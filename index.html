@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AffineDrift - Golf Research and Analysis">
-    <title>AffineDrift - Golf Research</title>
+    <meta name="description" content="AffineDrift - Mathematical modeling of the golf swing as an affine controllable system">
+    <meta name="keywords" content="affine control, golf swing, biomechanics, control theory, mathematical modeling">
+    <meta name="author" content="AffineDrift">
+    <title>AffineDrift - Affine Control Theory & Golf Swing Dynamics</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- MathJax for mathematical notation -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <header>
@@ -13,61 +18,194 @@
             <div class="container">
                 <h1 class="logo">AffineDrift</h1>
                 <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#research">Research</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#theory">Theory</a></li>
+                    <li><a href="#golf">Golf Application</a></li>
+                    <li><a href="resources.html">Resources</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
     <main>
-        <section id="hero">
+        <!-- Hero Section with Quote -->
+        <section id="home" class="hero">
             <div class="container">
-                <h2>Golf Research & Analysis</h2>
-                <p>Exploring the science and art of golf through data and research</p>
+                <div class="hero-content">
+                    <h1 class="site-title">AffineDrift</h1>
+                    <p class="subtitle">Mathematical Modeling of Golf Swing Dynamics</p>
+                    <blockquote class="featured-quote">
+                        <p>"What we do now echoes in eternity"</p>
+                        <cite>— Marcus Aurelius</cite>
+                    </blockquote>
+                </div>
             </div>
         </section>
 
-        <section id="about">
+        <!-- Mission Statement -->
+        <section id="mission" class="mission-section">
             <div class="container">
-                <h2>About</h2>
-                <p>Welcome to AffineDrift, a platform dedicated to golf research and analysis. Here we explore various aspects of the game through systematic study and data-driven insights.</p>
+                <h2>Our Mission</h2>
+                <p class="mission-text">
+                    AffineDrift is dedicated to exploring the profound mathematical structure underlying the golf swing.
+                    By modeling the swing as an affine controllable system, we bridge the gap between abstract control
+                    theory and physical biomechanics, creating a rigorous framework for understanding and optimizing
+                    human movement in one of sport's most complex motions.
+                </p>
+                <p class="mission-text">
+                    This platform serves as a repository for research, insights, and resources at the intersection of
+                    mathematics, control theory, and golf biomechanics. Here, we organize thoughts, share discoveries,
+                    and build a community around the mathematical beauty of the golf swing.
+                </p>
             </div>
         </section>
 
-        <section id="research">
+        <!-- Affine Control Theory Section -->
+        <section id="theory" class="theory-section">
             <div class="container">
-                <h2>Research</h2>
-                <div class="research-grid">
-                    <div class="research-card">
-                        <h3>Swing Mechanics</h3>
-                        <p>Analysis of golf swing biomechanics and optimization techniques.</p>
+                <h2>What is Affine Control Theory?</h2>
+
+                <div class="theory-content">
+                    <div class="theory-intro">
+                        <p>
+                            An <strong>affine control system</strong> is a fundamental concept in nonlinear control theory.
+                            These systems are characterized by being nonlinear in the state variables but linear (affine)
+                            in the control inputs.
+                        </p>
                     </div>
-                    <div class="research-card">
-                        <h3>Equipment Testing</h3>
-                        <p>Data-driven insights into golf equipment performance.</p>
+
+                    <div class="math-block">
+                        <h3>Mathematical Definition</h3>
+                        <p>A control-affine system takes the general form:</p>
+                        <div class="equation">
+                            \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
+                        </div>
+                        <div class="equation-explanation">
+                            <p>where:</p>
+                            <ul>
+                                <li>\(x \in \mathbb{R}^n\) is the state vector</li>
+                                <li>\(u = (u_1, \ldots, u_m) \in \mathbb{R}^m\) are the control inputs</li>
+                                <li>\(f_0(x)\) is the drift vector field (system dynamics without control)</li>
+                                <li>\(f_i(x)\) are the control vector fields</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="research-card">
-                        <h3>Course Strategy</h3>
-                        <p>Strategic approaches to course management and scoring.</p>
+
+                    <div class="key-properties">
+                        <h3>Key Properties</h3>
+                        <div class="properties-grid">
+                            <div class="property-card">
+                                <h4>Linearity in Control</h4>
+                                <p>Control inputs appear linearly, making the system affine rather than fully nonlinear</p>
+                            </div>
+                            <div class="property-card">
+                                <h4>Drift Dynamics</h4>
+                                <p>The \(f_0(x)\) term represents inherent system behavior independent of control</p>
+                            </div>
+                            <div class="property-card">
+                                <h4>Controllability</h4>
+                                <p>Lie brackets of vector fields determine the system's controllable subspace</p>
+                            </div>
+                            <div class="property-card">
+                                <h4>Geometric Structure</h4>
+                                <p>Natural interpretation on manifolds via differential geometry</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="contact">
+        <!-- Golf Application Section -->
+        <section id="golf" class="golf-section">
             <div class="container">
-                <h2>Contact</h2>
-                <p>For inquiries and collaboration opportunities, please reach out through GitHub.</p>
+                <h2>The Golf Swing as an Affine System</h2>
+
+                <div class="golf-content">
+                    <div class="golf-intro">
+                        <p>
+                            The golf swing is a remarkably sophisticated example of human motor control. When viewed
+                            through the lens of affine control theory, the swing reveals itself as a high-dimensional
+                            system where muscular inputs (controls) interact with biomechanical constraints and
+                            gravitational dynamics (drift).
+                        </p>
+                    </div>
+
+                    <div class="golf-model">
+                        <h3>System Components</h3>
+                        <div class="components-grid">
+                            <div class="component">
+                                <h4>State Space</h4>
+                                <p>Joint angles, angular velocities, club position and orientation in \(\mathbb{R}^n\)</p>
+                            </div>
+                            <div class="component">
+                                <h4>Drift Term \(f_0(x)\)</h4>
+                                <p>Gravity, inertial forces, passive tissue dynamics</p>
+                            </div>
+                            <div class="component">
+                                <h4>Control Inputs \(u_i\)</h4>
+                                <p>Muscle torques at joints, force generation patterns</p>
+                            </div>
+                            <div class="component">
+                                <h4>Control Vector Fields \(f_i(x)\)</h4>
+                                <p>Moment arms, biomechanical coupling between muscles and joints</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="research-insight">
+                        <h3>Why This Matters</h3>
+                        <p>
+                            Modeling the golf swing as an affine control system enables:
+                        </p>
+                        <ul>
+                            <li><strong>Optimal Control:</strong> Computing theoretically optimal swing trajectories</li>
+                            <li><strong>Sensitivity Analysis:</strong> Understanding how small changes in muscle activation affect ball flight</li>
+                            <li><strong>Learning Algorithms:</strong> Designing practice routines based on controllability analysis</li>
+                            <li><strong>Biomechanical Insights:</strong> Identifying critical control points in the swing sequence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section id="goals" class="goals-section">
+            <div class="container">
+                <h2>Website Goals</h2>
+                <div class="goals-grid">
+                    <div class="goal-card">
+                        <div class="goal-number">01</div>
+                        <h3>Theoretical Rigor</h3>
+                        <p>Present mathematically precise formulations of golf swing dynamics using control theory</p>
+                    </div>
+                    <div class="goal-card">
+                        <div class="goal-number">02</div>
+                        <h3>Knowledge Repository</h3>
+                        <p>Organize and share research, insights, and developments in affine control applications to biomechanics</p>
+                    </div>
+                    <div class="goal-card">
+                        <div class="goal-number">03</div>
+                        <h3>Resource Hub</h3>
+                        <p>Curate videos, papers, and educational materials on control theory and golf biomechanics</p>
+                    </div>
+                    <div class="goal-card">
+                        <div class="goal-number">04</div>
+                        <h3>Community Building</h3>
+                        <p>Foster discussion among researchers, golfers, and enthusiasts interested in the mathematics of motion</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 AffineDrift. All rights reserved.</p>
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">Where control theory meets the fairway</p>
         </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
