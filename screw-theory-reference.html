@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Screw Theory Reference for Control-Affine Multibody Dynamics - AffineDrift">
+    <title>Screw Theory Reference - AffineDrift</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#articles">Articles</a></li>
+                    <li><a href="#reviews">Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Articles</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="theory-part1.html">Theory</a></li>
+                        <li><a href="modelling.html">Modelling</a></li>
+                        <li><a href="wscg-research.html">WSCG Research</a></li>
+                        <li><a href="nonlinear-control-insights.html">Nonlinear Control Insights</a></li>
+                        <li><a href="inverse-dynamics-inference.html">Inverse Dynamics Inference</a></li>
+                        <li><a href="lagrangian-reference.html">Lagrangian Reference</a></li>
+                        <li><a href="screw-theory-reference.html" class="active">Screw Theory Reference</a></li>
+                        <li><a href="force-mobility-matrices.html">Force Mobility Matrices</a></li>
+                        <li><a href="null-space-constraint-jacobian.html">Null Space Constraint Jacobian</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Reviews</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="research-reviews.html">Research Reviews</a></li>
+                        <li><a href="book-reviews.html">Book Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Other</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="daydreams-doodles.html">Daydreams & Doodles</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="page-header">
+                <div class="container">
+                    <h1>Screw Theory Reference for Control-Affine Multibody Dynamics</h1>
+                </div>
+            </section>
+
+            <section class="article-section">
+                <div class="container">
+                    <article class="main-article">
+                        <div class="article-content">
+                            <section class="article-body">
+                                <h2>Introduction</h2>
+                                <p>
+                                    Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group \(SE(3)\) and its Lie algebra \(\mathfrak{se}(3)\). This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
+                                </p>
+
+                                <h2>The Lie Group \(SE(3)\) and Its Algebra</h2>
+                                <p>
+                                    Rigid-body configurations belong to the special Euclidean group
+                                </p>
+                                <div class="equation-block">
+                                    \[SE(3) = \left\{ \begin{bmatrix} R & p \\ 0 & 1 \end{bmatrix} : R\in SO(3), \; p\in \mathbb{R}^3 \right\}.\]
+                                </div>
+                                <p>
+                                    Its Lie algebra is
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathfrak{se}(3) = \left\{ \begin{bmatrix} \hat{\omega} & v \\ 0 & 0 \end{bmatrix} : \omega, v \in \mathbb{R}^3 \right\},\]
+                                </div>
+                                <p>
+                                    where \(\hat{\omega}\) is the skew-symmetric matrix corresponding to the vector \(\omega\) via the hat operator.
+                                </p>
+
+                                <h2>Twists</h2>
+                                <p>
+                                    A twist is a 6-vector
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{V} = \begin{bmatrix} \omega \\ v \end{bmatrix},\]
+                                </div>
+                                <p>
+                                    representing angular velocity \(\omega\) and linear velocity \(v\) of a body frame. For a reference point \(q \in \mathbb{R}^3\) on the axis of motion, one has
+                                </p>
+                                <div class="equation-block">
+                                    \[v = -\omega \times q.\]
+                                </div>
+                                <p>
+                                    This yields the Plücker representation of screws.
+                                </p>
+
+                                <h2>Wrenches</h2>
+                                <p>
+                                    A wrench is a 6-vector
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F} = \begin{bmatrix} n \\ f \end{bmatrix},\]
+                                </div>
+                                <p>
+                                    where \(f\) is the force and \(n\) is the moment about a reference point. The instantaneous power is
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}^\top \mathcal{V} = n^\top \omega + f^\top v.\]
+                                </div>
+                                <p>
+                                    This pairing is invariant under coordinate transformations and is fundamental to screw theory.
+                                </p>
+
+                                <h2>Adjoint Transformations</h2>
+                                <p>
+                                    For a homogeneous transform
+                                </p>
+                                <div class="equation-block">
+                                    \[g = \begin{bmatrix} R & p \\ 0 & 1 \end{bmatrix} \in SE(3),\]
+                                </div>
+                                <p>
+                                    the adjoint representation is
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathrm{Ad}_g = \begin{bmatrix} R & 0 \\ \hat{p}R & R \end{bmatrix}.\]
+                                </div>
+                                <p>
+                                    It maps twists and wrenches as
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{V}_b = \mathrm{Ad}_g \,\mathcal{V}_a, \qquad \mathcal{F}_a = \mathrm{Ad}_g^\top \,\mathcal{F}_b,\]
+                                </div>
+                                <p>
+                                    where subscripts denote different frames.
+                                </p>
+
+                                <h2>Joint Screws and the Screw Jacobian</h2>
+                                <p>
+                                    A revolute joint \(i\) is represented by a screw axis
+                                </p>
+                                <div class="equation-block">
+                                    \[S_i = \begin{bmatrix} \omega_i \\ -\omega_i \times q_i \end{bmatrix},\]
+                                </div>
+                                <p>
+                                    with \(\omega_i\) the unit axis of rotation and \(q_i\) a point on that axis. For an \(n\)-DOF chain, the body twist can be written as
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{V} = \sum_{i=1}^n S_i \dot{\theta}_i.\]
+                                </div>
+                                <p>
+                                    Stacking the screw axes gives the screw Jacobian
+                                </p>
+                                <div class="equation-block">
+                                    \[J_s(q) = [S_1 \;\; S_2 \;\; \cdots \;\; S_n],\]
+                                </div>
+                                <p>
+                                    so that
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{V} = J_s(q)\,\dot{\theta}.\]
+                                </div>
+
+                                <h2>Screw Dynamics (Newton–Euler in Screw Form)</h2>
+                                <p>
+                                    The spatial Newton–Euler equation for a rigid body can be written as
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F} = I_s(q)\dot{\mathcal{V}} + \mathrm{ad}^\ast_{\mathcal{V}} I_s(q)\mathcal{V},\]
+                                </div>
+                                <p>
+                                    where \(I_s(q)\) is the spatial inertia and \(\mathrm{ad}^\ast_{\mathcal{V}}\) is the dual adjoint operator. The first term corresponds to inertia, and the second term collects Coriolis and centrifugal effects. Additional spatial wrenches represent gravity and other external forces.
+                                </p>
+                                <p>
+                                    Thus a drift wrench can be expressed as
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{drift}} = I_s\dot{\mathcal{V}} + \mathrm{ad}^\ast_{\mathcal{V}} I_s \mathcal{V} + \mathcal{F}_{g} + \mathcal{F}_{\mathrm{shaft}},\]
+                                </div>
+                                <p>
+                                    where \(\mathcal{F}_g\) is a gravity wrench and \(\mathcal{F}_{\mathrm{shaft}}\) is the contribution of flexible shaft forces.
+                                </p>
+
+                                <h2>Control-Affine Structure in Screw Coordinates</h2>
+                                <p>
+                                    Joint torques \(\tau \in \mathbb{R}^n\) relate to input wrenches via
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{input}} = J_s(q)^{-T}\tau = J_s(q)^{-T} B u,\]
+                                </div>
+                                <p>
+                                    where \(B\) is the input distribution matrix and \(u\) is the vector of joint inputs. The total wrench at a given point is then
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{total}} = \mathcal{F}_{\mathrm{drift}}(x) + \mathcal{F}_{\mathrm{input}}(x,u).\]
+                                </div>
+                                <p>
+                                    This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
+                                </p>
+
+                                <h2>Flexible Shaft Forces in Screw Form</h2>
+                                <p>
+                                    Flexible shaft forces can be modeled as distributed elastic wrenches. For mode \(i\):
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{shaft},i} = K_i \eta_i S_{s,i} + D_i \dot{\eta}_i S_{s,i},\]
+                                </div>
+                                <p>
+                                    where \(\eta_i\) and \(\dot{\eta}_i\) are modal coordinates, \(K_i\) and \(D_i\) are stiffness and damping, and \(S_{s,i}\) is the associated mode screw. Importantly,
+                                </p>
+                                <div class="equation-block">
+                                    \[\frac{\partial \mathcal{F}_{\mathrm{shaft}}}{\partial u} = 0,\]
+                                </div>
+                                <p>
+                                    so shaft forces contribute only to drift and do not affect the linear dependence on \(u\).
+                                </p>
+
+                                <h2>Superposition in Screw Space</h2>
+                                <p>
+                                    Because wrenches add linearly, the total wrench decomposition
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{total}} = \mathcal{F}_{\mathrm{drift}} + \mathcal{F}_{\mathrm{input}}\]
+                                </div>
+                                <p>
+                                    holds in any screw coordinate representation. This coordinate-free linearity is a geometric expression of the superposition principle for forces in control-affine mechanical systems.
+                                </p>
+
+                                <h2>ZTCF and ZVCF in Screw Coordinates</h2>
+                                <p>
+                                    In the Zero Torque Counterfactual (ZTCF), all inputs are set to zero, so
+                                </p>
+                                <div class="equation-block">
+                                    \[\dot{x} = f(x),\]
+                                </div>
+                                <p>
+                                    and the corresponding wrench is purely
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{ZTCF}} = \mathcal{F}_{\mathrm{drift}}.\]
+                                </div>
+                                <p>
+                                    In the Zero Velocity Counterfactual (ZVCF), drift mechanisms are disabled and the state is held fixed, so that only input wrenches remain:
+                                </p>
+                                <div class="equation-block">
+                                    \[\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{input}}.\]
+                                </div>
+                                <p>
+                                    These constructions mirror the affine decomposition in screw space.
+                                </p>
+
+                                <h2>Summary</h2>
+                                <p>
+                                    Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.
+                                </p>
+                            </section>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">The past shapes the present</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
