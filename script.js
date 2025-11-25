@@ -117,6 +117,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Page history tracking for sidebar
+    function updateHistorySidebar() {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        // Get history from localStorage
+        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
+        
+        // Get current page info
+        const currentPage = {
+            title: document.title.replace(' - AffineDrift', ''),
+            url: window.location.pathname.split('/').pop() || 'index.html',
+            fullUrl: window.location.href
+        };
+
+        // Remove current page if it's already in history
+        history = history.filter(item => item.url !== currentPage.url);
+        
+        // Add current page to front
+        history.unshift(currentPage);
+        
+        // Keep only last 10 items
+        history = history.slice(0, 10);
+        
+        // Save back to localStorage
+        localStorage.setItem('affinedrift_history', JSON.stringify(history));
+        
+        // Update sidebar display
+        if (history.length === 0 || (history.length === 1 && history[0].url === currentPage.url)) {
+            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
+        } else {
+            // Filter out current page from display
+            const displayHistory = history.filter(item => item.url !== currentPage.url);
+            if (displayHistory.length === 0) {
+                historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
+            } else {
+                historyList.innerHTML = displayHistory.map(item => {
+                    const displayTitle = item.title.length > 40 ? item.title.substring(0, 40) + '...' : item.title;
+                    return `<li><a href="${item.url}">${displayTitle}</a></li>`;
+                }).join('');
+            }
+        }
+    }
+
+    // Initialize history sidebar
+    updateHistorySidebar();
+
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');

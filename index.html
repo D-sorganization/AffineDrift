@@ -15,9 +15,14 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="styles.css">
-    <!-- Favicon -->
+    <!-- Favicon and Bookmark Icons -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo/Logo Transparent/1.png">
+    <meta name="theme-color" content="#0f4c75">
     <!-- MathJax for mathematical notation - optimized loading -->
     <script>
       window.MathJax = {
@@ -42,8 +47,8 @@
                     <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
                 </a>
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#articles">Articles</a></li>
+                    <li><a href="index.html">Affine Drift</a></li>
+                    <li><a href="articles.html">Articles</a></li>
                     <li><a href="#reviews">Reviews</a></li>
                     <li><a href="resources.html">Resources</a></li>
                     <li><a href="contact.html">Contact</a></li>
@@ -54,33 +59,12 @@
     </header>
 
     <div class="layout-wrapper">
-        <aside class="sidebar">
+        <aside class="sidebar" id="history-sidebar">
             <nav class="sidebar-nav">
                 <div class="sidebar-section">
-                    <h3 class="sidebar-heading">Articles</h3>
-                    <ul class="sidebar-links">
-                        <li><a href="theory-part1.html">Theory</a></li>
-                        <li><a href="modelling.html">Modelling</a></li>
-                        <li><a href="wscg-research.html">WSCG 2024 Presentation</a></li>
-                        <li><a href="nonlinear-control-insights.html">Nonlinear Control Insights</a></li>
-                        <li><a href="inverse-dynamics-inference.html">Inverse Dynamics Inference</a></li>
-                        <li><a href="lagrangian-reference.html">Lagrangian Reference</a></li>
-                        <li><a href="screw-theory-reference.html">Screw Theory Reference</a></li>
-                        <li><a href="force-mobility-matrices.html">Force Mobility Matrices</a></li>
-                        <li><a href="null-space-constraint-jacobian.html">Null Space Constraint Jacobian</a></li>
-                    </ul>
-                </div>
-                <div class="sidebar-section">
-                    <h3 class="sidebar-heading">Reviews</h3>
-                    <ul class="sidebar-links">
-                        <li><a href="research-reviews.html">Research Reviews</a></li>
-                        <li><a href="book-reviews.html">Book Reviews</a></li>
-                    </ul>
-                </div>
-                <div class="sidebar-section">
-                    <h3 class="sidebar-heading">Other</h3>
-                    <ul class="sidebar-links">
-                        <li><a href="daydreams-doodles.html">Daydreams & Doodles</a></li>
+                    <h3 class="sidebar-heading">Recent Pages</h3>
+                    <ul class="sidebar-links" id="history-list">
+                        <li class="history-empty">No recent pages yet</li>
                     </ul>
                 </div>
             </nav>
@@ -123,7 +107,7 @@
         <!-- Affine Control Theory Section -->
         <section id="theory" class="theory-section">
             <div class="container">
-                <h2>What is Affine Control Theory?</h2>
+                <h2>What is affine control theory and why should we consider nonlinear control as golf researchers?</h2>
 
                 <div class="theory-content">
                     <div class="theory-intro">
@@ -131,6 +115,58 @@
                             An <strong>affine control system</strong> is a fundamental concept in nonlinear control theory.
                             These systems are characterized by being nonlinear in the state variables but linear (affine)
                             in the control inputs.
+                        </p>
+                    </div>
+
+                    <div class="coordination-section">
+                        <h3>Coordination of the Golf Swing as a Control Problem</h3>
+                        <p>
+                            The golf swing presents a fundamental coordination challenge: how does the golfer orchestrate 
+                            the motion of multiple body segments and the club to achieve a desired outcome? This question 
+                            lies at the heart of motor control research, and it is precisely the type of problem that 
+                            nonlinear control theory is designed to address.
+                        </p>
+                        <p>
+                            Traditional biomechanical analyses often treat the swing as a sequence of static positions or 
+                            focus on individual joint motions in isolation. However, the golf swing is fundamentally a 
+                            <strong>dynamic, coordinated movement</strong> where the actions of multiple joints must be 
+                            synchronized in time and space. The challenge is not merely one of kinematics—which positions 
+                            to achieve—but of <strong>dynamics</strong>: how to generate the right forces and torques at 
+                            the right moments to produce the desired motion.
+                        </p>
+                        <p>
+                            From a control perspective, the golfer must solve a <strong>trajectory optimization problem</strong>: 
+                            find a sequence of muscle activations (control inputs) that drives the system from an initial 
+                            state (address position) to a desired final state (ball contact) while satisfying constraints 
+                            on joint ranges of motion, force production capabilities, and timing. The complexity arises 
+                            because the system is <strong>highly nonlinear</strong>: the same muscle torque produces different 
+                            effects depending on the current configuration of the body and club, the velocities of all 
+                            segments, and the elastic state of the shaft.
+                        </p>
+                        <p>
+                            Nonlinear control theory provides the mathematical framework to understand and analyze this 
+                            coordination problem. The control-affine structure \(\dot{x} = f(x) + g(x)u\) naturally captures 
+                            the separation between <strong>passive dynamics</strong> (what the system does on its own) and 
+                            <strong>active control</strong> (what the golfer adds through muscle activation). This 
+                            decomposition is crucial because it allows us to ask: which aspects of the observed motion 
+                            are due to the golfer's active control, and which are due to the natural dynamics of the 
+                            multibody system?
+                        </p>
+                        <p>
+                            For golf researchers, this framework offers several advantages. First, it provides a rigorous 
+                            way to <strong>decompose forces</strong> into drift and input components, enabling causal 
+                            attribution of observed forces to specific control actions versus passive dynamics. Second, 
+                            it reveals how the <strong>mechanical advantage</strong> of control inputs changes throughout 
+                            the swing, explaining why certain timing patterns are more effective than others. Third, it 
+                            enables the construction of <strong>counterfactual analyses</strong>: what would the motion look 
+                            like if different control strategies were employed, or if the passive dynamics were different?
+                        </p>
+                        <p>
+                            By framing the golf swing as a nonlinear control problem, we move beyond descriptive 
+                            biomechanics toward a <strong>predictive, mechanistic understanding</strong> of how coordination 
+                            emerges from the interaction between neural control and mechanical dynamics. This perspective 
+                            is essential for understanding skill acquisition, injury mechanisms, and the effects of equipment 
+                            modifications on swing dynamics.
                         </p>
                     </div>
 
