@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Preconnect to CDN for faster loading -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="stylesheet" href="styles.css">
     <!-- MathJax for mathematical notation - optimized loading -->
@@ -23,9 +23,6 @@
         startup: {
           ready: () => {
             MathJax.startup.defaultReady();
-            MathJax.startup.promise.then(() => {
-              console.log('MathJax loaded and rendered');
-            });
           }
         }
       };
