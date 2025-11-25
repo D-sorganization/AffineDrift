@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add fade-in animation for sections on scroll (only if not already visible)
     // Content is visible by default - animation is optional enhancement
     const observerOptions = {
-        threshold: 0.01,
+        threshold: 0.1,
         rootMargin: '0px 0px 0px 0px'
     };
 
