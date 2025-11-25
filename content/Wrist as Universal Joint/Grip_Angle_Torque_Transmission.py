@@ -16,7 +16,7 @@ matplotlib.use('QtAgg')  # Set backend explicitly for PyQt6
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QSlider, QGroupBox, QSplitter, QCheckBox, QComboBox, QPushButton,
-    QDialog, QTextEdit, QScrollArea, QDialogButtonBox
+    QDialog, QTextEdit, QScrollArea, QDialogButtonBox, QLineEdit, QDoubleSpinBox
 )
 from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -24,21 +24,93 @@ from matplotlib.figure import Figure
 
 NOISE_TYPES = ['Golf-like Random', 'Burst', 'Step', 'Sinusoidal']
 
+# Default golf club properties (representative values)
+DEFAULT_CLUBHEAD_WEIGHT = 200.0  # grams
+DEFAULT_SHAFT_WEIGHT = 100.0  # grams
+DEFAULT_CLUB_LENGTH = 1.0  # meters (typical driver length)
+DEFAULT_CLUBHEAD_CG_DISTANCE = 0.85  # meters from grip (distance to center of mass)
+
+def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_m, cg_distance_m):
+    """
+    Calculate moments of inertia for golf club about two axes.
+    
+    Parameters:
+    - clubhead_weight_g: Clubhead weight in grams
+    - shaft_weight_g: Shaft weight in grams
+    - club_length_m: Total club length in meters
+    - cg_distance_m: Distance from grip to clubhead center of mass in meters
+    
+    Returns:
+    - I_alpha: Moment of inertia about shaft axis (kg·m²)
+    - I_gamma: Moment of inertia about high inertia axis (kg·m²)
+    """
+    # Convert to kg
+    m_head = clubhead_weight_g / 1000.0  # kg
+    m_shaft = shaft_weight_g / 1000.0  # kg
+    
+    # Shaft inertia (thin rod about its end): I = (1/3) * m * L²
+    # For shaft, assume uniform distribution
+    I_shaft_alpha = (1/3) * m_shaft * club_length_m**2
+    
+    # Clubhead inertia about shaft axis (point mass at distance r)
+    I_head_alpha = m_head * cg_distance_m**2
+    
+    # Total I_alpha (about shaft axis)
+    I_alpha = I_shaft_alpha + I_head_alpha
+    
+    # I_gamma (about high inertia axis, perpendicular to shaft)
+    # For clubhead: treat as point mass, but with additional term for rotation
+    # Typical golf club: I_gamma is larger due to clubhead geometry
+    # Approximate: I_gamma ≈ 2-3 × I_alpha for typical clubs
+    # More accurate: I_gamma includes clubhead's own moment of inertia
+    # For a typical iron: I_gamma ≈ 1.5-2.5 × I_alpha
+    # Using a conservative estimate: I_gamma = 2.0 × I_alpha
+    I_gamma = 2.0 * I_alpha
+    
+    return I_alpha, I_gamma
+
+def calculate_acceleration(torque, moment_of_inertia):
+    """
+    Calculate angular acceleration from torque.
+    
+    α = τ / I
+    
+    Parameters:
+    - torque: Torque array (N·m)
+    - moment_of_inertia: Moment of inertia (kg·m²)
+    
+    Returns:
+    - acceleration: Angular acceleration array (rad/s²)
+    """
+    # Avoid division by zero
+    if moment_of_inertia < 1e-6:
+        return np.zeros_like(torque)
+    return torque / moment_of_inertia
+
 class NoiseTransmissionCanvas(FigureCanvas):
-    def __init__(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma, noise=None):
-        self.figure = Figure(figsize=(6, 4))
+    def __init__(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma, 
+                 I_alpha, I_gamma, show_torque, show_acceleration, noise=None):
+        self.figure = Figure(figsize=(8, 6))
         super().__init__(self.figure)
-        self.setMinimumSize(400, 300)  # Set minimum size for canvas
-        self.ax = self.figure.add_subplot(111)
+        self.setMinimumSize(500, 400)  # Set minimum size for canvas
+        # Create two subplots: torque and acceleration
+        self.ax_torque = self.figure.add_subplot(211)
+        self.ax_accel = self.figure.add_subplot(212)
         self.grip_angle_deg = grip_angle_deg
         self.noise_type = noise_type
         self.show_input = show_input
         self.show_alpha = show_alpha
         self.show_gamma = show_gamma
+        self.I_alpha = I_alpha
+        self.I_gamma = I_gamma
+        self.show_torque = show_torque
+        self.show_acceleration = show_acceleration
         self.noise = noise if noise is not None else self.generate_noise()
-        # Store y-axis limits based on initial noise (will be set after first plot)
-        self.y_min = None
-        self.y_max = None
+        # Store y-axis limits
+        self.torque_y_min = None
+        self.torque_y_max = None
+        self.accel_y_min = None
+        self.accel_y_max = None
         self.update_plot()
 
     def generate_noise(self):
@@ -63,41 +135,47 @@ class NoiseTransmissionCanvas(FigureCanvas):
     def update_plot(self, update_limits=False):
         t = np.linspace(0, 1, len(self.noise))
         theta_rad = np.deg2rad(self.grip_angle_deg)
-        alpha = self.noise * np.sin(theta_rad)
-        gamma = self.noise * np.cos(theta_rad)
-        self.ax.clear()
-        # Main noise transmission plot
-        if self.show_input:
-            self.ax.plot(t, self.noise, label='Total Input', color='gray', alpha=0.7)
-        if self.show_alpha:
-            self.ax.plot(t, alpha, label='Local Alpha (sin θ)', color='red')
-        if self.show_gamma:
-            self.ax.plot(t, gamma, label='Local Gamma (cos θ)', color='blue')
-        self.ax.set_title(f'Noise Transmission (Grip Angle {self.grip_angle_deg:.0f}°)', fontsize=12)
-        self.ax.set_xlabel('Time (s)')
-        self.ax.set_ylabel('Amplitude')
-        self.ax.grid(True)
-        self.ax.legend(loc='upper left', fontsize=9)
+        # Calculate transmitted torques (N·m) - treating noise as torque input
+        torque_alpha = self.noise * np.sin(theta_rad)
+        torque_gamma = self.noise * np.cos(theta_rad)
         
-        # Set y-axis limits only when noise is regenerated, not when angle changes
-        if update_limits or self.y_min is None or self.y_max is None:
-            # Calculate limits based on all possible signals (input, alpha, gamma)
-            all_data = [self.noise]
+        # Calculate angular accelerations (rad/s²): α = τ / I
+        accel_alpha = calculate_acceleration(torque_alpha, self.I_alpha)
+        accel_gamma = calculate_acceleration(torque_gamma, self.I_gamma)
+        
+        # TORQUE PLOT (top subplot)
+        self.ax_torque.clear()
+        if self.show_torque:
+            if self.show_input:
+                self.ax_torque.plot(t, self.noise, label='Input Torque', color='gray', alpha=0.7, linewidth=1.5)
             if self.show_alpha:
-                all_data.append(alpha)
+                self.ax_torque.plot(t, torque_alpha, label='Torque α (sin θ)', color='red', linewidth=2)
             if self.show_gamma:
-                all_data.append(gamma)
-            if all_data:
-                combined = np.concatenate(all_data)
+                self.ax_torque.plot(t, torque_gamma, label='Torque γ (cos θ)', color='blue', linewidth=2)
+        
+        self.ax_torque.set_title(f'Transmitted Torque (Grip Angle {self.grip_angle_deg:.0f}°)', fontsize=11, fontweight='bold')
+        self.ax_torque.set_ylabel('Torque (N·m)', fontsize=10)
+        self.ax_torque.grid(True, alpha=0.3)
+        self.ax_torque.legend(loc='upper left', fontsize=8)
+        
+        # Set torque y-axis limits
+        if update_limits or self.torque_y_min is None or self.torque_y_max is None:
+            all_torque_data = [self.noise]
+            if self.show_alpha:
+                all_torque_data.append(torque_alpha)
+            if self.show_gamma:
+                all_torque_data.append(torque_gamma)
+            if all_torque_data:
+                combined = np.concatenate(all_torque_data)
                 data_range = np.max(combined) - np.min(combined)
-                margin = data_range * 0.1  # 10% margin
-                self.y_min = np.min(combined) - margin
-                self.y_max = np.max(combined) + margin
-        # Always use the stored limits
-        self.ax.set_ylim(self.y_min, self.y_max)
-        # Schematic: hand gripping club and theta angle
+                margin = data_range * 0.1 if data_range > 0 else 0.1
+                self.torque_y_min = np.min(combined) - margin
+                self.torque_y_max = np.max(combined) + margin
+        self.ax_torque.set_ylim(self.torque_y_min, self.torque_y_max)
+        
+        # Add schematic to torque plot
         try:
-            inset_ax = self.ax.inset_axes([0.65, 0.65, 0.32, 0.32])
+            inset_ax = self.ax_torque.inset_axes([0.65, 0.65, 0.32, 0.32])
             # Draw club as horizontal shaft
             shaft_y = 0.15
             inset_ax.plot([0, 1], [shaft_y, shaft_y], 'k-', lw=6)
@@ -109,7 +187,7 @@ class NoiseTransmissionCanvas(FigureCanvas):
             clubhead_width = 0.1
             clubhead_height = 0.12
             clubhead = Rectangle((clubhead_x, clubhead_y), clubhead_width, clubhead_height, 
-                                color='silver', alpha=0.8, edgecolor='gray', linewidth=1.5)
+                                facecolor='silver', alpha=0.8, edgecolor='gray', linewidth=1.5)
             inset_ax.add_patch(clubhead)
             
             # Draw hand as ellipse on the right side
@@ -117,7 +195,7 @@ class NoiseTransmissionCanvas(FigureCanvas):
             hand_width = 0.25
             hand_height = 0.12
             from matplotlib.patches import Ellipse
-            hand = Ellipse(hand_center, hand_width, hand_height, angle=self.grip_angle_deg, color='tan', alpha=0.7, edgecolor='saddlebrown', linewidth=1.5)
+            hand = Ellipse(hand_center, hand_width, hand_height, angle=self.grip_angle_deg, facecolor='tan', alpha=0.7, edgecolor='saddlebrown', linewidth=1.5)
             inset_ax.add_patch(hand)
             
             # Draw 4 fingers that rotate from pointing left (at 0°) to pointing down (at 90°)
@@ -149,7 +227,7 @@ class NoiseTransmissionCanvas(FigureCanvas):
                 finger_mid_y = (base_y + tip_y) / 2
                 finger_angle = np.rad2deg(np.arctan2(finger_dir_y, finger_dir_x))
                 finger = Ellipse((finger_mid_x, finger_mid_y), finger_length, finger_width, 
-                                angle=finger_angle, color='tan', alpha=0.8, edgecolor='saddlebrown', linewidth=0.5)
+                                angle=finger_angle, facecolor='tan', alpha=0.8, edgecolor='saddlebrown', linewidth=0.5)
                 inset_ax.add_patch(finger)
             
             # Draw theta angle arc (from club axis to hand axis)
@@ -179,14 +257,50 @@ class NoiseTransmissionCanvas(FigureCanvas):
             inset_ax.set_title(r"Schematic: $\theta$", fontsize=10)
         except Exception as e:
             print(f"Warning: Could not create inset axes: {e}")
+        
+        # ACCELERATION PLOT (bottom subplot)
+        self.ax_accel.clear()
+        if self.show_acceleration:
+            if self.show_alpha:
+                self.ax_accel.plot(t, accel_alpha, label='Accel α (rad/s²)', color='red', linewidth=2, linestyle='--')
+            if self.show_gamma:
+                self.ax_accel.plot(t, accel_gamma, label='Accel γ (rad/s²)', color='blue', linewidth=2, linestyle='--')
+        
+        self.ax_accel.set_title(f'Angular Acceleration (Iα={self.I_alpha:.4f} kg·m², Iγ={self.I_gamma:.4f} kg·m²)', 
+                               fontsize=11, fontweight='bold')
+        self.ax_accel.set_xlabel('Time (s)', fontsize=10)
+        self.ax_accel.set_ylabel('Acceleration (rad/s²)', fontsize=10)
+        self.ax_accel.grid(True, alpha=0.3)
+        self.ax_accel.legend(loc='upper left', fontsize=8)
+        
+        # Set acceleration y-axis limits
+        if update_limits or self.accel_y_min is None or self.accel_y_max is None:
+            all_accel_data = []
+            if self.show_alpha:
+                all_accel_data.append(accel_alpha)
+            if self.show_gamma:
+                all_accel_data.append(accel_gamma)
+            if all_accel_data:
+                combined = np.concatenate(all_accel_data)
+                data_range = np.max(combined) - np.min(combined)
+                margin = data_range * 0.1 if data_range > 0 else 0.1
+                self.accel_y_min = np.min(combined) - margin
+                self.accel_y_max = np.max(combined) + margin
+        self.ax_accel.set_ylim(self.accel_y_min, self.accel_y_max)
+        
         self.figure.tight_layout()
         self.draw()
 
-    def update_signals(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma, regenerate_noise=False):
+    def update_signals(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma, 
+                      I_alpha, I_gamma, show_torque, show_acceleration, regenerate_noise=False):
         self.grip_angle_deg = grip_angle_deg
         self.show_input = show_input
         self.show_alpha = show_alpha
         self.show_gamma = show_gamma
+        self.I_alpha = I_alpha
+        self.I_gamma = I_gamma
+        self.show_torque = show_torque
+        self.show_acceleration = show_acceleration
         # Only regenerate noise if noise type changed or explicitly requested
         if regenerate_noise or noise_type != self.noise_type:
             self.noise_type = noise_type
@@ -354,14 +468,69 @@ class CalculationsDialog(QDialog):
         <h3>Sinusoidal</h3>
         <p>A sinusoidal signal with frequency 4 Hz (8π rad/s), useful for studying frequency-dependent transmission characteristics.</p>
         
-        <h2>6. Interpretation of Results</h2>
+        <h2>6. Moment of Inertia Calculations</h2>
+        
+        <h3>Club Inertia Model</h3>
+        <p>The golf club is modeled as a composite system with two main components:</p>
+        <ul>
+        <li><strong>Shaft:</strong> Uniform rod rotating about one end</li>
+        <li><strong>Clubhead:</strong> Point mass at distance r from grip</li>
+        </ul>
+        
+        <h3>I_alpha (Shaft Axis Inertia)</h3>
+        <div class="equation">
+        I<sub>α</sub> = I<sub>shaft</sub> + I<sub>head</sub><br>
+        I<sub>shaft</sub> = (1/3) × m<sub>shaft</sub> × L²<br>
+        I<sub>head</sub> = m<sub>head</sub> × r²<br>
+        Where:<br>
+        - m<sub>shaft</sub> = shaft mass (kg)<br>
+        - m<sub>head</sub> = clubhead mass (kg)<br>
+        - L = club length (m)<br>
+        - r = distance from grip to clubhead CG (m)
+        </div>
+        
+        <h3>I_gamma (High Inertia Axis)</h3>
+        <p>For typical golf clubs, the moment of inertia about the high inertia axis (perpendicular to shaft) is approximately 2× the shaft axis inertia due to clubhead geometry and mass distribution.</p>
+        <div class="equation">
+        I<sub>γ</sub> ≈ 2.0 × I<sub>α</sub>
+        </div>
+        
+        <h2>7. Angular Acceleration Calculations</h2>
+        
+        <h3>Newton's Second Law for Rotation</h3>
+        <p>Angular acceleration is calculated from transmitted torque using:</p>
+        <div class="equation">
+        α = τ / I<br>
+        Where:<br>
+        - α = angular acceleration (rad/s²)<br>
+        - τ = torque (N·m)<br>
+        - I = moment of inertia (kg·m²)
+        </div>
+        
+        <h3>Acceleration Components</h3>
+        <p>For each axis:</p>
+        <div class="equation">
+        α<sub>α</sub> = τ<sub>α</sub> / I<sub>α</sub><br>
+        α<sub>γ</sub> = τ<sub>γ</sub> / I<sub>γ</sub>
+        </div>
+        
+        <p><strong>Key Insight:</strong> Higher inertia means lower acceleration for the same torque. This is why clubhead weight and distribution significantly affect how noise impacts club motion.</p>
+        
+        <h2>8. Interpretation of Results</h2>
         
         <h3>What the Plots Show</h3>
+        <p><strong>Torque Plots:</strong></p>
         <ul>
-        <li><strong>Total Input (gray):</strong> The original noise signal in the forearm axis</li>
-        <li><strong>Local Alpha (red):</strong> The component transmitted to the shaft axis - affects clubhead orientation</li>
-        <li><strong>Local Gamma (blue):</strong> The component transmitted to the high inertia axis - affects club rotation about the shaft</li>
+        <li><strong>Input Torque (gray):</strong> The original torque noise signal in the forearm axis</li>
+        <li><strong>Torque α (red):</strong> The component transmitted to the shaft axis - affects clubhead orientation</li>
+        <li><strong>Torque γ (blue):</strong> The component transmitted to the high inertia axis - affects club rotation about the shaft</li>
         </ul>
+        <p><strong>Acceleration Plots:</strong></p>
+        <ul>
+        <li><strong>Accel α (red, dashed):</strong> Angular acceleration about shaft axis - shows how noise affects clubhead motion</li>
+        <li><strong>Accel γ (blue, dashed):</strong> Angular acceleration about high inertia axis - shows how noise affects club rotation</li>
+        </ul>
+        <p><strong>Key Relationship:</strong> Acceleration = Torque / Inertia. Higher inertia reduces acceleration for the same torque input.</p>
         
         <h3>Understanding the Transmission</h3>
         <p>As the grip angle increases from 0° to 90°:</p>
@@ -371,7 +540,7 @@ class CalculationsDialog(QDialog):
         <li>The total vector magnitude is preserved: |T| = √(T<sub>α</sub>² + T<sub>γ</sub>²)</li>
         </ul>
         
-        <h2>7. Limitations & Future Work</h2>
+        <h2>9. Limitations & Future Work</h2>
         <ul>
         <li>This is a simplified model - real wrist mechanics involve more complex kinematics</li>
         <li>No damping or energy dissipation is included</li>
@@ -380,7 +549,7 @@ class CalculationsDialog(QDialog):
         <li>Muscle activation and active control are not included</li>
         </ul>
         
-        <h2>8. References</h2>
+        <h2>10. References</h2>
         <p>This model is based on:</p>
         <ul>
         <li>Universal joint mechanics and vector decomposition principles</li>
@@ -434,8 +603,8 @@ class AnglePanel(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Grip Angle Noise Transmission Comparison')
-        self.setGeometry(100, 100, 1200, 700)
+        self.setWindowTitle('Grip Angle Torque Transmission & Acceleration Analysis')
+        self.setGeometry(100, 100, 1400, 900)
         self.initUI()
 
     def initUI(self):
@@ -449,6 +618,73 @@ class MainWindow(QMainWindow):
         calc_btn.clicked.connect(self.show_calculations)
         top_bar.addWidget(calc_btn)
         top_bar.addStretch()
+
+        # Club properties section
+        club_props_group = QGroupBox('Club Properties (affects inertia and acceleration)')
+        club_props_layout = QHBoxLayout()
+        
+        # Clubhead weight
+        club_props_layout.addWidget(QLabel('Clubhead Weight (g):'))
+        self.clubhead_weight = QDoubleSpinBox()
+        self.clubhead_weight.setRange(50, 500)
+        self.clubhead_weight.setValue(DEFAULT_CLUBHEAD_WEIGHT)
+        self.clubhead_weight.setSuffix(' g')
+        self.clubhead_weight.setDecimals(1)
+        club_props_layout.addWidget(self.clubhead_weight)
+        
+        # Shaft weight
+        club_props_layout.addWidget(QLabel('Shaft Weight (g):'))
+        self.shaft_weight = QDoubleSpinBox()
+        self.shaft_weight.setRange(30, 200)
+        self.shaft_weight.setValue(DEFAULT_SHAFT_WEIGHT)
+        self.shaft_weight.setSuffix(' g')
+        self.shaft_weight.setDecimals(1)
+        club_props_layout.addWidget(self.shaft_weight)
+        
+        # Club length
+        club_props_layout.addWidget(QLabel('Club Length (m):'))
+        self.club_length = QDoubleSpinBox()
+        self.club_length.setRange(0.5, 1.5)
+        self.club_length.setValue(DEFAULT_CLUB_LENGTH)
+        self.club_length.setSuffix(' m')
+        self.club_length.setDecimals(2)
+        club_props_layout.addWidget(self.club_length)
+        
+        # CG distance
+        club_props_layout.addWidget(QLabel('CG Distance (m):'))
+        self.cg_distance = QDoubleSpinBox()
+        self.cg_distance.setRange(0.3, 1.2)
+        self.cg_distance.setValue(DEFAULT_CLUBHEAD_CG_DISTANCE)
+        self.cg_distance.setSuffix(' m')
+        self.cg_distance.setDecimals(2)
+        club_props_layout.addWidget(self.cg_distance)
+        
+        # Inertia display
+        self.inertia_label = QLabel()
+        club_props_layout.addWidget(self.inertia_label)
+        club_props_layout.addStretch()
+        
+        club_props_group.setLayout(club_props_layout)
+        
+        # Display/plot options
+        display_group = QGroupBox('Display Options')
+        display_layout = QHBoxLayout()
+        self.show_torque = QCheckBox('Show Torque Plots')
+        self.show_torque.setChecked(True)
+        self.show_acceleration = QCheckBox('Show Acceleration Plots')
+        self.show_acceleration.setChecked(True)
+        display_layout.addWidget(self.show_torque)
+        display_layout.addWidget(self.show_acceleration)
+        display_layout.addStretch()
+        display_group.setLayout(display_layout)
+        
+        # Connect club property changes
+        self.clubhead_weight.valueChanged.connect(self.update_inertia)
+        self.shaft_weight.valueChanged.connect(self.update_inertia)
+        self.club_length.valueChanged.connect(self.update_inertia)
+        self.cg_distance.valueChanged.connect(self.update_inertia)
+        self.show_torque.stateChanged.connect(self.update_all_plots)
+        self.show_acceleration.stateChanged.connect(self.update_all_plots)
 
         # Top header: sliders and options for both plots
         header_layout = QHBoxLayout()
@@ -501,19 +737,26 @@ class MainWindow(QMainWindow):
         header_layout.addWidget(plot2_controls_widget)
 
         # Center: Two plots
+        I_alpha, I_gamma = self.get_inertia_values()
         self.canvas1 = NoiseTransmissionCanvas(
             self.angle_panel1.angle,
             self.noise_type_box1.currentText(),
             self.show_input1.isChecked(),
             self.show_alpha1.isChecked(),
-            self.show_gamma1.isChecked()
+            self.show_gamma1.isChecked(),
+            I_alpha, I_gamma,
+            self.show_torque.isChecked(),
+            self.show_acceleration.isChecked()
         )
         self.canvas2 = NoiseTransmissionCanvas(
             self.angle_panel2.angle,
             self.noise_type_box2.currentText(),
             self.show_input2.isChecked(),
             self.show_alpha2.isChecked(),
-            self.show_gamma2.isChecked()
+            self.show_gamma2.isChecked(),
+            I_alpha, I_gamma,
+            self.show_torque.isChecked(),
+            self.show_acceleration.isChecked()
         )
         plot_layout = QHBoxLayout()
         plot_layout.addWidget(self.canvas1, 1)  # Add stretch factor
@@ -530,10 +773,16 @@ class MainWindow(QMainWindow):
 
         # Main vertical layout
         main_vlayout = QVBoxLayout(main_widget)
+        main_vlayout.addLayout(top_bar)
+        main_vlayout.addWidget(club_props_group)
+        main_vlayout.addWidget(display_group)
         main_vlayout.addLayout(header_layout)
         main_vlayout.addLayout(plot_layout)
         main_vlayout.addWidget(info_group)
         self.setCentralWidget(main_widget)
+        
+        # Initialize inertia display and update plots (after all widgets are created)
+        self.update_inertia()
 
         # Connect controls for immediate interactivity
         self.update_btn1.clicked.connect(self.update_plot1)
@@ -549,16 +798,42 @@ class MainWindow(QMainWindow):
         self.show_alpha2.stateChanged.connect(self.update_plot2)
         self.show_gamma2.stateChanged.connect(self.update_plot2)
 
+    def get_inertia_values(self):
+        """Calculate and return I_alpha and I_gamma based on current club properties"""
+        return calculate_moments_of_inertia(
+            self.clubhead_weight.value(),
+            self.shaft_weight.value(),
+            self.club_length.value(),
+            self.cg_distance.value()
+        )
+    
+    def update_inertia(self):
+        """Update inertia values and display, then update all plots"""
+        I_alpha, I_gamma = self.get_inertia_values()
+        self.inertia_label.setText(f'Iα = {I_alpha:.4f} kg·m², Iγ = {I_gamma:.4f} kg·m²')
+        # Only update plots if canvases exist (after initialization)
+        if hasattr(self, 'canvas1') and hasattr(self, 'canvas2'):
+            self.update_all_plots()
+    
+    def update_all_plots(self):
+        """Update both plots with current settings"""
+        self.update_plot1()
+        self.update_plot2()
+    
     def update_plot1(self):
         # Check if noise type changed (requires regeneration)
         current_noise_type = self.noise_type_box1.currentText()
         regenerate = (current_noise_type != self.canvas1.noise_type)
+        I_alpha, I_gamma = self.get_inertia_values()
         self.canvas1.update_signals(
             self.angle_panel1.angle,
             current_noise_type,
             self.show_input1.isChecked(),
             self.show_alpha1.isChecked(),
             self.show_gamma1.isChecked(),
+            I_alpha, I_gamma,
+            self.show_torque.isChecked(),
+            self.show_acceleration.isChecked(),
             regenerate_noise=regenerate
         )
         self.update_info()
@@ -567,12 +842,16 @@ class MainWindow(QMainWindow):
         # Check if noise type changed (requires regeneration)
         current_noise_type = self.noise_type_box2.currentText()
         regenerate = (current_noise_type != self.canvas2.noise_type)
+        I_alpha, I_gamma = self.get_inertia_values()
         self.canvas2.update_signals(
             self.angle_panel2.angle,
             current_noise_type,
             self.show_input2.isChecked(),
             self.show_alpha2.isChecked(),
             self.show_gamma2.isChecked(),
+            I_alpha, I_gamma,
+            self.show_torque.isChecked(),
+            self.show_acceleration.isChecked(),
             regenerate_noise=regenerate
         )
         self.update_info()
