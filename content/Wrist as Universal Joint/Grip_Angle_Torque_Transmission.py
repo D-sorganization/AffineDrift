@@ -15,7 +15,8 @@ import matplotlib
 matplotlib.use('QtAgg')  # Set backend explicitly for PyQt6
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QSlider, QGroupBox, QSplitter, QCheckBox, QComboBox, QPushButton
+    QLabel, QSlider, QGroupBox, QSplitter, QCheckBox, QComboBox, QPushButton,
+    QDialog, QTextEdit, QScrollArea, QDialogButtonBox
 )
 from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -194,6 +195,203 @@ class NoiseTransmissionCanvas(FigureCanvas):
         else:
             self.update_plot(update_limits=False)  # Keep same limits when only angle changes
 
+class CalculationsDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle('Calculations & Assumptions')
+        self.setGeometry(200, 200, 800, 700)
+        self.initUI()
+    
+    def initUI(self):
+        layout = QVBoxLayout(self)
+        
+        # Scrollable text area
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        text_widget = QTextEdit()
+        text_widget.setReadOnly(True)
+        text_widget.setHtml(self.get_calculations_text())
+        scroll.setWidget(text_widget)
+        layout.addWidget(scroll)
+        
+        # Close button
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        button_box.rejected.connect(self.accept)
+        layout.addWidget(button_box)
+    
+    def get_calculations_text(self):
+        return """
+        <html>
+        <head>
+        <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+        h2 { color: #34495e; margin-top: 20px; }
+        h3 { color: #7f8c8d; margin-top: 15px; }
+        p { margin: 10px 0; }
+        ul, ol { margin: 10px 0; padding-left: 30px; }
+        code { background-color: #ecf0f1; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        .equation { background-color: #f8f9fa; padding: 10px; margin: 10px 0; border-left: 4px solid #3498db; }
+        .assumption { background-color: #fff3cd; padding: 10px; margin: 10px 0; border-left: 4px solid #ffc107; }
+        </style>
+        </head>
+        <body>
+        
+        <h1>Grip Angle Noise Transmission: Calculations & Assumptions</h1>
+        
+        <h2>1. Physical Model</h2>
+        <p>This simulation models how torque noise in the forearm axis is transmitted to the golf club through the wrist joint, which acts as a universal joint. The transmission depends on the grip angle θ, defined as the angle between the club's shaft axis and the hand's long axis.</p>
+        
+        <h3>Coordinate System</h3>
+        <ul>
+        <li><strong>Forearm Axis:</strong> The axis along which torque noise originates (input signal)</li>
+        <li><strong>Local Alpha (Shaft Axis):</strong> The component along the club's shaft axis</li>
+        <li><strong>Local Gamma (High Inertia Axis):</strong> The component along the club's high moment of inertia axis (perpendicular to shaft)</li>
+        </ul>
+        
+        <h2>2. Mathematical Relationships</h2>
+        
+        <h3>Vector Decomposition</h3>
+        <p>When a torque <code>T</code> is applied along the forearm axis, it decomposes into two orthogonal components:</p>
+        
+        <div class="equation">
+        <strong>Component Magnitudes:</strong><br>
+        T<sub>α</sub> = T × sin(θ)  &nbsp;&nbsp;&nbsp; (Shaft axis component)<br>
+        T<sub>γ</sub> = T × cos(θ)  &nbsp;&nbsp;&nbsp; (High inertia axis component)
+        </div>
+        
+        <p>Where θ is the grip angle in degrees (0° to 90°).</p>
+        
+        <h3>Signal Transmission</h3>
+        <p>For a noise signal <code>n(t)</code> in the forearm axis, the transmitted signals are:</p>
+        
+        <div class="equation">
+        α(t) = n(t) × sin(θ)<br>
+        γ(t) = n(t) × cos(θ)
+        </div>
+        
+        <h3>Power/Energy Distribution</h3>
+        <p>The power (or energy) distribution between components follows:</p>
+        
+        <div class="equation">
+        P<sub>α</sub> = sin²(θ) × 100%<br>
+        P<sub>γ</sub> = cos²(θ) × 100%<br>
+        P<sub>α</sub> + P<sub>γ</sub> = sin²(θ) + cos²(θ) = 100%
+        </div>
+        
+        <p><strong>Note:</strong> Component magnitudes (sin θ, cos θ) do not add to 100% because they are orthogonal vector components. The vector magnitude is preserved through the Pythagorean relationship: |T|² = |T<sub>α</sub>|² + |T<sub>γ</sub>|²</p>
+        
+        <h2>3. Key Assumptions</h2>
+        
+        <div class="assumption">
+        <h3>3.1 Rigid Body Assumption</h3>
+        <p>The hand, wrist, and club are treated as rigid bodies connected at the wrist joint. Deformations and compliance are neglected.</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.2 Universal Joint Model</h3>
+        <p>The wrist is modeled as an ideal universal joint, allowing rotation about two perpendicular axes. This assumes perfect mechanical coupling with no slip or play.</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.3 Orthogonal Axes</h3>
+        <p>The shaft axis (alpha) and high inertia axis (gamma) are assumed to be perfectly orthogonal. In reality, there may be slight deviations.</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.4 Linear Transmission</h3>
+        <p>The transmission is assumed to be linear - the output is directly proportional to the input, scaled by the trigonometric functions. Nonlinear effects (friction, damping, etc.) are not included.</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.5 Constant Grip Angle</h3>
+        <p>The grip angle θ is assumed to remain constant throughout the motion. Dynamic changes in grip angle during the swing are not modeled.</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.6 No Energy Loss</h3>
+        <p>The model assumes no energy dissipation. All input torque is transmitted to the output components (conservation of energy through vector decomposition).</p>
+        </div>
+        
+        <div class="assumption">
+        <h3>3.7 Two-Dimensional Analysis</h3>
+        <p>The analysis is limited to a two-dimensional plane. Out-of-plane components and three-dimensional effects are not considered.</p>
+        </div>
+        
+        <h2>4. Boundary Conditions</h2>
+        
+        <h3>At θ = 0°:</h3>
+        <ul>
+        <li>sin(0°) = 0 → No transmission to shaft axis (alpha = 0)</li>
+        <li>cos(0°) = 1 → Full transmission to high inertia axis (gamma = 100%)</li>
+        <li>All torque goes to the high inertia axis</li>
+        </ul>
+        
+        <h3>At θ = 90°:</h3>
+        <ul>
+        <li>sin(90°) = 1 → Full transmission to shaft axis (alpha = 100%)</li>
+        <li>cos(90°) = 0 → No transmission to high inertia axis (gamma = 0)</li>
+        <li>All torque goes to the shaft axis</li>
+        </ul>
+        
+        <h3>At θ = 45°:</h3>
+        <ul>
+        <li>sin(45°) = cos(45°) = 0.707 → Equal component magnitudes (70.7%)</li>
+        <li>Power distribution: 50% to each axis</li>
+        </ul>
+        
+        <h2>5. Noise Signal Types</h2>
+        
+        <h3>Golf-like Random</h3>
+        <p>Simulates realistic golf swing noise with random variations and a burst near the middle of the swing (t = 0.5s), smoothed with a moving average filter.</p>
+        
+        <h3>Burst</h3>
+        <p>A localized noise burst between t = 0.4s and t = 0.6s, useful for studying transient responses.</p>
+        
+        <h3>Step</h3>
+        <p>A step function that jumps from 0 to a constant value at t = 0.5s, useful for studying steady-state transmission.</p>
+        
+        <h3>Sinusoidal</h3>
+        <p>A sinusoidal signal with frequency 4 Hz (8π rad/s), useful for studying frequency-dependent transmission characteristics.</p>
+        
+        <h2>6. Interpretation of Results</h2>
+        
+        <h3>What the Plots Show</h3>
+        <ul>
+        <li><strong>Total Input (gray):</strong> The original noise signal in the forearm axis</li>
+        <li><strong>Local Alpha (red):</strong> The component transmitted to the shaft axis - affects clubhead orientation</li>
+        <li><strong>Local Gamma (blue):</strong> The component transmitted to the high inertia axis - affects club rotation about the shaft</li>
+        </ul>
+        
+        <h3>Understanding the Transmission</h3>
+        <p>As the grip angle increases from 0° to 90°:</p>
+        <ul>
+        <li>More noise is transmitted to the shaft axis (alpha increases)</li>
+        <li>Less noise is transmitted to the high inertia axis (gamma decreases)</li>
+        <li>The total vector magnitude is preserved: |T| = √(T<sub>α</sub>² + T<sub>γ</sub>²)</li>
+        </ul>
+        
+        <h2>7. Limitations & Future Work</h2>
+        <ul>
+        <li>This is a simplified model - real wrist mechanics involve more complex kinematics</li>
+        <li>No damping or energy dissipation is included</li>
+        <li>Dynamic grip angle changes during the swing are not modeled</li>
+        <li>Three-dimensional effects and out-of-plane motion are not considered</li>
+        <li>Muscle activation and active control are not included</li>
+        </ul>
+        
+        <h2>8. References</h2>
+        <p>This model is based on:</p>
+        <ul>
+        <li>Universal joint mechanics and vector decomposition principles</li>
+        <li>Biomechanical models of wrist joint kinematics</li>
+        <li>Golf swing biomechanics literature on grip effects</li>
+        </ul>
+        
+        </body>
+        </html>
+        """
+
 class AnglePanel(QWidget):
     def __init__(self, label, initial_angle=0):
         super().__init__()
@@ -206,11 +404,29 @@ class AnglePanel(QWidget):
         self.slider.setTickInterval(5)
         self.slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.value_label = QLabel(f'{self.angle}°')
-        layout = QHBoxLayout(self)
-        layout.addWidget(self.label)
-        layout.addWidget(self.slider)
-        layout.addWidget(self.value_label)
+        
+        # Create layout with slider and labels
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(2)
+        
+        # Top row: label, slider, value
+        top_row = QHBoxLayout()
+        top_row.addWidget(self.label)
+        top_row.addWidget(self.slider)
+        top_row.addWidget(self.value_label)
+        main_layout.addLayout(top_row)
+        
+        # Bottom row: degree labels below slider
+        label_row = QHBoxLayout()
+        label_row.addWidget(QLabel('0°'))  # Left label
+        label_row.addStretch()  # Space for middle labels
+        label_row.addWidget(QLabel('45°'))  # Middle label
+        label_row.addStretch()  # Space for right
+        label_row.addWidget(QLabel('90°'))  # Right label
+        main_layout.addLayout(label_row)
+        
         self.slider.valueChanged.connect(self.update_value)
+    
     def update_value(self, value):
         self.angle = value
         self.value_label.setText(f'{self.angle}°')
@@ -224,6 +440,15 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
         main_widget = QWidget()
+
+        # Top bar with calculations button
+        top_bar = QHBoxLayout()
+        top_bar.addStretch()
+        calc_btn = QPushButton('📐 Calculations & Assumptions')
+        calc_btn.setToolTip('View detailed calculations, assumptions, and model information')
+        calc_btn.clicked.connect(self.show_calculations)
+        top_bar.addWidget(calc_btn)
+        top_bar.addStretch()
 
         # Top header: sliders and options for both plots
         header_layout = QHBoxLayout()
@@ -386,6 +611,11 @@ class MainWindow(QMainWindow):
             "Power distribution shows energy share (adds to 100%).</i>"
         )
         self.info_label.setText(info)
+    
+    def show_calculations(self):
+        """Open the calculations and assumptions dialog"""
+        dialog = CalculationsDialog(self)
+        dialog.exec()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
