@@ -80,7 +80,9 @@ document.addEventListener('DOMContentLoaded', function() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 // Only apply animation if element doesn't already have opacity set
-                if (entry.target.style.opacity === '' || entry.target.style.opacity === '0') {
+                // Use getComputedStyle to check actual rendered opacity value
+                const computedOpacity = window.getComputedStyle(entry.target).opacity;
+                if (computedOpacity === '0' || computedOpacity === '' || computedOpacity === undefined) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
                 }
