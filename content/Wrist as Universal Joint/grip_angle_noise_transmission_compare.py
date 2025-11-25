@@ -101,13 +101,13 @@ class NoiseTransmissionCanvas(FigureCanvas):
             shaft_y = 0.15
             inset_ax.plot([0, 1], [shaft_y, shaft_y], 'k-', lw=6)
             
-            # Draw golf clubhead as rectangle pointing upwards above the shaft
+            # Draw golf clubhead as rectangle pointing upwards above the shaft at far left end
             from matplotlib.patches import Rectangle
-            clubhead_x = 0.45  # Center of shaft
+            clubhead_x = 0.0  # Far left end of shaft
             clubhead_y = shaft_y + 0.05  # Above the shaft
             clubhead_width = 0.1
             clubhead_height = 0.12
-            clubhead = Rectangle((clubhead_x - clubhead_width/2, clubhead_y), clubhead_width, clubhead_height, 
+            clubhead = Rectangle((clubhead_x, clubhead_y), clubhead_width, clubhead_height, 
                                 color='silver', alpha=0.8, edgecolor='gray', linewidth=1.5)
             inset_ax.add_patch(clubhead)
             
