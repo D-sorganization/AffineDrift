@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wrists Behave as Universal Joints - Interactive analysis of grip angle torque transmission in golf swing biomechanics">
+    <title>Wrists Behave as Universal Joints - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo/Logo Transparent/1.png">
+    <meta name="theme-color" content="#0f4c75">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .interactive-tool-section {
+            background: #f8f9fa;
+            padding: 3rem 0;
+            margin: 3rem 0;
+            border-radius: 10px;
+        }
+        .tool-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .tool-container h3 {
+            color: #0f4c75;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tool-container iframe {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .tool-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .tool-toggle button {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #3282b8;
+            background: white;
+            color: #3282b8;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tool-toggle button:hover {
+            background: #3282b8;
+            color: white;
+        }
+        .tool-toggle button.active {
+            background: #0f4c75;
+            color: white;
+            border-color: #0f4c75;
+        }
+        .tool-description {
+            background: #e7f3ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3282b8;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .tool-container iframe {
+                height: 1200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Affine Drift</a></li>
+                    <li><a href="articles.html">Articles</a></li>
+                    <li><a href="research-reviews.html">Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar" id="history-sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Recent Pages</h3>
+                    <ul class="sidebar-links" id="history-list">
+                        <li class="history-empty">No recent pages yet</li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="page-header">
+                <div class="container">
+                    <h1>Wrists Behave as Universal Joints</h1>
+                    <p class="page-subtitle">Interactive analysis of grip angle torque transmission in golf swing biomechanics</p>
+                </div>
+            </section>
+
+            <section class="article-section">
+                <div class="container">
+                    <article class="article-content">
+                        <h2>Introduction</h2>
+                        <p>
+                            The wrist joint in the golf swing functions as a universal joint, allowing rotation about two 
+                            perpendicular axes. This mechanical structure has profound implications for how torque noise in 
+                            the forearm axis is transmitted to the golf club. The grip angle—the angle between the club's 
+                            shaft axis and the hand's long axis—determines how torque is distributed between the shaft axis 
+                            (local alpha) and the high moment of inertia axis (local gamma).
+                        </p>
+
+                        <h2>Mathematical Framework</h2>
+                        <p>
+                            When a torque $T$ is applied along the forearm axis, it decomposes into two orthogonal components:
+                        </p>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #3282b8;">
+                            <p style="margin: 0; font-size: 1.1em;">
+                                <strong>Component Magnitudes:</strong><br>
+                                $T_\alpha = T \times \sin(\theta)$ &nbsp;&nbsp;&nbsp; (Shaft axis component)<br>
+                                $T_\gamma = T \times \cos(\theta)$ &nbsp;&nbsp;&nbsp; (High inertia axis component)
+                            </p>
+                        </div>
+                        <p>
+                            Where $\theta$ is the grip angle in degrees (0° to 90°). The power distribution follows:
+                        </p>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #3282b8;">
+                            <p style="margin: 0; font-size: 1.1em;">
+                                $P_\alpha = \sin^2(\theta) \times 100\%$<br>
+                                $P_\gamma = \cos^2(\theta) \times 100\%$<br>
+                                $P_\alpha + P_\gamma = 100\%$
+                            </p>
+                        </div>
+
+                        <h2>Angular Acceleration</h2>
+                        <p>
+                            The transmitted torque creates angular acceleration according to Newton's second law for rotation:
+                        </p>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #3282b8;">
+                            <p style="margin: 0; font-size: 1.1em;">
+                                $\alpha = \frac{\tau}{I}$
+                            </p>
+                        </div>
+                        <p>
+                            Where $\alpha$ is angular acceleration, $\tau$ is torque, and $I$ is the moment of inertia. 
+                            Higher inertia means lower acceleration for the same torque input, which is why club properties 
+                            significantly affect how noise impacts club motion.
+                        </p>
+
+                        <h2>Interactive Simulators</h2>
+                        <p>
+                            Use the interactive tools below to explore how grip angle and club properties affect torque 
+                            transmission and angular acceleration. Both simulators provide the same functionality—choose 
+                            the version that works best for your device.
+                        </p>
+
+                        <div class="interactive-tool-section">
+                            <div class="container">
+                                <div class="tool-container">
+                                    <h3>🎨 JavaScript Version (Recommended)</h3>
+                                    <div class="tool-description">
+                                        <p><strong>Features:</strong> Runs entirely in your browser, no external dependencies. 
+                                        Beautiful modern interface with real-time updates. Works offline and loads instantly.</p>
+                                    </div>
+                                    <iframe 
+                                        src="tools/wrist-universal-joint/grip_angle_simulator.html" 
+                                        height="1000" 
+                                        width="100%" 
+                                        frameborder="0"
+                                        scrolling="auto"
+                                        id="js-simulator"
+                                        style="display: block;">
+                                    </iframe>
+                                </div>
+
+                                <div class="tool-container">
+                                    <h3>☁️ Streamlit Version (Cloud-Hosted)</h3>
+                                    <div class="tool-description">
+                                        <p><strong>Features:</strong> Professional Streamlit interface hosted on Streamlit Cloud. 
+                                        Easy to update and share. Requires internet connection.</p>
+                                        <p><strong>Note:</strong> If the Streamlit app is not yet deployed, this iframe will show a placeholder. 
+                                        Deploy the app at <a href="https://streamlit.io/cloud" target="_blank">streamlit.io/cloud</a> 
+                                        and update the URL below.</p>
+                                    </div>
+                                    <div id="streamlit-placeholder" style="display: block; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+                                        <p>Streamlit app not yet deployed. Deploy <code>tools/wrist-universal-joint/Grip_Angle_Torque_Transmission_Streamlit.py</code> to Streamlit Cloud to enable this version.</p>
+                                        <p><a href="tools/wrist-universal-joint/EMBEDDING_GUIDE.md" target="_blank">View deployment instructions</a></p>
+                                    </div>
+                                    <!-- TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment.
+                                         See deployment instructions in tools/wrist-universal-joint/EMBEDDING_GUIDE.md -->
+                                    <iframe 
+                                        src="https://your-app-name.streamlit.app/?embed=true" 
+                                        height="900" 
+                                        width="100%" 
+                                        frameborder="0"
+                                        scrolling="auto"
+                                        id="streamlit-simulator"
+                                        style="display: none;">
+                                    </iframe>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2>Key Insights</h2>
+                        <ul>
+                            <li><strong>At θ = 0°:</strong> All torque goes to the high inertia axis (gamma). No transmission to shaft axis.</li>
+                            <li><strong>At θ = 90°:</strong> All torque goes to the shaft axis (alpha). No transmission to high inertia axis.</li>
+                            <li><strong>At θ = 45°:</strong> Equal component magnitudes (70.7%), but power is distributed 50/50.</li>
+                            <li><strong>Inertia Effects:</strong> Higher clubhead weight and longer clubs increase inertia, reducing acceleration for the same torque.</li>
+                            <li><strong>Noise Impact:</strong> The same noise input creates different motion patterns depending on grip angle and club properties.</li>
+                        </ul>
+
+                        <h2>Applications</h2>
+                        <p>
+                            Understanding grip angle transmission is crucial for:
+                        </p>
+                        <ul>
+                            <li>Optimizing grip technique for desired club motion</li>
+                            <li>Analyzing how noise in the swing affects ball contact</li>
+                            <li>Designing clubs with specific inertial properties</li>
+                            <li>Understanding the biomechanical trade-offs in grip choices</li>
+                        </ul>
+
+                        <h2>Technical Details</h2>
+                        <p>
+                            The model assumes:
+                        </p>
+                        <ul>
+                            <li>Rigid body mechanics (no compliance)</li>
+                            <li>Ideal universal joint at the wrist</li>
+                            <li>Orthogonal axes (alpha and gamma)</li>
+                            <li>Linear transmission (no nonlinear effects)</li>
+                            <li>Constant grip angle throughout motion</li>
+                            <li>No energy dissipation</li>
+                        </ul>
+                        <p>
+                            For detailed calculations, assumptions, and limitations, use the "Calculations & Assumptions" 
+                            button in the JavaScript simulator or refer to the source code documentation.
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">The past shapes the present</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Handle Streamlit iframe loading
+        const streamlitIframe = document.getElementById('streamlit-simulator');
+        const streamlitPlaceholder = document.getElementById('streamlit-placeholder');
+        if (streamlitIframe && streamlitPlaceholder) {
+            // Check if URL is still a placeholder
+            const isPlaceholder = streamlitIframe.src.includes('your-app-name.streamlit.app');
+            
+            if (!isPlaceholder) {
+                // URL has been updated to a real Streamlit app, try to load the iframe
+                streamlitIframe.style.display = 'block';
+                streamlitPlaceholder.style.display = 'none';
+                
+                streamlitIframe.onload = function() {
+                    // If iframe loads successfully, ensure it's visible and hide placeholder
+                    streamlitPlaceholder.style.display = 'none';
+                    streamlitIframe.style.display = 'block';
+                };
+            }
+            // If URL is still a placeholder, placeholder is already shown by default (display: block)
+        }
+    </script>
+</body>
+</html>
+

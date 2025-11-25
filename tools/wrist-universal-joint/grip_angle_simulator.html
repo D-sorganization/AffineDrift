@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grip Angle Torque Transmission Simulator</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .control-group:last-child {
+            border-bottom: none;
+        }
+
+        .control-group h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group h3::before {
+            content: "⚙️";
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .input-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #dee2e6;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3282b8;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb:hover {
+            background: #0f4c75;
+            transform: scale(1.1);
+        }
+
+        .input-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3282b8;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .value-display {
+            display: inline-block;
+            background: #3282b8;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: #3282b8;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3282b8;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .plots-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1400px) {
+            .plots-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .plot-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .plot-card h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .plot-container {
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .info-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-panel h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #3282b8;
+        }
+
+        .info-item h4 {
+            color: #0f4c75;
+            margin-bottom: 10px;
+        }
+
+        .info-item p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #3282b8 0%, #0f4c75 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .schematic-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .schematic-container h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏌️ Grip Angle Torque Transmission Simulator</h1>
+            <p>Interactive visualization of torque transmission and angular acceleration in golf swing mechanics</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="control-group">
+                    <h3>Club Properties</h3>
+                    <div class="input-group">
+                        <label>Clubhead Weight (g) <span class="value-display" id="clubhead-value">200</span></label>
+                        <input type="range" id="clubhead-weight" min="50" max="500" value="200" step="1">
+                        <div class="slider-labels">
+                            <span>50g</span>
+                            <span>500g</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Shaft Weight (g) <span class="value-display" id="shaft-value">100</span></label>
+                        <input type="range" id="shaft-weight" min="30" max="200" value="100" step="1">
+                        <div class="slider-labels">
+                            <span>30g</span>
+                            <span>200g</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Club Length (m) <span class="value-display" id="length-value">1.00</span></label>
+                        <input type="range" id="club-length" min="0.5" max="1.5" value="1.0" step="0.01">
+                        <div class="slider-labels">
+                            <span>0.5m</span>
+                            <span>1.5m</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>CG Distance (m) <span class="value-display" id="cg-value">0.85</span></label>
+                        <input type="range" id="cg-distance" min="0.3" max="1.2" value="0.85" step="0.01">
+                        <div class="slider-labels">
+                            <span>0.3m</span>
+                            <span>1.2m</span>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <strong>Moments of Inertia</strong>
+                        <div id="inertia-display">Iα = 0.0000 kg·m²<br>Iγ = 0.0000 kg·m²</div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Grip Angle</h3>
+                    <div class="input-group">
+                        <label>Angle 1 (degrees) <span class="value-display" id="angle1-value">45</span>°</label>
+                        <input type="range" id="grip-angle1" min="0" max="90" value="45" step="1">
+                        <div class="slider-labels">
+                            <span>0°</span>
+                            <span>45°</span>
+                            <span>90°</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Angle 2 (degrees) <span class="value-display" id="angle2-value">90</span>°</label>
+                        <input type="range" id="grip-angle2" min="0" max="90" value="90" step="1">
+                        <div class="slider-labels">
+                            <span>0°</span>
+                            <span>45°</span>
+                            <span>90°</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Noise Input</h3>
+                    <div class="input-group">
+                        <label>Noise Type</label>
+                        <select id="noise-type">
+                            <option value="golf">Golf-like Random</option>
+                            <option value="burst">Burst</option>
+                            <option value="step">Step</option>
+                            <option value="sinusoidal">Sinusoidal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Display Options</h3>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="show-torque" checked>
+                        <label for="show-torque">Show Torque Plots</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="show-acceleration" checked>
+                        <label for="show-acceleration">Show Acceleration Plots</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="show-input" checked>
+                        <label for="show-input">Show Input Torque</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="show-alpha" checked>
+                        <label for="show-alpha">Show Alpha Components</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="show-gamma" checked>
+                        <label for="show-gamma">Show Gamma Components</label>
+                    </div>
+                </div>
+
+                <button class="button" onclick="regenerateNoise()">🔄 Regenerate Noise</button>
+            </div>
+
+            <div class="plots-area">
+                <div class="plots-container">
+                    <div class="plot-card">
+                        <h3>Plot 1: Grip Angle <span id="angle1-title">45°</span></h3>
+                        <div id="plot1" class="plot-container"></div>
+                    </div>
+                    <div class="plot-card">
+                        <h3>Plot 2: Grip Angle <span id="angle2-title">90°</span></h3>
+                        <div id="plot2" class="plot-container"></div>
+                    </div>
+                </div>
+
+                <div class="schematic-container">
+                    <h3>Schematic: Grip Angle Visualization</h3>
+                    <canvas id="schematic-canvas" width="600" height="300"></canvas>
+                </div>
+
+                <div class="info-panel">
+                    <h3>Transmission Analysis</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>Grip Angle 1: <span id="info-angle1">45°</span></h4>
+                            <p><strong>Component Magnitudes:</strong></p>
+                            <p>Alpha: <span id="info-alpha1-mag">0.0</span>%</p>
+                            <p>Gamma: <span id="info-gamma1-mag">0.0</span>%</p>
+                            <p><strong>Power Distribution:</strong></p>
+                            <p>Alpha: <span id="info-alpha1-pwr">0.0</span>%</p>
+                            <p>Gamma: <span id="info-gamma1-pwr">0.0</span>%</p>
+                        </div>
+                        <div class="info-item">
+                            <h4>Grip Angle 2: <span id="info-angle2">90°</span></h4>
+                            <p><strong>Component Magnitudes:</strong></p>
+                            <p>Alpha: <span id="info-alpha2-mag">0.0</span>%</p>
+                            <p>Gamma: <span id="info-gamma2-mag">0.0</span>%</p>
+                            <p><strong>Power Distribution:</strong></p>
+                            <p>Alpha: <span id="info-alpha2-pwr">0.0</span>%</p>
+                            <p>Gamma: <span id="info-gamma2-pwr">0.0</span>%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let noiseData = [];
+        let timeData = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            regenerateNoise(); // This calls updateAll() internally, so no need to call it again
+        });
+
+        function setupEventListeners() {
+            // Club properties
+            document.getElementById('clubhead-weight').addEventListener('input', updateClubProperty);
+            document.getElementById('shaft-weight').addEventListener('input', updateClubProperty);
+            document.getElementById('club-length').addEventListener('input', updateClubProperty);
+            document.getElementById('cg-distance').addEventListener('input', updateClubProperty);
+
+            // Grip angles
+            document.getElementById('grip-angle1').addEventListener('input', updateAngle1);
+            document.getElementById('grip-angle2').addEventListener('input', updateAngle2);
+
+            // Display options
+            document.getElementById('noise-type').addEventListener('change', regenerateNoise);
+            document.getElementById('show-torque').addEventListener('change', updateAll);
+            document.getElementById('show-acceleration').addEventListener('change', updateAll);
+            document.getElementById('show-input').addEventListener('change', updateAll);
+            document.getElementById('show-alpha').addEventListener('change', updateAll);
+            document.getElementById('show-gamma').addEventListener('change', updateAll);
+        }
+
+        function updateClubProperty() {
+            const clubhead = parseFloat(document.getElementById('clubhead-weight').value);
+            const shaft = parseFloat(document.getElementById('shaft-weight').value);
+            const length = parseFloat(document.getElementById('club-length').value);
+            const cg = parseFloat(document.getElementById('cg-distance').value);
+
+            document.getElementById('clubhead-value').textContent = clubhead;
+            document.getElementById('shaft-value').textContent = shaft;
+            document.getElementById('length-value').textContent = length.toFixed(2);
+            document.getElementById('cg-value').textContent = cg.toFixed(2);
+
+            const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
+            document.getElementById('inertia-display').innerHTML = 
+                `Iα = ${I_alpha.toFixed(4)} kg·m²<br>Iγ = ${I_gamma.toFixed(4)} kg·m²`;
+
+            updateAll();
+        }
+
+        function updateAngle1() {
+            const angle = parseInt(document.getElementById('grip-angle1').value);
+            document.getElementById('angle1-value').textContent = angle;
+            document.getElementById('angle1-title').textContent = angle + '°';
+            updateAll();
+        }
+
+        function updateAngle2() {
+            const angle = parseInt(document.getElementById('grip-angle2').value);
+            document.getElementById('angle2-value').textContent = angle;
+            document.getElementById('angle2-title').textContent = angle + '°';
+            updateAll();
+        }
+
+        function calculateInertia(clubhead_g, shaft_g, length_m, cg_m) {
+            const m_head = clubhead_g / 1000.0; // kg
+            const m_shaft = shaft_g / 1000.0; // kg
+            
+            const I_shaft_alpha = (1/3) * m_shaft * length_m * length_m;
+            const I_head_alpha = m_head * cg_m * cg_m;
+            const I_alpha = I_shaft_alpha + I_head_alpha;
+            const I_gamma = 2.0 * I_alpha;
+            
+            return [I_alpha, I_gamma];
+        }
+
+        function generateNoise(type, length = 500) {
+            const t = [];
+            const noise = [];
+            
+            for (let i = 0; i < length; i++) {
+                t.push(i / length);
+            }
+
+            if (type === 'golf') {
+                for (let i = 0; i < length; i++) {
+                    let val = (Math.random() - 0.5) * 2;
+                    const burst = Math.exp(-50 * Math.pow(t[i] - 0.5, 2)) * (Math.random() - 0.5) * 16;
+                    val += burst;
+                    // Simple smoothing
+                    if (i > 0 && i < length - 1) {
+                        val = (noise[i-1] + val + (Math.random() - 0.5) * 2) / 3;
+                    }
+                    noise.push(val);
+                }
+            } else if (type === 'burst') {
+                for (let i = 0; i < length; i++) {
+                    if (i >= 200 && i < 300) {
+                        noise.push((Math.random() - 0.5) * 4);
+                    } else {
+                        noise.push(0);
+                    }
+                }
+            } else if (type === 'step') {
+                for (let i = 0; i < length; i++) {
+                    noise.push(i >= 250 ? 3 : 0);
+                }
+            } else if (type === 'sinusoidal') {
+                for (let i = 0; i < length; i++) {
+                    noise.push(Math.sin(8 * Math.PI * t[i]));
+                }
+            }
+
+            return { time: t, noise: noise };
+        }
+
+        function regenerateNoise() {
+            const type = document.getElementById('noise-type').value;
+            const data = generateNoise(type);
+            timeData = data.time;
+            noiseData = data.noise;
+            updateAll();
+        }
+
+        function calculateTorque(noise, angle_deg) {
+            const angle_rad = angle_deg * Math.PI / 180;
+            const alpha = noise.map(n => n * Math.sin(angle_rad));
+            const gamma = noise.map(n => n * Math.cos(angle_rad));
+            return { alpha, gamma };
+        }
+
+        function calculateAcceleration(torque, inertia) {
+            if (inertia < 1e-6) {
+                return torque.map(() => 0);
+            }
+            return torque.map(t => t / inertia);
+        }
+
+        function updateAll() {
+            const clubhead = parseFloat(document.getElementById('clubhead-weight').value);
+            const shaft = parseFloat(document.getElementById('shaft-weight').value);
+            const length = parseFloat(document.getElementById('club-length').value);
+            const cg = parseFloat(document.getElementById('cg-distance').value);
+            const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
+
+            const angle1 = parseInt(document.getElementById('grip-angle1').value);
+            const angle2 = parseInt(document.getElementById('grip-angle2').value);
+
+            const showTorque = document.getElementById('show-torque').checked;
+            const showAccel = document.getElementById('show-acceleration').checked;
+            const showInput = document.getElementById('show-input').checked;
+            const showAlpha = document.getElementById('show-alpha').checked;
+            const showGamma = document.getElementById('show-gamma').checked;
+
+            // Update plot 1
+            updatePlot(1, angle1, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma);
+            
+            // Update plot 2
+            updatePlot(2, angle2, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma);
+
+            // Update schematic
+            drawSchematic(angle1);
+
+            // Update info panel
+            updateInfoPanel(angle1, angle2);
+        }
+
+        function updatePlot(plotNum, angle, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma) {
+            const torque = calculateTorque(noiseData, angle);
+            const accel_alpha = calculateAcceleration(torque.alpha, I_alpha);
+            const accel_gamma = calculateAcceleration(torque.gamma, I_gamma);
+
+            const traces = [];
+            const layout = {
+                height: 500,
+                margin: { l: 60, r: 20, t: 40, b: 50 },
+                paper_bgcolor: 'white',
+                plot_bgcolor: 'white',
+                font: { family: 'Arial', size: 12 },
+                showlegend: true,
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
+            };
+
+            if (showTorque) {
+                if (showInput) {
+                    traces.push({
+                        x: timeData,
+                        y: noiseData,
+                        name: 'Input Torque',
+                        line: { color: 'gray', width: 2, dash: 'dot' },
+                        opacity: 0.7
+                    });
+                }
+                if (showAlpha) {
+                    traces.push({
+                        x: timeData,
+                        y: torque.alpha,
+                        name: 'Torque α (sin θ)',
+                        line: { color: 'red', width: 2.5 }
+                    });
+                }
+                if (showGamma) {
+                    traces.push({
+                        x: timeData,
+                        y: torque.gamma,
+                        name: 'Torque γ (cos θ)',
+                        line: { color: 'blue', width: 2.5 }
+                    });
+                }
+            }
+
+            if (showAccel) {
+                if (showAlpha) {
+                    traces.push({
+                        x: timeData,
+                        y: accel_alpha,
+                        name: 'Accel α (rad/s²)',
+                        line: { color: 'red', width: 2.5, dash: 'dash' },
+                        yaxis: showTorque ? 'y2' : 'y'
+                    });
+                }
+                if (showGamma) {
+                    traces.push({
+                        x: timeData,
+                        y: accel_gamma,
+                        name: 'Accel γ (rad/s²)',
+                        line: { color: 'blue', width: 2.5, dash: 'dash' },
+                        yaxis: showTorque ? 'y2' : 'y'
+                    });
+                }
+            }
+
+            if (showTorque && showAccel) {
+                layout.yaxis = { title: 'Torque (N·m)', side: 'left' };
+                layout.yaxis2 = { title: 'Acceleration (rad/s²)', side: 'right', overlaying: 'y' };
+            } else if (showTorque) {
+                layout.yaxis = { title: 'Torque (N·m)' };
+            } else if (showAccel) {
+                layout.yaxis = { title: 'Acceleration (rad/s²)' };
+            }
+
+            layout.title = {
+                text: `Grip Angle ${angle}° (Iα=${I_alpha.toFixed(4)} kg·m², Iγ=${I_gamma.toFixed(4)} kg·m²)`,
+                font: { size: 14, color: '#0f4c75' }
+            };
+            layout.xaxis = { title: 'Time (s)' };
+
+            Plotly.newPlot(`plot${plotNum}`, traces, layout, { responsive: true, displayModeBar: true });
+        }
+
+        function drawSchematic(angle) {
+            const canvas = document.getElementById('schematic-canvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, width, height);
+
+            // Scale and offset
+            const scale = Math.min(width, height) * 0.8;
+            const offsetX = width / 2;
+            const offsetY = height / 2;
+
+            const angle_rad = angle * Math.PI / 180;
+
+            // Draw shaft (horizontal line)
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(offsetX - scale/2, offsetY);
+            ctx.lineTo(offsetX + scale/2, offsetY);
+            ctx.stroke();
+
+            // Draw clubhead (rectangle at left)
+            ctx.fillStyle = '#c0c0c0';
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 2;
+            ctx.fillRect(offsetX - scale/2 - 20, offsetY - 15, 30, 25);
+            ctx.strokeRect(offsetX - scale/2 - 20, offsetY - 15, 30, 25);
+
+            // Draw hand (ellipse on right, rotated)
+            const handX = offsetX + scale/3;
+            const handY = offsetY;
+            const handWidth = 40;
+            const handHeight = 20;
+
+            ctx.save();
+            ctx.translate(handX, handY);
+            ctx.rotate(angle_rad);
+            ctx.fillStyle = '#d2b48c';
+            ctx.strokeStyle = '#8b4513';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, handWidth/2, handHeight/2, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // Draw fingers
+            const fingerLength = 25;
+            const fingerDirX = -Math.cos(angle_rad);
+            const fingerDirY = -Math.sin(angle_rad);
+            const perpX = -Math.sin(angle_rad);
+            const perpY = Math.cos(angle_rad);
+
+            ctx.fillStyle = '#d2b48c';
+            ctx.strokeStyle = '#8b4513';
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i < 4; i++) {
+                const pos = (i - 1.5) * 0.5;
+                const baseX = handX + pos * 8 * perpX;
+                const baseY = handY + pos * 8 * perpY;
+                const tipX = baseX + fingerLength * fingerDirX;
+                const tipY = baseY + fingerLength * fingerDirY;
+
+                ctx.beginPath();
+                ctx.ellipse((baseX + tipX) / 2, (baseY + tipY) / 2, fingerLength/2, 3, 
+                           Math.atan2(fingerDirY, fingerDirX), 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            // Draw angle arc
+            const arcRadius = 30;
+            const arcCenterX = handX - 20;
+            const arcCenterY = handY;
+
+            ctx.strokeStyle = '#28a745';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(arcCenterX, arcCenterY, arcRadius, 0, angle_rad);
+            ctx.stroke();
+
+            // Draw angle lines
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(arcCenterX, arcCenterY);
+            ctx.lineTo(arcCenterX + arcRadius, arcCenterY);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#dc3545';
+            ctx.beginPath();
+            ctx.moveTo(arcCenterX, arcCenterY);
+            ctx.lineTo(arcCenterX + arcRadius * Math.cos(angle_rad), 
+                      arcCenterY + arcRadius * Math.sin(angle_rad));
+            ctx.stroke();
+
+            // Label theta
+            ctx.fillStyle = '#28a745';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            const labelX = arcCenterX + arcRadius * Math.cos(angle_rad/2);
+            const labelY = arcCenterY + arcRadius * Math.sin(angle_rad/2) + 5;
+            ctx.fillText('θ', labelX, labelY);
+        }
+
+        function updateInfoPanel(angle1, angle2) {
+            const a1_rad = angle1 * Math.PI / 180;
+            const a2_rad = angle2 * Math.PI / 180;
+
+            document.getElementById('info-angle1').textContent = angle1 + '°';
+            document.getElementById('info-alpha1-mag').textContent = (Math.abs(Math.sin(a1_rad)) * 100).toFixed(1);
+            document.getElementById('info-gamma1-mag').textContent = (Math.abs(Math.cos(a1_rad)) * 100).toFixed(1);
+            document.getElementById('info-alpha1-pwr').textContent = (Math.sin(a1_rad) * Math.sin(a1_rad) * 100).toFixed(1);
+            document.getElementById('info-gamma1-pwr').textContent = (Math.cos(a1_rad) * Math.cos(a1_rad) * 100).toFixed(1);
+
+            document.getElementById('info-angle2').textContent = angle2 + '°';
+            document.getElementById('info-alpha2-mag').textContent = (Math.abs(Math.sin(a2_rad)) * 100).toFixed(1);
+            document.getElementById('info-gamma2-mag').textContent = (Math.abs(Math.cos(a2_rad)) * 100).toFixed(1);
+            document.getElementById('info-alpha2-pwr').textContent = (Math.sin(a2_rad) * Math.sin(a2_rad) * 100).toFixed(1);
+            document.getElementById('info-gamma2-pwr').textContent = (Math.cos(a2_rad) * Math.cos(a2_rad) * 100).toFixed(1);
+        }
+    </script>
+</body>
+</html>
+

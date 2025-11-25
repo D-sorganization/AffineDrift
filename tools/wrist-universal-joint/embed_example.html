@@ -1,0 +1,84 @@
+<!-- 
+Example HTML snippet to embed the Streamlit app in your GitHub Pages site.
+Add this section to modelling.html or create a new page.
+
+REPLACE "https://your-app.streamlit.app" with your actual Streamlit Cloud URL
+-->
+
+<section id="grip-angle-simulator" class="interactive-section">
+    <div class="container">
+        <h2>Grip Angle Torque Transmission Simulator</h2>
+        <p>
+            This interactive tool visualizes how grip angle modulates transmission of forearm axis 
+            torque noise to the club's shaft axis (local alpha) and high inertia axis (local gamma), 
+            and calculates the resulting angular acceleration based on club inertial properties.
+        </p>
+        
+        <div class="simulator-container">
+            <iframe 
+                src="https://your-app.streamlit.app/?embed=true" 
+                height="900" 
+                width="100%" 
+                frameborder="0"
+                scrolling="auto"
+                style="border: 1px solid #ddd; border-radius: 8px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            </iframe>
+        </div>
+        
+        <div class="simulator-info">
+            <h3>Features</h3>
+            <ul>
+                <li>Adjustable club properties (clubhead weight, shaft weight, length, CG distance)</li>
+                <li>Real-time moment of inertia calculations</li>
+                <li>Grip angle slider (0° to 90°)</li>
+                <li>Multiple noise input types (golf-like random, burst, step, sinusoidal)</li>
+                <li>Dual plots: transmitted torque and angular acceleration</li>
+                <li>Side-by-side comparison of different grip angles</li>
+            </ul>
+            
+            <h3>Physics</h3>
+            <p>
+                The tool calculates angular acceleration using Newton's second law for rotation: 
+                $\alpha = \tau / I$, where $\tau$ is the transmitted torque and $I$ is the moment 
+                of inertia. Higher inertia means lower acceleration for the same torque input.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Add this CSS to styles.css -->
+<style>
+.interactive-section {
+    padding: 4rem 0;
+    background: #f8f9fa;
+}
+
+.simulator-container {
+    margin: 2rem 0;
+}
+
+.simulator-info {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.simulator-info h3 {
+    color: #0f4c75;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.simulator-info ul {
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .simulator-container iframe {
+        height: 1100px; /* Taller on mobile for better usability */
+    }
+}
+</style>
+

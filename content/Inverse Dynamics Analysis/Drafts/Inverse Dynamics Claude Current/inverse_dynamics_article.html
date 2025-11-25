@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations">
+    <title>Interpretation of Inverse Dynamics - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo/Logo Transparent/1.png">
+    <meta name="theme-color" content="#0f4c75">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Affine Drift</a></li>
+                    <li><a href="articles.html">Articles</a></li>
+                    <li><a href="research-reviews.html">Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar" id="history-sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Recent Pages</h3>
+                    <ul class="sidebar-links" id="history-list">
+                        <li class="history-empty">No recent pages yet</li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="page-header">
+                <div class="container">
+                    <h1>Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations</h1>
+                    <p class="page-subtitle">A comprehensive analysis of inverse dynamics methodology and its interpretive challenges</p>
+                </div>
+            </section>
+
+            <section class="article-section">
+                <div class="container">
+                    <article class="article-content">
+                        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+                            <p style="margin: 0; font-weight: 600; color: #856404;">
+                                📝 <strong>Article in Development</strong>
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; color: #856404;">
+                                This article is currently being prepared. The full content will be converted from the LaTeX source document 
+                                located at <code>content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex</code>.
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; color: #856404;">
+                                <strong>Source Document:</strong> The complete 17-page article analyzes three fundamental limitations of inverse 
+                                dynamics: (1) The Equivalent Couple Problem (spatial ambiguity), (2) The Control-Affine Decomposition Problem, 
+                                and (3) The Air Resistance Problem. The document includes 11 professional figures, quantitative examples, and 
+                                provides a constructive pathway from inverse dynamics to understanding golfer effort.
+                            </p>
+                        </div>
+
+                        <h2>Article Structure</h2>
+                        <p>
+                            The complete article covers the following sections:
+                        </p>
+                        <ol>
+                            <li><strong>Understanding Inverse Dynamics</strong> - Background and methodology</li>
+                            <li><strong>Limitation 1: The Equivalent Couple Problem (Spatial Ambiguity)</strong> - How the same motion can result from different force/couple combinations</li>
+                            <li><strong>Limitation 2: The Control-Affine Decomposition Problem</strong> - Separating active control from passive dynamics</li>
+                            <li><strong>Limitation 3: The Air Resistance Problem</strong> - Systematic errors from neglecting aerodynamic forces</li>
+                            <li><strong>The Path from Inverse Dynamics to Golfer Effort</strong> - Interpretive framework</li>
+                            <li><strong>Quantitative Examples</strong> - Detailed worked examples demonstrating the limitations</li>
+                            <li><strong>Implications and Best Practices</strong> - How to properly interpret inverse dynamics results</li>
+                            <li><strong>Conclusion</strong> - Summary and future directions</li>
+                        </ol>
+
+                        <h2>Key Insights</h2>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
+                            <h3>Limitation 1: The Equivalent Couple Problem</h3>
+                            <p>
+                                Inverse dynamics cannot distinguish between different force/couple combinations that produce identical motion. 
+                                This spatial ambiguity means that the same observed motion can result from fundamentally different force applications, 
+                                making it impossible to uniquely determine the forces acting on the system from motion data alone.
+                            </p>
+
+                            <h3>Limitation 2: The Control-Affine Decomposition Problem</h3>
+                            <p>
+                                Traditional inverse dynamics cannot separate active muscular control from passive mechanical dynamics (drift). 
+                                The control-affine framework provides a mathematical structure for this decomposition, revealing that what we observe 
+                                is a combination of what we're actively doing and what the system's history (momentum, gravity, constraints) is doing.
+                            </p>
+
+                            <h3>Limitation 3: The Air Resistance Problem</h3>
+                            <p>
+                                Neglecting air resistance introduces systematic, speed-dependent errors. At impact speeds, drag forces of 1.5-2 lbs 
+                                can cause 40% errors in calculated couples. This limitation is particularly significant because it affects the 
+                                spatial distribution of forces (couples more than forces) and is most pronounced near impact.
+                            </p>
+                        </div>
+
+                        <h2>Quantitative Examples</h2>
+                        <p>
+                            The article includes detailed quantitative examples using real golf swing data, demonstrating:
+                        </p>
+                        <ul>
+                            <li>How the equivalent couple problem manifests in practice</li>
+                            <li>The magnitude of errors introduced by neglecting air resistance</li>
+                            <li>Step-by-step calculations showing the interpretive pathway</li>
+                        </ul>
+
+                        <div style="background: #e7f3ff; border-left: 4px solid #3282b8; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+                            <p style="margin: 0; font-weight: 600; color: #0f4c75;">
+                                📄 Full Article Content
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0;">
+                                The complete article content is available in LaTeX format at:<br>
+                                <code>content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex</code>
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0;">
+                                A PDF version (256 KB, 17 pages) is also available:<br>
+                                <code>content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.pdf</code>
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0;">
+                                This placeholder page will be updated with the full HTML conversion of the LaTeX document, including all sections, 
+                                equations, figures, and quantitative examples.
+                            </p>
+                        </div>
+
+                        <h2>Related Resources</h2>
+                        <p>
+                            For additional context and background:
+                        </p>
+                        <ul>
+                            <li><a href="inverse-dynamics-inference.html">Inverse Dynamics Inference</a> - Methods for inferring control inputs from observed motion</li>
+                            <li><a href="theory-part1.html">Theory Part 1</a> - Control-affine system framework</li>
+                            <li><a href="modelling.html">Modelling</a> - Implementation approaches</li>
+                        </ul>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">The past shapes the present</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

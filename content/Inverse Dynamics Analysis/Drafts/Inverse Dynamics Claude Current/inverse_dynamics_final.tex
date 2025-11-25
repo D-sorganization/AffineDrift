@@ -1,0 +1,1131 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,patterns,decorations.pathreplacing,shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+
+% Title
+\title{\textbf{Interpretation of Inverse Dynamics: \\[0.3em] Understanding the Fundamental Limitations}}
+\author{}
+\date{}
+
+% Custom commands
+\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\Feq}{\bvec{F}_{\text{eq}}}
+\newcommand{\Ceq}{C_{\text{eq}}}
+\newcommand{\Rdrift}{\mathbb{R}_{\text{drift}}}
+\newcommand{\Rinput}{\mathbb{R}_{\text{input}}}
+
+% Custom theorem environments
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+
+% Custom boxes
+\newtcolorbox{keypoint}[1][]{
+  colback=blue!5!white,
+  colframe=blue!75!black,
+  fonttitle=\bfseries,
+  title=Key Point,
+  #1
+}
+
+\newtcolorbox{limitation}[1][]{
+  colback=red!5!white,
+  colframe=red!75!black,
+  fonttitle=\bfseries,
+  title=Fundamental Limitation,
+  #1
+}
+
+\begin{document}
+
+\maketitle
+
+\section{Understanding Inverse Dynamics}
+
+\subsection{What Inverse Dynamics Calculates}
+
+Inverse dynamics is a computational method that works backward from observed motion to calculate the forces and moments that must have produced that motion. In golf biomechanics, we observe the club's position, velocity, and acceleration through time (typically via motion capture), and inverse dynamics tells us the equivalent forces and moments acting at a chosen reference point—usually the midpoint between the hands on the grip.
+
+The method is powerful because it allows us to infer kinetic information (forces/moments) from kinematic data (motion) without requiring direct force measurement, which is technically challenging in naturalistic settings. However, understanding what these calculated forces and moments mean in terms of actual golfer effort requires careful interpretation.
+
+\subsection{The Mathematical Foundation}
+
+The equations of motion for a rigid body like a golf club are described by Euler's laws:
+
+\begin{align}
+\sum \bvec{F} &= m\bvec{a}_{\text{COM}} \label{eq:force_balance}\\
+\sum \bvec{M}_{\text{COM}} &= \bvec{I}\bvec{\alpha} + \bvec{\omega} \times (\bvec{I}\bvec{\omega}) \label{eq:moment_balance}
+\end{align}
+
+where:
+\begin{itemize}
+    \item $\sum \bvec{F}$ is the sum of all forces acting on the club
+    \item $m$ is the club mass
+    \item $\bvec{a}_{\text{COM}}$ is the acceleration of the center of mass
+    \item $\sum \bvec{M}_{\text{COM}}$ is the sum of moments about the center of mass
+    \item $\bvec{I}$ is the moment of inertia tensor
+    \item $\bvec{\alpha}$ is the angular acceleration
+    \item $\bvec{\omega}$ is the angular velocity (the final term is the gyroscopic effect)
+\end{itemize}
+
+\subsection{How Inverse Dynamics Works: Step by Step}
+
+\textbf{Step 1: Measure Kinematics}
+
+\vspace{3mm}
+
+Motion capture systems track the club's position and orientation over time, providing:
+\begin{itemize}
+    \item Position of the center of mass: $\bvec{r}_{\text{COM}}(t)$
+    \item Orientation (typically as rotation matrix or quaternion): $\bvec{R}(t)$
+\end{itemize}
+
+\vspace{3mm}
+
+\textbf{Step 2: Differentiate to Obtain Velocities and Accelerations}
+
+\vspace{3mm}
+
+Numerical differentiation yields:
+\begin{itemize}
+    \item Linear velocity: $\bvec{v}_{\text{COM}} = \dot{\bvec{r}}_{\text{COM}}$
+    \item Linear acceleration: $\bvec{a}_{\text{COM}} = \ddot{\bvec{r}}_{\text{COM}}$
+    \item Angular velocity: $\bvec{\omega}$
+    \item Angular acceleration: $\bvec{\alpha} = \dot{\bvec{\omega}}$
+\end{itemize}
+
+\vspace{3mm}
+
+\textbf{Step 3: Account for Known Forces}
+
+\vspace{3mm}
+
+Gravity is a known external force:
+\begin{equation}
+\bvec{F}_{\text{gravity}} = m\bvec{g}
+\end{equation}
+
+where $\bvec{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
+
+\vspace{3mm}
+
+\textbf{Step 4: Solve for Unknown Forces}
+
+\vspace{3mm}
+
+From Equation~\ref{eq:force_balance}, the sum of unknown forces (from the golfer's hands) is:
+\begin{equation}
+\bvec{F}_{\text{hands}} = m\bvec{a}_{\text{COM}} - \bvec{F}_{\text{gravity}}
+\end{equation}
+
+\vspace{3mm}
+
+\textbf{Step 5: Calculate Moments About the Reference Point}
+
+\vspace{3mm}
+
+The moment balance about an arbitrary reference point $P$ (typically the grip midpoint) is:
+\begin{equation}
+\sum \bvec{M}_{P} = \sum \bvec{M}_{\text{COM}} + (\bvec{r}_{P} - \bvec{r}_{\text{COM}}) \times \bvec{F}_{\text{hands}}
+\end{equation}
+
+Since we know $\sum \bvec{M}_{\text{COM}}$ from Equation~\ref{eq:moment_balance}, we can calculate the required moment about point $P$.
+
+\subsection{Critical Assumptions in Inverse Dynamics}
+
+For these calculations to be valid, we must assume:
+
+\begin{enumerate}
+    \item \textbf{Rigid body:} The club does not deform significantly. Shaft bending is neglected or treated separately.
+    
+    \item \textbf{Known mass properties:} We must accurately know:
+    \begin{itemize}
+        \item Total mass $m$
+        \item Center of mass location $\bvec{r}_{\text{COM}}$
+        \item Moment of inertia tensor $\bvec{I}$
+    \end{itemize}
+    
+    \item \textbf{Clean kinematic data:} Motion capture data must be:
+    \begin{itemize}
+        \item Accurate (minimal measurement error)
+        \item Smooth enough for differentiation (or properly filtered)
+        \item Sampled at sufficient frequency (typically $>$ 200 Hz)
+    \end{itemize}
+    
+    \item \textbf{Known external forces:} We account for gravity but typically neglect:
+    \begin{itemize}
+        \item Air resistance (discussed in Section 4 - often significant)
+        \item Impact forces (only applicable during ball contact)
+    \end{itemize}
+\end{enumerate}
+
+\begin{keypoint}
+Inverse dynamics provides mathematically correct values for the forces and moments at the reference point, \emph{given the assumptions above}. The challenges arise not in the calculation but in the interpretation: what do these values tell us about what the golfer is doing?
+\end{keypoint}
+
+\subsection{The Interpretive Gap}
+
+The output of inverse dynamics is:
+\begin{itemize}
+    \item A net force $\bvec{F}_{\text{hands}}$ at reference point $P$
+    \item A net couple (moment) $\bvec{C}_{P}$ at reference point $P$
+\end{itemize}
+
+What we want to understand is:
+\begin{itemize}
+    \item Where on the grip is the golfer applying force?
+    \item How much force from each hand? From each finger?
+    \item What is the golfer actively doing versus what is happening passively?
+    \item How much do unmodeled external forces (like air resistance) affect the results?
+    \item What does the golfer feel and consciously control?
+\end{itemize}
+
+Bridging this gap requires understanding three fundamental limitations.
+
+\section{Limitation 1: The Equivalent Couple Problem (Spatial Ambiguity)}
+
+\subsection{Force-Couple Equivalence in Rigid Body Mechanics}
+
+\begin{definition}[Force-Couple Equivalence]
+Any system of forces acting on a rigid body can be reduced to a statically equivalent system consisting of:
+\begin{itemize}
+    \item A single resultant force $\bvec{F}_{\text{eq}}$ acting at an arbitrary reference point
+    \item A couple $\bvec{C}_{\text{eq}}$ (pure moment) 
+\end{itemize}
+This equivalence is \emph{dynamic}: both systems produce identical translational and rotational accelerations of the rigid body.
+\end{definition}
+
+The fundamental principle is that a couple is a \emph{free vector}—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is \emph{bound} to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.2]
+    % Original force at offset point
+    \begin{scope}
+        \node[above=5mm] at (0,3.5) {\textbf{Original System}};
+        \draw[line width=2.5pt] (0,0) -- (0,3);
+        \fill (0,2) circle (2.5pt);
+        \node[right=4mm] at (0,2) {Point A};
+        \draw[->,very thick,blue] (0,2) -- (2,2);
+        \node[blue,right=2mm] at (2,2) {$\bvec{F}$};
+        
+        \node[below=3mm] at (0,0) {Rigid body};
+    \end{scope}
+    
+    % Arrow
+    \draw[->,ultra thick] (3.2,1.5) -- (4.8,1.5);
+    \node[above=2mm] at (4,1.5) {Equivalent to};
+    
+    % Equivalent system at reference point
+    \begin{scope}[shift={(7,0)}]
+        \node[above=5mm] at (0,3.5) {\textbf{Equivalent System}};
+        \draw[line width=2.5pt] (0,0) -- (0,3);
+        \fill (0,0.5) circle (2.5pt);
+        \node[right=4mm] at (0,0.5) {Reference};
+        \node[left=4mm] at (0,0.5) {point};
+        \draw[->,very thick,blue] (0,0.5) -- (2,0.5);
+        \node[blue,right=2mm] at (2,0.5) {$\bvec{F}$};
+        
+        % Couple representation - properly centered and opposed
+        \draw[->,red,very thick] (0.7,1.5) arc (30:150:0.7);
+        \draw[->,red,very thick] (-0.7,1.5) arc (150:30:0.7);
+        \node[red,above=1mm] at (0,2.3) {$\bvec{C}$};
+        
+        \node[below=3mm] at (0,0) {Same rigid body};
+    \end{scope}
+\end{tikzpicture}
+\caption{Force-couple equivalence: a force $\bvec{F}$ applied at point A (left) is dynamically equivalent to the same force applied at a reference point plus a couple $\bvec{C}$ (right). The couple accounts for the moment of the original force about the reference point.}
+\label{fig:basic_equivalence}
+\end{figure}
+
+\subsection{Coordinate Transformation of Force-Couple Pairs}
+
+For a rigid body such as a golf club, if inverse dynamics yields force $\Feq$ and couple $\Ceq$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
+
+\begin{proposition}[Couple Transformation Formula]
+For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
+\begin{equation}
+\label{eq:couple_transform}
+C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
+\end{equation}
+where:
+\begin{itemize}
+    \item $C_i$ = equivalent couple at point $i$
+    \item $M_m$ = moment of force about the midpoint ($M_m = F \cdot d_m$ for perpendicular force)
+    \item $d_i$ = signed distance from center of mass to point $i$
+    \item $d_m$ = signed distance from center of mass to midpoint $m$
+    \item $C_m$ = couple at midpoint from inverse dynamics
+\end{itemize}
+\end{proposition}
+
+This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+    % Draw club grip with coordinate system
+    \draw[line width=3pt,gray!30] (-1,0) -- (9,0);
+    \draw[line width=2.5pt] (0,0) -- (8,0);
+    
+    % Mark key points
+    \fill (1.5,0) circle (2.5pt);
+    \node[below=4mm] at (1.5,0) {$t$ (top)};
+    
+    \fill (4,0) circle (2.5pt);
+    \node[below=4mm] at (4,0) {$m$ (mid)};
+    
+    \fill (6.5,0) circle (2.5pt);
+    \node[below=4mm] at (6.5,0) {$b$ (bottom)};
+    
+    % Draw COM
+    \fill[red] (5.5,0) circle (3.5pt);
+    \node[red,above=5mm] at (5.5,0) {COM};
+    
+    % Distance annotations - staggered vertically with labels closer to arrows
+    \draw[<->,thick,blue] (4,-0.9) -- (5.5,-0.9);
+    \node[blue,below=1mm] at (4.75,-0.9) {$d_m$};
+    
+    \draw[<->,thick,violet] (1.5,-1.5) -- (5.5,-1.5);
+    \node[violet,below=1mm] at (3.5,-1.5) {$d_t$};
+    
+    \draw[<->,thick,orange] (5.5,-2.1) -- (6.5,-2.1);
+    \node[orange,below=1mm] at (6.0,-2.1) {$d_b$};
+    
+    % Show force at midpoint - label to the side
+    \draw[->,very thick,green!50!black] (4,0) -- (4,1.5);
+    \node[green!50!black,right=3mm] at (4,1.5) {$\Feq$};
+    
+    % Coordinate labels
+    \node[above=7mm] at (0,0) {Grip coordinate system};
+    \draw[->,thick] (8.5,0) -- (9.5,0);
+    \node[right=2mm] at (9.5,0) {toward clubhead};
+\end{tikzpicture}
+\caption{Golf club grip schematic showing reference points and distance measures. The center of mass (COM) is closer to the clubhead than to the hands. Distances are measured with consistent sign convention.}
+\label{fig:grip_coordinates}
+\end{figure}
+
+\subsection{The Range of Equivalent Couples}
+
+From Equation~\ref{eq:couple_transform}, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
+
+At the top of the grip:
+\begin{equation}
+C_t = M_m \left(1 - \frac{d_t}{d_m}\right) + C_m
+\end{equation}
+
+At the bottom of the grip:
+\begin{equation}
+C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
+\end{equation}
+
+\begin{keypoint}
+The range of viable equivalent couples increases linearly with the moment of force $M_m = F \cdot d_m$. For larger forces or forces acting farther from the center of mass, the spatial ambiguity grows substantially.
+\end{keypoint}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=14cm,
+    height=8.5cm,
+    xlabel={Position along grip (inches from COM)},
+    ylabel={Equivalent couple (Nm)},
+    grid=major,
+    legend pos=north west,
+    legend style={fill=white,fill opacity=0.9,font=\small},
+    xmin=0, xmax=14,
+    ymin=-25, ymax=5,
+    clip=true,
+]
+
+% Conversion: 1 in-lb = 0.113 Nm
+% Case 1: Low moment of force
+\addplot[blue,thick,domain=0:14,samples=100] {0.113*(100*(1-x/10) - 35)};
+\addlegendentry{$M_m = 11.3$ Nm, $C_m = -4.0$ Nm}
+
+% Case 2: Medium moment of force
+\addplot[red,thick,domain=0:14,samples=100] {0.113*(150*(1-x/10) - 35)};
+\addlegendentry{$M_m = 17.0$ Nm, $C_m = -4.0$ Nm}
+
+% Case 3: High moment of force
+\addplot[green!50!black,thick,domain=0:14,samples=100] {0.113*(200*(1-x/10) - 35)};
+\addlegendentry{$M_m = 22.6$ Nm, $C_m = -4.0$ Nm}
+
+% Mark typical grip region
+\draw[dashed,gray,thick] (axis cs:2,-25) -- (axis cs:2,5);
+\draw[dashed,gray,thick] (axis cs:12,-25) -- (axis cs:12,5);
+
+% Label for grip region
+\node[gray,rotate=90,font=\small] at (axis cs:7,-18) {Typical grip region};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Equivalent couple as a function of position along the grip for three different moments of force, with constant $C_m = -4.0$ Nm at the midpoint. The region between dashed lines represents typical hand placement. Note how the range of possible couple values increases with $M_m$.}
+\label{fig:couple_range}
+\end{figure}
+
+\subsection{Physical Interpretation: The Non-Uniqueness Problem}
+
+The mathematical transformation in Equation~\ref{eq:couple_transform} has a profound physical consequence: \textbf{a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer}.
+
+\begin{example}[Single Force Creating Apparent Couple]
+Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
+
+\textbf{Physical reality:} Only one force exists; no couple is applied.
+
+\textbf{Inverse dynamics at midpoint:}
+\begin{itemize}
+    \item Net force: $F$
+    \item Equivalent couple: $C_m = F \cdot d_F$ (nonzero!)
+\end{itemize}
+
+The inverse dynamics creates a mathematical couple to account for the offset application point, despite no physical twisting occurring.
+\end{example}
+
+This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena:
+\begin{enumerate}
+    \item \textbf{True couples:} Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)
+    \item \textbf{Offset forces:} Single or net forces applied away from the reference point
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+    % True couple example
+    \begin{scope}
+        \node[align=center] at (0,4.8) {\textbf{True Couple}\\\small Physical twisting action};
+        
+        \draw[line width=2.5pt] (0,0) -- (0,3.5);
+        \fill (0,1.75) circle (2pt);
+        \node[right=4mm] at (0,1.75) {$m$};
+        
+        % Opposing forces
+        \draw[->,very thick,blue] (0,2.5) -- (-1.2,2.5);
+        \node[blue,left=2mm] at (-1.2,2.5) {$F$};
+        
+        \draw[->,very thick,blue] (0,1.0) -- (1.2,1.0);
+        \node[blue,right=2mm] at (1.2,1.0) {$F$};
+        
+        % Distance marker
+        \draw[<->,red,thick] (0.5,1.0) -- (0.5,2.5);
+        \node[red,right=2mm] at (0.5,1.75) {$d$};
+        
+        \node[align=center,text width=3cm] at (0,-0.9) {\small Couple: $C = F \cdot d$\\\small Net force: $0$};
+    \end{scope}
+    
+    % Offset force example
+    \begin{scope}[shift={(6,0)}]
+        \node[align=center] at (0,4.8) {\textbf{Offset Force}\\\small No physical twisting};
+        
+        \draw[line width=2.5pt] (0,0) -- (0,3.5);
+        \fill (0,1.75) circle (2pt);
+        \node[right=4mm] at (0,1.75) {$m$};
+        
+        % Single offset force
+        \draw[->,very thick,blue] (0,2.5) -- (-1.2,2.5);
+        \node[blue,left=2mm] at (-1.2,2.5) {$F$};
+        
+        % Distance to reference
+        \draw[<->,red,thick] (0.5,1.75) -- (0.5,2.5);
+        \node[red,right=2mm] at (0.5,2.125) {$d$};
+        
+        \node[align=center,text width=3.2cm] at (0,-0.9) {\small Equivalent couple: $C = F \cdot d$\\\small Net force: $F$};
+    \end{scope}
+    
+    % Comparison annotation - smaller, centered over right F arrow
+    \draw[->,thick,violet] (-0.6,3.5) to[out=60,in=120] (5.4,3.5);
+    \node[violet,align=center,font=\small] at (2.4,4.0) {Same inverse\\dynamics at $m$};
+\end{tikzpicture}
+\caption{Two physically distinct force applications that produce identical inverse dynamics results at the reference point. Left: True couple from opposing forces. Right: Apparent couple from single offset force. Inverse dynamics cannot distinguish between them.}
+\label{fig:true_vs_apparent_couple}
+\end{figure}
+
+\subsection{Implications for Distributed Force Application}
+
+In reality, golfers apply forces at multiple points on the grip: individual fingers, palm heel, thumb pads, etc. Each force contributes to both the net force and the equivalent couple at any chosen reference point.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.1]
+    % Detailed grip with multiple force application points
+    \begin{scope}
+        \node[above=3mm] at (0,5.7) {\textbf{Actual Force Distribution}};
+        
+        % Draw grip
+        \draw[line width=3pt,fill=gray!20] (-0.3,0) rectangle (0.3,5);
+        
+        % Left hand forces (blue) - labels carefully positioned
+        \draw[->,thick,blue] (0,4.2) -- (-0.85,4.2);
+        \node[blue,left=2mm,font=\small] at (-0.85,4.2) {L pinky};
+        
+        \draw[->,thick,blue] (0,4.0) -- (-0.8,4.0);
+        \node[blue,left=2mm,font=\small] at (-0.8,4.0) {L ring};
+        
+        \draw[->,thick,blue] (0,3.7) -- (-0.75,3.7);
+        \node[blue,left=2mm,font=\small] at (-0.75,3.7) {L middle};
+        
+        \draw[->,thick,blue] (0,3.5) -- (-0.7,3.5);
+        \node[blue,left=2mm,font=\small] at (-0.7,3.5) {L index};
+        
+        \draw[->,thick,blue] (0,3.2) -- (0.7,3.2);
+        \node[blue,right=2mm,font=\small] at (0.7,3.2) {L thumb};
+        
+        % Right hand forces (red) - labels carefully positioned
+        \draw[->,thick,red] (0,2.7) -- (0.8,2.7);
+        \node[red,right=2mm,font=\small] at (0.8,2.7) {R index};
+        
+        \draw[->,thick,red] (0,2.4) -- (0.75,2.4);
+        \node[red,right=2mm,font=\small] at (0.75,2.4) {R middle};
+        
+        \draw[->,thick,red] (0,2.1) -- (0.7,2.1);
+        \node[red,right=2mm,font=\small] at (0.7,2.1) {R ring};
+        
+        \draw[->,thick,red] (0,1.8) -- (0.65,1.8);
+        \node[red,right=2mm,font=\small] at (0.65,1.8) {R pinky};
+        
+        \draw[->,thick,red] (0,2.0) -- (-0.65,2.0);
+        \node[red,left=2mm,font=\small] at (-0.65,2.0) {R palm};
+        
+        % Mark midpoint
+        \fill (0,2.5) circle (3pt);
+        \draw[dashed] (0,2.5) -- (1.6,2.5);
+        \node[right=2mm,font=\small] at (1.6,2.5) {Midpoint $m$};
+    \end{scope}
+    
+    % Reduction arrow
+    \draw[->,ultra thick] (3.0,2.5) -- (4.3,2.5);
+    \node[above=2mm,align=center,font=\small] at (3.65,2.5) {Inverse\\dynamics};
+    
+    % Inverse dynamics result
+    \begin{scope}[shift={(6.5,0)}]
+        \node[above=3mm] at (0,5.7) {\textbf{Inverse Dynamics Result}};
+        
+        % Draw grip
+        \draw[line width=3pt,fill=gray!20] (-0.3,0) rectangle (0.3,5);
+        
+        % Single equivalent force - from midpoint
+        \draw[->,very thick,violet] (0,2.5) -- (1.3,2.5);
+        \node[violet,right=2mm] at (1.3,2.5) {$\Feq$};
+        
+        % Equivalent couple - centered on midpoint (0,2.5)
+        \draw[->,orange,very thick] (0.65,2.5) arc (0:180:0.65);
+        \draw[->,orange,very thick] (-0.65,2.5) arc (180:360:0.65);
+        \node[orange,above=4mm] at (0,3.2) {$\Ceq$};
+        
+        % Mark midpoint
+        \fill (0,2.5) circle (3pt);
+        \node[below=4mm,font=\small] at (0,2.5) {$m$};
+        
+        \node[align=center,text width=3.5cm,font=\small] at (0,0.8) {Single force-couple pair\\at midpoint};
+    \end{scope}
+\end{tikzpicture}
+\caption{Inverse dynamics reduces distributed forces from multiple fingers and palm contact points to a single equivalent force and couple at the reference point. This reduction is mathematically valid but loses information about the spatial distribution.}
+\label{fig:distributed_forces}
+\end{figure}
+
+\begin{limitation}
+Without knowledge of where forces are applied along the grip, inverse dynamics results are fundamentally ambiguous. The same force-couple pair could arise from:
+\begin{itemize}
+    \item Strong forces applied close to the reference point
+    \item Weaker forces applied far from the reference point  
+    \item Any combination with the same resultant and moment
+\end{itemize}
+\end{limitation}
+
+\section{Limitation 2: The Control-Affine Decomposition Problem}
+
+\subsection{Control-Affine Systems: A Framework for Understanding Motion}
+
+The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge rooted in the structure of the system dynamics. The golf club-golfer system is naturally described as a \emph{control-affine system}.
+
+\begin{definition}[Control-Affine System]
+A control-affine system is a dynamical system of the form:
+\begin{equation}
+\label{eq:control_affine}
+\dot{\bvec{x}} = \bvec{f}(\bvec{x}) + \bvec{G}(\bvec{x})\bvec{u}
+\end{equation}
+where:
+\begin{itemize}
+    \item $\bvec{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
+    \item $\bvec{f}(\bvec{x})$ is the \emph{drift vector field} (system dynamics without input)
+    \item $\bvec{G}(\bvec{x})$ is the \emph{input matrix} (how controls affect the state)
+    \item $\bvec{u} \in \mathbb{R}^m$ is the \emph{control input vector}
+\end{itemize}
+\end{definition}
+
+The key feature is the \textbf{additive separation} of drift and input effects. This decomposition reflects a fundamental physical distinction:
+
+\begin{itemize}
+    \item \textbf{Drift ($\bvec{f}(\bvec{x})$):} Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
+    
+    \item \textbf{Input ($\bvec{G}(\bvec{x})\bvec{u}$):} Active control—forces that the controller (golfer) can directly modulate. This is what the golfer \emph{feels} and what they exert effort toward achieving.
+\end{itemize}
+
+\begin{keypoint}
+The input component represents what the golfer consciously controls and experiences as effort. When a golfer ``feels'' like they are pulling or pushing, they are sensing the input forces they must actively generate, not the total forces (which include passive dynamics).
+\end{keypoint}
+
+\subsection{Inverse Dynamics in the Lagrangian Framework}
+
+To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $\bvec{q}$, the equations of motion are:
+
+\begin{equation}
+\label{eq:lagrange}
+\bvec{M}(\bvec{q})\ddot{\bvec{q}} + \bvec{C}(\bvec{q},\dot{\bvec{q}})\dot{\bvec{q}} + \bvec{G}(\bvec{q}) = \bvec{\tau}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $\bvec{M}(\bvec{q})$ is the mass/inertia matrix
+    \item $\bvec{C}(\bvec{q},\dot{\bvec{q}})$ contains Coriolis and centrifugal terms
+    \item $\bvec{G}(\bvec{q})$ contains gravitational and other conservative force terms
+    \item $\bvec{\tau}$ are the generalized forces (what we want to find)
+\end{itemize}
+
+Inverse dynamics solves for $\bvec{\tau}$ given observed $\bvec{q}(t)$, $\dot{\bvec{q}}(t)$, and $\ddot{\bvec{q}}(t)$:
+
+\begin{equation}
+\label{eq:inverse_dynamics}
+\bvec{\tau} = \bvec{M}(\bvec{q})\ddot{\bvec{q}} + \bvec{C}(\bvec{q},\dot{\bvec{q}})\dot{\bvec{q}} + \bvec{G}(\bvec{q})
+\end{equation}
+
+\subsection{The Fundamental Problem: Inseparability of Drift and Input}
+
+Here is the critical observation: \textbf{inverse dynamics computes the total generalized force $\bvec{\tau}$, which includes both drift and input components}:
+
+\begin{equation}
+\bvec{\tau}_{\text{total}} = \bvec{\tau}_{\text{drift}} + \bvec{\tau}_{\text{input}}
+\end{equation}
+
+In the control-affine formulation, these correspond to:
+\begin{align}
+\bvec{\tau}_{\text{drift}} &= \text{generalized forces from } \bvec{f}(\bvec{x}) \\
+\bvec{\tau}_{\text{input}} &= \text{generalized forces from } \bvec{G}(\bvec{x})\bvec{u}
+\end{align}
+
+\begin{limitation}
+Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $\bvec{\tau}_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
+\begin{equation}
+\bvec{\tau}_{\text{drift}} + \bvec{\tau}_{\text{input}} = \bvec{\tau}_{\text{total}}
+\end{equation}
+\end{limitation}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth]
+    % Forward dynamics flow
+    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=blue!20,align=center] (drift) at (0,3.8) {Drift\\$\bvec{f}(\bvec{x})$};
+    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=red!20,align=center] (input) at (0,1.2) {Input\\$\bvec{G}(\bvec{x})\bvec{u}$};
+    \node[circle,draw,thick,minimum size=1.3cm,font=\Large] (sum) at (4.8,2.5) {$+$};
+    \node[rectangle,draw,thick,minimum width=2.8cm,minimum height=1.2cm,fill=green!20,align=center] (motion) at (9.5,2.5) {Motion\\$\ddot{\bvec{x}}$};
+    
+    \draw[->,very thick] (drift) -- (sum);
+    \draw[->,very thick] (input) -- (sum);
+    \draw[->,very thick] (sum) -- (motion);
+    \node[above=3mm,font=\small] at (7.15,2.5) {Forward};
+    
+    % Inverse dynamics (reverse arrow) - curved to avoid overlap
+    \draw[->,very thick,violet,dashed] (motion.south) to[out=-100,in=-10] (1.5,-0.2);
+    \node[violet,below,align=center,font=\small] at (5.5,-0.5) {Inverse\\(non-unique)};
+    
+    % Question mark for ambiguity
+    \node[violet,font=\Huge] at (1.5,-1.0) {?};
+    
+    % Labels with better positioning
+    \node[above=5mm of drift,align=center,text width=3.2cm,font=\small] {Passive dynamics\\ Gravity, inertia, constraints};
+    \node[below=5mm of input,align=center,text width=3.2cm,font=\small] {Active control\\ Golfer's input};
+    \node[above=5mm of motion,font=\small] {Observable};
+\end{tikzpicture}
+\caption{Forward vs. inverse dynamics in control-affine systems. Forward: drift and input combine uniquely to produce motion. Inverse: given motion alone, we cannot uniquely recover the drift-input decomposition.}
+\label{fig:forward_inverse_ambiguity}
+\end{figure}
+
+\subsection{Why a Model is Necessary}
+
+To separate drift from input, we need an \emph{explicit model} of the system. Specifically:
+
+\begin{enumerate}
+    \item \textbf{Kinematic model:} How the system's generalized coordinates relate to physical positions and orientations
+    
+    \item \textbf{Dynamic model:} The equations of motion including:
+    \begin{itemize}
+        \item Mass and inertia properties
+        \item Gravitational effects
+        \item Constraint forces (for closed chains)
+        \item Velocity-dependent terms (centrifugal, Coriolis)
+    \end{itemize}
+    
+    \item \textbf{Control model:} Which degrees of freedom are directly actuated and which forces are controllable
+\end{enumerate}
+
+With such a model, we can:
+\begin{enumerate}
+    \item Calculate $\bvec{\tau}_{\text{drift}}$ from the observed state $(\bvec{q}, \dot{\bvec{q}})$ using the drift dynamics
+    \item Obtain $\bvec{\tau}_{\text{input}}$ by subtraction: $\bvec{\tau}_{\text{input}} = \bvec{\tau}_{\text{total}} - \bvec{\tau}_{\text{drift}}$
+\end{enumerate}
+
+\begin{keypoint}
+The necessity of a model for interpreting inverse dynamics is often underappreciated. Without a model specifying how passive and active forces contribute to motion, we cannot determine ``what the golfer is doing'' from motion data alone—we only know ``what is happening to the club.''
+\end{keypoint}
+
+\subsection{Relevance to Golf Biomechanics}
+
+In the golf swing, significant forces arise from passive dynamics:
+
+\begin{itemize}
+    \item \textbf{Gravitational forces:} The club weighs approximately 0.5-1 lb, creating torques about pivot points
+    
+    \item \textbf{Centrifugal forces:} The rotating club creates substantial outward forces that the golfer must counteract or utilize
+    
+    \item \textbf{Coriolis forces:} Changes in angular velocity create velocity-dependent forces
+    
+    \item \textbf{Kinematic constraint forces:} In a double-pendulum model (common for golf swing analysis), constraint forces arise from the requirement that body segments remain connected
+\end{itemize}
+
+When inverse dynamics reports, for example, a radial force at the grip, we cannot determine without a model how much of that force is:
+\begin{itemize}
+    \item The golfer actively pulling inward (input)
+    \item Centrifugal force from the club's rotation that the golfer is passively resisting (drift)
+    \item Some combination of both
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=Stealth,scale=1.3]
+    % Simplified golf swing model
+    \coordinate (O) at (0,0);
+    \coordinate (A) at (2,2);
+    \coordinate (B) at (3.5,0.5);
+    \coordinate (C) at (5.5,-0.5);
+    
+    % Draw golfer body and arms
+    \fill[gray!30] (O) circle (3pt);
+    \node[above left=4mm,font=\small] at (O) {Golfer};
+    \node[below left=2mm,font=\small] at (O) {pivot};
+    \draw[very thick] (O) -- (A);
+    \draw[very thick] (A) -- (B);
+    \fill[gray!30] (A) circle (3pt);
+    
+    % Draw club
+    \draw[line width=2.5pt,blue] (B) -- (C);
+    \fill[blue] (B) circle (3pt);
+    \node[above=4mm,font=\small] at (B) {Grip};
+    \fill[blue] (C) circle (4pt);
+    \node[below right=3mm,font=\small] at (C) {Clubhead};
+    
+    % Angular velocity - positioned clearly
+    \draw[->,red,thick] (1.3,0.4) arc (15:70:1.4);
+    \node[red,font=\small] at (0.5,1.6) {$\omega$};
+    
+    % Force at grip - drawn as arrow from grip point
+    \draw[->,green!50!black,very thick] (B) -- ++(1.4,0.4);
+    \node[green!50!black,right=2mm,font=\small] at ($(B)+(1.4,0.4)$) {$F_{\text{total}}$};
+    
+    % Decomposition annotation box
+    \node[draw,thick,fill=white,align=left,text width=5.5cm,font=\small] at (8.2,1.0) {
+        \textbf{Force decomposition:}\\[2mm]
+        $\bvec{F}_{\text{total}} = \bvec{F}_{\text{drift}} + \bvec{F}_{\text{input}}$ \\[3mm]
+        $\bvec{F}_{\text{drift}}$ includes:\\
+        \quad • Centrifugal force\\
+        \quad • Gravity\\
+        \quad • Coriolis effects\\[2mm]
+        $\bvec{F}_{\text{input}}$ is:\\
+        \quad • Golfer's active force
+    };
+    
+    % Question
+    \node[violet,font=\Large] at (8.2,-0.7) {Which is which?};
+    \draw[->,violet,thick] (7.5,-1.0) -- (5.2,-0.2);
+\end{tikzpicture}
+\caption{In a rotating golf club system, inverse dynamics measures total force at the grip. Without a model, we cannot separate passive forces (centrifugal, gravitational) from active control inputs applied by the golfer.}
+\label{fig:golf_drift_input}
+\end{figure}
+
+\section{Limitation 3: The Air Resistance Problem}
+
+\subsection{The Neglected External Force}
+
+A factor that is often overlooked in golf swing inverse dynamics is air resistance. While air resistance cannot be significantly manipulated by the golfer, ignoring it can substantially influence our interpretation of the data. Unlike gravity, which is always included in inverse dynamics calculations, air resistance is typically neglected under the assumption that it is small. However, at the high speeds encountered in the golf swing, this assumption may not be justified.
+
+\subsection{Magnitude of Air Resistance}
+
+Research on driver aerodynamics provides insight into the magnitude of air drag forces. Henrikson and Wood measured drag forces on drivers at 100 mph ranging from 6.5 to 9 N (approximately 1.5 to 2 lbs) depending on clubhead design and orientation. A 7 iron at 95 mph likely experiences similar drag forces, as the iron's less aerodynamic profile may offset the slightly lower speed.
+
+For typical impact conditions:
+\begin{itemize}
+    \item Clubhead speed: $\approx$ 95 mph (7 iron)
+    \item Estimated drag force: $\approx$ 2 lbs
+    \item Drag acts approximately 1 inch from the end of the club (near the aerodynamic center of the clubhead)
+\end{itemize}
+
+While 2 lbs may seem small compared to the total forces on the club (which can exceed 100 lbs), the key issue is \emph{where} this force acts and how it affects the moment balance.
+
+\subsection{Effect on Force and Couple Calculations}
+
+When air resistance is neglected, inverse dynamics attributes all the force required to produce the observed acceleration to the golfer's hands. Let's examine what happens when we account for air drag using data from Sasho MacKenzie's user reference frame video.
+
+Consider impact conditions for a 7 iron:
+\begin{itemize}
+    \item Club length: 37 inches
+    \item Grip midpoint location: 3.5 inches from end of grip
+    \item COM location: 10 inches from end of club
+    \item Reported force at midpoint (no drag): $F_\alpha = 7.5$ lbs
+    \item Reported couple at midpoint (no drag): $C_\alpha = -18.4$ Nm
+\end{itemize}
+
+\textbf{Step 1: Calculate Moment of Force Without Drag}
+
+Distance from midpoint to COM: $d_m = 23.5$ inches = 0.597 m
+
+Moment of force about midpoint:
+\begin{equation}
+M_{mh} = F_\alpha \cdot d_m = 33.4 \text{ N} \times 0.597 \text{ m} = 19.9 \text{ Nm}
+\end{equation}
+
+\textbf{Step 2: Account for Air Drag}
+
+Drag force: $F_{\text{drag}} = 2$ lbs = 8.9 N acting 1 inch from club end (9 inches = 0.229 m from COM)
+
+Moment contribution from drag (negative because it opposes rotation):
+\begin{equation}
+M_{\text{drag}} = -8.9 \text{ N} \times 0.229 \text{ m} = -2.0 \text{ Nm}
+\end{equation}
+
+\textbf{Step 3: Calculate Revised Force at Hands}
+
+If drag provides 2.0 Nm of negative moment, the remaining force at the hands must provide:
+\begin{equation}
+M_{\text{hands}} = 19.9 - (-2.0) = 21.9 \text{ Nm}
+\end{equation}
+
+But wait—this is incorrect. The total moment must remain constant (it's determined by the observed motion). Instead:
+
+Net force at hands after accounting for drag:
+\begin{equation}
+F_{\text{hands}} = 7.5 - 2 = 5.5 \text{ lbs} = 24.5 \text{ N}
+\end{equation}
+
+Moment from hands force:
+\begin{equation}
+M_{\text{hands}} = 24.5 \text{ N} \times 0.597 \text{ m} = 14.6 \text{ Nm}
+\end{equation}
+
+Total moment (hands + drag):
+\begin{equation}
+M_{\text{total}} = 14.6 + (-2.0) = 12.6 \text{ Nm}
+\end{equation}
+
+This is 7.3 Nm less than the no-drag case! The sum of moments must equal what inverse dynamics calculated, so:
+\begin{equation}
+C_{\alpha,\text{drag}} = M_{\text{total}} - M_{mh} = 12.6 - 19.9 = -7.3 \text{ Nm}
+\end{equation}
+
+\textbf{Comparison:}
+\begin{itemize}
+    \item Without drag consideration: $C_\alpha = -18.4$ Nm
+    \item With drag consideration: $C_\alpha = -11.1$ Nm
+\end{itemize}
+
+This represents a \textbf{40\% reduction in the magnitude of the negative alpha couple}. For the sum of forces and moments to remain consistent across equivalent representations, the effect of neglecting drag would scale similarly across different reference points.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1]
+    % Club shaft
+    \draw[line width=2.5pt,gray!30] (0,0) -- (8,0);
+    \draw[line width=2pt] (0.5,0) -- (7.5,0);
+    
+    % Key points
+    \fill (1,0) circle (2.5pt);
+    \node[below=4mm,font=\small] at (1,0) {End of grip};
+    
+    \fill (2.5,0) circle (2.5pt);
+    \node[below=4mm,font=\small] at (2.5,0) {Midpoint};
+    
+    \fill (5.5,0) circle (3.5pt);
+    \node[below=4mm,font=\small,red] at (5.5,0) {COM};
+    
+    \fill (7,0) circle (2.5pt);
+    \node[below=4mm,font=\small] at (7,0) {Clubhead};
+    
+    % Forces without drag
+    \node[above=8mm,font=\small\bfseries,blue] at (2.5,0) {Without Drag};
+    \draw[->,very thick,blue] (2.5,0.3) -- (2.5,1.5);
+    \node[blue,right=2mm,font=\small] at (2.5,1.5) {$F = 7.5$ lbs};
+    
+    % Forces with drag
+    \node[above=20mm,font=\small\bfseries,green!50!black] at (2.5,0) {With Drag};
+    \draw[->,very thick,green!50!black] (2.5,2.8) -- (2.5,4.0);
+    \node[green!50!black,right=2mm,font=\small] at (2.5,4.0) {$F = 5.5$ lbs};
+    
+    \draw[->,very thick,orange] (6.8,2.8) -- (6.8,4.0);
+    \node[orange,right=2mm,font=\small] at (6.8,4.0) {$F_{\text{drag}} = 2$ lbs};
+    
+    % Annotation
+    \node[align=center,font=\small,text width=4cm] at (10.5,2) {
+        Couple changes from\\
+        $-18.4$ to $-11.1$ Nm\\
+        (40\% reduction)
+    };
+    
+    \draw[->,thick] (9,2) -- (4,3.5);
+\end{tikzpicture}
+\caption{Effect of accounting for air resistance on force and couple calculations. When drag is neglected, inverse dynamics attributes all forces to the golfer's hands, leading to substantially different couple values.}
+\label{fig:drag_effect}
+\end{figure}
+
+\subsection{Broader Implications}
+
+The air resistance effect demonstrates a third source of ambiguity in inverse dynamics interpretation:
+
+\begin{limitation}[title=Air Resistance Ambiguity]
+Neglecting air resistance leads to systematic errors in calculated forces and couples. Because drag acts far from the grip, its moment contribution is substantial despite its relatively modest magnitude. The resulting errors are:
+\begin{itemize}
+    \item Non-uniform across the swing (speed-dependent)
+    \item Most significant near impact (highest speeds)
+    \item Spatially biased (affects couples more than net forces)
+\end{itemize}
+\end{limitation}
+
+This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The 40\% difference shown in the example could easily lead to contradictory conclusions about whether golfers apply torques ``with'' or ``against'' rotation.
+
+\subsection{Why Air Resistance Matters for Interpretation}
+
+Unlike the spatial ambiguity (which requires knowing force distribution) or the drift-input ambiguity (which requires a full dynamic model), the air resistance problem is:
+
+\begin{itemize}
+    \item \textbf{Systematic:} It always acts in a known direction (opposing motion)
+    \item \textbf{Estimable:} Magnitude can be approximated from aerodynamic studies
+    \item \textbf{Correctable:} Can be included in inverse dynamics with reasonable assumptions
+    \item \textbf{Significant:} 40\% errors are large enough to change qualitative interpretations
+\end{itemize}
+
+\begin{keypoint}
+Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation provides more accurate estimates of the forces actually applied by the golfer.
+\end{keypoint}
+
+\section{The Path from Inverse Dynamics to Golfer Effort}
+
+\subsection{The Triple Indeterminacy}
+
+We have now identified three independent sources of ambiguity in inverse dynamics results:
+
+\begin{enumerate}
+    \item \textbf{Spatial ambiguity (Section 2):} Where are forces applied along the grip?
+    \item \textbf{Drift-input ambiguity (Section 3):} What portion of measured forces is passive vs. active?
+    \item \textbf{External force ambiguity (Section 4):} How much do neglected external forces (especially air resistance) affect the results?
+\end{enumerate}
+
+These ambiguities compound each other. Even perfect knowledge of one aspect leaves the others unresolved.
+
+\subsection{Required Tools and Information}
+
+To successfully interpret inverse dynamics, we need:
+
+\begin{table}[H]
+\centering
+\caption{Required tools to bridge from inverse dynamics to golfer effort}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Challenge} & \textbf{Required Information} & \textbf{Enables} \\ \midrule
+Spatial & Grip pressure distribution & Actual force sites \\
+Ambiguity & Finger/palm force directions & True vs. apparent couples \\
+ & Contact point kinematics & Moment arms \\ \midrule
+Drift-Input & System mass/inertia & Passive dynamics \\
+Separation & Kinematic constraints & Constraint forces \\
+ & Joint actuation model & Controllable DOFs \\ \midrule
+External & Aerodynamic coefficients & Drag force magnitude \\
+Forces & Wind conditions & Direction/location of drag \\
+ & Speed measurements & Velocity-dependent forces \\ \bottomrule
+\end{tabular}
+\label{tab:model_requirements}
+\end{table}
+
+\section{Quantitative Examples}
+
+\subsection{Example 1: Impact Zone Force Interpretation}
+
+Consider a typical scenario approaching impact. Motion capture yields the club's acceleration, and inverse dynamics calculates:
+\begin{itemize}
+    \item Net force at grip midpoint: $F_m = 60$ lbs = 267 N (toward target)
+    \item Couple at grip midpoint: $C_m = -4.5$ Nm (negative = counter-rotation)
+\end{itemize}
+
+Assume grip parameters:
+\begin{itemize}
+    \item Distance from midpoint to COM: $d_m = 30$ in = 0.762 m
+    \item Left hand predominantly at $d_L = 32$ in = 0.813 m from COM
+    \item Right hand predominantly at $d_R = 28$ in = 0.711 m from COM
+\end{itemize}
+
+\textbf{Spatial ambiguity analysis:}
+
+Equivalent couple at left hand:
+\begin{align}
+C_L &= M_m \left(1 - \frac{d_L}{d_m}\right) + C_m \\
+&= (267 \times 0.762) \left(1 - \frac{0.813}{0.762}\right) + (-4.5) \\
+&= 203 \times (-0.067) - 4.5 \\
+&= -13.6 - 4.5 = -18.1 \text{ Nm}
+\end{align}
+
+Equivalent couple at right hand:
+\begin{align}
+C_R &= M_m \left(1 - \frac{d_R}{d_m}\right) + C_m \\
+&= 203 \times (0.067) - 4.5 \\
+&= 13.6 - 4.5 = 9.1 \text{ Nm}
+\end{align}
+
+\begin{keypoint}
+The equivalent couple \textbf{changes sign} depending on reference point! At the midpoint, inverse dynamics shows negative couple (counter-rotation). But if force is primarily applied at the right hand, the equivalent couple at that location is positive (pro-rotation).
+\end{keypoint}
+
+\subsection{Example 2: Drift vs. Input Decomposition}
+
+Consider mid-downswing with the club rotating at $\omega = 30$ rad/s. Inverse dynamics measures radial force at grip: $F_{\text{radial}} = 100$ lbs (inward).
+
+\textbf{Without a model:} We know the club experiences 100 lbs total radial force.
+
+\textbf{With a model:} Suppose the club has:
+\begin{itemize}
+    \item Mass: $m_c = 0.5$ lbs
+    \item Effective radius from pivot: $r = 3$ ft
+\end{itemize}
+
+Centrifugal force (drift component):
+\begin{equation}
+F_{\text{centrifugal}} = \frac{m_c}{g} \omega^2 r = \frac{0.5}{32.2} \times (30)^2 \times 3 \approx 42 \text{ lbs}
+\end{equation}
+
+This is drift—it exists whether or not the golfer pulls. The active input component is:
+\begin{equation}
+F_{\text{input}} = F_{\text{total}} - F_{\text{drift}} = 100 - 42 = 58 \text{ lbs}
+\end{equation}
+
+So the golfer actively pulls inward with 58 lbs (what they \emph{feel}), while 42 lbs of the measured force is passive resistance to centrifugal effects.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=12.5cm,
+    height=7.5cm,
+    xlabel={Angular velocity (rad/s)},
+    ylabel={Radial force (lbs)},
+    title={Decomposition of radial force into drift and input components},
+    grid=major,
+    legend pos=north west,
+    legend style={font=\footnotesize,fill=white,fill opacity=0.9},
+    xmin=0, xmax=40,
+    ymin=0, ymax=150,
+]
+
+% Drift component (quadratic with omega)
+\addplot[red,very thick,domain=0:40,samples=100] {(0.5/32.2)*x^2*3};
+\addlegendentry{Drift (centrifugal)}
+
+% Assume constant active input
+\addplot[blue,very thick,domain=0:40,samples=100] {58};
+\addlegendentry{Input (active pull)}
+
+% Total
+\addplot[green!50!black,very thick,domain=0:40,samples=100] {(0.5/32.2)*x^2*3 + 58};
+\addlegendentry{Total (measured by ID)}
+
+% Mark example point
+\addplot[only marks,mark=*,mark size=4pt,black] coordinates {(30,100)};
+\node[above right=3mm,font=\footnotesize] at (axis cs:30,100) {Example: $\omega = 30$ rad/s};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Decomposition of measured radial force into drift (passive centrifugal) and input (active) components. The drift component grows quadratically with angular velocity. The input component represents what the golfer actively controls and feels.}
+\label{fig:drift_input_decomposition}
+\end{figure}
+
+\section{Implications and Best Practices}
+
+\subsection{For Golf Instruction}
+
+When using inverse dynamics data for instruction:
+\begin{itemize}
+    \item A reported couple may not correspond to twisting sensations the golfer feels
+    \item Forces golfers ``feel'' correspond more closely to input (active control) than to total forces
+    \item Passive dynamics (drift) are often substantial but may not be consciously perceived
+    \item External forces like air resistance can significantly affect calculated values
+    \item Different golfers may achieve similar inverse dynamics outcomes through different strategies
+\end{itemize}
+
+\subsection{For Biomechanics Research}
+
+\textbf{Methodological recommendations:}
+
+\begin{enumerate}
+    \item \textbf{Specify reference points:} Always state the reference point and acknowledge spatial ambiguity
+    
+    \item \textbf{Report ranges:} Consider reporting equivalent couples at multiple reference points
+    
+    \item \textbf{Include all external forces:} Don't neglect air resistance at high speeds
+    
+    \item \textbf{Use models:} Separate drift from input whenever possible
+    
+    \item \textbf{Seek direct measurements:} Instrumented grips reduce reliance on inverse dynamics alone
+    
+    \item \textbf{Be precise in language:} Distinguish between:
+    \begin{itemize}
+        \item ``What is happening to the club'' (inverse dynamics can tell us)
+        \item ``What the golfer is doing'' (requires additional interpretation)
+    \end{itemize}
+\end{enumerate}
+
+\subsection{The Alpha Torque Debate Revisited}
+
+The alpha torque debate involves all three ambiguities:
+
+\begin{enumerate}
+    \item \textbf{Reference point dependence:} Sign of couple changes with assumed force location
+    \item \textbf{Drift-input conflation:} Some measured torque arises from passive dynamics
+    \item \textbf{Air resistance:} Neglecting drag can cause 40\% errors in couple magnitude
+\end{enumerate}
+
+A productive path forward requires instrumented grips, validated models including drag, analysis at multiple reference points, and recognition that different golfers may use genuinely different strategies.
+
+\section{Conclusion}
+
+Inverse dynamics is a valuable tool for analyzing golf swing mechanics. However, interpreting its results requires navigating three fundamental challenges:
+
+\begin{enumerate}
+    \item \textbf{Spatial ambiguity:} Force-couple pairs are reference point dependent
+    \item \textbf{Drift-input separation:} Total forces include both passive and active components
+    \item \textbf{External forces:} Neglecting air resistance introduces systematic errors
+\end{enumerate}
+
+\textbf{These are inherent properties of the inverse problem, not shortcomings of the method.} The path forward requires:
+
+\begin{itemize}
+    \item Building validated biomechanical models
+    \item Including all relevant external forces (especially drag)
+    \item Using instrumented grips for direct measurement
+    \item Specifying reference points clearly
+    \item Recognizing that what golfers ``feel'' is the input component
+\end{itemize}
+
+Understanding these limitations enables more informed use of inverse dynamics in both research and instruction.
+
+\end{document}
