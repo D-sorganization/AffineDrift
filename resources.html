@@ -34,19 +34,15 @@
 </head>
 <body>
     <header>
-        <nav>
+        <nav class="top-nav">
             <div class="container">
                 <a href="index.html" class="logo-link">
-                    <img src="logo/AffineDriftLogo.png" alt="AffineDrift Logo" class="logo-img">
+                    <img src="logo/logo-transparent/logo.png" alt="AffineDrift Logo" class="logo-img">
                 </a>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="theory-part1.html">Theory</a></li>
-                    <li><a href="modelling.html">Modelling</a></li>
-                    <li><a href="wscg-research.html">WSCG Research</a></li>
-                    <li><a href="research-reviews.html">Research Reviews</a></li>
-                    <li><a href="book-reviews.html">Book Reviews</a></li>
-                    <li><a href="daydreams-doodles.html">Daydreams & Doodles</a></li>
+                    <li><a href="#articles">Articles</a></li>
+                    <li><a href="#reviews">Reviews</a></li>
                     <li><a href="resources.html">Resources</a></li>
                     <li><a href="contact.html">Contact</a></li>
                     <li><a href="about.html">About</a></li>
@@ -55,7 +51,40 @@
         </nav>
     </header>
 
-    <main>
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Articles</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="theory-part1.html">Theory</a></li>
+                        <li><a href="modelling.html">Modelling</a></li>
+                        <li><a href="wscg-research.html">WSCG 2024 Presentation</a></li>
+                        <li><a href="nonlinear-control-insights.html">Nonlinear Control Insights</a></li>
+                        <li><a href="inverse-dynamics-inference.html">Inverse Dynamics Inference</a></li>
+                        <li><a href="lagrangian-reference.html">Lagrangian Reference</a></li>
+                        <li><a href="screw-theory-reference.html">Screw Theory Reference</a></li>
+                        <li><a href="force-mobility-matrices.html">Force Mobility Matrices</a></li>
+                        <li><a href="null-space-constraint-jacobian.html">Null Space Constraint Jacobian</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Reviews</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="research-reviews.html">Research Reviews</a></li>
+                        <li><a href="book-reviews.html">Book Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Other</h3>
+                    <ul class="sidebar-links">
+                        <li><a href="daydreams-doodles.html">Daydreams & Doodles</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
         <section class="page-header">
             <div class="container">
                 <h1>Resources</h1>
@@ -71,64 +100,110 @@
                     <div class="resource-card video-card">
                         <div class="resource-header">
                             <span class="resource-type">YouTube</span>
-                            <h3>Introduction to Nonlinear Control</h3>
+                            <h3>Modern Robotics</h3>
                         </div>
                         <p class="resource-description">
-                            Foundational lectures on nonlinear control systems, including control-affine formulations
-                            and Lie algebraic methods.
+                            Comprehensive course by Kevin Lynch covering modern robotics fundamentals, including
+                            kinematics, dynamics, motion planning, and control. Essential for understanding
+                            robotic manipulators and their control.
+                        </p>
+                        <div class="resource-tags">
+                            <span class="tag">Robotics</span>
+                            <span class="tag">Fundamentals</span>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=jVu-Hijns70&list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            Watch Playlist →
+                        </a>
+                    </div>
+
+                    <div class="resource-card video-card">
+                        <div class="resource-header">
+                            <span class="resource-type">YouTube</span>
+                            <h3>Advanced Control for Robotics</h3>
+                        </div>
+                        <p class="resource-description">
+                            Advanced control theory course by Wei Zhang covering nonlinear control, optimal control,
+                            and advanced techniques for robotic systems. Highly relevant for understanding
+                            control-affine systems.
                         </p>
                         <div class="resource-tags">
                             <span class="tag">Control Theory</span>
-                            <span class="tag">Fundamentals</span>
-                        </div>
-                        <p class="resource-note">Add your favorite control theory videos here!</p>
-                    </div>
-
-                    <div class="resource-card video-card">
-                        <div class="resource-header">
-                            <span class="resource-type">YouTube</span>
-                            <h3>Differential Geometry for Control</h3>
-                        </div>
-                        <p class="resource-description">
-                            Geometric approaches to understanding control systems on manifolds, essential for
-                            analyzing affine systems.
-                        </p>
-                        <div class="resource-tags">
-                            <span class="tag">Differential Geometry</span>
                             <span class="tag">Advanced</span>
                         </div>
-                        <p class="resource-note">Coming soon - share your recommendations!</p>
+                        <a href="https://www.youtube.com/watch?v=-4pH6BZZKcQ&list=PLYkCanigA7S4x-ExlnFsQN9WrNZREWEZd" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            Watch Playlist →
+                        </a>
                     </div>
 
                     <div class="resource-card video-card">
                         <div class="resource-header">
                             <span class="resource-type">YouTube</span>
-                            <h3>Golf Biomechanics Analysis</h3>
+                            <h3>Underactuated Robotics</h3>
                         </div>
                         <p class="resource-description">
-                            Detailed biomechanical breakdowns of the golf swing, kinematic chains, and force transfer.
+                            MIT course by Russ Tedrake on control of underactuated systems. Explores how to
+                            exploit natural dynamics rather than cancel them out, highly relevant to biomechanical
+                            systems like the golf swing.
+                        </p>
+                        <div class="resource-tags">
+                            <span class="tag">MIT</span>
+                            <span class="tag">Underactuated</span>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE&list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            Watch Playlist →
+                        </a>
+                    </div>
+
+                    <div class="resource-card video-card">
+                        <div class="resource-header">
+                            <span class="resource-type">YouTube</span>
+                            <h3>Robotic Manipulation</h3>
+                        </div>
+                        <p class="resource-description">
+                            MIT course by Russ Tedrake on robotic manipulation, covering grasp planning, contact
+                            modeling, and manipulation strategies. Relevant for understanding how forces and torques
+                            interact in complex systems.
+                        </p>
+                        <div class="resource-tags">
+                            <span class="tag">MIT</span>
+                            <span class="tag">Manipulation</span>
+                        </div>
+                        <a href="https://www.youtube.com/watch?v=v04rn86Dehg&list=PLkx8KyIQkMfWr191lqbN8WfV08j-ui8WX" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            Watch Playlist →
+                        </a>
+                    </div>
+
+                    <div class="resource-card video-card">
+                        <div class="resource-header">
+                            <span class="resource-type">YouTube</span>
+                            <h3>Golf Biomechanics - Dr. Kwon</h3>
+                        </div>
+                        <p class="resource-description">
+                            Video playlist by Dr. Kwon covering golf biomechanics, swing analysis, and scientific
+                            approaches to understanding golf swing mechanics.
                         </p>
                         <div class="resource-tags">
                             <span class="tag">Biomechanics</span>
                             <span class="tag">Golf</span>
                         </div>
-                        <p class="resource-note">Share your favorite golf analysis channels!</p>
-                    </div>
-
-                    <div class="resource-card video-card">
-                        <div class="resource-header">
-                            <span class="resource-type">YouTube</span>
-                            <h3>Optimal Control Theory</h3>
-                        </div>
-                        <p class="resource-description">
-                            Lectures on optimal control, Pontryagin's maximum principle, and applications to
-                            trajectory optimization.
-                        </p>
-                        <div class="resource-tags">
-                            <span class="tag">Optimal Control</span>
-                            <span class="tag">Advanced</span>
-                        </div>
-                        <p class="resource-note">Key concepts for swing optimization</p>
+                        <a href="https://www.youtube.com/playlist?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            Watch Playlist →
+                        </a>
                     </div>
                 </div>
             </div>
@@ -194,12 +269,19 @@
                         </div>
                         <p class="resource-description">
                             MIT course on control of underactuated systems with emphasis on nonlinear control
-                            and optimization. Highly relevant to biomechanical systems.
+                            and optimization. Highly relevant to biomechanical systems. Includes comprehensive
+                            course notes covering algorithms for walking, running, swimming, flying, and manipulation.
                         </p>
                         <div class="resource-tags">
                             <span class="tag">MIT</span>
                             <span class="tag">Free</span>
                         </div>
+                        <a href="https://underactuated.mit.edu/intro.html" 
+                           class="resource-link" 
+                           target="_blank" 
+                           rel="noopener">
+                            View Course Notes →
+                        </a>
                     </div>
 
                     <div class="resource-card">
@@ -326,8 +408,8 @@
                         <h3>Golf Analysis</h3>
                         <ul class="link-list">
                             <li><a href="https://www.golfscience.org" target="_blank" rel="noopener">GolfScience.org</a> - Comprehensive golf science research and resources</li>
-                            <li>3D motion capture resources</li>
-                            <li>Biomechanics research databases</li>
+                            <li><a href="https://vimeo.com/sashomackenzie/videos/page:1/sort:date" target="_blank" rel="noopener">Sasho MacKenzie Vimeo Videos</a> - Golf biomechanics videos and analysis</li>
+                            <li><a href="https://www.tutelman.com/golf/swing/" target="_blank" rel="noopener">Dave Tutelman Golf Website</a> - Technical analysis of golf swing mechanics and equipment</li>
                         </ul>
                     </div>
                 </div>
@@ -349,7 +431,8 @@
                 </div>
             </div>
         </section>
-    </main>
+        </main>
+    </div>
 
     <footer>
         <div class="container">

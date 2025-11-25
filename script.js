@@ -69,28 +69,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial call
     highlightNavigation();
 
-    // Add fade-in animation for sections on scroll
+    // Add fade-in animation for sections on scroll (only if not already visible)
+    // Content is visible by default - animation is optional enhancement
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
+        rootMargin: '0px 0px 0px 0px'
     };
 
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                // Only apply animation if element doesn't already have opacity set
+                // Use getComputedStyle to check actual rendered opacity value
+                const computedOpacity = window.getComputedStyle(entry.target).opacity;
+                if (computedOpacity === '0') {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             }
         });
     }, observerOptions);
 
-    // Observe sections for fade-in effect
-    const sectionsToAnimate = document.querySelectorAll('section');
+    // Observe sections for fade-in effect (only apply to sections that should animate)
+    // Don't hide content initially - let it be visible
+    const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
     sectionsToAnimate.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
+        // Only animate if section is below the fold
+        const rect = section.getBoundingClientRect();
+        if (rect.top > window.innerHeight) {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            observer.observe(section);
+        } else {
+            // Content above the fold should be immediately visible
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }
     });
 
     // Mobile menu toggle (for future implementation)

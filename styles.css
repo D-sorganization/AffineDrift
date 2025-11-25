@@ -49,6 +49,9 @@ body {
     flex: 1;
     margin-left: 280px;
     transition: margin-left 0.3s ease;
+    min-height: 100vh;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Typography */
@@ -1109,8 +1112,12 @@ footer p {
 }
 
 /* Article Styles */
-.article-section {
+/* Increased specificity to ensure article sections are always visible */
+.article-section.article-section {
     padding: 4rem 0;
+    opacity: 1;
+    visibility: visible;
+    display: block;
 }
 
 .main-article {
