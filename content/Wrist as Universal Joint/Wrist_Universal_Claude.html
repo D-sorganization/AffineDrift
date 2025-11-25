@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wrist as Universal Joint - Constraint torques and force transmission in the golf swing">
+    <title>Wrist as Universal Joint - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo/Logo Transparent/1.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo/Logo Transparent/1.png">
+    <meta name="theme-color" content="#0f4c75">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="top-nav">
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Affine Drift</a></li>
+                    <li><a href="articles.html">Articles</a></li>
+                    <li><a href="research-reviews.html">Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar" id="history-sidebar">
+            <nav class="sidebar-nav">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-heading">Recent Pages</h3>
+                    <ul class="sidebar-links" id="history-list">
+                        <li class="history-empty">No recent pages yet</li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="page-header">
+                <div class="container">
+                    <h1>Constraint Torques at the Wrist: How Grip Angle Influences Force Transmission and Face Angle Variability in the Golf Swing</h1>
+                    <p class="page-subtitle">The left wrist as a universal joint in golf swing biomechanics</p>
+                </div>
+            </section>
+
+            <section class="article-section">
+                <div class="container">
+                    <article class="article-content">
+                        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+                            <p style="margin: 0; font-weight: 600; color: #856404;">
+                                📝 <strong>Article in Development</strong>
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; color: #856404;">
+                                This article is currently being prepared. The full content will be converted from the LaTeX source document 
+                                located at <code>content/Wrist as Universal Joint/Wrist_Universal_Claude.tex</code>.
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; color: #856404;">
+                                <strong>Source Document:</strong> The complete article discusses how the left wrist functions as a universal joint 
+                                with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree 
+                                of freedom (forearm rotation axis). It explores constraint torques and their role in force transmission, 
+                                demonstrating how grip angle fundamentally determines whether constraint torques are transmitted into 
+                                high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing face angle variability).
+                            </p>
+                        </div>
+
+                        <h2>Abstract</h2>
+                        <p>
+                            The left wrist in the golf swing can be modeled as a universal joint with two actuated degrees of freedom 
+                            (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). 
+                            Through forward dynamics simulation in MATLAB Simulink, we demonstrate that universal joints generate constraint 
+                            torques—passive torques about the constrained axis that arise from the interaction of applied torques, system 
+                            momentum, and geometric constraints. These constraint torques serve as efficient pathways for force and torque 
+                            transmission from proximal to distal segments but are inherently variable and uncontrollable. We hypothesize that 
+                            the angle at which the club is gripped relative to the wrist joint axes fundamentally determines whether these 
+                            constraint torques are transmitted into high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing 
+                            face angle variability). This analysis provides a mechanical framework for understanding the widely-taught principle 
+                            of gripping "in the fingers" versus "in the palm" and may explain why arm and club planes are typically not aligned 
+                            during the downswing.
+                        </p>
+
+                        <h2>Introduction</h2>
+                        <p>
+                            Force and torque transmission through multi-segment kinematic chains presents fascinating challenges in both 
+                            robotics and human movement. In the golf swing, torques generated by large proximal muscles must be efficiently 
+                            transmitted through multiple joints to ultimately control both the speed and orientation of the clubhead. Understanding 
+                            the mechanical pathways through which this transmission occurs is critical for optimizing both performance and consistency.
+                        </p>
+                        <p>
+                            Traditional biomechanical analysis focuses on actively generated torques—those produced by muscular contraction about 
+                            joints with actuated degrees of freedom. However, in constrained multi-body systems, passive constraint forces and 
+                            torques play equally important roles in force transmission. These constraint forces arise at joints where motion is 
+                            restricted, serving to maintain kinematic constraints while simultaneously transmitting forces between connected segments.
+                        </p>
+
+                        <h2>The Wrist as a Universal Joint</h2>
+                        <p>
+                            The radiocarpal (wrist) joint exhibits two primary degrees of freedom:
+                        </p>
+                        <ul>
+                            <li><strong>Flexion/Extension:</strong> Movement in the sagittal plane relative to the forearm</li>
+                            <li><strong>Radial/Ulnar Deviation:</strong> Movement in the frontal plane</li>
+                        </ul>
+                        <p>
+                            These two rotational degrees of freedom occur about approximately perpendicular axes, making the wrist kinematically 
+                            similar to a universal joint (U-joint) in mechanical systems. The third rotational degree of freedom—forearm 
+                            pronation/supination—occurs at the radioulnar joints proximal to the wrist, not at the wrist itself.
+                        </p>
+                        <p>
+                            From a control perspective, muscles can directly generate torques about the flexion/extension and radial/ulnar axes 
+                            at the wrist. However, rotation about the forearm axis occurs through forearm muscles acting at the proximal radioulnar 
+                            joint. This configuration is critical: the wrist joint itself has no direct actuation about the forearm rotation axis, 
+                            making this a <em>constrained</em> rather than <em>actuated</em> degree of freedom at the wrist.
+                        </p>
+
+                        <div style="background: #e7f3ff; border-left: 4px solid #3282b8; padding: 1.5rem; margin: 2rem 0; border-radius: 8px;">
+                            <p style="margin: 0; font-weight: 600; color: #0f4c75;">
+                                📄 Full Article Content
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0;">
+                                The complete article content is available in LaTeX format at:<br>
+                                <code>content/Wrist as Universal Joint/Wrist_Universal_Claude.tex</code>
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0;">
+                                This placeholder page will be updated with the full HTML conversion of the LaTeX document, including all sections, 
+                                equations, figures, and analysis.
+                            </p>
+                        </div>
+
+                        <h2>Related Interactive Tools</h2>
+                        <p>
+                            Explore the interactive simulator for grip angle torque transmission:
+                        </p>
+                        <p>
+                            <a href="wrist-universal-joint.html" class="button" style="display: inline-block; padding: 0.75rem 1.5rem; background: #3282b8; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                                🏌️ Grip Angle Torque Transmission Simulator
+                            </a>
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">The past shapes the present</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
