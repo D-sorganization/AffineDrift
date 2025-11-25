@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Theoretical foundations of affine control interpretation of the golf swing">
+    <title>Theory - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="AffineDriftLogo.png" alt="AffineDrift Logo" class="logo-img">
+                    <span class="logo-text">AffineDrift</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="theory.html">Theory</a></li>
+                    <li><a href="modelling.html">Modelling</a></li>
+                    <li><a href="research-reviews.html">Research Reviews</a></li>
+                    <li><a href="book-reviews.html">Book Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Theoretical Foundations</h1>
+                <p class="page-subtitle">Affine Control Interpretation of the Golf Swing</p>
+            </div>
+        </section>
+
+        <!-- Main Article -->
+        <section class="article-section">
+            <div class="container">
+                <article class="main-article">
+                    <header class="article-header">
+                        <h2>The Affine Nature of the Golf Swing</h2>
+                        <p class="article-subtitle">Drift, Input, and Causal Decomposition of Forces</p>
+                        <p class="article-meta">Part I: Theoretical Foundations</p>
+                    </header>
+
+                    <div class="article-content">
+                        <section class="abstract-section">
+                            <h3>Abstract</h3>
+                            <p>
+                                The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. 
+                                Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external 
+                                force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort 
+                                versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly 
+                                theoretical framework that models the golfer–club–shaft system as a nonlinear control-affine mechanical system and uses 
+                                that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque 
+                                Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics 
+                                and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within 
+                                the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
+                            </p>
+                        </section>
+
+                        <section class="article-body">
+                            <h3>Introduction</h3>
+                            <p>
+                                The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. 
+                                Traditional biomechanical analyses rely heavily on inverse dynamics to estimate generalized joint torques and hand 
+                                forces from measured kinematics and external forces. While inverse dynamics provides the <em>total</em> generalized 
+                                forces consistent with a given motion, it does not reveal the causal structure of those forces—specifically, how much 
+                                arises from the golfer's active muscular effort versus how much is generated passively by inertia, gravity, elastic 
+                                shaft deformation, and motion history.
+                            </p>
+                            <p>
+                                This distinction is fundamental. Passive forces (drift) can be large—even dominant—during rapid phases of the swing, 
+                                meaning that inverse-dynamics forces are often misinterpreted as indicators of muscular effort. Without a principled 
+                                decomposition, it is impossible to determine whether a large observed torque is caused by the golfer's action or 
+                                simply emerges from the dynamics of the system.
+                            </p>
+                            <p>
+                                The aim of this manuscript is to establish a rigorous, strictly theoretical foundation for decomposing forces in the 
+                                golf swing into two analytically distinct components:
+                            </p>
+                            <ul>
+                                <li><strong>Drift forces</strong> arising purely from passive, state-dependent mechanical dynamics, and</li>
+                                <li><strong>Input forces</strong> arising solely from actively applied joint torques.</li>
+                            </ul>
+                            <p>
+                                The key mathematical observation is that the golfer–club–shaft system can be modeled as a <em>nonlinear control-affine 
+                                mechanical system</em>. Control-affine systems admit an additive decomposition of their dynamics into passive drift 
+                                and linear control input channels. Once the affine structure is established, counterfactual tools such as the 
+                                <em>Zero Torque Counterfactual</em> (ZTCF) and <em>Zero Velocity Counterfactual</em> (ZVCF) follow naturally and 
+                                enable clean mechanical attribution of forces within the model.
+                            </p>
+
+                            <h3>System Definition and Modeling Assumptions</h3>
+                            <p>
+                                In this section we define the mathematical structure of the golfer–club–shaft system and state the modeling assumptions 
+                                that bound the theoretical framework. The goal is not to fix a unique anatomical model but to specify a general class of 
+                                multibody systems for which the subsequent analysis is valid.
+                            </p>
+
+                            <h4>Modeling Assumptions</h4>
+                            <div class="assumptions-box">
+                                <p><strong>Modeling Assumptions for the Theoretical Framework</strong></p>
+                                <p>These assumptions apply strictly to the theoretical decomposition presented in this manuscript (Part I). They define 
+                                the mathematical boundaries of the model; empirical validation and relaxation of these assumptions will be addressed 
+                                in later work.</p>
+                                <ol>
+                                    <li><strong>Rigid body segments.</strong> All anatomical segments of the golfer (torso, arms, hands) are modeled as 
+                                    rigid bodies with fixed mass and inertia properties.</li>
+                                    <li><strong>Flexible shaft via finite-dimensional modal approximation.</strong> The shaft is modeled using $m$ vibration 
+                                    modes obtained from standard beam theory (e.g., Euler–Bernoulli or Timoshenko). Modal truncation approximates the 
+                                    distributed dynamics with a finite-dimensional representation.</li>
+                                    <li><strong>No ball–club impact phase.</strong> Ball impact is excluded from the domain of analysis due to its hybrid 
+                                    (non-smooth) dynamics. The model applies to the pre-impact and post-impact phases only.</li>
+                                    <li><strong>No aerodynamic forces.</strong> Drag and lift forces on the clubhead and shaft are omitted in this theoretical 
+                                    treatment. All modeled external forces arise from gravity or internal mechanical interactions.</li>
+                                    <li><strong>Torques treated as generalized inputs.</strong> Muscular physiology (activation dynamics, force–velocity, 
+                                    force–length, tendon elasticity) is abstracted into a net generalized torque vector $\tau = B u$. These torques serve 
+                                    as the control inputs in the affine control formulation.</li>
+                                    <li><strong>Ground contact modeled as holonomic constraint.</strong> Feet–ground interaction is simplified as a fixed base 
+                                    with no slip or compliance; the golfer is treated as rooted at the ground.</li>
+                                    <li><strong>Smooth dynamical evolution (no discontinuities).</strong> Between impacts, the system evolves via smooth 
+                                    ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.</li>
+                                    <li><strong>No measurement noise or parameter uncertainty.</strong> The theoretical decomposition assumes perfect state 
+                                    knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.</li>
+                                </ol>
+                            </div>
+
+                            <h3>Unified Control-Affine Derivation</h3>
+                            <p>
+                                We now establish the control-affine structure of the coupled golfer–club–shaft system. The derivation presented here is 
+                                concise; detailed algebraic expansions, block-matrix forms, and modal–rigid coupling expressions are provided in the 
+                                appendices.
+                            </p>
+                            <p>
+                                The multibody equations of motion for the coupled system can be written in the standard form:
+                            </p>
+                            <div class="equation-block">
+                                \[M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q) + \begin{bmatrix} 0 \\ K_s\eta + C_s\dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}\]
+                            </div>
+                            <p>
+                                where $M(q,\eta)$ is the inertia matrix, $C(q,\dot{q},\eta,\dot{\eta})$ encodes Coriolis and centrifugal effects, 
+                                $G(q)$ is the gravitational torque vector, $K_s$ and $C_s$ are the shaft stiffness and damping matrices, and 
+                                $\tau = B(q) u$ is the generalized torque vector induced by control inputs $u$.
+                            </p>
+                            <p>
+                                Solving for accelerations and defining the state vector $x = [q^T, \dot{q}^T, \eta^T, \dot{\eta}^T]^T$, we obtain the 
+                                control-affine form:
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
+                            </div>
+                            <p>
+                                where $f_0(x)$ is the drift vector field (passive dynamics) and $f_i(x)$ are the control vector fields defining the 
+                                linear influence of torque inputs.
+                            </p>
+
+                            <h3>Drift–Input Decomposition</h3>
+                            <p>
+                                The control-affine structure enables a principled decomposition of forces into drift and input components. This decomposition 
+                                is fundamental to understanding the causal structure of forces in the golf swing.
+                            </p>
+
+                            <h3>Zero Torque Counterfactual (ZTCF)</h3>
+                            <p>
+                                The Zero Torque Counterfactual asks: "What would the system dynamics be if all torques were set to zero?" This counterfactual 
+                                isolates the pure drift dynamics, revealing the passive mechanical behavior of the system.
+                            </p>
+
+                            <h3>Zero Velocity Counterfactual (ZVCF)</h3>
+                            <p>
+                                The Zero Velocity Counterfactual asks: "What would the forces be if the system had zero velocity?" This counterfactual 
+                                helps isolate the contribution of motion-dependent forces (Coriolis, centrifugal) from static forces (gravity, elastic).
+                            </p>
+
+                            <h3>Force Taxonomy</h3>
+                            <p>
+                                Based on the affine structure, we derive a taxonomy that classifies measured forces by their causal origin:
+                            </p>
+                            <ul>
+                                <li><strong>Drift forces:</strong> Forces arising from passive dynamics (gravity, inertia, elastic deformation)</li>
+                                <li><strong>Input forces:</strong> Forces directly attributable to applied joint torques</li>
+                                <li><strong>Mixed forces:</strong> Forces with contributions from both drift and input components</li>
+                            </ul>
+
+                            <h3>Conclusion</h3>
+                            <p>
+                                This theoretical framework provides a rigorous foundation for decomposing forces in the golf swing. The control-affine 
+                                structure enables clean separation of passive and active components, with counterfactual tools providing mathematical 
+                                means for causal attribution. Future work will implement and validate this framework using high-fidelity simulations 
+                                and experimental data.
+                            </p>
+                        </section>
+                    </div>
+                </article>
+
+                <!-- Background Articles Section -->
+                <section class="background-articles">
+                    <div class="container">
+                        <h2>Background Articles</h2>
+                        <p class="section-intro">
+                            Foundational articles and background material on affine control theory and its applications to biomechanics.
+                        </p>
+                        <div class="articles-list">
+                            <div class="article-card">
+                                <h3>Nonlinear Control Insights</h3>
+                                <p>Detailed examination of nonlinear control theory foundations relevant to the golf swing model.</p>
+                                <a href="#" class="article-link">Read more →</a>
+                            </div>
+                            <div class="article-card">
+                                <h3>Inverse Dynamics Inference</h3>
+                                <p>Methods for inferring control inputs from observed motion in control-affine systems.</p>
+                                <a href="#" class="article-link">Read more →</a>
+                            </div>
+                            <div class="article-card">
+                                <h3>Applications and Extensions</h3>
+                                <p>Practical applications of the affine control framework to golf biomechanics and beyond.</p>
+                                <a href="#" class="article-link">Read more →</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comments Section -->
+                <section class="comments-section">
+                    <div class="container">
+                        <h2>Comments & Discussion</h2>
+                        <div class="comments-container">
+                            <p class="comments-note">
+                                Comments and discussion are coming soon. This section will allow readers to engage with 
+                                the theoretical content, ask questions, and share insights.
+                            </p>
+                            <!-- Comment system will be integrated here (e.g., Disqus, Commento, etc.) -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">Where control theory meets the fairway</p>
+            <div class="footer-social">
+                <ul class="footer-social-links">
+                    <li><a href="#" target="_blank" rel="noopener">Twitter/X</a></li>
+                    <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
+                    <li><a href="https://github.com/D-sorganization/AffineDrift" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
