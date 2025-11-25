@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Part 5: Appendices D-F - Simulink, Numerical Computation">
+    <title>Theory Part 5 - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          macros: {
+            R: "\\mathbb{R}",
+            qd: "\\dot{q}",
+            qdd: "\\ddot{q}",
+            etad: "\\dot{\\eta}",
+            etadd: "\\ddot{\\eta}",
+            xd: "\\dot{x}"
+          }
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="AffineDriftLogo.png" alt="AffineDrift Logo" class="logo-img">
+                    <span class="logo-text">AffineDrift</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="theory-part1.html">Theory</a></li>
+                    <li><a href="modelling.html">Modelling</a></li>
+                    <li><a href="research-reviews.html">Research Reviews</a></li>
+                    <li><a href="book-reviews.html">Book Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Affine Control Interpretation of the Golf Swing</h1>
+                <p class="page-subtitle">Drift, Input, and Causal Decomposition of Forces</p>
+                <p class="article-meta">Part I: Theoretical Foundations — Part 5 of 5 (Appendices D-F)</p>
+            </div>
+        </section>
+
+        <section class="article-section">
+            <div class="container">
+                <article class="main-article">
+                    <div class="article-content">
+                        <section class="article-body">
+                            <h2>Appendix D: Simulink Forward Dynamics Modeling and Counterfactual Evaluation</h2>
+                            <p>
+                                To complement the theoretical framework developed in this manuscript, a forward-dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced earlier using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
+                            </p>
+                            <p>
+                                The model is a planar two–hand, multi–link system with a flexible beam shaft, based on the publicly released "Two Hand Golf Swing Model" (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings. The structure of the model and its evaluation are documented in Olson (2024).
+                            </p>
+
+                            <h3>Model construction</h3>
+                            <p>
+                                The model consists of:
+                            </p>
+                            <ul>
+                                <li>a linked two–hand upper–body chain confined to a plane,</li>
+                                <li>multiple revolute joints, each driven by a torque input,</li>
+                                <li>a flexible golf shaft modeled using a finite–dimensional modal approximation,</li>
+                                <li>clubhead and hand coordinate frames for computing interaction forces.</li>
+                            </ul>
+                            <p>
+                                Shaft flexibility was represented using modal bending dynamics, similar to Appendix B, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control–affine decomposition.
+                            </p>
+
+                            <h3>Zero–Torque Counterfactual evaluation via "kill switches"</h3>
+                            <p>
+                                To compute the Zero Torque Counterfactual (ZTCF) within a forward dynamics environment, the Simulink model incorporated "kill switches" at every joint. These switches instantaneously set applied joint torques to zero at a prescribed time while leaving the system state untouched.
+                            </p>
+                            <p>
+                                A total of 56 kill–switch times were distributed uniformly across the downswing. For each run:
+                            </p>
+                            <ol>
+                                <li>the model evolved normally until a scheduled kill time,</li>
+                                <li>all joint torques were set to zero at that instant,</li>
+                                <li>the model continued to evolve under drift dynamics only,</li>
+                                <li>the resulting hand–on–club forces were recorded at the kill instant.</li>
+                            </ol>
+                            <p>
+                                This procedure produced a sampled version of the drift forces across the downswing. The resulting "counterfactual" points represent the purely passive momentum contribution to the hand–club interaction forces.
+                            </p>
+
+                            <h3>Comparison with total forces</h3>
+                            <p>
+                                For each kill–switch instant, the interaction forces produced under drift–only dynamics were compared to the forces produced during the corresponding instant of the full torque–driven swing. The difference between these two represents the torque–driven contribution.
+                            </p>
+                            <p>
+                                The analysis showed:
+                            </p>
+                            <ul>
+                                <li>Passive momentum contributes substantially to both normal and axial hand forces.</li>
+                                <li>The passive component can reverse direction prior to the reversal of the total force (visible in the normal–force curves).</li>
+                                <li>The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.</li>
+                                <li>Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.</li>
+                            </ul>
+                            <p>
+                                These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high–velocity phases of the swing.
+                            </p>
+
+                            <h3>Zero Velocity Counterfactual computation and validation</h3>
+                            <p>
+                                Although not included in the slides or PDF, the Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state \(x(t)\) on the simulated trajectory:
+                            </p>
+                            <ol>
+                                <li>generalized velocities were set to zero,</li>
+                                <li>the drift term \(a_{\mathrm{drift}}(q,0,\eta,0)\) was evaluated,</li>
+                                <li>inverse dynamics was used to compute \(\tau_{\mathrm{ZVCF}}(t)\).</li>
+                            </ol>
+                            <p>
+                                A key empirical result emerged:
+                            </p>
+                            <blockquote>
+                                <em>When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.</em>
+                            </blockquote>
+                            <p>
+                                That is,
+                            </p>
+                            <div class="equation-block">
+                                \[F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),\]
+                            </div>
+                            <p>
+                                matching the analytical identity predicted by the force taxonomy. This serves as a strong validation of the drift–input decomposition and demonstrates that the counterfactuals behave numerically exactly as the theory predicts.
+                            </p>
+
+                            <h3>Implications for future work</h3>
+                            <p>
+                                The current Simulink model provides:
+                            </p>
+                            <ul>
+                                <li>a working numerical platform for evaluating drift, ZTCF, ZVCF, and input forces,</li>
+                                <li>a validation of the affine decomposition under realistic multibody dynamics,</li>
+                                <li>a method for quantifying the effect of momentum on hand–club interaction forces,</li>
+                                <li>a pathway toward full Part II (simulation) and Part III (experimental) papers.</li>
+                            </ul>
+                            <p>
+                                Future research will incorporate these counterfactual calculations into high–fidelity 3D multibody simulations, explore sensitivity to shaft stiffness and segment masses, and apply the decomposition to motion capture data to understand timing, effort, and mechanical efficiency in real swings.
+                            </p>
+
+                            <h2>Appendix E: Numerical Computation of ZTCF and ZVCF</h2>
+                            <p>
+                                This appendix documents the numerical procedures used to compute the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) in simulation. The algorithms described here were developed using MATLAB and Simulink and apply to any multibody system that can be expressed in the control–affine form
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x} = f(x) + g(x)u,\]
+                            </div>
+                            <p>
+                                with inverse dynamics available for evaluating generalized forces from kinematic states and accelerations.
+                            </p>
+                            <p>
+                                The methods presented are general and will serve as the computational backbone in future simulation (Part II) and experimental (Part III) work.
+                            </p>
+
+                            <h3>D.1 Notation and discretization</h3>
+                            <p>
+                                Let the continuous-time state be
+                            </p>
+                            <div class="equation-block">
+                                \[x(t) = [q(t),\dot{q}(t),\eta(t),\dot{\eta}(t)]^T,\]
+                            </div>
+                            <p>
+                                and let the simulation produce samples at discrete times
+                            </p>
+                            <div class="equation-block">
+                                \[t_k = t_0 + k\,\Delta t, \qquad k = 0,\dots,N.\]
+                            </div>
+                            <p>
+                                Let:
+                            </p>
+                            <ul>
+                                <li>\(x_k\) denote the state at time \(t_k\),</li>
+                                <li>\(u_k\) denote the applied torque input,</li>
+                                <li>\(a_{\mathrm{drift}}(x_k)\) denote the drift acceleration,</li>
+                                <li>\(\tau_{\mathrm{ID}}(x_k,\dot{x}_k)\) denote inverse-dynamics torques.</li>
+                            </ul>
+                            <p>
+                                The goal is to compute:
+                            </p>
+                            <ul>
+                                <li>ZTCF trajectory: \(x^{\mathrm{ZTCF}}_k\),</li>
+                                <li>ZVCF torque: \(\tau_{\mathrm{ZVCF}}(t_k)\),</li>
+                                <li>drift torque: \(\tau_{\mathrm{drift}}(t_k)\),</li>
+                                <li>input torque: \(\tau_{\mathrm{input}}(t_k)\).</li>
+                            </ul>
+
+                            <h3>D.2 Algorithm for ZTCF computation</h3>
+                            <p>
+                                The ZTCF requires simulating the drift-only evolution of the system from an initial state \(x(t_0)\). For each time sample in the original simulation, we compute the counterfactual trajectory starting from the same state but with all torques removed.
+                            </p>
+                            <p>
+                                <strong>Procedure (conceptual):</strong>
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}^{\mathrm{ZTCF}} = f\big(x^{\mathrm{ZTCF}}\big), \qquad x^{\mathrm{ZTCF}}(t_0) = x(t_0).\]
+                            </div>
+                            <p>
+                                <strong>Discrete-time implementation:</strong> For each time step \(k\):
+                            </p>
+                            <ol>
+                                <li>Extract the state \(x_k\) from the full simulation.</li>
+                                <li>Reinitialize the Simulink model at \(x_k\).</li>
+                                <li>Set all joint torques to zero via kill-switch logic.</li>
+                                <li>Integrate forward for one simulation step \(\Delta t\) to obtain:
+                                    \[x^{\mathrm{ZTCF}}_{k+1} = x^{\mathrm{ZTCF}}_k + \Delta t\, f\big(x^{\mathrm{ZTCF}}_k\big) + \mathcal{O}(\Delta t^2).\]
+                                </li>
+                            </ol>
+                            <p>
+                                In the full-scale implementation, the kill-switch approach replaces step 4 with a fully integrated natural evolution under drift dynamics.
+                            </p>
+                            <p>
+                                <strong>Numerical stability.</strong> ZTCF computation is especially sensitive during periods of large curvatures (late downswing). Stiff ODE solvers (e.g., <code>ode15s</code>, <code>ode23t</code>) or low step-size solvers are recommended to maintain trajectory fidelity.
+                            </p>
+
+                            <h3>D.3 Algorithm for ZVCF computation</h3>
+                            <p>
+                                ZVCF is computed instantaneously, not via simulation. It examines the forces that would occur if the system were held at the same configuration but with all velocities zero.
+                            </p>
+                            <p>
+                                <strong>Procedure:</strong> For each time sample \(t_k\):
+                            </p>
+                            <ol>
+                                <li>Define:
+                                    \[x^{\mathrm{ZVCF}}_k = (q_k,\, 0,\, \eta_k,\, 0).\]
+                                </li>
+                                <li>Compute drift acceleration at zero velocity:
+                                    \[a^{\mathrm{ZVCF}}_k = a_{\mathrm{drift}}(q_k,0,\eta_k,0).\]
+                                </li>
+                                <li>Use inverse dynamics to compute:
+                                    \[\tau_{\mathrm{ZVCF}}(t_k) = \mathrm{ID}\big(q_k,0,\eta_k,0,a^{\mathrm{ZVCF}}_k\big).\]
+                                </li>
+                            </ol>
+                            <p>
+                                This gives the configuration-dependent drift torque.
+                            </p>
+
+                            <h3>D.4 Drift, input, and ZVCF consistency</h3>
+                            <p>
+                                From the equations of motion:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{total}}(t_k) = \tau_{\mathrm{drift}}(x_k) + \tau_{\mathrm{input}}(t_k),\]
+                            </div>
+                            <p>
+                                where the drift term is evaluated along the <em>actual</em> trajectory:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{drift}}(x_k) = \mathrm{ID}\!\left(q_k,\dot{q}_k,\eta_k,\dot{\eta}_k,a_{\mathrm{drift}}(x_k)\right).\]
+                            </div>
+                            <p>
+                                Decomposing the drift into ZVCF and velocity-dependent components:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{drift}}(x_k) = \tau_{\mathrm{ZVCF}}(t_k) + \tau_{\mathrm{vel.\,drift}}(t_k),\]
+                            </div>
+                            <p>
+                                where:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{vel.\,drift}}(t_k) = \mathrm{ID}\big(q_k,\dot{q}_k,\eta_k,\dot{\eta}_k\big) - \mathrm{ID}\big(q_k,0,\eta_k,0\big).\]
+                            </div>
+                            <p>
+                                In the Simulink implementation, it was observed that:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k) = \tau_{\mathrm{ZVCF}}(t_k),\]
+                            </div>
+                            <p>
+                                matching the analytical identity predicted by the affine decomposition.
+                            </p>
+                            <p>
+                                This numerical equality is a strong validation of the framework, showing that:
+                            </p>
+                            <div class="equation-block">
+                                \[F_{\mathrm{input}}(t_k) = F_{\mathrm{config}}(t_k) \quad\text{when evaluated as}\quad F_{\mathrm{total}} - F_{\mathrm{ZTCF}}.\]
+                            </div>
+
+                            <h3>D.5 Pseudocode summary</h3>
+                            <pre class="code-block"><code>for k = 1:N
+
+    #--- Compute Total Torque ---------------------------
+    tau_total[k] = ID(x[k], dx[k])
+
+    #--- Compute Drift Acceleration ----------------------
+    a_drift[k] = f(x[k])    # passive dynamics only
+
+    #--- Compute Drift Torque ----------------------------
+    tau_drift[k] = ID(x[k], a_drift[k])
+
+    #--- Input Torque ------------------------------------
+    tau_input[k] = tau_total[k] - tau_drift[k]
+
+    #--- Compute ZVCF -------------------------------------
+    x_zvcf = (q[k], 0, eta[k], 0)
+    a_zvcf = a_drift at zero-velocity
+    tau_zvcf[k] = ID(x_zvcf, a_zvcf)
+
+    #--- Compute ZTCF (kill-switch) -----------------------
+    # Simulate forward with all torques set to zero
+    x_ztcf[k] = simulate_drift_only(x[k])
+
+end</code></pre>
+
+                            <h3>D.6 Practical considerations</h3>
+                            <p>
+                                <strong>Filtering and numerical derivatives.</strong> ZVCF and drift torques are sensitive to acceleration estimates; use low-pass filtered velocities and accelerations or employ smooth differentiators (e.g., Savitzky–Golay).
+                            </p>
+                            <p>
+                                <strong>Consistent parameter sets.</strong> All inverse-dynamics evaluations must use the exact same inertia, stiffness, and damping parameters as the forward simulation to ensure identity between:
+                            </p>
+                            <div class="equation-block">
+                                \[F_{\mathrm{total}} - F_{\mathrm{ZTCF}} \quad\text{and}\quad F_{\mathrm{ZVCF}}.\]
+                            </div>
+                            <p>
+                                <strong>Solver matching.</strong> ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the original forward simulation to avoid numerical drift between trajectories.
+                            </p>
+
+                            <h3>D.7 Summary</h3>
+                            <p>
+                                The algorithms in this appendix show how ZTCF and ZVCF are computed numerically and how they integrate with inverse dynamics to yield drift, input, and configuration torque components. These numerical procedures provide the operational backbone for validating the theoretical framework and are used extensively in the forward-dynamics modeling described in Appendix D.
+                            </p>
+                        </section>
+                    </div>
+                </article>
+
+                <!-- Navigation between parts -->
+                <nav class="article-navigation">
+                    <div class="container">
+                        <div class="nav-links">
+                            <a href="theory-part4.html" class="nav-prev">← Previous: Part 4</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">Where control theory meets the fairway</p>
+            <div class="footer-social">
+                <ul class="footer-social-links">
+                    <li><a href="#" target="_blank" rel="noopener">Twitter/X</a></li>
+                    <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
+                    <li><a href="https://github.com/D-sorganization/AffineDrift" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

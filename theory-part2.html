@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Part 2: Drift-Input Decomposition, ZTCF, and ZVCF - Affine Control Interpretation of the Golf Swing">
+    <title>Theory Part 2 - AffineDrift</title>
+    <!-- Google Fonts - Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="styles.css">
+    <!-- MathJax for mathematical notation -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          macros: {
+            R: "\\mathbb{R}",
+            qd: "\\dot{q}",
+            qdd: "\\ddot{q}",
+            etad: "\\dot{\\eta}",
+            etadd: "\\ddot{\\eta}",
+            xd: "\\dot{x}"
+          }
+        },
+        startup: {
+          ready: () => {
+            MathJax.startup.defaultReady();
+          }
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo-link">
+                    <img src="AffineDriftLogo.png" alt="AffineDrift Logo" class="logo-img">
+                    <span class="logo-text">AffineDrift</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="theory-part1.html">Theory</a></li>
+                    <li><a href="modelling.html">Modelling</a></li>
+                    <li><a href="research-reviews.html">Research Reviews</a></li>
+                    <li><a href="book-reviews.html">Book Reviews</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Affine Control Interpretation of the Golf Swing</h1>
+                <p class="page-subtitle">Drift, Input, and Causal Decomposition of Forces</p>
+                <p class="article-meta">Part I: Theoretical Foundations — Part 2 of 5</p>
+            </div>
+        </section>
+
+        <section class="article-section">
+            <div class="container">
+                <article class="main-article">
+                    <div class="article-content">
+                        <section class="article-body">
+                            <h2>Drift vs. Input Decomposition</h2>
+                            <p>
+                                Given the control-affine form \(\dot{x} = f(x) + g(x)u\), we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
+                            </p>
+
+                            <h3>Passive drift dynamics</h3>
+                            <p>
+                                The <em>drift dynamics</em> are defined as the evolution of the system in the absence of all muscular torques:
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}_{\text{drift}} = f(x).\]
+                            </div>
+                            <p>
+                                Physically, this includes:
+                            </p>
+                            <ul>
+                                <li>inertia of all rigid segments,</li>
+                                <li>Coriolis and centrifugal forces,</li>
+                                <li>gravitational torques,</li>
+                                <li>passive joint contributions (if modeled),</li>
+                                <li>elastic and damping forces from shaft deformation.</li>
+                            </ul>
+                            <p>
+                                Drift represents what the system would do "on its own" given its current configuration, velocities, and shaft deformation, under the modeling assumptions stated earlier.
+                            </p>
+
+                            <h3>Torque-driven input dynamics</h3>
+                            <p>
+                                The <em>input dynamics</em> are defined as the torque-driven component:
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}_{\text{input}} = g(x)\,u.\]
+                            </div>
+                            <p>
+                                Key properties:
+                            </p>
+                            <ul>
+                                <li>The dependence on \(u\) is strictly linear.</li>
+                                <li>The mapping \(g(x)\) depends on configuration and shaft deformation, but does not multiply \(u\) nonlinearly.</li>
+                                <li>The number of effective torque channels is \(m_{u} \le n\), reflecting anatomical underactuation at the joint level.</li>
+                            </ul>
+                            <p>
+                                This term represents the portion of the dynamics directly caused by the golfer's applied torques at the mechanical level of description.
+                            </p>
+
+                            <h3>Total evolution and causal interpretation within the model</h3>
+                            <p>
+                                Combining the two contributions yields
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x} = f(x) + g(x)\,u = \dot{x}_{\text{drift}} + \dot{x}_{\text{input}}.\]
+                            </div>
+                            <p>
+                                Within the model, this additive structure supports the following interpretation:
+                            </p>
+                            <ul>
+                                <li>the <em>drift</em> term \(f(x)\) captures the passive mechanical response to the current state,</li>
+                                <li>the <em>input</em> term \(g(x)u\) captures the incremental effect of the applied torques on top of that passive response.</li>
+                            </ul>
+                            <p>
+                                The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
+                            </p>
+
+                            <h3>Role in counterfactual analysis</h3>
+                            <p>
+                                The drift–input decomposition underlies the counterfactual tools introduced later:
+                            </p>
+                            <ul>
+                                <li>The <em>Zero Torque Counterfactual</em> (ZTCF) trajectory integrates the drift-only dynamics from a given initial state, isolating the passive evolution of the system.</li>
+                                <li>The <em>Zero Velocity Counterfactual</em> (ZVCF) evaluates forces at the same configuration with velocities set to zero, isolating configuration-dependent contributions.</li>
+                            </ul>
+                            <p>
+                                By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces and construct a force taxonomy for interpretation of measured or simulated swings.
+                            </p>
+
+                            <h2>Zero Torque Counterfactual (ZTCF)</h2>
+                            <p>
+                                The drift–input decomposition separates the dynamics into a passive component \(f(x)\) and a torque-driven component \(g(x)u\). The <em>Zero Torque Counterfactual</em> (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
+                            </p>
+
+                            <h3>Definition as a drift-only trajectory</h3>
+                            <p>
+                                Consider the control-affine system
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.\]
+                            </div>
+                            <p>
+                                Let \(x(t)\) denote the actual trajectory of the system under some torque input \(u(t)\) on a time interval \(t \in [t_{0}, t_{f}]\), with the initial condition
+                            </p>
+                            <div class="equation-block">
+                                \[x(t_{0}) = x_{0}.\]
+                            </div>
+                            <p>
+                                We define the <em>Zero Torque Counterfactual</em> trajectory, denoted \(x^{\mathrm{ZTCF}}(t)\), as the solution of the drift-only system
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big), \qquad x^{\mathrm{ZTCF}}(t_{0}) = x_{0},\]
+                            </div>
+                            <p>
+                                on the same time interval \([t_{0}, t_{f}]\).
+                            </p>
+                            <p>
+                                By construction:
+                            </p>
+                            <ul>
+                                <li>The initial condition is identical to that of the actual swing.</li>
+                                <li>All mechanical parameters (masses, inertias, shaft stiffness, etc.) are identical.</li>
+                                <li>The only difference is that the torque input is set to zero: \(u(t) \equiv 0\).</li>
+                            </ul>
+                            <p>
+                                Thus \(x^{\mathrm{ZTCF}}(t)\) is the unique trajectory predicted by the model when the system is released from the same initial state but allowed to evolve purely under passive dynamics.
+                            </p>
+
+                            <h3>Relationship to drift and input terms</h3>
+                            <p>
+                                Along the actual trajectory \(x(t)\), the state derivative is
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}(t) = f\big(x(t)\big) + g\big(x(t)\big)\,u(t),\]
+                            </div>
+                            <p>
+                                while along the ZTCF trajectory \(x^{\mathrm{ZTCF}}(t)\) the derivative is purely
+                            </p>
+                            <div class="equation-block">
+                                \[\dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big).\]
+                            </div>
+                            <p>
+                                The drift vector field \(f(x)\) is invariant with respect to the instantaneous torque input: it depends only on the state and model parameters, not on \(u\). In contrast, the input term \(g(x)u\) vanishes identically when \(u = 0\).
+                            </p>
+                            <p>
+                                Conceptually, ZTCF isolates the drift dynamics by providing a full trajectory that is generated <em>only</em> by \(f(x)\). The difference between the actual trajectory and its ZTCF counterpart, when interpreted via the equations of motion, captures the incremental effect of the torque input.
+                            </p>
+
+                            <h3>Using ZTCF with inverse dynamics</h3>
+                            <p>
+                                In practice, we are often given a measured or simulated swing trajectory in terms of kinematics,
+                            </p>
+                            <div class="equation-block">
+                                \[\big(q(t), \dot{q}(t), \eta(t), \dot{\eta}(t)\big), \qquad t \in [t_{0}, t_{f}],\]
+                            </div>
+                            <p>
+                                and we obtain the generalized torque vector \(\tau_{\text{total}}(t)\) from inverse dynamics:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{total}}(t) = \text{ID}\big(q(t), \dot{q}(t), \ddot{q}(t), \eta(t), \dot{\eta}(t), \ddot{\eta}(t)\big),\]
+                            </div>
+                            <p>
+                                where \(\text{ID}(\cdot)\) denotes the inverse dynamics operator for the coupled rigid–flexible model.
+                            </p>
+                            <p>
+                                From the equations of motion, the generalized torques can be written as
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{total}}(t) = \underbrace{\tau_{\text{drift}}\big(x(t)\big)}_{\text{passive component}} + \underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}},\]
+                            </div>
+                            <p>
+                                where the <em>drift torque</em> is defined by evaluating the passive terms at the actual state:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{drift}}\big(x(t)\big) = M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},\]
+                            </div>
+                            <p>
+                                and \(M_{q}\) denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see the Appendices for details).
+                            </p>
+                            <p>
+                                The <em>input torque</em> is then given by
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{input}}(t) = \tau_{\text{total}}(t) - \tau_{\text{drift}}\big(x(t)\big).\]
+                            </div>
+                            <p>
+                                These equations provide an algebraically exact decomposition of the total generalized torque into drift and input components within the model.
+                            </p>
+                            <p>
+                                The ZTCF trajectory is not strictly required to compute this decomposition: evaluating the drift terms \(a_{\text{drift}}(x)\) along the actual trajectory \(x(t)\) is sufficient. However, the ZTCF provides a useful conceptual and computational tool:
+                            </p>
+                            <ul>
+                                <li>Conceptually, it is the trajectory that realizes the drift dynamics in isolation.</li>
+                                <li>Computationally, simulating \(x^{\mathrm{ZTCF}}(t)\) gives a concrete motion that can be analyzed or visualized alongside the actual swing to illustrate the effect of the torque input.</li>
+                            </ul>
+
+                            <h3>Interpretational scope and limitations</h3>
+                            <p>
+                                The ZTCF is a counterfactual <em>within the model</em>. It answers the question:
+                            </p>
+                            <blockquote>
+                                "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero?"
+                            </blockquote>
+                            <p>
+                                It does <em>not</em> claim that such a motion could actually be achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control policy during a swing. Instead, ZTCF is a mathematical device that:
+                            </p>
+                            <ul>
+                                <li>isolates the passive mechanical contribution to the dynamics,</li>
+                                <li>provides a baseline against which torque-driven effects can be quantified, and</li>
+                                <li>makes the drift–input decomposition explicit and reproducible.</li>
+                            </ul>
+                            <p>
+                                All causal statements made in this paper are therefore conditional on the mechanical model and on the modeling assumptions. Within that scope, the decomposition
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input}}(t)\]
+                            </div>
+                            <p>
+                                and the associated ZTCF construction are analytically exact. Outside that scope, their interpretation must be made with care and with explicit reference to model fidelity, parameter uncertainty, and unmodeled physiological effects.
+                            </p>
+
+                            <h2>Zero Velocity Counterfactual (ZVCF)</h2>
+                            <p>
+                                The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a <em>trajectory</em>-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an <em>instantaneous</em> construction. It identifies the passive mechanical forces that arise <em>only from configuration</em> (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
+                            </p>
+
+                            <h3>Definition</h3>
+                            <p>
+                                Let the actual swing at time \(t\) be characterized by the state
+                            </p>
+                            <div class="equation-block">
+                                \[x(t) = \big(q(t),\, \dot{q}(t),\, \eta(t),\, \dot{\eta}(t)\big).\]
+                            </div>
+                            <p>
+                                The <em>Zero Velocity Counterfactual state</em> at the same instant is defined as
+                            </p>
+                            <div class="equation-block">
+                                \[x^{\mathrm{ZVCF}}(t) = \big(q(t),\, 0,\, \eta(t),\, 0\big).\]
+                            </div>
+                            <p>
+                                Only the configuration variables \(q(t)\) and \(\eta(t)\) are retained; all generalized velocities are set to zero.
+                            </p>
+                            <p>
+                                Evaluating the equations of motion at this state yields the <em>ZVCF generalized torque</em>:
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{ZVCF}}(t) = \text{ID}\!\left(q(t),\, 0,\, \eta(t),\, 0,\, \ddot{q}^{\mathrm{ZVCF}}(t),\, \ddot{\eta}^{\mathrm{ZVCF}}(t)\right),\]
+                            </div>
+                            <p>
+                                where the ZVCF accelerations are computed from the passive terms of the dynamics evaluated at zero velocity:
+                            </p>
+                            <div class="equation-block">
+                                \[\begin{bmatrix} \ddot{q}^{\mathrm{ZVCF}} \\ \ddot{\eta}^{\mathrm{ZVCF}} \end{bmatrix} = a_{\text{drift}}\big(q(t),0,\eta(t),0\big).\]
+                            </div>
+                            <p>
+                                Intuitively, \(\tau_{\mathrm{ZVCF}}(t)\) represents the generalized torques the model predicts at that configuration if:
+                            </p>
+                            <ul>
+                                <li>the system were held momentarily at rest,</li>
+                                <li>the shaft retained its instantaneous deformation \(\eta(t)\),</li>
+                                <li>but no velocity-dependent forces were present.</li>
+                            </ul>
+
+                            <h3>What ZVCF isolates</h3>
+                            <p>
+                                Evaluating the drift terms at zero velocity eliminates:
+                            </p>
+                            <ul>
+                                <li>Coriolis and centrifugal forces (all terms proportional to \(\dot{q}\) or \(\dot{\eta}\)),</li>
+                                <li>velocity-proportional damping in the shaft,</li>
+                                <li>any passive joint damping,</li>
+                                <li>all torque input contributions.</li>
+                            </ul>
+                            <p>
+                                What remains in \(\tau_{\mathrm{ZVCF}}(t)\) are:
+                            </p>
+                            <ul>
+                                <li>gravitational torques \(G(q)\),</li>
+                                <li>elastic shaft restoring forces \(K_s \eta(t)\),</li>
+                                <li>configuration-dependent components of the multibody dynamics (e.g., coupling due to mass distribution),</li>
+                                <li>geometric projection effects (due to Jacobians and inertia coupling).</li>
+                            </ul>
+                            <p>
+                                Thus the ZVCF isolates forces arising purely from the system's instantaneous <em>shape</em>.
+                            </p>
+
+                            <h3>Relation to ZTCF and drift–input decomposition</h3>
+                            <p>
+                                ZVCF and ZTCF play complementary roles:
+                            </p>
+                            <ul>
+                                <li><strong>ZTCF (trajectory-level)</strong> removes torque input but preserves velocity, allowing inertial, history-dependent drift forces to act naturally.</li>
+                                <li><strong>ZVCF (instantaneous)</strong> removes all velocity contributions, freezing the system in place to expose purely configuration-dependent loads.</li>
+                            </ul>
+                            <p>
+                                Within the drift–input decomposition,
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{total}}(t) = \tau_{\mathrm{drift}}(t) + \tau_{\mathrm{input}}(t),\]
+                            </div>
+                            <p>
+                                the ZVCF satisfies
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\mathrm{ZVCF}}(t) = \tau_{\mathrm{drift}}(q(t),0,\eta(t),0),\]
+                            </div>
+                            <p>
+                                so ZVCF should be viewed as the <em>zero-velocity slice</em> of the drift torque field.
+                            </p>
+                            <p>
+                                The full drift torque can be written as
+                            </p>
+                            <div class="equation-block">
+                                \[\tau_{\text{drift}}(t) = \tau_{\mathrm{ZVCF}}(t) + \tau_{\mathrm{vel.\,drift}}(t),\]
+                            </div>
+                            <p>
+                                where \(\tau_{\mathrm{vel.\,drift}}(t)\) contains all velocity-dependent passive forces (Coriolis, centrifugal, shaft damping, etc.).
+                            </p>
+
+                            <h3>Interpretational cautions</h3>
+                            <p>
+                                The ZVCF is not intended to represent a physically realizable motion:
+                            </p>
+                            <ul>
+                                <li>A real golfer cannot instantaneously set all joint and shaft velocities to zero while holding the same configuration.</li>
+                                <li>The system would generally not remain in equilibrium under \(\tau_{\mathrm{ZVCF}}(t)\); internal and external forces would cause instantaneous acceleration.</li>
+                            </ul>
+                            <p>
+                                Instead, ZVCF is a mathematical probe of the model used to answer:
+                            </p>
+                            <blockquote>
+                                "At this exact configuration, ignoring all motion, what passive torques does the system geometry and shaft deformation impose?"
+                            </blockquote>
+                            <p>
+                                This makes it especially useful for:
+                            </p>
+                            <ul>
+                                <li>quantifying shaft bending loads independent of motion history,</li>
+                                <li>separating gravity from inertial effects,</li>
+                                <li>identifying configuration-driven mechanical biases (e.g., favored directions of passive motion),</li>
+                                <li>analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.</li>
+                            </ul>
+                            <p>
+                                ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
+                            </p>
+                        </section>
+                    </div>
+                </article>
+
+                <!-- Navigation between parts -->
+                <nav class="article-navigation">
+                    <div class="container">
+                        <div class="nav-links">
+                            <a href="theory-part1.html" class="nav-prev">← Previous: Part 1</a>
+                            <a href="theory-part3.html" class="nav-next">Next: Part 3 →</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
+            <p class="footer-tagline">Where control theory meets the fairway</p>
+            <div class="footer-social">
+                <ul class="footer-social-links">
+                    <li><a href="#" target="_blank" rel="noopener">Twitter/X</a></li>
+                    <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
+                    <li><a href="https://github.com/D-sorganization/AffineDrift" target="_blank" rel="noopener">GitHub</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -71,6 +71,28 @@ nav .container {
     align-items: center;
 }
 
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--pure-white);
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pure-white);
+    letter-spacing: 0.5px;
+    font-family: 'Playfair Display', 'Georgia', serif;
+}
+
 .logo {
     font-size: 2rem;
     font-weight: 700;
@@ -838,4 +860,623 @@ footer p {
 /* MathJax styling */
 .MathJax {
     font-size: 1.1em !important;
+}
+
+/* ===========================
+   New Page Styles
+   =========================== */
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+    color: var(--pure-white);
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.page-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+}
+
+/* Article Styles */
+.article-section {
+    padding: 4rem 0;
+}
+
+.main-article {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--pure-white);
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.article-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+.article-meta {
+    font-style: italic;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+.abstract-section {
+    background: var(--off-white);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    border-left: 4px solid var(--accent-blue);
+}
+
+.article-body {
+    line-height: 1.8;
+}
+
+.article-body h3 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-blue);
+}
+
+.article-body h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent-blue);
+}
+
+.assumptions-box {
+    background: var(--off-white);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-light);
+}
+
+.assumptions-box ol {
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+}
+
+.assumptions-box li {
+    margin-bottom: 0.75rem;
+}
+
+.equation-block {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--off-white);
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Front Matter */
+.front-matter {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--off-white) 100%);
+    border-left: 4px solid var(--accent-blue);
+    border-radius: 8px;
+}
+
+.front-matter-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+}
+
+.front-matter-content p {
+    margin-bottom: 1.5rem;
+}
+
+.front-matter-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Notation Table */
+.notation-table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    background: var(--pure-white);
+    box-shadow: 0 2px 10px var(--shadow-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.notation-table caption {
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 1rem;
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    text-align: left;
+}
+
+.notation-table thead {
+    background: var(--primary-dark);
+    color: var(--pure-white);
+}
+
+.notation-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.notation-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.notation-table tbody tr:hover {
+    background: var(--off-white);
+}
+
+.notation-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Article Navigation */
+.article-navigation {
+    margin: 4rem 0 2rem;
+    padding: 2rem 0;
+    border-top: 2px solid var(--border-light);
+    border-bottom: 2px solid var(--border-light);
+}
+
+.article-navigation .nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.article-navigation .nav-prev,
+.article-navigation .nav-next {
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.article-navigation .nav-prev:hover,
+.article-navigation .nav-next:hover {
+    background: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.article-navigation .nav-prev::before {
+    content: "← ";
+}
+
+.article-navigation .nav-next::after {
+    content: " →";
+}
+
+/* Code blocks */
+.code-block {
+    background: var(--primary-dark);
+    color: var(--light-blue);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.code-block code {
+    display: block;
+    white-space: pre;
+}
+
+/* Background Articles */
+.background-articles {
+    padding: 4rem 0;
+    background: var(--off-white);
+}
+
+.articles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.article-card {
+    background: var(--pure-white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.article-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.article-link:hover {
+    text-decoration: underline;
+}
+
+/* Modelling Page */
+.modelling-section {
+    padding: 4rem 0;
+}
+
+.model-card {
+    background: var(--pure-white);
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    margin-bottom: 2rem;
+}
+
+.featured-model {
+    border: 2px solid var(--accent-blue);
+}
+
+.model-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin: 1.5rem 0;
+}
+
+.model-features {
+    margin: 2rem 0;
+}
+
+.model-features ul {
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+}
+
+.model-link {
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--accent-blue);
+    color: var(--pure-white);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: var(--primary-blue);
+    transform: translateY(-2px);
+}
+
+.model-info, .model-usage {
+    background: var(--off-white);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+/* Reviews Pages */
+.reviews-section, .book-reviews-section {
+    padding: 4rem 0;
+}
+
+.reviews-intro {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.reviews-list {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.review-card, .book-review-card {
+    background: var(--pure-white);
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    margin-bottom: 2rem;
+}
+
+.review-header, .book-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.review-date {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    float: right;
+}
+
+.review-content, .book-review-content {
+    line-height: 1.8;
+    margin: 1.5rem 0;
+}
+
+.review-footer, .book-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.read-more {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.comment-count {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.coming-soon {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Book Reviews */
+.top-lists {
+    margin: 3rem 0;
+}
+
+.top-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.top-list-card {
+    background: var(--pure-white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.book-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.book-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.book-author, .book-year {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-left: 1rem;
+}
+
+.bookfinder-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.bookfinder-link:hover {
+    text-decoration: underline;
+}
+
+/* Contact Page */
+.contact-section {
+    padding: 4rem 0;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-form-container {
+    background: var(--pure-white);
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.contact-info {
+    background: var(--off-white);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.contact-form {
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(50, 130, 184, 0.1);
+}
+
+.social-links {
+    margin-top: 2rem;
+}
+
+.social-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.social-list li {
+    margin-bottom: 0.75rem;
+}
+
+.social-link {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+.social-link:hover {
+    text-decoration: underline;
+}
+
+.contact-note {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--pure-white);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Resource Links */
+.resource-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.resource-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer Social */
+.footer-social {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.footer-social-links a {
+    color: var(--pure-white);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.footer-social-links a:hover {
+    opacity: 1;
+}
+
+/* Comments Section */
+.comments-section {
+    padding: 3rem 0;
+    background: var(--off-white);
+    margin-top: 3rem;
+}
+
+.comments-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--pure-white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.comments-note {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 2rem;
+}
+
+.article-comments {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Responsive adjustments for new pages */
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+
+    .main-article {
+        padding: 2rem;
+    }
+
+    .articles-list,
+    .top-list-grid {
+        grid-template-columns: 1fr;
+    }
 }
