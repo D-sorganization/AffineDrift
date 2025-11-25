@@ -1,0 +1,408 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{bm}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{physics}
+\geometry{margin=1in}
+
+\usetikzlibrary{arrows.meta,calc}
+\definecolor{accent}{RGB}{0,90,160}
+\definecolor{softgray}{RGB}{230,230,230}
+
+\tikzset{
+    shaft/.style={thick},
+    forcevec/.style={->,thick,accent},
+    couplevec/.style={->,thick,accent},
+    refpoint/.style={circle,fill=black,inner sep=1.5pt},
+    labelpt/.style={circle,fill=black,inner sep=1.2pt},
+    axisline/.style={thin},
+    boundregion/.style={fill=softgray,draw=none,opacity=0.5}
+}
+
+\title{\Large\bfseries
+Interpreting Inverse Dynamics in Two-Handed Golf Swing Analysis:\\[4pt]
+Why Equivalent Forces and Couples Do Not Describe What the Hands Actually Do}
+
+\author{2025}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Inverse dynamics is one of the most powerful tools available for analyzing the golf swing, yet one of the easiest to misunderstand.  
+When two hands hold the club, the system becomes a closed mechanical loop that obscures the true distribution of forces applied by the golfer.  
+Inverse dynamics reports a net force and an ``equivalent couple'' at a chosen point—typically the midpoint between the hands—but these values do not necessarily correspond to literal push, pull, or twisting actions.
+
+This article explains, for a broad technical audience, why inverse dynamics produces force--couple pairs, why the couple does not directly represent hand torque, how equivalent representations shift when forces move along the grip, and how closed-loop mechanics generate ambiguity.  
+Clean abstract diagrams illustrate each concept.
+
+We conclude by outlining what inverse dynamics can reliably tell us, what it cannot, and how to responsibly interpret wrench data in golf research.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%==========================================================================
+\section{What Inverse Dynamics Computes}
+%==========================================================================
+
+For a rigid body,
+\begin{align}
+    \mathbf{F}_{\mathrm{net}} &= m \mathbf{a}_{\mathrm{COM}}, \\
+    \bm{\tau}_{\mathrm{net}} &= \mathbf{I}\bm{\alpha} + \bm{\omega}\times(\mathbf{I}\bm{\omega}),
+\end{align}
+where $\mathbf{F}_{\mathrm{net}}$ and $\bm{\tau}_{\mathrm{net}}$ are the total external force and moment acting on the club.
+
+Inverse dynamics then rewrites this wrench at a chosen point (usually the midpoint between the hands).  
+This is a \emph{mathematical relocation}, not a direct measurement of hand activity.
+
+\subsection*{Diagram 1: Net wrench at an arbitrary point}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05,>=Stealth]
+    % Club as line
+    \draw[shaft] (-3,0) -- (3,0);
+    % Reference point
+    \fill[refpoint] (0,0) circle;
+    \node[below] at (0,0) {analysis point};
+    % Net force
+    \draw[forcevec] (0,0) -- (0,1.4) node[above] {$\mathbf{F}_{\mathrm{net}}$};
+    % Net couple (drawn as a curved vector)
+    \draw[couplevec] (0.3,0) arc (0:300:0.3);
+    \node[right] at (0.5,-0.1) {$\bm{\tau}_{\mathrm{net}}$};
+\end{tikzpicture}
+\end{center}
+
+The pair $(\mathbf{F}_{\mathrm{net}},\bm{\tau}_{\mathrm{net}})$ is the \emph{combined effect} of everything acting on the club: both hands, gravity, and small aerodynamic forces.
+
+\begin{quote}
+\textbf{Inverse dynamics computes the net effect needed to reproduce the motion.  
+It does not resolve who did what at the hands.}
+\end{quote}
+
+%==========================================================================
+\section{How Equivalent Couples Are Created}
+%==========================================================================
+
+Any force $\mathbf{F}$ applied at point $\mathbf{r}_a$ can be rewritten at another point $\mathbf{r}_b$ as:
+\begin{align}
+    \mathbf{F}_{\mathrm{eq}} &= \mathbf{F},\\
+    \bm{\tau}_{\mathrm{eq}} &= (\mathbf{r}_a - \mathbf{r}_b)\times \mathbf{F}.
+\end{align}
+
+This preserves the overall moment and guarantees identical motion.
+
+\subsection*{Diagram 2: Single force relocated as force + couple}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+    % Shaft
+    \draw[shaft] (-3,0) -- (3,0);
+    % Points
+    \fill[labelpt] (-2,0) circle;
+    \node[below] at (-2,0) {$\mathbf{r}_a$};
+    \fill[labelpt] (1.5,0) circle;
+    \node[below] at (1.5,0) {$\mathbf{r}_b$};
+    % Force at r_a
+    \draw[forcevec] (-2,0) -- (-2,1.3) node[left] {$\mathbf{F}$};
+    % Offset arrow
+    \draw[<->,thin] (-2,-0.4) -- (1.5,-0.4);
+    \node[below] at (-0.25,-0.4) {$\mathbf{r}_a - \mathbf{r}_b$};
+    % Equivalent force at r_b
+    \draw[forcevec] (1.5,0) -- (1.5,1.3) node[right] {$\mathbf{F}_{\mathrm{eq}}$};
+    % Equivalent couple at r_b
+    \draw[couplevec] (1.8,0) arc (0:300:0.3);
+    \node[right] at (2.1,-0.1) {$\bm{\tau}_{\mathrm{eq}}$};
+\end{tikzpicture}
+\end{center}
+
+Even if the golfer applied a \emph{pure force} at $\mathbf{r}_a$, the representation at $\mathbf{r}_b$ includes a couple.
+
+\begin{quote}
+\textbf{A nonzero couple reported by inverse dynamics can arise purely from force location, not from twisting.}
+\end{quote}
+
+%==========================================================================
+\section{Affine Dynamics and Input Ambiguity}
+%==========================================================================
+
+The club’s equations of motion can be expressed as an affine system:
+\begin{equation}
+    \ddot{\mathbf{q}} = \mathbf{f}(\mathbf{q},\dot{\mathbf{q}}) + \mathbf{G}(\mathbf{q})\,\mathbf{u},
+\end{equation}
+where:
+\begin{itemize}
+    \item $\mathbf{u}$ represents forces and torques supplied by the hands,
+    \item $\mathbf{f}$ contains drift terms (gravity, inertial and Coriolis effects).
+\end{itemize}
+
+Many different input histories $\mathbf{u}(t)$ can generate the same motion trajectory $\mathbf{q}(t)$.  
+Inverse dynamics provides \emph{one} net wrench consistent with the observed motion and assumed inertial properties, but that wrench may correspond to many different hand-force distributions.
+
+\subsection*{Diagram 3: Non-unique inputs for the same motion}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0,>=Stealth]
+    % Block diagram style
+    \node[draw,rounded corners,minimum width=3.5cm,minimum height=1.2cm] (sys) at (0,0) {club dynamics};
+    \draw[->,thick] (-3,0) node[left] {$\mathbf{u}_1(t)$} -- (sys.west);
+    \draw[->,thick] (-3,0.7) node[left] {$\mathbf{u}_2(t)$} -- (-1.75,0.35);
+    \draw[->,thick] (-3,-0.7) node[left] {$\mathbf{u}_3(t)$} -- (-1.75,-0.35);
+    \draw[->,thick] (sys.east) -- (3,0) node[right] {same $\mathbf{q}(t)$};
+\end{tikzpicture}
+\end{center}
+
+This non-uniqueness exists even before we add the complexity of two hands.
+
+%==========================================================================
+\section{Two-Handed Grip: A Closed Mechanical Loop}
+%==========================================================================
+
+With two hands on the club, we have:
+\[
+\text{left hand} \rightarrow \text{club} \rightarrow \text{right hand},
+\]
+forming a closed loop of forces and reactions.
+
+\subsection*{Diagram 4: Two-handed closed loop}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+    % Club
+    \draw[shaft] (-3,0) -- (3,0);
+    % Hands
+    \fill[labelpt] (-1.5,0) circle;
+    \node[below] at (-1.5,0) {left hand};
+    \fill[labelpt] (1.5,0) circle;
+    \node[below] at (1.5,0) {right hand};
+    % Forces
+    \draw[forcevec] (-1.5,0) -- (-1.5,1.1) node[left] {$\mathbf{F}_\ell$};
+    \draw[forcevec] (1.5,0) -- (1.5,1.1) node[right] {$\mathbf{F}_r$};
+    % Internal loop arrows
+    \draw[->,thin] (-1.5,-0.3) -- (1.5,-0.3);
+    \draw[->,thin] (1.5,-0.6) -- (-1.5,-0.6);
+    \node[below] at (0,-0.6) {internal constraints};
+\end{tikzpicture}
+\end{center}
+
+Closed loops introduce:
+\begin{itemize}
+    \item internal constraint forces that do not affect overall motion,
+    \item redundant ways to generate the same net wrench,
+    \item fundamental non-uniqueness of hand-force distributions.
+\end{itemize}
+
+\begin{quote}
+\textbf{Inverse dynamics of the club cannot uniquely determine how much force the left hand applied versus the right hand.}
+\end{quote}
+
+%==========================================================================
+\section{Force Decomposition and the Free Couple}
+%==========================================================================
+
+We can think of real hand forces as being reduced to two resultants:
+\[
+\mathbf{F}_\ell, \quad \mathbf{F}_r.
+\]
+
+These can be decomposed into:
+\begin{itemize}
+    \item a net force $\mathbf{F}_{\mathrm{net}} = \mathbf{F}_\ell + \mathbf{F}_r$,
+    \item a couple $\bm{\tau}_c$ arising from their separation.
+\end{itemize}
+
+\subsection*{Diagram 5: Decomposing left/right forces into net + couple}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+    % Top row: two forces
+    % Shaft
+    \draw[shaft] (-3,1.0) -- (3,1.0);
+    % Hands
+    \fill[labelpt] (-1.5,1.0) circle;
+    \fill[labelpt] (1.5,1.0) circle;
+    % Forces
+    \draw[forcevec] (-1.5,1.0) -- (-1.5,2.0);
+    \draw[forcevec] (1.5,1.0) -- (1.5,2.0);
+    \node[above] at (0,2.0) {real left/right resultants};
+    % Arrow down
+    \draw[->,thin] (0,0.7) -- (0,0.3);
+    % Bottom row: net force + couple
+    \draw[shaft] (-3,0) -- (3,0);
+    \fill[refpoint] (0,0) circle;
+    \node[below] at (0,0) {reference};
+    \draw[forcevec] (0,0) -- (0,-1.2) node[below] {$\mathbf{F}_{\mathrm{net}}$};
+    \draw[couplevec] (0.3,0) arc (0:300:0.3);
+    \node[right] at (0.7,-0.1) {$\bm{\tau}_c$};
+\end{tikzpicture}
+\end{center}
+
+The couple $\bm{\tau}_c$ is a \emph{free vector}: it can be applied at any point without changing the rotational behavior of the club.
+
+%==========================================================================
+\section{Dependence on the Chosen Analysis Point}
+%==========================================================================
+
+The conventional choice is to express the equivalent wrench at the midpoint between the hands.  
+This is convenient, but arbitrary.
+
+Shifting the reference point along the shaft changes the reported couple:
+\[
+\bm{\tau}_{\mathrm{new}} = \bm{\tau}_m + \mathbf{r}\times\mathbf{F}_m.
+\]
+
+\subsection*{Diagram 6: Changing reference point along the shaft}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.15,>=Stealth]
+    % Shaft
+    \draw[shaft] (-4,0) -- (4,0);
+    % Midpoint
+    \fill[refpoint] (0,0) circle;
+    \node[below] at (0,0) {midpoint};
+    % New ref points
+    \fill[labelpt] (-2,0) circle;
+    \node[below] at (-2,0) {point A};
+    \fill[labelpt] (2.5,0) circle;
+    \node[below] at (2.5,0) {point B};
+    % Net force at midpoint
+    \draw[forcevec] (0,0) -- (0,1.4) node[above] {$\mathbf{F}_m$};
+    % Couples at A and B
+    \draw[couplevec] (-1.7,0) arc (0:300:0.3);
+    \node[above left] at (-1.4,-0.1) {$\bm{\tau}_A$};
+    \draw[couplevec] (2.8,0) arc (0:300:0.3);
+    \node[above right] at (3.1,-0.1) {$\bm{\tau}_B$};
+\end{tikzpicture}
+\end{center}
+
+This is why the same motion can produce different torque values depending on the point chosen for analysis.
+
+%==========================================================================
+\section{Bounds and “What-If” Scenarios}
+%==========================================================================
+
+Let $C_m$ denote the couple at the midpoint and $M_{fm}$ the moment of the net force about that midpoint.  
+If we assume the real point of force application slides along the grip, the equivalent couple $C(d)$ at distance $d$ from the midpoint changes approximately linearly.
+
+\subsection*{Diagram 7: Range of possible couples as force location shifts}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05,>=Stealth]
+    % Axes
+    \draw[axisline,->] (-3,0) -- (3.2,0) node[right] {$d$ (along grip)};
+    \draw[axisline,->] (0,-1.5) -- (0,1.7) node[left] {$C(d)$};
+    % Bound region
+    \path[boundregion] (-2.5,-1) -- (2.5,0.8) -- (2.5,0.3) -- (-2.5,-1.3) -- cycle;
+    % Nominal line
+    \draw[thick,accent] (-2.5,-1) -- (2.5,0.8);
+    % Midpoint couple
+    \draw[dashed] (-3,0.1) -- (3,0.1);
+    \node[right] at (3,0.1) {$C_m$};
+    % Labels
+    \node at (1.8,1.3) {possible $C(d)$};
+\end{tikzpicture}
+\end{center}
+
+Reasonable shifts in $d$ (different parts of the hands, fingers vs. palms) can easily change $C(d)$ by 10--20\% or more—and sometimes flip the sign.
+
+%==========================================================================
+\section{Contextual Swing Examples}
+%==========================================================================
+
+\subsection{Early backswing: force high on the grip}
+
+Imagine an upward pull applied closer to the trail hand than to the midpoint.
+
+\subsection*{Diagram 8: Early-backswing upward pull}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+    % Shaft slightly inclined
+    \draw[shaft] (-3,-0.2) -- (3,0.2);
+    % Midpoint
+    \coordinate (mid) at (0,0);
+    \fill[refpoint] (mid) circle;
+    \node[below] at (mid) {midpoint};
+    % Force point near trail side
+    \coordinate (fp) at (1.7,0.13);
+    \fill[labelpt] (fp) circle;
+    \node[above] at (fp) {force point};
+    % Upward-ish force
+    \draw[forcevec] (fp) -- ($(fp)+(0.1,1.1)$) node[right] {$\mathbf{F}$};
+\end{tikzpicture}
+\end{center}
+
+At the midpoint, inverse dynamics might report:
+\begin{itemize}
+    \item an upward net force, and
+    \item a negative couple (depending on sign convention).
+\end{itemize}
+The negative couple in this case simply reflects where the force acted relative to the midpoint, not a deliberate ``twisting down'' by the golfer.
+
+\subsection{Late downswing: large moment, ambiguous couple sign}
+
+In late downswing the external moment of force can be large.  
+Depending on the actual point of application (higher or lower on the grip), the equivalent couple evaluated at the hand locations may be positive or negative, even if the midpoint couple is negative.
+
+\subsection*{Diagram 9: Sign-change zone for late downswing}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.05,>=Stealth]
+    % Axes
+    \draw[axisline,->] (-3,0) -- (3.2,0) node[right] {force location};
+    \draw[axisline,->] (0,-1.5) -- (0,1.7) node[left] {equivalent couple};
+    % Zero line
+    \draw[dashed] (-3,0) -- (3,0);
+    % Couple curve
+    \draw[thick,accent] (-2.5,1.0) .. controls (-1,0.4) and (1,-0.4) .. (2.5,-1.2);
+    % Region annotation
+    \node at (-1.8,1.2) {positive at lead side};
+    \node at (1.8,-1.4) {negative at trail side};
+\end{tikzpicture}
+\end{center}
+
+This is a key reason why debates that treat the sign of the midpoint couple as a direct indicator of how the hands twist the club are on shaky ground.
+
+%==========================================================================
+\section{What Inverse Dynamics Can and Cannot Tell Us}
+%==========================================================================
+
+\subsection*{It CAN tell us:}
+\begin{itemize}
+    \item the net wrench required to produce the measured motion,
+    \item how overall loading trends evolve during the swing,
+    \item whether the motion is more force-driven or moment-driven in aggregate,
+    \item bounds and families of plausible hand-force strategies.
+\end{itemize}
+
+\subsection*{It CANNOT tell us:}
+\begin{itemize}
+    \item which hand applied more force,
+    \item whether one hand was pulling while the other was pushing,
+    \item whether the golfer intentionally twisted the club,
+    \item where along the grip forces were applied,
+    \item a unique ``hand torque’’ profile or ``alpha torque’’ signal.
+\end{itemize}
+
+These limitations stem from the physics and mathematics of closed-loop affine systems, not from measurement noise.
+
+%==========================================================================
+\section{Conclusion}
+%==========================================================================
+
+Inverse dynamics provides the correct net wrench for a given motion, but it does not reconstruct human intent or actual contact forces.  
+Two hands on the club form a closed-loop mechanical system with internal constraints and redundant force pathways.  
+One can always transform forces into different equivalent force--couple pairs by shifting the reference point along the shaft.
+
+A nonzero couple at the midpoint:
+\begin{itemize}
+    \item may arise purely from force location,
+    \item will change if the analysis point is moved,
+    \item and does not directly measure twisting exerted by the hands.
+\end{itemize}
+
+Understanding these facts is essential for interpreting inverse dynamics torque data, for engaging with discussions of ``alpha torque’’, and for avoiding overly literal readings of equivalent couples in golf swing analysis.
+
+\end{document}
