@@ -224,7 +224,7 @@
                                         Deploy the app at <a href="https://streamlit.io/cloud" target="_blank">streamlit.io/cloud</a> 
                                         and update the URL below.</p>
                                     </div>
-                                    <div id="streamlit-placeholder" style="display: none; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+                                    <div id="streamlit-placeholder" style="display: block; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
                                         <p>Streamlit app not yet deployed. Deploy <code>tools/wrist-universal-joint/Grip_Angle_Torque_Transmission_Streamlit.py</code> to Streamlit Cloud to enable this version.</p>
                                         <p><a href="tools/wrist-universal-joint/EMBEDDING_GUIDE.md" target="_blank">View deployment instructions</a></p>
                                     </div>
@@ -237,8 +237,7 @@
                                         frameborder="0"
                                         scrolling="auto"
                                         id="streamlit-simulator"
-                                        style="display: none;"
-                                        onerror="document.getElementById('streamlit-placeholder').style.display='block'; this.style.display='none';">
+                                        style="display: none;">
                                     </iframe>
                                 </div>
                             </div>
@@ -297,17 +296,23 @@
     <script>
         // Handle Streamlit iframe loading
         const streamlitIframe = document.getElementById('streamlit-simulator');
-        if (streamlitIframe) {
-            streamlitIframe.onload = function() {
-                // If iframe loads successfully, hide placeholder
-                document.getElementById('streamlit-placeholder').style.display = 'none';
+        const streamlitPlaceholder = document.getElementById('streamlit-placeholder');
+        if (streamlitIframe && streamlitPlaceholder) {
+            // Check if URL is still a placeholder
+            const isPlaceholder = streamlitIframe.src.includes('your-app-name.streamlit.app');
+            
+            if (!isPlaceholder) {
+                // URL has been updated to a real Streamlit app, try to load the iframe
                 streamlitIframe.style.display = 'block';
-            };
-            streamlitIframe.onerror = function() {
-                // If iframe fails to load, show placeholder
-                document.getElementById('streamlit-placeholder').style.display = 'block';
-                streamlitIframe.style.display = 'none';
-            };
+                streamlitPlaceholder.style.display = 'none';
+                
+                streamlitIframe.onload = function() {
+                    // If iframe loads successfully, ensure it's visible and hide placeholder
+                    streamlitPlaceholder.style.display = 'none';
+                    streamlitIframe.style.display = 'block';
+                };
+            }
+            // If URL is still a placeholder, placeholder is already shown by default (display: block)
         }
     </script>
 </body>
