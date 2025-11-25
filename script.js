@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Only apply animation if element doesn't already have opacity set
                 // Use getComputedStyle to check actual rendered opacity value
                 const computedOpacity = window.getComputedStyle(entry.target).opacity;
-                if (computedOpacity === '0' || computedOpacity === '') {
+                if (computedOpacity === '0') {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
                 }
