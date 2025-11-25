@@ -117,6 +117,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Page history tracking for sidebar
+    function updateHistorySidebar() {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        // Constants
+        const MAX_HISTORY_TITLE_LENGTH = 40;
+        const MAX_HISTORY_ITEMS = 10;
+
+        // Get history from localStorage
+        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
+        
+        // Get current page info with improved title extraction
+        let pageTitle = document.title;
+        // Handle different title formats
+        if (pageTitle.includes(' - AffineDrift')) {
+            pageTitle = pageTitle.replace(' - AffineDrift', '');
+        } else if (pageTitle.startsWith('AffineDrift - ')) {
+            pageTitle = pageTitle.replace('AffineDrift - ', '');
+        } else if (pageTitle === 'AffineDrift') {
+            pageTitle = 'Home';
+        }
+        
+        const currentPage = {
+            title: pageTitle,
+            url: window.location.pathname.split('/').pop() || 'index.html',
+            fullUrl: window.location.href
+        };
+
+        // Remove current page if it's already in history
+        history = history.filter(item => item.url !== currentPage.url);
+        
+        // Add current page to front
+        history.unshift(currentPage);
+        
+        // Keep only last N items
+        history = history.slice(0, MAX_HISTORY_ITEMS);
+        
+        // Save back to localStorage
+        localStorage.setItem('affinedrift_history', JSON.stringify(history));
+        
+        // Update sidebar display
+        // Filter out current page from display
+        const displayHistory = history.filter(item => item.url !== currentPage.url);
+        if (displayHistory.length === 0) {
+            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
+        } else {
+            historyList.innerHTML = displayHistory.map(item => {
+                const displayTitle = item.title.length > MAX_HISTORY_TITLE_LENGTH 
+                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
+                    : item.title;
+                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
+            }).join('');
+        }
+    }
+
+    // Initialize history sidebar
+    updateHistorySidebar();
+
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
