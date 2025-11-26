@@ -764,9 +764,8 @@
             
             const { tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
             const torque_transmitted = noiseData.map(n => n * tau_ratio);
-            const { torque_alpha, torque_gamma } = distributeTorqueByGripAngle(
-                torque_transmitted.map((t, i) => t), theta_grip_rad
-            );
+            const torque_alpha = torque_transmitted.map(t => t * Math.sin(theta_grip_rad));
+            const torque_gamma = torque_transmitted.map(t => t * Math.cos(theta_grip_rad));
 
             const traces = [];
             const showInput = document.getElementById('show-input')?.checked ?? true;
