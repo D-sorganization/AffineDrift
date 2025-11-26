@@ -1,0 +1,296 @@
+name: CI - Build and Test
+
+on:
+  pull_request:
+    branches: [ main, master, copilot/* ]
+  push:
+    branches: [ main, master, copilot/* ]
+
+jobs:
+  python-lint-and-test:
+    name: Python Lint and Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements*.txt', '**/pyproject.toml', '**/setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install CI tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff==0.5.0 mypy==1.10.0 black==24.4.2 pytest==8.3.3 pytest-cov==6.0.0
+
+      - name: Install project deps
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f tools/wrist-universal-joint/requirements.txt ]; then pip install -r tools/wrist-universal-joint/requirements.txt; fi
+
+      - name: Run quality check script
+        continue-on-error: true
+        run: |
+          if [ -f scripts/quality-check.py ]; then
+            python scripts/quality-check.py
+          else
+            echo "⚠️ No quality check script found, skipping..."
+          fi
+
+      - name: Run Ruff linter
+        run: |
+          echo "🔍 Running Ruff linter..."
+          if [ -f ruff.toml ]; then
+            ruff check .
+          else
+            ruff check . --select ALL
+          fi
+
+      - name: Type check with MyPy
+        continue-on-error: true
+        run: |
+          echo "🔍 Running MyPy type checker..."
+          if [ -f mypy.ini ]; then
+            mypy . --config-file mypy.ini
+          else
+            mypy . --ignore-missing-imports
+          fi
+
+      - name: Format check with Black
+        run: |
+          echo "🔍 Checking code formatting with Black..."
+          # Check Python files in content and tools directories
+          find content -name "*.py" -not -path "*/Archive/*" -not -path "*/Drafts/*" | xargs black --check --diff || true
+          find tools -name "*.py" | xargs black --check --diff || true
+
+      - name: Run pytest (if tests exist)
+        run: |
+          if [ -d tests ]; then
+            export PYTHONPATH="${{ github.workspace }}"
+            pytest tests/ -v
+          else
+            echo "⚠️ No tests directory found, skipping pytest"
+          fi
+
+  quarto-validate:
+    name: Quarto Document Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Validate Quarto documents
+        continue-on-error: true
+        run: |
+          echo "🔍 Validating Quarto documents..."
+          # Check if Quarto project exists
+          if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
+            quarto check || echo "⚠️ Quarto check completed with warnings"
+          else
+            echo "⚠️ No Quarto project file found, skipping Quarto validation"
+          fi
+
+      - name: Render Quarto documents (dry run)
+        continue-on-error: true
+        run: |
+          echo "🔍 Testing Quarto render..."
+          if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
+            quarto render --to html --cache || echo "⚠️ Quarto render completed with warnings"
+          fi
+
+  website-validate:
+    name: Website Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install validation tools
+        run: |
+          npm install -g html-validate@latest
+          npm install -g stylelint@latest stylelint-config-standard@latest
+          npm install -g eslint@latest
+          npm install -g prettier@latest
+
+      - name: Validate HTML files
+        continue-on-error: true
+        run: |
+          echo "🔍 Validating HTML files..."
+          # Validate all HTML files (excluding generated _site and docs)
+          find . -name "*.html" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
+            echo "Checking $file..."
+            npx html-validate "$file" || echo "⚠️ HTML validation issues in $file"
+          done
+
+      - name: Check HTML accessibility
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking HTML accessibility..."
+          # Check for semantic HTML elements and ARIA attributes
+          find . -name "*.html" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
+            # Check for missing alt attributes on images
+            if grep -q '<img' "$file" && ! grep -q 'alt=' "$file"; then
+              echo "⚠️ Warning: Images without alt attributes in $file"
+            fi
+            # Check for missing lang attribute
+            if ! grep -q '<html.*lang=' "$file"; then
+              echo "⚠️ Warning: Missing lang attribute in $file"
+            fi
+          done
+
+      - name: Lint CSS files
+        continue-on-error: true
+        run: |
+          echo "🔍 Linting CSS files..."
+          find . -name "*.css" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
+            echo "Checking $file..."
+            npx stylelint "$file" --config-basedir . || echo "⚠️ CSS linting issues in $file"
+          done
+
+      - name: Format check CSS with Prettier
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking CSS formatting..."
+          find . -name "*.css" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
+            npx prettier --check "$file" || echo "⚠️ CSS formatting issues in $file"
+          done
+
+      - name: Lint JavaScript files
+        continue-on-error: true
+        run: |
+          echo "🔍 Linting JavaScript files..."
+          find . -name "*.js" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "./node_modules/*" | while read file; do
+            echo "Checking $file..."
+            # Basic syntax check
+            node -c "$file" || echo "⚠️ JavaScript syntax error in $file"
+            # ESLint check (if .eslintrc exists)
+            if [ -f .eslintrc ] || [ -f .eslintrc.json ] || [ -f .eslintrc.js ]; then
+              npx eslint "$file" || echo "⚠️ ESLint issues in $file"
+            fi
+          done
+
+      - name: Format check JavaScript with Prettier
+        continue-on-error: true
+        run: |
+          echo "🔍 Checking JavaScript formatting..."
+          find . -name "*.js" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "./node_modules/*" | while read file; do
+            npx prettier --check "$file" || echo "⚠️ JavaScript formatting issues in $file"
+          done
+
+      - name: Check for common issues
+        run: |
+          echo "🔍 Checking for common issues..."
+          # Check for TODO comments (warning only)
+          find . -name "*.html" -o -name "*.css" -o -name "*.js" | grep -v "./_site/" | grep -v "./docs/" | grep -v "./.git/" | grep -v "./.quarto/" | xargs grep -l "TODO" 2>/dev/null && echo "⚠️ Warning: TODO comments found" || echo "✓ No TODO comments found"
+          # Check for console.log in production (warning only)
+          find . -name "*.js" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | xargs grep -l "console.log" 2>/dev/null && echo "⚠️ Warning: console.log found in JS" || echo "✓ No console.log found"
+          # Check for debugger statements
+          find . -name "*.js" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | xargs grep -l "debugger" 2>/dev/null && echo "⚠️ Warning: debugger statements found" || echo "✓ No debugger statements found"
+
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install markdownlint
+        run: |
+          npm install -g markdownlint-cli2@latest
+
+      - name: Lint Markdown files
+        continue-on-error: true
+        run: |
+          echo "🔍 Linting Markdown files..."
+          # Lint all markdown files except in _site and docs (generated)
+          find . -name "*.md" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | \
+            xargs markdownlint-cli2 || echo "⚠️ Markdown linting completed with warnings"
+
+  matlab-validate:
+    name: MATLAB Code Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: "contains(github.event.head_commit.message, 'matlab') || contains(github.event.head_commit.message, 'MATLAB') || contains(github.event.head_commit.message, '.m') || always()"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check for MATLAB files
+        id: matlab-check
+        run: |
+          if find . -name "*.m" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "*/Archive/*" -not -path "*/Drafts/*" | grep -q .; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "MATLAB files found"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No MATLAB files found"
+          fi
+
+      - name: Install MATLAB quality check dependencies
+        if: steps.matlab-check.outputs.exists == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install regex
+
+      - name: Run MATLAB static analysis
+        if: steps.matlab-check.outputs.exists == 'true'
+        continue-on-error: true
+        run: |
+          echo "🔍 Running MATLAB static analysis..."
+          # Basic MATLAB file validation
+          find . -name "*.m" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "*/Archive/*" -not -path "*/Drafts/*" | while read file; do
+            echo "Checking $file..."
+            # Check for basic syntax issues
+            # Check for function name matching file name
+            filename=$(basename "$file" .m)
+            if grep -q "^function" "$file"; then
+              if ! grep -q "^function.*$filename" "$file"; then
+                echo "⚠️ Warning: Function name may not match filename in $file"
+              fi
+            fi
+            # Check for TODO/FIXME
+            if grep -q "TODO\|FIXME" "$file"; then
+              echo "⚠️ Warning: TODO/FIXME found in $file"
+            fi
+            # Check for clear all/clc in library code
+            if grep -q "clear all\|clc" "$file" && ! grep -q "script\|main" "$file"; then
+              echo "⚠️ Warning: clear all/clc found in library code: $file"
+            fi
+          done || echo "⚠️ MATLAB validation completed with warnings"
+
