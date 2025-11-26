@@ -1,0 +1,70 @@
+name: Quarto Publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.4.549
+
+      - name: Verify Quarto installation
+        run: quarto --version
+
+      - name: Render Quarto Project
+        run: quarto render
+
+      - name: Verify output files
+        run: |
+          echo "Checking _site directory..."
+          ls -la _site/ || echo "_site directory not found"
+          test -d _site && echo "✓ _site directory exists" || (echo "✗ _site directory missing" && exit 1)
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deployment summary
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "🚀 Quarto site deployment successful!"
+          echo "📍 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "✅ All files uploaded and deployed"
