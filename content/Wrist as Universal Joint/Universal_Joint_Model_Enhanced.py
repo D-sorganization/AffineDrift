@@ -345,15 +345,6 @@ class DiagramCanvas(FigureCanvas):
         wrist_arc_center_y = hand_endpoint_forearm_y
         wrist_arc_radius = 0.12
 
-        # Wrist angle: actual angle between hand and forearm
-        # Hand direction (away from club)
-        hand_axis_angle = theta_grip_rad
-        # Forearm direction (away from hand, accounting for wrist angle)
-        # When wrist angle = 0, forearm should align with hand
-        # When wrist angle = phi, forearm rotates by phi relative to hand
-        # Note: Must match the actual forearm drawing angle which includes + np.pi
-        forearm_axis_angle = theta_grip_rad + phi_wrist_rad + np.pi
-
         # Draw arc showing the actual wrist angle φ
         # The arc should show just phi_wrist_rad, not including the π offset
         # Hand axis direction (away from club)
