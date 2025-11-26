@@ -227,6 +227,9 @@ nav .container {
     text-align: center;
     white-space: normal;
     word-break: break-word;
+    display: flex;
+    align-items: flex-end;
+    min-height: 2.5rem;
 }
 
 .nav-links a::after {
@@ -240,11 +243,13 @@ nav .container {
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
     width: 100%;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--light-blue);
 }
 
