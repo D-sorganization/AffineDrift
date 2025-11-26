@@ -74,9 +74,9 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar {
     position: fixed;
     left: 0;
-    top: 96px; /* Account for header height: 70px logo + 0.8rem top padding + 0.8rem bottom padding */
+    top: 120px; /* Account for header height with potential wrapping: 70px logo + padding + potential wrap */
     width: 260px;
-    height: calc(100vh - 96px);
+    height: calc(100vh - 120px);
     background: var(--pure-white);
     border-right: 2px solid var(--border-light);
     overflow-y: auto;
@@ -207,10 +207,12 @@ nav .container {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.5rem;
     margin-right: 1rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .nav-links a {
@@ -320,7 +322,7 @@ nav .container {
 }
 
 .drift-quote p {
-    font-size: 1.05em;
+    font-size: 0.95rem;
     font-style: italic;
     line-height: 1.9;
     margin: 0;
@@ -996,6 +998,13 @@ footer p {
     }
 }
 
+@media (max-width: 992px) {
+    .sidebar {
+        top: 140px; /* Account for header wrapping to multiple rows */
+        height: calc(100vh - 140px);
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 0 1.5rem;
@@ -1004,6 +1013,8 @@ footer p {
     .sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
+        top: 96px; /* Reset for mobile where header is smaller */
+        height: calc(100vh - 96px);
     }
 
     .sidebar.open {
