@@ -75,11 +75,10 @@ jobs:
           find tools -name "*.py" | xargs black --check --diff || true
 
       - name: Run pytest (if tests exist)
-        continue-on-error: true
         run: |
           if [ -d tests ]; then
             export PYTHONPATH="${{ github.workspace }}"
-            pytest tests/ -v || echo "⚠️ Tests failed or no tests found"
+            pytest tests/ -v
           else
             echo "⚠️ No tests directory found, skipping pytest"
           fi

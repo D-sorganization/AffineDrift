@@ -62,8 +62,20 @@ jobs:
       - name: Check for common issues
         run: |
           echo "Checking for common issues..."
-          grep -r "TODO" *.html *.css *.js 2>/dev/null && echo "⚠️ Warning: TODO comments found" || echo "✓ No TODO comments found"
-          grep -r "console.log" *.js 2>/dev/null && echo "⚠️ Warning: console.log found in JS" || echo "✓ No console.log found"
+          # Check for TODO comments in HTML, CSS, and JS files (excluding generated directories)
+          files=$(find . -name "*.html" -o -name "*.css" -o -name "*.js" | grep -v "./_site/" | grep -v "./docs/" | grep -v "./.git/" | grep -v "./.quarto/" || true)
+          if [ -n "$files" ] && echo "$files" | xargs grep -l "TODO" 2>/dev/null; then
+            echo "⚠️ Warning: TODO comments found"
+          else
+            echo "✓ No TODO comments found"
+          fi
+          # Check for console.log in JS files (excluding generated directories)
+          js_files=$(find . -name "*.js" | grep -v "./_site/" | grep -v "./docs/" | grep -v "./.git/" | grep -v "./.quarto/" | grep -v "./node_modules/" || true)
+          if [ -n "$js_files" ] && echo "$js_files" | xargs grep -l "console.log" 2>/dev/null; then
+            echo "⚠️ Warning: console.log found in JS"
+          else
+            echo "✓ No console.log found"
+          fi
 
       - name: Render Quarto documents (if project exists)
         continue-on-error: true
