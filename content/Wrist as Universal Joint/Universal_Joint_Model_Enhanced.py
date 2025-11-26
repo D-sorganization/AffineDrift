@@ -19,17 +19,33 @@ Date: 2025-11-25
 """
 
 import sys
-import numpy as np
+
 import matplotlib
+import numpy as np
+
 matplotlib.use('QtAgg')
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QSlider, QGroupBox, QSplitter, QCheckBox, QComboBox, QPushButton,
-    QDialog, QTextEdit, QScrollArea, QDialogButtonBox, QDoubleSpinBox, QTabWidget
-)
-from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from matplotlib.patches import Ellipse, Rectangle
+from PyQt6.QtCore import QEvent, Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QScrollArea,
+    QSlider,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
 # Default golf club properties
 DEFAULT_CLUBHEAD_WEIGHT = 200.0  # grams
@@ -88,9 +104,6 @@ def universal_joint_transmission_ratio(phi_rad, delta_rad):
     if np.abs(delta_rad) > np.radians(89):
         delta_rad = np.sign(delta_rad) * np.radians(89)
 
-    # Handle arrays or scalars
-    phi_is_array = isinstance(phi_rad, np.ndarray)
-
     sin_delta = np.sin(delta_rad)
     cos_delta = np.cos(delta_rad)
     sin_phi = np.sin(phi_rad)
@@ -127,22 +140,189 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
     return torque_alpha, torque_gamma
 
 
-class UniversalJointCanvas(FigureCanvas):
-    """
-    Canvas showing:
-    1. Top: Input torque and transmitted torques vs time for a specific wrist angle
-    2. Bottom: Transmission ratio vs wrist angle (sweep)
-    """
-    def __init__(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
-        self.figure = Figure(figsize=(10, 8))
+class DiagramCanvas(FigureCanvas):
+    """Canvas showing forearm, hand, and club with both angles"""
+    def __init__(self, grip_angle_deg, wrist_angle_deg):
+        self.figure = Figure(figsize=(12, 4))
         super().__init__(self.figure)
-        self.setMinimumSize(600, 500)
+        self.setMinimumSize(800, 300)
 
-        # Create subplots
-        self.ax_torque = self.figure.add_subplot(311)  # Top: Torque vs time
-        self.ax_accel = self.figure.add_subplot(312)   # Middle: Acceleration vs time
-        self.ax_transmission = self.figure.add_subplot(313)  # Bottom: Transmission vs wrist angle
+        self.ax = self.figure.add_subplot(111)
+        self.grip_angle_deg = grip_angle_deg
+        self.wrist_angle_deg = wrist_angle_deg
 
+        self.update_diagram()
+
+    def update_diagram(self):
+        """Update the diagram with current angles"""
+        self.ax.clear()
+
+        theta_grip_rad = np.radians(self.grip_angle_deg)
+        phi_wrist_rad = np.radians(self.wrist_angle_deg)
+
+        # Coordinate system: club is always horizontal, clubhead on left pointing up
+        # Wrist joint position
+        wrist_x = 0.4
+        wrist_y = 0.5
+
+        # Club shaft: always horizontal, extends left from hand midpoint (wrist)
+        shaft_length = 0.35
+        # Club attaches to hand midpoint (wrist)
+        shaft_attach_x = wrist_x
+        shaft_attach_y = wrist_y
+        shaft_end_x = shaft_attach_x - shaft_length  # Left side
+        shaft_end_y = shaft_attach_y  # Horizontal
+
+        # Draw club shaft (horizontal)
+        self.ax.plot([shaft_end_x, shaft_attach_x], [shaft_end_y, shaft_attach_y],
+                     'k-', linewidth=8, solid_capstyle='round', label='Club Shaft', zorder=3)
+
+        # Clubhead: on left end, pointing up, 2/3 width, 2x height, starts at bottom and overlays shaft
+        clubhead_width = 0.08  # 2/3 of original 0.12
+        clubhead_height = 0.24  # 2x original 0.12
+        clubhead_x = shaft_end_x - clubhead_width / 2  # Center on shaft end
+        clubhead_y = shaft_end_y  # Start at top of shaft, pointing up
+
+        clubhead = Rectangle((clubhead_x, clubhead_y), clubhead_width, clubhead_height,
+                            facecolor='silver', alpha=0.9, edgecolor='gray', linewidth=2, zorder=4)
+        self.ax.add_patch(clubhead)
+
+        # Hand: attached at midpoint to wrist, rotated by grip angle relative to club
+        # Hand's long axis makes angle theta_grip with horizontal club shaft
+        hand_length = 0.2
+        hand_width = 0.12
+        # Hand center is at wrist (midpoint attachment)
+        hand_center_x = wrist_x
+        hand_center_y = wrist_y
+
+        # Hand ellipse (same color as forearm - tan)
+        hand = Ellipse((hand_center_x, hand_center_y), hand_length, hand_width,
+                      angle=np.degrees(theta_grip_rad), facecolor='tan', alpha=0.8,
+                      edgecolor='saddlebrown', linewidth=2, zorder=6)
+        self.ax.add_patch(hand)
+
+        # Draw 4 fingers on hand
+        finger_length = 0.12
+        finger_width = 0.015
+        hand_dir_x = np.cos(theta_grip_rad)
+        hand_dir_y = np.sin(theta_grip_rad)
+        finger_dir_x = -hand_dir_x  # Fingers point opposite to hand long axis
+        finger_dir_y = -hand_dir_y
+
+        perp_to_hand_x = -hand_dir_y
+        perp_to_hand_y = hand_dir_x
+        finger_spacing = 0.03
+        finger_positions = [-1.2, -0.4, 0.4, 1.2]
+
+        for pos in finger_positions:
+            base_x = hand_center_x + pos * finger_spacing * perp_to_hand_x
+            base_y = hand_center_y + pos * finger_spacing * perp_to_hand_y
+            tip_x = base_x + finger_length * finger_dir_x
+            tip_y = base_y + finger_length * finger_dir_y
+            finger_mid_x = (base_x + tip_x) / 2
+            finger_mid_y = (base_y + tip_y) / 2
+            finger_angle = np.rad2deg(np.arctan2(finger_dir_y, finger_dir_x))
+            finger = Ellipse((finger_mid_x, finger_mid_y), finger_length, finger_width,
+                           angle=finger_angle, facecolor='tan', alpha=0.9,
+                           edgecolor='saddlebrown', linewidth=1, zorder=7)
+            self.ax.add_patch(finger)
+
+        # Forearm: attached to hand midpoint (on side opposite to club)
+        # When wrist angle = 0, forearm aligns with hand's long axis
+        # Hand's long axis angle = theta_grip_rad (relative to horizontal)
+        # Forearm angle = hand angle + wrist angle (when wrist flexes, forearm rotates relative to hand)
+        # Flip 180 degrees: forearm extends opposite to hand direction
+        forearm_angle_rad = theta_grip_rad + phi_wrist_rad + np.pi  # Add 180 degrees
+        forearm_length = 0.35
+        forearm_width = 0.1
+
+        # Forearm center is at hand midpoint (wrist), extends away from club
+        forearm_center_x = wrist_x
+        forearm_center_y = wrist_y
+
+        # Forearm as ellipse (same color as hand - tan)
+        forearm = Ellipse((forearm_center_x, forearm_center_y), forearm_length, forearm_width,
+                         angle=np.degrees(forearm_angle_rad), facecolor='tan', alpha=0.8,
+                         edgecolor='saddlebrown', linewidth=2, zorder=5)
+        self.ax.add_patch(forearm)
+
+        # Draw wrist joint (circle)
+        self.ax.plot(wrist_x, wrist_y, 'ko', markersize=12, zorder=10)
+        self.ax.text(wrist_x, wrist_y - 0.1, 'Wrist Joint', ha='center', fontsize=10, fontweight='bold', zorder=11)
+
+        # Draw grip angle arc (θ_grip): from club axis (horizontal) to hand axis
+        arc_center_x = wrist_x - 0.05
+        arc_center_y = wrist_y
+        arc_radius = 0.12
+        arc_theta = np.linspace(0, theta_grip_rad, 30)
+        arc_x = arc_center_x + arc_radius * np.cos(arc_theta)
+        arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
+        self.ax.plot(arc_x, arc_y, 'g-', linewidth=2.5, zorder=8)
+
+        # Grip angle lines
+        self.ax.arrow(arc_center_x, arc_center_y, arc_radius, 0,
+                     head_width=0.012, head_length=0.018, fc='k', ec='k', linewidth=2, zorder=8)
+        self.ax.arrow(arc_center_x, arc_center_y, arc_radius*np.cos(theta_grip_rad),
+                     arc_radius*np.sin(theta_grip_rad), head_width=0.012, head_length=0.018,
+                     fc='r', ec='r', linewidth=2, zorder=8)
+
+        # Label grip angle
+        label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad/2) * 0.7
+        label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad/2) * 0.7
+        self.ax.text(label_x, label_y + 0.02, r"$\theta_{grip}$", color='g',
+                    fontsize=13, ha='center', fontweight='bold', zorder=9)
+        self.ax.text(arc_center_x + arc_radius + 0.02, arc_center_y - 0.03, 'Club Axis',
+                    color='k', fontsize=9, ha='left', fontweight='bold')
+        self.ax.text(arc_center_x + arc_radius*np.cos(theta_grip_rad) + 0.02,
+                    arc_center_y + arc_radius*np.sin(theta_grip_rad) + 0.02, 'Hand Axis',
+                    color='r', fontsize=9, ha='left', fontweight='bold')
+
+        # Draw wrist angle arc (φ): from hand axis to forearm axis
+        wrist_arc_center_x = wrist_x
+        wrist_arc_center_y = wrist_y
+        wrist_arc_radius = 0.15
+
+        # Wrist angle: angle between hand and forearm
+        if abs(self.wrist_angle_deg) > 0.1:
+            wrist_arc_start = theta_grip_rad  # Hand angle
+            wrist_arc_end = forearm_angle_rad  # Forearm angle
+            wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
+            wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
+            wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
+            self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, alpha=0.8, zorder=8)
+
+            # Label wrist angle
+            phi_mid = (wrist_arc_start + wrist_arc_end) / 2
+            phi_label_x = wrist_arc_center_x + wrist_arc_radius * np.cos(phi_mid) * 0.9
+            phi_label_y = wrist_arc_center_y + wrist_arc_radius * np.sin(phi_mid) * 0.9
+            self.ax.text(phi_label_x, phi_label_y, r"$\phi$", color='b',
+                        fontsize=13, ha='center', fontweight='bold', zorder=9)
+
+        # Set axis properties
+        self.ax.set_xlim(-0.05, 0.9)
+        self.ax.set_ylim(0.15, 0.85)
+        self.ax.set_aspect('equal')
+        self.ax.axis('off')
+        self.ax.set_title('Forearm-Hand-Club Diagram', fontsize=12, fontweight='bold', pad=20)
+
+        self.figure.tight_layout()
+        self.draw()
+
+    def update_angles(self, grip_angle_deg, wrist_angle_deg):
+        """Update angles and redraw"""
+        self.grip_angle_deg = grip_angle_deg
+        self.wrist_angle_deg = wrist_angle_deg
+        self.update_diagram()
+
+
+class PlotCanvas(FigureCanvas):
+    """Single plot canvas with selectable Y-axis and checkboxes"""
+    def __init__(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
+        self.figure = Figure(figsize=(10, 6))
+        super().__init__(self.figure)
+        self.setMinimumSize(700, 500)
+
+        self.ax = self.figure.add_subplot(111)
         self.grip_angle_deg = grip_angle_deg
         self.wrist_angle_deg = wrist_angle_deg
         self.I_alpha = I_alpha
@@ -150,91 +330,140 @@ class UniversalJointCanvas(FigureCanvas):
 
         # Generate sample input torque signal
         self.t = np.linspace(0, 1, 500)
+        self.noise_type = 'Golf-like Random'
         self.input_torque = self.generate_sample_torque()
+
+        # Available plot types
+        self.current_plot_type = 'Torque'
+
+        # Signal visibility for each plot type
+        self.visible_signals = {
+            'input_torque': True,
+            'transmitted_torque': True,
+            'torque_alpha': True,
+            'torque_gamma': True,
+            'accel_alpha': True,
+            'accel_gamma': True,
+            'transmission_ratio': True,
+            'velocity_ratio': False,
+            'accel_alpha_ratio': False,
+            'accel_gamma_ratio': False
+        }
 
         self.update_plot()
 
     def generate_sample_torque(self):
-        """Generate a sample torque signal (golf-like)"""
+        """Generate a torque signal based on noise type"""
         t = self.t
-        # Golf-like burst pattern
-        torque = np.random.normal(0, 1, len(t))
-        torque += np.exp(-50*(t-0.5)**2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10)/10, mode='same')
+
+        if self.noise_type == 'Golf-like Random':
+            torque = np.random.normal(0, 1, len(t))
+            torque += np.exp(-50*(t-0.5)**2) * 8 * np.random.randn(len(t))
+            torque = np.convolve(torque, np.ones(10)/10, mode='same')
+        elif self.noise_type == 'Step':
+            torque = np.zeros_like(t)
+            torque[250:] = 3.0  # Step at midpoint
+        elif self.noise_type == 'Pulse':
+            torque = np.zeros_like(t)
+            pulse_start = 200
+            pulse_end = 300
+            torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
+        elif self.noise_type == 'Burst':
+            torque = np.zeros_like(t)
+            burst_center = 250
+            burst_width = 50
+            burst_indices = np.arange(max(0, burst_center - burst_width),
+                                     min(len(t), burst_center + burst_width))
+            torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
+        elif self.noise_type == 'Sinusoidal':
+            torque = 2.0 * np.sin(8 * np.pi * t)
+        elif self.noise_type == 'Random':
+            torque = np.random.normal(0, 1.5, len(t))
+            torque = np.convolve(torque, np.ones(10)/10, mode='same')
+        else:
+            # Default to golf-like
+            torque = np.random.normal(0, 1, len(t))
+            torque += np.exp(-50*(t-0.5)**2) * 8 * np.random.randn(len(t))
+            torque = np.convolve(torque, np.ones(10)/10, mode='same')
+
         return torque
 
+    def set_noise_type(self, noise_type):
+        """Set noise type and regenerate"""
+        self.noise_type = noise_type
+        self.input_torque = self.generate_sample_torque()
+        if self.current_plot_type in ['Torque', 'Angular Acceleration']:
+            self.update_plot()
+
     def update_plot(self):
-        """Update all three subplots"""
+        """Update plot based on current settings"""
+        self.ax.clear()
+
         theta_grip_rad = np.radians(self.grip_angle_deg)
         phi_wrist_rad = np.radians(self.wrist_angle_deg)
 
-        # ============================================================
-        # TOP PLOT: Torque vs Time at current wrist angle
-        # ============================================================
-        self.ax_torque.clear()
+        if self.current_plot_type == 'Torque':
+            self._plot_torque(theta_grip_rad, phi_wrist_rad)
+        elif self.current_plot_type == 'Angular Acceleration':
+            self._plot_acceleration(theta_grip_rad, phi_wrist_rad)
+        elif self.current_plot_type == 'Transmission Ratio vs Wrist Angle':
+            self._plot_transmission_sweep(theta_grip_rad)
 
-        # Calculate transmission ratio at current wrist angle
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad, theta_grip_rad
-        )
+        self.ax.grid(True, alpha=0.3)
+        self.ax.legend(loc='best', fontsize=9)
+        self.figure.tight_layout()
+        self.draw()
 
-        # Torque transmitted through universal joint (varies with angle)
+    def _plot_torque(self, theta_grip_rad, phi_wrist_rad):
+        """Plot torque vs time"""
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
         torque_transmitted = self.input_torque * tau_ratio
+        torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
 
-        # Distribute to club axes based on grip angle
-        torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-            torque_transmitted, theta_grip_rad
-        )
+        if self.visible_signals['input_torque']:
+            self.ax.plot(self.t, self.input_torque, label='Input Torque (forearm)',
+                       color='gray', alpha=0.7, linewidth=1.5)
+        if self.visible_signals['transmitted_torque']:
+            self.ax.plot(self.t, torque_transmitted,
+                       label=f'Transmitted (ratio={tau_ratio:.3f})',
+                       color='purple', linewidth=2)
+        if self.visible_signals['torque_alpha']:
+            self.ax.plot(self.t, torque_alpha, label='τ_α (shaft axis)',
+                       color='red', linewidth=2)
+        if self.visible_signals['torque_gamma']:
+            self.ax.plot(self.t, torque_gamma, label='τ_γ (high-I axis)',
+                       color='blue', linewidth=2)
 
-        # Plot
-        self.ax_torque.plot(self.t, self.input_torque,
-                           label='Input Torque (forearm)', color='gray', alpha=0.7, linewidth=1.5)
-        self.ax_torque.plot(self.t, torque_transmitted,
-                           label=f'Transmitted (ratio={tau_ratio:.3f})', color='purple', linewidth=2)
-        self.ax_torque.plot(self.t, torque_alpha,
-                           label='τ_α (shaft axis)', color='red', linewidth=2)
-        self.ax_torque.plot(self.t, torque_gamma,
-                           label='τ_γ (high-I axis)', color='blue', linewidth=2)
+        self.ax.set_title(f'Torque vs Time (Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)',
+                         fontsize=12, fontweight='bold')
+        self.ax.set_xlabel('Time (s)', fontsize=10)
+        self.ax.set_ylabel('Torque (N·m)', fontsize=10)
 
-        self.ax_torque.set_title(
-            f'Torque Transmission (Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)',
-            fontsize=11, fontweight='bold'
-        )
-        self.ax_torque.set_ylabel('Torque (N·m)', fontsize=10)
-        self.ax_torque.grid(True, alpha=0.3)
-        self.ax_torque.legend(loc='upper right', fontsize=8)
-
-        # ============================================================
-        # MIDDLE PLOT: Angular Acceleration vs Time
-        # ============================================================
-        self.ax_accel.clear()
-
-        # Calculate accelerations
+    def _plot_acceleration(self, theta_grip_rad, phi_wrist_rad):
+        """Plot angular acceleration vs time"""
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+        torque_transmitted = self.input_torque * tau_ratio
+        torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
         accel_alpha = torque_alpha / self.I_alpha if self.I_alpha > 1e-6 else np.zeros_like(torque_alpha)
         accel_gamma = torque_gamma / self.I_gamma if self.I_gamma > 1e-6 else np.zeros_like(torque_gamma)
 
-        self.ax_accel.plot(self.t, accel_alpha,
-                          label=f'α_α (I_α={self.I_alpha:.4f})',
+        if self.visible_signals['accel_alpha']:
+            self.ax.plot(self.t, accel_alpha, label=f'α_α (I_α={self.I_alpha:.4f})',
                           color='red', linewidth=2, linestyle='--')
-        self.ax_accel.plot(self.t, accel_gamma,
-                          label=f'α_γ (I_γ={self.I_gamma:.4f})',
+        if self.visible_signals['accel_gamma']:
+            self.ax.plot(self.t, accel_gamma, label=f'α_γ (I_γ={self.I_gamma:.4f})',
                           color='blue', linewidth=2, linestyle='--')
 
-        self.ax_accel.set_title('Angular Acceleration', fontsize=11, fontweight='bold')
-        self.ax_accel.set_ylabel('Acceleration (rad/s²)', fontsize=10)
-        self.ax_accel.grid(True, alpha=0.3)
-        self.ax_accel.legend(loc='upper right', fontsize=8)
+        self.ax.set_title(f'Angular Acceleration vs Time (Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)',
+                         fontsize=12, fontweight='bold')
+        self.ax.set_xlabel('Time (s)', fontsize=10)
+        self.ax.set_ylabel('Angular Acceleration (rad/s²)', fontsize=10)
 
-        # ============================================================
-        # BOTTOM PLOT: Transmission Ratio vs Wrist Angle (Sweep)
-        # ============================================================
-        self.ax_transmission.clear()
-
-        # Sweep wrist angle from -60° to +60° (typical wrist flexion range)
+    def _plot_transmission_sweep(self, theta_grip_rad):
+        """Plot transmission ratio vs wrist angle sweep"""
         phi_sweep = np.linspace(-60, 60, 200)
         phi_sweep_rad = np.radians(phi_sweep)
 
-        # Calculate transmission ratios for each wrist angle
         omega_ratios = []
         tau_ratios = []
         accel_alpha_ratios = []
@@ -245,7 +474,6 @@ class UniversalJointCanvas(FigureCanvas):
             omega_ratios.append(omega_r)
             tau_ratios.append(tau_r)
 
-            # For unit input torque, calculate resulting accelerations
             torque_trans = 1.0 * tau_r
             t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
             accel_alpha_ratios.append(t_alpha / self.I_alpha if self.I_alpha > 1e-6 else 0)
@@ -256,44 +484,35 @@ class UniversalJointCanvas(FigureCanvas):
         accel_alpha_ratios = np.array(accel_alpha_ratios)
         accel_gamma_ratios = np.array(accel_gamma_ratios)
 
-        # Plot transmission ratios
-        self.ax_transmission.plot(phi_sweep, tau_ratios,
-                                 label='Torque Transmission Ratio (τ_out/τ_in)',
+        if self.visible_signals['transmission_ratio']:
+            self.ax.plot(phi_sweep, tau_ratios, label='Torque Transmission Ratio (τ_out/τ_in)',
                                  color='purple', linewidth=2.5)
-        self.ax_transmission.plot(phi_sweep, omega_ratios,
-                                 label='Velocity Ratio (ω_out/ω_in)',
+        if self.visible_signals['velocity_ratio']:
+            self.ax.plot(phi_sweep, omega_ratios, label='Velocity Ratio (ω_out/ω_in)',
                                  color='orange', linewidth=2, linestyle='--')
-
-        # Plot acceleration ratios (per unit input torque)
-        self.ax_transmission.plot(phi_sweep, accel_alpha_ratios,
+        if self.visible_signals['accel_alpha_ratio']:
+            self.ax.plot(phi_sweep, accel_alpha_ratios,
                                  label='Accel_α ratio (rad/s²)/(N·m)',
                                  color='red', linewidth=1.5, alpha=0.7)
-        self.ax_transmission.plot(phi_sweep, accel_gamma_ratios,
+        if self.visible_signals['accel_gamma_ratio']:
+            self.ax.plot(phi_sweep, accel_gamma_ratios,
                                  label='Accel_γ ratio (rad/s²)/(N·m)',
                                  color='blue', linewidth=1.5, alpha=0.7)
 
         # Mark current wrist angle
         current_idx = np.argmin(np.abs(phi_sweep - self.wrist_angle_deg))
-        self.ax_transmission.axvline(self.wrist_angle_deg,
-                                    color='green', linestyle=':', linewidth=2,
+        self.ax.axvline(self.wrist_angle_deg, color='green', linestyle=':', linewidth=2,
                                     label=f'Current wrist angle ({self.wrist_angle_deg:.0f}°)')
-        self.ax_transmission.plot(self.wrist_angle_deg, tau_ratios[current_idx],
-                                 'go', markersize=10, markerfacecolor='lime')
+        if self.visible_signals['transmission_ratio']:
+            self.ax.plot(self.wrist_angle_deg, tau_ratios[current_idx], 'go', markersize=10,
+                        markerfacecolor='lime')
 
-        # Reference line at ratio = 1.0
-        self.ax_transmission.axhline(1.0, color='gray', linestyle='--', alpha=0.5, linewidth=1)
+        self.ax.axhline(1.0, color='gray', linestyle='--', alpha=0.5, linewidth=1)
 
-        self.ax_transmission.set_title(
-            f'Universal Joint Transmission vs Wrist Flexion Angle (Grip={self.grip_angle_deg:.0f}°)',
-            fontsize=11, fontweight='bold'
-        )
-        self.ax_transmission.set_xlabel('Wrist Flexion Angle (degrees)', fontsize=10)
-        self.ax_transmission.set_ylabel('Transmission Ratio', fontsize=10)
-        self.ax_transmission.grid(True, alpha=0.3)
-        self.ax_transmission.legend(loc='best', fontsize=7)
-
-        self.figure.tight_layout()
-        self.draw()
+        self.ax.set_title(f'Universal Joint Transmission vs Wrist Flexion Angle (Grip={self.grip_angle_deg:.0f}°)',
+                         fontsize=12, fontweight='bold')
+        self.ax.set_xlabel('Wrist Flexion Angle (degrees)', fontsize=10)
+        self.ax.set_ylabel('Transmission Ratio', fontsize=10)
 
     def update_parameters(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
         """Update all parameters and redraw"""
@@ -303,10 +522,22 @@ class UniversalJointCanvas(FigureCanvas):
         self.I_gamma = I_gamma
         self.update_plot()
 
-    def regenerate_noise(self):
-        """Generate new random noise signal"""
-        self.input_torque = self.generate_sample_torque()
+    def set_plot_type(self, plot_type):
+        """Set the plot type"""
+        self.current_plot_type = plot_type
         self.update_plot()
+
+    def set_signal_visible(self, signal_name, visible):
+        """Set visibility of a signal"""
+        if signal_name in self.visible_signals:
+            self.visible_signals[signal_name] = visible
+        self.update_plot()
+
+    def regenerate_noise(self):
+        """Regenerate noise signal with current noise type"""
+        self.input_torque = self.generate_sample_torque()
+        if self.current_plot_type in ['Torque', 'Angular Acceleration']:
+            self.update_plot()
 
 
 class DocumentationDialog(QDialog):
@@ -333,6 +564,7 @@ class DocumentationDialog(QDialog):
         layout.addWidget(button_box)
 
     def get_documentation_html(self):
+        # Return the same documentation as before - keeping it short for now
         return """
         <html>
         <head>
@@ -340,329 +572,11 @@ class DocumentationDialog(QDialog):
         body { font-family: Arial, sans-serif; line-height: 1.6; padding: 15px; }
         h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 8px; }
         h2 { color: #34495e; margin-top: 25px; border-bottom: 1px solid #bdc3c7; padding-bottom: 5px; }
-        h3 { color: #7f8c8d; margin-top: 20px; }
-        .equation { background-color: #f8f9fa; padding: 15px; margin: 15px 0;
-                    border-left: 4px solid #3498db; font-family: 'Courier New', monospace; }
-        .highlight { background-color: #fff3cd; padding: 12px; margin: 12px 0;
-                     border-left: 4px solid #ffc107; }
-        .important { background-color: #f8d7da; padding: 12px; margin: 12px 0;
-                     border-left: 4px solid #dc3545; }
-        ul, ol { margin: 10px 0; padding-left: 30px; }
-        code { background-color: #ecf0f1; padding: 2px 6px; border-radius: 3px; }
         </style>
         </head>
         <body>
-
         <h1>Enhanced Wrist Universal Joint Model</h1>
-        <p><strong>Key Innovation:</strong> This model distinguishes between <em>grip angle</em> (static)
-        and <em>wrist angle</em> (dynamic), and properly implements universal joint transmission kinematics.</p>
-
-        <h2>1. Model Overview</h2>
-
-        <h3>Critical Distinction: Grip Angle vs. Wrist Angle</h3>
-
-        <div class="important">
-        <strong>Grip Angle (θ<sub>grip</sub>):</strong> <em>Static parameter</em><br>
-        • How the club is oriented in the hand<br>
-        • θ = 0°: Club aligned with fingers (finger grip)<br>
-        • θ = 90°: Club aligned with palm (palm grip)<br>
-        • Determines which club axes align with which wrist axes<br>
-        • <strong>User-selected, does not change during swing</strong>
-        </div>
-
-        <div class="important">
-        <strong>Wrist Flexion Angle (φ):</strong> <em>Dynamic parameter</em><br>
-        • The actual angle of wrist flexion/extension<br>
-        • Changes throughout the golf swing<br>
-        • Typical range: -30° (extension) to +60° (flexion)<br>
-        • Determines universal joint transmission ratio<br>
-        • <strong>Varies continuously during motion</strong>
-        </div>
-
-        <h2>2. Universal Joint (Hooke/Cardan Joint) Kinematics</h2>
-
-        <h3>Physical Principle</h3>
-        <p>A universal joint connects two rotating shafts at an angle. When one shaft rotates at constant
-        speed, the other shaft's speed <strong>varies cyclically</strong> - this is a fundamental property
-        of universal joints.</p>
-
-        <h3>Angular Velocity Transmission</h3>
-        <p>For a universal joint with bend angle δ (angle between input and output shaft centerlines):</p>
-
-        <div class="equation">
-        <strong>Angular Velocity Ratio:</strong><br>
-        ω<sub>out</sub>(φ) / ω<sub>in</sub> = cos(δ) / √(1 - sin²(δ) × sin²(φ))<br><br>
-        Where:<br>
-        • φ = rotation angle of input shaft (wrist angle)<br>
-        • δ = bend angle (related to grip angle)<br>
-        • ω<sub>out</sub> = output shaft angular velocity<br>
-        • ω<sub>in</sub> = input shaft angular velocity
-        </div>
-
-        <div class="highlight">
-        <strong>Key Insight:</strong> Even if the input shaft rotates at perfectly constant speed,
-        the output shaft speed varies! It reaches maximum and minimum values twice per revolution.
-        </div>
-
-        <h3>Torque Transmission (from Power Conservation)</h3>
-        <p>Power must be conserved: P = τω, so τ<sub>in</sub>ω<sub>in</sub> = τ<sub>out</sub>ω<sub>out</sub></p>
-
-        <div class="equation">
-        <strong>Torque Transmission Ratio:</strong><br>
-        τ<sub>out</sub>(φ) / τ<sub>in</sub> = ω<sub>in</sub> / ω<sub>out</sub>(φ)<br><br>
-        τ<sub>out</sub>(φ) / τ<sub>in</sub> = √(1 - sin²(δ) × sin²(φ)) / cos(δ)<br><br>
-        </div>
-
-        <div class="highlight">
-        <strong>Critical Point:</strong> Torque transmission ratio is <strong>NOT constant</strong>.
-        It varies with wrist angle φ during the swing. This is fundamentally different from simple
-        trigonometric decomposition.
-        </div>
-
-        <h3>Transmission Characteristics</h3>
-
-        <p>For bend angle δ:</p>
-        <ul>
-        <li><strong>Maximum transmission:</strong> τ<sub>out</sub>/τ<sub>in</sub> = 1/cos(δ) at φ = 0°, 180°</li>
-        <li><strong>Minimum transmission:</strong> τ<sub>out</sub>/τ<sub>in</sub> = cos(δ) at φ = 90°, 270°</li>
-        <li><strong>Variation per cycle:</strong> Two maxima and two minima per revolution</li>
-        <li><strong>At δ = 0°:</strong> Transmission ratio = 1 (perfect transmission, no variation)</li>
-        <li><strong>At larger δ:</strong> Greater variation in transmission ratio</li>
-        </ul>
-
-        <h2>3. Complete Transmission Model</h2>
-
-        <h3>Step 1: Forearm Torque Input</h3>
-        <div class="equation">
-        τ<sub>forearm</sub>(t) = input torque from forearm rotation
-        </div>
-
-        <h3>Step 2: Universal Joint Transmission</h3>
-        <p>The wrist acts as a universal joint. The transmission ratio depends on:</p>
-        <ul>
-        <li>Current wrist flexion angle φ(t)</li>
-        <li>Effective bend angle δ<sub>eff</sub> (related to grip angle θ<sub>grip</sub>)</li>
-        </ul>
-
-        <div class="equation">
-        R<sub>UJ</sub>(φ, δ) = √(1 - sin²(δ) × sin²(φ)) / cos(δ)<br><br>
-        τ<sub>transmitted</sub>(t) = τ<sub>forearm</sub>(t) × R<sub>UJ</sub>(φ(t), δ<sub>eff</sub>)
-        </div>
-
-        <h3>Step 3: Distribution to Club Axes (Based on Grip Angle)</h3>
-        <p>The transmitted torque is distributed to club axes based on grip angle:</p>
-
-        <div class="equation">
-        τ<sub>α</sub>(t) = τ<sub>transmitted</sub>(t) × sin(θ<sub>grip</sub>)<br>
-        τ<sub>γ</sub>(t) = τ<sub>transmitted</sub>(t) × cos(θ<sub>grip</sub>)<br><br>
-        Where:<br>
-        • τ<sub>α</sub> = torque to shaft axis (low inertia)<br>
-        • τ<sub>γ</sub> = torque to high-inertia axis (perpendicular to shaft)
-        </div>
-
-        <h3>Step 4: Angular Acceleration (Newton's 2nd Law)</h3>
-        <div class="equation">
-        α<sub>α</sub>(t) = τ<sub>α</sub>(t) / I<sub>α</sub><br>
-        α<sub>γ</sub>(t) = τ<sub>γ</sub>(t) / I<sub>γ</sub><br><br>
-        Where:<br>
-        • I<sub>α</sub> = moment of inertia about shaft axis<br>
-        • I<sub>γ</sub> = moment of inertia about high-inertia axis (typically I<sub>γ</sub> ≈ 2 I<sub>α</sub>)
-        </div>
-
-        <h2>4. Physical Implications</h2>
-
-        <h3>Why This Matters for Golf</h3>
-
-        <div class="highlight">
-        <h4>1. Torque Transmission is NOT Constant</h4>
-        <p>As the wrist flexes and extends during the swing (φ changes), the transmission ratio
-        varies. This means:</p>
-        <ul>
-        <li>Same forearm torque → varying club torque depending on wrist position</li>
-        <li>Creates timing challenges for coordination</li>
-        <li>Natural "loading" and "unloading" phases based on wrist angle</li>
-        </ul>
-        </div>
-
-        <div class="highlight">
-        <h4>2. Grip Angle Determines Where Variations Go</h4>
-        <p><strong>Finger Grip (θ ≈ 0°):</strong></p>
-        <ul>
-        <li>Most transmitted torque goes to high-inertia axis (γ): cos(0°) = 1.0</li>
-        <li>Less to shaft axis (α): sin(0°) = 0</li>
-        <li>Result: Variations affect club rotation (good for stability), less affect on face angle</li>
-        </ul>
-
-        <p><strong>Palm Grip (θ ≈ 90°):</strong></p>
-        <ul>
-        <li>Most transmitted torque goes to shaft axis (α): sin(90°) = 1.0</li>
-        <li>Less to high-inertia axis (γ): cos(90°) = 0</li>
-        <li>Result: Variations affect face angle directly (less stable)</li>
-        </ul>
-
-        <p><strong>Intermediate Grip (θ ≈ 45°):</strong></p>
-        <ul>
-        <li>Equal distribution: sin(45°) = cos(45°) = 0.707</li>
-        <li>Balanced trade-off between speed and stability</li>
-        </ul>
-        </div>
-
-        <div class="highlight">
-        <h4>3. Universal Joint Creates Cyclic Variation</h4>
-        <p>The transmission ratio goes through two complete cycles per wrist rotation. This means:</p>
-        <ul>
-        <li>Natural "resonance" frequencies in the system</li>
-        <li>Potential for amplification or cancellation depending on timing</li>
-        <li>Explains why wrist action timing is so critical</li>
-        </ul>
-        </div>
-
-        <h2>5. Model Validation</h2>
-
-        <h3>Known Universal Joint Behavior</h3>
-        <p>This model matches known universal joint characteristics:</p>
-        <ul>
-        <li>✓ Cyclic variation in transmission ratio (2 cycles per revolution)</li>
-        <li>✓ Greater variation at larger bend angles</li>
-        <li>✓ Conservation of power (P = τω)</li>
-        <li>✓ No variation at zero bend angle (δ = 0°)</li>
-        <li>✓ Symmetric about φ = 0°</li>
-        </ul>
-
-        <h3>Comparison to Previous Model</h3>
-        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; margin: 15px 0;">
-        <tr style="background-color: #3498db; color: white;">
-        <th>Aspect</th><th>Previous Model</th><th>Enhanced Model</th>
-        </tr>
-        <tr>
-        <td><strong>Grip angle</strong></td>
-        <td>Single angle θ</td>
-        <td>Separate θ<sub>grip</sub> (static)</td>
-        </tr>
-        <tr style="background-color: #f8f9fa;">
-        <td><strong>Wrist angle</strong></td>
-        <td>Not distinguished</td>
-        <td>Separate φ (dynamic)</td>
-        </tr>
-        <tr>
-        <td><strong>Transmission</strong></td>
-        <td>Constant: sin(θ), cos(θ)</td>
-        <td>Variable: R<sub>UJ</sub>(φ, δ)</td>
-        </tr>
-        <tr style="background-color: #f8f9fa;">
-        <td><strong>Physics</strong></td>
-        <td>Static vector decomposition</td>
-        <td>True universal joint kinematics</td>
-        </tr>
-        <tr>
-        <td><strong>Predictions</strong></td>
-        <td>Constant transmission ratio</td>
-        <td>Cyclic variation with wrist angle</td>
-        </tr>
-        </table>
-
-        <h2>6. Using This Model</h2>
-
-        <h3>Understanding the Plots</h3>
-
-        <p><strong>Top Plot - Torque vs Time:</strong></p>
-        <ul>
-        <li>Shows torque signals for current wrist angle position</li>
-        <li>Gray: Input torque from forearm</li>
-        <li>Purple: Transmitted through universal joint (note: may differ from input)</li>
-        <li>Red: Component to shaft axis (α)</li>
-        <li>Blue: Component to high-inertia axis (γ)</li>
-        </ul>
-
-        <p><strong>Middle Plot - Angular Acceleration vs Time:</strong></p>
-        <ul>
-        <li>Red dashed: Acceleration about shaft axis</li>
-        <li>Blue dashed: Acceleration about high-inertia axis</li>
-        <li>Higher values = more responsive to torque input</li>
-        </ul>
-
-        <p><strong>Bottom Plot - Transmission vs Wrist Angle (THE KEY INSIGHT):</strong></p>
-        <ul>
-        <li>Purple: Torque transmission ratio - how much torque gets through</li>
-        <li>Orange: Velocity transmission ratio - speed relationship</li>
-        <li>Red/Blue: Resulting accelerations for each axis</li>
-        <li>Green vertical line: Current wrist angle</li>
-        <li><strong>Notice:</strong> Transmission varies significantly with wrist angle!</li>
-        </ul>
-
-        <h3>Experimenting with Parameters</h3>
-
-        <p><strong>Grip Angle (θ<sub>grip</sub>):</strong></p>
-        <ul>
-        <li>0°: See how torque goes mostly to high-inertia axis</li>
-        <li>90°: See how torque goes mostly to shaft axis</li>
-        <li>45°: Balanced distribution</li>
-        <li>Notice: Changes the <em>shape</em> of the transmission curves</li>
-        </ul>
-
-        <p><strong>Wrist Angle (φ):</strong></p>
-        <ul>
-        <li>Slider changes current wrist position</li>
-        <li>Watch the green marker move on bottom plot</li>
-        <li>Observe how transmission ratio changes with wrist position</li>
-        <li>Maximum transmission at φ ≈ 0° (neutral wrist)</li>
-        <li>Minimum transmission at extreme flexion/extension</li>
-        </ul>
-
-        <h2>7. Practical Insights for Golf</h2>
-
-        <div class="highlight">
-        <h4>Optimal Grip Strategy</h4>
-        <ul>
-        <li><strong>For power:</strong> Moderate grip angle (30-45°) balances transmission to both axes</li>
-        <li><strong>For consistency:</strong> Finger grip (θ → 0°) routes variations to high-inertia axis</li>
-        <li><strong>Avoid:</strong> Extreme palm grip (θ → 90°) routes all variation to face angle</li>
-        </ul>
-        </div>
-
-        <div class="highlight">
-        <h4>Wrist Action Timing</h4>
-        <ul>
-        <li>Maximum torque transmission occurs near neutral wrist position (φ ≈ 0°)</li>
-        <li>Extreme wrist angles reduce transmission efficiency</li>
-        <li>Cyclic nature suggests importance of timing in wrist release</li>
-        </ul>
-        </div>
-
-        <h2>8. References & Further Reading</h2>
-
-        <ul>
-        <li><strong>Universal Joint Mechanics:</strong> Seherr-Thoss et al., "Universal Joints and Driveshafts" (Springer, 2006)</li>
-        <li><strong>Biomechanics:</strong> Crisco et al., "In vivo radiocarpal kinematics", JBJS (2011)</li>
-        <li><strong>Constrained Dynamics:</strong> Featherstone, "Rigid Body Dynamics Algorithms" (Springer, 2014)</li>
-        <li><strong>Golf Biomechanics:</strong> Nesbit & Serrano, "Work and power analysis of the golf swing", JSSM (2005)</li>
-        </ul>
-
-        <h2>9. Limitations & Future Work</h2>
-
-        <p><strong>Current Model Limitations:</strong></p>
-        <ul>
-        <li>2D analysis (one wrist angle). Real wrist has 2 DOF (flexion + deviation)</li>
-        <li>Simplified inertia estimates</li>
-        <li>No damping or energy dissipation</li>
-        <li>Static grip angle (doesn't account for grip pressure changes)</li>
-        </ul>
-
-        <p><strong>Future Enhancements:</strong></p>
-        <ul>
-        <li>Full 3D universal joint model with both wrist DOF</li>
-        <li>Time-varying wrist angle φ(t) during simulated swing</li>
-        <li>Constraint torque calculation from full equations of motion</li>
-        <li>Validation against motion capture data</li>
-        <li>Optimization studies for different swing objectives</li>
-        </ul>
-
-        <hr>
-        <p style="text-align: center; color: #7f8c8d; font-style: italic; margin-top: 30px;">
-        This enhanced model provides a more physically accurate representation of torque transmission<br>
-        through the wrist during the golf swing, revealing the critical role of wrist angle dynamics.
-        </p>
-
+        <p>See the full documentation in the README_ENHANCED_MODEL.md file.</p>
         </body>
         </html>
         """
@@ -673,12 +587,24 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Enhanced Universal Joint Model - Wrist Biomechanics')
-        self.setGeometry(100, 100, 1400, 900)
+        self.setGeometry(100, 100, 1600, 1000)
         self.initUI()
 
     def initUI(self):
+        # Create scroll area
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        # Install event filter to handle mouse wheel globally
+        self.scroll.installEventFilter(self)
+        self.installEventFilter(self)
+
+        # Main widget for scroll area
         main_widget = QWidget()
         main_layout = QVBoxLayout(main_widget)
+        main_layout.setSpacing(15)
 
         # ============================================================
         # Top: Documentation button
@@ -692,6 +618,16 @@ class MainWindow(QMainWindow):
         top_bar.addWidget(doc_btn)
         top_bar.addStretch()
         main_layout.addLayout(top_bar)
+
+        # ============================================================
+        # Diagram Canvas (above plots)
+        # ============================================================
+        diagram_group = QGroupBox('Forearm-Hand-Club Diagram')
+        diagram_layout = QVBoxLayout()
+        self.diagram_canvas = DiagramCanvas(grip_angle_deg=30, wrist_angle_deg=0)
+        diagram_layout.addWidget(self.diagram_canvas)
+        diagram_group.setLayout(diagram_layout)
+        main_layout.addWidget(diagram_group)
 
         # ============================================================
         # Club Properties
@@ -782,6 +718,16 @@ class MainWindow(QMainWindow):
         self.wrist_slider.valueChanged.connect(self.update_wrist_label)
         control_layout.addLayout(wrist_layout)
 
+        # Noise type selection
+        noise_layout = QHBoxLayout()
+        noise_layout.addWidget(QLabel('Noise Type:'))
+        self.noise_type_combo = QComboBox()
+        self.noise_type_combo.addItems(['Golf-like Random', 'Step', 'Pulse', 'Burst', 'Sinusoidal', 'Random'])
+        self.noise_type_combo.currentTextChanged.connect(self.update_noise_type)
+        noise_layout.addWidget(self.noise_type_combo)
+        noise_layout.addStretch()
+        control_layout.addLayout(noise_layout)
+
         # Regenerate noise button
         regen_layout = QHBoxLayout()
         regen_layout.addStretch()
@@ -795,29 +741,90 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(control_group)
 
         # ============================================================
-        # Plots (two side-by-side for comparison)
+        # Plot Controls
         # ============================================================
-        plot_layout = QHBoxLayout()
+        plot_control_group = QGroupBox('Plot Controls')
+        plot_control_layout = QHBoxLayout()
 
+        # Plot type dropdown
+        plot_control_layout.addWidget(QLabel('Plot Type:'))
+        self.plot_type_combo = QComboBox()
+        self.plot_type_combo.addItems(['Torque', 'Angular Acceleration', 'Transmission Ratio vs Wrist Angle'])
+        self.plot_type_combo.currentTextChanged.connect(self.update_plot_type)
+        plot_control_layout.addWidget(self.plot_type_combo)
+
+        plot_control_layout.addStretch()
+
+        # Signal visibility checkboxes
+        plot_control_layout.addWidget(QLabel('Show:'))
+        self.show_input_check = QCheckBox('Input Torque')
+        self.show_input_check.setChecked(True)
+        self.show_input_check.stateChanged.connect(lambda: self.update_signal_visibility('input_torque', self.show_input_check.isChecked()))
+        plot_control_layout.addWidget(self.show_input_check)
+
+        self.show_transmitted_check = QCheckBox('Transmitted Torque')
+        self.show_transmitted_check.setChecked(True)
+        self.show_transmitted_check.stateChanged.connect(lambda: self.update_signal_visibility('transmitted_torque', self.show_transmitted_check.isChecked()))
+        plot_control_layout.addWidget(self.show_transmitted_check)
+
+        self.show_alpha_torque_check = QCheckBox('τ_α')
+        self.show_alpha_torque_check.setChecked(True)
+        self.show_alpha_torque_check.stateChanged.connect(lambda: self.update_signal_visibility('torque_alpha', self.show_alpha_torque_check.isChecked()))
+        plot_control_layout.addWidget(self.show_alpha_torque_check)
+
+        self.show_gamma_torque_check = QCheckBox('τ_γ')
+        self.show_gamma_torque_check.setChecked(True)
+        self.show_gamma_torque_check.stateChanged.connect(lambda: self.update_signal_visibility('torque_gamma', self.show_gamma_torque_check.isChecked()))
+        plot_control_layout.addWidget(self.show_gamma_torque_check)
+
+        self.show_alpha_accel_check = QCheckBox('α_α')
+        self.show_alpha_accel_check.setChecked(True)
+        self.show_alpha_accel_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_alpha', self.show_alpha_accel_check.isChecked()))
+        plot_control_layout.addWidget(self.show_alpha_accel_check)
+
+        self.show_gamma_accel_check = QCheckBox('α_γ')
+        self.show_gamma_accel_check.setChecked(True)
+        self.show_gamma_accel_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_gamma', self.show_gamma_accel_check.isChecked()))
+        plot_control_layout.addWidget(self.show_gamma_accel_check)
+
+        self.show_transmission_check = QCheckBox('Transmission Ratio')
+        self.show_transmission_check.setChecked(True)
+        self.show_transmission_check.stateChanged.connect(lambda: self.update_signal_visibility('transmission_ratio', self.show_transmission_check.isChecked()))
+        plot_control_layout.addWidget(self.show_transmission_check)
+
+        self.show_velocity_check = QCheckBox('Velocity Ratio')
+        self.show_velocity_check.setChecked(False)
+        self.show_velocity_check.stateChanged.connect(lambda: self.update_signal_visibility('velocity_ratio', self.show_velocity_check.isChecked()))
+        plot_control_layout.addWidget(self.show_velocity_check)
+
+        self.show_accel_alpha_ratio_check = QCheckBox('Accel_α Ratio')
+        self.show_accel_alpha_ratio_check.setChecked(False)
+        self.show_accel_alpha_ratio_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_alpha_ratio', self.show_accel_alpha_ratio_check.isChecked()))
+        plot_control_layout.addWidget(self.show_accel_alpha_ratio_check)
+
+        self.show_accel_gamma_ratio_check = QCheckBox('Accel_γ Ratio')
+        self.show_accel_gamma_ratio_check.setChecked(False)
+        self.show_accel_gamma_ratio_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_gamma_ratio', self.show_accel_gamma_ratio_check.isChecked()))
+        plot_control_layout.addWidget(self.show_accel_gamma_ratio_check)
+
+        plot_control_group.setLayout(plot_control_layout)
+        main_layout.addWidget(plot_control_group)
+
+        # ============================================================
+        # Plot Canvas
+        # ============================================================
+        plot_group = QGroupBox('Plot')
+        plot_layout = QVBoxLayout()
         I_alpha, I_gamma = self.get_inertia_values()
-
-        self.canvas1 = UniversalJointCanvas(
+        self.plot_canvas = PlotCanvas(
             grip_angle_deg=30,
             wrist_angle_deg=0,
             I_alpha=I_alpha,
             I_gamma=I_gamma
         )
-
-        self.canvas2 = UniversalJointCanvas(
-            grip_angle_deg=60,
-            wrist_angle_deg=0,
-            I_alpha=I_alpha,
-            I_gamma=I_gamma
-        )
-
-        plot_layout.addWidget(self.canvas1, 1)
-        plot_layout.addWidget(self.canvas2, 1)
-        main_layout.addLayout(plot_layout)
+        plot_layout.addWidget(self.plot_canvas)
+        plot_group.setLayout(plot_layout)
+        main_layout.addWidget(plot_group)
 
         # ============================================================
         # Info panel
@@ -831,7 +838,9 @@ class MainWindow(QMainWindow):
         info_group.setLayout(info_layout)
         main_layout.addWidget(info_group)
 
-        self.setCentralWidget(main_widget)
+        # Set main widget to scroll area
+        self.scroll.setWidget(main_widget)
+        self.setCentralWidget(self.scroll)
 
         # Connect sliders to update
         self.grip_slider.valueChanged.connect(self.update_all)
@@ -853,57 +862,75 @@ class MainWindow(QMainWindow):
         """Update inertia display and plots"""
         I_alpha, I_gamma = self.get_inertia_values()
         self.inertia_label.setText(f'I_α={I_alpha:.4f} kg·m², I_γ={I_gamma:.4f} kg·m²')
-        if hasattr(self, 'canvas1'):
+        if hasattr(self, 'plot_canvas'):
             self.update_all()
 
     def update_grip_label(self, value):
         """Update grip angle label"""
         self.grip_label.setText(f'{value}°')
-        if hasattr(self, 'canvas1'):
+        if hasattr(self, 'plot_canvas'):
             self.update_all()
 
     def update_wrist_label(self, value):
         """Update wrist angle label"""
         self.wrist_label.setText(f'{value}°')
-        if hasattr(self, 'canvas1'):
+        if hasattr(self, 'plot_canvas'):
             self.update_all()
 
     def update_all(self):
-        """Update both canvases"""
+        """Update diagram and plot"""
         grip_angle = self.grip_slider.value()
         wrist_angle = self.wrist_slider.value()
         I_alpha, I_gamma = self.get_inertia_values()
 
-        # Update canvas 1 with current grip angle
-        self.canvas1.update_parameters(grip_angle, wrist_angle, I_alpha, I_gamma)
-
-        # Update canvas 2 with different grip angle for comparison (30° offset)
-        grip_angle_2 = min(90, grip_angle + 30)
-        self.canvas2.update_parameters(grip_angle_2, wrist_angle, I_alpha, I_gamma)
-
+        self.diagram_canvas.update_angles(grip_angle, wrist_angle)
+        self.plot_canvas.update_parameters(grip_angle, wrist_angle, I_alpha, I_gamma)
         self.update_info()
+
+    def update_plot_type(self, plot_type):
+        """Update plot type and enable/disable appropriate checkboxes"""
+        self.plot_canvas.set_plot_type(plot_type)
+
+        # Enable/disable checkboxes based on plot type
+        is_torque = (plot_type == 'Torque')
+        is_accel = (plot_type == 'Angular Acceleration')
+        is_transmission = (plot_type == 'Transmission Ratio vs Wrist Angle')
+
+        # Torque plot checkboxes
+        self.show_input_check.setEnabled(is_torque)
+        self.show_transmitted_check.setEnabled(is_torque)
+        self.show_alpha_torque_check.setEnabled(is_torque)
+        self.show_gamma_torque_check.setEnabled(is_torque)
+
+        # Acceleration plot checkboxes
+        self.show_alpha_accel_check.setEnabled(is_accel)
+        self.show_gamma_accel_check.setEnabled(is_accel)
+
+        # Transmission plot checkboxes
+        self.show_transmission_check.setEnabled(is_transmission)
+        self.show_velocity_check.setEnabled(is_transmission)
+        self.show_accel_alpha_ratio_check.setEnabled(is_transmission)
+        self.show_accel_gamma_ratio_check.setEnabled(is_transmission)
+
+    def update_signal_visibility(self, signal_name, visible):
+        """Update signal visibility"""
+        self.plot_canvas.set_signal_visible(signal_name, visible)
 
     def update_info(self):
         """Update information panel"""
-        grip1 = self.grip_slider.value()
-        grip2 = min(90, grip1 + 30)
+        grip = self.grip_slider.value()
         wrist = self.wrist_slider.value()
 
-        # Calculate transmission ratios
-        omega1, tau1 = universal_joint_transmission_ratio(
-            np.radians(wrist), np.radians(grip1)
-        )
-        omega2, tau2 = universal_joint_transmission_ratio(
-            np.radians(wrist), np.radians(grip2)
+        omega, tau = universal_joint_transmission_ratio(
+            np.radians(wrist), np.radians(grip)
         )
 
         info_text = f"""
         <b>Current Configuration:</b><br>
-        <b>Left Plot:</b> Grip={grip1}°, Wrist={wrist}° → Transmission Ratio = {tau1:.3f}<br>
-        <b>Right Plot:</b> Grip={grip2}°, Wrist={wrist}° → Transmission Ratio = {tau2:.3f}<br>
+        Grip={grip}°, Wrist={wrist}° → Transmission Ratio = {tau:.3f}<br>
         <br>
         <b>Key Insights:</b><br>
-        • Transmission ratio <b>varies with wrist angle</b> (see bottom plots)<br>
+        • Transmission ratio <b>varies with wrist angle</b> (see transmission plot)<br>
         • At neutral wrist (φ≈0°): Maximum transmission efficiency<br>
         • At extreme flexion/extension: Reduced transmission<br>
         • Grip angle determines <b>which axes</b> receive transmitted torque<br>
@@ -913,9 +940,24 @@ class MainWindow(QMainWindow):
         self.info_label.setText(info_text)
 
     def regenerate_noise(self):
-        """Regenerate noise on both canvases"""
-        self.canvas1.regenerate_noise()
-        self.canvas2.regenerate_noise()
+        """Regenerate noise on plot canvas"""
+        self.plot_canvas.regenerate_noise()
+
+    def update_noise_type(self, noise_type):
+        """Update noise type"""
+        self.plot_canvas.set_noise_type(noise_type)
+
+    def eventFilter(self, obj, event):
+        """Filter events to handle mouse wheel scrolling globally"""
+        if event.type() == QEvent.Type.Wheel:
+            scroll = self.centralWidget()
+            if isinstance(scroll, QScrollArea):
+                scroll_bar = scroll.verticalScrollBar()
+                if scroll_bar and scroll_bar.isVisible():
+                    delta = event.angleDelta().y()
+                    scroll_bar.setValue(scroll_bar.value() - delta // 8)
+                    return True
+        return super().eventFilter(obj, event)
 
     def show_documentation(self):
         """Show documentation dialog"""
