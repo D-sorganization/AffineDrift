@@ -40,6 +40,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMainWindow,
+    QMessageBox,
     QPushButton,
     QScrollArea,
     QSlider,
@@ -359,7 +360,7 @@ class DiagramCanvas(FigureCanvas):
         wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
         wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
         wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
-        self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, zorder=8)
+        self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, alpha=0.8, zorder=8)
 
         # Wrist angle lines - show hand axis and forearm axis
         self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle),
@@ -413,6 +414,7 @@ class PlotCanvas(FigureCanvas):
         self.wrist_angle_deg = wrist_angle_deg
         self.I_alpha = I_alpha
         self.I_gamma = I_gamma
+        self.polynomial_error = None  # Store polynomial evaluation errors
 
         # Generate sample input torque signal
         self.t = np.linspace(0, 1, 500)
@@ -468,9 +470,9 @@ class PlotCanvas(FigureCanvas):
             torque = np.random.normal(0, 1.5, len(t))
             torque = np.convolve(torque, np.ones(10)/10, mode='same')
         elif self.noise_type == 'Polynomial':
-            # Evaluate polynomial expression
+            # Evaluate polynomial expression using safer method
             try:
-                # Create a safe evaluation environment
+                # Create a safe evaluation environment with only allowed functions
                 safe_dict = {
                     't': t,
                     'np': np,
@@ -482,14 +484,24 @@ class PlotCanvas(FigureCanvas):
                     'pi': np.pi,
                     'e': np.e
                 }
-                # Evaluate the polynomial expression
-                torque = eval(self.polynomial_expression, {"__builtins__": {}}, safe_dict)
+                # Compile the expression first to validate syntax
+                code = compile(self.polynomial_expression, '<string>', 'eval')
+                # Evaluate with restricted namespace (no builtins, only safe_dict)
+                torque = eval(code, {"__builtins__": {}}, safe_dict)
                 # Ensure it's a numpy array
                 if not isinstance(torque, np.ndarray):
                     torque = np.full_like(t, float(torque))
+                # Store success (clear any previous error)
+                self.polynomial_error = None
+            except SyntaxError as e:
+                # Syntax error in expression
+                error_msg = f"Syntax error in polynomial: {e}"
+                self.polynomial_error = error_msg
+                torque = t**2 - t
             except Exception as e:
-                # If evaluation fails, use default polynomial
-                print(f"Error evaluating polynomial: {e}")
+                # Other evaluation errors
+                error_msg = f"Error evaluating polynomial '{self.polynomial_expression}': {e}"
+                self.polynomial_error = error_msg
                 torque = t**2 - t
         else:
             # Default to golf-like
@@ -511,6 +523,15 @@ class PlotCanvas(FigureCanvas):
         self.polynomial_expression = expression
         if self.noise_type == 'Polynomial':
             self.input_torque = self.generate_sample_torque()
+            # Show error message if evaluation failed
+            if self.polynomial_error:
+                # Get parent widget to show message box
+                parent = self.parent()
+                while parent and not isinstance(parent, QMainWindow):
+                    parent = parent.parent()
+                if parent:
+                    QMessageBox.warning(parent, 'Polynomial Evaluation Error',
+                                       self.polynomial_error)
             if self.current_plot_type in ['Torque', 'Angular Acceleration']:
                 self.update_plot()
 
