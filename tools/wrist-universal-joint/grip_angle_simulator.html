@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grip Angle Torque Transmission Simulator</title>
+    <title>Enhanced Wrist Universal Joint Model</title>
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
     <style>
         * {
@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -49,12 +49,12 @@
 
         .main-content {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 400px 1fr;
             gap: 20px;
             padding: 20px;
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
@@ -224,17 +224,23 @@
             font-size: 1.1em;
         }
 
-        .plots-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .plots-area {
+            display: flex;
+            flex-direction: column;
             gap: 20px;
-            margin-bottom: 20px;
         }
 
-        @media (max-width: 1400px) {
-            .plots-container {
-                grid-template-columns: 1fr;
-            }
+        .diagram-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .diagram-container h3 {
+            color: #0f4c75;
+            margin-bottom: 15px;
+            font-size: 1.3em;
         }
 
         .plot-card {
@@ -268,23 +274,12 @@
             margin-bottom: 15px;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .info-item {
             background: white;
             padding: 15px;
             border-radius: 10px;
             border-left: 4px solid #3282b8;
+            margin-bottom: 10px;
         }
 
         .info-item h4 {
@@ -320,35 +315,75 @@
             transform: translateY(0);
         }
 
-        .schematic-container {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .schematic-container h3 {
-            color: #0f4c75;
-            margin-bottom: 15px;
-        }
-
         canvas {
             border: 2px solid #dee2e6;
             border-radius: 10px;
             max-width: 100%;
+            width: 100%;
+            height: 400px;
+        }
+
+        .polynomial-input {
+            margin-top: 10px;
+        }
+
+        .polynomial-input input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85em;
+            margin-top: 5px;
+            padding: 5px;
+            background: #f8d7da;
+            border-radius: 4px;
+        }
+
+        .plot-type-selector {
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏌️ Grip Angle Torque Transmission Simulator</h1>
-            <p>Interactive visualization of torque transmission and angular acceleration in golf swing mechanics</p>
+            <h1>🏌️ Enhanced Wrist Universal Joint Model</h1>
+            <p>Interactive visualization of universal joint (Hooke/Cardan) transmission with grip angle and wrist deviation</p>
         </div>
 
         <div class="main-content">
             <div class="sidebar">
+                <div class="control-group">
+                    <h3>Parameters</h3>
+                    
+                    <div class="input-group">
+                        <label>Grip Angle θ_grip (degrees) <span class="value-display" id="grip-value">30</span></label>
+                        <input type="range" id="grip-angle" min="0" max="90" value="30" step="1">
+                        <div class="slider-labels">
+                            <span>0°</span>
+                            <span>45°</span>
+                            <span>90°</span>
+                        </div>
+                        <small style="color: #6c757d; font-size: 0.85em;">0° = parallel to fingers, 90° = perpendicular to fingers</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Wrist Deviation φ (degrees) <span class="value-display" id="wrist-value">0</span></label>
+                        <input type="range" id="wrist-angle" min="-60" max="60" value="0" step="1">
+                        <div class="slider-labels">
+                            <span>-60°</span>
+                            <span>0°</span>
+                            <span>60°</span>
+                        </div>
+                        <small style="color: #6c757d; font-size: 0.85em;">+ values = radial deviation, - values = ulnar deviation</small>
+                    </div>
+                </div>
+
                 <div class="control-group">
                     <h3>Club Properties</h3>
                     <div class="input-group">
@@ -390,105 +425,62 @@
                 </div>
 
                 <div class="control-group">
-                    <h3>Grip Angle</h3>
+                    <h3>Input Signal Generator</h3>
                     <div class="input-group">
-                        <label>Angle 1 (degrees) <span class="value-display" id="angle1-value">45</span>°</label>
-                        <input type="range" id="grip-angle1" min="0" max="90" value="45" step="1">
-                        <div class="slider-labels">
-                            <span>0°</span>
-                            <span>45°</span>
-                            <span>90°</span>
-                        </div>
+                        <label>Signal Type</label>
+                        <select id="noise-type">
+                            <option value="golf">Golf-like Random</option>
+                            <option value="step">Step</option>
+                            <option value="pulse">Pulse</option>
+                            <option value="burst">Burst</option>
+                            <option value="sinusoidal">Sinusoidal</option>
+                            <option value="random">Random</option>
+                            <option value="polynomial">Polynomial</option>
+                        </select>
                     </div>
-                    <div class="input-group">
-                        <label>Angle 2 (degrees) <span class="value-display" id="angle2-value">90</span>°</label>
-                        <input type="range" id="grip-angle2" min="0" max="90" value="90" step="1">
-                        <div class="slider-labels">
-                            <span>0°</span>
-                            <span>45°</span>
-                            <span>90°</span>
-                        </div>
+                    <div class="polynomial-input" id="polynomial-section" style="display: none;">
+                        <label>Polynomial Expression</label>
+                        <input type="text" id="polynomial-expr" value="t**2 - t" placeholder="e.g., t**2 - t">
+                        <small style="color: #6c757d; font-size: 0.85em;">Use 't' as variable. Functions: sin, cos, exp, sqrt, log, pi, e</small>
+                        <div id="polynomial-error" class="error-message" style="display: none;"></div>
                     </div>
+                    <button class="button" onclick="regenerateNoise()">🎲 Regenerate Signal</button>
                 </div>
 
                 <div class="control-group">
-                    <h3>Noise Input</h3>
+                    <h3>Plot Type</h3>
                     <div class="input-group">
-                        <label>Noise Type</label>
-                        <select id="noise-type">
-                            <option value="golf">Golf-like Random</option>
-                            <option value="burst">Burst</option>
-                            <option value="step">Step</option>
-                            <option value="sinusoidal">Sinusoidal</option>
+                        <select id="plot-type">
+                            <option value="torque">Torque</option>
+                            <option value="acceleration">Angular Acceleration</option>
+                            <option value="transmission">Transmission Ratio vs Wrist Angle</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <h3>Display Options</h3>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="show-torque" checked>
-                        <label for="show-torque">Show Torque Plots</label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="show-acceleration" checked>
-                        <label for="show-acceleration">Show Acceleration Plots</label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="show-input" checked>
-                        <label for="show-input">Show Input Torque</label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="show-alpha" checked>
-                        <label for="show-alpha">Show Alpha Components</label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="show-gamma" checked>
-                        <label for="show-gamma">Show Gamma Components</label>
+                    <h3>Show Signals</h3>
+                    <div id="signal-checkboxes">
+                        <!-- Dynamically populated based on plot type -->
                     </div>
                 </div>
-
-                <button class="button" onclick="regenerateNoise()">🔄 Regenerate Noise</button>
             </div>
 
             <div class="plots-area">
-                <div class="plots-container">
-                    <div class="plot-card">
-                        <h3>Plot 1: Grip Angle <span id="angle1-title">45°</span></h3>
-                        <div id="plot1" class="plot-container"></div>
-                    </div>
-                    <div class="plot-card">
-                        <h3>Plot 2: Grip Angle <span id="angle2-title">90°</span></h3>
-                        <div id="plot2" class="plot-container"></div>
-                    </div>
+                <div class="diagram-container">
+                    <h3>Forearm-Hand-Club Diagram</h3>
+                    <canvas id="diagram-canvas" width="1200" height="400"></canvas>
                 </div>
 
-                <div class="schematic-container">
-                    <h3>Schematic: Grip Angle Visualization</h3>
-                    <canvas id="schematic-canvas" width="600" height="300"></canvas>
+                <div class="plot-card">
+                    <h3 id="plot-title">Torque vs Time</h3>
+                    <div id="plot" class="plot-container"></div>
                 </div>
 
                 <div class="info-panel">
-                    <h3>Transmission Analysis</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <h4>Grip Angle 1: <span id="info-angle1">45°</span></h4>
-                            <p><strong>Component Magnitudes:</strong></p>
-                            <p>Alpha: <span id="info-alpha1-mag">0.0</span>%</p>
-                            <p>Gamma: <span id="info-gamma1-mag">0.0</span>%</p>
-                            <p><strong>Power Distribution:</strong></p>
-                            <p>Alpha: <span id="info-alpha1-pwr">0.0</span>%</p>
-                            <p>Gamma: <span id="info-gamma1-pwr">0.0</span>%</p>
-                        </div>
-                        <div class="info-item">
-                            <h4>Grip Angle 2: <span id="info-angle2">90°</span></h4>
-                            <p><strong>Component Magnitudes:</strong></p>
-                            <p>Alpha: <span id="info-alpha2-mag">0.0</span>%</p>
-                            <p>Gamma: <span id="info-gamma2-mag">0.0</span>%</p>
-                            <p><strong>Power Distribution:</strong></p>
-                            <p>Alpha: <span id="info-alpha2-pwr">0.0</span>%</p>
-                            <p>Gamma: <span id="info-gamma2-pwr">0.0</span>%</p>
-                        </div>
+                    <h3>📐 Model Information</h3>
+                    <div id="model-info">
+                        <!-- Dynamically populated -->
                     </div>
                 </div>
             </div>
@@ -499,31 +491,47 @@
         // Global state
         let noiseData = [];
         let timeData = [];
+        let polynomialError = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
-            regenerateNoise(); // This calls updateAll() internally, so no need to call it again
+            updateSignalCheckboxes();
+            regenerateNoise();
         });
 
         function setupEventListeners() {
+            // Angle controls
+            document.getElementById('grip-angle').addEventListener('input', updateAngles);
+            document.getElementById('wrist-angle').addEventListener('input', updateAngles);
+
             // Club properties
             document.getElementById('clubhead-weight').addEventListener('input', updateClubProperty);
             document.getElementById('shaft-weight').addEventListener('input', updateClubProperty);
             document.getElementById('club-length').addEventListener('input', updateClubProperty);
             document.getElementById('cg-distance').addEventListener('input', updateClubProperty);
 
-            // Grip angles
-            document.getElementById('grip-angle1').addEventListener('input', updateAngle1);
-            document.getElementById('grip-angle2').addEventListener('input', updateAngle2);
+            // Signal generator
+            document.getElementById('noise-type').addEventListener('change', updateNoiseType);
+            document.getElementById('polynomial-expr').addEventListener('input', function() {
+                if (document.getElementById('noise-type').value === 'polynomial') {
+                    regenerateNoise();
+                }
+            });
 
-            // Display options
-            document.getElementById('noise-type').addEventListener('change', regenerateNoise);
-            document.getElementById('show-torque').addEventListener('change', updateAll);
-            document.getElementById('show-acceleration').addEventListener('change', updateAll);
-            document.getElementById('show-input').addEventListener('change', updateAll);
-            document.getElementById('show-alpha').addEventListener('change', updateAll);
-            document.getElementById('show-gamma').addEventListener('change', updateAll);
+            // Plot type
+            document.getElementById('plot-type').addEventListener('change', function() {
+                updateSignalCheckboxes();
+                updateAll();
+            });
+        }
+
+        function updateAngles() {
+            const grip = parseInt(document.getElementById('grip-angle').value);
+            const wrist = parseInt(document.getElementById('wrist-angle').value);
+            document.getElementById('grip-value').textContent = grip;
+            document.getElementById('wrist-value').textContent = wrist;
+            updateAll();
         }
 
         function updateClubProperty() {
@@ -544,23 +552,9 @@
             updateAll();
         }
 
-        function updateAngle1() {
-            const angle = parseInt(document.getElementById('grip-angle1').value);
-            document.getElementById('angle1-value').textContent = angle;
-            document.getElementById('angle1-title').textContent = angle + '°';
-            updateAll();
-        }
-
-        function updateAngle2() {
-            const angle = parseInt(document.getElementById('grip-angle2').value);
-            document.getElementById('angle2-value').textContent = angle;
-            document.getElementById('angle2-title').textContent = angle + '°';
-            updateAll();
-        }
-
         function calculateInertia(clubhead_g, shaft_g, length_m, cg_m) {
-            const m_head = clubhead_g / 1000.0; // kg
-            const m_shaft = shaft_g / 1000.0; // kg
+            const m_head = clubhead_g / 1000.0;
+            const m_shaft = shaft_g / 1000.0;
             
             const I_shaft_alpha = (1/3) * m_shaft * length_m * length_m;
             const I_head_alpha = m_head * cg_m * cg_m;
@@ -570,44 +564,121 @@
             return [I_alpha, I_gamma];
         }
 
+        function universalJointTransmissionRatio(phi_rad, delta_rad) {
+            // Avoid singularities
+            if (Math.abs(delta_rad) > Math.PI * 89 / 180) {
+                delta_rad = Math.sign(delta_rad) * Math.PI * 89 / 180;
+            }
+
+            const sin_delta = Math.sin(delta_rad);
+            const cos_delta = Math.cos(delta_rad);
+            const sin_phi = Math.sin(phi_rad);
+
+            const denominator = Math.sqrt(1.0 - sin_delta * sin_delta * sin_phi * sin_phi);
+            const omega_ratio = cos_delta / denominator;
+            const tau_ratio = denominator / cos_delta;
+
+            return { omega_ratio, tau_ratio };
+        }
+
+        function distributeTorqueByGripAngle(torque_transmitted, theta_grip_rad) {
+            const torque_alpha = torque_transmitted * Math.sin(theta_grip_rad);
+            const torque_gamma = torque_transmitted * Math.cos(theta_grip_rad);
+            return { torque_alpha, torque_gamma };
+        }
+
         function generateNoise(type, length = 500) {
             const t = [];
-            const noise = [];
-            
             for (let i = 0; i < length; i++) {
                 t.push(i / length);
             }
+            const noise = [];
 
             if (type === 'golf') {
                 for (let i = 0; i < length; i++) {
                     let val = (Math.random() - 0.5) * 2;
                     const burst = Math.exp(-50 * Math.pow(t[i] - 0.5, 2)) * (Math.random() - 0.5) * 16;
                     val += burst;
-                    // Simple smoothing
                     if (i > 0 && i < length - 1) {
                         val = (noise[i-1] + val + (Math.random() - 0.5) * 2) / 3;
                     }
                     noise.push(val);
                 }
-            } else if (type === 'burst') {
-                for (let i = 0; i < length; i++) {
-                    if (i >= 200 && i < 300) {
-                        noise.push((Math.random() - 0.5) * 4);
-                    } else {
-                        noise.push(0);
-                    }
-                }
             } else if (type === 'step') {
                 for (let i = 0; i < length; i++) {
                     noise.push(i >= 250 ? 3 : 0);
                 }
+            } else if (type === 'pulse') {
+                for (let i = 0; i < length; i++) {
+                    if (i >= 200 && i < 300) {
+                        noise.push((Math.random() - 0.5) * 10);
+                    } else {
+                        noise.push(0);
+                    }
+                }
+            } else if (type === 'burst') {
+                for (let i = 0; i < length; i++) {
+                    if (i >= 200 && i < 300) {
+                        noise.push((Math.random() - 0.5) * 6);
+                    } else {
+                        noise.push(0);
+                    }
+                }
             } else if (type === 'sinusoidal') {
                 for (let i = 0; i < length; i++) {
-                    noise.push(Math.sin(8 * Math.PI * t[i]));
+                    noise.push(2.0 * Math.sin(8 * Math.PI * t[i]));
+                }
+            } else if (type === 'random') {
+                for (let i = 0; i < length; i++) {
+                    noise.push((Math.random() - 0.5) * 3);
+                }
+                // Smooth
+                for (let i = 1; i < length - 1; i++) {
+                    noise[i] = (noise[i-1] + noise[i] + noise[i+1]) / 3;
+                }
+            } else if (type === 'polynomial') {
+                const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
+                polynomialError = null;
+                try {
+                    // Safe evaluation - only allow specific functions
+                    const safeEval = (t_val) => {
+                        const sin = Math.sin;
+                        const cos = Math.cos;
+                        const exp = Math.exp;
+                        const sqrt = Math.sqrt;
+                        const log = Math.log;
+                        const pi = Math.PI;
+                        const e = Math.E;
+                        const t = t_val;
+                        // Use Function constructor for safer evaluation
+                        const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e', 
+                            `return ${expr.replace(/\*\*/g, '**')}`);
+                        return func(t, sin, cos, exp, sqrt, log, pi, e);
+                    };
+                    for (let i = 0; i < length; i++) {
+                        noise.push(safeEval(t[i]));
+                    }
+                } catch (error) {
+                    polynomialError = `Error: ${error.message}`;
+                    // Fallback
+                    for (let i = 0; i < length; i++) {
+                        noise.push(t[i] * t[i] - t[i]);
+                    }
                 }
             }
 
             return { time: t, noise: noise };
+        }
+
+        function updateNoiseType() {
+            const type = document.getElementById('noise-type').value;
+            const polySection = document.getElementById('polynomial-section');
+            if (type === 'polynomial') {
+                polySection.style.display = 'block';
+            } else {
+                polySection.style.display = 'none';
+            }
+            regenerateNoise();
         }
 
         function regenerateNoise() {
@@ -615,21 +686,48 @@
             const data = generateNoise(type);
             timeData = data.time;
             noiseData = data.noise;
+            
+            // Show polynomial error if any
+            const errorDiv = document.getElementById('polynomial-error');
+            if (polynomialError && type === 'polynomial') {
+                errorDiv.textContent = polynomialError;
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.style.display = 'none';
+            }
+            
             updateAll();
         }
 
-        function calculateTorque(noise, angle_deg) {
-            const angle_rad = angle_deg * Math.PI / 180;
-            const alpha = noise.map(n => n * Math.sin(angle_rad));
-            const gamma = noise.map(n => n * Math.cos(angle_rad));
-            return { alpha, gamma };
+        function updateSignalCheckboxes() {
+            const plotType = document.getElementById('plot-type').value;
+            const container = document.getElementById('signal-checkboxes');
+            container.innerHTML = '';
+
+            if (plotType === 'torque') {
+                addCheckbox(container, 'show-input', 'Input Torque', true);
+                addCheckbox(container, 'show-transmitted', 'Transmitted Torque', true);
+                addCheckbox(container, 'show-alpha', 'Torque α (shaft axis)', true);
+                addCheckbox(container, 'show-gamma', 'Torque γ (high-I axis)', true);
+            } else if (plotType === 'acceleration') {
+                addCheckbox(container, 'show-alpha', 'Acceleration α', true);
+                addCheckbox(container, 'show-gamma', 'Acceleration γ', true);
+            } else {
+                addCheckbox(container, 'show-transmission', 'Transmission Ratio', true);
+                addCheckbox(container, 'show-velocity', 'Velocity Ratio', false);
+                addCheckbox(container, 'show-accel-alpha', 'Accel α Ratio', false);
+                addCheckbox(container, 'show-accel-gamma', 'Accel γ Ratio', false);
+            }
         }
 
-        function calculateAcceleration(torque, inertia) {
-            if (inertia < 1e-6) {
-                return torque.map(() => 0);
-            }
-            return torque.map(t => t / inertia);
+        function addCheckbox(container, id, label, checked) {
+            const div = document.createElement('div');
+            div.className = 'checkbox-group';
+            div.innerHTML = `
+                <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} onchange="updateAll()">
+                <label for="${id}">${label}</label>
+            `;
+            container.appendChild(div);
         }
 
         function updateAll() {
@@ -639,238 +737,522 @@
             const cg = parseFloat(document.getElementById('cg-distance').value);
             const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
 
-            const angle1 = parseInt(document.getElementById('grip-angle1').value);
-            const angle2 = parseInt(document.getElementById('grip-angle2').value);
+            const grip_angle = parseInt(document.getElementById('grip-angle').value);
+            const wrist_angle = parseInt(document.getElementById('wrist-angle').value);
 
-            const showTorque = document.getElementById('show-torque').checked;
-            const showAccel = document.getElementById('show-acceleration').checked;
-            const showInput = document.getElementById('show-input').checked;
-            const showAlpha = document.getElementById('show-alpha').checked;
-            const showGamma = document.getElementById('show-gamma').checked;
+            const plotType = document.getElementById('plot-type').value;
 
-            // Update plot 1
-            updatePlot(1, angle1, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma);
-            
-            // Update plot 2
-            updatePlot(2, angle2, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma);
+            // Update diagram
+            drawDiagram(grip_angle, wrist_angle);
 
-            // Update schematic
-            drawSchematic(angle1);
+            // Update plot
+            if (plotType === 'torque') {
+                updateTorquePlot(grip_angle, wrist_angle, I_alpha, I_gamma);
+            } else if (plotType === 'acceleration') {
+                updateAccelerationPlot(grip_angle, wrist_angle, I_alpha, I_gamma);
+            } else {
+                updateTransmissionPlot(grip_angle, wrist_angle, I_alpha, I_gamma);
+            }
 
             // Update info panel
-            updateInfoPanel(angle1, angle2);
+            updateInfoPanel(grip_angle, wrist_angle, I_alpha, I_gamma);
         }
 
-        function updatePlot(plotNum, angle, I_alpha, I_gamma, showTorque, showAccel, showInput, showAlpha, showGamma) {
-            const torque = calculateTorque(noiseData, angle);
-            const accel_alpha = calculateAcceleration(torque.alpha, I_alpha);
-            const accel_gamma = calculateAcceleration(torque.gamma, I_gamma);
+        function updateTorquePlot(grip_angle, wrist_angle, I_alpha, I_gamma) {
+            const theta_grip_rad = grip_angle * Math.PI / 180;
+            const phi_wrist_rad = wrist_angle * Math.PI / 180;
+            
+            const { tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
+            const torque_transmitted = noiseData.map(n => n * tau_ratio);
+            const { torque_alpha, torque_gamma } = distributeTorqueByGripAngle(
+                torque_transmitted.map((t, i) => t), theta_grip_rad
+            );
 
             const traces = [];
+            const showInput = document.getElementById('show-input')?.checked ?? true;
+            const showTransmitted = document.getElementById('show-transmitted')?.checked ?? true;
+            const showAlpha = document.getElementById('show-alpha')?.checked ?? true;
+            const showGamma = document.getElementById('show-gamma')?.checked ?? true;
+
+            if (showInput) {
+                traces.push({
+                    x: timeData,
+                    y: noiseData,
+                    name: 'Input Torque (forearm)',
+                    line: { color: 'gray', width: 2 },
+                    opacity: 0.7
+                });
+            }
+            if (showTransmitted) {
+                traces.push({
+                    x: timeData,
+                    y: torque_transmitted,
+                    name: `Transmitted (ratio=${tau_ratio.toFixed(3)})`,
+                    line: { color: 'purple', width: 2.5 }
+                });
+            }
+            if (showAlpha) {
+                traces.push({
+                    x: timeData,
+                    y: torque_alpha,
+                    name: 'τ_α (shaft axis)',
+                    line: { color: 'red', width: 2.5 }
+                });
+            }
+            if (showGamma) {
+                traces.push({
+                    x: timeData,
+                    y: torque_gamma,
+                    name: 'τ_γ (high-I axis)',
+                    line: { color: 'blue', width: 2.5 }
+                });
+            }
+
             const layout = {
                 height: 500,
                 margin: { l: 60, r: 20, t: 40, b: 50 },
+                title: `Torque vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
+                xaxis: { title: 'Time (s)' },
+                yaxis: { title: 'Torque (N·m)' },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                grid: { show: true, alpha: 0.3 }
             };
 
-            if (showTorque) {
-                if (showInput) {
-                    traces.push({
-                        x: timeData,
-                        y: noiseData,
-                        name: 'Input Torque',
-                        line: { color: 'gray', width: 2, dash: 'dot' },
-                        opacity: 0.7
-                    });
-                }
-                if (showAlpha) {
-                    traces.push({
-                        x: timeData,
-                        y: torque.alpha,
-                        name: 'Torque α (sin θ)',
-                        line: { color: 'red', width: 2.5 }
-                    });
-                }
-                if (showGamma) {
-                    traces.push({
-                        x: timeData,
-                        y: torque.gamma,
-                        name: 'Torque γ (cos θ)',
-                        line: { color: 'blue', width: 2.5 }
-                    });
-                }
-            }
-
-            if (showAccel) {
-                if (showAlpha) {
-                    traces.push({
-                        x: timeData,
-                        y: accel_alpha,
-                        name: 'Accel α (rad/s²)',
-                        line: { color: 'red', width: 2.5, dash: 'dash' },
-                        yaxis: showTorque ? 'y2' : 'y'
-                    });
-                }
-                if (showGamma) {
-                    traces.push({
-                        x: timeData,
-                        y: accel_gamma,
-                        name: 'Accel γ (rad/s²)',
-                        line: { color: 'blue', width: 2.5, dash: 'dash' },
-                        yaxis: showTorque ? 'y2' : 'y'
-                    });
-                }
-            }
-
-            if (showTorque && showAccel) {
-                layout.yaxis = { title: 'Torque (N·m)', side: 'left' };
-                layout.yaxis2 = { title: 'Acceleration (rad/s²)', side: 'right', overlaying: 'y' };
-            } else if (showTorque) {
-                layout.yaxis = { title: 'Torque (N·m)' };
-            } else if (showAccel) {
-                layout.yaxis = { title: 'Acceleration (rad/s²)' };
-            }
-
-            layout.title = {
-                text: `Grip Angle ${angle}° (Iα=${I_alpha.toFixed(4)} kg·m², Iγ=${I_gamma.toFixed(4)} kg·m²)`,
-                font: { size: 14, color: '#0f4c75' }
-            };
-            layout.xaxis = { title: 'Time (s)' };
-
-            Plotly.newPlot(`plot${plotNum}`, traces, layout, { responsive: true, displayModeBar: true });
+            document.getElementById('plot-title').textContent = 'Torque vs Time';
+            Plotly.newPlot('plot', traces, layout, { responsive: true, displayModeBar: true });
         }
 
-        function drawSchematic(angle) {
-            const canvas = document.getElementById('schematic-canvas');
+        function updateAccelerationPlot(grip_angle, wrist_angle, I_alpha, I_gamma) {
+            const theta_grip_rad = grip_angle * Math.PI / 180;
+            const phi_wrist_rad = wrist_angle * Math.PI / 180;
+            
+            const { tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
+            const torque_transmitted = noiseData.map(n => n * tau_ratio);
+            const torque_alpha = torque_transmitted.map(t => t * Math.sin(theta_grip_rad));
+            const torque_gamma = torque_transmitted.map(t => t * Math.cos(theta_grip_rad));
+            
+            const accel_alpha = torque_alpha.map(t => I_alpha > 1e-6 ? t / I_alpha : 0);
+            const accel_gamma = torque_gamma.map(t => I_gamma > 1e-6 ? t / I_gamma : 0);
+
+            const traces = [];
+            const showAlpha = document.getElementById('show-alpha')?.checked ?? true;
+            const showGamma = document.getElementById('show-gamma')?.checked ?? true;
+
+            if (showAlpha) {
+                traces.push({
+                    x: timeData,
+                    y: accel_alpha,
+                    name: `α_α (I_α=${I_alpha.toFixed(4)})`,
+                    line: { color: 'red', width: 2.5, dash: 'dash' }
+                });
+            }
+            if (showGamma) {
+                traces.push({
+                    x: timeData,
+                    y: accel_gamma,
+                    name: `α_γ (I_γ=${I_gamma.toFixed(4)})`,
+                    line: { color: 'blue', width: 2.5, dash: 'dash' }
+                });
+            }
+
+            const layout = {
+                height: 500,
+                margin: { l: 60, r: 20, t: 40, b: 50 },
+                title: `Angular Acceleration vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
+                xaxis: { title: 'Time (s)' },
+                yaxis: { title: 'Angular Acceleration (rad/s²)' },
+                paper_bgcolor: 'white',
+                plot_bgcolor: 'white',
+                font: { family: 'Arial', size: 12 },
+                showlegend: true,
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                grid: { show: true, alpha: 0.3 }
+            };
+
+            document.getElementById('plot-title').textContent = 'Angular Acceleration vs Time';
+            Plotly.newPlot('plot', traces, layout, { responsive: true, displayModeBar: true });
+        }
+
+        function updateTransmissionPlot(grip_angle, wrist_angle, I_alpha, I_gamma) {
+            const theta_grip_rad = grip_angle * Math.PI / 180;
+            const phi_sweep = [];
+            for (let i = -60; i <= 60; i += 0.6) {
+                phi_sweep.push(i);
+            }
+
+            const omega_ratios = [];
+            const tau_ratios = [];
+            const accel_alpha_ratios = [];
+            const accel_gamma_ratios = [];
+
+            phi_sweep.forEach(phi_deg => {
+                const phi_rad = phi_deg * Math.PI / 180;
+                const { omega_ratio, tau_ratio } = universalJointTransmissionRatio(phi_rad, theta_grip_rad);
+                omega_ratios.push(omega_ratio);
+                tau_ratios.push(tau_ratio);
+
+                const torque_trans = 1.0 * tau_ratio;
+                const { torque_alpha, torque_gamma } = distributeTorqueByGripAngle(torque_trans, theta_grip_rad);
+                accel_alpha_ratios.push(I_alpha > 1e-6 ? torque_alpha / I_alpha : 0);
+                accel_gamma_ratios.push(I_gamma > 1e-6 ? torque_gamma / I_gamma : 0);
+            });
+
+            const traces = [];
+            const showTransmission = document.getElementById('show-transmission')?.checked ?? true;
+            const showVelocity = document.getElementById('show-velocity')?.checked ?? false;
+            const showAccelAlpha = document.getElementById('show-accel-alpha')?.checked ?? false;
+            const showAccelGamma = document.getElementById('show-accel-gamma')?.checked ?? false;
+
+            if (showTransmission) {
+                traces.push({
+                    x: phi_sweep,
+                    y: tau_ratios,
+                    name: 'Torque Transmission Ratio (τ_out/τ_in)',
+                    line: { color: 'purple', width: 2.5 }
+                });
+            }
+            if (showVelocity) {
+                traces.push({
+                    x: phi_sweep,
+                    y: omega_ratios,
+                    name: 'Velocity Ratio (ω_out/ω_in)',
+                    line: { color: 'orange', width: 2, dash: 'dash' }
+                });
+            }
+            if (showAccelAlpha) {
+                traces.push({
+                    x: phi_sweep,
+                    y: accel_alpha_ratios,
+                    name: 'Accel_α ratio (rad/s²)/(N·m)',
+                    line: { color: 'red', width: 1.5, opacity: 0.7 }
+                });
+            }
+            if (showAccelGamma) {
+                traces.push({
+                    x: phi_sweep,
+                    y: accel_gamma_ratios,
+                    name: 'Accel_γ ratio (rad/s²)/(N·m)',
+                    line: { color: 'blue', width: 1.5, opacity: 0.7 }
+                });
+            }
+
+            // Mark current wrist angle
+            const currentIdx = phi_sweep.findIndex(p => Math.abs(p - wrist_angle) < 0.6);
+            if (currentIdx >= 0 && showTransmission) {
+                traces.push({
+                    x: [wrist_angle],
+                    y: [tau_ratios[currentIdx]],
+                    name: `Current wrist angle (${wrist_angle}°)`,
+                    mode: 'markers',
+                    marker: { color: 'lime', size: 12, symbol: 'circle' }
+                });
+            }
+
+            const layout = {
+                height: 500,
+                margin: { l: 60, r: 20, t: 40, b: 50 },
+                title: `Universal Joint Transmission vs Wrist Deviation Angle (Grip=${grip_angle}°)`,
+                xaxis: { title: 'Wrist Deviation Angle (degrees)' },
+                yaxis: { title: 'Transmission Ratio' },
+                paper_bgcolor: 'white',
+                plot_bgcolor: 'white',
+                font: { family: 'Arial', size: 12 },
+                showlegend: true,
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
+                shapes: [{
+                    type: 'line',
+                    x0: wrist_angle,
+                    x1: wrist_angle,
+                    y0: 0,
+                    y1: 1,
+                    yref: 'paper',
+                    line: { color: 'green', width: 2, dash: 'dot' }
+                }],
+                grid: { show: true, alpha: 0.3 }
+            };
+
+            document.getElementById('plot-title').textContent = 'Transmission Ratio vs Wrist Deviation Angle';
+            Plotly.newPlot('plot', traces, layout, { responsive: true, displayModeBar: true });
+        }
+
+        function drawDiagram(grip_angle_deg, wrist_angle_deg) {
+            const canvas = document.getElementById('diagram-canvas');
             const ctx = canvas.getContext('2d');
             const width = canvas.width;
             const height = canvas.height;
 
             ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = '#f8f9fa';
+            ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, width, height);
 
-            // Scale and offset
-            const scale = Math.min(width, height) * 0.8;
-            const offsetX = width / 2;
-            const offsetY = height / 2;
+            // Coordinate system: club is always horizontal, clubhead on left pointing up
+            const scale = Math.min(width, height) * 0.6;
+            const wrist_x = width * 0.4;
+            const wrist_y = height * 0.5;
 
-            const angle_rad = angle * Math.PI / 180;
+            const theta_grip_rad = grip_angle_deg * Math.PI / 180;
+            const phi_wrist_rad = wrist_angle_deg * Math.PI / 180;
 
-            // Draw shaft (horizontal line)
+            // Club shaft: always horizontal, extends left from wrist
+            const shaft_length = scale * 1.05;
+            const hand_length = scale * 0.2;
+            const hand_dir_x = Math.cos(theta_grip_rad);
+            const hand_dir_y = Math.sin(theta_grip_rad);
+            const shaft_attach_x = wrist_x;
+            const shaft_attach_y = wrist_y;
+            const shaft_end_x = shaft_attach_x - shaft_length;
+            const shaft_end_y = shaft_attach_y;
+
+            // Draw club shaft
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.moveTo(offsetX - scale/2, offsetY);
-            ctx.lineTo(offsetX + scale/2, offsetY);
+            ctx.moveTo(shaft_end_x, shaft_end_y);
+            ctx.lineTo(shaft_attach_x, shaft_attach_y);
             ctx.stroke();
 
-            // Draw clubhead (rectangle at left)
+            // Clubhead: trapezoid, tilted 30 degrees
+            const clubhead_width_base = scale * 0.08;
+            const clubhead_width_bottom = clubhead_width_base / 3;
+            const clubhead_width_top = clubhead_width_base * 4 / 3;
+            const clubhead_height = scale * 0.24;
+            const clubhead_angle_rad = 30 * Math.PI / 180;
+
+            ctx.save();
+            ctx.translate(shaft_end_x, shaft_end_y);
+            ctx.rotate(clubhead_angle_rad);
             ctx.fillStyle = '#c0c0c0';
             ctx.strokeStyle = '#666';
             ctx.lineWidth = 2;
-            ctx.fillRect(offsetX - scale/2 - 20, offsetY - 15, 30, 25);
-            ctx.strokeRect(offsetX - scale/2 - 20, offsetY - 15, 30, 25);
-
-            // Draw hand (ellipse on right, rotated)
-            const handX = offsetX + scale/3;
-            const handY = offsetY;
-            const handWidth = 40;
-            const handHeight = 20;
-
-            ctx.save();
-            ctx.translate(handX, handY);
-            ctx.rotate(angle_rad);
-            ctx.fillStyle = '#d2b48c';
-            ctx.strokeStyle = '#8b4513';
-            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.ellipse(0, 0, handWidth/2, handHeight/2, 0, 0, 2 * Math.PI);
+            ctx.moveTo(-clubhead_width_bottom/2, 0);
+            ctx.lineTo(clubhead_width_bottom/2, 0);
+            ctx.lineTo(clubhead_width_top/2, clubhead_height);
+            ctx.lineTo(-clubhead_width_top/2, clubhead_height);
+            ctx.closePath();
             ctx.fill();
             ctx.stroke();
             ctx.restore();
 
-            // Draw fingers
-            const fingerLength = 25;
-            const fingerDirX = -Math.cos(angle_rad);
-            const fingerDirY = -Math.sin(angle_rad);
-            const perpX = -Math.sin(angle_rad);
-            const perpY = Math.cos(angle_rad);
+            // Hand: ellipse at wrist, rotated by grip angle
+            const hand_width = scale * 0.12;
+            const hand_center_x = wrist_x;
+            const hand_center_y = wrist_y;
+
+            ctx.save();
+            ctx.translate(hand_center_x, hand_center_y);
+            ctx.rotate(theta_grip_rad);
+            ctx.fillStyle = '#d2b48c';
+            ctx.strokeStyle = '#8b4513';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, hand_length/2, hand_width/2, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+
+            // Draw 4 fingers
+            const finger_length = scale * 0.12;
+            const finger_width = scale * 0.015;
+            const finger_dir_x = -hand_dir_x;
+            const finger_dir_y = -hand_dir_y;
+            const perp_to_hand_x = -hand_dir_y;
+            const perp_to_hand_y = hand_dir_x;
+            const finger_spacing = scale * 0.03;
+            const finger_positions = [-1.2, -0.4, 0.4, 1.2];
 
             ctx.fillStyle = '#d2b48c';
             ctx.strokeStyle = '#8b4513';
             ctx.lineWidth = 1;
+            finger_positions.forEach(pos => {
+                const base_x = hand_center_x + pos * finger_spacing * perp_to_hand_x;
+                const base_y = hand_center_y + pos * finger_spacing * perp_to_hand_y;
+                const tip_x = base_x + finger_length * finger_dir_x;
+                const tip_y = base_y + finger_length * finger_dir_y;
+                const finger_mid_x = (base_x + tip_x) / 2;
+                const finger_mid_y = (base_y + tip_y) / 2;
+                const finger_angle = Math.atan2(finger_dir_y, finger_dir_x);
 
-            for (let i = 0; i < 4; i++) {
-                const pos = (i - 1.5) * 0.5;
-                const baseX = handX + pos * 8 * perpX;
-                const baseY = handY + pos * 8 * perpY;
-                const tipX = baseX + fingerLength * fingerDirX;
-                const tipY = baseY + fingerLength * fingerDirY;
-
+                ctx.save();
+                ctx.translate(finger_mid_x, finger_mid_y);
+                ctx.rotate(finger_angle);
                 ctx.beginPath();
-                ctx.ellipse((baseX + tipX) / 2, (baseY + tipY) / 2, fingerLength/2, 3, 
-                           Math.atan2(fingerDirY, fingerDirX), 0, 2 * Math.PI);
+                ctx.ellipse(0, 0, finger_length/2, finger_width/2, 0, 0, 2 * Math.PI);
                 ctx.fill();
                 ctx.stroke();
-            }
+                ctx.restore();
+            });
 
-            // Draw angle arc
-            const arcRadius = 30;
-            const arcCenterX = handX - 20;
-            const arcCenterY = handY;
+            // Forearm: attached to hand at long axis endpoint
+            const forearm_angle_rad = theta_grip_rad + phi_wrist_rad + Math.PI;
+            const forearm_length = scale * 0.35;
+            const forearm_width = scale * 0.1;
 
-            ctx.strokeStyle = '#28a745';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(arcCenterX, arcCenterY, arcRadius, 0, angle_rad);
-            ctx.stroke();
+            const hand_endpoint_forearm_x = wrist_x + (hand_length / 2) * hand_dir_x;
+            const hand_endpoint_forearm_y = wrist_y + (hand_length / 2) * hand_dir_y;
 
-            // Draw angle lines
-            ctx.strokeStyle = '#000';
+            const forearm_dir_x = Math.cos(forearm_angle_rad);
+            const forearm_dir_y = Math.sin(forearm_angle_rad);
+            const forearm_center_x = hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x;
+            const forearm_center_y = hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y;
+
+            ctx.save();
+            ctx.translate(forearm_center_x, forearm_center_y);
+            ctx.rotate(forearm_angle_rad);
+            ctx.fillStyle = '#d2b48c';
+            ctx.strokeStyle = '#8b4513';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(arcCenterX, arcCenterY);
-            ctx.lineTo(arcCenterX + arcRadius, arcCenterY);
+            ctx.ellipse(0, 0, forearm_length/2, forearm_width/2, 0, 0, 2 * Math.PI);
+            ctx.fill();
             ctx.stroke();
+            ctx.restore();
 
-            ctx.strokeStyle = '#dc3545';
+            // Draw wrist joint
+            ctx.fillStyle = '#000';
             ctx.beginPath();
-            ctx.moveTo(arcCenterX, arcCenterY);
-            ctx.lineTo(arcCenterX + arcRadius * Math.cos(angle_rad), 
-                      arcCenterY + arcRadius * Math.sin(angle_rad));
+            ctx.arc(wrist_x, wrist_y, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Wrist Joint', wrist_x, wrist_y - 10);
+
+            // Draw grip angle arc
+            const arc_center_x = wrist_x - scale * 0.05;
+            const arc_center_y = wrist_y;
+            const arc_radius = scale * 0.12;
+
+            ctx.strokeStyle = '#28a745';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(arc_center_x, arc_center_y, arc_radius, 0, theta_grip_rad);
             ctx.stroke();
 
-            // Label theta
+            // Grip angle arrows
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            drawArrow(ctx, arc_center_x, arc_center_y, arc_center_x + arc_radius, arc_center_y);
+            ctx.strokeStyle = '#dc3545';
+            drawArrow(ctx, arc_center_x, arc_center_y, 
+                     arc_center_x + arc_radius * Math.cos(theta_grip_rad),
+                     arc_center_y + arc_radius * Math.sin(theta_grip_rad));
+
+            // Label grip angle
             ctx.fillStyle = '#28a745';
-            ctx.font = 'bold 16px Arial';
-            ctx.textAlign = 'center';
-            const labelX = arcCenterX + arcRadius * Math.cos(angle_rad/2);
-            const labelY = arcCenterY + arcRadius * Math.sin(angle_rad/2) + 5;
-            ctx.fillText('θ', labelX, labelY);
+            ctx.font = 'bold 13px Arial';
+            const label_x = arc_center_x + arc_radius * Math.cos(theta_grip_rad/2) * 0.7;
+            const label_y = arc_center_y + arc_radius * Math.sin(theta_grip_rad/2) * 0.7;
+            ctx.fillText('θ', label_x, label_y + 5);
+
+            // Draw wrist angle arc
+            const wrist_arc_center_x = hand_endpoint_forearm_x - scale * 0.05;
+            const wrist_arc_center_y = hand_endpoint_forearm_y;
+            const wrist_arc_radius = scale * 0.12;
+
+            const hand_axis_angle = theta_grip_rad;
+            const forearm_axis_angle = theta_grip_rad + phi_wrist_rad + Math.PI;
+
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 2.5;
+            ctx.globalAlpha = 0.8;
+            ctx.beginPath();
+            ctx.arc(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius, 
+                   hand_axis_angle, forearm_axis_angle);
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+
+            // Wrist angle arrows
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 2;
+            drawArrow(ctx, wrist_arc_center_x, wrist_arc_center_y,
+                     wrist_arc_center_x + wrist_arc_radius * Math.cos(hand_axis_angle),
+                     wrist_arc_center_y + wrist_arc_radius * Math.sin(hand_axis_angle));
+            ctx.strokeStyle = '#007bff';
+            drawArrow(ctx, wrist_arc_center_x, wrist_arc_center_y,
+                     wrist_arc_center_x + wrist_arc_radius * Math.cos(forearm_axis_angle),
+                     wrist_arc_center_y + wrist_arc_radius * Math.sin(forearm_axis_angle));
+
+            // Label wrist angle
+            const phi_mid = (hand_axis_angle + forearm_axis_angle) / 2;
+            ctx.fillStyle = '#007bff';
+            ctx.font = 'bold 13px Arial';
+            const phi_label_x = wrist_arc_center_x + wrist_arc_radius * Math.cos(phi_mid) * 0.7;
+            const phi_label_y = wrist_arc_center_y + wrist_arc_radius * Math.sin(phi_mid) * 0.7;
+            ctx.fillText('φ', phi_label_x, phi_label_y + 5);
         }
 
-        function updateInfoPanel(angle1, angle2) {
-            const a1_rad = angle1 * Math.PI / 180;
-            const a2_rad = angle2 * Math.PI / 180;
+        function drawArrow(ctx, x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            // Arrowhead
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const arrowLength = 12;
+            const arrowAngle = Math.PI / 6;
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - arrowLength * Math.cos(angle - arrowAngle),
+                      y2 - arrowLength * Math.sin(angle - arrowAngle));
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - arrowLength * Math.cos(angle + arrowAngle),
+                      y2 - arrowLength * Math.sin(angle + arrowAngle));
+            ctx.stroke();
+        }
 
-            document.getElementById('info-angle1').textContent = angle1 + '°';
-            document.getElementById('info-alpha1-mag').textContent = (Math.abs(Math.sin(a1_rad)) * 100).toFixed(1);
-            document.getElementById('info-gamma1-mag').textContent = (Math.abs(Math.cos(a1_rad)) * 100).toFixed(1);
-            document.getElementById('info-alpha1-pwr').textContent = (Math.sin(a1_rad) * Math.sin(a1_rad) * 100).toFixed(1);
-            document.getElementById('info-gamma1-pwr').textContent = (Math.cos(a1_rad) * Math.cos(a1_rad) * 100).toFixed(1);
+        function updateInfoPanel(grip_angle, wrist_angle, I_alpha, I_gamma) {
+            const theta_grip_rad = grip_angle * Math.PI / 180;
+            const phi_wrist_rad = wrist_angle * Math.PI / 180;
+            
+            const { omega_ratio, tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
+            const mean_torque = noiseData.reduce((a, b) => a + b, 0) / noiseData.length;
+            const torque_transmitted = mean_torque * tau_ratio;
+            const { torque_alpha, torque_gamma } = distributeTorqueByGripAngle(torque_transmitted, theta_grip_rad);
+            
+            const accel_alpha = I_alpha > 1e-6 ? torque_alpha / I_alpha : 0;
+            const accel_gamma = I_gamma > 1e-6 ? torque_gamma / I_gamma : 0;
 
-            document.getElementById('info-angle2').textContent = angle2 + '°';
-            document.getElementById('info-alpha2-mag').textContent = (Math.abs(Math.sin(a2_rad)) * 100).toFixed(1);
-            document.getElementById('info-gamma2-mag').textContent = (Math.abs(Math.cos(a2_rad)) * 100).toFixed(1);
-            document.getElementById('info-alpha2-pwr').textContent = (Math.sin(a2_rad) * Math.sin(a2_rad) * 100).toFixed(1);
-            document.getElementById('info-gamma2-pwr').textContent = (Math.cos(a2_rad) * Math.cos(a2_rad) * 100).toFixed(1);
+            const wrist_label = wrist_angle > 0 ? 'radial' : (wrist_angle < 0 ? 'ulnar' : 'neutral');
+
+            const infoHTML = `
+                <div class="info-item">
+                    <h4>Current Parameters</h4>
+                    <p><strong>Grip Angle (θ_grip):</strong> ${grip_angle}°</p>
+                    <p><strong>Wrist Deviation Angle (φ):</strong> ${wrist_angle}° (${wrist_label} deviation)</p>
+                </div>
+                <div class="info-item">
+                    <h4>Transmission Ratios</h4>
+                    <p><strong>Angular Velocity Ratio (ω_out/ω_in):</strong> ${omega_ratio.toFixed(4)}</p>
+                    <p><strong>Torque Transmission Ratio (τ_out/τ_in):</strong> ${tau_ratio.toFixed(4)}</p>
+                </div>
+                <div class="info-item">
+                    <h4>Torque Distribution (at mean input torque)</h4>
+                    <p><strong>Torque to α-axis (shaft):</strong> ${torque_alpha.toFixed(4)} N·m (${(Math.abs(Math.sin(theta_grip_rad))*100).toFixed(1)}% of transmitted)</p>
+                    <p><strong>Torque to γ-axis (high-I):</strong> ${torque_gamma.toFixed(4)} N·m (${(Math.abs(Math.cos(theta_grip_rad))*100).toFixed(1)}% of transmitted)</p>
+                </div>
+                <div class="info-item">
+                    <h4>Angular Acceleration (at mean torque)</h4>
+                    <p><strong>α-axis acceleration:</strong> ${accel_alpha.toFixed(4)} rad/s²</p>
+                    <p><strong>γ-axis acceleration:</strong> ${accel_gamma.toFixed(4)} rad/s²</p>
+                </div>
+                <div class="info-item">
+                    <h4>Model Assumptions</h4>
+                    <p>• Universal joint (Hooke/Cardan) kinematics</p>
+                    <p>• Rigid body model</p>
+                    <p>• Power conservation (P = τω)</p>
+                    <p>• Constant grip angle during motion</p>
+                    <p>• Wrist angle represents radial/ulnar deviation</p>
+                </div>
+            `;
+
+            document.getElementById('model-info').innerHTML = infoHTML;
         }
     </script>
 </body>
 </html>
-
