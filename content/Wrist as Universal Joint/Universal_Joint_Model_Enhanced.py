@@ -352,7 +352,8 @@ class DiagramCanvas(FigureCanvas):
         # Forearm direction (away from hand, accounting for wrist angle)
         # When wrist angle = 0, forearm should align with hand
         # When wrist angle = phi, forearm rotates by phi relative to hand
-        forearm_axis_angle = theta_grip_rad + phi_wrist_rad
+        # Note: Must match the actual forearm drawing angle which includes + np.pi
+        forearm_axis_angle = theta_grip_rad + phi_wrist_rad + np.pi
 
         # Draw arc showing the actual wrist angle φ
         wrist_arc_start = hand_axis_angle
@@ -415,11 +416,12 @@ class PlotCanvas(FigureCanvas):
         self.I_alpha = I_alpha
         self.I_gamma = I_gamma
         self.polynomial_error = None  # Store polynomial evaluation errors
+        self.DEFAULT_POLYNOMIAL = 't**2 - t'  # Fallback polynomial expression
 
         # Generate sample input torque signal
         self.t = np.linspace(0, 1, 500)
         self.noise_type = 'Golf-like Random'
-        self.polynomial_expression = 't**2 - t'  # Default polynomial
+        self.polynomial_expression = self.DEFAULT_POLYNOMIAL
         self.input_torque = self.generate_sample_torque()
 
         # Available plot types
@@ -471,11 +473,12 @@ class PlotCanvas(FigureCanvas):
             torque = np.convolve(torque, np.ones(10)/10, mode='same')
         elif self.noise_type == 'Polynomial':
             # Evaluate polynomial expression using safer method
+            # Note: We don't expose 'np' module to prevent sandbox escape via object introspection
             try:
-                # Create a safe evaluation environment with only allowed functions
+                # Create a safe evaluation environment with only specific allowed functions
+                # Exposing the full 'np' module is a security risk - use only specific functions
                 safe_dict = {
                     't': t,
-                    'np': np,
                     'sin': np.sin,
                     'cos': np.cos,
                     'exp': np.exp,
@@ -487,22 +490,35 @@ class PlotCanvas(FigureCanvas):
                 # Compile the expression first to validate syntax
                 code = compile(self.polynomial_expression, '<string>', 'eval')
                 # Evaluate with restricted namespace (no builtins, only safe_dict)
-                torque = eval(code, {"__builtins__": {}}, safe_dict)
-                # Ensure it's a numpy array
-                if not isinstance(torque, np.ndarray):
-                    torque = np.full_like(t, float(torque))
+                result = eval(code, {"__builtins__": {}}, safe_dict)
+                # Ensure it's a numpy array (check outside eval for safety)
+                if isinstance(result, np.ndarray):
+                    torque = result
+                else:
+                    # Convert scalar to array
+                    torque = np.full_like(t, float(result))
                 # Store success (clear any previous error)
                 self.polynomial_error = None
-            except SyntaxError as e:
+            except SyntaxError:
                 # Syntax error in expression
-                error_msg = f"Syntax error in polynomial: {e}"
+                error_msg = "Invalid polynomial syntax. Please check your expression."
                 self.polynomial_error = error_msg
-                torque = t**2 - t
-            except Exception as e:
-                # Other evaluation errors
-                error_msg = f"Error evaluating polynomial '{self.polynomial_expression}': {e}"
+                torque = t**2 - t  # Use fallback polynomial
+            except NameError:
+                # Invalid variable or function used
+                error_msg = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."
                 self.polynomial_error = error_msg
-                torque = t**2 - t
+                torque = t**2 - t  # Use fallback polynomial
+            except (TypeError, ValueError) as e:
+                # Type or value error
+                error_msg = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."
+                self.polynomial_error = error_msg
+                torque = t**2 - t  # Use fallback polynomial
+            except Exception:
+                # Other unexpected errors
+                error_msg = "Unexpected error evaluating polynomial expression. Please check your formula."
+                self.polynomial_error = error_msg
+                torque = t**2 - t  # Use fallback polynomial
         else:
             # Default to golf-like
             torque = np.random.normal(0, 1, len(t))
@@ -1276,7 +1292,7 @@ class MainWindow(QMainWindow):
             scroll = self.centralWidget()
             if isinstance(scroll, QScrollArea):
                 scroll_bar = scroll.verticalScrollBar()
-                if scroll_bar:
+                if scroll_bar and scroll_bar.isVisible():
                     delta = event.angleDelta().y()
                     scroll_bar.setValue(scroll_bar.value() - delta // 8)
                     return True  # Consume the event so sliders don't get it
