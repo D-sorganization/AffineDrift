@@ -18,7 +18,6 @@ import into a Streamlit app or run directly.
 import numpy as np
 from scipy.integrate import solve_ivp
 
-
 # ---------------------------------------------------------------------------
 # Physical parameters for the double pendulum
 # ---------------------------------------------------------------------------
