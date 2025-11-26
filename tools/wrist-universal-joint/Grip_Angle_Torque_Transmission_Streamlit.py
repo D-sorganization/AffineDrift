@@ -333,8 +333,6 @@ def draw_diagram(grip_angle_deg, wrist_angle_deg):
     # For arc visualization, use angles without π offset
     hand_axis_angle_for_arc = theta_grip_rad
     forearm_axis_angle_for_arc = theta_grip_rad + phi_wrist_rad
-    # For forearm drawing, use the actual forearm angle (with π offset)
-    forearm_axis_angle = theta_grip_rad + phi_wrist_rad + np.pi
 
     wrist_arc_start = hand_axis_angle_for_arc
     wrist_arc_end = forearm_axis_angle_for_arc

@@ -381,11 +381,11 @@ class DiagramCanvas(FigureCanvas):
         phi_label_y = wrist_arc_center_y + wrist_arc_radius * np.sin(phi_mid) * 0.7
         self.ax.text(phi_label_x, phi_label_y + 0.02, r"$\phi$", color='b',
                     fontsize=13, ha='center', fontweight='bold', zorder=9)
-        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(hand_axis_angle) + 0.02,
-                    wrist_arc_center_y + wrist_arc_radius*np.sin(hand_axis_angle) + 0.02, 'Hand Axis',
+        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(hand_axis_angle_for_arc) + 0.02,
+                    wrist_arc_center_y + wrist_arc_radius*np.sin(hand_axis_angle_for_arc) + 0.02, 'Hand Axis',
                     color='r', fontsize=9, ha='left', fontweight='bold')
-        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(forearm_axis_angle) + 0.02,
-                    wrist_arc_center_y + wrist_arc_radius*np.sin(forearm_axis_angle) + 0.02, 'Forearm Axis',
+        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(forearm_axis_angle_for_arc) + 0.02,
+                    wrist_arc_center_y + wrist_arc_radius*np.sin(forearm_axis_angle_for_arc) + 0.02, 'Forearm Axis',
                     color='b', fontsize=9, ha='left', fontweight='bold')
 
         # Set axis properties (adjusted for longer shaft and to show full forearm)
