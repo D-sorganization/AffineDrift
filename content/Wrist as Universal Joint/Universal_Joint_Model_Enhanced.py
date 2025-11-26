@@ -356,19 +356,24 @@ class DiagramCanvas(FigureCanvas):
         forearm_axis_angle = theta_grip_rad + phi_wrist_rad + np.pi
 
         # Draw arc showing the actual wrist angle φ
-        wrist_arc_start = hand_axis_angle
-        wrist_arc_end = forearm_axis_angle
+        # The arc should show just phi_wrist_rad, not including the π offset
+        # Hand axis direction (away from club)
+        hand_axis_angle_for_arc = theta_grip_rad
+        # Forearm axis direction relative to hand (without π offset for arc visualization)
+        forearm_axis_angle_for_arc = theta_grip_rad + phi_wrist_rad
+        wrist_arc_start = hand_axis_angle_for_arc
+        wrist_arc_end = forearm_axis_angle_for_arc
         wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
         wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
         wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
         self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, alpha=0.8, zorder=8)
 
-        # Wrist angle lines - show hand axis and forearm axis
-        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle),
-                     wrist_arc_radius*np.sin(hand_axis_angle), head_width=0.012, head_length=0.018,
+        # Wrist angle lines - show hand axis and forearm axis (for arc visualization)
+        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle_for_arc),
+                     wrist_arc_radius*np.sin(hand_axis_angle_for_arc), head_width=0.012, head_length=0.018,
                      fc='r', ec='r', linewidth=2, zorder=8)
-        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle),
-                     wrist_arc_radius*np.sin(forearm_axis_angle), head_width=0.012, head_length=0.018,
+        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle_for_arc),
+                     wrist_arc_radius*np.sin(forearm_axis_angle_for_arc), head_width=0.012, head_length=0.018,
                      fc='b', ec='b', linewidth=2, zorder=8)
 
         # Label wrist angle
@@ -1197,6 +1202,7 @@ class MainWindow(QMainWindow):
         except ValueError:
             # Invalid input, restore to default
             self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
+            self.update_inertia()
 
     def update_shaft_from_textbox(self):
         """Update shaft weight from text box"""
@@ -1209,6 +1215,7 @@ class MainWindow(QMainWindow):
             self.update_inertia()
         except ValueError:
             self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
+            self.update_inertia()
 
     def update_length_from_textbox(self):
         """Update club length from text box"""
@@ -1221,6 +1228,7 @@ class MainWindow(QMainWindow):
             self.update_inertia()
         except ValueError:
             self.club_length.setText(f'{DEFAULT_CLUB_LENGTH:.2f}')
+            self.update_inertia()
 
     def update_cg_from_textbox(self):
         """Update CG distance from text box"""
@@ -1233,6 +1241,7 @@ class MainWindow(QMainWindow):
             self.update_inertia()
         except ValueError:
             self.cg_distance.setText(f'{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}')
+            self.update_inertia()
 
     def update_inertia(self):
         """Update inertia display and plots"""

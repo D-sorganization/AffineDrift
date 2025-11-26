@@ -652,7 +652,7 @@
                         const t = t_val;
                         // Use Function constructor for safer evaluation
                         const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e', 
-                            `return ${expr.replace(/\*\*/g, '**')}`);
+                            `return ${expr}`);
                         return func(t, sin, cos, exp, sqrt, log, pi, e);
                     };
                     for (let i = 0; i < length; i++) {
@@ -811,14 +811,13 @@
                 height: 500,
                 margin: { l: 60, r: 20, t: 40, b: 50 },
                 title: `Torque vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Torque (N·m)' },
+                xaxis: { title: 'Time (s)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
+                yaxis: { title: 'Torque (N·m)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
-                grid: { show: true, alpha: 0.3 }
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
             };
 
             document.getElementById('plot-title').textContent = 'Torque vs Time';
@@ -862,14 +861,13 @@
                 height: 500,
                 margin: { l: 60, r: 20, t: 40, b: 50 },
                 title: `Angular Acceleration vs Time (Grip: ${grip_angle}°, Wrist: ${wrist_angle}°)`,
-                xaxis: { title: 'Time (s)' },
-                yaxis: { title: 'Angular Acceleration (rad/s²)' },
+                xaxis: { title: 'Time (s)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
+                yaxis: { title: 'Angular Acceleration (rad/s²)', showgrid: true, gridcolor: 'rgba(0,0,0,0.3)' },
                 paper_bgcolor: 'white',
                 plot_bgcolor: 'white',
                 font: { family: 'Arial', size: 12 },
                 showlegend: true,
-                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' },
-                grid: { show: true, alpha: 0.3 }
+                legend: { x: 0.02, y: 0.98, bgcolor: 'rgba(255,255,255,0.8)' }
             };
 
             document.getElementById('plot-title').textContent = 'Angular Acceleration vs Time';
@@ -1154,7 +1152,10 @@
             const wrist_arc_center_y = hand_endpoint_forearm_y;
             const wrist_arc_radius = scale * 0.12;
 
-            const hand_axis_angle = theta_grip_rad;
+            // For arc visualization, use angles without π offset
+            const hand_axis_angle_for_arc = theta_grip_rad;
+            const forearm_axis_angle_for_arc = theta_grip_rad + phi_wrist_rad;
+            // For arrow drawing, use the actual forearm angle (with π offset)
             const forearm_axis_angle = theta_grip_rad + phi_wrist_rad + Math.PI;
 
             ctx.strokeStyle = '#007bff';
@@ -1162,23 +1163,23 @@
             ctx.globalAlpha = 0.8;
             ctx.beginPath();
             ctx.arc(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius, 
-                   hand_axis_angle, forearm_axis_angle);
+                   hand_axis_angle_for_arc, forearm_axis_angle_for_arc);
             ctx.stroke();
             ctx.globalAlpha = 1.0;
 
-            // Wrist angle arrows
+            // Wrist angle arrows (for arc visualization)
             ctx.strokeStyle = '#dc3545';
             ctx.lineWidth = 2;
             drawArrow(ctx, wrist_arc_center_x, wrist_arc_center_y,
-                     wrist_arc_center_x + wrist_arc_radius * Math.cos(hand_axis_angle),
-                     wrist_arc_center_y + wrist_arc_radius * Math.sin(hand_axis_angle));
+                     wrist_arc_center_x + wrist_arc_radius * Math.cos(hand_axis_angle_for_arc),
+                     wrist_arc_center_y + wrist_arc_radius * Math.sin(hand_axis_angle_for_arc));
             ctx.strokeStyle = '#007bff';
             drawArrow(ctx, wrist_arc_center_x, wrist_arc_center_y,
-                     wrist_arc_center_x + wrist_arc_radius * Math.cos(forearm_axis_angle),
-                     wrist_arc_center_y + wrist_arc_radius * Math.sin(forearm_axis_angle));
+                     wrist_arc_center_x + wrist_arc_radius * Math.cos(forearm_axis_angle_for_arc),
+                     wrist_arc_center_y + wrist_arc_radius * Math.sin(forearm_axis_angle_for_arc));
 
             // Label wrist angle
-            const phi_mid = (hand_axis_angle + forearm_axis_angle) / 2;
+            const phi_mid = (hand_axis_angle_for_arc + forearm_axis_angle_for_arc) / 2;
             ctx.fillStyle = '#007bff';
             ctx.font = 'bold 13px Arial';
             const phi_label_x = wrist_arc_center_x + wrist_arc_radius * Math.cos(phi_mid) * 0.7;

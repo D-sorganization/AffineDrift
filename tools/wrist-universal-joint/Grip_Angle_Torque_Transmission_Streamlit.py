@@ -165,7 +165,11 @@ def generate_sample_torque(noise_type, t, polynomial_expression='t**2 - t'):
             code = compile(polynomial_expression, '<string>', 'eval')
             result = eval(code, {"__builtins__": {}}, safe_dict)
             if isinstance(result, np.ndarray):
-                torque = result
+                if result.shape != t.shape:
+                    st.session_state.polynomial_error = f"Polynomial result shape {result.shape} does not match time array shape {t.shape}."
+                    torque = t**2 - t
+                else:
+                    torque = result
             else:
                 torque = np.full_like(t, float(result))
             st.session_state.polynomial_error = None
@@ -654,19 +658,19 @@ with st.expander("📐 Model Information"):
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
     - **Wrist Deviation Angle (φ):** {wrist_angle}° ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'} deviation)
-    
+
     ### Transmission Ratios
     - **Angular Velocity Ratio (ω_out/ω_in):** {omega_ratio:.4f}
     - **Torque Transmission Ratio (τ_out/τ_in):** {tau_ratio:.4f}
-    
+
     ### Torque Distribution (at mean input torque)
     - **Torque to α-axis (shaft):** {torque_alpha:.4f} N·m ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
     - **Torque to γ-axis (high-I):** {torque_gamma:.4f} N·m ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
-    
+
     ### Angular Acceleration (at mean torque)
     - **α-axis acceleration:** {torque_alpha/I_alpha:.4f} rad/s²
     - **γ-axis acceleration:** {torque_gamma/I_gamma:.4f} rad/s²
-    
+
     ### Model Assumptions
     - Universal joint (Hooke/Cardan) kinematics
     - Rigid body model
