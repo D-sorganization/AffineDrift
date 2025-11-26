@@ -5,7 +5,7 @@ Enhanced Wrist Universal Joint Model - PyQt6 GUI
 This program models the wrist as a universal joint with proper kinematics,
 distinguishing between:
 1. Grip angle (θ_grip): How the club is oriented in the hand (static)
-2. Wrist angle (φ): The dynamic flexion/extension angle of the wrist joint
+2. Wrist angle (φ): The dynamic radial/ulnar deviation angle of the wrist joint
 
 Key improvements over previous model:
 - Implements actual universal joint (Hooke/Cardan) transmission characteristics
@@ -26,7 +26,8 @@ import numpy as np
 matplotlib.use('QtAgg')
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from matplotlib.patches import Ellipse, Rectangle
+from matplotlib.patches import Ellipse, Rectangle, Polygon
+from matplotlib.transforms import Affine2D
 from PyQt6.QtCore import QEvent, Qt
 from PyQt6.QtWidgets import (
     QApplication,
@@ -38,6 +39,7 @@ from PyQt6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMainWindow,
     QPushButton,
     QScrollArea,
@@ -46,6 +48,21 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+
+class WheelIgnoringSlider(QSlider):
+    """Slider that ignores mouse wheel events - wheel only scrolls page"""
+    def wheelEvent(self, event):
+        """Ignore wheel events - let parent handle scrolling"""
+        event.ignore()  # Let the event propagate to parent for scrolling
+
+
+class WheelIgnoringSpinBox(QDoubleSpinBox):
+    """SpinBox that ignores mouse wheel events - wheel only scrolls page"""
+    def wheelEvent(self, event):
+        """Ignore wheel events - let parent handle scrolling"""
+        event.ignore()  # Let the event propagate to parent for scrolling
+
 
 # Default golf club properties
 DEFAULT_CLUBHEAD_WEIGHT = 200.0  # grams
@@ -57,9 +74,16 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
     """
     Calculate moments of inertia for golf club about two axes.
 
+    Args:
+        clubhead_weight_g (float): Clubhead weight in grams.
+        shaft_weight_g (float): Shaft weight in grams.
+        club_length_m (float): Total club length in meters.
+        cg_distance_m (float): Distance from grip to clubhead center of mass in meters.
+
     Returns:
-        I_alpha: Moment of inertia about shaft axis (kg·m²)
-        I_gamma: Moment of inertia about high inertia axis (kg·m²)
+        tuple[float, float]: A tuple containing:
+            - I_alpha (float): Moment of inertia about shaft axis (kg·m²).
+            - I_gamma (float): Moment of inertia about high inertia axis (kg·m²).
     """
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
@@ -92,13 +116,14 @@ def universal_joint_transmission_ratio(phi_rad, delta_rad):
     Torque ratio (from power conservation, P = τω):
         τ_out/τ_in = ω_in/ω_out = sqrt(1 - sin²(δ) × sin²(φ)) / cos(δ)
 
-    Parameters:
-        phi_rad: Rotation angle of input shaft (radians)
-        delta_rad: Bend angle between shafts (radians)
+    Args:
+        phi_rad (float): Rotation angle of input shaft (radians).
+        delta_rad (float): Bend angle between shafts (radians).
 
     Returns:
-        omega_ratio: ω_out / ω_in (angular velocity ratio)
-        tau_ratio: τ_out / τ_in (torque transmission ratio)
+        tuple[float, float]: A tuple containing:
+            - omega_ratio (float): ω_out / ω_in (angular velocity ratio).
+            - tau_ratio (float): τ_out / τ_in (torque transmission ratio).
     """
     # Avoid singularities at delta = 90°
     if np.abs(delta_rad) > np.radians(89):
@@ -126,13 +151,14 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
     - θ = 0°: Club aligned with fingers → torque goes to high-inertia axis (γ)
     - θ = 90°: Club aligned with palm → torque goes to shaft axis (α)
 
-    Parameters:
-        torque_transmitted: Torque transmitted through universal joint
-        theta_grip_rad: Grip angle in radians
+    Args:
+        torque_transmitted (float): Torque transmitted through universal joint (N·m).
+        theta_grip_rad (float): Grip angle in radians.
 
     Returns:
-        torque_alpha: Torque to shaft axis
-        torque_gamma: Torque to high-inertia axis
+        tuple[float, float]: A tuple containing:
+            - torque_alpha (float): Torque to shaft axis (N·m).
+            - torque_gamma (float): Torque to high-inertia axis (N·m).
     """
     torque_alpha = torque_transmitted * np.sin(theta_grip_rad)
     torque_gamma = torque_transmitted * np.cos(theta_grip_rad)
@@ -152,6 +178,10 @@ class DiagramCanvas(FigureCanvas):
         self.wrist_angle_deg = wrist_angle_deg
 
         self.update_diagram()
+    
+    def wheelEvent(self, event):
+        """Ignore wheel events - let parent scroll area handle scrolling"""
+        event.ignore()  # Let the event propagate to parent for scrolling
 
     def update_diagram(self):
         """Update the diagram with current angles"""
@@ -166,8 +196,11 @@ class DiagramCanvas(FigureCanvas):
         wrist_y = 0.5
 
         # Club shaft: always horizontal, extends left from hand midpoint (wrist)
-        shaft_length = 0.35
-        # Club attaches to hand midpoint (wrist)
+        shaft_length = 1.05  # 3x longer (was 0.35)
+        hand_length = 0.2
+        hand_dir_x = np.cos(theta_grip_rad)
+        hand_dir_y = np.sin(theta_grip_rad)
+        # Club attaches to hand at hand's midpoint (wrist)
         shaft_attach_x = wrist_x
         shaft_attach_y = wrist_y
         shaft_end_x = shaft_attach_x - shaft_length  # Left side
@@ -177,19 +210,43 @@ class DiagramCanvas(FigureCanvas):
         self.ax.plot([shaft_end_x, shaft_attach_x], [shaft_end_y, shaft_attach_y],
                      'k-', linewidth=8, solid_capstyle='round', label='Club Shaft', zorder=3)
 
-        # Clubhead: on left end, pointing up, 2/3 width, 2x height, starts at bottom and overlays shaft
-        clubhead_width = 0.08  # 2/3 of original 0.12
+        # Clubhead: on left end, pointing up, trapezoid shape, tilted 30 degrees (top to left)
+        clubhead_width_base = 0.08  # Base width (2/3 of original 0.12)
+        clubhead_width_bottom = clubhead_width_base / 3  # Bottom is 1/3 as wide
+        clubhead_width_top = clubhead_width_base * 4 / 3  # Top is 4/3 as wide
         clubhead_height = 0.24  # 2x original 0.12
-        clubhead_x = shaft_end_x - clubhead_width / 2  # Center on shaft end
-        clubhead_y = shaft_end_y  # Start at top of shaft, pointing up
-
-        clubhead = Rectangle((clubhead_x, clubhead_y), clubhead_width, clubhead_height,
-                            facecolor='silver', alpha=0.9, edgecolor='gray', linewidth=2, zorder=4)
+        clubhead_angle_deg = 30  # Tilt top to left by 30 degrees (counterclockwise)
+        clubhead_angle_rad = np.radians(clubhead_angle_deg)
+        
+        # Clubhead base at shaft end, pointing up initially
+        clubhead_base_x = shaft_end_x
+        clubhead_base_y = shaft_end_y
+        
+        # Define trapezoid corners (before rotation) - bottom narrower, top wider
+        corners = np.array([
+            [-clubhead_width_bottom/2, 0],  # Bottom left
+            [clubhead_width_bottom/2, 0],    # Bottom right
+            [clubhead_width_top/2, clubhead_height],    # Top right
+            [-clubhead_width_top/2, clubhead_height]    # Top left
+        ])
+        
+        # Rotate corners around origin
+        cos_a = np.cos(clubhead_angle_rad)
+        sin_a = np.sin(clubhead_angle_rad)
+        rotation_matrix = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
+        rotated_corners = corners @ rotation_matrix.T
+        
+        # Translate to clubhead position
+        rotated_corners[:, 0] += clubhead_base_x
+        rotated_corners[:, 1] += clubhead_base_y
+        
+        # Create polygon for rotated clubhead
+        clubhead = Polygon(rotated_corners, facecolor='silver', alpha=0.9, 
+                          edgecolor='gray', linewidth=2, zorder=4)
         self.ax.add_patch(clubhead)
 
         # Hand: attached at midpoint to wrist, rotated by grip angle relative to club
         # Hand's long axis makes angle theta_grip with horizontal club shaft
-        hand_length = 0.2
         hand_width = 0.12
         # Hand center is at wrist (midpoint attachment)
         hand_center_x = wrist_x
@@ -204,8 +261,6 @@ class DiagramCanvas(FigureCanvas):
         # Draw 4 fingers on hand
         finger_length = 0.12
         finger_width = 0.015
-        hand_dir_x = np.cos(theta_grip_rad)
-        hand_dir_y = np.sin(theta_grip_rad)
         finger_dir_x = -hand_dir_x  # Fingers point opposite to hand long axis
         finger_dir_y = -hand_dir_y
 
@@ -227,18 +282,25 @@ class DiagramCanvas(FigureCanvas):
                            edgecolor='saddlebrown', linewidth=1, zorder=7)
             self.ax.add_patch(finger)
 
-        # Forearm: attached to hand midpoint (on side opposite to club)
+        # Forearm: attached to hand at long axis endpoints
         # When wrist angle = 0, forearm aligns with hand's long axis
         # Hand's long axis angle = theta_grip_rad (relative to horizontal)
-        # Forearm angle = hand angle + wrist angle (when wrist flexes, forearm rotates relative to hand)
-        # Flip 180 degrees: forearm extends opposite to hand direction
+        # Forearm angle = hand angle + wrist angle (when wrist deviates, forearm rotates relative to hand)
+        # Flip 180 degrees so forearm extends opposite to hand direction
         forearm_angle_rad = theta_grip_rad + phi_wrist_rad + np.pi  # Add 180 degrees
         forearm_length = 0.35
         forearm_width = 0.1
 
-        # Forearm center is at hand midpoint (wrist), extends away from club
-        forearm_center_x = wrist_x
-        forearm_center_y = wrist_y
+        # Hand's endpoint away from club (forearm attachment point)
+        hand_endpoint_forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
+        hand_endpoint_forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
+        
+        # Forearm attaches at its long axis endpoint to hand's endpoint
+        # Forearm center is offset from attachment point
+        forearm_dir_x = np.cos(forearm_angle_rad)
+        forearm_dir_y = np.sin(forearm_angle_rad)
+        forearm_center_x = hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x
+        forearm_center_y = hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y
 
         # Forearm as ellipse (same color as hand - tan)
         forearm = Ellipse((forearm_center_x, forearm_center_y), forearm_length, forearm_width,
@@ -277,30 +339,55 @@ class DiagramCanvas(FigureCanvas):
                     arc_center_y + arc_radius*np.sin(theta_grip_rad) + 0.02, 'Hand Axis',
                     color='r', fontsize=9, ha='left', fontweight='bold')
 
-        # Draw wrist angle arc (φ): from hand axis to forearm axis
-        wrist_arc_center_x = wrist_x
-        wrist_arc_center_y = wrist_y
-        wrist_arc_radius = 0.15
+        # Draw wrist angle arc (φ): from hand axis to forearm axis (similar to grip angle)
+        # The wrist angle φ is the actual angle between hand and forearm
+        # When φ = 0, forearm aligns with hand. When φ changes, forearm rotates relative to hand.
+        wrist_arc_center_x = hand_endpoint_forearm_x - 0.05
+        wrist_arc_center_y = hand_endpoint_forearm_y
+        wrist_arc_radius = 0.12
 
-        # Wrist angle: angle between hand and forearm
-        if abs(self.wrist_angle_deg) > 0.1:
-            wrist_arc_start = theta_grip_rad  # Hand angle
-            wrist_arc_end = forearm_angle_rad  # Forearm angle
-            wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
-            wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
-            wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
-            self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, alpha=0.8, zorder=8)
+        # Wrist angle: actual angle between hand and forearm
+        # Hand direction (away from club)
+        hand_axis_angle = theta_grip_rad
+        # Forearm direction (away from hand, accounting for wrist angle)
+        # When wrist angle = 0, forearm should align with hand
+        # When wrist angle = phi, forearm rotates by phi relative to hand
+        forearm_axis_angle = theta_grip_rad + phi_wrist_rad
+        
+        # Draw arc showing the actual wrist angle φ
+        wrist_arc_start = hand_axis_angle
+        wrist_arc_end = forearm_axis_angle
+        wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
+        wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
+        wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
+        self.ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, zorder=8)
+        
+        # Wrist angle lines - show hand axis and forearm axis
+        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle),
+                     wrist_arc_radius*np.sin(hand_axis_angle), head_width=0.012, head_length=0.018,
+                     fc='r', ec='r', linewidth=2, zorder=8)
+        self.ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle),
+                     wrist_arc_radius*np.sin(forearm_axis_angle), head_width=0.012, head_length=0.018,
+                     fc='b', ec='b', linewidth=2, zorder=8)
+        
+        # Label wrist angle
+        phi_mid = (wrist_arc_start + wrist_arc_end) / 2
+        phi_label_x = wrist_arc_center_x + wrist_arc_radius * np.cos(phi_mid) * 0.7
+        phi_label_y = wrist_arc_center_y + wrist_arc_radius * np.sin(phi_mid) * 0.7
+        self.ax.text(phi_label_x, phi_label_y + 0.02, r"$\phi$", color='b',
+                    fontsize=13, ha='center', fontweight='bold', zorder=9)
+        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(hand_axis_angle) + 0.02,
+                    wrist_arc_center_y + wrist_arc_radius*np.sin(hand_axis_angle) + 0.02, 'Hand Axis',
+                    color='r', fontsize=9, ha='left', fontweight='bold')
+        self.ax.text(wrist_arc_center_x + wrist_arc_radius*np.cos(forearm_axis_angle) + 0.02,
+                    wrist_arc_center_y + wrist_arc_radius*np.sin(forearm_axis_angle) + 0.02, 'Forearm Axis',
+                    color='b', fontsize=9, ha='left', fontweight='bold')
 
-            # Label wrist angle
-            phi_mid = (wrist_arc_start + wrist_arc_end) / 2
-            phi_label_x = wrist_arc_center_x + wrist_arc_radius * np.cos(phi_mid) * 0.9
-            phi_label_y = wrist_arc_center_y + wrist_arc_radius * np.sin(phi_mid) * 0.9
-            self.ax.text(phi_label_x, phi_label_y, r"$\phi$", color='b',
-                        fontsize=13, ha='center', fontweight='bold', zorder=9)
-
-        # Set axis properties
-        self.ax.set_xlim(-0.05, 0.9)
-        self.ax.set_ylim(0.15, 0.85)
+        # Set axis properties (adjusted for longer shaft and to show full forearm)
+        # Expand window significantly to accommodate forearm extension in all directions
+        # Forearm can extend up to 0.35 length, and with angles it can go far left
+        self.ax.set_xlim(-1.5, 0.8)
+        self.ax.set_ylim(-0.2, 1.2)
         self.ax.set_aspect('equal')
         self.ax.axis('off')
         self.ax.set_title('Forearm-Hand-Club Diagram', fontsize=12, fontweight='bold', pad=20)
@@ -331,6 +418,7 @@ class PlotCanvas(FigureCanvas):
         # Generate sample input torque signal
         self.t = np.linspace(0, 1, 500)
         self.noise_type = 'Golf-like Random'
+        self.polynomial_expression = 't**2 - t'  # Default polynomial
         self.input_torque = self.generate_sample_torque()
 
         # Available plot types
@@ -380,6 +468,30 @@ class PlotCanvas(FigureCanvas):
         elif self.noise_type == 'Random':
             torque = np.random.normal(0, 1.5, len(t))
             torque = np.convolve(torque, np.ones(10)/10, mode='same')
+        elif self.noise_type == 'Polynomial':
+            # Evaluate polynomial expression
+            try:
+                # Create a safe evaluation environment
+                safe_dict = {
+                    't': t,
+                    'np': np,
+                    'sin': np.sin,
+                    'cos': np.cos,
+                    'exp': np.exp,
+                    'sqrt': np.sqrt,
+                    'log': np.log,
+                    'pi': np.pi,
+                    'e': np.e
+                }
+                # Evaluate the polynomial expression
+                torque = eval(self.polynomial_expression, {"__builtins__": {}}, safe_dict)
+                # Ensure it's a numpy array
+                if not isinstance(torque, np.ndarray):
+                    torque = np.full_like(t, float(torque))
+            except Exception as e:
+                # If evaluation fails, use default polynomial
+                print(f"Error evaluating polynomial: {e}")
+                torque = t**2 - t
         else:
             # Default to golf-like
             torque = np.random.normal(0, 1, len(t))
@@ -394,6 +506,14 @@ class PlotCanvas(FigureCanvas):
         self.input_torque = self.generate_sample_torque()
         if self.current_plot_type in ['Torque', 'Angular Acceleration']:
             self.update_plot()
+    
+    def set_polynomial_expression(self, expression):
+        """Set polynomial expression and regenerate if polynomial type is selected"""
+        self.polynomial_expression = expression
+        if self.noise_type == 'Polynomial':
+            self.input_torque = self.generate_sample_torque()
+            if self.current_plot_type in ['Torque', 'Angular Acceleration']:
+                self.update_plot()
 
     def update_plot(self):
         """Update plot based on current settings"""
@@ -509,9 +629,9 @@ class PlotCanvas(FigureCanvas):
 
         self.ax.axhline(1.0, color='gray', linestyle='--', alpha=0.5, linewidth=1)
 
-        self.ax.set_title(f'Universal Joint Transmission vs Wrist Flexion Angle (Grip={self.grip_angle_deg:.0f}°)',
+        self.ax.set_title(f'Universal Joint Transmission vs Wrist Deviation Angle (Grip={self.grip_angle_deg:.0f}°)',
                          fontsize=12, fontweight='bold')
-        self.ax.set_xlabel('Wrist Flexion Angle (degrees)', fontsize=10)
+        self.ax.set_xlabel('Wrist Deviation Angle (degrees)', fontsize=10)
         self.ax.set_ylabel('Transmission Ratio', fontsize=10)
 
     def update_parameters(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
@@ -630,47 +750,209 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(diagram_group)
 
         # ============================================================
-        # Club Properties
+        # Control Panel
         # ============================================================
-        club_group = QGroupBox('Club Properties')
-        club_layout = QHBoxLayout()
+        control_group = QGroupBox('Parameters')
+        control_layout = QHBoxLayout()  # Horizontal layout for two columns
 
-        club_layout.addWidget(QLabel('Clubhead (g):'))
+        # Grip angle
+        grip_layout = QVBoxLayout()
+        grip_layout.setSpacing(5)  # Consistent spacing
+        grip_layout.setContentsMargins(0, 0, 0, 0)  # No margins for consistent alignment
+        grip_label = QLabel('Grip Angle θ<sub>grip</sub>:')
+        grip_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
+        grip_layout.addWidget(grip_label)
+        
+        # Container for slider row and tick labels - ensures alignment
+        slider_container = QWidget()
+        slider_container_layout = QVBoxLayout(slider_container)
+        slider_container_layout.setContentsMargins(0, 0, 0, 0)
+        slider_container_layout.setSpacing(0)
+        
+        # Slider and spinbox row
+        grip_control_layout = QHBoxLayout()
+        grip_control_layout.setContentsMargins(0, 0, 0, 0)
+        grip_control_layout.setSpacing(5)  # Small gap between slider and spinbox
+        self.grip_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
+        self.grip_slider.setMinimum(0)
+        self.grip_slider.setMaximum(90)
+        self.grip_slider.setValue(30)
+        self.grip_slider.setTickInterval(15)
+        self.grip_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.grip_slider.setFixedWidth(300)  # Fixed width to match tick labels
+        self.grip_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        grip_control_layout.addWidget(self.grip_slider)
+        self.grip_spinbox = WheelIgnoringSpinBox()
+        self.grip_spinbox.setMinimum(0)
+        self.grip_spinbox.setMaximum(90)
+        self.grip_spinbox.setValue(30)
+        self.grip_spinbox.setSuffix('°')
+        self.grip_spinbox.setFixedWidth(80)
+        self.grip_spinbox.valueChanged.connect(self.update_grip_from_spinbox)
+        grip_control_layout.addWidget(self.grip_spinbox)
+        grip_control_layout.addStretch()  # Push everything to the left
+        slider_container_layout.addLayout(grip_control_layout)
+        
+        # Add tick mark labels below slider - aligned with slider
+        tick_container = QWidget()
+        tick_container.setFixedWidth(300)  # Match slider width exactly
+        tick_label_layout = QHBoxLayout(tick_container)
+        tick_label_layout.setContentsMargins(0, 0, 0, 0)
+        tick_label_layout.setSpacing(0)
+        # 7 ticks at 0, 15, 30, 45, 60, 75, 90 - evenly spaced
+        tick_values = [0, 15, 30, 45, 60, 75, 90]
+        for i, val in enumerate(tick_values):
+            label = QLabel(f'{val}°')
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            label.setStyleSheet("font-size: 10pt; font-weight: bold;")
+            tick_label_layout.addWidget(label)
+            if i < len(tick_values) - 1:
+                tick_label_layout.addStretch()
+        slider_container_layout.addWidget(tick_container)
+        grip_layout.addWidget(slider_container)
+        
+        grip_info = QLabel('0° = parallel to fingers, 90° = perpendicular to fingers')
+        grip_info.setStyleSheet("font-size: 12pt; font-weight: bold;")
+        grip_layout.addWidget(grip_info)
+        self.grip_slider.valueChanged.connect(self.update_grip_label)
+
+        # Wrist deviation angle - radial/ulnar deviation
+        wrist_layout = QVBoxLayout()
+        wrist_layout.setSpacing(5)  # Match grip_layout exactly
+        wrist_layout.setContentsMargins(0, 0, 0, 0)  # Match grip_layout exactly
+        wrist_label = QLabel('Wrist Deviation Angle φ:')
+        wrist_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
+        wrist_layout.addWidget(wrist_label)
+        
+        # Container for slider row and tick labels - ensures alignment (match grip structure exactly)
+        wrist_slider_container = QWidget()
+        wrist_slider_container_layout = QVBoxLayout(wrist_slider_container)
+        wrist_slider_container_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
+        wrist_slider_container_layout.setSpacing(0)  # Match grip
+        
+        # Slider and spinbox row (match grip structure exactly)
+        wrist_control_layout = QHBoxLayout()
+        wrist_control_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
+        wrist_control_layout.setSpacing(5)  # Match grip
+        self.wrist_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
+        self.wrist_slider.setMinimum(-60)
+        self.wrist_slider.setMaximum(60)
+        self.wrist_slider.setValue(0)
+        self.wrist_slider.setTickInterval(15)
+        self.wrist_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.wrist_slider.setFixedWidth(300)  # Match grip
+        self.wrist_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        wrist_control_layout.addWidget(self.wrist_slider)
+        self.wrist_spinbox = WheelIgnoringSpinBox()
+        self.wrist_spinbox.setMinimum(-60)
+        self.wrist_spinbox.setMaximum(60)
+        self.wrist_spinbox.setValue(0)
+        self.wrist_spinbox.setSuffix('°')
+        self.wrist_spinbox.setFixedWidth(80)  # Match grip
+        self.wrist_spinbox.valueChanged.connect(self.update_wrist_from_spinbox)
+        wrist_control_layout.addWidget(self.wrist_spinbox)
+        wrist_control_layout.addStretch()  # Match grip
+        wrist_slider_container_layout.addLayout(wrist_control_layout)
+        
+        # Add tick mark labels below slider - aligned with slider (match grip structure exactly)
+        wrist_tick_container = QWidget()
+        wrist_tick_container.setFixedWidth(300)  # Match grip
+        wrist_tick_label_layout = QHBoxLayout(wrist_tick_container)
+        wrist_tick_label_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
+        wrist_tick_label_layout.setSpacing(0)  # Match grip
+        # 9 ticks at -60, -45, -30, -15, 0, 15, 30, 45, 60 - evenly spaced
+        wrist_tick_values = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
+        for i, val in enumerate(wrist_tick_values):
+            label = QLabel(f'{val}°')
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            label.setStyleSheet("font-size: 10pt; font-weight: bold;")  # Match grip
+            wrist_tick_label_layout.addWidget(label)
+            if i < len(wrist_tick_values) - 1:
+                wrist_tick_label_layout.addStretch()
+        wrist_slider_container_layout.addWidget(wrist_tick_container)
+        wrist_layout.addWidget(wrist_slider_container)
+        
+        wrist_info = QLabel('+ values = radial deviation, - values = ulnar deviation')
+        wrist_info.setStyleSheet("font-size: 12pt; font-weight: bold;")  # Match grip
+        wrist_layout.addWidget(wrist_info)
+        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
+        
+        # Left column: Angle controls
+        left_column = QVBoxLayout()
+        left_column.setSpacing(0)  # No extra spacing between sections
+        left_column.setContentsMargins(0, 0, 0, 0)  # No margins
+        left_column.addLayout(grip_layout)
+        left_column.addLayout(wrist_layout)
+        left_column.addStretch()
+        control_layout.addLayout(left_column)
+        
+        # Right column: Club Properties
+        club_layout = QVBoxLayout()
+        
+        club_props_label = QLabel('Club Properties:')
+        club_props_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
+        club_layout.addWidget(club_props_label)
+        
+        # Club properties in vertical layout
+        clubhead_layout = QHBoxLayout()
+        clubhead_label = QLabel('Clubhead:')
+        clubhead_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        clubhead_layout.addWidget(clubhead_label)
         self.clubhead_weight = QDoubleSpinBox()
         self.clubhead_weight.setRange(50, 500)
         self.clubhead_weight.setValue(DEFAULT_CLUBHEAD_WEIGHT)
         self.clubhead_weight.setSuffix(' g')
-        club_layout.addWidget(self.clubhead_weight)
+        clubhead_layout.addWidget(self.clubhead_weight)
+        clubhead_layout.addStretch()
+        club_layout.addLayout(clubhead_layout)
 
-        club_layout.addWidget(QLabel('Shaft (g):'))
+        shaft_layout = QHBoxLayout()
+        shaft_label = QLabel('Shaft:')
+        shaft_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        shaft_layout.addWidget(shaft_label)
         self.shaft_weight = QDoubleSpinBox()
         self.shaft_weight.setRange(30, 200)
         self.shaft_weight.setValue(DEFAULT_SHAFT_WEIGHT)
         self.shaft_weight.setSuffix(' g')
-        club_layout.addWidget(self.shaft_weight)
+        shaft_layout.addWidget(self.shaft_weight)
+        shaft_layout.addStretch()
+        club_layout.addLayout(shaft_layout)
 
-        club_layout.addWidget(QLabel('Length (m):'))
+        length_layout = QHBoxLayout()
+        length_label = QLabel('Length:')
+        length_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        length_layout.addWidget(length_label)
         self.club_length = QDoubleSpinBox()
         self.club_length.setRange(0.5, 1.5)
         self.club_length.setValue(DEFAULT_CLUB_LENGTH)
         self.club_length.setDecimals(2)
         self.club_length.setSuffix(' m')
-        club_layout.addWidget(self.club_length)
+        length_layout.addWidget(self.club_length)
+        length_layout.addStretch()
+        club_layout.addLayout(length_layout)
 
-        club_layout.addWidget(QLabel('CG Dist (m):'))
+        cg_layout = QHBoxLayout()
+        cg_label = QLabel('CG Dist:')
+        cg_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        cg_layout.addWidget(cg_label)
         self.cg_distance = QDoubleSpinBox()
         self.cg_distance.setRange(0.3, 1.2)
         self.cg_distance.setValue(DEFAULT_CLUBHEAD_CG_DISTANCE)
         self.cg_distance.setDecimals(2)
         self.cg_distance.setSuffix(' m')
-        club_layout.addWidget(self.cg_distance)
+        cg_layout.addWidget(self.cg_distance)
+        cg_layout.addStretch()
+        club_layout.addLayout(cg_layout)
 
         self.inertia_label = QLabel()
+        self.inertia_label.setStyleSheet("font-size: 12pt; font-weight: bold;")
         club_layout.addWidget(self.inertia_label)
         club_layout.addStretch()
 
-        club_group.setLayout(club_layout)
-        main_layout.addWidget(club_group)
+        control_layout.addLayout(club_layout)
+        
+        control_group.setLayout(control_layout)
+        main_layout.addWidget(control_group)
 
         # Connect club property changes
         self.clubhead_weight.valueChanged.connect(self.update_inertia)
@@ -678,67 +960,47 @@ class MainWindow(QMainWindow):
         self.club_length.valueChanged.connect(self.update_inertia)
         self.cg_distance.valueChanged.connect(self.update_inertia)
 
-        # ============================================================
-        # Control Panel
-        # ============================================================
-        control_group = QGroupBox('Universal Joint Parameters')
-        control_layout = QVBoxLayout()
-
-        # Grip angle (static)
-        grip_layout = QHBoxLayout()
-        grip_layout.addWidget(QLabel('Grip Angle θ<sub>grip</sub> (static):'))
-        self.grip_slider = QSlider(Qt.Orientation.Horizontal)
-        self.grip_slider.setMinimum(0)
-        self.grip_slider.setMaximum(90)
-        self.grip_slider.setValue(30)
-        self.grip_slider.setTickInterval(15)
-        self.grip_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        grip_layout.addWidget(self.grip_slider)
-        self.grip_label = QLabel('30°')
-        self.grip_label.setMinimumWidth(50)
-        grip_layout.addWidget(self.grip_label)
-        grip_layout.addWidget(QLabel('   [0°=fingers, 90°=palm]'))
-        self.grip_slider.valueChanged.connect(self.update_grip_label)
-        control_layout.addLayout(grip_layout)
-
-        # Wrist angle (dynamic)
-        wrist_layout = QHBoxLayout()
-        wrist_layout.addWidget(QLabel('Wrist Flexion Angle φ (dynamic):'))
-        self.wrist_slider = QSlider(Qt.Orientation.Horizontal)
-        self.wrist_slider.setMinimum(-60)
-        self.wrist_slider.setMaximum(60)
-        self.wrist_slider.setValue(0)
-        self.wrist_slider.setTickInterval(15)
-        self.wrist_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        wrist_layout.addWidget(self.wrist_slider)
-        self.wrist_label = QLabel('0°')
-        self.wrist_label.setMinimumWidth(50)
-        wrist_layout.addWidget(self.wrist_label)
-        wrist_layout.addWidget(QLabel('   [-60°=ext, +60°=flex]'))
-        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
-        control_layout.addLayout(wrist_layout)
-
+        # Signal Generator Section
+        signal_group = QGroupBox('Input Signal Generator')
+        signal_layout = QVBoxLayout()
+        
         # Noise type selection
         noise_layout = QHBoxLayout()
-        noise_layout.addWidget(QLabel('Noise Type:'))
+        signal_type_label = QLabel('Signal Type:')
+        signal_type_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        noise_layout.addWidget(signal_type_label)
         self.noise_type_combo = QComboBox()
-        self.noise_type_combo.addItems(['Golf-like Random', 'Step', 'Pulse', 'Burst', 'Sinusoidal', 'Random'])
+        self.noise_type_combo.addItems(['Golf-like Random', 'Step', 'Pulse', 'Burst', 'Sinusoidal', 'Random', 'Polynomial'])
         self.noise_type_combo.currentTextChanged.connect(self.update_noise_type)
         noise_layout.addWidget(self.noise_type_combo)
         noise_layout.addStretch()
-        control_layout.addLayout(noise_layout)
+        signal_layout.addLayout(noise_layout)
+        
+        # Polynomial input section (shown when Polynomial is selected)
+        poly_layout = QHBoxLayout()
+        self.polynomial_label = QLabel('Polynomial (e.g., "t**2 + 2*t - 1" or "t**3 - 0.5*t"):')
+        self.polynomial_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        poly_layout.addWidget(self.polynomial_label)
+        self.polynomial_input = QLineEdit()
+        self.polynomial_input.setPlaceholderText('Enter polynomial expression using t as variable')
+        self.polynomial_input.setText('t**2 - t')
+        self.polynomial_input.setVisible(False)  # Hidden by default
+        self.polynomial_input.textChanged.connect(self.update_polynomial_signal)
+        poly_layout.addWidget(self.polynomial_input)
+        self.polynomial_label.setVisible(False)  # Hidden by default
+        signal_layout.addLayout(poly_layout)
 
         # Regenerate noise button
         regen_layout = QHBoxLayout()
         regen_layout.addStretch()
-        regen_btn = QPushButton('🎲 Regenerate Noise Signal')
+        regen_btn = QPushButton('🎲 Regenerate Signal')
         regen_btn.clicked.connect(self.regenerate_noise)
         regen_layout.addWidget(regen_btn)
         regen_layout.addStretch()
-        control_layout.addLayout(regen_layout)
+        signal_layout.addLayout(regen_layout)
 
-        control_group.setLayout(control_layout)
-        main_layout.addWidget(control_group)
+        signal_group.setLayout(signal_layout)
+        main_layout.addWidget(signal_group)
 
         # ============================================================
         # Plot Controls
@@ -747,7 +1009,9 @@ class MainWindow(QMainWindow):
         plot_control_layout = QHBoxLayout()
 
         # Plot type dropdown
-        plot_control_layout.addWidget(QLabel('Plot Type:'))
+        plot_type_label = QLabel('Plot Type:')
+        plot_type_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        plot_control_layout.addWidget(plot_type_label)
         self.plot_type_combo = QComboBox()
         self.plot_type_combo.addItems(['Torque', 'Angular Acceleration', 'Transmission Ratio vs Wrist Angle'])
         self.plot_type_combo.currentTextChanged.connect(self.update_plot_type)
@@ -756,7 +1020,9 @@ class MainWindow(QMainWindow):
         plot_control_layout.addStretch()
 
         # Signal visibility checkboxes
-        plot_control_layout.addWidget(QLabel('Show:'))
+        show_label = QLabel('Show:')
+        show_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        plot_control_layout.addWidget(show_label)
         self.show_input_check = QCheckBox('Input Torque')
         self.show_input_check.setChecked(True)
         self.show_input_check.stateChanged.connect(lambda: self.update_signal_visibility('input_torque', self.show_input_check.isChecked()))
@@ -833,6 +1099,7 @@ class MainWindow(QMainWindow):
         info_layout = QVBoxLayout()
         self.info_label = QLabel()
         self.info_label.setWordWrap(True)
+        self.info_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         self.update_info()
         info_layout.addWidget(self.info_label)
         info_group.setLayout(info_layout)
@@ -842,9 +1109,9 @@ class MainWindow(QMainWindow):
         self.scroll.setWidget(main_widget)
         self.setCentralWidget(self.scroll)
 
-        # Connect sliders to update
-        self.grip_slider.valueChanged.connect(self.update_all)
-        self.wrist_slider.valueChanged.connect(self.update_all)
+        # Connect sliders and spinboxes to update (with signal blocking to prevent loops)
+        self.grip_slider.valueChanged.connect(self.update_grip_label)
+        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
 
         # Initial update
         self.update_inertia()
@@ -866,14 +1133,38 @@ class MainWindow(QMainWindow):
             self.update_all()
 
     def update_grip_label(self, value):
-        """Update grip angle label"""
-        self.grip_label.setText(f'{value}°')
+        """Update grip angle from slider"""
+        if hasattr(self, 'grip_spinbox'):
+            self.grip_spinbox.blockSignals(True)
+            self.grip_spinbox.setValue(value)
+            self.grip_spinbox.blockSignals(False)
         if hasattr(self, 'plot_canvas'):
             self.update_all()
 
     def update_wrist_label(self, value):
-        """Update wrist angle label"""
-        self.wrist_label.setText(f'{value}°')
+        """Update wrist angle from slider"""
+        if hasattr(self, 'wrist_spinbox'):
+            self.wrist_spinbox.blockSignals(True)
+            self.wrist_spinbox.setValue(value)
+            self.wrist_spinbox.blockSignals(False)
+        if hasattr(self, 'plot_canvas'):
+            self.update_all()
+
+    def update_grip_from_spinbox(self, value):
+        """Update grip angle from spinbox"""
+        if hasattr(self, 'grip_slider'):
+            self.grip_slider.blockSignals(True)
+            self.grip_slider.setValue(int(value))
+            self.grip_slider.blockSignals(False)
+        if hasattr(self, 'plot_canvas'):
+            self.update_all()
+
+    def update_wrist_from_spinbox(self, value):
+        """Update wrist angle from spinbox"""
+        if hasattr(self, 'wrist_slider'):
+            self.wrist_slider.blockSignals(True)
+            self.wrist_slider.setValue(int(value))
+            self.wrist_slider.blockSignals(False)
         if hasattr(self, 'plot_canvas'):
             self.update_all()
 
@@ -932,7 +1223,7 @@ class MainWindow(QMainWindow):
         <b>Key Insights:</b><br>
         • Transmission ratio <b>varies with wrist angle</b> (see transmission plot)<br>
         • At neutral wrist (φ≈0°): Maximum transmission efficiency<br>
-        • At extreme flexion/extension: Reduced transmission<br>
+        • At extreme radial/ulnar deviation: Reduced transmission<br>
         • Grip angle determines <b>which axes</b> receive transmitted torque<br>
         • Lower grip angle (fingers) → more torque to high-inertia axis (stability)<br>
         • Higher grip angle (palm) → more torque to shaft axis (face angle control)
@@ -944,19 +1235,31 @@ class MainWindow(QMainWindow):
         self.plot_canvas.regenerate_noise()
 
     def update_noise_type(self, noise_type):
-        """Update noise type"""
+        """Update noise type and show/hide polynomial input"""
         self.plot_canvas.set_noise_type(noise_type)
+        # Show/hide polynomial input and label based on selection
+        is_polynomial = noise_type == 'Polynomial'
+        if hasattr(self, 'polynomial_input'):
+            self.polynomial_input.setVisible(is_polynomial)
+        if hasattr(self, 'polynomial_label'):
+            self.polynomial_label.setVisible(is_polynomial)
+    
+    def update_polynomial_signal(self, expression):
+        """Update polynomial expression"""
+        if hasattr(self, 'plot_canvas'):
+            self.plot_canvas.set_polynomial_expression(expression)
 
     def eventFilter(self, obj, event):
-        """Filter events to handle mouse wheel scrolling globally"""
+        """Filter events to handle mouse wheel scrolling globally - prevent sliders from responding"""
         if event.type() == QEvent.Type.Wheel:
+            # Always redirect wheel events to scroll area, never let sliders/spinboxes handle them
             scroll = self.centralWidget()
             if isinstance(scroll, QScrollArea):
                 scroll_bar = scroll.verticalScrollBar()
-                if scroll_bar and scroll_bar.isVisible():
+                if scroll_bar:
                     delta = event.angleDelta().y()
                     scroll_bar.setValue(scroll_bar.value() - delta // 8)
-                    return True
+                    return True  # Consume the event so sliders don't get it
         return super().eventFilter(obj, event)
 
     def show_documentation(self):
