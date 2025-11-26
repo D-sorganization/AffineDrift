@@ -50,9 +50,11 @@ jobs:
           test -d _site && echo "✓ _site directory exists" || (echo "✗ _site directory missing" && exit 1)
 
       - name: Setup Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '_site'

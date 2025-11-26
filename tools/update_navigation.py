@@ -35,7 +35,7 @@ PAGES_TO_UPDATE = [
 
 def update_navigation(filepath):
     """Update navigation in a single file"""
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         content = f.read()
 
     # Pattern to match the nav-links ul

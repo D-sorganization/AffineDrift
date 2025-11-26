@@ -4,11 +4,11 @@ LaTeX to Quarto (.qmd) Converter for AffineDrift
 Converts LaTeX article files to Quarto Markdown with preserved equations
 """
 
-import re
 import os
+import re
 import sys
-from pathlib import Path
 from datetime import date
+from pathlib import Path
 
 
 class LaTeXToQuartoConverter:
@@ -18,7 +18,7 @@ class LaTeXToQuartoConverter:
 
     def read_latex_file(self, filepath):
         """Read LaTeX file content"""
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, encoding='utf-8') as f:
             return f.read()
 
     def extract_metadata(self, latex_content):
@@ -50,7 +50,7 @@ class LaTeXToQuartoConverter:
         return metadata
 
     def extract_body(self, latex_content):
-        """Extract content between \begin{document} and \end{document}"""
+        r"""Extract content between \begin{document} and \end{document}"""
         doc_match = re.search(r'\\begin\{document\}(.+)\\end\{document\}', latex_content, re.DOTALL)
         if doc_match:
             content = doc_match.group(1)
@@ -175,10 +175,6 @@ class LaTeXToQuartoConverter:
             # Try to extract caption
             caption_match = re.search(r'\\caption\{([^}]+)\}', fig_content)
             caption = caption_match.group(1) if caption_match else ""
-
-            # Try to extract label
-            label_match = re.search(r'\\label\{([^}]+)\}', fig_content)
-            label = label_match.group(1) if label_match else ""
 
             if caption:
                 return f'\n\n[Figure: {caption}]\n\n'
