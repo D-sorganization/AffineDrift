@@ -57,8 +57,8 @@ class WheelIgnoringSlider(QSlider):
         event.ignore()  # Let the event propagate to parent for scrolling
 
 
-class WheelIgnoringSpinBox(QDoubleSpinBox):
-    """SpinBox that ignores mouse wheel events - wheel only scrolls page"""
+class WheelIgnoringLineEdit(QLineEdit):
+    """LineEdit that ignores mouse wheel events - wheel only scrolls page"""
     def wheelEvent(self, event):
         """Ignore wheel events - let parent handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
@@ -805,10 +805,10 @@ class MainWindow(QMainWindow):
         slider_container_layout.setContentsMargins(0, 0, 0, 0)
         slider_container_layout.setSpacing(0)
 
-        # Slider and spinbox row
+        # Slider and text box row
         grip_control_layout = QHBoxLayout()
         grip_control_layout.setContentsMargins(0, 0, 0, 0)
-        grip_control_layout.setSpacing(5)  # Small gap between slider and spinbox
+        grip_control_layout.setSpacing(5)  # Small gap between slider and text box
         self.grip_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
         self.grip_slider.setMinimum(0)
         self.grip_slider.setMaximum(90)
@@ -818,14 +818,16 @@ class MainWindow(QMainWindow):
         self.grip_slider.setFixedWidth(300)  # Fixed width to match tick labels
         self.grip_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         grip_control_layout.addWidget(self.grip_slider)
-        self.grip_spinbox = WheelIgnoringSpinBox()
-        self.grip_spinbox.setMinimum(0)
-        self.grip_spinbox.setMaximum(90)
-        self.grip_spinbox.setValue(30)
-        self.grip_spinbox.setSuffix('°')
-        self.grip_spinbox.setFixedWidth(80)
-        self.grip_spinbox.valueChanged.connect(self.update_grip_from_spinbox)
-        grip_control_layout.addWidget(self.grip_spinbox)
+        self.grip_textbox = WheelIgnoringLineEdit()
+        self.grip_textbox.setText('30')
+        self.grip_textbox.setFixedWidth(80)
+        self.grip_textbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.grip_textbox.setPlaceholderText('0-90')
+        self.grip_textbox.editingFinished.connect(self.update_grip_from_textbox)
+        grip_control_layout.addWidget(self.grip_textbox)
+        degree_label1 = QLabel('°')
+        degree_label1.setFixedWidth(15)
+        grip_control_layout.addWidget(degree_label1)
         grip_control_layout.addStretch()  # Push everything to the left
         slider_container_layout.addLayout(grip_control_layout)
 
@@ -866,10 +868,10 @@ class MainWindow(QMainWindow):
         wrist_slider_container_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
         wrist_slider_container_layout.setSpacing(0)  # Match grip
 
-        # Slider and spinbox row (match grip structure exactly)
+        # Slider and text box row
         wrist_control_layout = QHBoxLayout()
-        wrist_control_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
-        wrist_control_layout.setSpacing(5)  # Match grip
+        wrist_control_layout.setContentsMargins(0, 0, 0, 0)
+        wrist_control_layout.setSpacing(5)  # Small gap between slider and text box
         self.wrist_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
         self.wrist_slider.setMinimum(-60)
         self.wrist_slider.setMaximum(60)
@@ -879,15 +881,17 @@ class MainWindow(QMainWindow):
         self.wrist_slider.setFixedWidth(300)  # Match grip
         self.wrist_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         wrist_control_layout.addWidget(self.wrist_slider)
-        self.wrist_spinbox = WheelIgnoringSpinBox()
-        self.wrist_spinbox.setMinimum(-60)
-        self.wrist_spinbox.setMaximum(60)
-        self.wrist_spinbox.setValue(0)
-        self.wrist_spinbox.setSuffix('°')
-        self.wrist_spinbox.setFixedWidth(80)  # Match grip
-        self.wrist_spinbox.valueChanged.connect(self.update_wrist_from_spinbox)
-        wrist_control_layout.addWidget(self.wrist_spinbox)
-        wrist_control_layout.addStretch()  # Match grip
+        self.wrist_textbox = WheelIgnoringLineEdit()
+        self.wrist_textbox.setText('0')
+        self.wrist_textbox.setFixedWidth(80)  # Match grip text box width
+        self.wrist_textbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.wrist_textbox.setPlaceholderText('-60 to 60')
+        self.wrist_textbox.editingFinished.connect(self.update_wrist_from_textbox)
+        wrist_control_layout.addWidget(self.wrist_textbox)
+        degree_label2 = QLabel('°')
+        degree_label2.setFixedWidth(15)  # Match grip degree label width
+        wrist_control_layout.addWidget(degree_label2)
+        wrist_control_layout.addStretch()  # Push everything to the left
         wrist_slider_container_layout.addLayout(wrist_control_layout)
 
         # Add tick mark labels below slider - aligned with slider (match grip structure exactly)
@@ -929,55 +933,72 @@ class MainWindow(QMainWindow):
         club_props_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
         club_layout.addWidget(club_props_label)
 
-        # Club properties in vertical layout
+        # Club properties in vertical layout - text boxes just right of labels, right edges aligned
+        # Use fixed minimum width for label area so all text boxes align on the right
+        label_area_width = 100  # Fixed width for label + spacer area
+        
         clubhead_layout = QHBoxLayout()
         clubhead_label = QLabel('Clubhead:')
         clubhead_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        clubhead_label.setFixedWidth(label_area_width)  # Fixed width for alignment
+        clubhead_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         clubhead_layout.addWidget(clubhead_label)
-        self.clubhead_weight = QDoubleSpinBox()
-        self.clubhead_weight.setRange(50, 500)
-        self.clubhead_weight.setValue(DEFAULT_CLUBHEAD_WEIGHT)
-        self.clubhead_weight.setSuffix(' g')
+        self.clubhead_weight = WheelIgnoringLineEdit()
+        self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
+        self.clubhead_weight.setFixedWidth(80)
+        self.clubhead_weight.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.clubhead_weight.setPlaceholderText('50-500')
+        self.clubhead_weight.editingFinished.connect(self.update_clubhead_from_textbox)
         clubhead_layout.addWidget(self.clubhead_weight)
-        clubhead_layout.addStretch()
+        clubhead_layout.addWidget(QLabel(' g'))
         club_layout.addLayout(clubhead_layout)
 
         shaft_layout = QHBoxLayout()
         shaft_label = QLabel('Shaft:')
         shaft_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        shaft_label.setFixedWidth(label_area_width)  # Same fixed width
+        shaft_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         shaft_layout.addWidget(shaft_label)
-        self.shaft_weight = QDoubleSpinBox()
-        self.shaft_weight.setRange(30, 200)
-        self.shaft_weight.setValue(DEFAULT_SHAFT_WEIGHT)
-        self.shaft_weight.setSuffix(' g')
+        self.shaft_weight = WheelIgnoringLineEdit()
+        self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
+        self.shaft_weight.setFixedWidth(80)  # Match clubhead width
+        self.shaft_weight.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.shaft_weight.setPlaceholderText('30-200')
+        self.shaft_weight.editingFinished.connect(self.update_shaft_from_textbox)
         shaft_layout.addWidget(self.shaft_weight)
-        shaft_layout.addStretch()
+        shaft_layout.addWidget(QLabel(' g'))
         club_layout.addLayout(shaft_layout)
 
         length_layout = QHBoxLayout()
         length_label = QLabel('Length:')
         length_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        length_label.setFixedWidth(label_area_width)  # Same fixed width
+        length_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         length_layout.addWidget(length_label)
-        self.club_length = QDoubleSpinBox()
-        self.club_length.setRange(0.5, 1.5)
-        self.club_length.setValue(DEFAULT_CLUB_LENGTH)
-        self.club_length.setDecimals(2)
-        self.club_length.setSuffix(' m')
+        self.club_length = WheelIgnoringLineEdit()
+        self.club_length.setText(f'{DEFAULT_CLUB_LENGTH:.2f}')
+        self.club_length.setFixedWidth(80)  # Match other text boxes
+        self.club_length.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.club_length.setPlaceholderText('0.5-1.5')
+        self.club_length.editingFinished.connect(self.update_length_from_textbox)
         length_layout.addWidget(self.club_length)
-        length_layout.addStretch()
+        length_layout.addWidget(QLabel(' m'))
         club_layout.addLayout(length_layout)
 
         cg_layout = QHBoxLayout()
         cg_label = QLabel('CG Dist:')
         cg_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        cg_label.setFixedWidth(label_area_width)  # Same fixed width
+        cg_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         cg_layout.addWidget(cg_label)
-        self.cg_distance = QDoubleSpinBox()
-        self.cg_distance.setRange(0.3, 1.2)
-        self.cg_distance.setValue(DEFAULT_CLUBHEAD_CG_DISTANCE)
-        self.cg_distance.setDecimals(2)
-        self.cg_distance.setSuffix(' m')
+        self.cg_distance = WheelIgnoringLineEdit()
+        self.cg_distance.setText(f'{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}')
+        self.cg_distance.setFixedWidth(80)  # Match other text boxes
+        self.cg_distance.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.cg_distance.setPlaceholderText('0.3-1.2')
+        self.cg_distance.editingFinished.connect(self.update_cg_from_textbox)
         cg_layout.addWidget(self.cg_distance)
-        cg_layout.addStretch()
+        cg_layout.addWidget(QLabel(' m'))
         club_layout.addLayout(cg_layout)
 
         self.inertia_label = QLabel()
@@ -990,11 +1011,8 @@ class MainWindow(QMainWindow):
         control_group.setLayout(control_layout)
         main_layout.addWidget(control_group)
 
-        # Connect club property changes
-        self.clubhead_weight.valueChanged.connect(self.update_inertia)
-        self.shaft_weight.valueChanged.connect(self.update_inertia)
-        self.club_length.valueChanged.connect(self.update_inertia)
-        self.cg_distance.valueChanged.connect(self.update_inertia)
+        # Connect club property changes (text boxes trigger on editingFinished)
+        # No need to connect - editingFinished already calls update methods
 
         # Signal Generator Section
         signal_group = QGroupBox('Input Signal Generator')
@@ -1154,12 +1172,67 @@ class MainWindow(QMainWindow):
 
     def get_inertia_values(self):
         """Get current inertia values from club properties"""
-        return calculate_moments_of_inertia(
-            self.clubhead_weight.value(),
-            self.shaft_weight.value(),
-            self.club_length.value(),
-            self.cg_distance.value()
-        )
+        try:
+            clubhead = float(self.clubhead_weight.text())
+            shaft = float(self.shaft_weight.text())
+            length = float(self.club_length.text())
+            cg = float(self.cg_distance.text())
+        except ValueError:
+            # If text boxes have invalid values, use defaults
+            clubhead = DEFAULT_CLUBHEAD_WEIGHT
+            shaft = DEFAULT_SHAFT_WEIGHT
+            length = DEFAULT_CLUB_LENGTH
+            cg = DEFAULT_CLUBHEAD_CG_DISTANCE
+        return calculate_moments_of_inertia(clubhead, shaft, length, cg)
+
+    def update_clubhead_from_textbox(self):
+        """Update clubhead weight from text box"""
+        try:
+            value = float(self.clubhead_weight.text())
+            value = max(50, min(500, value))  # Clamp to range
+            self.clubhead_weight.blockSignals(True)
+            self.clubhead_weight.setText(str(int(value)))
+            self.clubhead_weight.blockSignals(False)
+            self.update_inertia()
+        except ValueError:
+            # Invalid input, restore to default
+            self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
+
+    def update_shaft_from_textbox(self):
+        """Update shaft weight from text box"""
+        try:
+            value = float(self.shaft_weight.text())
+            value = max(30, min(200, value))  # Clamp to range
+            self.shaft_weight.blockSignals(True)
+            self.shaft_weight.setText(str(int(value)))
+            self.shaft_weight.blockSignals(False)
+            self.update_inertia()
+        except ValueError:
+            self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
+
+    def update_length_from_textbox(self):
+        """Update club length from text box"""
+        try:
+            value = float(self.club_length.text())
+            value = max(0.5, min(1.5, value))  # Clamp to range
+            self.club_length.blockSignals(True)
+            self.club_length.setText(f'{value:.2f}')
+            self.club_length.blockSignals(False)
+            self.update_inertia()
+        except ValueError:
+            self.club_length.setText(f'{DEFAULT_CLUB_LENGTH:.2f}')
+
+    def update_cg_from_textbox(self):
+        """Update CG distance from text box"""
+        try:
+            value = float(self.cg_distance.text())
+            value = max(0.3, min(1.2, value))  # Clamp to range
+            self.cg_distance.blockSignals(True)
+            self.cg_distance.setText(f'{value:.2f}')
+            self.cg_distance.blockSignals(False)
+            self.update_inertia()
+        except ValueError:
+            self.cg_distance.setText(f'{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}')
 
     def update_inertia(self):
         """Update inertia display and plots"""
@@ -1170,39 +1243,63 @@ class MainWindow(QMainWindow):
 
     def update_grip_label(self, value):
         """Update grip angle from slider"""
-        if hasattr(self, 'grip_spinbox'):
-            self.grip_spinbox.blockSignals(True)
-            self.grip_spinbox.setValue(value)
-            self.grip_spinbox.blockSignals(False)
+        if hasattr(self, 'grip_textbox'):
+            self.grip_textbox.blockSignals(True)
+            self.grip_textbox.setText(str(value))
+            self.grip_textbox.blockSignals(False)
         if hasattr(self, 'plot_canvas'):
             self.update_all()
 
     def update_wrist_label(self, value):
         """Update wrist angle from slider"""
-        if hasattr(self, 'wrist_spinbox'):
-            self.wrist_spinbox.blockSignals(True)
-            self.wrist_spinbox.setValue(value)
-            self.wrist_spinbox.blockSignals(False)
+        if hasattr(self, 'wrist_textbox'):
+            self.wrist_textbox.blockSignals(True)
+            self.wrist_textbox.setText(str(value))
+            self.wrist_textbox.blockSignals(False)
         if hasattr(self, 'plot_canvas'):
             self.update_all()
 
-    def update_grip_from_spinbox(self, value):
-        """Update grip angle from spinbox"""
-        if hasattr(self, 'grip_slider'):
-            self.grip_slider.blockSignals(True)
-            self.grip_slider.setValue(int(value))
-            self.grip_slider.blockSignals(False)
-        if hasattr(self, 'plot_canvas'):
-            self.update_all()
+    def update_grip_from_textbox(self):
+        """Update grip angle from text box"""
+        try:
+            value = float(self.grip_textbox.text())
+            # Clamp to valid range
+            value = max(0, min(90, value))
+            if hasattr(self, 'grip_slider'):
+                self.grip_slider.blockSignals(True)
+                self.grip_slider.setValue(int(value))
+                self.grip_slider.blockSignals(False)
+            # Update text box with clamped value
+            self.grip_textbox.blockSignals(True)
+            self.grip_textbox.setText(str(int(value)))
+            self.grip_textbox.blockSignals(False)
+            if hasattr(self, 'plot_canvas'):
+                self.update_all()
+        except ValueError:
+            # Invalid input, restore to slider value
+            if hasattr(self, 'grip_slider'):
+                self.grip_textbox.setText(str(self.grip_slider.value()))
 
-    def update_wrist_from_spinbox(self, value):
-        """Update wrist angle from spinbox"""
-        if hasattr(self, 'wrist_slider'):
-            self.wrist_slider.blockSignals(True)
-            self.wrist_slider.setValue(int(value))
-            self.wrist_slider.blockSignals(False)
-        if hasattr(self, 'plot_canvas'):
-            self.update_all()
+    def update_wrist_from_textbox(self):
+        """Update wrist angle from text box"""
+        try:
+            value = float(self.wrist_textbox.text())
+            # Clamp to valid range
+            value = max(-60, min(60, value))
+            if hasattr(self, 'wrist_slider'):
+                self.wrist_slider.blockSignals(True)
+                self.wrist_slider.setValue(int(value))
+                self.wrist_slider.blockSignals(False)
+            # Update text box with clamped value
+            self.wrist_textbox.blockSignals(True)
+            self.wrist_textbox.setText(str(int(value)))
+            self.wrist_textbox.blockSignals(False)
+            if hasattr(self, 'plot_canvas'):
+                self.update_all()
+        except ValueError:
+            # Invalid input, restore to slider value
+            if hasattr(self, 'wrist_slider'):
+                self.wrist_textbox.setText(str(self.wrist_slider.value()))
 
     def update_all(self):
         """Update diagram and plot"""
