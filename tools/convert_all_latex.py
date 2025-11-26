@@ -6,7 +6,7 @@ Converts all LaTeX article files to HTML and updates root-level HTML files
 
 import os
 import sys
-from pathlib import Path
+
 from latex_to_html import LaTeXToHTMLConverter
 
 # Mapping of LaTeX files to their target HTML locations
@@ -53,7 +53,7 @@ def convert_all(dry_run=False):
             continue
 
         if dry_run:
-            print(f"  ✓ Would convert (dry run)")
+            print("  ✓ Would convert (dry run)")
             success_count += 1
         else:
             try:
@@ -66,7 +66,7 @@ def convert_all(dry_run=False):
         print()
 
     print("=" * 70)
-    print(f"Conversion Summary:")
+    print("Conversion Summary:")
     print(f"  Successful: {success_count}")
     print(f"  Errors: {error_count}")
     print("=" * 70)

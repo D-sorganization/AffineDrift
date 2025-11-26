@@ -4,10 +4,11 @@ LaTeX to HTML Converter for AffineDrift
 Converts LaTeX article files to HTML with MathJax rendering
 """
 
-import re
 import os
+import re
 import sys
 from pathlib import Path
+
 
 class LaTeXToHTMLConverter:
     def __init__(self, template_file=None):
@@ -16,7 +17,7 @@ class LaTeXToHTMLConverter:
 
     def read_latex_file(self, filepath):
         """Read LaTeX file content"""
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, encoding='utf-8') as f:
             return f.read()
 
     def extract_title(self, latex_content):

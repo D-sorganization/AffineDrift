@@ -6,7 +6,7 @@ Converts all LaTeX article files to Quarto .qmd format
 
 import os
 import sys
-from pathlib import Path
+
 from latex_to_qmd import LaTeXToQuartoConverter
 
 # Articles directory for Quarto documents
@@ -83,7 +83,7 @@ def convert_all(dry_run=False):
             continue
 
         if dry_run:
-            print(f"  ✓ Would convert (dry run)")
+            print("  ✓ Would convert (dry run)")
             success_count += 1
         else:
             try:
@@ -96,7 +96,7 @@ def convert_all(dry_run=False):
         print()
 
     print("=" * 70)
-    print(f"Conversion Summary:")
+    print("Conversion Summary:")
     print(f"  Successful: {success_count}")
     print(f"  Errors: {error_count}")
     print("=" * 70)
