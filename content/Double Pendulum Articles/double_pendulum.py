@@ -206,7 +206,7 @@ def u_pd(t: float, x: np.ndarray, kp: float = 10.0, kd: float = 2.0) -> np.ndarr
     """
     Simple PD control law around the downward configuration q = [0, 0].
 
-    This is NOT meant to be biomechanically realistic; it's just a example
+    This is NOT meant to be biomechanically realistic; it's just an example
     input to get non-trivial dynamics and torque fields.
 
     Parameters

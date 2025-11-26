@@ -170,9 +170,10 @@ def generate_sample_torque(noise_type, t, polynomial_expression='t**2 - t'):
                     torque = t**2 - t
                 else:
                     torque = result
+                    st.session_state.polynomial_error = None  # Only clear error on successful evaluation
             else:
                 torque = np.full_like(t, float(result))
-            st.session_state.polynomial_error = None
+                st.session_state.polynomial_error = None  # Only clear error on successful evaluation
         except SyntaxError:
             st.session_state.polynomial_error = "Invalid polynomial syntax. Please check your expression."
             torque = t**2 - t

@@ -1162,8 +1162,12 @@
             ctx.lineWidth = 2.5;
             ctx.globalAlpha = 0.8;
             ctx.beginPath();
+            // Handle negative wrist angles correctly - always draw from hand to forearm
+            // When wrist angle is negative, forearm_axis_angle_for_arc < hand_axis_angle_for_arc,
+            // so we need to draw counterclockwise (anticlockwise = true)
+            const anticlockwise = phi_wrist_rad < 0;
             ctx.arc(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius, 
-                   hand_axis_angle_for_arc, forearm_axis_angle_for_arc);
+                   hand_axis_angle_for_arc, forearm_axis_angle_for_arc, anticlockwise);
             ctx.stroke();
             ctx.globalAlpha = 1.0;
 
