@@ -193,7 +193,7 @@ def generate_sample_torque(noise_type, t, polynomial_expression='t**2 - t'):
 def draw_diagram(grip_angle_deg, wrist_angle_deg):
     """Draw the forearm-hand-club diagram"""
     fig, ax = plt.subplots(figsize=(12, 4))
-    
+
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
@@ -363,10 +363,10 @@ def plot_torque(t, input_torque, grip_angle_deg, wrist_angle_deg, I_alpha, I_gam
                 show_input, show_transmitted, show_alpha, show_gamma):
     """Plot torque vs time"""
     fig, ax = plt.subplots(figsize=(10, 6))
-    
+
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-    
+
     omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
@@ -391,7 +391,7 @@ def plot_torque(t, input_torque, grip_angle_deg, wrist_angle_deg, I_alpha, I_gam
     ax.set_ylabel('Torque (N·m)', fontsize=10)
     ax.grid(True, alpha=0.3)
     ax.legend(loc='best', fontsize=9)
-    
+
     plt.tight_layout()
     return fig
 
@@ -400,10 +400,10 @@ def plot_acceleration(t, input_torque, grip_angle_deg, wrist_angle_deg, I_alpha,
                      show_alpha, show_gamma):
     """Plot angular acceleration vs time"""
     fig, ax = plt.subplots(figsize=(10, 6))
-    
+
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-    
+
     omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
@@ -423,7 +423,7 @@ def plot_acceleration(t, input_torque, grip_angle_deg, wrist_angle_deg, I_alpha,
     ax.set_ylabel('Angular Acceleration (rad/s²)', fontsize=10)
     ax.grid(True, alpha=0.3)
     ax.legend(loc='best', fontsize=9)
-    
+
     plt.tight_layout()
     return fig
 
@@ -432,7 +432,7 @@ def plot_transmission_sweep(grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma,
                             show_transmission, show_velocity, show_accel_alpha, show_accel_gamma):
     """Plot transmission ratio vs wrist angle sweep"""
     fig, ax = plt.subplots(figsize=(10, 6))
-    
+
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_sweep = np.linspace(-60, 60, 200)
     phi_sweep_rad = np.radians(phi_sweep)
@@ -488,7 +488,7 @@ def plot_transmission_sweep(grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma,
     ax.set_ylabel('Transmission Ratio', fontsize=10)
     ax.grid(True, alpha=0.3)
     ax.legend(loc='best', fontsize=9)
-    
+
     plt.tight_layout()
     return fig
 
@@ -530,18 +530,18 @@ st.markdown("""
 # Sidebar controls
 with st.sidebar:
     st.header("Parameters")
-    
+
     # Angle controls
     st.subheader("Grip Angle θ_grip")
     grip_angle = st.slider("Grip Angle (degrees)", 0, 90, 30, 1,
                           help="0° = parallel to fingers, 90° = perpendicular to fingers")
-    
+
     st.subheader("Wrist Deviation Angle φ")
     wrist_angle = st.slider("Wrist Deviation (degrees)", -60, 60, 0, 1,
                            help="+ values = radial deviation, - values = ulnar deviation")
-    
+
     st.markdown("---")
-    
+
     # Club Properties
     st.subheader("Club Properties")
     clubhead_weight = st.number_input("Clubhead (g)", 50.0, 500.0, DEFAULT_CLUBHEAD_WEIGHT, 1.0)
@@ -555,34 +555,34 @@ with st.sidebar:
     - I_α = {I_alpha:.4f} kg·m²
     - I_γ = {I_gamma:.4f} kg·m²
     """)
-    
+
     st.markdown("---")
-    
+
     # Signal Generator
     st.subheader("Input Signal Generator")
-    noise_type = st.selectbox("Signal Type", 
+    noise_type = st.selectbox("Signal Type",
                               ['Golf-like Random', 'Step', 'Pulse', 'Burst', 'Sinusoidal', 'Random', 'Polynomial'])
-    
+
     if noise_type == 'Polynomial':
-        polynomial_expr = st.text_input("Polynomial Expression", 
+        polynomial_expr = st.text_input("Polynomial Expression",
                                        value=st.session_state.polynomial_expression,
                                        help="Use 't' as variable. Example: t**2 - t")
         st.session_state.polynomial_expression = polynomial_expr
         if st.session_state.polynomial_error:
             st.error(st.session_state.polynomial_error)
-    
+
     if st.button("🎲 Regenerate Signal"):
         st.rerun()
-    
+
     st.markdown("---")
-    
+
     # Plot type selection
     st.subheader("Plot Type")
-    plot_type = st.selectbox("Select Plot", 
+    plot_type = st.selectbox("Select Plot",
                              ['Torque', 'Angular Acceleration', 'Transmission Ratio vs Wrist Angle'])
-    
+
     st.markdown("---")
-    
+
     # Signal visibility (depends on plot type)
     st.subheader("Show Signals")
     if plot_type == 'Torque':
@@ -626,7 +626,7 @@ with col1:
 
 with col2:
     st.subheader(f"{plot_type} Plot")
-    
+
     if plot_type == 'Torque':
         plot_fig = plot_torque(t, input_torque, grip_angle, wrist_angle, I_alpha, I_gamma,
                               show_input, show_transmitted, show_alpha, show_gamma)
@@ -635,9 +635,9 @@ with col2:
                                     show_alpha, show_gamma)
     else:  # Transmission Ratio
         plot_fig = plot_transmission_sweep(grip_angle, wrist_angle, I_alpha, I_gamma,
-                                           show_transmission, show_velocity, 
+                                           show_transmission, show_velocity,
                                            show_accel_alpha, show_accel_gamma)
-    
+
     st.pyplot(plot_fig)
     plt.close(plot_fig)
 
@@ -649,7 +649,7 @@ with st.expander("📐 Model Information"):
     omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = np.mean(input_torque) * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
-    
+
     st.markdown(f"""
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
