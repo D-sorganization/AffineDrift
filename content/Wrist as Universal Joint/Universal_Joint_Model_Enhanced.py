@@ -34,7 +34,6 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
-    QDoubleSpinBox,
     QGroupBox,
     QHBoxLayout,
     QLabel,
@@ -941,7 +940,7 @@ class MainWindow(QMainWindow):
         # Club properties in vertical layout - text boxes just right of labels, right edges aligned
         # Use fixed minimum width for label area so all text boxes align on the right
         label_area_width = 100  # Fixed width for label + spacer area
-        
+
         clubhead_layout = QHBoxLayout()
         clubhead_label = QLabel('Clubhead:')
         clubhead_label.setStyleSheet("font-size: 11pt; font-weight: bold;")

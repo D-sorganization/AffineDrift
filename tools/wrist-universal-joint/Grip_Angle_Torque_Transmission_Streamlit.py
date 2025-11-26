@@ -330,21 +330,25 @@ def draw_diagram(grip_angle_deg, wrist_angle_deg):
     wrist_arc_center_y = hand_endpoint_forearm_y
     wrist_arc_radius = 0.12
 
-    hand_axis_angle = theta_grip_rad
+    # For arc visualization, use angles without π offset
+    hand_axis_angle_for_arc = theta_grip_rad
+    forearm_axis_angle_for_arc = theta_grip_rad + phi_wrist_rad
+    # For forearm drawing, use the actual forearm angle (with π offset)
     forearm_axis_angle = theta_grip_rad + phi_wrist_rad + np.pi
 
-    wrist_arc_start = hand_axis_angle
-    wrist_arc_end = forearm_axis_angle
+    wrist_arc_start = hand_axis_angle_for_arc
+    wrist_arc_end = forearm_axis_angle_for_arc
     wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
     wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
     wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
     ax.plot(wrist_arc_x, wrist_arc_y, 'b-', linewidth=2.5, alpha=0.8, zorder=8)
 
-    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle),
-             wrist_arc_radius*np.sin(hand_axis_angle), head_width=0.012, head_length=0.018,
+    # Wrist angle arrows (for arc visualization)
+    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle_for_arc),
+             wrist_arc_radius*np.sin(hand_axis_angle_for_arc), head_width=0.012, head_length=0.018,
              fc='r', ec='r', linewidth=2, zorder=8)
-    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle),
-             wrist_arc_radius*np.sin(forearm_axis_angle), head_width=0.012, head_length=0.018,
+    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle_for_arc),
+             wrist_arc_radius*np.sin(forearm_axis_angle_for_arc), head_width=0.012, head_length=0.018,
              fc='b', ec='b', linewidth=2, zorder=8)
 
     phi_mid = (wrist_arc_start + wrist_arc_end) / 2
