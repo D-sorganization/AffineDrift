@@ -1075,7 +1075,7 @@ class MainWindow(QMainWindow):
         show_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         plot_control_layout.addWidget(show_label)
         plot_control_layout.addSpacing(10)  # Space after label
-        
+
         self.show_input_check = QCheckBox('Input Torque')
         self.show_input_check.setChecked(True)
         self.show_input_check.stateChanged.connect(lambda: self.update_signal_visibility('input_torque', self.show_input_check.isChecked()))
