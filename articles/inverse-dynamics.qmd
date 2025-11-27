@@ -24,8 +24,8 @@ The equations of motion for a rigid body like a golf club are described by Euler
 
 $$
 \begin{align}
-\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \label{eq-force_balance}\\
-\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \label{eq-moment_balance}
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
 \end{align}
 $$
 
@@ -159,7 +159,7 @@ This equivalence is *dynamic*: both systems produce identical translational and 
 
 The fundamental principle is that a couple is a *free vector*—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is *bound* to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
 
-[Figure: Force-couple equivalence: a force $**F]
+[Figure: Force-couple equivalence: a force $\mathbf{F}$]
 
 ### Coordinate Transformation of Force-Couple Pairs
 
@@ -265,9 +265,8 @@ The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge
 A control-affine system is a dynamical system of the form:
 
 $$
-{#eq-control_affine}
 \dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
-$$
+$$ {#eq-control_affine}
 
 where:
 - $\mathbf{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
@@ -276,7 +275,7 @@ where:
     
 - $\mathbf{G}(\mathbf{x})$ is the *input matrix* (how controls affect the state)
     
-- $\mathbf{u} \in \mathbb{R}^m$ is the *control input vector$
+- $\mathbf{u} \in \mathbb{R}^m$ is the *control input vector*
 
 The key feature is the **additive separation** of drift and input effects. This decomposition reflects a fundamental physical distinction:
 
