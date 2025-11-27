@@ -22,7 +22,7 @@ TTL: 3600 (or default)
 
 This will point `www.affinedrift.com` to your GitHub Pages site.
 
-### Option 2: A Records (For apex domain - affinedrift.com)
+### Option 2: A Records for Apex Domain
 
 If you also want to use `affinedrift.com` (without www), add **A records**:
 

@@ -173,7 +173,7 @@ Add this to `modelling.html` or create a new page:
 </html>
 ```
 
-### CSS Styling (add to `styles.css`)
+### CSS Styling (add to `styles.css`) {#css-styling-add-to-styles-css}
 
 ```css
 .interactive-section {

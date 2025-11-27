@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dieter et al.">
+
+<title>Wrist as a Universal Joint: Torque Noise Transmission to the Clubface – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../articles.html"> 
+<span class="menu-text">Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../resources.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../contact.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract"><span class="header-section-number">1</span> Abstract</a></li>
+  <li><a href="#model-overview" id="toc-model-overview" class="nav-link" data-scroll-target="#model-overview"><span class="header-section-number">2</span> 1. Model Overview</a>
+  <ul class="collapse">
+  <li><a href="#joint-structure-and-angles" id="toc-joint-structure-and-angles" class="nav-link" data-scroll-target="#joint-structure-and-angles"><span class="header-section-number">2.1</span> 1.1 Joint structure and angles</a></li>
+  <li><a href="#universal-joint-kinematics-and-torque-transmission" id="toc-universal-joint-kinematics-and-torque-transmission" class="nav-link" data-scroll-target="#universal-joint-kinematics-and-torque-transmission"><span class="header-section-number">2.2</span> 1.2 Universal joint kinematics and torque transmission</a></li>
+  <li><a href="#club-inertial-model" id="toc-club-inertial-model" class="nav-link" data-scroll-target="#club-inertial-model"><span class="header-section-number">2.3</span> 1.3 Club inertial model</a></li>
+  <li><a href="#torque-decomposition-via-grip-angle" id="toc-torque-decomposition-via-grip-angle" class="nav-link" data-scroll-target="#torque-decomposition-via-grip-angle"><span class="header-section-number">2.4</span> 1.4 Torque decomposition via grip angle</a></li>
+  </ul></li>
+  <li><a href="#from-torque-to-angular-acceleration" id="toc-from-torque-to-angular-acceleration" class="nav-link" data-scroll-target="#from-torque-to-angular-acceleration"><span class="header-section-number">3</span> 2. From Torque to Angular Acceleration</a>
+  <ul class="collapse">
+  <li><a href="#linearized-angular-dynamics" id="toc-linearized-angular-dynamics" class="nav-link" data-scroll-target="#linearized-angular-dynamics"><span class="header-section-number">3.1</span> 2.1 Linearized angular dynamics</a></li>
+  <li><a href="#stochastic-model-for-torque-noise" id="toc-stochastic-model-for-torque-noise" class="nav-link" data-scroll-target="#stochastic-model-for-torque-noise"><span class="header-section-number">3.2</span> 2.2 Stochastic model for torque noise</a></li>
+  <li><a href="#noise-in-an-arbitrary-clubface-direction" id="toc-noise-in-an-arbitrary-clubface-direction" class="nav-link" data-scroll-target="#noise-in-an-arbitrary-clubface-direction"><span class="header-section-number">3.3</span> 2.3 Noise in an arbitrary clubface direction</a></li>
+  </ul></li>
+  <li><a href="#special-cases-and-analytical-results" id="toc-special-cases-and-analytical-results" class="nav-link" data-scroll-target="#special-cases-and-analytical-results"><span class="header-section-number">4</span> 3. Special Cases and Analytical Results</a>
+  <ul class="collapse">
+  <li><a href="#neutral-wrist-configuration-0" id="toc-neutral-wrist-configuration-0" class="nav-link" data-scroll-target="#neutral-wrist-configuration-0"><span class="header-section-number">4.1</span> 3.1 Neutral wrist configuration: (= 0)</a></li>
+  <li><a href="#relative-noise-in-and-at-neutral-wrist" id="toc-relative-noise-in-and-at-neutral-wrist" class="nav-link" data-scroll-target="#relative-noise-in-and-at-neutral-wrist"><span class="header-section-number">4.2</span> 3.2 Relative noise in () and () at neutral wrist</a></li>
+  <li><a href="#non-neutral-wrist-dependence-on" id="toc-non-neutral-wrist-dependence-on" class="nav-link" data-scroll-target="#non-neutral-wrist-dependence-on"><span class="header-section-number">4.3</span> 3.3 Non-neutral wrist: dependence on ()</a></li>
+  </ul></li>
+  <li><a href="#signal-to-noise-ratio-in-acceleration" id="toc-signal-to-noise-ratio-in-acceleration" class="nav-link" data-scroll-target="#signal-to-noise-ratio-in-acceleration"><span class="header-section-number">5</span> 4. Signal-to-Noise Ratio in Acceleration</a>
+  <ul class="collapse">
+  <li><a href="#acceleration-snr-along-a-clubface-direction" id="toc-acceleration-snr-along-a-clubface-direction" class="nav-link" data-scroll-target="#acceleration-snr-along-a-clubface-direction"><span class="header-section-number">5.1</span> 4.1 Acceleration SNR along a clubface direction</a></li>
+  <li><a href="#where-geometry-actually-matters" id="toc-where-geometry-actually-matters" class="nav-link" data-scroll-target="#where-geometry-actually-matters"><span class="header-section-number">5.2</span> 4.2 Where geometry actually matters</a></li>
+  </ul></li>
+  <li><a href="#biomechanical-interpretation" id="toc-biomechanical-interpretation" class="nav-link" data-scroll-target="#biomechanical-interpretation"><span class="header-section-number">6</span> 5. Biomechanical Interpretation</a>
+  <ul class="collapse">
+  <li><a href="#finger-aligned-vs-palm-aligned-grips" id="toc-finger-aligned-vs-palm-aligned-grips" class="nav-link" data-scroll-target="#finger-aligned-vs-palm-aligned-grips"><span class="header-section-number">6.1</span> 5.1 Finger-aligned vs palm-aligned grips</a></li>
+  <li><a href="#role-of-the-universal-joint-modulation" id="toc-role-of-the-universal-joint-modulation" class="nav-link" data-scroll-target="#role-of-the-universal-joint-modulation"><span class="header-section-number">6.2</span> 5.2 Role of the universal joint modulation</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">7</span> 6. Conclusions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Wrist as a Universal Joint: Torque Noise Transmission to the Clubface</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dieter et al. </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="abstract" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="abstract"><span class="header-section-number">1</span> Abstract</h2>
+<p>We model the golfer’s wrist as a universal (Hooke/Cardan) joint with a static skew set by grip configuration and a dynamic phase associated with wrist radial/ulnar deviation. The club is treated as a rigid body with anisotropic principal moments of inertia (MOI) about the shaft axis and a lower-MOI axis associated with clubface rotation. Forearm long-axis torques, consisting of both deterministic “signal” contributions and stochastic “noise,” are transmitted through the universal joint to the hand and then decomposed into the club’s principal axes according to the grip angle.</p>
+<p>From the classical universal joint kinematics, we obtain an angular velocity ratio [ = , ] and, by power conservation, a torque ratio [ = . ] Here, () is the static bend (skew) angle between the forearm axis and the hand axis, and () is the dynamic wrist deviation angle. The grip angle (_{}) is identified with (), while () parameterizes the instantaneous wrist radial/ulnar deviation.</p>
+<p>The transmitted torque is then resolved into two club axes: a high-MOI shaft axis (()) and a low-MOI axis (()) corresponding to a principal face-rotation mode. We derive closed-form expressions for the variance of angular acceleration noise about each axis as a function of grip angle, wrist deviation, and inertial anisotropy. At neutral wrist deviation, the model predicts that the variance of angular acceleration noise about the low-MOI axis () is independent of grip angle, while the variance about the shaft axis () scales as (^2 <em>{}). For realistic MOI ratios (e.g.&nbsp;(I</em> I_)), we show that noise is concentrated in the low-MOI axis for small grip angles but can be redirected into the shaft axis for large grip angles.</p>
+<p>Finally, we show that, within this linearized framework, the acceleration signal-to-noise ratio (SNR) in a given clubface direction is invariant under changes in grip angle and wrist deviation if signal and noise share the same torque channel. The biomechanical implications instead arise from which axes are excited by the noise, how those axes contribute to clubface orientation, and how differing inertias control the time evolution of perturbations.</p>
+<hr>
+</section>
+<section id="model-overview" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="model-overview"><span class="header-section-number">2</span> 1. Model Overview</h2>
+<section id="joint-structure-and-angles" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="joint-structure-and-angles"><span class="header-section-number">2.1</span> 1.1 Joint structure and angles</h3>
+<p>We distinguish three levels of description:</p>
+<ol type="1">
+<li><p><strong>Input torque</strong> about the forearm long axis: [ _{}(t) = _s(t) + _n(t), ] where (_s(t)) is the deliberate (“signal”) torque and (_n(t)) is stochastic torque noise (e.g.&nbsp;from neuromuscular variability).</p></li>
+<li><p><strong>Universal joint geometry</strong> at the wrist:</p>
+<ul>
+<li>(): static bend (skew) between the forearm axis and the hand axis.</li>
+<li>(): dynamic wrist deviation angle (radial/ulnar deviation).</li>
+</ul></li>
+<li><p><strong>Grip angle</strong> (_{}):</p>
+<ul>
+<li>(_{} = 0^): club axis aligned with the fingers; transmitted torque is oriented toward the club’s lowest-MOI axis.</li>
+<li>(_{} = 90^): club axis aligned with the palm; transmitted torque is oriented toward the shaft axis.</li>
+</ul></li>
+</ol>
+<p>In the implementation motivating this work, we identify [ = _{}, ] so that the grip style directly determines the static skew between forearm and hand axes. The wrist deviation ((t)) is then the time-varying phase angle of the universal joint.</p>
+</section>
+<section id="universal-joint-kinematics-and-torque-transmission" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="universal-joint-kinematics-and-torque-transmission"><span class="header-section-number">2.2</span> 1.2 Universal joint kinematics and torque transmission</h3>
+<p>Consider a universal joint whose input and output shafts intersect at an angle (). Let () be the rotation of the input shaft about its own axis relative to a reference. The standard Hooke/Cardan kinematics give the angular velocity ratio <span class="math display">\[\begin{equation}
+\label{eq:omega_ratio}
+\frac{\omega_{\text{out}}}{\omega_{\text{in}}}
+= \frac{\cos\delta}{\sqrt{1 - \sin^2\delta\,\sin^2\phi}}.
+\end{equation}\]</span></p>
+<p>Assuming negligible losses, power is conserved: [ P_{} = P_{} <em>{} </em>{} = <em>{} </em>{}. ] Hence the torque ratio is <span class="math display">\[\begin{equation}
+\label{eq:tau_ratio}
+\frac{\tau_{\text{out}}}{\tau_{\text{in}}}
+= \frac{\omega_{\text{in}}}{\omega_{\text{out}}}
+= \frac{\sqrt{1 - \sin^2\delta\,\sin^2\phi}}{\cos\delta}.
+\end{equation}\]</span></p>
+<p>For convenience we define [ R_(,) := = . ] This factor encapsulates how the wrist’s kinematic configuration modulates the magnitude of torque transmitted from the forearm to the hand.</p>
+<p>Throughout, we regard: - () (equivalently (_{})) as a <strong>configuration parameter</strong>. - ((t)) as a <strong>dynamic variable</strong> reflecting radial/ulnar deviation.</p>
+<p>The wrist thus behaves as a universal joint with static skew () and time-varying phase ((t)).</p>
+</section>
+<section id="club-inertial-model" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="club-inertial-model"><span class="header-section-number">2.3</span> 1.3 Club inertial model</h3>
+<p>We model the club as:</p>
+<ul>
+<li><p>A uniform shaft: [ I_{,} = m_{} L^2, ] where (m_{}) is shaft mass and (L) is club length.</p></li>
+<li><p>A clubhead treated as a point mass at distance (d_{}) from the grip: [ I_{,} = m_{} d_{}^2. ]</p></li>
+</ul>
+<p>The total MOI about a shaft-like axis () is [ I_= I_{,} + I_{,}. ]</p>
+<p>To capture face-rotation dynamics, we introduce a second principal axis () with lower MOI: [ I_I_, &lt; &lt; 1. ] In the accompanying code, one uses (), giving [ I_,I_. ]</p>
+<p>The axes () and () span a 2D small-angle plane in which we resolve clubface orientation perturbations.</p>
+</section>
+<section id="torque-decomposition-via-grip-angle" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="torque-decomposition-via-grip-angle"><span class="header-section-number">2.4</span> 1.4 Torque decomposition via grip angle</h3>
+Let the hand axis, which receives (<em>{}) from the universal joint, lie in the ()-() plane at angle (</em>{}) measured from the () axis toward the () axis. That is, in club coordinates: [ _{} =
+<span class="math display">\[\begin{bmatrix}
+\sin\theta_{\text{grip}} \\
+\cos\theta_{\text{grip}}
+\end{bmatrix}\]</span>
+<p>] with respect to the basis ((,)).</p>
+If (<em>{}(t)) is the scalar torque transmitted through the wrist, [ </em>{}(t) = R_((t),),<em>{}(t), ] then the vector torque in club coordinates is [ </em>{}(t) = <em>{}(t), </em>{} = _{}(t)
+<span class="math display">\[\begin{bmatrix}
+\sin\theta_{\text{grip}} \\
+\cos\theta_{\text{grip}}
+\end{bmatrix}\]</span>
+<p>. ]</p>
+<p>We identify [ <em>(t) = </em>{}(t),<em>{}, </em>(t) = <em>{}(t),</em>{}. ]</p>
+<p>Substituting (<em>{}(t) = R</em>((t),),_{}(t)), <span class="math display">\[\begin{align}
+\tau_\alpha(t)
+&amp;= R_\tau(\phi,\delta)\,\tau_{\text{in}}(t)\,\sin\theta_{\text{grip}},
+\\
+\tau_\gamma(t)
+&amp;= R_\tau(\phi,\delta)\,\tau_{\text{in}}(t)\,\cos\theta_{\text{grip}}.
+\end{align}\]</span></p>
+<p>This completes the mapping from forearm long-axis torque to torques about the club’s principal axes.</p>
+<hr>
+</section>
+</section>
+<section id="from-torque-to-angular-acceleration" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="from-torque-to-angular-acceleration"><span class="header-section-number">3</span> 2. From Torque to Angular Acceleration</h2>
+<section id="linearized-angular-dynamics" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="linearized-angular-dynamics"><span class="header-section-number">3.1</span> 2.1 Linearized angular dynamics</h3>
+<p>For small motions about each principal axis, we approximate the dynamics as <span class="math display">\[\begin{align}
+\ddot{q}_\alpha(t) &amp;= \frac{\tau_\alpha(t)}{I_\alpha}, \\
+\ddot{q}_\gamma(t) &amp;= \frac{\tau_\gamma(t)}{I_\gamma},
+\end{align}\]</span> where (q_, q_) are small rotations about () and (), respectively.</p>
+<p>Substituting the expressions for (<em>) and (</em>), <span class="math display">\[\begin{align}
+\ddot{q}_\alpha(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\alpha}\,
+\tau_{\text{in}}(t)\,\sin\theta_{\text{grip}},
+\\
+\ddot{q}_\gamma(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\gamma}\,
+\tau_{\text{in}}(t)\,\cos\theta_{\text{grip}}.
+\end{align}\]</span></p>
+<p>Recall that [ _{}(t) = _s(t) + _n(t) ] with (_s(t)) the intended torque and (_n(t)) the noise. We therefore separate each acceleration into a signal part and a noise part: <span class="math display">\[\begin{align}
+\ddot{q}_\alpha(t)
+&amp;= \ddot{q}_{\alpha,s}(t) + \ddot{q}_{\alpha,n}(t),
+\\
+\ddot{q}_\gamma(t)
+&amp;= \ddot{q}_{\gamma,s}(t) + \ddot{q}_{\gamma,n}(t),
+\end{align}\]</span> where <span class="math display">\[\begin{align}
+\ddot{q}_{\alpha,s}(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\alpha}\,
+\tau_s(t)\,\sin\theta_{\text{grip}},
+\\
+\ddot{q}_{\alpha,n}(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\alpha}\,
+\tau_n(t)\,\sin\theta_{\text{grip}},
+\\[6pt]
+\ddot{q}_{\gamma,s}(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\gamma}\,
+\tau_s(t)\,\cos\theta_{\text{grip}},
+\\
+\ddot{q}_{\gamma,n}(t)
+&amp;= \frac{R_\tau(\phi,\delta)}{I_\gamma}\,
+\tau_n(t)\,\cos\theta_{\text{grip}}.
+\end{align}\]</span></p>
+<p>The noise acceleration components are thus <span class="math display">\[\begin{align}
+\ddot{q}_{\alpha,n}(t)
+&amp;= \frac{R_\tau(\phi,\delta)\,\sin\theta_{\text{grip}}}{I_\alpha}\,\tau_n(t),
+\label{eq:qalpha_noise}
+\\
+\ddot{q}_{\gamma,n}(t)
+&amp;= \frac{R_\tau(\phi,\delta)\,\cos\theta_{\text{grip}}}{I_\gamma}\,\tau_n(t).
+\label{eq:qgamma_noise}
+\end{align}\]</span></p>
+</section>
+<section id="stochastic-model-for-torque-noise" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="stochastic-model-for-torque-noise"><span class="header-section-number">3.2</span> 2.2 Stochastic model for torque noise</h3>
+<p>Assume the noise process (<em>n(t)) is zero-mean and stationary with [ [_n(t)] = 0, [_n(t)^2] = </em>^2. ]</p>
+<p>Assume over a short analysis window that () and () can be treated as approximately constant. Then (R_(,)), (<em>{}), and (</em>{}) are constant coefficients in the linear mapping from (_n(t)) to angular acceleration.</p>
+<p>From <span class="math inline">\(\eqref{eq:qalpha_noise}\)</span>–<span class="math inline">\(\eqref{eq:qgamma_noise}\)</span>, the acceleration noise variances are <span class="math display">\[\begin{align}
+\mathrm{Var}(\ddot{q}_{\alpha,n})
+&amp;= \left(
+\frac{R_\tau(\phi,\delta)\,\sin\theta_{\text{grip}}}{I_\alpha}
+\right)^2 \sigma_\tau^2,
+\label{eq:var_qalpha_noise}
+\\
+\mathrm{Var}(\ddot{q}_{\gamma,n})
+&amp;= \left(
+\frac{R_\tau(\phi,\delta)\,\cos\theta_{\text{grip}}}{I_\gamma}
+\right)^2 \sigma_\tau^2.
+\label{eq:var_qgamma_noise}
+\end{align}\]</span></p>
+<p>These expressions quantify how the universal joint geometry, grip angle, and MOI anisotropy determine the magnitude of noise-driven angular acceleration about each axis.</p>
+</section>
+<section id="noise-in-an-arbitrary-clubface-direction" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="noise-in-an-arbitrary-clubface-direction"><span class="header-section-number">3.3</span> 2.3 Noise in an arbitrary clubface direction</h3>
+Let ( = (q_, q_)^T) represent the small orientation vector in the principal-axis basis. For performance, the relevant direction may be some linear combination of these axes, described by a unit vector [ =
+<span class="math display">\[\begin{bmatrix}
+c_\alpha \\
+c_\gamma
+\end{bmatrix}\]</span>
+<p>, || = 1. ]</p>
+<p>The acceleration along () is [ <em>c(t) = c</em><em>(t) + c</em>_(t). ]</p>
+<p>The noise contribution is [ <em>{c,n}(t) = c</em><em>{,n}(t) + c</em>_{,n}(t). ]</p>
+<p>Using <span class="math inline">\(\eqref{eq:qalpha_noise}\)</span>–<span class="math inline">\(\eqref{eq:qgamma_noise}\)</span>, [ <em>{c,n}(t) = R</em>(,),_n(t)( + ). ]</p>
+<p>Thus <span class="math display">\[\begin{equation}
+\label{eq:var_qc_noise}
+\mathrm{Var}(\ddot{q}_{c,n})
+= R_\tau(\phi,\delta)^2\,\sigma_\tau^2
+\left(
+\frac{c_\alpha \sin\theta_{\text{grip}}}{I_\alpha}
++ \frac{c_\gamma \cos\theta_{\text{grip}}}{I_\gamma}
+\right)^2.
+\end{equation}\]</span></p>
+<p>Equation <span class="math inline">\(\eqref{eq:var_qc_noise}\)</span> is the central object for understanding how linkage style and MOI anisotropy control the coupling of forearm torque noise into clubface acceleration along any chosen direction.</p>
+<hr>
+</section>
+</section>
+<section id="special-cases-and-analytical-results" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="special-cases-and-analytical-results"><span class="header-section-number">4</span> 3. Special Cases and Analytical Results</h2>
+<section id="neutral-wrist-configuration-0" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="neutral-wrist-configuration-0"><span class="header-section-number">4.1</span> 3.1 Neutral wrist configuration: (= 0)</h3>
+<p>At neutral radial/ulnar deviation, (= 0), we obtain from <span class="math inline">\(\eqref{eq:tau_ratio}\)</span> [ R_(0,) = = . ]</p>
+<p>Substituting into <span class="math inline">\(\eqref{eq:qgamma_noise}\)</span>, [ _{,n}(t) = ( ). ]</p>
+<p>With (= <em>{}), this simplifies to [ </em>{,n}(t) = . ] Hence <span class="math display">\[\begin{equation}
+\mathrm{Var}(\ddot{q}_{\gamma,n})
+= \frac{\sigma_\tau^2}{I_\gamma^2},
+\qquad \text{for all }\theta_{\text{grip}},\ \phi=0.
+\label{eq:gamma_var_neutral}
+\end{equation}\]</span></p>
+<p><strong>Result 1.</strong> At neutral wrist deviation, the variance of angular acceleration noise about the low-MOI axis () is independent of grip angle.</p>
+<p>This is a somewhat counter-intuitive but exact consequence of identifying the universal joint bend angle with the grip angle. Changing grip configuration alters the skew (), but the combination (R_(0,)_{}) collapses to unity.</p>
+<p>For the shaft axis (), at (), [ <em>{,n}(t) = ,</em>{},_n(t). ]</p>
+<p>Again taking (= <em>{}), [ </em>{,n}(t) = ,_n(t), ] so <span class="math display">\[\begin{equation}
+\mathrm{Var}(\ddot{q}_{\alpha,n})
+= \frac{\tan^2\theta_{\text{grip}}}{I_\alpha^2}\,\sigma_\tau^2.
+\label{eq:alpha_var_neutral}
+\end{equation}\]</span></p>
+<p><strong>Result 2.</strong> At neutral wrist, the shaft-axis acceleration noise variance scales as (^2_{}). Small grip angles produce essentially no ()-axis noise, while large grip angles produce substantial ()-axis noise.</p>
+</section>
+<section id="relative-noise-in-and-at-neutral-wrist" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="relative-noise-in-and-at-neutral-wrist"><span class="header-section-number">4.2</span> 3.2 Relative noise in () and () at neutral wrist</h3>
+<p>Taking the ratio of <span class="math inline">\(\eqref{eq:alpha_var_neutral}\)</span> and <span class="math inline">\(\eqref{eq:gamma_var_neutral}\)</span>, [ = ^2_{} ()^2. ]</p>
+<p>With (I_I_), [ ^2 ^2_{}. ]</p>
+<p>For (), [ ,^2_{}. ]</p>
+<p>Several regimes follow:</p>
+<ul>
+<li>(<em>{} ^): (</em>{} ); noise is overwhelmingly in ().</li>
+<li>(<em>{} = 45^): (</em>{} = 1); ((<em>{,n}) ,(</em>{,n})).</li>
+<li>For sufficiently large (<em>{}), ((</em>{,n})) can exceed ((_{,n})).</li>
+</ul>
+<p><strong>Result 3.</strong> At neutral wrist and with (I_0.5I_), noise is concentrated in the low-MOI axis () at small grip angles, but can be redirected predominantly into the shaft axis () at large grip angles.</p>
+<p>This already shows that linkage style (grip angle) controls how forearm torque noise is partitioned between axes with different inertias, even before accounting for non-zero wrist deviation.</p>
+</section>
+<section id="non-neutral-wrist-dependence-on" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="non-neutral-wrist-dependence-on"><span class="header-section-number">4.3</span> 3.3 Non-neutral wrist: dependence on ()</h3>
+<p>For (), the torque ratio becomes [ R_(,) = , ] and the acceleration noise variances <span class="math inline">\(\eqref{eq:var_qalpha_noise}\)</span>–<span class="math inline">\(\eqref{eq:var_qgamma_noise}\)</span> show that wrist deviation acts as a multiplicative gain on both ()- and ()-axis accelerations: [ (<em>{,n}) R</em>(,)^2, (<em>{,n}) R</em>(,)^2. ]</p>
+<p>Since (R_(,) ) for (|| &gt; 0) over the interior of the domain, joint bend introduces a minimum amplification of both signal and noise in the transmitted torque magnitude. However, the <em>relative</em> distribution between axes is still governed by (<em>{}) and (</em>{}), as before.</p>
+<hr>
+</section>
+</section>
+<section id="signal-to-noise-ratio-in-acceleration" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="signal-to-noise-ratio-in-acceleration"><span class="header-section-number">5</span> 4. Signal-to-Noise Ratio in Acceleration</h2>
+<section id="acceleration-snr-along-a-clubface-direction" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="acceleration-snr-along-a-clubface-direction"><span class="header-section-number">5.1</span> 4.1 Acceleration SNR along a clubface direction</h3>
+<p>Using the same ( = (c_, c_)^T) as before, the signal component along this direction is [ <em>{c,s}(t) = R</em>(,),_s(t)( + ). ]</p>
+<p>Define RMS quantities over a time window: [ S_c^2 := [_{c,s}^2], N_c^2 := [_{c,n}^2]. ]</p>
+<p>Assuming (<em>s(t)) and (<em>n(t)) are uncorrelated and have RMS amplitudes (A_s) and (</em>), respectively, [ S_c^2 = R</em>(,)^2 A_s^2 ( + )^2, ] [ N_c^2 = R_(,)^2 _^2 ( + )^2. ]</p>
+<p>Hence the acceleration SNR is <span class="math display">\[\begin{equation}
+\frac{S_c^2}{N_c^2} = \frac{A_s^2}{\sigma_\tau^2}.
+\label{eq:snr_accel}
+\end{equation}\]</span></p>
+<p><strong>Result 4.</strong> In this linear model, if both signal and noise are realized as torques in the same forearm DOF, the wrist universal joint and inertial anisotropy scale them identically. The acceleration SNR in any chosen clubface direction is independent of grip angle, wrist deviation, and MOI anisotropy.</p>
+<p>In other words, the universal joint by itself does not improve or degrade SNR in a scalar sense; it merely reshapes the directional distribution of both signal and noise.</p>
+</section>
+<section id="where-geometry-actually-matters" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="where-geometry-actually-matters"><span class="header-section-number">5.2</span> 4.2 Where geometry actually matters</h3>
+<p>Even though the scalar SNR in a given direction is unaffected under the assumptions above, the geometry matters in at least three ways:</p>
+<ol type="1">
+<li><p><strong>Axis selection:</strong> Different grip angles (_{}) change the partitioning of torque (and thus signal and noise) between the () and () axes.</p></li>
+<li><p><strong>Contribution to clubface orientation:</strong> The performance-relevant direction () need not align with either principal axis; small changes in torque partitioning can significantly alter how noise projects into orientation components such as face angle, loft, or lie.</p></li>
+<li><p><strong>Temporal evolution:</strong> Inertia differences affect how noise-driven accelerations accumulate over time into angular velocity and orientation. A high-MOI axis will show smaller instantaneous acceleration but can carry larger angular momentum and thus more persistent deviations if noise is not quickly corrected.</p></li>
+</ol>
+<p>These effects mean that linkage style can make noise <em>feel</em> more or less damaging in practice, even though the linear SNR relation <span class="math inline">\(\eqref{eq:snr_accel}\)</span> is invariant when evaluated at the wrist torque level.</p>
+<hr>
+</section>
+</section>
+<section id="biomechanical-interpretation" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="biomechanical-interpretation"><span class="header-section-number">6</span> 5. Biomechanical Interpretation</h2>
+<section id="finger-aligned-vs-palm-aligned-grips" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="finger-aligned-vs-palm-aligned-grips"><span class="header-section-number">6.1</span> 5.1 Finger-aligned vs palm-aligned grips</h3>
+<p>At neutral wrist deviation (()):</p>
+<ul>
+<li>The low-MOI axis () receives a fixed noise acceleration variance (<em>^2 / I</em>^2), independent of grip angle.</li>
+<li>The shaft axis () receives noise variance (_^2 <sup>2<em>{} / I</em></sup>2).</li>
+</ul>
+<p>Therefore:</p>
+<ul>
+<li><p>**Finger-aligned grip ((_{} ^))**:<br>
+Noise is mainly expressed in the low-MOI () axis. This favors fast accelerative response but concentrates perturbations into a single rotational mode, which may be advantageous if that mode is tightly controlled or naturally damped by the player’s motor strategy.</p></li>
+<li><p>**Palm-aligned grip ((_{}) large)**:<br>
+Noise increasingly populates the shaft axis (). While instantaneous accelerations are reduced by the larger MOI, noise-driven angular momentum can become larger and more persistent in this axis, potentially causing slow but impactful drifts in the club’s orientation.</p></li>
+</ul>
+</section>
+<section id="role-of-the-universal-joint-modulation" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="role-of-the-universal-joint-modulation"><span class="header-section-number">6.2</span> 5.2 Role of the universal joint modulation</h3>
+<p>Off-neutral wrist deviation (()) introduces a time-varying gain (R_(,)) that amplifies both signal and noise. During a real swing, ((t)) changes substantially, so the effective torque magnitude at the hand is modulated in a phase-dependent way. Peaks in (R_(,)) can coincide with critical swing phases (e.g.&nbsp;early downswing), where noise is particularly unwelcome.</p>
+<p>Because () depends on grip style, different players may experience different combinations of:</p>
+<ul>
+<li><strong>Where in the swing</strong> the torque gain is largest.</li>
+<li><strong>Which axes</strong> receive the amplified torque and noise.</li>
+</ul>
+<p>This opens a pathway by which wrist–club linkage geometry can contribute to inter-individual variation in clubface stability, even if the fundamental SNR relationship at the torque level remains unchanged.</p>
+<hr>
+</section>
+</section>
+<section id="conclusions" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">7</span> 6. Conclusions</h2>
+<p>We have constructed and analyzed a model of the wrist–club linkage in which:</p>
+<ul>
+<li>The wrist behaves as a universal joint with static bend angle (= _{}) and dynamic deviation ((t)).</li>
+<li>Classical Cardan kinematics yield a torque transmission factor [ R_(,) = , ] which modulates both signal and noise torques transmitted from the forearm to the hand.</li>
+<li>The club is treated as a rigid body with anisotropic principal MOIs (I_) and (I_), with (I_&lt; I_) representing a face-rotation axis with low inertia.</li>
+<li>The grip angle (_{}) determines how the transmitted torque is decomposed into the club’s principal axes via simple trigonometric projection.</li>
+</ul>
+<p>Within this framework we have proven that:</p>
+<ol type="1">
+<li><p>At neutral wrist deviation, noise variance about the low-MOI axis () is independent of grip angle, while noise variance about the shaft axis () grows as (^2 _{}).</p></li>
+<li><p>Given (I_&lt; I_), there exists a range of grip angles over which noise is predominantly expressed in the low-MOI axis, and a range over which it is predominantly expressed in the high-MOI shaft axis.</p></li>
+<li><p>For any fixed direction in the α–γ plane, the acceleration SNR is invariant with respect to grip angle, wrist deviation, and MOI differences if both signal and noise are generated by torques along the same forearm DOF.</p></li>
+<li><p>The biomechanical significance of linkage style arises not from scalar SNR changes, but from:</p>
+<ul>
+<li>how noise is partitioned between axes with different inertias,</li>
+<li>how those axes contribute to performance-relevant clubface directions, and</li>
+<li>how inertia differences shape the time evolution and persistence of noise-driven deviations.</li>
+</ul></li>
+</ol>
+<p>These results provide a theoretical basis for interpreting how wrist joint mechanics and grip style influence the susceptibility of the clubface to forearm torque noise. Extensions of this work could incorporate:</p>
+<ul>
+<li>More detailed wrist anatomy (non-intersecting axes, passive stiffness),</li>
+<li>Shaft flexibility and off-axis modes,</li>
+<li>Full stochastic integration to predict orientation variance at impact.</li>
+</ul>
+<p>Such developments would allow quantitatively predicting how small changes in grip and wrist motion strategy might reduce noise-driven clubface deviations in high-speed swings.</p>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script src="script.js"></script>
+
+
+
+
+</body></html>

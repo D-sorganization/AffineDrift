@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="AffineDrift">
 
 <title>dns_setup – AffineDrift</title>
 <style>
@@ -30,6 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -40,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,34 +70,28 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-</head><body class="nav-fixed quarto-light">www.affinedrift.com
-
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    ignoreHtmlClass: 'tex2jax_ignore',
-    processHtmlClass: 'tex2jax_process'
-  }
-};
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
 
 <link rel="stylesheet" href="styles.css">
+</head>
 
-
-
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
+    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
@@ -111,21 +107,19 @@ MathJax = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./articles.qmd"> 
+    <a class="nav-link" href="./articles.html"> 
 <span class="menu-text">Articles</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resources.qmd"> 
+    <a class="nav-link" href="./resources.html"> 
 <span class="menu-text">Resources</span></a>
   </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.qmd"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./contact.qmd"> 
+    <a class="nav-link" href="./contact.html"> 
 <span class="menu-text">Contact</span></a>
   </li>  
 </ul>
@@ -144,46 +138,67 @@ MathJax = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#dns-configuration-for-github-pages-custom-domain" id="toc-dns-configuration-for-github-pages-custom-domain" class="nav-link active" data-scroll-target="#dns-configuration-for-github-pages-custom-domain"><span class="header-section-number">1</span> DNS Configuration for GitHub Pages Custom Domain</a>
+  <li><a href="#dns-configuration-for-github-pages-custom-domain" id="toc-dns-configuration-for-github-pages-custom-domain" class="nav-link active" data-scroll-target="#dns-configuration-for-github-pages-custom-domain">DNS Configuration for GitHub Pages Custom Domain</a>
   <ul class="collapse">
-  <li><a href="#current-setup" id="toc-current-setup" class="nav-link" data-scroll-target="#current-setup"><span class="header-section-number">1.1</span> Current Setup</a></li>
-  <li><a href="#dns-configuration-required" id="toc-dns-configuration-required" class="nav-link" data-scroll-target="#dns-configuration-required"><span class="header-section-number">1.2</span> DNS Configuration Required</a>
+  <li><a href="#current-setup" id="toc-current-setup" class="nav-link" data-scroll-target="#current-setup">Current Setup</a></li>
+  <li><a href="#dns-configuration-required" id="toc-dns-configuration-required" class="nav-link" data-scroll-target="#dns-configuration-required">DNS Configuration Required</a>
   <ul class="collapse">
-  <li><a href="#option-1-cname-record-recommended-for-www-subdomain" id="toc-option-1-cname-record-recommended-for-www-subdomain" class="nav-link" data-scroll-target="#option-1-cname-record-recommended-for-www-subdomain"><span class="header-section-number">1.2.1</span> Option 1: CNAME Record (Recommended for www subdomain)</a></li>
-  <li><a href="#option-2-a-records-for-apex-domain---affinedrift.com" id="toc-option-2-a-records-for-apex-domain---affinedrift.com" class="nav-link" data-scroll-target="#option-2-a-records-for-apex-domain---affinedrift.com"><span class="header-section-number">1.2.2</span> Option 2: A Records (For apex domain - affinedrift.com)</a></li>
+  <li><a href="#option-1-cname-record-recommended-for-www-subdomain" id="toc-option-1-cname-record-recommended-for-www-subdomain" class="nav-link" data-scroll-target="#option-1-cname-record-recommended-for-www-subdomain">Option 1: CNAME Record (Recommended for www subdomain)</a></li>
+  <li><a href="#option-2-a-records-for-apex-domain" id="toc-option-2-a-records-for-apex-domain" class="nav-link" data-scroll-target="#option-2-a-records-for-apex-domain">Option 2: A Records for Apex Domain</a></li>
   </ul></li>
-  <li><a href="#verification-steps" id="toc-verification-steps" class="nav-link" data-scroll-target="#verification-steps"><span class="header-section-number">1.3</span> Verification Steps</a></li>
-  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting"><span class="header-section-number">1.4</span> Troubleshooting</a>
+  <li><a href="#verification-steps" id="toc-verification-steps" class="nav-link" data-scroll-target="#verification-steps">Verification Steps</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a>
   <ul class="collapse">
-  <li><a href="#if-dns-is-configured-but-github-still-shows-error" id="toc-if-dns-is-configured-but-github-still-shows-error" class="nav-link" data-scroll-target="#if-dns-is-configured-but-github-still-shows-error"><span class="header-section-number">1.4.1</span> If DNS is configured but GitHub still shows error:</a></li>
-  <li><a href="#temporary-solution" id="toc-temporary-solution" class="nav-link" data-scroll-target="#temporary-solution"><span class="header-section-number">1.4.2</span> Temporary Solution:</a></li>
+  <li><a href="#if-dns-is-configured-but-github-still-shows-error" id="toc-if-dns-is-configured-but-github-still-shows-error" class="nav-link" data-scroll-target="#if-dns-is-configured-but-github-still-shows-error">If DNS is configured but GitHub still shows error:</a></li>
+  <li><a href="#temporary-solution" id="toc-temporary-solution" class="nav-link" data-scroll-target="#temporary-solution">Temporary Solution:</a></li>
   </ul></li>
-  <li><a href="#current-status" id="toc-current-status" class="nav-link" data-scroll-target="#current-status"><span class="header-section-number">1.5</span> Current Status</a></li>
+  <li><a href="#current-status" id="toc-current-status" class="nav-link" data-scroll-target="#current-status">Current Status</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<section id="dns-configuration-for-github-pages-custom-domain" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> DNS Configuration for GitHub Pages Custom Domain</h1>
-<section id="current-setup" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="current-setup"><span class="header-section-number">1.1</span> Current Setup</h2>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AffineDrift </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="dns-configuration-for-github-pages-custom-domain" class="level1">
+<h1>DNS Configuration for GitHub Pages Custom Domain</h1>
+<section id="current-setup" class="level2">
+<h2 class="anchored" data-anchor-id="current-setup">Current Setup</h2>
 <ul>
 <li><strong>Repository</strong>: D-sorganization/AffineDrift</li>
 <li><strong>Custom Domain</strong>: www.affinedrift.com</li>
 <li><strong>CNAME File</strong>: ✅ Correctly configured in repository</li>
 </ul>
 </section>
-<section id="dns-configuration-required" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="dns-configuration-required"><span class="header-section-number">1.2</span> DNS Configuration Required</h2>
+<section id="dns-configuration-required" class="level2">
+<h2 class="anchored" data-anchor-id="dns-configuration-required">DNS Configuration Required</h2>
 <p>You need to configure DNS records at your domain registrar (where you purchased affinedrift.com).</p>
-<section id="option-1-cname-record-recommended-for-www-subdomain" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="option-1-cname-record-recommended-for-www-subdomain"><span class="header-section-number">1.2.1</span> Option 1: CNAME Record (Recommended for www subdomain)</h3>
+<section id="option-1-cname-record-recommended-for-www-subdomain" class="level3">
+<h3 class="anchored" data-anchor-id="option-1-cname-record-recommended-for-www-subdomain">Option 1: CNAME Record (Recommended for www subdomain)</h3>
 <p>At your domain registrar, add a <strong>CNAME record</strong>:</p>
 <pre><code>Type: CNAME
 Name: www
@@ -191,8 +206,8 @@ Value: d-sorganization.github.io
 TTL: 3600 (or default)</code></pre>
 <p>This will point <code>www.affinedrift.com</code> to your GitHub Pages site.</p>
 </section>
-<section id="option-2-a-records-for-apex-domain---affinedrift.com" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="option-2-a-records-for-apex-domain---affinedrift.com"><span class="header-section-number">1.2.2</span> Option 2: A Records (For apex domain - affinedrift.com)</h3>
+<section id="option-2-a-records-for-apex-domain" class="level3">
+<h3 class="anchored" data-anchor-id="option-2-a-records-for-apex-domain">Option 2: A Records for Apex Domain</h3>
 <p>If you also want to use <code>affinedrift.com</code> (without www), add <strong>A records</strong>:</p>
 <pre><code>Type: A
 Name: @ (or leave blank)
@@ -204,8 +219,8 @@ TTL: 3600</code></pre>
 <p><strong>Note</strong>: GitHub’s IP addresses may change. Check <a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site#configuring-an-apex-domain">GitHub Pages documentation</a> for current IPs.</p>
 </section>
 </section>
-<section id="verification-steps" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="verification-steps"><span class="header-section-number">1.3</span> Verification Steps</h2>
+<section id="verification-steps" class="level2">
+<h2 class="anchored" data-anchor-id="verification-steps">Verification Steps</h2>
 <ol type="1">
 <li><strong>Add DNS records</strong> at your domain registrar (Namecheap, GoDaddy, etc.)</li>
 <li><strong>Wait for DNS propagation</strong> (can take up to 48 hours, usually much faster)</li>
@@ -221,10 +236,10 @@ TTL: 3600</code></pre>
 </ul></li>
 </ol>
 </section>
-<section id="troubleshooting" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="troubleshooting"><span class="header-section-number">1.4</span> Troubleshooting</h2>
-<section id="if-dns-is-configured-but-github-still-shows-error" class="level3" data-number="1.4.1">
-<h3 data-number="1.4.1" class="anchored" data-anchor-id="if-dns-is-configured-but-github-still-shows-error"><span class="header-section-number">1.4.1</span> If DNS is configured but GitHub still shows error:</h3>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<section id="if-dns-is-configured-but-github-still-shows-error" class="level3">
+<h3 class="anchored" data-anchor-id="if-dns-is-configured-but-github-still-shows-error">If DNS is configured but GitHub still shows error:</h3>
 <ol type="1">
 <li>Wait a few hours for DNS propagation</li>
 <li>Clear browser cache</li>
@@ -232,13 +247,13 @@ TTL: 3600</code></pre>
 <li>Verify no conflicting DNS records exist</li>
 </ol>
 </section>
-<section id="temporary-solution" class="level3" data-number="1.4.2">
-<h3 data-number="1.4.2" class="anchored" data-anchor-id="temporary-solution"><span class="header-section-number">1.4.2</span> Temporary Solution:</h3>
+<section id="temporary-solution" class="level3">
+<h3 class="anchored" data-anchor-id="temporary-solution">Temporary Solution:</h3>
 <p>If you want to use the default GitHub Pages URL while fixing DNS: - Remove or rename the <code>CNAME</code> file - Site will be available at: <code>https://d-sorganization.github.io/AffineDrift/</code></p>
 </section>
 </section>
-<section id="current-status" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="current-status"><span class="header-section-number">1.5</span> Current Status</h2>
+<section id="current-status" class="level2">
+<h2 class="anchored" data-anchor-id="current-status">Current Status</h2>
 <ul>
 <li>✅ CNAME file in repository: Correct</li>
 <li>❌ DNS records at registrar: Need to be configured</li>
@@ -259,68 +274,6 @@ TTL: 3600</code></pre>
       icon: icon
     };
     anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -651,203 +604,7 @@ TTL: 3600</code></pre>
   });
   </script>
 </div> <!-- /content -->
-/**
- * AffineDrift - Interactive JavaScript
- * Handles smooth scrolling, navigation highlights, and interactive elements
- */
-
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scroll for anchor links
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link =&gt; {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-
-            // Only handle internal anchors
-            if (href !== '#' &amp;&amp; href.length &gt; 1) {
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-
-                if (targetElement) {
-                    e.preventDefault();
-
-                    // Smooth scroll to target
-                    const headerOffset = 80; // Account for sticky header
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-    });
-
-    // Highlight active navigation link on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-
-    function highlightNavigation() {
-        const scrollPosition = window.scrollY + 150;
-
-        sections.forEach(section =&gt; {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollPosition &gt;= sectionTop &amp;&amp; scrollPosition &lt; sectionTop + sectionHeight) {
-                navLinks.forEach(link =&gt; {
-                    link.style.opacity = '0.8';
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.style.opacity = '1';
-                    }
-                });
-            }
-        });
-    }
-
-    // Debounce scroll event for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(highlightNavigation, 50);
-    });
-
-    // Initial call
-    highlightNavigation();
-
-    // Add fade-in animation for sections on scroll (only if not already visible)
-    // Content is visible by default - animation is optional enhancement
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px 0px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry =&gt; {
-            if (entry.isIntersecting) {
-                // Only apply animation if element doesn't already have opacity set
-                // Use getComputedStyle to check actual rendered opacity value
-                const computedOpacity = window.getComputedStyle(entry.target).opacity;
-                if (computedOpacity === '0') {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            }
-        });
-    }, observerOptions);
-
-    // Observe sections for fade-in effect (only apply to sections that should animate)
-    // Don't hide content initially - let it be visible
-    const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
-    sectionsToAnimate.forEach(section =&gt; {
-        // Only animate if section is below the fold
-        const rect = section.getBoundingClientRect();
-        if (rect.top &gt; window.innerHeight) {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            observer.observe(section);
-        } else {
-            // Content above the fold should be immediately visible
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        }
-    });
-
-    // Mobile menu toggle (for future implementation)
-    const navToggle = document.querySelector('.nav-toggle');
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        });
-    }
-
-    // Page history tracking for sidebar
-    function updateHistorySidebar() {
-        const historyList = document.getElementById('history-list');
-        if (!historyList) return;
-
-        // Constants
-        const MAX_HISTORY_TITLE_LENGTH = 40;
-        const MAX_HISTORY_ITEMS = 10;
-
-        // Get history from localStorage
-        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
-        
-        // Get current page info with improved title extraction
-        let pageTitle = document.title;
-        // Handle different title formats
-        if (pageTitle.includes(' - AffineDrift')) {
-            pageTitle = pageTitle.replace(' - AffineDrift', '');
-        } else if (pageTitle.startsWith('AffineDrift - ')) {
-            pageTitle = pageTitle.replace('AffineDrift - ', '');
-        } else if (pageTitle === 'AffineDrift') {
-            pageTitle = 'Home';
-        }
-        
-        const currentPage = {
-            title: pageTitle,
-            url: window.location.pathname.split('/').pop() || 'index.html',
-            fullUrl: window.location.href
-        };
-
-        // Remove current page if it's already in history
-        history = history.filter(item =&gt; item.url !== currentPage.url);
-        
-        // Add current page to front
-        history.unshift(currentPage);
-        
-        // Keep only last N items
-        history = history.slice(0, MAX_HISTORY_ITEMS);
-        
-        // Save back to localStorage
-        localStorage.setItem('affinedrift_history', JSON.stringify(history));
-        
-        // Update sidebar display
-        // Filter out current page from display
-        const displayHistory = history.filter(item =&gt; item.url !== currentPage.url);
-        if (displayHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
-        } else {
-            historyList.innerHTML = displayHistory.map(item =&gt; {
-                const displayTitle = item.title.length &gt; MAX_HISTORY_TITLE_LENGTH 
-                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
-                    : item.title;
-                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
-            }).join('');
-        }
-    }
-
-    // Initialize history sidebar
-    updateHistorySidebar();
-
-    // Log page load for analytics (optional)
-    console.log('AffineDrift loaded successfully');
-    console.log('Mathematical notation rendering via MathJax');
-});
-
-// Utility function for future features
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Export for potential module use
-if (typeof module !== 'undefined' &amp;&amp; module.exports) {
-    module.exports = {
-        scrollToTop
-    };
-}
+<script src="script.js"></script>
 
 
 

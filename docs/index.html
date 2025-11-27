@@ -6,7 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Exploring the golf swing through the lens of affine control theory">
+<meta name="author" content="AffineDrift">
+<meta name="description" content="Affine control theory for golf swing dynamics">
 
 <title>AffineDrift</title>
 <style>
@@ -31,6 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -41,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,34 +71,28 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-</head><body class="nav-fixed quarto-light">www.affinedrift.com
-
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    ignoreHtmlClass: 'tex2jax_ignore',
-    processHtmlClass: 'tex2jax_process'
-  }
-};
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
 
 <link rel="stylesheet" href="styles.css">
+</head>
 
-
-
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
+    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
@@ -112,21 +108,19 @@ MathJax = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./articles.qmd"> 
+    <a class="nav-link" href="./articles.html"> 
 <span class="menu-text">Articles</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resources.qmd"> 
+    <a class="nav-link" href="./resources.html"> 
 <span class="menu-text">Resources</span></a>
   </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.qmd"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./contact.qmd"> 
+    <a class="nav-link" href="./contact.html"> 
 <span class="menu-text">Contact</span></a>
   </li>  
 </ul>
@@ -140,44 +134,30 @@ MathJax = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#affinedrift" id="toc-affinedrift" class="nav-link active" data-scroll-target="#affinedrift"><span class="header-section-number">1</span> AffineDrift</a>
-  <ul class="collapse">
-  <li><a href="#mission" id="toc-mission" class="nav-link" data-scroll-target="#mission"><span class="header-section-number">1.1</span> 🎯 Mission</a></li>
-  <li><a href="#latest-articles" id="toc-latest-articles" class="nav-link" data-scroll-target="#latest-articles"><span class="header-section-number">1.2</span> 📚 Latest Articles</a></li>
-  <li><a href="#research-focus" id="toc-research-focus" class="nav-link" data-scroll-target="#research-focus"><span class="header-section-number">1.3</span> 🔬 Research Focus</a></li>
-  <li><a href="#tools-resources" id="toc-tools-resources" class="nav-link" data-scroll-target="#tools-resources"><span class="header-section-number">1.4</span> 🛠️ Tools &amp; Resources</a></li>
-  <li><a href="#featured-content" id="toc-featured-content" class="nav-link" data-scroll-target="#featured-content"><span class="header-section-number">1.5</span> 📖 Featured Content</a>
-  <ul class="collapse">
-  <li><a href="#mathematical-foundations" id="toc-mathematical-foundations" class="nav-link" data-scroll-target="#mathematical-foundations"><span class="header-section-number">1.5.1</span> Mathematical Foundations</a></li>
-  <li><a href="#golf-specific-analysis" id="toc-golf-specific-analysis" class="nav-link" data-scroll-target="#golf-specific-analysis"><span class="header-section-number">1.5.2</span> Golf-Specific Analysis</a></li>
-  </ul></li>
-  </ul></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">AffineDrift</h1>
-<p class="subtitle lead">Mathematical Modeling of Golf Swing Dynamics</p>
 </div>
 
 <div>
   <div class="description">
-    Exploring the golf swing through the lens of affine control theory
+    Affine control theory for golf swing dynamics
   </div>
 </div>
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta column-page">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AffineDrift </p>
+          </div>
+  </div>
     
   
     
@@ -188,64 +168,90 @@ MathJax = {
 </header>
 
 
-<section id="affinedrift" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> AffineDrift</h1>
-<p><strong>Mathematical Modeling of Golf Swing Dynamics</strong></p>
-<p>AffineDrift is a research-focused website exploring the golf swing through the lens of affine control theory. This platform bridges abstract mathematical concepts with real-world biomechanics, creating a rigorous framework for understanding and optimizing one of sport’s most complex movements.</p>
-<section id="mission" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="mission"><span class="header-section-number">1.1</span> 🎯 Mission</h2>
-<p>To explore the profound mathematical structure underlying the golf swing by modeling it as an affine controllable system, creating a repository for research, insights, and resources at the intersection of mathematics, control theory, and golf biomechanics.</p>
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <blockquote class="featured-quote blockquote">
+        <p>"What we do now echoes in eternity"</p>
+        <cite>— Marcus Aurelius</cite>
+        <div class="drift-quote">
+          <p>
+            Drift is not a nuisance to suppress—it is the stored history of the system. The golf swing becomes predictable when we understand how previous states accumulate momentum. Affine control theory lets us separate that stored drift from the deliberate inputs that steer the club.
+          </p>
+        </div>
+      </blockquote>
+      <div class="hero-cta">
+        <a class="btn-primary" href="articles.html">Explore the theory</a>
+        <a class="btn-primary" href="resources.html">Browse the resources</a>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="latest-articles" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="latest-articles"><span class="header-section-number">1.2</span> 📚 Latest Articles</h2>
-<p>Browse our collection of mathematical analyses and research articles on golf swing dynamics:</p>
-<ul>
-<li><a href="articles.qmd">Articles</a> - Complete collection of research papers and technical analyses</li>
-</ul>
+<section class="mission-section">
+  <div class="container">
+    <div class="mission-content">
+      <p class="mission-text">
+        AffineDrift documents a research program that treats the golf swing as a nonlinear, control-affine system. We study how the passive dynamics of the golfer–club system (the drift) combine with deliberate muscular inputs to create repeatable trajectories. Every project connects rigorous mathematics with practical coaching intuition.
+      </p>
+      <ul class="mission-list">
+        <li><strong>Drift diagnostics</strong>: quantify the state-dependent forces emerging from prior motion.</li>
+        <li><strong>Control efficiency</strong>: map how torque channels and manipulability change through the swing.</li>
+        <li><strong>Counterfactual analysis</strong>: simulate what happens when we alter inputs, constraints, or equipment.</li>
+      </ul>
+      <p class="mission-text">
+        The site hosts full derivations, interactive tools, and replication notes so that other researchers can validate the work or extend it with their own data.
+      </p>
+    </div>
+  </div>
 </section>
-<section id="research-focus" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="research-focus"><span class="header-section-number">1.3</span> 🔬 Research Focus</h2>
-<ul>
-<li><strong>Affine Control Theory</strong>: Mathematical framework for modeling nonlinear systems</li>
-<li><strong>Golf Biomechanics</strong>: Application to the golf swing as a complex mechanical system</li>
-<li><strong>Rigid Body Dynamics</strong>: Analysis of multi-link systems and interaction forces</li>
-<li><strong>Optimization</strong>: Control strategies for swing efficiency and consistency</li>
-</ul>
+
+<section class="theory-section">
+  <div class="container">
+    <h2 class="anchored">Why affine control matters</h2>
+    <div class="theory-content">
+      <div class="theory-intro">
+        <p>
+          A control-affine model separates the golf swing into a drift term \(f(x)\) that encodes passive dynamics and an input term \(g(x)u\) that captures muscular torques. This structure preserves nonlinear state dependence while keeping control inputs linear, which is exactly what we need to reason about coordination, manipulability, and causality.
+        </p>
+      </div>
+      <div class="coordination-section">
+        <h3 class="anchored">Research focus</h3>
+        <p>
+          Our current work centers on three topics: (1) inverse dynamics interpretation with zero torque and zero velocity counterfactuals, (2) modal approximations for flexible shafts, and (3) how mechanical advantage migrates through impact. Each article documents the math and the computational workflow end-to-end.
+        </p>
+        <p>
+          The <a href="articles/theory-part1.html">Drifter Manifesto</a> series walks through the derivation of the model. Later entries apply it to pendulum analogies, simulators, and experimental swing data.
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="tools-resources" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="tools-resources"><span class="header-section-number">1.4</span> 🛠️ Tools &amp; Resources</h2>
-<ul>
-<li><a href="tools/">Interactive Simulators</a> - Web-based tools for exploring golf swing dynamics</li>
-<li><a href="articles.qmd">Research Papers</a> - Technical documentation and derivations</li>
-<li><a href="resources.qmd">Educational Materials</a> - Videos, tutorials, and learning resources</li>
-</ul>
+
+<section class="goals-section">
+  <div class="container">
+    <h2 class="anchored">What you can do here</h2>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-number">01</div>
+        <h3 class="anchored">Study the math</h3>
+        <p>Read fully typeset derivations for drift decomposition, screw theory references, and Lagrangian formulations.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-number">02</div>
+        <h3 class="anchored">Explore tools</h3>
+        <p>Use interactive notebooks and Streamlit demos such as the wrist universal joint simulator to test scenarios.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-number">03</div>
+        <h3 class="anchored">Review literature</h3>
+        <p>Leverage curated reading lists that connect biomechanics research with modern control concepts.</p>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="featured-content" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="featured-content"><span class="header-section-number">1.5</span> 📖 Featured Content</h2>
-<section id="mathematical-foundations" class="level3" data-number="1.5.1">
-<h3 data-number="1.5.1" class="anchored" data-anchor-id="mathematical-foundations"><span class="header-section-number">1.5.1</span> Mathematical Foundations</h3>
-<ul>
-<li>Lagrangian mechanics and rigid body dynamics</li>
-<li>Screw theory and spatial kinematics</li>
-<li>Control theory applications to biomechanics</li>
-<li>Force-mobility relationships in linked systems</li>
-</ul>
-</section>
-<section id="golf-specific-analysis" class="level3" data-number="1.5.2">
-<h3 data-number="1.5.2" class="anchored" data-anchor-id="golf-specific-analysis"><span class="header-section-number">1.5.2</span> Golf-Specific Analysis</h3>
-<ul>
-<li>Wrist as universal joint mechanics</li>
-<li>Momentum effects on interaction forces</li>
-<li>Inverse dynamics inference</li>
-<li>Nonlinear control insights</li>
-</ul>
-<hr>
-<p><em>“What we do now echoes in eternity”</em> — Marcus Aurelius</p>
 
 
-</section>
-</section>
-</section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -257,68 +263,6 @@ MathJax = {
       icon: icon
     };
     anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -649,203 +593,7 @@ MathJax = {
   });
   </script>
 </div> <!-- /content -->
-/**
- * AffineDrift - Interactive JavaScript
- * Handles smooth scrolling, navigation highlights, and interactive elements
- */
-
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scroll for anchor links
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link =&gt; {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-
-            // Only handle internal anchors
-            if (href !== '#' &amp;&amp; href.length &gt; 1) {
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-
-                if (targetElement) {
-                    e.preventDefault();
-
-                    // Smooth scroll to target
-                    const headerOffset = 80; // Account for sticky header
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-    });
-
-    // Highlight active navigation link on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-
-    function highlightNavigation() {
-        const scrollPosition = window.scrollY + 150;
-
-        sections.forEach(section =&gt; {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollPosition &gt;= sectionTop &amp;&amp; scrollPosition &lt; sectionTop + sectionHeight) {
-                navLinks.forEach(link =&gt; {
-                    link.style.opacity = '0.8';
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.style.opacity = '1';
-                    }
-                });
-            }
-        });
-    }
-
-    // Debounce scroll event for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(highlightNavigation, 50);
-    });
-
-    // Initial call
-    highlightNavigation();
-
-    // Add fade-in animation for sections on scroll (only if not already visible)
-    // Content is visible by default - animation is optional enhancement
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px 0px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry =&gt; {
-            if (entry.isIntersecting) {
-                // Only apply animation if element doesn't already have opacity set
-                // Use getComputedStyle to check actual rendered opacity value
-                const computedOpacity = window.getComputedStyle(entry.target).opacity;
-                if (computedOpacity === '0') {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            }
-        });
-    }, observerOptions);
-
-    // Observe sections for fade-in effect (only apply to sections that should animate)
-    // Don't hide content initially - let it be visible
-    const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
-    sectionsToAnimate.forEach(section =&gt; {
-        // Only animate if section is below the fold
-        const rect = section.getBoundingClientRect();
-        if (rect.top &gt; window.innerHeight) {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            observer.observe(section);
-        } else {
-            // Content above the fold should be immediately visible
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        }
-    });
-
-    // Mobile menu toggle (for future implementation)
-    const navToggle = document.querySelector('.nav-toggle');
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        });
-    }
-
-    // Page history tracking for sidebar
-    function updateHistorySidebar() {
-        const historyList = document.getElementById('history-list');
-        if (!historyList) return;
-
-        // Constants
-        const MAX_HISTORY_TITLE_LENGTH = 40;
-        const MAX_HISTORY_ITEMS = 10;
-
-        // Get history from localStorage
-        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
-        
-        // Get current page info with improved title extraction
-        let pageTitle = document.title;
-        // Handle different title formats
-        if (pageTitle.includes(' - AffineDrift')) {
-            pageTitle = pageTitle.replace(' - AffineDrift', '');
-        } else if (pageTitle.startsWith('AffineDrift - ')) {
-            pageTitle = pageTitle.replace('AffineDrift - ', '');
-        } else if (pageTitle === 'AffineDrift') {
-            pageTitle = 'Home';
-        }
-        
-        const currentPage = {
-            title: pageTitle,
-            url: window.location.pathname.split('/').pop() || 'index.html',
-            fullUrl: window.location.href
-        };
-
-        // Remove current page if it's already in history
-        history = history.filter(item =&gt; item.url !== currentPage.url);
-        
-        // Add current page to front
-        history.unshift(currentPage);
-        
-        // Keep only last N items
-        history = history.slice(0, MAX_HISTORY_ITEMS);
-        
-        // Save back to localStorage
-        localStorage.setItem('affinedrift_history', JSON.stringify(history));
-        
-        // Update sidebar display
-        // Filter out current page from display
-        const displayHistory = history.filter(item =&gt; item.url !== currentPage.url);
-        if (displayHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
-        } else {
-            historyList.innerHTML = displayHistory.map(item =&gt; {
-                const displayTitle = item.title.length &gt; MAX_HISTORY_TITLE_LENGTH 
-                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
-                    : item.title;
-                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
-            }).join('');
-        }
-    }
-
-    // Initialize history sidebar
-    updateHistorySidebar();
-
-    // Log page load for analytics (optional)
-    console.log('AffineDrift loaded successfully');
-    console.log('Mathematical notation rendering via MathJax');
-});
-
-// Utility function for future features
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Export for potential module use
-if (typeof module !== 'undefined' &amp;&amp; module.exports) {
-    module.exports = {
-        scrollToTop
-    };
-}
+<script src="script.js"></script>
 
 
 
