@@ -1,0 +1,491 @@
+---
+title: "Affine Control Interpretation of the Golf Swing"
+subtitle: "Drift, Input, and Causal Decomposition of Forces"
+author: "Part I: Theoretical Foundations — Part 4 of 5"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: false
+---
+
+# Appendices
+
+## Appendix A: Mathematical Derivations
+
+This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
+
+$$\dot{x} = f(x) + g(x)u$$
+
+and to document all assumptions required for the formulation.
+
+### Coupled rigid--flexible equations of motion
+
+We partition the generalized coordinates into
+
+$$q \in \mathbb{R}^{n}, \qquad \eta \in \mathbb{R}^{m},$$
+
+where $q$ describes the rigid-body degrees of freedom and $\eta$ contains the modal coordinates of the flexible shaft.
+
+Let
+
+$$v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}$$
+
+denote the generalized velocity.
+
+The equations of motion for the coupled system may be written in compact form:
+
+$$M(q,\eta)\,\dot{v}
+  +
+  C(q,\dot{q},\eta,\dot{\eta})\,v
+  +
+  G(q)
+  +
+  F_{s}(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    \tau \\[0.2em]
+    0
+  \end{bmatrix},$$
+
+where:
+
+- $M(q,\eta)$ is the full inertia matrix of the rigid--flexible system,
+- $C(q,\dot{q},\eta,\dot{\eta})$ contains Coriolis and centrifugal terms,
+- $G(q)$ contains gravitational torques acting on the rigid-body DOFs,
+- $F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}$ contains shaft restoring and damping forces,
+- $\tau = B(q)\,u$ is the generalized torque vector induced by the input $u$.
+
+The flexible DOFs have no direct torque inputs.
+
+### Block structure of the inertia and Coriolis matrices
+
+The inertia matrix has the block form
+
+$$M(q,\eta)
+  =
+  \begin{bmatrix}
+    M_{rr}(q,\eta) & M_{rf}(q,\eta) \\
+    M_{fr}(q,\eta) & M_{ff}(q,\eta)
+  \end{bmatrix},$$
+
+where:
+
+- $M_{rr}$ is the rigid-body inertia matrix,
+- $M_{ff}$ is the modal inertia matrix for the flexible shaft,
+- $M_{rf}$ and $M_{fr}$ represent rigid--flexible coupling.
+
+Similarly, the Coriolis matrix has the block structure:
+
+$$C(q,\dot{q},\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    C_{rr} & C_{rf} \\
+    C_{fr} & C_{ff}
+  \end{bmatrix},$$
+
+with the usual property that
+
+$$\dot{M} - 2C \quad \text{is skew-symmetric}.$$
+
+These blocks arise from standard manipulator equations extended to include flexible-body contributions.
+
+### Solving for accelerations
+
+Writing $\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}$, the equations of motion become:
+
+$$M
+  \begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  -
+  C
+  \begin{bmatrix}
+    \dot{q} \\ \dot{\eta}
+  \end{bmatrix}
+  - 
+  G(q)
+  -
+  F_s(\eta,\dot{\eta})
+  +
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.$$
+
+Assuming $M$ is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:
+
+$$\begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  - M^{-1}
+  \left(
+    C\,v + G + F_{s}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.$$
+
+### Drift acceleration
+
+We define the drift acceleration as
+
+$$a_{\mathrm{drift}}(x)
+  =
+  -M^{-1}(q,\eta)
+  \left(
+    C(q,\dot{q},\eta,\dot{\eta})\,v
+    + G(q)
+    + F_{s}(\eta,\dot{\eta})
+  \right).$$
+
+All passive mechanical terms are explicitly included:
+
+- inertia coupling,
+- Coriolis and centripetal terms,
+- gravity,
+- elastic and damping forces from shaft deformation.
+
+Importantly,
+
+$$a_{\mathrm{drift}}(x) \quad \text{is independent of } u.$$
+
+This constitutes the *drift invariance* property formalized in the main text.
+
+### Input acceleration mapping
+
+The input-driven acceleration is the part proportional to $u$:
+
+$$a_{\mathrm{input}}(x)\,u
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.$$
+
+Thus the input matrix is:
+
+$$A_{\mathrm{input}}(x)
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q) \\ 0
+  \end{bmatrix}.$$
+
+Linearity of the torque input is preserved even in the presence of:
+
+- flexible-body modes,
+- rigid--flexible coupling,
+- configuration-dependent $B(q)$,
+- velocity-dependent $C$ terms.
+
+### First-order state-space (affine) form
+
+Define the full state
+
+$$x = \begin{bmatrix}
+    q \\ \dot{q} \\ \eta \\ \dot{\eta}
+  \end{bmatrix}.$$
+
+The first-order dynamics follow directly from the definitions:
+
+$$\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{q} \\ \ddot{q} \\ \dot{\eta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  f(x) + g(x)u,$$
+
+with
+
+$$f(x)
+  =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{1:n} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{n+1:n+m}
+  \end{bmatrix},$$
+
+$$g(x)
+  =
+  \begin{bmatrix}
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{1:n,:} \\[0.2em]
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{n+1:n+m,:}
+  \end{bmatrix}.$$
+
+This establishes the nonlinear control-affine structure used throughout the manuscript.
+
+## Appendix B: Modal Approximation for the Flexible Shaft
+
+This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid--flexible dynamics of the golfer--club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates $\eta \in \mathbb{R}^{m}$ used in the main text, and why this representation preserves the linearity of the torque input in the final control-affine form.
+
+### Continuous beam model
+
+The golf shaft is modeled as a uniform Euler--Bernoulli beam of length $L$, with transverse displacement field
+
+$$w(s,t), \qquad s \in [0,L],$$
+
+where $s$ is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is
+
+$$\rho A \,\frac{\partial^2 w}{\partial t^2}
+  + c_b \frac{\partial w}{\partial t}
+  + EI \,\frac{\partial^4 w}{\partial s^4}
+  = f_{\mathrm{base}}(s,t),$$
+
+where:
+
+- $\rho A$ is the linear mass density,
+- $c_b$ is distributed damping,
+- $E I$ is the bending rigidity,
+- $f_{\mathrm{base}}(s,t)$ contains forces transmitted from the handle motion.
+
+Boundary conditions depend on grip modeling. We assume:
+
+$$w(0,t) = 0, \qquad w_s(0,t) = 0,$$
+
+for a clamped handle, and free-tip conditions at $s=L$:
+
+$$EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.$$
+
+These constraints define the mode shapes used in the modal expansion.
+
+### Modal expansion
+
+The transverse displacement is approximated using a finite set of vibration modes:
+
+$$w(s,t)
+  \approx
+  \sum_{i=1}^{m} \phi_i(s)\,\eta_i(t),$$
+
+where:
+
+- $\phi_i(s)$ are the eigenfunctions of the beam operator with the boundary conditions above,
+- $\eta_i(t)$ are the modal amplitudes,
+- $m$ is the number of modes retained.
+
+The mode shapes satisfy the eigenvalue problem:
+
+$$EI \,\phi_i'''' = \omega_i^2 \rho A \,\phi_i,$$
+
+with orthogonality relations
+
+$$\int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.$$
+
+Substituting the modal expansion into the beam equation and projecting onto each $\phi_i$ yields the modal equations of motion.
+
+### Modal equations of motion
+
+The projected dynamics have the form:
+
+$$\ddot{\eta}_i
+  + 2\,\zeta_i \omega_i\,\dot{\eta}_i
+  + \omega_i^2 \eta_i
+  =
+  Q_i(q,\dot{q}),$$
+
+for $i = 1,\dots,m$, where:
+
+- $\omega_i$ is the natural frequency of mode $i$,
+- $\zeta_i$ is the modal damping ratio (derived from $c_b$),
+- $Q_i(q,\dot{q})$ are generalized modal forces induced by handle motion.
+
+Collecting terms,
+
+$$\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q}),$$
+
+where:
+
+$$K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2),\qquad
+C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).$$
+
+These matrices match those used in the main text, where the shaft forces enter the drift term.
+
+### Preservation of linear torque input
+
+From the full equations of motion:
+
+$$M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_s(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    B(q)u \\ 0
+  \end{bmatrix},$$
+
+the modal forces enter entirely through the drift term:
+
+$$F_s(\eta,\dot{\eta}) = 
+  \begin{bmatrix}
+    0 \\
+    K_s \eta + C_s \dot{\eta}
+  \end{bmatrix}.$$
+
+Because $u$ appears only in the block $B(q)u$ associated with rigid-body torques:
+
+$$u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.$$
+
+Hence: **The modal representation does not create any nonlinear torque dependence.**
+
+All flexible-body dynamics remain embedded in the drift vector field $f(x)$.
+
+## Appendix C: Pendulum Examples
+
+This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
+
+- a planar (2D) pendulum with and without a flexible shaft, and
+- a spatial (3D) pendulum with and without a flexible shaft.
+
+In each case, we show that the equations of motion can be written as
+
+$$\dot{x} = f(x) + g(x)u,$$
+
+with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input $u$.
+
+### Planar rigid pendulum with torque input
+
+Consider a simple planar pendulum of length $L$ and mass $m$, pivoted at the origin and moving in the vertical plane. Let $\theta$ be the angle from the downward vertical, positive counterclockwise. A torque input $u$ is applied at the pivot.
+
+The kinetic and potential energy are:
+
+$$T = \frac{1}{2} m L^2 \dot{\theta}^2, \qquad
+V = m g L (1 - \cos\theta),$$
+
+and the Lagrangian is $\mathcal{L} = T - V$.
+
+The Euler--Lagrange equation with generalized torque $u$ is:
+
+$$m L^2 \ddot{\theta} + m g L \sin\theta = u.$$
+
+Defining the state $x = [\theta, \dot{\theta}]^T$, we obtain the first-order system:
+
+$$\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix} u.$$
+
+Thus,
+
+$$f(x) =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix},
+  \qquad
+  g(x) =
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix},$$
+
+and the system is clearly control-affine.
+
+### Planar pendulum with flexible shaft
+
+We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let $\eta$ be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.
+
+The resulting equations of motion can be written schematically as:
+
+$$M(\theta,\eta)
+  \begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  +
+  C(\theta,\dot{\theta},\eta,\dot{\eta})
+  \begin{bmatrix}
+    \dot{\theta} \\[0.2em]
+    \dot{\eta}
+  \end{bmatrix}
+  +
+  G(\theta,\eta)
+  +
+  \begin{bmatrix}
+    0 \\[0.2em]
+    k_\eta \eta + c_\eta \dot{\eta}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    u \\[0.2em]
+    0
+  \end{bmatrix},$$
+
+where $k_\eta$ and $c_\eta$ are the modal stiffness and damping, and all coupling terms have been absorbed into the matrices $M,C,G$.
+
+Solving for accelerations:
+
+$$\begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix} u.$$
+
+Defining
+
+$$a_{\mathrm{drift}}(x) =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right),
+  \qquad
+  A_{\mathrm{input}}(x) =
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix},$$
+
+we obtain
+
+$$\begin{bmatrix}
+    \ddot{\theta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.$$
+
+**Superposition still holds.** Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs $u_1,u_2$ differ by the same linear map $A_{\mathrm{input}}(x)$ applied to the difference in inputs.
+
+### Summary: Superposition and affine structure
+
+Across all cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:
+
+- Flexible dynamics (shaft modes) modify the drift term $f(x)$ by adding state-dependent inertia, Coriolis, and restoring forces.
+- The torque input $u$ enters linearly through an input matrix $g(x)$ that depends only on configuration and flexible coordinates, not on $u$.
+- For any fixed state $x$, the acceleration (and hence $\dot{x}$) is an affine function of $u$; the passive part and active part superpose exactly.
+
+These examples provide explicit, low-dimensional realizations of the general control-affine structure used in the main text and highlight why the drift--input decomposition, ZTCF, and ZVCF constructions remain valid and interpretable in the presence of shaft flexibility.
+
