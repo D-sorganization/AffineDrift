@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let sidebarToggleButton;
     let overlay;
 
+    // Responsive breakpoints - match CSS media queries
+    const NAV_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
+    const SIDEBAR_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
+
     function highlightNavigation() {
         const scrollPosition = window.scrollY + 150;
 
@@ -152,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateOverlayState() {
-        const navOpen = navLinksContainer && navLinksContainer.classList.contains('active') && window.innerWidth <= 900;
-        const sidebarOpen = sidebar && sidebar.classList.contains('open') && window.innerWidth <= 768;
+        const navOpen = navLinksContainer && navLinksContainer.classList.contains('active') && window.innerWidth <= NAV_BREAKPOINT;
+        const sidebarOpen = sidebar && sidebar.classList.contains('open') && window.innerWidth <= SIDEBAR_BREAKPOINT;
         const shouldShowOverlay = navOpen || sidebarOpen;
 
         if (!overlay && shouldShowOverlay) {
@@ -189,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         navLinksContainer.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                if (window.innerWidth <= 900) {
+                if (window.innerWidth <= NAV_BREAKPOINT) {
                     closeNavMenu();
                 }
             });
@@ -218,15 +222,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleResize() {
-        if (window.innerWidth > 900) {
+        if (window.innerWidth > NAV_BREAKPOINT) {
             closeNavMenu();
         }
 
-        if (window.innerWidth > 768 && sidebar) {
-            sidebar.classList.remove('open');
-            if (sidebarToggleButton) {
-                sidebarToggleButton.setAttribute('aria-expanded', 'false');
-            }
+        if (window.innerWidth > SIDEBAR_BREAKPOINT) {
+            closeSidebar();
         }
 
         updateOverlayState();
