@@ -169,9 +169,8 @@ For a rigid body such as a golf club, if inverse dynamics yields force $**Feq**$
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
-{#eq-couple_transform}
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-$$
+$$ {#eq-couple_transform}
 
 where:
 - $C_i$ = equivalent couple at point $i$
@@ -264,9 +263,8 @@ The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge
 A control-affine system is a dynamical system of the form:
 
 $$
-{#eq-control_affine}
 \dot{**x**} = **f**(**x**) + **G**(**x**)**u**
-$$
+$$ {#eq-control_affine}
 
 where:
 - $**x** \in \mathbb{R}^n$ is the state vector (positions and velocities)
@@ -295,9 +293,8 @@ The input component represents what the golfer consciously controls and experien
 To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $**q**$, the equations of motion are:
 
 $$
-{#eq-lagrange}
 **M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**) = **\tau**
-$$
+$$ {#eq-lagrange}
 
 where:
 - $**M**(**q**)$ is the mass/inertia matrix
@@ -311,9 +308,8 @@ where:
 Inverse dynamics solves for $**\tau**$ given observed $**q**(t)$, $\dot{**q**}(t)$, and $\ddot{**q**}(t)$:
 
 $$
-{#eq-inverse_dynamics}
 **\tau** = **M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**)
-$$
+$$ {#eq-inverse_dynamics}
 
 ### The Fundamental Problem: Inseparability of Drift and Input
 
