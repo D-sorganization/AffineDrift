@@ -1,0 +1,72 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "articles/*.qmd"
+
+website:
+  title: "AffineDrift"
+  site-url: "https://affinedrift.com"
+  favicon: favicon.ico
+
+  navbar:
+    logo: logo/Logo Transparent/1.png
+    left:
+      - text: "Home"
+        href: index.html
+      - text: "Articles"
+        href: articles.html
+      - text: "Reviews"
+        href: research-reviews.html
+      - text: "Resources"
+        href: resources.html
+      - text: "Contact"
+        href: contact.html
+      - text: "About"
+        href: about.html
+
+  sidebar:
+    - id: history
+      title: "Recent Pages"
+      style: "floating"
+      collapse-level: 1
+
+format:
+  html:
+    theme:
+      light: [cosmo, custom.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-location: right
+    number-sections: false
+    code-fold: true
+    code-tools: false
+    html-math-method: mathjax
+    mathjax:
+      config:
+        tex:
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          processEscapes: true
+          processEnvironments: true
+        startup:
+          ready: |
+            function() {
+              MathJax.startup.defaultReady();
+            }
+    include-in-header:
+      - text: |
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+          <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+          <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    include-after-body:
+      - text: |
+          <script src="script.js"></script>
+
+# Metadata for all pages
+metadata:
+  author: "AffineDrift"
+  lang: "en"

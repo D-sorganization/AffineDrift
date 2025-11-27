@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>development_guide – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+</head><body class="nav-fixed quarto-light">www.affinedrift.com
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./articles.qmd"> 
+<span class="menu-text">Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resources.qmd"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about.qmd"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./contact.qmd"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#affinedrift-development-guide" id="toc-affinedrift-development-guide" class="nav-link active" data-scroll-target="#affinedrift-development-guide"><span class="header-section-number">1</span> AffineDrift Development Guide</a>
+  <ul class="collapse">
+  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link" data-scroll-target="#table-of-contents"><span class="header-section-number">1.1</span> Table of Contents</a></li>
+  <li><a href="#understanding-the-basics" id="toc-understanding-the-basics" class="nav-link" data-scroll-target="#understanding-the-basics"><span class="header-section-number">1.2</span> Understanding the Basics</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-static-website" id="toc-what-is-a-static-website" class="nav-link" data-scroll-target="#what-is-a-static-website"><span class="header-section-number">1.2.1</span> What is a Static Website?</a></li>
+  <li><a href="#why-static-sites" id="toc-why-static-sites" class="nav-link" data-scroll-target="#why-static-sites"><span class="header-section-number">1.2.2</span> Why Static Sites?</a></li>
+  </ul></li>
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure"><span class="header-section-number">1.3</span> Project Structure</a>
+  <ul class="collapse">
+  <li><a href="#file-descriptions" id="toc-file-descriptions" class="nav-link" data-scroll-target="#file-descriptions"><span class="header-section-number">1.3.1</span> File Descriptions</a></li>
+  </ul></li>
+  <li><a href="#html-fundamentals" id="toc-html-fundamentals" class="nav-link" data-scroll-target="#html-fundamentals"><span class="header-section-number">1.4</span> HTML Fundamentals</a>
+  <ul class="collapse">
+  <li><a href="#basic-structure" id="toc-basic-structure" class="nav-link" data-scroll-target="#basic-structure"><span class="header-section-number">1.4.1</span> Basic Structure</a></li>
+  <li><a href="#key-html-elements-used" id="toc-key-html-elements-used" class="nav-link" data-scroll-target="#key-html-elements-used"><span class="header-section-number">1.4.2</span> Key HTML Elements Used</a></li>
+  <li><a href="#semantic-html" id="toc-semantic-html" class="nav-link" data-scroll-target="#semantic-html"><span class="header-section-number">1.4.3</span> Semantic HTML</a></li>
+  </ul></li>
+  <li><a href="#css-styling" id="toc-css-styling" class="nav-link" data-scroll-target="#css-styling"><span class="header-section-number">1.5</span> CSS Styling</a>
+  <ul class="collapse">
+  <li><a href="#how-css-works" id="toc-how-css-works" class="nav-link" data-scroll-target="#how-css-works"><span class="header-section-number">1.5.1</span> How CSS Works</a></li>
+  <li><a href="#css-variables-custom-properties" id="toc-css-variables-custom-properties" class="nav-link" data-scroll-target="#css-variables-custom-properties"><span class="header-section-number">1.5.2</span> CSS Variables (Custom Properties)</a></li>
+  <li><a href="#responsive-design" id="toc-responsive-design" class="nav-link" data-scroll-target="#responsive-design"><span class="header-section-number">1.5.3</span> Responsive Design</a></li>
+  <li><a href="#flexbox-and-grid" id="toc-flexbox-and-grid" class="nav-link" data-scroll-target="#flexbox-and-grid"><span class="header-section-number">1.5.4</span> Flexbox and Grid</a></li>
+  </ul></li>
+  <li><a href="#javascript-interactivity" id="toc-javascript-interactivity" class="nav-link" data-scroll-target="#javascript-interactivity"><span class="header-section-number">1.6</span> JavaScript Interactivity</a>
+  <ul class="collapse">
+  <li><a href="#what-javascript-does" id="toc-what-javascript-does" class="nav-link" data-scroll-target="#what-javascript-does"><span class="header-section-number">1.6.1</span> What JavaScript Does</a></li>
+  <li><a href="#basic-structure-1" id="toc-basic-structure-1" class="nav-link" data-scroll-target="#basic-structure-1"><span class="header-section-number">1.6.2</span> Basic Structure</a></li>
+  <li><a href="#smooth-scrolling-example" id="toc-smooth-scrolling-example" class="nav-link" data-scroll-target="#smooth-scrolling-example"><span class="header-section-number">1.6.3</span> Smooth Scrolling Example</a></li>
+  </ul></li>
+  <li><a href="#development-workflow" id="toc-development-workflow" class="nav-link" data-scroll-target="#development-workflow"><span class="header-section-number">1.7</span> Development Workflow</a>
+  <ul class="collapse">
+  <li><a href="#setup-your-environment" id="toc-setup-your-environment" class="nav-link" data-scroll-target="#setup-your-environment"><span class="header-section-number">1.7.1</span> Setup Your Environment</a></li>
+  <li><a href="#local-development" id="toc-local-development" class="nav-link" data-scroll-target="#local-development"><span class="header-section-number">1.7.2</span> Local Development</a></li>
+  </ul></li>
+  <li><a href="#testing-your-changes" id="toc-testing-your-changes" class="nav-link" data-scroll-target="#testing-your-changes"><span class="header-section-number">1.8</span> Testing Your Changes</a>
+  <ul class="collapse">
+  <li><a href="#browser-devtools" id="toc-browser-devtools" class="nav-link" data-scroll-target="#browser-devtools"><span class="header-section-number">1.8.1</span> Browser DevTools</a></li>
+  <li><a href="#validation" id="toc-validation" class="nav-link" data-scroll-target="#validation"><span class="header-section-number">1.8.2</span> Validation</a></li>
+  <li><a href="#cross-browser-testing" id="toc-cross-browser-testing" class="nav-link" data-scroll-target="#cross-browser-testing"><span class="header-section-number">1.8.3</span> Cross-Browser Testing</a></li>
+  </ul></li>
+  <li><a href="#git-and-version-control" id="toc-git-and-version-control" class="nav-link" data-scroll-target="#git-and-version-control"><span class="header-section-number">1.9</span> Git and Version Control</a>
+  <ul class="collapse">
+  <li><a href="#basic-git-workflow" id="toc-basic-git-workflow" class="nav-link" data-scroll-target="#basic-git-workflow"><span class="header-section-number">1.9.1</span> Basic Git Workflow</a></li>
+  <li><a href="#branching" id="toc-branching" class="nav-link" data-scroll-target="#branching"><span class="header-section-number">1.9.2</span> Branching</a></li>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="header-section-number">1.9.3</span> Best Practices</a></li>
+  </ul></li>
+  <li><a href="#deployment" id="toc-deployment" class="nav-link" data-scroll-target="#deployment"><span class="header-section-number">1.10</span> Deployment</a>
+  <ul class="collapse">
+  <li><a href="#github-pages-setup" id="toc-github-pages-setup" class="nav-link" data-scroll-target="#github-pages-setup"><span class="header-section-number">1.10.1</span> GitHub Pages Setup</a></li>
+  <li><a href="#deployment-workflow" id="toc-deployment-workflow" class="nav-link" data-scroll-target="#deployment-workflow"><span class="header-section-number">1.10.2</span> Deployment Workflow</a></li>
+  </ul></li>
+  <li><a href="#common-tasks" id="toc-common-tasks" class="nav-link" data-scroll-target="#common-tasks"><span class="header-section-number">1.11</span> Common Tasks</a>
+  <ul class="collapse">
+  <li><a href="#adding-a-new-section-to-homepage" id="toc-adding-a-new-section-to-homepage" class="nav-link" data-scroll-target="#adding-a-new-section-to-homepage"><span class="header-section-number">1.11.1</span> Adding a New Section to Homepage</a></li>
+  <li><a href="#adding-a-resource" id="toc-adding-a-resource" class="nav-link" data-scroll-target="#adding-a-resource"><span class="header-section-number">1.11.2</span> Adding a Resource</a></li>
+  <li><a href="#changing-colors" id="toc-changing-colors" class="nav-link" data-scroll-target="#changing-colors"><span class="header-section-number">1.11.3</span> Changing Colors</a></li>
+  <li><a href="#adding-math-equations" id="toc-adding-math-equations" class="nav-link" data-scroll-target="#adding-math-equations"><span class="header-section-number">1.11.4</span> Adding Math Equations</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting"><span class="header-section-number">1.12</span> Troubleshooting</a>
+  <ul class="collapse">
+  <li><a href="#common-issues" id="toc-common-issues" class="nav-link" data-scroll-target="#common-issues"><span class="header-section-number">1.12.1</span> Common Issues</a></li>
+  <li><a href="#debugging-tips" id="toc-debugging-tips" class="nav-link" data-scroll-target="#debugging-tips"><span class="header-section-number">1.12.2</span> Debugging Tips</a></li>
+  </ul></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">1.13</span> Resources</a>
+  <ul class="collapse">
+  <li><a href="#learning-web-development" id="toc-learning-web-development" class="nav-link" data-scroll-target="#learning-web-development"><span class="header-section-number">1.13.1</span> Learning Web Development</a></li>
+  <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools"><span class="header-section-number">1.13.2</span> Tools</a></li>
+  <li><a href="#mathematical-notation" id="toc-mathematical-notation" class="nav-link" data-scroll-target="#mathematical-notation"><span class="header-section-number">1.13.3</span> Mathematical Notation</a></li>
+  <li><a href="#design-inspiration" id="toc-design-inspiration" class="nav-link" data-scroll-target="#design-inspiration"><span class="header-section-number">1.13.4</span> Design Inspiration</a></li>
+  </ul></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">1.14</span> Next Steps</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="affinedrift-development-guide" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> AffineDrift Development Guide</h1>
+<p><strong>A Comprehensive Guide for Beginners Building Static Websites</strong></p>
+<p>This guide will teach you everything you need to know to build, modify, and maintain the AffineDrift website, even if you’ve never built a website before.</p>
+<section id="table-of-contents" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="table-of-contents"><span class="header-section-number">1.1</span> Table of Contents</h2>
+<ol type="1">
+<li><a href="#understanding-the-basics">Understanding the Basics</a></li>
+<li><a href="#project-structure">Project Structure</a></li>
+<li><a href="#html-fundamentals">HTML Fundamentals</a></li>
+<li><a href="#css-styling">CSS Styling</a></li>
+<li><a href="#javascript-interactivity">JavaScript Interactivity</a></li>
+<li><a href="#development-workflow">Development Workflow</a></li>
+<li><a href="#testing-your-changes">Testing Your Changes</a></li>
+<li><a href="#git-and-version-control">Git and Version Control</a></li>
+<li><a href="#deployment">Deployment</a></li>
+<li><a href="#common-tasks">Common Tasks</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#resources">Resources</a></li>
+</ol>
+<hr>
+</section>
+<section id="understanding-the-basics" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="understanding-the-basics"><span class="header-section-number">1.2</span> Understanding the Basics</h2>
+<section id="what-is-a-static-website" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="what-is-a-static-website"><span class="header-section-number">1.2.1</span> What is a Static Website?</h3>
+<p>A static website is made up of files that are sent directly to the user’s browser without any server-side processing. AffineDrift uses three core technologies:</p>
+<ul>
+<li><strong>HTML</strong> (HyperText Markup Language): Structures the content</li>
+<li><strong>CSS</strong> (Cascading Style Sheets): Styles and layouts the content</li>
+<li><strong>JavaScript</strong>: Adds interactivity and dynamic behavior</li>
+</ul>
+</section>
+<section id="why-static-sites" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="why-static-sites"><span class="header-section-number">1.2.2</span> Why Static Sites?</h3>
+<ul>
+<li><strong>Simple</strong>: No databases or complex backend</li>
+<li><strong>Fast</strong>: Files are served directly</li>
+<li><strong>Secure</strong>: No server-side code to exploit</li>
+<li><strong>Free Hosting</strong>: GitHub Pages hosts static sites for free</li>
+<li><strong>Version Controlled</strong>: Every change is tracked in Git</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="project-structure" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">1.3</span> Project Structure</h2>
+<pre><code>AffineDrift/
+├── index.html              # Homepage (main entry point)
+├── resources.html          # Resources page
+├── styles.css              # All styling in one file
+├── script.js               # Interactive JavaScript
+├── README.md               # Project overview
+├── DEVELOPMENT_GUIDE.md    # This file
+├── WEBSITE_MANAGEMENT.md   # Content management guide
+└── .github/
+    └── workflows/
+        └── deploy.yml      # Automated deployment</code></pre>
+<section id="file-descriptions" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="file-descriptions"><span class="header-section-number">1.3.1</span> File Descriptions</h3>
+<ul>
+<li><strong>index.html</strong>: The main page users see when they visit your site</li>
+<li><strong>resources.html</strong>: A separate page for curated resources</li>
+<li><strong>styles.css</strong>: Contains all visual styling (colors, fonts, layouts)</li>
+<li><strong>script.js</strong>: Handles smooth scrolling, animations, and interactions</li>
+<li><strong>README.md</strong>: Overview for anyone visiting the GitHub repository</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="html-fundamentals" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="html-fundamentals"><span class="header-section-number">1.4</span> HTML Fundamentals</h2>
+<section id="basic-structure" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="basic-structure"><span class="header-section-number">1.4.1</span> Basic Structure</h3>
+<p>Every HTML page follows this structure:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="ot"> lang</span><span class="op">=</span><span class="st">"en"</span><span class="dt">&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> charset</span><span class="op">=</span><span class="st">"UTF-8"</span><span class="dt">&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">"viewport"</span><span class="ot"> content</span><span class="op">=</span><span class="st">"width=device-width, initial-scale=1.0"</span><span class="dt">&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">title</span><span class="dt">&gt;</span>Page Title<span class="dt">&lt;/</span><span class="kw">title</span><span class="dt">&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">link</span><span class="ot"> rel</span><span class="op">=</span><span class="st">"stylesheet"</span><span class="ot"> href</span><span class="op">=</span><span class="st">"styles.css"</span><span class="dt">&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">head</span><span class="dt">&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- Your content goes here --&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="key-html-elements-used" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="key-html-elements-used"><span class="header-section-number">1.4.2</span> Key HTML Elements Used</h3>
+<ul>
+<li><code>&lt;header&gt;</code>: Top section with navigation</li>
+<li><code>&lt;nav&gt;</code>: Navigation menu</li>
+<li><code>&lt;main&gt;</code>: Primary content area</li>
+<li><code>&lt;section&gt;</code>: Logical sections of content</li>
+<li><code>&lt;div&gt;</code>: Generic container for grouping</li>
+<li><code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>: Headings (hierarchy)</li>
+<li><code>&lt;p&gt;</code>: Paragraphs</li>
+<li><code>&lt;ul&gt;</code> &amp; <code>&lt;li&gt;</code>: Lists</li>
+<li><code>&lt;a&gt;</code>: Links</li>
+<li><code>&lt;footer&gt;</code>: Bottom section</li>
+</ul>
+</section>
+<section id="semantic-html" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="semantic-html"><span class="header-section-number">1.4.3</span> Semantic HTML</h3>
+<p>We use semantic HTML for better accessibility and SEO:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="ot"> id</span><span class="op">=</span><span class="st">"theory"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"theory-section"</span><span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"container"</span><span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>What is Affine Control Theory?<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">p</span><span class="dt">&gt;</span>Content here...<span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Why?</strong> - Screen readers understand content structure - Search engines rank pages better - Code is more maintainable</p>
+<hr>
+</section>
+</section>
+<section id="css-styling" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="css-styling"><span class="header-section-number">1.5</span> CSS Styling</h2>
+<section id="how-css-works" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="how-css-works"><span class="header-section-number">1.5.1</span> How CSS Works</h3>
+<p>CSS uses <strong>selectors</strong> to target HTML elements and apply <strong>styles</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Select all paragraphs */</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>p {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">1.2</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">line-height</span><span class="ch">:</span> <span class="dv">1.7</span><span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">/* Select elements with class "hero" */</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">.hero</span> {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background</span><span class="ch">:</span> <span class="fu">linear-gradient(</span><span class="dv">135</span><span class="dt">deg</span><span class="op">,</span> <span class="cn">#0f4c75</span><span class="op">,</span> <span class="cn">#3282b8</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">8</span><span class="dt">rem</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">/* Select element with ID "theory" */</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="pp">#theory</span> {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="css-variables-custom-properties" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="css-variables-custom-properties"><span class="header-section-number">1.5.2</span> CSS Variables (Custom Properties)</h3>
+<p>We use CSS variables for consistent theming:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">:root</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">--primary-blue</span><span class="ch">:</span> <span class="cn">#0f4c75</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">--accent-blue</span><span class="ch">:</span> <span class="cn">#3282b8</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">--text-dark</span><span class="ch">:</span> <span class="cn">#2c3e50</span><span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">/* Usage */</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>h2 {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="fu">var(</span><span class="va">--primary-blue</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Benefits:</strong> - Change colors site-wide by editing one place - Easy to create color schemes - Maintainable code</p>
+</section>
+<section id="responsive-design" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="responsive-design"><span class="header-section-number">1.5.3</span> Responsive Design</h3>
+<p>We use <strong>media queries</strong> to adapt to different screen sizes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Default (desktop) */</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.site-title</span> {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">4</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">/* Tablets */</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">@media</span> <span class="fu">(</span><span class="kw">max-width</span><span class="ch">:</span> <span class="dv">768</span><span class="dt">px</span><span class="fu">)</span> {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.site-title</span> {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">2.5</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">/* Phones */</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="im">@media</span> <span class="fu">(</span><span class="kw">max-width</span><span class="ch">:</span> <span class="dv">480</span><span class="dt">px</span><span class="fu">)</span> {</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.site-title</span> {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="flexbox-and-grid" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="flexbox-and-grid"><span class="header-section-number">1.5.4</span> Flexbox and Grid</h3>
+<p><strong>Flexbox</strong> (for one-dimensional layouts):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.nav-links</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">gap</span><span class="ch">:</span> <span class="dv">2.5</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Grid</strong> (for two-dimensional layouts):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.goals-grid</span> {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">display</span><span class="ch">:</span> <span class="dv">grid</span><span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">grid-template-columns</span><span class="ch">:</span> <span class="fu">repeat(</span><span class="dv">auto-fit</span><span class="op">,</span> <span class="fu">minmax(</span><span class="dv">260</span><span class="dt">px</span><span class="op">,</span> <span class="dv">1</span><span class="dt">fr</span><span class="fu">))</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">gap</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">rem</span><span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="javascript-interactivity" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="javascript-interactivity"><span class="header-section-number">1.6</span> JavaScript Interactivity</h2>
+<section id="what-javascript-does" class="level3" data-number="1.6.1">
+<h3 data-number="1.6.1" class="anchored" data-anchor-id="what-javascript-does"><span class="header-section-number">1.6.1</span> What JavaScript Does</h3>
+<p>In AffineDrift, JavaScript handles: - Smooth scrolling when clicking navigation links - Highlighting the active section in navigation - Fade-in animations as you scroll - Mobile menu toggle (future feature)</p>
+</section>
+<section id="basic-structure-1" class="level3" data-number="1.6.2">
+<h3 data-number="1.6.2" class="anchored" data-anchor-id="basic-structure-1"><span class="header-section-number">1.6.2</span> Basic Structure</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Wait for page to load</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">document</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">'DOMContentLoaded'</span><span class="op">,</span> <span class="kw">function</span>() {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Code runs after page loads</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">'Page loaded!'</span>)<span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="smooth-scrolling-example" class="level3" data-number="1.6.3">
+<h3 data-number="1.6.3" class="anchored" data-anchor-id="smooth-scrolling-example"><span class="header-section-number">1.6.3</span> Smooth Scrolling Example</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>links<span class="op">.</span><span class="fu">forEach</span>(link <span class="kw">=&gt;</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    link<span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">'click'</span><span class="op">,</span> <span class="kw">function</span>(e) {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        e<span class="op">.</span><span class="fu">preventDefault</span>()<span class="op">;</span> <span class="co">// Stop default jump</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Smoothly scroll to target</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">window</span><span class="op">.</span><span class="fu">scrollTo</span>({</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            <span class="dt">top</span><span class="op">:</span> targetPosition<span class="op">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">behavior</span><span class="op">:</span> <span class="st">'smooth'</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        })<span class="op">;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<hr>
+</section>
+</section>
+<section id="development-workflow" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="development-workflow"><span class="header-section-number">1.7</span> Development Workflow</h2>
+<section id="setup-your-environment" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="setup-your-environment"><span class="header-section-number">1.7.1</span> Setup Your Environment</h3>
+<ol type="1">
+<li><p><strong>Install a Code Editor</strong></p>
+<ul>
+<li><a href="https://code.visualstudio.com/">VS Code</a> (recommended)</li>
+<li><a href="https://www.sublimetext.com/">Sublime Text</a></li>
+<li><a href="https://atom.io/">Atom</a></li>
+</ul></li>
+<li><p><strong>Install Git</strong></p>
+<ul>
+<li>macOS: <code>brew install git</code> or download from <a href="https://git-scm.com/">git-scm.com</a></li>
+<li>Linux: <code>sudo apt-get install git</code></li>
+<li>Windows: Download from <a href="https://git-scm.com/">git-scm.com</a></li>
+</ul></li>
+<li><p><strong>Clone the Repository</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/D-sorganization/AffineDrift.git</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> AffineDrift</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+</section>
+<section id="local-development" class="level3" data-number="1.7.2">
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="local-development"><span class="header-section-number">1.7.2</span> Local Development</h3>
+<p><strong>Option 1: Open HTML directly</strong> - Right-click <code>index.html</code> → Open with → Your browser - Simple but doesn’t work well with some features</p>
+<p><strong>Option 2: Use Python’s Built-in Server</strong> (Recommended)</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> http.server 8000</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Visit http://localhost:8000 in your browser</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Option 3: Use VS Code Live Server</strong> - Install “Live Server” extension in VS Code - Right-click <code>index.html</code> → “Open with Live Server” - Auto-refreshes on save!</p>
+<hr>
+</section>
+</section>
+<section id="testing-your-changes" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="testing-your-changes"><span class="header-section-number">1.8</span> Testing Your Changes</h2>
+<section id="browser-devtools" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="browser-devtools"><span class="header-section-number">1.8.1</span> Browser DevTools</h3>
+<p>Every browser has developer tools (F12 or right-click → Inspect):</p>
+<ol type="1">
+<li><strong>Elements Tab</strong>: Inspect HTML and CSS in real-time</li>
+<li><strong>Console Tab</strong>: View JavaScript errors and logs</li>
+<li><strong>Network Tab</strong>: Check if resources load properly</li>
+<li><strong>Responsive Mode</strong>: Test different screen sizes</li>
+</ol>
+</section>
+<section id="validation" class="level3" data-number="1.8.2">
+<h3 data-number="1.8.2" class="anchored" data-anchor-id="validation"><span class="header-section-number">1.8.2</span> Validation</h3>
+<p><strong>HTML Validation:</strong> - Use <a href="https://validator.w3.org/">W3C HTML Validator</a> - Upload your HTML file or paste the code</p>
+<p><strong>CSS Validation:</strong> - Use <a href="https://jigsaw.w3.org/css-validator/">W3C CSS Validator</a></p>
+<p><strong>Accessibility:</strong> - Use <a href="https://wave.webaim.org/">WAVE</a> - Checks for screen reader compatibility</p>
+</section>
+<section id="cross-browser-testing" class="level3" data-number="1.8.3">
+<h3 data-number="1.8.3" class="anchored" data-anchor-id="cross-browser-testing"><span class="header-section-number">1.8.3</span> Cross-Browser Testing</h3>
+<p>Test in: - Chrome/Edge (Chromium) - Firefox - Safari (if on Mac)</p>
+<hr>
+</section>
+</section>
+<section id="git-and-version-control" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="git-and-version-control"><span class="header-section-number">1.9</span> Git and Version Control</h2>
+<section id="basic-git-workflow" class="level3" data-number="1.9.1">
+<h3 data-number="1.9.1" class="anchored" data-anchor-id="basic-git-workflow"><span class="header-section-number">1.9.1</span> Basic Git Workflow</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check status</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add changes</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Commit with message</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Update homepage content"</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Push to GitHub</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="branching" class="level3" data-number="1.9.2">
+<h3 data-number="1.9.2" class="anchored" data-anchor-id="branching"><span class="header-section-number">1.9.2</span> Branching</h3>
+<p>Create branches for new features:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and switch to new branch</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> add-blog-section</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make changes, commit</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Push branch</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin add-blog-section</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create pull request on GitHub</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="best-practices" class="level3" data-number="1.9.3">
+<h3 data-number="1.9.3" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">1.9.3</span> Best Practices</h3>
+<ol type="1">
+<li><strong>Commit often</strong> with clear messages</li>
+<li><strong>Use branches</strong> for experimental changes</li>
+<li><strong>Write descriptive commit messages</strong>:
+<ul>
+<li>✅ “Add MathJax rendering for equations”</li>
+<li>❌ “Fixed stuff”</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="deployment" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="deployment"><span class="header-section-number">1.10</span> Deployment</h2>
+<section id="github-pages-setup" class="level3" data-number="1.10.1">
+<h3 data-number="1.10.1" class="anchored" data-anchor-id="github-pages-setup"><span class="header-section-number">1.10.1</span> GitHub Pages Setup</h3>
+<ol type="1">
+<li><strong>Enable GitHub Pages</strong>:
+<ul>
+<li>Go to repository Settings</li>
+<li>Scroll to “Pages” section</li>
+<li>Source: Deploy from a branch</li>
+<li>Branch: <code>main</code> → <code>/root</code></li>
+<li>Save</li>
+</ul></li>
+<li><strong>Custom Domain</strong> (Optional):
+<ul>
+<li>Add <code>CNAME</code> file with your domain</li>
+<li>Configure DNS settings with your provider</li>
+</ul></li>
+<li><strong>Automatic Deployment</strong>:
+<ul>
+<li>Handled by <code>.github/workflows/deploy.yml</code></li>
+<li>Deploys automatically on push to main</li>
+</ul></li>
+</ol>
+</section>
+<section id="deployment-workflow" class="level3" data-number="1.10.2">
+<h3 data-number="1.10.2" class="anchored" data-anchor-id="deployment-workflow"><span class="header-section-number">1.10.2</span> Deployment Workflow</h3>
+<p>The GitHub Actions workflow:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Triggers on push to main</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at"> main </span><span class="kw">]</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Deploys to GitHub Pages</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Validates HTML/CSS</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Runs accessibility checks</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>View deployment status in the “Actions” tab on GitHub.</p>
+<hr>
+</section>
+</section>
+<section id="common-tasks" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="common-tasks"><span class="header-section-number">1.11</span> Common Tasks</h2>
+<section id="adding-a-new-section-to-homepage" class="level3" data-number="1.11.1">
+<h3 data-number="1.11.1" class="anchored" data-anchor-id="adding-a-new-section-to-homepage"><span class="header-section-number">1.11.1</span> Adding a New Section to Homepage</h3>
+<ol type="1">
+<li>Open <code>index.html</code></li>
+<li>Find the closing <code>&lt;/section&gt;</code> of the last section</li>
+<li>Add your new section:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="ot"> id</span><span class="op">=</span><span class="st">"new-section"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"custom-section"</span><span class="dt">&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"container"</span><span class="dt">&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>New Section Title<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">p</span><span class="dt">&gt;</span>Your content here...<span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="4" type="1">
+<li>Style it in <code>styles.css</code>:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.custom-section</span> {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background</span><span class="ch">:</span> <span class="fu">var(</span><span class="va">--pure-white</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">5</span><span class="dt">rem</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="5" type="1">
+<li>Add to navigation in <code>&lt;nav&gt;</code>:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">li</span><span class="dt">&gt;&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"#new-section"</span><span class="dt">&gt;</span>New Section<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;&lt;/</span><span class="kw">li</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="adding-a-resource" class="level3" data-number="1.11.2">
+<h3 data-number="1.11.2" class="anchored" data-anchor-id="adding-a-resource"><span class="header-section-number">1.11.2</span> Adding a Resource</h3>
+<ol type="1">
+<li>Open <code>resources.html</code></li>
+<li>Find the appropriate section (Videos, Papers, etc.)</li>
+<li>Copy an existing resource card:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-card video-card"</span><span class="dt">&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-header"</span><span class="dt">&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-type"</span><span class="dt">&gt;</span>YouTube<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">h3</span><span class="dt">&gt;</span>Your Video Title<span class="dt">&lt;/</span><span class="kw">h3</span><span class="dt">&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">p</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-description"</span><span class="dt">&gt;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        Description of the video or resource.</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-tags"</span><span class="dt">&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> class</span><span class="op">=</span><span class="st">"tag"</span><span class="dt">&gt;</span>Control Theory<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> class</span><span class="op">=</span><span class="st">"tag"</span><span class="dt">&gt;</span>Advanced<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"https://youtube.com/..."</span><span class="ot"> target</span><span class="op">=</span><span class="st">"_blank"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"resource-link"</span><span class="dt">&gt;</span>Watch Video<span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="changing-colors" class="level3" data-number="1.11.3">
+<h3 data-number="1.11.3" class="anchored" data-anchor-id="changing-colors"><span class="header-section-number">1.11.3</span> Changing Colors</h3>
+<p>Edit CSS variables in <code>styles.css</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="in">:root</span> {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">--primary-dark</span><span class="ch">:</span> <span class="cn">#1a1a2e</span><span class="op">;</span>    <span class="co">/* Change this */</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">--primary-blue</span><span class="ch">:</span> <span class="cn">#0f4c75</span><span class="op">;</span>    <span class="co">/* And this */</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">--accent-blue</span><span class="ch">:</span> <span class="cn">#3282b8</span><span class="op">;</span>     <span class="co">/* And this */</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>All colors update automatically!</p>
+</section>
+<section id="adding-math-equations" class="level3" data-number="1.11.4">
+<h3 data-number="1.11.4" class="anchored" data-anchor-id="adding-math-equations"><span class="header-section-number">1.11.4</span> Adding Math Equations</h3>
+<p>Use LaTeX notation with MathJax:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"equation"</span><span class="dt">&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Inline math</strong>: Use <code>\(...\)</code> <strong>Display math</strong>: Use <code>\[...\]</code></p>
+<hr>
+</section>
+</section>
+<section id="troubleshooting" class="level2" data-number="1.12">
+<h2 data-number="1.12" class="anchored" data-anchor-id="troubleshooting"><span class="header-section-number">1.12</span> Troubleshooting</h2>
+<section id="common-issues" class="level3" data-number="1.12.1">
+<h3 data-number="1.12.1" class="anchored" data-anchor-id="common-issues"><span class="header-section-number">1.12.1</span> Common Issues</h3>
+<p><strong>Problem: Changes don’t appear</strong> - Hard refresh: Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac) - Clear browser cache - Check if you saved the file</p>
+<p><strong>Problem: CSS not loading</strong> - Check file path in <code>&lt;link&gt;</code> tag - Ensure <code>styles.css</code> is in the same directory - Check browser console for 404 errors</p>
+<p><strong>Problem: JavaScript not working</strong> - Open browser console (F12) - Look for error messages - Ensure <code>&lt;script src="script.js"&gt;</code> is before <code>&lt;/body&gt;</code></p>
+<p><strong>Problem: MathJax not rendering</strong> - Check internet connection (MathJax loads from CDN) - Verify MathJax script tag is in <code>&lt;head&gt;</code> - Check for syntax errors in LaTeX</p>
+<p><strong>Problem: GitHub Pages not updating</strong> - Check Actions tab for deployment status - Wait 2-3 minutes after push - Clear browser cache - Check if branch is set correctly in Settings</p>
+</section>
+<section id="debugging-tips" class="level3" data-number="1.12.2">
+<h3 data-number="1.12.2" class="anchored" data-anchor-id="debugging-tips"><span class="header-section-number">1.12.2</span> Debugging Tips</h3>
+<ol type="1">
+<li><p><strong>Use console.log()</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">'Debug message'</span><span class="op">,</span> variableName)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Check Network Tab</strong>:</p>
+<ul>
+<li>See which files fail to load</li>
+</ul></li>
+<li><p><strong>Validate HTML/CSS</strong>:</p>
+<ul>
+<li>Use W3C validators</li>
+</ul></li>
+<li><p><strong>Test Incrementally</strong>:</p>
+<ul>
+<li>Make small changes and test</li>
+<li>Easier to find what broke</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="resources" class="level2" data-number="1.13">
+<h2 data-number="1.13" class="anchored" data-anchor-id="resources"><span class="header-section-number">1.13</span> Resources</h2>
+<section id="learning-web-development" class="level3" data-number="1.13.1">
+<h3 data-number="1.13.1" class="anchored" data-anchor-id="learning-web-development"><span class="header-section-number">1.13.1</span> Learning Web Development</h3>
+<p><strong>HTML:</strong> - <a href="https://developer.mozilla.org/en-US/docs/Learn/HTML">MDN HTML Tutorial</a> - <a href="http://html5doctor.com/">HTML5 Doctor</a></p>
+<p><strong>CSS:</strong> - <a href="https://css-tricks.com/">CSS Tricks</a> - <a href="https://flexboxfroggy.com/">Flexbox Froggy</a> (Game to learn Flexbox) - <a href="https://cssgridgarden.com/">Grid Garden</a> (Game to learn Grid) - <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS">MDN CSS Tutorial</a></p>
+<p><strong>JavaScript:</strong> - <a href="https://javascript.info/">JavaScript.info</a> - <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">MDN JavaScript Guide</a> - <a href="https://eloquentjavascript.net/">Eloquent JavaScript</a> (Free book)</p>
+<p><strong>Git:</strong> - <a href="https://guides.github.com/introduction/git-handbook/">Git Handbook</a> - <a href="https://learngitbranching.js.org/">Learn Git Branching</a> (Interactive)</p>
+</section>
+<section id="tools" class="level3" data-number="1.13.2">
+<h3 data-number="1.13.2" class="anchored" data-anchor-id="tools"><span class="header-section-number">1.13.2</span> Tools</h3>
+<ul>
+<li><a href="https://code.visualstudio.com/">VS Code</a>: Code editor</li>
+<li><a href="https://developer.chrome.com/docs/devtools/">Chrome DevTools</a>: Debugging</li>
+<li><a href="https://caniuse.com/">Can I Use</a>: Browser compatibility</li>
+<li><a href="https://htmlcolorcodes.com/">Color Picker</a>: Choose colors</li>
+</ul>
+</section>
+<section id="mathematical-notation" class="level3" data-number="1.13.3">
+<h3 data-number="1.13.3" class="anchored" data-anchor-id="mathematical-notation"><span class="header-section-number">1.13.3</span> Mathematical Notation</h3>
+<ul>
+<li><a href="https://www.mathjax.org/">MathJax Documentation</a></li>
+<li><a href="https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols">LaTeX Math Symbols</a></li>
+<li><a href="http://detexify.kirelabs.org/classify.html">Detexify</a>: Draw symbol to find LaTeX</li>
+</ul>
+</section>
+<section id="design-inspiration" class="level3" data-number="1.13.4">
+<h3 data-number="1.13.4" class="anchored" data-anchor-id="design-inspiration"><span class="header-section-number">1.13.4</span> Design Inspiration</h3>
+<ul>
+<li><a href="https://www.awwwards.com/">Awwwards</a>: Award-winning websites</li>
+<li><a href="https://dribbble.com/">Dribbble</a>: Design inspiration</li>
+<li><a href="https://codepen.io/">CodePen</a>: HTML/CSS/JS examples</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="next-steps" class="level2" data-number="1.14">
+<h2 data-number="1.14" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">1.14</span> Next Steps</h2>
+<ol type="1">
+<li><strong>Read through the code</strong>: Understanding beats memorization</li>
+<li><strong>Make small changes</strong>: Experiment with colors, fonts, spacing</li>
+<li><strong>Break things</strong>: That’s how you learn (Git has your back!)</li>
+<li><strong>Build something new</strong>: Add a blog section or image gallery</li>
+<li><strong>Keep learning</strong>: Web development is constantly evolving</li>
+</ol>
+<hr>
+<p><strong>Remember</strong>: Everyone starts as a beginner. The best way to learn is by doing. Don’t be afraid to experiment, make mistakes, and ask questions!</p>
+<p>Happy coding! 🚀</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+/**
+ * AffineDrift - Interactive JavaScript
+ * Handles smooth scrolling, navigation highlights, and interactive elements
+ */
+
+// Smooth scrolling for navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for anchor links
+    const links = document.querySelectorAll('a[href^="#"]');
+
+    links.forEach(link =&gt; {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+
+            // Only handle internal anchors
+            if (href !== '#' &amp;&amp; href.length &gt; 1) {
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    e.preventDefault();
+
+                    // Smooth scroll to target
+                    const headerOffset = 80; // Account for sticky header
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
+    // Highlight active navigation link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+    function highlightNavigation() {
+        const scrollPosition = window.scrollY + 150;
+
+        sections.forEach(section =&gt; {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+
+            if (scrollPosition &gt;= sectionTop &amp;&amp; scrollPosition &lt; sectionTop + sectionHeight) {
+                navLinks.forEach(link =&gt; {
+                    link.style.opacity = '0.8';
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.style.opacity = '1';
+                    }
+                });
+            }
+        });
+    }
+
+    // Debounce scroll event for performance
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(highlightNavigation, 50);
+    });
+
+    // Initial call
+    highlightNavigation();
+
+    // Add fade-in animation for sections on scroll (only if not already visible)
+    // Content is visible by default - animation is optional enhancement
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px 0px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry =&gt; {
+            if (entry.isIntersecting) {
+                // Only apply animation if element doesn't already have opacity set
+                // Use getComputedStyle to check actual rendered opacity value
+                const computedOpacity = window.getComputedStyle(entry.target).opacity;
+                if (computedOpacity === '0') {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe sections for fade-in effect (only apply to sections that should animate)
+    // Don't hide content initially - let it be visible
+    const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
+    sectionsToAnimate.forEach(section =&gt; {
+        // Only animate if section is below the fold
+        const rect = section.getBoundingClientRect();
+        if (rect.top &gt; window.innerHeight) {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            observer.observe(section);
+        } else {
+            // Content above the fold should be immediately visible
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }
+    });
+
+    // Mobile menu toggle (for future implementation)
+    const navToggle = document.querySelector('.nav-toggle');
+    if (navToggle) {
+        navToggle.addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        });
+    }
+
+    // Page history tracking for sidebar
+    function updateHistorySidebar() {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        // Constants
+        const MAX_HISTORY_TITLE_LENGTH = 40;
+        const MAX_HISTORY_ITEMS = 10;
+
+        // Get history from localStorage
+        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
+        
+        // Get current page info with improved title extraction
+        let pageTitle = document.title;
+        // Handle different title formats
+        if (pageTitle.includes(' - AffineDrift')) {
+            pageTitle = pageTitle.replace(' - AffineDrift', '');
+        } else if (pageTitle.startsWith('AffineDrift - ')) {
+            pageTitle = pageTitle.replace('AffineDrift - ', '');
+        } else if (pageTitle === 'AffineDrift') {
+            pageTitle = 'Home';
+        }
+        
+        const currentPage = {
+            title: pageTitle,
+            url: window.location.pathname.split('/').pop() || 'index.html',
+            fullUrl: window.location.href
+        };
+
+        // Remove current page if it's already in history
+        history = history.filter(item =&gt; item.url !== currentPage.url);
+        
+        // Add current page to front
+        history.unshift(currentPage);
+        
+        // Keep only last N items
+        history = history.slice(0, MAX_HISTORY_ITEMS);
+        
+        // Save back to localStorage
+        localStorage.setItem('affinedrift_history', JSON.stringify(history));
+        
+        // Update sidebar display
+        // Filter out current page from display
+        const displayHistory = history.filter(item =&gt; item.url !== currentPage.url);
+        if (displayHistory.length === 0) {
+            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
+        } else {
+            historyList.innerHTML = displayHistory.map(item =&gt; {
+                const displayTitle = item.title.length &gt; MAX_HISTORY_TITLE_LENGTH 
+                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
+                    : item.title;
+                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
+            }).join('');
+        }
+    }
+
+    // Initialize history sidebar
+    updateHistorySidebar();
+
+    // Log page load for analytics (optional)
+    console.log('AffineDrift loaded successfully');
+    console.log('Mathematical notation rendering via MathJax');
+});
+
+// Utility function for future features
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Export for potential module use
+if (typeof module !== 'undefined' &amp;&amp; module.exports) {
+    module.exports = {
+        scrollToTop
+    };
+}
+
+
+
+
+</body></html>

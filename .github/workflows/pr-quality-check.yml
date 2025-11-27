@@ -94,7 +94,7 @@ jobs:
         fi
 
     - name: Upload coverage to Codecov
-      if: steps.coverage-check.outputs.exists == 'true'
+      if: steps.coverage-check.outputs.exists == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
       uses: codecov/codecov-action@v4
       with:
         files: '**/coverage.xml'
