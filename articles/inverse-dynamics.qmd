@@ -1,5 +1,5 @@
 ---
-title: "\textbf{Interpretation of Inverse Dynamics:   Understanding the Fundamental Limitations"
+title: "Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations"
 author: "AffineDrift"
 date: "2025-11-26"
 format:
@@ -24,52 +24,52 @@ The equations of motion for a rigid body like a golf club are described by Euler
 
 $$
 \begin{align}
-\sum **F** &= m**a**_{\text{COM}} {#eq-force_balance}\\
-\sum **M**_{\text{COM}} &= **I****\alpha** + **\omega** \times (**I****\omega**) {#eq-moment_balance}
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \label{eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \label{eq-moment_balance}
 \end{align}
 $$
 
 where:
-- $\sum **F**$ is the sum of all forces acting on the club
+- $\sum \mathbf{F}$ is the sum of all forces acting on the club
     
 - $m$ is the club mass
     
-- $**a**_{\text{COM}}$ is the acceleration of the center of mass
+- $\mathbf{a}_{\text{COM}}$ is the acceleration of the center of mass
     
-- $\sum **M**_{\text{COM}}$ is the sum of moments about the center of mass
+- $\sum \mathbf{M}_{\text{COM}}$ is the sum of moments about the center of mass
     
-- $**I**$ is the moment of inertia tensor
+- $\mathbf{I}$ is the moment of inertia tensor
     
-- $**\alpha**$ is the angular acceleration
+- $\boldsymbol{\alpha}$ is the angular acceleration
     
-- $**\omega**$ is the angular velocity (the final term is the gyroscopic effect)
+- $\boldsymbol{\omega}$ is the angular velocity (the final term is the gyroscopic effect)
 
 ### How Inverse Dynamics Works: Step by Step
 
 **Step 1: Measure Kinematics**
 
 Motion capture systems track the club's position and orientation over time, providing:
-- Position of the center of mass: $**r**_{\text{COM}}(t)$
+- Position of the center of mass: $\mathbf{r}_{\text{COM}}(t)$
     
-- Orientation (typically as rotation matrix or quaternion): $**R**(t)$
+- Orientation (typically as rotation matrix or quaternion): $\mathbf{R}(t)$
 
 **Step 2: Differentiate to Obtain Velocities and Accelerations**
 
 Numerical differentiation yields:
-- Linear velocity: $**v**_{\text{COM}} = \dot{**r**}_{\text{COM}}$
+- Linear velocity: $\mathbf{v}_{\text{COM}} = \dot{\mathbf{r}}_{\text{COM}}$
     
-- Linear acceleration: $**a**_{\text{COM}} = \ddot{**r**}_{\text{COM}}$
+- Linear acceleration: $\mathbf{a}_{\text{COM}} = \ddot{\mathbf{r}}_{\text{COM}}$
     
-- Angular velocity: $**\omega**$
+- Angular velocity: $\boldsymbol{\omega}$
     
-- Angular acceleration: $**\alpha** = \dot{**\omega**}$
+- Angular acceleration: $\boldsymbol{\alpha} = \dot{\boldsymbol{\omega}}$
 
 **Step 3: Account for Known Forces**
 
 Gravity is a known external force:
 
 $$
-**F**_{\text{gravity}} = m**g**
+\mathbf{F}_{\text{gravity}} = m\mathbf{g}
 $$
 
 where $**g** = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
@@ -79,7 +79,7 @@ where $**g** = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 From Equation~[@eq:force_balance], the sum of unknown forces (from the golfer's hands) is:
 
 $$
-**F**_{\text{hands}} = m**a**_{\text{COM}} - **F**_{\text{gravity}}
+\mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
 $$
 
 **Step 5: Calculate Moments About the Reference Point**
@@ -87,7 +87,7 @@ $$
 The moment balance about an arbitrary reference point $P$ (typically the grip midpoint) is:
 
 $$
-\sum **M**_{P} = \sum **M**_{\text{COM}} + (**r**_{P} - **r**_{\text{COM}}) \times **F**_{\text{hands}}
+\sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 $$
 
 Since we know $\sum **M**_{\text{COM}}$ from Equation~[@eq:moment_balance], we can calculate the required moment about point $P$.
@@ -165,8 +165,7 @@ The fundamental principle is that a couple is a *free vector*—it can act anywh
 
 For a rigid body such as a golf club, if inverse dynamics yields force $**Feq**$ and couple $**Ceq**$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-::: {.proposition}
-**Couple Transformation Formula**
+\begin{proposition**[Couple Transformation Formula]
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
@@ -184,7 +183,7 @@ where:
 - $d_m$ = signed distance from center of mass to midpoint $m$
     
 - $C_m$ = couple at midpoint from inverse dynamics
-:::
+\end{proposition}
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
@@ -266,7 +265,7 @@ A control-affine system is a dynamical system of the form:
 
 $$
 {#eq-control_affine}
-\dot{**x**} = **f**(**x**) + **G**(**x**)**u**
+\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
 $$
 
 where:
@@ -280,10 +279,10 @@ where:
 
 The key feature is the **additive separation** of drift and input effects. This decomposition reflects a fundamental physical distinction:
 
-- **Drift ($**f**(\bvec{x**)$):} Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
+- **Drift ($\mathbf{f}(\mathbf{x})$):** Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
     
     
-- **Input ($**G**(\bvec{x**)**u**$):} Active control—forces that the controller (golfer) can directly modulate. This is what the golfer *feels* and what they exert effort toward achieving.
+- **Input ($\mathbf{G}(\mathbf{x})\mathbf{u}$):** Active control—forces that the controller (golfer) can directly modulate. This is what the golfer *feels* and what they exert effort toward achieving.
 
 ::: {.keypoint-box}
 **Key Point:** 
@@ -297,7 +296,7 @@ To understand what inverse dynamics calculates, we examine the Lagrangian formul
 
 $$
 {#eq-lagrange}
-**M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**) = **\tau**
+\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
 $$
 
 where:
@@ -313,7 +312,7 @@ Inverse dynamics solves for $**\tau**$ given observed $**q**(t)$, $\dot{**q**}(t
 
 $$
 {#eq-inverse_dynamics}
-**\tau** = **M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**)
+\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
 $$
 
 ### The Fundamental Problem: Inseparability of Drift and Input
@@ -321,15 +320,15 @@ $$
 Here is the critical observation: **inverse dynamics computes the total generalized force $**\tau**$, which includes both drift and input components**:
 
 $$
-**\tau**_{\text{total}} = **\tau**_{\text{drift}} + **\tau**_{\text{input}}
+\boldsymbol{\tau}_{\text{total}} = \boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}}
 $$
 
 In the control-affine formulation, these correspond to:
 
 $$
 \begin{align}
-**\tau**_{\text{drift}} &= \text{generalized forces from } **f**(**x**) \\
-**\tau**_{\text{input}} &= \text{generalized forces from } **G**(**x**)**u**
+\boldsymbol{\tau}_{\text{drift}} &= \text{generalized forces from } \mathbf{f}(\mathbf{x}) \\
+\boldsymbol{\tau}_{\text{input}} &= \text{generalized forces from } \mathbf{G}(\mathbf{x})\mathbf{u}
 \end{align}
 $$
 
@@ -338,7 +337,7 @@ $$
 Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $**\tau**_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
 
 $$
-**\tau**_{\text{drift}} + **\tau**_{\text{input}} = **\tau**_{\text{total}}
+\boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}}
 $$
 
 :::
@@ -492,7 +491,7 @@ $$
     
 - With drag consideration: $C_\alpha = -11.1$ Nm
 
-This represents a **40% reduction in the magnitude of the negative alpha couple**. For the sum of forces and moments to remain consistent across equivalent representations, the effect of neglecting drag would scale similarly across different reference points.
+This represents a **40\
 
 [Figure: Effect of accounting for air resistance on force and couple calculations. When drag is neglected, inverse dynamics attributes all forces to the golfer's hands, leading to substantially different couple values.]
 
