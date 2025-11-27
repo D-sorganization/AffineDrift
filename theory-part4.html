@@ -1,739 +1,1045 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Part 4: Appendices A-C - Mathematical Derivations, Modal Approximation, Pendulum Examples">
-    <title>Theory Part 4 - AffineDrift</title>
-    <!-- Google Fonts - Playfair Display -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Preconnect to CDN for faster loading -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/x-icon" sizes="16x16" href="favicon.ico">
-    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="logo/Logo Transparent/1.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="logo/Logo Transparent/1.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="logo/Logo Transparent/1.png">
-    <meta name="theme-color" content="#0f4c75">
-    <!-- MathJax for mathematical notation -->
-    <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']],
-          macros: {
-            R: "\\mathbb{R}",
-            qd: "\\dot{q}",
-            qdd: "\\ddot{q}",
-            etad: "\\dot{\\eta}",
-            etadd: "\\ddot{\\eta}",
-            xd: "\\dot{x}"
-          }
-        },
-        startup: {
-          ready: () => {
-            MathJax.startup.defaultReady();
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Part I: Theoretical Foundations — Part 4 of 5">
+<meta name="dcterms.date" content="2025-11-26">
+
+<title>Affine Control Interpretation of the Golf Swing – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../articles.html"> 
+<span class="menu-text">Articles</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../research-reviews.html"> 
+<span class="menu-text">Reviews</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../resources.html"> 
+<span class="menu-text">Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../contact.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#appendices" id="toc-appendices" class="nav-link active" data-scroll-target="#appendices">Appendices</a>
+  <ul class="collapse">
+  <li><a href="#appendix-a-mathematical-derivations" id="toc-appendix-a-mathematical-derivations" class="nav-link" data-scroll-target="#appendix-a-mathematical-derivations">Appendix A: Mathematical Derivations</a>
+  <ul class="collapse">
+  <li><a href="#coupled-rigidflexible-equations-of-motion" id="toc-coupled-rigidflexible-equations-of-motion" class="nav-link" data-scroll-target="#coupled-rigidflexible-equations-of-motion">Coupled rigid–flexible equations of motion</a></li>
+  <li><a href="#block-structure-of-the-inertia-and-coriolis-matrices" id="toc-block-structure-of-the-inertia-and-coriolis-matrices" class="nav-link" data-scroll-target="#block-structure-of-the-inertia-and-coriolis-matrices">Block structure of the inertia and Coriolis matrices</a></li>
+  <li><a href="#solving-for-accelerations" id="toc-solving-for-accelerations" class="nav-link" data-scroll-target="#solving-for-accelerations">Solving for accelerations</a></li>
+  <li><a href="#drift-acceleration" id="toc-drift-acceleration" class="nav-link" data-scroll-target="#drift-acceleration">Drift acceleration</a></li>
+  <li><a href="#input-acceleration-mapping" id="toc-input-acceleration-mapping" class="nav-link" data-scroll-target="#input-acceleration-mapping">Input acceleration mapping</a></li>
+  <li><a href="#first-order-state-space-affine-form" id="toc-first-order-state-space-affine-form" class="nav-link" data-scroll-target="#first-order-state-space-affine-form">First-order state-space (affine) form</a></li>
+  </ul></li>
+  <li><a href="#appendix-b-modal-approximation-for-the-flexible-shaft" id="toc-appendix-b-modal-approximation-for-the-flexible-shaft" class="nav-link" data-scroll-target="#appendix-b-modal-approximation-for-the-flexible-shaft">Appendix B: Modal Approximation for the Flexible Shaft</a>
+  <ul class="collapse">
+  <li><a href="#continuous-beam-model" id="toc-continuous-beam-model" class="nav-link" data-scroll-target="#continuous-beam-model">Continuous beam model</a></li>
+  <li><a href="#modal-expansion" id="toc-modal-expansion" class="nav-link" data-scroll-target="#modal-expansion">Modal expansion</a></li>
+  <li><a href="#modal-equations-of-motion" id="toc-modal-equations-of-motion" class="nav-link" data-scroll-target="#modal-equations-of-motion">Modal equations of motion</a></li>
+  <li><a href="#preservation-of-linear-torque-input" id="toc-preservation-of-linear-torque-input" class="nav-link" data-scroll-target="#preservation-of-linear-torque-input">Preservation of linear torque input</a></li>
+  </ul></li>
+  <li><a href="#appendix-c-pendulum-examples" id="toc-appendix-c-pendulum-examples" class="nav-link" data-scroll-target="#appendix-c-pendulum-examples">Appendix C: Pendulum Examples</a>
+  <ul class="collapse">
+  <li><a href="#planar-rigid-pendulum-with-torque-input" id="toc-planar-rigid-pendulum-with-torque-input" class="nav-link" data-scroll-target="#planar-rigid-pendulum-with-torque-input">Planar rigid pendulum with torque input</a></li>
+  <li><a href="#planar-pendulum-with-flexible-shaft" id="toc-planar-pendulum-with-flexible-shaft" class="nav-link" data-scroll-target="#planar-pendulum-with-flexible-shaft">Planar pendulum with flexible shaft</a></li>
+  <li><a href="#summary-superposition-and-affine-structure" id="toc-summary-superposition-and-affine-structure" class="nav-link" data-scroll-target="#summary-superposition-and-affine-structure">Summary: Superposition and affine structure</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Affine Control Interpretation of the Golf Swing</h1>
+<p class="subtitle lead">Drift, Input, and Causal Decomposition of Forces</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Part I: Theoretical Foundations — Part 4 of 5 </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 26, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="appendices" class="level1">
+<h1>Appendices</h1>
+<section id="appendix-a-mathematical-derivations" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-a-mathematical-derivations">Appendix A: Mathematical Derivations</h2>
+<p>This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid–flexible dynamics produce the affine decomposition</p>
+<p><span class="math display">\[\dot{x} = f(x) + g(x)u\]</span></p>
+<p>and to document all assumptions required for the formulation.</p>
+<section id="coupled-rigidflexible-equations-of-motion" class="level3">
+<h3 class="anchored" data-anchor-id="coupled-rigidflexible-equations-of-motion">Coupled rigid–flexible equations of motion</h3>
+<p>We partition the generalized coordinates into</p>
+<p><span class="math display">\[q \in \mathbb{R}^{n}, \qquad \eta \in \mathbb{R}^{m},\]</span></p>
+<p>where <span class="math inline">\(q\)</span> describes the rigid-body degrees of freedom and <span class="math inline">\(\eta\)</span> contains the modal coordinates of the flexible shaft.</p>
+<p>Let</p>
+<p><span class="math display">\[v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}\]</span></p>
+<p>denote the generalized velocity.</p>
+<p>The equations of motion for the coupled system may be written in compact form:</p>
+<p><span class="math display">\[M(q,\eta)\,\dot{v}
+  +
+  C(q,\dot{q},\eta,\dot{\eta})\,v
+  +
+  G(q)
+  +
+  F_{s}(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    \tau \\[0.2em]
+    0
+  \end{bmatrix},\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(M(q,\eta)\)</span> is the full inertia matrix of the rigid–flexible system,</li>
+<li><span class="math inline">\(C(q,\dot{q},\eta,\dot{\eta})\)</span> contains Coriolis and centrifugal terms,</li>
+<li><span class="math inline">\(G(q)\)</span> contains gravitational torques acting on the rigid-body DOFs,</li>
+<li><span class="math inline">\(F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}\)</span> contains shaft restoring and damping forces,</li>
+<li><span class="math inline">\(\tau = B(q)\,u\)</span> is the generalized torque vector induced by the input <span class="math inline">\(u\)</span>.</li>
+</ul>
+<p>The flexible DOFs have no direct torque inputs.</p>
+</section>
+<section id="block-structure-of-the-inertia-and-coriolis-matrices" class="level3">
+<h3 class="anchored" data-anchor-id="block-structure-of-the-inertia-and-coriolis-matrices">Block structure of the inertia and Coriolis matrices</h3>
+<p>The inertia matrix has the block form</p>
+<p><span class="math display">\[M(q,\eta)
+  =
+  \begin{bmatrix}
+    M_{rr}(q,\eta) &amp; M_{rf}(q,\eta) \\
+    M_{fr}(q,\eta) &amp; M_{ff}(q,\eta)
+  \end{bmatrix},\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(M_{rr}\)</span> is the rigid-body inertia matrix,</li>
+<li><span class="math inline">\(M_{ff}\)</span> is the modal inertia matrix for the flexible shaft,</li>
+<li><span class="math inline">\(M_{rf}\)</span> and <span class="math inline">\(M_{fr}\)</span> represent rigid–flexible coupling.</li>
+</ul>
+<p>Similarly, the Coriolis matrix has the block structure:</p>
+<p><span class="math display">\[C(q,\dot{q},\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    C_{rr} &amp; C_{rf} \\
+    C_{fr} &amp; C_{ff}
+  \end{bmatrix},\]</span></p>
+<p>with the usual property that</p>
+<p><span class="math display">\[\dot{M} - 2C \quad \text{is skew-symmetric}.\]</span></p>
+<p>These blocks arise from standard manipulator equations extended to include flexible-body contributions.</p>
+</section>
+<section id="solving-for-accelerations" class="level3">
+<h3 class="anchored" data-anchor-id="solving-for-accelerations">Solving for accelerations</h3>
+<p>Writing <span class="math inline">\(\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}\)</span>, the equations of motion become:</p>
+<p><span class="math display">\[M
+  \begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  -
+  C
+  \begin{bmatrix}
+    \dot{q} \\ \dot{\eta}
+  \end{bmatrix}
+  -
+  G(q)
+  -
+  F_s(\eta,\dot{\eta})
+  +
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.\]</span></p>
+<p>Assuming <span class="math inline">\(M\)</span> is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  - M^{-1}
+  \left(
+    C\,v + G + F_{s}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.\]</span></p>
+</section>
+<section id="drift-acceleration" class="level3">
+<h3 class="anchored" data-anchor-id="drift-acceleration">Drift acceleration</h3>
+<p>We define the drift acceleration as</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x)
+  =
+  -M^{-1}(q,\eta)
+  \left(
+    C(q,\dot{q},\eta,\dot{\eta})\,v
+    + G(q)
+    + F_{s}(\eta,\dot{\eta})
+  \right).\]</span></p>
+<p>All passive mechanical terms are explicitly included:</p>
+<ul>
+<li>inertia coupling,</li>
+<li>Coriolis and centripetal terms,</li>
+<li>gravity,</li>
+<li>elastic and damping forces from shaft deformation.</li>
+</ul>
+<p>Importantly,</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x) \quad \text{is independent of } u.\]</span></p>
+<p>This constitutes the <em>drift invariance</em> property formalized in the main text.</p>
+</section>
+<section id="input-acceleration-mapping" class="level3">
+<h3 class="anchored" data-anchor-id="input-acceleration-mapping">Input acceleration mapping</h3>
+<p>The input-driven acceleration is the part proportional to <span class="math inline">\(u\)</span>:</p>
+<p><span class="math display">\[a_{\mathrm{input}}(x)\,u
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.\]</span></p>
+<p>Thus the input matrix is:</p>
+<p><span class="math display">\[A_{\mathrm{input}}(x)
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q) \\ 0
+  \end{bmatrix}.\]</span></p>
+<p>Linearity of the torque input is preserved even in the presence of:</p>
+<ul>
+<li>flexible-body modes,</li>
+<li>rigid–flexible coupling,</li>
+<li>configuration-dependent <span class="math inline">\(B(q)\)</span>,</li>
+<li>velocity-dependent <span class="math inline">\(C\)</span> terms.</li>
+</ul>
+</section>
+<section id="first-order-state-space-affine-form" class="level3">
+<h3 class="anchored" data-anchor-id="first-order-state-space-affine-form">First-order state-space (affine) form</h3>
+<p>Define the full state</p>
+<p><span class="math display">\[x = \begin{bmatrix}
+    q \\ \dot{q} \\ \eta \\ \dot{\eta}
+  \end{bmatrix}.\]</span></p>
+<p>The first-order dynamics follow directly from the definitions:</p>
+<p><span class="math display">\[\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{q} \\ \ddot{q} \\ \dot{\eta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  f(x) + g(x)u,\]</span></p>
+<p>with</p>
+<p><span class="math display">\[f(x)
+  =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{1:n} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{n+1:n+m}
+  \end{bmatrix},\]</span></p>
+<p><span class="math display">\[g(x)
+  =
+  \begin{bmatrix}
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{1:n,:} \\[0.2em]
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{n+1:n+m,:}
+  \end{bmatrix}.\]</span></p>
+<p>This establishes the nonlinear control-affine structure used throughout the manuscript.</p>
+</section>
+</section>
+<section id="appendix-b-modal-approximation-for-the-flexible-shaft" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-b-modal-approximation-for-the-flexible-shaft">Appendix B: Modal Approximation for the Flexible Shaft</h2>
+<p>This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid–flexible dynamics of the golfer–club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates <span class="math inline">\(\eta \in \mathbb{R}^{m}\)</span> used in the main text, and why this representation preserves the linearity of the torque input in the final control-affine form.</p>
+<section id="continuous-beam-model" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-beam-model">Continuous beam model</h3>
+<p>The golf shaft is modeled as a uniform Euler–Bernoulli beam of length <span class="math inline">\(L\)</span>, with transverse displacement field</p>
+<p><span class="math display">\[w(s,t), \qquad s \in [0,L],\]</span></p>
+<p>where <span class="math inline">\(s\)</span> is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is</p>
+<p><span class="math display">\[\rho A \,\frac{\partial^2 w}{\partial t^2}
+  + c_b \frac{\partial w}{\partial t}
+  + EI \,\frac{\partial^4 w}{\partial s^4}
+  = f_{\mathrm{base}}(s,t),\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\rho A\)</span> is the linear mass density,</li>
+<li><span class="math inline">\(c_b\)</span> is distributed damping,</li>
+<li><span class="math inline">\(E I\)</span> is the bending rigidity,</li>
+<li><span class="math inline">\(f_{\mathrm{base}}(s,t)\)</span> contains forces transmitted from the handle motion.</li>
+</ul>
+<p>Boundary conditions depend on grip modeling. We assume:</p>
+<p><span class="math display">\[w(0,t) = 0, \qquad w_s(0,t) = 0,\]</span></p>
+<p>for a clamped handle, and free-tip conditions at <span class="math inline">\(s=L\)</span>:</p>
+<p><span class="math display">\[EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.\]</span></p>
+<p>These constraints define the mode shapes used in the modal expansion.</p>
+</section>
+<section id="modal-expansion" class="level3">
+<h3 class="anchored" data-anchor-id="modal-expansion">Modal expansion</h3>
+<p>The transverse displacement is approximated using a finite set of vibration modes:</p>
+<p><span class="math display">\[w(s,t)
+  \approx
+  \sum_{i=1}^{m} \phi_i(s)\,\eta_i(t),\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\phi_i(s)\)</span> are the eigenfunctions of the beam operator with the boundary conditions above,</li>
+<li><span class="math inline">\(\eta_i(t)\)</span> are the modal amplitudes,</li>
+<li><span class="math inline">\(m\)</span> is the number of modes retained.</li>
+</ul>
+<p>The mode shapes satisfy the eigenvalue problem:</p>
+<p><span class="math display">\[EI \,\phi_i'''' = \omega_i^2 \rho A \,\phi_i,\]</span></p>
+<p>with orthogonality relations</p>
+<p><span class="math display">\[\int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.\]</span></p>
+<p>Substituting the modal expansion into the beam equation and projecting onto each <span class="math inline">\(\phi_i\)</span> yields the modal equations of motion.</p>
+</section>
+<section id="modal-equations-of-motion" class="level3">
+<h3 class="anchored" data-anchor-id="modal-equations-of-motion">Modal equations of motion</h3>
+<p>The projected dynamics have the form:</p>
+<p><span class="math display">\[\ddot{\eta}_i
+  + 2\,\zeta_i \omega_i\,\dot{\eta}_i
+  + \omega_i^2 \eta_i
+  =
+  Q_i(q,\dot{q}),\]</span></p>
+<p>for <span class="math inline">\(i = 1,\dots,m\)</span>, where:</p>
+<ul>
+<li><span class="math inline">\(\omega_i\)</span> is the natural frequency of mode <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\(\zeta_i\)</span> is the modal damping ratio (derived from <span class="math inline">\(c_b\)</span>),</li>
+<li><span class="math inline">\(Q_i(q,\dot{q})\)</span> are generalized modal forces induced by handle motion.</li>
+</ul>
+<p>Collecting terms,</p>
+<p><span class="math display">\[\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q}),\]</span></p>
+<p>where:</p>
+<p><span class="math display">\[K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2),\qquad
+C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).\]</span></p>
+<p>These matrices match those used in the main text, where the shaft forces enter the drift term.</p>
+</section>
+<section id="preservation-of-linear-torque-input" class="level3">
+<h3 class="anchored" data-anchor-id="preservation-of-linear-torque-input">Preservation of linear torque input</h3>
+<p>From the full equations of motion:</p>
+<p><span class="math display">\[M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_s(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    B(q)u \\ 0
+  \end{bmatrix},\]</span></p>
+<p>the modal forces enter entirely through the drift term:</p>
+<p><span class="math display">\[F_s(\eta,\dot{\eta}) =
+  \begin{bmatrix}
+    0 \\
+    K_s \eta + C_s \dot{\eta}
+  \end{bmatrix}.\]</span></p>
+<p>Because <span class="math inline">\(u\)</span> appears only in the block <span class="math inline">\(B(q)u\)</span> associated with rigid-body torques:</p>
+<p><span class="math display">\[u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.\]</span></p>
+<p>Hence: <strong>The modal representation does not create any nonlinear torque dependence.</strong></p>
+<p>All flexible-body dynamics remain embedded in the drift vector field <span class="math inline">\(f(x)\)</span>.</p>
+</section>
+</section>
+<section id="appendix-c-pendulum-examples" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-c-pendulum-examples">Appendix C: Pendulum Examples</h2>
+<p>This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:</p>
+<ul>
+<li>a planar (2D) pendulum with and without a flexible shaft, and</li>
+<li>a spatial (3D) pendulum with and without a flexible shaft.</li>
+</ul>
+<p>In each case, we show that the equations of motion can be written as</p>
+<p><span class="math display">\[\dot{x} = f(x) + g(x)u,\]</span></p>
+<p>with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input <span class="math inline">\(u\)</span>.</p>
+<section id="planar-rigid-pendulum-with-torque-input" class="level3">
+<h3 class="anchored" data-anchor-id="planar-rigid-pendulum-with-torque-input">Planar rigid pendulum with torque input</h3>
+<p>Consider a simple planar pendulum of length <span class="math inline">\(L\)</span> and mass <span class="math inline">\(m\)</span>, pivoted at the origin and moving in the vertical plane. Let <span class="math inline">\(\theta\)</span> be the angle from the downward vertical, positive counterclockwise. A torque input <span class="math inline">\(u\)</span> is applied at the pivot.</p>
+<p>The kinetic and potential energy are:</p>
+<p><span class="math display">\[T = \frac{1}{2} m L^2 \dot{\theta}^2, \qquad
+V = m g L (1 - \cos\theta),\]</span></p>
+<p>and the Lagrangian is <span class="math inline">\(\mathcal{L} = T - V\)</span>.</p>
+<p>The Euler–Lagrange equation with generalized torque <span class="math inline">\(u\)</span> is:</p>
+<p><span class="math display">\[m L^2 \ddot{\theta} + m g L \sin\theta = u.\]</span></p>
+<p>Defining the state <span class="math inline">\(x = [\theta, \dot{\theta}]^T\)</span>, we obtain the first-order system:</p>
+<p><span class="math display">\[\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix} u.\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[f(x) =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix},
+  \qquad
+  g(x) =
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix},\]</span></p>
+<p>and the system is clearly control-affine.</p>
+</section>
+<section id="planar-pendulum-with-flexible-shaft" class="level3">
+<h3 class="anchored" data-anchor-id="planar-pendulum-with-flexible-shaft">Planar pendulum with flexible shaft</h3>
+<p>We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let <span class="math inline">\(\eta\)</span> be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.</p>
+<p>The resulting equations of motion can be written schematically as:</p>
+<p><span class="math display">\[M(\theta,\eta)
+  \begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  +
+  C(\theta,\dot{\theta},\eta,\dot{\eta})
+  \begin{bmatrix}
+    \dot{\theta} \\[0.2em]
+    \dot{\eta}
+  \end{bmatrix}
+  +
+  G(\theta,\eta)
+  +
+  \begin{bmatrix}
+    0 \\[0.2em]
+    k_\eta \eta + c_\eta \dot{\eta}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    u \\[0.2em]
+    0
+  \end{bmatrix},\]</span></p>
+<p>where <span class="math inline">\(k_\eta\)</span> and <span class="math inline">\(c_\eta\)</span> are the modal stiffness and damping, and all coupling terms have been absorbed into the matrices <span class="math inline">\(M,C,G\)</span>.</p>
+<p>Solving for accelerations:</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix} u.\]</span></p>
+<p>Defining</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x) =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right),
+  \qquad
+  A_{\mathrm{input}}(x) =
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix},\]</span></p>
+<p>we obtain</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{\theta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.\]</span></p>
+<p><strong>Superposition still holds.</strong> Even though the dynamics are now richer and nonlinear in <span class="math inline">\((\theta,\eta)\)</span>, the torque input still appears linearly as <span class="math inline">\(A_{\mathrm{input}}(x)\,u\)</span>. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs <span class="math inline">\(u_1,u_2\)</span> differ by the same linear map <span class="math inline">\(A_{\mathrm{input}}(x)\)</span> applied to the difference in inputs.</p>
+</section>
+<section id="summary-superposition-and-affine-structure" class="level3">
+<h3 class="anchored" data-anchor-id="summary-superposition-and-affine-structure">Summary: Superposition and affine structure</h3>
+<p>Across all cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:</p>
+<ul>
+<li>Flexible dynamics (shaft modes) modify the drift term <span class="math inline">\(f(x)\)</span> by adding state-dependent inertia, Coriolis, and restoring forces.</li>
+<li>The torque input <span class="math inline">\(u\)</span> enters linearly through an input matrix <span class="math inline">\(g(x)\)</span> that depends only on configuration and flexible coordinates, not on <span class="math inline">\(u\)</span>.</li>
+<li>For any fixed state <span class="math inline">\(x\)</span>, the acceleration (and hence <span class="math inline">\(\dot{x}\)</span>) is an affine function of <span class="math inline">\(u\)</span>; the passive part and active part superpose exactly.</li>
+</ul>
+<p>These examples provide explicit, low-dimensional realizations of the general control-affine structure used in the main text and highlight why the drift–input decomposition, ZTCF, and ZVCF constructions remain valid and interpretable in the presence of shaft flexibility.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
       };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
-<body>
-    <header>
-        <nav class="top-nav">
-            <div class="container">
-                                <ul class="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="articles.html">Articles</a></li>
-                    <li><a href="resources.html">Resources<br>& 
-                    <li><a href="daydreams-doodles.html">Daydreams<br>& 
-                    <li><a href="tools.html">Programs<br>& 
-                    <li><a href="contact.html">About<br>&amp; Contact</a></li>
-                    
-                </ul>
-                <a href="index.html" class="logo-link">
-                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
-                </a>
-            </div>
-        </nav>
-    </header>
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script src="script.js"></script>
 
-    <main>
-        <section class="page-header">
-            <div class="container">
-                <h1>Affine Control Interpretation of the Golf Swing</h1>
-                <p class="page-subtitle">Drift, Input, and Causal Decomposition of Forces</p>
-                <p class="article-meta">Part I: Theoretical Foundations — Part 4 of 5 (Appendices A-C)</p>
-            </div>
-        </section>
 
-        <section class="article-section">
-            <div class="container">
-                <article class="main-article">
-                    <div class="article-content">
-                        <section class="article-body">
-                            <h2>Appendix A: Mathematical Derivations</h2>
-                            <p>
-                                This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid–flexible dynamics produce the affine decomposition
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = f(x) + g(x)u\]
-                            </div>
-                            <p>
-                                and to document all assumptions required for the formulation.
-                            </p>
 
-                            <h3>A.1 Coupled rigid–flexible equations of motion</h3>
-                            <p>
-                                We partition the generalized coordinates into
-                            </p>
-                            <div class="equation-block">
-                                \[q \in \mathbb{R}^{n}, \qquad \eta \in \mathbb{R}^{m},\]
-                            </div>
-                            <p>
-                                where \(q\) describes the rigid-body degrees of freedom and \(\eta\) contains the modal coordinates of the flexible shaft.
-                            </p>
-                            <p>
-                                Let
-                            </p>
-                            <div class="equation-block">
-                                \[v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}\]
-                            </div>
-                            <p>
-                                denote the generalized velocity.
-                            </p>
-                            <p>
-                                The equations of motion for the coupled system may be written in compact form:
-                            </p>
-                            <div class="equation-block">
-                                \[M(q,\eta)\,\dot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} \tau \\ 0 \end{bmatrix},\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(M(q,\eta)\) is the full inertia matrix of the rigid–flexible system,</li>
-                                <li>\(C(q,\dot{q},\eta,\dot{\eta})\) contains Coriolis and centrifugal terms,</li>
-                                <li>\(G(q)\) contains gravitational torques acting on the rigid-body DOFs,</li>
-                                <li>\(F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}\) contains shaft restoring and damping forces,</li>
-                                <li>\(\tau = B(q)\,u\) is the generalized torque vector induced by the input \(u\).</li>
-                            </ul>
-                            <p>
-                                The flexible DOFs have no direct torque inputs.
-                            </p>
 
-                            <h3>A.2 Block structure of the inertia and Coriolis matrices</h3>
-                            <p>
-                                The inertia matrix has the block form
-                            </p>
-                            <div class="equation-block">
-                                \[M(q,\eta) = \begin{bmatrix} M_{rr}(q,\eta) & M_{rf}(q,\eta) \\ M_{fr}(q,\eta) & M_{ff}(q,\eta) \end{bmatrix},\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(M_{rr}\) is the rigid-body inertia matrix,</li>
-                                <li>\(M_{ff}\) is the modal inertia matrix for the flexible shaft,</li>
-                                <li>\(M_{rf}\) and \(M_{fr}\) represent rigid–flexible coupling.</li>
-                            </ul>
-                            <p>
-                                Similarly, the Coriolis matrix has the block structure:
-                            </p>
-                            <div class="equation-block">
-                                \[C(q,\dot{q},\eta,\dot{\eta}) = \begin{bmatrix} C_{rr} & C_{rf} \\ C_{fr} & C_{ff} \end{bmatrix},\]
-                            </div>
-                            <p>
-                                with the usual property that
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{M} - 2C \quad \text{is skew-symmetric}.\]
-                            </div>
-                            <p>
-                                These blocks arise from standard manipulator equations extended to include flexible-body contributions.
-                            </p>
-
-                            <h3>A.3 Solving for accelerations</h3>
-                            <p>
-                                Writing \(\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}\), the equation becomes:
-                            </p>
-                            <div class="equation-block">
-                                \[M \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = - C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} - G(q) - F_s(\eta,\dot{\eta}) + \begin{bmatrix} B(q)\,u \\ 0 \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Assuming \(M\) is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = - M^{-1} \left( C\,v + G + F_{s} \right) + M^{-1} \begin{bmatrix} B(q)\,u \\ 0 \end{bmatrix}.\]
-                            </div>
-
-                            <h3>A.4 Drift acceleration</h3>
-                            <p>
-                                We define the drift acceleration as
-                            </p>
-                            <div class="equation-block">
-                                \[a_{\mathrm{drift}}(x) = -M^{-1}(q,\eta) \left( C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_{s}(\eta,\dot{\eta}) \right).\]
-                            </div>
-                            <p>
-                                All passive mechanical terms are explicitly included:
-                            </p>
-                            <ul>
-                                <li>inertia coupling,</li>
-                                <li>Coriolis and centripetal terms,</li>
-                                <li>gravity,</li>
-                                <li>elastic and damping forces from shaft deformation.</li>
-                            </ul>
-                            <p>
-                                Importantly,
-                            </p>
-                            <div class="equation-block">
-                                \[a_{\mathrm{drift}}(x) \quad \text{is independent of } u.\]
-                            </div>
-                            <p>
-                                This constitutes the <em>drift invariance</em> property.
-                            </p>
-
-                            <h3>A.5 Input acceleration mapping</h3>
-                            <p>
-                                The input-driven acceleration is the part proportional to \(u\):
-                            </p>
-                            <div class="equation-block">
-                                \[a_{\mathrm{input}}(x)\,u = M^{-1}(q,\eta) \begin{bmatrix} B(q)\,u \\ 0 \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Thus the input matrix is:
-                            </p>
-                            <div class="equation-block">
-                                \[A_{\mathrm{input}}(x) = M^{-1}(q,\eta) \begin{bmatrix} B(q) \\ 0 \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Linearity of the torque input is preserved even in the presence of:
-                            </p>
-                            <ul>
-                                <li>flexible-body modes,</li>
-                                <li>rigid–flexible coupling,</li>
-                                <li>configuration-dependent \(B(q)\),</li>
-                                <li>velocity-dependent \(C\) terms.</li>
-                            </ul>
-
-                            <h3>A.6 First-order state-space (affine) form</h3>
-                            <p>
-                                Define the full state
-                            </p>
-                            <div class="equation-block">
-                                \[x = \begin{bmatrix} q \\ \dot{q} \\ \eta \\ \dot{\eta} \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                The first-order dynamics follow directly from the definitions:
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = \begin{bmatrix} \dot{q} \\ \ddot{q} \\ \dot{\eta} \\ \ddot{\eta} \end{bmatrix} = f(x) + g(x)u,\]
-                            </div>
-                            <p>
-                                with
-                            </p>
-                            <div class="equation-block">
-                                \[f(x) = \begin{bmatrix} \dot{q} \\ [a_{\mathrm{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\mathrm{drift}}(x)]_{n+1:n+m} \end{bmatrix}, \qquad g(x) = \begin{bmatrix} 0 \\ [A_{\mathrm{input}}(x)]_{1:n,:} \\ 0 \\ [A_{\mathrm{input}}(x)]_{n+1:n+m,:} \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                This establishes the nonlinear control-affine structure used throughout the manuscript.
-                            </p>
-
-                            <h3>A.7 Notes on coordinate choices</h3>
-                            <p>
-                                The derivations above are independent of the coordinate representation used for the rigid-body DOFs, provided:
-                            </p>
-                            <ul>
-                                <li>the coordinates are minimal and smooth, or</li>
-                                <li>redundant coordinates are supplemented with constraint forces.</li>
-                            </ul>
-                            <p>
-                                The formulation is consistent with:
-                            </p>
-                            <ul>
-                                <li>Denavit–Hartenberg (DH) joint coordinates,</li>
-                                <li>spatial vector formulations,</li>
-                                <li>exponential coordinates for rigid-body motion,</li>
-                                <li>Euler angles (with appropriate domain restrictions),</li>
-                                <li>quaternion-based internal representations (converted to minimal coordinates for dynamics).</li>
-                            </ul>
-                            <p>
-                                The drift and input mappings depend only on the mechanical structure and remain unchanged by a different choice of coordinates or frames.
-                            </p>
-
-                            <h3>A.8 Summary</h3>
-                            <p>
-                                The derivations in this appendix demonstrate explicitly that:
-                            </p>
-                            <ul>
-                                <li>the golfer–club–shaft system admits a nonlinear control-affine representation,</li>
-                                <li>drift forces arise solely from passive dynamics,</li>
-                                <li>input forces arise solely from the torque inputs,</li>
-                                <li>all rigid–flexible coupling remains in the drift term,</li>
-                                <li>counterfactual constructions (ZTCF and ZVCF) follow naturally from the structure.</li>
-                            </ul>
-                            <p>
-                                This provides the mathematical backbone for the force decomposition and torque taxonomy developed in the main text.
-                            </p>
-
-                            <h2>Appendix B: Modal Approximation for the Flexible Shaft</h2>
-                            <p>
-                                This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid–flexible dynamics of the golfer–club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates \(\eta \in \mathbb{R}^{m}\) used earlier, and why this representation preserves the linearity of the torque input in the final control-affine form.
-                            </p>
-
-                            <h3>B.1 Continuous beam model</h3>
-                            <p>
-                                The golf shaft is modeled as a uniform Euler–Bernoulli beam of length \(L\), with transverse displacement field
-                            </p>
-                            <div class="equation-block">
-                                \[w(s,t), \qquad s \in [0,L],\]
-                            </div>
-                            <p>
-                                where \(s\) is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is
-                            </p>
-                            <div class="equation-block">
-                                \[\rho A \,\frac{\partial^2 w}{\partial t^2} + c_b \frac{\partial w}{\partial t} + EI \,\frac{\partial^4 w}{\partial s^4} = f_{\mathrm{base}}(s,t),\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(\rho A\) is the linear mass density,</li>
-                                <li>\(c_b\) is distributed damping,</li>
-                                <li>\(E I\) is the bending rigidity,</li>
-                                <li>\(f_{\mathrm{base}}(s,t)\) contains forces transmitted from the handle motion.</li>
-                            </ul>
-                            <p>
-                                Boundary conditions depend on grip modeling. We assume:
-                            </p>
-                            <div class="equation-block">
-                                \[w(0,t) = 0, \qquad w_s(0,t) = 0,\]
-                            </div>
-                            <p>
-                                for a clamped handle, and free-tip conditions at \(s=L\):
-                            </p>
-                            <div class="equation-block">
-                                \[EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.\]
-                            </div>
-                            <p>
-                                These constraints define the mode shapes used in the modal expansion.
-                            </p>
-
-                            <h3>B.2 Modal expansion</h3>
-                            <p>
-                                The transverse displacement is approximated using a finite set of vibration modes:
-                            </p>
-                            <div class="equation-block">
-                                \[w(s,t) \approx \sum_{i=1}^{m} \phi_i(s)\,\eta_i(t),\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(\phi_i(s)\) are the eigenfunctions of the beam operator with the boundary conditions above,</li>
-                                <li>\(\eta_i(t)\) are the modal amplitudes,</li>
-                                <li>\(m\) is the number of modes retained.</li>
-                            </ul>
-                            <p>
-                                The mode shapes satisfy the eigenvalue problem:
-                            </p>
-                            <div class="equation-block">
-                                \[EI \,\phi_i'''' = \omega_i^2 \rho A \,\phi_i,\]
-                            </div>
-                            <p>
-                                with orthogonality relations
-                            </p>
-                            <div class="equation-block">
-                                \[\int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.\]
-                            </div>
-                            <p>
-                                Substituting the modal expansion into the beam equation and projecting onto each \(\phi_i\) yields the modal equations of motion.
-                            </p>
-
-                            <h3>B.3 Modal equations of motion</h3>
-                            <p>
-                                The projected dynamics have the form:
-                            </p>
-                            <div class="equation-block">
-                                \[\ddot{\eta}_i + 2\,\zeta_i \omega_i\,\dot{\eta}_i + \omega_i^2 \eta_i = Q_i(q,\dot{q}),\]
-                            </div>
-                            <p>
-                                for \(i = 1,\dots,m\), where:
-                            </p>
-                            <ul>
-                                <li>\(\omega_i\) is the natural frequency of mode \(i\),</li>
-                                <li>\(\zeta_i\) is the modal damping ratio (derived from \(c_b\)),</li>
-                                <li>\(Q_i(q,\dot{q})\) are generalized modal forces induced by handle motion.</li>
-                            </ul>
-                            <p>
-                                Collecting terms,
-                            </p>
-                            <div class="equation-block">
-                                \[\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q}),\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <div class="equation-block">
-                                \[K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2), \qquad C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).\]
-                            </div>
-                            <p>
-                                These matrices match those used earlier, where the shaft forces enter the drift term.
-                            </p>
-
-                            <h3>B.4 Rigid–flexible coupling</h3>
-                            <p>
-                                Motion of the hands introduces base excitation into the beam. If \(r_h(q)\) denotes the handle position, the kinematic constraint yields:
-                            </p>
-                            <div class="equation-block">
-                                \[w(0,t) = r_h(q(t)) \quad \Rightarrow \quad f_{\mathrm{base}}(s,t) \propto \ddot{r}_h(q,\dot{q},\ddot{q}).\]
-                            </div>
-                            <p>
-                                Projected modal forcings then take the form:
-                            </p>
-                            <div class="equation-block">
-                                \[Q(q,\dot{q}) = - M_{fr}(q,\eta)\,\ddot{q} - C_{fr}(q,\dot{q},\eta,\dot{\eta})\,\dot{q} - \cdots,\]
-                            </div>
-                            <p>
-                                matching the coupling seen in the full equations of motion.
-                            </p>
-                            <p>
-                                Critically:
-                            </p>
-                            <div class="equation-block">
-                                \[Q(q,\dot{q}) \quad \text{contains no direct dependence on } u.\]
-                            </div>
-                            <p>
-                                All torque influence on the shaft is mediated through rigid-body acceleration.
-                            </p>
-
-                            <h3>B.5 Preservation of linear torque input</h3>
-                            <p>
-                                From the full equations of motion:
-                            </p>
-                            <div class="equation-block">
-                                \[M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_s(\eta,\dot{\eta}) = \begin{bmatrix} B(q)u \\ 0 \end{bmatrix},\]
-                            </div>
-                            <p>
-                                the modal forces enter entirely through the drift term:
-                            </p>
-                            <div class="equation-block">
-                                \[F_s(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Because \(u\) appears only in the block \(B(q)u\) associated with rigid-body torques:
-                            </p>
-                            <div class="equation-block">
-                                \[u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.\]
-                            </div>
-                            <p>
-                                Hence: <strong>The modal representation does not create any nonlinear torque dependence.</strong>
-                            </p>
-                            <p>
-                                All flexible-body dynamics remain embedded in the drift vector field \(f(x)\).
-                            </p>
-
-                            <h3>B.6 Influence of mode truncation</h3>
-                            <p>
-                                Using \(m < \infty\) modes introduces model reduction error:
-                            </p>
-                            <ul>
-                                <li>High-frequency shaft vibration is omitted.</li>
-                                <li>Tip deflection accuracy depends on \(m\).</li>
-                                <li>Stiffness estimates become approximate near impact.</li>
-                            </ul>
-                            <p>
-                                However, the <em>structure</em> of the drift–input decomposition is preserved for any \(m\). Increasing \(m\) simply increases the dimension of the drift term, never the form of the input term.
-                            </p>
-
-                            <h3>B.7 Summary</h3>
-                            <p>
-                                The modal shaft model presented here:
-                            </p>
-                            <ul>
-                                <li>originates from a continuous beam,</li>
-                                <li>reduces to a finite-dimensional ODE system via orthogonal mode projection,</li>
-                                <li>produces stiffness and damping forces that appear only in the drift,</li>
-                                <li>preserves the linearity of torque input,</li>
-                                <li>maintains the control-affine structure central to the force and torque taxonomy.</li>
-                            </ul>
-                            <p>
-                                This makes the modal approximation both computationally efficient and theoretically compatible with the full decomposition presented in the main text.
-                            </p>
-
-                            <h2>Appendix C: Pendulum Examples: Rigid and Flexible, 2D and 3D</h2>
-                            <p>
-                                This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
-                            </p>
-                            <ul>
-                                <li>a planar (2D) pendulum with and without a flexible shaft, and</li>
-                                <li>a spatial (3D) pendulum with and without a flexible shaft.</li>
-                            </ul>
-                            <p>
-                                In each case, we show that the equations of motion can be written as
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = f(x) + g(x)u,\]
-                            </div>
-                            <p>
-                                with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input \(u\).
-                            </p>
-
-                            <h3>C.1 Planar rigid pendulum with torque input</h3>
-                            <p>
-                                Consider a simple planar pendulum of length \(L\) and mass \(m\), pivoted at the origin and moving in the vertical plane. Let \(\theta\) be the angle from the downward vertical, positive counterclockwise. A torque input \(u\) is applied at the pivot.
-                            </p>
-                            <p>
-                                The kinetic and potential energy are:
-                            </p>
-                            <div class="equation-block">
-                                \[T = \frac{1}{2} m L^2 \dot{\theta}^2, \qquad V = m g L (1 - \cos\theta),\]
-                            </div>
-                            <p>
-                                and the Lagrangian is \(\mathcal{L} = T - V\).
-                            </p>
-                            <p>
-                                The Euler–Lagrange equation with generalized torque \(u\) is:
-                            </p>
-                            <div class="equation-block">
-                                \[\frac{d}{dt}\left( \frac{\partial \mathcal{L}}{\partial \dot{\theta}} \right) - \frac{\partial \mathcal{L}}{\partial \theta} = u.\]
-                            </div>
-                            <p>
-                                This yields:
-                            </p>
-                            <div class="equation-block">
-                                \[m L^2 \ddot{\theta} + m g L \sin\theta = u.\]
-                            </div>
-                            <p>
-                                Defining the state \(x = [\theta, \dot{\theta}]^T\), we obtain the first-order system:
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = \begin{bmatrix} \dot{\theta} \\ -\frac{g}{L} \sin\theta \end{bmatrix} + \begin{bmatrix} 0 \\ \frac{1}{m L^2} \end{bmatrix} u.\]
-                            </div>
-                            <p>
-                                Thus,
-                            </p>
-                            <div class="equation-block">
-                                \[f(x) = \begin{bmatrix} \dot{\theta} \\ -\frac{g}{L} \sin\theta \end{bmatrix}, \qquad g(x) = \begin{bmatrix} 0 \\ \frac{1}{m L^2} \end{bmatrix},\]
-                            </div>
-                            <p>
-                                and the system is clearly control-affine.
-                            </p>
-                            <p>
-                                <em>Superposition of drift and input.</em> For any two inputs \(u_1,u_2\) and associated accelerations \(\ddot{\theta}_1, \ddot{\theta}_2\), we have:
-                            </p>
-                            <div class="equation-block">
-                                \[\ddot{\theta}_i = -\frac{g}{L}\sin\theta + \frac{1}{mL^2}u_i, \quad i=1,2.\]
-                            </div>
-                            <p>
-                                Then for a convex combination \(u_\lambda = \lambda u_1 + (1-\lambda)u_2\),
-                            </p>
-                            <div class="equation-block">
-                                \[\ddot{\theta}_\lambda = -\frac{g}{L}\sin\theta + \frac{1}{mL^2}u_\lambda = \lambda \ddot{\theta}_1 + (1-\lambda)\ddot{\theta}_2,\]
-                            </div>
-                            <p>
-                                so the torque contribution superposes linearly on top of the same drift term. This is the simplest explicit instance of the structure used in the main manuscript.
-                            </p>
-
-                            <h3>C.2 Planar pendulum with flexible shaft (single bending mode)</h3>
-                            <p>
-                                We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let \(\eta\) be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.
-                            </p>
-                            <p>
-                                We model the shaft deformation as a linear oscillator attached at the end of the rigid pendulum:
-                            </p>
-                            <div class="equation-block">
-                                \[\ddot{\eta} + 2\zeta\omega \dot{\eta} + \omega^2 \eta = -\alpha \ddot{\theta},\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(\omega\) is the natural frequency of the mode,</li>
-                                <li>\(\zeta\) is its damping ratio,</li>
-                                <li>\(\alpha\) scales how base rotation \(\ddot{\theta}\) drives shaft bending.</li>
-                            </ul>
-                            <p>
-                                The resulting equations of motion can be written schematically as:
-                            </p>
-                            <div class="equation-block">
-                                \[M(\theta,\eta) \begin{bmatrix} \ddot{\theta} \\ \ddot{\eta} \end{bmatrix} + C(\theta,\dot{\theta},\eta,\dot{\eta}) \begin{bmatrix} \dot{\theta} \\ \dot{\eta} \end{bmatrix} + G(\theta,\eta) + \begin{bmatrix} 0 \\ k_\eta \eta + c_\eta \dot{\eta} \end{bmatrix} = \begin{bmatrix} u \\ 0 \end{bmatrix},\]
-                            </div>
-                            <p>
-                                where \(k_\eta\) and \(c_\eta\) are the modal stiffness and damping derived from \(\omega,\zeta\), and all coupling terms have been absorbed into the matrices \(M,C,G\).
-                            </p>
-                            <p>
-                                Solving for accelerations:
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} \ddot{\theta} \\ \ddot{\eta} \end{bmatrix} = -M^{-1} \left( C \begin{bmatrix} \dot{\theta} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ k_\eta \eta + c_\eta \dot{\eta} \end{bmatrix} \right) + M^{-1} \begin{bmatrix} 1 \\ 0 \end{bmatrix} u.\]
-                            </div>
-                            <p>
-                                Defining
-                            </p>
-                            <div class="equation-block">
-                                \[a_{\mathrm{drift}}(x) = -M^{-1} \left( C \begin{bmatrix} \dot{\theta} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ k_\eta \eta + c_\eta \dot{\eta} \end{bmatrix} \right), \qquad A_{\mathrm{input}}(x) = M^{-1} \begin{bmatrix} 1 \\ 0 \end{bmatrix},\]
-                            </div>
-                            <p>
-                                we obtain
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} \ddot{\theta} \\ \ddot{\eta} \end{bmatrix} = a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.\]
-                            </div>
-                            <p>
-                                <em>Superposition still holds.</em> Even though the dynamics are now richer and nonlinear in \((\theta,\eta)\), the torque input still appears linearly as \(A_{\mathrm{input}}(x)\,u\). The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs \(u_1,u_2\) differ by the same linear map \(A_{\mathrm{input}}(x)\) applied to the difference in inputs.
-                            </p>
-
-                            <h3>C.3 Spatial (3D) rigid pendulum with torque input</h3>
-                            <p>
-                                We now consider a 3D pendulum: a point mass \(m\) at the end of a massless rod of length \(L\), pivoted at the origin and free to move in 3D under gravity. Let \(R \in SO(3)\) describe the orientation of the rod, so the mass position is
-                            </p>
-                            <div class="equation-block">
-                                \[p = R\,\begin{bmatrix} 0 \\ 0 \\ -L \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Let \(\omega \in \mathbb{R}^3\) be the body angular velocity, and let \(\tau = u \in \mathbb{R}^3\) be the control torque in body coordinates.
-                            </p>
-                            <p>
-                                The rigid-body equations of motion for a 3D pendulum are:
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{R} = R \hat{\omega}, \qquad I \dot{\omega} + \omega \times (I\omega) = \tau + \tau_g(R),\]
-                            </div>
-                            <p>
-                                where:
-                            </p>
-                            <ul>
-                                <li>\(I\) is the inertia tensor about the pivot,</li>
-                                <li>\(\hat{\omega}\) is the skew-symmetric matrix such that \(\hat{\omega}v = \omega \times v\),</li>
-                                <li>\(\tau_g(R)\) is the gravitational torque.</li>
-                            </ul>
-                            <p>
-                                Rewriting,
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{\omega} = I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big) + I^{-1} \tau.\]
-                            </div>
-                            <p>
-                                Defining the state \(x = (R,\omega)\), we have:
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = \begin{bmatrix} R \hat{\omega} \\ I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big) \end{bmatrix} + \begin{bmatrix} 0 \\ I^{-1} \end{bmatrix} u,\]
-                            </div>
-                            <p>
-                                i.e.,
-                            </p>
-                            <div class="equation-block">
-                                \[f(x) = \begin{bmatrix} R \hat{\omega} \\ I^{-1}\big( -\omega \times (I\omega) + \tau_g(R) \big) \end{bmatrix}, \qquad g(x) = \begin{bmatrix} 0 \\ I^{-1} \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Once again, the system is control-affine: all nonlinearities are encapsulated in \(f(x)\), and the input enters linearly via \(g(x)u\).
-                            </p>
-
-                            <h3>C.4 Spatial (3D) pendulum with flexible shaft</h3>
-                            <p>
-                                We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates \(\eta \in \mathbb{R}^m\), just as in Appendix B.
-                            </p>
-                            <p>
-                                The full state is
-                            </p>
-                            <div class="equation-block">
-                                \[x = (R,\omega,\eta,\dot{\eta}),\]
-                            </div>
-                            <p>
-                                and the equations of motion may be written schematically as:
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} I(\eta) & I_{rf}(\eta) \\ I_{fr}(\eta) & M_{ff} \end{bmatrix} \begin{bmatrix} \dot{\omega} \\ \ddot{\eta} \end{bmatrix} + \begin{bmatrix} C_{rr}(\omega,\eta,\dot{\eta}) & C_{rf}(\omega,\eta,\dot{\eta}) \\ C_{fr}(\omega,\eta,\dot{\eta}) & C_{ff}(\omega,\eta,\dot{\eta}) \end{bmatrix} \begin{bmatrix} \omega \\ \dot{\eta} \end{bmatrix} + \begin{bmatrix} \tau_g(R,\eta) \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.\]
-                            </div>
-                            <p>
-                                Solving for \((\dot{\omega},\ddot{\eta})\):
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} \dot{\omega} \\ \ddot{\eta} \end{bmatrix} = -\tilde{M}^{-1}(R,\eta) \left( \tilde{C}(\omega,\eta,\dot{\eta}) \begin{bmatrix} \omega \\ \dot{\eta} \end{bmatrix} + \begin{bmatrix} \tau_g(R,\eta) \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) + \tilde{M}^{-1}(R,\eta) \begin{bmatrix} I_3 \\ 0 \end{bmatrix} u,\]
-                            </div>
-                            <p>
-                                where \(\tilde{M},\tilde{C}\) compact the block matrices and \(I_3\) is the \(3\times3\) identity.
-                            </p>
-                            <p>
-                                Defining
-                            </p>
-                            <div class="equation-block">
-                                \[a_{\mathrm{drift}}(x) = -\tilde{M}^{-1}(R,\eta) \left( \tilde{C}(\omega,\eta,\dot{\eta}) \begin{bmatrix} \omega \\ \dot{\eta} \end{bmatrix} + \begin{bmatrix} \tau_g(R,\eta) \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right), \qquad A_{\mathrm{input}}(x) = \tilde{M}^{-1}(R,\eta) \begin{bmatrix} I_3 \\ 0 \end{bmatrix},\]
-                            </div>
-                            <p>
-                                we have
-                            </p>
-                            <div class="equation-block">
-                                \[\begin{bmatrix} \dot{\omega} \\ \ddot{\eta} \end{bmatrix} = a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u,\]
-                            </div>
-                            <p>
-                                and \(R\) evolves as \(\dot{R} = R \hat{\omega}\). The full first-order dynamics again take the control-affine form
-                            </p>
-                            <div class="equation-block">
-                                \[\dot{x} = f(x) + g(x)u,\]
-                            </div>
-                            <p>
-                                with all flexible-shaft contributions embedded in \(f(x)\).
-                            </p>
-                            <p>
-                                <em>Superposition in 3D with flexibility.</em> Despite the complexity of the 3D coupled dynamics, any change in the torque input \(u\) influences \((\dot{\omega},\ddot{\eta})\) only through the linear operator \(A_{\mathrm{input}}(x)\). For a given state \(x\), the mapping \(u \mapsto \dot{x}\) is affine; the difference between two trajectories at the same state due to different inputs is always given by \(g(x)(u_1-u_2)\). This is the same structural property exploited in the full golfer–club model.
-                            </p>
-
-                            <h3>C.5 Summary: Superposition and affine structure</h3>
-                            <p>
-                                Across all four cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:
-                            </p>
-                            <ul>
-                                <li>Flexible dynamics (shaft modes) modify the drift term \(f(x)\) by adding state-dependent inertia, Coriolis, and restoring forces.</li>
-                                <li>The torque input \(u\) enters linearly through an input matrix \(g(x)\) that depends only on configuration and flexible coordinates, not on \(u\).</li>
-                                <li>For any fixed state \(x\), the acceleration (and hence \(\dot{x}\)) is an affine function of \(u\); the passive part and active part superpose exactly.</li>
-                            </ul>
-                            <p>
-                                These examples provide explicit, low-dimensional realizations of the general control-affine structure used in the main text and highlight why the drift–input decomposition, ZTCF, and ZVCF constructions remain valid and interpretable in the presence of shaft flexibility.
-                            </p>
-                        </section>
-                    </div>
-                </article>
-
-                <!-- Navigation between parts -->
-                <nav class="article-navigation">
-                    <div class="container">
-                        <div class="nav-links">
-                            <a href="theory-part3.html" class="nav-prev">← Previous: Part 3</a>
-                            <a href="theory-part5.html" class="nav-next">Next: Part 5 →</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 AffineDrift. Exploring the mathematics of motion.</p>
-            <p class="footer-tagline">Affine Drift Effin Matters</p>
-            <div class="footer-social">
-                <ul class="footer-social-links">
-                    <li><a href="#" target="_blank" rel="noopener">Twitter/X</a></li>
-                    <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
-                    <li><a href="https://github.com/D-sorganization/AffineDrift" target="_blank" rel="noopener">AffineDrift on GitHub</a></li>
-                    <li><a href="https://github.com/D-sorganization" target="_blank" rel="noopener">D-Sorganization</a></li>
-                </ul>
-                <a href="index.html" class="logo-link">
-                    <img src="logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
-                </a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
+</body></html>
