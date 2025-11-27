@@ -72,11 +72,11 @@ $$
 \mathbf{F}_{\text{gravity}} = m\mathbf{g}
 $$
 
-where $**g** = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
+where $\mathbf{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 
 **Step 4: Solve for Unknown Forces**
 
-From Equation~[@eq:force_balance], the sum of unknown forces (from the golfer's hands) is:
+From Equation~[@eq-force_balance], the sum of unknown forces (from the golfer's hands) is:
 
 $$
 \mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
@@ -90,7 +90,7 @@ $$
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 $$
 
-Since we know $\sum **M**_{\text{COM}}$ from Equation~[@eq:moment_balance], we can calculate the required moment about point $P$.
+Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation~[@eq-moment_balance], we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
@@ -102,9 +102,9 @@ For these calculations to be valid, we must assume:
 2. **Known mass properties:** We must accurately know:
     - Total mass $m$
         
-- Center of mass location $**r**_{\text{COM}}$
-        
-- Moment of inertia tensor $**I**$
+- Center of mass location $\mathbf{r}_{\text{COM}}$
+    
+- Moment of inertia tensor $\mathbf{I}$
     
     
 3. **Clean kinematic data:** Motion capture data must be:
@@ -129,9 +129,9 @@ Inverse dynamics provides mathematically correct values for the forces and momen
 ### The Interpretive Gap
 
 The output of inverse dynamics is:
-- A net force $**F**_{\text{hands}}$ at reference point $P$
+- A net force $\mathbf{F}_{\text{hands}}$ at reference point $P$
     
-- A net couple (moment) $**C**_{P}$ at reference point $P$
+- A net couple (moment) $\mathbf{C}_{P}$ at reference point $P$
 
 What we want to understand is:
 - Where on the grip is the golfer applying force?
@@ -152,9 +152,9 @@ Bridging this gap requires understanding three fundamental limitations.
 
 **definition:** [Force-Couple Equivalence]
 Any system of forces acting on a rigid body can be reduced to a statically equivalent system consisting of:
-- A single resultant force $**F**_{\text{eq}}$ acting at an arbitrary reference point
+- A single resultant force $\mathbf{F}_{\text{eq}}$ acting at an arbitrary reference point
     
-- A couple $**C**_{\text{eq}}$ (pure moment)
+- A couple $\mathbf{C}_{\text{eq}}$ (pure moment)
 This equivalence is *dynamic*: both systems produce identical translational and rotational accelerations of the rigid body.
 
 The fundamental principle is that a couple is a *free vector*—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is *bound* to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
@@ -163,15 +163,16 @@ The fundamental principle is that a couple is a *free vector*—it can act anywh
 
 ### Coordinate Transformation of Force-Couple Pairs
 
-For a rigid body such as a golf club, if inverse dynamics yields force $**Feq**$ and couple $**Ceq**$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
+For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-\begin{proposition**[Couple Transformation Formula]
+::: {.proposition}
+**Couple Transformation Formula**
+
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
-{#eq-couple_transform}
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-$$
+$$ {#eq-couple_transform}
 
 where:
 - $C_i$ = equivalent couple at point $i$
@@ -269,13 +270,13 @@ $$
 $$
 
 where:
-- $**x** \in \mathbb{R}^n$ is the state vector (positions and velocities)
+- $\mathbf{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
     
-- $**f**(**x**)$ is the *drift vector field* (system dynamics without input)
+- $\mathbf{f}(\mathbf{x})$ is the *drift vector field* (system dynamics without input)
     
-- $**G**(**x**)$ is the *input matrix* (how controls affect the state)
+- $\mathbf{G}(\mathbf{x})$ is the *input matrix* (how controls affect the state)
     
-- $**u** \in \mathbb{R}^m$ is the *control input vector*
+- $\mathbf{u} \in \mathbb{R}^m$ is the *control input vector$
 
 The key feature is the **additive separation** of drift and input effects. This decomposition reflects a fundamental physical distinction:
 
@@ -292,7 +293,7 @@ The input component represents what the golfer consciously controls and experien
 
 ### Inverse Dynamics in the Lagrangian Framework
 
-To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $**q**$, the equations of motion are:
+To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $\mathbf{q}$, the equations of motion are:
 
 $$
 {#eq-lagrange}
@@ -300,24 +301,23 @@ $$
 $$
 
 where:
-- $**M**(**q**)$ is the mass/inertia matrix
+- $\mathbf{M}(\mathbf{q})$ is the mass/inertia matrix
     
-- $**C**(**q**,\dot{**q**})$ contains Coriolis and centrifugal terms
+- $\mathbf{C}(\mathbf{q},\dot{\mathbf{q}})$ contains Coriolis and centrifugal terms
     
-- $**G**(**q**)$ contains gravitational and other conservative force terms
+- $\mathbf{G}(\mathbf{q})$ contains gravitational and other conservative force terms
     
-- $**\tau**$ are the generalized forces (what we want to find)
+- $\boldsymbol{\tau}$ are the generalized forces (what we want to find)
 
-Inverse dynamics solves for $**\tau**$ given observed $**q**(t)$, $\dot{**q**}(t)$, and $\ddot{**q**}(t)$:
+Inverse dynamics solves for $\boldsymbol{\tau}$ given observed $\mathbf{q}(t)$, $\dot{\mathbf{q}}(t)$, and $\ddot{\mathbf{q}}(t)$:
 
 $$
-{#eq-inverse_dynamics}
 \boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
-$$
+$$ {#eq-inverse_dynamics}
 
 ### The Fundamental Problem: Inseparability of Drift and Input
 
-Here is the critical observation: **inverse dynamics computes the total generalized force $**\tau**$, which includes both drift and input components**:
+Here is the critical observation: **inverse dynamics computes the total generalized force $\boldsymbol{\tau}$, which includes both drift and input components**:
 
 $$
 \boldsymbol{\tau}_{\text{total}} = \boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}}
@@ -334,7 +334,7 @@ $$
 
 ::: {.limitation-box}
 **Fundamental Limitation:** 
-Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $**\tau**_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
+Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $\boldsymbol{\tau}_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
 
 $$
 \boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}}
@@ -364,9 +364,9 @@ To separate drift from input, we need an *explicit model* of the system. Specifi
 3. **Control model:** Which degrees of freedom are directly actuated and which forces are controllable
 
 With such a model, we can:
-1. Calculate $**\tau**_{\text{drift}}$ from the observed state $(**q**, \dot{**q**})$ using the drift dynamics
+1. Calculate $\boldsymbol{\tau}_{\text{drift}}$ from the observed state $(\mathbf{q}, \dot{\mathbf{q}})$ using the drift dynamics
     
-2. Obtain $**\tau**_{\text{input}}$ by subtraction: $**\tau**_{\text{input}} = **\tau**_{\text{total}} - **\tau**_{\text{drift}}$
+2. Obtain $\boldsymbol{\tau}_{\text{input}}$ by subtraction: $\boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}} - \boldsymbol{\tau}_{\text{drift}}$
 
 ::: {.keypoint-box}
 **Key Point:** 
