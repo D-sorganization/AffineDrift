@@ -156,6 +156,7 @@ nav .container {
     align-items: center;
     gap: 2rem;
     padding: 0 1rem;
+    position: relative;
 }
 
 .top-nav .container {
@@ -214,6 +215,58 @@ nav .container {
     align-items: center;
     flex-shrink: 1;
     min-width: 0;
+}
+
+.nav-toggle,
+.sidebar-toggle {
+    display: none;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: var(--pure-white);
+    border-radius: 10px;
+    padding: 0.45rem 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+}
+
+.nav-toggle:focus-visible,
+.sidebar-toggle:focus-visible {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}
+
+.screen-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 900;
+}
+
+.screen-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+.nav-toggle:hover,
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.nav-toggle:active,
+.sidebar-toggle:active {
+    transform: translateY(0);
 }
 
 .nav-links a {
@@ -1021,6 +1074,7 @@ footer p {
         transition: transform 0.3s ease;
         top: 96px; /* Reset for mobile where header is smaller */
         height: calc(100vh - 96px);
+        box-shadow: 6px 0 18px rgba(0, 0, 0, 0.12);
     }
 
     .sidebar.open {
@@ -1043,10 +1097,39 @@ footer p {
         height: 60px;
     }
 
+    .nav-toggle,
+    .sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.95rem;
+        min-width: 0;
+    }
+
     .nav-links {
-        gap: 1.2rem;
-        font-size: 0.9rem;
-        margin-right: 0.5rem;
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+        background: linear-gradient(135deg, rgba(15, 76, 117, 0.97), rgba(26, 26, 46, 0.97));
+        padding: 0.8rem 1rem 1rem 1rem;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 5;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        width: 100%;
+        padding: 0.6rem 0.4rem;
     }
 
     .site-title {

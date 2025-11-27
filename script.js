@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Highlight active navigation link on scroll
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const navLinksContainer = document.querySelector('.nav-links');
+    const sidebar = document.querySelector('.sidebar');
+    const navContainer = document.querySelector('.top-nav .container');
+    let navToggleButton;
+    let sidebarToggleButton;
+    let overlay;
 
     function highlightNavigation() {
         const scrollPosition = window.scrollY + 150;
@@ -108,14 +114,132 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Mobile menu toggle (for future implementation)
-    const navToggle = document.querySelector('.nav-toggle');
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
+    // Mobile menu toggle and sidebar toggle creation
+    if (navContainer) {
+        navToggleButton = document.createElement('button');
+        navToggleButton.className = 'nav-toggle';
+        navToggleButton.type = 'button';
+        navToggleButton.setAttribute('aria-expanded', 'false');
+        navToggleButton.setAttribute('aria-label', 'Toggle navigation menu');
+        navToggleButton.textContent = 'Menu';
+
+        sidebarToggleButton = document.createElement('button');
+        sidebarToggleButton.className = 'sidebar-toggle';
+        sidebarToggleButton.type = 'button';
+        sidebarToggleButton.setAttribute('aria-expanded', 'false');
+        sidebarToggleButton.setAttribute('aria-label', 'Toggle recent pages panel');
+        sidebarToggleButton.textContent = 'History';
+
+        const firstChild = navContainer.firstElementChild;
+        navContainer.insertBefore(navToggleButton, firstChild);
+        navContainer.insertBefore(sidebarToggleButton, firstChild);
+    }
+
+    function ensureOverlay() {
+        if (overlay) return overlay;
+
+        overlay = document.createElement('div');
+        overlay.className = 'screen-overlay';
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener('click', () => {
+            closeNavMenu();
+            closeSidebar();
+        });
+
+        return overlay;
+    }
+
+    function updateOverlayState() {
+        const navOpen = navLinksContainer && navLinksContainer.classList.contains('active') && window.innerWidth <= 900;
+        const sidebarOpen = sidebar && sidebar.classList.contains('open') && window.innerWidth <= 768;
+        const shouldShowOverlay = navOpen || sidebarOpen;
+
+        if (!overlay && shouldShowOverlay) {
+            ensureOverlay();
+        }
+
+        if (overlay) {
+            overlay.classList.toggle('active', shouldShowOverlay);
+        }
+
+        document.body.classList.toggle('no-scroll', shouldShowOverlay);
+    }
+
+    function toggleNavMenu() {
+        if (!navLinksContainer || !navToggleButton) return;
+        const isActive = navLinksContainer.classList.toggle('active');
+        navToggleButton.setAttribute('aria-expanded', isActive.toString());
+        if (isActive) {
+            ensureOverlay();
+        }
+        updateOverlayState();
+    }
+
+    function closeNavMenu() {
+        if (!navLinksContainer || !navToggleButton) return;
+        navLinksContainer.classList.remove('active');
+        navToggleButton.setAttribute('aria-expanded', 'false');
+        updateOverlayState();
+    }
+
+    if (navToggleButton && navLinksContainer) {
+        navToggleButton.addEventListener('click', toggleNavMenu);
+
+        navLinksContainer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 900) {
+                    closeNavMenu();
+                }
+            });
         });
     }
+
+    function toggleSidebar() {
+        if (!sidebar || !sidebarToggleButton) return;
+        const isOpen = sidebar.classList.toggle('open');
+        sidebarToggleButton.setAttribute('aria-expanded', isOpen.toString());
+        if (isOpen) {
+            ensureOverlay();
+        }
+        updateOverlayState();
+    }
+
+    function closeSidebar() {
+        if (!sidebar || !sidebarToggleButton) return;
+        sidebar.classList.remove('open');
+        sidebarToggleButton.setAttribute('aria-expanded', 'false');
+        updateOverlayState();
+    }
+
+    if (sidebarToggleButton && sidebar) {
+        sidebarToggleButton.addEventListener('click', toggleSidebar);
+    }
+
+    function handleResize() {
+        if (window.innerWidth > 900) {
+            closeNavMenu();
+        }
+
+        if (window.innerWidth > 768 && sidebar) {
+            sidebar.classList.remove('open');
+            if (sidebarToggleButton) {
+                sidebarToggleButton.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        updateOverlayState();
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            closeNavMenu();
+            closeSidebar();
+        }
+    });
 
     // Page history tracking for sidebar
     function updateHistorySidebar() {
