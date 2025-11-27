@@ -302,7 +302,7 @@ class LaTeXToQuartoConverter:
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(qmd_content)
 
-        print(f"✓ Conversion complete: {output_file}")
+        print(f"Conversion complete: {output_file}")
         return output_file
 
 

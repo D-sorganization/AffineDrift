@@ -81,8 +81,8 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
 
     Returns:
         tuple[float, float]: A tuple containing:
-            - I_alpha (float): Moment of inertia about shaft axis (kg·m²).
-            - I_gamma (float): Moment of inertia about high inertia axis (kg·m²).
+            - I_alpha (float): Moment of inertia about shaft axis (kg·m²) - higher MOI.
+            - I_gamma (float): Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
     """
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
@@ -93,11 +93,11 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
     # Clubhead inertia about shaft axis (point mass)
     I_head_alpha = m_head * cg_distance_m**2
 
-    # Total I_alpha (about shaft axis)
+    # Total I_alpha (about shaft axis) - higher MOI axis
     I_alpha = I_shaft_alpha + I_head_alpha
 
-    # I_gamma (high inertia axis) - typically 2x for golf clubs
-    I_gamma = 2.0 * I_alpha
+    # I_gamma (lowest MOI axis) - typically 0.5x for golf clubs
+    I_gamma = 0.5 * I_alpha
 
     return I_alpha, I_gamma
 
@@ -147,7 +147,7 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
     Distribute transmitted torque to club axes based on grip angle.
 
     Grip angle determines how the club sits in the hand:
-    - θ = 0°: Club aligned with fingers → torque goes to high-inertia axis (γ)
+    - θ = 0°: Club aligned with fingers → torque goes to lowest MOI axis (γ)
     - θ = 90°: Club aligned with palm → torque goes to shaft axis (α)
 
     Args:
@@ -157,7 +157,7 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
     Returns:
         tuple[float, float]: A tuple containing:
             - torque_alpha (float): Torque to shaft axis (N·m).
-            - torque_gamma (float): Torque to high-inertia axis (N·m).
+            - torque_gamma (float): Torque to lowest MOI axis (N·m).
     """
     torque_alpha = torque_transmitted * np.sin(theta_grip_rad)
     torque_gamma = torque_transmitted * np.cos(theta_grip_rad)
@@ -579,10 +579,10 @@ class PlotCanvas(FigureCanvas):
                        label=f'Transmitted (ratio={tau_ratio:.3f})',
                        color='purple', linewidth=2)
         if self.visible_signals['torque_alpha']:
-            self.ax.plot(self.t, torque_alpha, label='τ_α (shaft axis)',
+            self.ax.plot(self.t, torque_alpha, label='τ_α (higher MOI axis)',
                        color='red', linewidth=2)
         if self.visible_signals['torque_gamma']:
-            self.ax.plot(self.t, torque_gamma, label='τ_γ (high-I axis)',
+            self.ax.plot(self.t, torque_gamma, label='τ_γ (lowest MOI axis)',
                        color='blue', linewidth=2)
 
         self.ax.set_title(f'Torque vs Time (Grip: {self.grip_angle_deg:.0f}°, Wrist: {self.wrist_angle_deg:.0f}°)',
@@ -1056,6 +1056,7 @@ class MainWindow(QMainWindow):
         # ============================================================
         plot_control_group = QGroupBox('Plot Controls')
         plot_control_layout = QHBoxLayout()
+        plot_control_layout.setSpacing(15)  # Add spacing between widgets
 
         # Plot type dropdown
         plot_type_label = QLabel('Plot Type:')
@@ -1066,56 +1067,68 @@ class MainWindow(QMainWindow):
         self.plot_type_combo.currentTextChanged.connect(self.update_plot_type)
         plot_control_layout.addWidget(self.plot_type_combo)
 
+        plot_control_layout.addSpacing(20)  # Extra space after combo box
         plot_control_layout.addStretch()
 
         # Signal visibility checkboxes
         show_label = QLabel('Show:')
         show_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         plot_control_layout.addWidget(show_label)
+        plot_control_layout.addSpacing(10)  # Space after label
+
         self.show_input_check = QCheckBox('Input Torque')
         self.show_input_check.setChecked(True)
         self.show_input_check.stateChanged.connect(lambda: self.update_signal_visibility('input_torque', self.show_input_check.isChecked()))
         plot_control_layout.addWidget(self.show_input_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_transmitted_check = QCheckBox('Transmitted Torque')
         self.show_transmitted_check.setChecked(True)
         self.show_transmitted_check.stateChanged.connect(lambda: self.update_signal_visibility('transmitted_torque', self.show_transmitted_check.isChecked()))
         plot_control_layout.addWidget(self.show_transmitted_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_alpha_torque_check = QCheckBox('τ_α')
         self.show_alpha_torque_check.setChecked(True)
         self.show_alpha_torque_check.stateChanged.connect(lambda: self.update_signal_visibility('torque_alpha', self.show_alpha_torque_check.isChecked()))
         plot_control_layout.addWidget(self.show_alpha_torque_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_gamma_torque_check = QCheckBox('τ_γ')
         self.show_gamma_torque_check.setChecked(True)
         self.show_gamma_torque_check.stateChanged.connect(lambda: self.update_signal_visibility('torque_gamma', self.show_gamma_torque_check.isChecked()))
         plot_control_layout.addWidget(self.show_gamma_torque_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_alpha_accel_check = QCheckBox('α_α')
         self.show_alpha_accel_check.setChecked(True)
         self.show_alpha_accel_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_alpha', self.show_alpha_accel_check.isChecked()))
         plot_control_layout.addWidget(self.show_alpha_accel_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_gamma_accel_check = QCheckBox('α_γ')
         self.show_gamma_accel_check.setChecked(True)
         self.show_gamma_accel_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_gamma', self.show_gamma_accel_check.isChecked()))
         plot_control_layout.addWidget(self.show_gamma_accel_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_transmission_check = QCheckBox('Transmission Ratio')
         self.show_transmission_check.setChecked(True)
         self.show_transmission_check.stateChanged.connect(lambda: self.update_signal_visibility('transmission_ratio', self.show_transmission_check.isChecked()))
         plot_control_layout.addWidget(self.show_transmission_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_velocity_check = QCheckBox('Velocity Ratio')
         self.show_velocity_check.setChecked(False)
         self.show_velocity_check.stateChanged.connect(lambda: self.update_signal_visibility('velocity_ratio', self.show_velocity_check.isChecked()))
         plot_control_layout.addWidget(self.show_velocity_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_accel_alpha_ratio_check = QCheckBox('Accel_α Ratio')
         self.show_accel_alpha_ratio_check.setChecked(False)
         self.show_accel_alpha_ratio_check.stateChanged.connect(lambda: self.update_signal_visibility('accel_alpha_ratio', self.show_accel_alpha_ratio_check.isChecked()))
         plot_control_layout.addWidget(self.show_accel_alpha_ratio_check)
+        plot_control_layout.addSpacing(10)  # Space between checkboxes
 
         self.show_accel_gamma_ratio_check = QCheckBox('Accel_γ Ratio')
         self.show_accel_gamma_ratio_check.setChecked(False)
@@ -1357,8 +1370,8 @@ class MainWindow(QMainWindow):
         • At neutral wrist (φ≈0°): Maximum transmission efficiency<br>
         • At extreme radial/ulnar deviation: Reduced transmission<br>
         • Grip angle determines <b>which axes</b> receive transmitted torque<br>
-        • Lower grip angle (fingers) → more torque to high-inertia axis (stability)<br>
-        • Higher grip angle (palm) → more torque to shaft axis (face angle control)
+        • Lower grip angle (fingers) → more torque to lowest MOI axis (γ) (stability)<br>
+        • Higher grip angle (palm) → more torque to higher MOI axis (α) (face angle control)
         """
         self.info_label.setText(info_text)
 
