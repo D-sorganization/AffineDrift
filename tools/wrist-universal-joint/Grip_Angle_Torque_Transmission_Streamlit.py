@@ -52,8 +52,8 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
 
     Returns:
         tuple[float, float]: A tuple containing:
-            - I_alpha (float): Moment of inertia about shaft axis (kg·m²).
-            - I_gamma (float): Moment of inertia about high inertia axis (kg·m²).
+            - I_alpha (float): Moment of inertia about shaft axis (kg·m²) - higher MOI.
+            - I_gamma (float): Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
     """
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
@@ -64,11 +64,11 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
     # Clubhead inertia about shaft axis (point mass)
     I_head_alpha = m_head * cg_distance_m**2
 
-    # Total I_alpha (about shaft axis)
+    # Total I_alpha (about shaft axis) - higher MOI axis
     I_alpha = I_shaft_alpha + I_head_alpha
 
-    # I_gamma (high inertia axis) - typically 2x for golf clubs
-    I_gamma = 2.0 * I_alpha
+    # I_gamma (lowest MOI axis) - typically 0.5x for golf clubs
+    I_gamma = 0.5 * I_alpha
 
     return I_alpha, I_gamma
 
@@ -114,8 +114,8 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
 
     Returns:
         tuple[float, float]: A tuple containing:
-            - torque_alpha (float): Torque to shaft axis (N·m).
-            - torque_gamma (float): Torque to high-inertia axis (N·m).
+            - torque_alpha (float): Torque to higher MOI axis (N·m).
+            - torque_gamma (float): Torque to lowest MOI axis (N·m).
     """
     torque_alpha = torque_transmitted * np.sin(theta_grip_rad)
     torque_gamma = torque_transmitted * np.cos(theta_grip_rad)
@@ -386,10 +386,10 @@ def plot_torque(t, input_torque, grip_angle_deg, wrist_angle_deg, I_alpha, I_gam
                label=f'Transmitted (ratio={tau_ratio:.3f})',
                color='purple', linewidth=2)
     if show_alpha:
-        ax.plot(t, torque_alpha, label='τ_α (shaft axis)',
+        ax.plot(t, torque_alpha, label='τ_α (higher MOI axis)',
                color='red', linewidth=2)
     if show_gamma:
-        ax.plot(t, torque_gamma, label='τ_γ (high-I axis)',
+        ax.plot(t, torque_gamma, label='τ_γ (lowest MOI axis)',
                color='blue', linewidth=2)
 
     ax.set_title(f'Torque vs Time (Grip: {grip_angle_deg:.0f}°, Wrist: {wrist_angle_deg:.0f}°)',
@@ -595,8 +595,8 @@ with st.sidebar:
     if plot_type == 'Torque':
         show_input = st.checkbox("Input Torque", True)
         show_transmitted = st.checkbox("Transmitted Torque", True)
-        show_alpha = st.checkbox("Torque α (shaft axis)", True)
-        show_gamma = st.checkbox("Torque γ (high-I axis)", True)
+        show_alpha = st.checkbox("Torque α (higher MOI axis)", True)
+        show_gamma = st.checkbox("Torque γ (lowest MOI axis)", True)
         show_velocity = False
         show_accel_alpha = False
         show_accel_gamma = False
@@ -667,8 +667,8 @@ with st.expander("📐 Model Information"):
     - **Torque Transmission Ratio (τ_out/τ_in):** {tau_ratio:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (shaft):** {torque_alpha:.4f} N·m ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
-    - **Torque to γ-axis (high-I):** {torque_gamma:.4f} N·m ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
+    - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
     - **α-axis acceleration:** {torque_alpha/I_alpha:.4f} rad/s²
