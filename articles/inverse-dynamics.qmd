@@ -23,11 +23,11 @@ The method is powerful because it allows us to infer kinetic information (forces
 The equations of motion for a rigid body like a golf club are described by Euler's laws:
 
 $$
-\begin{align}
-\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
-\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
-\end{align}
-$$
+\begin{aligned}
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \tag{1} \label{eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \tag{2} \label{eq-moment_balance}
+\end{aligned}
+$$ {#eq-euler-laws}
 
 where:
 - $\sum \mathbf{F}$ is the sum of all forces acting on the club
@@ -76,7 +76,7 @@ where $\mathbf{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 
 **Step 4: Solve for Unknown Forces**
 
-From Equation~[@eq-force_balance], the sum of unknown forces (from the golfer's hands) is:
+From Equation (1), the sum of unknown forces (from the golfer's hands) is:
 
 $$
 \mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
@@ -90,7 +90,7 @@ $$
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 $$
 
-Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation~[@eq-moment_balance], we can calculate the required moment about point $P$.
+Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation (2), we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
