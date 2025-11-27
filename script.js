@@ -159,10 +159,25 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('affinedrift_history', JSON.stringify(history));
         
         // Update sidebar display
-        // Filter out current page from display
-        const displayHistory = history.filter(item => item.url !== currentPage.url);
+        // Filter to only show articles (exclude navigation pages)
+        const excludedPages = [
+            'index.html', 'home.html',
+            'articles.html', 'article.html',
+            'resources.html', 'tools.html', 'programs.html',
+            'contact.html', 'about.html',
+            'research-reviews.html', 'book-reviews.html',
+            'daydreams-doodles.html', 'daydreams.html', 'doodles.html'
+        ];
+        
+        // Filter out current page and non-article pages
+        const displayHistory = history.filter(item => 
+            item.url !== currentPage.url && 
+            !excludedPages.includes(item.url.toLowerCase()) &&
+            !item.url.match(/^(tools|contact|about|resources|articles|research-reviews|book-reviews|daydreams)/i)
+        );
+        
         if (displayHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
+            historyList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
         } else {
             historyList.innerHTML = displayHistory.map(item => {
                 const displayTitle = item.title.length > MAX_HISTORY_TITLE_LENGTH 
