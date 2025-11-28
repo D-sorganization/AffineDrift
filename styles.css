@@ -140,8 +140,8 @@ h1, h2, h3, h4, h5, h6 {
    Header & Navigation
    =========================== */
 header {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
-    color: var(--pure-white);
+    background: var(--light-blue);
+    color: var(--text-dark);
     padding: 0.8rem 0;
     position: sticky;
     top: 0;
@@ -168,19 +168,19 @@ nav .container {
     align-items: center;
     gap: 0;
     text-decoration: none;
-    color: var(--pure-white);
+    color: var(--text-dark);
     margin-left: auto;
     margin-right: 0.5rem;
     flex-shrink: 0;
     padding: 0.5rem;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
 
 .logo-link:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     transform: scale(1.02);
 }
 
@@ -220,9 +220,9 @@ nav .container {
 .nav-toggle,
 .sidebar-toggle {
     display: none;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: var(--pure-white);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--border-light);
+    color: var(--text-dark);
     border-radius: 10px;
     padding: 0.45rem 0.75rem;
     font-weight: 600;
@@ -260,7 +260,7 @@ body.no-scroll {
 
 .nav-toggle:hover,
 .sidebar-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.9);
     transform: translateY(-1px);
 }
 
@@ -270,7 +270,7 @@ body.no-scroll {
 }
 
 .nav-links a {
-    color: var(--pure-white);
+    color: var(--text-dark);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -290,21 +290,24 @@ body.no-scroll {
     content: '';
     position: absolute;
     width: 0;
-    height: 2px;
+    height: 3px;
     bottom: 0;
     left: 0;
-    background-color: var(--math-gold);
+    background-color: var(--accent-blue);
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover::after,
+.nav-links a:hover::after {
+    width: 100%;
+}
+
 .nav-links a.active::after {
     width: 100%;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--light-blue);
+    color: var(--primary-blue);
 }
 
 /* ===========================
@@ -1117,11 +1120,11 @@ footer p {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.25rem;
-        background: linear-gradient(135deg, rgba(15, 76, 117, 0.97), rgba(26, 26, 46, 0.97));
+        background: var(--light-blue);
         padding: 0.8rem 1rem 1rem 1rem;
         border-radius: 0 0 12px 12px;
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
         z-index: 5;
     }
 
@@ -1259,6 +1262,12 @@ footer p {
 /* ===========================
    New Page Styles
    =========================== */
+
+/* Hide Quarto title blocks */
+.quarto-title-block,
+#title-block-header {
+    display: none !important;
+}
 
 /* Page Header */
 .page-header {
