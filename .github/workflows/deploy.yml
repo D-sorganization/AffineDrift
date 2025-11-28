@@ -104,6 +104,9 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Install helpers
+        run: sudo apt-get update && sudo apt-get install -y yq
+
       - name: Render Quarto site (if project exists)
         continue-on-error: true
         run: |
@@ -117,8 +120,29 @@ jobs:
       - name: Verify required files
         run: |
           echo "Verifying required files exist..."
-          test -f index.html && echo "✓ index.html found" || (echo "✗ index.html missing" && exit 1)
-          test -f styles.css && echo "✓ styles.css found" || (echo "✗ styles.css missing" && exit 1)
+          if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
+            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
+            echo "Detected Quarto project; using output directory: ${OUTPUT_DIR}"
+          else
+            OUTPUT_DIR='.'
+            echo "No Quarto project detected; using repository root"
+          fi
+
+          INDEX_PATH="${OUTPUT_DIR%/}/index.html"
+          STYLES_PATH="${OUTPUT_DIR%/}/styles.css"
+
+          test -f "$INDEX_PATH" && echo "✓ ${INDEX_PATH} found" || (echo "✗ ${INDEX_PATH} missing" && exit 1)
+          test -f "$STYLES_PATH" && echo "✓ ${STYLES_PATH} found" || (echo "✗ ${STYLES_PATH} missing" && exit 1)
+
+      - name: Determine publish directory
+        id: publish-dir
+        run: |
+          if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
+            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
+          else
+            OUTPUT_DIR='.'
+          fi
+          echo "publish_dir=${OUTPUT_DIR%/}" >> "$GITHUB_OUTPUT"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -126,7 +150,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '${{ steps.publish-dir.outputs.publish_dir }}'
 
       - name: Deploy to GitHub Pages
         id: deployment
