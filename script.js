@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add fade-in animation for sections on scroll (only if not already visible)
     // Content is visible by default - animation is optional enhancement
     // Disabled on mobile to prevent content loading issues
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= NAV_BREAKPOINT;
 
     if (!isMobile) {
         const observerOptions = {
