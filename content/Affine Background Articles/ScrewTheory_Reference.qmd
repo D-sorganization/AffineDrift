@@ -1,0 +1,236 @@
+---
+title: "Screw Theory Reference for Control-Affine Multibody Dynamics"
+format:
+  html:
+---
+
+# Introduction
+
+
+Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group $SE(3)$ and its Lie algebra $\mathfrak{se}(3)$. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
+
+
+# The Lie Group $SE(3)$ and Its Algebra
+
+
+Rigid-body configurations belong to the special Euclidean group
+\begin{equation}
+SE(3)
+=
+\left\{
+\begin{bmatrix}
+R & p \\
+0 & 1
+\end{bmatrix}
+:
+R\in SO(3), \;
+p\in \mathbb{R}^3
+\right\}.
+\end{equation}
+Its Lie algebra is
+\begin{equation}
+\mathfrak{se}(3)
+=
+\left\{
+\begin{bmatrix}
+\hat{\omega} & v \\
+0 & 0
+\end{bmatrix}
+:
+\omega, v \in \mathbb{R}^3
+\right\},
+\end{equation}
+where $\hat{\omega}$ is the skew-symmetric matrix corresponding to the vector $\omega$ via the hat operator.
+
+
+# Twists
+
+
+A twist is a 6-vector
+\begin{equation}
+\mathcal{V} =
+\begin{bmatrix}
+\omega \\ v
+\end{bmatrix},
+\end{equation}
+representing angular velocity $\omega$ and linear velocity $v$ of a body frame. For a reference point $q \in \mathbb{R}^3$ on the axis of motion, one has
+\begin{equation}
+v = -\omega \times q.
+\end{equation}
+This yields the Pl\"ucker representation of screws.
+
+
+# Wrenches
+
+
+A wrench is a 6-vector
+\begin{equation}
+\mathcal{F} =
+\begin{bmatrix}
+n \\ f
+\end{bmatrix},
+\end{equation}
+where $f$ is the force and $n$ is the moment about a reference point. The instantaneous power is
+\begin{equation}
+\mathcal{F}^\top \mathcal{V}
+= n^\top \omega + f^\top v.
+\end{equation}
+This pairing is invariant under coordinate transformations and is fundamental to screw theory.
+
+
+# Adjoint Transformations
+
+
+For a homogeneous transform
+\begin{equation}
+g =
+\begin{bmatrix}
+R & p \\
+0 & 1
+\end{bmatrix}
+\in SE(3),
+\end{equation}
+the adjoint representation is
+\begin{equation}
+\mathrm{Ad}_g
+=
+\begin{bmatrix}
+R & 0 \\
+\hat{p}R & R
+\end{bmatrix}.
+\end{equation}
+It maps twists and wrenches as
+\begin{equation}
+\mathcal{V}_b = \mathrm{Ad}_g \,\mathcal{V}_a, \qquad
+\mathcal{F}_a = \mathrm{Ad}_g^\top \,\mathcal{F}_b,
+\end{equation}
+where subscripts denote different frames.
+
+
+# Joint Screws and the Screw Jacobian
+
+
+A revolute joint $i$ is represented by a screw axis
+\begin{equation}
+S_i =
+\begin{bmatrix}
+\omega_i \\ -\omega_i \times q_i
+\end{bmatrix},
+\end{equation}
+with $\omega_i$ the unit axis of rotation and $q_i$ a point on that axis. For an $n$-DOF chain, the body twist can be written as
+\begin{equation}
+\mathcal{V} = \sum_{i=1}^n S_i \dot{\theta}_i.
+\end{equation}
+Stacking the screw axes gives the screw Jacobian
+\begin{equation}
+J_s(q) = [S_1 \;\; S_2 \;\; \cdots \;\; S_n],
+\end{equation}
+so that
+\begin{equation}
+\mathcal{V} = J_s(q)\,\dot{\theta}.
+\end{equation}
+
+
+# Screw Dynamics (Newton--Euler in Screw Form)
+
+
+The spatial Newton--Euler equation for a rigid body can be written as
+\begin{equation}
+\mathcal{F} =
+I_s(q)\dot{\mathcal{V}}
++
+\mathrm{ad}^\ast_{\mathcal{V}} I_s(q)\mathcal{V},
+\end{equation}
+where $I_s(q)$ is the spatial inertia and $\mathrm{ad}^\ast_{\mathcal{V}}$ is the dual adjoint operator. The first term corresponds to inertia, and the second term collects Coriolis and centrifugal effects. Additional spatial wrenches represent gravity and other external forces.
+
+Thus a drift wrench can be expressed as
+\begin{equation}
+\mathcal{F}_{\mathrm{drift}}
+=
+I_s\dot{\mathcal{V}}
++
+\mathrm{ad}^\ast_{\mathcal{V}} I_s \mathcal{V}
++
+\mathcal{F}_{g}
++
+\mathcal{F}_{\mathrm{shaft}},
+\end{equation}
+where $\mathcal{F}_g$ is a gravity wrench and $\mathcal{F}_{\mathrm{shaft}}$ is the contribution of flexible shaft forces.
+
+
+# Control-Affine Structure in Screw Coordinates
+
+
+Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via
+\begin{equation}
+\mathcal{F}_{\mathrm{input}}
+=
+J_s(q)^{-T}\tau
+=
+J_s(q)^{-T} B u,
+\end{equation}
+where $B$ is the input distribution matrix and $u$ is the vector of joint inputs. The total wrench at a given point is then
+\begin{equation}
+\mathcal{F}_{\mathrm{total}}
+=
+\mathcal{F}_{\mathrm{drift}}(x)
++
+\mathcal{F}_{\mathrm{input}}(x,u).
+\end{equation}
+This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
+
+
+# Flexible Shaft Forces in Screw Form
+
+
+Flexible shaft forces can be modeled as distributed elastic wrenches. For mode $i$:
+\begin{equation}
+\mathcal{F}_{\mathrm{shaft},i}
+=
+K_i x_{s,i} S_{s,i}
++
+D_i \dot{x}_{s,i} S_{s,i},
+\end{equation}
+where $x_{s,i}$ and $\dot{x}_{s,i}$ are modal coordinates, $K_i$ and $D_i$ are stiffness and damping, and $S_{s,i}$ is the associated mode screw. Importantly,
+\begin{equation}
+\frac{\partial \mathcal{F}_{\mathrm{shaft}}}{\partial u} = 0,
+\end{equation}
+so shaft forces contribute only to drift and do not affect the linear dependence on $u$.
+
+
+# Superposition in Screw Space
+
+
+Because wrenches add linearly, the total wrench decomposition
+\begin{equation}
+\mathcal{F}_{\mathrm{total}}
+=
+\mathcal{F}_{\mathrm{drift}}
++
+\mathcal{F}_{\mathrm{input}}
+\end{equation}
+holds in any screw coordinate representation. This coordinate-free linearity is a geometric expression of the superposition principle for forces in control-affine mechanical systems.
+
+
+# ZTCF and ZVCF in Screw Coordinates
+
+
+In the Zero Torque Counterfactual (ZTCF), all inputs are set to zero, so
+\begin{equation}
+\dot{x} = f(x),
+\end{equation}
+and the corresponding wrench is purely
+\begin{equation}
+\mathcal{F}_{\mathrm{ZTCF}} = \mathcal{F}_{\mathrm{drift}}.
+\end{equation}
+In the Zero Velocity Counterfactual (ZVCF), drift mechanisms are disabled and the state is held fixed, so that only input wrenches remain:
+\begin{equation}
+\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{input}}.
+\end{equation}
+These constructions mirror the affine decomposition in screw space.
+
+
+# Summary
+
+
+Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.

@@ -1,0 +1,116 @@
+---
+title: "Section Y: Inference from Inverse Dynamics in a Nonlinear Affine System"
+format:
+  html:
+---
+
+# Introduction
+
+
+Inverse dynamics is a foundational tool in biomechanics for estimating joint torques from kinematic measurements. For a multibody system such as the golfer--club--shaft chain, the classical inverse dynamics approach solves the equations of motion for the generalized torques required to reproduce a measured motion. However, in a nonlinear control-affine system of the form
+\begin{equation}
+\dot{x} = f(x) + G(x)u,
+\end{equation}
+the torques recovered from classical inverse dynamics do not isolate the contributions of active muscular torques from those of drift dynamics. This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) resolve these ambiguities.
+
+
+# Classical Inverse Dynamics and Its Limitations
+
+
+The classical rigid-body dynamics of the system can be written as
+\begin{equation}
+M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}} = \tau_{\mathrm{input}},
+\end{equation}
+where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $G(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. Classical inverse dynamics rearranges this equation to compute
+\begin{equation}
+\tau_{\mathrm{ID}} = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}}.
+\end{equation}
+This total torque $\tau_{\mathrm{ID}}$ is the torque that would need to be applied to the model to reproduce the measured motion. However, it does not distinguish between the drift torque $\tau_{\mathrm{drift}}$ and the active input torque $\tau_{\mathrm{input}} = Bu$. In control-affine systems,
+\begin{equation}
+\tau_{\mathrm{ID}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}},
+\end{equation}
+which implies that classical inverse dynamics inherently conflates passive and active contributions.
+
+
+# Why Classical Inverse Dynamics Cannot Identify Input Torques
+
+
+The input torques satisfy
+\begin{equation}
+\tau_{\mathrm{input}} = Bu,
+\end{equation}
+where $B$ maps input controls into generalized joint torques. Solving for $u$ given only $\tau_{\mathrm{ID}}$ would require knowing $\tau_{\mathrm{drift}}$, because
+\begin{equation}
+Bu = \tau_{\mathrm{ID}} - \tau_{\mathrm{drift}}.
+\end{equation}
+However, $\tau_{\mathrm{drift}}$ is not observable directly from kinematic measurements. Drift dynamics include inertial effects, Coriolis forces, gravitational loading, shaft deformation forces, joint passive forces, and geometric coupling terms. Many of these require full dynamic simulation or model-based estimation and cannot be separated from $\tau_{\mathrm{input}}$ using classical inverse dynamics alone.
+
+Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing.
+
+
+# Drift--Input Decomposition and Affine Structure
+
+
+In the affine form, the decomposition of total generalized forces is
+\begin{equation}
+F_{\mathrm{total}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
+\end{equation}
+Therefore, the active input forces can be computed only if the drift forces are known:
+\begin{equation}
+F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}.
+\end{equation}
+Classical inverse dynamics attempts to recover $F_{\mathrm{total}}$ but has no mechanism for computing $F_{\mathrm{drift}}$. This is where counterfactual simulation becomes essential.
+
+
+# ZTCF for Drift Estimation
+
+
+The Zero Torque Counterfactual (ZTCF) simulates the dynamics under $u(t) \equiv 0$:
+\begin{equation}
+\dot{x} = f(x).
+\end{equation}
+This simulation produces the drift-only forces:
+\begin{equation}
+F_{\mathrm{drift}}(t) = \text{forces generated in the ZTCF simulation},
+\end{equation}
+including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft contributions. Drift forces therefore become computable based on the system model and the measured kinematics.
+
+
+# ZVCF for Input Estimation
+
+
+The Zero Velocity Counterfactual (ZVCF) holds the state fixed and disables drift contributions. Gravity, shaft elasticity, and other passive contributions are set to zero. Only the input vector fields $G(x)u$ remain active. The forces obtained from the ZVCF correspond to
+\begin{equation}
+F_{\mathrm{ZVCF}} = F_{\mathrm{input}}.
+\end{equation}
+The ZVCF therefore generates the pure input component of generalized forces, enabling direct inference of the joint torques required to produce the observed deviation of $F_{\mathrm{total}}$ from $F_{\mathrm{drift}}$.
+
+
+# Hand--Club and Ground Reaction Forces as Mixed Forces
+
+
+Measured hand--club forces and ground reaction forces satisfy
+\begin{equation}
+F_{\mathrm{measured}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
+\end{equation}
+Without drift--input decomposition, classical inverse dynamics cannot distinguish passive contributions (such as inertial loading or shaft bending) from active contributions transmitted through joint torques. Counterfactual simulation enables this separation by computing drift and input terms independently.
+
+
+# Causal Interpretation of Inverse Dynamics in Affine Systems
+
+
+Because drift is the causal residue of all prior states, the generalized forces required to reproduce a motion necessarily encode the system's history. Classical inverse dynamics at time $t$ therefore conflates contributions from past passive dynamics with present-time active inputs. The affine decomposition clarifies this causality by separating drift from input forces, allowing torque inference to be interpreted in terms of the system's geometry and dynamic history.
+
+
+# Implications for Biomechanics Research
+
+
+The affine decomposition, ZTCF, and ZVCF enable:
+\begin{itemize}
+\item accurate estimation of input torques,
+\item separation of passive and active contributions to interaction forces,
+\item interpretation of large forces without assuming high muscular effort,
+\item reproducible inference independent of equipment or technique,
+\item improved machine learning models based on drift-removed data.
+\end{itemize}
+This section provides the conceptual and computational foundation for replacing classical inverse dynamics with a more rigorous framework grounded in nonlinear affine dynamics.
