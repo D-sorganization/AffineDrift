@@ -40,15 +40,15 @@ jobs:
 
       - name: Verify output files
         run: |
-          echo "Checking _site directory..."
-          ls -la _site/ || echo "_site directory not found"
-          test -d _site && echo "✓ _site directory exists" || (echo "✗ _site directory missing" && exit 1)
+          echo "Checking docs directory..."
+          ls -la docs/ || echo "docs directory not found"
+          test -d docs && echo "✓ docs directory exists" || (echo "✗ docs directory missing" && exit 1)
 
       - name: Upload artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_site'
+          path: 'docs'
 
   deploy:
     runs-on: ubuntu-latest
