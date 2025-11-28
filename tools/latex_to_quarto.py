@@ -2,6 +2,7 @@ import re
 import sys
 from pathlib import Path
 
+
 def find_tex_files(paths):
     """
     Find all .tex files in the given paths (files or directories).
@@ -13,7 +14,7 @@ def find_tex_files(paths):
         if not path.exists():
             print(f"WARNING: {path_str} not found, skipping.")
             continue
-        
+
         if path.is_file() and path.suffix == '.tex':
             tex_files.append(path)
         elif path.is_dir():
@@ -21,7 +22,7 @@ def find_tex_files(paths):
             tex_files.extend(path.glob("*.tex"))
         else:
             print(f"WARNING: {path_str} is not a .tex file or directory, skipping.")
-    
+
     return tex_files
 
 def prompt_for_files():
@@ -81,12 +82,12 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
     if re.search(r'\\tableofcontents', body):
         toc = True
         body = re.sub(r'\\tableofcontents', '', body)
-    
+
     # Remove LaTeX comments (lines starting with %)
     body = re.sub(r'^%.*$', '', body, flags=re.MULTILINE)
     # Remove comment blocks
     body = re.sub(r'%.*', '', body)
-    
+
     # Remove \appendix command (will be converted to heading later)
     body = re.sub(r'\\appendix\b', '', body)
 
@@ -120,7 +121,7 @@ def main():
         # Use command-line arguments (folders or files)
         input_paths = sys.argv[1:]
         tex_files = find_tex_files(input_paths)
-        
+
         if not tex_files:
             print("No .tex files found in the specified paths.")
             sys.exit(1)
@@ -130,9 +131,9 @@ def main():
         if not tex_files:
             print("No files selected.")
             sys.exit(0)
-    
+
     print(f"Found {len(tex_files)} .tex file(s) to convert.\n")
-    
+
     for tex_path in tex_files:
         try:
             tex_text = tex_path.read_text(encoding="utf-8")
@@ -147,7 +148,7 @@ def main():
         except Exception as e:
             print(f"[ERROR] Error converting {tex_path.name}: {e}")
             print()
-    
+
     print(f"Conversion complete! Processed {len(tex_files)} file(s).")
 
 if __name__ == "__main__":
