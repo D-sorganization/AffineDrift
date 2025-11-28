@@ -4,6 +4,8 @@ LaTeX to Quarto (.qmd) Converter for AffineDrift
 Converts LaTeX article files to Quarto Markdown with preserved equations
 """
 
+from __future__ import annotations
+
 import os
 import re
 import sys
@@ -12,17 +14,17 @@ from pathlib import Path
 
 
 class LaTeXToQuartoConverter:
-    def __init__(self):
-        """Initialize converter"""
+    def __init__(self) -> None:
+        """Initialize converter."""
         pass
 
-    def read_latex_file(self, filepath):
-        """Read LaTeX file content"""
+    def read_latex_file(self, filepath: str | Path) -> str:
+        """Read LaTeX file content."""
         with open(filepath, encoding='utf-8') as f:
             return f.read()
 
-    def extract_metadata(self, latex_content):
-        """Extract title, author, and other metadata from LaTeX"""
+    def extract_metadata(self, latex_content: str) -> dict[str, str]:
+        """Extract title, author, and other metadata from LaTeX."""
         metadata = {}
 
         # Extract title
@@ -49,8 +51,8 @@ class LaTeXToQuartoConverter:
 
         return metadata
 
-    def extract_body(self, latex_content):
-        r"""Extract content between \begin{document} and \end{document}"""
+    def extract_body(self, latex_content: str) -> str:
+        r"""Extract content between \begin{document} and \end{document}."""
         doc_match = re.search(r'\\begin\{document\}(.+)\\end\{document\}', latex_content, re.DOTALL)
         if doc_match:
             content = doc_match.group(1)
@@ -62,8 +64,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_sections(self, content):
-        """Convert LaTeX sections to Markdown headers"""
+    def convert_sections(self, content: str) -> str:
+        """Convert LaTeX sections to Markdown headers."""
         # Sections
         content = re.sub(r'\\section\{([^}]+)\}', r'## \1', content)
         content = re.sub(r'\\subsection\{([^}]+)\}', r'### \1', content)
@@ -73,8 +75,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_text_formatting(self, content):
-        """Convert LaTeX text formatting to Markdown"""
+    def convert_text_formatting(self, content: str) -> str:
+        """Convert LaTeX text formatting to Markdown."""
         # Bold
         content = re.sub(r'\\textbf\{([^}]+)\}', r'**\1**', content)
         # Italic
@@ -88,10 +90,10 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_lists(self, content):
-        """Convert LaTeX lists to Markdown lists"""
+    def convert_lists(self, content: str) -> str:
+        """Convert LaTeX lists to Markdown lists."""
         # Itemize (unordered)
-        def replace_itemize(match):
+        def replace_itemize(match: re.Match[str]) -> str:
             items = match.group(1)
             # Replace \item with -
             items = re.sub(r'\\item\s+', '\n- ', items)
@@ -101,11 +103,11 @@ class LaTeXToQuartoConverter:
         content = re.sub(r'\\begin\{itemize\}(.*?)\\end\{itemize\}', replace_itemize, content, flags=re.DOTALL)
 
         # Enumerate (ordered)
-        def replace_enumerate(match):
+        def replace_enumerate(match: re.Match[str]) -> str:
             items = match.group(1)
             # Replace \item with numbered list
             item_count = [0]  # Use list to make it mutable in nested function
-            def number_item(m):
+            def number_item(m: re.Match[str]) -> str:
                 item_count[0] += 1
                 return f'\n{item_count[0]}. '
             items = re.sub(r'\\item\s+', number_item, items)
@@ -115,8 +117,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_environments(self, content):
-        """Convert special LaTeX environments"""
+    def convert_environments(self, content: str) -> str:
+        """Convert special LaTeX environments."""
         # Abstract
         content = re.sub(
             r'\\begin\{abstract\}(.*?)\\end\{abstract\}',
@@ -151,8 +153,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_equations(self, content):
-        """Convert LaTeX equations - Quarto supports them natively!"""
+    def convert_equations(self, content: str) -> str:
+        """Convert LaTeX equations - Quarto supports them natively!."""
         # Display equations - keep as-is, Quarto understands them
         # Just ensure they're on their own lines
 
@@ -166,10 +168,10 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_figures(self, content):
-        """Convert LaTeX figures to Quarto format"""
+    def convert_figures(self, content: str) -> str:
+        """Convert LaTeX figures to Quarto format."""
         # Remove complex figure environments but preserve caption info
-        def replace_figure(match):
+        def replace_figure(match: re.Match[str]) -> str:
             fig_content = match.group(1)
 
             # Try to extract caption
@@ -193,8 +195,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_references(self, content):
-        """Convert LaTeX cross-references"""
+    def convert_references(self, content: str) -> str:
+        """Convert LaTeX cross-references."""
         # Convert \ref and \cref to Quarto format
         content = re.sub(r'\\cref\{([^}]+)\}', r'[@\1]', content)
         content = re.sub(r'\\ref\{([^}]+)\}', r'[@\1]', content)
@@ -207,8 +209,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def convert_links(self, content):
-        """Convert LaTeX URLs and hyperlinks to Markdown"""
+    def convert_links(self, content: str) -> str:
+        """Convert LaTeX URLs and hyperlinks to Markdown."""
         # \url{...}
         content = re.sub(r'\\url\{([^}]+)\}', r'<\1>', content)
         # \href{url}{text}
@@ -216,8 +218,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def clean_latex_commands(self, content):
-        """Remove or clean remaining LaTeX commands"""
+    def clean_latex_commands(self, content: str) -> str:
+        """Remove or clean remaining LaTeX commands."""
         # Remove comments
         content = re.sub(r'%.*$', '', content, flags=re.MULTILINE)
 
@@ -240,8 +242,8 @@ class LaTeXToQuartoConverter:
 
         return content
 
-    def create_frontmatter(self, metadata):
-        """Create Quarto YAML frontmatter"""
+    def create_frontmatter(self, metadata: dict[str, str]) -> str:
+        """Create Quarto YAML frontmatter."""
         frontmatter = "---\n"
         frontmatter += f'title: "{metadata["title"]}"\n'
         frontmatter += f'author: "{metadata["author"]}"\n'
@@ -257,8 +259,8 @@ class LaTeXToQuartoConverter:
 """
         return frontmatter
 
-    def convert_to_qmd(self, latex_content):
-        """Main conversion pipeline"""
+    def convert_to_qmd(self, latex_content: str) -> str:
+        """Main conversion pipeline."""
         # Extract metadata
         metadata = self.extract_metadata(latex_content)
 
@@ -284,8 +286,8 @@ class LaTeXToQuartoConverter:
 
         return frontmatter + content.strip() + '\n'
 
-    def convert_file(self, input_file, output_file=None):
-        """Convert a LaTeX file to Quarto .qmd"""
+    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> Path:
+        """Convert a LaTeX file to Quarto .qmd."""
         if output_file is None:
             output_file = Path(input_file).with_suffix('.qmd')
 
@@ -306,8 +308,8 @@ class LaTeXToQuartoConverter:
         return output_file
 
 
-def main():
-    """Main entry point"""
+def main() -> None:
+    """Main entry point."""
     if len(sys.argv) < 2:
         print("Usage: python3 latex_to_qmd.py <input.tex> [output.qmd]")
         print("\nExample:")

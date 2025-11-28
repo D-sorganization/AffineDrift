@@ -49,7 +49,7 @@ Add this to any HTML page (e.g., `modelling.html` or create a new page):
 </section>
 ```
 
-### Step 3: Add CSS (in styles.css)
+### Step 3: Add CSS (in styles.css) {#step-3-add-css-in-styles-css}
 
 ```css
 .interactive-section {

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="AffineDrift">
 
 <title>embedding_guide – AffineDrift</title>
 <style>
@@ -65,6 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -75,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -103,34 +105,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-</head><body class="nav-fixed quarto-light">www.affinedrift.com
-
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    ignoreHtmlClass: 'tex2jax_ignore',
-    processHtmlClass: 'tex2jax_process'
-  }
-};
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
 
 <link rel="stylesheet" href="../../styles.css">
+</head>
 
-
-
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
+    <img src="../../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
@@ -146,21 +142,19 @@ MathJax = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../articles.qmd"> 
+    <a class="nav-link" href="../../articles.html"> 
 <span class="menu-text">Articles</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../resources.qmd"> 
+    <a class="nav-link" href="../../resources.html"> 
 <span class="menu-text">Resources</span></a>
   </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.qmd"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../contact.qmd"> 
+    <a class="nav-link" href="../../contact.html"> 
 <span class="menu-text">Contact</span></a>
   </li>  
 </ul>
@@ -179,46 +173,67 @@ MathJax = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#embedding-guide-grip-angle-torque-transmission-simulator" id="toc-embedding-guide-grip-angle-torque-transmission-simulator" class="nav-link active" data-scroll-target="#embedding-guide-grip-angle-torque-transmission-simulator"><span class="header-section-number">1</span> Embedding Guide: Grip Angle Torque Transmission Simulator</a>
+  <li><a href="#embedding-guide-grip-angle-torque-transmission-simulator" id="toc-embedding-guide-grip-angle-torque-transmission-simulator" class="nav-link active" data-scroll-target="#embedding-guide-grip-angle-torque-transmission-simulator">Embedding Guide: Grip Angle Torque Transmission Simulator</a>
   <ul class="collapse">
-  <li><a href="#version-1-javascripthtml5-standalone---recommended-for-github-pages" id="toc-version-1-javascripthtml5-standalone---recommended-for-github-pages" class="nav-link" data-scroll-target="#version-1-javascripthtml5-standalone---recommended-for-github-pages"><span class="header-section-number">1.1</span> 🎨 Version 1: JavaScript/HTML5 (Standalone - Recommended for GitHub Pages)</a>
+  <li><a href="#version-1-javascripthtml5-standalone---recommended-for-github-pages" id="toc-version-1-javascripthtml5-standalone---recommended-for-github-pages" class="nav-link" data-scroll-target="#version-1-javascripthtml5-standalone---recommended-for-github-pages">🎨 Version 1: JavaScript/HTML5 (Standalone - Recommended for GitHub Pages)</a>
   <ul class="collapse">
-  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features"><span class="header-section-number">1.1.1</span> Features:</a></li>
-  <li><a href="#how-to-embed" id="toc-how-to-embed" class="nav-link" data-scroll-target="#how-to-embed"><span class="header-section-number">1.1.2</span> How to Embed:</a></li>
-  <li><a href="#advantages" id="toc-advantages" class="nav-link" data-scroll-target="#advantages"><span class="header-section-number">1.1.3</span> Advantages:</a></li>
+  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features:</a></li>
+  <li><a href="#how-to-embed" id="toc-how-to-embed" class="nav-link" data-scroll-target="#how-to-embed">How to Embed:</a></li>
+  <li><a href="#advantages" id="toc-advantages" class="nav-link" data-scroll-target="#advantages">Advantages:</a></li>
   </ul></li>
-  <li><a href="#version-2-streamlit-cloud-hosted" id="toc-version-2-streamlit-cloud-hosted" class="nav-link" data-scroll-target="#version-2-streamlit-cloud-hosted"><span class="header-section-number">1.2</span> ☁️ Version 2: Streamlit (Cloud-Hosted)</a>
+  <li><a href="#version-2-streamlit-cloud-hosted" id="toc-version-2-streamlit-cloud-hosted" class="nav-link" data-scroll-target="#version-2-streamlit-cloud-hosted">☁️ Version 2: Streamlit (Cloud-Hosted)</a>
   <ul class="collapse">
-  <li><a href="#features-1" id="toc-features-1" class="nav-link" data-scroll-target="#features-1"><span class="header-section-number">1.2.1</span> Features:</a></li>
-  <li><a href="#setup-steps" id="toc-setup-steps" class="nav-link" data-scroll-target="#setup-steps"><span class="header-section-number">1.2.2</span> Setup Steps:</a></li>
-  <li><a href="#advantages-1" id="toc-advantages-1" class="nav-link" data-scroll-target="#advantages-1"><span class="header-section-number">1.2.3</span> Advantages:</a></li>
+  <li><a href="#features-1" id="toc-features-1" class="nav-link" data-scroll-target="#features-1">Features:</a></li>
+  <li><a href="#setup-steps" id="toc-setup-steps" class="nav-link" data-scroll-target="#setup-steps">Setup Steps:</a></li>
+  <li><a href="#advantages-1" id="toc-advantages-1" class="nav-link" data-scroll-target="#advantages-1">Advantages:</a></li>
   </ul></li>
-  <li><a href="#recommended-approach" id="toc-recommended-approach" class="nav-link" data-scroll-target="#recommended-approach"><span class="header-section-number">1.3</span> 🎯 Recommended Approach</a></li>
-  <li><a href="#adding-to-your-site" id="toc-adding-to-your-site" class="nav-link" data-scroll-target="#adding-to-your-site"><span class="header-section-number">1.4</span> 📝 Adding to Your Site</a>
+  <li><a href="#recommended-approach" id="toc-recommended-approach" class="nav-link" data-scroll-target="#recommended-approach">🎯 Recommended Approach</a></li>
+  <li><a href="#adding-to-your-site" id="toc-adding-to-your-site" class="nav-link" data-scroll-target="#adding-to-your-site">📝 Adding to Your Site</a>
   <ul class="collapse">
-  <li><a href="#quick-integration-example" id="toc-quick-integration-example" class="nav-link" data-scroll-target="#quick-integration-example"><span class="header-section-number">1.4.1</span> Quick Integration Example</a></li>
-  <li><a href="#css-styling-add-to-styles.css" id="toc-css-styling-add-to-styles.css" class="nav-link" data-scroll-target="#css-styling-add-to-styles.css"><span class="header-section-number">1.4.2</span> CSS Styling (add to <code>styles.css</code>)</a></li>
+  <li><a href="#quick-integration-example" id="toc-quick-integration-example" class="nav-link" data-scroll-target="#quick-integration-example">Quick Integration Example</a></li>
+  <li><a href="#css-styling-add-to-styles-css" id="toc-css-styling-add-to-styles-css" class="nav-link" data-scroll-target="#css-styling-add-to-styles-css">CSS Styling (add to <code>styles.css</code>)</a></li>
   </ul></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">1.5</span> 🚀 Next Steps</a></li>
-  <li><a href="#features-comparison" id="toc-features-comparison" class="nav-link" data-scroll-target="#features-comparison"><span class="header-section-number">1.6</span> ✨ Features Comparison</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">🚀 Next Steps</a></li>
+  <li><a href="#features-comparison" id="toc-features-comparison" class="nav-link" data-scroll-target="#features-comparison">✨ Features Comparison</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<section id="embedding-guide-grip-angle-torque-transmission-simulator" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Embedding Guide: Grip Angle Torque Transmission Simulator</h1>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AffineDrift </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="embedding-guide-grip-angle-torque-transmission-simulator" class="level1">
+<h1>Embedding Guide: Grip Angle Torque Transmission Simulator</h1>
 <p>You now have <strong>two beautiful versions</strong> of the simulator that can be embedded in your GitHub Pages site!</p>
-<section id="version-1-javascripthtml5-standalone---recommended-for-github-pages" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="version-1-javascripthtml5-standalone---recommended-for-github-pages"><span class="header-section-number">1.1</span> 🎨 Version 1: JavaScript/HTML5 (Standalone - Recommended for GitHub Pages)</h2>
+<section id="version-1-javascripthtml5-standalone---recommended-for-github-pages" class="level2">
+<h2 class="anchored" data-anchor-id="version-1-javascripthtml5-standalone---recommended-for-github-pages">🎨 Version 1: JavaScript/HTML5 (Standalone - Recommended for GitHub Pages)</h2>
 <p><strong>File:</strong> <code>grip_angle_simulator.html</code></p>
-<section id="features" class="level3" data-number="1.1.1">
-<h3 data-number="1.1.1" class="anchored" data-anchor-id="features"><span class="header-section-number">1.1.1</span> Features:</h3>
+<section id="features" class="level3">
+<h3 class="anchored" data-anchor-id="features">Features:</h3>
 <ul>
 <li>✅ Runs entirely on GitHub Pages (no external hosting needed)</li>
 <li>✅ Beautiful modern UI with gradient backgrounds</li>
@@ -229,21 +244,21 @@ MathJax = {
 <li>✅ Works offline</li>
 </ul>
 </section>
-<section id="how-to-embed" class="level3" data-number="1.1.2">
-<h3 data-number="1.1.2" class="anchored" data-anchor-id="how-to-embed"><span class="header-section-number">1.1.2</span> How to Embed:</h3>
-<section id="option-a-direct-link-easiest" class="level4" data-number="1.1.2.1">
-<h4 data-number="1.1.2.1" class="anchored" data-anchor-id="option-a-direct-link-easiest"><span class="header-section-number">1.1.2.1</span> Option A: Direct Link (Easiest)</h4>
+<section id="how-to-embed" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-embed">How to Embed:</h3>
+<section id="option-a-direct-link-easiest" class="level4">
+<h4 class="anchored" data-anchor-id="option-a-direct-link-easiest">Option A: Direct Link (Easiest)</h4>
 <p>Simply link to the file from any page:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"content/Wrist as Universal Joint/grip_angle_simulator.html"</span><span class="ot"> </span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">a</span><span class="ot"> href</span><span class="op">=</span><span class="st">"content/Wrist as Universal Joint/grip_angle_simulator.html"</span><span class="ot"> </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">   class</span><span class="op">=</span><span class="st">"button"</span><span class="ot"> </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">   target</span><span class="op">=</span><span class="st">"_blank"</span><span class="dt">&gt;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>   🏌️ Launch Grip Angle Simulator</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">a</span><span class="dt">&gt;</span></span></code></pre></div>
 </section>
-<section id="option-b-embed-in-page-iframe" class="level4" data-number="1.1.2.2">
-<h4 data-number="1.1.2.2" class="anchored" data-anchor-id="option-b-embed-in-page-iframe"><span class="header-section-number">1.1.2.2</span> Option B: Embed in Page (Iframe)</h4>
+<section id="option-b-embed-in-page-iframe" class="level4">
+<h4 class="anchored" data-anchor-id="option-b-embed-in-page-iframe">Option B: Embed in Page (Iframe)</h4>
 <p>Add to any HTML page (e.g., <code>modelling.html</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="ot"> id</span><span class="op">=</span><span class="st">"grip-angle-simulator"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"interactive-section"</span><span class="dt">&gt;</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">section</span><span class="ot"> id</span><span class="op">=</span><span class="st">"grip-angle-simulator"</span><span class="ot"> class</span><span class="op">=</span><span class="st">"interactive-section"</span><span class="dt">&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">div</span><span class="ot"> class</span><span class="op">=</span><span class="st">"container"</span><span class="dt">&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">h2</span><span class="dt">&gt;</span>Grip Angle Torque Transmission Simulator<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;</span><span class="kw">p</span><span class="dt">&gt;</span>Interactive tool to visualize how grip angle affects torque transmission and angular acceleration.<span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span>
@@ -257,15 +272,15 @@ MathJax = {
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ot">            style</span><span class="op">=</span><span class="st">"border: 1px solid #ddd; border-radius: 8px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"</span><span class="dt">&gt;</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;/</span><span class="kw">div</span><span class="dt">&gt;</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">section</span><span class="dt">&gt;</span></span></code></pre></div>
 </section>
-<section id="option-c-full-page-integration" class="level4" data-number="1.1.2.3">
-<h4 data-number="1.1.2.3" class="anchored" data-anchor-id="option-c-full-page-integration"><span class="header-section-number">1.1.2.3</span> Option C: Full Page Integration</h4>
+<section id="option-c-full-page-integration" class="level4">
+<h4 class="anchored" data-anchor-id="option-c-full-page-integration">Option C: Full Page Integration</h4>
 <p>Copy the content from <code>grip_angle_simulator.html</code> and integrate it directly into your page HTML.</p>
 </section>
 </section>
-<section id="advantages" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="advantages"><span class="header-section-number">1.1.3</span> Advantages:</h3>
+<section id="advantages" class="level3">
+<h3 class="anchored" data-anchor-id="advantages">Advantages:</h3>
 <ul>
 <li>No external dependencies</li>
 <li>Works completely offline</li>
@@ -276,11 +291,11 @@ MathJax = {
 <hr>
 </section>
 </section>
-<section id="version-2-streamlit-cloud-hosted" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="version-2-streamlit-cloud-hosted"><span class="header-section-number">1.2</span> ☁️ Version 2: Streamlit (Cloud-Hosted)</h2>
+<section id="version-2-streamlit-cloud-hosted" class="level2">
+<h2 class="anchored" data-anchor-id="version-2-streamlit-cloud-hosted">☁️ Version 2: Streamlit (Cloud-Hosted)</h2>
 <p><strong>File:</strong> <code>Grip_Angle_Torque_Transmission_Streamlit.py</code></p>
-<section id="features-1" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="features-1"><span class="header-section-number">1.2.1</span> Features:</h3>
+<section id="features-1" class="level3">
+<h3 class="anchored" data-anchor-id="features-1">Features:</h3>
 <ul>
 <li>✅ Professional Streamlit interface</li>
 <li>✅ Easy to update (just edit Python file)</li>
@@ -289,8 +304,8 @@ MathJax = {
 <li>✅ Shareable link</li>
 </ul>
 </section>
-<section id="setup-steps" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="setup-steps"><span class="header-section-number">1.2.2</span> Setup Steps:</h3>
+<section id="setup-steps" class="level3">
+<h3 class="anchored" data-anchor-id="setup-steps">Setup Steps:</h3>
 <ol type="1">
 <li><p><strong>Create <code>requirements.txt</code></strong> (already created):</p>
 <pre><code>streamlit&gt;=1.28.0
@@ -308,16 +323,16 @@ matplotlib&gt;=3.7.0</code></pre></li>
 <li><p><strong>Get your URL</strong> (e.g., <code>https://your-app.streamlit.app</code>)</p></li>
 <li><p><strong>Embed in HTML:</strong></p></li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> </span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">iframe</span><span class="ot"> </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ot">    src</span><span class="op">=</span><span class="st">"https://your-app.streamlit.app/?embed=true"</span><span class="ot"> </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    height</span><span class="op">=</span><span class="st">"900"</span><span class="ot"> </span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    width</span><span class="op">=</span><span class="st">"100%"</span><span class="ot"> </span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    frameborder</span><span class="op">=</span><span class="st">"0"</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ot">    style</span><span class="op">=</span><span class="st">"border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"</span><span class="dt">&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">iframe</span><span class="dt">&gt;</span></span></code></pre></div>
 </section>
-<section id="advantages-1" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="advantages-1"><span class="header-section-number">1.2.3</span> Advantages:</h3>
+<section id="advantages-1" class="level3">
+<h3 class="anchored" data-anchor-id="advantages-1">Advantages:</h3>
 <ul>
 <li>Easy Python-based updates</li>
 <li>Automatic deployment</li>
@@ -327,18 +342,18 @@ matplotlib&gt;=3.7.0</code></pre></li>
 <hr>
 </section>
 </section>
-<section id="recommended-approach" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="recommended-approach"><span class="header-section-number">1.3</span> 🎯 Recommended Approach</h2>
+<section id="recommended-approach" class="level2">
+<h2 class="anchored" data-anchor-id="recommended-approach">🎯 Recommended Approach</h2>
 <p><strong>For GitHub Pages:</strong> Use the <strong>JavaScript/HTML5 version</strong> (<code>grip_angle_simulator.html</code>) - No external dependencies - Works entirely on your site - Fast and reliable - Beautiful modern design</p>
 <p><strong>For sharing/updates:</strong> Use <strong>Streamlit version</strong> - Easy to update Python code - Shareable link - Good for rapid iterations</p>
 <hr>
 </section>
-<section id="adding-to-your-site" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="adding-to-your-site"><span class="header-section-number">1.4</span> 📝 Adding to Your Site</h2>
-<section id="quick-integration-example" class="level3" data-number="1.4.1">
-<h3 data-number="1.4.1" class="anchored" data-anchor-id="quick-integration-example"><span class="header-section-number">1.4.1</span> Quick Integration Example</h3>
+<section id="adding-to-your-site" class="level2">
+<h2 class="anchored" data-anchor-id="adding-to-your-site">📝 Adding to Your Site</h2>
+<section id="quick-integration-example" class="level3">
+<h3 class="anchored" data-anchor-id="quick-integration-example">Quick Integration Example</h3>
 <p>Add this to <code>modelling.html</code> or create a new page:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">html</span><span class="ot"> lang</span><span class="op">=</span><span class="st">"en"</span><span class="dt">&gt;</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">head</span><span class="dt">&gt;</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- Your existing head content --&gt;</span></span>
@@ -376,11 +391,11 @@ matplotlib&gt;=3.7.0</code></pre></li>
 <span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">&lt;!-- Your existing footer --&gt;</span></span>
 <span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">body</span><span class="dt">&gt;</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">html</span><span class="dt">&gt;</span></span></code></pre></div>
 </section>
-<section id="css-styling-add-to-styles.css" class="level3" data-number="1.4.2">
-<h3 data-number="1.4.2" class="anchored" data-anchor-id="css-styling-add-to-styles.css"><span class="header-section-number">1.4.2</span> CSS Styling (add to <code>styles.css</code>)</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.interactive-section</span> {</span>
+<section id="css-styling-add-to-styles-css" class="level3">
+<h3 class="anchored" data-anchor-id="css-styling-add-to-styles-css">CSS Styling (add to <code>styles.css</code>)</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.interactive-section</span> {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">4</span><span class="dt">rem</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background</span><span class="ch">:</span> <span class="cn">#f8f9fa</span><span class="op">;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -394,12 +409,12 @@ matplotlib&gt;=3.7.0</code></pre></li>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.interactive-section</span> iframe {</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">height</span><span class="ch">:</span> <span class="dv">1200</span><span class="dt">px</span><span class="op">;</span> <span class="co">/* Taller on mobile */</span></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <hr>
 </section>
 </section>
-<section id="next-steps" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">1.5</span> 🚀 Next Steps</h2>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">🚀 Next Steps</h2>
 <ol type="1">
 <li><p><strong>Test the JavaScript version locally:</strong></p>
 <ul>
@@ -407,9 +422,9 @@ matplotlib&gt;=3.7.0</code></pre></li>
 <li>Verify all features work</li>
 </ul></li>
 <li><p><strong>Commit and push:</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add content/Wrist\ as\ Universal\ Joint/grip_angle_simulator.html</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add content/Wrist\ as\ Universal\ Joint/grip_angle_simulator.html</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Add interactive grip angle simulator (JavaScript version)"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div></li>
 <li><p><strong>Add to your site:</strong></p>
 <ul>
 <li>Edit <code>modelling.html</code> or create new page</li>
@@ -425,8 +440,8 @@ matplotlib&gt;=3.7.0</code></pre></li>
 </ol>
 <hr>
 </section>
-<section id="features-comparison" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="features-comparison"><span class="header-section-number">1.6</span> ✨ Features Comparison</h2>
+<section id="features-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="features-comparison">✨ Features Comparison</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -491,68 +506,6 @@ matplotlib&gt;=3.7.0</code></pre></li>
       icon: icon
     };
     anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -883,203 +836,7 @@ matplotlib&gt;=3.7.0</code></pre></li>
   });
   </script>
 </div> <!-- /content -->
-/**
- * AffineDrift - Interactive JavaScript
- * Handles smooth scrolling, navigation highlights, and interactive elements
- */
-
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scroll for anchor links
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link =&gt; {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-
-            // Only handle internal anchors
-            if (href !== '#' &amp;&amp; href.length &gt; 1) {
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-
-                if (targetElement) {
-                    e.preventDefault();
-
-                    // Smooth scroll to target
-                    const headerOffset = 80; // Account for sticky header
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-    });
-
-    // Highlight active navigation link on scroll
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-
-    function highlightNavigation() {
-        const scrollPosition = window.scrollY + 150;
-
-        sections.forEach(section =&gt; {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollPosition &gt;= sectionTop &amp;&amp; scrollPosition &lt; sectionTop + sectionHeight) {
-                navLinks.forEach(link =&gt; {
-                    link.style.opacity = '0.8';
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.style.opacity = '1';
-                    }
-                });
-            }
-        });
-    }
-
-    // Debounce scroll event for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(highlightNavigation, 50);
-    });
-
-    // Initial call
-    highlightNavigation();
-
-    // Add fade-in animation for sections on scroll (only if not already visible)
-    // Content is visible by default - animation is optional enhancement
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px 0px 0px'
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry =&gt; {
-            if (entry.isIntersecting) {
-                // Only apply animation if element doesn't already have opacity set
-                // Use getComputedStyle to check actual rendered opacity value
-                const computedOpacity = window.getComputedStyle(entry.target).opacity;
-                if (computedOpacity === '0') {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            }
-        });
-    }, observerOptions);
-
-    // Observe sections for fade-in effect (only apply to sections that should animate)
-    // Don't hide content initially - let it be visible
-    const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
-    sectionsToAnimate.forEach(section =&gt; {
-        // Only animate if section is below the fold
-        const rect = section.getBoundingClientRect();
-        if (rect.top &gt; window.innerHeight) {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            observer.observe(section);
-        } else {
-            // Content above the fold should be immediately visible
-            section.style.opacity = '1';
-            section.style.transform = 'translateY(0)';
-        }
-    });
-
-    // Mobile menu toggle (for future implementation)
-    const navToggle = document.querySelector('.nav-toggle');
-    if (navToggle) {
-        navToggle.addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
-        });
-    }
-
-    // Page history tracking for sidebar
-    function updateHistorySidebar() {
-        const historyList = document.getElementById('history-list');
-        if (!historyList) return;
-
-        // Constants
-        const MAX_HISTORY_TITLE_LENGTH = 40;
-        const MAX_HISTORY_ITEMS = 10;
-
-        // Get history from localStorage
-        let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
-        
-        // Get current page info with improved title extraction
-        let pageTitle = document.title;
-        // Handle different title formats
-        if (pageTitle.includes(' - AffineDrift')) {
-            pageTitle = pageTitle.replace(' - AffineDrift', '');
-        } else if (pageTitle.startsWith('AffineDrift - ')) {
-            pageTitle = pageTitle.replace('AffineDrift - ', '');
-        } else if (pageTitle === 'AffineDrift') {
-            pageTitle = 'Home';
-        }
-        
-        const currentPage = {
-            title: pageTitle,
-            url: window.location.pathname.split('/').pop() || 'index.html',
-            fullUrl: window.location.href
-        };
-
-        // Remove current page if it's already in history
-        history = history.filter(item =&gt; item.url !== currentPage.url);
-        
-        // Add current page to front
-        history.unshift(currentPage);
-        
-        // Keep only last N items
-        history = history.slice(0, MAX_HISTORY_ITEMS);
-        
-        // Save back to localStorage
-        localStorage.setItem('affinedrift_history', JSON.stringify(history));
-        
-        // Update sidebar display
-        // Filter out current page from display
-        const displayHistory = history.filter(item =&gt; item.url !== currentPage.url);
-        if (displayHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-empty">No recent pages yet</li>';
-        } else {
-            historyList.innerHTML = displayHistory.map(item =&gt; {
-                const displayTitle = item.title.length &gt; MAX_HISTORY_TITLE_LENGTH 
-                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
-                    : item.title;
-                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
-            }).join('');
-        }
-    }
-
-    // Initialize history sidebar
-    updateHistorySidebar();
-
-    // Log page load for analytics (optional)
-    console.log('AffineDrift loaded successfully');
-    console.log('Mathematical notation rendering via MathJax');
-});
-
-// Utility function for future features
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Export for potential module use
-if (typeof module !== 'undefined' &amp;&amp; module.exports) {
-    module.exports = {
-        scrollToTop
-    };
-}
+<script src="script.js"></script>
 
 
 

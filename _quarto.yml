@@ -1,8 +1,24 @@
 project:
   type: website
-  output-dir: _site
+  output-dir: docs
   render:
+    - "*.qmd"
     - "articles/*.qmd"
+    - CONTRIBUTING.md
+    - DEVELOPMENT_GUIDE.md
+    - DNS_SETUP.md
+    - MIGRATION_GUIDE.md
+    - WEBSITE_MANAGEMENT.md
+    - tools/wrist-universal-joint/EMBEDDING_GUIDE.md
+    - tools/wrist-universal-joint/EMBED_INSTRUCTIONS.md
+  resources:
+    - styles.css
+    - script.js
+    - logo/
+    - favicon.ico
+    - CNAME
+    - legacy-pages/qmd/
+    - static/
 
 website:
   title: "AffineDrift"
@@ -11,19 +27,18 @@ website:
 
   navbar:
     logo: logo/Logo Transparent/1.png
+    logo-alt: "AffineDrift logo"
     left:
       - text: "Home"
-        href: index.html
+        href: index.qmd
       - text: "Articles"
-        href: articles.html
-      - text: "Reviews"
-        href: research-reviews.html
+        href: articles.qmd
       - text: "Resources"
-        href: resources.html
-      - text: "Contact"
-        href: contact.html
+        href: resources.qmd
       - text: "About"
-        href: about.html
+        href: about.qmd
+      - text: "Contact"
+        href: contact.qmd
 
   sidebar:
     - id: history
@@ -36,6 +51,7 @@ format:
     theme:
       light: [cosmo, custom.scss]
     css: styles.css
+    code-copy: false
     toc: true
     toc-depth: 3
     toc-location: right
@@ -58,9 +74,10 @@ format:
     include-in-header:
       - text: |
           <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link rel="preconnect" href="https://fonts.gstatic.com">
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-          <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+          <link rel="preconnect" href="https://cdn.jsdelivr.net">
           <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     include-after-body:
       - text: |
