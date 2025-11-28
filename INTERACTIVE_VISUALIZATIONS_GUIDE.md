@@ -1150,7 +1150,7 @@ Create `tools/equation-explorer.html`:
         <div class="parameters">
             <div class="param-control">
                 <label>
-                    X Range: <span class="param-value" id="range-value">0 to 20</span>
+                    X Range: <span class="param-value" id="range-value">-20 to 20</span>
                 </label>
                 <input type="range" id="x-range" min="5" max="50" value="20" step="1">
             </div>
@@ -1273,11 +1273,11 @@ Create `tools/equation-explorer.html`:
             // Convert simple equation to LaTeX (basic conversion)
             let latex = currentEquation
                 .replace(/\*/g, ' \\cdot ')
-                .replace(/exp/g, 'e^')
+                .replace(/exp\(([^)]+)\)/g, 'e^{$1}')  // exp(...) → e^{...}
+                .replace(/sqrt\(([^)]+)\)/g, '\\sqrt{$1}')  // sqrt(...) → \sqrt{...}
                 .replace(/sin/g, '\\sin')
                 .replace(/cos/g, '\\cos')
-                .replace(/tan/g, '\\tan')
-                .replace(/sqrt/g, '\\sqrt');
+                .replace(/tan/g, '\\tan');
 
             document.querySelector('.rendered-equation').innerHTML =
                 `$$f(x) = ${latex}$$`;
