@@ -787,7 +787,9 @@ function initCommandPalette() {
             renderResults();
         } else if (e.key === 'Enter') {
             e.preventDefault();
-            executeCommand(filteredCommands[selectedIndex]);
+            if (filteredCommands.length > 0 && selectedIndex >= 0 && filteredCommands[selectedIndex]) {
+                executeCommand(filteredCommands[selectedIndex]);
+            }
         }
     });
 

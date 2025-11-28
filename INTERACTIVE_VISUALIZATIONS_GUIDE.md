@@ -325,6 +325,7 @@ Create `tools/swing-visualizer-3d.html`:
         let isPlaying = false;
         let swingProgress = 0;
         let animationSpeed = 1.0;
+        let frameCounter = 0;
 
         // UI Controls
         const progressSlider = document.getElementById('swing-progress');
@@ -405,8 +406,9 @@ Create `tools/swing-visualizer-3d.html`:
                 controlForce.hide();
             }
 
-            // Update trajectory
-            if (swingProgress % 2 === 0) {
+            // Update trajectory (every 2 frames to avoid floating-point issues)
+            frameCounter++;
+            if (frameCounter % 2 === 0) {
                 trajectoryPoints.push(clubHeadPos.clone());
                 if (trajectoryPoints.length > 50) trajectoryPoints.shift();
 
@@ -563,7 +565,7 @@ Create `tools/drift-input-explorer.html`:
             <div class="control-group">
                 <label for="control-amplitude">Control Input Amplitude</label>
                 <input type="range" id="control-amplitude" min="0" max="50" step="1" value="10">
-                <div class="value-display" id="control-value">10 N</div>
+                <div class="value-display" id="control-amplitude-value">10 N</div>
             </div>
         </div>
 
