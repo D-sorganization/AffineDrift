@@ -67,13 +67,13 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
     end = m_end.start() if m_end else len(tex_text)
     body = tex_text[start:end]
 
-    # Remove LaTeX document structure commands
+    # Remove LaTeX document structure commands (more comprehensive)
     body = re.sub(r'\\maketitle', '', body)
     body = re.sub(r'\\title\{[^}]*\}', '', body)
     body = re.sub(r'\\author\{[^}]*\}', '', body)
     body = re.sub(r'\\date\{[^}]*\}', '', body)
 
-    # Remove abstract from body
+    # Remove abstract from body (if not already extracted)
     body = re.sub(r'\\begin\{abstract\}.*?\\end\{abstract\}', '', body, flags=re.DOTALL)
 
     # Remove \tableofcontents and set toc: true
@@ -81,6 +81,14 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
     if re.search(r'\\tableofcontents', body):
         toc = True
         body = re.sub(r'\\tableofcontents', '', body)
+    
+    # Remove LaTeX comments (lines starting with %)
+    body = re.sub(r'^%.*$', '', body, flags=re.MULTILINE)
+    # Remove comment blocks
+    body = re.sub(r'%.*', '', body)
+    
+    # Remove \appendix command (will be converted to heading later)
+    body = re.sub(r'\\appendix\b', '', body)
 
     # Convert section commands to markdown headings
     body = re.sub(r'\\section\*?\{([^}]*)\}', r'\n\n# \1\n\n', body)
@@ -98,7 +106,7 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
         yaml += "\n    toc: true"
     yaml += "\n"
     if abstract:
-        yaml += f"abstract: |\n  {abstract.replace(chr(10), chr(10)+'  ')}\n"
+        yaml += f"abstract: |\n  {abstract.replace('\n', '\n  ')}\n"
     yaml += "---\n\n"
 
     md = f"{yaml}{body}\n"

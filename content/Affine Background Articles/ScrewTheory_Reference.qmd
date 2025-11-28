@@ -7,13 +7,10 @@ format:
 # Introduction
 
 
-
 Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group $SE(3)$ and its Lie algebra $\mathfrak{se}(3)$. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
 
 
-
 # The Lie Group $SE(3)$ and Its Algebra
-
 
 
 Rigid-body configurations belong to the special Euclidean group
@@ -46,9 +43,7 @@ Its Lie algebra is
 where $\hat{\omega}$ is the skew-symmetric matrix corresponding to the vector $\omega$ via the hat operator.
 
 
-
 # Twists
-
 
 
 A twist is a 6-vector
@@ -65,9 +60,7 @@ v = -\omega \times q.
 This yields the Pl\"ucker representation of screws.
 
 
-
 # Wrenches
-
 
 
 A wrench is a 6-vector
@@ -85,9 +78,7 @@ where $f$ is the force and $n$ is the moment about a reference point. The instan
 This pairing is invariant under coordinate transformations and is fundamental to screw theory.
 
 
-
 # Adjoint Transformations
-
 
 
 For a homogeneous transform
@@ -116,9 +107,7 @@ It maps twists and wrenches as
 where subscripts denote different frames.
 
 
-
 # Joint Screws and the Screw Jacobian
-
 
 
 A revolute joint $i$ is represented by a screw axis
@@ -142,9 +131,7 @@ so that
 \end{equation}
 
 
-
 # Screw Dynamics (Newton--Euler in Screw Form)
-
 
 
 The spatial Newton--Euler equation for a rigid body can be written as
@@ -171,9 +158,7 @@ I_s\dot{\mathcal{V}}
 where $\mathcal{F}_g$ is a gravity wrench and $\mathcal{F}_{\mathrm{shaft}}$ is the contribution of flexible shaft forces.
 
 
-
 # Control-Affine Structure in Screw Coordinates
-
 
 
 Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via
@@ -195,9 +180,7 @@ where $B$ is the input distribution matrix and $u$ is the vector of joint inputs
 This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
 
 
-
 # Flexible Shaft Forces in Screw Form
-
 
 
 Flexible shaft forces can be modeled as distributed elastic wrenches. For mode $i$:
@@ -215,9 +198,7 @@ where $x_{s,i}$ and $\dot{x}_{s,i}$ are modal coordinates, $K_i$ and $D_i$ are s
 so shaft forces contribute only to drift and do not affect the linear dependence on $u$.
 
 
-
 # Superposition in Screw Space
-
 
 
 Because wrenches add linearly, the total wrench decomposition
@@ -231,9 +212,7 @@ Because wrenches add linearly, the total wrench decomposition
 holds in any screw coordinate representation. This coordinate-free linearity is a geometric expression of the superposition principle for forces in control-affine mechanical systems.
 
 
-
 # ZTCF and ZVCF in Screw Coordinates
-
 
 
 In the Zero Torque Counterfactual (ZTCF), all inputs are set to zero, so
@@ -251,9 +230,7 @@ In the Zero Velocity Counterfactual (ZVCF), drift mechanisms are disabled and th
 These constructions mirror the affine decomposition in screw space.
 
 
-
 # Summary
-
 
 
 Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.

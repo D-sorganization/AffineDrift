@@ -7,7 +7,6 @@ format:
 # Introduction
 
 
-
 This reference document summarizes the Lagrangian formulation of multibody mechanical systems and shows how the control-affine structure
 \begin{equation}
 \dot{x} = f(x) + G(x)u
@@ -15,9 +14,7 @@ This reference document summarizes the Lagrangian formulation of multibody mecha
 arises naturally from first principles. It also clarifies how the drift and input components correspond to potential, kinetic, and generalized non-conservative forces, including those associated with a flexible shaft.
 
 
-
 # Configuration Space and Generalized Coordinates
-
 
 
 Let $q \in \mathbb{R}^n$ denote the generalized coordinates describing the rigid-body configuration of the system (e.g., joint angles, trunk rotation).
@@ -32,9 +29,7 @@ The corresponding generalized velocities are $\dot{q}$ and $\dot{x}_s$, and we c
 \end{equation}
 
 
-
 # Lagrangian: Kinetic and Potential Energy
-
 
 
 The Lagrangian is defined as
@@ -56,9 +51,7 @@ V(q_{\mathrm{ext}}) = V_{\mathrm{grav}}(q) + V_{\mathrm{shaft}}(x_s) + V_{\mathr
 where $V_{\mathrm{shaft}}$ accounts for shaft bending/torsion and $V_{\mathrm{geom}}$ captures configuration-dependent geometric terms.
 
 
-
 # Euler--Lagrange Equations with Generalized Forces
-
 
 
 The Euler--Lagrange equations for generalized coordinates $q_{\mathrm{ext}}$ are
@@ -85,9 +78,7 @@ Q_q = \tau_{\mathrm{app}} + Q_{q,\mathrm{nc}}, \qquad Q_s = Q_{s,\mathrm{nc}},
 with $\tau_{\mathrm{app}}$ the applied joint torques, and $Q_{(\cdot),\mathrm{nc}}$ representing additional non-conservative effects such as damping.
 
 
-
 # Manipulator Form from Lagrange
-
 
 
 Expanding the Euler--Lagrange equations yields the standard manipulator form for the extended system:
@@ -121,9 +112,7 @@ Q_{s,\mathrm{nc}}
 where $B$ maps inputs to generalized joint torques.
 
 
-
 # Drift and Input Decomposition
-
 
 
 We define the extended drift generalized forces as
@@ -154,9 +143,7 @@ M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
 \end{equation}
 
 
-
 # First-Order State Form and Control-Affine Structure
-
 
 
 Define the extended state
@@ -205,17 +192,13 @@ Then
 which is exactly the control-affine structure used throughout the main text.
 
 
-
 # Role of Gravity and Flexible Shaft in Lagrangian Terms
-
 
 
 In the Lagrangian framework, gravity arises as part of the potential energy $V_{\mathrm{grav}}(q)$, and hence appears in $G_{\mathrm{ext}}(q_{\mathrm{ext}})$. Shaft elasticity is included in $V_{\mathrm{shaft}}(x_s)$, and any associated non-conservative terms (e.g. shaft damping) appear in $\tau_{\mathrm{passive,ext}}$. Both gravity and shaft contributions enter the drift term and do not modify the linear dependence on $u$.
 
 
-
 # Connection to ZTCF and ZVCF
-
 
 
 From the Lagrangian viewpoint:
@@ -230,9 +213,7 @@ and the motion is governed solely by the drift.
 Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
 
 
-
 # Summary
-
 
 
 The Lagrangian formalism provides a principled route from kinetic and potential energy to the manipulator equations, and from there to the control-affine state-space representation. Drift dynamics collect all velocity-dependent, gravitational, and elastic effects, including those of a flexible shaft, while inputs enter linearly via the actuator mapping. This alignment with the control-affine structure underpins the theoretical framework developed in the main body of the work.
