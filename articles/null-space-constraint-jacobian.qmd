@@ -1,7 +1,5 @@
 ---
-title: "The Null Space of the Constraint Jacobian: 
-Unconstrained Motion in Constrained Systems 
-with Applications to Golf Swing Biomechanics"
+title: "The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems with Applications to Golf Swing Biomechanics"
 author: "Golf Swing Dynamics Research"
 date: "2025-11-28"
 format:
@@ -12,13 +10,6 @@ format:
     code-fold: true
 ---
 
-\title{The Null Space of the Constraint Jacobian:\\
-Unconstrained Motion in Constrained Systems\\
-with Applications to Golf Swing Biomechanics}
-
-\author{Golf Swing Dynamics Research}
-\date{\today}
-
 ::: {.abstract-section}
 ## Abstract
 
@@ -26,16 +17,12 @@ The golf swing represents one of the most complex coordinated movements in human
 
 :::
 
-\tableofcontents
-
 ## Introduction
 
 The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves *loop closures*---the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.
 
 Mathematically, constraints manifest through the *constraint Jacobian* $\Jc$, a matrix that maps generalized velocities to constraint violation rates. The *null space* of this Jacobian, denoted $\nullspace(\Jc)$, represents the subspace of velocity directions that are kinematically admissible---motions that satisfy all constraints to first order. Understanding this null space is essential for:
 
-[noitemsep]
-    
 - Reducing the dimension of the equations of motion
     
 - Projecting applied forces onto the feasible motion space
@@ -277,8 +264,6 @@ $$
 $$
 
 where:
-[noitemsep]
-    
 - $\fvec(\xvec)$: the *drift vector field* (dynamics with zero control input)
     
 - $G(\xvec) = [g_1, g_2, \ldots, g_p]$: the *control distribution*
@@ -305,8 +290,6 @@ $$
 This is independent of constraint forces---they have been naturally eliminated through the null space formulation.
 
 The separation of drift and control has a beautiful interpretation in golf:
-[noitemsep]
-    
 - **Drift**: The passive dynamics due to gravity and centrifugal/Coriolis effects
     
 - **Control**: Active muscle forces producing clubhead acceleration
@@ -347,8 +330,6 @@ $$
 That is, the projected control inputs must span the entire null space.
 
 In the golf swing, this has implications for:
-[noitemsep]
-    
 - Joint actuation strategy
     
 - Timing of force application
@@ -400,8 +381,6 @@ where $N_{\text{open}}$ is the null space of the open chain constraints and $N_{
 ### Model Description
 
 Consider a simplified golf swing model with the following segments:
-[noitemsep]
-    
 1. Pelvis (3 DOF: rotation about spine)
     
 2. Torso (3 DOF: spinal flexion/extension, lateral bend, rotation)
@@ -458,8 +437,6 @@ $$
 $$
 
 Principal Component Analysis (PCA) of these synergies often reveals:
-[noitemsep]
-    
 - **X-factor**: Coordinated pelvis-torso separation
     
 - **Arm swing synergy**: Coupled shoulder-elbow motion
@@ -477,8 +454,6 @@ $$
 $$
 
 The drift in the downswing includes:
-[noitemsep]
-    
 - Gravitational acceleration of the club
     
 - Centrifugal "straightening" of the arm-club system
@@ -507,8 +482,6 @@ $$
 $$
 
 This separates:
-[noitemsep]
-    
 - Power input from muscles: $\dot{\bm{z}}^\top \bar{\tauvec}$
     
 - Gravitational power: $-\dot{\bm{z}}^\top \bar{\gvec}$
@@ -526,8 +499,6 @@ $$
 $$
 
 At such configurations, $\dim(\nullspace(\Jc))$ increases---the system gains degrees of freedom. In golf, this occurs at:
-[noitemsep]
-    
 - Full wrist cock position (gimbal lock-like behavior)
     
 - Extreme backswing positions
@@ -553,8 +524,6 @@ $$
 $$
 
 These determine:
-[noitemsep]
-    
 - Additional reachable directions (controllability)
     
 - Coupling between passive dynamics and control
@@ -626,27 +595,18 @@ $$
 
 [Table]
 
-\begin{thebibliography}{99}
+## References
 
-\bibitem{murray1994}
-R.M. Murray, Z. Li, and S.S. Sastry, *A Mathematical Introduction to Robotic Manipulation*, CRC Press, 1994.
+1. R.M. Murray, Z. Li, and S.S. Sastry, *A Mathematical Introduction to Robotic Manipulation*, CRC Press, 1994.
 
-\bibitem{bloch2003}
-A.M. Bloch, *Nonholonomic Mechanics and Control*, Springer, 2003.
+2. A.M. Bloch, *Nonholonomic Mechanics and Control*, Springer, 2003.
 
-\bibitem{featherstone2008}
-R. Featherstone, *Rigid Body Dynamics Algorithms*, Springer, 2008.
+3. R. Featherstone, *Rigid Body Dynamics Algorithms*, Springer, 2008.
 
-\bibitem{nesbit2005}
-S.M. Nesbit, "A three-dimensional kinematic and kinetic study of the golf swing," *Journal of Sports Science and Medicine*, vol. 4, pp. 499--519, 2005.
+4. S.M. Nesbit, "A three-dimensional kinematic and kinetic study of the golf swing," *Journal of Sports Science and Medicine*, vol. 4, pp. 499--519, 2005.
 
-\bibitem{isidori1995}
-A. Isidori, *Nonlinear Control Systems*, 3rd ed., Springer, 1995.
+5. A. Isidori, *Nonlinear Control Systems*, 3rd ed., Springer, 1995.
 
-\bibitem{blajer1994}
-W. Blajer, "A geometric unification of constrained system dynamics," *Multibody System Dynamics*, vol. 1, pp. 3--21, 1997.
+6. W. Blajer, "A geometric unification of constrained system dynamics," *Multibody System Dynamics*, vol. 1, pp. 3--21, 1997.
 
-\bibitem{udwadia2002}
-F.E. Udwadia and R.E. Kalaba, "What is the general form of the explicit equations of motion for constrained mechanical systems?" *Journal of Applied Mechanics*, vol. 69, pp. 335--339, 2002.
-
-\end{thebibliography}
+7. F.E. Udwadia and R.E. Kalaba, "What is the general form of the explicit equations of motion for constrained mechanical systems?" *Journal of Applied Mechanics*, vol. 69, pp. 335--339, 2002.
