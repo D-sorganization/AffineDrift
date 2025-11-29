@@ -1,0 +1,240 @@
+---
+title: "Lagrangian Reference for Control-Affine Multibody Dynamics"
+author: "Anonymized for Review"
+date: "2025-11-28"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-fold: true
+---
+
+## Introduction
+
+This reference document summarizes the Lagrangian formulation of multibody mechanical systems and shows how the control-affine structure
+
+$$
+\dot{x} = f(x) + G(x)u
+$$
+
+arises naturally from first principles. It also clarifies how the drift and input components correspond to potential, kinetic, and generalized non-conservative forces, including those associated with a flexible shaft.
+
+## Configuration Space and Generalized Coordinates
+
+Let $q \in \mathbb{R}^n$ denote the generalized coordinates describing the rigid-body configuration of the system (e.g., joint angles, trunk rotation).
+Let $x_s \in \mathbb{R}^k$ denote additional generalized coordinates representing shaft deformation modes (e.g., bending, torsion).
+We define the extended coordinate vector
+
+$$
+q_{\mathrm{ext}} = \begin{bmatrix} q \\ x_s \end{bmatrix} \in \mathbb{R}^{n+k}.
+$$
+
+The corresponding generalized velocities are $\dot{q}$ and $\dot{x}_s$, and we collect them in
+
+$$
+\dot{q}_{\mathrm{ext}} = \begin{bmatrix} \dot{q} \\ \dot{x}_s \end{bmatrix}.
+$$
+
+## Lagrangian: Kinetic and Potential Energy
+
+The Lagrangian is defined as
+
+$$
+\mathcal{L}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) = T(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) - V(q_{\mathrm{ext}}),
+$$
+
+where $T$ is the total kinetic energy and $V$ is the total potential energy.
+
+For an articulated rigid-body system with flexible shaft modes, the kinetic energy can be written in quadratic form:
+
+$$
+T = \frac{1}{2}\dot{q}_{\mathrm{ext}}^\top M_{\mathrm{ext}}(q_{\mathrm{ext}}) \dot{q}_{\mathrm{ext}},
+$$
+
+where $M_{\mathrm{ext}}(q_{\mathrm{ext}})$ is the extended inertia matrix, symmetric and positive definite.
+
+The potential energy includes gravitational and elastic components:
+
+$$
+V(q_{\mathrm{ext}}) = V_{\mathrm{grav}}(q) + V_{\mathrm{shaft}}(x_s) + V_{\mathrm{geom}}(q,x_s),
+$$
+
+where $V_{\mathrm{shaft}}$ accounts for shaft bending/torsion and $V_{\mathrm{geom}}$ captures configuration-dependent geometric terms.
+
+## Euler--Lagrange Equations with Generalized Forces
+
+The Euler--Lagrange equations for generalized coordinates $q_{\mathrm{ext}}$ are
+
+$$
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\mathrm{ext}}}\right)
+-
+\frac{\partial \mathcal{L}}{\partial q_{\mathrm{ext}}}
+=
+Q_{\mathrm{ext}},
+$$
+
+where $Q_{\mathrm{ext}}$ are the generalized non-conservative forces.
+
+We partition $Q_{\mathrm{ext}}$ as
+
+$$
+Q_{\mathrm{ext}} =
+\begin{bmatrix}
+Q_q \\ Q_s
+\end{bmatrix},
+$$
+
+where $Q_q$ corresponds to torques at the actuated joints and $Q_s$ corresponds to generalized forces associated with shaft modes. Typically,
+
+$$
+Q_q = \tau_{\mathrm{app}} + Q_{q,\mathrm{nc}}, \qquad Q_s = Q_{s,\mathrm{nc}},
+$$
+
+with $\tau_{\mathrm{app}}$ the applied joint torques, and $Q_{(\cdot),\mathrm{nc}}$ representing additional non-conservative effects such as damping.
+
+## Manipulator Form from Lagrange
+
+Expanding the Euler--Lagrange equations yields the standard manipulator form for the extended system:
+
+$$
+M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
++
+C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
++
+G_{\mathrm{ext}}(q_{\mathrm{ext}})
++
+\tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+=
+Q_{\mathrm{ext}},
+$$
+
+where:
+- $M_{\mathrm{ext}}(q_{\mathrm{ext}})$ is the extended inertia matrix,
+
+- $C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}$ contains Coriolis and centrifugal terms,
+
+- $G_{\mathrm{ext}}(q_{\mathrm{ext}}) = \partial V/\partial q_{\mathrm{ext}}$ contains gravitational and elastic contributions,
+
+- $\tau_{\mathrm{passive,ext}}$ gathers additional modeled passive effects (e.g. damping).
+
+For actuated joints with input $u \in \mathbb{R}^m$, we express
+
+$$
+Q_{\mathrm{ext}} =
+\begin{bmatrix}
+B u + Q_{q,\mathrm{nc}} \\
+Q_{s,\mathrm{nc}}
+\end{bmatrix},
+$$
+
+where $B$ maps inputs to generalized joint torques.
+
+## Drift and Input Decomposition
+
+We define the extended drift generalized forces as
+
+$$
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+=
+- \left[
+C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
++ G_{\mathrm{ext}}(q_{\mathrm{ext}})
++ \tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+- Q_{\mathrm{ext,noninput}}
+\right],
+$$
+
+where $Q_{\mathrm{ext,noninput}}$ groups non-input generalized forces (e.g., certain non-conservative terms). The input generalized forces are
+
+$$
+\tau_{\mathrm{input,ext}} = 
+\begin{bmatrix}
+B u \\ 0
+\end{bmatrix}.
+$$
+
+Then the extended equation of motion becomes
+
+$$
+M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
+=
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
++
+\tau_{\mathrm{input,ext}}.
+$$
+
+## First-Order State Form and Control-Affine Structure
+
+Define the extended state
+
+$$
+x = 
+\begin{bmatrix}
+q_{\mathrm{ext}} \\
+\dot{q}_{\mathrm{ext}}
+\end{bmatrix},
+$$
+
+and write
+
+$$
+\dot{x} =
+\begin{bmatrix}
+\dot{q}_{\mathrm{ext}} \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\begin{bmatrix} B \\ 0 \end{bmatrix}
+\end{bmatrix} u.
+$$
+
+Define
+
+$$
+f(x) =
+\begin{bmatrix}
+\dot{q}_{\mathrm{ext}} \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+\end{bmatrix},
+\qquad
+G(x) =
+\begin{bmatrix}
+0 \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\begin{bmatrix} B \\ 0 \end{bmatrix}
+\end{bmatrix}.
+$$
+
+Then
+
+$$
+\dot{x} = f(x) + G(x)u,
+$$
+
+which is exactly the control-affine structure used throughout the main text.
+
+## Role of Gravity and Flexible Shaft in Lagrangian Terms
+
+In the Lagrangian framework, gravity arises as part of the potential energy $V_{\mathrm{grav}}(q)$, and hence appears in $G_{\mathrm{ext}}(q_{\mathrm{ext}})$. Shaft elasticity is included in $V_{\mathrm{shaft}}(x_s)$, and any associated non-conservative terms (e.g. shaft damping) appear in $\tau_{\mathrm{passive,ext}}$. Both gravity and shaft contributions enter the drift term and do not modify the linear dependence on $u$.
+
+## Connection to ZTCF and ZVCF
+
+From the Lagrangian viewpoint:
+- ZTCF corresponds to setting $u = 0$ in the Euler--Lagrange equations, so that
+\[
+M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
+\]
+and the motion is governed solely by the drift.
+
+- ZVCF corresponds to freezing $q_{\mathrm{ext}}$ and $\dot{q}_{\mathrm{ext}}$ and disabling drift contributions (including gravity), so that the only remaining generalized forces come from $\tau_{\mathrm{input,ext}} = [B u; 0]^\top$.
+Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
+
+## Summary
+
+The Lagrangian formalism provides a principled route from kinetic and potential energy to the manipulator equations, and from there to the control-affine state-space representation. Drift dynamics collect all velocity-dependent, gravitational, and elastic effects, including those of a flexible shaft, while inputs enter linearly via the actuator mapping. This alignment with the control-affine structure underpins the theoretical framework developed in the main body of the work.

@@ -1,6 +1,7 @@
 ---
-title: "Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations"
-date: "2025-11-26"
+title: "\textbf{Interpretation of Inverse Dynamics:   Understanding the Fundamental Limitations"
+author: "AffineDrift"
+date: "2025-11-28"
 format:
   html:
     toc: true
@@ -22,63 +23,63 @@ The method is powerful because it allows us to infer kinetic information (forces
 The equations of motion for a rigid body like a golf club are described by Euler's laws:
 
 $$
-\begin{aligned}
-\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \tag{1}\\
-\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \tag{2}
-\end{aligned}
+\begin{align}
+\sum **F** &= m**a**_{\text{COM}} {#eq-force_balance}\\
+\sum **M**_{\text{COM}} &= **I****\alpha** + **\omega** \times (**I****\omega**) {#eq-moment_balance}
+\end{align}
 $$
 
 where:
-- $\sum \mathbf{F}$ is the sum of all forces acting on the club
+- $\sum **F**$ is the sum of all forces acting on the club
     
 - $m$ is the club mass
     
-- $\mathbf{a}_{\text{COM}}$ is the acceleration of the center of mass
+- $**a**_{\text{COM}}$ is the acceleration of the center of mass
     
-- $\sum \mathbf{M}_{\text{COM}}$ is the sum of moments about the center of mass
+- $\sum **M**_{\text{COM}}$ is the sum of moments about the center of mass
     
-- $\mathbf{I}$ is the moment of inertia tensor
+- $**I**$ is the moment of inertia tensor
     
-- $\boldsymbol{\alpha}$ is the angular acceleration
+- $**\alpha**$ is the angular acceleration
     
-- $\boldsymbol{\omega}$ is the angular velocity (the final term is the gyroscopic effect)
+- $**\omega**$ is the angular velocity (the final term is the gyroscopic effect)
 
 ### How Inverse Dynamics Works: Step by Step
 
 **Step 1: Measure Kinematics**
 
 Motion capture systems track the club's position and orientation over time, providing:
-- Position of the center of mass: $\mathbf{r}_{\text{COM}}(t)$
+- Position of the center of mass: $**r**_{\text{COM}}(t)$
     
-- Orientation (typically as rotation matrix or quaternion): $\mathbf{R}(t)$
+- Orientation (typically as rotation matrix or quaternion): $**R**(t)$
 
 **Step 2: Differentiate to Obtain Velocities and Accelerations**
 
 Numerical differentiation yields:
-- Linear velocity: $\mathbf{v}_{\text{COM}} = \dot{\mathbf{r}}_{\text{COM}}$
+- Linear velocity: $**v**_{\text{COM}} = \dot{**r**}_{\text{COM}}$
     
-- Linear acceleration: $\mathbf{a}_{\text{COM}} = \ddot{\mathbf{r}}_{\text{COM}}$
+- Linear acceleration: $**a**_{\text{COM}} = \ddot{**r**}_{\text{COM}}$
     
-- Angular velocity: $\boldsymbol{\omega}$
+- Angular velocity: $**\omega**$
     
-- Angular acceleration: $\boldsymbol{\alpha} = \dot{\boldsymbol{\omega}}$
+- Angular acceleration: $**\alpha** = \dot{**\omega**}$
 
 **Step 3: Account for Known Forces**
 
 Gravity is a known external force:
 
 $$
-\mathbf{F}_{\text{gravity}} = m\mathbf{g}
+**F**_{\text{gravity}} = m**g**
 $$
 
-where $\mathbf{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
+where $**g** = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 
 **Step 4: Solve for Unknown Forces**
 
-From Equation (1), the sum of unknown forces (from the golfer's hands) is:
+From Equation~[@eq:force_balance], the sum of unknown forces (from the golfer's hands) is:
 
 $$
-\mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
+**F**_{\text{hands}} = m**a**_{\text{COM}} - **F**_{\text{gravity}}
 $$
 
 **Step 5: Calculate Moments About the Reference Point**
@@ -86,10 +87,10 @@ $$
 The moment balance about an arbitrary reference point $P$ (typically the grip midpoint) is:
 
 $$
-\sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
+\sum **M**_{P} = \sum **M**_{\text{COM}} + (**r**_{P} - **r**_{\text{COM}}) \times **F**_{\text{hands}}
 $$
 
-Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation (2), we can calculate the required moment about point $P$.
+Since we know $\sum **M**_{\text{COM}}$ from Equation~[@eq:moment_balance], we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
@@ -101,9 +102,9 @@ For these calculations to be valid, we must assume:
 2. **Known mass properties:** We must accurately know:
     - Total mass $m$
         
-- Center of mass location $\mathbf{r}_{\text{COM}}$
-    
-- Moment of inertia tensor $\mathbf{I}$
+- Center of mass location $**r**_{\text{COM}}$
+        
+- Moment of inertia tensor $**I**$
     
     
 3. **Clean kinematic data:** Motion capture data must be:
@@ -128,9 +129,9 @@ Inverse dynamics provides mathematically correct values for the forces and momen
 ### The Interpretive Gap
 
 The output of inverse dynamics is:
-- A net force $\mathbf{F}_{\text{hands}}$ at reference point $P$
+- A net force $**F**_{\text{hands}}$ at reference point $P$
     
-- A net couple (moment) $\mathbf{C}_{P}$ at reference point $P$
+- A net couple (moment) $**C**_{P}$ at reference point $P$
 
 What we want to understand is:
 - Where on the grip is the golfer applying force?
@@ -151,27 +152,26 @@ Bridging this gap requires understanding three fundamental limitations.
 
 **definition:** [Force-Couple Equivalence]
 Any system of forces acting on a rigid body can be reduced to a statically equivalent system consisting of:
-- A single resultant force $\mathbf{F}_{\text{eq}}$ acting at an arbitrary reference point
+- A single resultant force $**F**_{\text{eq}}$ acting at an arbitrary reference point
     
-- A couple $\mathbf{C}_{\text{eq}}$ (pure moment)
+- A couple $**C**_{\text{eq}}$ (pure moment)
 This equivalence is *dynamic*: both systems produce identical translational and rotational accelerations of the rigid body.
 
 The fundamental principle is that a couple is a *free vector*—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is *bound* to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
 
-[Figure: Force-couple equivalence: a force $\mathbf{F}$]
+[Figure: Force-couple equivalence: a force $**F]
 
 ### Coordinate Transformation of Force-Couple Pairs
 
-For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
+For a rigid body such as a golf club, if inverse dynamics yields force $**Feq**$ and couple $**Ceq**$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-::: {.proposition}
-**Couple Transformation Formula**
-
+\begin{proposition**[Couple Transformation Formula]
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
+{#eq-couple_transform}
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-$$ {#eq-couple_transform}
+$$
 
 where:
 - $C_i$ = equivalent couple at point $i$
@@ -183,8 +183,7 @@ where:
 - $d_m$ = signed distance from center of mass to midpoint $m$
     
 - $C_m$ = couple at midpoint from inverse dynamics
-
-:::
+\end{proposition}
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
@@ -192,7 +191,7 @@ This transformation reveals a crucial insight: the equivalent couple is not an i
 
 ### The Range of Equivalent Couples
 
-From Equation~[@eq-couple_transform], we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
+From Equation~[@eq:couple_transform], we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
 
 At the top of the grip:
 
@@ -216,7 +215,7 @@ The range of viable equivalent couples increases linearly with the moment of for
 
 ### Physical Interpretation: The Non-Uniqueness Problem
 
-The mathematical transformation in Equation~[@eq-couple_transform] has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
+The mathematical transformation in Equation~[@eq:couple_transform] has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
 
 \begin{example}[Single Force Creating Apparent Couple]
 Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
@@ -265,24 +264,25 @@ The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge
 A control-affine system is a dynamical system of the form:
 
 $$
-\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
-$$ {#eq-control_affine}
+{#eq-control_affine}
+\dot{**x**} = **f**(**x**) + **G**(**x**)**u**
+$$
 
 where:
-- $\mathbf{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
+- $**x** \in \mathbb{R}^n$ is the state vector (positions and velocities)
     
-- $\mathbf{f}(\mathbf{x})$ is the *drift vector field* (system dynamics without input)
+- $**f**(**x**)$ is the *drift vector field* (system dynamics without input)
     
-- $\mathbf{G}(\mathbf{x})$ is the *input matrix* (how controls affect the state)
+- $**G**(**x**)$ is the *input matrix* (how controls affect the state)
     
-- $\mathbf{u} \in \mathbb{R}^m$ is the *control input vector*
+- $**u** \in \mathbb{R}^m$ is the *control input vector*
 
 The key feature is the **additive separation** of drift and input effects. This decomposition reflects a fundamental physical distinction:
 
-- **Drift ($\mathbf{f}(\mathbf{x})$):** Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
+- **Drift ($**f**(\bvec{x**)$):} Passive dynamics arising from the system's configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains
     
     
-- **Input ($\mathbf{G}(\mathbf{x})\mathbf{u}$):** Active control—forces that the controller (golfer) can directly modulate. This is what the golfer *feels* and what they exert effort toward achieving.
+- **Input ($**G**(\bvec{x**)**u**$):} Active control—forces that the controller (golfer) can directly modulate. This is what the golfer *feels* and what they exert effort toward achieving.
 
 ::: {.keypoint-box}
 **Key Point:** 
@@ -292,51 +292,52 @@ The input component represents what the golfer consciously controls and experien
 
 ### Inverse Dynamics in the Lagrangian Framework
 
-To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $\mathbf{q}$, the equations of motion are:
+To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $**q**$, the equations of motion are:
 
 $$
 {#eq-lagrange}
-\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
+**M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**) = **\tau**
 $$
 
 where:
-- $\mathbf{M}(\mathbf{q})$ is the mass/inertia matrix
+- $**M**(**q**)$ is the mass/inertia matrix
     
-- $\mathbf{C}(\mathbf{q},\dot{\mathbf{q}})$ contains Coriolis and centrifugal terms
+- $**C**(**q**,\dot{**q**})$ contains Coriolis and centrifugal terms
     
-- $\mathbf{G}(\mathbf{q})$ contains gravitational and other conservative force terms
+- $**G**(**q**)$ contains gravitational and other conservative force terms
     
-- $\boldsymbol{\tau}$ are the generalized forces (what we want to find)
+- $**\tau**$ are the generalized forces (what we want to find)
 
-Inverse dynamics solves for $\boldsymbol{\tau}$ given observed $\mathbf{q}(t)$, $\dot{\mathbf{q}}(t)$, and $\ddot{\mathbf{q}}(t)$:
+Inverse dynamics solves for $**\tau**$ given observed $**q**(t)$, $\dot{**q**}(t)$, and $\ddot{**q**}(t)$:
 
 $$
-\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
-$$ {#eq-inverse_dynamics}
+{#eq-inverse_dynamics}
+**\tau** = **M**(**q**)\ddot{**q**} + **C**(**q**,\dot{**q**})\dot{**q**} + **G**(**q**)
+$$
 
 ### The Fundamental Problem: Inseparability of Drift and Input
 
-Here is the critical observation: **inverse dynamics computes the total generalized force $\boldsymbol{\tau}$, which includes both drift and input components**:
+Here is the critical observation: **inverse dynamics computes the total generalized force $**\tau**$, which includes both drift and input components**:
 
 $$
-\boldsymbol{\tau}_{\text{total}} = \boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}}
+**\tau**_{\text{total}} = **\tau**_{\text{drift}} + **\tau**_{\text{input}}
 $$
 
 In the control-affine formulation, these correspond to:
 
 $$
 \begin{align}
-\boldsymbol{\tau}_{\text{drift}} &= \text{generalized forces from } \mathbf{f}(\mathbf{x}) \\
-\boldsymbol{\tau}_{\text{input}} &= \text{generalized forces from } \mathbf{G}(\mathbf{x})\mathbf{u}
+**\tau**_{\text{drift}} &= \text{generalized forces from } **f**(**x**) \\
+**\tau**_{\text{input}} &= \text{generalized forces from } **G**(**x**)**u**
 \end{align}
 $$
 
 ::: {.limitation-box}
 **Fundamental Limitation:** 
-Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $\boldsymbol{\tau}_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
+Inverse dynamics cannot distinguish between these components without additional information. The calculation yields $**\tau**_{\text{total}}$, but this single measurement corresponds to infinitely many possible $(drift, input)$ pairs satisfying:
 
 $$
-\boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}}
+**\tau**_{\text{drift}} + **\tau**_{\text{input}} = **\tau**_{\text{total}}
 $$
 
 :::
@@ -363,9 +364,9 @@ To separate drift from input, we need an *explicit model* of the system. Specifi
 3. **Control model:** Which degrees of freedom are directly actuated and which forces are controllable
 
 With such a model, we can:
-1. Calculate $\boldsymbol{\tau}_{\text{drift}}$ from the observed state $(\mathbf{q}, \dot{\mathbf{q}})$ using the drift dynamics
+1. Calculate $**\tau**_{\text{drift}}$ from the observed state $(**q**, \dot{**q**})$ using the drift dynamics
     
-2. Obtain $\boldsymbol{\tau}_{\text{input}}$ by subtraction: $\boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}} - \boldsymbol{\tau}_{\text{drift}}$
+2. Obtain $**\tau**_{\text{input}}$ by subtraction: $**\tau**_{\text{input}} = **\tau**_{\text{total}} - **\tau**_{\text{drift}}$
 
 ::: {.keypoint-box}
 **Key Point:** 
@@ -594,7 +595,7 @@ The equivalent couple **changes sign** depending on reference point! At the midp
 
 :::
 
-### Example 2: Drift vs. Input Decomposition {#example-2-drift-vs-input-decomposition}
+### Example 2: Drift vs. Input Decomposition
 
 Consider mid-downswing with the club rotating at $\omega = 30$ rad/s. Inverse dynamics measures radial force at grip: $F_{\text{radial}} = 100$ lbs (inward).
 
