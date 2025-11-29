@@ -74,3 +74,5 @@ It acts like Ruff (lint checks) and Black (formatter) combined—Cursor should a
 - If it's clever, make it clearer—or make it simpler.
 - And remember: **never use `inv`**.
 
+
+

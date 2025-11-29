@@ -1,6 +1,7 @@
 ---
 title: "Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations"
-date: "2025-11-26"
+author: "AffineDrift"
+date: "2025-11-28"
 format:
   html:
     toc: true
@@ -22,10 +23,10 @@ The method is powerful because it allows us to infer kinetic information (forces
 The equations of motion for a rigid body like a golf club are described by Euler's laws:
 
 $$
-\begin{aligned}
-\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \tag{1}\\
-\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \tag{2}
-\end{aligned}
+\begin{align}
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
+\end{align}
 $$
 
 where:
@@ -75,7 +76,7 @@ where $\mathbf{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 
 **Step 4: Solve for Unknown Forces**
 
-From Equation (1), the sum of unknown forces (from the golfer's hands) is:
+From Equation~[@eq:force_balance], the sum of unknown forces (from the golfer's hands) is:
 
 $$
 \mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
@@ -89,7 +90,7 @@ $$
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 $$
 
-Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation (2), we can calculate the required moment about point $P$.
+Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation~[@eq:moment_balance], we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
@@ -102,7 +103,7 @@ For these calculations to be valid, we must assume:
     - Total mass $m$
         
 - Center of mass location $\mathbf{r}_{\text{COM}}$
-    
+        
 - Moment of inertia tensor $\mathbf{I}$
     
     
@@ -164,14 +165,13 @@ The fundamental principle is that a couple is a *free vector*—it can act anywh
 
 For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-::: {.proposition}
-**Couple Transformation Formula**
-
+\begin{proposition}[Couple Transformation Formula]
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
+{#eq-couple_transform}
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-$$ {#eq-couple_transform}
+$$
 
 where:
 - $C_i$ = equivalent couple at point $i$
@@ -183,8 +183,7 @@ where:
 - $d_m$ = signed distance from center of mass to midpoint $m$
     
 - $C_m$ = couple at midpoint from inverse dynamics
-
-:::
+\end{proposition}
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
@@ -192,7 +191,7 @@ This transformation reveals a crucial insight: the equivalent couple is not an i
 
 ### The Range of Equivalent Couples
 
-From Equation~[@eq-couple_transform], we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
+From Equation~[@eq:couple_transform], we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
 
 At the top of the grip:
 
@@ -216,7 +215,7 @@ The range of viable equivalent couples increases linearly with the moment of for
 
 ### Physical Interpretation: The Non-Uniqueness Problem
 
-The mathematical transformation in Equation~[@eq-couple_transform] has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
+The mathematical transformation in Equation~[@eq:couple_transform] has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
 
 \begin{example}[Single Force Creating Apparent Couple]
 Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
@@ -265,8 +264,9 @@ The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge
 A control-affine system is a dynamical system of the form:
 
 $$
+{#eq-control_affine}
 \dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
-$$ {#eq-control_affine}
+$$
 
 where:
 - $\mathbf{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
@@ -311,8 +311,9 @@ where:
 Inverse dynamics solves for $\boldsymbol{\tau}$ given observed $\mathbf{q}(t)$, $\dot{\mathbf{q}}(t)$, and $\ddot{\mathbf{q}}(t)$:
 
 $$
+{#eq-inverse_dynamics}
 \boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
-$$ {#eq-inverse_dynamics}
+$$
 
 ### The Fundamental Problem: Inseparability of Drift and Input
 
@@ -594,7 +595,7 @@ The equivalent couple **changes sign** depending on reference point! At the midp
 
 :::
 
-### Example 2: Drift vs. Input Decomposition {#example-2-drift-vs-input-decomposition}
+### Example 2: Drift vs. Input Decomposition
 
 Consider mid-downswing with the club rotating at $\omega = 30$ rad/s. Inverse dynamics measures radial force at grip: $F_{\text{radial}} = 100$ lbs (inward).
 
