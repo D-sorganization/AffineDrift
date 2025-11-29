@@ -131,6 +131,16 @@ jobs:
           quarto render "$file" --to html --no-execute || echo "⚠️ Issues in $file"
         done
 
+    - name: Check equation rendering
+      continue-on-error: true
+      run: |
+        echo "🔍 Checking equation rendering..."
+        if [ -f scripts/check-equations.py ]; then
+          python scripts/check-equations.py || echo "⚠️ Equation check completed with warnings"
+        else
+          echo "⚠️ No equation check script found, skipping..."
+        fi
+
     - name: Check for broken links in Quarto docs
       continue-on-error: true
       run: |
