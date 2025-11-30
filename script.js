@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Smooth scroll to target
                     const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - HEADER_OFFSET;
+                    const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
 
                     window.scrollTo({
                         top: offsetPosition,
@@ -416,12 +416,18 @@ document.addEventListener('DOMContentLoaded', function() {
             h2s.forEach((h2, index) => {
                 let id = h2.id;
                 if (!id || usedIds.has(id)) {
-                    // Generate unique ID
+                    // Generate unique ID with safety limit
                     let counter = 1;
+                    let attempts = 0;
                     do {
                         id = `section-${index + 1}${counter > 1 ? `-${counter}` : ''}`;
                         counter++;
-                    } while (usedIds.has(id));
+                        attempts++;
+                    } while (usedIds.has(id) && attempts < MAX_ID_GENERATION_ATTEMPTS);
+                    // If we hit the max attempts, assign a fallback ID
+                    if (usedIds.has(id)) {
+                        id = `section-${index + 1}-unique-${Math.random().toString(36).substr(2, 6)}`;
+                    }
                     h2.id = id;
                 }
                 usedIds.add(id);
@@ -447,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const target = document.getElementById(section.id);
                     if (target) {
                     const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - HEADER_OFFSET;
+                    const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
                         window.scrollTo({
                             top: offsetPosition,
                             behavior: 'smooth'
@@ -472,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!element) return;
                 
                 const rect = element.getBoundingClientRect();
-                const elementTop = rect.top + window.pageYOffset;
+                const elementTop = rect.top + window.scrollY;
                 const elementBottom = elementTop + rect.height;
                 
                 if (index < tocLinks.length) {
