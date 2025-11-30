@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         id = `${baseId}-${counter}`;
                         counter++;
                     }
-                    if (counter >= MAX_ID_GENERATION_ATTEMPTS) {
+                    if (usedIds.has(id)) {
                         // Fallback: use timestamp to ensure uniqueness
                         id = `${baseId}-${Date.now()}`;
                     }
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         id = `${baseId}-${counter}`;
                         counter++;
                     }
-                    if (counter >= MAX_ID_GENERATION_ATTEMPTS) {
+                    if (usedIds.has(id)) {
                         // Fallback: use timestamp to ensure uniqueness
                         id = `${baseId}-${Date.now()}`;
                     }
