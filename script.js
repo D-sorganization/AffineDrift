@@ -3,6 +3,13 @@
  * Handles smooth scrolling, navigation highlights, and interactive elements
  */
 
+// Constants for scroll offsets and timing
+// Matches scroll-margin-top: 140px defined in styles.css for page sections
+const HEADER_OFFSET = 140; // Offset for smooth scrolling to account for fixed header
+const TOC_SCROLL_OFFSET = 160; // Offset for active section detection in TOC
+const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
+const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
+
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll for anchor links
@@ -21,9 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
 
                     // Smooth scroll to target
-                    const headerOffset = 80; // Account for sticky header
                     const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    const offsetPosition = elementPosition + window.pageYOffset - HEADER_OFFSET;
 
                     window.scrollTo({
                         top: offsetPosition,
@@ -331,11 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateHistorySidebar();
 
     // Table of Contents functionality
-    // Constants for TOC functionality
-    const TOC_HEADER_OFFSET = 140; // Matches scroll-margin-top in styles.css
-    const TOC_SCROLL_OFFSET = 160; // Offset for active section detection
-    const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
-
     function generateTableOfContents() {
         const sidebar = document.getElementById('history-sidebar');
         if (!sidebar) return;
@@ -389,9 +390,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     let baseId = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
                     id = baseId;
                     let counter = 1;
-                    while (usedIds.has(id)) {
+                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
                         id = `${baseId}-${counter}`;
                         counter++;
+                    }
+                    if (counter >= MAX_ID_GENERATION_ATTEMPTS) {
+                        // Fallback: use timestamp to ensure uniqueness
+                        id = `${baseId}-${Date.now()}`;
                     }
                     category.id = id;
                 }
@@ -441,8 +446,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     const target = document.getElementById(section.id);
                     if (target) {
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - TOC_HEADER_OFFSET;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - HEADER_OFFSET;
                         window.scrollTo({
                             top: offsetPosition,
                             behavior: 'smooth'
@@ -512,17 +517,6 @@ document.addEventListener('DOMContentLoaded', function() {
         header.addEventListener('click', function() {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             const content = this.nextElementSibling;
-            
-            // Close all other accordions in the same container (optional - remove if you want multiple open)
-            // const parentContainer = this.closest('.resource-grid, .articles-list');
-            // if (parentContainer) {
-            //     const otherHeaders = parentContainer.querySelectorAll('.accordion-header');
-            //     otherHeaders.forEach(otherHeader => {
-            //         if (otherHeader !== this) {
-            //             otherHeader.setAttribute('aria-expanded', 'false');
-            //         }
-            //     });
-            // }
             
             // Toggle current accordion
             this.setAttribute('aria-expanded', !isExpanded);
