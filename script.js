@@ -3,6 +3,13 @@
  * Handles smooth scrolling, navigation highlights, and interactive elements
  */
 
+// Constants for scroll offsets and timing
+// Matches scroll-margin-top: 140px defined in styles.css for page sections
+const HEADER_OFFSET = 140; // Offset for smooth scrolling to account for fixed header
+const TOC_SCROLL_OFFSET = 160; // Offset for active section detection in TOC
+const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
+const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
+
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scroll for anchor links
@@ -21,9 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
 
                     // Smooth scroll to target
-                    const headerOffset = 80; // Account for sticky header
                     const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
 
                     window.scrollTo({
                         top: offsetPosition,
@@ -330,6 +336,190 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize history sidebar
     updateHistorySidebar();
 
+    // Table of Contents functionality
+    function generateTableOfContents() {
+        const sidebar = document.getElementById('history-sidebar');
+        if (!sidebar) return;
+
+        const sidebarNav = sidebar.querySelector('.sidebar-nav');
+        if (!sidebarNav) return;
+
+        // Find or create TOC section
+        let tocSection = sidebar.querySelector('.sidebar-toc');
+        if (!tocSection) {
+            tocSection = document.createElement('div');
+            tocSection.className = 'sidebar-section sidebar-toc';
+            tocSection.innerHTML = '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
+            sidebarNav.insertBefore(tocSection, sidebarNav.firstChild);
+        }
+
+        const tocList = document.getElementById('toc-list');
+        if (!tocList) return;
+
+        // Clear existing TOC
+        tocList.innerHTML = '';
+
+        // Find all section headings (h2 with IDs or page-section divs with IDs)
+        const sections = [];
+        const usedIds = new Set(); // Track used IDs to prevent duplicates
+        
+        // Look for page-section divs with IDs
+        const pageSections = document.querySelectorAll('.page-section[id], section[id]');
+        pageSections.forEach(section => {
+            const heading = section.querySelector('.section-heading, h2, h1');
+            if (heading && section.id) {
+                sections.push({
+                    id: section.id,
+                    text: heading.textContent.trim(),
+                    element: section,
+                    level: 2
+                });
+                usedIds.add(section.id);
+            }
+        });
+
+        // Also look for article-category containers (use container ID, not heading ID)
+        const categories = document.querySelectorAll('.article-category');
+        categories.forEach((category, categoryIndex) => {
+            const heading = category.querySelector('h2');
+            if (heading) {
+                // Use container ID if it exists, otherwise generate one
+                let id = category.id;
+                if (!id) {
+                    // Generate ID from heading text, ensuring uniqueness
+                    let baseId = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    id = baseId;
+                    let counter = 1;
+                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+                        id = `${baseId}-${counter}`;
+                        counter++;
+                    }
+                    if (usedIds.has(id)) {
+                        // Fallback: use timestamp to ensure uniqueness
+                        id = `${baseId}-${Date.now()}`;
+                    }
+                    category.id = id;
+                } else if (usedIds.has(id)) {
+                    // If ID already exists, generate a new unique one
+                    let baseId = id;
+                    let counter = 1;
+                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+                        id = `${baseId}-${counter}`;
+                        counter++;
+                    }
+                    if (usedIds.has(id)) {
+                        // Fallback: use timestamp to ensure uniqueness
+                        id = `${baseId}-${Date.now()}`;
+                    }
+                    category.id = id;
+                }
+                usedIds.add(id);
+                sections.push({
+                    id: id,
+                    text: heading.textContent.trim(),
+                    element: category, // Use container element, not heading
+                    level: 2
+                });
+            }
+        });
+
+        // If no sections found, look for any h2 headings
+        if (sections.length === 0) {
+            const h2s = document.querySelectorAll('h2');
+            h2s.forEach((h2, index) => {
+                let id = h2.id;
+                if (!id || usedIds.has(id)) {
+                    // Generate unique ID with safety limit
+                    let counter = 1;
+                    let attempts = 0;
+                    do {
+                        id = `section-${index + 1}${counter > 1 ? `-${counter}` : ''}`;
+                        counter++;
+                        attempts++;
+                    } while (usedIds.has(id) && attempts < MAX_ID_GENERATION_ATTEMPTS);
+                    // If we hit the max attempts, assign a fallback ID
+                    if (usedIds.has(id)) {
+                        id = `section-${index + 1}-unique-${Math.random().toString(36).substr(2, 6)}`;
+                    }
+                    h2.id = id;
+                }
+                usedIds.add(id);
+                sections.push({
+                    id: id,
+                    text: h2.textContent.trim(),
+                    element: h2,
+                    level: 2
+                });
+            });
+        }
+
+        // Generate TOC links
+        if (sections.length > 0) {
+            sections.forEach(section => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${section.id}`;
+                a.textContent = section.text;
+                a.className = `toc-level-${section.level}`;
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.getElementById(section.id);
+                    if (target) {
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+        } else {
+            // Hide TOC if no sections found
+            tocSection.style.display = 'none';
+        }
+
+        // Highlight active section on scroll
+        function highlightActiveSection() {
+            const scrollPosition = window.scrollY + TOC_SCROLL_OFFSET;
+            const tocLinks = tocList.querySelectorAll('a');
+            
+            sections.forEach((section, index) => {
+                const element = section.element;
+                if (!element) return;
+                
+                const rect = element.getBoundingClientRect();
+                const elementTop = rect.top + window.scrollY;
+                const elementBottom = elementTop + rect.height;
+                
+                if (index < tocLinks.length) {
+                    tocLinks[index].classList.remove('active');
+                    
+                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+                        tocLinks[index].classList.add('active');
+                    }
+                }
+            });
+        }
+
+        // Update on scroll
+        let tocScrollTimeout;
+        window.addEventListener('scroll', function() {
+            if (tocScrollTimeout) {
+                clearTimeout(tocScrollTimeout);
+            }
+            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
+        });
+
+        // Initial highlight
+        highlightActiveSection();
+    }
+
+    // Generate TOC after page loads
+    generateTableOfContents();
+
     // Lazy load images
     if ('loading' in HTMLImageElement.prototype) {
         const images = document.querySelectorAll('img[src]');
@@ -339,6 +529,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const content = this.nextElementSibling;
+            
+            // Toggle current accordion
+            this.setAttribute('aria-expanded', !isExpanded);
+        });
+    });
 
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
