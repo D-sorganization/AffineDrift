@@ -81,10 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add fade-in animation for sections on scroll (only if not already visible)
     // Content is visible by default - animation is optional enhancement
-    // Disabled on mobile to prevent content loading issues
+    // Disabled on mobile to prevent content loading issues and improve performance
     const isMobile = window.innerWidth <= NAV_BREAKPOINT;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (!isMobile) {
+    if (!isMobile && !prefersReducedMotion) {
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px 0px 0px'
@@ -328,6 +329,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize history sidebar
     updateHistorySidebar();
+
+    // Lazy load images
+    if ('loading' in HTMLImageElement.prototype) {
+        const images = document.querySelectorAll('img[src]');
+        images.forEach(img => {
+            if (!img.hasAttribute('loading')) {
+                img.setAttribute('loading', 'lazy');
+            }
+        });
+    }
 
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
