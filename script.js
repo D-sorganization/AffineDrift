@@ -331,6 +331,11 @@ document.addEventListener('DOMContentLoaded', function() {
     updateHistorySidebar();
 
     // Table of Contents functionality
+    // Constants for TOC functionality
+    const TOC_HEADER_OFFSET = 140; // Matches scroll-margin-top in styles.css
+    const TOC_SCROLL_OFFSET = 160; // Offset for active section detection
+    const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
+
     function generateTableOfContents() {
         const sidebar = document.getElementById('history-sidebar');
         if (!sidebar) return;
@@ -355,36 +360,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Find all section headings (h2 with IDs or page-section divs with IDs)
         const sections = [];
+        const usedIds = new Set(); // Track used IDs to prevent duplicates
         
         // Look for page-section divs with IDs
         const pageSections = document.querySelectorAll('.page-section[id], section[id]');
         pageSections.forEach(section => {
             const heading = section.querySelector('.section-heading, h2, h1');
-            if (heading) {
+            if (heading && section.id) {
                 sections.push({
                     id: section.id,
                     text: heading.textContent.trim(),
                     element: section,
                     level: 2
                 });
+                usedIds.add(section.id);
             }
         });
 
-        // Also look for article-category headings
+        // Also look for article-category containers (use container ID, not heading ID)
         const categories = document.querySelectorAll('.article-category');
-        categories.forEach(category => {
+        categories.forEach((category, categoryIndex) => {
             const heading = category.querySelector('h2');
             if (heading) {
-                // Create ID if it doesn't exist
-                let id = heading.id;
+                // Use container ID if it exists, otherwise generate one
+                let id = category.id;
                 if (!id) {
-                    id = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    heading.id = id;
+                    // Generate ID from heading text, ensuring uniqueness
+                    let baseId = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    id = baseId;
+                    let counter = 1;
+                    while (usedIds.has(id)) {
+                        id = `${baseId}-${counter}`;
+                        counter++;
+                    }
+                    category.id = id;
                 }
+                usedIds.add(id);
                 sections.push({
                     id: id,
                     text: heading.textContent.trim(),
-                    element: heading,
+                    element: category, // Use container element, not heading
                     level: 2
                 });
             }
@@ -395,10 +410,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const h2s = document.querySelectorAll('h2');
             h2s.forEach((h2, index) => {
                 let id = h2.id;
-                if (!id) {
-                    id = `section-${index + 1}`;
+                if (!id || usedIds.has(id)) {
+                    // Generate unique ID
+                    let counter = 1;
+                    do {
+                        id = `section-${index + 1}${counter > 1 ? `-${counter}` : ''}`;
+                        counter++;
+                    } while (usedIds.has(id));
                     h2.id = id;
                 }
+                usedIds.add(id);
                 sections.push({
                     id: id,
                     text: h2.textContent.trim(),
@@ -420,9 +441,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     const target = document.getElementById(section.id);
                     if (target) {
-                        const headerOffset = 140;
                         const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        const offsetPosition = elementPosition + window.pageYOffset - TOC_HEADER_OFFSET;
                         window.scrollTo({
                             top: offsetPosition,
                             behavior: 'smooth'
@@ -439,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Highlight active section on scroll
         function highlightActiveSection() {
-            const scrollPosition = window.scrollY + 160;
+            const scrollPosition = window.scrollY + TOC_SCROLL_OFFSET;
             const tocLinks = tocList.querySelectorAll('a');
             
             sections.forEach((section, index) => {
@@ -450,10 +470,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 const elementTop = rect.top + window.pageYOffset;
                 const elementBottom = elementTop + rect.height;
                 
-                tocLinks[index].classList.remove('active');
-                
-                if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-                    tocLinks[index].classList.add('active');
+                if (index < tocLinks.length) {
+                    tocLinks[index].classList.remove('active');
+                    
+                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+                        tocLinks[index].classList.add('active');
+                    }
                 }
             });
         }
@@ -464,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (tocScrollTimeout) {
                 clearTimeout(tocScrollTimeout);
             }
-            tocScrollTimeout = setTimeout(highlightActiveSection, 50);
+            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
         });
 
         // Initial highlight
