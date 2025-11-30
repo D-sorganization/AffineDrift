@@ -108,15 +108,13 @@ h4, h5, h6 {
     left: 0;
     top: 120px; /* Account for header height with potential wrapping: 70px logo + padding + potential wrap */
     width: 260px;
-    height: calc(100vh - 120px);
-    max-height: calc(100vh - 120px);
+    bottom: 0;
     background: var(--legal-pad-yellow);
     border-right: 2px solid var(--legal-pad-yellow-border);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 950; /* Above overlay (900) so sidebar content is clickable when open */
     box-shadow: 2px 0 8px var(--shadow-color);
-    bottom: 0;
 }
 
 .sidebar-nav {
@@ -1157,7 +1155,7 @@ img[loading="lazy"].loaded {
 @media (max-width: 992px) {
     .sidebar {
         top: 140px; /* Account for header wrapping to multiple rows */
-        height: calc(100vh - 140px);
+        bottom: 0;
     }
 }
 
@@ -1170,7 +1168,7 @@ img[loading="lazy"].loaded {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
         top: 96px; /* Reset for mobile where header is smaller */
-        height: calc(100vh - 96px);
+        bottom: 0;
         box-shadow: 6px 0 18px rgba(0, 0, 0, 0.12);
         /* Optimize scrolling on mobile */
         -webkit-overflow-scrolling: touch;
@@ -2152,9 +2150,10 @@ img[loading="lazy"].loaded {
     height: 0;
     overflow: hidden;
     max-width: 100%;
-    margin: 1rem 0;
+    margin: 0;
     border-radius: 4px;
     background: var(--legal-pad-yellow-accent);
+    flex-shrink: 0;
 }
 
 .youtube-embed iframe {
@@ -2171,7 +2170,7 @@ img[loading="lazy"].loaded {
     width: 100%;
     max-width: 300px;
     height: auto;
-    margin: 1rem 0;
+    margin: 0;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     background: var(--pure-white);
@@ -2181,18 +2180,59 @@ img[loading="lazy"].loaded {
 
 .resource-card .software-logo {
     max-width: 200px;
-    margin: 0.75rem 0;
+    margin: 0;
+}
+
+/* Website preview styling */
+.website-preview {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--pure-white);
+    object-fit: cover;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.website-preview:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.resource-media a {
+    display: block;
+    text-decoration: none;
 }
 
 /* Resource card with image/video */
 .resource-card.has-media {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: flex-start;
 }
 
 .resource-card.has-media .resource-media {
-    order: -1;
-    margin-bottom: 1rem;
+    flex: 0 0 350px;
+    max-width: 350px;
+    min-width: 0;
+}
+
+.resource-card.has-media .resource-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.resource-card.has-media h3,
+.resource-card.has-media .resource-description,
+.resource-card.has-media .resource-link {
+    margin-left: 0;
+}
+
+.resource-card.has-media h3 {
+    margin-top: 0;
 }
 
 /* Footer Social */
@@ -2263,5 +2303,19 @@ img[loading="lazy"].loaded {
     .articles-list,
     .top-list-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Stack media and content on mobile */
+    .resource-card.has-media {
+        flex-direction: column;
+    }
+
+    .resource-card.has-media .resource-media {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
+    .resource-card.has-media .resource-content {
+        flex: 1 1 100%;
     }
 }
