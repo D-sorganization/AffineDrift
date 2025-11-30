@@ -340,6 +340,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Accordion functionality
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const content = this.nextElementSibling;
+            
+            // Close all other accordions in the same container (optional - remove if you want multiple open)
+            // const parentContainer = this.closest('.resource-grid, .articles-list');
+            // if (parentContainer) {
+            //     const otherHeaders = parentContainer.querySelectorAll('.accordion-header');
+            //     otherHeaders.forEach(otherHeader => {
+            //         if (otherHeader !== this) {
+            //             otherHeader.setAttribute('aria-expanded', 'false');
+            //         }
+            //     });
+            // }
+            
+            // Toggle current accordion
+            this.setAttribute('aria-expanded', !isExpanded);
+        });
+    });
+
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');

@@ -2290,6 +2290,93 @@ img[loading="lazy"].loaded {
     border-top: 1px solid var(--border-light);
 }
 
+/* ===========================
+   Accordion Styles
+   =========================== */
+.accordion-item {
+    background: var(--legal-pad-yellow);
+    border-bottom: 1px solid var(--legal-pad-yellow-border);
+    margin-bottom: 0;
+}
+
+.accordion-item:first-child {
+    border-top: 1px solid var(--legal-pad-yellow-border);
+}
+
+.accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.accordion-header:hover {
+    background: var(--legal-pad-yellow-light);
+}
+
+.accordion-header:focus {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: -2px;
+}
+
+.accordion-header span:first-child {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.accordion-icon {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--accent-blue);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+}
+
+.accordion-header[aria-expanded="true"] .accordion-icon {
+    transform: rotate(45deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 1.5rem;
+}
+
+.accordion-header[aria-expanded="true"] + .accordion-content {
+    max-height: 1000px;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.accordion-content p {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+.accordion-content p:last-child {
+    margin-bottom: 0;
+}
+
+.accordion-content .resource-link {
+    margin-top: 0.75rem;
+    display: inline-block;
+}
+
 /* Responsive adjustments for new pages */
 @media (max-width: 768px) {
     .contact-content {
