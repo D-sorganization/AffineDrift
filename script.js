@@ -465,8 +465,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                     const target = document.getElementById(section.id);
                     if (target) {
-                    const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
                         window.scrollTo({
                             top: offsetPosition,
                             behavior: 'smooth'
