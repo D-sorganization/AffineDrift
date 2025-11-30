@@ -111,8 +111,7 @@ if ~isempty(analysisOpts.OutputFile) || opts.AutoSave
 
     if ~isempty(outputFile)
         try
-            exportCodeIssues('dummy', 'Output', ''); % Just to use the writeOutput function
-            % Actually, let's implement our own simple output
+            % Write results table to file
             writetable(T, outputFile);
             fprintf('[codeIssuesGUI] Results saved to: %s\n', outputFile);
         catch ME
@@ -272,8 +271,12 @@ currentPaths = {};
 
     function removePath(~, ~)
         selected = get(pathListbox, 'Value');
-        if ~isempty(selected) && selected <= length(currentPaths)
-            currentPaths(selected) = [];
+        if ~isempty(selected) && all(selected > 0) && all(selected <= length(currentPaths))
+            % Sort in descending order to remove from end to beginning
+            selected = sort(selected, 'descend');
+            for idx = selected
+                currentPaths(idx) = [];
+            end
             updatePathList();
         end
     end
@@ -303,7 +306,7 @@ currentPaths = {};
         % Collect options
         selectedPaths = currentPaths;
 
-        analysisOpts.Recursive = get(recursiveCheck, 'Value');
+        analysisOpts.Recursive = logical(get(recursiveCheck, 'Value'));
 
         extStr = get(extEdit, 'String');
         if isempty(strtrim(extStr))

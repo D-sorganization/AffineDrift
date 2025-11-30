@@ -16,11 +16,11 @@ import logging
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 # Set up logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class MATLABQualityChecker:
         logger.info(f"Found {len(m_files)} MATLAB files")
         return True
 
-    def run_matlab_quality_checks(self) -> dict[str, Any]:
+    def run_matlab_quality_checks(self) -> dict[str, object]:
         """Run MATLAB quality checks using the MATLAB script.
 
         Returns:
@@ -77,8 +77,11 @@ class MATLABQualityChecker:
             # Check if we can run MATLAB from command line
             matlab_script = self.matlab_dir / "matlab_quality_config.m"
             if not matlab_script.exists():
-                logger.error(f"MATLAB quality config script not found: {matlab_script}")
-                return {"error": "MATLAB quality config script not found"}
+                # Config script not found - fall back to static analysis (primary use case)
+                logger.info(
+                    "MATLAB quality config script not found, using static analysis",
+                )
+                return self._static_matlab_analysis()
 
             # Try to run MATLAB quality checks
             # Note: This requires MATLAB to be installed and accessible from command line
@@ -95,7 +98,7 @@ class MATLABQualityChecker:
             logger.error(f"Error running MATLAB quality checks: {e}")
             return {"error": str(e)}
 
-    def _run_matlab_script(self, script_path: Path) -> dict[str, Any]:
+    def _run_matlab_script(self, script_path: Path) -> dict[str, object]:
         """Attempt to run MATLAB script from command line.
 
         Args:
@@ -126,7 +129,8 @@ class MATLABQualityChecker:
                         capture_output=True,
                         text=True,
                         cwd=self.matlab_dir,
-                        timeout=300, check=False,  # 5 minute timeout
+                        timeout=300,
+                        check=False,  # 5 minute timeout
                     )
 
                     if result.returncode == 0:
@@ -153,7 +157,7 @@ class MATLABQualityChecker:
             logger.error(f"Error running MATLAB script: {e}")
             return {"error": str(e)}
 
-    def _static_matlab_analysis(self) -> dict[str, Any]:
+    def _static_matlab_analysis(self) -> dict[str, object]:
         """Perform static analysis of MATLAB files without running MATLAB.
 
         Returns:
@@ -399,7 +403,7 @@ class MATLABQualityChecker:
 
         return issues
 
-    def run_all_checks(self) -> dict[str, Any]:
+    def run_all_checks(self) -> dict[str, object]:
         """Run all MATLAB quality checks.
 
         Returns:
@@ -486,7 +490,18 @@ def main():
         print("\n" + "=" * 60)
 
     # Exit with appropriate code
-    sys.exit(0 if results.get("passed", False) else 1)
+    # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass
+    passed = results.get("passed", False)
+    has_issues = bool(results.get("issues"))
+
+    if args.strict:
+        # Strict mode: fail if any issues found
+        exit_code = 0 if (passed and not has_issues) else 1
+    else:
+        # Normal mode: fail only if checks didn't pass
+        exit_code = 0 if passed else 1
+
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

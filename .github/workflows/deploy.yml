@@ -108,28 +108,39 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y yq
 
       - name: Render Quarto site (if project exists)
-        continue-on-error: true
         run: |
           if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
             echo "Rendering Quarto site..."
-            quarto render --to html
+            quarto render --to html || {
+              echo "❌ Quarto render failed. Checking for errors..."
+              quarto render --to html 2>&1 | head -50
+              exit 1
+            }
+            echo "✓ Quarto render completed successfully"
           else
             echo "No Quarto project found, using static files"
           fi
 
-      - name: Restore committed site on render failure
+      - name: Verify render output
         run: |
           if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
             OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
-          else
-            OUTPUT_DIR='.'
-          fi
-
-          if [ "$OUTPUT_DIR" != "." ]; then
+            echo "Checking output directory: ${OUTPUT_DIR}"
+            if [ -d "$OUTPUT_DIR" ]; then
+              echo "✓ Output directory exists"
+              ls -la "$OUTPUT_DIR" | head -20
+            else
+              echo "❌ Output directory ${OUTPUT_DIR} does not exist"
+              exit 1
+            fi
             INDEX_PATH="${OUTPUT_DIR%/}/index.html"
-            if [ ! -f "$INDEX_PATH" ] && git ls-tree -r HEAD --name-only | grep -q "^${INDEX_PATH}$"; then
-              echo "Quarto render did not produce ${INDEX_PATH}; restoring committed ${OUTPUT_DIR} contents."
-              git checkout -- "$OUTPUT_DIR"
+            if [ -f "$INDEX_PATH" ]; then
+              echo "✓ ${INDEX_PATH} exists"
+            else
+              echo "❌ ${INDEX_PATH} is missing"
+              echo "Files in ${OUTPUT_DIR}:"
+              ls -la "$OUTPUT_DIR" || echo "Directory is empty or inaccessible"
+              exit 1
             fi
           fi
 
