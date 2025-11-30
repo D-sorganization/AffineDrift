@@ -399,6 +399,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         id = `${baseId}-${Date.now()}`;
                     }
                     category.id = id;
+                } else if (usedIds.has(id)) {
+                    // If ID already exists, generate a new unique one
+                    let baseId = id;
+                    let counter = 1;
+                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+                        id = `${baseId}-${counter}`;
+                        counter++;
+                    }
+                    if (counter >= MAX_ID_GENERATION_ATTEMPTS) {
+                        // Fallback: use timestamp to ensure uniqueness
+                        id = `${baseId}-${Date.now()}`;
+                    }
+                    category.id = id;
                 }
                 usedIds.add(id);
                 sections.push({
