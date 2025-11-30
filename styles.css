@@ -1094,6 +1094,37 @@ footer p {
 }
 
 /* ===========================
+   Performance Optimizations
+   =========================== */
+/* Reduce animations on mobile for better performance */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Optimize font rendering */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Lazy loading for images */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* ===========================
    Responsive Design
    =========================== */
 @media (max-width: 992px) {
@@ -1141,6 +1172,9 @@ footer p {
         top: 96px; /* Reset for mobile where header is smaller */
         height: calc(100vh - 96px);
         box-shadow: 6px 0 18px rgba(0, 0, 0, 0.12);
+        /* Optimize scrolling on mobile */
+        -webkit-overflow-scrolling: touch;
+        will-change: transform;
     }
 
     .sidebar.open {
@@ -1243,6 +1277,25 @@ footer p {
 
     .page-subtitle {
         font-size: 1.1rem;
+    }
+}
+
+/* Mobile-specific performance optimizations */
+@media (max-width: 768px) {
+    /* Reduce expensive effects on mobile */
+    * {
+        will-change: auto;
+    }
+    
+    /* Optimize scrolling */
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Reduce shadow complexity on mobile */
+    .goal-card:hover,
+    .property-card:hover {
+        box-shadow: 0 4px 8px var(--shadow-color);
     }
 }
 
