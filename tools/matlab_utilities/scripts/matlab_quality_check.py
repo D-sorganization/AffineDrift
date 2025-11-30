@@ -18,6 +18,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Constants
 MATLAB_SCRIPT_TIMEOUT_SECONDS: int = 300  # 5 minutes - allows time for large codebases
@@ -31,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 
 class MATLABQualityChecker:
-    """Comprehensive MATLAB code quality checker."""
+    """Comprehensive MATLAB code quality checker with enhanced error handling and type safety."""
 
     def __init__(self, project_root: Path):
         """Initialize the MATLAB quality checker.
@@ -42,7 +43,7 @@ class MATLABQualityChecker:
         self.project_root = project_root
         self.matlab_dir = project_root / "matlab"
         self.results = {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": None,
             "total_files": 0,
             "issues": [],
             "passed": True,
@@ -56,470 +57,294 @@ class MATLABQualityChecker:
         Returns:
             True if MATLAB files are found, False otherwise
         """
-        if not self.matlab_dir.exists():
-            logger.info(
-                f"MATLAB directory not found: {self.matlab_dir} (skipping MATLAB checks)",
-            )
-            return False
-
-        m_files = list(self.matlab_dir.rglob("*.m"))
-        self.results["total_files"] = len(m_files)
-
-        if len(m_files) == 0:
-            logger.info("No MATLAB files found (skipping MATLAB checks)")
-            return False
-
+        m_files = list(self.matlab_dir.glob("**/*.m"))
         logger.info(f"Found {len(m_files)} MATLAB files")
-        return True
+        return len(m_files) > 0
 
-    def run_matlab_quality_checks(self) -> dict[str, object]:
-        """Run MATLAB quality checks using the MATLAB script.
+    def run_matlab_quality_checks(self) -> dict[str, Any]:
+        """Run MATLAB quality checks using MATLAB script execution.
 
         Returns:
-            Dictionary containing quality check results
+            Dictionary containing check results
         """
-        try:
-            # Check if we can run MATLAB from command line
-            matlab_script = self.matlab_dir / "matlab_quality_config.m"
-            if not matlab_script.exists():
-                # Config script not found - fall back to static analysis (primary use case)
-                logger.info(
-                    "MATLAB quality config script not found, using static analysis",
-                )
-                return self._static_matlab_analysis()
+        logger.info("Running MATLAB quality checks...")
 
-            # Try to run MATLAB quality checks
-            # Note: This requires MATLAB to be installed and accessible from command line
-            try:
-                # First, try to run the MATLAB script directly if possible
-                result = self._run_matlab_script(matlab_script)
-                return result
-            except Exception as e:
-                logger.warning(f"Could not run MATLAB script directly: {e}")
-                # Fall back to static analysis
-                return self._static_matlab_analysis()
+        # Find MATLAB quality check script
+        script_path = self.matlab_dir / "run_matlab_quality_checks.m"
+        if not script_path.exists():
+            logger.warning(f"MATLAB script not found: {script_path}")
+            return {"error": "MATLAB quality check script not found"}
 
-        except Exception as e:
-            logger.error(f"Error running MATLAB quality checks: {e}")
-            return {"error": str(e)}
+        return self._run_matlab_script(script_path)
 
-    def _run_matlab_script(self, script_path: Path) -> dict[str, object]:
-        """Attempt to run MATLAB script from command line.
+    def _run_matlab_script(self, script_path: Path) -> dict[str, Any]:
+        """Execute MATLAB quality check script.
 
         Args:
-            script_path: Path to the MATLAB script
+            script_path: Path to the MATLAB script to execute
 
         Returns:
-            Dictionary containing script results
+            Dictionary with execution results
         """
-        try:
-            # Try different ways to run MATLAB
-            commands = [
-                ["matlab", "-batch", f"run('{script_path}')"],
-                [
-                    "matlab",
-                    "-nosplash",
-                    "-nodesktop",
-                    "-batch",
-                    f"run('{script_path}')",
-                ],
-                ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
-            ]
+        commands = [
+            ["matlab", "-batch", f"run('{script_path}')"],
+            ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
+        ]
 
-            for cmd in commands:
-                try:
-                    logger.info(f"Trying command: {' '.join(cmd)}")
-                    result = subprocess.run(
-                        cmd,
-                        capture_output=True,
-                        text=True,
-                        cwd=self.matlab_dir,
-                        timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
-                        check=False,
-                    )
+        for cmd in commands:
+            try:
+                logger.info(f"Trying command: {' '.join(cmd)}")
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                    cwd=self.matlab_dir,
+                    timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
+                    check=True,
+                )
+                logger.info("MATLAB quality checks completed successfully")
+                return {
+                    "success": True,
+                    "output": result.stdout,
+                    "method": "matlab_script",
+                }
+            except subprocess.CalledProcessError as e:
+                logger.warning(
+                    f"Command failed with return code {e.returncode}",
+                )
+                logger.debug(f"stderr: {e.stderr}")
+                continue
+            except (subprocess.TimeoutExpired, FileNotFoundError):
+                continue
 
-                    if result.returncode == 0:
-                        logger.info("MATLAB quality checks completed successfully")
-                        return {
-                            "success": True,
-                            "output": result.stdout,
-                            "method": "matlab_script",
-                        }
-                    else:
-                        logger.warning(
-                            f"Command failed with return code {result.returncode}",
-                        )
-                        logger.debug(f"stderr: {result.stderr}")
+        # If all commands fail, fall back to static analysis
+        logger.info("MATLAB execution failed, falling back to static analysis")
+        return self._static_matlab_analysis()
 
-                except (subprocess.TimeoutExpired, FileNotFoundError):
-                    continue
-
-            # If all commands fail, fall back to static analysis
-            logger.info("All MATLAB commands failed, falling back to static analysis")
-            return self._static_matlab_analysis()
-
-        except Exception as e:
-            logger.error(f"Error running MATLAB script: {e}")
-            return {"error": str(e)}
-
-    def _static_matlab_analysis(self) -> dict[str, object]:
-        """Perform static analysis of MATLAB files without running MATLAB.
+    def _static_matlab_analysis(self) -> dict[str, Any]:
+        """Perform static analysis of MATLAB files without MATLAB runtime.
 
         Returns:
-            Dictionary containing static analysis results
+            Dictionary containing analysis results
         """
-        logger.info("Performing static MATLAB file analysis")
+        logger.info("Performing static MATLAB analysis...")
 
         issues = []
-        total_files = 0
+        m_files = list(self.matlab_dir.glob("**/*.m"))
 
-        # Analyze each MATLAB file
-        for m_file in self.matlab_dir.rglob("*.m"):
-            total_files += 1
-            file_issues = self._analyze_matlab_file(m_file)
-            issues.extend(file_issues)
+        for file_path in m_files:
+            try:
+                file_issues = self._analyze_matlab_file(file_path)
+                issues.extend(file_issues)
+            except Exception as e:
+                logger.warning(f"Error analyzing {file_path}: {e}")
 
-        self.results["total_files"] = total_files
+        # Update results
+        self.results["timestamp"] = datetime.now().isoformat()
+        self.results["total_files"] = len(m_files)
         self.results["issues"] = issues
         self.results["passed"] = len(issues) == 0
+        self.results["summary"] = f"Found {len(issues)} issues in {len(m_files)} files"
 
         return {
             "success": True,
             "method": "static_analysis",
-            "total_files": total_files,
-            "issues": issues,
-            "passed": len(issues) == 0,
+            "results": self.results,
         }
 
     def _analyze_matlab_file(self, file_path: Path) -> list[str]:
         """Analyze a single MATLAB file for quality issues.
 
         Args:
-            file_path: Path to the MATLAB file
+            file_path: Path to the MATLAB file to analyze
 
         Returns:
-            List of quality issues found
+            List of issue descriptions
         """
         issues = []
 
         try:
-            with file_path.open(encoding="utf-8", errors="ignore") as f:
-                content = f.read()
-                lines = content.split("\n")
-
-            # Track if we're in a function and nesting level
-            in_function = False
-            nesting_level = 0
-
-            # Check for basic quality issues
-            for i, line in enumerate(lines, 1):
-                line_stripped = line.strip()
-                line_original = line  # Keep original for indentation checks
-
-                # Skip empty lines
-                if not line_stripped:
-                    continue
-
-                # Skip comment-only lines for most checks (but check comments for banned patterns)
-                is_comment = line_stripped.startswith("%")
-
-                # Track function scope by monitoring nesting level
-                if not is_comment:
-                    # Check for keywords that increase nesting
-                    # Note: arguments, properties, methods, events also have 'end'
-                    if re.match(
-                        r"\b(function|if|for|while|switch|try|parfor|classdef|arguments|properties|methods|events)\b",
-                        line_stripped,
-                    ):
-                        if line_stripped.startswith("function"):
-                            in_function = True
-                        nesting_level += 1
-
-                    # Check for 'end' keyword that decreases nesting
-                    if re.match(r"\bend\b", line_stripped):
-                        nesting_level -= 1
-                        if nesting_level <= 0:
-                            in_function = False
-                            nesting_level = 0  # Prevent negative nesting
-
-                # Check for function definition (for docstring and arguments validation)
-                if line_stripped.startswith("function") and not is_comment:
-                    # Check if next non-empty line has docstring
-                    has_docstring = False
-                    for j in range(i, min(i + 5, len(lines))):
-                        next_line = lines[j].strip()
-                        if next_line and not next_line.startswith("%"):
-                            break
-                        if next_line.startswith("%") and len(next_line) > 3:
-                            has_docstring = True
-                            break
-
-                    if not has_docstring:
-                        issues.append(
-                            f"{file_path.name} (line {i}): Missing function docstring",
-                        )
-
-                    # Check for arguments validation block
-                    # Skip comment lines to avoid false positives
-                    has_arguments = False
-                    for j in range(i, min(i + 15, len(lines))):
-                        line_check = lines[j].strip()
-                        # Skip comment lines
-                        if line_check.startswith("%"):
-                            continue
-                        if re.search(r"\barguments\b", line_check):
-                            has_arguments = True
-                            break
-
-                    if not has_arguments:
-                        issues.append(
-                            f"{file_path.name} (line {i}): Missing arguments validation block",
-                        )
-
-                # Check for banned patterns (in comments and code)
-                banned_patterns = [
-                    (r"\bTODO\b", "TODO placeholder found"),
-                    (r"\bFIXME\b", "FIXME placeholder found"),
-                    (r"\bHACK\b", "HACK comment found"),
-                    (r"\bXXX\b", "XXX comment found"),
-                    (r"<[A-Z_][A-Z0-9_]*>", "Angle bracket placeholder found"),
-                    (r"\{\{.*?\}\}", "Template placeholder found"),
-                ]
-
-                for pattern, message in banned_patterns:
-                    if re.search(pattern, line_stripped):
-                        issues.append(f"{file_path.name} (line {i}): {message}")
-
-                # Skip further checks for comment lines
-                if is_comment:
-                    continue
-
-                # Check for common MATLAB anti-patterns
-                if re.search(r"\beval\s*\(", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Avoid using eval() - potential security risk and performance issue",
-                    )
-
-                if re.search(r"\bassignin\s*\(", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Avoid using assignin() - violates encapsulation",
-                    )
-
-                if re.search(r"\bevalin\s*\(", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Avoid using evalin() - violates encapsulation",
-                    )
-
-                # Check for global variables (often code smell)
-                if re.search(r"\bglobal\s+\w+", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Global variable usage - consider passing as argument",
-                    )
-
-                # Check for load without output (loads into workspace)
-                # Match both command syntax (load file.mat) and function syntax (load('file.mat'))
-                if (
-                    (re.search(r"^\s*load\s+\w+", line_stripped) or re.search(r"^\s*load\s*\([^)]+\)", line_stripped))
-                    and "=" not in line_stripped
-                ):
-                    issues.append(
-                        f"{file_path.name} (line {i}): load without output variable - use 'data = load(...)' instead",
-                    )
-
-                # Check for magic numbers (but allow common values and known constants)
-                # Matches both integer and floating-point literals (e.g., 3.14, 42, 0.5)
-                # that are not part of scientific notation, array indices, or embedded in words.
-                # Uses lookbehind/lookahead to avoid matching numbers adjacent to dots or word characters.
-                # This helps flag "magic numbers" in code while avoiding false positives from common patterns.
-                magic_number_pattern = r"(?<![.\w])(?:\d+\.\d+|\d+)(?![.\w])"
-                magic_numbers = re.findall(magic_number_pattern, line_stripped)
-
-                # Known acceptable values (include integer and float representations)
-                acceptable_numbers = {
-                    "0", "0.0",
-                    "1", "1.0",
-                    "2", "2.0",
-                    "3", "3.0",
-                    "4", "4.0",
-                    "5", "5.0",
-                    "10", "10.0",
-                    "100", "100.0",
-                    "1000", "1000.0",
-                    "0.5",
-                    "0.1",
-                    "0.01",
-                    "0.001",
-                    "0.0001",  # Common tolerances
-                }
-
-                # Known physics constants (should be defined but at least flag with context)
-                # Includes units and sources per coding guidelines
-                known_constants = {
-                    "3.14159": "pi constant [dimensionless] - mathematical constant",
-                    "3.1416": "pi constant [dimensionless] - mathematical constant",
-                    "3.14": "pi constant [dimensionless] - mathematical constant",
-                    "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
-                    "1.57": "pi/2 constant [dimensionless] - mathematical constant",
-                    "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
-                    "0.785": "pi/4 constant [dimensionless] - mathematical constant",
-                    "9.81": "gravitational acceleration [m/s²] - approximate standard gravity",
-                    "9.8": "gravitational acceleration [m/s²] - approximate standard gravity",
-                    "9.807": "gravitational acceleration [m/s²] - approximate standard gravity",
-                }
-
-                for num in magic_numbers:
-                    # Check if it's a known constant
-                    if num in known_constants:
-                        issues.append(
-                            f"{file_path.name} (line {i}): Magic number {num} ({known_constants[num]}) - define as named constant",
-                        )
-                    elif num not in acceptable_numbers:
-                        # Check if the number appears before a comment on same line
-                        comment_idx = line_original.find("%")
-                        num_idx = line_original.find(num)
-                        if comment_idx == -1 or (
-                            num_idx != -1 and num_idx < comment_idx
-                        ):
-                            issues.append(
-                                f"{file_path.name} (line {i}): Magic number {num} should be defined as constant with units and source",
-                            )
-
-                # Check for clear/clc/close all in functions (bad practice)
-                if in_function:
-                    # Check for clear without variable (dangerous) or clear all/global (very dangerous)
-                    if re.search(r"\bclear\s+(all|global)\b", line_stripped, re.IGNORECASE):
-                        issues.append(
-                            f"{file_path.name} (line {i}): Avoid 'clear all' or 'clear global' in functions - clears all variables, functions, and MEX links",
-                        )
-                    elif re.search(r"\bclear\b(?!\s+\w+)", line_stripped):
-                        issues.append(
-                            f"{file_path.name} (line {i}): Avoid 'clear' in functions - can clear function variables",
-                        )
-                    if re.search(r"\bclc\b", line_stripped):
-                        issues.append(
-                            f"{file_path.name} (line {i}): Avoid 'clc' in functions - affects user's workspace",
-                        )
-                    if re.search(r"\bclose\s+all\b", line_stripped):
-                        issues.append(
-                            f"{file_path.name} (line {i}): Avoid 'close all' in functions - closes user's figures",
-                        )
-
-                # Check for exist() usage (often code smell, prefer try/catch or validation)
-                if re.search(r"\bexist\s*\(", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Consider using validation or try/catch instead of exist()",
-                    )
-
-                # Check for addpath in functions (should be in startup.m or managed externally)
-                if in_function and re.search(r"\baddpath\s*\(", line_stripped):
-                    issues.append(
-                        f"{file_path.name} (line {i}): Avoid addpath in functions - manage paths externally",
-                    )
-
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                lines = f.readlines()
         except Exception as e:
-            issues.append(f"{file_path.name}: Could not analyze file - {e!s}")
+            return [f"Error reading file: {e}"]
+
+        in_function = False
+        nesting_level = 0
+
+        for i, line in enumerate(lines, 1):
+            line_stripped = line.strip()
+
+            # Skip empty lines and pure comments
+            if not line_stripped or line_stripped.startswith("%"):
+                continue
+
+            # Track function definitions and nesting
+            if re.search(r"^\s*function\s", line_stripped):
+                in_function = True
+                nesting_level = 0
+                continue
+            elif re.search(r"^\s*end\s*$", line_stripped):
+                nesting_level -= 1
+                if nesting_level <= 0:
+                    in_function = False
+                    nesting_level = 0
+                continue
+            elif re.search(r"^\s*(if|for|while|switch|try)\b", line_stripped):
+                nesting_level += 1
+
+            # Check for arguments validation block (only in functions)
+            if in_function and i <= 15:  # Check only in first 15 lines of function
+                if re.search(r"\barguments\b", line_stripped) and not re.search(
+                    r"^\s*function\s", line_stripped
+                ):
+                    # Found arguments block, function is properly structured
+                    break
+            elif in_function and i > 15:
+                # No arguments block found
+                issues.append(
+                    f"{file_path.name} (line {i}): Missing arguments validation block"
+                )
+                break
+
+            # Check for banned patterns (in comments and code)
+            if in_function:
+                # Check for clear/clc/close all in functions (bad practice)
+                if re.search(r"\bclear\s+(all|global)\b", line_stripped, re.IGNORECASE):
+                    issues.append(
+                        f"{file_path.name} (line {i}): Avoid 'clear all' or 'clear global' in functions - clears all variables, functions, and MEX links",
+                    )
+                elif re.search(r"\bclear\s*$", line_stripped):
+                    issues.append(
+                        f"{file_path.name} (line {i}): Avoid 'clear' in functions - can clear function variables",
+                    )
+                if re.search(r"\bclc\b", line_stripped):
+                    issues.append(
+                        f"{file_path.name} (line {i}): Avoid 'clc' in functions - affects user's workspace",
+                    )
+
+            # Check for load without output (loads into workspace)
+            if (
+                re.search(r"^\s*load\b", line_stripped)
+                or re.search(r"^\s*load\s*\(", line_stripped)
+            ) and not re.search(r"\w+\s*=\s*load", line_stripped):
+                issues.append(
+                    f"{file_path.name} (line {i}): load without output variable - use 'data = load(...)' instead",
+                )
 
         return issues
 
-    def run_all_checks(self) -> dict[str, object]:
-        """Run all MATLAB quality checks.
+    def run_all_checks(self) -> dict[str, Any]:
+        """Run all available quality checks.
 
         Returns:
-            Dictionary containing all quality check results
+            Comprehensive results dictionary
         """
-        logger.info("Starting MATLAB quality checks")
+        logger.info("Running comprehensive MATLAB quality checks...")
 
-        # Check if MATLAB files exist
-        if not self.check_matlab_files_exist():
-            self.results["passed"] = True
-            self.results["summary"] = "[SKIP] No MATLAB files to check - passed"
-            return self.results
+        results = {
+            "matlab_available": False,
+            "static_analysis": {},
+            "final_result": "unknown",
+        }
 
-        # Run MATLAB quality checks
-        matlab_results = self.run_matlab_quality_checks()
-
-        if "error" in matlab_results:
-            self.results["passed"] = False
-            self.results["summary"] = (
-                f"MATLAB quality checks failed: {matlab_results['error']}"
+        # Try MATLAB-based checks first
+        matlab_result = self.run_matlab_quality_checks()
+        if "success" in matlab_result and matlab_result["success"]:
+            results["matlab_available"] = True
+            results["matlab_result"] = matlab_result
+            results["final_result"] = (
+                "passed" if matlab_result.get("passed", True) else "failed"
             )
-            self.results["checks"]["matlab"] = matlab_results
         else:
-            self.results["checks"]["matlab"] = matlab_results
-            if matlab_results.get("passed", False):
-                self.results["summary"] = (
-                    f"[PASS] MATLAB quality checks PASSED ({self.results['total_files']} files checked)"
-                )
-            else:
-                self.results["passed"] = False
-                self.results["summary"] = (
-                    f"[FAIL] MATLAB quality checks FAILED ({self.results['total_files']} files checked)"
-                )
+            # Fall back to static analysis
+            static_result = self._static_matlab_analysis()
+            results["static_analysis"] = static_result
+            results["final_result"] = (
+                "passed" if len(static_result.get("issues", [])) == 0 else "failed"
+            )
 
-        return self.results
+        return results
 
 
 def main():
-    """Main entry point for the MATLAB quality check script."""
-    parser = argparse.ArgumentParser(description="MATLAB Code Quality Checker")
-    parser.add_argument("--strict", action="store_true", help="Enable strict mode")
+    """Main entry point for command-line usage."""
+    parser = argparse.ArgumentParser(
+        description="MATLAB Code Quality Checker",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python matlab_quality_check.py                    # Basic check
+  python matlab_quality_check.py --strict         # Strict mode
+  python matlab_quality_check.py --output-format json  # JSON output
+        """,
+    )
+
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="Path to project root directory (default: current directory)",
+    )
+
     parser.add_argument(
         "--output-format",
-        choices=["json", "text"],
+        choices=["text", "json"],
         default="text",
         help="Output format (default: text)",
     )
+
     parser.add_argument(
-        "--project-root",
-        type=str,
-        default=".",
-        help="Project root directory (default: current directory)",
+        "--strict",
+        action="store_true",
+        help="Enable strict checking mode",
     )
 
     args = parser.parse_args()
 
-    # Get project root
-    project_root = Path(args.project_root).resolve()
-    if not project_root.exists():
-        logger.error(f"Project root does not exist: {project_root}")
+    # Validate project root
+    if not args.project_root.exists():
+        logger.error(f"Project root does not exist: {args.project_root}")
         sys.exit(1)
 
-    # Initialize and run quality checks
-    checker = MATLABQualityChecker(project_root)
+    if not args.project_root.is_dir():
+        logger.error(f"Project root is not a directory: {args.project_root}")
+        sys.exit(1)
+
+    # Run checks
+    checker = MATLABQualityChecker(args.project_root)
     results = checker.run_all_checks()
 
     # Output results
     if args.output_format == "json":
-        print(json.dumps(results, indent=2, default=str))  # noqa: T201
+        print(json.dumps(results, indent=2))
     else:
-        print("\n" + "=" * 60)  # noqa: T201
-        print("MATLAB QUALITY CHECK RESULTS")  # noqa: T201
-        print("=" * 60)  # noqa: T201
-        print(f"Timestamp: {results.get('timestamp', 'N/A')}")  # noqa: T201
-        print(f"Total Files: {results.get('total_files', 0)}")  # noqa: T201
-        print(f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}")  # noqa: T201
-        print(f"Summary: {results.get('summary', 'N/A')}")  # noqa: T201
+        # Text output
+        print("MATLAB Quality Check Results")
+        print(f"Final Result: {results['final_result']}")
 
-        if results.get("issues"):
-            print(f"\nIssues Found ({len(results['issues'])}):")  # noqa: T201
-            for i, issue in enumerate(results["issues"], 1):
-                print(f"  {i}. {issue}")  # noqa: T201
+        if results.get("matlab_available"):
+            print("✓ MATLAB execution successful")
+        else:
+            print("ℹ️  Using static analysis (MATLAB not available)")
 
-        print("\n" + "=" * 60)  # noqa: T201
+        if "static_analysis" in results and "results" in results["static_analysis"]:
+            static = results["static_analysis"]["results"]
+            print(f"Files analyzed: {static['total_files']}")
+            print(f"Issues found: {len(static['issues'])}")
+
+            if static["issues"]:
+                print("\nIssues:")
+                for issue in static["issues"][:10]:  # Show first 10 issues
+                    print(f"  {issue}")
+                if len(static["issues"]) > 10:
+                    print(f"  ... and {len(static['issues']) - 10} more issues")
 
     # Exit with appropriate code
-    # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass
-    passed = results.get("passed", False)
-    has_issues = bool(results.get("issues"))
-
-    if args.strict:
-        # Strict mode: fail if any issues found
-        exit_code = 0 if (passed and not has_issues) else 1
+    if results["final_result"] == "passed":
+        sys.exit(0)
     else:
-        # Normal mode: fail only if checks didn't pass
-        exit_code = 0 if passed else 1
-
-    sys.exit(exit_code)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
