@@ -109,11 +109,14 @@ h4, h5, h6 {
     top: 120px; /* Account for header height with potential wrapping: 70px logo + padding + potential wrap */
     width: 260px;
     height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);
     background: var(--legal-pad-yellow);
     border-right: 2px solid var(--legal-pad-yellow-border);
     overflow-y: auto;
+    overflow-x: hidden;
     z-index: 950; /* Above overlay (900) so sidebar content is clickable when open */
     box-shadow: 2px 0 8px var(--shadow-color);
+    bottom: 0;
 }
 
 .sidebar-nav {
@@ -2087,6 +2090,56 @@ footer p {
 
 .resource-link:hover {
     text-decoration: underline;
+}
+
+/* YouTube embed container */
+.youtube-embed {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 1rem 0;
+    border-radius: 4px;
+    background: var(--legal-pad-yellow-accent);
+}
+
+.youtube-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Software logo/image styling */
+.software-logo {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--pure-white);
+    padding: 0.5rem;
+    object-fit: contain;
+}
+
+.resource-card .software-logo {
+    max-width: 200px;
+    margin: 0.75rem 0;
+}
+
+/* Resource card with image/video */
+.resource-card.has-media {
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-card.has-media .resource-media {
+    order: -1;
+    margin-bottom: 1rem;
 }
 
 /* Footer Social */
