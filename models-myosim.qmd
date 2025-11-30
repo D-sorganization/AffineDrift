@@ -21,22 +21,22 @@ page-layout: full
 
       <div class="article-category">
         <h2>Available Models</h2>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Muscle-Tendon Unit Models</h3>
           <p>Models of individual muscle-tendon units with detailed force-length-velocity relationships, 
           enabling analysis of muscle force production and energy consumption during movement.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Multi-Muscle System Models</h3>
           <p>Models of systems with multiple muscles acting on joints, allowing for analysis of 
           muscle coordination, synergies, and force sharing in complex movements like the golf swing.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Forward Dynamics Simulations</h3>
           <p>Forward dynamics models that simulate movement from muscle activations, enabling predictive 
           analysis and optimization of movement patterns and muscle activation strategies.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Muscle Activation Models</h3>
           <p>Models for simulating muscle activation dynamics, including excitation-activation coupling, 
           allowing for realistic simulation of muscle behavior in response to neural commands.</p>
@@ -45,15 +45,15 @@ page-layout: full
 
       <div class="article-category">
         <h2>Resources</h2>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://github.com/MyoSim/MyoSim" target="_blank" rel="noopener">MyoSim GitHub Repository</a></h3>
           <p>Access the MyoSim source code, documentation, examples, and issue tracker on GitHub.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://github.com/MyoSim/MyoSim#readme" target="_blank" rel="noopener">MyoSim Documentation</a></h3>
           <p>Read the MyoSim README and documentation for installation instructions, usage examples, and API reference.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://github.com/MyoSim/MyoSim/issues" target="_blank" rel="noopener">MyoSim Issues & Support</a></h3>
           <p>Report bugs, ask questions, and get support from the MyoSim community through GitHub issues.</p>
         </div>
@@ -67,5 +67,27 @@ page-layout: full
     </div>
   </div>
 </section>
-```
 
+<script>
+// Add sidebar links for MyoSim page
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.querySelector('.sidebar-nav');
+  if (sidebar) {
+    const existingHistory = sidebar.querySelector('.sidebar-section');
+    if (existingHistory) {
+      const linksSection = document.createElement('div');
+      linksSection.className = 'sidebar-section';
+      linksSection.innerHTML = `
+        <h3 class="sidebar-heading">Quick Links</h3>
+        <ul class="sidebar-links">
+          <li><a href="https://github.com/MyoSim/MyoSim" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://github.com/MyoSim/MyoSim#readme" target="_blank" rel="noopener">Documentation</a></li>
+          <li><a href="https://github.com/MyoSim/MyoSim/issues" target="_blank" rel="noopener">Issues & Support</a></li>
+        </ul>
+      `;
+      sidebar.insertBefore(linksSection, existingHistory);
+    }
+  }
+});
+</script>
+```

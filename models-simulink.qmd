@@ -19,7 +19,7 @@ page-layout: full
 
       <div class="article-category">
         <h2>Model Documentation</h2>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="articles/theory-part5.html">Theory Part 5 &mdash; Simulink Model Documentation</a></h3>
           <p>Comprehensive documentation of the Simulink implementation, including numerical routines, 
           model structure, and supporting technical notes. This article provides detailed information 
@@ -29,18 +29,18 @@ page-layout: full
 
       <div class="article-category">
         <h2>Available Models</h2>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Golf Swing Dynamics Model</h3>
           <p>Full multibody dynamics model of the golfer-club system implemented as a control-affine 
           system. Includes drift/input decomposition, zero torque and zero velocity counterfactuals, 
           and analysis tools.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Pendulum Analog Models</h3>
           <p>Simplified pendulum models that serve as analogs for understanding golf swing dynamics, 
           including single and double pendulum implementations with control inputs.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3>Drift-Input Decomposition Tools</h3>
           <p>Simulink blocks and subsystems for performing drift-input decomposition analysis, 
           computing zero torque and zero velocity counterfactuals, and analyzing the separation 
@@ -50,27 +50,27 @@ page-layout: full
 
       <div class="article-category">
         <h2>Software & Resources</h2>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/products/simulink.html" target="_blank" rel="noopener">Matlab Simulink Official Website</a></h3>
           <p>Visit the official Matlab Simulink website for product information, features, and capabilities.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/help/simulink/" target="_blank" rel="noopener">Simulink Documentation</a></h3>
           <p>Comprehensive Simulink documentation including user guides, examples, and API reference.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/help/simulink/getting-started-with-simulink.html" target="_blank" rel="noopener">Getting Started with Simulink</a></h3>
           <p>Tutorials and guides for getting started with Simulink, including basic modeling and simulation concepts.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/academia/student-center.html" target="_blank" rel="noopener">Matlab Student Licensing</a></h3>
           <p>Information about student licensing options for Matlab and Simulink.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/support.html" target="_blank" rel="noopener">Matlab Support</a></h3>
           <p>Access Matlab support resources, including technical support, documentation, and community forums.</p>
         </div>
-        <div class="article-card">
+        <div class="article-list-item">
           <h3><a href="https://www.mathworks.com/matlabcentral/" target="_blank" rel="noopener">Matlab Central</a></h3>
           <p>Matlab Central community with file exchange, answers, and discussions for Matlab and Simulink users.</p>
         </div>
@@ -85,5 +85,30 @@ page-layout: full
     </div>
   </div>
 </section>
-```
 
+<script>
+// Add sidebar links for Simulink page
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.querySelector('.sidebar-nav');
+  if (sidebar) {
+    const existingHistory = sidebar.querySelector('.sidebar-section');
+    if (existingHistory) {
+      const linksSection = document.createElement('div');
+      linksSection.className = 'sidebar-section';
+      linksSection.innerHTML = `
+        <h3 class="sidebar-heading">Quick Links</h3>
+        <ul class="sidebar-links">
+          <li><a href="https://www.mathworks.com/products/simulink.html" target="_blank" rel="noopener">Official Website</a></li>
+          <li><a href="https://www.mathworks.com/help/simulink/" target="_blank" rel="noopener">Documentation</a></li>
+          <li><a href="https://www.mathworks.com/help/simulink/getting-started-with-simulink.html" target="_blank" rel="noopener">Getting Started</a></li>
+          <li><a href="https://www.mathworks.com/academia/student-center.html" target="_blank" rel="noopener">Student License</a></li>
+          <li><a href="https://www.mathworks.com/support.html" target="_blank" rel="noopener">Support</a></li>
+          <li><a href="https://www.mathworks.com/matlabcentral/" target="_blank" rel="noopener">Matlab Central</a></li>
+        </ul>
+      `;
+      sidebar.insertBefore(linksSection, existingHistory);
+    }
+  }
+});
+</script>
+```
