@@ -100,13 +100,15 @@ jobs:
       - name: Type check with MyPy
         run: |
           echo "🔍 Running MyPy type checker..."
+          # Exclude website content directories from type checking
+          EXCLUDE_PATTERN=".*(content|articles|docs|archive|legacy-pages|_templates|logo|pics|static|qmd|\.quarto|wrist-universal-joint).*|.*-.*"
           if [ -f mypy.ini ]; then
-            mypy . --config-file mypy.ini --exclude ".*wrist-universal-joint.*|.*-.*"
+            mypy . --config-file mypy.ini --exclude "$EXCLUDE_PATTERN"
           elif [ -f pyproject.toml ] && grep -q "\[tool.mypy\]" pyproject.toml; then
-            mypy . --exclude ".*wrist-universal-joint.*|.*-.*"
+            mypy . --exclude "$EXCLUDE_PATTERN"
           else
-            # ✅ Non-strict fallback to avoid conflicts, exclude dirs with hyphens
-            mypy . --ignore-missing-imports --exclude ".*wrist-universal-joint.*|.*-.*"
+            # ✅ Non-strict fallback to avoid conflicts, exclude website content and dirs with hyphens
+            mypy . --ignore-missing-imports --exclude "$EXCLUDE_PATTERN"
           fi
 
       - name: Format check with Black
