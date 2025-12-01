@@ -184,9 +184,8 @@ jobs:
             [ -d tools ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tools"
             [ -d tests ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tests"
             if [ -n "$DIRS_TO_CHECK" ]; then
-              # Exclude website-related subdirectories within tools
-              black --check --diff $DIRS_TO_CHECK \
-                --exclude "tools/wrist-universal-joint"
+              # pyproject.toml handles exclusions (website content, tools/wrist-universal-joint, etc.)
+              black --check --diff $DIRS_TO_CHECK
             else
               echo "⚠️ No source directories found to check"
             fi
