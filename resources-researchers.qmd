@@ -7,9 +7,30 @@ page-layout: full
 ```{=html}
 <section class="resources-section">
   <div class="container">
-    <div id="researchers-section" class="page-section">
-      <h2 class="section-heading">Researchers</h2>
-    </div>
+    <div class="resources-layout">
+      <!-- Left Sidebar Navigation -->
+      <aside class="resources-sidebar">
+        <nav class="resources-nav">
+          <h3 class="resources-nav-heading">Resources</h3>
+          <ul class="resources-nav-links">
+            <li><a href="resources.html">Resources Home</a></li>
+            <li><a href="resources-videos.html">Videos</a></li>
+            <li><a href="resources-software.html">Software</a></li>
+            <li><a href="resources-websites.html">Websites</a></li>
+            <li><a href="resources-datasets.html">Datasets</a></li>
+            <li><a href="resources-books.html">Books</a></li>
+            <li><a href="resources-papers.html">Papers</a></li>
+            <li><a href="resources-researchers.html" class="active">Researchers</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="resources-main">
+        <div class="page-header">
+          <h1>Researchers</h1>
+          <p class="page-subtitle">Profiles of researchers and experts in golf biomechanics, robotics, and control theory</p>
+        </div>
     <div class="resource-grid">
       <div class="resource-card has-media">
         <div class="resource-media">
@@ -32,6 +53,13 @@ page-layout: full
              rel="noopener"
              style="margin-top: 0.5rem; display: inline-block;">
             Visit Website →
+          </a>
+          <a href="https://scholar.google.com/scholar?q=author:%22Sasho+MacKenzie%22"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Google Scholar →
           </a>
         </div>
       </div>
@@ -72,6 +100,20 @@ page-layout: full
              style="margin-top: 0.5rem; display: inline-block;">
             Geometry of Putting →
           </a>
+          <a href="https://scholar.google.com/scholar?q=author:%22Robert+D+Groeber%22+OR+author:%22Robert+Groeber%22"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Google Scholar →
+          </a>
+          <a href="https://physics.yale.edu/people/robert-d-groeber"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Yale Profile →
+          </a>
         </div>
       </div>
 
@@ -97,10 +139,203 @@ page-layout: full
              style="margin-top: 0.5rem; display: inline-block;">
             Watch YouTube Playlist →
           </a>
+          <a href="https://scholar.google.com/scholar?q=author:%22Young-Hoo+Kwon%22"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Google Scholar →
+          </a>
         </div>
       </div>
     </div>
+      </main>
+    </div>
   </div>
 </section>
+
+<style>
+.resources-layout {
+  display: flex;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.resources-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: var(--legal-pad-yellow);
+  border-right: 2px solid var(--legal-pad-yellow-border);
+  padding: 2rem 1rem;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.resources-nav-heading {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.resources-nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resources-nav-links li {
+  margin-bottom: 0.5rem;
+}
+
+.resources-nav-links a {
+  display: block;
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.resources-nav-links a:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding-left: 1.3rem;
+}
+
+.resources-nav-links a.active {
+  background-color: var(--accent-blue);
+  color: var(--pure-white);
+}
+
+.resources-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.resource-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0;
+}
+
+.resource-card {
+  background: var(--legal-pad-yellow);
+  padding: 1.5rem;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--legal-pad-yellow-border);
+  box-shadow: none;
+  transition: all 0.3s ease;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.resource-card:last-child {
+  border-bottom: none;
+}
+
+.resource-card:hover {
+  background: var(--legal-pad-yellow-light);
+  transform: none;
+  box-shadow: none;
+}
+
+.resource-card.has-media {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.resource-media {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.website-preview {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--legal-pad-yellow-border);
+}
+
+.resource-content {
+  flex: 1;
+}
+
+.resource-content h3 {
+  color: var(--primary-blue);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.resource-description {
+  color: var(--text-dark);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.resource-link {
+  display: inline-block;
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.resource-link:hover {
+  color: var(--primary-blue);
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .resources-layout {
+    flex-direction: column;
+  }
+
+  .resources-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    max-height: none;
+    border-right: none;
+    border-bottom: 2px solid var(--legal-pad-yellow-border);
+  }
+
+  .resource-card.has-media {
+    flex-direction: column;
+  }
+
+  .resource-media {
+    width: 100%;
+  }
+}
+</style>
 ```
 
