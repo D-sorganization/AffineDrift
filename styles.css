@@ -140,7 +140,21 @@ h4, h5, h6 {
 /* CRITICAL FIX: Override Quarto's grid-template-columns that limits content width to 850px */
 @media (min-width: 992px) {
     body .page-columns {
-        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset] 35px [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(500px, 1fr) [body-content-end] 1.5em [body-end] 35px [body-end-outset] 0px [page-end-inset] 0px [page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+        /* Grid layout: screen margins | page margins | body margins | content (minmax 500px, 1fr) | body margins | page margins | screen margins */
+        grid-template-columns:
+            [screen-start] 1.5em
+            [screen-start-inset] 5fr
+            [page-start page-start-inset] 35px
+            [body-start-outset] 35px
+            [body-start] 1.5em
+            [body-content-start] minmax(500px, 1fr)
+            [body-content-end] 1.5em
+            [body-end] 35px
+            [body-end-outset] 0px
+            [page-end-inset] 0px
+            [page-end] 1fr
+            [screen-end-inset] 1.5em
+            [screen-end] !important;
     }
 
     body.fullcontent:not(.floating):not(.docked) .page-columns,
@@ -148,7 +162,18 @@ h4, h5, h6 {
     body.listing:not(.floating):not(.docked) .page-columns,
     body.floating .page-columns,
     body.docked .page-columns {
-        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset] 35px [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(500px, 1fr) [body-content-end] 1.5em [body-end body-end-outset page-end-inset page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+        /* Same layout but with collapsed margin columns */
+        grid-template-columns:
+            [screen-start] 1.5em
+            [screen-start-inset] 5fr
+            [page-start page-start-inset] 35px
+            [body-start-outset] 35px
+            [body-start] 1.5em
+            [body-content-start] minmax(500px, 1fr)
+            [body-content-end] 1.5em
+            [body-end body-end-outset page-end-inset page-end] 1fr
+            [screen-end-inset] 1.5em
+            [screen-end] !important;
     }
 }
 
@@ -156,7 +181,16 @@ h4, h5, h6 {
     body .page-columns,
     body.fullcontent:not(.floating):not(.docked) .page-columns,
     body.slimcontent:not(.floating):not(.docked) .page-columns {
-        grid-template-columns: [screen-start] 1.5em [screen-start-inset page-start page-start-inset body-start-outset] 5fr [body-start] 1.5em [body-content-start] minmax(300px, 1fr) [body-content-end] 1.5em [body-end body-end-outset page-end-inset page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+        /* Mobile layout: collapsed margins, smaller content min-width */
+        grid-template-columns:
+            [screen-start] 1.5em
+            [screen-start-inset page-start page-start-inset body-start-outset] 5fr
+            [body-start] 1.5em
+            [body-content-start] minmax(300px, 1fr)
+            [body-content-end] 1.5em
+            [body-end body-end-outset page-end-inset page-end] 1fr
+            [screen-end-inset] 1.5em
+            [screen-end] !important;
     }
 }
 
