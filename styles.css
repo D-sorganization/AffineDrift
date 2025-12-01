@@ -137,6 +137,29 @@ h4, h5, h6 {
     padding-right: 0 !important;
 }
 
+/* CRITICAL FIX: Override Quarto's grid-template-columns that limits content width to 850px */
+@media (min-width: 992px) {
+    body .page-columns {
+        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset] 35px [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(500px, 1fr) [body-content-end] 1.5em [body-end] 35px [body-end-outset] 0px [page-end-inset] 0px [page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+    }
+
+    body.fullcontent:not(.floating):not(.docked) .page-columns,
+    body.slimcontent:not(.floating):not(.docked) .page-columns,
+    body.listing:not(.floating):not(.docked) .page-columns,
+    body.floating .page-columns,
+    body.docked .page-columns {
+        grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start page-start-inset] 35px [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(500px, 1fr) [body-content-end] 1.5em [body-end body-end-outset page-end-inset page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    body .page-columns,
+    body.fullcontent:not(.floating):not(.docked) .page-columns,
+    body.slimcontent:not(.floating):not(.docked) .page-columns {
+        grid-template-columns: [screen-start] 1.5em [screen-start-inset page-start page-start-inset body-start-outset] 5fr [body-start] 1.5em [body-content-start] minmax(300px, 1fr) [body-content-end] 1.5em [body-end body-end-outset page-end-inset page-end] 1fr [screen-end-inset] 1.5em [screen-end] !important;
+    }
+}
+
 /* Remove margin sidebar (TOC) to make content wider */
 #quarto-margin-sidebar,
 .margin-sidebar {
@@ -1475,9 +1498,74 @@ img[loading="lazy"].loaded {
     }
 }
 
-/* MathJax styling */
+/* MathJax styling - Better equation display */
 .MathJax {
     font-size: 1.1em !important;
+}
+
+/* Ensure display equations have full width and don't overflow */
+.math.display,
+span.math.display,
+div.math.display,
+.MathJax_Display {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    margin: 1em 0 !important;
+}
+
+/* Inline math should not break awkwardly */
+.math.inline,
+span.math.inline,
+.MathJax {
+    display: inline-block !important;
+    max-width: 100% !important;
+}
+
+/* MathJax output containers */
+mjx-container[jax="CHTML"][display="true"],
+mjx-container[jax="SVG"][display="true"] {
+    display: block !important;
+    text-align: center !important;
+    margin: 1em 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+}
+
+mjx-container[jax="CHTML"],
+mjx-container[jax="SVG"] {
+    display: inline-block !important;
+    max-width: 100% !important;
+}
+
+/* Prevent equation text from being processed as markdown */
+.math,
+.math *,
+mjx-container,
+mjx-container * {
+    font-style: normal !important;
+}
+
+/* Fix for align and aligned environments */
+.MathJax mjx-maligngroup,
+.MathJax mjx-mtable {
+    text-align: left !important;
+}
+
+/* Equation blocks should be visible and well-spaced */
+.equation,
+.equation-block {
+    background: var(--off-white);
+    padding: 2rem;
+    margin: 1.5rem 0;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1.3rem;
+    border-left: 4px solid var(--accent-blue);
+    overflow-x: auto;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 /* ===========================
