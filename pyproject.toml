@@ -1,0 +1,29 @@
+[tool.black]
+line-length = 100
+target-version = ['py311']
+exclude = '''
+/(
+  # Website content
+  content
+  | articles
+  | docs
+  | archive
+  | legacy-pages
+  | _templates
+  | logo
+  | pics
+  | static
+  | qmd
+  | \.quarto
+  # Website-related tools
+  | tools/wrist-universal-joint
+  # Standard exclusions
+  | \.git
+  | __pycache__
+  | \.venv
+  | venv
+  | node_modules
+  | \.pytest_cache
+)/
+'''
+
