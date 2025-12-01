@@ -178,10 +178,16 @@ jobs:
               black --check --diff src/
             fi
           else
-            # Exclude website content, articles, docs, and other non-source directories
-            black --check --diff . \
-              --exclude "/(content|articles|docs|archive|legacy-pages|_templates|logo|pics|static|qmd|\.quarto)/" \
-              --exclude "/(\.git|node_modules|\.venv|venv|__pycache__|\.pytest_cache)/"
+            # Explicitly check only source code directories, exclude website content
+            DIRS_TO_CHECK=""
+            [ -d scripts ] && DIRS_TO_CHECK="$DIRS_TO_CHECK scripts"
+            [ -d tools ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tools"
+            [ -d tests ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tests"
+            if [ -n "$DIRS_TO_CHECK" ]; then
+              black --check --diff $DIRS_TO_CHECK
+            else
+              echo "⚠️ No source directories found to check"
+            fi
           fi
 
       - name: Run pre-commit
