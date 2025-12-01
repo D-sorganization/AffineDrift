@@ -684,7 +684,7 @@ class PlotCanvas(FigureCanvas):
             self.visible_signals[signal_name] = visible
         self.update_plot()
 
-    def regenerate_noise(self):
+    def regenerate_noise(self) -> None:
         """Regenerate noise signal with current noise type"""
         self.input_torque = self.generate_sample_torque()
         if self.current_plot_type in ['Torque', 'Angular Acceleration']:
@@ -1348,11 +1348,11 @@ class MainWindow(QMainWindow):
         self.show_accel_alpha_ratio_check.setEnabled(is_transmission)
         self.show_accel_gamma_ratio_check.setEnabled(is_transmission)
 
-    def update_signal_visibility(self, signal_name, visible):
+    def update_signal_visibility(self, signal_name: str, visible: bool) -> None:
         """Update signal visibility"""
         self.plot_canvas.set_signal_visible(signal_name, visible)
 
-    def update_info(self):
+    def update_info(self) -> None:
         """Update information panel"""
         grip = self.grip_slider.value()
         wrist = self.wrist_slider.value()
@@ -1375,11 +1375,11 @@ class MainWindow(QMainWindow):
         """
         self.info_label.setText(info_text)
 
-    def regenerate_noise(self):
+    def regenerate_noise(self) -> None:
         """Regenerate noise on plot canvas"""
         self.plot_canvas.regenerate_noise()
 
-    def update_noise_type(self, noise_type):
+    def update_noise_type(self, noise_type: str) -> None:
         """Update noise type and show/hide polynomial input"""
         self.plot_canvas.set_noise_type(noise_type)
         # Show/hide polynomial input and label based on selection
@@ -1389,12 +1389,12 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'polynomial_label'):
             self.polynomial_label.setVisible(is_polynomial)
 
-    def update_polynomial_signal(self, expression):
+    def update_polynomial_signal(self, expression: str) -> None:
         """Update polynomial expression"""
         if hasattr(self, 'plot_canvas'):
             self.plot_canvas.set_polynomial_expression(expression)
 
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj: QWidget, event: QEvent) -> bool:
         """Filter events to handle mouse wheel scrolling globally - prevent sliders from responding"""
         if event.type() == QEvent.Type.Wheel:
             # Always redirect wheel events to scroll area, never let sliders/spinboxes handle them
@@ -1407,7 +1407,7 @@ class MainWindow(QMainWindow):
                     return True  # Consume the event so sliders don't get it
         return super().eventFilter(obj, event)
 
-    def show_documentation(self):
+    def show_documentation(self) -> None:
         """Show documentation dialog"""
         dialog = DocumentationDialog(self)
         dialog.exec()

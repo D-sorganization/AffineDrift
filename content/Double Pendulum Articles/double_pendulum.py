@@ -15,8 +15,10 @@ This file is intended as a standalone module that you can
 import into a Streamlit app or run directly.
 """
 
+from typing import Callable, Tuple
+
 import numpy as np
-from scipy.integrate import solve_ivp
+from scipy.integrate import OdeResult, solve_ivp
 
 # ---------------------------------------------------------------------------
 # Physical parameters for the double pendulum
@@ -30,7 +32,7 @@ c1 = 0.5   # COM distance of link 1 from joint 1
 c2 = 0.5   # COM distance of link 2 from joint 2
 I1 = 0.05  # inertia of link 1 about its COM (out of plane)
 I2 = 0.05  # inertia of link 2 about its COM (out of plane)
-g  = 9.81  # gravity
+GRAVITY_M_S2 = 9.81  # gravity in m/s²
 
 
 # ---------------------------------------------------------------------------
@@ -116,8 +118,8 @@ def g_vector(q: np.ndarray) -> np.ndarray:
     """
     q1, q2 = q
 
-    g1 = (m1 * c1 + m2 * l1) * g * np.sin(q1) + m2 * c2 * g * np.sin(q1 + q2)
-    g2 = m2 * c2 * g * np.sin(q1 + q2)
+    g1 = (m1 * c1 + m2 * l1) * GRAVITY_M_S2 * np.sin(q1) + m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
+    g2 = m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
 
     return np.array([g1, g2], dtype=float)
 
@@ -239,14 +241,16 @@ def u_pd(t: float, x: np.ndarray, kp: float = 10.0, kd: float = 2.0) -> np.ndarr
 # Trajectory post-processing: reconstruct tau_nat(t)
 # ---------------------------------------------------------------------------
 
-def compute_tau_natural_trajectory(sol, u_func):
+def compute_tau_natural_trajectory(
+    sol: OdeResult, u_func: Callable[[float, np.ndarray], np.ndarray]
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Given a solution object `sol` from solve_ivp and an input function u_func,
     compute tau_nat(t) at each time sample.
 
     Parameters
     ----------
-    sol : OdeSolution
+    sol : OdeResult
         Solution object returned by solve_ivp.
     u_func : callable
         Function u_func(t, x) -> u used in the simulation.
@@ -375,7 +379,7 @@ def natural_wrench(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.nda
 # Example usage / quick test
 # ---------------------------------------------------------------------------
 
-def run_example():
+def run_example() -> None:
     """
     Run a simple simulation with PD input and print some diagnostics.
     """

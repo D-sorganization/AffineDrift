@@ -102,9 +102,15 @@ def check_banned_patterns(
     if filepath.name in excluded_names:
         return issues
 
+    # Check if this is a test file - exclude angle bracket check for test files
+    is_test_file = "test" in filepath.name.lower() or "test" in str(filepath.parts)
+
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
+            # Skip angle bracket placeholder check for test files (HTML strings are valid)
+            if is_test_file and "Angle bracket placeholder" in message:
+                continue
             if pattern.search(line):
                 issues.append((line_num, message, line.strip()))
 
