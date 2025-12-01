@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 class LaTeXToHTMLConverter:
-    def __init__(self, template_file=None):
+    def __init__(self, template_file: str | Path | None = None) -> None:
         """Initialize converter with optional custom template"""
         self.template_file = template_file
 
@@ -427,7 +427,7 @@ class LaTeXToHTMLConverter:
 
     def convert_file(
         self, input_file: str | Path, output_file: str | Path | None = None
-    ) -> None:
+    ) -> str:
         """Convert a LaTeX file to HTML"""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".html")

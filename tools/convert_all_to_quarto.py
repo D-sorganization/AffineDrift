@@ -112,7 +112,7 @@ format:
         print(f"✓ Created {metadata_path}")
 
 
-def convert_all(dry_run: bool = False) -> None:
+def convert_all(dry_run: bool = False) -> bool:
     """Convert all LaTeX files to Quarto"""
     converter = LaTeXToQuartoConverter()
 

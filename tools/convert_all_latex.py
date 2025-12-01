@@ -24,7 +24,7 @@ CONVERSIONS = [
 ]
 
 
-def convert_all(dry_run: bool = False) -> None:
+def convert_all(dry_run: bool = False) -> bool:
     """Convert all LaTeX files to HTML"""
     converter = LaTeXToHTMLConverter()
 
@@ -41,8 +41,8 @@ def convert_all(dry_run: bool = False) -> None:
     error_count = 0
 
     for conversion in CONVERSIONS:
-        source = conversion["source"]
-        target = conversion["target"]
+        source: str = conversion["source"]
+        target: str = conversion["target"]
 
         print(f"Processing: {source}")
         print(f"  -> Target: {target}")

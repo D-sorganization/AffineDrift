@@ -49,18 +49,18 @@ from PyQt6.QtWidgets import (
 )
 
 
-class WheelIgnoringSlider(QSlider):
+class WheelIgnoringSlider(QSlider):  # type: ignore[misc]
     """Slider that ignores mouse wheel events - wheel only scrolls page"""
 
-    def wheelEvent(self, event) -> None:
+    def wheelEvent(self, event: QEvent) -> None:
         """Ignore wheel events - let parent handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
 
-class WheelIgnoringLineEdit(QLineEdit):
+class WheelIgnoringLineEdit(QLineEdit):  # type: ignore[misc]
     """LineEdit that ignores mouse wheel events - wheel only scrolls page"""
 
-    def wheelEvent(self, event) -> None:
+    def wheelEvent(self, event: QEvent) -> None:
         """Ignore wheel events - let parent handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
@@ -73,7 +73,10 @@ DEFAULT_CLUBHEAD_CG_DISTANCE = 0.85  # meters
 
 
 def calculate_moments_of_inertia(
-    clubhead_weight_g, shaft_weight_g, club_length_m, cg_distance_m
+    clubhead_weight_g: float,
+    shaft_weight_g: float,
+    club_length_m: float,
+    cg_distance_m: float,
 ) -> tuple[float, float]:
     """
     Calculate moments of inertia for golf club about two axes.
@@ -107,7 +110,9 @@ def calculate_moments_of_inertia(
     return I_alpha, I_gamma
 
 
-def universal_joint_transmission_ratio(phi_rad, delta_rad) -> tuple[float, float]:
+def universal_joint_transmission_ratio(
+    phi_rad: float, delta_rad: float
+) -> tuple[float, float]:
     """
     Calculate transmission ratios for a universal (Hooke/Cardan) joint.
 
@@ -148,7 +153,7 @@ def universal_joint_transmission_ratio(phi_rad, delta_rad) -> tuple[float, float
 
 
 def distribute_torque_by_grip_angle(
-    torque_transmitted, theta_grip_rad
+    torque_transmitted: float, theta_grip_rad: float
 ) -> tuple[float, float]:
     """
     Distribute transmitted torque to club axes based on grip angle.
@@ -172,10 +177,10 @@ def distribute_torque_by_grip_angle(
     return torque_alpha, torque_gamma
 
 
-class DiagramCanvas(FigureCanvas):
+class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
     """Canvas showing forearm, hand, and club with both angles"""
 
-    def __init__(self, grip_angle_deg, wrist_angle_deg) -> None:
+    def __init__(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
         """Initialize diagram canvas with grip and wrist angles."""
         self.figure = Figure(figsize=(12, 4))
         super().__init__(self.figure)
@@ -539,17 +544,23 @@ class DiagramCanvas(FigureCanvas):
         self.figure.tight_layout()
         self.draw()
 
-    def update_angles(self, grip_angle_deg, wrist_angle_deg) -> None:
+    def update_angles(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
         """Update angles and redraw"""
         self.grip_angle_deg = grip_angle_deg
         self.wrist_angle_deg = wrist_angle_deg
         self.update_diagram()
 
 
-class PlotCanvas(FigureCanvas):
+class PlotCanvas(FigureCanvas):  # type: ignore[misc]
     """Single plot canvas with selectable Y-axis and checkboxes"""
 
-    def __init__(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma) -> None:
+    def __init__(
+        self,
+        grip_angle_deg: float,
+        wrist_angle_deg: float,
+        I_alpha: float,
+        I_gamma: float,
+    ) -> None:
         """Initialize plot canvas with angles and inertia values."""
         self.figure = Figure(figsize=(10, 6))
         super().__init__(self.figure)
@@ -560,7 +571,7 @@ class PlotCanvas(FigureCanvas):
         self.wrist_angle_deg = wrist_angle_deg
         self.I_alpha = I_alpha
         self.I_gamma = I_gamma
-        self.polynomial_error = None  # Store polynomial evaluation errors
+        self.polynomial_error: str | None = None  # Store polynomial evaluation errors
         self.DEFAULT_POLYNOMIAL = "t**2 - t"  # Fallback polynomial expression
 
         # Generate sample input torque signal
@@ -676,14 +687,14 @@ class PlotCanvas(FigureCanvas):
 
         return torque
 
-    def set_noise_type(self, noise_type) -> None:
+    def set_noise_type(self, noise_type: str) -> None:
         """Set noise type and regenerate"""
         self.noise_type = noise_type
         self.input_torque = self.generate_sample_torque()
         if self.current_plot_type in ["Torque", "Angular Acceleration"]:
             self.update_plot()
 
-    def set_polynomial_expression(self, expression) -> None:
+    def set_polynomial_expression(self, expression: str) -> None:
         """Set polynomial expression and regenerate if polynomial type is selected"""
         self.polynomial_expression = expression
         if self.noise_type == "Polynomial":
@@ -720,7 +731,7 @@ class PlotCanvas(FigureCanvas):
         self.figure.tight_layout()
         self.draw()
 
-    def _plot_torque(self, theta_grip_rad, phi_wrist_rad) -> None:
+    def _plot_torque(self, theta_grip_rad: float, phi_wrist_rad: float) -> None:
         """Plot torque vs time"""
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
             phi_wrist_rad, theta_grip_rad
@@ -772,7 +783,7 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_xlabel("Time (s)", fontsize=10)
         self.ax.set_ylabel("Torque (N·m)", fontsize=10)
 
-    def _plot_acceleration(self, theta_grip_rad, phi_wrist_rad) -> None:
+    def _plot_acceleration(self, theta_grip_rad: float, phi_wrist_rad: float) -> None:
         """Plot angular acceleration vs time"""
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
             phi_wrist_rad, theta_grip_rad
@@ -819,7 +830,7 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_xlabel("Time (s)", fontsize=10)
         self.ax.set_ylabel("Angular Acceleration (rad/s²)", fontsize=10)
 
-    def _plot_transmission_sweep(self, theta_grip_rad) -> None:
+    def _plot_transmission_sweep(self, theta_grip_rad: float) -> None:
         """Plot transmission ratio vs wrist angle sweep"""
         phi_sweep = np.linspace(-60, 60, 200)
         phi_sweep_rad = np.radians(phi_sweep)
@@ -1731,7 +1742,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
                     scroll_bar.setValue(scroll_bar.value() - delta // 8)
                     return True  # Consume the event so sliders don't get it
         result = super().eventFilter(obj, event)
-        return bool(result)  # type: ignore[no-any-return]
+        return bool(result)
 
     def show_documentation(self) -> None:
         """Show documentation dialog"""
