@@ -19,7 +19,6 @@ Date: 2025-11-25
 """
 
 import sys
-from typing import Any, Optional
 
 import matplotlib
 import numpy as np
@@ -950,7 +949,7 @@ class PlotCanvas(FigureCanvas):
 class DocumentationDialog(QDialog):  # type: ignore[misc]
     """Dialog showing mathematical documentation"""
 
-    def __init__(self, parent: Optional[QWidget] = None) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         """Initialize documentation dialog."""
         super().__init__(parent)
         self.setWindowTitle("Universal Joint Model - Mathematics & Physics")
