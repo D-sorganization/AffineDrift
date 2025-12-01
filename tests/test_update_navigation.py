@@ -42,7 +42,7 @@ def test_update_navigation_replaces_nav_and_logo(tmp_path: Path) -> None:
 
     assert changed is True
     assert '<nav class="top-nav">' in updated
-    assert 'logo/Logo Transparent/1.png' in updated
+    assert "logo/Logo Transparent/1.png" in updated
     assert '<li><a href="articles.html">Articles</a></li>' in updated
 
 
@@ -55,7 +55,9 @@ def test_update_navigation_raises_for_missing_nav(tmp_path: Path) -> None:
         update_navigation(page)
 
 
-def test_main_reports_missing_files(tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+def test_main_reports_missing_files(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
     """Test that main reports missing files correctly."""
     missing = tmp_path / "does-not-exist.html"
     caplog.set_level("INFO")
@@ -64,4 +66,3 @@ def test_main_reports_missing_files(tmp_path: Path, caplog: pytest.LogCaptureFix
 
     assert exit_code == 1
     assert "Not found" in caplog.text
-
