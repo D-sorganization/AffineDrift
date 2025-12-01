@@ -49,7 +49,7 @@ def prompt_for_files():
         sys.exit(1)
 
 
-def latex_to_quarto_md(tex_text: str, fallback_title: str):
+def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, int]:
     r"""
     Convert a LaTeX article to Quarto markdown (.qmd) while preserving all body content.
     Only structure is changed:
