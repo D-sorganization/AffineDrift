@@ -2,319 +2,271 @@ name: Pull Request Quality Check
 
 on:
   pull_request:
-    branches: [ main, master, copilot/* ]
+    branches: [main, master]
+    # Add replicant branches if they exist:
+    # branches: [ main, master, claude/RepositoryName_Replicants ]
   push:
-    branches: [ main, master, copilot/* ]
+    branches: [main, master]
+    # Add replicant branches if they exist
+
+# Minimal permissions for security
+permissions:
+  contents: read
 
 jobs:
   quality-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
-      fail-fast: true
+      fail-fast: true # ✅ Always include
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Cache pip dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/*requirements*.txt', '**/pyproject.toml', '**/setup.py') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-${{ matrix.python-version }}-
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          # ✅ Comprehensive cache key pattern
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/*requirements*.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f tools/wrist-universal-joint/requirements.txt ]; then pip install -r tools/wrist-universal-joint/requirements.txt; fi
-        pip install ruff==0.5.0 mypy==1.10.0 black==24.4.2 pytest==8.3.3 pytest-cov==6.0.0
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Check both root and python/ subdirectory
+          if [ -f python/requirements.txt ]; then pip install -r python/requirements.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Skip pip install -e . for this repo (not a Python package, pyproject.toml is only for tool config)
+          # ✅ Pin tool versions
+          pip install ruff==0.5.0 mypy==1.10.0 black==24.4.2 pytest pytest-cov
 
-    - name: Check for placeholders and magic numbers
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking for placeholders and magic numbers..."
-        if [ -f scripts/quality-check.py ]; then
-          python scripts/quality-check.py
-        else
-          echo "⚠️ No quality check script found, skipping..."
-        fi
+      - name: Run MATLAB Quality Check (Static Analysis)
+        id: matlab-check
+        continue-on-error: true # Non-blocking due to MATLAB license restrictions
+        run: |
+          if [ -f tools/matlab_utilities/scripts/matlab_quality_check.py ]; then
+            echo "=========================================="
+            echo "MATLAB Code Quality Checks"
+            echo "=========================================="
+            python tools/matlab_utilities/scripts/matlab_quality_check.py --output-format json > matlab_quality_results.json || true
+            python tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text || echo "⚠️  Quality issues found - see report above (non-blocking)"
+          else
+            echo "⚠️  MATLAB quality check script not found - skipping"
+          fi
 
-    - name: Lint with Ruff
-      run: |
-        echo "🔍 Running Ruff linter..."
-        if [ -f ruff.toml ]; then
-          ruff check .
-        else
-          ruff check . --select ALL
-        fi
+      - name: Upload MATLAB Quality Report
+        if: always() && steps.matlab-check.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: matlab-quality-report-py${{ matrix.python-version }}
+          path: matlab_quality_results.json
+          retention-days: 30
+          if-no-files-found: ignore
 
-    - name: Type check with MyPy
-      continue-on-error: true
-      run: |
-        echo "🔍 Running MyPy type checker..."
-        if [ -f mypy.ini ]; then
-          mypy . --config-file mypy.ini
-        else
-          mypy . --ignore-missing-imports
-        fi
+      - name: Check for placeholders and magic numbers
+        run: |
+          echo "🔍 Checking for placeholders and magic numbers..."
+          # ✅ Check both possible script locations
+          if [ -f scripts/quality-check.py ]; then
+            python scripts/quality-check.py
+          elif [ -f quality_check_script.py ]; then
+            python quality_check_script.py
+          else
+            echo "⚠️ No quality check script found, skipping..."
+          fi
 
-    - name: Format check with Black
-      run: |
-        echo "🔍 Checking code formatting with Black..."
-        find content -name "*.py" -not -path "*/Archive/*" -not -path "*/Drafts/*" | xargs black --check --diff || true
-        find tools -name "*.py" | xargs black --check --diff || true
+      - name: Lint with Ruff
+        run: |
+          echo "🔍 Running Ruff linter..."
+          if [ -f ruff.toml ]; then
+            # ✅ Respect config file, don't override
+            ruff check .
+          else
+            # ✅ Fallback with explicit rules
+            ruff check . --select ALL
+          fi
 
-    - name: Run tests
-      run: |
-        echo "🧪 Running tests..."
-        if [ -d tests ]; then
-          export PYTHONPATH="${{ github.workspace }}"
-          pytest tests/ --cov=. --cov-report=xml --cov-report=term-missing
-        else
-          echo "⚠️ No tests directory found, skipping tests"
-        fi
+      - name: Type check with MyPy
+        run: |
+          echo "🔍 Running MyPy type checker..."
+          # Exclude website content directories from type checking
+          EXCLUDE_PATTERN=".*(content|articles|docs|archive|legacy-pages|_templates|logo|pics|static|qmd|\.quarto|wrist-universal-joint).*|.*-.*"
+          if [ -f mypy.ini ]; then
+            mypy . --config-file mypy.ini --exclude "$EXCLUDE_PATTERN"
+          elif [ -f pyproject.toml ] && grep -q "\[tool.mypy\]" pyproject.toml; then
+            mypy . --exclude "$EXCLUDE_PATTERN"
+          else
+            # ✅ Non-strict fallback to avoid conflicts, exclude website content and dirs with hyphens
+            mypy . --ignore-missing-imports --exclude "$EXCLUDE_PATTERN"
+          fi
 
-    - name: Check for coverage file
-      id: coverage-check
-      run: |
-        if find . -name 'coverage.xml' -type f | grep -q .; then
-          echo "exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "exists=false" >> $GITHUB_OUTPUT
-        fi
+      - name: Format check with Black
+        run: |
+          echo "🔍 Checking code formatting with Black..."
+          # ✅ Check source directories explicitly, exclude website content
+          if [ -d python/src ]; then
+            if [ -d python/tests ]; then
+              black --check --diff python/src python/tests
+            else
+              black --check --diff python/src
+            fi
+          elif [ -d python ]; then
+            black --check --diff python/
+          elif [ -d src ]; then
+            if [ -d tests ]; then
+              black --check --diff src/ tests/
+            else
+              black --check --diff src/
+            fi
+          else
+            # Explicitly check only source code directories, exclude website content
+            DIRS_TO_CHECK=""
+            [ -d scripts ] && DIRS_TO_CHECK="$DIRS_TO_CHECK scripts"
+            [ -d tools ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tools"
+            [ -d tests ] && DIRS_TO_CHECK="$DIRS_TO_CHECK tests"
+            if [ -n "$DIRS_TO_CHECK" ]; then
+              # pyproject.toml handles exclusions (website content, tools/wrist-universal-joint, etc.)
+              black --check --diff $DIRS_TO_CHECK
+            else
+              echo "⚠️ No source directories found to check"
+            fi
+          fi
 
-    - name: Upload coverage to Codecov
-      if: steps.coverage-check.outputs.exists == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-      uses: codecov/codecov-action@v4
-      with:
-        files: '**/coverage.xml'
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run tests
+        run: |
+          echo "🧪 Running tests..."
+          # ✅ Detect source directory for accurate coverage
+          if [ -d python/src ]; then
+            COV_TARGET="python/src"
+          elif [ -d python ]; then
+            COV_TARGET="python"
+          elif [ -d src ]; then
+            COV_TARGET="src"
+          else
+            COV_TARGET="."
+          fi
 
-  quarto-quality-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+          if [ -f pytest.ini ]; then
+            pytest --cov="$COV_TARGET" --cov-report=xml --cov-report=term-missing
+          elif [ -d python/tests ]; then
+            cd python
+            if [ -d src ]; then
+              pytest tests/ --cov=src --cov-report=xml --cov-report=term-missing
+            else
+              pytest tests/ --cov=. --cov-report=xml --cov-report=term-missing
+            fi
+            cd ..
+          elif [ -d tests ]; then
+            pytest tests/ --cov="$COV_TARGET" --cov-report=xml --cov-report=term-missing
+          else
+            echo "⚠️ No tests directory found, skipping tests"
+          fi
 
-    - name: Setup Quarto
-      uses: quarto-dev/quarto-actions/setup@v2
+      - name: Check for coverage file
+        id: coverage-check
+        run: |
+          # ✅ Check multiple possible locations
+          if [ -f coverage.xml ] || [ -f python/coverage.xml ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
-    - name: Check Quarto document structure
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking Quarto document structure..."
-        if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-          quarto check || echo "⚠️ Quarto structure check completed with warnings"
-        else
-          echo "⚠️ No Quarto project file found"
-        fi
-
-    - name: Validate Quarto syntax
-      continue-on-error: true
-      run: |
-        echo "🔍 Validating Quarto syntax..."
-        # Check for .qmd files and validate basic syntax
-        find . -name "*.qmd" -not -path "./_site/*" -not -path "./.quarto/*" -not -path "./docs/*" | while read file; do
-          echo "Checking $file..."
-          quarto render "$file" --to html --no-execute || echo "⚠️ Issues in $file"
-        done
-
-    - name: Check equation rendering
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking equation rendering..."
-        if [ -f scripts/check-equations.py ]; then
-          python scripts/check-equations.py || echo "⚠️ Equation check completed with warnings"
-        else
-          echo "⚠️ No equation check script found, skipping..."
-        fi
-
-    - name: Check for broken links in Quarto docs
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking for broken links..."
-        # This is a placeholder - can be enhanced with link checking tools
-        echo "⚠️ Link checking not yet implemented"
-
-  documentation-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Check documentation links
-      run: |
-        echo "📚 Checking documentation..."
-        if [ -f README.md ]; then
-          echo "✅ README.md found"
-        else
-          echo "⚠️ No README.md found"
-        fi
-
-    - name: Check for docstrings
-      continue-on-error: true
-      run: |
-        echo "📝 Checking for docstrings..."
-        pip install pydocstyle==6.3.0
-        find content -name "*.py" -not -path "*/Archive/*" -not -path "*/Drafts/*" | xargs pydocstyle || echo "⚠️ Docstring check completed with warnings"
-        find tools -name "*.py" | xargs pydocstyle || echo "⚠️ Docstring check completed with warnings"
+      - name: Upload coverage to Codecov
+        if: steps.coverage-check.outputs.exists == 'true'
+        uses: codecov/codecov-action@v4
+        with:
+          # ✅ Wildcard pattern for flexibility
+          files: "**/coverage.xml"
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          # ✅ Always include token
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   security-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      # ✅ Always set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Run Bandit security check
-      continue-on-error: true
-      run: |
-        pip install bandit==1.7.7
-        if [ -d content ]; then
-          bandit -r content --exclude '**/Archive/**','**/Drafts/**','**/tests/**' -f json -o bandit-report.json || true
-        fi
-        if [ -d tools ]; then
-          bandit -r tools --exclude '**/tests/**' -f json -o bandit-report.json || true
-        fi
+      - name: Run Bandit security check
+        id: bandit-check
+        # ✅ Use continue-on-error instead of || true
+        continue-on-error: true
+        run: |
+          pip install bandit
+          # ✅ Exclude test directories, target source code only
+          if [ -d python/src ]; then
+            bandit -r python/src -x python/tests -f json -o bandit-report.json
+          elif [ -d python ]; then
+            bandit -r python -x python/tests -f json -o bandit-report.json
+          elif [ -d src ]; then
+            bandit -r src -x tests -f json -o bandit-report.json
+          else
+            bandit -r . -x tests -f json -o bandit-report.json
+          fi
 
-    - name: Upload Bandit results
-      uses: actions/upload-artifact@v4
-      with:
-        name: bandit-report
-        path: bandit-report.json
-        if-no-files-found: ignore
+      - name: Upload Bandit results
+        if: always() && steps.bandit-check.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+          # ✅ Handle missing files gracefully
+          if-no-files-found: ignore
 
-  html-css-js-quality:
+  documentation-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      # ✅ Always set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install validation tools
-      run: |
-        npm install -g html-validate@latest
-        npm install -g stylelint@latest stylelint-config-standard@latest
-        npm install -g eslint@latest
-        npm install -g prettier@latest
-
-    - name: Validate HTML quality
-      continue-on-error: true
-      run: |
-        echo "🔍 Validating HTML quality..."
-        find . -name "*.html" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
-          # Check for missing alt attributes
-          if grep -q '<img' "$file" && ! grep -q 'alt=' "$file"; then
-            echo "⚠️ Warning: Images without alt attributes in $file"
+      - name: Check documentation links
+        run: |
+          echo "📚 Checking documentation..."
+          if [ -f README.md ]; then
+            echo "✅ README.md found"
+          else
+            echo "⚠️ No README.md found"
           fi
-          # Check for missing lang attribute
-          if ! grep -q '<html.*lang=' "$file"; then
-            echo "⚠️ Warning: Missing lang attribute in $file"
+
+      - name: Check for docstrings
+        # ✅ Use continue-on-error instead of || echo
+        continue-on-error: true
+        run: |
+          echo "📝 Checking for docstrings..."
+          pip install pydocstyle
+          # ✅ Check source directories only
+          if [ -d python/src ]; then
+            pydocstyle python/src/
+          elif [ -d python ]; then
+            pydocstyle python/
+          elif [ -d src ]; then
+            pydocstyle src/
+          else
+            pydocstyle .
           fi
-          # Validate HTML
-          npx html-validate "$file" || echo "⚠️ HTML validation issues in $file"
-        done
-
-    - name: Check CSS quality
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking CSS quality..."
-        find . -name "*.css" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" | while read file; do
-          npx stylelint "$file" --config-basedir . || echo "⚠️ CSS issues in $file"
-          npx prettier --check "$file" || echo "⚠️ CSS formatting issues in $file"
-        done
-
-    - name: Check JavaScript quality
-      continue-on-error: true
-      run: |
-        echo "🔍 Checking JavaScript quality..."
-        find . -name "*.js" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "./node_modules/*" | while read file; do
-          # Syntax check
-          node -c "$file" || echo "⚠️ JavaScript syntax error in $file"
-          # Format check
-          npx prettier --check "$file" || echo "⚠️ JavaScript formatting issues in $file"
-          # Check for console.log
-          if grep -q "console.log" "$file"; then
-            echo "⚠️ Warning: console.log found in $file"
-          fi
-          # Check for debugger
-          if grep -q "debugger" "$file"; then
-            echo "⚠️ Warning: debugger statement found in $file"
-          fi
-        done
-
-  matlab-quality-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Check for MATLAB files
-      id: matlab-check
-      run: |
-        if find . -name "*.m" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "*/Archive/*" -not -path "*/Drafts/*" | grep -q .; then
-          echo "exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "exists=false" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Install MATLAB quality check dependencies
-      if: steps.matlab-check.outputs.exists == 'true'
-      run: |
-        python -m pip install --upgrade pip
-        pip install regex
-
-    - name: Run MATLAB quality checks
-      if: steps.matlab-check.outputs.exists == 'true'
-      continue-on-error: true
-      run: |
-        echo "🔍 Running MATLAB quality checks..."
-        find . -name "*.m" -not -path "./_site/*" -not -path "./docs/*" -not -path "./.git/*" -not -path "./.quarto/*" -not -path "*/Archive/*" -not -path "*/Drafts/*" | while read file; do
-          filename=$(basename "$file" .m)
-          echo "Checking $file..."
-          # Check function name matches filename
-          if grep -q "^function" "$file"; then
-            if ! grep -q "^function.*$filename" "$file"; then
-              echo "⚠️ Warning: Function name may not match filename in $file"
-            fi
-          fi
-          # Check for TODO/FIXME
-          if grep -q "TODO\|FIXME" "$file"; then
-            echo "⚠️ Warning: TODO/FIXME found in $file"
-          fi
-          # Check for clear all/clc in library code
-          if grep -q "clear all\|clc" "$file" && ! grep -q "script\|main" "$file"; then
-            echo "⚠️ Warning: clear all/clc found in library code: $file"
-          fi
-          # Check for eval
-          if grep -q "eval(" "$file"; then
-            echo "⚠️ Warning: eval() found in $file (security risk)"
-          fi
-        done || echo "⚠️ MATLAB quality checks completed with warnings"
-

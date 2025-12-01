@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 
-def find_tex_files(paths):
+def find_tex_files(paths: list[str]) -> list[Path]:
     """
     Find all .tex files in the given paths (files or directories).
     Returns a list of Path objects.
@@ -15,7 +15,7 @@ def find_tex_files(paths):
             print(f"WARNING: {path_str} not found, skipping.")
             continue
 
-        if path.is_file() and path.suffix == '.tex':
+        if path.is_file() and path.suffix == ".tex":
             tex_files.append(path)
         elif path.is_dir():
             # Find all .tex files in directory
@@ -25,16 +25,18 @@ def find_tex_files(paths):
 
     return tex_files
 
-def prompt_for_files():
+
+def prompt_for_files() -> list[Path]:
     """Fallback to GUI if no command-line arguments provided."""
     try:
         import tkinter as tk
         from tkinter import filedialog
+
         root = tk.Tk()
         root.withdraw()
         file_paths = filedialog.askopenfilenames(
             title="Select LaTeX files to convert",
-            filetypes=[("LaTeX files", "*.tex"), ("All files", "*.*")]
+            filetypes=[("LaTeX files", "*.tex"), ("All files", "*.*")],
         )
         return [Path(f) for f in file_paths]
     except ImportError:
@@ -42,7 +44,8 @@ def prompt_for_files():
         print("Usage: python latex_to_quarto.py <folder1> [folder2] ... [file1.tex] ...")
         sys.exit(1)
 
-def latex_to_quarto_md(tex_text: str, fallback_title: str):
+
+def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, int]:
     r"""
     Convert a LaTeX article to Quarto markdown (.qmd) while preserving all body content.
     Only structure is changed:
@@ -54,60 +57,62 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
     original_word_count = len(tex_text.split())
 
     # Extract title
-    m = re.search(r'\\title\{([^}]*)\}', tex_text)
+    m = re.search(r"\\title\{([^}]*)\}", tex_text)
     title = m.group(1).strip() if m else fallback_title
 
     # Extract abstract
-    m_abs = re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}', tex_text, re.DOTALL)
+    m_abs = re.search(r"\\begin\{abstract\}(.*?)\\end\{abstract\}", tex_text, re.DOTALL)
     abstract = m_abs.group(1).strip() if m_abs else None
 
     # Extract body between \begin{document} and \end{document}
-    m_begin = re.search(r'\\begin\{document\}', tex_text)
-    m_end = re.search(r'\\end\{document\}', tex_text)
+    m_begin = re.search(r"\\begin\{document\}", tex_text)
+    m_end = re.search(r"\\end\{document\}", tex_text)
     start = m_begin.end() if m_begin else 0
     end = m_end.start() if m_end else len(tex_text)
     body = tex_text[start:end]
 
     # Remove LaTeX document structure commands (more comprehensive)
-    body = re.sub(r'\\maketitle', '', body)
-    body = re.sub(r'\\title\{[^}]*\}', '', body)
-    body = re.sub(r'\\author\{[^}]*\}', '', body)
-    body = re.sub(r'\\date\{[^}]*\}', '', body)
+    body = re.sub(r"\\maketitle", "", body)
+    body = re.sub(r"\\title\{[^}]*\}", "", body)
+    body = re.sub(r"\\author\{[^}]*\}", "", body)
+    body = re.sub(r"\\date\{[^}]*\}", "", body)
 
     # Remove abstract from body (if not already extracted)
-    body = re.sub(r'\\begin\{abstract\}.*?\\end\{abstract\}', '', body, flags=re.DOTALL)
+    body = re.sub(r"\\begin\{abstract\}.*?\\end\{abstract\}", "", body, flags=re.DOTALL)
 
     # Remove \tableofcontents and set toc: true
     toc = False
-    if re.search(r'\\tableofcontents', body):
+    if re.search(r"\\tableofcontents", body):
         toc = True
-        body = re.sub(r'\\tableofcontents', '', body)
+        body = re.sub(r"\\tableofcontents", "", body)
 
     # Remove LaTeX comments (lines starting with %)
-    body = re.sub(r'^%.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r"^%.*$", "", body, flags=re.MULTILINE)
     # Remove comment blocks
-    body = re.sub(r'%.*', '', body)
+    body = re.sub(r"%.*", "", body)
 
     # Remove \appendix command (will be converted to heading later)
-    body = re.sub(r'\\appendix\b', '', body)
+    body = re.sub(r"\\appendix\b", "", body)
 
     # Convert section commands to markdown headings
-    body = re.sub(r'\\section\*?\{([^}]*)\}', r'\n\n# \1\n\n', body)
-    body = re.sub(r'\\subsection\*?\{([^}]*)\}', r'\n\n## \1\n\n', body)
-    body = re.sub(r'\\subsubsection\*?\{([^}]*)\}', r'\n\n### \1\n\n', body)
+    body = re.sub(r"\\section\*?\{([^}]*)\}", r"\n\n# \1\n\n", body)
+    body = re.sub(r"\\subsection\*?\{([^}]*)\}", r"\n\n## \1\n\n", body)
+    body = re.sub(r"\\subsubsection\*?\{([^}]*)\}", r"\n\n### \1\n\n", body)
 
     # Convert \appendix to Quarto appendix heading
-    body = re.sub(r'\\appendix', '\n\n# Appendix {.appendix}\n\n', body)
+    body = re.sub(r"\\appendix", "\n\n# Appendix {.appendix}\n\n", body)
 
     body = body.strip()
 
     # Build Quarto markdown with YAML front matter
-    yaml = f"---\ntitle: \"{title}\"\nformat:\n  html:"
+    yaml = f'---\ntitle: "{title}"\nformat:\n  html:'
     if toc:
         yaml += "\n    toc: true"
     yaml += "\n"
     if abstract:
-        yaml += f"abstract: |\n  {abstract.replace('\n', '\n  ')}\n"
+        # Replace newlines with indented newlines (can't use backslash in f-string expression)
+        indented_abstract = abstract.replace("\n", "\n  ")
+        yaml += f"abstract: |\n  {indented_abstract}\n"
     yaml += "---\n\n"
 
     md = f"{yaml}{body}\n"
@@ -115,7 +120,9 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str):
     md_word_count = len(md.split())
     return md, original_word_count, md_word_count
 
-def main():
+
+def main() -> None:
+    """Main entry point for LaTeX to Quarto converter."""
     # Check for command-line arguments
     if len(sys.argv) > 1:
         # Use command-line arguments (folders or files)
@@ -150,6 +157,7 @@ def main():
             print()
 
     print(f"Conversion complete! Processed {len(tex_files)} file(s).")
+
 
 if __name__ == "__main__":
     main()

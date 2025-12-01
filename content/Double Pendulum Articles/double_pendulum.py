@@ -15,27 +15,30 @@ This file is intended as a standalone module that you can
 import into a Streamlit app or run directly.
 """
 
+from collections.abc import Callable
+
 import numpy as np
-from scipy.integrate import solve_ivp
+from scipy.integrate import OdeResult, solve_ivp
 
 # ---------------------------------------------------------------------------
 # Physical parameters for the double pendulum
 # ---------------------------------------------------------------------------
 
-m1 = 1.0   # mass of link 1
-m2 = 1.0   # mass of link 2
-l1 = 1.0   # length of link 1
-l2 = 1.0   # length of link 2
-c1 = 0.5   # COM distance of link 1 from joint 1
-c2 = 0.5   # COM distance of link 2 from joint 2
+m1 = 1.0  # mass of link 1
+m2 = 1.0  # mass of link 2
+l1 = 1.0  # length of link 1
+l2 = 1.0  # length of link 2
+c1 = 0.5  # COM distance of link 1 from joint 1
+c2 = 0.5  # COM distance of link 2 from joint 2
 I1 = 0.05  # inertia of link 1 about its COM (out of plane)
 I2 = 0.05  # inertia of link 2 about its COM (out of plane)
-g  = 9.81  # gravity
+GRAVITY_M_S2 = 9.81  # gravity in m/s²
 
 
 # ---------------------------------------------------------------------------
 # Inertia matrix M(q)
 # ---------------------------------------------------------------------------
+
 
 def M_matrix(q: np.ndarray) -> np.ndarray:
     """
@@ -59,13 +62,13 @@ def M_matrix(q: np.ndarray) -> np.ndarray:
     M21 = M12
     M22 = I2 + m2 * c2**2
 
-    return np.array([[M11, M12],
-                     [M21, M22]], dtype=float)
+    return np.array([[M11, M12], [M21, M22]], dtype=float)
 
 
 # ---------------------------------------------------------------------------
 # Coriolis / centrifugal term C(q, qdot) * qdot
 # ---------------------------------------------------------------------------
+
 
 def C_times_qdot(q: np.ndarray, qdot: np.ndarray) -> np.ndarray:
     """
@@ -100,6 +103,7 @@ def C_times_qdot(q: np.ndarray, qdot: np.ndarray) -> np.ndarray:
 # Gravity term g(q)
 # ---------------------------------------------------------------------------
 
+
 def g_vector(q: np.ndarray) -> np.ndarray:
     """
     Gravity torque vector g(q) for the double pendulum.
@@ -116,8 +120,10 @@ def g_vector(q: np.ndarray) -> np.ndarray:
     """
     q1, q2 = q
 
-    g1 = (m1 * c1 + m2 * l1) * g * np.sin(q1) + m2 * c2 * g * np.sin(q1 + q2)
-    g2 = m2 * c2 * g * np.sin(q1 + q2)
+    g1 = (m1 * c1 + m2 * l1) * GRAVITY_M_S2 * np.sin(
+        q1
+    ) + m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
+    g2 = m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
 
     return np.array([g1, g2], dtype=float)
 
@@ -125,6 +131,7 @@ def g_vector(q: np.ndarray) -> np.ndarray:
 # ---------------------------------------------------------------------------
 # Natural torque field tau_nat(q, qdot, qddot)
 # ---------------------------------------------------------------------------
+
 
 def tau_natural(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.ndarray:
     """
@@ -159,7 +166,10 @@ def tau_natural(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.ndarra
 # State dynamics: x_dot = f(x, u)
 # ---------------------------------------------------------------------------
 
-def double_pendulum_dynamics(t: float, x: np.ndarray, u_func) -> np.ndarray:
+
+def double_pendulum_dynamics(
+    t: float, x: np.ndarray, u_func: Callable[[float, np.ndarray], np.ndarray]
+) -> np.ndarray:
     """
     State-space dynamics for the double pendulum.
 
@@ -202,6 +212,7 @@ def double_pendulum_dynamics(t: float, x: np.ndarray, u_func) -> np.ndarray:
 # Example input: simple PD around q = [0, 0]
 # ---------------------------------------------------------------------------
 
+
 def u_pd(t: float, x: np.ndarray, kp: float = 10.0, kd: float = 2.0) -> np.ndarray:
     """
     Simple PD control law around the downward configuration q = [0, 0].
@@ -239,14 +250,17 @@ def u_pd(t: float, x: np.ndarray, kp: float = 10.0, kd: float = 2.0) -> np.ndarr
 # Trajectory post-processing: reconstruct tau_nat(t)
 # ---------------------------------------------------------------------------
 
-def compute_tau_natural_trajectory(sol, u_func):
+
+def compute_tau_natural_trajectory(
+    sol: OdeResult, u_func: Callable[[float, np.ndarray], np.ndarray]
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Given a solution object `sol` from solve_ivp and an input function u_func,
     compute tau_nat(t) at each time sample.
 
     Parameters
     ----------
-    sol : OdeSolution
+    sol : OdeResult
         Solution object returned by solve_ivp.
     u_func : callable
         Function u_func(t, x) -> u used in the simulation.
@@ -287,6 +301,7 @@ def compute_tau_natural_trajectory(sol, u_func):
 # End-effector Jacobian and wrench reconstruction (optional)
 # ---------------------------------------------------------------------------
 
+
 def J_end_effector(q: np.ndarray) -> np.ndarray:
     """
     Planar end-effector Jacobian for the tip of link 2.
@@ -311,14 +326,10 @@ def J_end_effector(q: np.ndarray) -> np.ndarray:
 
     dx_dq1 = -l1 * s1 - l2 * s12
     dx_dq2 = -l2 * s12
-    dy_dq1 =  l1 * c1 + l2 * c12
-    dy_dq2 =  l2 * c12
+    dy_dq1 = l1 * c1 + l2 * c12
+    dy_dq2 = l2 * c12
 
-    J = np.array([
-        [dx_dq1, dx_dq2],
-        [dy_dq1, dy_dq2],
-        [1.0,    1.0]
-    ], dtype=float)
+    J = np.array([[dx_dq1, dx_dq2], [dy_dq1, dy_dq2], [1.0, 1.0]], dtype=float)
     return J
 
 
@@ -375,7 +386,8 @@ def natural_wrench(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.nda
 # Example usage / quick test
 # ---------------------------------------------------------------------------
 
-def run_example():
+
+def run_example() -> None:
     """
     Run a simple simulation with PD input and print some diagnostics.
     """
@@ -391,13 +403,12 @@ def run_example():
         y0=x0,
         t_eval=t_eval,
         rtol=1e-8,
-        atol=1e-8
+        atol=1e-8,
     )
 
     # Compute natural torque trajectory
     t_samples, tau_nat_traj = compute_tau_natural_trajectory(
-        sol,
-        lambda t, x: u_pd(t, x)
+        sol, lambda t, x: u_pd(t, x)
     )
 
     # Simple console output

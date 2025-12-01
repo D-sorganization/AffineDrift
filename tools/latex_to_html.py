@@ -11,60 +11,63 @@ from pathlib import Path
 
 
 class LaTeXToHTMLConverter:
-    def __init__(self, template_file=None):
+    def __init__(self, template_file: str | Path | None = None) -> None:
         """Initialize converter with optional custom template"""
         self.template_file = template_file
 
-    def read_latex_file(self, filepath):
+    def read_latex_file(self, filepath: str | Path) -> str:
         """Read LaTeX file content"""
-        with open(filepath, encoding='utf-8') as f:
+        with open(filepath, encoding="utf-8") as f:
             return f.read()
 
-    def extract_title(self, latex_content):
+    def extract_title(self, latex_content: str) -> str:
         """Extract title from LaTeX content"""
-        title_match = re.search(r'\\title\{([^}]+)\}', latex_content, re.DOTALL)
+        title_match = re.search(r"\\title\{([^}]+)\}", latex_content, re.DOTALL)
         if title_match:
             title = title_match.group(1)
             # Remove LaTeX commands like \textbf{}, \\[...], etc.
-            title = re.sub(r'\\textbf\{([^}]+)\}', r'\1', title)
-            title = re.sub(r'\\\\\[[^\]]+\]', ' ', title)
-            title = re.sub(r'\\\\', ' ', title)
+            title = re.sub(r"\\textbf\{([^}]+)\}", r"\1", title)
+            title = re.sub(r"\\\\\[[^\]]+\]", " ", title)
+            title = re.sub(r"\\\\", " ", title)
             return title.strip()
         return "Untitled Article"
 
-    def extract_sections(self, latex_content):
+    def extract_sections(self, latex_content: str) -> str:
         """Extract sections from LaTeX content"""
         # Remove everything before \begin{document}
-        doc_match = re.search(r'\\begin\{document\}(.+)\\end\{document\}', latex_content, re.DOTALL)
+        doc_match = re.search(r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL)
         if doc_match:
             content = doc_match.group(1)
         else:
             content = latex_content
 
         # Remove \maketitle
-        content = re.sub(r'\\maketitle', '', content)
+        content = re.sub(r"\\maketitle", "", content)
 
         return content
 
-    def convert_latex_to_html(self, latex_content):
+    def convert_latex_to_html(self, latex_content: str) -> str:
         """Convert LaTeX content to HTML"""
         html = latex_content
 
         # Convert abstract environment
-        html = re.sub(r'\\begin\{abstract\}(.*?)\\end\{abstract\}',
-                     r'<div class="abstract-section">\n<h2>Abstract</h2>\n<p>\1</p>\n</div>',
-                     html, flags=re.DOTALL)
+        html = re.sub(
+            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
+            r'<div class="abstract-section">\n<h2>Abstract</h2>\n<p>\1</p>\n</div>',
+            html,
+            flags=re.DOTALL,
+        )
 
         # Convert sections
-        html = re.sub(r'\\section\{([^}]+)\}', r'<h2>\1</h2>', html)
-        html = re.sub(r'\\subsection\{([^}]+)\}', r'<h3>\1</h3>', html)
-        html = re.sub(r'\\subsubsection\{([^}]+)\}', r'<h4>\1</h4>', html)
+        html = re.sub(r"\\section\{([^}]+)\}", r"<h2>\1</h2>", html)
+        html = re.sub(r"\\subsection\{([^}]+)\}", r"<h3>\1</h3>", html)
+        html = re.sub(r"\\subsubsection\{([^}]+)\}", r"<h4>\1</h4>", html)
 
         # Convert text formatting
-        html = re.sub(r'\\textbf\{([^}]+)\}', r'<strong>\1</strong>', html)
-        html = re.sub(r'\\textit\{([^}]+)\}', r'<em>\1</em>', html)
-        html = re.sub(r'\\emph\{([^}]+)\}', r'<em>\1</em>', html)
-        html = re.sub(r'\\texttt\{([^}]+)\}', r'<code>\1</code>', html)
+        html = re.sub(r"\\textbf\{([^}]+)\}", r"<strong>\1</strong>", html)
+        html = re.sub(r"\\textit\{([^}]+)\}", r"<em>\1</em>", html)
+        html = re.sub(r"\\emph\{([^}]+)\}", r"<em>\1</em>", html)
+        html = re.sub(r"\\texttt\{([^}]+)\}", r"<code>\1</code>", html)
 
         # Convert itemize/enumerate environments
         html = self.convert_lists(html)
@@ -73,20 +76,24 @@ class LaTeXToHTMLConverter:
         html = self.convert_equations(html)
 
         # Convert align environments
-        html = re.sub(r'\\begin\{align\}', r'\\begin{align}', html)
-        html = re.sub(r'\\end\{align\}', r'\\end{align}', html)
+        html = re.sub(r"\\begin\{align\}", r"\\begin{align}", html)
+        html = re.sub(r"\\end\{align\}", r"\\end{align}", html)
 
         # Convert figure references
-        html = re.sub(r'\\cref\{([^}]+)\}', r'Figure \1', html)
-        html = re.sub(r'\\ref\{([^}]+)\}', r'\1', html)
+        html = re.sub(r"\\cref\{([^}]+)\}", r"Figure \1", html)
+        html = re.sub(r"\\ref\{([^}]+)\}", r"\1", html)
 
         # Convert quotes
-        html = re.sub(r'``', r'"', html)
+        html = re.sub(r"``", r'"', html)
         html = re.sub(r"''", r'"', html)
 
         # Convert URLs
-        html = re.sub(r'\\url\{([^}]+)\}', r'<a href="\1" target="_blank">\1</a>', html)
-        html = re.sub(r'\\href\{([^}]+)\}\{([^}]+)\}', r'<a href="\1" target="_blank">\2</a>', html)
+        html = re.sub(r"\\url\{([^}]+)\}", r'<a href="\1" target="_blank">\1</a>', html)
+        html = re.sub(
+            r"\\href\{([^}]+)\}\{([^}]+)\}",
+            r'<a href="\1" target="_blank">\2</a>',
+            html,
+        )
 
         # Remove remaining LaTeX commands that don't need conversion
         html = self.clean_latex_commands(html)
@@ -96,49 +103,72 @@ class LaTeXToHTMLConverter:
 
         return html
 
-    def convert_equations(self, content):
+    def convert_equations(self, content: str) -> str:
         """Convert LaTeX equation environments to MathJax-friendly format"""
         # Display equations
-        content = re.sub(r'\\begin\{equation\}(.*?)\\end\{equation\}', r'<div class="equation">\n\\[\1\\]\n</div>', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{equation\}(.*?)\\end\{equation\}",
+            r'<div class="equation">\n\\[\1\\]\n</div>',
+            content,
+            flags=re.DOTALL,
+        )
 
         # Already wrapped equations
-        content = re.sub(r'\\\[(.*?)\\\]', r'<div class="equation">\n\\[\1\\]\n</div>', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\\[(.*?)\\\]",
+            r'<div class="equation">\n\\[\1\\]\n</div>',
+            content,
+            flags=re.DOTALL,
+        )
 
         # Inline equations with $
         # Leave them as-is for MathJax
 
         return content
 
-    def convert_lists(self, content):
+    def convert_lists(self, content: str) -> str:
         """Convert LaTeX lists to HTML lists"""
-        # Itemize (unordered lists)
-        def replace_itemize(match):
-            items = match.group(1)
-            items = re.sub(r'\\item\s+', '<li>', items)
-            items = re.sub(r'\\item\s*$', '<li>', items, flags=re.MULTILINE)
-            # Close li tags
-            items = re.sub(r'(<li>.*?)(?=<li>|$)', r'\1</li>', items, flags=re.DOTALL)
-            return f'<ul>\n{items}\n</ul>'
 
-        content = re.sub(r'\\begin\{itemize\}(.*?)\\end\{itemize\}', replace_itemize, content, flags=re.DOTALL)
+        # Itemize (unordered lists)
+        def replace_itemize(match: re.Match[str]) -> str:
+            """Replace itemize environment with HTML unordered list."""
+            items = match.group(1)
+            items = re.sub(r"\\item\s+", "<li>", items)
+            items = re.sub(r"\\item\s*$", "<li>", items, flags=re.MULTILINE)
+            # Close li tags
+            items = re.sub(r"(<li>.*?)(?=<li>|$)", r"\1</li>", items, flags=re.DOTALL)
+            return f"<ul>\n{items}\n</ul>"
+
+        content = re.sub(
+            r"\\begin\{itemize\}(.*?)\\end\{itemize\}",
+            replace_itemize,
+            content,
+            flags=re.DOTALL,
+        )
 
         # Enumerate (ordered lists)
-        def replace_enumerate(match):
+        def replace_enumerate(match: re.Match[str]) -> str:
+            """Replace enumerate environment with HTML ordered list."""
             items = match.group(1)
-            items = re.sub(r'\\item\s+', '<li>', items)
-            items = re.sub(r'\\item\s*$', '<li>', items, flags=re.MULTILINE)
+            items = re.sub(r"\\item\s+", "<li>", items)
+            items = re.sub(r"\\item\s*$", "<li>", items, flags=re.MULTILINE)
             # Close li tags
-            items = re.sub(r'(<li>.*?)(?=<li>|$)', r'\1</li>', items, flags=re.DOTALL)
-            return f'<ol>\n{items}\n</ol>'
+            items = re.sub(r"(<li>.*?)(?=<li>|$)", r"\1</li>", items, flags=re.DOTALL)
+            return f"<ol>\n{items}\n</ol>"
 
-        content = re.sub(r'\\begin\{enumerate\}(.*?)\\end\{enumerate\}', replace_enumerate, content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
+            replace_enumerate,
+            content,
+            flags=re.DOTALL,
+        )
 
         return content
 
-    def convert_paragraphs(self, content):
+    def convert_paragraphs(self, content: str) -> str:
         """Convert LaTeX paragraphs to HTML paragraphs"""
         # Split by double newlines (paragraph breaks)
-        lines = content.split('\n\n')
+        lines = content.split("\n\n")
         result = []
 
         for line in lines:
@@ -147,57 +177,81 @@ class LaTeXToHTMLConverter:
                 continue
 
             # Skip if already wrapped in HTML tags
-            if line.startswith('<') and (line.startswith('<h') or line.startswith('<div') or
-                                        line.startswith('<ul') or line.startswith('<ol') or
-                                        line.startswith('<figure')):
+            if line.startswith("<") and (
+                line.startswith("<h")
+                or line.startswith("<div")
+                or line.startswith("<ul")
+                or line.startswith("<ol")
+                or line.startswith("<figure")
+            ):
                 result.append(line)
             elif line:
                 # Wrap in paragraph tag
-                result.append(f'<p>\n{line}\n</p>')
+                result.append(f"<p>\n{line}\n</p>")
 
-        return '\n\n'.join(result)
+        return "\n\n".join(result)
 
-    def clean_latex_commands(self, content):
+    def clean_latex_commands(self, content: str) -> str:
         """Remove or clean LaTeX commands that don't need HTML conversion"""
         # Remove comments
-        content = re.sub(r'%.*$', '', content, flags=re.MULTILINE)
+        content = re.sub(r"%.*$", "", content, flags=re.MULTILINE)
 
         # Handle special colored boxes - convert to styled divs
-        content = re.sub(r'\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}',
-                        r'<div class="keypoint-box"><strong>Key Point:</strong>\1</div>',
-                        content, flags=re.DOTALL)
-        content = re.sub(r'\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}',
-                        r'<div class="limitation-box"><strong>Fundamental Limitation:</strong>\1</div>',
-                        content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
+            r'<div class="keypoint-box"><strong>Key Point:</strong>\1</div>',
+            content,
+            flags=re.DOTALL,
+        )
+        content = re.sub(
+            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
+            r'<div class="limitation-box"><strong>Fundamental Limitation:</strong>\1</div>',
+            content,
+            flags=re.DOTALL,
+        )
 
         # Remove figure, table, theorem, definition environments
-        content = re.sub(r'\\begin\{(figure|table|theorem|definition)\}.*?\\end\{\1\}', '', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{(figure|table|theorem|definition)\}.*?\\end\{\1\}",
+            "",
+            content,
+            flags=re.DOTALL,
+        )
 
         # Remove graphics/figure commands
-        content = re.sub(r'\\includegraphics(\[[^\]]*\])?\{[^}]+\}', '[Figure]', content)
-        content = re.sub(r'\\caption\{[^}]+\}', '', content)
+        content = re.sub(r"\\includegraphics(\[[^\]]*\])?\{[^}]+\}", "[Figure]", content)
+        content = re.sub(r"\\caption\{[^}]+\}", "", content)
 
         # Remove labels
-        content = re.sub(r'\\label\{[^}]+\}', '', content)
+        content = re.sub(r"\\label\{[^}]+\}", "", content)
 
         # Remove vspace, hspace
-        content = re.sub(r'\\[vh]space\*?\{[^}]+\}', '', content)
+        content = re.sub(r"\\[vh]space\*?\{[^}]+\}", "", content)
 
         # Remove font size commands
-        content = re.sub(r'\\(small|large|Large|huge|Huge|tiny|footnotesize|scriptsize|normalsize)', '', content)
+        content = re.sub(
+            r"\\(small|large|Large|huge|Huge|tiny|footnotesize|scriptsize|normalsize)",
+            "",
+            content,
+        )
 
         # Remove custom commands we define - convert to styled text
-        content = re.sub(r'\\bvec\{([^}]+)\}', r'<strong>\1</strong>', content)
-        content = re.sub(r'\\(Feq|Ceq|Rdrift|Rinput)', r'<strong>\1</strong>', content)
+        content = re.sub(r"\\bvec\{([^}]+)\}", r"<strong>\1</strong>", content)
+        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"<strong>\1</strong>", content)
 
         # Remove tikz and pgfplots entirely
-        content = re.sub(r'\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}', '[Figure: See PDF version]', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
+            "[Figure: See PDF version]",
+            content,
+            flags=re.DOTALL,
+        )
 
         return content
 
-    def create_html_page(self, title, content, description=""):
+    def create_html_page(self, title: str, content: str, description: str = "") -> str:
         """Create complete HTML page with AffineDrift template"""
-        template = f'''<!DOCTYPE html>
+        template = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -364,13 +418,13 @@ class LaTeXToHTMLConverter:
     <script src="../../../script.js"></script>
 </body>
 </html>
-'''
+"""
         return template
 
-    def convert_file(self, input_file, output_file=None):
+    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> str:
         """Convert a LaTeX file to HTML"""
         if output_file is None:
-            output_file = Path(input_file).with_suffix('.html')
+            output_file = Path(input_file).with_suffix(".html")
 
         print(f"Converting {input_file} -> {output_file}")
 
@@ -390,19 +444,21 @@ class LaTeXToHTMLConverter:
         full_html = self.create_html_page(title, html_content, description=title)
 
         # Write output
-        with open(output_file, 'w', encoding='utf-8') as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(full_html)
 
         print(f"✓ Conversion complete: {output_file}")
-        return output_file
+        return str(output_file)
 
 
-def main():
+def main() -> None:
     """Main entry point"""
     if len(sys.argv) < 2:
         print("Usage: python3 latex_to_html.py <input.tex> [output.html]")
         print("\nExample:")
-        print("  python3 latex_to_html.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex")
+        print(
+            "  python3 latex_to_html.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
+        )
         sys.exit(1)
 
     input_file = sys.argv[1]
@@ -416,5 +472,5 @@ def main():
     converter.convert_file(input_file, output_file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

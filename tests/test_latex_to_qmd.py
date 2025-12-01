@@ -119,8 +119,7 @@ This is the body content.
         converter = LaTeXToQuartoConverter()
         metadata = {"title": "Test", "author": "Author", "date": "2024-01-01"}
         frontmatter = converter.create_frontmatter(metadata)
-        assert "title: \"Test\"" in frontmatter
-        assert "author: \"Author\"" in frontmatter
-        assert "date: \"2024-01-01\"" in frontmatter
+        assert 'title: "Test"' in frontmatter
+        assert 'author: "Author"' in frontmatter
+        assert 'date: "2024-01-01"' in frontmatter
         assert "---" in frontmatter
-

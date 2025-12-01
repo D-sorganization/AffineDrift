@@ -14,17 +14,17 @@ CONVERSIONS = [
     {
         "source": "content/Wrist as Universal Joint/Wrist_Universal_Claude.tex",
         "target": "content/Wrist as Universal Joint/Wrist_Universal_Claude.html",
-        "root_page": None  # This is a content page, not a root-level page
+        "root_page": None,  # This is a content page, not a root-level page
     },
     {
         "source": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex",
         "target": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_article.html",
-        "root_page": None  # This is a content page
-    }
+        "root_page": None,  # This is a content page
+    },
 ]
 
 
-def convert_all(dry_run=False):
+def convert_all(dry_run: bool = False) -> bool:
     """Convert all LaTeX files to HTML"""
     converter = LaTeXToHTMLConverter()
 
@@ -43,6 +43,10 @@ def convert_all(dry_run=False):
     for conversion in CONVERSIONS:
         source = conversion["source"]
         target = conversion["target"]
+        if not isinstance(source, str) or not isinstance(target, str):
+            print(f"  ✗ Invalid conversion entry: {conversion}")
+            error_count += 1
+            continue
 
         print(f"Processing: {source}")
         print(f"  -> Target: {target}")
@@ -74,7 +78,7 @@ def convert_all(dry_run=False):
     return error_count == 0
 
 
-def main():
+def main() -> None:
     """Main entry point"""
     dry_run = "--dry-run" in sys.argv or "-n" in sys.argv
 
@@ -90,5 +94,5 @@ def main():
     sys.exit(0 if success else 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

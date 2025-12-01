@@ -18,7 +18,7 @@ def calculate_moments_of_inertia(
     m_shaft = shaft_weight_g / 1000.0  # kg
 
     # Shaft inertia (thin rod about end): I = (1/3) * m * L²
-    i_shaft_alpha = (1/3) * m_shaft * club_length_m**2
+    i_shaft_alpha = (1 / 3) * m_shaft * club_length_m**2
 
     # Clubhead inertia about shaft axis (point mass)
     i_head_alpha = m_head * cg_distance_m**2

@@ -1,21 +1,29 @@
 #!/usr/bin/env python3
 """
-MATLAB Quality Check Script
+MATLAB Quality Check Script (Unified Version)
 
 This script runs comprehensive quality checks on MATLAB code following the project's
 .cursorrules.md requirements. It can be run from the command line and integrates
 with the project's quality control system.
 
+This is the unified version combining the best features from all repository implementations.
+
 Usage:
-    python scripts/matlab_quality_check.py [--strict] [--output-format json|text]
+    python tools/matlab_utilities/scripts/matlab_quality_check.py [--strict] [--output-format json|text] [--project-root PATH]
 """
 
 import argparse
 import json
 import logging
+import re
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
+from typing import Any
+
+# Constants
+MATLAB_SCRIPT_TIMEOUT_SECONDS: int = 300  # 5 minutes - allows time for large codebases
 
 # Set up logging
 logging.basicConfig(
@@ -36,8 +44,8 @@ class MATLABQualityChecker:
         """
         self.project_root = project_root
         self.matlab_dir = project_root / "matlab"
-        self.results = {
-            "timestamp": None,
+        self.results: dict[str, Any] = {
+            "timestamp": datetime.now().isoformat(),
             "total_files": 0,
             "issues": [],
             "passed": True,
@@ -129,8 +137,8 @@ class MATLABQualityChecker:
                         capture_output=True,
                         text=True,
                         cwd=self.matlab_dir,
-                        timeout=300,
-                        check=False,  # 5 minute timeout
+                        timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
+                        check=False,
                     )
 
                     if result.returncode == 0:
@@ -198,11 +206,9 @@ class MATLABQualityChecker:
         issues = []
 
         try:
-            with open(file_path, encoding="utf-8", errors="ignore") as f:
+            with file_path.open(encoding="utf-8", errors="ignore") as f:
                 content = f.read()
                 lines = content.split("\n")
-
-            import re
 
             # Track if we're in a function and nesting level
             in_function = False
@@ -257,9 +263,14 @@ class MATLABQualityChecker:
                         )
 
                     # Check for arguments validation block
+                    # Skip comment lines to avoid false positives
                     has_arguments = False
                     for j in range(i, min(i + 15, len(lines))):
-                        if re.search(r"\barguments\b", lines[j]):
+                        line_check = lines[j].strip()
+                        # Skip comment lines
+                        if line_check.startswith("%"):
+                            continue
+                        if re.search(r"\barguments\b", line_check):
                             has_arguments = True
                             break
 
@@ -309,31 +320,44 @@ class MATLABQualityChecker:
                     )
 
                 # Check for load without output (loads into workspace)
+                # Match both command syntax (load file.mat) and function syntax (load('file.mat'))
                 if (
                     re.search(r"^\s*load\s+\w+", line_stripped)
-                    and "=" not in line_stripped
-                ):
+                    or re.search(r"^\s*load\s*\([^)]+\)", line_stripped)
+                ) and "=" not in line_stripped:
                     issues.append(
                         f"{file_path.name} (line {i}): load without output variable - use 'data = load(...)' instead",
                     )
 
                 # Check for magic numbers (but allow common values and known constants)
-                # Exclude scientific notation, array indices, and common values
-                magic_number_pattern = r"(?<![.\w])\d*\.\d+(?![.\w])"
+                # Matches both integer and floating-point literals (e.g., 3.14, 42, 0.5)
+                # that are not part of scientific notation, array indices, or embedded in words.
+                # Uses lookbehind/lookahead to avoid matching numbers adjacent to dots or word characters.
+                # This helps flag "magic numbers" in code while avoiding false positives from common patterns.
+                magic_number_pattern = r"(?<![.\w])(?:\d+\.\d+|\d+)(?![.\w])"
                 magic_numbers = re.findall(magic_number_pattern, line_stripped)
 
-                # Known acceptable values
+                # Known acceptable values (include integer and float representations)
                 acceptable_numbers = {
+                    "0",
                     "0.0",
-                    "0.5",
+                    "1",
                     "1.0",
+                    "2",
                     "2.0",
+                    "3",
                     "3.0",
+                    "4",
                     "4.0",
+                    "5",
                     "5.0",
+                    "10",
                     "10.0",
+                    "100",
                     "100.0",
+                    "1000",
                     "1000.0",
+                    "0.5",
                     "0.1",
                     "0.01",
                     "0.001",
@@ -341,17 +365,18 @@ class MATLABQualityChecker:
                 }
 
                 # Known physics constants (should be defined but at least flag with context)
+                # Includes units and sources per coding guidelines
                 known_constants = {
-                    "3.14159": "pi constant",
-                    "3.1416": "pi constant",
-                    "3.14": "pi constant",
-                    "1.5708": "pi/2 constant",
-                    "1.57": "pi/2 constant",
-                    "0.7854": "pi/4 constant",
-                    "0.785": "pi/4 constant",
-                    "9.81": "gravitational acceleration",
-                    "9.8": "gravitational acceleration",
-                    "9.807": "gravitational acceleration",
+                    "3.14159": "pi constant [dimensionless] - mathematical constant",
+                    "3.1416": "pi constant [dimensionless] - mathematical constant",
+                    "3.14": "pi constant [dimensionless] - mathematical constant",
+                    "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
+                    "1.57": "pi/2 constant [dimensionless] - mathematical constant",
+                    "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
+                    "0.785": "pi/4 constant [dimensionless] - mathematical constant",
+                    "9.81": "gravitational acceleration [m/s²] - approximate standard gravity",
+                    "9.8": "gravitational acceleration [m/s²] - approximate standard gravity",
+                    "9.807": "gravitational acceleration [m/s²] - approximate standard gravity",
                 }
 
                 for num in magic_numbers:
@@ -364,16 +389,23 @@ class MATLABQualityChecker:
                         # Check if the number appears before a comment on same line
                         comment_idx = line_original.find("%")
                         num_idx = line_original.find(num)
-                        if comment_idx == -1 or (
-                            num_idx != -1 and num_idx < comment_idx
-                        ):
+                        if comment_idx == -1 or (num_idx != -1 and num_idx < comment_idx):
                             issues.append(
                                 f"{file_path.name} (line {i}): Magic number {num} should be defined as constant with units and source",
                             )
 
                 # Check for clear/clc/close all in functions (bad practice)
                 if in_function:
-                    if re.search(r"\bclear\b(?!\s+\w+)", line_stripped):
+                    # Check for clear without variable (dangerous) or clear all/global (very dangerous)
+                    if re.search(
+                        r"\bclear\s+(all|global)\b",
+                        line_stripped,
+                        re.IGNORECASE,
+                    ):
+                        issues.append(
+                            f"{file_path.name} (line {i}): Avoid 'clear all' or 'clear global' in functions - clears all variables, functions, and MEX links",
+                        )
+                    elif re.search(r"\bclear\b(?!\s+\w+)", line_stripped):
                         issues.append(
                             f"{file_path.name} (line {i}): Avoid 'clear' in functions - can clear function variables",
                         )
@@ -422,9 +454,7 @@ class MATLABQualityChecker:
 
         if "error" in matlab_results:
             self.results["passed"] = False
-            self.results["summary"] = (
-                f"MATLAB quality checks failed: {matlab_results['error']}"
-            )
+            self.results["summary"] = f"MATLAB quality checks failed: {matlab_results['error']}"
             self.results["checks"]["matlab"] = matlab_results
         else:
             self.results["checks"]["matlab"] = matlab_results
@@ -441,7 +471,7 @@ class MATLABQualityChecker:
         return self.results
 
 
-def main():
+def main() -> None:
     """Main entry point for the MATLAB quality check script."""
     parser = argparse.ArgumentParser(description="MATLAB Code Quality Checker")
     parser.add_argument("--strict", action="store_true", help="Enable strict mode")
@@ -472,22 +502,26 @@ def main():
 
     # Output results
     if args.output_format == "json":
-        print(json.dumps(results, indent=2, default=str))
+        print(json.dumps(results, indent=2, default=str))  # noqa: T201
     else:
-        print("\n" + "=" * 60)
-        print("MATLAB QUALITY CHECK RESULTS")
-        print("=" * 60)
-        print(f"Timestamp: {results.get('timestamp', 'N/A')}")
-        print(f"Total Files: {results.get('total_files', 0)}")
-        print(f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}")
-        print(f"Summary: {results.get('summary', 'N/A')}")
+        print("\n" + "=" * 60)  # noqa: T201
+        print("MATLAB QUALITY CHECK RESULTS")  # noqa: T201
+        print("=" * 60)  # noqa: T201
+        print(f"Timestamp: {results.get('timestamp', 'N/A')}")  # noqa: T201
+        print(f"Total Files: {results.get('total_files', 0)}")  # noqa: T201
+        print(
+            f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}",
+        )
+        print(f"Summary: {results.get('summary', 'N/A')}")  # noqa: T201
 
-        if results.get("issues"):
-            print(f"\nIssues Found ({len(results['issues'])}):")
-            for i, issue in enumerate(results["issues"], 1):
-                print(f"  {i}. {issue}")
+        issues_raw = results.get("issues", [])
+        issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
+        if issues:
+            print(f"\nIssues Found ({len(issues)}):")  # noqa: T201
+            for i, issue in enumerate(issues, 1):
+                print(f"  {i}. {issue}")  # noqa: T201
 
-        print("\n" + "=" * 60)
+        print("\n" + "=" * 60)  # noqa: T201
 
     # Exit with appropriate code
     # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass
