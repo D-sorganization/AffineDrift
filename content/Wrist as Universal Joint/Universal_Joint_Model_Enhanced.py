@@ -19,6 +19,7 @@ Date: 2025-11-25
 """
 
 import sys
+from typing import Any, Optional
 
 import matplotlib
 import numpy as np
@@ -915,7 +916,11 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_ylabel("Transmission Ratio", fontsize=10)
 
     def update_parameters(
-        self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma
+        self,
+        grip_angle_deg: float,
+        wrist_angle_deg: float,
+        I_alpha: float,
+        I_gamma: float,
     ) -> None:
         """Update all parameters and redraw"""
         self.grip_angle_deg = grip_angle_deg
@@ -924,12 +929,12 @@ class PlotCanvas(FigureCanvas):
         self.I_gamma = I_gamma
         self.update_plot()
 
-    def set_plot_type(self, plot_type) -> None:
+    def set_plot_type(self, plot_type: str) -> None:
         """Set the plot type"""
         self.current_plot_type = plot_type
         self.update_plot()
 
-    def set_signal_visible(self, signal_name, visible) -> None:
+    def set_signal_visible(self, signal_name: str, visible: bool) -> None:
         """Set visibility of a signal"""
         if signal_name in self.visible_signals:
             self.visible_signals[signal_name] = visible
@@ -942,10 +947,10 @@ class PlotCanvas(FigureCanvas):
             self.update_plot()
 
 
-class DocumentationDialog(QDialog):
+class DocumentationDialog(QDialog):  # type: ignore[misc]
     """Dialog showing mathematical documentation"""
 
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: Optional[QWidget] = None) -> None:
         """Initialize documentation dialog."""
         super().__init__(parent)
         self.setWindowTitle("Universal Joint Model - Mathematics & Physics")
@@ -988,7 +993,7 @@ class DocumentationDialog(QDialog):
         """
 
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow):  # type: ignore[misc]
     """Main application window"""
 
     def __init__(self) -> None:
@@ -1574,7 +1579,7 @@ class MainWindow(QMainWindow):
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def update_grip_label(self, value) -> None:
+    def update_grip_label(self, value: int) -> None:
         """Update grip angle from slider"""
         if hasattr(self, "grip_textbox"):
             self.grip_textbox.blockSignals(True)
@@ -1583,7 +1588,7 @@ class MainWindow(QMainWindow):
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def update_wrist_label(self, value) -> None:
+    def update_wrist_label(self, value: int) -> None:
         """Update wrist angle from slider"""
         if hasattr(self, "wrist_textbox"):
             self.wrist_textbox.blockSignals(True)
@@ -1644,7 +1649,7 @@ class MainWindow(QMainWindow):
         self.plot_canvas.update_parameters(grip_angle, wrist_angle, I_alpha, I_gamma)
         self.update_info()
 
-    def update_plot_type(self, plot_type) -> None:
+    def update_plot_type(self, plot_type: str) -> None:
         """Update plot type and enable/disable appropriate checkboxes"""
         self.plot_canvas.set_plot_type(plot_type)
 
@@ -1726,7 +1731,8 @@ class MainWindow(QMainWindow):
                     delta = event.angleDelta().y()
                     scroll_bar.setValue(scroll_bar.value() - delta // 8)
                     return True  # Consume the event so sliders don't get it
-        return super().eventFilter(obj, event)
+        result = super().eventFilter(obj, event)
+        return bool(result)  # type: ignore[no-any-return]
 
     def show_documentation(self) -> None:
         """Show documentation dialog"""

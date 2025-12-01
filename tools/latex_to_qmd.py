@@ -340,12 +340,13 @@ class LaTeXToQuartoConverter:
         qmd_content = self.convert_to_qmd(latex_content)
 
         # Write output
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        with open(output_file, "w", encoding="utf-8") as f:
+        output_path = Path(output_file)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(qmd_content)
 
-        print(f"Conversion complete: {output_file}")
-        return output_file
+        print(f"Conversion complete: {output_path}")
+        return output_path
 
 
 def main() -> None:

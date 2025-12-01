@@ -20,6 +20,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Constants
 MATLAB_SCRIPT_TIMEOUT_SECONDS: int = 300  # 5 minutes - allows time for large codebases
@@ -43,7 +44,7 @@ class MATLABQualityChecker:
         """
         self.project_root = project_root
         self.matlab_dir = project_root / "matlab"
-        self.results = {
+        self.results: dict[str, Any] = {
             "timestamp": datetime.now().isoformat(),
             "total_files": 0,
             "issues": [],
@@ -517,9 +518,10 @@ def main() -> None:
         )
         print(f"Summary: {results.get('summary', 'N/A')}")  # noqa: T201
 
-        if results.get("issues"):
-            print(f"\nIssues Found ({len(results['issues'])}):")  # noqa: T201
-            for i, issue in enumerate(results["issues"], 1):
+        issues = results.get("issues", [])
+        if issues:
+            print(f"\nIssues Found ({len(issues)}):")  # noqa: T201
+            for i, issue in enumerate(issues, 1):
                 print(f"  {i}. {issue}")  # noqa: T201
 
         print("\n" + "=" * 60)  # noqa: T201

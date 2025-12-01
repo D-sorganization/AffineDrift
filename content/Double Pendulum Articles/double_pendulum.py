@@ -167,7 +167,9 @@ def tau_natural(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.ndarra
 # ---------------------------------------------------------------------------
 
 
-def double_pendulum_dynamics(t: float, x: np.ndarray, u_func) -> np.ndarray:
+def double_pendulum_dynamics(
+    t: float, x: np.ndarray, u_func: Callable[[float, np.ndarray], np.ndarray]
+) -> np.ndarray:
     """
     State-space dynamics for the double pendulum.
 

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 
-def find_tex_files(paths: list[str]) -> list[str]:
+def find_tex_files(paths: list[str]) -> list[Path]:
     """
     Find all .tex files in the given paths (files or directories).
     Returns a list of Path objects.
@@ -26,7 +26,7 @@ def find_tex_files(paths: list[str]) -> list[str]:
     return tex_files
 
 
-def prompt_for_files() -> list[str]:
+def prompt_for_files() -> list[Path]:
     """Fallback to GUI if no command-line arguments provided."""
     try:
         import tkinter as tk
