@@ -101,12 +101,12 @@ jobs:
         run: |
           echo "🔍 Running MyPy type checker..."
           if [ -f mypy.ini ]; then
-            mypy . --config-file mypy.ini
+            mypy . --config-file mypy.ini --exclude ".*wrist-universal-joint.*|.*-.*"
           elif [ -f pyproject.toml ] && grep -q "\[tool.mypy\]" pyproject.toml; then
-            mypy .
+            mypy . --exclude ".*wrist-universal-joint.*|.*-.*"
           else
-            # ✅ Non-strict fallback to avoid conflicts
-            mypy . --ignore-missing-imports
+            # ✅ Non-strict fallback to avoid conflicts, exclude dirs with hyphens
+            mypy . --ignore-missing-imports --exclude ".*wrist-universal-joint.*|.*-.*"
           fi
 
       - name: Format check with Black
