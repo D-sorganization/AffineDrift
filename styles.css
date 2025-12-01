@@ -95,10 +95,11 @@ h4, h5, h6 {
 }
 
 .container {
-    max-width: 1800px;
+    max-width: 100% !important;
     margin: 0 auto;
-    padding: 0 2rem;
-    width: 100%;
+    padding: 0 4rem;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
 }
 
 /* Override Quarto's default column constraints - force wide single column */
@@ -587,7 +588,8 @@ section h2::after {
 }
 
 .mission-content {
-    max-width: 1400px;
+    max-width: 100% !important;
+    width: 100% !important;
     margin: 0 auto;
 }
 
@@ -628,7 +630,8 @@ section h2::after {
 }
 
 .theory-content {
-    max-width: 1400px;
+    max-width: 100% !important;
+    width: 100% !important;
     margin: 0 auto;
 }
 
@@ -718,8 +721,8 @@ section h2::after {
 }
 
 .properties-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     margin-top: 2rem;
 }
@@ -773,7 +776,8 @@ section h2::after {
 }
 
 .golf-content {
-    max-width: 1400px;
+    max-width: 100% !important;
+    width: 100% !important;
     margin: 0 auto;
 }
 
@@ -789,8 +793,8 @@ section h2::after {
 }
 
 .components-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
     margin-top: 2rem;
 }
@@ -865,8 +869,8 @@ section h2::after {
 }
 
 .goals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     margin-top: 2rem;
 }
@@ -1079,8 +1083,8 @@ section h2::after {
 }
 
 .links-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     margin-top: 2rem;
 }
@@ -1256,11 +1260,21 @@ img[loading="lazy"].loaded {
     }
 
     /* Remove sidebar offset on mobile - sidebar is hidden */
+    .container {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 2rem 1.5rem !important;
+    }
+    
     .article-section .container,
     .model-section .container,
     .resources-section .container,
     .quarto-document-content,
-    .main-article {
+    .main-article,
+    .hero .container,
+    .mission-section .container,
+    .theory-section .container,
+    .golf-section .container {
         width: 100% !important;
         margin-left: 0 !important;
         padding: 2rem 1.5rem !important;
@@ -1269,6 +1283,13 @@ img[loading="lazy"].loaded {
     .resources-layout {
         width: 100% !important;
         margin-left: 0 !important;
+    }
+    
+    .mission-content,
+    .theory-content,
+    .golf-content {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     header {
@@ -2301,6 +2322,24 @@ img[loading="lazy"].loaded {
 .website-preview:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Book cover styling */
+.book-cover {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--pure-white);
+    object-fit: contain;
+    display: block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-cover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Video player styling in resource cards */
