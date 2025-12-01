@@ -60,7 +60,7 @@ class WheelIgnoringSlider(QSlider):
 class WheelIgnoringLineEdit(QLineEdit):
     """LineEdit that ignores mouse wheel events - wheel only scrolls page"""
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event) -> None:
         """Ignore wheel events - let parent handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
@@ -74,7 +74,7 @@ DEFAULT_CLUBHEAD_CG_DISTANCE = 0.85  # meters
 
 def calculate_moments_of_inertia(
     clubhead_weight_g, shaft_weight_g, club_length_m, cg_distance_m
-):
+) -> tuple[float, float]:
     """
     Calculate moments of inertia for golf club about two axes.
 
@@ -107,7 +107,7 @@ def calculate_moments_of_inertia(
     return I_alpha, I_gamma
 
 
-def universal_joint_transmission_ratio(phi_rad, delta_rad):
+def universal_joint_transmission_ratio(phi_rad, delta_rad) -> tuple[float, float]:
     """
     Calculate transmission ratios for a universal (Hooke/Cardan) joint.
 
@@ -147,7 +147,9 @@ def universal_joint_transmission_ratio(phi_rad, delta_rad):
     return omega_ratio, tau_ratio
 
 
-def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
+def distribute_torque_by_grip_angle(
+    torque_transmitted, theta_grip_rad
+) -> tuple[float, float]:
     """
     Distribute transmitted torque to club axes based on grip angle.
 
@@ -173,7 +175,8 @@ def distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad):
 class DiagramCanvas(FigureCanvas):
     """Canvas showing forearm, hand, and club with both angles"""
 
-    def __init__(self, grip_angle_deg, wrist_angle_deg):
+    def __init__(self, grip_angle_deg, wrist_angle_deg) -> None:
+        """Initialize diagram canvas with grip and wrist angles."""
         self.figure = Figure(figsize=(12, 4))
         super().__init__(self.figure)
         self.setMinimumSize(800, 300)
@@ -184,11 +187,11 @@ class DiagramCanvas(FigureCanvas):
 
         self.update_diagram()
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event) -> None:
         """Ignore wheel events - let parent scroll area handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
-    def update_diagram(self):
+    def update_diagram(self) -> None:
         """Update the diagram with current angles"""
         self.ax.clear()
 
@@ -536,7 +539,7 @@ class DiagramCanvas(FigureCanvas):
         self.figure.tight_layout()
         self.draw()
 
-    def update_angles(self, grip_angle_deg, wrist_angle_deg):
+    def update_angles(self, grip_angle_deg, wrist_angle_deg) -> None:
         """Update angles and redraw"""
         self.grip_angle_deg = grip_angle_deg
         self.wrist_angle_deg = wrist_angle_deg
@@ -546,7 +549,8 @@ class DiagramCanvas(FigureCanvas):
 class PlotCanvas(FigureCanvas):
     """Single plot canvas with selectable Y-axis and checkboxes"""
 
-    def __init__(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
+    def __init__(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma) -> None:
+        """Initialize plot canvas with angles and inertia values."""
         self.figure = Figure(figsize=(10, 6))
         super().__init__(self.figure)
         self.setMinimumSize(700, 500)
@@ -584,7 +588,7 @@ class PlotCanvas(FigureCanvas):
 
         self.update_plot()
 
-    def generate_sample_torque(self):
+    def generate_sample_torque(self) -> np.ndarray:
         """Generate a torque signal based on noise type"""
         t = self.t
 
@@ -672,14 +676,14 @@ class PlotCanvas(FigureCanvas):
 
         return torque
 
-    def set_noise_type(self, noise_type):
+    def set_noise_type(self, noise_type) -> None:
         """Set noise type and regenerate"""
         self.noise_type = noise_type
         self.input_torque = self.generate_sample_torque()
         if self.current_plot_type in ["Torque", "Angular Acceleration"]:
             self.update_plot()
 
-    def set_polynomial_expression(self, expression):
+    def set_polynomial_expression(self, expression) -> None:
         """Set polynomial expression and regenerate if polynomial type is selected"""
         self.polynomial_expression = expression
         if self.noise_type == "Polynomial":
@@ -697,7 +701,7 @@ class PlotCanvas(FigureCanvas):
             if self.current_plot_type in ["Torque", "Angular Acceleration"]:
                 self.update_plot()
 
-    def update_plot(self):
+    def update_plot(self) -> None:
         """Update plot based on current settings"""
         self.ax.clear()
 
@@ -716,7 +720,7 @@ class PlotCanvas(FigureCanvas):
         self.figure.tight_layout()
         self.draw()
 
-    def _plot_torque(self, theta_grip_rad, phi_wrist_rad):
+    def _plot_torque(self, theta_grip_rad, phi_wrist_rad) -> None:
         """Plot torque vs time"""
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
             phi_wrist_rad, theta_grip_rad
@@ -768,7 +772,7 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_xlabel("Time (s)", fontsize=10)
         self.ax.set_ylabel("Torque (N·m)", fontsize=10)
 
-    def _plot_acceleration(self, theta_grip_rad, phi_wrist_rad):
+    def _plot_acceleration(self, theta_grip_rad, phi_wrist_rad) -> None:
         """Plot angular acceleration vs time"""
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
             phi_wrist_rad, theta_grip_rad
@@ -815,7 +819,7 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_xlabel("Time (s)", fontsize=10)
         self.ax.set_ylabel("Angular Acceleration (rad/s²)", fontsize=10)
 
-    def _plot_transmission_sweep(self, theta_grip_rad):
+    def _plot_transmission_sweep(self, theta_grip_rad) -> None:
         """Plot transmission ratio vs wrist angle sweep"""
         phi_sweep = np.linspace(-60, 60, 200)
         phi_sweep_rad = np.radians(phi_sweep)
@@ -910,7 +914,9 @@ class PlotCanvas(FigureCanvas):
         self.ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
         self.ax.set_ylabel("Transmission Ratio", fontsize=10)
 
-    def update_parameters(self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma):
+    def update_parameters(
+        self, grip_angle_deg, wrist_angle_deg, I_alpha, I_gamma
+    ) -> None:
         """Update all parameters and redraw"""
         self.grip_angle_deg = grip_angle_deg
         self.wrist_angle_deg = wrist_angle_deg
@@ -918,12 +924,12 @@ class PlotCanvas(FigureCanvas):
         self.I_gamma = I_gamma
         self.update_plot()
 
-    def set_plot_type(self, plot_type):
+    def set_plot_type(self, plot_type) -> None:
         """Set the plot type"""
         self.current_plot_type = plot_type
         self.update_plot()
 
-    def set_signal_visible(self, signal_name, visible):
+    def set_signal_visible(self, signal_name, visible) -> None:
         """Set visibility of a signal"""
         if signal_name in self.visible_signals:
             self.visible_signals[signal_name] = visible
@@ -939,13 +945,15 @@ class PlotCanvas(FigureCanvas):
 class DocumentationDialog(QDialog):
     """Dialog showing mathematical documentation"""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None) -> None:
+        """Initialize documentation dialog."""
         super().__init__(parent)
         self.setWindowTitle("Universal Joint Model - Mathematics & Physics")
         self.setGeometry(150, 150, 900, 800)
         self.initUI()
 
-    def initUI(self):
+    def initUI(self) -> None:
+        """Initialize UI components."""
         layout = QVBoxLayout(self)
 
         scroll = QScrollArea()
@@ -960,7 +968,8 @@ class DocumentationDialog(QDialog):
         button_box.rejected.connect(self.accept)
         layout.addWidget(button_box)
 
-    def get_documentation_html(self):
+    def get_documentation_html(self) -> str:
+        """Return HTML documentation content."""
         # Return the same documentation as before - keeping it short for now
         return """
         <html>
@@ -982,13 +991,15 @@ class DocumentationDialog(QDialog):
 class MainWindow(QMainWindow):
     """Main application window"""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize main window."""
         super().__init__()
         self.setWindowTitle("Enhanced Universal Joint Model - Wrist Biomechanics")
         self.setGeometry(100, 100, 1600, 1000)
         self.initUI()
 
-    def initUI(self):
+    def initUI(self) -> None:
+        """Initialize UI components."""
         # Create scroll area
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
@@ -1488,7 +1499,7 @@ class MainWindow(QMainWindow):
         # Initial update
         self.update_inertia()
 
-    def get_inertia_values(self):
+    def get_inertia_values(self) -> tuple[float, float]:
         """Get current inertia values from club properties"""
         try:
             clubhead = float(self.clubhead_weight.text())
@@ -1503,7 +1514,7 @@ class MainWindow(QMainWindow):
             cg = DEFAULT_CLUBHEAD_CG_DISTANCE
         return calculate_moments_of_inertia(clubhead, shaft, length, cg)
 
-    def update_clubhead_from_textbox(self):
+    def update_clubhead_from_textbox(self) -> None:
         """Update clubhead weight from text box"""
         try:
             value = float(self.clubhead_weight.text())
@@ -1517,7 +1528,7 @@ class MainWindow(QMainWindow):
             self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
             self.update_inertia()
 
-    def update_shaft_from_textbox(self):
+    def update_shaft_from_textbox(self) -> None:
         """Update shaft weight from text box"""
         try:
             value = float(self.shaft_weight.text())
@@ -1530,7 +1541,7 @@ class MainWindow(QMainWindow):
             self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
             self.update_inertia()
 
-    def update_length_from_textbox(self):
+    def update_length_from_textbox(self) -> None:
         """Update club length from text box"""
         try:
             value = float(self.club_length.text())
@@ -1543,7 +1554,7 @@ class MainWindow(QMainWindow):
             self.club_length.setText(f"{DEFAULT_CLUB_LENGTH:.2f}")
             self.update_inertia()
 
-    def update_cg_from_textbox(self):
+    def update_cg_from_textbox(self) -> None:
         """Update CG distance from text box"""
         try:
             value = float(self.cg_distance.text())
@@ -1556,14 +1567,14 @@ class MainWindow(QMainWindow):
             self.cg_distance.setText(f"{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}")
             self.update_inertia()
 
-    def update_inertia(self):
+    def update_inertia(self) -> None:
         """Update inertia display and plots"""
         I_alpha, I_gamma = self.get_inertia_values()
         self.inertia_label.setText(f"I_α={I_alpha:.4f} kg·m², I_γ={I_gamma:.4f} kg·m²")
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def update_grip_label(self, value):
+    def update_grip_label(self, value) -> None:
         """Update grip angle from slider"""
         if hasattr(self, "grip_textbox"):
             self.grip_textbox.blockSignals(True)
@@ -1572,7 +1583,7 @@ class MainWindow(QMainWindow):
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def update_wrist_label(self, value):
+    def update_wrist_label(self, value) -> None:
         """Update wrist angle from slider"""
         if hasattr(self, "wrist_textbox"):
             self.wrist_textbox.blockSignals(True)
@@ -1581,7 +1592,7 @@ class MainWindow(QMainWindow):
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def update_grip_from_textbox(self):
+    def update_grip_from_textbox(self) -> None:
         """Update grip angle from text box"""
         try:
             value = float(self.grip_textbox.text())
@@ -1602,7 +1613,7 @@ class MainWindow(QMainWindow):
             if hasattr(self, "grip_slider"):
                 self.grip_textbox.setText(str(self.grip_slider.value()))
 
-    def update_wrist_from_textbox(self):
+    def update_wrist_from_textbox(self) -> None:
         """Update wrist angle from text box"""
         try:
             value = float(self.wrist_textbox.text())
@@ -1623,7 +1634,7 @@ class MainWindow(QMainWindow):
             if hasattr(self, "wrist_slider"):
                 self.wrist_textbox.setText(str(self.wrist_slider.value()))
 
-    def update_all(self):
+    def update_all(self) -> None:
         """Update diagram and plot"""
         grip_angle = self.grip_slider.value()
         wrist_angle = self.wrist_slider.value()
@@ -1633,7 +1644,7 @@ class MainWindow(QMainWindow):
         self.plot_canvas.update_parameters(grip_angle, wrist_angle, I_alpha, I_gamma)
         self.update_info()
 
-    def update_plot_type(self, plot_type):
+    def update_plot_type(self, plot_type) -> None:
         """Update plot type and enable/disable appropriate checkboxes"""
         self.plot_canvas.set_plot_type(plot_type)
 

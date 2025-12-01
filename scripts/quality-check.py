@@ -20,9 +20,18 @@ BANNED_PATTERNS = [
 # More intelligent pass statement detection
 PASS_PATTERNS = [
     (re.compile(r"^\s*pass\s*$"), "Empty pass statement"),
-    (re.compile(r"^\s*if\s+.*:\s*$"), "Empty if block - consider adding logic or comment"),
-    (re.compile(r"^\s*else:\s*$"), "Empty else block - consider adding logic or comment"),
-    (re.compile(r"^\s*except\s+.*:\s*$"), "Empty except block - consider adding error handling"),
+    (
+        re.compile(r"^\s*if\s+.*:\s*$"),
+        "Empty if block - consider adding logic or comment",
+    ),
+    (
+        re.compile(r"^\s*else:\s*$"),
+        "Empty else block - consider adding logic or comment",
+    ),
+    (
+        re.compile(r"^\s*except\s+.*:\s*$"),
+        "Empty except block - consider adding error handling",
+    ),
 ]
 
 MAGIC_NUMBERS = [
@@ -105,11 +114,32 @@ def check_banned_patterns(
     # Check if this is a test file - exclude angle bracket check for test files
     is_test_file = "test" in filepath.name.lower() or "test" in str(filepath.parts)
 
+    # Check if this is a GUI file that uses HTML (PyQt/Qt applications)
+    is_gui_file = False
+    if filepath.suffix == ".py":
+        try:
+            content = filepath.read_text(encoding="utf-8")
+            # Check for GUI framework imports and HTML usage
+            if any(
+                import_name in content
+                for import_name in [
+                    "PyQt",
+                    "QtWidgets",
+                    "QApplication",
+                    "QLabel",
+                    "setText",
+                ]
+            ):
+                if "<b>" in content or "<br>" in content or "setText" in content:
+                    is_gui_file = True
+        except (OSError, UnicodeDecodeError):
+            pass
+
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
-            # Skip angle bracket placeholder check for test files (HTML strings are valid)
-            if is_test_file and "Angle bracket placeholder" in message:
+            # Skip angle bracket placeholder check for test files and GUI files (HTML strings are valid)
+            if (is_test_file or is_gui_file) and "Angle bracket placeholder" in message:
                 continue
             if pattern.search(line):
                 issues.append((line_num, message, line.strip()))
@@ -144,6 +174,9 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
         return issues
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
+        # Skip lines that are already defining constants (e.g., GRAVITY_M_S2 = 9.81)
+        if re.search(r"GRAVITY_M_S2\s*=\s*", line_content, re.IGNORECASE):
+            continue
         for pattern, message in MAGIC_NUMBERS:
             if pattern.search(line_content):
                 issues.append((line_num, message, line.strip()))
@@ -223,10 +256,7 @@ def main() -> None:
         "quality-check.py",
         "quality-check-script.py",
     ]
-    python_files = [
-        f for f in python_files
-        if f.name not in excluded_script_names
-    ]
+    python_files = [f for f in python_files if f.name not in excluded_script_names]
 
     all_issues = []
     for filepath in python_files:
