@@ -454,7 +454,7 @@ class LaTeXToHTMLConverter:
             f.write(full_html)
 
         print(f"✓ Conversion complete: {output_file}")
-        return output_file
+        return str(output_file)
 
 
 def main() -> None:

@@ -518,7 +518,8 @@ def main() -> None:
         )
         print(f"Summary: {results.get('summary', 'N/A')}")  # noqa: T201
 
-        issues: list[str] = results.get("issues", []) or []
+        issues_raw = results.get("issues", [])
+        issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
         if issues:
             print(f"\nIssues Found ({len(issues)}):")  # noqa: T201
             for i, issue in enumerate(issues, 1):

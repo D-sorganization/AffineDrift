@@ -41,8 +41,12 @@ def convert_all(dry_run: bool = False) -> bool:
     error_count = 0
 
     for conversion in CONVERSIONS:
-        source: str = conversion["source"]
-        target: str = conversion["target"]
+        source = conversion["source"]
+        target = conversion["target"]
+        if not isinstance(source, str) or not isinstance(target, str):
+            print(f"  ✗ Invalid conversion entry: {conversion}")
+            error_count += 1
+            continue
 
         print(f"Processing: {source}")
         print(f"  -> Target: {target}")

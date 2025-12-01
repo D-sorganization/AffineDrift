@@ -192,7 +192,7 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
 
         self.update_diagram()
 
-    def wheelEvent(self, event) -> None:
+    def wheelEvent(self, event: QEvent) -> None:
         """Ignore wheel events - let parent scroll area handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
