@@ -162,7 +162,7 @@ jobs:
       - name: Format check with Black
         run: |
           echo "🔍 Checking code formatting with Black..."
-          # ✅ Check source directories explicitly
+          # ✅ Check source directories explicitly, exclude website content
           if [ -d python/src ]; then
             if [ -d python/tests ]; then
               black --check --diff python/src python/tests
@@ -178,7 +178,10 @@ jobs:
               black --check --diff src/
             fi
           else
-            black --check --diff .
+            # Exclude website content, articles, docs, and other non-source directories
+            black --check --diff . \
+              --exclude "/(content|articles|docs|archive|legacy-pages|_templates|logo|pics|static|qmd|\.quarto)/" \
+              --exclude "/(\.git|node_modules|\.venv|venv|__pycache__|\.pytest_cache)/"
           fi
 
       - name: Run pre-commit
