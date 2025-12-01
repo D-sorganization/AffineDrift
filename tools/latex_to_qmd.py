@@ -188,6 +188,7 @@ class LaTeXToQuartoConverter:
 
         # Remove complex figure environments but preserve caption info
         def replace_figure(match: re.Match[str]) -> str:
+            """Replace LaTeX figure environment with Quarto figure syntax."""
             fig_content = match.group(1)
 
             # Try to extract caption

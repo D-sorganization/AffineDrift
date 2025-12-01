@@ -15,12 +15,12 @@ class LaTeXToHTMLConverter:
         """Initialize converter with optional custom template"""
         self.template_file = template_file
 
-    def read_latex_file(self, filepath):
+    def read_latex_file(self, filepath: str | Path) -> str:
         """Read LaTeX file content"""
         with open(filepath, encoding="utf-8") as f:
             return f.read()
 
-    def extract_title(self, latex_content):
+    def extract_title(self, latex_content: str) -> str:
         """Extract title from LaTeX content"""
         title_match = re.search(r"\\title\{([^}]+)\}", latex_content, re.DOTALL)
         if title_match:
@@ -32,7 +32,7 @@ class LaTeXToHTMLConverter:
             return title.strip()
         return "Untitled Article"
 
-    def extract_sections(self, latex_content):
+    def extract_sections(self, latex_content: str) -> str:
         """Extract sections from LaTeX content"""
         # Remove everything before \begin{document}
         doc_match = re.search(
@@ -48,7 +48,7 @@ class LaTeXToHTMLConverter:
 
         return content
 
-    def convert_latex_to_html(self, latex_content):
+    def convert_latex_to_html(self, latex_content: str) -> str:
         """Convert LaTeX content to HTML"""
         html = latex_content
 
@@ -105,7 +105,7 @@ class LaTeXToHTMLConverter:
 
         return html
 
-    def convert_equations(self, content):
+    def convert_equations(self, content: str) -> str:
         """Convert LaTeX equation environments to MathJax-friendly format"""
         # Display equations
         content = re.sub(
@@ -167,7 +167,7 @@ class LaTeXToHTMLConverter:
 
         return content
 
-    def convert_paragraphs(self, content):
+    def convert_paragraphs(self, content: str) -> str:
         """Convert LaTeX paragraphs to HTML paragraphs"""
         # Split by double newlines (paragraph breaks)
         lines = content.split("\n\n")
@@ -193,7 +193,7 @@ class LaTeXToHTMLConverter:
 
         return "\n\n".join(result)
 
-    def clean_latex_commands(self, content):
+    def clean_latex_commands(self, content: str) -> str:
         """Remove or clean LaTeX commands that don't need HTML conversion"""
         # Remove comments
         content = re.sub(r"%.*$", "", content, flags=re.MULTILINE)

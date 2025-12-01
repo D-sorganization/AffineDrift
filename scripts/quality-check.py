@@ -174,9 +174,13 @@ def check_banned_patterns(
                 or "Angle bracket placeholder" in message
             ):
                 continue
-            # Skip angle bracket patterns in regex strings (r"<...")
+            # Skip angle bracket patterns in regex strings (r"<...") and usage messages
             if "Angle bracket placeholder" in message and (
-                'r"' in line or "r'" in line or "re.compile" in line
+                'r"' in line
+                or "r'" in line
+                or "re.compile" in line
+                or "Usage:" in line
+                or "print(" in line
             ):
                 continue
             if pattern.search(line):
