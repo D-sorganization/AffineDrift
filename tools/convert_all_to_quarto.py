@@ -18,87 +18,88 @@ CONVERSIONS = [
     {
         "source": "content/Wrist as Universal Joint/Wrist_Universal_Claude.tex",
         "target": f"{ARTICLES_DIR}/wrist-universal-joint.qmd",
-        "description": "Wrist as Universal Joint article"
+        "description": "Wrist as Universal Joint article",
     },
     {
         "source": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex",
         "target": f"{ARTICLES_DIR}/inverse-dynamics.qmd",
-        "description": "Inverse Dynamics article"
+        "description": "Inverse Dynamics article",
     },
     # Affine Background Articles
     {
         "source": "content/Affine Background Articles/Nonlinear_Control_Insights.tex",
         "target": f"{ARTICLES_DIR}/nonlinear-control-insights.qmd",
-        "description": "Nonlinear Control Theory Insights"
+        "description": "Nonlinear Control Theory Insights",
     },
     {
         "source": "content/Affine Background Articles/Force_Mobility_Matrices.tex",
         "target": f"{ARTICLES_DIR}/force-mobility-matrices.qmd",
-        "description": "Force Mobility Matrices"
+        "description": "Force Mobility Matrices",
     },
     {
         "source": "content/Affine Background Articles/Inverse_Dynamics_Inference.tex",
         "target": f"{ARTICLES_DIR}/inverse-dynamics-inference.qmd",
-        "description": "Inverse Dynamics Inference"
+        "description": "Inverse Dynamics Inference",
     },
     {
         "source": "content/Affine Background Articles/Lagrangian_Reference.tex",
         "target": f"{ARTICLES_DIR}/lagrangian-reference.qmd",
-        "description": "Lagrangian Reference"
+        "description": "Lagrangian Reference",
     },
     {
         "source": "content/Affine Background Articles/ScrewTheory_Reference.tex",
         "target": f"{ARTICLES_DIR}/screw-theory-reference.qmd",
-        "description": "Screw Theory Reference"
+        "description": "Screw Theory Reference",
     },
     {
         "source": "content/Affine Background Articles/null_space_constraint_jacobian.tex",
         "target": f"{ARTICLES_DIR}/null-space-constraint-jacobian.qmd",
-        "description": "Null Space Constraint Jacobian"
+        "description": "Null Space Constraint Jacobian",
     },
     # Affine Nature of the Golf Swing
     {
         "source": "content/Affine Nature of the Golf Swing/Draft3_Compiled_Working_Copy.tex",
         "target": f"{ARTICLES_DIR}/affine-nature-golf-swing.qmd",
-        "description": "Affine Nature of the Golf Swing (Main Article)"
+        "description": "Affine Nature of the Golf Swing (Main Article)",
     },
     {
         "source": "content/Affine Nature of the Golf Swing/Appendix_A_Nonlinear_Control_Insights.tex",
         "target": f"{ARTICLES_DIR}/appendix-nonlinear-control-insights.qmd",
-        "description": "Appendix A: Nonlinear Control Insights"
+        "description": "Appendix A: Nonlinear Control Insights",
     },
     {
         "source": "content/Affine Nature of the Golf Swing/Appendix_B_Inverse_Dynamics_Inference.tex",
         "target": f"{ARTICLES_DIR}/appendix-inverse-dynamics-inference.qmd",
-        "description": "Appendix B: Inverse Dynamics Inference"
+        "description": "Appendix B: Inverse Dynamics Inference",
     },
     {
         "source": "content/Affine Nature of the Golf Swing/Appendix_C_Applications.tex",
         "target": f"{ARTICLES_DIR}/appendix-applications.qmd",
-        "description": "Appendix C: Applications"
+        "description": "Appendix C: Applications",
     },
     {
         "source": "content/Affine Nature of the Golf Swing/Appendix_D_Lagrangian_Reference.tex",
         "target": f"{ARTICLES_DIR}/appendix-lagrangian-reference.qmd",
-        "description": "Appendix D: Lagrangian Reference"
+        "description": "Appendix D: Lagrangian Reference",
     },
     {
         "source": "content/Affine Nature of the Golf Swing/Appendix_E_ScrewTheory_Reference.tex",
         "target": f"{ARTICLES_DIR}/appendix-screw-theory-reference.qmd",
-        "description": "Appendix E: Screw Theory Reference"
+        "description": "Appendix E: Screw Theory Reference",
     },
 ]
 
 
-def setup_articles_directory():
+def setup_articles_directory() -> None:
     """Create articles directory if it doesn't exist"""
     os.makedirs(ARTICLES_DIR, exist_ok=True)
 
     # Create _metadata.yml for articles
     metadata_path = os.path.join(ARTICLES_DIR, "_metadata.yml")
     if not os.path.exists(metadata_path):
-        with open(metadata_path, 'w') as f:
-            f.write("""# Shared metadata for all articles
+        with open(metadata_path, "w") as f:
+            f.write(
+                """# Shared metadata for all articles
 format:
   html:
     toc: true
@@ -106,11 +107,12 @@ format:
     number-sections: false
     code-fold: true
     css: ../styles.css
-""")
+"""
+            )
         print(f"✓ Created {metadata_path}")
 
 
-def convert_all(dry_run=False):
+def convert_all(dry_run: bool = False) -> None:
     """Convert all LaTeX files to Quarto"""
     converter = LaTeXToQuartoConverter()
 
@@ -175,7 +177,7 @@ def convert_all(dry_run=False):
     return error_count == 0
 
 
-def main():
+def main() -> None:
     """Main entry point"""
     dry_run = "--dry-run" in sys.argv or "-n" in sys.argv
 
@@ -183,7 +185,9 @@ def main():
         print("Usage: python3 convert_all_to_quarto.py [--dry-run|-n] [--help|-h]")
         print()
         print("Options:")
-        print("  --dry-run, -n  : Preview what would be converted without making changes")
+        print(
+            "  --dry-run, -n  : Preview what would be converted without making changes"
+        )
         print("  --help, -h     : Show this help message")
         sys.exit(0)
 
@@ -191,5 +195,5 @@ def main():
     sys.exit(0 if success else 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

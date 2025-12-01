@@ -16,11 +16,11 @@ from pathlib import Path
 class LaTeXToQuartoConverter:
     def __init__(self) -> None:
         """Initialize converter."""
-        pass
+        # Converter initialized with default settings
 
     def read_latex_file(self, filepath: str | Path) -> str:
         """Read LaTeX file content."""
-        with open(filepath, encoding='utf-8') as f:
+        with open(filepath, encoding="utf-8") as f:
             return f.read()
 
     def extract_metadata(self, latex_content: str) -> dict[str, str]:
@@ -28,92 +28,110 @@ class LaTeXToQuartoConverter:
         metadata = {}
 
         # Extract title
-        title_match = re.search(r'\\title\{([^}]+)\}', latex_content, re.DOTALL)
+        title_match = re.search(r"\\title\{([^}]+)\}", latex_content, re.DOTALL)
         if title_match:
             title = title_match.group(1)
             # Clean LaTeX commands
-            title = re.sub(r'\\textbf\{([^}]+)\}', r'\1', title)
-            title = re.sub(r'\\\\\[[^\]]+\]', ' ', title)
-            title = re.sub(r'\\\\', ' ', title)
-            metadata['title'] = title.strip()
+            title = re.sub(r"\\textbf\{([^}]+)\}", r"\1", title)
+            title = re.sub(r"\\\\\[[^\]]+\]", " ", title)
+            title = re.sub(r"\\\\", " ", title)
+            metadata["title"] = title.strip()
         else:
-            metadata['title'] = "Untitled Article"
+            metadata["title"] = "Untitled Article"
 
         # Extract author if present
-        author_match = re.search(r'\\author\{([^}]+)\}', latex_content, re.DOTALL)
+        author_match = re.search(r"\\author\{([^}]+)\}", latex_content, re.DOTALL)
         if author_match:
-            metadata['author'] = author_match.group(1).strip()
+            metadata["author"] = author_match.group(1).strip()
         else:
-            metadata['author'] = "AffineDrift"
+            metadata["author"] = "AffineDrift"
 
         # Add date
-        metadata['date'] = date.today().strftime("%Y-%m-%d")
+        metadata["date"] = date.today().strftime("%Y-%m-%d")
 
         return metadata
 
     def extract_body(self, latex_content: str) -> str:
         r"""Extract content between \begin{document} and \end{document}."""
-        doc_match = re.search(r'\\begin\{document\}(.+)\\end\{document\}', latex_content, re.DOTALL)
+        doc_match = re.search(
+            r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL
+        )
         if doc_match:
             content = doc_match.group(1)
         else:
             content = latex_content
 
         # Remove \maketitle
-        content = re.sub(r'\\maketitle', '', content)
+        content = re.sub(r"\\maketitle", "", content)
 
         return content
 
     def convert_sections(self, content: str) -> str:
         """Convert LaTeX sections to Markdown headers."""
         # Sections
-        content = re.sub(r'\\section\{([^}]+)\}', r'## \1', content)
-        content = re.sub(r'\\subsection\{([^}]+)\}', r'### \1', content)
-        content = re.sub(r'\\subsubsection\{([^}]+)\}', r'#### \1', content)
-        content = re.sub(r'\\paragraph\{([^}]+)\}', r'##### \1', content)
-        content = re.sub(r'\\subparagraph\{([^}]+)\}', r'###### \1', content)
+        content = re.sub(r"\\section\{([^}]+)\}", r"## \1", content)
+        content = re.sub(r"\\subsection\{([^}]+)\}", r"### \1", content)
+        content = re.sub(r"\\subsubsection\{([^}]+)\}", r"#### \1", content)
+        content = re.sub(r"\\paragraph\{([^}]+)\}", r"##### \1", content)
+        content = re.sub(r"\\subparagraph\{([^}]+)\}", r"###### \1", content)
 
         return content
 
     def convert_text_formatting(self, content: str) -> str:
         """Convert LaTeX text formatting to Markdown."""
         # Bold
-        content = re.sub(r'\\textbf\{([^}]+)\}', r'**\1**', content)
+        content = re.sub(r"\\textbf\{([^}]+)\}", r"**\1**", content)
         # Italic
-        content = re.sub(r'\\textit\{([^}]+)\}', r'*\1*', content)
-        content = re.sub(r'\\emph\{([^}]+)\}', r'*\1*', content)
+        content = re.sub(r"\\textit\{([^}]+)\}", r"*\1*", content)
+        content = re.sub(r"\\emph\{([^}]+)\}", r"*\1*", content)
         # Code
-        content = re.sub(r'\\texttt\{([^}]+)\}', r'`\1`', content)
+        content = re.sub(r"\\texttt\{([^}]+)\}", r"`\1`", content)
         # Quotes
-        content = re.sub(r'``', r'"', content)
+        content = re.sub(r"``", r'"', content)
         content = re.sub(r"''", r'"', content)
 
         return content
 
     def convert_lists(self, content: str) -> str:
         """Convert LaTeX lists to Markdown lists."""
+
         # Itemize (unordered)
         def replace_itemize(match: re.Match[str]) -> str:
+            """Replace itemize environment with Markdown unordered list."""
             items = match.group(1)
             # Replace \item with -
-            items = re.sub(r'\\item\s+', '\n- ', items)
-            items = re.sub(r'\\item\s*$', '\n- ', items, flags=re.MULTILINE)
+            items = re.sub(r"\\item\s+", "\n- ", items)
+            items = re.sub(r"\\item\s*$", "\n- ", items, flags=re.MULTILINE)
             return items.strip()
 
-        content = re.sub(r'\\begin\{itemize\}(.*?)\\end\{itemize\}', replace_itemize, content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{itemize\}(.*?)\\end\{itemize\}",
+            replace_itemize,
+            content,
+            flags=re.DOTALL,
+        )
 
         # Enumerate (ordered)
         def replace_enumerate(match: re.Match[str]) -> str:
+            """Replace enumerate environment with Markdown ordered list."""
             items = match.group(1)
             # Replace \item with numbered list
             item_count = [0]  # Use list to make it mutable in nested function
+
             def number_item(m: re.Match[str]) -> str:
+                """Number items in enumerate list."""
                 item_count[0] += 1
-                return f'\n{item_count[0]}. '
-            items = re.sub(r'\\item\s+', number_item, items)
+                return f"\n{item_count[0]}. "
+
+            items = re.sub(r"\\item\s+", number_item, items)
             return items.strip()
 
-        content = re.sub(r'\\begin\{enumerate\}(.*?)\\end\{enumerate\}', replace_enumerate, content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
+            replace_enumerate,
+            content,
+            flags=re.DOTALL,
+        )
 
         return content
 
@@ -121,34 +139,31 @@ class LaTeXToQuartoConverter:
         """Convert special LaTeX environments."""
         # Abstract
         content = re.sub(
-            r'\\begin\{abstract\}(.*?)\\end\{abstract\}',
-            r'::: {.abstract-section}\n## Abstract\n\n\1\n\n:::',
+            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
+            r"::: {.abstract-section}\n## Abstract\n\n\1\n\n:::",
             content,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         # Key points
         content = re.sub(
-            r'\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}',
-            r'::: {.keypoint-box}\n**Key Point:** \1\n:::',
+            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
+            r"::: {.keypoint-box}\n**Key Point:** \1\n:::",
             content,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         # Limitations
         content = re.sub(
-            r'\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}',
-            r'::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::',
+            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
+            r"::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::",
             content,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         # Quotes
         content = re.sub(
-            r'\\begin\{quote\}(.*?)\\end\{quote\}',
-            r'> \1',
-            content,
-            flags=re.DOTALL
+            r"\\begin\{quote\}(.*?)\\end\{quote\}", r"> \1", content, flags=re.DOTALL
         )
 
         return content
@@ -159,38 +174,44 @@ class LaTeXToQuartoConverter:
         # Just ensure they're on their own lines
 
         # align environments - keep as-is
-        content = re.sub(r'\\begin\{align\}', r'\n$$\n\\begin{align}', content)
-        content = re.sub(r'\\end\{align\}', r'\\end{align}\n$$\n', content)
+        content = re.sub(r"\\begin\{align\}", r"\n$$\n\\begin{align}", content)
+        content = re.sub(r"\\end\{align\}", r"\\end{align}\n$$\n", content)
 
         # equation environments - keep as-is
-        content = re.sub(r'\\begin\{equation\}', r'\n$$', content)
-        content = re.sub(r'\\end\{equation\}', r'$$\n', content)
+        content = re.sub(r"\\begin\{equation\}", r"\n$$", content)
+        content = re.sub(r"\\end\{equation\}", r"$$\n", content)
 
         return content
 
     def convert_figures(self, content: str) -> str:
         """Convert LaTeX figures to Quarto format."""
+
         # Remove complex figure environments but preserve caption info
         def replace_figure(match: re.Match[str]) -> str:
             fig_content = match.group(1)
 
             # Try to extract caption
-            caption_match = re.search(r'\\caption\{([^}]+)\}', fig_content)
+            caption_match = re.search(r"\\caption\{([^}]+)\}", fig_content)
             caption = caption_match.group(1) if caption_match else ""
 
             if caption:
-                return f'\n\n[Figure: {caption}]\n\n'
+                return f"\n\n[Figure: {caption}]\n\n"
             else:
-                return '\n\n[Figure]\n\n'
+                return "\n\n[Figure]\n\n"
 
-        content = re.sub(r'\\begin\{figure\}(.*?)\\end\{figure\}', replace_figure, content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{figure\}(.*?)\\end\{figure\}",
+            replace_figure,
+            content,
+            flags=re.DOTALL,
+        )
 
         # Remove tikzpicture environments
         content = re.sub(
-            r'\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}',
-            '[Figure: TikZ diagram - see PDF version]',
+            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
+            "[Figure: TikZ diagram - see PDF version]",
             content,
-            flags=re.DOTALL
+            flags=re.DOTALL,
         )
 
         return content
@@ -198,47 +219,63 @@ class LaTeXToQuartoConverter:
     def convert_references(self, content: str) -> str:
         """Convert LaTeX cross-references."""
         # Convert \ref and \cref to Quarto format
-        content = re.sub(r'\\cref\{([^}]+)\}', r'[@\1]', content)
-        content = re.sub(r'\\ref\{([^}]+)\}', r'[@\1]', content)
+        content = re.sub(r"\\cref\{([^}]+)\}", r"[@\1]", content)
+        content = re.sub(r"\\ref\{([^}]+)\}", r"[@\1]", content)
 
         # Convert \label to Quarto format
-        content = re.sub(r'\\label\{eq:([^}]+)\}', r'{#eq-\1}', content)
-        content = re.sub(r'\\label\{fig:([^}]+)\}', r'{#fig-\1}', content)
-        content = re.sub(r'\\label\{sec:([^}]+)\}', r'{#sec-\1}', content)
-        content = re.sub(r'\\label\{([^}]+)\}', r'{#\1}', content)
+        content = re.sub(r"\\label\{eq:([^}]+)\}", r"{#eq-\1}", content)
+        content = re.sub(r"\\label\{fig:([^}]+)\}", r"{#fig-\1}", content)
+        content = re.sub(r"\\label\{sec:([^}]+)\}", r"{#sec-\1}", content)
+        content = re.sub(r"\\label\{([^}]+)\}", r"{#\1}", content)
 
         return content
 
     def convert_links(self, content: str) -> str:
         """Convert LaTeX URLs and hyperlinks to Markdown."""
         # \url{...}
-        content = re.sub(r'\\url\{([^}]+)\}', r'<\1>', content)
+        content = re.sub(r"\\url\{([^}]+)\}", r"<\1>", content)
         # \href{url}{text}
-        content = re.sub(r'\\href\{([^}]+)\}\{([^}]+)\}', r'[\2](\1)', content)
+        content = re.sub(r"\\href\{([^}]+)\}\{([^}]+)\}", r"[\2](\1)", content)
 
         return content
 
     def clean_latex_commands(self, content: str) -> str:
         """Remove or clean remaining LaTeX commands."""
         # Remove comments
-        content = re.sub(r'%.*$', '', content, flags=re.MULTILINE)
+        content = re.sub(r"%.*$", "", content, flags=re.MULTILINE)
 
         # Remove vspace, hspace
-        content = re.sub(r'\\[vh]space\*?\{[^}]+\}', '', content)
+        content = re.sub(r"\\[vh]space\*?\{[^}]+\}", "", content)
 
         # Remove font size commands
-        content = re.sub(r'\\(small|large|Large|huge|Huge|tiny|footnotesize|scriptsize|normalsize)', '', content)
+        content = re.sub(
+            r"\\(small|large|Large|huge|Huge|tiny|footnotesize|scriptsize|normalsize)",
+            "",
+            content,
+        )
 
         # Custom commands - convert to bold
-        content = re.sub(r'\\bvec\{([^}]+)\}', r'**\1**', content)
-        content = re.sub(r'\\(Feq|Ceq|Rdrift|Rinput)', r'**\1**', content)
+        content = re.sub(r"\\bvec\{([^}]+)\}", r"**\1**", content)
+        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
 
         # Remove table environments (not converting tables in this version)
-        content = re.sub(r'\\begin\{table\}.*?\\end\{table\}', '[Table]', content, flags=re.DOTALL)
-        content = re.sub(r'\\begin\{tabular\}.*?\\end\{tabular\}', '[Table]', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL
+        )
+        content = re.sub(
+            r"\\begin\{tabular\}.*?\\end\{tabular\}",
+            "[Table]",
+            content,
+            flags=re.DOTALL,
+        )
 
         # Remove theorem/definition environments
-        content = re.sub(r'\\begin\{(theorem|definition|proposition|lemma)\}(.*?)\\end\{\1\}', r'\n\n**\1:** \2\n\n', content, flags=re.DOTALL)
+        content = re.sub(
+            r"\\begin\{(theorem|definition|proposition|lemma)\}(.*?)\\end\{\1\}",
+            r"\n\n**\1:** \2\n\n",
+            content,
+            flags=re.DOTALL,
+        )
 
         return content
 
@@ -279,17 +316,19 @@ class LaTeXToQuartoConverter:
         content = self.clean_latex_commands(content)
 
         # Clean up extra whitespace
-        content = re.sub(r'\n{3,}', '\n\n', content)
+        content = re.sub(r"\n{3,}", "\n\n", content)
 
         # Create frontmatter
         frontmatter = self.create_frontmatter(metadata)
 
-        return frontmatter + content.strip() + '\n'
+        return frontmatter + content.strip() + "\n"
 
-    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> Path:
+    def convert_file(
+        self, input_file: str | Path, output_file: str | Path | None = None
+    ) -> Path:
         """Convert a LaTeX file to Quarto .qmd."""
         if output_file is None:
-            output_file = Path(input_file).with_suffix('.qmd')
+            output_file = Path(input_file).with_suffix(".qmd")
 
         print(f"Converting {input_file} -> {output_file}")
 
@@ -301,7 +340,7 @@ class LaTeXToQuartoConverter:
 
         # Write output
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        with open(output_file, 'w', encoding='utf-8') as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             f.write(qmd_content)
 
         print(f"Conversion complete: {output_file}")
@@ -313,7 +352,9 @@ def main() -> None:
     if len(sys.argv) < 2:
         print("Usage: python3 latex_to_qmd.py <input.tex> [output.qmd]")
         print("\nExample:")
-        print("  python3 latex_to_qmd.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex")
+        print(
+            "  python3 latex_to_qmd.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
+        )
         sys.exit(1)
 
     input_file = sys.argv[1]
@@ -327,5 +368,5 @@ def main() -> None:
     converter.convert_file(input_file, output_file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

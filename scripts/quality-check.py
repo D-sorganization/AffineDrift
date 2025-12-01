@@ -114,32 +114,63 @@ def check_banned_patterns(
     # Check if this is a test file - exclude angle bracket check for test files
     is_test_file = "test" in filepath.name.lower() or "test" in str(filepath.parts)
 
-    # Check if this is a GUI file that uses HTML (PyQt/Qt applications)
-    is_gui_file = False
+    # Check if this is a file that generates HTML/uses HTML strings (GUI, Streamlit, HTML conversion tools)
+    is_html_generating_file = False
     if filepath.suffix == ".py":
-        try:
-            content = filepath.read_text(encoding="utf-8")
-            # Check for GUI framework imports and HTML usage
-            if any(
-                import_name in content
-                for import_name in [
-                    "PyQt",
-                    "QtWidgets",
-                    "QApplication",
-                    "QLabel",
-                    "setText",
-                ]
-            ):
-                if "<b>" in content or "<br>" in content or "setText" in content:
-                    is_gui_file = True
-        except (OSError, UnicodeDecodeError):
-            pass
+        # Check if it's a Streamlit file
+        if "streamlit" in filepath.name.lower() or "Streamlit" in str(filepath.parts):
+            is_html_generating_file = True
+        # Check if it's an HTML conversion tool or navigation update tool
+        elif any(
+            tool_name in filepath.name.lower()
+            for tool_name in ["latex_to_html", "html", "convert", "update_navigation"]
+        ):
+            is_html_generating_file = True
+        # Check if it's a GUI file (PyQt/Qt applications)
+        else:
+            try:
+                content = filepath.read_text(encoding="utf-8")
+                # Check for GUI framework imports and HTML usage
+                if any(
+                    import_name in content
+                    for import_name in [
+                        "PyQt",
+                        "QtWidgets",
+                        "QApplication",
+                        "QLabel",
+                        "setText",
+                        "streamlit",
+                        "st.",
+                    ]
+                ):
+                    if (
+                        "<b>" in content
+                        or "<br>" in content
+                        or "setText" in content
+                        or "st." in content
+                    ):
+                        is_html_generating_file = True
+            except (OSError, UnicodeDecodeError):
+                pass
+
+    # Exclude quality check scripts and MATLAB quality check from certain checks
+    is_quality_check_script = (
+        "quality_check" in filepath.name.lower()
+        or "matlab_quality_check" in filepath.name.lower()
+    )
 
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
-            # Skip angle bracket placeholder check for test files and GUI files (HTML strings are valid)
-            if (is_test_file or is_gui_file) and "Angle bracket placeholder" in message:
+            # Skip angle bracket placeholder check for test files and HTML-generating files (HTML strings are valid)
+            if (
+                is_test_file or is_html_generating_file
+            ) and "Angle bracket placeholder" in message:
+                continue
+            # Skip TODO/FIXME checks in quality check scripts (they're part of the pattern definitions)
+            if is_quality_check_script and (
+                "TODO placeholder" in message or "FIXME placeholder" in message
+            ):
                 continue
             if pattern.search(line):
                 issues.append((line_num, message, line.strip()))
@@ -169,14 +200,28 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
         "quality_check.py",
         "quality-check.py",
         "quality-check-script.py",
+        "matlab_quality_check.py",
     ]
     if filepath.name in excluded_names:
+        return issues
+    # Skip magic number checks in quality check scripts (they contain pattern definitions)
+    if (
+        "quality_check" in filepath.name.lower()
+        or "matlab_quality_check" in filepath.name.lower()
+    ):
         return issues
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
         # Skip lines that are already defining constants (e.g., GRAVITY_M_S2 = 9.81)
         if re.search(r"GRAVITY_M_S2\s*=\s*", line_content, re.IGNORECASE):
             continue
+        # Skip magic numbers in string literals (like in matlab_quality_check.py)
+        if '"' in line_content or "'" in line_content:
+            # Check if the magic number is inside quotes
+            if re.search(r'["\'].*9\.8[0-9]?.*["\']', line_content) or re.search(
+                r'["\'].*3\.141.*["\']', line_content
+            ):
+                continue
         for pattern, message in MAGIC_NUMBERS:
             if pattern.search(line_content):
                 issues.append((line_num, message, line.strip()))

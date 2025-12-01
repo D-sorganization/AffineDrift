@@ -399,7 +399,9 @@ class MATLABQualityChecker:
                 if in_function:
                     # Check for clear without variable (dangerous) or clear all/global (very dangerous)
                     if re.search(
-                        r"\bclear\s+(all|global)\b", line_stripped, re.IGNORECASE,
+                        r"\bclear\s+(all|global)\b",
+                        line_stripped,
+                        re.IGNORECASE,
                     ):
                         issues.append(
                             f"{file_path.name} (line {i}): Avoid 'clear all' or 'clear global' in functions - clears all variables, functions, and MEX links",
@@ -472,7 +474,7 @@ class MATLABQualityChecker:
         return self.results
 
 
-def main():
+def main() -> None:
     """Main entry point for the MATLAB quality check script."""
     parser = argparse.ArgumentParser(description="MATLAB Code Quality Checker")
     parser.add_argument("--strict", action="store_true", help="Enable strict mode")
@@ -539,4 +541,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
