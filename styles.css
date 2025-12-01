@@ -97,7 +97,79 @@ h4, h5, h6 {
 .container {
     max-width: 1800px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
+    width: 100%;
+}
+
+/* Override Quarto's default column constraints - force wide single column */
+.quarto-layout-panel,
+.quarto-title-block,
+.quarto-content,
+.quarto-document-content,
+.column-page,
+.page-columns {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Force single column layout - remove Quarto's three-column layout */
+.page-columns.page-rows-contents .content,
+.page-columns.page-rows-contents .margin-sidebar,
+.page-columns.page-rows-contents .sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Main content area should be wide */
+#quarto-content,
+.quarto-container {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Content column should be full width */
+.content,
+.column-page {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Remove margin sidebar (TOC) to make content wider */
+#quarto-margin-sidebar,
+.margin-sidebar {
+    display: none !important;
+    width: 0 !important;
+}
+
+/* Ensure all article content is wide */
+.article-section .container,
+.about-section .container,
+.contact-section .container,
+.collaborate-section .container,
+.reviews-section .container,
+.book-reviews-section .container,
+.repositories-section .container {
+    max-width: 1600px !important;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
+    padding: 2rem 4rem !important;
+}
+
+/* Individual article pages should also be wide */
+.quarto-document-content {
+    max-width: 1600px !important;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
+    padding: 2rem 4rem !important;
+}
+
+/* Ensure article body content is wide */
+.quarto-document-content .content,
+.quarto-document-content main {
+    max-width: 100% !important;
+    width: 100% !important;
 }
 
 /* ===========================
@@ -1183,6 +1255,22 @@ img[loading="lazy"].loaded {
         margin-left: 0;
     }
 
+    /* Remove sidebar offset on mobile - sidebar is hidden */
+    .article-section .container,
+    .model-section .container,
+    .resources-section .container,
+    .quarto-document-content,
+    .main-article {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 2rem 1.5rem !important;
+    }
+
+    .resources-layout {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
     header {
         padding: 0.6rem 0;
     }
@@ -1410,13 +1498,15 @@ img[loading="lazy"].loaded {
 }
 
 .main-article {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     background: var(--pure-white);
-    padding: 3rem;
+    padding: 3rem 4rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px var(--shadow-color);
     min-height: 200px; /* Ensure content area is visible */
+    width: calc(100% - 300px); /* Account for sidebar */
+    margin-left: 300px; /* Account for sidebar */
 }
 
 .main-article * {
@@ -1756,10 +1846,12 @@ img[loading="lazy"].loaded {
     padding-left: 0.25rem;
 }
 
-/* Wider container for article/model pages */
+/* Wider container for article/model pages - single wide column */
 .article-section .container {
-    max-width: 1200px;
-    padding: 2rem 2rem;
+    max-width: 1600px !important;
+    padding: 2rem 4rem !important;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
 }
 
 .model-section {
@@ -1768,8 +1860,18 @@ img[loading="lazy"].loaded {
 }
 
 .model-section .container {
-    max-width: 1200px;
-    padding: 2rem 2rem;
+    max-width: 1600px !important;
+    padding: 2rem 4rem !important;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
+}
+
+/* Resources pages should also be wide */
+.resources-section .container {
+    max-width: 1600px !important;
+    padding: 2rem 4rem !important;
+    width: calc(100% - 300px) !important;
+    margin-left: 300px !important;
 }
 
 /* Sidebar links for model pages */

@@ -282,3 +282,38 @@ page-layout: full
   </div>
 </section>
 ```
+
+```{=html}
+<script>
+// Add article topic navigation to sidebar
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.querySelector('.sidebar-nav');
+  if (sidebar) {
+    const existingHistory = sidebar.querySelector('.sidebar-section');
+    
+    // Create article navigation section
+    const articleNavSection = document.createElement('div');
+    articleNavSection.className = 'sidebar-section';
+    articleNavSection.innerHTML = `
+      <h3 class="sidebar-heading">Article Topics</h3>
+      <ul class="sidebar-links">
+        <li><a href="#drifter-manifesto">The Drifter Manifesto</a></li>
+        <li><a href="#current-studies">Current Studies</a></li>
+        <li><a href="#affine-nature-golf-swing">Affine Nature of Golf Swing</a></li>
+        <li><a href="#affine-background-articles">Affine Background Articles</a></li>
+        <li><a href="drifter-manifesto.html">Drifter Manifesto Overview</a></li>
+        <li><a href="research-reviews.html">Research Reviews</a></li>
+        <li><a href="book-reviews.html">Book Reviews</a></li>
+      </ul>
+    `;
+    
+    // Insert article navigation before history section
+    if (existingHistory) {
+      sidebar.insertBefore(articleNavSection, existingHistory);
+    } else {
+      sidebar.appendChild(articleNavSection);
+    }
+  }
+});
+</script>
+```
