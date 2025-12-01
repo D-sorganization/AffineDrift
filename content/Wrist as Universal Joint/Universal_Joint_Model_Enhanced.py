@@ -52,7 +52,7 @@ from PyQt6.QtWidgets import (
 class WheelIgnoringSlider(QSlider):
     """Slider that ignores mouse wheel events - wheel only scrolls page"""
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event) -> None:
         """Ignore wheel events - let parent handle scrolling"""
         event.ignore()  # Let the event propagate to parent for scrolling
 
