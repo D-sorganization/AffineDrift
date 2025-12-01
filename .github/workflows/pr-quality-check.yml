@@ -16,6 +16,7 @@ permissions:
 jobs:
   quality-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: true # ✅ Always include
       matrix:
@@ -51,6 +52,7 @@ jobs:
           pip install ruff==0.5.0 mypy==1.10.0 black==24.4.2 pytest pytest-cov
 
       - name: Run MATLAB Quality Check (Static Analysis)
+        id: matlab-check
         continue-on-error: true # Non-blocking due to MATLAB license restrictions
         run: |
           if [ -f tools/matlab_utilities/scripts/matlab_quality_check.py ]; then
@@ -64,7 +66,7 @@ jobs:
           fi
 
       - name: Upload MATLAB Quality Report
-        if: always()
+        if: always() && steps.matlab-check.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
           name: matlab-quality-report-py${{ matrix.python-version }}
@@ -183,6 +185,7 @@ jobs:
 
   security-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -193,6 +196,7 @@ jobs:
           python-version: "3.11"
 
       - name: Run Bandit security check
+        id: bandit-check
         # ✅ Use continue-on-error instead of || true
         continue-on-error: true
         run: |
@@ -209,6 +213,7 @@ jobs:
           fi
 
       - name: Upload Bandit results
+        if: always() && steps.bandit-check.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:
           name: bandit-report
@@ -218,6 +223,7 @@ jobs:
 
   documentation-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
