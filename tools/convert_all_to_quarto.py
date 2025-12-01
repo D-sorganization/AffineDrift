@@ -185,9 +185,7 @@ def main() -> None:
         print("Usage: python3 convert_all_to_quarto.py [--dry-run|-n] [--help|-h]")
         print()
         print("Options:")
-        print(
-            "  --dry-run, -n  : Preview what would be converted without making changes"
-        )
+        print("  --dry-run, -n  : Preview what would be converted without making changes")
         print("  --help, -h     : Show this help message")
         sys.exit(0)
 

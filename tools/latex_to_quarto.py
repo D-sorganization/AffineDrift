@@ -40,12 +40,8 @@ def prompt_for_files() -> list[Path]:
         )
         return [Path(f) for f in file_paths]
     except ImportError:
-        print(
-            "ERROR: tkinter not available. Please provide folder or file paths as arguments."
-        )
-        print(
-            "Usage: python latex_to_quarto.py <folder1> [folder2] ... [file1.tex] ..."
-        )
+        print("ERROR: tkinter not available. Please provide folder or file paths as arguments.")
+        print("Usage: python latex_to_quarto.py <folder1> [folder2] ... [file1.tex] ...")
         sys.exit(1)
 
 

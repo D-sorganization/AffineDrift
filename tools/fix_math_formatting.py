@@ -21,9 +21,7 @@ def fix_math_formatting(content: str) -> str:
         # Replace **X** with \mathbf{X} (single letter)
         math_content = re.sub(r"\*\*([A-Za-z])\*\*", r"\\mathbf{\1}", math_content)
         # Replace **\alpha** etc with \boldsymbol{\alpha}
-        math_content = re.sub(
-            r"\*\*\\([a-z]+)\*\*", r"\\boldsymbol{\\\1}", math_content
-        )
+        math_content = re.sub(r"\*\*\\([a-z]+)\*\*", r"\\boldsymbol{\\\1}", math_content)
         return f"${math_content}$"
 
     # Use non-greedy matching to handle multiple inline math expressions
@@ -36,9 +34,7 @@ def fix_math_formatting(content: str) -> str:
         # Replace **X** with \mathbf{X}
         math_content = re.sub(r"\*\*([A-Za-z])\*\*", r"\\mathbf{\1}", math_content)
         # Also handle Greek letters: **\alpha** -> \boldsymbol{\alpha}
-        math_content = re.sub(
-            r"\*\*\\([a-z]+)\*\*", r"\\boldsymbol{\\\1}", math_content
-        )
+        math_content = re.sub(r"\*\*\\([a-z]+)\*\*", r"\\boldsymbol{\\\1}", math_content)
         return f"$${math_content}$$"
 
     content = re.sub(r"\$\$([^$]+)\$\$", replace_display_math, content, flags=re.DOTALL)

@@ -155,17 +155,14 @@ def check_banned_patterns(
 
     # Exclude quality check scripts and MATLAB quality check from certain checks
     is_quality_check_script = (
-        "quality_check" in filepath.name.lower()
-        or "matlab_quality_check" in filepath.name.lower()
+        "quality_check" in filepath.name.lower() or "matlab_quality_check" in filepath.name.lower()
     )
 
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
             # Skip angle bracket placeholder check for test files and HTML-generating files (HTML strings are valid)
-            if (
-                is_test_file or is_html_generating_file
-            ) and "Angle bracket placeholder" in message:
+            if (is_test_file or is_html_generating_file) and "Angle bracket placeholder" in message:
                 continue
             # Skip TODO/FIXME/Angle bracket checks in quality check scripts (they're part of the pattern definitions)
             if is_quality_check_script and (
@@ -216,10 +213,7 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     if filepath.name in excluded_names:
         return issues
     # Skip magic number checks in quality check scripts (they contain pattern definitions)
-    if (
-        "quality_check" in filepath.name.lower()
-        or "matlab_quality_check" in filepath.name.lower()
-    ):
+    if "quality_check" in filepath.name.lower() or "matlab_quality_check" in filepath.name.lower():
         return issues
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
@@ -258,8 +252,7 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
                     if not ast.get_docstring(node):
                         # Skip private nested functions in update_navigation.py
                         if not (
-                            filepath.name == "update_navigation.py"
-                            and node.name.startswith("_")
+                            filepath.name == "update_navigation.py" and node.name.startswith("_")
                         ):
                             issues.append(
                                 (
@@ -324,9 +317,7 @@ def main() -> None:
         ".ipynb_checkpoints",
         ".Trash",
     }
-    python_files = [
-        f for f in python_files if not any(part in exclude_dirs for part in f.parts)
-    ]
+    python_files = [f for f in python_files if not any(part in exclude_dirs for part in f.parts)]
 
     # Exclude quality check scripts themselves
     excluded_script_names = [

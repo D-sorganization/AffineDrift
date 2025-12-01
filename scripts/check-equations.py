@@ -42,9 +42,7 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
                 matches = re.findall(r"\\\[(.*?)\\\]", line)
                 for match in matches:
                     if not match.strip():
-                        issues.append(
-                            (line_num, "empty", "Empty equation block \\[\\]")
-                        )
+                        issues.append((line_num, "empty", "Empty equation block \\[\\]"))
 
         # Check for $$ ... $$ patterns
         dollar_count = line.count("$$")
@@ -175,9 +173,7 @@ def main() -> None:
             issues_found = True
 
     # Check rendered HTML files in docs/ for MathJax configuration
-    html_files = (
-        list((root / "docs").rglob("*.html")) if (root / "docs").exists() else []
-    )
+    html_files = list((root / "docs").rglob("*.html")) if (root / "docs").exists() else []
 
     for html_file in html_files[:10]:  # Limit to first 10 to avoid too much output
         config_issues = check_mathjax_config(str(html_file))
@@ -191,9 +187,7 @@ def main() -> None:
         print("SUCCESS: No equation rendering issues found!")
         return 0
     else:
-        print(
-            "\nWARNING: Some equation rendering issues were found. Please review and fix."
-        )
+        print("\nWARNING: Some equation rendering issues were found. Please review and fix.")
         return 1
 
 

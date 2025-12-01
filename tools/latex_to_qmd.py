@@ -53,9 +53,7 @@ class LaTeXToQuartoConverter:
 
     def extract_body(self, latex_content: str) -> str:
         r"""Extract content between \begin{document} and \end{document}."""
-        doc_match = re.search(
-            r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL
-        )
+        doc_match = re.search(r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL)
         if doc_match:
             content = doc_match.group(1)
         else:
@@ -162,9 +160,7 @@ class LaTeXToQuartoConverter:
         )
 
         # Quotes
-        content = re.sub(
-            r"\\begin\{quote\}(.*?)\\end\{quote\}", r"> \1", content, flags=re.DOTALL
-        )
+        content = re.sub(r"\\begin\{quote\}(.*?)\\end\{quote\}", r"> \1", content, flags=re.DOTALL)
 
         return content
 
@@ -260,9 +256,7 @@ class LaTeXToQuartoConverter:
         content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
 
         # Remove table environments (not converting tables in this version)
-        content = re.sub(
-            r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL
-        )
+        content = re.sub(r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL)
         content = re.sub(
             r"\\begin\{tabular\}.*?\\end\{tabular\}",
             "[Table]",
@@ -324,9 +318,7 @@ class LaTeXToQuartoConverter:
 
         return frontmatter + content.strip() + "\n"
 
-    def convert_file(
-        self, input_file: str | Path, output_file: str | Path | None = None
-    ) -> Path:
+    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> Path:
         """Convert a LaTeX file to Quarto .qmd."""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".qmd")

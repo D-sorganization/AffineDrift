@@ -24,9 +24,7 @@ def clean_latex_comments(file_path: Path) -> bool:
 
         cleaned_content = "\n".join(cleaned_lines)
         # Also remove standalone comment blocks like "%=="
-        cleaned_content = re.sub(
-            r"^\s*% =+.*$", "", cleaned_content, flags=re.MULTILINE
-        )
+        cleaned_content = re.sub(r"^\s*% =+.*$", "", cleaned_content, flags=re.MULTILINE)
         # Remove empty lines that were left by comment removal (max 2 consecutive)
         cleaned_content = re.sub(r"\n{4,}", "\n\n\n", cleaned_content)
 

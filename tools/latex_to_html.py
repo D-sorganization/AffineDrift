@@ -35,9 +35,7 @@ class LaTeXToHTMLConverter:
     def extract_sections(self, latex_content: str) -> str:
         """Extract sections from LaTeX content"""
         # Remove everything before \begin{document}
-        doc_match = re.search(
-            r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL
-        )
+        doc_match = re.search(r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL)
         if doc_match:
             content = doc_match.group(1)
         else:
@@ -221,9 +219,7 @@ class LaTeXToHTMLConverter:
         )
 
         # Remove graphics/figure commands
-        content = re.sub(
-            r"\\includegraphics(\[[^\]]*\])?\{[^}]+\}", "[Figure]", content
-        )
+        content = re.sub(r"\\includegraphics(\[[^\]]*\])?\{[^}]+\}", "[Figure]", content)
         content = re.sub(r"\\caption\{[^}]+\}", "", content)
 
         # Remove labels
@@ -425,9 +421,7 @@ class LaTeXToHTMLConverter:
 """
         return template
 
-    def convert_file(
-        self, input_file: str | Path, output_file: str | Path | None = None
-    ) -> str:
+    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> str:
         """Convert a LaTeX file to HTML"""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".html")
