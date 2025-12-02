@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isArticlePage || ARTICLE_PAGES.includes(currentUrl)) {
       const currentPage = {
         title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-        url: currentPath.includes('/articles/') ? currentPath.replace(/^.*\//, 'articles/') + currentUrl : currentUrl
+        url: currentPath.includes('/articles/') ? 'articles/' + currentUrl : currentUrl
       };
 
       history = history.filter(item => item.url !== currentPage.url);
