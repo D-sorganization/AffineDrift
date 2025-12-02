@@ -4,9 +4,12 @@
  */
 
 // Constants for scroll offsets and timing
-// Matches scroll-margin-top: 140px defined in styles.css for page sections
-const HEADER_OFFSET = 140; // Offset for smooth scrolling to account for fixed header
-const TOC_SCROLL_OFFSET = 160; // Offset for active section detection in TOC
+// Note: Uses --scroll-offset (140px) not --header-offset (120px) because:
+// - --header-offset is for sidebar positioning (top: 120px)
+// - --scroll-offset is for scroll behavior (scroll-margin-top: 140px)
+// JS smooth scrolling must match CSS scroll-margin-top for consistency
+const HEADER_OFFSET = 140; // Smooth scrolling offset (matches CSS --scroll-offset)
+const TOC_SCROLL_OFFSET = 140; // Active section detection offset (matches CSS --scroll-offset)
 const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
 const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
 
@@ -147,16 +150,20 @@ document.addEventListener('DOMContentLoaded', function() {
         navToggleButton.setAttribute('aria-label', 'Toggle navigation menu');
         navToggleButton.textContent = 'Menu';
 
-        sidebarToggleButton = document.createElement('button');
-        sidebarToggleButton.className = 'sidebar-toggle';
-        sidebarToggleButton.type = 'button';
-        sidebarToggleButton.setAttribute('aria-expanded', 'false');
-        sidebarToggleButton.setAttribute('aria-label', 'Toggle recent pages panel');
-        sidebarToggleButton.textContent = 'History';
-
         const firstChild = navContainer.firstElementChild;
         navContainer.insertBefore(navToggleButton, firstChild);
-        navContainer.insertBefore(sidebarToggleButton, firstChild);
+
+        // Only create History button if .sidebar element exists
+        // (legacy sidebar for tool pages, not used in main site 3-column layout)
+        if (sidebar) {
+            sidebarToggleButton = document.createElement('button');
+            sidebarToggleButton.className = 'sidebar-toggle';
+            sidebarToggleButton.type = 'button';
+            sidebarToggleButton.setAttribute('aria-expanded', 'false');
+            sidebarToggleButton.setAttribute('aria-label', 'Toggle recent pages panel');
+            sidebarToggleButton.textContent = 'History';
+            navContainer.insertBefore(sidebarToggleButton, firstChild);
+        }
     }
 
     function ensureOverlay() {
