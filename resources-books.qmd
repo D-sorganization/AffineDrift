@@ -7,13 +7,12 @@ page-layout: full
 ```{=html}
 <section class="resources-section">
   <div class="container">
-    <div class="resources-layout">
-      <!-- Left Sidebar Navigation -->
-      <aside class="resources-sidebar">
-        <nav class="resources-nav">
-          <h3 class="resources-nav-heading">Resources</h3>
-          <ul class="resources-nav-links">
-            <li><a href="resources.html">Resources Home</a></li>
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Resources</h3>
+          <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
             <li><a href="resources-websites.html">Websites</a></li>
@@ -22,13 +21,22 @@ page-layout: full
             <li><a href="resources-papers.html">Papers</a></li>
             <li><a href="resources-researchers.html">Researchers</a></li>
           </ul>
+          <h3 class="sidebar-heading" style="margin-top: 2rem;">Book Categories</h3>
+          <ul class="sidebar-links">
+            <li><a href="#robotics-screw">Robotics & Screw Theory</a></li>
+            <li><a href="#nonlinear-control">Nonlinear Control</a></li>
+            <li><a href="#underactuated">Underactuated Robotics</a></li>
+            <li><a href="#biomechanics">Biomechanics</a></li>
+            <li><a href="#golf-science">Golf Science</a></li>
+            <li><a href="#classical-mechanics">Classical Mechanics</a></li>
+          </ul>
         </nav>
       </aside>
 
       <!-- Main Content -->
-      <main class="resources-main">
-        <div class="page-header">
-          <h1>Books</h1>
+      <main class="main-content-area">
+        <div class="page-section">
+          <h2 class="section-heading">Books</h2>
           <p class="page-subtitle">Essential reading for robotics, screw axis theory, nonlinear control, underactuated robotics, biomechanics, golf science, and classical mechanics</p>
         </div>
 
@@ -40,9 +48,8 @@ page-layout: full
           </p>
         </div>
 
-        <!-- Robotics and Screw Axis Theory Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Robotics and Screw Axis Theory</h2>
+        <div id="robotics-screw" class="category-section">
+          <h3 class="category-title">Robotics and Screw Axis Theory</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
@@ -121,9 +128,10 @@ page-layout: full
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://via.placeholder.com/200x300?text=Modern+Robotics" 
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/1107156300?fife=w400-h600" 
                      alt="Modern Robotics Cover" 
-                     class="book-cover">
+                     class="book-cover"
+                     onerror="this.src='https://via.placeholder.com/200x300?text=Modern+Robotics'">
               </div>
               <div class="resource-content">
                 <h3>Modern Robotics: Mechanics, Planning, and Control</h3>
@@ -265,9 +273,8 @@ page-layout: full
           </div>
         </div>
 
-        <!-- Nonlinear Control Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Nonlinear Control</h2>
+        <div id="nonlinear-control" class="category-section">
+          <h3 class="category-title">Nonlinear Control</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
@@ -456,16 +463,17 @@ page-layout: full
           </div>
         </div>
 
-        <!-- Underactuated Robotics Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Underactuated Robotics</h2>
+        <div id="underactuated" class="category-section">
+          <h3 class="category-title">Underactuated Robotics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://via.placeholder.com/200x300?text=Book+Cover" 
+                <img src="https://underactuated.mit.edu/cover.png" 
                      alt="Underactuated Robotics Cover" 
-                     class="book-cover">
+                     class="book-cover"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/200x300?text=Underactuated+Robotics'">
               </div>
               <div class="resource-content">
                 <h3>Underactuated Robotics</h3>
@@ -609,16 +617,16 @@ page-layout: full
           </div>
         </div>
 
-        <!-- Biomechanics Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Biomechanics</h2>
+        <div id="biomechanics" class="category-section">
+          <h3 class="category-title">Biomechanics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://via.placeholder.com/200x300?text=Book+Cover" 
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/0470398183?fife=w400-h600" 
                      alt="Biomechanics and Motor Control of Human Movement Cover" 
-                     class="book-cover">
+                     class="book-cover"
+                     onerror="this.src='https://via.placeholder.com/200x300?text=Book+Cover'">
               </div>
               <div class="resource-content">
                 <h3>Biomechanics and Motor Control of Human Movement</h3>
@@ -804,9 +812,8 @@ page-layout: full
           </div>
         </div>
 
-        <!-- Golf Science Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Golf Science</h2>
+        <div id="golf-science" class="category-section">
+          <h3 class="category-title">Golf Science</h3>
           
           <div class="resource-grid">
             <div class="resource-card">
@@ -817,9 +824,8 @@ page-layout: full
           </div>
         </div>
 
-        <!-- Classical Mechanics Section -->
-        <div class="book-section">
-          <h2 class="section-heading">Classical Mechanics</h2>
+        <div id="classical-mechanics" class="category-section">
+          <h3 class="category-title">Classical Mechanics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
@@ -882,21 +888,130 @@ page-layout: full
           </div>
         </div>
       </main>
+
+      <!-- Right Sidebar: Recent Books History -->
+      <aside class="right-sidebar">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Books</h3>
+          <ul class="sidebar-links" id="books-history-list">
+            <li class="history-empty">No recent books yet</li>
+          </ul>
+        </nav>
+      </aside>
     </div>
   </div>
 </section>
 
 <style>
-.book-section {
-  margin-bottom: 3rem;
+.standard-page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+.left-sidebar,
+.right-sidebar {
+  background: var(--legal-pad-yellow);
+  border: 2px solid var(--legal-pad-yellow-border);
+  padding: 1.5rem 1rem;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
+  margin-bottom: 0.5rem;
+}
+
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
+  display: block;
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding-left: 1.3rem;
+}
+
+.toc-nav .sidebar-links a.active {
+  background-color: var(--accent-blue);
+  color: var(--pure-white);
+}
+
+.main-content-area {
+  min-width: 0;
+}
+
+.page-section {
+  margin-top: 0;
+  margin-bottom: 2rem;
 }
 
 .section-heading {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: var(--primary-blue);
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  font-style: italic;
   margin-bottom: 1.5rem;
+}
+
+.category-section {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.category-section:first-of-type {
+  margin-top: 0;
+}
+
+.category-title {
+  font-size: 1.75rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+  margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--accent-blue);
+  border-bottom: 2px solid var(--legal-pad-yellow-accent);
 }
 
 .book-authors {
@@ -919,94 +1034,8 @@ page-layout: full
   margin: 0;
 }
 
-.resources-layout {
-  display: flex;
-  gap: 2rem;
-  max-width: 1600px;
-  margin: 0 auto;
-  width: calc(100% - 300px);
-  margin-left: 300px;
-}
-
-.resources-sidebar {
-  width: 250px;
-  flex-shrink: 0;
-  background: var(--legal-pad-yellow);
-  border-right: 2px solid var(--legal-pad-yellow-border);
-  padding: 2rem 1rem;
-  position: sticky;
-  top: 120px;
-  align-self: flex-start;
-  max-height: calc(100vh - 140px);
-  overflow-y: auto;
-}
-
-.resources-nav-heading {
-  font-weight: 600;
-  color: var(--primary-blue);
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-light);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-}
-
-.resources-nav-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.resources-nav-links li {
-  margin-bottom: 0.5rem;
-}
-
-.resources-nav-links a {
-  display: block;
-  color: var(--text-dark);
-  text-decoration: none;
-  padding: 0.6rem 1rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-size: 0.95rem;
-}
-
-.resources-nav-links a:hover {
-  background-color: var(--light-blue);
-  color: var(--primary-blue);
-  padding-left: 1.3rem;
-}
-
-.resources-nav-links a.active {
-  background-color: var(--accent-blue);
-  color: var(--pure-white);
-}
-
-.resources-main {
-  flex: 1;
-  min-width: 0;
-  max-width: none;
-}
-
-.page-header {
-  margin-bottom: 2rem;
-}
-
-.page-header h1 {
-  font-size: 2.5rem;
-  color: var(--primary-blue);
-  margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  font-style: italic;
-}
-
 .resources-intro {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding: 1.5rem;
   background: var(--legal-pad-yellow-light);
   border-left: 4px solid var(--accent-blue);
@@ -1024,7 +1053,6 @@ page-layout: full
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0;
 }
 
 .resource-card {
@@ -1049,7 +1077,28 @@ page-layout: full
   box-shadow: none;
 }
 
-.resource-card h3 {
+.resource-card.has-media {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.resource-media {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.book-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid var(--legal-pad-yellow-border);
+}
+
+.resource-content {
+  flex: 1;
+}
+
+.resource-content h3 {
   color: var(--primary-blue);
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
@@ -1075,20 +1124,31 @@ page-layout: full
   padding-left: 0.5rem;
 }
 
-@media (max-width: 768px) {
-  .resources-layout {
-    flex-direction: column;
-    width: 100% !important;
-    margin-left: 0 !important;
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .resources-sidebar {
-    width: 100%;
+  .left-sidebar,
+  .right-sidebar {
     position: relative;
     top: 0;
     max-height: none;
-    border-right: none;
-    border-bottom: 2px solid var(--legal-pad-yellow-border);
+  }
+
+  .resource-card.has-media {
+    flex-direction: column;
+  }
+
+  .resource-media {
+    width: 100%;
   }
 
   .book-links {
@@ -1101,5 +1161,39 @@ page-layout: full
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const booksHistoryList = document.getElementById('books-history-list');
+  if (!booksHistoryList) return;
+
+  function updateBooksHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_books_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'resources-books.html'
+    };
+
+    if (currentPage.url === 'resources-books.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_books_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      booksHistoryList.innerHTML = '<li class="history-empty">No recent books yet</li>';
+      return;
+    }
+
+    booksHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateBooksHistory();
+});
+</script>
 ```
 

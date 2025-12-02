@@ -7,9 +7,31 @@ page-layout: full
 ```{=html}
 <section class="article-section">
   <div class="container">
-    <div class="articles-list">
-      <div class="article-category">
-        <h2>Pendulum Models</h2>
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Models</h3>
+          <ul class="sidebar-links">
+            <li><a href="models.html">Models Home</a></li>
+            <li><a href="models-simulink.html">Matlab Simulink</a></li>
+            <li><a href="models-mujoco.html">MuJoCo</a></li>
+            <li><a href="models-drake.html">Drake</a></li>
+            <li><a href="models-pinnochio.html">Pinocchio</a></li>
+            <li><a href="models-pendulum.html" class="active">Pendulum</a></li>
+            <li><a href="models-opensim.html">OpenSim</a></li>
+            <li><a href="models-myosim.html">MyoSim</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content-area">
+        <div class="page-section">
+          <h2 class="section-heading">Pendulum Models</h2>
+        </div>
+        <div class="articles-list">
+          <div class="article-category">
         <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.8; color: var(--text-dark);">
           Pendulum-based models and simulations that serve as simplified analogs for understanding 
           golf swing dynamics. These models provide insights into control-affine systems, drift-input 
@@ -17,8 +39,8 @@ page-layout: full
         </p>
       </div>
 
-      <div class="article-category">
-        <h2>Model Types</h2>
+          <div id="model-types" class="category-section">
+            <h3 class="category-title">Model Types</h3>
         <div class="article-list-item">
           <h3>Single Pendulum Models</h3>
           <p>Simple pendulum models with various actuation schemes, including torque at the pivot 
@@ -43,8 +65,8 @@ page-layout: full
         </div>
       </div>
 
-      <div class="article-category">
-        <h2>Related Articles</h2>
+          <div id="related-articles" class="category-section">
+            <h3 class="category-title">Related Articles</h3>
         <div class="article-list-item">
           <h3><a href="articles/drift-components-wrench-double-pendulum.html">Drift Components of Wrench in Double Pendulum</a></h3>
           <p>Analysis of drift components and wrench dynamics in a double pendulum system, providing 
@@ -56,13 +78,233 @@ page-layout: full
         </div>
       </div>
 
-      <div class="coming-soon">
-        <p style="margin-top: 3rem; font-style: italic; color: var(--text-light);">
-          Additional pendulum models and detailed documentation will be added as they are developed. 
-          Check back soon!
-        </p>
-      </div>
+          <div class="coming-soon">
+            <p style="margin-top: 3rem; font-style: italic; color: var(--text-light);">
+              Additional pendulum models and detailed documentation will be added as they are developed. 
+              Check back soon!
+            </p>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Sidebar: Recent Models History -->
+      <aside class="right-sidebar">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Models</h3>
+          <ul class="sidebar-links" id="models-history-list">
+            <li class="history-empty">No recent models yet</li>
+          </ul>
+        </nav>
+      </aside>
     </div>
   </div>
 </section>
+
+<style>
+.standard-page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+.left-sidebar,
+.right-sidebar {
+  background: var(--legal-pad-yellow);
+  border: 2px solid var(--legal-pad-yellow-border);
+  padding: 1.5rem 1rem;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
+  margin-bottom: 0.5rem;
+}
+
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
+  display: block;
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding-left: 1.3rem;
+}
+
+.toc-nav .sidebar-links a.active {
+  background-color: var(--accent-blue);
+  color: var(--pure-white);
+}
+
+.main-content-area {
+  min-width: 0;
+}
+
+.page-section {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.section-heading {
+  font-size: 2.5rem;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.category-section {
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.category-section:first-of-type {
+  margin-top: 0;
+}
+
+.category-title {
+  font-size: 1.75rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--legal-pad-yellow-accent);
+}
+
+.article-category {
+  margin-bottom: 2rem;
+}
+
+.article-list-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--legal-pad-yellow-border);
+}
+
+.article-list-item:last-child {
+  border-bottom: none;
+}
+
+.article-list-item h3 {
+  color: var(--primary-blue);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.article-list-item h3 a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.article-list-item h3 a:hover {
+  color: var(--accent-blue);
+}
+
+.article-list-item p {
+  color: var(--text-dark);
+  line-height: 1.8;
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modelsHistoryList = document.getElementById('models-history-list');
+  if (!modelsHistoryList) return;
+
+  const MODEL_PAGES = [
+    'models.html',
+    'models-simulink.html',
+    'models-mujoco.html',
+    'models-drake.html',
+    'models-pinnochio.html',
+    'models-pendulum.html',
+    'models-opensim.html',
+    'models-myosim.html'
+  ];
+
+  function updateModelsHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'models-pendulum.html'
+    };
+
+    if (MODEL_PAGES.includes(currentPage.url)) {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      modelsHistoryList.innerHTML = '<li class="history-empty">No recent models yet</li>';
+      return;
+    }
+
+    modelsHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateModelsHistory();
+});
+</script>
 ```
