@@ -15,8 +15,6 @@ website:
     left:
       - text: "Articles"
         menu:
-          - text: "Articles Home"
-            href: articles.html
           - text: "Drifter Manifesto"
             href: drifter-manifesto.html
           - text: "Articles"
@@ -217,6 +215,22 @@ format:
           </footer>
           <script src="script.js"></script>
           <script>
+          // MathJax automatically typesets content after startup, but we check for
+          // equations in HTML blocks that might need reprocessing after DOM is fully loaded
+          document.addEventListener('DOMContentLoaded', function() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+              // Only manually typeset if there are unprocessed math elements
+              // MathJax automatically typesets on startup, so this is only for edge cases
+              const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+              if (hasUnprocessedMath) {
+                MathJax.startup.promise.then(function() {
+                  return MathJax.typesetPromise();
+                }).catch(function(err) {
+                  console.log('MathJax typeset error:', err);
+                });
+              }
+            }
+          });
           // Global article history tracking for individual article pages
           (function() {
             const currentPath = window.location.pathname;
