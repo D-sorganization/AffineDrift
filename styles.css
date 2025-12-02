@@ -33,6 +33,14 @@
     --math-silver: #c0c0c0;
     --gradient-start: #0f4c75;
     --gradient-end: #3282b8;
+
+    /* Layout dimensions - standardized across site */
+    --sidebar-width: 250px;
+    --sidebar-gap: 2rem;
+    --content-max-width: 1600px;
+    --header-height: 120px;
+    --header-offset: 120px;
+    --scroll-offset: 140px;
 }
 
 body {
@@ -54,7 +62,7 @@ body {
 
 .main-content {
     flex: 1;
-    margin-left: 280px;
+    margin-left: 0;
     transition: margin-left 0.3s ease;
     min-height: 100vh;
     opacity: 1;
@@ -95,7 +103,7 @@ h4, h5, h6 {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -103,18 +111,55 @@ h4, h5, h6 {
 /* ===========================
    Sidebar Navigation
    =========================== */
+/* 3-Column Layout System */
+.standard-page-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width);
+    gap: var(--sidebar-gap);
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding-top: 1rem;
+}
+
+.left-sidebar,
+.right-sidebar {
+    background: var(--legal-pad-yellow);
+    border: 2px solid var(--legal-pad-yellow-border);
+    padding: 1.5rem 1rem;
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--header-offset);
+    align-self: flex-start;
+    height: fit-content;
+    max-height: calc(100vh - var(--scroll-offset));
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 4px;
+}
+
+.main-content-area {
+    min-width: 0;
+}
+
+/* Legacy sidebar for mobile menu compatibility */
 .sidebar {
     position: fixed;
     left: 0;
-    top: 120px; /* Account for header height with potential wrapping: 70px logo + padding + potential wrap */
-    width: 260px;
+    top: var(--header-offset);
+    width: var(--sidebar-width);
     bottom: 0;
     background: var(--legal-pad-yellow);
     border-right: 2px solid var(--legal-pad-yellow-border);
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 950; /* Above overlay (900) so sidebar content is clickable when open */
+    z-index: 950;
     box-shadow: 2px 0 8px var(--shadow-color);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+    transform: translateX(0);
 }
 
 .sidebar-nav {
@@ -167,6 +212,82 @@ h4, h5, h6 {
 .sidebar-links a.active {
     background-color: var(--accent-blue);
     color: var(--pure-white);
+}
+
+/* TOC and History Navigation Styles */
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
+    margin-bottom: 0.5rem;
+}
+
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
+    display: block;
+    color: var(--text-dark);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    padding-left: 1.3rem;
+}
+
+/* Page and Article Styles */
+.page-section {
+    margin-top: 0;
+    margin-bottom: 2rem;
+    scroll-margin-top: var(--scroll-offset);
+}
+
+.section-heading {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.article-category {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+.article-category:first-of-type {
+    margin-top: 0;
+}
+
+.category-title {
+    font-size: 1.75rem;
+    color: var(--primary-blue);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--legal-pad-yellow-accent);
 }
 
 /* ===========================
@@ -486,7 +607,7 @@ section h2::after {
 }
 
 .mission-quote {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto 2rem;
     padding: 1.5rem;
     background: var(--legal-pad-yellow);
@@ -515,7 +636,7 @@ section h2::after {
 }
 
 .mission-content {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -529,7 +650,7 @@ section h2::after {
 }
 
 .mission-list {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 1.5rem auto 1.5rem;
     padding-left: 2rem;
     color: var(--text-dark);
@@ -556,7 +677,7 @@ section h2::after {
 }
 
 .theory-content {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -701,7 +822,7 @@ section h2::after {
 }
 
 .golf-content {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -867,7 +988,7 @@ section h2::after {
 }
 
 .resources-section .container {
-    max-width: 1000px;
+    max-width: var(--content-max-width);
     padding: 2rem 1.5rem;
 }
 
@@ -961,7 +1082,7 @@ section h2::after {
 }
 
 .resource-list {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -1056,12 +1177,12 @@ section h2::after {
 .contribution-text {
     font-size: 1.2rem;
     line-height: 1.8;
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto 2rem;
 }
 
 .contribution-note {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 2rem auto;
     padding: 1.5rem;
     background: var(--pure-white);
@@ -1153,9 +1274,8 @@ img[loading="lazy"].loaded {
 }
 
 @media (max-width: 992px) {
-    .sidebar {
-        top: 140px; /* Account for header wrapping to multiple rows */
-        bottom: 0;
+    .standard-page-layout {
+        grid-template-columns: 200px 1fr 200px;
     }
 }
 
@@ -1164,27 +1284,26 @@ img[loading="lazy"].loaded {
         padding: 0 1.5rem;
     }
 
+    /* Switch to single column layout on mobile */
+    .standard-page-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .left-sidebar,
+    .right-sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
+
     .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        top: 96px; /* Reset for mobile where header is smaller */
-        bottom: 0;
-        box-shadow: 6px 0 18px rgba(0, 0, 0, 0.12);
-        /* Optimize scrolling on mobile */
         -webkit-overflow-scrolling: touch;
         will-change: transform;
     }
 
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
     .main-content {
         margin-left: 0;
-    }
-
-    .container {
-        padding: 0 1.5rem;
     }
 
     header {
@@ -1479,7 +1598,7 @@ mjx-container * {
 }
 
 .main-article {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     background: var(--pure-white);
     padding: 3rem 4rem;
@@ -1827,7 +1946,7 @@ mjx-container * {
 
 /* Wider container for article/model pages */
 .article-section .container {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
 }
 
 .model-section {
@@ -1836,12 +1955,12 @@ mjx-container * {
 }
 
 .model-section .container {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
 }
 
 /* Resources pages */
 .resources-section .container {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     padding: 2rem 1.5rem;
 }
 
@@ -2000,7 +2119,7 @@ mjx-container * {
 }
 
 .reviews-intro {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto 3rem;
     text-align: center;
     font-size: 1.1rem;
@@ -2008,7 +2127,7 @@ mjx-container * {
 }
 
 .reviews-list {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -2122,7 +2241,7 @@ mjx-container * {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 3rem;
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -2134,7 +2253,7 @@ mjx-container * {
 
 .contact-intro {
     text-align: center;
-    max-width: 800px;
+    max-width: var(--content-max-width);
     margin-bottom: 3rem;
     font-size: 1.1rem;
     line-height: 1.8;
@@ -2142,30 +2261,17 @@ mjx-container * {
 
 .contact-sidebar {
     position: sticky;
-    top: 120px;
+    top: var(--header-offset);
     align-self: flex-start;
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - var(--scroll-offset));
     overflow-y: auto;
-}
-
-/* Global sidebar sticky fix for all pages
- * Note: !important is necessary here to override inline styles defined in individual .qmd files
- * Each page defines sidebar styles in its own <style> block, so we need !important to ensure
- * consistent sticky behavior across all pages. This is intentional to fix the scrolling issue.
- */
-.standard-page-layout .left-sidebar,
-.standard-page-layout .right-sidebar {
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  height: fit-content;
-  overflow-x: hidden;
 }
 
 .contact-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 3rem;
-    max-width: 1200px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
 }
 
@@ -2418,7 +2524,7 @@ mjx-container * {
 }
 
 .comments-container {
-    max-width: 1400px;
+    max-width: var(--content-max-width);
     margin: 0 auto;
     background: var(--pure-white);
     padding: 2rem;
