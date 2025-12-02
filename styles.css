@@ -2148,7 +2148,11 @@ mjx-container * {
     overflow-y: auto;
 }
 
-/* Global sidebar sticky fix for all pages */
+/* Global sidebar sticky fix for all pages
+ * Note: !important is necessary here to override inline styles defined in individual .qmd files
+ * Each page defines sidebar styles in its own <style> block, so we need !important to ensure
+ * consistent sticky behavior across all pages. This is intentional to fix the scrolling issue.
+ */
 .standard-page-layout .left-sidebar,
 .standard-page-layout .right-sidebar {
   position: -webkit-sticky !important;
