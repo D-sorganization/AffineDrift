@@ -5,7 +5,7 @@
 
 // Constants for scroll offsets and timing
 // Matches CSS variables defined in styles.css for page sections
-const HEADER_OFFSET = 120; // Offset for smooth scrolling (matches --header-offset)
+const HEADER_OFFSET = 140; // Offset for smooth scrolling (matches --scroll-offset)
 const TOC_SCROLL_OFFSET = 140; // Offset for active section detection (matches --scroll-offset)
 const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
 const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
