@@ -442,14 +442,39 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateArticlesHistory() {
     let history = JSON.parse(localStorage.getItem('affinedrift_articles_history') || '[]');
     
-    // Track individual article pages
-    const articlePages = document.querySelectorAll('.accordion-content a[href^="articles/"]');
-    const currentUrl = window.location.pathname.split('/').pop() || 'articles.html';
+    // Track individual article pages - get full pathname to properly detect articles/
+    const currentPath = window.location.pathname;
+    const currentUrl = currentPath.split('/').pop() || 'articles.html';
+    const isArticlePage = currentPath.includes('/articles/') || currentUrl === 'articles.html';
     
-    if (currentUrl.startsWith('articles/') || currentUrl === 'articles.html') {
+    // List of article pages for validation
+    const ARTICLE_PAGES = [
+      'articles.html',
+      'theory-part1.html',
+      'theory-part2.html',
+      'theory-part3.html',
+      'theory-part4.html',
+      'theory-part5.html',
+      'inverse-dynamics.html',
+      'wrist-universal-joint.html',
+      'nonlinear-control-insights.html',
+      'drift-components-wrench-double-pendulum.html',
+      'secondary-axis-stability.html',
+      'controllability-drift-ratio.html',
+      'strokes-gained-limitations.html',
+      'superposition.html',
+      'screw-theory-reference.html',
+      'null-space-constraint-jacobian.html',
+      'lagrangian-reference.html',
+      'inverse-dynamics-inference.html',
+      'force-mobility-matrices.html',
+      'affine-nature-golf-swing.html'
+    ];
+    
+    if (isArticlePage || ARTICLE_PAGES.includes(currentUrl)) {
       const currentPage = {
         title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-        url: currentUrl
+        url: currentPath.includes('/articles/') ? currentPath.replace(/^.*\//, 'articles/') + currentUrl : currentUrl
       };
 
       history = history.filter(item => item.url !== currentPage.url);

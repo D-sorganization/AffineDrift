@@ -320,62 +320,6 @@ page-layout: full
   gap: 0;
 }
 
-@media (max-width: 1200px) {
-  .standard-page-layout {
-    grid-template-columns: 200px 1fr 200px;
-  }
-}
-
-@media (max-width: 968px) {
-  .standard-page-layout {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .left-sidebar,
-  .right-sidebar {
-    position: relative;
-    top: 0;
-    max-height: none;
-  }
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const researchersHistoryList = document.getElementById('researchers-history-list');
-  if (!researchersHistoryList) return;
-
-  function updateResearchersHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_researchers_history') || '[]');
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'resources-researchers.html'
-    };
-
-    if (currentPage.url === 'resources-researchers.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_researchers_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      researchersHistoryList.innerHTML = '<li class="history-empty">No recent researchers yet</li>';
-      return;
-    }
-
-    researchersHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
-  }
-
-  updateResearchersHistory();
-});
-</script>
-
-<style>
 .resource-card {
   background: var(--legal-pad-yellow);
   padding: 1.5rem;
@@ -445,7 +389,25 @@ document.addEventListener('DOMContentLoaded', function() {
   padding-left: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+
   .resource-card.has-media {
     flex-direction: column;
   }
@@ -455,5 +417,39 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const researchersHistoryList = document.getElementById('researchers-history-list');
+  if (!researchersHistoryList) return;
+
+  function updateResearchersHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_researchers_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'resources-researchers.html'
+    };
+
+    if (currentPage.url === 'resources-researchers.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_researchers_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      researchersHistoryList.innerHTML = '<li class="history-empty">No recent researchers yet</li>';
+      return;
+    }
+
+    researchersHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateResearchersHistory();
+});
+</script>
 ```
 
