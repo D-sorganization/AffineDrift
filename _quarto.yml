@@ -15,8 +15,6 @@ website:
     left:
       - text: "Articles"
         menu:
-          - text: "Articles Home"
-            href: articles.html
           - text: "Drifter Manifesto"
             href: drifter-manifesto.html
           - text: "Articles"
@@ -217,6 +215,17 @@ format:
           </footer>
           <script src="script.js"></script>
           <script>
+          // Ensure MathJax processes equations in HTML blocks
+          document.addEventListener('DOMContentLoaded', function() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+              // Wait for MathJax to be ready, then typeset
+              MathJax.startup.promise.then(function() {
+                return MathJax.typesetPromise();
+              }).catch(function(err) {
+                console.log('MathJax typeset error:', err);
+              });
+            }
+          });
           // Global article history tracking for individual article pages
           (function() {
             const currentPath = window.location.pathname;

@@ -2118,6 +2118,46 @@ mjx-container * {
     padding: 4rem 0;
 }
 
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.contact-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-intro {
+    text-align: center;
+    max-width: 800px;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.contact-sidebar {
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+
+/* Global sidebar sticky fix for all pages */
+.standard-page-layout .left-sidebar,
+.standard-page-layout .right-sidebar {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  height: fit-content;
+  overflow-x: hidden;
+  will-change: transform;
+}
+
 .contact-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
