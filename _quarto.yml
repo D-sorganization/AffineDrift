@@ -102,49 +102,7 @@ format:
     code-tools: false
     html-math-method: mathjax
     mathjax:
-      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-      config:
-        loader:
-          load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-        tex:
-          packages: {'[+]': ['ams', 'newcommand', 'mathtools']}
-          inlineMath: [['$', '$'], ['\\(', '\\)']]
-          displayMath: [['$$', '$$'], ['\\[', '\\]']]
-          processEscapes: true
-          processEnvironments: true
-          processRefs: true
-          digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/
-          tags: 'ams'
-          tagSide: 'right'
-          tagIndent: '0.8em'
-          multlineWidth: '85%'
-          maxMacros: 10000
-          maxBuffer: 5120
-        chtml:
-          scale: 1.0
-          minScale: 0.5
-          mtextInheritFont: false
-          merrorInheritFont: true
-          mathmlSpacing: false
-          skipAttributes: {}
-          exFactor: 0.5
-          displayAlign: 'center'
-          displayIndent: '0'
-        svg:
-          scale: 1.0
-          minScale: 0.5
-          mtextInheritFont: false
-          merrorInheritFont: true
-          mathmlSpacing: false
-          skipAttributes: {}
-          exFactor: 0.5
-          displayAlign: 'center'
-          displayIndent: '0'
-        startup:
-          pageReady: |
-            () => {
-              return MathJax.startup.defaultPageReady();
-            }
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
     include-in-header:
       - text: |
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
@@ -153,6 +111,55 @@ format:
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
           <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+          <script type="text/javascript">
+          window.MathJax = {
+            loader: {
+              load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+            },
+            tex: {
+              packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+              inlineMath: [['$', '$'], ['\\(', '\\)']],
+              displayMath: [['$$', '$$'], ['\\[', '\\]']],
+              processEscapes: true,
+              processEnvironments: true,
+              processRefs: true,
+              digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+              tags: 'ams',
+              tagSide: 'right',
+              tagIndent: '0.8em',
+              multlineWidth: '85%',
+              maxMacros: 10000,
+              maxBuffer: 5120
+            },
+            chtml: {
+              scale: 1.0,
+              minScale: 0.5,
+              mtextInheritFont: false,
+              merrorInheritFont: true,
+              mathmlSpacing: false,
+              skipAttributes: {},
+              exFactor: 0.5,
+              displayAlign: 'center',
+              displayIndent: '0'
+            },
+            svg: {
+              scale: 1.0,
+              minScale: 0.5,
+              mtextInheritFont: false,
+              merrorInheritFont: true,
+              mathmlSpacing: false,
+              skipAttributes: {},
+              exFactor: 0.5,
+              displayAlign: 'center',
+              displayIndent: '0'
+            },
+            startup: {
+              pageReady: function() {
+                return MathJax.startup.defaultPageReady();
+              }
+            }
+          };
+          </script>
     include-after-body:
       - text: |
           <footer>
