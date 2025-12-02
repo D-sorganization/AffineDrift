@@ -345,19 +345,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Table of Contents functionality
     function generateTableOfContents() {
-        const sidebar = document.getElementById('history-sidebar');
+        // Look for left-sidebar (for .qmd pages with standard-page-layout)
+        const leftSidebar = document.querySelector('.left-sidebar');
+        
+        // Fallback to history-sidebar for pages without left-sidebar (legacy pages)
+        const sidebar = leftSidebar || document.getElementById('history-sidebar');
         if (!sidebar) return;
 
-        const sidebarNav = sidebar.querySelector('.sidebar-nav');
-        if (!sidebarNav) return;
+        // For left-sidebar pages, add TOC section to the left-sidebar
+        if (leftSidebar) {
+            // Find or create TOC section in left-sidebar
+            let tocSection = leftSidebar.querySelector('.sidebar-toc');
+            if (!tocSection) {
+                tocSection = document.createElement('div');
+                tocSection.className = 'sidebar-toc';
+                tocSection.innerHTML = '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
+                // Insert after the existing toc-nav if it exists, otherwise at the beginning
+                const existingTocNav = leftSidebar.querySelector('.toc-nav');
+                if (existingTocNav) {
+                    existingTocNav.insertAdjacentElement('afterend', tocSection);
+                } else {
+                    leftSidebar.insertBefore(tocSection, leftSidebar.firstChild);
+                }
+            }
+        } else {
+            // For legacy pages with history-sidebar, use the old approach
+            const sidebarNav = sidebar.querySelector('.sidebar-nav');
+            if (!sidebarNav) return;
 
-        // Find or create TOC section
-        let tocSection = sidebar.querySelector('.sidebar-toc');
-        if (!tocSection) {
-            tocSection = document.createElement('div');
-            tocSection.className = 'sidebar-section sidebar-toc';
-            tocSection.innerHTML = '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
-            sidebarNav.insertBefore(tocSection, sidebarNav.firstChild);
+            // Find or create TOC section
+            let tocSection = sidebar.querySelector('.sidebar-toc');
+            if (!tocSection) {
+                tocSection = document.createElement('div');
+                tocSection.className = 'sidebar-section sidebar-toc';
+                tocSection.innerHTML = '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
+                sidebarNav.insertBefore(tocSection, sidebarNav.firstChild);
+            }
         }
 
         const tocList = document.getElementById('toc-list');
@@ -485,7 +508,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             // Hide TOC if no sections found
-            tocSection.style.display = 'none';
+            const tocSection = sidebar.querySelector('.sidebar-toc');
+            if (tocSection) {
+                tocSection.style.display = 'none';
+            } else if (tocList) {
+                // Fallback: hide the TOC list directly if tocSection wasn't found
+                // (tocList is guaranteed to be in DOM if it exists, per line 386-387)
+                tocList.style.display = 'none';
+            }
         }
 
         // Highlight active section on scroll
