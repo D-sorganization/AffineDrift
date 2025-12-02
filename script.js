@@ -542,6 +542,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Make repository dropdown links open in new tabs
+    const repositoryLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
+    repositoryLinks.forEach(link => {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+    });
+
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');

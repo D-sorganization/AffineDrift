@@ -2118,6 +2118,49 @@ mjx-container * {
     padding: 4rem 0;
 }
 
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.contact-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-intro {
+    text-align: center;
+    max-width: 800px;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.contact-sidebar {
+    position: sticky;
+    top: 120px;
+    align-self: flex-start;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+}
+
+/* Global sidebar sticky fix for all pages
+ * Note: !important is necessary here to override inline styles defined in individual .qmd files
+ * Each page defines sidebar styles in its own <style> block, so we need !important to ensure
+ * consistent sticky behavior across all pages. This is intentional to fix the scrolling issue.
+ */
+.standard-page-layout .left-sidebar,
+.standard-page-layout .right-sidebar {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  height: fit-content;
+  overflow-x: hidden;
+}
+
 .contact-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -2523,6 +2566,20 @@ mjx-container * {
 
 /* Responsive adjustments for new pages */
 @media (max-width: 768px) {
+    .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-sidebar {
+        position: static;
+        max-height: none;
+    }
+
+    .contact-intro {
+        margin-bottom: 2rem;
+    }
+
     .contact-content {
         grid-template-columns: 1fr;
     }
