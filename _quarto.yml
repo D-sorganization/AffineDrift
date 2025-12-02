@@ -195,7 +195,7 @@ format:
               const navbarTools = document.querySelector('.quarto-navbar-tools');
               if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
                 const rssLink = document.createElement('a');
-                rssLink.href = './feed.xml';
+                rssLink.href = '/feed.xml';
                 rssLink.className = 'rss-feed-link';
                 rssLink.title = 'RSS Feed';
                 rssLink.setAttribute('aria-label', 'RSS Feed');
@@ -216,6 +216,51 @@ format:
             </div>
           </footer>
           <script src="script.js"></script>
+          <script>
+          // Global article history tracking for individual article pages
+          (function() {
+            const currentPath = window.location.pathname;
+            const currentUrl = currentPath.split('/').pop() || '';
+            const isArticlePage = currentPath.includes('/articles/') && currentUrl.endsWith('.html');
+            
+            if (isArticlePage) {
+              const ARTICLE_PAGES = [
+                'theory-part1.html',
+                'theory-part2.html',
+                'theory-part3.html',
+                'theory-part4.html',
+                'theory-part5.html',
+                'inverse-dynamics.html',
+                'wrist-universal-joint.html',
+                'nonlinear-control-insights.html',
+                'drift-components-wrench-double-pendulum.html',
+                'secondary-axis-stability.html',
+                'controllability-drift-ratio.html',
+                'strokes-gained-limitations.html',
+                'superposition.html',
+                'screw-theory-reference.html',
+                'null-space-constraint-jacobian.html',
+                'lagrangian-reference.html',
+                'inverse-dynamics-inference.html',
+                'force-mobility-matrices.html',
+                'affine-nature-golf-swing.html'
+              ];
+              
+              if (ARTICLE_PAGES.includes(currentUrl)) {
+                let history = JSON.parse(localStorage.getItem('affinedrift_articles_history') || '[]');
+                const currentPage = {
+                  title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+                  url: 'articles/' + currentUrl
+                };
+                
+                history = history.filter(item => item.url !== currentPage.url);
+                history.unshift(currentPage);
+                history = history.slice(0, 10);
+                localStorage.setItem('affinedrift_articles_history', JSON.stringify(history));
+              }
+            }
+          })();
+          </script>
 
 # Metadata for all pages
 metadata:
