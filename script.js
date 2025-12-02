@@ -511,8 +511,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const tocSection = sidebar.querySelector('.sidebar-toc');
             if (tocSection) {
                 tocSection.style.display = 'none';
-            } else if (tocList) {
+            } else if (tocList && tocList.parentElement) {
                 // Fallback: hide the TOC list if section not found
+                // Check tocList exists and is in the DOM before accessing style
                 tocList.style.display = 'none';
             }
         }
