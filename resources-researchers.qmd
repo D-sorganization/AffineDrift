@@ -7,13 +7,12 @@ page-layout: full
 ```{=html}
 <section class="resources-section">
   <div class="container">
-    <div class="resources-layout">
-      <!-- Left Sidebar Navigation -->
-      <aside class="resources-sidebar">
-        <nav class="resources-nav">
-          <h3 class="resources-nav-heading">Resources</h3>
-          <ul class="resources-nav-links">
-            <li><a href="resources.html">Resources Home</a></li>
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Resources</h3>
+          <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
             <li><a href="resources-websites.html">Websites</a></li>
@@ -26,12 +25,12 @@ page-layout: full
       </aside>
 
       <!-- Main Content -->
-      <main class="resources-main">
-        <div class="page-header">
-          <h1>Researchers</h1>
+      <main class="main-content-area">
+        <div class="page-section">
+          <h2 class="section-heading">Researchers</h2>
           <p class="page-subtitle">Profiles of researchers and experts in golf biomechanics, robotics, and control theory</p>
         </div>
-    <div class="resource-grid">
+        <div class="resource-grid">
       <div class="resource-card has-media">
         <div class="resource-media">
           <img src="content/headshots/sasho-mackenzie.jpg" alt="Sasho MacKenzie" class="website-preview" onerror="this.style.display='none'">
@@ -148,36 +147,104 @@ page-layout: full
           </a>
         </div>
       </div>
-    </div>
+
+      <div class="resource-card has-media">
+        <div class="resource-media">
+          <img src="https://wedgecraft.com/wp-content/uploads/2023/01/rob-neal-headshot.jpg" alt="Rob Neal" class="website-preview" onerror="this.style.display='none'">
+        </div>
+        <div class="resource-content">
+          <h3>Dr. Rob Neal</h3>
+          <p class="resource-description">
+            Dr. Rob Neal is a world-renowned biomechanist and co-founder of WedgeCraft, a wedge play data collective committed to developing a comprehensive model for learning the short game through coaching and science-based methods. He is also the owner of Golf BioDynamics, where he applies biomechanical principles to golf instruction and analysis. Dr. Neal's research focuses on golf biomechanics, with particular emphasis on short game mechanics and wedge play dynamics.
+          </p>
+          <a href="https://wedgecraft.com/dr-robert-neal/"
+             class="resource-link"
+             target="_blank"
+             rel="noopener">
+            Visit WedgeCraft →
+          </a>
+          <a href="https://www.golfbiodynamics.com/"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Visit Golf BioDynamics →
+          </a>
+          <a href="https://scholar.google.com/scholar?q=author:%22Rob+Neal%22+OR+author:%22Robert+Neal%22+golf"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Google Scholar →
+          </a>
+        </div>
+      </div>
+
+      <div class="resource-card has-media">
+        <div class="resource-media">
+          <img src="https://www.lafayette.edu/wp-content/uploads/2021/05/nesbit-steven.jpg" alt="Steven Nesbit" class="website-preview" onerror="this.style.display='none'">
+        </div>
+        <div class="resource-content">
+          <h3>Dr. Steven Nesbit</h3>
+          <p class="resource-description">
+            Dr. Steven M. Nesbit is a Professor of Mechanical Engineering and Head of the Department of Mechanical Engineering at Lafayette College. He has extensive research in golf biomechanics, including kinematic and kinetic studies of the golf swing. His work focuses on understanding the mechanics of the golf swing through detailed biomechanical analysis, collaborating with Jacobs 3D Golf on advanced swing analysis techniques. Dr. Nesbit's research contributes to understanding how forces, torques, and motion patterns interact in the golf swing.
+          </p>
+          <a href="https://www.jacobs3dgolf.com/"
+             class="resource-link"
+             target="_blank"
+             rel="noopener">
+            Visit Jacobs 3D Golf →
+          </a>
+          <a href="https://scholar.google.com/scholar?q=author:%22Steven+Nesbit%22+OR+author:%22Steven+M+Nesbit%22+golf"
+             class="resource-link"
+             target="_blank"
+             rel="noopener"
+             style="margin-top: 0.5rem; display: inline-block;">
+            Google Scholar →
+          </a>
+        </div>
+      </div>
+        </div>
       </main>
+
+      <!-- Right Sidebar: Recent Researchers History -->
+      <aside class="right-sidebar">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Researchers</h3>
+          <ul class="sidebar-links" id="researchers-history-list">
+            <li class="history-empty">No recent researchers yet</li>
+          </ul>
+        </nav>
+      </aside>
     </div>
   </div>
 </section>
 
 <style>
-.resources-layout {
-  display: flex;
+.standard-page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
   gap: 2rem;
   max-width: 1600px;
   margin: 0 auto;
-  width: calc(100% - 300px);
-  margin-left: 300px;
+  padding-top: 1rem;
 }
 
-.resources-sidebar {
-  width: 250px;
-  flex-shrink: 0;
+.left-sidebar,
+.right-sidebar {
   background: var(--legal-pad-yellow);
-  border-right: 2px solid var(--legal-pad-yellow-border);
-  padding: 2rem 1rem;
+  border: 2px solid var(--legal-pad-yellow-border);
+  padding: 1.5rem 1rem;
   position: sticky;
   top: 120px;
   align-self: flex-start;
   max-height: calc(100vh - 140px);
   overflow-y: auto;
+  border-radius: 4px;
 }
 
-.resources-nav-heading {
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
   font-weight: 600;
   color: var(--primary-blue);
   margin-bottom: 1rem;
@@ -188,17 +255,20 @@ page-layout: full
   font-size: 0.9rem;
 }
 
-.resources-nav-links {
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.resources-nav-links li {
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
   margin-bottom: 0.5rem;
 }
 
-.resources-nav-links a {
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
   display: block;
   color: var(--text-dark);
   text-decoration: none;
@@ -208,46 +278,104 @@ page-layout: full
   font-size: 0.95rem;
 }
 
-.resources-nav-links a:hover {
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
   background-color: var(--light-blue);
   color: var(--primary-blue);
   padding-left: 1.3rem;
 }
 
-.resources-nav-links a.active {
+.toc-nav .sidebar-links a.active {
   background-color: var(--accent-blue);
   color: var(--pure-white);
 }
 
-.resources-main {
-  flex: 1;
+.main-content-area {
   min-width: 0;
-  max-width: none;
 }
 
-.page-header {
+.page-section {
+  margin-top: 0;
   margin-bottom: 2rem;
 }
 
-.page-header h1 {
+.section-heading {
   font-size: 2.5rem;
   color: var(--primary-blue);
   margin-bottom: 0.5rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
   color: var(--text-light);
   font-style: italic;
+  margin-bottom: 1.5rem;
 }
 
 .resource-grid {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0;
 }
 
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const researchersHistoryList = document.getElementById('researchers-history-list');
+  if (!researchersHistoryList) return;
+
+  function updateResearchersHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_researchers_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'resources-researchers.html'
+    };
+
+    if (currentPage.url === 'resources-researchers.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_researchers_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      researchersHistoryList.innerHTML = '<li class="history-empty">No recent researchers yet</li>';
+      return;
+    }
+
+    researchersHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateResearchersHistory();
+});
+</script>
+
+<style>
 .resource-card {
   background: var(--legal-pad-yellow);
   padding: 1.5rem;
@@ -318,21 +446,6 @@ page-layout: full
 }
 
 @media (max-width: 768px) {
-  .resources-layout {
-    flex-direction: column;
-    width: 100% !important;
-    margin-left: 0 !important;
-  }
-
-  .resources-sidebar {
-    width: 100%;
-    position: relative;
-    top: 0;
-    max-height: none;
-    border-right: none;
-    border-bottom: 2px solid var(--legal-pad-yellow-border);
-  }
-
   .resource-card.has-media {
     flex-direction: column;
   }

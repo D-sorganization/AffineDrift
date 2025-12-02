@@ -7,155 +7,388 @@ page-layout: full
 ```{=html}
 <section class="resources-section">
   <div class="container">
-    <div class="resource-grid">
-      <div class="resource-card">
-        <h3>Models Overview</h3>
-        <p class="resource-description">
-          This section contains mathematical models and simulations implemented across various platforms 
-          for analyzing golf biomechanics, control-affine systems, and multibody dynamics. Each model 
-          category provides tools and documentation for understanding the underlying physics and control 
-          principles. Click on any model to expand and view details.
-        </p>
-      </div>
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Models</h3>
+          <ul class="sidebar-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#simulink">Matlab Simulink</a></li>
+            <li><a href="#mujoco">MuJoCo</a></li>
+            <li><a href="#drake">Drake</a></li>
+            <li><a href="#pinocchio">Pinocchio</a></li>
+            <li><a href="#pendulum">Pendulum</a></li>
+            <li><a href="#opensim">OpenSim</a></li>
+            <li><a href="#myosim">MyoSim</a></li>
+            <li><a href="#wrist-universal">Wrist Universal Joint</a></li>
+          </ul>
+        </nav>
+      </aside>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Matlab Simulink Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Control-affine system models, drift-input decomposition simulations, and golf swing dynamics 
-            implemented in Matlab Simulink. These models implement the theoretical framework developed in 
-            the Drifter Manifesto series, providing numerical simulations and analysis tools. Includes 
-            comprehensive documentation of numerical routines, model structure, and supporting technical 
-            notes.
-          </p>
-          <a href="models-simulink.html" class="resource-link">View Details →</a>
+      <!-- Main Content -->
+      <main class="main-content-area">
+        <div class="page-section">
+          <h2 class="section-heading">Models</h2>
         </div>
-      </div>
+        <div class="resource-grid">
+          <div id="overview" class="resource-card">
+            <h3>Models Overview</h3>
+            <p class="resource-description">
+              This section contains mathematical models and simulations implemented across various platforms 
+              for analyzing golf biomechanics, control-affine systems, and multibody dynamics. Each model 
+              category provides tools and documentation for understanding the underlying physics and control 
+              principles. Click on any model to expand and view details.
+            </p>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>MuJoCo Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Physics-based simulations using MuJoCo (Multi-Joint dynamics with Contact) for biomechanical 
-            analysis, including golf swing models, pendulum systems, and multibody dynamics simulations. 
-            MuJoCo provides fast and accurate physics simulation for model-based optimization and analysis.
-          </p>
-          <a href="models-mujoco.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div id="simulink" class="category-section">
+            <h3 class="category-title">Matlab Simulink Models</h3>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Drake Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Robotics and control system models implemented in Drake, focusing on underactuated systems, 
-            manipulation, and control-affine dynamics. Drake is an open-source toolbox from MIT's Robot 
-            Locomotion Group that provides tools for modeling, simulation, and control of complex robotic 
-            systems.
-          </p>
-          <a href="models-drake.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Matlab Simulink Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Control-affine system models, drift-input decomposition simulations, and golf swing dynamics 
+                implemented in Matlab Simulink. These models implement the theoretical framework developed in 
+                the Drifter Manifesto series, providing numerical simulations and analysis tools. Includes 
+                comprehensive documentation of numerical routines, model structure, and supporting technical 
+                notes.
+              </p>
+              <a href="models-simulink.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Pinnochio Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Rigid body dynamics and kinematics models using Pinocchio, including forward/inverse dynamics, 
-            Jacobian computations, and constraint handling for multibody systems. Pinocchio provides efficient 
-            algorithms for robot dynamics and kinematics, based on Roy Featherstone's "Rigid Body Dynamics 
-            Algorithms."
-          </p>
-          <a href="models-pinnochio.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div id="mujoco" class="category-section">
+            <h3 class="category-title">MuJoCo Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MuJoCo Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Physics-based simulations using MuJoCo (Multi-Joint dynamics with Contact) for biomechanical 
+                analysis, including golf swing models, pendulum systems, and multibody dynamics simulations. 
+                MuJoCo provides fast and accurate physics simulation for model-based optimization and analysis.
+              </p>
+              <a href="models-mujoco.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Pendulum Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Pendulum-based models and simulations that serve as simplified analogs for understanding golf 
-            swing dynamics, including single, double, and multi-link pendulum systems. These models provide 
-            insights into control-affine systems, drift-input decomposition, and the fundamental physics of 
-            underactuated multibody systems.
-          </p>
-          <a href="models-pendulum.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div id="drake" class="category-section">
+            <h3 class="category-title">Drake Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Drake Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Robotics and control system models implemented in Drake, focusing on underactuated systems, 
+                manipulation, and control-affine dynamics. Drake is an open-source toolbox from MIT's Robot 
+                Locomotion Group that provides tools for modeling, simulation, and control of complex robotic 
+                systems.
+              </p>
+              <a href="models-drake.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>OpenSim Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Biomechanics simulation models using OpenSim, a freely available, open-source software platform 
-            for modeling, simulating, and analyzing the neuromusculoskeletal system. OpenSim enables building 
-            and analyzing musculoskeletal models, performing inverse kinematics and dynamics, and simulating 
-            movement.
-          </p>
-          <a href="models-opensim.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div id="pinocchio" class="category-section">
+            <h3 class="category-title">Pinocchio Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Pinnochio Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Rigid body dynamics and kinematics models using Pinocchio, including forward/inverse dynamics, 
+                Jacobian computations, and constraint handling for multibody systems. Pinocchio provides efficient 
+                algorithms for robot dynamics and kinematics, based on Roy Featherstone's "Rigid Body Dynamics 
+                Algorithms."
+              </p>
+              <a href="models-pinnochio.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>MyoSim Models</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Muscle-driven movement simulation models using MyoSim, an open-source software library for 
-            simulating muscle-driven movement. MyoSim provides tools for biomechanical modeling and analysis, 
-            enabling researchers to build and simulate models of muscle-tendon systems and analyze muscle 
-            activation patterns.
-          </p>
-          <a href="models-myosim.html" class="resource-link">View Details →</a>
-        </div>
-      </div>
+          <div id="pendulum" class="category-section">
+            <h3 class="category-title">Pendulum Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Pendulum Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Pendulum-based models and simulations that serve as simplified analogs for understanding golf 
+                swing dynamics, including single, double, and multi-link pendulum systems. These models provide 
+                insights into control-affine systems, drift-input decomposition, and the fundamental physics of 
+                underactuated multibody systems.
+              </p>
+              <a href="models-pendulum.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Wrist Universal Joint Model</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Interactive application modeling the wrist as a universal joint with proper kinematics. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis, with real-time visualization and calculations.
-          </p>
-          <a href="tools/wrist-universal-joint/grip_angle_simulator.html" class="resource-link">View Interactive Tool →</a>
-        </div>
-      </div>
+          <div id="opensim" class="category-section">
+            <h3 class="category-title">OpenSim Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>OpenSim Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Biomechanics simulation models using OpenSim, a freely available, open-source software platform 
+                for modeling, simulating, and analyzing the neuromusculoskeletal system. OpenSim enables building 
+                and analyzing musculoskeletal models, performing inverse kinematics and dynamics, and simulating 
+                movement.
+              </p>
+              <a href="models-opensim.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
 
-      <div class="accordion-item">
-        <button class="accordion-header" type="button" aria-expanded="false">
-          <span>Wrist Universal Joint Model (PyQt6)</span>
-          <span class="accordion-icon">+</span>
-        </button>
-        <div class="accordion-content">
-          <p class="resource-description">
-            Enhanced PyQt6 desktop application with advanced GUI features. Download and run locally for full interactive control over grip angle, wrist angle, club properties, and signal generation.
-          </p>
-          <a href="content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application →</a>
+          <div id="myosim" class="category-section">
+            <h3 class="category-title">MyoSim Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MyoSim Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Muscle-driven movement simulation models using MyoSim, an open-source software library for 
+                simulating muscle-driven movement. MyoSim provides tools for biomechanical modeling and analysis, 
+                enabling researchers to build and simulate models of muscle-tendon systems and analyze muscle 
+                activation patterns.
+              </p>
+              <a href="models-myosim.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
+
+          <div id="wrist-universal" class="category-section">
+            <h3 class="category-title">Wrist Universal Joint Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint Model</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Interactive application modeling the wrist as a universal joint with proper kinematics. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis, with real-time visualization and calculations.
+              </p>
+              <a href="tools/wrist-universal-joint/grip_angle_simulator.html" class="resource-link">View Interactive Tool →</a>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint Model (PyQt6)</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Enhanced PyQt6 desktop application with advanced GUI features. Download and run locally for full interactive control over grip angle, wrist angle, club properties, and signal generation.
+              </p>
+              <a href="content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application →</a>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+
+      <!-- Right Sidebar: Recent Models History -->
+      <aside class="right-sidebar">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Models</h3>
+          <ul class="sidebar-links" id="models-history-list">
+            <li class="history-empty">No recent models yet</li>
+          </ul>
+        </nav>
+      </aside>
     </div>
   </div>
 </section>
+
+<style>
+.standard-page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+.left-sidebar,
+.right-sidebar {
+  background: var(--legal-pad-yellow);
+  border: 2px solid var(--legal-pad-yellow-border);
+  padding: 1.5rem 1rem;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
+  margin-bottom: 0.5rem;
+}
+
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
+  display: block;
+  color: var(--text-dark);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding-left: 1.3rem;
+}
+
+.main-content-area {
+  min-width: 0;
+}
+
+.page-section {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.section-heading {
+  font-size: 2.5rem;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.category-section {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.category-section:first-of-type {
+  margin-top: 0;
+}
+
+.category-title {
+  font-size: 1.75rem;
+  color: var(--primary-blue);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--legal-pad-yellow-accent);
+}
+
+.resource-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modelsHistoryList = document.getElementById('models-history-list');
+  if (!modelsHistoryList) return;
+
+  const MODEL_PAGES = [
+    'models.html',
+    'models-simulink.html',
+    'models-mujoco.html',
+    'models-drake.html',
+    'models-pinnochio.html',
+    'models-pendulum.html',
+    'models-opensim.html',
+    'models-myosim.html'
+  ];
+
+  function updateModelsHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'models.html'
+    };
+
+    if (MODEL_PAGES.includes(currentPage.url)) {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      modelsHistoryList.innerHTML = '<li class="history-empty">No recent models yet</li>';
+      return;
+    }
+
+    modelsHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateModelsHistory();
+});
+</script>
 ```

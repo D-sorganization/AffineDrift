@@ -45,8 +45,6 @@ website:
             href: models-myosim.html
       - text: "Resources"
         menu:
-          - text: "Resources Home"
-            href: resources.html
           - text: "Videos"
             href: resources-videos.html
           - text: "Software"
@@ -63,18 +61,22 @@ website:
             href: resources-researchers.html
       - text: "Repositories"
         menu:
-          - text: "Repositories Home"
-            href: repositories.html
-          - text: "3D Model"
-            href: repositories-3d-model.html
-          - text: "2D Model"
-            href: repositories-2d-model.html
-          - text: "Pinocchio"
-            href: repositories-pinocchio.html
-          - text: "Drake"
-            href: repositories-drake.html
-          - text: "Models"
-            href: repositories-models.html
+          - text: "D-sorganization: Golf Model (3D)"
+            href: https://github.com/D-sorganization/Golf_Model
+          - text: "D-sorganization: 2D Golf Model"
+            href: https://github.com/D-sorganization/2D_Golf_Model
+          - text: "D-sorganization: Drake Golf Model"
+            href: https://github.com/D-sorganization/Drake_Golf_Model
+          - text: "D-sorganization: Pinocchio Golf Model"
+            href: https://github.com/D-sorganization/Pinnochio_Golf_Model
+          - text: "D-sorganization: MuJoCo Golf Swing Model"
+            href: https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model
+          - text: "D-sorganization: Pendulum Golf Models"
+            href: https://github.com/D-sorganization/Pendulum_Golf_Models
+          - text: "MyoSim"
+            href: https://github.com/myosim/myosim
+          - text: "MuJoCo"
+            href: https://github.com/deepmind/mujoco
       - text: "Contact"
         menu:
           - text: "Contact"
@@ -153,12 +155,57 @@ format:
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
           <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
           <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+          <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="https://affinedrift.com/feed.xml">
+          <style>
+            .rss-feed-link {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 2rem;
+              height: 2rem;
+              color: rgba(255, 255, 255, 0.8);
+              text-decoration: none;
+              border-radius: 4px;
+              transition: all 0.2s ease;
+              margin-left: 0.5rem;
+            }
+            .rss-feed-link:hover {
+              color: #ffa500;
+              background-color: rgba(255, 165, 0, 0.1);
+            }
+            .rss-feed-link svg {
+              width: 1.25rem;
+              height: 1.25rem;
+              fill: currentColor;
+            }
+            .quarto-navbar-tools {
+              display: flex;
+              align-items: center;
+            }
+          </style>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const navbarTools = document.querySelector('.quarto-navbar-tools');
+              if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+                const rssLink = document.createElement('a');
+                rssLink.href = './feed.xml';
+                rssLink.className = 'rss-feed-link';
+                rssLink.title = 'RSS Feed';
+                rssLink.setAttribute('aria-label', 'RSS Feed');
+                rssLink.innerHTML = `
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+                  </svg>
+                `;
+                navbarTools.appendChild(rssLink);
+              }
+            });
+          </script>
     include-after-body:
       - text: |
           <footer>
             <div class="container">
               <p>&copy; 2025. Affine Drift Effin Matters.</p>
-              <p class="footer-tagline">2025 AffineDrift matters</p>
             </div>
           </footer>
           <script src="script.js"></script>

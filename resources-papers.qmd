@@ -7,13 +7,12 @@ page-layout: full
 ```{=html}
 <section class="resources-section">
   <div class="container">
-    <div class="resources-layout">
-      <!-- Left Sidebar Navigation -->
-      <aside class="resources-sidebar">
-        <nav class="resources-nav">
-          <h3 class="resources-nav-heading">Resources</h3>
-          <ul class="resources-nav-links">
-            <li><a href="resources.html">Resources Home</a></li>
+    <div class="standard-page-layout">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading">Resources</h3>
+          <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
             <li><a href="resources-websites.html">Websites</a></li>
@@ -26,57 +25,87 @@ page-layout: full
       </aside>
 
       <!-- Main Content -->
-      <main class="resources-main">
-        <div class="page-header">
-          <h1>Papers</h1>
+      <main class="main-content-area">
+        <div class="page-section">
+          <h2 class="section-heading">Papers</h2>
           <p class="page-subtitle">Journal articles and research papers with links to publications and Google Scholar</p>
         </div>
 
         <div class="resources-intro">
           <p>
-            This page will contain links to journal articles and research papers relevant to robotics, biomechanics, 
-            and golf science. Each entry will include links to the paper, Google Scholar profiles, and other relevant resources. 
-            Papers will be added here in the future.
+            This page contains links to journal articles and research papers relevant to robotics, biomechanics, 
+            and golf science. Each entry includes links to the paper, Google Scholar profiles, and other relevant resources.
           </p>
         </div>
 
         <div class="resource-grid">
           <div class="resource-card">
-            <h3>Coming Soon</h3>
+            <h3>Instrumented Grip Studies</h3>
             <p class="resource-description">
-              Journal articles and research papers will be added to this page in the future. Check back for updates.
+              Research papers on instrumented grip analysis and closed-loop constraints in golf biomechanics.
             </p>
+            <a href="https://scholar.google.com/scholar?q=Choi+Park+instrumented+grip+golf"
+               class="resource-link"
+               target="_blank"
+               rel="noopener">
+              Choi and Park Instrumented Grip Papers →
+            </a>
+            <a href="https://scholar.google.com/scholar?q=Koike+instrumented+grip+golf"
+               class="resource-link"
+               target="_blank"
+               rel="noopener"
+               style="margin-top: 0.5rem; display: inline-block;">
+              Koike Instrumented Grip Paper →
+            </a>
+            <a href="https://scholar.google.com/scholar?q=Vaughan+closed+loop+constraints+grip+golf"
+               class="resource-link"
+               target="_blank"
+               rel="noopener"
+               style="margin-top: 0.5rem; display: inline-block;">
+              Vaughan Closed Loop Constraints Papers →
+            </a>
           </div>
         </div>
       </main>
+
+      <!-- Right Sidebar: Recent Papers History -->
+      <aside class="right-sidebar">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Papers</h3>
+          <ul class="sidebar-links" id="papers-history-list">
+            <li class="history-empty">No recent papers yet</li>
+          </ul>
+        </nav>
+      </aside>
     </div>
   </div>
 </section>
 
 <style>
-.resources-layout {
-  display: flex;
+.standard-page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
   gap: 2rem;
   max-width: 1600px;
   margin: 0 auto;
-  width: calc(100% - 300px);
-  margin-left: 300px;
+  padding-top: 1rem;
 }
 
-.resources-sidebar {
-  width: 250px;
-  flex-shrink: 0;
+.left-sidebar,
+.right-sidebar {
   background: var(--legal-pad-yellow);
-  border-right: 2px solid var(--legal-pad-yellow-border);
-  padding: 2rem 1rem;
+  border: 2px solid var(--legal-pad-yellow-border);
+  padding: 1.5rem 1rem;
   position: sticky;
   top: 120px;
   align-self: flex-start;
   max-height: calc(100vh - 140px);
   overflow-y: auto;
+  border-radius: 4px;
 }
 
-.resources-nav-heading {
+.toc-nav .sidebar-heading,
+.history-nav .sidebar-heading {
   font-weight: 600;
   color: var(--primary-blue);
   margin-bottom: 1rem;
@@ -87,17 +116,20 @@ page-layout: full
   font-size: 0.9rem;
 }
 
-.resources-nav-links {
+.toc-nav .sidebar-links,
+.history-nav .sidebar-links {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.resources-nav-links li {
+.toc-nav .sidebar-links li,
+.history-nav .sidebar-links li {
   margin-bottom: 0.5rem;
 }
 
-.resources-nav-links a {
+.toc-nav .sidebar-links a,
+.history-nav .sidebar-links a {
   display: block;
   color: var(--text-dark);
   text-decoration: none;
@@ -107,41 +139,44 @@ page-layout: full
   font-size: 0.95rem;
 }
 
-.resources-nav-links a:hover {
+.toc-nav .sidebar-links a:hover,
+.history-nav .sidebar-links a:hover {
   background-color: var(--light-blue);
   color: var(--primary-blue);
   padding-left: 1.3rem;
 }
 
-.resources-nav-links a.active {
+.toc-nav .sidebar-links a.active {
   background-color: var(--accent-blue);
   color: var(--pure-white);
 }
 
-.resources-main {
-  flex: 1;
+.main-content-area {
   min-width: 0;
-  max-width: none;
 }
 
-.page-header {
+.page-section {
+  margin-top: 0;
   margin-bottom: 2rem;
 }
 
-.page-header h1 {
+.section-heading {
   font-size: 2.5rem;
   color: var(--primary-blue);
   margin-bottom: 0.5rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .page-subtitle {
   font-size: 1.1rem;
   color: var(--text-light);
   font-style: italic;
+  margin-bottom: 1.5rem;
 }
 
 .resources-intro {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding: 1.5rem;
   background: var(--legal-pad-yellow-light);
   border-left: 4px solid var(--accent-blue);
@@ -159,7 +194,6 @@ page-layout: full
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 0;
 }
 
 .resource-card {
@@ -197,22 +231,73 @@ page-layout: full
   margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-  .resources-layout {
-    flex-direction: column;
-    width: 100% !important;
-    margin-left: 0 !important;
+.resource-link {
+  display: inline-block;
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.resource-link:hover {
+  color: var(--primary-blue);
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 1200px) {
+  .standard-page-layout {
+    grid-template-columns: 200px 1fr 200px;
+  }
+}
+
+@media (max-width: 968px) {
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .resources-sidebar {
-    width: 100%;
+  .left-sidebar,
+  .right-sidebar {
     position: relative;
     top: 0;
     max-height: none;
-    border-right: none;
-    border-bottom: 2px solid var(--legal-pad-yellow-border);
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const papersHistoryList = document.getElementById('papers-history-list');
+  if (!papersHistoryList) return;
+
+  function updatePapersHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_papers_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'resources-papers.html'
+    };
+
+    if (currentPage.url === 'resources-papers.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_papers_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      papersHistoryList.innerHTML = '<li class="history-empty">No recent papers yet</li>';
+      return;
+    }
+
+    papersHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updatePapersHistory();
+});
+</script>
+```
 ```
 
