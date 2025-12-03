@@ -34,7 +34,7 @@ All items from the plan are present:
   - Matlab Simulink Models
   - MuJoCo Models
   - Drake Models
-  - Pinnochio Models
+  - Pinocchio Models
   - Pendulum Models
   - **OpenSim Models** ✅
   - **MyoSim Models** ✅
@@ -47,7 +47,7 @@ All model pages exist:
 - ✅ `models-myosim.qmd` - MyoSim Models page
 - ✅ `models-drake.qmd` - Drake Models page
 - ✅ `models-mujoco.qmd` - MuJoCo Models page
-- ✅ `models-pinnochio.qmd` - Pinocchio Models page
+- ✅ `models-pinocchio.qmd` - Pinocchio Models page
 - ✅ `models-simulink.qmd` - Simulink Models page
 - ✅ `models-pendulum.qmd` - Pendulum Models page
 

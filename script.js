@@ -43,54 +43,57 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Highlight active navigation link on scroll
+    // Highlight active navigation link on scroll for Quarto/Bootstrap navbar
     const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
-    const navLinksContainer = document.querySelector('.nav-links');
-    const sidebar = document.querySelector('.sidebar');
-    const navContainer = document.querySelector('.top-nav .container');
-    let navToggleButton;
-    let sidebarToggleButton;
-    let overlay;
+    const navLinks = document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]');
+    const navbarCollapse = document.getElementById('navbarCollapse');
 
-    // Responsive breakpoints - match CSS media queries
-    const NAV_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
-    const SIDEBAR_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
+    if (navLinks.length > 0 && sections.length > 0) {
+        function highlightNavigation() {
+            const scrollPosition = window.scrollY + 150;
 
-    function highlightNavigation() {
-        const scrollPosition = window.scrollY + 150;
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
 
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
+                    });
+                }
+            });
+        }
 
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                navLinks.forEach(link => {
-                    link.style.opacity = '0.8';
-                    if (link.getAttribute('href') === `#${sectionId}`) {
-                        link.style.opacity = '1';
-                    }
-                });
+        // Debounce scroll event for performance
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
             }
+            scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+        });
+
+        highlightNavigation();
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                    const collapseInstance = window.bootstrap?.Collapse?.getInstance?.(navbarCollapse);
+                    if (collapseInstance) {
+                        collapseInstance.hide();
+                    } else {
+                        navbarCollapse.classList.remove('show');
+                    }
+                }
+            });
         });
     }
-
-    // Debounce scroll event for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(highlightNavigation, 50);
-    });
-
-    // Initial call
-    highlightNavigation();
 
     // Add fade-in animation for sections on scroll (only if not already visible)
     // Content is visible by default - animation is optional enhancement
     // Disabled on mobile to prevent content loading issues and improve performance
+    const NAV_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
     const isMobile = window.innerWidth <= NAV_BREAKPOINT;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -141,133 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mobile menu toggle and sidebar toggle creation
-    if (navContainer) {
-        navToggleButton = document.createElement('button');
-        navToggleButton.className = 'nav-toggle';
-        navToggleButton.type = 'button';
-        navToggleButton.setAttribute('aria-expanded', 'false');
-        navToggleButton.setAttribute('aria-label', 'Toggle navigation menu');
-        navToggleButton.textContent = 'Menu';
-
-        const firstChild = navContainer.firstElementChild;
-        navContainer.insertBefore(navToggleButton, firstChild);
-
-        // Only create History button if .sidebar element exists
-        // (legacy sidebar for tool pages, not used in main site 3-column layout)
-        if (sidebar) {
-            sidebarToggleButton = document.createElement('button');
-            sidebarToggleButton.className = 'sidebar-toggle';
-            sidebarToggleButton.type = 'button';
-            sidebarToggleButton.setAttribute('aria-expanded', 'false');
-            sidebarToggleButton.setAttribute('aria-label', 'Toggle recent pages panel');
-            sidebarToggleButton.textContent = 'History';
-            navContainer.insertBefore(sidebarToggleButton, firstChild);
-        }
-    }
-
-    function ensureOverlay() {
-        if (overlay) return overlay;
-
-        overlay = document.createElement('div');
-        overlay.className = 'screen-overlay';
-        overlay.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(overlay);
-
-        overlay.addEventListener('click', () => {
-            closeNavMenu();
-            closeSidebar();
-        });
-
-        return overlay;
-    }
-
-    function updateOverlayState() {
-        const navOpen = navLinksContainer && navLinksContainer.classList.contains('active') && window.innerWidth <= NAV_BREAKPOINT;
-        const sidebarOpen = sidebar && sidebar.classList.contains('open') && window.innerWidth <= SIDEBAR_BREAKPOINT;
-        const shouldShowOverlay = navOpen || sidebarOpen;
-
-        if (!overlay && shouldShowOverlay) {
-            ensureOverlay();
-        }
-
-        if (overlay) {
-            overlay.classList.toggle('active', shouldShowOverlay);
-        }
-
-        document.body.classList.toggle('no-scroll', shouldShowOverlay);
-    }
-
-    function toggleNavMenu() {
-        if (!navLinksContainer || !navToggleButton) return;
-        const isActive = navLinksContainer.classList.toggle('active');
-        navToggleButton.setAttribute('aria-expanded', isActive.toString());
-        if (isActive) {
-            ensureOverlay();
-        }
-        updateOverlayState();
-    }
-
-    function closeNavMenu() {
-        if (!navLinksContainer || !navToggleButton) return;
-        navLinksContainer.classList.remove('active');
-        navToggleButton.setAttribute('aria-expanded', 'false');
-        updateOverlayState();
-    }
-
-    if (navToggleButton && navLinksContainer) {
-        navToggleButton.addEventListener('click', toggleNavMenu);
-
-        navLinksContainer.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= NAV_BREAKPOINT) {
-                    closeNavMenu();
-                }
-            });
-        });
-    }
-
-    function toggleSidebar() {
-        if (!sidebar || !sidebarToggleButton) return;
-        const isOpen = sidebar.classList.toggle('open');
-        sidebarToggleButton.setAttribute('aria-expanded', isOpen.toString());
-        if (isOpen) {
-            ensureOverlay();
-        }
-        updateOverlayState();
-    }
-
-    function closeSidebar() {
-        if (!sidebar || !sidebarToggleButton) return;
-        sidebar.classList.remove('open');
-        sidebarToggleButton.setAttribute('aria-expanded', 'false');
-        updateOverlayState();
-    }
-
-    if (sidebarToggleButton && sidebar) {
-        sidebarToggleButton.addEventListener('click', toggleSidebar);
-    }
-
-    function handleResize() {
-        if (window.innerWidth > NAV_BREAKPOINT) {
-            closeNavMenu();
-        }
-
-        if (window.innerWidth > SIDEBAR_BREAKPOINT) {
-            closeSidebar();
-        }
-
-        updateOverlayState();
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
-            closeNavMenu();
-            closeSidebar();
-        }
-    });
+    // Navigation collapsing and sidebar overlays are handled by Quarto's Bootstrap navbar,
+    // so legacy toggle logic targeting `.top-nav`/`.nav-links` has been removed.
 
     // Page history tracking for sidebar
     function updateHistorySidebar() {

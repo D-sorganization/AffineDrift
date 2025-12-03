@@ -147,7 +147,7 @@ As discussed in @sec-intro...
 
 **Figures:**
 ```markdown
-![Caption](image.png){#fig-myplot}
+![AffineDrift logo example](logo/AffineDriftLogo.png){#fig-myplot}
 
 See @fig-myplot for details.
 ```
