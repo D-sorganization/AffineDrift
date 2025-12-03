@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="AffineDrift">
-<meta name="description" content="Complete list of AffineDrift research notes">
+<meta name="description" content="Mathematical models and simulations for golf biomechanics and control theory">
 
-<title>Research Articles – AffineDrift</title>
+<title>Models – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -142,12 +142,12 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Research Articles</h1>
+<h1 class="title">Models</h1>
 </div>
 
 <div>
   <div class="description">
-    Complete list of AffineDrift research notes
+    Mathematical models and simulations for golf biomechanics and control theory
   </div>
 </div>
 
@@ -170,310 +170,263 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="article-section">
+<section class="resources-section">
   <div class="container">
     <div class="standard-page-layout">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Article Topics</h3>
+          <h3 class="sidebar-heading">Models</h3>
           <ul class="sidebar-links">
-            <li><a href="#drifter-manifesto">The Drifter Manifesto</a></li>
-            <li><a href="#articles">Articles</a></li>
-            <li><a href="#affine-nature-golf-swing">Affine Nature of Golf Swing</a></li>
-            <li><a href="#affine-background-articles">Affine Background Articles</a></li>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#simulink">Matlab Simulink</a></li>
+            <li><a href="#mujoco">MuJoCo</a></li>
+            <li><a href="#drake">Drake</a></li>
+            <li><a href="#pinocchio">Pinocchio</a></li>
+            <li><a href="#pendulum">Pendulum</a></li>
+            <li><a href="#opensim">OpenSim</a></li>
+            <li><a href="#myosim">MyoSim</a></li>
+            <li><a href="#wrist-universal">Wrist Universal Joint</a></li>
           </ul>
         </nav>
       </aside>
 
       <!-- Main Content -->
       <main class="main-content-area">
-        <div class="articles-list">
-          <div id="drifter-manifesto" class="article-category">
-            <h3 class="category-title">The Drifter Manifesto</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 1 &mdash; State definition and affine derivation</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Establishes the multibody coordinates, derives the control-affine structure, and sets the notation used in every subsequent article.</p>
-            <a href="articles/theory-part1.html" class="resource-link">Read Article →</a>
+        <div class="resource-grid">
+          <div id="overview" class="resource-card">
+            <h3>Models Overview</h3>
+            <p class="resource-description">
+              This section contains mathematical models and simulations implemented across various platforms 
+              for analyzing golf biomechanics, control-affine systems, and multibody dynamics. Each model 
+              category provides tools and documentation for understanding the underlying physics and control 
+              principles. Click on any model to expand and view details.
+            </p>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 2 &mdash; Drift/input decomposition, ZTCF, ZVCF</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Formalizes how to separate passive dynamics from deliberate torque using zero torque and zero velocity counterfactuals.</p>
-            <a href="articles/theory-part2.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 3 &mdash; Drift invariance and taxonomy</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Explores invariants, introduces a force taxonomy, and discusses limitations of the affine assumption.</p>
-            <a href="articles/theory-part3.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 4 &mdash; Modal Approximation, Wrenches, and Pendulum Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Collects derivations, modal approximations, and pendulum examples that support the main theory.</p>
-            <a href="articles/theory-part4.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 5 &mdash; Simulink Model Documentation</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Documents the Simulink implementation, numerical routines, and supporting technical notes.</p>
-            <a href="articles/theory-part5.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-      </div>
 
-          <div id="articles" class="article-category">
-            <h3 class="category-title">Articles</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Interpretation of Inverse Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Shows why inverse dynamics results require careful interpretation and how counterfactuals resolve the force-couple ambiguity.</p>
-            <a href="articles/inverse-dynamics.html" class="resource-link">Read Article →</a>
+          <div id="simulink" class="category-section">
+            <h3 class="category-title">Matlab Simulink Models</h3>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Wrists behave as universal joints</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analyzes grip torque transmission with an accompanying interactive visualization.</p>
-            <a href="articles/wrist-universal-joint.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Superposition in Affine Control Systems</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Rigorous derivation of superposition with respect to inputs for mechanical systems whose dynamics are affine in control, presented in Newton–Euler, Lagrangian, and screw-theoretic formulations.</p>
-            <a href="articles/superposition.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Controllability and Drift–Control Ratio</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Control-theoretic and multibody dynamics analysis of the drift–control ratio in the golf swing, examining controllability using Lie brackets and impact stability.</p>
-            <a href="articles/controllability-drift-ratio.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Drift Components of Wrench in Double Pendulum</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of drift components and wrench dynamics in a double pendulum system, providing insights into passive dynamics in multibody systems.</p>
-            <a href="articles/drift-components-wrench-double-pendulum.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Strokes Gained Limitations</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of limitations in strokes gained methodology and its application to golf swing analysis.</p>
-            <a href="articles/strokes-gained-limitations.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Intermediate Axis Theorem and Golf Club Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of how the intermediate axis theorem (secondary axis instability) applies to golf club dynamics, 
-            explaining shaft behavior and rotation stability during the swing.</p>
-            <a href="articles/secondary-axis-stability.html" class="resource-link">Read Article →</a>
-            <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU" 
-               class="resource-link" 
-               target="_blank" 
-               rel="noopener"
-               style="margin-top: 0.5rem; display: inline-block;">
-              Watch Demonstration Video →
-            </a>
-            <a href="https://www.youtube.com/watch?v=Xrf1HzFJ8jc" 
-               class="resource-link" 
-               target="_blank" 
-               rel="noopener"
-               style="margin-top: 0.5rem; display: inline-block;">
-              Watch Additional Video →
-            </a>
-          </div>
-        </div>
-      </div>
 
-          <div id="affine-nature-golf-swing" class="article-category">
-            <h3 class="category-title">Affine Nature of the Golf Swing</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Affine Control Interpretation of the Golf Swing</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Main theoretical manuscript developing the control-affine framework for modeling the golfer–club–shaft system, with drift/input decomposition and force taxonomy.</p>
-            <a href="articles/affine-nature-golf-swing.html" class="resource-link">Read Article →</a>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Matlab Simulink Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Control-affine system models, drift-input decomposition simulations, and golf swing dynamics 
+                implemented in Matlab Simulink. These models implement the theoretical framework developed in 
+                the Drifter Manifesto series, providing numerical simulations and analysis tools. Includes 
+                comprehensive documentation of numerical routines, model structure, and supporting technical 
+                notes.
+              </p>
+              <a href="models-simulink.html" class="resource-link">View Details →</a>
+            </div>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Nonlinear Control Insights</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Nonlinear control theory insights, drift causality, and future research directions.</p>
-            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Inverse Dynamics Inference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Detailed treatment of inverse dynamics inference within the affine control framework.</p>
-            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Applications</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Applications and examples of the affine control framework.</p>
-            <a href="articles/appendix-applications.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Lagrangian Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Lagrangian mechanics reference material supporting the main theory.</p>
-            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Screw Theory Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Screw theory reference material for spatial mechanics and wrenches.</p>
-            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-      </div>
 
-          <div id="affine-background-articles" class="article-category">
-            <h3 class="category-title">Affine Background Articles</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Nonlinear Control Theory Insights</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Nonlinear control theory insights, drift causality, and future research directions for control-affine mechanical systems.</p>
-            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
+          <div id="mujoco" class="category-section">
+            <h3 class="category-title">MuJoCo Models</h3>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Force Mobility Matrices</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of force and mobility matrices in constrained multibody systems.</p>
-            <a href="articles/force-mobility-matrices.html" class="resource-link">Read Article →</a>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MuJoCo Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Physics-based simulations using MuJoCo (Multi-Joint dynamics with Contact) for biomechanical 
+                analysis, including golf swing models, pendulum systems, and multibody dynamics simulations. 
+                MuJoCo provides fast and accurate physics simulation for model-based optimization and analysis.
+              </p>
+              <a href="models-mujoco.html" class="resource-link">View Details →</a>
+            </div>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Inverse Dynamics Inference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Theoretical framework for inferring forces and torques from motion data in control-affine systems.</p>
-            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
+
+          <div id="drake" class="category-section">
+            <h3 class="category-title">Drake Models</h3>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Lagrangian Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on Lagrangian mechanics for multibody systems.</p>
-            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Drake Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Robotics and control system models implemented in Drake, focusing on underactuated systems, 
+                manipulation, and control-affine dynamics. Drake is an open-source toolbox from MIT's Robot 
+                Locomotion Group that provides tools for modeling, simulation, and control of complex robotic 
+                systems.
+              </p>
+              <a href="models-drake.html" class="resource-link">View Details →</a>
+            </div>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Screw Theory Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on screw theory for spatial mechanics, wrenches, and twists.</p>
-            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
+
+          <div id="pinocchio" class="category-section">
+            <h3 class="category-title">Pinocchio Models</h3>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Null Space Constraint Jacobian</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of null spaces and constraint Jacobians in constrained mechanical systems.</p>
-            <a href="articles/null-space-constraint-jacobian.html" class="resource-link">Read Article →</a>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Pinnochio Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Rigid body dynamics and kinematics models using Pinocchio, including forward/inverse dynamics, 
+                Jacobian computations, and constraint handling for multibody systems. Pinocchio provides efficient 
+                algorithms for robot dynamics and kinematics, based on Roy Featherstone's "Rigid Body Dynamics 
+                Algorithms."
+              </p>
+              <a href="models-pinnochio.html" class="resource-link">View Details →</a>
+            </div>
           </div>
-        </div>
+
+          <div id="pendulum" class="category-section">
+            <h3 class="category-title">Pendulum Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Pendulum Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Pendulum-based models and simulations that serve as simplified analogs for understanding golf 
+                swing dynamics, including single, double, and multi-link pendulum systems. These models provide 
+                insights into control-affine systems, drift-input decomposition, and the fundamental physics of 
+                underactuated multibody systems.
+              </p>
+              <a href="models-pendulum.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
+
+          <div id="opensim" class="category-section">
+            <h3 class="category-title">OpenSim Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>OpenSim Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Biomechanics simulation models using OpenSim, a freely available, open-source software platform 
+                for modeling, simulating, and analyzing the neuromusculoskeletal system. OpenSim enables building 
+                and analyzing musculoskeletal models, performing inverse kinematics and dynamics, and simulating 
+                movement.
+              </p>
+              <a href="models-opensim.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
+
+          <div id="myosim" class="category-section">
+            <h3 class="category-title">MyoSim Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MyoSim Models</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Muscle-driven movement simulation models using MyoSim, an open-source software library for 
+                simulating muscle-driven movement. MyoSim provides tools for biomechanical modeling and analysis, 
+                enabling researchers to build and simulate models of muscle-tendon systems and analyze muscle 
+                activation patterns.
+              </p>
+              <a href="models-myosim.html" class="resource-link">View Details →</a>
+            </div>
+          </div>
+
+          <div id="wrist-universal" class="category-section">
+            <h3 class="category-title">Wrist Universal Joint Models</h3>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint Model</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Interactive application modeling the wrist as a universal joint with proper kinematics. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis, with real-time visualization and calculations.
+              </p>
+              <a href="tools/wrist-universal-joint/grip_angle_simulator.html" class="resource-link">View Interactive Tool →</a>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint Model (PyQt6)</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Enhanced PyQt6 desktop application with advanced GUI features. Download and run locally for full interactive control over grip angle, wrist angle, club properties, and signal generation.
+              </p>
+              <a href="content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application →</a>
+            </div>
           </div>
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Articles History -->
+      <!-- Right Sidebar: Recent Models History -->
       <aside class="right-sidebar">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Articles</h3>
-          <ul class="sidebar-links" id="articles-history-list">
-            <li class="history-empty">No recent articles yet</li>
+          <h3 class="sidebar-heading">Recent Models</h3>
+          <ul class="sidebar-links" id="models-history-list">
+            <li class="history-empty">No recent models yet</li>
           </ul>
         </nav>
       </aside>
     </div>
   </div>
 </section>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modelsHistoryList = document.getElementById('models-history-list');
+  if (!modelsHistoryList) return;
+
+  const MODEL_PAGES = [
+    'models.html',
+    'models-simulink.html',
+    'models-mujoco.html',
+    'models-drake.html',
+    'models-pinnochio.html',
+    'models-pendulum.html',
+    'models-opensim.html',
+    'models-myosim.html'
+  ];
+
+  function updateModelsHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'models.html'
+    };
+
+    if (MODEL_PAGES.includes(currentPage.url)) {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      modelsHistoryList.innerHTML = '<li class="history-empty">No recent models yet</li>';
+      return;
+    }
+
+    modelsHistoryList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateModelsHistory();
+});
+</script>
 
 
 <script>
