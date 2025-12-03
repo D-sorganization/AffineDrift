@@ -90,6 +90,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+<<<<<<< Updated upstream
+=======
+    // Debounce scroll event for performance
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+    });
+
+    // Initial call
+    highlightNavigation();
+
+>>>>>>> Stashed changes
     // Add fade-in animation for sections on scroll (only if not already visible)
     // Content is visible by default - animation is optional enhancement
     // Disabled on mobile to prevent content loading issues and improve performance
