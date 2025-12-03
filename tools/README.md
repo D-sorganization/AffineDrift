@@ -23,7 +23,7 @@ Interactive tool for analyzing how grip angle affects torque transmission and an
 - `requirements.txt` - Python dependencies
 - `EMBEDDING_GUIDE.md` - Complete embedding instructions
 
-**Article:** [Wrists Behave as Universal Joints](../wrist-universal-joint.html)
+**Article:** [Wrists Behave as Universal Joints](../docs/articles/wrist-universal-joint.html)
 
 ## Adding New Tools
 
