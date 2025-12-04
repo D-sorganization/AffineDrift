@@ -5,16 +5,15 @@ This is a workaround for when Quarto is not available.
 """
 
 import re
-import sys
 from pathlib import Path
-from typing import Optional, Tuple
 
-def extract_html_from_qmd(qmd_file: Path) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+
+def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str | None]:
     """Extract HTML content from a .qmd file
-    
+
     Args:
         qmd_file: Path to the .qmd file to process
-        
+
     Returns:
         Tuple of (title, description, html_content). Any can be None if not found.
     """
@@ -44,14 +43,14 @@ def extract_html_from_qmd(qmd_file: Path) -> Tuple[Optional[str], Optional[str],
 
 def create_html_page(title: str, description: str, body_html: str, output_file: Path, page_type: str = "articles") -> bool:
     """Create a complete HTML page from a template
-    
+
     Args:
         title: Page title
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
         page_type: Type of page ('articles', 'models', 'resources') to set correct nav active state
-        
+
     Returns:
         True if successful, False otherwise
     """
