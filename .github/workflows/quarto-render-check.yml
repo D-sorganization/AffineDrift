@@ -1,0 +1,128 @@
+name: Quarto Render Check
+
+on:
+  push:
+    branches:
+      - '**'  # All branches
+    paths:
+      - '**.qmd'
+      - '_quarto.yml'
+      - 'styles.css'
+      - 'script.js'
+  pull_request:
+    paths:
+      - '**.qmd'
+      - '_quarto.yml'
+      - 'styles.css'
+      - 'script.js'
+
+jobs:
+  render-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.4.549
+
+      - name: Verify Quarto installation
+        run: quarto --version
+
+      - name: Render Quarto Project
+        run: |
+          echo "🔄 Rendering Quarto project..."
+          quarto render
+          echo "✅ Render completed"
+
+      - name: Verify output structure
+        run: |
+          echo "🔍 Checking for rendered HTML files..."
+
+          # Check that docs directory exists
+          if [ ! -d "docs" ]; then
+            echo "❌ docs/ directory not found"
+            exit 1
+          fi
+
+          # Check for key files
+          REQUIRED_FILES=(
+            "docs/index.html"
+            "docs/articles.html"
+            "docs/resources.html"
+          )
+
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ $file exists"
+            else
+              echo "❌ $file missing"
+              exit 1
+            fi
+          done
+
+      - name: Check for 3-column layout preservation
+        run: |
+          echo "🔍 Verifying that {=html} blocks preserved 3-column layout..."
+
+          # Check if articles.html has the 3-column layout structure
+          if grep -q "standard-page-layout" docs/articles.html; then
+            echo "✅ standard-page-layout found in articles.html"
+          else
+            echo "⚠️  standard-page-layout NOT found in articles.html"
+            echo "This may indicate that Quarto is stripping custom HTML"
+          fi
+
+          if grep -q "left-sidebar" docs/articles.html; then
+            echo "✅ left-sidebar found in articles.html"
+          else
+            echo "⚠️  left-sidebar NOT found in articles.html"
+          fi
+
+          if grep -q "toc-nav" docs/articles.html; then
+            echo "✅ toc-nav found in articles.html"
+          else
+            echo "⚠️  toc-nav NOT found in articles.html"
+          fi
+
+      - name: Check for changes in docs/
+        run: |
+          echo "📊 Checking what files changed in docs/..."
+          git diff --stat HEAD -- docs/ || echo "No changes in docs/"
+
+      - name: Commit rendered HTML (optional)
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add docs/
+
+          if git diff --staged --quiet; then
+            echo "📝 No changes to commit"
+          else
+            echo "📝 Committing rendered HTML files"
+            git commit -m "Auto-render: Update HTML files from QMD changes
+
+[skip ci]"
+            git push
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "======================================="
+          echo "Quarto Render Check Complete"
+          echo "======================================="
+          echo ""
+          echo "This workflow:"
+          echo "✓ Renders all .qmd files to HTML"
+          echo "✓ Verifies output files exist"
+          echo "✓ Checks that 3-column layout is preserved"
+          echo "✓ Auto-commits changes on feature branches"
+          echo ""
+          echo "Main branch deployment uses quarto-publish.yml"
+          echo "======================================="
