@@ -19,6 +19,8 @@ on:
 jobs:
   render-and-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for auto-committing rendered HTML files
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -67,24 +69,39 @@ jobs:
         run: |
           echo "🔍 Verifying that {=html} blocks preserved 3-column layout..."
 
+          # Track if any critical layout classes are missing
+          LAYOUT_FAILED=0
+
           # Check if articles.html has the 3-column layout structure
           if grep -q "standard-page-layout" docs/articles.html; then
             echo "✅ standard-page-layout found in articles.html"
           else
-            echo "⚠️  standard-page-layout NOT found in articles.html"
-            echo "This may indicate that Quarto is stripping custom HTML"
+            echo "❌ standard-page-layout NOT found in articles.html"
+            echo "This indicates that Quarto is stripping custom HTML"
+            LAYOUT_FAILED=1
           fi
 
           if grep -q "left-sidebar" docs/articles.html; then
             echo "✅ left-sidebar found in articles.html"
           else
-            echo "⚠️  left-sidebar NOT found in articles.html"
+            echo "❌ left-sidebar NOT found in articles.html"
+            LAYOUT_FAILED=1
           fi
 
           if grep -q "toc-nav" docs/articles.html; then
             echo "✅ toc-nav found in articles.html"
           else
-            echo "⚠️  toc-nav NOT found in articles.html"
+            echo "❌ toc-nav NOT found in articles.html"
+            LAYOUT_FAILED=1
+          fi
+
+          # Fail the workflow if critical layout classes are missing
+          if [ "$LAYOUT_FAILED" -eq 1 ]; then
+            echo ""
+            echo "❌ CRITICAL: 3-column layout structure is missing!"
+            echo "The TOC sidebar will not display correctly."
+            echo "This workflow will fail to prevent broken HTML from being committed."
+            exit 1
           fi
 
       - name: Check for changes in docs/

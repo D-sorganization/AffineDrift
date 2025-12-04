@@ -7,9 +7,17 @@ This is a workaround for when Quarto is not available.
 import re
 import sys
 from pathlib import Path
+from typing import Optional, Tuple
 
-def extract_html_from_qmd(qmd_file):
-    """Extract HTML content from a .qmd file"""
+def extract_html_from_qmd(qmd_file: Path) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+    """Extract HTML content from a .qmd file
+    
+    Args:
+        qmd_file: Path to the .qmd file to process
+        
+    Returns:
+        Tuple of (title, description, html_content). Any can be None if not found.
+    """
     content = qmd_file.read_text()
 
     # Extract YAML frontmatter
@@ -34,10 +42,20 @@ def extract_html_from_qmd(qmd_file):
     html_content = html_match.group(1)
     return title, description, html_content
 
-def create_html_page(title, description, body_html, output_file):
-    """Create a complete HTML page"""
-
-    # Read template from existing articles.html
+def create_html_page(title: str, description: str, body_html: str, output_file: Path, page_type: str = "articles") -> bool:
+    """Create a complete HTML page from a template
+    
+    Args:
+        title: Page title
+        description: Page description
+        body_html: HTML content for the main body
+        output_file: Path where the HTML file should be written
+        page_type: Type of page ('articles', 'models', 'resources') to set correct nav active state
+        
+    Returns:
+        True if successful, False otherwise
+    """
+    # Read template from existing articles.html (but don't modify it)
     template_file = Path('docs/articles.html')
     if template_file.exists():
         template = template_file.read_text()
@@ -55,6 +73,28 @@ def create_html_page(title, description, body_html, output_file):
             f'<meta name="description" content="{description}">',
             template
         )
+
+        # Fix navigation active state based on page type
+        if page_type == "models":
+            # Remove active state from Articles link
+            template = re.sub(
+                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+                '<a class="nav-link" href="./articles.html">',
+                template
+            )
+        elif page_type == "resources":
+            # Remove active state from Articles link, add to Resources
+            template = re.sub(
+                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+                '<a class="nav-link" href="./articles.html">',
+                template
+            )
+            template = re.sub(
+                r'<a class="nav-link" href="./resources.html">',
+                '<a class="nav-link active" href="./resources.html" aria-current="page">',
+                template
+            )
+        # For articles type, keep Articles as active (default)
 
         # Replace title block
         template = re.sub(
@@ -80,13 +120,30 @@ def create_html_page(title, description, body_html, output_file):
             flags=re.DOTALL
         )
 
+        # Remove articles-specific JavaScript for non-articles pages
+        if page_type != "articles":
+            # Remove updateArticlesHistory function and calls
+            template = re.sub(
+                r'\s*function updateArticlesHistory\(\) \{.*?\}\s*',
+                '',
+                template,
+                flags=re.DOTALL
+            )
+            template = re.sub(
+                r'\s*updateArticlesHistory\(\);?\s*',
+                '',
+                template
+            )
+
         output_file.write_text(template)
         return True
 
     return False
 
-def main():
+def main() -> None:
+    """Main function to process all .qmd files and generate HTML pages."""
     # Find all .qmd files that need to be built
+    # Note: Process articles.qmd LAST to avoid corrupting the template
     qmd_files = [
         'models.qmd',
         'models-drake.qmd',
@@ -94,7 +151,7 @@ def main():
         'models-myosim.qmd',
         'models-opensim.qmd',
         'models-pendulum.qmd',
-        'models-pinnochio.qmd',
+        'models-pinocchio.qmd',  # Fixed spelling: Pinnochio -> Pinocchio
         'models-simulink.qmd',
         'resources-books.qmd',
         'resources-datasets.qmd',
@@ -105,8 +162,9 @@ def main():
         'resources-websites.qmd',
     ]
 
-    # Also rebuild articles.html
-    qmd_files.insert(0, 'articles.qmd')
+    # Process articles.qmd LAST to avoid corrupting the template
+    # (articles.html is used as the template for all other pages)
+    qmd_files.append('articles.qmd')
 
     docs_dir = Path('docs')
     docs_dir.mkdir(exist_ok=True)
@@ -127,7 +185,15 @@ def main():
 
         output_file = docs_dir / qmd_file.with_suffix('.html').name
 
-        if create_html_page(title, description, html_content, output_file):
+        # Determine page type for navigation active state
+        if qmd_name.startswith('models'):
+            page_type = "models"
+        elif qmd_name.startswith('resources'):
+            page_type = "resources"
+        else:
+            page_type = "articles"
+
+        if create_html_page(title, description, html_content, output_file, page_type):
             print(f"  Created {output_file}")
         else:
             print(f"  Failed to create {output_file}")
