@@ -150,7 +150,7 @@ def main() -> None:
         'models-myosim.qmd',
         'models-opensim.qmd',
         'models-pendulum.qmd',
-        'models-pinocchio.qmd',  # Fixed spelling: Pinnochio -> Pinocchio
+        'models-pinnochio.qmd',  # TODO: Rename file to models-pinocchio.qmd for correct spelling
         'models-simulink.qmd',
         'resources-books.qmd',
         'resources-datasets.qmd',
