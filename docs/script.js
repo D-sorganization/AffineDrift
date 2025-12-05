@@ -525,6 +525,7 @@ function initArticleHistory() {
     }
 
     // 2. Display History (runs on articles.html where the list exists)
+    const articlesHistoryList = document.getElementById('articles-history-list');
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
