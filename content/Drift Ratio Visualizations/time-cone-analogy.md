@@ -1,7 +1,6 @@
-
 What it conveys:
 
-- **Top panel**: visual proof of “drift explodes, control fades” as we approach impact.  
+- **Top panel**: visual proof of “drift explodes, control fades” as we approach impact.
 - **Bottom panel**: DCR goes from < 1 (control-dominated) to ≫ 10 (drift-dominated) → nice visual hook for your “collapse of control authority” sections.
 
 ---
@@ -12,13 +11,13 @@ Now for the fun one: a **control cone** diagram, inspired by light cones.
 
 We’ll plot:
 
-- Horizontal axis: time (normalized swing phase)  
-- Vertical axis: “reachable deviation” from the nominal trajectory (abstracted as ±max deviation)  
+- Horizontal axis: time (normalized swing phase)
+- Vertical axis: “reachable deviation” from the nominal trajectory (abstracted as ±max deviation)
 - The cone narrows as time → impact, representing the reachable set shrinking as DCR explodes.
 
 You can drop this **as-is** into your Quarto paper as another figure:
 
-```markdown
+````markdown
 ## Visualization: Control Cone Analogy
 
 ```{python}
@@ -55,3 +54,9 @@ plt.text(0.8, 0.05, "Late Downswing:\nCone Collapse", fontsize=10)
 
 plt.tight_layout()
 plt.show()
+```
+````
+
+```
+
+```
