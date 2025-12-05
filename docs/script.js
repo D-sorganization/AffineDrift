@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Also look for article-category containers (use container ID, not heading ID)
         const categories = document.querySelectorAll('.article-category');
         categories.forEach((category, categoryIndex) => {
-            // Fixed: use h3 not h2 because article categories use h3.category-title
-            const heading = category.querySelector('h3, h2');
+            // Fixed: use h3 because article categories use h3.category-title
+            const heading = category.querySelector('h3');
             if (heading) {
                 // Use container ID if it exists, otherwise generate one
                 let id = category.id;
@@ -472,7 +472,72 @@ document.addEventListener('DOMContentLoaded', function () {
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
+
+    // Initialize Article History Tracking and Display
+    initArticleHistory();
 });
+
+// Article History Logic
+function initArticleHistory() {
+    // List of article pages for history tracking
+    const ARTICLE_PAGES = [
+        'theory-part1.html',
+        'theory-part2.html',
+        'theory-part3.html',
+        'theory-part4.html',
+        'theory-part5.html',
+        'inverse-dynamics.html',
+        'wrist-universal-joint.html',
+        'nonlinear-control-insights.html',
+        'drift-components-wrench-double-pendulum.html',
+        'secondary-axis-stability.html',
+        'controllability-drift-ratio.html',
+        'strokes-gained-limitations.html',
+        'superposition.html',
+        'screw-theory-reference.html',
+        'null-space-constraint-jacobian.html',
+        'lagrangian-reference.html',
+        'inverse-dynamics-inference.html',
+        'force-mobility-matrices.html',
+        'mobility-force-ellipses.html',
+        'affine-nature-golf-swing.html',
+        'appendix-applications.html'
+    ];
+
+    const STORAGE_KEY = 'affinedrift_articles_history';
+    const currentPath = window.location.pathname;
+    const currentUrl = currentPath.split('/').pop() || '';
+    const isArticlePage = currentPath.includes('/articles/') && currentUrl.endsWith('.html');
+
+    // 1. Track Visit (runs on article pages)
+    if (isArticlePage && ARTICLE_PAGES.includes(currentUrl)) {
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const currentPage = {
+            title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+            url: 'articles/' + currentUrl
+        };
+
+        // Remove if existing, add to top
+        history = history.filter(item => item.url !== currentPage.url);
+        history.unshift(currentPage);
+        history = history.slice(0, 10); // Keep last 10
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
+
+    // 2. Display History (runs on articles.html where the list exists)
+    const articlesHistoryList = document.getElementById('articles-history-list');
+    if (articlesHistoryList) {
+        const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+        if (history.length === 0) {
+            articlesHistoryList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
+        } else {
+            articlesHistoryList.innerHTML = history.map(item =>
+                `<li><a href="${item.url}">${item.title}</a></li>`
+            ).join('');
+        }
+    }
+}
 
 // Utility function for future features
 function scrollToTop() {
@@ -482,9 +547,15 @@ function scrollToTop() {
     });
 }
 
+
 // Export for potential module use
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         scrollToTop
     };
 }
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    initArticleHistory();
+});

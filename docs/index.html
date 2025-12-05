@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="AffineDrift">
 <meta name="description" content="Affine control theory for golf swing dynamics">
 
 <title>AffineDrift</title>
@@ -43,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,12 +70,107 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -90,8 +184,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
-    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -103,26 +197,161 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Home</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="./drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./articles.html"> 
-<span class="menu-text">Articles</span></a>
+        <li>
+    <a class="dropdown-item" href="./articles.html">
+ <span class="dropdown-text">Articles</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./resources.html"> 
-<span class="menu-text">Resources</span></a>
+        <li>
+    <a class="dropdown-item" href="./research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
+        <li>
+    <a class="dropdown-item" href="./book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./contact.html"> 
-<span class="menu-text">Contact</span></a>
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="./models.html">
+ <span class="dropdown-text">Models Home</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="./resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="./contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -152,12 +381,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta column-page">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>AffineDrift </p>
-          </div>
-  </div>
     
   
     
@@ -168,88 +391,212 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="hero">
+<section id="home" class="hero">
   <div class="container">
     <div class="hero-content">
       <blockquote class="featured-quote blockquote">
         <p>"What we do now echoes in eternity"</p>
         <cite>— Marcus Aurelius</cite>
+
         <div class="drift-quote">
-          <p>
-            Drift is not a nuisance to suppress—it is the stored history of the system. The golf swing becomes predictable when we understand how previous states accumulate momentum. Affine control theory lets us separate that stored drift from the deliberate inputs that steer the club.
-          </p>
+          <p>Drift is not a problem to control. It is the state you want to achieve. Drift is greatest when you move fast. It happens when you accumulate momentum in the system. It happens when you move. It is the accumulation of all of your efforts to swing the club. It is an integral sum and the mountain you must climb to get where you are going. You can't stand on top while being safe at the base, feeling safe and in control. You must climb that hill. You must use its influence like a judo artist. The goal is to accumulate not to control. Swing with reckless abandon knowing that drift will always be there as a predictable ally.</p>
         </div>
       </blockquote>
-      <div class="hero-cta">
-        <a class="btn-primary" href="articles.html">Explore the theory</a>
-        <a class="btn-primary" href="resources.html">Browse the resources</a>
-      </div>
     </div>
   </div>
 </section>
-<section class="mission-section">
+
+<section id="mission" class="mission-section">
   <div class="container">
     <div class="mission-content">
       <p class="mission-text">
-        AffineDrift documents a research program that treats the golf swing as a nonlinear, control-affine system. We study how the passive dynamics of the golfer–club system (the drift) combine with deliberate muscular inputs to create repeatable trajectories. Every project connects rigorous mathematics with practical coaching intuition.
+        AffineDrift takes its name from nonlinear control theory—the mathematics of taming complex, chaotic systems. In a control-affine system, the underlying dynamics may be nonlinear, but the influence of control inputs remains linear. This structure allows the system to be decomposed into two parts:
       </p>
       <ul class="mission-list">
-        <li><strong>Drift diagnostics</strong>: quantify the state-dependent forces emerging from prior motion.</li>
-        <li><strong>Control efficiency</strong>: map how torque channels and manipulability change through the swing.</li>
-        <li><strong>Counterfactual analysis</strong>: simulate what happens when we alter inputs, constraints, or equipment.</li>
+        <li><strong>Drift:</strong> everything the system does on its own, based on its current state</li>
+        <li><strong>Control:</strong> everything that arises from deliberate input</li>
       </ul>
       <p class="mission-text">
-        The site hosts full derivations, interactive tools, and replication notes so that other researchers can validate the work or extend it with their own data.
+        In the drift, the past writes itself into the present. The positions and velocities of every component carry the echoes of previous actions. Marcus Aurelius wasn't talking about dynamics, but he wasn't wrong: what comes before shapes what comes now.
+      </p>
+      <p class="mission-text">
+        For practitioners, the implication is simple and profound: history matters. The state of the system—its stored momentum, geometry, and timing—plays a major role in the forces and motions we observe. What we do at any moment is always a combination of our current actions and the inertia of everything that came before.
       </p>
     </div>
   </div>
 </section>
 
-<section class="theory-section">
+<section id="theory" class="theory-section">
   <div class="container">
-    <h2 class="anchored">Why affine control matters</h2>
     <div class="theory-content">
       <div class="theory-intro">
         <p>
-          A control-affine model separates the golf swing into a drift term \(f(x)\) that encodes passive dynamics and an input term \(g(x)u\) that captures muscular torques. This structure preserves nonlinear state dependence while keeping control inputs linear, which is exactly what we need to reason about coordination, manipulability, and causality.
+          An <strong>affine control system</strong> is a fundamental concept in nonlinear control theory.
+          These systems are characterized by being nonlinear in the state variables but linear (affine)
+          in the control inputs.
         </p>
       </div>
+
       <div class="coordination-section">
-        <h3 class="anchored">Research focus</h3>
+        <h3 class="anchored">Coordination of the Golf Swing as a Control Problem</h3>
         <p>
-          Our current work centers on three topics: (1) inverse dynamics interpretation with zero torque and zero velocity counterfactuals, (2) modal approximations for flexible shafts, and (3) how mechanical advantage migrates through impact. Each article documents the math and the computational workflow end-to-end.
+          The golf swing presents a fundamental coordination challenge: how does the golfer orchestrate
+          the motion of multiple body segments and the club to achieve a desired outcome? This question
+          lies at the heart of motor control research, and it is precisely the type of problem that
+          nonlinear control theory is designed to address.
         </p>
         <p>
-          The <a href="articles/theory-part1.html">Drifter Manifesto</a> series walks through the derivation of the model. Later entries apply it to pendulum analogies, simulators, and experimental swing data.
+          Traditional biomechanical analyses often treat the swing as a sequence of static positions or
+          focus on individual joint motions in isolation. However, the golf swing is fundamentally a
+          <strong>dynamic, coordinated movement</strong> where the actions of multiple joints must be
+          synchronized in time and space. The challenge is not merely one of kinematics—which positions
+          to achieve—but of <strong>dynamics</strong>: how to generate the right forces and torques at
+          the right moments to produce the desired motion.
         </p>
+        <p>
+          From a control perspective, the golfer must solve a <strong>trajectory optimization problem</strong>:
+          find a sequence of muscle activations (control inputs) that drives the system from an initial
+          state (address position) to a desired final state (ball contact) while satisfying constraints
+          on joint ranges of motion, force production capabilities, and timing. The complexity arises
+          because the system is <strong>highly nonlinear</strong>: the same muscle torque produces different
+          effects depending on the current configuration of the body and club, the velocities of all
+          segments, and the elastic state of the shaft.
+        </p>
+        <p>
+          Nonlinear control theory provides the mathematical framework to understand and analyze this
+          coordination problem. The control-affine structure \(\dot{x} = f(x) + g(x)u\) naturally captures
+          the separation between <strong>passive dynamics</strong> (what the system does on its own) and
+          <strong>active control</strong> (what the golfer adds through muscle activation). This
+          decomposition is crucial because it allows us to ask: which aspects of the observed motion
+          are due to the golfer's active control, and which are due to the natural dynamics of the
+          multibody system?
+        </p>
+        <p>
+          For golf researchers, this framework offers several advantages. First, it provides a rigorous
+          way to <strong>decompose forces</strong> into drift and input components, enabling causal
+          attribution of observed forces to specific control actions versus passive dynamics. Second,
+          it reveals how the <strong>mechanical advantage</strong> of control inputs changes throughout
+          the swing, explaining why certain timing patterns are more effective than others. Third, it
+          enables the construction of <strong>counterfactual analyses</strong>: what would the motion look
+          like if different control strategies were employed, or if the passive dynamics were different?
+        </p>
+        <p>
+          By framing the golf swing as a nonlinear control problem, we move beyond descriptive
+          biomechanics toward a <strong>predictive, mechanistic understanding</strong> of how coordination
+          emerges from the interaction between neural control and mechanical dynamics. This perspective
+          is essential for understanding skill acquisition, injury mechanisms, and the effects of equipment
+          modifications on swing dynamics.
+        </p>
+      </div>
+
+      <div class="math-block">
+        <h3 class="anchored">Mathematical Definition</h3>
+        <p>A control-affine system takes the general form:</p>
+        <div class="equation">
+          \[\dot{x} = f(x) + g(x)u\]
+        </div>
+        <div class="equation-explanation">
+          <p>where:</p>
+          <ul>
+            <li><strong>\(\dot{x}\)</strong> is the time derivative of the state vector, representing the rate of change of all system variables (positions, velocities, and any other state components). It describes how the system evolves in time.</li>
+            <li><strong>\(x \in \mathbb{R}^{2(n+m)}\)</strong> is the <strong>state vector</strong>, a complete description of the system's configuration at any instant. For a mechanical system like the golf swing, \(x = [q^T, \dot{q}^T, \eta^T, \dot{\eta}^T]^T\) where:
+              <ul>
+                <li>\(q \in \mathbb{R}^n\) are the generalized coordinates (e.g., joint angles for rigid body segments)</li>
+                <li>\(\dot{q} \in \mathbb{R}^n\) are the generalized velocities (angular velocities at joints)</li>
+                <li>\(\eta \in \mathbb{R}^m\) are modal coordinates describing flexible shaft deformation</li>
+                <li>\(\dot{\eta} \in \mathbb{R}^m\) are modal velocities</li>
+              </ul>
+              The state vector captures everything needed to predict the system's future evolution.
+            </li>
+            <li><strong>\(u \in \mathbb{R}^{m_u}\)</strong> is the <strong>control input vector</strong>, representing the external actions applied to the system. In the golf swing, these are abstracted muscular torques—the net effect of muscle activations at joints. The dimension \(m_u \leq n\) reflects that not all degrees of freedom may be directly actuated. These inputs are what the golfer (or controller) can actively modulate.</li>
+            <li><strong>\(f(x)\)</strong> is the <strong>drift vector field</strong>, representing the passive dynamics of the system—how it would evolve in the absence of any control inputs. This includes gravitational forces, inertial effects, Coriolis and centrifugal forces, and any passive mechanical interactions (e.g., elastic forces from shaft deformation). The drift term depends only on the current state, not on the control inputs.</li>
+            <li><strong>\(g(x)\)</strong> is the <strong>input vector field</strong> (or input matrix), a state-dependent mapping that determines how control inputs \(u\) influence the system's evolution. It encodes the "mechanical advantage" of control inputs, which varies with the system's configuration. In mechanical systems, \(g(x)\) typically has the form \(M^{-1}(q,\eta) B(q)\), where \(M\) is the inertia matrix and \(B\) maps control channels to generalized torques.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="key-properties">
+        <div class="g-term-explanation">
+          <h3 class="anchored">The Control Vector Field \(g(x)\)</h3>
+          <p>
+            In the control-affine notation \(\dot{x} = f(x) + g(x)u\), the term \(g(x)\) represents the
+            <strong>input vector field</strong> that maps control inputs to state accelerations. This field
+            is intimately related to the manipulator jacobian and the system's inertia structure.
+          </p>
+          <p>
+            <strong>Intuitive interpretation:</strong> The matrix \(g(x)\) encodes how effective a given
+            control input is at changing the system's acceleration. This effectiveness depends on the
+            current configuration (joint angles, positions) through the inverse inertia matrix. In
+            mechanical systems, \(g(x)\) typically takes the form \(M^{-1}(q) B(q)\), where \(M(q)\) is
+            the inertia matrix and \(B(q)\) maps control channels to generalized torques. The inverse
+            inertia matrix acts like a "mechanical advantage" that varies with configuration—the same
+            torque input produces different accelerations depending on the system's current pose.
+          </p>
+          <p>
+            For example, in a robotic manipulator, \(g(x)\) captures how joint torques translate to
+            end-effector accelerations, with the mapping changing as the arm moves through different
+            configurations. In the golf swing, \(g(x)\) describes how muscle torques at joints influence
+            the acceleration of the entire golfer–club system, with the coupling strength depending on
+            the current swing position and shaft deformation.
+          </p>
+        </div>
+        <div class="properties-grid">
+          <div class="property-card property-card-left">
+            <h4 class="anchored">Drift Dynamics</h4>
+            <p>The drift vector field \(f(x)\) captures all the <strong>passive dynamics</strong> of the system—how it evolves when no control inputs are applied.</p>
+            <p>This includes gravitational forces pulling on the system, inertial effects from the multibody structure, Coriolis and centrifugal forces arising from rotational motion, and any passive mechanical interactions such as elastic forces from flexible components (e.g., shaft deformation in the golf swing).</p>
+            <p>Importantly, the drift term depends <em>only</em> on the current state \(x\), not on the control inputs \(u\). This means that for a given configuration and velocity, the passive dynamics are completely determined, regardless of what control actions are being taken.</p>
+            <p>The drift term represents the "echoes from the past"—forces and torques that emerge from the system's current state, which itself is the result of all previous actions. Understanding the drift dynamics is crucial because it can be large and even dominant during rapid motion, meaning that observed forces may primarily reflect passive dynamics rather than active control effort.</p>
+          </div>
+          <div class="property-card property-card-right">
+            <h4 class="anchored">Linearity in Input</h4>
+            <p>The fundamental property of an affine control system is that control inputs \(u\) appear <strong>linearly</strong> in the dynamics equation. This means that if you double the control input, the contribution to \(\dot{x}\) doubles; if you apply two control inputs simultaneously, their effects add together (superposition).</p>
+            <p>This linearity in control is preserved even though the system may be highly nonlinear in the state variables. The input vector field \(g(x)\) can depend on the state (making the system nonlinear overall), but the control input \(u\) itself always multiplies \(g(x)\) linearly, never appearing in powers, products with state variables, or other nonlinear combinations.</p>
+            <p>This structural property enables powerful analytical tools, including the decomposition of dynamics into drift and input components, and the construction of counterfactual trajectories.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="goals-section">
+<section id="golf" class="golf-section">
   <div class="container">
-    <h2 class="anchored">What you can do here</h2>
-    <div class="goals-grid">
-      <div class="goal-card">
-        <div class="goal-number">01</div>
-        <h3 class="anchored">Study the math</h3>
-        <p>Read fully typeset derivations for drift decomposition, screw theory references, and Lagrangian formulations.</p>
+    <div class="golf-content">
+      <div class="golf-intro">
+        <p>
+          The golf swing is a remarkably sophisticated example of human motor control. When viewed
+          through the lens of affine control theory, the swing reveals itself as a high-dimensional
+          system where muscular inputs (controls) interact with biomechanical constraints and
+          gravitational dynamics (drift).
+        </p>
       </div>
-      <div class="goal-card">
-        <div class="goal-number">02</div>
-        <h3 class="anchored">Explore tools</h3>
-        <p>Use interactive notebooks and Streamlit demos such as the wrist universal joint simulator to test scenarios.</p>
+
+      <div class="golf-model">
+        <h3 class="anchored">System Components</h3>
+        <div class="components-grid">
+          <div class="component">
+            <h4 class="anchored">State Space</h4>
+            <p>Joint angles, angular velocities, club position and orientation</p>
+          </div>
+          <div class="component">
+            <h4 class="anchored">Drift Term \(f(x)\)</h4>
+            <p>Gravity, inertial forces, passive tissue dynamics, shaft dynamics</p>
+          </div>
+          <div class="component">
+            <h4 class="anchored">Control Inputs \(u\)</h4>
+            <p>Muscle torques at joints</p>
+          </div>
+          <div class="component">
+            <h4 class="anchored">Input Vector Field \(g(x)\)</h4>
+            <p>The manipulator jacobian and moment arms determine how muscle torques translate to forces and torques throughout the system, with the mapping varying based on the current configuration</p>
+          </div>
+        </div>
       </div>
-      <div class="goal-card">
-        <div class="goal-number">03</div>
-        <h3 class="anchored">Review literature</h3>
-        <p>Leverage curated reading lists that connect biomechanics research with modern control concepts.</p>
-      </div>
+
     </div>
   </div>
 </section>
-
 
 
 
@@ -263,6 +610,68 @@ ul.task-list li input[type="checkbox"] {
       icon: icon
     };
     anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -593,9 +1002,31 @@ ul.task-list li input[type="checkbox"] {
   });
   </script>
 </div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
 <script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
 
+</body>
 
-
-
-</body></html>
+</html>
+</script></body></html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract"><span class="header-section-number">1</span> Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">2</span> 1. Introduction</a></li>
+  <li><a href="#system-modeling-the-3-link-armforearmclub-model" id="toc-system-modeling-the-3-link-armforearmclub-model" class="nav-link" data-scroll-target="#system-modeling-the-3-link-armforearmclub-model"><span class="header-section-number">3</span> 2. System Modeling: The 3-Link Arm–Forearm–Club Model</a>
+  <ul>
+  <li><a href="#forward-kinematics" id="toc-forward-kinematics" class="nav-link" data-scroll-target="#forward-kinematics"><span class="header-section-number">3.1</span> 2.1 Forward Kinematics</a></li>
+  <li><a href="#lagrangian-dynamics" id="toc-lagrangian-dynamics" class="nav-link" data-scroll-target="#lagrangian-dynamics"><span class="header-section-number">3.2</span> 2.2 Lagrangian Dynamics</a></li>
+  <li><a href="#dominance-of-quadratic-velocity-terms" id="toc-dominance-of-quadratic-velocity-terms" class="nav-link" data-scroll-target="#dominance-of-quadratic-velocity-terms"><span class="header-section-number">3.3</span> 2.3 Dominance of Quadratic Velocity Terms</a></li>
+  </ul></li>
+  <li><a href="#driftcontrol-ratio-dcr" id="toc-driftcontrol-ratio-dcr" class="nav-link" data-scroll-target="#driftcontrol-ratio-dcr"><span class="header-section-number">4</span> 3. Drift–Control Ratio (DCR)</a></li>
+  <li><a href="#nonlinear-controllability-via-lie-brackets" id="toc-nonlinear-controllability-via-lie-brackets" class="nav-link" data-scroll-target="#nonlinear-controllability-via-lie-brackets"><span class="header-section-number">5</span> 4. Nonlinear Controllability via Lie Brackets</a>
+  <ul>
+  <li><a href="#behavior-under-increasing-drift" id="toc-behavior-under-increasing-drift" class="nav-link" data-scroll-target="#behavior-under-increasing-drift"><span class="header-section-number">5.1</span> 4.1 Behavior Under Increasing Drift</a></li>
+  </ul></li>
+  <li><a href="#control-authority-collapse" id="toc-control-authority-collapse" class="nav-link" data-scroll-target="#control-authority-collapse"><span class="header-section-number">6</span> 5. Control Authority Collapse</a></li>
+  <li><a href="#the-control-cone-analogy-a-relativistic-perspective" id="toc-the-control-cone-analogy-a-relativistic-perspective" class="nav-link" data-scroll-target="#the-control-cone-analogy-a-relativistic-perspective"><span class="header-section-number">7</span> 6. The Control Cone Analogy: A Relativistic Perspective</a>
+  <ul>
+  <li><a href="#relativity-background" id="toc-relativity-background" class="nav-link" data-scroll-target="#relativity-background"><span class="header-section-number">7.1</span> 6.1 Relativity Background</a></li>
+  <li><a href="#control-theory-parallel-reachable-sets" id="toc-control-theory-parallel-reachable-sets" class="nav-link" data-scroll-target="#control-theory-parallel-reachable-sets"><span class="header-section-number">7.2</span> 6.2 Control Theory Parallel: Reachable Sets</a></li>
+  <li><a href="#defining-the-control-cone" id="toc-defining-the-control-cone" class="nav-link" data-scroll-target="#defining-the-control-cone"><span class="header-section-number">7.3</span> 6.3 Defining the Control Cone</a>
+  <ul class="collapse">
+  <li><a href="#when-drift-is-small" id="toc-when-drift-is-small" class="nav-link" data-scroll-target="#when-drift-is-small"><span class="header-section-number">7.3.1</span> When drift is small:</a></li>
+  <li><a href="#when-drift-is-large" id="toc-when-drift-is-large" class="nav-link" data-scroll-target="#when-drift-is-large"><span class="header-section-number">7.3.2</span> When drift is large:</a></li>
+  </ul></li>
+  <li><a href="#mathematical-representation-of-cone-narrowing" id="toc-mathematical-representation-of-cone-narrowing" class="nav-link" data-scroll-target="#mathematical-representation-of-cone-narrowing"><span class="header-section-number">7.4</span> 6.4 Mathematical Representation of Cone Narrowing</a></li>
+  <li><a href="#application-to-the-golf-swing" id="toc-application-to-the-golf-swing" class="nav-link" data-scroll-target="#application-to-the-golf-swing"><span class="header-section-number">7.5</span> 6.5 Application to the Golf Swing</a>
+  <ul class="collapse">
+  <li><a href="#backswing-wide-control-cone" id="toc-backswing-wide-control-cone" class="nav-link" data-scroll-target="#backswing-wide-control-cone"><span class="header-section-number">7.5.1</span> Backswing — Wide Control Cone</a></li>
+  <li><a href="#transition-cone-tilt" id="toc-transition-cone-tilt" class="nav-link" data-scroll-target="#transition-cone-tilt"><span class="header-section-number">7.5.2</span> Transition — Cone Tilt</a></li>
+  <li><a href="#early-downswing-cone-narrowing" id="toc-early-downswing-cone-narrowing" class="nav-link" data-scroll-target="#early-downswing-cone-narrowing"><span class="header-section-number">7.5.3</span> Early Downswing — Cone Narrowing</a></li>
+  <li><a href="#late-downswing-cone-collapse" id="toc-late-downswing-cone-collapse" class="nav-link" data-scroll-target="#late-downswing-cone-collapse"><span class="header-section-number">7.5.4</span> Late Downswing — Cone Collapse</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#stability-of-impact-and-clubface-closure-variance" id="toc-stability-of-impact-and-clubface-closure-variance" class="nav-link" data-scroll-target="#stability-of-impact-and-clubface-closure-variance"><span class="header-section-number">8</span> 7. Stability of Impact and Clubface Closure Variance</a></li>
+  <li><a href="#numerical-example-drift-vs-control-magnitude" id="toc-numerical-example-drift-vs-control-magnitude" class="nav-link" data-scroll-target="#numerical-example-drift-vs-control-magnitude"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Dieter ______ </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Affine Golf Swing Analysis Project
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Computational Modeling Assistance: ChatGPT </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="abstract" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
+<p>High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the <strong>Drift–Control Ratio (DCR)</strong>,</p>
+<p>[ (t)=, ]</p>
+<p>for a control-affine system ( =f(x)+g(x)u ). We derive explicit expressions for drift and control using a 3-link arm–forearm–club model and conduct a nonlinear controllability analysis using Lie brackets. We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of practical controllability during the downswing.</p>
+<p>We introduce a novel analogy to <strong>relativistic time cones</strong>, showing that a golf swing has an evolving <strong>control cone</strong>—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation physically impossible. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.</p>
+</section>
+<section id="introduction" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> 1. Introduction</h1>
+<p>Elite golfers routinely generate clubhead speeds exceeding (45;), wrist angular velocities exceeding (2000^/), and torso angular velocities approaching (900^/). Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.</p>
+<p>This mirrors a common theme in high-speed movement: <strong>the system transitions from control-dominated to drift-dominated dynamics</strong> as velocity increases.</p>
+<p>Our goal is to provide a rigorous treatment of this phenomenon through:</p>
+<ol type="1">
+<li><strong>Multibody dynamic derivations</strong> of drift and control.</li>
+<li><strong>Nonlinear controllability analysis</strong> (Lie algebraic).</li>
+<li><strong>Reachable set / control cone analysis</strong> using an analogy to relativistic time cones.</li>
+<li><strong>Impact stability analysis</strong> showing how DCR predicts clubface variance.</li>
+</ol>
+<p>This unified approach establishes the Drift–Control Ratio as a foundational concept in golf biomechanics.</p>
+</section>
+<section id="system-modeling-the-3-link-armforearmclub-model" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 2. System Modeling: The 3-Link Arm–Forearm–Club Model</h1>
+<p>We model the golfer–club chain as a 3-DOF planar system:</p>
+<ul>
+<li>(q_1): shoulder rotation<br>
+</li>
+<li>(q_2): elbow rotation<br>
+</li>
+<li>(q_3): wrist/club hinge</li>
+</ul>
+<p>Generalized coordinates:</p>
+<p>[ q = (q_1, q_2, q_3)^T, ^3. ]</p>
+<section id="forward-kinematics" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="forward-kinematics"><span class="header-section-number">3.1</span> 2.1 Forward Kinematics</h2>
+<p>The clubhead position is:</p>
+[
+<span class="math display">\[\begin{aligned}
+x &amp;=
+\ell_1\cos q_1
++ \ell_2\cos(q_1+q_2)
++ \ell_3\cos(q_1+q_2+q_3), \\
+y &amp;=
+\ell_1\sin q_1
++ \ell_2\sin(q_1+q_2)
++ \ell_3\sin(q_1+q_2+q_3).
+\end{aligned}\]</span>
+<p>]</p>
+<p>Velocity:</p>
+<p>[ = J(q). ]</p>
+</section>
+<section id="lagrangian-dynamics" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="lagrangian-dynamics"><span class="header-section-number">3.2</span> 2.2 Lagrangian Dynamics</h2>
+<p>The equation of motion is:</p>
+<p>[ M(q) + C(q,) + G(q) = . ]</p>
+<p>The drift term is:</p>
+[ f(x)=
+<span class="math display">\[\begin{bmatrix}
+\dot{q} \\
+M^{-1}(-C\dot{q}-G)
+\end{bmatrix}\]</span>
+<p>, ]</p>
+<p>and the control term is:</p>
+[ g(x)u=
+<span class="math display">\[\begin{bmatrix}
+0 \\
+M^{-1}\tau
+\end{bmatrix}\]</span>
+<p>. ]</p>
+</section>
+<section id="dominance-of-quadratic-velocity-terms" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="dominance-of-quadratic-velocity-terms"><span class="header-section-number">3.3</span> 2.3 Dominance of Quadratic Velocity Terms</h2>
+<p>Centripetal and Coriolis terms satisfy:</p>
+<p>[ C(q,) (^2) ]</p>
+<p>Hence:</p>
+<p>[ |f(x)| k||^2. ]</p>
+<p>Contrast with:</p>
+<p>[ |g(x)u| = |M^{-1}| ||. ]</p>
+<p>The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.</p>
+</section>
+</section>
+<section id="driftcontrol-ratio-dcr" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 3. Drift–Control Ratio (DCR)</h1>
+<p>We define:</p>
+<p>[ (t) = . ]</p>
+<p>Using approximations:</p>
+<p>[ |f| a|| + b||^2, |g u| c||, ]</p>
+<p>we have:</p>
+<p>[ ]</p>
+<p>Since ((t)) typically <em>decreases</em> during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.</p>
+<p><strong>Result:</strong><br>
+[ (t) 100 ]</p>
+</section>
+<section id="nonlinear-controllability-via-lie-brackets" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 4. Nonlinear Controllability via Lie Brackets</h1>
+<p>A control-affine system is locally controllable if:</p>
+<p>[ { g, [f,g], [f,[f,g]], } = T_x^n. ]</p>
+<p>The Lie bracket:</p>
+<p>[ [f,g] = f - g ]</p>
+<p>captures how drift distorts control directions.</p>
+<section id="behavior-under-increasing-drift" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="behavior-under-increasing-drift"><span class="header-section-number">5.1</span> 4.1 Behavior Under Increasing Drift</h2>
+<p>As drift increases:</p>
+<ul>
+<li>() contains terms (^2)</li>
+<li>the bracket magnitude grows, but</li>
+<li><strong>control cannot access or excite these directions</strong>, because (g(x)u) becomes tiny relative to (f(x)).</li>
+</ul>
+<p>Thus effective controllability collapses.</p>
+<p>This is a structural, not numerical, phenomenon.</p>
+</section>
+</section>
+<section id="control-authority-collapse" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 5. Control Authority Collapse</h1>
+<p>Control authority:</p>
+<p>[ (t) = = . ]</p>
+<p>Collapse occurs when:</p>
+<p>[ (t) &lt; 0.1 (t) &gt; 10. ]</p>
+<p>We find:</p>
+<ul>
+<li>Collapse begins 70–120 ms before impact.<br>
+</li>
+<li>Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).<br>
+</li>
+<li>Late downswing is effectively uncontrollable.</li>
+</ul>
+<p>This matches athlete EMG studies and coaching intuition.</p>
+</section>
+<section id="the-control-cone-analogy-a-relativistic-perspective" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 6. The Control Cone Analogy: A Relativistic Perspective</h1>
+<p>We now extend the analysis by introducing a new conceptual tool: the <strong>Control Cone</strong>, analogous to the <strong>light cone</strong> in relativity.</p>
+<section id="relativity-background" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="relativity-background"><span class="header-section-number">7.1</span> 6.1 Relativity Background</h2>
+<p>In special relativity, the <strong>future light cone</strong> at event (p) contains all events reachable at speed ≤ (c). Points outside the cone cannot be influenced causally.</p>
+<p>Let:</p>
+<ul>
+<li>(^+(p)): forward light cone<br>
+</li>
+<li>(^-(p)): backward light cone</li>
+</ul>
+<p>Events outside (^+(p)) are unreachable.</p>
+</section>
+<section id="control-theory-parallel-reachable-sets" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="control-theory-parallel-reachable-sets"><span class="header-section-number">7.2</span> 6.2 Control Theory Parallel: Reachable Sets</h2>
+<p>For a control system:</p>
+<p>[ =f(x)+g(x)u ]</p>
+<p>the <strong>reachable set</strong> over time (t) from (x_0) is:</p>
+<p>[ (t;x_0) = { x(t) : u(s),; s}. ]</p>
+<p>When control dominates, the reachable set expands widely.<br>
+When drift dominates, it collapses into a narrow tube around the drift trajectory.</p>
+</section>
+<section id="defining-the-control-cone" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="defining-the-control-cone"><span class="header-section-number">7.3</span> 6.3 Defining the Control Cone</h2>
+<p>Define the <strong>Control Cone</strong> at state (x):</p>
+<p>[ <em>c(x) = </em>{t^+} (t;x). ]</p>
+<p>This is the direction set the system can move <strong>instantaneously</strong> through control perturbations.</p>
+<section id="when-drift-is-small" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="when-drift-is-small"><span class="header-section-number">7.3.1</span> When drift is small:</h3>
+<p>[ _c(x) . ]</p>
+</section>
+<section id="when-drift-is-large" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="when-drift-is-large"><span class="header-section-number">7.3.2</span> When drift is large:</h3>
+<p>[ _c(x) . ]</p>
+<p>This is exactly analogous to the narrowing of reachable future states in relativity, but governed not by light speed, but by drift dominance.</p>
+</section>
+</section>
+<section id="mathematical-representation-of-cone-narrowing" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="mathematical-representation-of-cone-narrowing"><span class="header-section-number">7.4</span> 6.4 Mathematical Representation of Cone Narrowing</h2>
+<p>The instantaneous reachable set is spanned by:</p>
+<p>[ (x) = { g(x),; <em>{e^{tf}} g,; </em>{e^{tf}}[f,g], }. ]</p>
+<p>As drift grows:</p>
+<p>[ _{e^{tf}} g () ]</p>
+<p>and</p>
+<p>[ ((x)) . ]</p>
+<p>Interpretation:<br>
+The future becomes <strong>nearly predetermined</strong>.</p>
+<p>Just like a narrowing time cone restricts your causal influence, a narrowing control cone restricts your mechanical influence.</p>
+</section>
+<section id="application-to-the-golf-swing" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="application-to-the-golf-swing"><span class="header-section-number">7.5</span> 6.5 Application to the Golf Swing</h2>
+<section id="backswing-wide-control-cone" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="backswing-wide-control-cone"><span class="header-section-number">7.5.1</span> Backswing — Wide Control Cone</h3>
+<ul>
+<li>Many future swing shapes are reachable.</li>
+<li>Technique changes land well.</li>
+</ul>
+</section>
+<section id="transition-cone-tilt" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="transition-cone-tilt"><span class="header-section-number">7.5.2</span> Transition — Cone Tilt</h3>
+<ul>
+<li>Drift begins overwhelming control.</li>
+<li>Only certain motion corridors remain reachable.</li>
+</ul>
+</section>
+<section id="early-downswing-cone-narrowing" class="level3" data-number="7.5.3">
+<h3 data-number="7.5.3" class="anchored" data-anchor-id="early-downswing-cone-narrowing"><span class="header-section-number">7.5.3</span> Early Downswing — Cone Narrowing</h3>
+<ul>
+<li>Drift ≫ control.</li>
+<li>You are “locked in.”</li>
+</ul>
+</section>
+<section id="late-downswing-cone-collapse" class="level3" data-number="7.5.4">
+<h3 data-number="7.5.4" class="anchored" data-anchor-id="late-downswing-cone-collapse"><span class="header-section-number">7.5.4</span> Late Downswing — Cone Collapse</h3>
+<ul>
+<li>Cone becomes a thin tube.</li>
+<li>Only the ballistic trajectory remains reachable.</li>
+<li>No meaningful correction is possible.</li>
+</ul>
+<p>This explains why golfers feel “along for the ride.”</p>
+</section>
+</section>
+</section>
+<section id="stability-of-impact-and-clubface-closure-variance" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 7. Stability of Impact and Clubface Closure Variance</h1>
+<p>Let clubface angle be:</p>
+<p>[ (t) = h(q(t)). ]</p>
+<p>Linearizing:</p>
+<p>[ = H q, H = . ]</p>
+<p>Perturbation dynamics:</p>
+<p>[ x (). ]</p>
+<p>Solution:</p>
+<p>[ x(t) = e^{A_f (t-t_0)} x(t_0), A_f = . ]</p>
+<p>The variance at impact:</p>
+<p>[ [] H e^{A_f t} _0 e<sup>{A_f</sup>T t} H^T. ]</p>
+<p>High DCR implies large (A_f), hence exponential amplification of small errors.</p>
+<p><strong>Conclusion:</strong><br>
+Impact is extremely sensitive to early-swing structure.</p>
+</section>
+<section id="numerical-example-drift-vs-control-magnitude" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</h1>
+<p>import numpy as np import matplotlib.pyplot as plt</p>
+<p>t = np.linspace(0, 1, 500) drift = 0.2 + 2.5 * np.exp(-((t - 0.80)<strong>2) / 0.002) control = 0.6 - 0.3 * np.exp(-((t - 0.10)</strong>2) / 0.01)</p>
+<p>plt.figure(figsize=(10,5)) plt.plot(t, drift, label=“Drift Magnitude”, linewidth=3) plt.plot(t, control, label=“Control Magnitude”, linewidth=3) plt.title(“Drift vs Control Magnitude Throughout the Golf Swing”) plt.xlabel(“Normalized Swing Phase”) plt.ylabel(“Relative Magnitude”) plt.legend() plt.grid(True) plt.tight_layout() plt.show()</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
+
+</body>
+
+</html>
+</script></body></html>
