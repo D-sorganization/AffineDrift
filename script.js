@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Also look for article-category containers (use container ID, not heading ID)
         const categories = document.querySelectorAll('.article-category');
         categories.forEach((category, categoryIndex) => {
-            // Fixed: use h3 not h2 because article categories use h3.category-title
-            const heading = category.querySelector('h3, h2');
+            // Fixed: use h3 because article categories use h3.category-title
+            const heading = category.querySelector('h3');
             if (heading) {
                 // Use container ID if it exists, otherwise generate one
                 let id = category.id;
