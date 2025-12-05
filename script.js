@@ -4,22 +4,57 @@
  */
 
 // Constants for scroll offsets and timing
-// Note: Uses --scroll-offset (140px) not --header-offset (120px) because:
+// Note: Uses --scroll-offset not --header-offset because:
 // - --header-offset is for sidebar positioning (top: 120px)
 // - --scroll-offset is for scroll behavior (scroll-margin-top: 140px)
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
-const HEADER_OFFSET = 140; // Smooth scrolling offset (matches CSS --scroll-offset)
-const TOC_SCROLL_OFFSET = 140; // Active section detection offset (matches CSS --scroll-offset)
+// Fetch offset from CSS variable or default to 140
+const getScrollOffset = () => {
+    if (typeof window !== 'undefined') {
+        const value = getComputedStyle(document.documentElement).getPropertyValue('--scroll-offset');
+        return value ? parseInt(value) : 140;
+    }
+    return 140;
+};
+const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset (matches CSS --scroll-offset)
+const TOC_SCROLL_OFFSET = HEADER_OFFSET; // Active section detection offset
 const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
 const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
 
+// Helper function to generate unique IDs
+function generateUniqueId(text, usedIds) {
+    let baseId = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (!baseId) baseId = 'section'; // Fallback for empty text
+
+    let id = baseId;
+    let counter = 1;
+
+    // First try base ID
+    if (!usedIds.has(id)) {
+        return id;
+    }
+
+    // Try incrementing counter
+    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+        id = `${baseId}-${counter}`;
+        counter++;
+    }
+
+    // Fallback if still colliding
+    if (usedIds.has(id)) {
+        id = `${baseId}-${Date.now()}`;
+    }
+
+    return id;
+}
+
 // Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Smooth scroll for anchor links
     const links = document.querySelectorAll('a[href^="#"]');
 
     links.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
 
             // Only handle internal anchors
@@ -103,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             rootMargin: '0px 0px 0px 0px'
         };
 
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver(function (entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     // Only apply animation if element doesn't already have opacity set
@@ -158,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Get history from localStorage
         let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
-        
+
         // Get current page info with improved title extraction
         let pageTitle = document.title;
         // Handle different title formats
@@ -169,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (pageTitle === 'AffineDrift') {
             pageTitle = 'Home';
         }
-        
+
         const currentPage = {
             title: pageTitle,
             url: window.location.pathname.split('/').pop() || 'index.html',
@@ -178,16 +213,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Remove current page if it's already in history
         history = history.filter(item => item.url !== currentPage.url);
-        
+
         // Add current page to front
         history.unshift(currentPage);
-        
+
         // Keep only last N items
         history = history.slice(0, MAX_HISTORY_ITEMS);
-        
+
         // Save back to localStorage
         localStorage.setItem('affinedrift_history', JSON.stringify(history));
-        
+
         // Update sidebar display
         // Filter to only show articles (exclude navigation pages)
         const excludedPages = [
@@ -198,20 +233,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'research-reviews.html', 'book-reviews.html',
             'daydreams-doodles.html', 'daydreams.html', 'doodles.html'
         ];
-        
+
         // Filter out current page and non-article pages
-        const displayHistory = history.filter(item => 
-            item.url !== currentPage.url && 
+        const displayHistory = history.filter(item =>
+            item.url !== currentPage.url &&
             !excludedPages.includes(item.url.toLowerCase()) &&
             !item.url.match(/^(tools|contact|about|resources|articles|research-reviews|book-reviews|daydreams)/i)
         );
-        
+
         if (displayHistory.length === 0) {
             historyList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
         } else {
             historyList.innerHTML = displayHistory.map(item => {
-                const displayTitle = item.title.length > MAX_HISTORY_TITLE_LENGTH 
-                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...' 
+                const displayTitle = item.title.length > MAX_HISTORY_TITLE_LENGTH
+                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...'
                     : item.title;
                 return `<li><a href="${item.url}">${displayTitle}</a></li>`;
             }).join('');
@@ -225,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateTableOfContents() {
         // Look for left-sidebar (for .qmd pages with standard-page-layout)
         const leftSidebar = document.querySelector('.left-sidebar');
-        
+
         // Fallback to history-sidebar for pages without left-sidebar (legacy pages)
         const sidebar = leftSidebar || document.getElementById('history-sidebar');
         if (!sidebar) return;
@@ -270,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Find all section headings (h2 with IDs or page-section divs with IDs)
         const sections = [];
         const usedIds = new Set(); // Track used IDs to prevent duplicates
-        
+
         // Look for page-section divs with IDs
         const pageSections = document.querySelectorAll('.page-section[id], section[id]');
         pageSections.forEach(section => {
@@ -289,36 +324,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Also look for article-category containers (use container ID, not heading ID)
         const categories = document.querySelectorAll('.article-category');
         categories.forEach((category, categoryIndex) => {
-            const heading = category.querySelector('h2');
+            // Fixed: use h3 because article categories use h3.category-title
+            const heading = category.querySelector('h3');
             if (heading) {
                 // Use container ID if it exists, otherwise generate one
                 let id = category.id;
                 if (!id) {
-                    // Generate ID from heading text, ensuring uniqueness
-                    let baseId = heading.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    id = baseId;
-                    let counter = 1;
-                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
-                        id = `${baseId}-${counter}`;
-                        counter++;
-                    }
-                    if (usedIds.has(id)) {
-                        // Fallback: use timestamp to ensure uniqueness
-                        id = `${baseId}-${Date.now()}`;
-                    }
+                    id = generateUniqueId(heading.textContent, usedIds);
                     category.id = id;
                 } else if (usedIds.has(id)) {
-                    // If ID already exists, generate a new unique one
-                    let baseId = id;
-                    let counter = 1;
-                    while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
-                        id = `${baseId}-${counter}`;
-                        counter++;
-                    }
-                    if (usedIds.has(id)) {
-                        // Fallback: use timestamp to ensure uniqueness
-                        id = `${baseId}-${Date.now()}`;
-                    }
+                    // ID exists and is used - generate new unique one
+                    id = generateUniqueId(id, usedIds);
                     category.id = id;
                 }
                 usedIds.add(id);
@@ -337,18 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
             h2s.forEach((h2, index) => {
                 let id = h2.id;
                 if (!id || usedIds.has(id)) {
-                    // Generate unique ID with safety limit
-                    let counter = 1;
-                    let attempts = 0;
-                    do {
-                        id = `section-${index + 1}${counter > 1 ? `-${counter}` : ''}`;
-                        counter++;
-                        attempts++;
-                    } while (usedIds.has(id) && attempts < MAX_ID_GENERATION_ATTEMPTS);
-                    // If we hit the max attempts, assign a fallback ID
-                    if (usedIds.has(id)) {
-                        id = `section-${index + 1}-unique-${Math.random().toString(36).substr(2, 6)}`;
-                    }
+                    id = generateUniqueId(h2.textContent || `section-${index + 1}`, usedIds);
                     h2.id = id;
                 }
                 usedIds.add(id);
@@ -369,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 a.href = `#${section.id}`;
                 a.textContent = section.text;
                 a.className = `toc-level-${section.level}`;
-                a.addEventListener('click', function(e) {
+                a.addEventListener('click', function (e) {
                     e.preventDefault();
                     const target = document.getElementById(section.id);
                     if (target) {
@@ -400,18 +405,18 @@ document.addEventListener('DOMContentLoaded', function() {
         function highlightActiveSection() {
             const scrollPosition = window.scrollY + TOC_SCROLL_OFFSET;
             const tocLinks = tocList.querySelectorAll('a');
-            
+
             sections.forEach((section, index) => {
                 const element = section.element;
                 if (!element) return;
-                
+
                 const rect = element.getBoundingClientRect();
                 const elementTop = rect.top + window.scrollY;
                 const elementBottom = elementTop + rect.height;
-                
+
                 if (index < tocLinks.length) {
                     tocLinks[index].classList.remove('active');
-                    
+
                     if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
                         tocLinks[index].classList.add('active');
                     }
@@ -421,7 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update on scroll
         let tocScrollTimeout;
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             if (tocScrollTimeout) {
                 clearTimeout(tocScrollTimeout);
             }
@@ -448,10 +453,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Accordion functionality
     const accordionHeaders = document.querySelectorAll('.accordion-header');
     accordionHeaders.forEach(header => {
-        header.addEventListener('click', function() {
+        header.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
             const content = this.nextElementSibling;
-            
+
             // Toggle current accordion
             this.setAttribute('aria-expanded', !isExpanded);
         });
@@ -467,7 +472,72 @@ document.addEventListener('DOMContentLoaded', function() {
     // Log page load for analytics (optional)
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
+
+    // Initialize Article History Tracking and Display
+    initArticleHistory();
 });
+
+// Article History Logic
+function initArticleHistory() {
+    // List of article pages for history tracking
+    const ARTICLE_PAGES = [
+        'theory-part1.html',
+        'theory-part2.html',
+        'theory-part3.html',
+        'theory-part4.html',
+        'theory-part5.html',
+        'inverse-dynamics.html',
+        'wrist-universal-joint.html',
+        'nonlinear-control-insights.html',
+        'drift-components-wrench-double-pendulum.html',
+        'secondary-axis-stability.html',
+        'controllability-drift-ratio.html',
+        'strokes-gained-limitations.html',
+        'superposition.html',
+        'screw-theory-reference.html',
+        'null-space-constraint-jacobian.html',
+        'lagrangian-reference.html',
+        'inverse-dynamics-inference.html',
+        'force-mobility-matrices.html',
+        'mobility-force-ellipses.html',
+        'affine-nature-golf-swing.html',
+        'appendix-applications.html'
+    ];
+
+    const STORAGE_KEY = 'affinedrift_articles_history';
+    const currentPath = window.location.pathname;
+    const currentUrl = currentPath.split('/').pop() || '';
+    const isArticlePage = currentPath.includes('/articles/') && currentUrl.endsWith('.html');
+
+    // 1. Track Visit (runs on article pages)
+    if (isArticlePage && ARTICLE_PAGES.includes(currentUrl)) {
+        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const currentPage = {
+            title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+            url: 'articles/' + currentUrl
+        };
+
+        // Remove if existing, add to top
+        history = history.filter(item => item.url !== currentPage.url);
+        history.unshift(currentPage);
+        history = history.slice(0, 10); // Keep last 10
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
+
+    // 2. Display History (runs on articles.html where the list exists)
+    const articlesHistoryList = document.getElementById('articles-history-list');
+    if (articlesHistoryList) {
+        const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+        if (history.length === 0) {
+            articlesHistoryList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
+        } else {
+            articlesHistoryList.innerHTML = history.map(item =>
+                `<li><a href="${item.url}">${item.title}</a></li>`
+            ).join('');
+        }
+    }
+}
 
 // Utility function for future features
 function scrollToTop() {
@@ -477,9 +547,15 @@ function scrollToTop() {
     });
 }
 
+
 // Export for potential module use
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         scrollToTop
     };
 }
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    initArticleHistory();
+});

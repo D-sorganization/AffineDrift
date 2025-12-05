@@ -84,11 +84,7 @@ website:
           - text: "Collaborate"
             href: collaborate.html
 
-  sidebar:
-    - id: history
-      title: "Recent Pages"
-      style: "floating"
-      collapse-level: 1
+
 
 format:
   html:
@@ -105,7 +101,7 @@ format:
       url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
     include-in-header:
       - text: |
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -231,51 +227,8 @@ format:
               }
             }
           });
-          // Global article history tracking for individual article pages
-          (function() {
-            const currentPath = window.location.pathname;
-            const currentUrl = currentPath.split('/').pop() || '';
-            const isArticlePage = currentPath.includes('/articles/') && currentUrl.endsWith('.html');
-            
-            if (isArticlePage) {
-              const ARTICLE_PAGES = [
-                'theory-part1.html',
-                'theory-part2.html',
-                'theory-part3.html',
-                'theory-part4.html',
-                'theory-part5.html',
-                'inverse-dynamics.html',
-                'wrist-universal-joint.html',
-                'nonlinear-control-insights.html',
-                'drift-components-wrench-double-pendulum.html',
-                'secondary-axis-stability.html',
-                'controllability-drift-ratio.html',
-                'strokes-gained-limitations.html',
-                'superposition.html',
-                'screw-theory-reference.html',
-                'null-space-constraint-jacobian.html',
-                'lagrangian-reference.html',
-                'inverse-dynamics-inference.html',
-                'force-mobility-matrices.html',
-                'affine-nature-golf-swing.html',
-                'appendix-applications.html'
-              ];
-              
-              if (ARTICLE_PAGES.includes(currentUrl)) {
-                let history = JSON.parse(localStorage.getItem('affinedrift_articles_history') || '[]');
-                const currentPage = {
-                  title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-                  url: 'articles/' + currentUrl
-                };
-                
-                history = history.filter(item => item.url !== currentPage.url);
-                history.unshift(currentPage);
-                history = history.slice(0, 10);
-                localStorage.setItem('affinedrift_articles_history', JSON.stringify(history));
-              }
-            }
-          })();
-          </script>
+
+
 
 # Metadata for all pages
 metadata:
