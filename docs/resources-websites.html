@@ -9,7 +9,7 @@
 <meta name="author" content="AffineDrift">
 <meta name="description" content="Websites and online resources on robotics, biomechanics, and golf">
 
-<title>Websites â€“ AffineDrift</title>
+<title>Websites – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,11 +108,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./articles.html" aria-current="page"> 
+    <a class="nav-link" href="./articles.html"> 
 <span class="menu-text">Articles</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./resources.html"> 
+    <a class="nav-link active" href="./resources.html" aria-current="page"> 
 <span class="menu-text">Resources</span></a>
   </li>  
   <li class="nav-item">
@@ -596,46 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const articlesHistoryList = document.getElementById('articles-history-list');
-  if (!articlesHistoryList) return;
-
-  function updateArticlesHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_articles_history') || '[]');
-    
-    // Track individual article pages - get full pathname to properly detect articles/
-    const currentPath = window.location.pathname;
-    const currentUrl = currentPath.split('/').pop() || 'articles.html';
-    const isArticlePage = currentPath.includes('/articles/') || currentUrl === 'articles.html';
-    
-    // List of article pages for validation
-    const ARTICLE_PAGES = [
-      'articles.html',
-      'theory-part1.html',
-      'theory-part2.html',
-      'theory-part3.html',
-      'theory-part4.html',
-      'theory-part5.html',
-      'inverse-dynamics.html',
-      'wrist-universal-joint.html',
-      'nonlinear-control-insights.html',
-      'drift-components-wrench-double-pendulum.html',
-      'secondary-axis-stability.html',
-      'controllability-drift-ratio.html',
-      'strokes-gained-limitations.html',
-      'superposition.html',
-      'screw-theory-reference.html',
-      'null-space-constraint-jacobian.html',
-      'lagrangian-reference.html',
-      'inverse-dynamics-inference.html',
-      'force-mobility-matrices.html',
-      'affine-nature-golf-swing.html',
-      'appendix-applications.html'
-    ];
-    
-    if (isArticlePage || ARTICLE_PAGES.includes(currentUrl)) {
-      const currentPage = {
-        title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-        url: currentPath.includes('/articles/') ? 'articles/' + currentUrl : currentUrl
-      };
+  if (!articlesHistoryList) return;;
 
       history = history.filter(item => item.url !== currentPage.url);
       history.unshift(currentPage);
@@ -651,10 +612,7 @@ document.addEventListener('DOMContentLoaded', function() {
     articlesHistoryList.innerHTML = history.map(item => 
       `<li><a href="${item.url}">${item.title}</a></li>`
     ).join('');
-  }
-
-  updateArticlesHistory();
-});
+  }});
 </script>
 
 

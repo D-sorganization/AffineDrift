@@ -77,3 +77,5 @@ It acts like Ruff (lint checks) and Black (formatter) combined—Cursor should a
 
 
 
+
+
