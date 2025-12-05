@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="AffineDrift">
-<meta name="dcterms.date" content="2025-11-26">
+<meta name="dcterms.date" content="2025-11-28">
 
 <title>Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations – AffineDrift</title>
 <style>
@@ -43,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,12 +71,107 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -119,8 +214,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -132,26 +227,161 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Home</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../articles.html"> 
-<span class="menu-text">Articles</span></a>
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../resources.html"> 
-<span class="menu-text">Resources</span></a>
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
-<span class="menu-text">About</span></a>
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../contact.html"> 
-<span class="menu-text">Contact</span></a>
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -208,7 +438,7 @@ window.Quarto = {
   <li><a href="#quantitative-examples" id="toc-quantitative-examples" class="nav-link" data-scroll-target="#quantitative-examples">Quantitative Examples</a>
   <ul class="collapse">
   <li><a href="#example-1-impact-zone-force-interpretation" id="toc-example-1-impact-zone-force-interpretation" class="nav-link" data-scroll-target="#example-1-impact-zone-force-interpretation">Example 1: Impact Zone Force Interpretation</a></li>
-  <li><a href="#example-2-drift-vs-input-decomposition" id="toc-example-2-drift-vs-input-decomposition" class="nav-link" data-scroll-target="#example-2-drift-vs-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</a></li>
+  <li><a href="#example-2-drift-vs.-input-decomposition" id="toc-example-2-drift-vs.-input-decomposition" class="nav-link" data-scroll-target="#example-2-drift-vs.-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</a></li>
   </ul></li>
   <li><a href="#implications-and-best-practices" id="toc-implications-and-best-practices" class="nav-link" data-scroll-target="#implications-and-best-practices">Implications and Best Practices</a>
   <ul class="collapse">
@@ -242,7 +472,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 26, 2025</p>
+      <p class="date">November 28, 2025</p>
     </div>
   </div>
   
@@ -265,10 +495,10 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="the-mathematical-foundation">The Mathematical Foundation</h3>
 <p>The equations of motion for a rigid body like a golf club are described by Euler’s laws:</p>
 <p><span class="math display">\[
-\begin{aligned}
-\sum \mathbf{F} &amp;= m\mathbf{a}_{\text{COM}} \tag{1}\\
-\sum \mathbf{M}_{\text{COM}} &amp;= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) \tag{2}
-\end{aligned}
+\begin{align}
+\sum \mathbf{F} &amp;= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &amp;= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
+\end{align}
 \]</span></p>
 <p>where: - <span class="math inline">\(\sum \mathbf{F}\)</span> is the sum of all forces acting on the club</p>
 <ul>
@@ -301,7 +531,7 @@ window.Quarto = {
 \]</span></p>
 <p>where <span class="math inline">\(\mathbf{g} = [0, 0, -9.81]\)</span> m/s<span class="math inline">\(^2\)</span> (if z is vertical).</p>
 <p><strong>Step 4: Solve for Unknown Forces</strong></p>
-<p>From Equation (1), the sum of unknown forces (from the golfer’s hands) is:</p>
+<p>From Equation~<span class="citation" data-cites="eq:force_balance">[@eq:force_balance]</span>, the sum of unknown forces (from the golfer’s hands) is:</p>
 <p><span class="math display">\[
 \mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
 \]</span></p>
@@ -310,7 +540,7 @@ window.Quarto = {
 <p><span class="math display">\[
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 \]</span></p>
-<p>Since we know <span class="math inline">\(\sum \mathbf{M}_{\text{COM}}\)</span> from Equation (2), we can calculate the required moment about point <span class="math inline">\(P\)</span>.</p>
+<p>Since we know <span class="math inline">\(\sum \mathbf{M}_{\text{COM}}\)</span> from Equation~<span class="citation" data-cites="eq:moment_balance">[@eq:moment_balance]</span>, we can calculate the required moment about point <span class="math inline">\(P\)</span>.</p>
 </section>
 <section id="critical-assumptions-in-inverse-dynamics" class="level3">
 <h3 class="anchored" data-anchor-id="critical-assumptions-in-inverse-dynamics">Critical Assumptions in Inverse Dynamics</h3>
@@ -379,26 +609,12 @@ window.Quarto = {
 <section id="coordinate-transformation-of-force-couple-pairs" class="level3">
 <h3 class="anchored" data-anchor-id="coordinate-transformation-of-force-couple-pairs">Coordinate Transformation of Force-Couple Pairs</h3>
 <p>For a rigid body such as a golf club, if inverse dynamics yields force <span class="math inline">\(\mathbf{F}_{\text{eq}}\)</span> and couple <span class="math inline">\(\mathbf{C}_{\text{eq}}\)</span> at reference point <span class="math inline">\(m\)</span>, we can transform these to an equivalent force-couple pair at any other point <span class="math inline">\(i\)</span> along the grip.</p>
-<div class="proposition">
-<p><strong>Couple Transformation Formula</strong></p>
-<p>For points along a one-dimensional grip, the equivalent couple at point <span class="math inline">\(i\)</span> is given by:</p>
-<p><span id="eq-couple_transform"><span class="math display">\[
-C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-\tag{1}\]</span></span></p>
-<p>where: - <span class="math inline">\(C_i\)</span> = equivalent couple at point <span class="math inline">\(i\)</span></p>
-<ul>
-<li><p><span class="math inline">\(M_m\)</span> = moment of force about the midpoint (<span class="math inline">\(M_m = F \cdot d_m\)</span> for perpendicular force)</p></li>
-<li><p><span class="math inline">\(d_i\)</span> = signed distance from center of mass to point <span class="math inline">\(i\)</span></p></li>
-<li><p><span class="math inline">\(d_m\)</span> = signed distance from center of mass to midpoint <span class="math inline">\(m\)</span></p></li>
-<li><p><span class="math inline">\(C_m\)</span> = couple at midpoint from inverse dynamics</p></li>
-</ul>
-</div>
 <p>This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.</p>
 <p>[Figure: Golf club grip schematic showing reference points and distance measures. The center of mass (COM) is closer to the clubhead than to the hands. Distances are measured with consistent sign convention.]</p>
 </section>
 <section id="the-range-of-equivalent-couples" class="level3">
 <h3 class="anchored" data-anchor-id="the-range-of-equivalent-couples">The Range of Equivalent Couples</h3>
-<p>From Equation~<a href="#eq-couple_transform" class="quarto-xref">Equation&nbsp;1</a>, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.</p>
+<p>From Equation~<span class="citation" data-cites="eq:couple_transform">[@eq:couple_transform]</span>, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.</p>
 <p>At the top of the grip:</p>
 <p><span class="math display">\[
 C_t = M_m \left(1 - \frac{d_t}{d_m}\right) + C_m
@@ -414,7 +630,7 @@ C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
 </section>
 <section id="physical-interpretation-the-non-uniqueness-problem" class="level3">
 <h3 class="anchored" data-anchor-id="physical-interpretation-the-non-uniqueness-problem">Physical Interpretation: The Non-Uniqueness Problem</h3>
-<p>The mathematical transformation in Equation~<a href="#eq-couple_transform" class="quarto-xref">Equation&nbsp;1</a> has a profound physical consequence: <strong>a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer</strong>.</p>
+<p>The mathematical transformation in Equation~<span class="citation" data-cites="eq:couple_transform">[@eq:couple_transform]</span> has a profound physical consequence: <strong>a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer</strong>.</p>
 <p>This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena: 1. <strong>True couples:</strong> Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)</p>
 <ol start="2" type="1">
 <li><strong>Offset forces:</strong> Single or net forces applied away from the reference point</li>
@@ -440,9 +656,10 @@ C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
 <h3 class="anchored" data-anchor-id="control-affine-systems-a-framework-for-understanding-motion">Control-Affine Systems: A Framework for Understanding Motion</h3>
 <p>The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge rooted in the structure of the system dynamics. The golf club-golfer system is naturally described as a <em>control-affine system</em>.</p>
 <p><strong>definition:</strong> [Control-Affine System] A control-affine system is a dynamical system of the form:</p>
-<p><span id="eq-control_affine"><span class="math display">\[
+<p><span class="math display">\[
+{#eq-control_affine}
 \dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
-\tag{2}\]</span></span></p>
+\]</span></p>
 <p>where: - <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> is the state vector (positions and velocities)</p>
 <ul>
 <li><p><span class="math inline">\(\mathbf{f}(\mathbf{x})\)</span> is the <em>drift vector field</em> (system dynamics without input)</p></li>
@@ -472,9 +689,10 @@ C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
 <li><p><span class="math inline">\(\boldsymbol{\tau}\)</span> are the generalized forces (what we want to find)</p></li>
 </ul>
 <p>Inverse dynamics solves for <span class="math inline">\(\boldsymbol{\tau}\)</span> given observed <span class="math inline">\(\mathbf{q}(t)\)</span>, <span class="math inline">\(\dot{\mathbf{q}}(t)\)</span>, and <span class="math inline">\(\ddot{\mathbf{q}}(t)\)</span>:</p>
-<p><span id="eq-inverse_dynamics"><span class="math display">\[
+<p><span class="math display">\[
+{#eq-inverse_dynamics}
 \boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
-\tag{3}\]</span></span></p>
+\]</span></p>
 </section>
 <section id="the-fundamental-problem-inseparability-of-drift-and-input" class="level3">
 <h3 class="anchored" data-anchor-id="the-fundamental-problem-inseparability-of-drift-and-input">The Fundamental Problem: Inseparability of Drift and Input</h3>
@@ -689,8 +907,8 @@ C_R &amp;= M_m \left(1 - \frac{d_R}{d_m}\right) + C_m \\
 <p><strong>Key Point:</strong> The equivalent couple <strong>changes sign</strong> depending on reference point! At the midpoint, inverse dynamics shows negative couple (counter-rotation). But if force is primarily applied at the right hand, the equivalent couple at that location is positive (pro-rotation).</p>
 </div>
 </section>
-<section id="example-2-drift-vs-input-decomposition" class="level3">
-<h3 class="anchored" data-anchor-id="example-2-drift-vs-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</h3>
+<section id="example-2-drift-vs.-input-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-drift-vs.-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</h3>
 <p>Consider mid-downswing with the club rotating at <span class="math inline">\(\omega = 30\)</span> rad/s. Inverse dynamics measures radial force at grip: <span class="math inline">\(F_{\text{radial}} = 100\)</span> lbs (inward).</p>
 <p><strong>Without a model:</strong> We know the club experiences 100 lbs total radial force.</p>
 <p><strong>With a model:</strong> Suppose the club has: - Mass: <span class="math inline">\(m_c = 0.5\)</span> lbs</p>
@@ -782,6 +1000,68 @@ F_{\text{input}} = F_{\text{total}} - F_{\text{drift}} = 100 - 42 = 58 \text{ lb
       icon: icon
     };
     anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -1112,9 +1392,31 @@ F_{\text{input}} = F_{\text{total}} - F_{\text{drift}} = 100 - 42 = 58 \text{ lb
   });
   </script>
 </div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
 <script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
 
+</body>
 
-
-
-</body></html>
+</html>
+</script></body></html>

@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dieter">
+<meta name="dcterms.date" content="2025-11-28">
+
+<title>Superposition in Affine Control Systems via Newton–Euler, Lagrangian, and Screw-Theoretic Formulations – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">0.1</span> 1. Introduction</a></li>
+  <li><a href="#control-affine-systems-and-superposition-in-inputs" id="toc-control-affine-systems-and-superposition-in-inputs" class="nav-link" data-scroll-target="#control-affine-systems-and-superposition-in-inputs"><span class="header-section-number">0.2</span> 2. Control-Affine Systems and Superposition in Inputs</a>
+  <ul class="collapse">
+  <li><a href="#control-affine-systems-on-a-manifold" id="toc-control-affine-systems-on-a-manifold" class="nav-link" data-scroll-target="#control-affine-systems-on-a-manifold"><span class="header-section-number">0.2.1</span> 2.1 Control-affine systems on a manifold</a></li>
+  <li><a href="#superposition-with-respect-to-inputs" id="toc-superposition-with-respect-to-inputs" class="nav-link" data-scroll-target="#superposition-with-respect-to-inputs"><span class="header-section-number">0.2.2</span> 2.2 Superposition with respect to inputs</a></li>
+  </ul></li>
+  <li><a href="#newtoneuler-derivation-of-control-affinity-and-superposition" id="toc-newtoneuler-derivation-of-control-affinity-and-superposition" class="nav-link" data-scroll-target="#newtoneuler-derivation-of-control-affinity-and-superposition"><span class="header-section-number">0.3</span> 3. Newton–Euler Derivation of Control Affinity and Superposition</a>
+  <ul class="collapse">
+  <li><a href="#single-rigid-body-in-3d" id="toc-single-rigid-body-in-3d" class="nav-link" data-scroll-target="#single-rigid-body-in-3d"><span class="header-section-number">0.3.1</span> 3.1 Single rigid body in 3D</a></li>
+  <li><a href="#superposition-in-inputs-for-the-single-body" id="toc-superposition-in-inputs-for-the-single-body" class="nav-link" data-scroll-target="#superposition-in-inputs-for-the-single-body"><span class="header-section-number">0.3.2</span> 3.2 Superposition in inputs for the single body</a></li>
+  </ul></li>
+  <li><a href="#fx-gx-ug-uc-ud" id="toc-fx-gx-ug-uc-ud" class="nav-link" data-scroll-target="#fx-gx-ug-uc-ud"><span class="header-section-number">1</span> f(x) + G(x) (u^{(g)} + u^{(c)} + u^{(d)} + )</a>
+  <ul class="collapse">
+  <li><a href="#multibody-system-and-generalized-coordinates" id="toc-multibody-system-and-generalized-coordinates" class="nav-link" data-scroll-target="#multibody-system-and-generalized-coordinates"><span class="header-section-number">1.0.1</span> 3.3 Multibody system and generalized coordinates</a></li>
+  <li><a href="#control-affine-structure" id="toc-control-affine-structure" class="nav-link" data-scroll-target="#control-affine-structure"><span class="header-section-number">1.0.2</span> 3.4 Control-affine structure</a></li>
+  <li><a href="#newtoneuler-superposition-theorem" id="toc-newtoneuler-superposition-theorem" class="nav-link" data-scroll-target="#newtoneuler-superposition-theorem"><span class="header-section-number">1.0.3</span> 3.5 Newton–Euler superposition theorem</a></li>
+  <li><a href="#example-planar-simple-pendulum-newtoneuler-flavor" id="toc-example-planar-simple-pendulum-newtoneuler-flavor" class="nav-link" data-scroll-target="#example-planar-simple-pendulum-newtoneuler-flavor"><span class="header-section-number">1.0.4</span> 3.6 Example: planar simple pendulum (Newton–Euler flavor)</a></li>
+  <li><a href="#lagrangian-derivation-of-control-affinity-and-superposition" id="toc-lagrangian-derivation-of-control-affinity-and-superposition" class="nav-link" data-scroll-target="#lagrangian-derivation-of-control-affinity-and-superposition"><span class="header-section-number">1.1</span> 4. Lagrangian Derivation of Control Affinity and Superposition</a>
+  <ul class="collapse">
+  <li><a href="#lagrangian-mechanics-and-lagrangedalembert-principle" id="toc-lagrangian-mechanics-and-lagrangedalembert-principle" class="nav-link" data-scroll-target="#lagrangian-mechanics-and-lagrangedalembert-principle"><span class="header-section-number">1.1.1</span> 4.1 Lagrangian mechanics and Lagrange–d’Alembert principle</a></li>
+  <li><a href="#control-decomposition-of-generalized-forces" id="toc-control-decomposition-of-generalized-forces" class="nav-link" data-scroll-target="#control-decomposition-of-generalized-forces"><span class="header-section-number">1.1.2</span> 4.2 Control decomposition of generalized forces</a></li>
+  <li><a href="#control-affine-lagrangian-dynamics" id="toc-control-affine-lagrangian-dynamics" class="nav-link" data-scroll-target="#control-affine-lagrangian-dynamics"><span class="header-section-number">1.1.3</span> 4.3 Control-affine Lagrangian dynamics</a></li>
+  <li><a href="#lagrangian-superposition-theorem" id="toc-lagrangian-superposition-theorem" class="nav-link" data-scroll-target="#lagrangian-superposition-theorem"><span class="header-section-number">1.1.4</span> 4.4 Lagrangian superposition theorem</a></li>
+  <li><a href="#example-planar-pendulum-lagrangian-derivation" id="toc-example-planar-pendulum-lagrangian-derivation" class="nav-link" data-scroll-target="#example-planar-pendulum-lagrangian-derivation"><span class="header-section-number">1.1.5</span> 4.5 Example: planar pendulum (Lagrangian derivation)</a></li>
+  </ul></li>
+  <li><a href="#screw-theoretic-spatial-vector-derivation" id="toc-screw-theoretic-spatial-vector-derivation" class="nav-link" data-scroll-target="#screw-theoretic-spatial-vector-derivation"><span class="header-section-number">1.2</span> 5. Screw-Theoretic / Spatial Vector Derivation</a>
+  <ul class="collapse">
+  <li><a href="#twists-wrenches-and-spatial-inertia" id="toc-twists-wrenches-and-spatial-inertia" class="nav-link" data-scroll-target="#twists-wrenches-and-spatial-inertia"><span class="header-section-number">1.2.1</span> 5.1 Twists, wrenches, and spatial inertia</a></li>
+  <li><a href="#multibody-dynamics-in-screw-form" id="toc-multibody-dynamics-in-screw-form" class="nav-link" data-scroll-target="#multibody-dynamics-in-screw-form"><span class="header-section-number">1.2.2</span> 5.2 Multibody dynamics in screw form</a></li>
+  <li><a href="#linearity-of-wrench-mapping-and-superposition" id="toc-linearity-of-wrench-mapping-and-superposition" class="nav-link" data-scroll-target="#linearity-of-wrench-mapping-and-superposition"><span class="header-section-number">1.2.3</span> 5.3 Linearity of wrench mapping and superposition</a></li>
+  <li><a href="#example-spatial-single-link-actuator" id="toc-example-spatial-single-link-actuator" class="nav-link" data-scroll-target="#example-spatial-single-link-actuator"><span class="header-section-number">1.2.4</span> 5.4 Example: spatial single-link actuator</a></li>
+  </ul></li>
+  <li><a href="#cross-comparison-of-the-three-formulations" id="toc-cross-comparison-of-the-three-formulations" class="nav-link" data-scroll-target="#cross-comparison-of-the-three-formulations"><span class="header-section-number">1.3</span> 6. Cross-Comparison of the Three Formulations</a>
+  <ul class="collapse">
+  <li><a href="#common-structure" id="toc-common-structure" class="nav-link" data-scroll-target="#common-structure"><span class="header-section-number">1.3.1</span> 6.1 Common structure</a></li>
+  <li><a href="#what-superposition-does-not-give-you" id="toc-what-superposition-does-not-give-you" class="nav-link" data-scroll-target="#what-superposition-does-not-give-you"><span class="header-section-number">1.3.2</span> 6.2 What superposition <em>does not</em> give you</a></li>
+  </ul></li>
+  <li><a href="#applications-and-worked-examples-across-formulations" id="toc-applications-and-worked-examples-across-formulations" class="nav-link" data-scroll-target="#applications-and-worked-examples-across-formulations"><span class="header-section-number">1.4</span> 7. Applications and Worked Examples Across Formulations</a>
+  <ul class="collapse">
+  <li><a href="#example-2r-planar-robot-arm-newtoneuler-lagrangian" id="toc-example-2r-planar-robot-arm-newtoneuler-lagrangian" class="nav-link" data-scroll-target="#example-2r-planar-robot-arm-newtoneuler-lagrangian"><span class="header-section-number">1.4.1</span> 7.1 Example: 2R planar robot arm (Newton–Euler / Lagrangian)</a></li>
+  <li><a href="#example-planar-end-effector-wrench-screw-theoretic-flavor" id="toc-example-planar-end-effector-wrench-screw-theoretic-flavor" class="nav-link" data-scroll-target="#example-planar-end-effector-wrench-screw-theoretic-flavor"><span class="header-section-number">1.4.2</span> 7.2 Example: planar end-effector wrench (screw-theoretic flavor)</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">1.5</span> 8. Conclusions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">1.6</span> References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Superposition in Affine Control Systems via Newton–Euler, Lagrangian, and Screw-Theoretic Formulations</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dieter </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 28, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="abstract">
+<p>This article develops a rigorous derivation of <em>superposition with respect to inputs</em> for mechanical systems whose dynamics are <em>affine in control</em>. We work in three parallel formalisms: Newton–Euler equations, Lagrangian mechanics (including Lagrange–d’Alembert), and screw-theoretic / spatial vector mechanics. In each framework we explicitly derive the control-affine structure</p>
+<p><span class="math display">\[
+\dot x = f(x) + \sum_{i=1}^m g_i(x) u_i,
+\]</span></p>
+<p>for finite-dimensional mechanical systems actuated by generalized forces, and prove that the mapping from inputs to generalized accelerations, generalized forces, and wrenches is linear at fixed state. This yields a precise superposition principle: although <em>trajectories in state space do not superpose</em> in general (due to nonlinearity), the <em>effects of distinct input channels on generalized forces and accelerations do</em>. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.</p>
+</div>
+<section id="introduction" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">0.1</span> 1. Introduction</h2>
+<p>Superposition is often invoked informally in robotics and biomechanics: one speaks of “the gravitational torque,” “the Coriolis torque,” “the control torque,” as if these were independently meaningful and add linearly to produce the net motion. At the same time, the underlying dynamics are nonlinear in configuration and velocity, so <strong>naïve trajectory superposition is false</strong>. This tension is a constant source of conceptual confusion.</p>
+<p>The correct statement is more modest but powerful:</p>
+<blockquote class="blockquote">
+<p>For a mechanical system whose dynamics are <em>affine in generalized forces</em>, the <strong>mapping from inputs to generalized accelerations is linear at fixed state</strong>. Therefore, the generalized acceleration (and the corresponding wrench) at any instant can be written as a <em>sum of contributions</em> induced by different input channels or physical effects.</p>
+</blockquote>
+<p>This paper makes that statement precise and derives it in three parallel languages:</p>
+<ul>
+<li>classical <strong>Newton–Euler</strong> mechanics,</li>
+<li><strong>Lagrangian</strong> mechanics (including Lagrange–d’Alembert),</li>
+<li><strong>screw theory / spatial vector</strong> mechanics.</li>
+</ul>
+<p>In each setting, we:</p>
+<ol type="1">
+<li>Define the configuration, state, and control spaces.</li>
+<li>Derive the equations of motion in a form that is <em>affine in the control inputs</em>.</li>
+<li>Prove a superposition theorem for inputs at fixed state.</li>
+<li>Give a concrete worked example showing how to decompose torques and accelerations.</li>
+</ol>
+<p>We will be uncomfortably explicit with notation; this is deliberate. The target audience is assumed to be comfortable with manifolds, linear algebra, and multibody dynamics, but the goal is to close all “hand-wavy” gaps.</p>
+<hr>
+</section>
+<section id="control-affine-systems-and-superposition-in-inputs" class="level2" data-number="0.2">
+<h2 data-number="0.2" class="anchored" data-anchor-id="control-affine-systems-and-superposition-in-inputs"><span class="header-section-number">0.2</span> 2. Control-Affine Systems and Superposition in Inputs</h2>
+<section id="control-affine-systems-on-a-manifold" class="level3" data-number="0.2.1">
+<h3 data-number="0.2.1" class="anchored" data-anchor-id="control-affine-systems-on-a-manifold"><span class="header-section-number">0.2.1</span> 2.1 Control-affine systems on a manifold</h3>
+<p>Let <span class="math inline">\(Q\)</span> be an <span class="math inline">\(n\)</span>-dimensional configuration manifold, with local coordinates <span class="math inline">\(q \in \mathbb{R}^n\)</span> on some chart. Let the <strong>state</strong> be <span class="math inline">\(x = (q, \dot q) \in TQ\)</span>, the tangent bundle. Let the <strong>control input</strong> be <span class="math inline">\(u \in \mathbb{R}^m\)</span>.</p>
+<p>A <em>control-affine system</em> is a system of ODEs of the form</p>
+<p><span class="math display">\[
+\dot x = f(x) + \sum_{i=1}^m g_i(x),u_i,
+\tag{2.1}
+\]</span></p>
+<p>where</p>
+<ul>
+<li><span class="math inline">\(f: TQ \to T(TQ)\)</span> is a smooth drift vector field,</li>
+<li><span class="math inline">\(g_i: TQ \to T(TQ)\)</span> are smooth control vector fields.</li>
+</ul>
+<p>The key structural property is <strong>affinity in <span class="math inline">\(u\)</span></strong>: for fixed <span class="math inline">\(x\)</span>, the right-hand side is an affine function of <span class="math inline">\(u\)</span>.</p>
+<p>It will be convenient to write (component-wise in some coordinate system)</p>
+<p><span class="math display">\[
+\dot x = f(x) + G(x) u,
+\tag{2.2}
+\]</span></p>
+<p>where <span class="math inline">\(G(x) \in \mathbb{R}^{(2n)\times m}\)</span> is the matrix whose <span class="math inline">\(i\)</span>th column is <span class="math inline">\(g_i(x)\)</span>.</p>
+</section>
+<section id="superposition-with-respect-to-inputs" class="level3" data-number="0.2.2">
+<h3 data-number="0.2.2" class="anchored" data-anchor-id="superposition-with-respect-to-inputs"><span class="header-section-number">0.2.2</span> 2.2 Superposition with respect to inputs</h3>
+<p>We now define precisely the type of “superposition” we will use.</p>
+<p>Let <span class="math inline">\(x\)</span> be fixed. Consider the map</p>
+<p><span class="math display">\[
+\mathcal{F}_x : \mathbb{R}^m \to T_x(TQ),
+\qquad
+\mathcal{F}_x(u) := f(x) + G(x) u.
+\tag{2.3}
+\]</span></p>
+<p>This is an <strong>affine</strong> map. If we remove the drift,</p>
+<p><span class="math display">\[
+\tilde{\mathcal{F}}_x(u) := \mathcal{F}_x(u) - f(x) = G(x) u,
+\tag{2.4}
+\]</span></p>
+<p>then <span class="math inline">\(\tilde{\mathcal{F}}_x\)</span> is <strong>linear in <span class="math inline">\(u\)</span></strong>. Hence, for any <span class="math inline">\(u^{(1)},u^{(2)} \in \mathbb{R}^m\)</span> and scalars <span class="math inline">\(\alpha,\beta \in \mathbb{R}\)</span>,</p>
+<p>$$ _x!(u^{(1)} + u^{(2)}) =================================================================</p>
+<p>,_x!(u^{(1)}) + ,_x!(u^{(2)}). $$</p>
+<p>In particular, if we decompose <span class="math inline">\(u\)</span> as a sum of input components</p>
+<p><span class="math display">\[
+u = u^{(g)} + u^{(c)} + u^{(d)} + \cdots,
+\tag{2.6}
+\]</span></p>
+<p>(ranging over, say, “gravity compensation”, “control”, “disturbance”, etc.), then</p>
+<p>$$ G(x) u ======</p>
+<p>G(x) u^{(g)} + G(x) u^{(c)} + G(x) u^{(d)} + . $$</p>
+<p><strong>This is the basic superposition statement:</strong> at a fixed state <span class="math inline">\(x\)</span>, the <em>incremental effect of each input component</em> on <span class="math inline">\(\dot x\)</span> is linear and additively separable.</p>
+<p>What is <em>not</em> true in general is that full solutions <span class="math inline">\(x(t)\)</span> of the nonlinear ODE (2.1) can be written as linear sums of solutions for different inputs. That would require <span class="math inline">\(f\)</span> and <span class="math inline">\(g_i\)</span> to be linear in <span class="math inline">\(x\)</span> as well; we do <strong>not</strong> assume that.</p>
+<p>The rest of this paper is devoted to showing that <strong>standard rigid-body dynamics models admit the structure (2.1)</strong>, with the controls entering as generalized forces, and that in each formulation the map from those generalized forces to accelerations is linear.</p>
+<hr>
+</section>
+</section>
+<section id="newtoneuler-derivation-of-control-affinity-and-superposition" class="level2" data-number="0.3">
+<h2 data-number="0.3" class="anchored" data-anchor-id="newtoneuler-derivation-of-control-affinity-and-superposition"><span class="header-section-number">0.3</span> 3. Newton–Euler Derivation of Control Affinity and Superposition</h2>
+<p>We start from the most classical picture: Newton–Euler equations for rigid bodies.</p>
+<section id="single-rigid-body-in-3d" class="level3" data-number="0.3.1">
+<h3 data-number="0.3.1" class="anchored" data-anchor-id="single-rigid-body-in-3d"><span class="header-section-number">0.3.1</span> 3.1 Single rigid body in 3D</h3>
+<p>Let <span class="math inline">\(B\)</span> be a rigid body, with body-fixed frame <span class="math inline">\(\mathcal{F}_B\)</span> and spatial (inertial) frame <span class="math inline">\(\mathcal{F}_0\)</span>. For simplicity, assume:</p>
+<ul>
+<li>mass <span class="math inline">\(m &gt; 0\)</span>,</li>
+<li>inertia tensor (about the body frame origin) <span class="math inline">\(I_B \in \mathbb{R}^{3\times 3}\)</span>, symmetric positive definite,</li>
+<li>position of the body frame origin <span class="math inline">\(p \in \mathbb{R}^3\)</span>,</li>
+<li>rotation matrix <span class="math inline">\(R \in SO(3)\)</span> mapping body frame coordinates to spatial coordinates.</li>
+</ul>
+<p>Define:</p>
+<ul>
+<li>linear velocity <span class="math inline">\(v = \dot p \in \mathbb{R}^3\)</span>,</li>
+<li>angular velocity <span class="math inline">\(\omega \in \mathbb{R}^3\)</span> (in body or spatial coordinates; we choose body for definiteness).</li>
+</ul>
+<p>Let <span class="math inline">\(f^\text{ext} \in \mathbb{R}^3\)</span> be the net <strong>external force</strong> on the body, expressed in the chosen frame, and <span class="math inline">\(n^\text{ext} \in \mathbb{R}^3\)</span> the net <strong>external moment</strong> about the body frame origin.</p>
+<p>The Newton–Euler equations in body coordinates can be written as</p>
+<p><span class="math display">\[\begin{align}
+m,\dot v &amp;= m,g^B + f^\text{ext}, \tag{3.1a} \
+I_B \dot \omega + \omega \times (I_B \omega) &amp;= n^\text{ext}, \tag{3.1b}
+\end{align}\]</span>mega + (I_B ) &amp;= n^, \end{align}</p>
+<p>where <span class="math inline">\(g^B\)</span> is the gravity vector expressed in the body frame.</p>
+<section id="identification-of-inputs" class="level4" data-number="0.3.1.1">
+<h4 data-number="0.3.1.1" class="anchored" data-anchor-id="identification-of-inputs"><span class="header-section-number">0.3.1.1</span> 3.1.1 Identification of inputs</h4>
+<p>We can regard <span class="math inline">\((f^\text{ext}, n^\text{ext})\)</span> as <em>control-like inputs</em> <span class="math inline">\(u \in \mathbb{R}^6\)</span>, decomposed as</p>
+<p><span class="math display">\[
+u =
+\begin{bmatrix}
+f^\text{ext} [3pt]
+n^\text{ext}
+\end{bmatrix}.
+\tag{3.2}
+\]</span></p>
+<p>Then the state is <span class="math inline">\(x = (p, R, v, \omega)\)</span> and the dynamics can be written in first-order form:</p>
+<ul>
+<li><p>Kinematics: <span class="math display">\[\begin{align}
+\dot p &amp;= R v^B \quad \text{(if $v^B$ is body velocity; or simply $\dot p = v$ if $v$ spatial)}, \tag{3.3a} \
+\dot R &amp;= R,\widehat{\omega}^B, \tag{3.3b}
+\end{align}\]</span>,^B, \end{align} where <span class="math inline">\(\widehat{\omega}\)</span> is the skew-symmetric matrix representing the cross product: <span class="math inline">\(\widehat{\omega} x = \omega \times x\)</span>.</p></li>
+<li><p>Dynamics: <span class="math display">\[\begin{align}
+\dot v &amp;= g^B + \frac{1}{m} f^\text{ext}, \tag{3.4a} \
+\dot \omega &amp;= I_B^{-1}\left(n^\text{ext} - \omega \times (I_B \omega)\right). \tag{3.4b}
+\end{align}\]</span> &amp;= I_B<sup>{-1}(n</sup> - (I_B )). \end{align}</p></li>
+</ul>
+<p>Writing this as <span class="math inline">\(\dot x = f(x) + G(x) u\)</span>, we identify:</p>
+<ul>
+<li>Drift term <span class="math inline">\(f(x)\)</span> (terms present without external input <span class="math inline">\(u\)</span>),</li>
+<li>Input matrix <span class="math inline">\(G(x)\)</span> (linear mapping from <span class="math inline">\(u\)</span> to <span class="math inline">\(\dot x\)</span>).</li>
+</ul>
+<p>Explicitly, for <span class="math inline">\(x = (p, R, v, \omega)\)</span>:</p>
+[ f(x) =
+<span class="math display">\[\begin{bmatrix}
+R , v^B [3pt]
+R \widehat{\omega}^B [3pt]
+g^B [3pt]
+
+* I_B^{-1}\big(\omega \times (I_B \omega)\big)
+  \end{bmatrix}\]</span>
+, G(x) =
+<span class="math display">\[\begin{bmatrix}
+  0_{3\times 3} &amp; 0_{3\times 3} [3pt]
+  0_{3\times 3} &amp; 0_{3\times 3} [3pt]
+  \frac{1}{m} I_{3} &amp; 0_{3} [3pt]
+  0_{3} &amp; I_B^{-1}
+  \end{bmatrix}\]</span>
+<p>. ]</p>
+<p>Then</p>
+<p>[ x = f(x) + G(x),u. ]</p>
+<p>Note that <span class="math inline">\(G(x)\)</span> is <em>constant</em> (independent of <span class="math inline">\(x\)</span>) in this simple rigid-body case, but this is not essential; in multibody systems <span class="math inline">\(G(x)\)</span> will depend on configuration.</p>
+</section>
+</section>
+<section id="superposition-in-inputs-for-the-single-body" class="level3" data-number="0.3.2">
+<h3 data-number="0.3.2" class="anchored" data-anchor-id="superposition-in-inputs-for-the-single-body"><span class="header-section-number">0.3.2</span> 3.2 Superposition in inputs for the single body</h3>
+<p>Let us decompose the external wrench <span class="math inline">\(u\)</span> as a sum</p>
+<p><span class="math display">\[
+u = u^{(g)} + u^{(c)} + u^{(d)} + \cdots,
+\tag{3.7}
+\]</span></p>
+<p>for example:</p>
+<ul>
+<li><span class="math inline">\(u^{(g)}\)</span> := wrench generated by a gravity-compensating actuator,</li>
+<li><span class="math inline">\(u^{(c)}\)</span> := “control” wrench from a motor,</li>
+<li><span class="math inline">\(u^{(d)}\)</span> := disturbance wrench (contact, aerodynamic drag, etc.).</li>
+</ul>
+<p>Define</p>
+<p>[ x(u) := f(x) + G(x) u. ]</p>
+<p>Then</p>
+<p>[ x(u) =========</p>
+</section>
+</section>
+<section id="fx-gx-ug-uc-ud" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> f(x) + G(x) (u^{(g)} + u^{(c)} + u^{(d)} + )</h1>
+<p>f(x)</p>
+<ul>
+<li>G(x)u^{(g)}</li>
+<li>G(x)u^{(c)}</li>
+<li>G(x)u^{(d)} + . ]</li>
+</ul>
+<p>Define</p>
+<p>[ x^{(i)} := G(x) u^{(i)}, ]</p>
+<p>the incremental contribution of <span class="math inline">\(u^{(i)}\)</span> to <span class="math inline">\(\dot x\)</span> relative to the drift. Then</p>
+<p>[ x(u) = f(x) + _i x^{(i)}. ]</p>
+<p>This is the <strong>Newton–Euler superposition principle for inputs</strong>: the instantaneous state derivative is the drift plus a linear sum of contributions from each input.</p>
+<p>Again, note the limitation: integrating (3.6) over time, the <em>trajectories</em> <span class="math inline">\(x^{(i)}(t)\)</span> obtained under each <span class="math inline">\(u^{(i)}\)</span> do <em>not</em> in general sum to the trajectory under <span class="math inline">\(u = \sum_i u^{(i)}\)</span>.</p>
+<section id="multibody-system-and-generalized-coordinates" class="level3" data-number="1.0.1">
+<h3 data-number="1.0.1" class="anchored" data-anchor-id="multibody-system-and-generalized-coordinates"><span class="header-section-number">1.0.1</span> 3.3 Multibody system and generalized coordinates</h3>
+<p>Now consider a multibody system with <span class="math inline">\(n\)</span> generalized coordinates <span class="math inline">\(q \in \mathbb{R}^n\)</span> and generalized velocities <span class="math inline">\(\dot q \in \mathbb{R}^n\)</span>. Let <span class="math inline">\(x = (q, \dot q)\)</span> be the state.</p>
+<p>Using Newton–Euler and constraint kinematics, one arrives at the standard manipulator form of the equations,</p>
+<p>[ M(q),q + C(q,q),q + g(q) + d(q,q) = + J^(q) f^, ]</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(M(q) \in \mathbb{R}^{n\times n}\)</span> is the symmetric positive definite <strong>mass matrix</strong>,</li>
+<li><span class="math inline">\(C(q,\dot q)\dot q\)</span> collects Coriolis and centrifugal terms,</li>
+<li><span class="math inline">\(g(q)\)</span> is the generalized gravity vector,</li>
+<li><span class="math inline">\(d(q,\dot q)\)</span> lumps other dissipative terms (e.g., joint friction),</li>
+<li><span class="math inline">\(\tau \in \mathbb{R}^n\)</span> is the vector of <strong>joint torques</strong> (controls),</li>
+<li><span class="math inline">\(J(q)\)</span> is the task Jacobian at the contact point(s),</li>
+<li><span class="math inline">\(f^\text{ext}\)</span> is the stacked external contact wrench vector.</li>
+</ul>
+<p>We can group the right-hand side as a sum of <em>generalized forces</em>:</p>
+<p>[ Q(q,q, u) := + J^(q) f^, ]</p>
+<p>where we think of the controls as</p>
+<p>[ u := ]</p>
+</section>
+<section id="control-affine-structure" class="level3" data-number="1.0.2">
+<h3 data-number="1.0.2" class="anchored" data-anchor-id="control-affine-structure"><span class="header-section-number">1.0.2</span> 3.4 Control-affine structure</h3>
+<p>Solve (3.12) for <span class="math inline">\(\ddot q\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+\ddot q
+&amp;= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \Big) \
+&amp;= M(q)^{-1} \Big( - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \Big)
+
+* M(q)^{-1}\tau
+* M(q)^{-1} J^\top(q) f^\text{ext}.
+  \tag{3.15}
+  \end{align}\]</span> \end{align}</p>
+<p>Define</p>
+<p>[ f(x) := ]</p>
+<p>[ G_(x) := ]</p>
+<p>where <span class="math inline">\(r\)</span> is the dimension of <span class="math inline">\(f^\text{ext}\)</span>. Then</p>
+[ x =
+<span class="math display">\[\begin{bmatrix}
+\dot q [3pt]
+\ddot q
+\end{bmatrix}\]</span>
+<p>=============</p>
+<p>f(x) + G_(x),+ G_f(x), f^. ]</p>
+<p>Again we see a <strong>control-affine system</strong> with <span class="math inline">\(m = n + r\)</span> input channels (<span class="math inline">\(n\)</span> joint torques and <span class="math inline">\(r\)</span> external wrench components). At fixed <span class="math inline">\(x\)</span>, the map from <span class="math inline">\((\tau,f^\text{ext})\)</span> to <span class="math inline">\(\ddot q\)</span> is <em>linear</em>.</p>
+</section>
+<section id="newtoneuler-superposition-theorem" class="level3" data-number="1.0.3">
+<h3 data-number="1.0.3" class="anchored" data-anchor-id="newtoneuler-superposition-theorem"><span class="header-section-number">1.0.3</span> 3.5 Newton–Euler superposition theorem</h3>
+<p>We can now formalize the Newton–Euler version of superposition.</p>
+<div class="theorem">
+<p>Let a multibody system with generalized coordinates <span class="math inline">\(q \in \mathbb{R}^n\)</span> satisfy (3.12). Define the mapping</p>
+<p>[ <em>{(q,q)} : ^n ^r ^n, </em>{(q,q)}(, f^) := q.]</p>
+<p>Then, for each fixed <span class="math inline">\((q,\dot q)\)</span>, the map [ (, f^) <em>{(q,q)}(, f^) - </em>{(q,q)}(0, 0)] is linear in <span class="math inline">\((\tau,f^\text{ext})\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>From (3.15),</p>
+<p>[ q = A(q,q) + M(q)^{-1} + M(q)^{-1} J^(q) f^,]</p>
+<p>where</p>
+<p>[ A(q,q) := M(q)^{-1} ( - C(q,q),q - g(q) - d(q,q) )]</p>
+<p>depends only on <span class="math inline">\((q,\dot q)\)</span>, not on <span class="math inline">\((\tau,f^\text{ext})\)</span>.</p>
+<p>Hence,</p>
+<p>[ _{(q,q)}(, f^) =====================================</p>
+<p>A(q,q) + M(q)^{-1} + M(q)^{-1} J^(q) f^, ]</p>
+<p>and</p>
+<p>[ _{(q,q)}(0, 0) =======================</p>
+<p>A(q,q). ]</p>
+<p>Thus,</p>
+<p>[ <em>{(q,q)}(, f^) - </em>{(q,q)}(0, 0) ===============================================================</p>
+<p>M(q)^{-1} + M(q)^{-1} J^(q) f^. ]</p>
+<p>The right-hand side is a linear map of <span class="math inline">\((\tau,f^\text{ext})\)</span>. ∎</p>
+</div>
+<p>This theorem is the precise superposition statement: <strong>for fixed state, generalized accelerations superpose linearly with respect to inputs</strong>.</p>
+</section>
+<section id="example-planar-simple-pendulum-newtoneuler-flavor" class="level3" data-number="1.0.4">
+<h3 data-number="1.0.4" class="anchored" data-anchor-id="example-planar-simple-pendulum-newtoneuler-flavor"><span class="header-section-number">1.0.4</span> 3.6 Example: planar simple pendulum (Newton–Euler flavor)</h3>
+<p>Consider a planar pendulum: point mass <span class="math inline">\(m\)</span> at end of rigid massless rod length <span class="math inline">\(l\)</span>, pivot at the origin. Let <span class="math inline">\(q\)</span> be the angle from the vertical, positive counterclockwise. Generalized coordinate <span class="math inline">\(q \in \mathbb{R}\)</span>. We use a sign convention where <span class="math inline">\(q=0\)</span> is vertical downward.</p>
+<ul>
+<li>Gravity acts along <span class="math inline">\(-y\)</span> with magnitude <span class="math inline">\(mg\)</span>.</li>
+<li>Applied torque <span class="math inline">\(\tau\)</span> acts at the pivot.</li>
+</ul>
+<section id="equation-of-motion" class="level4" data-number="1.0.4.1">
+<h4 data-number="1.0.4.1" class="anchored" data-anchor-id="equation-of-motion"><span class="header-section-number">1.0.4.1</span> 3.6.1 Equation of motion</h4>
+<p>Elementary Newtonian derivation yields:</p>
+<p>[ I,q + mgl q = , I = m l^2. ]</p>
+<p>Rewrite as</p>
+<p>[ q = - q + . ]</p>
+<p>Define state <span class="math inline">\(x = (q,\dot q)\)</span> and input <span class="math inline">\(u := \tau\)</span>. Then</p>
+<p>[ x = ]</p>
+<p>This is clearly of the form (2.1) with <span class="math inline">\(m=1\)</span> input.</p>
+</section>
+<section id="superposed-contributions" class="level4" data-number="1.0.4.2">
+<h4 data-number="1.0.4.2" class="anchored" data-anchor-id="superposed-contributions"><span class="header-section-number">1.0.4.2</span> 3.6.2 Superposed contributions</h4>
+<p>Suppose we decompose the torque <span class="math inline">\(u\)</span> as</p>
+<p>[ u = u^{(g)} + u^{(c)}, ]</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(u^{(g)}\)</span> is a “gravity-compensating” component,</li>
+<li><span class="math inline">\(u^{(c)}\)</span> is an additional control component.</li>
+</ul>
+<p>At some fixed <span class="math inline">\((q,\dot q)\)</span>, the gravitational acceleration term is</p>
+<p>[ q^{()} = - q. ]</p>
+<p>The incremental accelerations from each torque component are</p>
+<p>[ q^{(g)} = u^{(g)}, q^{(c)} = u^{(c)}. ]</p>
+<p>The total acceleration is</p>
+<p>[ q = q^{()}</p>
+<ul>
+<li>q^{(g)} + q^{(c)}. ]</li>
+</ul>
+<p>For instance, if <span class="math inline">\(u^{(g)} = mgl \sin q\)</span> (exact gravity compensation), then</p>
+<p>[ q^{(g)} = (mgl q) = q, ]</p>
+<p>which cancels the drift term (3.23), and we are left with</p>
+<p>[ q = u^{(c)}. ]</p>
+<p>This is a very concrete illustration of Newton–Euler superposition: <em>the gravitational component and control component of acceleration add linearly</em>.</p>
+<hr>
+</section>
+</section>
+<section id="lagrangian-derivation-of-control-affinity-and-superposition" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="lagrangian-derivation-of-control-affinity-and-superposition"><span class="header-section-number">1.1</span> 4. Lagrangian Derivation of Control Affinity and Superposition</h2>
+<p>We now re-derive the same structure using Lagrangian mechanics, which highlights the geometric origin of the mass matrix and generalized forces.</p>
+<section id="lagrangian-mechanics-and-lagrangedalembert-principle" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="lagrangian-mechanics-and-lagrangedalembert-principle"><span class="header-section-number">1.1.1</span> 4.1 Lagrangian mechanics and Lagrange–d’Alembert principle</h3>
+<p>Let <span class="math inline">\(Q\)</span> be the configuration manifold, <span class="math inline">\(q \in Q\)</span> generalized coordinates, <span class="math inline">\(\dot q \in T_q Q\)</span> generalized velocities. A mechanical system is defined by a Lagrangian</p>
+<p>[ L(q,q) = T(q,q) - V(q), ]</p>
+<p>with kinetic energy <span class="math inline">\(T\)</span> and potential energy <span class="math inline">\(V\)</span>.</p>
+<section id="kinetic-energy-and-mass-matrix" class="level4" data-number="1.1.1.1">
+<h4 data-number="1.1.1.1" class="anchored" data-anchor-id="kinetic-energy-and-mass-matrix"><span class="header-section-number">1.1.1.1</span> 4.1.1 Kinetic energy and mass matrix</h4>
+<p>Assume standard mechanical type:</p>
+<p>[ T(q,q) = q^M(q) q, ]</p>
+<p>with <span class="math inline">\(M(q)\)</span> symmetric positive definite. Then</p>
+<p>[ = M(q)q. ]</p>
+</section>
+<section id="generalized-forces" class="level4" data-number="1.1.1.2">
+<h4 data-number="1.1.1.2" class="anchored" data-anchor-id="generalized-forces"><span class="header-section-number">1.1.1.2</span> 4.1.2 Generalized forces</h4>
+<p>Let <span class="math inline">\(Q(q,\dot q, t)\)</span> denote the generalized forces, defined by</p>
+<p>[ Q_k = _{j} f_j , ]</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(f_j\)</span> are physical forces acting at points with position vectors <span class="math inline">\(r_j(q)\)</span>,</li>
+<li><span class="math inline">\(k = 1,\dots,n\)</span> indexes generalized coordinates.</li>
+</ul>
+<p>By construction, <span class="math inline">\(Q\)</span> is <strong>linear in the physical forces <span class="math inline">\(f_j\)</span></strong>. We will exploit this linearity.</p>
+</section>
+<section id="lagrangedalembert-equations" class="level4" data-number="1.1.1.3">
+<h4 data-number="1.1.1.3" class="anchored" data-anchor-id="lagrangedalembert-equations"><span class="header-section-number">1.1.1.3</span> 4.1.3 Lagrange–d’Alembert equations</h4>
+<p>The Lagrange–d’Alembert principle yields</p>
+<p>[ </p>
+<ul>
+<li> = Q_k, k=1,,n, ]</li>
+</ul>
+<p>or in vector form,</p>
+<p>[ </p>
+<ul>
+<li> = Q. ]</li>
+</ul>
+<p>Substituting (4.2) and <span class="math inline">\(L = T-V\)</span> gives the standard manipulator form:</p>
+<p>[ M(q)q + C(q,q)q + g(q) = Q. ]</p>
+<p>Here, <span class="math inline">\(C\)</span> and <span class="math inline">\(g\)</span> emerge from the time derivative and the potential term (we do not re-derive them in detail; the important point is that they depend on <span class="math inline">\((q,\dot q)\)</span> but not on <span class="math inline">\(Q\)</span>).</p>
+</section>
+</section>
+<section id="control-decomposition-of-generalized-forces" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="control-decomposition-of-generalized-forces"><span class="header-section-number">1.1.2</span> 4.2 Control decomposition of generalized forces</h3>
+<p>We now decompose the generalized forces <span class="math inline">\(Q\)</span> into components induced by distinct physical effects and control channels.</p>
+<p>Suppose the physical forces present are:</p>
+<ul>
+<li>internal actuation forces (joint torques, muscle forces, etc.),</li>
+<li>gravity,</li>
+<li>external contact forces,</li>
+<li>dissipative forces (viscous friction),</li>
+<li>etc.</li>
+</ul>
+<p>Let <span class="math inline">\(f^{(1)},\dots,f^{(m)}\)</span> denote a collection of <strong>force components</strong> (or wrenches) we treat as independent. For instance:</p>
+<ul>
+<li><span class="math inline">\(f^{(1)}\)</span> = actuator force from motor 1,</li>
+<li><span class="math inline">\(f^{(2)}\)</span> = actuator force from motor 2,</li>
+<li>…</li>
+<li><span class="math inline">\(f^{(m)}\)</span> = some external load.</li>
+</ul>
+<p>By construction of (4.4), the generalized forces are</p>
+<p>[ Q(q,q) = _{i=1}^m Q^{(i)}(q,q), Q^{(i)}(q,q) := _j f^{(i)}_j . ]</p>
+<p>Define an <strong>input vector</strong> <span class="math inline">\(u \in \mathbb{R}^m\)</span> that scales each force component:</p>
+<p>[ f^{(i)} = u_i ,f^{(i)}, ]</p>
+<p>where <span class="math inline">\(\bar f^{(i)}\)</span> is a unit “shape” of the <span class="math inline">\(i\)</span>th force (for example a fixed direction at a given attachment point). Then</p>
+<p>[ Q^{(i)}(q,q;u_i) = u_i, Q^{(i)}(q,q), ]</p>
+<p>where</p>
+<p>[ Q^{(i)}(q,q) = _j f^{(i)}_j . ]</p>
+<p>Therefore,</p>
+<p>[ Q(q,q; u) = _{i=1}^m u_i, Q^{(i)}(q,q). ]</p>
+<p>In matrix form,</p>
+<p>[ Q(q,q;u) = B(q,q) u, ]</p>
+<p>with columns <span class="math inline">\(B_i(q,\dot q) = \bar Q^{(i)}(q,\dot q)\)</span>.</p>
+</section>
+<section id="control-affine-lagrangian-dynamics" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="control-affine-lagrangian-dynamics"><span class="header-section-number">1.1.3</span> 4.3 Control-affine Lagrangian dynamics</h3>
+<p>Substitute (4.13) into the Lagrange equations (4.7):</p>
+<p><span class="math display">\[\begin{align}
+M(q)\ddot q + C(q,\dot q)\dot q + g(q) &amp;= B(q,\dot q) u, \
+\ddot q &amp;= - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right) + M(q)^{-1}B(q,\dot q) u.
+\tag{4.14}
+\end{align}\]</span>\end{align}</p>
+<p>Define state <span class="math inline">\(x=(q,\dot q)\)</span> and vector fields:</p>
+[ f(x) :=
+<span class="math display">\[\begin{bmatrix}
+\dot q [3pt]
+
+* M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
+  \end{bmatrix}\]</span>
+, G(x) :=
+<span class="math display">\[\begin{bmatrix}
+  0_{n\times m} [3pt]
+  M(q)^{-1}B(q,\dot q)
+  \end{bmatrix}\]</span>
+<p>. ]</p>
+<p>Then</p>
+<p>[ x = f(x) + G(x),u. ]</p>
+<p>Hence, the Lagrangian equations of motion yield a <strong>control-affine system</strong> exactly as in (2.1).</p>
+</section>
+<section id="lagrangian-superposition-theorem" class="level3" data-number="1.1.4">
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="lagrangian-superposition-theorem"><span class="header-section-number">1.1.4</span> 4.4 Lagrangian superposition theorem</h3>
+<p>We obtain the Lagrangian analog of the Newton–Euler superposition theorem.</p>
+<div class="theorem">
+<p>Consider a mechanical system with Lagrangian <span class="math inline">\(L(q,\dot q)\)</span> and generalized forces of the form <span class="math inline">\(Q(q,\dot q;u) = B(q,\dot q) u\)</span>. Then, for each fixed state <span class="math inline">\((q,\dot q)\)</span>, the mapping <span class="math inline">\(u \mapsto \ddot q\)</span> given by (4.14) is affine in <span class="math inline">\(u\)</span>, and the incremental effect of <span class="math inline">\(u\)</span> on <span class="math inline">\(\ddot q\)</span> (relative to <span class="math inline">\(u=0\)</span>) is linear in <span class="math inline">\(u\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>From (4.14),</p>
+<p>[ q = - M(q)^{-1} ( C(q,q)q + g(q) )</p>
+<ul>
+<li>M(q)^{-1}B(q,q) u. ]</li>
+</ul>
+<p>For fixed <span class="math inline">\((q,\dot q)\)</span>, define</p>
+<p>[ A(q,q) := - M(q)^{-1} ( C(q,q)q + g(q) ), L(q,q) := M(q)^{-1} B(q,q).]</p>
+<p>Then</p>
+<p>[ q = A(q,q) + L(q,q),u.]</p>
+<p>Thus the map <span class="math inline">\(u \mapsto \ddot q\)</span> is affine, and the incremental map</p>
+<p>[ u q - q|_{u=0} = L(q,q),u]</p>
+<p>is linear. ∎</p>
+</div>
+</section>
+<section id="example-planar-pendulum-lagrangian-derivation" class="level3" data-number="1.1.5">
+<h3 data-number="1.1.5" class="anchored" data-anchor-id="example-planar-pendulum-lagrangian-derivation"><span class="header-section-number">1.1.5</span> 4.5 Example: planar pendulum (Lagrangian derivation)</h3>
+<p>Re-derive the pendulum example from §3.6 using Lagrange–d’Alembert.</p>
+<ul>
+<li>Coordinate: <span class="math inline">\(q\)</span> (pendulum angle).</li>
+<li>Kinetic energy: <span class="math inline">\(T = \frac{1}{2} m l^2 \dot q^2\)</span>.</li>
+<li>Potential energy: <span class="math inline">\(V = -m g l \cos q\)</span> (zero at <span class="math inline">\(q = 0\)</span> is arbitrary).</li>
+<li>Lagrangian: <span class="math inline">\(L = T - V = \frac{1}{2} m l^2 \dot q^2 + m g l \cos q\)</span>.</li>
+</ul>
+<p>Compute</p>
+<p>[ = m l^2 q, = m l^2 q,]</p>
+<p>[ = - m g l q.]</p>
+<p>Joint torque <span class="math inline">\(\tau\)</span> is the generalized force:</p>
+<p>[ Q = .]</p>
+<p>Lagrange–d’Alembert equation:</p>
+<p>[ m l^2 q - (- m g l q) = m l^2 q + m g l q = ,]</p>
+<p>which is identical to (3.19). We then repeat the decomposition in (3.22)–(3.27); all linear superposition steps follow directly from the linearity of <span class="math inline">\(Q\)</span> in <span class="math inline">\(\tau\)</span>.</p>
+<hr>
+</section>
+</section>
+<section id="screw-theoretic-spatial-vector-derivation" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="screw-theoretic-spatial-vector-derivation"><span class="header-section-number">1.2</span> 5. Screw-Theoretic / Spatial Vector Derivation</h2>
+<p>Screw theory packages translational and rotational quantities into unified <strong>twists</strong> (velocities) and <strong>wrenches</strong> (forces/torques). This formalism makes linearity properties especially transparent.</p>
+<section id="twists-wrenches-and-spatial-inertia" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="twists-wrenches-and-spatial-inertia"><span class="header-section-number">1.2.1</span> 5.1 Twists, wrenches, and spatial inertia</h3>
+<p>A <strong>twist</strong> is a 6D vector</p>
+<p>[ V = ]</p>
+<p>with angular velocity <span class="math inline">\(\omega \in \mathbb{R}^3\)</span> and linear velocity <span class="math inline">\(v \in \mathbb{R}^3\)</span> of a body frame.</p>
+<p>A <strong>wrench</strong> is a 6D vector</p>
+<p>[ F = ]</p>
+<p>with moment <span class="math inline">\(n \in \mathbb{R}^3\)</span> and force <span class="math inline">\(f \in \mathbb{R}^3\)</span> about the body frame origin.</p>
+<p>The <strong>spatial inertia matrix</strong> of a rigid body is a symmetric <span class="math inline">\(6\times 6\)</span> matrix of the form</p>
+[ =
+<span class="math display">\[\begin{bmatrix}
+I &amp; m,c^\times [3pt]
+
+* m,c^\times &amp; m I_3
+  \end{bmatrix}\]</span>
+<p>, ]</p>
+<p>where</p>
+<ul>
+<li><span class="math inline">\(I\)</span> is the <span class="math inline">\(3\times 3\)</span> rotational inertia about the body frame origin,</li>
+<li><span class="math inline">\(m\)</span> is the mass,</li>
+<li><span class="math inline">\(c\)</span> is the vector from body frame origin to center of mass,</li>
+<li><span class="math inline">\(c^\times\)</span> is the skew-symmetric matrix s.t. <span class="math inline">\(c^\times x = c \times x\)</span>.</li>
+</ul>
+<p>The spatial <strong>momentum</strong> is <span class="math inline">\(h = \mathcal{I} V\)</span>, and Newton–Euler dynamics become</p>
+<p>[ V + ^_V V = F^, ]</p>
+<p>where <span class="math inline">\(\mathrm{ad}^\ast_V\)</span> is the dual of the Lie algebra adjoint operator (encoding Coriolis and gyroscopic terms), and the sum runs over all external wrenches applied to the body.</p>
+</section>
+<section id="multibody-dynamics-in-screw-form" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="multibody-dynamics-in-screw-form"><span class="header-section-number">1.2.2</span> 5.2 Multibody dynamics in screw form</h3>
+<p>For a chain of rigid bodies, the dynamics can be written compactly (Featherstone-style) as</p>
+<p>[ (q),V + (q,q),V = (q) u + ^(q), ]</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\mathcal{M}(q)\)</span> is the <em>global spatial inertia</em>,</li>
+<li><span class="math inline">\(\mathcal{C}(q,\dot q)\)</span> collects Coriolis and centrifugal-like terms,</li>
+<li><span class="math inline">\(\mathcal{W}(q)\)</span> is a “wrench-shaping” matrix mapping generalized forces <span class="math inline">\(u\)</span> to body-frame wrenches,</li>
+<li><span class="math inline">\(\mathcal{F}^\text{ext}(q)\)</span> collects gravity and other known wrenches.</li>
+</ul>
+<p>In minimal coordinate form, one recovers the manipulator equation</p>
+<p>[ M(q)q + C(q,q)q + g(q) = + J(q)<sup>f</sup>, ]</p>
+<p>but the spatial formalism keeps wrenches and twists as first-class objects.</p>
+</section>
+<section id="linearity-of-wrench-mapping-and-superposition" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="linearity-of-wrench-mapping-and-superposition"><span class="header-section-number">1.2.3</span> 5.3 Linearity of wrench mapping and superposition</h3>
+<p>The crucial property is:</p>
+<ul>
+<li>The mapping from generalized forces <span class="math inline">\(u\)</span> to <strong>wrenches</strong> at any point is <strong>linear</strong>,</li>
+<li>The mapping from <strong>wrenches</strong> to joint accelerations is <strong>linear</strong> at fixed state.</li>
+</ul>
+<section id="jacobian-mapping-from-joint-torques-to-wrenches" class="level4" data-number="1.2.3.1">
+<h4 data-number="1.2.3.1" class="anchored" data-anchor-id="jacobian-mapping-from-joint-torques-to-wrenches"><span class="header-section-number">1.2.3.1</span> 5.3.1 Jacobian mapping from joint torques to wrenches</h4>
+<p>Consider a manipulator with end-effector twist <span class="math inline">\(V_e\)</span> and Jacobian <span class="math inline">\(J(q)\)</span> such that</p>
+<p>[ V_e = J(q)q. ]</p>
+<p>The <strong>joint torques</strong> <span class="math inline">\(\tau\)</span> produce end-effector wrench <span class="math inline">\(F_e\)</span> related by the power duality</p>
+<p>[ ^q = F_e^V_e, ]</p>
+<p>i.e., mechanical power at the joints equals mechanical power at the end-effector. Using (5.7),</p>
+<p>[ ^q = F_e^J(q)q = (J(q)<sup>F_e)</sup>q. ]</p>
+<p>Since this must hold for all <span class="math inline">\(\dot q\)</span>, we obtain</p>
+<p>[ = J(q)^F_e. ]</p>
+<p>Thus, for fixed configuration <span class="math inline">\(q\)</span>, the mapping <span class="math inline">\(F_e \mapsto \tau\)</span> is <em>linear</em> (matrix multiplication by <span class="math inline">\(J(q)^\top\)</span>).</p>
+<p>If the end-effector wrench <span class="math inline">\(F_e\)</span> is itself decomposed as</p>
+<p>[ F_e = _{i=1}^m u_i F_e^{(i)}, ]</p>
+<p>then</p>
+<p>[ = _{i=1}^m u_i J(q)<sup>F_e</sup>{(i)}. ]</p>
+<p>So each input component <span class="math inline">\(u_i\)</span> contributes an additive joint torque component <span class="math inline">\(J(q)^\top F_e^{(i)}\)</span>.</p>
+</section>
+<section id="from-wrenches-to-accelerations" class="level4" data-number="1.2.3.2">
+<h4 data-number="1.2.3.2" class="anchored" data-anchor-id="from-wrenches-to-accelerations"><span class="header-section-number">1.2.3.2</span> 5.3.2 From wrenches to accelerations</h4>
+<p>The spatial equations (5.5) can be written as</p>
+<p>[ (q),V = - (q,q),V + (q) u + ^(q). ]</p>
+<p>At fixed state <span class="math inline">\((q,\dot q)\)</span>, the matrix <span class="math inline">\(\mathcal{M}\)</span>, operator <span class="math inline">\(\mathcal{C}\)</span>, and mapping <span class="math inline">\(\mathcal{W}\)</span> are fixed. Solving,</p>
+<p>[ V(q,q; u) = (q)^{-1} (- (q,q),V + (q) u + ^(q) ). ]</p>
+<p>Thus,</p>
+<p>[ V(q,q; u) = A(q,q) + B(q,q) u, ]</p>
+<p>with <span class="math inline">\(A(q,\dot q)\)</span> and <span class="math inline">\(B(q,\dot q)\)</span> independent of <span class="math inline">\(u\)</span>. The dependence on <span class="math inline">\(u\)</span> is linear.</p>
+<p>This leads directly to:</p>
+<div class="theorem">
+<p>For fixed state <span class="math inline">\((q,\dot q)\)</span>, the spatial acceleration <span class="math inline">\(\dot V\)</span> is an affine function of the generalized input <span class="math inline">\(u\)</span>, and its incremental dependence on <span class="math inline">\(u\)</span> is linear. Therefore, the acceleration contribution from each input channel superposes linearly in the screw-theoretic formulation.</p>
+</div>
+<p>The proof is simply (5.14)–(5.15).</p>
+</section>
+</section>
+<section id="example-spatial-single-link-actuator" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="example-spatial-single-link-actuator"><span class="header-section-number">1.2.4</span> 5.4 Example: spatial single-link actuator</h3>
+<p>Consider a single rigid link actuated by a spatial wrench <span class="math inline">\(F^\text{act}\)</span>. Let the link’s twist <span class="math inline">\(V\)</span> obey</p>
+<p>[ V + ^_V V = F^ + F^, ]</p>
+<p>where <span class="math inline">\(F^\text{grav}\)</span> is the gravity wrench, and <span class="math inline">\(F^\text{act}\)</span> is the actuator-applied wrench. Writing explicitly,</p>
+<p>[ V = ^{-1} ( - ^_V V + F^ + F^ ). ]</p>
+<p>Decompose <span class="math inline">\(F^\text{act}\)</span> into basis wrenches:</p>
+<p>[ F^ = _{i=1}^m u_i F^{(i)}. ]</p>
+<p>Then</p>
+<p>[ V = ^{-1} ( - ^_V V + F^ )</p>
+<ul>
+<li>^{-1} _{i=1}^m u_i F^{(i)}. ]</li>
+</ul>
+<p>Define</p>
+<p>[ A(V) := ^{-1} ( - ^_V V + F^ ), B := ^{-1} ]</p>
+<p>Then</p>
+<p>[ V = A(V) + B u, ]</p>
+<p>where <span class="math inline">\(u \in \mathbb{R}^m\)</span>. This is the same control-affine structure as before, now in terms of twists and wrenches; the superposition in <span class="math inline">\(u\)</span> is again immediate.</p>
+<hr>
+</section>
+</section>
+<section id="cross-comparison-of-the-three-formulations" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="cross-comparison-of-the-three-formulations"><span class="header-section-number">1.3</span> 6. Cross-Comparison of the Three Formulations</h2>
+<p>We now summarize and compare the Newton–Euler, Lagrangian, and screw-theoretic versions of the same underlying structure.</p>
+<section id="common-structure" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="common-structure"><span class="header-section-number">1.3.1</span> 6.1 Common structure</h3>
+<p>All three approaches lead to equations of the form</p>
+<p>[ q = f_2(q,q) + H(q,q) u, ]</p>
+<p>with state <span class="math inline">\(x=(q,\dot q)\)</span>, drift <span class="math inline">\(f(x)\)</span>, and input matrix <span class="math inline">\(G(x)\)</span> such that</p>
+<p>[ x = f(x) + G(x) u. ]</p>
+<ul>
+<li><strong>Newton–Euler</strong>: <span class="math inline">\(M(q)\)</span> arises from summing link inertias; <span class="math inline">\(H(q,\dot q)\)</span> is <span class="math inline">\(M(q)^{-1}\)</span> times a matrix that maps torques and external wrenches to generalized forces.</li>
+<li><strong>Lagrangian</strong>: <span class="math inline">\(M(q)\)</span> arises from the kinetic energy metric; <span class="math inline">\(H(q,\dot q) = M(q)^{-1} B(q,\dot q)\)</span> where <span class="math inline">\(B\)</span> encodes generalized forces from physical forces.</li>
+<li><strong>Screw theory</strong>: the spatial inertia <span class="math inline">\(\mathcal{I}\)</span> yields <span class="math inline">\(M(q)\)</span> after coordinate transformation; <span class="math inline">\(H(q,\dot q)\)</span> is the composition of wrench mappings and <span class="math inline">\(M(q)^{-1}\)</span>.</li>
+</ul>
+<p>In each approach, <strong>linearity in <span class="math inline">\(u\)</span> is inherited from:</strong></p>
+<ol type="1">
+<li>The linearity of <strong>forces and wrenches</strong> in their scalar magnitudes (Newton’s second law is linear in force).</li>
+<li>The linearity of the <strong>generalized force mapping</strong> from physical forces/wrenches to <span class="math inline">\(Q\)</span> (via Jacobians).</li>
+<li>The linear solution of the linear system <span class="math inline">\(M(q)\ddot q = \cdots\)</span> at fixed <span class="math inline">\(q\)</span>.</li>
+</ol>
+</section>
+<section id="what-superposition-does-not-give-you" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="what-superposition-does-not-give-you"><span class="header-section-number">1.3.2</span> 6.2 What superposition <em>does not</em> give you</h3>
+<p>It is essential to stress what we <em>do not</em> get:</p>
+<ul>
+<li>For a general nonlinear mechanical system, if <span class="math inline">\(x^{(1)}(t)\)</span> solves <span class="math inline">\(\dot x = f(x) + G(x) u^{(1)}(t)\)</span> and <span class="math inline">\(x^{(2)}(t)\)</span> solves <span class="math inline">\(\dot x = f(x) + G(x) u^{(2)}(t)\)</span>, then in general [ x(t) x^{(1)}(t) + x^{(2)}(t)] except in special linear cases.</li>
+<li>Superposition in this paper refers to <strong>linear decomposition of instantaneous generalized forces and accelerations</strong> with respect to input channels at a fixed state, not linear combination of trajectories.</li>
+</ul>
+<p>Still, this local superposition is extremely useful in practice: it allows you to calculate, at each time, how much of the instantaneous acceleration or joint torque is attributable to gravity, inertial coupling, specific actuators, or external loads, etc.</p>
+<hr>
+</section>
+</section>
+<section id="applications-and-worked-examples-across-formulations" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="applications-and-worked-examples-across-formulations"><span class="header-section-number">1.4</span> 7. Applications and Worked Examples Across Formulations</h2>
+<p>To make the parallels concrete, we now present two more worked examples: a planar 2R manipulator and a brief screw-theoretic example.</p>
+<section id="example-2r-planar-robot-arm-newtoneuler-lagrangian" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="example-2r-planar-robot-arm-newtoneuler-lagrangian"><span class="header-section-number">1.4.1</span> 7.1 Example: 2R planar robot arm (Newton–Euler / Lagrangian)</h3>
+<p>Consider a 2-link planar robot arm with joint angles <span class="math inline">\(q_1,q_2\)</span>, link lengths <span class="math inline">\(l_1,l_2\)</span>, link masses <span class="math inline">\(m_1,m_2\)</span>, and moments of inertia <span class="math inline">\(I_1,I_2\)</span> about their centers of mass. Gravity acts in <span class="math inline">\(-y\)</span>.</p>
+<p>The equations of motion can be written as</p>
+<p>[ M(q) q + C(q,q)q + g(q) = , ]</p>
+<p>with <span class="math inline">\(q = [q_1;q_2]^\top\)</span>, <span class="math inline">\(\tau = [\tau_1;\tau_2]^\top\)</span>.</p>
+<p>Explicit expressions (standard textbook result, shown here to emphasize structure):</p>
+<p>[ M(q) = ]</p>
+<p>where</p>
+<p>[ a = I_1 + I_2 + m_2 l_1^2, b = m_2 l_1 c_2, d = I_2,]</p>
+<p>and <span class="math inline">\(c_2\)</span> is the COM distance of link 2 from joint 2.</p>
+<p>The Coriolis/centrifugal term is</p>
+[ C(q,q)q =
+<span class="math display">\[\begin{bmatrix}
+
+* b \sin q_2, (2\dot q_1 \dot q_2 + \dot q_2^2) \
+  b \sin q_2, \dot q_1^2
+  \end{bmatrix}\]</span>
+<p>dot q_1^2 \end{bmatrix}, ]</p>
+<p>and the gravity vector</p>
+<p>[ g(q) = ]</p>
+<p>Rewrite (7.1) as</p>
+<p>[ q = - M(q)^{-1}(C(q,q)q + g(q)) + M(q)^{-1}. ]</p>
+<p>At a fixed <span class="math inline">\((q,\dot q)\)</span>, define:</p>
+<p>[ q^{()}(q,q) := - M(q)^{-1}(C(q,q)q + g(q)),]</p>
+<p>[ L(q,q) := M(q)^{-1}.]</p>
+<p>Then</p>
+<p>[ q = q^{()}(q,q) + L(q,q),. ]</p>
+<p>As before, if we decompose</p>
+<p>[ = ^{(g)} + ^{(c)} + ^{(d)}, ]</p>
+<p>corresponding to gravity compensation, control, and disturbance, we have</p>
+<p>[ q = q^{()}</p>
+<ul>
+<li>L(q,q),^{(g)}</li>
+<li>L(q,q),^{(c)}</li>
+<li>L(q,q),^{(d)}. ]</li>
+</ul>
+<p>Each term <span class="math inline">\(L(q,\dot q),\tau^{(i)}\)</span> is the <strong>instantaneous acceleration contribution</strong> of the corresponding torque component.</p>
+<section id="lagrangian-viewpoint" class="level4" data-number="1.4.1.1">
+<h4 data-number="1.4.1.1" class="anchored" data-anchor-id="lagrangian-viewpoint"><span class="header-section-number">1.4.1.1</span> 7.1.1 Lagrangian viewpoint</h4>
+<p>From the Lagrangian viewpoint, the same equations arise from</p>
+<ul>
+<li><span class="math inline">\(L = T - V\)</span> with appropriate kinetic and potential energy expressions,</li>
+<li>generalized forces <span class="math inline">\(Q = \tau\)</span>.</li>
+</ul>
+<p>The key distinction is <em>interpretive</em>: Lagrangian mechanics frames <span class="math inline">\(M(q)\)</span> as a metric on <span class="math inline">\(Q\)</span>, and <span class="math inline">\(g(q)\)</span> as the gradient of a potential. But the linearity in <span class="math inline">\(u\)</span> (here <span class="math inline">\(u=\tau\)</span>) is identical to the Newton–Euler derivation.</p>
+</section>
+</section>
+<section id="example-planar-end-effector-wrench-screw-theoretic-flavor" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="example-planar-end-effector-wrench-screw-theoretic-flavor"><span class="header-section-number">1.4.2</span> 7.2 Example: planar end-effector wrench (screw-theoretic flavor)</h3>
+<p>For the same 2R planar manipulator, consider the end-effector exerting a planar force <span class="math inline">\(f_e = [f_x;f_y]^\top\)</span> (moments ignored for simplicity). The Jacobian <span class="math inline">\(J(q) \in \mathbb{R}^{2\times 2}\)</span> satisfies</p>
+<p>[ ]</p>
+<p>so that the power duality implies</p>
+<p>[ = J(q)^f_e. ]</p>
+<p>Decompose the end-effector force as</p>
+<p>[ f_e = f_e^{(1)} + f_e^{(2)}, ]</p>
+<p>with, say,</p>
+<ul>
+<li><span class="math inline">\(f_e^{(1)}\)</span> = commanded interaction force,</li>
+<li><span class="math inline">\(f_e^{(2)}\)</span> = environmental force (contact).</li>
+</ul>
+<p>Then</p>
+<p>[ = J(q)<sup>f_e</sup>{(1)} + J(q)<sup>f_e</sup>{(2)} = ^{(1)} + ^{(2)}. ]</p>
+<p>Substituting into (7.5),</p>
+<p>[ q = q^{()}</p>
+<ul>
+<li>L(q,q),^{(1)}</li>
+<li>L(q,q),^{(2)}. ]</li>
+</ul>
+<p>If we are interested in the acceleration “due to environment forces” versus “due to commanded forces,” we can compute each term separately at a given <span class="math inline">\((q,\dot q)\)</span>:</p>
+<p>[ q^{(1)} = L(q,q),J(q)<sup>f_e</sup>{(1)}, q^{(2)} = L(q,q),J(q)<sup>f_e</sup>{(2)}. ]</p>
+<p>This is a direct screw-theoretic superposition: the <strong>total acceleration is the sum of accelerations induced by separate wrenches</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="conclusions" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="conclusions"><span class="header-section-number">1.5</span> 8. Conclusions</h2>
+<p>We have shown, in three formulations (Newton–Euler, Lagrangian, screw-theoretic), that:</p>
+<ol type="1">
+<li>Multibody mechanical systems with actuation via generalized forces admit <strong>control-affine dynamics</strong> of the form [ x = f(x) + G(x) u,] where <span class="math inline">\(x = (q,\dot q)\)</span> and <span class="math inline">\(u\)</span> parameterizes joint torques and/or external wrenches.</li>
+<li>For each fixed state <span class="math inline">\(x\)</span>, the mapping <span class="math inline">\(u \mapsto \dot x\)</span> (or <span class="math inline">\(u \mapsto \ddot q\)</span>) is <strong>affine</strong>, and the incremental dependence on <span class="math inline">\(u\)</span> (relative to <span class="math inline">\(u=0\)</span>) is <strong>linear</strong>.</li>
+<li>This yields a rigorous <strong>superposition principle for inputs</strong>: the instantaneous contributions of different input channels (actuators, gravity compensation, disturbances, contact forces) to generalized accelerations and wrenches add linearly.</li>
+<li>The principle is identical in essence across Newton–Euler, Lagrangian, and screw-theoretic settings; they differ in how the mass matrix and generalized forces are constructed, not in the linearity structure.</li>
+</ol>
+<p>At the same time, we emphasized that <strong>trajectory-level superposition is false in general</strong> for nonlinear systems. Superposition here is a local statement about the <em>linear structure of forces and wrenches</em> and their mapping into accelerations at a given state.</p>
+<p>This clarified view of superposition is particularly valuable for:</p>
+<ul>
+<li>decomposition of motion into gravity, inertial coupling, external, and control contributions;</li>
+<li>design and analysis of gravity compensation and feedforward controllers;</li>
+<li>counterfactual simulations (e.g., “what would the motion be under zero gravity?”, “what if a particular actuator were disabled?”);</li>
+<li>screw-theoretic modeling of force transmission and manipulability.</li>
+</ul>
+<p>In applications ranging from robotics to biomechanics, this perspective allows us to speak precisely about the <em>share</em> of motion “caused by” different inputs, without pretending that nonlinear trajectories themselves superpose.</p>
+<hr>
+</section>
+<section id="references" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="references"><span class="header-section-number">1.6</span> References</h2>
+<p><em>(Indicative only; you can replace or expand with your preferred bibliography.)</em></p>
+<ul>
+<li>Featherstone, R. <strong>Rigid Body Dynamics Algorithms</strong>. Springer, 2008.</li>
+<li>Murray, R. M., Li, Z., Sastry, S. S. <strong>A Mathematical Introduction to Robotic Manipulation</strong>. CRC Press, 1994.</li>
+<li>Spong, M. W., Hutchinson, S., Vidyasagar, M. <strong>Robot Modeling and Control</strong>. Wiley, 2005.</li>
+<li>Bullo, F., Lewis, A. D. <strong>Geometric Control of Mechanical Systems</strong>. Springer, 2004.</li>
+<li>Greenwood, D. T. <strong>Advanced Dynamics</strong>. Cambridge University Press, 2003.</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
+
+</body>
+
+</html>
+</script></body></html>
