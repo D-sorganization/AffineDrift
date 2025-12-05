@@ -1,5 +1,4 @@
-GOLFER_MODEL_MASTER_PLAN.md
-A Comprehensive Roadmap for Building a Full-Body, Physics-Grounded, IK/Dynamics-Driven Golfer Simulation Toolkit
+# A Comprehensive Roadmap for Building a Full-Body, Physics-Grounded, IK/Dynamics-Driven Golfer Simulation Toolkit
 
 (Pinocchio, PINK, MuJoCo, MeshCat, Geppetto, Python GUI)
 

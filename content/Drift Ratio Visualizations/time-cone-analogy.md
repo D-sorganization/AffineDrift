@@ -17,9 +17,6 @@ We’ll plot:
 
 You can drop this **as-is** into your Quarto paper as another figure:
 
-````markdown
-## Visualization: Control Cone Analogy
-
 ```{python}
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,7 +26,8 @@ t = np.linspace(0, 1, 500)
 
 # Define "cone half-width" as a simple decreasing function of time
 # Wide early (large reachable set), narrow near impact
-max_dev = 0.4 * (1 - 0.85 * np.exp(-((t - 0.2)**2) / 0.02))  # wide early, then contracts
+# Using a gaussian decay to ensure it shrinks towards impact
+max_dev = 0.4 * np.exp(-3 * t**2)  # Wide at t=0, narrow at t=1
 
 upper = max_dev
 lower = -max_dev
@@ -54,9 +52,4 @@ plt.text(0.8, 0.05, "Late Downswing:\nCone Collapse", fontsize=10)
 
 plt.tight_layout()
 plt.show()
-```
-````
-
-```
-
 ```

@@ -525,11 +525,10 @@ function initArticleHistory() {
     }
 
     // 2. Display History (runs on articles.html where the list exists)
-    const articlesHistoryList = document.getElementById('articles-history-list');
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-        if (history.length === 0) {
+        if (!history || history.length === 0) {
             articlesHistoryList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
         } else {
             articlesHistoryList.innerHTML = history.map(item =>
