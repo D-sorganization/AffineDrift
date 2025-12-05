@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="">
+
+<title>On the Limits of Strokes-Gained Inference for Individual Golfers – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">1. Introduction</a></li>
+  <li><a href="#the-strokes-gained-framework-in-mathematical-form" id="toc-the-strokes-gained-framework-in-mathematical-form" class="nav-link" data-scroll-target="#the-strokes-gained-framework-in-mathematical-form">2. The strokes-gained framework in mathematical form</a>
+  <ul class="collapse">
+  <li><a href="#the-benchmark-value-function" id="toc-the-benchmark-value-function" class="nav-link" data-scroll-target="#the-benchmark-value-function">2.1 The benchmark value function</a></li>
+  <li><a href="#per-shot-strokes-gained" id="toc-per-shot-strokes-gained" class="nav-link" data-scroll-target="#per-shot-strokes-gained">2.2 Per-shot strokes gained</a></li>
+  <li><a href="#a-dynamic-programming-perspective-briefly" id="toc-a-dynamic-programming-perspective-briefly" class="nav-link" data-scroll-target="#a-dynamic-programming-perspective-briefly">2.3 A dynamic programming perspective (briefly)</a></li>
+  </ul></li>
+  <li><a href="#strokes-gained-as-a-population-conditional-expectation" id="toc-strokes-gained-as-a-population-conditional-expectation" class="nav-link" data-scroll-target="#strokes-gained-as-a-population-conditional-expectation">3. Strokes gained as a <em>population</em> conditional expectation</a></li>
+  <li><a href="#gradients-of-expected-strokes-and-heterogeneous-skill-profiles" id="toc-gradients-of-expected-strokes-and-heterogeneous-skill-profiles" class="nav-link" data-scroll-target="#gradients-of-expected-strokes-and-heterogeneous-skill-profiles">4. Gradients of expected strokes and heterogeneous skill profiles</a>
+  <ul class="collapse">
+  <li><a href="#local-value-of-a-small-improvement" id="toc-local-value-of-a-small-improvement" class="nav-link" data-scroll-target="#local-value-of-a-small-improvement">4.1 Local value of a small improvement</a></li>
+  <li><a href="#the-key-conceptual-error" id="toc-the-key-conceptual-error" class="nav-link" data-scroll-target="#the-key-conceptual-error">4.2 The key conceptual error</a></li>
+  </ul></li>
+  <li><a href="#a-concrete-putting-example" id="toc-a-concrete-putting-example" class="nav-link" data-scroll-target="#a-concrete-putting-example">5. A concrete putting example</a>
+  <ul class="collapse">
+  <li><a href="#simple-two-putt-model" id="toc-simple-two-putt-model" class="nav-link" data-scroll-target="#simple-two-putt-model">5.1 Simple two-putt model</a></li>
+  <li><a href="#when-gaining-0.3-strokes-putting-is-misinterpreted" id="toc-when-gaining-0.3-strokes-putting-is-misinterpreted" class="nav-link" data-scroll-target="#when-gaining-0.3-strokes-putting-is-misinterpreted">5.2 When “gaining 0.3 strokes putting” is misinterpreted</a></li>
+  </ul></li>
+  <li><a href="#extension-to-other-parts-of-the-game" id="toc-extension-to-other-parts-of-the-game" class="nav-link" data-scroll-target="#extension-to-other-parts-of-the-game">6. Extension to other parts of the game</a>
+  <ul class="collapse">
+  <li><a href="#driving-distance-and-the-how-much-is-10-yards-worth-question" id="toc-driving-distance-and-the-how-much-is-10-yards-worth-question" class="nav-link" data-scroll-target="#driving-distance-and-the-how-much-is-10-yards-worth-question">6.1 Driving distance and the “how much is 10 yards worth?” question</a></li>
+  <li><a href="#approach-play-and-wedge-distance-optimization" id="toc-approach-play-and-wedge-distance-optimization" class="nav-link" data-scroll-target="#approach-play-and-wedge-distance-optimization">6.2 Approach play and wedge distance optimization</a></li>
+  <li><a href="#around-the-green-play" id="toc-around-the-green-play" class="nav-link" data-scroll-target="#around-the-green-play">6.3 Around-the-green play</a></li>
+  </ul></li>
+  <li><a href="#statistical-perspective-ecological-fallacy-and-heterogeneity" id="toc-statistical-perspective-ecological-fallacy-and-heterogeneity" class="nav-link" data-scroll-target="#statistical-perspective-ecological-fallacy-and-heterogeneity">7. Statistical perspective: ecological fallacy and heterogeneity</a>
+  <ul class="collapse">
+  <li><a href="#what-a-more-rigorous-model-would-look-like" id="toc-what-a-more-rigorous-model-would-look-like" class="nav-link" data-scroll-target="#what-a-more-rigorous-model-would-look-like">7.1 What a more rigorous model would look like</a></li>
+  </ul></li>
+  <li><a href="#practical-implications-for-coaching-and-analysis" id="toc-practical-implications-for-coaching-and-analysis" class="nav-link" data-scroll-target="#practical-implications-for-coaching-and-analysis">8. Practical implications for coaching and analysis</a>
+  <ul class="collapse">
+  <li><a href="#use-strokes-gained-for-what-it-is-excellent-at" id="toc-use-strokes-gained-for-what-it-is-excellent-at" class="nav-link" data-scroll-target="#use-strokes-gained-for-what-it-is-excellent-at">8.1 Use strokes gained for what it is excellent at</a></li>
+  <li><a href="#be-explicit-when-making-causal-statements" id="toc-be-explicit-when-making-causal-statements" class="nav-link" data-scroll-target="#be-explicit-when-making-causal-statements">8.2 Be explicit when making <em>causal</em> statements</a></li>
+  <li><a href="#pay-attention-to-interaction-effects" id="toc-pay-attention-to-interaction-effects" class="nav-link" data-scroll-target="#pay-attention-to-interaction-effects">8.3 Pay attention to interaction effects</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">9. Conclusion</a></li>
+  <li><a href="#references-informal" id="toc-references-informal" class="nav-link" data-scroll-target="#references-informal">References (informal)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">On the Limits of Strokes-Gained Inference for Individual Golfers</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>Strokes gained has transformed golf analytics by decomposing scores into contributions from different parts of the game relative to a benchmark player. However, the same feature that makes strokes gained powerful—the use of a common population baseline—also limits its interpretability when we start talking about <em>individual</em> performance changes and practice priorities.</p>
+<p>This article shows, using a formal statistical and mathematical framework, why “if I improve my strokes gained putting by 0.5 per round, I’ll score 0.5 shots better per round” is generally false. Strokes gained is defined with respect to an <em>average</em> player’s expected performance surface, not the individual golfer’s. When a player’s skill profile differs from the benchmark (e.g., unusually poor from short range, unusually strong with wedges), the mapping from a mechanical or tactical change (like leaving putts closer) to actual scoring impact can diverge substantially from what the strokes-gained tables suggest.</p>
+<p>We formalize this using conditional expectations, derivatives of expected strokes with respect to state variables (distance, lie, etc.), and the distinction between population-level and individual-level response surfaces. A simple putting example shows that a poor short putter can gain <em>more</em> actual strokes than a good short putter from the same improvement in first-putt proximity—even though the standard strokes-gained metric values the two changes identically. The same logic extends to driving, approach shots, and the short game.</p>
+<p>The upshot: strokes gained is excellent as a <strong>descriptive</strong> and <strong>comparative</strong> tool, but it is easy to misappropriate it as an <strong>individual causal model</strong>. Coaches and players who want to use strokes gained to guide training should be explicit about this limitation and, where possible, move toward player-specific or hierarchical models.</p>
+<hr>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
+<p>Strokes gained is often treated as the gospel of modern golf analytics: clean, additive, and expressed in the same currency as the scorecard—strokes. But once you start using it to answer questions like</p>
+<blockquote class="blockquote">
+<p>“If I improve my strokes gained putting by 0.3, how many shots will I actually save?”</p>
+</blockquote>
+<p>you’re quietly stepping from <em>description</em> into <em>causal inference</em>, and that’s where things get slippery.</p>
+<p>The central point of this article is simple:</p>
+<blockquote class="blockquote">
+<p>Strokes gained is defined with respect to the expected performance of a <strong>benchmark population</strong>, not with respect to the conditional expectations of any specific golfer. Optimizing a player’s game by treating the benchmark function as if it were the player’s own can systematically misstate the value of changes in technique, training, or strategy.</p>
+</blockquote>
+<p>We’ll formalize the strokes-gained machinery, then show—mathematically and with golf-specific examples—why:</p>
+<ul>
+<li>Improving a player’s strokes gained putting does <strong>not</strong> guarantee a one-for-one improvement in their scoring average.</li>
+<li>The same change in shot outcome (e.g., leaving putts 0.5 m closer) can have <em>different</em> scoring impacts for different players, even though strokes gained assigns the same value.</li>
+<li>This is a textbook case of misapplying population-level regression functions to individual cases (ecological fallacy / misuse of average treatment effects).</li>
+</ul>
+<p>We then extend the reasoning beyond putting to driving, approach play, and around-the-green play, and close with practical implications for science-based coaching.</p>
+<hr>
+</section>
+<section id="the-strokes-gained-framework-in-mathematical-form" class="level2">
+<h2 class="anchored" data-anchor-id="the-strokes-gained-framework-in-mathematical-form">2. The strokes-gained framework in mathematical form</h2>
+<section id="the-benchmark-value-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-benchmark-value-function">2.1 The benchmark value function</h3>
+<p>Let a <em>state</em> on the golf course be described by variables such as:</p>
+<ul>
+<li>distance to the hole, (d),</li>
+<li>lie / surface / condition, (c) (e.g.&nbsp;tee, fairway, rough, sand, green, recovery).</li>
+</ul>
+<p>For a reference population of golfers (e.g., PGA Tour pros measured with high-resolution shot tracking), define the <strong>benchmark value function</strong>:</p>
+<p>[ J_{}(d, c) ;=; , ]</p>
+<p>where (H) is the random number of strokes required to hole out from state ((d,c)) for a randomly chosen player from the reference population.</p>
+<p>Intuitively, (J_{}(d,c)) is “how many strokes an average player of this population needs to finish from here.”</p>
+</section>
+<section id="per-shot-strokes-gained" class="level3">
+<h3 class="anchored" data-anchor-id="per-shot-strokes-gained">2.2 Per-shot strokes gained</h3>
+<p>Consider a single shot that starts from state ((d_i, c_i)) and finishes at state ((d_{i+1}, c_{i+1})), not yet holed. The <strong>strokes gained</strong> for that shot is defined as</p>
+<p>[ g_i ;=; J_{}(d_i, c_i) - J_{}(d_{i+1}, c_{i+1}) - 1. ]</p>
+<p>If the shot finishes in the hole, then (J_{}(d_{i+1}, c_{i+1}) = 0).</p>
+<p>The interpretation:</p>
+<ul>
+<li>(J_{}(d_i, c_i)): how many strokes the benchmark player needs from where you started.</li>
+<li>(J_{}(d_{i+1}, c_{i+1})): how many strokes the benchmark player needs from where your ball ended up.</li>
+<li>The difference minus the one stroke you actually played is how many strokes you gained (positive) or lost (negative) relative to the benchmark.</li>
+</ul>
+<p>Strokes gained over any collection of shots (e.g., a hole, a round, a season, a category such as “putting”) is just the sum of the individual (g_i). The telescoping sum identity shows that for a hole:</p>
+<p>[ <em>{i=1}^{n} g_i = J</em>{}(d_1, c_1) - n, ]</p>
+<p>where (n) is the actual number of strokes taken on the hole and ((d_1, c_1)) is the initial state (typically the tee).</p>
+<p>Thus, total strokes gained on a hole equals “benchmark strokes from the tee” minus “actual strokes,” exactly matching the intuitive description.</p>
+</section>
+<section id="a-dynamic-programming-perspective-briefly" class="level3">
+<h3 class="anchored" data-anchor-id="a-dynamic-programming-perspective-briefly">2.3 A dynamic programming perspective (briefly)</h3>
+<p>More formally, the benchmark function satisfies a Bellman equation:</p>
+<p>[ J_{}(d, c) = _{} !, ]</p>
+<p>where () denotes the shot strategy (club, target, etc.) and ((D’, C’)) is the random next state.</p>
+<p>Under this view, the strokes-gained value of a realized shot outcome is the difference between what the dynamic program <em>expected</em> and what actually happened, again measured in strokes. That’s elegant—and, for population-level analysis, very effective. The trouble starts when we implicitly assume that (J_{}) is also the correct value function for each individual golfer.</p>
+<hr>
+</section>
+</section>
+<section id="strokes-gained-as-a-population-conditional-expectation" class="level2">
+<h2 class="anchored" data-anchor-id="strokes-gained-as-a-population-conditional-expectation">3. Strokes gained as a <em>population</em> conditional expectation</h2>
+<p>The critical statistical fact is that (J_{}(d,c)) is a <strong>population conditional expectation</strong>:</p>
+<p>[ J_{}(d,c) = _{} , ]</p>
+<p>where the expectation is taken over all shots in the reference population that begin from state ((d,c)).</p>
+<p>Now consider a particular golfer (i). They also have their own (unknown) value function:</p>
+<p>[ J_i(d,c) = , ]</p>
+<p>the expected number of strokes <em>for that golfer</em> to hole out from state ((d,c)). In general,</p>
+<p>[ J_i(d,c) ;; J_{}(d,c). ]</p>
+<p>This inequality is the entire issue in one line:</p>
+<ul>
+<li>Strokes gained uses (J_{}) to <strong>score shots</strong>.</li>
+<li>The player’s actual scoring future is governed by (J_i).</li>
+</ul>
+<p>If we use (J_{}) not just for descriptive scoring but as a model of how changes in the state (e.g., closer approaches, better leaves) translate to changes in <em>this golfer’s</em> scoring average, we are implicitly assuming that</p>
+<p>[ J_i(d,c) J_{}(d,c) (d,c), ]</p>
+<p>and that the way (J_i) changes with (d), (c), etc. is also similar to the reference player. For elite professionals this might be “not crazy” in aggregate; for ordinary golfers the assumption is often badly wrong.</p>
+<p>What follows is a more precise description of how that mismatch creates problems when interpreting strokes-gained improvements for individuals.</p>
+<hr>
+</section>
+<section id="gradients-of-expected-strokes-and-heterogeneous-skill-profiles" class="level2">
+<h2 class="anchored" data-anchor-id="gradients-of-expected-strokes-and-heterogeneous-skill-profiles">4. Gradients of expected strokes and heterogeneous skill profiles</h2>
+<section id="local-value-of-a-small-improvement" class="level3">
+<h3 class="anchored" data-anchor-id="local-value-of-a-small-improvement">4.1 Local value of a small improvement</h3>
+<p>Let (x) be a continuous state variable, for example, <em>distance to the hole</em> along the green surface. For simplicity, suppose the lie is fixed (putts on the green), so we write</p>
+<p>[ J_{}(x) J_i(x) ]</p>
+<p>for the benchmark and individual value functions, respectively.</p>
+<p>If a training intervention or strategy change causes the player to leave their first putt, on average, (x &lt; 0) metres closer to the hole, then (for small (x)) the change in the benchmark expectation is approximately</p>
+<p>[ J_{} (x), x, ]</p>
+<p>while the change in the player’s <em>actual</em> expectation is</p>
+<p>[ J_i (x), x. ]</p>
+<p>The <strong>strokes-gained logic</strong> implicitly uses (J_{}) as a surrogate for (J_i). This is only valid if the <em>gradient</em> (slope) of the player’s value function matches the gradient of the benchmark:</p>
+<p>[ (x) (x). ]</p>
+<p>There is no reason for this to hold in general.</p>
+<ul>
+<li>If a golfer is <strong>worse than average</strong> at short putts, then their chance of holing out deteriorates <em>more</em> rapidly with distance than the reference population’s probability. Their (J_i(x)) is <strong>steeper</strong> than (J_{}(x)) for short putts, so (|J_i / x|) is <em>larger</em>.</li>
+<li>Conversely, if a golfer is <strong>better than average</strong> from short range, their value function is <em>flatter</em> there.</li>
+</ul>
+<p>This immediately implies that the same improvement in <em>leave distance</em> ((x)) will produce different changes in expected score for different players, even though strokes-gained calculations give them the same credit.</p>
+</section>
+<section id="the-key-conceptual-error" class="level3">
+<h3 class="anchored" data-anchor-id="the-key-conceptual-error">4.2 The key conceptual error</h3>
+<p>When we say:</p>
+<blockquote class="blockquote">
+<p>“Improving average leave distances from 2.5 m to 2.0 m is worth ~0.05 strokes per putt because that’s what the strokes-gained table says,”</p>
+</blockquote>
+<p>we’re really saying:</p>
+<p>[ J_{} , ]</p>
+<p>and then smuggling in an extra assumption that</p>
+<p>[ J_i J_{}. ]</p>
+<p>That step is what is <em>not</em> justified without additional modeling of the individual. It is a classic case of using a <strong>population regression function</strong> as if it were an <strong>individual response curve</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="a-concrete-putting-example" class="level2">
+<h2 class="anchored" data-anchor-id="a-concrete-putting-example">5. A concrete putting example</h2>
+<p>Let’s make this more explicit with a toy model that still captures the real issue.</p>
+<section id="simple-two-putt-model" class="level3">
+<h3 class="anchored" data-anchor-id="simple-two-putt-model">5.1 Simple two-putt model</h3>
+<p>Suppose from some short-putt distance (x) (say 1–3 metres), the reference population has one-putt probability (p_{}(x)), so that:</p>
+<ul>
+<li>Probability of holing in one: (p_{}(x)).</li>
+<li>Probability of holing in two: (1 - p_{}(x)) (we ignore three-putts at this distance for simplicity).</li>
+</ul>
+<p>The benchmark expected strokes from this state is then</p>
+<p>[ J_{}(x) = 1p_{}(x) + 2 (1 - p_{}(x)) = 2 - p_{}(x). ]</p>
+<p>Differentiating:</p>
+<p>[ (x) = - (x). ]</p>
+<p>So the local value (per metre) of getting closer is controlled by how fast make probability increases as you move in.</p>
+<p>Now consider two golfers, both facing putts from distance (x):</p>
+<ul>
+<li>Golfer A: “good short putter,” with one-putt probability (p_A(x)).</li>
+<li>Golfer B: “poor short putter,” with one-putt probability (p_B(x)).</li>
+</ul>
+<p>Their individual value functions are</p>
+<p>[ J_A(x) = 2 - p_A(x), J_B(x) = 2 - p_B(x), ]</p>
+<p>with local slopes</p>
+<p>[ (x) = - p_A’(x), (x) = - p_B’(x). ]</p>
+<p>For a <em>good</em> putter A, (p_A(x)) is already high near the hole and typically changes more slowly with distance; (p_A’(x)) (in magnitude) is moderate. For a <em>poor</em> short putter B, (p_B(x)) is lower and often changes more sharply with distance; (|p_B’(x)|) is larger.</p>
+<p>Now suppose improved approach play reduces their typical leave distance from (x) to (x + x) with (x &lt; 0) (closer to the hole) by the same amount for both golfers. Then, for small (x),</p>
+<p>[ J_A -p_A’(x) x, J_B -p_B’(x) x. ]</p>
+<p>If (|p_B’(x)| &gt; |p_A’(x)|), the poor short putter B gets a <strong>larger reduction in expected strokes per putt</strong> from the same distance improvement. In plain language:</p>
+<blockquote class="blockquote">
+<p>A player who is bad from short range gains <em>more</em> (in real scoring terms) from leaving the ball closer than a good short putter does, even though the strokes-gained benchmark assigns the same value to the change in leave distance.</p>
+</blockquote>
+<p>However, the strokes-gained credit for the approach that yielded the closer putt is based on</p>
+<p>[ J_{} - p_{}’(x),x, ]</p>
+<p>which is common to both players. So:</p>
+<ul>
+<li>For the poor short putter, strokes gained <strong>understates</strong> the actual score benefit of leaving the ball closer.</li>
+<li>For the strong short putter, strokes gained <strong>overstates</strong> the benefit.</li>
+</ul>
+<p>Strokes-gained putting numbers will still tell you who putted better <em>relative to the benchmark</em>, but they are not a direct estimator of how many strokes you will actually save by improving either your approach proximity or your short-putt skill.</p>
+</section>
+<section id="when-gaining-0.3-strokes-putting-is-misinterpreted" class="level3">
+<h3 class="anchored" data-anchor-id="when-gaining-0.3-strokes-putting-is-misinterpreted">5.2 When “gaining 0.3 strokes putting” is misinterpreted</h3>
+<p>When analysts say “Player X improved their strokes-gained putting by 0.3 per round this season,” they are reporting:</p>
+<p>[ ( g_i ), ]</p>
+<p>which is a change in <em>relative performance</em> versus the benchmark. This can be driven by many things:</p>
+<ul>
+<li>better holing from specific distances,</li>
+<li>better lag putting that changes the distribution of second-putt distances,</li>
+<li>different course sets, green speeds, or environmental conditions.</li>
+</ul>
+<p>The key: this 0.3 is a <strong>change in the sum of (J_{}(x_) - J_{}(x_) - 1)</strong> over all putts—not a direct estimate of the causal impact of a particular mechanical improvement on the player’s own (J_i).</p>
+<p>Without a model for how (J_i) changed, inferring “0.3 strokes gained putting → 0.3 strokes better scoring <em>because of putting mechanics</em>” is a leap.</p>
+<hr>
+</section>
+</section>
+<section id="extension-to-other-parts-of-the-game" class="level2">
+<h2 class="anchored" data-anchor-id="extension-to-other-parts-of-the-game">6. Extension to other parts of the game</h2>
+<p>Exactly the same logic applies off the green.</p>
+<section id="driving-distance-and-the-how-much-is-10-yards-worth-question" class="level3">
+<h3 class="anchored" data-anchor-id="driving-distance-and-the-how-much-is-10-yards-worth-question">6.1 Driving distance and the “how much is 10 yards worth?” question</h3>
+<p>Analyses that estimate the value of +10 yards of driving typically work by evaluating how much the benchmark function (J_{}) decreases when moving the starting point of the second shot 10 yards closer, conditional on lie type.</p>
+<p>Formally, if fairway distance to the hole is (d), the estimated benefit of 10 extra yards is</p>
+<p>[ J_{}(d) J_{}(d, ) - J_{}(d - 10, ). ]</p>
+<p>To interpret this as “Golfer A gains X strokes per round from being 10 yards longer than Golfer B,” you must assume:</p>
+<ol type="1">
+<li>A and B are <strong>equally skilled at approach play and putting</strong>, so that their individual value functions (J_A) and (J_B) match (J_{}) at those distances.</li>
+<li>A and B have similarly shaped <strong>dispersion patterns</strong> (fairway vs rough, hazards, etc.), or you explicitly account for different lie distributions.</li>
+</ol>
+<p>If Golfer A is substantially better from long irons than the reference player, and Golfer B is worse, the actual marginal value of moving both of them 10 yards closer is not the same as the benchmark calculation. The reference curve is computing something like an <strong>average treatment effect</strong> (ATE) of distance across the population; the coach really cares about a <strong>conditional individual treatment effect</strong> (CITE) for the specific golfer.</p>
+</section>
+<section id="approach-play-and-wedge-distance-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="approach-play-and-wedge-distance-optimization">6.2 Approach play and wedge distance optimization</h3>
+<p>“Optimal wedge distance” discussions often use baseline curves of (J_{}(d,)) versus (d) to argue about whether a player should lay up to, say, 90 yards versus 50 yards.</p>
+<p>Again, the decision is being evaluated with the <strong>population expectation surface</strong>. But individuals vary enormously in:</p>
+<ul>
+<li>spin control,</li>
+<li>trajectory consistency,</li>
+<li>performance from partial wedges vs fuller swings.</li>
+</ul>
+<p>If a particular player is unusually strong at 50-yard shots and unusually weak at 90-yard shots, their individual (J_i(d,)) is shaped differently:</p>
+<p>[ J_i(50,) - J_i(90,) ;; J_{}(50,) - J_{}(90,). ]</p>
+<p>Using the reference surface to prescribe “optimal” lay-up distances can therefore systematically misguide a player whose skill profile is atypical.</p>
+</section>
+<section id="around-the-green-play" class="level3">
+<h3 class="anchored" data-anchor-id="around-the-green-play">6.3 Around-the-green play</h3>
+<p>Around the green, the same phenomenon appears in:</p>
+<ul>
+<li>choice of shot type (chip vs pitch vs putter from fringe),</li>
+<li>aggressiveness vs conservativeness,</li>
+<li>target selection relative to hazards.</li>
+</ul>
+<p>The strokes-gained decomposition will correctly attribute relative performance to different shot types <em>on average</em>, but the marginal value of improving, say, bunker play depends on how that interacts with the player’s proximal putting skill and their existing dispersion pattern out of sand. The benchmark function blends all that over the population.</p>
+<hr>
+</section>
+</section>
+<section id="statistical-perspective-ecological-fallacy-and-heterogeneity" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-perspective-ecological-fallacy-and-heterogeneity">7. Statistical perspective: ecological fallacy and heterogeneity</h2>
+<p>The core statistical issue is that strokes gained relies on a <strong>single regression surface</strong> (J_{}(d,c)) estimated from a pooled population. In causal-inference language:</p>
+<ul>
+<li>(J_{}) approximates the <strong>average potential outcome</strong> surface across players.</li>
+<li>Player-specific surfaces (J_i) are random draws from a (usually unmodeled) distribution of skill profiles.</li>
+</ul>
+<p>Using (J_{}) to make forward-looking statements about interventions on a specific individual implicitly assumes away <strong>heterogeneity of treatment effects</strong>.</p>
+<p>This is analogous to:</p>
+<ul>
+<li>Taking a regression of medical outcomes on dosage for a population, then assuming the same dose-response curve holds for every patient.</li>
+<li>Using an “expected points added” (EPA) model in another sport as if the marginal value of a play call were the same for all teams, regardless of their personnel and scheme.</li>
+</ul>
+<p>From a statistical standpoint, we can view the standard strokes-gained system as estimating:</p>
+<p>[ J_{}(d,c) = _i , ]</p>
+<p>where the expectation is taken over players (i) in the reference population. The gradients, second derivatives, and other local properties of (J_{}) are then <strong>averages</strong> of the corresponding properties of the individual surfaces.</p>
+<p>But the coaching question “If this player improves factor X, what happens to their scoring?” is about (J_i), not about (_i[J_i]).</p>
+<p>This is precisely where ecological fallacy comes in: inferring individual-level behavior or treatment effects from group-level averages.</p>
+<section id="what-a-more-rigorous-model-would-look-like" class="level3">
+<h3 class="anchored" data-anchor-id="what-a-more-rigorous-model-would-look-like">7.1 What a more rigorous model would look like</h3>
+<p>A statistically coherent approach to individualized strokes-gained analysis would model:</p>
+<p>[ J_i(d,c) = J_{}(d,c) + _i(d,c), ]</p>
+<p>where (_i(d,c)) is a player-specific deviation surface. A hierarchical (multilevel) model could:</p>
+<ul>
+<li>shrink (_i) toward zero where data for player (i) are sparse,</li>
+<li>allow for structured variation, e.g., players differ mainly along a small number of latent dimensions (long game, wedge play, short putts, etc.),</li>
+<li>estimate player-specific gradients (J_i / d) that better reflect their own response to distance.</li>
+</ul>
+<p>With such a model, we could talk meaningfully about the causal effect of, say, improving proximity from 15–25 feet on <em>this</em> player’s expected scoring, instead of relying on (J_{}) as a proxy.</p>
+<hr>
+</section>
+</section>
+<section id="practical-implications-for-coaching-and-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="practical-implications-for-coaching-and-analysis">8. Practical implications for coaching and analysis</h2>
+<p>Given these limitations, how should science-based coaches and analysts use strokes gained responsibly?</p>
+<section id="use-strokes-gained-for-what-it-is-excellent-at" class="level3">
+<h3 class="anchored" data-anchor-id="use-strokes-gained-for-what-it-is-excellent-at">8.1 Use strokes gained for what it is excellent at</h3>
+<p>Strokes gained is outstanding for:</p>
+<ul>
+<li><strong>Performance decomposition</strong>: breaking down scoring into off-the-tee, approach, around-the-green, and putting contributions relative to a reference field.</li>
+<li><strong>Comparisons within a peer group</strong>: ranking players against each other within the same dataset and course conditions.</li>
+<li><strong>Tracking relative changes over time</strong>: seeing whether a player’s performance in a given facet is improving or declining relative to the same benchmark.</li>
+</ul>
+<p>For these uses, the fact that (J_{}) is population-based is a feature, not a bug.</p>
+</section>
+<section id="be-explicit-when-making-causal-statements" class="level3">
+<h3 class="anchored" data-anchor-id="be-explicit-when-making-causal-statements">8.2 Be explicit when making <em>causal</em> statements</h3>
+<p>Any time a statement starts to sound like:</p>
+<ul>
+<li>“If you improve X by Y, you’ll gain Z strokes,” or</li>
+<li>“This practice intervention is worth Q strokes per round,”</li>
+</ul>
+<p>you are no longer in purely descriptive territory. At that point:</p>
+<ol type="1">
+<li>Recognize that strokes-gained tables are giving you (J_{}), not (J_i).</li>
+<li>Ask how plausible it is that the player’s skill profile matches the benchmark assumptions underlying that table.</li>
+<li>Where feasible, estimate <strong>player-specific</strong> baselines from the player’s own shot-level data (even if noisy), possibly with hierarchical shrinkage.</li>
+</ol>
+</section>
+<section id="pay-attention-to-interaction-effects" class="level3">
+<h3 class="anchored" data-anchor-id="pay-attention-to-interaction-effects">8.3 Pay attention to interaction effects</h3>
+<p>Because all parts of the game interact through the state transitions, the value of improving any aspect (e.g., proximity on approaches) is conditional on others (e.g., putting performance from the resulting distances).</p>
+<ul>
+<li>A lag-putting improvement that changes the distribution of second-putt distances will be worth <em>more</em> for a player who is weak from 4–6 feet than for one who is elite from that range.</li>
+<li>A driving-distance gain is worth more to a player who is above average with mid-irons than to one who gains little from slightly shorter approaches.</li>
+</ul>
+<p>The reference (J_{}) integrates over these interactions <em>on average</em>; it does not know the player’s individual strengths and weaknesses.</p>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">9. Conclusion</h2>
+<p>Strokes gained is, mathematically, a value function for an <strong>average player</strong> in a specified reference population. It assigns a score to each shot by comparing the realized state transition to what that average player would experience. For comparing players and decomposing performance, this is extremely powerful.</p>
+<p>However, when that same machinery is used to infer the <strong>individual causal impact</strong> of changes in technique, practice, or strategy, an important assumption is often left unstated: that the individual golfer’s conditional expectation surface (J_i) looks enough like the benchmark (J_{}) that the gradients and local changes calculated from (J_{}) are good proxies for those of (J_i).</p>
+<p>In reality:</p>
+<ul>
+<li>Golfers differ systematically in their skill profiles across distances and shot types.</li>
+<li>The same physical or strategic change can have different scoring impacts for different players, even when strokes gained assigns identical value to the resulting shot patterns.</li>
+<li>Interpreting changes in strokes gained as direct, player-specific causal effects is a misappropriation of a population-level model to an individual case.</li>
+</ul>
+<p>For a science-based golf community, the way forward is not to discard strokes gained but to contextualize it:</p>
+<ul>
+<li>Keep using it as a <strong>descriptive</strong> and <strong>comparative</strong> tool.</li>
+<li>Treat causal claims about individual players as requiring <strong>additional modeling</strong>—ideally player-specific or hierarchical models of expected strokes to hole out.</li>
+<li>Acknowledge the difference between “average effect according to the benchmark” and “effect for this player with this particular skill profile.”</li>
+</ul>
+<p>Or, less formally: the “average player” that strokes gained is based on is a useful fictitious character—but nobody on your lesson tee is actually that golfer.</p>
+<hr>
+</section>
+<section id="references-informal" class="level2">
+<h2 class="anchored" data-anchor-id="references-informal">References (informal)</h2>
+<ul>
+<li>Broadie, M. (2011). <em>Assessing Golfer Performance on the PGA TOUR.</em> Working paper, Columbia University.</li>
+<li>Broadie, M. (2014). <em>Every Shot Counts.</em> Gotham Books.</li>
+<li>DataGolf. “How much is 10 yards worth?” Various online resources on marginal distance value.</li>
+<li>General literature on expected value functions, dynamic programming, and hierarchical modeling for sports performance.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
+
+</body>
+
+</html>
+</script></body></html>

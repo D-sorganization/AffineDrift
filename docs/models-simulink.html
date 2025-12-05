@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="AffineDrift">
 <meta name="description" content="Control-affine system models and simulations in Matlab Simulink">
 
 <title>Matlab Simulink Models – AffineDrift</title>
@@ -43,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7679180556b434b96aa89fc442b8c46f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,12 +70,107 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script type="text/javascript">
+window.MathJax = {
+  loader: {
+    load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
+      const rssLink = document.createElement('a');
+      rssLink.href = '/feed.xml';
+      rssLink.className = 'rss-feed-link';
+      rssLink.title = 'RSS Feed';
+      rssLink.setAttribute('aria-label', 'RSS Feed');
+      rssLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+        </svg>
+      `;
+      navbarTools.appendChild(rssLink);
+    }
+  });
+</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -90,8 +184,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo light-content">
-    <img src="./logo/Logo Transparent/1.png" alt="AffineDrift logo" class="navbar-logo dark-content">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -103,26 +197,161 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Home</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="./drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="./articles.html" aria-current="page"> 
-<span class="menu-text">Articles</span></a>
+        <li>
+    <a class="dropdown-item" href="./articles.html">
+ <span class="dropdown-text">Articles</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./resources.html"> 
-<span class="menu-text">Resources</span></a>
+        <li>
+    <a class="dropdown-item" href="./research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
+        <li>
+    <a class="dropdown-item" href="./book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./contact.html"> 
-<span class="menu-text">Contact</span></a>
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="./models.html">
+ <span class="dropdown-text">Models Home</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-pinnochio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="./resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
+ <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
+ <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
+ <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
+ <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
+ <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/myosim/myosim">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="./contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -134,11 +363,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content page-columns page-full column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -154,12 +381,6 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-title-meta column-page">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>AffineDrift </p>
-          </div>
-  </div>
     
   
     
@@ -170,19 +391,19 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="article-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="article-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Models</h3>
+          <h3 class="sidebar-heading anchored">Models</h3>
           <ul class="sidebar-links">
             <li><a href="models.html">Models Home</a></li>
             <li><a href="models-simulink.html" class="active">Matlab Simulink</a></li>
             <li><a href="models-mujoco.html">MuJoCo</a></li>
             <li><a href="models-drake.html">Drake</a></li>
-            <li><a href="models-pinnochio.html">Pinocchio</a></li>
+            <li><a href="models-pinocchio.html">Pinocchio</a></li>
             <li><a href="models-pendulum.html">Pendulum</a></li>
             <li><a href="models-opensim.html">OpenSim</a></li>
             <li><a href="models-myosim.html">MyoSim</a></li>
@@ -205,9 +426,9 @@ ul.task-list li input[type="checkbox"] {
       </div>
 
           <div id="documentation" class="category-section">
-            <h3 class="category-title">Model Documentation</h3>
+            <h3 class="category-title anchored">Model Documentation</h3>
         <div class="article-list-item">
-          <h3><a href="articles/theory-part5.html">Theory Part 5 &mdash; Simulink Model Documentation</a></h3>
+          <h3 class="anchored"><a href="articles/theory-part5.html">Theory Part 5 — Simulink Model Documentation</a></h3>
           <p>Comprehensive documentation of the Simulink implementation, including numerical routines, 
           model structure, and supporting technical notes. This article provides detailed information 
           on how the control-affine framework is implemented in Simulink.</p>
@@ -215,20 +436,20 @@ ul.task-list li input[type="checkbox"] {
       </div>
 
           <div id="available-models" class="category-section">
-            <h3 class="category-title">Available Models</h3>
+            <h3 class="category-title anchored">Available Models</h3>
         <div class="article-list-item">
-          <h3>Golf Swing Dynamics Model</h3>
+          <h3 class="anchored">Golf Swing Dynamics Model</h3>
           <p>Full multibody dynamics model of the golfer-club system implemented as a control-affine 
           system. Includes drift/input decomposition, zero torque and zero velocity counterfactuals, 
           and analysis tools.</p>
         </div>
         <div class="article-list-item">
-          <h3>Pendulum Analog Models</h3>
+          <h3 class="anchored">Pendulum Analog Models</h3>
           <p>Simplified pendulum models that serve as analogs for understanding golf swing dynamics, 
           including single and double pendulum implementations with control inputs.</p>
         </div>
         <div class="article-list-item">
-          <h3>Drift-Input Decomposition Tools</h3>
+          <h3 class="anchored">Drift-Input Decomposition Tools</h3>
           <p>Simulink blocks and subsystems for performing drift-input decomposition analysis, 
           computing zero torque and zero velocity counterfactuals, and analyzing the separation 
           of passive dynamics from deliberate control.</p>
@@ -236,29 +457,29 @@ ul.task-list li input[type="checkbox"] {
       </div>
 
           <div id="software-resources" class="category-section">
-            <h3 class="category-title">Software & Resources</h3>
+            <h3 class="category-title anchored">Software &amp; Resources</h3>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/products/simulink.html" target="_blank" rel="noopener">Matlab Simulink Official Website</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/products/simulink.html" target="_blank" rel="noopener">Matlab Simulink Official Website</a></h3>
           <p>Visit the official Matlab Simulink website for product information, features, and capabilities.</p>
         </div>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/help/simulink/" target="_blank" rel="noopener">Simulink Documentation</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/help/simulink/" target="_blank" rel="noopener">Simulink Documentation</a></h3>
           <p>Comprehensive Simulink documentation including user guides, examples, and API reference.</p>
         </div>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/help/simulink/getting-started-with-simulink.html" target="_blank" rel="noopener">Getting Started with Simulink</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/help/simulink/getting-started-with-simulink.html" target="_blank" rel="noopener">Getting Started with Simulink</a></h3>
           <p>Tutorials and guides for getting started with Simulink, including basic modeling and simulation concepts.</p>
         </div>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/academia/student-center.html" target="_blank" rel="noopener">Matlab Student Licensing</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/academia/student-center.html" target="_blank" rel="noopener">Matlab Student Licensing</a></h3>
           <p>Information about student licensing options for Matlab and Simulink.</p>
         </div>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/support.html" target="_blank" rel="noopener">Matlab Support</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/support.html" target="_blank" rel="noopener">Matlab Support</a></h3>
           <p>Access Matlab support resources, including technical support, documentation, and community forums.</p>
         </div>
         <div class="article-list-item">
-          <h3><a href="https://www.mathworks.com/matlabcentral/" target="_blank" rel="noopener">Matlab Central</a></h3>
+          <h3 class="anchored"><a href="https://www.mathworks.com/matlabcentral/" target="_blank" rel="noopener">Matlab Central</a></h3>
           <p>Matlab Central community with file exchange, answers, and discussions for Matlab and Simulink users.</p>
         </div>
       </div>
@@ -275,7 +496,7 @@ ul.task-list li input[type="checkbox"] {
       <!-- Right Sidebar: Recent Models History -->
       <aside class="right-sidebar">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Models</h3>
+          <h3 class="sidebar-heading anchored">Recent Models</h3>
           <ul class="sidebar-links" id="models-history-list">
             <li class="history-empty">No recent models yet</li>
           </ul>
@@ -296,7 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
     'models-simulink.html',
     'models-mujoco.html',
     'models-drake.html',
-    'models-pinnochio.html',
+    'models-pinocchio.html',
     'models-pendulum.html',
     'models-opensim.html',
     'models-myosim.html'
@@ -332,72 +553,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const articlesHistoryList = document.getElementById('articles-history-list');
-  if (!articlesHistoryList) return;
-
-  function updateArticlesHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_articles_history') || '[]');
-    
-    // Track individual article pages - get full pathname to properly detect articles/
-    const currentPath = window.location.pathname;
-    const currentUrl = currentPath.split('/').pop() || 'articles.html';
-    const isArticlePage = currentPath.includes('/articles/') || currentUrl === 'articles.html';
-    
-    // List of article pages for validation
-    const ARTICLE_PAGES = [
-      'articles.html',
-      'theory-part1.html',
-      'theory-part2.html',
-      'theory-part3.html',
-      'theory-part4.html',
-      'theory-part5.html',
-      'inverse-dynamics.html',
-      'wrist-universal-joint.html',
-      'nonlinear-control-insights.html',
-      'drift-components-wrench-double-pendulum.html',
-      'secondary-axis-stability.html',
-      'controllability-drift-ratio.html',
-      'strokes-gained-limitations.html',
-      'superposition.html',
-      'screw-theory-reference.html',
-      'null-space-constraint-jacobian.html',
-      'lagrangian-reference.html',
-      'inverse-dynamics-inference.html',
-      'force-mobility-matrices.html',
-      'affine-nature-golf-swing.html',
-      'appendix-applications.html'
-    ];
-    
-    if (isArticlePage || ARTICLE_PAGES.includes(currentUrl)) {
-      const currentPage = {
-        title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-        url: currentPath.includes('/articles/') ? 'articles/' + currentUrl : currentUrl
-      };
-
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_articles_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      articlesHistoryList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
-      return;
-    }
-
-    articlesHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
-  }
-
-  updateArticlesHistory();
-});
-</script>
-
-
-
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -409,6 +564,68 @@ document.addEventListener('DOMContentLoaded', function() {
       icon: icon
     };
     anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
         var filterRegex = new RegExp("https:\/\/affinedrift\.com");
@@ -739,9 +956,31 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
+<footer>
+  <div class="container">
+    <p>© 2025. Affine Drift Effin Matters.</p>
+  </div>
+</footer>
 <script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
 
+</body>
 
-
-
-</body></html>
+</html>
+</script></body></html>
