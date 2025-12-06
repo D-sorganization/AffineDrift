@@ -1,11 +1,24 @@
+#!/usr/bin/env python3
+"""Verify image URLs in markdown and HTML files."""
+
 import os
 import re
 import urllib.request
 import urllib.error
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+from typing import List, Optional
 
-def extract_image_urls(content):
+
+def extract_image_urls(content: str) -> List[str]:
+    """Extract all image URLs from markdown and HTML content.
+    
+    Args:
+        content: The file content to search for image URLs.
+        
+    Returns:
+        A list of image URLs found in the content.
+    """
     # Match HTML img tags
     html_matches = re.findall(r'<img\s+[^>]*src=["\']([^"\']+)["\']', content)
 
@@ -14,7 +27,17 @@ def extract_image_urls(content):
 
     return html_matches + md_matches
 
-def check_url(url, file_path):
+
+def check_url(url: str, file_path: Path) -> Optional[str]:
+    """Check if a URL is accessible.
+    
+    Args:
+        url: The URL to check.
+        file_path: Path to the file containing the URL.
+        
+    Returns:
+        None if the URL is valid, otherwise a string describing the error.
+    """
     if url.startswith('http'):
         try:
             req = urllib.request.Request(url, method='HEAD')
@@ -48,7 +71,16 @@ def check_url(url, file_path):
             return f"BROKEN (Local): {url} in {file_path} (Resolved to: {local_path} or {root_path})"
         return None
 
-def process_file(file_path):
+
+def process_file(file_path: Path) -> List[str]:
+    """Process a file and check all image URLs.
+    
+    Args:
+        file_path: Path to the file to process.
+        
+    Returns:
+        A list of error messages for broken image URLs found in the file.
+    """
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
@@ -64,7 +96,9 @@ def process_file(file_path):
 
     return results
 
-def main():
+
+def main() -> None:
+    """Main function to verify images in all relevant files."""
     files = list(Path('.').rglob('*.qmd')) + list(Path('.').rglob('*.html'))
     # Filter out _site or docs if we are checking source
     files = [f for f in files if '_site' not in str(f) and 'docs' not in str(f)]
@@ -85,6 +119,7 @@ def main():
         print("No broken images found!")
     else:
         print(f"Found {len(all_broken)} broken image references.")
+
 
 if __name__ == "__main__":
     main()
