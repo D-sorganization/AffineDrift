@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
-import os
 import re
-import urllib.request
 import urllib.error
-from pathlib import Path
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
-from typing import Optional
+from pathlib import Path
 
 
 def extract_image_urls(content: str) -> list[str]:
@@ -28,13 +26,13 @@ def extract_image_urls(content: str) -> list[str]:
     return html_matches + md_matches
 
 
-def check_url(url: str, file_path: Path) -> Optional[str]:
+def check_url(url: str, file_path: Path) -> str | None:
     """Check if a URL is accessible.
-    
+
     Args:
         url: The URL to check.
         file_path: Path to the file containing the URL.
-        
+
     Returns:
         None if the URL is valid, otherwise a string describing the error.
     """
