@@ -34,7 +34,7 @@ def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str |
     description = desc_match.group(1) if desc_match else ""
 
     # Extract HTML block
-    html_match = re.search(r'```{=html}\n(.*?)\n```', content, re.DOTALL)
+    html_match = re.search(r'```{=html}\s*\n(.*?)\n\s*```', content, re.DOTALL)
     if not html_match:
         return title, description, None
 
@@ -150,7 +150,7 @@ def main() -> None:
         'models-myosim.qmd',
         'models-opensim.qmd',
         'models-pendulum.qmd',
-        'models-pinnochio.qmd',  # Note: File uses incorrect spelling but matches actual source file
+        'models-pinocchio.qmd',
         'models-simulink.qmd',
         'resources-books.qmd',
         'resources-datasets.qmd',
