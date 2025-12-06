@@ -7,15 +7,15 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Optional
+from typing import Optional
 
 
-def extract_image_urls(content: str) -> List[str]:
+def extract_image_urls(content: str) -> list[str]:
     """Extract all image URLs from markdown and HTML content.
-    
+
     Args:
         content: The file content to search for image URLs.
-        
+
     Returns:
         A list of image URLs found in the content.
     """
@@ -72,16 +72,16 @@ def check_url(url: str, file_path: Path) -> Optional[str]:
         return None
 
 
-def process_file(file_path: Path) -> List[str]:
+def process_file(file_path: Path) -> list[str]:
     """Process a file and check all image URLs.
-    
+
     Args:
         file_path: Path to the file to process.
-        
+
     Returns:
         A list of error messages for broken image URLs found in the file.
     """
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(file_path, encoding='utf-8') as f:
         content = f.read()
 
     urls = extract_image_urls(content)
