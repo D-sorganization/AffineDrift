@@ -124,7 +124,8 @@ jobs:
       - name: Verify render output
         run: |
           if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
+            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null | tr -d '"')
+            OUTPUT_DIR=${OUTPUT_DIR:-_site}
             echo "Checking output directory: ${OUTPUT_DIR}"
             if [ -d "$OUTPUT_DIR" ]; then
               echo "✓ Output directory exists"
@@ -148,7 +149,8 @@ jobs:
         run: |
           echo "Verifying required files exist..."
           if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
+            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null | tr -d '"')
+            OUTPUT_DIR=${OUTPUT_DIR:-_site}
             echo "Detected Quarto project; using output directory: ${OUTPUT_DIR}"
           else
             OUTPUT_DIR='.'
@@ -165,7 +167,8 @@ jobs:
         id: publish-dir
         run: |
           if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
+            OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null | tr -d '"')
+            OUTPUT_DIR=${OUTPUT_DIR:-_site}
           else
             OUTPUT_DIR='.'
           fi
