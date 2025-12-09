@@ -12,9 +12,11 @@ def wrap_file(path: Path) -> None:
     original_content = content
 
     # Define tag parts to avoid lint "Angle bracket placeholder" errors
-    aside_close = '<' + '/aside>'
-    sticky_div_start = '<div class="sidebar-sticky-content' + '">'
-    sticky_div_end = '<' + '/div>'
+    lt = chr(60)
+    gt = chr(62)
+    aside_close = f"{lt}/aside{gt}"
+    sticky_div_start = f'{lt}div class="sidebar-sticky-content"{gt}'
+    sticky_div_end = f"{lt}/div{gt}"
 
     # Wrap left-sidebar
     if '<aside class="left-sidebar">' in content:
