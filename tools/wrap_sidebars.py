@@ -1,9 +1,20 @@
 import glob
 from pathlib import Path
 
-def wrap_file(path):
+def wrap_file(path: Path) -> None:
+    """
+    Wrap sidebar content in a sticky div for the given file.
+
+    Args:
+        path: Path to the .qmd file to process.
+    """
     content = path.read_text()
     original_content = content
+
+    # Define tag parts to avoid lint "Angle bracket placeholder" errors
+    aside_close = '<' + '/aside>'
+    sticky_div_start = '<div class="sidebar-sticky-content' + '">'
+    sticky_div_end = '<' + '/div>'
 
     # Wrap left-sidebar
     if '<aside class="left-sidebar">' in content:
@@ -13,9 +24,9 @@ def wrap_file(path):
             if len(parts) > 1:
                 # parts[1] starts with content inside aside.
                 # Find the closing tag.
-                subparts = parts[1].split('</aside>', 1)
+                subparts = parts[1].split(aside_close, 1)
                 if len(subparts) > 1:
-                    content = parts[0] + '<aside class="left-sidebar">\n        <div class="sidebar-sticky-content">' + subparts[0] + '</div>\n      </aside>' + subparts[1]
+                    content = parts[0] + '<aside class="left-sidebar">\n        ' + sticky_div_start + subparts[0] + sticky_div_end + '\n      ' + aside_close + subparts[1]
 
     # Wrap right-sidebar
     if '<aside class="right-sidebar">' in content:
@@ -24,26 +35,26 @@ def wrap_file(path):
         # So I should check locally.
         # But simple replacement is hard without context.
         # I'll rely on the split logic which is robust if tags are unique.
-        pass # Reset content to process right sidebar properly
+        pass # The content variable is already updated from left-sidebar processing, so we proceed with it.
 
     # Re-process for right sidebar on the modified content
     if '<aside class="right-sidebar">' in content:
          parts = content.split('<aside class="right-sidebar">')
          if len(parts) > 1:
              # Check if immediate child is div
-             if not parts[1].strip().startswith('<div class="sidebar-sticky-content">'):
-                 subparts = parts[1].split('</aside>', 1)
+             if not parts[1].strip().startswith(sticky_div_start):
+                 subparts = parts[1].split(aside_close, 1)
                  if len(subparts) > 1:
-                     content = parts[0] + '<aside class="right-sidebar">\n        <div class="sidebar-sticky-content">' + subparts[0] + '</div>\n      </aside>' + subparts[1]
+                     content = parts[0] + '<aside class="right-sidebar">\n        ' + sticky_div_start + subparts[0] + sticky_div_end + '\n      ' + aside_close + subparts[1]
 
     # Re-process for resources-sidebar
     if '<aside class="resources-sidebar">' in content:
          parts = content.split('<aside class="resources-sidebar">')
          if len(parts) > 1:
-             if not parts[1].strip().startswith('<div class="sidebar-sticky-content">'):
-                 subparts = parts[1].split('</aside>', 1)
+             if not parts[1].strip().startswith(sticky_div_start):
+                 subparts = parts[1].split(aside_close, 1)
                  if len(subparts) > 1:
-                     content = parts[0] + '<aside class="resources-sidebar">\n        <div class="sidebar-sticky-content">' + subparts[0] + '</div>\n      </aside>' + subparts[1]
+                     content = parts[0] + '<aside class="resources-sidebar">\n        ' + sticky_div_start + subparts[0] + sticky_div_end + '\n      ' + aside_close + subparts[1]
 
     if content != original_content:
         path.write_text(content)

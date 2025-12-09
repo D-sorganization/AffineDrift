@@ -139,7 +139,8 @@ body .standard-page-layout .right-sidebar {
 }
 
 .left-sidebar,
-.right-sidebar {
+.right-sidebar,
+.resources-sidebar {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
@@ -152,8 +153,9 @@ body .standard-page-layout .right-sidebar {
 }
 
 /* Make content inside sidebars sticky */
-.left-sidebar > *,
-.right-sidebar > * {
+.left-sidebar > .sidebar-sticky-content,
+.right-sidebar > .sidebar-sticky-content,
+.resources-sidebar > .sidebar-sticky-content {
     position: -webkit-sticky;
     position: sticky;
     top: calc(var(--header-offset) + 1rem);
@@ -364,12 +366,8 @@ body .standard-page-layout .right-sidebar {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
-    position: sticky;
-    top: var(--header-offset);
-    align-self: flex-start;
-    max-height: calc(100vh - var(--scroll-offset));
-    overflow-y: auto;
     border-radius: 4px;
+    /* Height and sticky behavior handled by shared rule */
 }
 
 .resources-nav-heading {

@@ -159,6 +159,7 @@ def main() -> None:
         'resources-software.qmd',
         'resources-videos.qmd',
         'resources-websites.qmd',
+        'resources.qmd',
     ]
 
     # Process articles.qmd LAST to avoid corrupting the template
