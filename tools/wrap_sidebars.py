@@ -28,14 +28,7 @@ def wrap_file(path: Path) -> None:
                 if len(subparts) > 1:
                     content = parts[0] + '<aside class="left-sidebar">\n        ' + sticky_div_start + subparts[0] + sticky_div_end + '\n      ' + aside_close + subparts[1]
 
-    # Wrap right-sidebar
-    if '<aside class="right-sidebar">' in content:
-        # Check if right sidebar needs wrapping (it might be wrapped even if left is not, or vice versa, but checking content is safer)
-        # However, checking 'sidebar-sticky-content' globally might skip right sidebar if left is wrapped.
-        # So I should check locally.
-        # But simple replacement is hard without context.
-        # I'll rely on the split logic which is robust if tags are unique.
-        pass # The content variable is already updated from left-sidebar processing, so we proceed with it.
+
 
     # Re-process for right sidebar on the modified content
     if '<aside class="right-sidebar">' in content:
