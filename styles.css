@@ -115,27 +115,53 @@ h4, h5, h6 {
 /* 3-Column Layout System */
 .standard-page-layout {
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width);
+    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width) !important;
     gap: var(--sidebar-gap);
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding-top: 1rem;
 }
 
+/* Explicit Grid Placement - High specificity to override Quarto defaults */
+#quarto-content .standard-page-layout .left-sidebar,
+body .standard-page-layout .left-sidebar {
+    grid-column: 1 !important;
+}
+
+#quarto-content .standard-page-layout .main-content-area,
+body .standard-page-layout .main-content-area {
+    grid-column: 2 !important;
+}
+
+#quarto-content .standard-page-layout .right-sidebar,
+body .standard-page-layout .right-sidebar {
+    grid-column: 3 !important;
+}
+
 .left-sidebar,
-.right-sidebar {
+.right-sidebar,
+.resources-sidebar {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
+    /* Stretch sidebars to full height */
+    align-self: stretch;
+    height: auto;
+    min-height: 100%;
+    border-radius: 4px;
+    overflow-x: hidden;
+}
+
+/* Make content inside sidebars sticky */
+.left-sidebar > *,
+.right-sidebar > *,
+.resources-sidebar > * {
     position: -webkit-sticky;
     position: sticky;
-    top: var(--header-offset);
-    align-self: flex-start;
-    height: fit-content;
-    max-height: calc(100vh - var(--scroll-offset));
+    top: calc(var(--header-offset) + 1rem);
+    max-height: calc(100vh - var(--header-offset) - 3rem);
     overflow-y: auto;
     overflow-x: hidden;
-    border-radius: 4px;
 }
 
 .main-content-area {
@@ -340,12 +366,8 @@ h4, h5, h6 {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
-    position: sticky;
-    top: var(--header-offset);
-    align-self: flex-start;
-    max-height: calc(100vh - var(--scroll-offset));
-    overflow-y: auto;
     border-radius: 4px;
+    /* Height and sticky behavior handled by shared rule */
 }
 
 .resources-nav-heading {
@@ -795,7 +817,16 @@ body.no-scroll {
    Section Styles
    =========================== */
 section {
-    padding: 5rem 0;
+    padding: 2rem 0;
+    margin-top: 0;
+}
+
+/* Reduce spacing for header overlap */
+#title-block-header {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.quarto-title-meta {
     margin-top: 0;
 }
 
@@ -1531,6 +1562,15 @@ img[loading="lazy"].loaded {
     .standard-page-layout {
         grid-template-columns: 1fr;
         gap: 1rem;
+    }
+
+    #quarto-content .standard-page-layout .left-sidebar,
+    body .standard-page-layout .left-sidebar,
+    #quarto-content .standard-page-layout .main-content-area,
+    body .standard-page-layout .main-content-area,
+    #quarto-content .standard-page-layout .right-sidebar,
+    body .standard-page-layout .right-sidebar {
+        grid-column: auto !important;
     }
 
     .left-sidebar,
