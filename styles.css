@@ -115,11 +115,27 @@ h4, h5, h6 {
 /* 3-Column Layout System */
 .standard-page-layout {
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width);
+    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width) !important;
     gap: var(--sidebar-gap);
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding-top: 1rem;
+}
+
+/* Explicit Grid Placement - High specificity to override Quarto defaults */
+#quarto-content .standard-page-layout .left-sidebar,
+body .standard-page-layout .left-sidebar {
+    grid-column: 1 !important;
+}
+
+#quarto-content .standard-page-layout .main-content-area,
+body .standard-page-layout .main-content-area {
+    grid-column: 2 !important;
+}
+
+#quarto-content .standard-page-layout .right-sidebar,
+body .standard-page-layout .right-sidebar {
+    grid-column: 3 !important;
 }
 
 .left-sidebar,
@@ -1531,6 +1547,15 @@ img[loading="lazy"].loaded {
     .standard-page-layout {
         grid-template-columns: 1fr;
         gap: 1rem;
+    }
+
+    #quarto-content .standard-page-layout .left-sidebar,
+    body .standard-page-layout .left-sidebar,
+    #quarto-content .standard-page-layout .main-content-area,
+    body .standard-page-layout .main-content-area,
+    #quarto-content .standard-page-layout .right-sidebar,
+    body .standard-page-layout .right-sidebar {
+        grid-column: auto !important;
     }
 
     .left-sidebar,
