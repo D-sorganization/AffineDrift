@@ -1,10 +1,12 @@
-from playwright.sync_api import sync_playwright, Page
 from pathlib import Path
+
+from playwright.sync_api import Page, sync_playwright
+
 
 def verify_layout(page: Page) -> None:
     """
     Verify the layout of the articles page by taking a screenshot and checking element heights.
-    
+
     Args:
         page: The Playwright page object.
     """

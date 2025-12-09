@@ -1,6 +1,7 @@
 import glob
 from pathlib import Path
 
+
 def wrap_file(path: Path) -> None:
     """
     Wrap sidebar content in a sticky div for the given file.
