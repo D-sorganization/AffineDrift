@@ -139,19 +139,29 @@ body .standard-page-layout .right-sidebar {
 }
 
 .left-sidebar,
-.right-sidebar {
+.right-sidebar,
+.resources-sidebar {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
+    /* Stretch sidebars to full height */
+    align-self: stretch;
+    height: auto;
+    min-height: 100%;
+    border-radius: 4px;
+    overflow-x: hidden;
+}
+
+/* Make content inside sidebars sticky */
+.left-sidebar > .sidebar-sticky-content,
+.right-sidebar > .sidebar-sticky-content,
+.resources-sidebar > .sidebar-sticky-content {
     position: -webkit-sticky;
     position: sticky;
-    top: var(--header-offset);
-    align-self: flex-start;
-    height: fit-content;
-    max-height: calc(100vh - var(--scroll-offset));
+    top: calc(var(--header-offset) + 1rem);
+    max-height: calc(100vh - var(--header-offset) - 3rem);
     overflow-y: auto;
     overflow-x: hidden;
-    border-radius: 4px;
 }
 
 .main-content-area {
@@ -356,12 +366,8 @@ body .standard-page-layout .right-sidebar {
     background: var(--legal-pad-yellow);
     border: 2px solid var(--legal-pad-yellow-border);
     padding: 1.5rem 1rem;
-    position: sticky;
-    top: var(--header-offset);
-    align-self: flex-start;
-    max-height: calc(100vh - var(--scroll-offset));
-    overflow-y: auto;
     border-radius: 4px;
+    /* Height and sticky behavior handled by shared rule */
 }
 
 .resources-nav-heading {
@@ -811,7 +817,16 @@ body.no-scroll {
    Section Styles
    =========================== */
 section {
-    padding: 5rem 0;
+    padding: 2rem 0;
+    margin-top: 0;
+}
+
+/* Reduce spacing for header overlap */
+#title-block-header {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.quarto-title-meta {
     margin-top: 0;
 }
 
