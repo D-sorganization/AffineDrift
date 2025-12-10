@@ -242,14 +242,24 @@ document.addEventListener('DOMContentLoaded', function () {
         );
 
         if (displayHistory.length === 0) {
-            historyList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
+            historyList.textContent = '';
+            const li = document.createElement('li');
+            li.className = 'history-empty';
+            li.textContent = 'No recent articles yet';
+            historyList.appendChild(li);
         } else {
-            historyList.innerHTML = displayHistory.map(item => {
+            historyList.textContent = '';
+            displayHistory.forEach(item => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = item.url;
                 const displayTitle = item.title.length > MAX_HISTORY_TITLE_LENGTH
                     ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + '...'
                     : item.title;
-                return `<li><a href="${item.url}">${displayTitle}</a></li>`;
-            }).join('');
+                a.textContent = displayTitle;
+                li.appendChild(a);
+                historyList.appendChild(li);
+            });
         }
     }
 
@@ -525,15 +535,26 @@ function initArticleHistory() {
     }
 
     // 2. Display History (runs on articles.html where the list exists)
+    const articlesHistoryList = document.getElementById('articles-history-list');
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
         if (!history || history.length === 0) {
-            articlesHistoryList.innerHTML = '<li class="history-empty">No recent articles yet</li>';
+            articlesHistoryList.textContent = '';
+            const li = document.createElement('li');
+            li.className = 'history-empty';
+            li.textContent = 'No recent articles yet';
+            articlesHistoryList.appendChild(li);
         } else {
-            articlesHistoryList.innerHTML = history.map(item =>
-                `<li><a href="${item.url}">${item.title}</a></li>`
-            ).join('');
+            articlesHistoryList.textContent = '';
+            history.forEach(item => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = item.url;
+                a.textContent = item.title;
+                li.appendChild(a);
+                articlesHistoryList.appendChild(li);
+            });
         }
     }
 }
