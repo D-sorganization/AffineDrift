@@ -4,6 +4,7 @@ Simple script to extract HTML from .qmd files and create proper HTML files.
 This is a workaround for when Quarto is not available.
 """
 
+import html
 import re
 from pathlib import Path
 
@@ -41,7 +42,7 @@ def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str |
     html_content = html_match.group(1)
     return title, description, html_content
 
-def create_html_page(title: str, description: str, body_html: str, output_file: Path, page_type: str = "articles") -> bool:
+def create_html_page(title: str, description: str, body_html: str, output_file: Path, page_type: str = "articles", template_path: Path = Path('docs/articles.html')) -> bool:
     """Create a complete HTML page from a template
 
     Args:
@@ -50,26 +51,30 @@ def create_html_page(title: str, description: str, body_html: str, output_file: 
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
         page_type: Type of page ('articles', 'models', 'resources') to set correct nav active state
+        template_path: Path to the HTML template file
 
     Returns:
         True if successful, False otherwise
     """
     # Read template from existing articles.html (but don't modify it)
-    template_file = Path('docs/articles.html')
-    if template_file.exists():
-        template = template_file.read_text()
+    if template_path.exists():
+        template = template_path.read_text()
+
+        # Escape inputs for security
+        title_escaped = html.escape(title)
+        description_escaped = html.escape(description)
 
         # Replace title
         template = re.sub(
             r'<title>.*?</title>',
-            f'<title>{title} – AffineDrift</title>',
+            f'<title>{title_escaped} – AffineDrift</title>',
             template
         )
 
         # Replace meta description
         template = re.sub(
             r'<meta name="description" content="[^"]*">',
-            f'<meta name="description" content="{description}">',
+            f'<meta name="description" content="{description_escaped}">',
             template
         )
 
@@ -98,14 +103,14 @@ def create_html_page(title: str, description: str, body_html: str, output_file: 
         # Replace title block
         template = re.sub(
             r'<h1 class="title">.*?</h1>',
-            f'<h1 class="title">{title}</h1>',
+            f'<h1 class="title">{title_escaped}</h1>',
             template
         )
 
         # Replace description in page
         template = re.sub(
             r'<div class="description">\s*.*?\s*</div>',
-            f'<div class="description">\n    {description}\n  </div>',
+            f'<div class="description">\n    {description_escaped}\n  </div>',
             template,
             flags=re.DOTALL
         )
@@ -182,6 +187,12 @@ def main() -> None:
         if html_content is None:
             print(f"  No HTML content found in {qmd_name}")
             continue
+
+        # Ensure title and description are strings (for mypy)
+        if title is None:
+            title = qmd_file.stem
+        if description is None:
+            description = ""
 
         output_file = docs_dir / qmd_file.with_suffix('.html').name
 
