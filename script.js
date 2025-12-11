@@ -473,6 +473,37 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
 
+    // Back to Top Button
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.className = 'back-to-top';
+    backToTopBtn.setAttribute('aria-label', 'Scroll to top');
+    backToTopBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 4l-8 8h6v8h4v-8h6z"/>
+        </svg>
+    `;
+    document.body.appendChild(backToTopBtn);
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    function toggleBackToTop() {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    }
+
+    window.addEventListener('scroll', toggleBackToTop);
+
+    // Initial check
+    toggleBackToTop();
+
     // Initialize Article History Tracking and Display
     initArticleHistory();
 });
@@ -525,6 +556,7 @@ function initArticleHistory() {
     }
 
     // 2. Display History (runs on articles.html where the list exists)
+    const articlesHistoryList = document.getElementById('articles-history-list');
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 

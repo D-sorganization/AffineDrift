@@ -1598,7 +1598,6 @@ img[loading="lazy"].loaded {
     gap: 1rem;
   }
 
-<<<<<<< HEAD
   #quarto-content .standard-page-layout .left-sidebar,
   body .standard-page-layout .left-sidebar,
   #quarto-content .standard-page-layout .main-content-area,
@@ -1607,23 +1606,6 @@ img[loading="lazy"].loaded {
   body .standard-page-layout .right-sidebar {
     grid-column: auto !important;
   }
-=======
-    #quarto-content .standard-page-layout .left-sidebar,
-    body .standard-page-layout .left-sidebar,
-    #quarto-content .standard-page-layout .main-content-area,
-    body .standard-page-layout .main-content-area,
-    #quarto-content .standard-page-layout .right-sidebar,
-    body .standard-page-layout .right-sidebar {
-        grid-column: auto !important;
-    }
-
-    .left-sidebar,
-    .right-sidebar {
-        position: relative;
-        top: 0;
-        max-height: none;
-    }
->>>>>>> main
 
   .left-sidebar,
   .right-sidebar {
@@ -3094,5 +3076,61 @@ mjx-container * {
   .book-links .resource-link {
     margin-left: 0;
     margin-top: 0.5rem;
+  }
+}
+
+/* ===========================
+   Back to Top Button
+   =========================== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--accent-blue);
+  color: var(--pure-white);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  padding: 0;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background-color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.back-to-top svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentcolor;
+}
+
+@media (width <= 768px) {
+  .back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 }
