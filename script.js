@@ -610,3 +610,59 @@ if (typeof module !== 'undefined' && module.exports) {
 document.addEventListener('DOMContentLoaded', () => {
     initArticleHistory();
 });
+
+// Copy to Clipboard functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all pre elements
+    const codeBlocks = document.querySelectorAll('pre');
+
+    codeBlocks.forEach(pre => {
+        // Skip if already processed or inside a wrapper
+        if (pre.parentNode.classList.contains('code-wrapper')) return;
+
+        // Check if pre is empty
+        if (!pre.textContent.trim()) return;
+
+        // Create wrapper
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-wrapper';
+
+        // Insert wrapper before pre
+        pre.parentNode.insertBefore(wrapper, pre);
+
+        // Move pre into wrapper
+        wrapper.appendChild(pre);
+
+        // Create button
+        const button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.type = 'button'; // Prevent form submission if inside a form
+
+        // Add click event
+        button.addEventListener('click', async () => {
+            try {
+                // Get text content
+                const code = pre.innerText || pre.textContent;
+
+                await navigator.clipboard.writeText(code);
+
+                // Success feedback
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Error';
+                setTimeout(() => button.textContent = 'Copy', 2000);
+            }
+        });
+
+        wrapper.appendChild(button);
+    });
+});

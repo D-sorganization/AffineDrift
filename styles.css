@@ -3134,3 +3134,61 @@ mjx-container * {
     height: 2.5rem;
   }
 }
+
+/* ===========================
+   Code Block Copy Button
+   =========================== */
+.code-wrapper {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.code-wrapper pre,
+.code-wrapper .code-block {
+  margin: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  z-index: 10;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--primary-blue);
+  font-size: 0.8rem;
+  font-family: sans-serif;
+  background: rgb(255 255 255 / 0.9);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.code-wrapper:hover .copy-btn,
+.copy-btn:focus-visible {
+  opacity: 1;
+}
+
+.copy-btn:hover {
+  color: var(--primary-blue);
+  background: var(--light-blue);
+}
+
+.copy-btn.copied {
+  color: var(--pure-white);
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+/* For dark code blocks, adjust button colors if needed */
+.code-block .copy-btn {
+  color: var(--pure-white);
+  background: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.code-block .copy-btn:hover {
+  background: rgb(255 255 255 / 0.3);
+}
