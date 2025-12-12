@@ -50,15 +50,20 @@ function generateUniqueId(text, usedIds) {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function () {
-    // Smooth scroll for anchor links
-    const links = document.querySelectorAll('a[href^="#"]');
-
-    links.forEach(link => {
-        link.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
+    // Smooth scroll for anchor links (Event Delegation)
+    // Replaces individual event listeners for better performance and handling dynamic content
+    document.addEventListener('click', function (e) {
+        const link = e.target.closest('a[href^="#"]');
+        if (link) {
+            const href = link.getAttribute('href');
 
             // Only handle internal anchors
-            if (href !== '#' && href.length > 1) {
+            if (href && href !== '#' && href.length > 1) {
+                // Check if this is a bootstrap tab/collapse toggle (don't interfere)
+                if (link.hasAttribute('data-bs-toggle') || link.hasAttribute('data-toggle')) {
+                    return;
+                }
+
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
 
@@ -75,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             }
-        });
+        }
     });
 
     // Highlight active navigation link on scroll for Quarto/Bootstrap navbar
@@ -107,10 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearTimeout(scrollTimeout);
             }
             scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
-        });
+        }, { passive: true });
 
         highlightNavigation();
 
+        // Note: Navbar collapse logic is handled by Bootstrap, but if we need custom logic:
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 if (navbarCollapse && navbarCollapse.classList.contains('show')) {
@@ -384,18 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 a.href = `#${section.id}`;
                 a.textContent = section.text;
                 a.className = `toc-level-${section.level}`;
-                a.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.getElementById(section.id);
-                    if (target) {
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
+                // Event listener removed here in favor of global delegation
                 li.appendChild(a);
                 tocList.appendChild(li);
             });
@@ -406,7 +401,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 tocSection.style.display = 'none';
             } else if (tocList) {
                 // Fallback: hide the TOC list directly if tocSection wasn't found
-                // (tocList is guaranteed to be in DOM if it exists, per line 386-387)
                 tocList.style.display = 'none';
             }
         }
@@ -441,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearTimeout(tocScrollTimeout);
             }
             tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
-        });
+        }, { passive: true });
 
         // Initial highlight
         highlightActiveSection();
@@ -465,7 +459,6 @@ document.addEventListener('DOMContentLoaded', function () {
     accordionHeaders.forEach(header => {
         header.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            const content = this.nextElementSibling;
 
             // Toggle current accordion
             this.setAttribute('aria-expanded', !isExpanded);
@@ -509,7 +502,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    window.addEventListener('scroll', toggleBackToTop);
+    // Optimized scroll listener using requestAnimationFrame for better performance
+    let backToTopTicking = false;
+    window.addEventListener('scroll', () => {
+        if (!backToTopTicking) {
+            window.requestAnimationFrame(() => {
+                toggleBackToTop();
+                backToTopTicking = false;
+            });
+            backToTopTicking = true;
+        }
+    }, { passive: true });
 
     // Initial check
     toggleBackToTop();
@@ -607,9 +610,10 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', () => {
-    initArticleHistory();
-});
+// Removed duplicate DOMContentLoaded listener for initArticleHistory
+// It is now called inside the main listener
+
+
 
 // Copy to Clipboard functionality
 document.addEventListener('DOMContentLoaded', function() {
