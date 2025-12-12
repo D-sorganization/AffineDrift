@@ -465,11 +465,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Make repository dropdown links open in new tabs
-    const repositoryLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-    repositoryLinks.forEach(link => {
-        link.setAttribute('target', '_blank');
-        link.setAttribute('rel', 'noopener noreferrer');
+    // Secure all external links
+    // Adds target="_blank" and rel="noopener noreferrer" to all external links
+    // This prevents reverse tabnabbing and improves privacy
+    const allLinks = document.querySelectorAll('a[href^="http"]');
+    const currentHostname = window.location.hostname;
+
+    allLinks.forEach(link => {
+        try {
+            const url = new URL(link.href);
+            if (url.hostname !== currentHostname && url.hostname !== '') {
+                // Ensure external links open in new tab
+                if (!link.hasAttribute('target')) {
+                    link.setAttribute('target', '_blank');
+                }
+
+                // Add security attributes
+                const rel = link.getAttribute('rel') || '';
+                const parts = rel.split(' ').filter(p => p);
+                if (!parts.includes('noopener')) parts.push('noopener');
+                if (!parts.includes('noreferrer')) parts.push('noreferrer');
+                link.setAttribute('rel', parts.join(' '));
+            }
+        } catch (e) {
+            // Ignore invalid URLs
+        }
     });
 
     // Log page load for analytics (optional)
