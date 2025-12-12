@@ -613,6 +613,8 @@ if (typeof module !== 'undefined' && module.exports) {
 // Removed duplicate DOMContentLoaded listener for initArticleHistory
 // It is now called inside the main listener
 
+
+
 // Copy to Clipboard functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Select all pre elements
@@ -628,7 +630,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create wrapper
         const wrapper = document.createElement('div');
         wrapper.className = 'code-wrapper';
-        wrapper.style.position = 'relative';
 
         // Insert wrapper before pre
         pre.parentNode.insertBefore(wrapper, pre);
@@ -636,49 +637,36 @@ document.addEventListener('DOMContentLoaded', function() {
         // Move pre into wrapper
         wrapper.appendChild(pre);
 
-        // Create copy button
+        // Create button
         const button = document.createElement('button');
-        button.className = 'copy-button';
-        button.style.position = 'absolute';
-        button.style.top = '0.5rem';
-        button.style.right = '0.5rem';
-        button.style.background = 'rgba(255,255,255,0.8)';
-        button.style.border = '1px solid #ccc';
-        button.style.borderRadius = '4px';
-        button.style.padding = '4px';
-        button.style.cursor = 'pointer';
-        button.style.zIndex = '10';
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.type = 'button'; // Prevent form submission if inside a form
 
-        button.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-        `;
-        button.setAttribute('aria-label', 'Copy to clipboard');
-
-        // Add button to wrapper
-        wrapper.appendChild(button);
-
-        // Add click handler
+        // Add click event
         button.addEventListener('click', async () => {
             try {
-                await navigator.clipboard.writeText(pre.textContent);
+                // Get text content
+                const code = pre.innerText || pre.textContent;
 
-                // Visual feedback
-                const originalContent = button.innerHTML;
-                button.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                `;
+                await navigator.clipboard.writeText(code);
+
+                // Success feedback
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
                 setTimeout(() => {
-                    button.innerHTML = originalContent;
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy:', err);
                 button.textContent = 'Error';
+                setTimeout(() => button.textContent = 'Copy', 2000);
             }
         });
+
+        wrapper.appendChild(button);
     });
 });
