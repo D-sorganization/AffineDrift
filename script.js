@@ -50,6 +50,37 @@ function generateUniqueId(text, usedIds) {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function () {
+    // Shared Scroll Event Manager
+    const scrollHandlers = {
+        debounce: [],
+        raf: []
+    };
+    let scrollTimeout;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        // High frequency updates (rAF)
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                scrollHandlers.raf.forEach(handler => {
+                    try { handler(); } catch(e) { console.error(e); }
+                });
+                ticking = false;
+            });
+            ticking = true;
+        }
+
+        // Low frequency updates (Debounced)
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(() => {
+            scrollHandlers.debounce.forEach(handler => {
+                try { handler(); } catch(e) { console.error(e); }
+            });
+        }, TOC_SCROLL_DEBOUNCE_MS);
+    }, { passive: true });
+
     // Smooth scroll for anchor links (Event Delegation)
     // Replaces individual event listeners for better performance and handling dynamic content
     document.addEventListener('click', function (e) {
@@ -105,14 +136,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Debounce scroll event for performance
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
-        }, { passive: true });
+        // Register to shared scroll manager
+        scrollHandlers.debounce.push(highlightNavigation);
 
         highlightNavigation();
 
@@ -429,13 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Update on scroll
-        let tocScrollTimeout;
-        window.addEventListener('scroll', function () {
-            if (tocScrollTimeout) {
-                clearTimeout(tocScrollTimeout);
-            }
-            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
-        }, { passive: true });
+        scrollHandlers.debounce.push(highlightActiveSection);
 
         // Initial highlight
         highlightActiveSection();
@@ -502,17 +521,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Optimized scroll listener using requestAnimationFrame for better performance
-    let backToTopTicking = false;
-    window.addEventListener('scroll', () => {
-        if (!backToTopTicking) {
-            window.requestAnimationFrame(() => {
-                toggleBackToTop();
-                backToTopTicking = false;
-            });
-            backToTopTicking = true;
-        }
-    }, { passive: true });
+    // Register to shared scroll manager
+    scrollHandlers.raf.push(toggleBackToTop);
 
     // Initial check
     toggleBackToTop();
