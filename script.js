@@ -465,9 +465,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Secure all external links
-    // Adds target="_blank" and rel="noopener noreferrer" to all external links
-    // This prevents reverse tabnabbing and improves privacy
+    // Make repository dropdown links open in new tabs
+    const repositoryLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
+    repositoryLinks.forEach(link => {
+        link.setAttribute('target', '_blank');
+        // rel attribute will be handled by the generic security block below
+    });
+
+    // Secure all external links with target="_blank"
+    // Adds rel="noopener noreferrer" to prevent reverse tabnabbing
     const allLinks = document.querySelectorAll('a[href^="http"]');
     const currentHostname = window.location.hostname;
 
@@ -475,17 +481,14 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const url = new URL(link.href);
             if (url.hostname !== currentHostname && url.hostname !== '') {
-                // Ensure external links open in new tab
-                if (!link.hasAttribute('target')) {
-                    link.setAttribute('target', '_blank');
+                // Only add security attributes if the link opens in a new tab
+                if (link.getAttribute('target') === '_blank') {
+                    const rel = link.getAttribute('rel') || '';
+                    const parts = rel.split(' ').filter(p => p);
+                    if (!parts.includes('noopener')) parts.push('noopener');
+                    if (!parts.includes('noreferrer')) parts.push('noreferrer');
+                    link.setAttribute('rel', parts.join(' '));
                 }
-
-                // Add security attributes
-                const rel = link.getAttribute('rel') || '';
-                const parts = rel.split(' ').filter(p => p);
-                if (!parts.includes('noopener')) parts.push('noopener');
-                if (!parts.includes('noreferrer')) parts.push('noreferrer');
-                link.setAttribute('rel', parts.join(' '));
             }
         } catch (e) {
             // Ignore invalid URLs
