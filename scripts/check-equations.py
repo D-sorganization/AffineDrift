@@ -84,7 +84,7 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
 
 def check_mathjax_config(filepath: str) -> list[str]:
     """Check if MathJax is properly configured in HTML files."""
-    issues = []
+    issues: list[str] = []
 
     if not filepath.endswith(".html"):
         return issues
@@ -109,7 +109,7 @@ def check_mathjax_config(filepath: str) -> list[str]:
 
 def check_quarto_math_config(quarto_yml: Path) -> list[str]:
     """Check if Quarto is configured for MathJax."""
-    issues = []
+    issues: list[str] = []
 
     if not quarto_yml.exists():
         return issues
@@ -130,7 +130,7 @@ def check_quarto_math_config(quarto_yml: Path) -> list[str]:
     return issues
 
 
-def main() -> None:
+def main() -> int:
     """Main function to check equations in all relevant files."""
     print("Checking equation rendering...")
 
