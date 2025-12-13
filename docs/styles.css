@@ -3150,20 +3150,20 @@ mjx-container * {
 
 .copy-btn {
   position: absolute;
+  z-index: 10;
   top: 0.5rem;
   right: 0.5rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border-light);
-  color: var(--primary-blue);
-  border-radius: 4px;
   padding: 0.25rem 0.5rem;
+  color: var(--primary-blue);
   font-size: 0.8rem;
   font-family: sans-serif;
+  background: rgb(255 255 255 / 0.9);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
   cursor: pointer;
   opacity: 0;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
   transition: opacity 0.2s, background 0.2s;
-  z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .code-wrapper:hover .copy-btn,
@@ -3172,23 +3172,51 @@ mjx-container * {
 }
 
 .copy-btn:hover {
-  background: var(--light-blue);
   color: var(--primary-blue);
+  background: var(--light-blue);
 }
 
 .copy-btn.copied {
-  background: var(--accent-blue);
   color: var(--pure-white);
+  background: var(--accent-blue);
   border-color: var(--accent-blue);
 }
 
 /* For dark code blocks, adjust button colors if needed */
 .code-block .copy-btn {
-  background: rgba(255, 255, 255, 0.2);
   color: var(--pure-white);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 0.2);
+  border-color: rgb(255 255 255 / 0.3);
 }
 
 .code-block .copy-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgb(255 255 255 / 0.3);
+}
+
+/* ===========================
+   Accessibility Improvements
+   =========================== */
+
+/* Skip to Content Link - hidden until focused */
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 1rem;
+  z-index: 10000; /* Higher than header */
+  background: var(--accent-blue);
+  color: var(--pure-white);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: top 0.3s ease;
+  opacity: 0;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  opacity: 1;
+  outline: 2px solid var(--pure-white);
+  outline-offset: -2px;
 }

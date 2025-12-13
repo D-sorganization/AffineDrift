@@ -670,3 +670,23 @@ document.addEventListener('DOMContentLoaded', function() {
         wrapper.appendChild(button);
     });
 });
+
+// Accessibility: Skip to Content Link
+// Injected dynamically to ensure it exists on all pages (especially generated ones)
+document.addEventListener('DOMContentLoaded', function() {
+    // Only add if it doesn't already exist
+    if (document.querySelector('.skip-to-content')) return;
+
+    const skipLink = document.createElement('a');
+    skipLink.href = '#quarto-document-content';
+    skipLink.className = 'skip-to-content';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.setAttribute('aria-label', 'Skip to main content');
+
+    // Insert as the very first element in the body
+    if (document.body.firstChild) {
+        document.body.insertBefore(skipLink, document.body.firstChild);
+    } else {
+        document.body.appendChild(skipLink);
+    }
+});

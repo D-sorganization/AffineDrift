@@ -3192,3 +3192,31 @@ mjx-container * {
 .code-block .copy-btn:hover {
   background: rgb(255 255 255 / 0.3);
 }
+
+/* ===========================
+   Accessibility Improvements
+   =========================== */
+
+/* Skip to Content Link - hidden until focused */
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 1rem;
+  z-index: 10000; /* Higher than header */
+  background: var(--accent-blue);
+  color: var(--pure-white);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transition: top 0.3s ease;
+  opacity: 0;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  opacity: 1;
+  outline: 2px solid var(--pure-white);
+  outline-offset: -2px;
+}
