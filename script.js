@@ -472,8 +472,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // rel attribute will be handled by the generic security block below
     });
 
-    // Secure all external links with target="_blank"
-    // Adds rel="noopener noreferrer" to prevent reverse tabnabbing
+    // Secure all external links
+    // Adds rel="noopener noreferrer" to prevent reverse tabnabbing and improve privacy
+    // Applied to all external links regardless of target, as a defense-in-depth measure
     const allLinks = document.querySelectorAll('a[href^="http"]');
     const currentHostname = window.location.hostname;
 
@@ -481,14 +482,12 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const url = new URL(link.href);
             if (url.hostname !== currentHostname && url.hostname !== '') {
-                // Only add security attributes if the link opens in a new tab
-                if (link.getAttribute('target') === '_blank') {
-                    const rel = link.getAttribute('rel') || '';
-                    const parts = rel.split(' ').filter(p => p);
-                    if (!parts.includes('noopener')) parts.push('noopener');
-                    if (!parts.includes('noreferrer')) parts.push('noreferrer');
-                    link.setAttribute('rel', parts.join(' '));
-                }
+                // Add security attributes
+                const rel = link.getAttribute('rel') || '';
+                const parts = rel.split(' ').filter(p => p);
+                if (!parts.includes('noopener')) parts.push('noopener');
+                if (!parts.includes('noreferrer')) parts.push('noreferrer');
+                link.setAttribute('rel', parts.join(' '));
             }
         } catch (e) {
             // Ignore invalid URLs
