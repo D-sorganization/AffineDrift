@@ -488,7 +488,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const repositoryLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
     repositoryLinks.forEach(link => {
         link.setAttribute('target', '_blank');
-        link.setAttribute('rel', 'noopener noreferrer');
+        // rel attribute will be handled by the generic security block below
+    });
+
+    // Secure all external links
+    // Adds rel="noopener noreferrer" to prevent reverse tabnabbing and improve privacy
+    // Applied to all external links regardless of target, as a defense-in-depth measure
+    const allLinks = document.querySelectorAll('a[href^="http"]');
+    const currentHostname = window.location.hostname;
+
+    allLinks.forEach(link => {
+        try {
+            const url = new URL(link.href);
+            if (url.hostname !== currentHostname && url.hostname !== '') {
+                // Add target="_blank" if missing
+                if (!link.hasAttribute('target')) {
+                    link.setAttribute('target', '_blank');
+                }
+
+                // Add security attributes
+                const rel = link.getAttribute('rel') || '';
+                const parts = rel.split(' ').filter(p => p);
+                if (!parts.includes('noopener')) parts.push('noopener');
+                if (!parts.includes('noreferrer')) parts.push('noreferrer');
+                link.setAttribute('rel', parts.join(' '));
+            }
+        } catch (e) {
+            // Ignore invalid URLs
+        }
     });
 
     // Log page load for analytics (optional)
