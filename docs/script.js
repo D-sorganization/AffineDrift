@@ -482,6 +482,11 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const url = new URL(link.href);
             if (url.hostname !== currentHostname && url.hostname !== '') {
+                // Add target="_blank" if missing
+                if (!link.hasAttribute('target')) {
+                    link.setAttribute('target', '_blank');
+                }
+
                 // Add security attributes
                 const rel = link.getAttribute('rel') || '';
                 const parts = rel.split(' ').filter(p => p);
