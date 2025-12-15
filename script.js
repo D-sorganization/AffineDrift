@@ -50,37 +50,6 @@ function generateUniqueId(text, usedIds) {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function () {
-    // Shared Scroll Event Manager
-    const scrollHandlers = {
-        debounce: [],
-        raf: []
-    };
-    let scrollTimeout;
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-        // High frequency updates (rAF)
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                scrollHandlers.raf.forEach(handler => {
-                    try { handler(); } catch(e) { console.error(e); }
-                });
-                ticking = false;
-            });
-            ticking = true;
-        }
-
-        // Low frequency updates (Debounced)
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(() => {
-            scrollHandlers.debounce.forEach(handler => {
-                try { handler(); } catch(e) { console.error(e); }
-            });
-        }, TOC_SCROLL_DEBOUNCE_MS);
-    }, { passive: true });
-
     // Smooth scroll for anchor links (Event Delegation)
     // Replaces individual event listeners for better performance and handling dynamic content
     document.addEventListener('click', function (e) {
@@ -136,8 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Register to shared scroll manager
-        scrollHandlers.debounce.push(highlightNavigation);
+        // Register scroll listener (Debounced)
+        let navScrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (navScrollTimeout) clearTimeout(navScrollTimeout);
+            navScrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+        });
 
         highlightNavigation();
 
@@ -453,8 +426,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Update on scroll
-        scrollHandlers.debounce.push(highlightActiveSection);
+        // Update on scroll (Debounced)
+        let tocScrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (tocScrollTimeout) clearTimeout(tocScrollTimeout);
+            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
+        });
 
         // Initial highlight
         highlightActiveSection();
@@ -475,12 +452,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Accordion functionality
     const accordionHeaders = document.querySelectorAll('.accordion-header');
-    accordionHeaders.forEach(header => {
+    accordionHeaders.forEach((header, index) => {
+        const content = header.nextElementSibling;
+
+        // Accessibility: Connect header and content
+        if (content && content.classList.contains('accordion-content')) {
+            // Ensure content has an ID
+            if (!content.id) {
+                content.id = `accordion-content-${index}`;
+            }
+
+            // Link header to content
+            header.setAttribute('aria-controls', content.id);
+
+            // Set initial state
+            const isExpanded = header.getAttribute('aria-expanded') === 'true';
+            content.setAttribute('aria-hidden', !isExpanded);
+        }
+
         header.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const newExpandedState = !isExpanded;
 
             // Toggle current accordion
-            this.setAttribute('aria-expanded', !isExpanded);
+            this.setAttribute('aria-expanded', newExpandedState);
+
+            // Toggle content visibility for screen readers
+            if (content && content.classList.contains('accordion-content')) {
+                content.setAttribute('aria-hidden', !newExpandedState);
+            }
         });
     });
 
@@ -548,8 +548,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Register to shared scroll manager
-    scrollHandlers.raf.push(toggleBackToTop);
+    // Update on scroll
+    window.addEventListener('scroll', toggleBackToTop);
 
     // Initial check
     toggleBackToTop();
