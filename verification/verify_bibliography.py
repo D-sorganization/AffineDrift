@@ -1,7 +1,13 @@
-from playwright.sync_api import sync_playwright, expect
 import time
 
-def verify_bibliography():
+from playwright.sync_api import expect, sync_playwright
+
+
+def verify_bibliography() -> None:
+    """
+    Verify the functionality of the bibliography page using Playwright.
+    Checks loading, search, and detail view interactions.
+    """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -50,6 +56,7 @@ def verify_bibliography():
             page.screenshot(path="verification/error.png")
         finally:
             browser.close()
+
 
 if __name__ == "__main__":
     verify_bibliography()

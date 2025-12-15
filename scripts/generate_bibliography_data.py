@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 import json
-import yaml
-import os
 from pathlib import Path
 
-def main():
+import yaml  # type: ignore[import-untyped]
+
+
+def main() -> None:
+    """
+    Generate JSON data for the interactive bibliography from YAML sources.
+    Reads 'data/bibliography.yaml' and 'data/reading_paths.yaml',
+    and converts them to JSON in 'docs/data'.
+    """
     source_path = Path("data/bibliography.yaml")
     output_dir = Path("docs/data")
     output_path = output_dir / "bibliography.json"
@@ -17,7 +23,7 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     try:
-        with open(source_path, "r") as f:
+        with open(source_path) as f:
             data = yaml.safe_load(f)
 
         with open(output_path, "w") as f:
@@ -35,13 +41,14 @@ def main():
 
     if paths_source.exists():
         try:
-            with open(paths_source, "r") as f:
+            with open(paths_source) as f:
                 paths_data = yaml.safe_load(f)
             with open(paths_output, "w") as f:
                 json.dump(paths_data, f, indent=2)
             print(f"Successfully generated {paths_output}")
         except Exception as e:
             print(f"Error processing reading paths: {e}")
+
 
 if __name__ == "__main__":
     main()
