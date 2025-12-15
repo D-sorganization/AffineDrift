@@ -28,7 +28,7 @@ The key mathematical observation is that the golfer--club--shaft system can be m
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
-The remainder of the paper is organized as follows. Section 1 defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid--flexible system, including the rigorous treatment of holonomic constraints. Section 3 formalizes the drift--input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
+The remainder of the manuscript is organized as follows. Section 1 defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid--flexible system, including the rigorous treatment of holonomic constraints. Section 3 formalizes the drift--input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
 
 ## System Definition and Modeling Assumptions
 
@@ -48,6 +48,8 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 6. **Holonomic Constraints.** The system is subject to holonomic constraints representing physical restrictions such as ground contact (feet fixed to ground) and the closed kinematic chain formed by the two arms gripping the club handle.
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
+
+With these assumptions establishing the physical boundaries of the model, we must now define a coordinate system that captures the continuous evolution of this hybrid rigid--flexible system. The challenge is to construct a state space that unifies the gross motion of the golfer's body with the vibration dynamics of the club shaft, while preserving the structure necessary for control-theoretic analysis.
 
 ### Generalized coordinates and state
 
@@ -98,6 +100,8 @@ $$\Phi(q) = 0 \in \mathbb{R}^k,$$
 
 representing the geometric closures (e.g., hand grip, ground contact). These constraints generate reaction forces that enforce consistency of the motion.
 
+While these external forces define the environment, the most critical internal interaction in the system is the mechanical coupling between the rigid biomechanical chain and the flexible instrument. This interaction is not merely a force applied at the hands; it is a kinematic constraint that links the deformation of the shaft to the acceleration of the body. We explicitly define this interface before deriving the equations of motion.
+
 ### Notation table
 
 For reference, the following table summarizes the main symbols used in the manuscript.
@@ -124,7 +128,9 @@ For reference, the following table summarizes the main symbols used in the manus
 | $F_{\text{drift}}$ | Generalized drift force (passive component) |
 | $F_{\text{input}}$ | Generalized input force (torque-driven component) |
 
-## Mathematical Formulation
+With the system components and notation established, we now proceed to derive the equations of motion. Our objective is not just to write down Newton's laws, but to cast them into a form that explicitly exposes the control-affine structure---separating the dynamics into terms that depend on the state alone and terms that are driven by the golfer's torque.
+
+## Unified Control-Affine Derivation (Rigid + Flexible System)
 
 We now establish the control-affine structure of the coupled golfer--club--shaft system. This derivation explicitly handles the coupling between rigid body dynamics, flexible shaft modes, and kinematic constraints.
 
@@ -214,18 +220,37 @@ We observe that the acceleration is still affine in the control input $u$. The t
 
 Finally, we define the state vector $x = [z^T, \dot{z}^T]^T$ and write the system in first-order form:
 
-$$ \dot{x} = \begin{bmatrix} \dot{z} \\ a_{drift}(x) \end{bmatrix} + \begin{bmatrix} 0 \\ A_{input}(x) \end{bmatrix} u $$
+$$f(x) =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    [a_{\text{drift}}(x)]_{1:n} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    [a_{\text{drift}}(x)]_{n+1:n+m}
+  \end{bmatrix},
+  \qquad
+  g(x) =
+  \begin{bmatrix}
+    0 \\[0.2em]
+    [A_{\text{input}}(x)]_{1:n,:} \\[0.2em]
+    0 \\[0.2em]
+    [A_{\text{input}}(x)]_{n+1:n+m,:}
+  \end{bmatrix}.$$
 
-This yields the fundamental control-affine structure:
+Here $[\cdot]_{1:n}$ and $[\cdot]_{n+1:n+m}$ denote the rigid and flexible components of the acceleration, and $[\cdot]_{:, :}$ denotes the appropriate block of the input matrix.
 
-$$ \dot{x} = f(x) + g(x)u $$
+This is a nonlinear control-affine system:
+
+$$\dot{x} = f(x) + g(x)\,u.$$
+
+All nonlinearities---including those introduced by shaft flexibility---are contained in the drift vector field $f(x)$, while the input vector fields $g(x)$ multiply the control input $u$ linearly. The purely rigid-body model is recovered by setting $m = 0$.
 
 ### Structural Consequences
 
 The derivation confirms that even with flexible degrees of freedom and holonomic constraints, the system retains the affine structure. This has three crucial implications:
 
-1.  **Decomposition Validity:** The separation of dynamics into a drift term $f(x)$ (passive, constraint-consistent evolution) and an input term $g(x)u$ (active, constraint-consistent control) is mechanically rigorous.
+1.  **Flexibility enriches drift but preserves input linearity:** Shaft flexibility introduces additional passive degrees of freedom and modifies $M, C,$ and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques.
 2.  **Constraint Embedment:** The vector fields $f(x)$ and $g(x)$ implicitly contain the effects of the constraints. The drift term $f(x)$ effectively "knows" how to curve the trajectory to satisfy $\Phi(q)=0$, and $g(x)$ maps torques to accelerations only in the valid directions permitted by the constraints.
 3.  **Linearity Preservation:** The complexity of the constraint forces (which depend on state and input) does not destroy the linearity with respect to $u$. The Lagrange multipliers are linear in $u$, and thus their substitution back into the dynamics preserves the affine form.
+4.  **Parameter Independence:** The affine structure is independent of parameter values. The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion.
 
 This structure forms the mathematical basis for the Zero Torque Counterfactual (ZTCF) and the force taxonomy presented in the subsequent parts of this series.
