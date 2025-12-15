@@ -1,7 +1,10 @@
-from playwright.sync_api import sync_playwright
 import os
 
-def run():
+from playwright.sync_api import sync_playwright
+
+
+def run() -> None:
+    """Run the Playwright test for accordion accessibility."""
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
