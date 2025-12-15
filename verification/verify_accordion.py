@@ -1,12 +1,7 @@
+from playwright.sync_api import sync_playwright
 import os
 
-from playwright.sync_api import sync_playwright
-
-
-def run() -> None:
-    """
-    Run accessibility verification checks on the accordion component using Playwright.
-    """
+def run():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
