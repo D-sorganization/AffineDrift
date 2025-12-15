@@ -9,7 +9,7 @@ format:
     number-sections: false
 ---
 
-## Drift--input decomposition {#drift-vs-input-decomposition}
+## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
 Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
 
@@ -35,11 +35,11 @@ The *input dynamics* are defined as the torque-driven component:
 
 $$\dot{x}_{\text{input}} = g(x)\,u.$$
 
-::: {.callout-note title="Key Properties"}
+Key properties:
+
 - The dependence on $u$ is strictly linear.
 - The mapping $g(x)$ depends on configuration and shaft deformation, but does not multiply $u$ nonlinearly.
 - The number of effective torque channels is $m_{u} \le n$, reflecting anatomical underactuation at the joint level.
-:::
 
 This term represents the portion of the dynamics directly caused by the golfer's applied torques at the mechanical level of description.
 
@@ -115,9 +115,9 @@ $$\big(q(t), \dot{q}(t), \eta(t), \dot{\eta}(t)\big), \qquad t \in [t_{0}, t_{f}
 
 and we obtain the generalized torque vector $\tau_{\text{total}}(t)$ from inverse dynamics:
 
-$$\tau_{\text{total}}(t) = \mathrm{ID}\big(q(t), \dot{q}(t), \ddot{q}(t), \eta(t), \dot{\eta}(t), \ddot{\eta}(t)\big),$$
+$$\tau_{\text{total}}(t) = \text{ID}\big(q(t), \dot{q}(t), \ddot{q}(t), \eta(t), \dot{\eta}(t), \ddot{\eta}(t)\big),$$
 
-where $\mathrm{ID}(\cdot)$ denotes the inverse dynamics operator for the coupled rigid--flexible model.
+where $\text{ID}(\cdot)$ denotes the inverse dynamics operator for the coupled rigid--flexible model.
 
 From the equations of motion, the generalized torques can be written as
 
@@ -150,7 +150,6 @@ The ZTCF trajectory is not strictly required to compute this decomposition: eval
 
 ### Interpretational scope and limitations
 
-::: {.callout-important title="Scope and Limitations"}
 The ZTCF is a counterfactual *within the model*. It answers the question:
 
 > "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero?"
@@ -160,7 +159,6 @@ It does *not* claim that such a motion could actually be achieved by a real golf
 - isolates the passive mechanical contribution to the dynamics,
 - provides a baseline against which torque-driven effects can be quantified, and
 - makes the drift--input decomposition explicit and reproducible.
-:::
 
 All causal statements made in this paper are therefore conditional on the mechanical model and on the modeling assumptions stated earlier. Within that scope, the decomposition
 
@@ -190,7 +188,7 @@ Evaluating the equations of motion at this state yields the *ZVCF generalized to
 
 $$\tau_{\mathrm{ZVCF}}(t)
   =
-  \mathrm{ID}\!\left(q(t),\, 0,\,
+  \text{ID}\!\left(q(t),\, 0,\,
   \eta(t),\, 0,\,
   \ddot{q}^{\mathrm{ZVCF}}(t),\, 
   \ddot{\eta}^{\mathrm{ZVCF}}(t)\right)$$
@@ -257,12 +255,10 @@ where $\tau_{\mathrm{vel.\,drift}}(t)$ contains all velocity-dependent passive f
 
 ### Interpretational cautions
 
-::: {.callout-warning title="Interpretational Cautions"}
 The ZVCF is not intended to represent a physically realizable motion:
 
 - A real golfer cannot instantaneously set all joint and shaft velocities to zero while holding the same configuration.
 - The system would generally not remain in equilibrium under $\tau_{\mathrm{ZVCF}}(t)$; internal and external forces would cause instantaneous acceleration.
-:::
 
 Instead, ZVCF is a mathematical probe of the model used to answer:
 
