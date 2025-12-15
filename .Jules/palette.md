@@ -9,3 +9,7 @@
 ## 2025-12-12 - Skip Link Injection
 **Learning:** For sites using static generators (like Quarto) where the HTML template is hard to modify or shared across many pages, injecting critical accessibility elements like "Skip to Content" links via JavaScript is a valid strategy. It ensures presence on all pages without complex template overrides.
 **Action:** When working with generated sites, use `document.body.insertBefore(link, document.body.firstChild)` to inject skip links, ensuring they are the first focusable element.
+
+## 2025-12-13 - Accordion Accessibility
+**Learning:** Accordions require explicit programmatic linkage between headers and content panels. Using `aria-controls` and managing `aria-hidden` states ensures screen reader users understand the relationship and state of the content, which visual cues alone don't provide.
+**Action:** Ensure all accordion headers have `aria-controls` pointing to the content ID, and synchronize `aria-hidden` on the content with the `aria-expanded` state of the header.
