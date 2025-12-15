@@ -6,6 +6,7 @@ This is a workaround for when Quarto is not available.
 
 import html
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -158,11 +159,19 @@ def main() -> None:
         "resources-videos.qmd",
         "resources-websites.qmd",
         "resources.qmd",
+        "bibliography.qmd",
     ]
 
     # Process articles.qmd LAST to avoid corrupting the template
     # (articles.html is used as the template for all other pages)
     qmd_files.append("articles.qmd")
+
+    # Generate bibliography data
+    print("Generating bibliography data...")
+    try:
+        subprocess.run(["python3", "scripts/generate_bibliography_data.py"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Warning: Failed to generate bibliography data: {e}")
 
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)

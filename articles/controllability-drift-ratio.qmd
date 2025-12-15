@@ -42,9 +42,9 @@ This unified approach establishes the Drift–Control Ratio as a foundational co
 
 We model the golfer–club chain as a 3-DOF planar system:
 
-- \(q_1\): shoulder rotation  
-- \(q_2\): elbow rotation  
-- \(q_3\): wrist/club hinge  
+- \(q_1\): shoulder rotation
+- \(q_2\): elbow rotation
+- \(q_3\): wrist/club hinge
 
 Generalized coordinates:
 
@@ -58,13 +58,13 @@ The clubhead position is:
 
 \[
 \begin{aligned}
-x &= 
-\ell_1\cos q_1 
-+ \ell_2\cos(q_1+q_2) 
+x &=
+\ell_1\cos q_1
++ \ell_2\cos(q_1+q_2)
 + \ell_3\cos(q_1+q_2+q_3), \\
-y &= 
-\ell_1\sin q_1 
-+ \ell_2\sin(q_1+q_2) 
+y &=
+\ell_1\sin q_1
++ \ell_2\sin(q_1+q_2)
 + \ell_3\sin(q_1+q_2+q_3).
 \end{aligned}
 \]
@@ -138,7 +138,7 @@ We define:
 Using approximations:
 
 \[
-\|f\| \sim a\|\dot{q}\| + b\|\dot{q}\|^2,\quad 
+\|f\| \sim a\|\dot{q}\| + b\|\dot{q}\|^2,\quad
 \|g u\| \sim c\|\tau\|,
 \]
 
@@ -146,15 +146,15 @@ we have:
 
 \[
 \boxed{
-\mathrm{DCR}(t) 
-\approx 
+\mathrm{DCR}(t)
+\approx
 \frac{a\|\dot{q}(t)\| + b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
 }
 \]
 
 Since \(\tau(t)\) typically *decreases* during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.
 
-**Result:**  
+**Result:**
 \[
 \mathrm{DCR}(t) \text{ increases by } 100\times-300\times \text{ across the downswing.}
 \]
@@ -173,7 +173,7 @@ g, [f,g], [f,[f,g]], \dots
 The Lie bracket:
 
 \[
-[f,g] 
+[f,g]
 = \frac{\partial g}{\partial x}f
 - \frac{\partial f}{\partial x}g
 \]
@@ -203,15 +203,15 @@ Control authority:
 Collapse occurs when:
 
 \[
-\alpha(t) < 0.1 
-\quad\Leftrightarrow\quad 
+\alpha(t) < 0.1
+\quad\Leftrightarrow\quad
 \mathrm{DCR}(t) > 10.
 \]
 
 We find:
 
-- Collapse begins 70–120 ms before impact.  
-- Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).  
+- Collapse begins 70–120 ms before impact.
+- Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).
 - Late downswing is effectively uncontrollable.
 
 This matches athlete EMG studies and coaching intuition.
@@ -226,8 +226,8 @@ In special relativity, the **future light cone** at event \(p\) contains all eve
 
 Let:
 
-- \(\mathcal{C}^+(p)\): forward light cone  
-- \(\mathcal{C}^-(p)\): backward light cone  
+- \(\mathcal{C}^+(p)\): forward light cone
+- \(\mathcal{C}^-(p)\): backward light cone
 
 Events outside \(\mathcal{C}^+(p)\) are unreachable.
 
@@ -249,7 +249,7 @@ x(t) : u(s)\in \mathcal{U},\; s\in[0,t]
 \right\}.
 \]
 
-When control dominates, the reachable set expands widely.  
+When control dominates, the reachable set expands widely.
 When drift dominates, it collapses into a narrow tube around the drift trajectory.
 
 ## 6.3 Defining the Control Cone
@@ -283,7 +283,7 @@ The instantaneous reachable set is spanned by:
 
 \[
 \mathcal{V}(x)
-= 
+=
 \mathrm{span}\left\{
 g(x),\; \mathrm{Ad}_{e^{tf}} g,\;
 \mathrm{Ad}_{e^{tf}}[f,g], \dots
@@ -293,7 +293,7 @@ g(x),\; \mathrm{Ad}_{e^{tf}} g,\;
 As drift grows:
 
 \[
-\mathrm{Ad}_{e^{tf}} g 
+\mathrm{Ad}_{e^{tf}} g
 \longrightarrow 0
 \quad (\text{relative to drift})
 \]
@@ -301,11 +301,11 @@ As drift grows:
 and
 
 \[
-\dim(\mathcal{V}(x)) 
+\dim(\mathcal{V}(x))
 \longrightarrow 1.
 \]
 
-Interpretation:  
+Interpretation:
 The future becomes **nearly predetermined**.
 
 Just like a narrowing time cone restricts your causal influence, a narrowing control cone restricts your mechanical influence.
@@ -349,7 +349,7 @@ Linearizing:
 Perturbation dynamics:
 
 \[
-\delta \dot{x} 
+\delta \dot{x}
 \approx
 \frac{\partial f}{\partial x} \delta x
 \quad (\text{since control effects vanish}).
@@ -368,8 +368,8 @@ The variance at impact:
 
 \[
 \mathrm{Var}[\phi]
-\approx 
-H 
+\approx
+H
 e^{A_f \Delta t}
 \Sigma_0
 e^{A_f^T \Delta t}
@@ -378,7 +378,7 @@ H^T.
 
 High DCR implies large \(A_f\), hence exponential amplification of small errors.
 
-**Conclusion:**  
+**Conclusion:**
 Impact is extremely sensitive to early-swing structure.
 
 # 8. Numerical Example: Drift vs Control Magnitude

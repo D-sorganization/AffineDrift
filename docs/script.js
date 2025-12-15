@@ -50,56 +50,6 @@ function generateUniqueId(text, usedIds) {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function () {
-    // Shared Scroll Event Manager
-    const scrollHandlers = {
-        debounce: [],
-        raf: []
-    };
-    let scrollTimeout;
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-        // High frequency updates (rAF)
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                scrollHandlers.raf.forEach(handler => {
-                    try { handler(); } catch(e) { console.error(e); }
-                });
-                ticking = false;
-            });
-            ticking = true;
-        }
-
-        // Low frequency updates (Debounced)
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
-        }
-        scrollTimeout = setTimeout(() => {
-            scrollHandlers.debounce.forEach(handler => {
-                try { handler(); } catch(e) { console.error(e); }
-            });
-        }, TOC_SCROLL_DEBOUNCE_MS);
-    }, { passive: true });
-
-    // Shared Resize Event Manager (Performance Optimization)
-    // Uses ResizeObserver to robustly detect layout changes and update caches
-    const resizeHandlers = [];
-    let resizeTimeout;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-        // Debounce resize updates
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            resizeHandlers.forEach(handler => {
-                try { handler(); } catch(e) { console.error(e); }
-            });
-        }, 100);
-    });
-
-    // Observe body for layout changes
-    resizeObserver.observe(document.body);
-
-
     // Smooth scroll for anchor links (Event Delegation)
     // Replaces individual event listeners for better performance and handling dynamic content
     document.addEventListener('click', function (e) {
@@ -139,42 +89,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const navbarCollapse = document.getElementById('navbarCollapse');
 
     if (navLinks.length > 0 && sections.length > 0) {
-        // Cache for section positions to avoid layout thrashing on scroll
-        let navSectionCache = [];
-
-        function updateNavCache() {
-            // Update cache with current positions
-            navSectionCache = Array.from(sections).map(section => {
-                const rect = section.getBoundingClientRect();
-                const scrollTop = window.scrollY;
-                return {
-                    id: section.getAttribute('id'),
-                    top: rect.top + scrollTop,
-                    bottom: rect.top + scrollTop + rect.height
-                };
-            });
-        }
-
-        // Register to resize manager
-        resizeHandlers.push(updateNavCache);
-        // Initial update
-        updateNavCache();
-
         function highlightNavigation() {
             const scrollPosition = window.scrollY + 150;
 
-            // Use cached values instead of accessing DOM properties
-            navSectionCache.forEach(section => {
-                if (scrollPosition >= section.top && scrollPosition < section.bottom) {
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                     navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('href') === `#${section.id}`);
+                        link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
                     });
                 }
             });
         }
 
-        // Register to shared scroll manager
-        scrollHandlers.debounce.push(highlightNavigation);
+        // Register scroll listener (Debounced)
+        let navScrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (navScrollTimeout) clearTimeout(navScrollTimeout);
+            navScrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+        });
 
         highlightNavigation();
 
@@ -467,47 +403,35 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Cache for TOC section positions
-        let tocSectionCache = [];
-
-        function updateTocCache() {
-             tocSectionCache = sections.map(section => {
-                 const element = section.element;
-                 if (!element) return null;
-                 const rect = element.getBoundingClientRect();
-                 const scrollTop = window.scrollY;
-                 return {
-                     ...section,
-                     top: rect.top + scrollTop,
-                     bottom: rect.top + scrollTop + rect.height
-                 };
-             }).filter(s => s !== null);
-        }
-
-        // Initial update
-        updateTocCache();
-        // Register to resize manager
-        resizeHandlers.push(updateTocCache);
-
         // Highlight active section on scroll
         function highlightActiveSection() {
             const scrollPosition = window.scrollY + TOC_SCROLL_OFFSET;
             const tocLinks = tocList.querySelectorAll('a');
 
-            // Use cached positions
-            tocSectionCache.forEach((section, index) => {
+            sections.forEach((section, index) => {
+                const element = section.element;
+                if (!element) return;
+
+                const rect = element.getBoundingClientRect();
+                const elementTop = rect.top + window.scrollY;
+                const elementBottom = elementTop + rect.height;
+
                 if (index < tocLinks.length) {
                     tocLinks[index].classList.remove('active');
 
-                    if (scrollPosition >= section.top && scrollPosition < section.bottom) {
+                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
                         tocLinks[index].classList.add('active');
                     }
                 }
             });
         }
 
-        // Update on scroll
-        scrollHandlers.debounce.push(highlightActiveSection);
+        // Update on scroll (Debounced)
+        let tocScrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (tocScrollTimeout) clearTimeout(tocScrollTimeout);
+            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
+        });
 
         // Initial highlight
         highlightActiveSection();
@@ -528,12 +452,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Accordion functionality
     const accordionHeaders = document.querySelectorAll('.accordion-header');
-    accordionHeaders.forEach(header => {
+    accordionHeaders.forEach((header, index) => {
+        const content = header.nextElementSibling;
+
+        // Accessibility: Connect header and content
+        if (content && content.classList.contains('accordion-content')) {
+            // Ensure content has an ID
+            if (!content.id) {
+                content.id = `accordion-content-${index}`;
+            }
+
+            // Link header to content
+            header.setAttribute('aria-controls', content.id);
+
+            // Set initial state
+            const isExpanded = header.getAttribute('aria-expanded') === 'true';
+            content.setAttribute('aria-hidden', !isExpanded);
+        }
+
         header.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            const newExpandedState = !isExpanded;
 
             // Toggle current accordion
-            this.setAttribute('aria-expanded', !isExpanded);
+            this.setAttribute('aria-expanded', newExpandedState);
+
+            // Toggle content visibility for screen readers
+            if (content && content.classList.contains('accordion-content')) {
+                content.setAttribute('aria-hidden', !newExpandedState);
+            }
         });
     });
 
@@ -601,8 +548,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Register to shared scroll manager
-    scrollHandlers.raf.push(toggleBackToTop);
+    // Update on scroll
+    window.addEventListener('scroll', toggleBackToTop);
 
     // Initial check
     toggleBackToTop();
