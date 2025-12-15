@@ -1,0 +1,590 @@
+r1 (Quarto Markdown file — copy/paste)
+
+````markdown
+---
+title: "Drift vs Control in a Driven Double Pendulum: Intersegmental Power Transfer and the Golf-Swing Analogy"
+author: ""
+date: "2025-12-15"
+format:
+  html:
+    toc: true
+    number-sections: true
+    math: katex
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Abstract
+
+A driven double pendulum is the minimal model that still exhibits the *coupling physics* golfers actually exploit: energy and angular momentum can be redistributed between segments even when distal actuation is small or zero. This redistribution is often mislabeled as “torque production,” but much of it is *drift*: state-dependent dynamics (Coriolis/centrifugal, gravity, inertia coupling) that exist even with no active distal torque.  
+
+This article formalizes **drift vs control** in a planar two-link (shoulder–arm, wrist–club) model and focuses on **power** not as a system-wide scalar, but as **power transfer between segments** through intersegmental forces/torques. Critically, **joint constraint forces do zero net power on the full system** (internal forces), yet they can generate **large positive power on one segment and equally large negative power on the other**, enabling “free” energy transfer that grows strongly with swing speed. We show how to compute that transfer, and how it varies with velocity in a golf-like regime.
+
+---
+
+## 1. What “drift vs control” means in this context
+
+Consider generalized coordinates for a planar double pendulum:
+- $\theta_1$: absolute angle of the proximal link (upper limb / arm)
+- $\theta_2$: absolute angle of the distal link (club)
+
+Let $q = [\theta_1,\theta_2]^T$ and $\dot q$ its time derivative.
+
+The standard manipulator dynamics are
+\[
+M(q)\,\ddot q + C(q,\dot q)\,\dot q + g(q) = \tau + \tau_{\text{ext}},
+\]
+where:
+- $M(q)$ is the inertia matrix,
+- $C(q,\dot q)\dot q$ contains Coriolis/centrifugal terms,
+- $g(q)$ is gravity,
+- $\tau = [\tau_1,\tau_2]^T$ are actuator torques (here: shoulder and wrist “muscle” torques),
+- $\tau_{\text{ext}}$ are external torques (aerodynamic drag, ground coupling if you later add legs, etc.).
+
+Define the **drift acceleration** as what the system does with *zero control torques*:
+\[
+\ddot q_{\text{drift}}(q,\dot q) := M(q)^{-1}\left[-C(q,\dot q)\dot q - g(q) + \tau_{\text{ext}}\right].
+\]
+
+Define the **control acceleration map**:
+\[
+\ddot q_{\text{ctrl}}(q)\,\tau := M(q)^{-1}\tau.
+\]
+
+So the acceleration is the affine decomposition:
+\[
+\ddot q = \ddot q_{\text{drift}}(q,\dot q) + M(q)^{-1}\tau.
+\]
+
+**Key point:** even if $\tau_2=0$ (no wrist torque), $\ddot \theta_2$ can still be large because $\ddot q_{\text{drift}}$ contains coupling terms that explode with speed.
+
+---
+
+## 2. Energy rate is not the same thing as intersegmental power transfer
+
+Total mechanical energy (kinetic + potential)
+\[
+E(q,\dot q) = T(q,\dot q) + V(q).
+\]
+
+A standard identity (for ideal rigid links and holonomic joints) gives the total power balance:
+\[
+\frac{dE}{dt} = \tau^T \dot q + \tau_{\text{ext}}^T \dot q_{\text{(appropriate)}} - \mathcal{D},
+\]
+where $\mathcal{D}$ would be dissipation if included.
+
+If $\tau_{\text{ext}}=0$ and no dissipation, then:
+\[
+\frac{dE}{dt} = \tau_1 \dot\theta_1 + \tau_2 \dot\theta_2.
+\]
+
+So yes: **internal forces do not change total energy**.  
+But golfers don’t care about “total energy” in isolation — they care about **where the energy is** (club vs body), and **how fast it moves distally**.
+
+That requires a **segment-by-segment power ledger**.
+
+---
+
+## 3. Segment power accounting: how internal forces move power around
+
+### 3.1 Definitions
+
+Let link 1 be proximal, link 2 distal. Each has:
+- center-of-mass velocity $v_i$,
+- angular velocity $\omega_i$ (scalar in planar),
+- net external force $F_i$ and net external moment $M_i$ about COM.
+
+Instantaneous mechanical power *into link i* is:
+\[
+P_i = F_i \cdot v_i + M_i \,\omega_i.
+\]
+
+For link 2 (club), the “external” forces include:
+- gravity,
+- and crucially the **joint interaction wrench** from link 1 at the wrist.
+
+This joint interaction can do **positive power on the club** (speeding it up) while doing **negative power on the arm** (slowing it down) — with the sum zero (internal transfer).
+
+### 3.2 Wrist joint power transfer (planar revolute)
+
+Let the wrist joint point be $J$. Let:
+- $v_J$ be the velocity of the wrist joint point in the world frame,
+- $f_J$ be the constraint force exerted by link 1 on link 2 at the wrist (equal/opposite on link 1),
+- $m_J$ be the constraint couple moment at the joint (for an ideal revolute, you can treat it as whatever is required to satisfy constraints; if you explicitly model an actuator torque at the wrist, separate that out).
+
+Then the instantaneous **constraint-force power into link 2** is:
+\[
+P_{J\to 2}^{(\text{force})} = f_J \cdot v_J.
+\]
+The power into link 1 from the equal/opposite force is:
+\[
+P_{J\to 1}^{(\text{force})} = (-f_J)\cdot v_J = -\,P_{J\to 2}^{(\text{force})}.
+\]
+So the *net* is zero, but the *transfer* can be huge.
+
+Similarly, if you include a constraint couple $m_J$ applied to link 2, the rotational contribution is:
+\[
+P_{J\to 2}^{(\text{couple})} = m_J \,\omega_2,\quad
+P_{J\to 1}^{(\text{couple})} = (-m_J)\,\omega_1.
+\]
+
+For an **ideal revolute with no joint friction**, the joint couple that enforces the constraint does no net work on the pair, but it can still redistribute power depending on the angular velocities.
+
+### 3.3 Actuator power vs drift-mediated transfer
+
+At joint 2 (wrist), if an actuator torque $\tau_2$ is applied between links, the **actuator power** is:
+\[
+P_{\text{act},2} = \tau_2\,(\dot\theta_2 - \dot\theta_1),
+\]
+because the actuator acts on the *relative* rotation.
+
+At joint 1 (shoulder), if it actuates the proximal link relative to ground:
+\[
+P_{\text{act},1} = \tau_1\,\dot\theta_1.
+\]
+
+Everything else that changes the club’s energy—*beyond* direct $\tau_2$ input—is coming from:
+- **drift dynamics** (coupling terms),
+- manifested physically as **intersegmental power transfer** across the wrist.
+
+That’s the whole point: the club can gain power even when $\tau_2$ is small, because $f_J \cdot v_J$ can be large at high speed.
+
+---
+
+## 4. A golf-like double pendulum model
+
+### 4.1 Geometry and inertial parameters (reasonable “golf-ish” defaults)
+
+Let:
+- proximal link length $L_1 \approx 0.65\ \text{m}$ (arms/hands lumped),
+- distal link length $L_2 \approx 1.10\ \text{m}$ (club),
+- masses: $m_1 \approx 7.0\ \text{kg}$ (effective arms segment), $m_2 \approx 0.35\ \text{kg}$ (club),
+- COM distances from proximal ends: $r_1=0.32\ \text{m}$, $r_2=0.55\ \text{m}$,
+- planar moments of inertia about COM:
+  \[
+  I_i \approx \frac{1}{12} m_i L_i^2 \quad \text{(slender rod approximation)}.
+  \]
+
+This is not a perfect biomechanical model — it’s a deliberately minimal coupling engine.
+
+### 4.2 “Golf-like” speed targets
+
+Typical club angular velocity near impact can be enormous; in a planar abstraction you can aim for:
+- $\omega_2$ peak on the order of $30$–$60\ \text{rad/s}$,
+- with $\omega_1$ smaller but still large.
+
+The *important thing* is not exact realism; it’s reaching a regime where **$C(q,\dot q)\dot q$ dominates**. Those terms scale roughly like $\mathcal{O}(\|\dot q\|^2)$, so drift-mediated transfer should balloon with speed.
+
+---
+
+## 5. Dynamics (explicit form you can implement)
+
+Let $\Delta := \theta_2 - \theta_1$.
+
+Define:
+- $a := I_1 + I_2 + m_1 r_1^2 + m_2(L_1^2 + r_2^2)$
+- $b := m_2 L_1 r_2$
+- $d := I_2 + m_2 r_2^2$
+
+A common planar two-link form (absolute angles) yields an inertia matrix:
+\[
+M(q) =
+\begin{bmatrix}
+a + 2b\cos\Delta & d + b\cos\Delta \\
+d + b\cos\Delta  & d
+\end{bmatrix}.
+\]
+
+Coriolis/centrifugal terms can be written such that:
+\[
+C(q,\dot q)\dot q =
+\begin{bmatrix}
+- b\sin\Delta\, (2\dot\theta_1\dot\theta_2 - \dot\theta_2^2 - \dot\theta_1^2) \\
+\ \ \ b\sin\Delta\,(\dot\theta_1^2)
+\end{bmatrix}
+\]
+(Equivalent representations exist; what matters is consistency.)
+
+Gravity terms:
+\[
+g(q)=
+\begin{bmatrix}
+(m_1 r_1 + m_2 L_1) g \sin\theta_1 + m_2 r_2 g \sin\theta_2 \\
+m_2 r_2 g \sin\theta_2
+\end{bmatrix}.
+\]
+
+Then simulate:
+\[
+\ddot q = M(q)^{-1}(\tau - C(q,\dot q)\dot q - g(q)).
+\]
+
+---
+
+## 6. Computing *intersegmental power transfer* (what you actually want)
+
+### 6.1 Strategy
+
+At every timestep:
+1. compute $q,\dot q,\ddot q$ from the ODE,
+2. compute kinematics of:
+   - COM velocities $v_1, v_2$,
+   - angular velocities $\omega_1=\dot\theta_1,\ \omega_2=\dot\theta_2$,
+   - joint-point velocity $v_J$ (wrist point),
+3. compute link-wise kinetic energy rates $\dot T_1, \dot T_2$,
+4. compute actuator powers $P_{\text{act},1}, P_{\text{act},2}$,
+5. infer the **wrist transfer power** as the remainder needed to make each link’s power balance close.
+
+The cleanest operational definition for transfer from link 1 to link 2 is:
+\[
+P_{1\to 2}^{(\text{transfer})}
+:= \frac{d}{dt}T_2 \;-\; P_{\text{act},2}^{(\text{into link 2})} \;-\; P_{g,2},
+\]
+where
+\[
+P_{g,2} = (m_2 g \hat y)\cdot v_{2,\text{COM}}
+\]
+(with sign convention: gravity does negative work when COM moves upward).
+
+This transfer quantity is exactly the “internal pipeline” that does not show up in total energy change (because it cancels with $-P_{1\to 2}$ on link 1).
+
+### 6.2 Why drift dominates at high speed
+
+The coupling terms $C(q,\dot q)\dot q$ scale like $\|\dot q\|^2$.
+So even if $\tau_2$ is modest, the distal link can receive large positive power through transfer.
+
+In other words: at high speed, the club is being “fed” by the state-dependent dynamics more than by direct wrist torque — which is precisely the drift story.
+
+---
+
+## 7. A simulation recipe with “golf-ish” torques
+
+You want a model that:
+- builds speed proximally (shoulder torque early),
+- then allows coupling to sling power distally,
+- optionally adds a late wrist pulse to compare “control” vs “drift transfer.”
+
+Example torque profiles (smooth bumps). Let $t\in[0,T]$, $T\approx 0.30\ \text{s}$.
+
+Define a smooth bump function:
+\[
+B(t;t_0,t_1) =
+\begin{cases}
+\sin^2\left(\pi \frac{t-t_0}{t_1-t_0}\right), & t_0 \le t \le t_1\\
+0, & \text{else}
+\end{cases}
+\]
+
+Then:
+- shoulder torque: $\tau_1(t)=\tau_{1,\max} B(t;0.02,0.22)$
+- wrist torque: $\tau_2(t)=\tau_{2,\max} B(t;0.18,0.28)$ (optional late “snap”)
+
+Pick magnitudes to hit fast regimes, e.g.
+- $\tau_{1,\max}$ in the tens to low hundreds N·m (effective),
+- $\tau_{2,\max}$ smaller (or set to zero to isolate drift transfer).
+
+---
+
+## 8. Python implementation (complete, runnable)
+
+```{python}
+import numpy as np
+from dataclasses import dataclass
+from scipy.integrate import solve_ivp
+
+@dataclass
+class Params:
+    g: float = 9.81
+    L1: float = 0.65
+    L2: float = 1.10
+    m1: float = 7.0
+    m2: float = 0.35
+    r1: float = 0.32
+    r2: float = 0.55
+    I1: float = None
+    I2: float = None
+
+    def __post_init__(self):
+        if self.I1 is None:
+            self.I1 = (1/12)*self.m1*self.L1**2
+        if self.I2 is None:
+            self.I2 = (1/12)*self.m2*self.L2**2
+
+def bump(t, t0, t1):
+    if t < t0 or t > t1:
+        return 0.0
+    x = (t - t0)/(t1 - t0)
+    return np.sin(np.pi*x)**2
+
+def torques(t, p: Params, tau1_max=120.0, tau2_max=25.0, use_wrist=True):
+    tau1 = tau1_max * bump(t, 0.02, 0.22)
+    tau2 = (tau2_max * bump(t, 0.18, 0.28)) if use_wrist else 0.0
+    return np.array([tau1, tau2])
+
+def M_mat(th1, th2, p: Params):
+    Δ = th2 - th1
+    a = p.I1 + p.I2 + p.m1*p.r1**2 + p.m2*(p.L1**2 + p.r2**2)
+    b = p.m2*p.L1*p.r2
+    d = p.I2 + p.m2*p.r2**2
+    c = np.cos(Δ)
+    return np.array([[a + 2*b*c, d + b*c],
+                     [d + b*c,     d     ]])
+
+def Cqd(th1, th2, w1, w2, p: Params):
+    # One consistent representation (absolute angles)
+    Δ = th2 - th1
+    b = p.m2*p.L1*p.r2
+    s = np.sin(Δ)
+    # Note: equivalent forms exist; keep internal consistency with your M and g.
+    c1 = -b*s*(2*w1*w2 - w2**2 - w1**2)
+    c2 =  b*s*(w1**2)
+    return np.array([c1, c2])
+
+def g_vec(th1, th2, p: Params):
+    g = p.g
+    g1 = (p.m1*p.r1 + p.m2*p.L1)*g*np.sin(th1) + p.m2*p.r2*g*np.sin(th2)
+    g2 = p.m2*p.r2*g*np.sin(th2)
+    return np.array([g1, g2])
+
+def dynamics(t, x, p: Params, tau1_max, tau2_max, use_wrist):
+    th1, th2, w1, w2 = x
+    τ = torques(t, p, tau1_max=tau1_max, tau2_max=tau2_max, use_wrist=use_wrist)
+    M = M_mat(th1, th2, p)
+    rhs = τ - Cqd(th1, th2, w1, w2, p) - g_vec(th1, th2, p)
+    dd = np.linalg.solve(M, rhs)
+    return np.array([w1, w2, dd[0], dd[1]])
+
+def kinematics(th1, th2, w1, w2, p: Params):
+    # Shoulder at origin. Angles measured from +x axis, CCW.
+    # Joint positions
+    Jx = p.L1*np.cos(th1)
+    Jy = p.L1*np.sin(th1)
+
+    # COM positions
+    x1 = p.r1*np.cos(th1)
+    y1 = p.r1*np.sin(th1)
+
+    x2 = Jx + p.r2*np.cos(th2)
+    y2 = Jy + p.r2*np.sin(th2)
+
+    # Velocities (time derivatives)
+    vxJ = -p.L1*np.sin(th1)*w1
+    vyJ =  p.L1*np.cos(th1)*w1
+
+    vx1 = -p.r1*np.sin(th1)*w1
+    vy1 =  p.r1*np.cos(th1)*w1
+
+    vx2 = vxJ - p.r2*np.sin(th2)*w2
+    vy2 = vyJ + p.r2*np.cos(th2)*w2
+
+    return dict(
+        J=np.array([Jx, Jy]),
+        vJ=np.array([vxJ, vyJ]),
+        com1=np.array([x1, y1]),
+        v1=np.array([vx1, vy1]),
+        com2=np.array([x2, y2]),
+        v2=np.array([vx2, vy2]),
+        ω1=w1, ω2=w2
+    )
+
+def energies(th1, th2, w1, w2, p: Params):
+    # Kinetic energy via standard two-link expression:
+    Δ = th2 - th1
+    a = p.I1 + p.I2 + p.m1*p.r1**2 + p.m2*(p.L1**2 + p.r2**2)
+    b = p.m2*p.L1*p.r2
+    d = p.I2 + p.m2*p.r2**2
+    T = 0.5*(a*w1**2 + 2*(d + b*np.cos(Δ))*w1*w2 + d*w2**2)
+    V = (p.m1*p.g*p.r1*np.sin(th1) +
+         p.m2*p.g*(p.L1*np.sin(th1) + p.r2*np.sin(th2)))
+    return T, V
+
+def run_sim(use_wrist=True, tau1_max=120.0, tau2_max=25.0, T_end=0.30):
+    p = Params()
+    # "Downswing-like" initial: small backswing angles, near rest
+    x0 = np.array([np.deg2rad(-40), np.deg2rad(-80), 0.0, 0.0])
+
+    sol = solve_ivp(
+        fun=lambda t, x: dynamics(t, x, p, tau1_max, tau2_max, use_wrist),
+        t_span=(0.0, T_end),
+        y0=x0,
+        max_step=1e-3,
+        rtol=1e-7,
+        atol=1e-9
+    )
+    return p, sol
+
+# Example usage (produces arrays; plot in your Quarto later)
+p, sol = run_sim(use_wrist=False)  # set True to compare with active wrist
+t = sol.t
+x = sol.y.T
+t[:5], x[:2]
+````
+
+---
+
+## 9. Post-processing: drift vs control *in terms of segment power transfer*
+
+### 9.1 Compute actuator powers
+
+[
+P_{\text{act},1}(t) = \tau_1(t),\dot\theta_1(t)
+]
+[
+P_{\text{act},2}(t) = \tau_2(t),(\dot\theta_2(t)-\dot\theta_1(t))
+]
+
+### 9.2 Compute per-link kinetic energy rates and transfer power
+
+You can compute link kinetic energies explicitly (COM translation + rotation) and differentiate numerically:
+[
+T_1 = \tfrac12 m_1|v_1|^2 + \tfrac12 I_1 \omega_1^2,\quad
+T_2 = \tfrac12 m_2|v_2|^2 + \tfrac12 I_2 \omega_2^2
+]
+Then
+[
+\dot T_2 \approx \frac{T_2(t+\Delta t) - T_2(t-\Delta t)}{2\Delta t}.
+]
+
+Gravity power into link 2:
+[
+P_{g,2} = (0,-m_2 g)\cdot v_2.
+]
+
+Finally define the **intersegmental transfer into the club**:
+[
+P_{1\to 2}(t) := \dot T_2(t) - P_{\text{act},2\to 2}(t) - P_{g,2}(t).
+]
+
+This is the “pipeline power” delivered through the wrist constraint interaction (equal/opposite on link 1).
+
+### 9.3 The drift contribution (operationally)
+
+Run two simulations along the *same* state trajectory is generally impossible without control redesign, so the most practical decomposition is:
+
+* **Control injection**: $P_{\text{act},2}$ and $P_{\text{act},1}$ (what actuators add to the system)
+* **Drift-mediated redistribution**: $P_{1\to 2}$ (what the system state causes internally)
+
+As speed increases, $P_{1\to 2}$ should dominate the club’s positive power episodes even if $P_{\text{act},2}$ stays small.
+
+---
+
+## 10. What you should expect to see (and why)
+
+### 10.1 Scaling with velocity
+
+Coriolis/centrifugal terms roughly scale as:
+[
+|C(q,\dot q)\dot q| \sim \mathcal{O}(|\dot q|^2).
+]
+Intersegmental transfer power has the structure “force times velocity,” and the constraint forces needed to curve the motion also grow with $|\dot q|^2$, so the transfer can scale like:
+[
+P_{1\to 2} \sim \mathcal{O}(|\dot q|^3)
+]
+in aggressive regimes.
+
+That means: once you get fast, the system is basically a power-amplifying redistribution machine.
+
+### 10.2 The uncomfortable truth
+
+If you look only at $\tau^T\dot q$, you’ll conclude “the wrist doesn’t matter” or “all power comes from shoulder.”
+If you look only at joint torque power, you’ll miss the fact that the club is being accelerated largely by **internal transfer**, which is **not** “actuator power at the wrist,” but it is absolutely real power **into the club segment**.
+
+The club doesn’t care whether the power arrived via:
+
+* direct wrist motor,
+* or a coupling-driven intersegmental pipeline.
+
+It just speeds up.
+
+---
+
+## 11. Plot set that makes the story obvious
+
+Make these plots versus time:
+
+1. $\omega_1(t)$ and $\omega_2(t)$
+2. Actuator powers: $P_{\text{act},1}(t)$ and $P_{\text{act},2}(t)$
+3. Club transfer power: $P_{1\to 2}(t)$
+4. Club kinetic energy $T_2(t)$ and its rate $\dot T_2(t)$
+5. Scatter: $P_{1\to 2}$ vs $|\dot q|$ (or vs $|\omega_2|$) to show the speed scaling
+
+Then do two runs:
+
+* **Run A:** wrist torque off ($\tau_2=0$)
+* **Run B:** wrist torque on (late pulse)
+
+If drift is doing what it should, Run A will still show large positive $P_{1\to 2}$ in the late downswing as speeds spike.
+
+---
+
+## 12. Extensions that make it even more “golf” without changing the core math
+
+* Add a torso DOF (a third link) and keep the exact same accounting; transfer just cascades across joints.
+* Add a “hand separation” constraint later (two-point attachment) if you want the true parallel mechanism feel.
+* Add a simple aerodynamic drag torque on the club: $\tau_{\text{drag}}\propto -\omega_2|\omega_2|$ to prevent absurd speeds.
+
+---
+
+## 13. Summary
+
+* **Total power** is $\tau^T\dot q$ (plus external), and internal forces cancel in the sum.
+* **Intersegmental power transfer** is not a contradiction: internal forces do zero *net* work but can do large equal/opposite work on different segments.
+* **Drift** (state-dependent coupling) is the mechanism that makes this transfer explode at high speed.
+* If you want a golf-swing story that survives contact with physics, you must talk about **segment-wise power flow**, not just system energy.
+
+---
+
+## Appendix A: Minimal post-processing code snippet (power transfer)
+
+import numpy as np
+
+def postprocess(p, sol, tau1_max=120.0, tau2_max=25.0, use_wrist=True):
+t = sol.t
+X = sol.y.T
+dt = np.mean(np.diff(t))
+
+```
+th1, th2, w1, w2 = X[:,0], X[:,1], X[:,2], X[:,3]
+
+# torques and actuator powers
+τ = np.vstack([torques(ti, p, tau1_max, tau2_max, use_wrist) for ti in t])
+P_act1 = τ[:,0] * w1
+P_act2 = τ[:,1] * (w2 - w1)  # relative joint speed
+
+# per-link kinetic energies (COM + rotation)
+T1 = np.zeros_like(t)
+T2 = np.zeros_like(t)
+Pg2 = np.zeros_like(t)
+
+for k in range(len(t)):
+    kin = kinematics(th1[k], th2[k], w1[k], w2[k], p)
+    v1 = kin["v1"]
+    v2 = kin["v2"]
+    T1[k] = 0.5*p.m1*np.dot(v1, v1) + 0.5*p.I1*(w1[k]**2)
+    T2[k] = 0.5*p.m2*np.dot(v2, v2) + 0.5*p.I2*(w2[k]**2)
+    # gravity force on link2 is (0, -m2 g)
+    Pg2[k] = np.dot(np.array([0.0, -p.m2*p.g]), v2)
+
+# time derivative of club kinetic energy
+dT2 = np.gradient(T2, t)
+
+# transfer power into club (drift-mediated + internal pipeline)
+P_transfer_1to2 = dT2 - P_act2 - Pg2
+
+return dict(
+    t=t, th1=th1, th2=th2, w1=w1, w2=w2,
+    P_act1=P_act1, P_act2=P_act2,
+    T1=T1, T2=T2, dT2=dT2,
+    Pg2=Pg2, P_transfer_1to2=P_transfer_1to2
+)
+```
+
+data = postprocess(p, sol, use_wrist=False)
+data["P_transfer_1to2"][:5]
+
+```
+
+If you want, I can also turn this into a “results-included” article (plots + a short numeric summary like peak $P_{1\to 2}$, peak $\omega_2$, and the fraction of club power coming from transfer vs direct wrist actuation) — but the core structure above is already the right physics ledger for what you described.
+```
