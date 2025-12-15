@@ -28,7 +28,7 @@ The key mathematical observation is that the golfer--club--shaft system can be m
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
-The remainder of the manuscript is organized as follows. Section 1 defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid--flexible system. Section 3 formalizes the drift--input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
+The remainder of the paper is organized as follows. Section 1 defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid--flexible system. Section 3 formalizes the drift--input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
 
 ## System Definition and Modeling Assumptions
 
@@ -94,11 +94,6 @@ External forces included in the model are:
 
 Aerodynamic forces, impact forces, and non-holonomic contact effects are excluded under the assumptions above. Ground contact is modeled as a holonomic constraint that effectively fixes the base of the kinematic chain.
 
-
-$$r_{\text{club}}(q,\eta) = r_{h}(q) + \sum_{i=1}^{m} \phi_{i} \, \eta_{i},$$
-
-where $\phi_{i}$ are mode-shape dependent vectors (or fields, in a more detailed representation). This coupling modifies the inertia, Coriolis, and elastic terms in the dynamics but does not introduce multiplicative torque terms; the control input still enters linearly through the joint torques.
-
 ### Hand--club kinematic interface
 
 Let $r_{h}(q)$ denote the hand pose (e.g., the pose of a marker cluster or a grip reference frame) and $r_{\text{club}}(q,\eta)$ the clubhead pose. Under a modal shaft approximation, the clubhead pose can be written schematically as
@@ -106,8 +101,6 @@ Let $r_{h}(q)$ denote the hand pose (e.g., the pose of a marker cluster or a gri
 $$r_{\text{club}}(q,\eta) = r_{h}(q) + \sum_{i=1}^{m} \phi_{i} \, \eta_{i},$$
 
 where $\phi_{i}$ are mode-shape dependent vectors (or fields, in a more detailed representation). This coupling modifies the inertia, Coriolis, and elastic terms in the dynamics but does not introduce multiplicative torque terms; the control input still enters linearly through the joint torques.
-
-To facilitate the derivation of the unified equations of motion in the next section, we summarize the key kinematic and dynamic symbols in the following table.
 
 ### Notation table
 
@@ -137,8 +130,6 @@ For reference, the following table summarizes the main symbols used in the manus
 | ZVCF | Zero Velocity Counterfactual |
 | $\phi_{i}$ | Coefficients associated with shaft mode shapes |
 | $t$ | Time |
-
-With the system components and notation established, we now proceed to derive the equations of motion. Our objective is not just to write down Newton's laws, but to cast them into a form that explicitly exposes the control-affine structure---separating the dynamics into terms that depend on the state alone and terms that are driven by the golfer's torque.
 
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 
@@ -306,7 +297,7 @@ Three structural observations follow:
 2. **All torque-driven effects are confined to $g(x)u$.** Any change in the dynamics caused by altering the torque profile must pass through the input term; the drift term depends only on the state and parameters.
 3. **The affine structure is independent of parameter values.** The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion. In practice, parameter uncertainty affects the *accuracy* of the decomposition but not its algebraic form.
 
-This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections. Specifically, the identification of the drift vector field $f(x)$ and the input vector fields $g(x)$ allows us to mathematically separate the passive evolution of the system from the active intervention of the golfer. In Part II, we will exploit this separation to define the Zero Torque Counterfactual and formalize the causal decomposition of forces.
+This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections.
 
 
 

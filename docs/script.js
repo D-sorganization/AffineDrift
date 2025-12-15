@@ -105,14 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Debounce scroll event for performance
-        let scrollTimeout;
+        // Register scroll listener (Debounced)
+        let navScrollTimeout;
         window.addEventListener('scroll', () => {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
-        }, { passive: true });
+            if (navScrollTimeout) clearTimeout(navScrollTimeout);
+            navScrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+        });
 
         highlightNavigation();
 
@@ -428,23 +426,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-<<<<<<< HEAD
         // Update on scroll (Debounced)
         let tocScrollTimeout;
         window.addEventListener('scroll', () => {
             if (tocScrollTimeout) clearTimeout(tocScrollTimeout);
             tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
         });
-=======
-        // Update on scroll
-        let tocScrollTimeout;
-        window.addEventListener('scroll', function () {
-            if (tocScrollTimeout) {
-                clearTimeout(tocScrollTimeout);
-            }
-            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
-        }, { passive: true });
->>>>>>> origin/main
 
         // Initial highlight
         highlightActiveSection();
@@ -561,17 +548,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Optimized scroll listener using requestAnimationFrame for better performance
-    let backToTopTicking = false;
-    window.addEventListener('scroll', () => {
-        if (!backToTopTicking) {
-            window.requestAnimationFrame(() => {
-                toggleBackToTop();
-                backToTopTicking = false;
-            });
-            backToTopTicking = true;
-        }
-    }, { passive: true });
+    // Update on scroll
+    window.addEventListener('scroll', toggleBackToTop);
 
     // Initial check
     toggleBackToTop();
