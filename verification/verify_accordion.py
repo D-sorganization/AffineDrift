@@ -1,15 +1,13 @@
 from playwright.sync_api import sync_playwright
 import os
 
-def run() -> None:
-    """Run the Playwright test for accordion accessibility."""
+def run():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
 
         # Load the test file
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(base_dir, "test_accordion.html")
+        file_path = os.path.abspath("test_accordion.html")
         page.goto(f"file://{file_path}")
 
         # Wait for script to run
