@@ -50,6 +50,36 @@ function generateUniqueId(text, usedIds) {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function () {
+    // Shared Scroll Event Manager
+    const scrollHandlers = {
+        debounce: [],
+        raf: []
+    };
+    let scrollTimeout;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        // High frequency updates (rAF)
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                scrollHandlers.raf.forEach(handler => {
+                    try { handler(); } catch(e) { console.error(e); }
+                });
+                ticking = false;
+            });
+            ticking = true;
+        }
+
+        // Low frequency updates (Debounced)
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+        }
+        scrollTimeout = setTimeout(() => {
+            scrollHandlers.debounce.forEach(handler => {
+                try { handler(); } catch(e) { console.error(e); }
+            });
+        }, TOC_SCROLL_DEBOUNCE_MS);
+    }, { passive: true });
     // Smooth scroll for anchor links (Event Delegation)
     // Replaces individual event listeners for better performance and handling dynamic content
     document.addEventListener('click', function (e) {

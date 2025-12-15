@@ -105,12 +105,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Register scroll listener (Debounced)
-        let navScrollTimeout;
+        // Debounce scroll event for performance
+        let scrollTimeout;
         window.addEventListener('scroll', () => {
-            if (navScrollTimeout) clearTimeout(navScrollTimeout);
-            navScrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
-        });
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            scrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+        }, { passive: true });
 
         highlightNavigation();
 
@@ -426,12 +428,23 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+<<<<<<< HEAD
         // Update on scroll (Debounced)
         let tocScrollTimeout;
         window.addEventListener('scroll', () => {
             if (tocScrollTimeout) clearTimeout(tocScrollTimeout);
             tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
         });
+=======
+        // Update on scroll
+        let tocScrollTimeout;
+        window.addEventListener('scroll', function () {
+            if (tocScrollTimeout) {
+                clearTimeout(tocScrollTimeout);
+            }
+            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
+        }, { passive: true });
+>>>>>>> origin/main
 
         // Initial highlight
         highlightActiveSection();
@@ -548,8 +561,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Update on scroll
-    window.addEventListener('scroll', toggleBackToTop);
+    // Optimized scroll listener using requestAnimationFrame for better performance
+    let backToTopTicking = false;
+    window.addEventListener('scroll', () => {
+        if (!backToTopTicking) {
+            window.requestAnimationFrame(() => {
+                toggleBackToTop();
+                backToTopTicking = false;
+            });
+            backToTopTicking = true;
+        }
+    }, { passive: true });
 
     // Initial check
     toggleBackToTop();
