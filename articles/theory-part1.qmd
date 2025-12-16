@@ -28,17 +28,29 @@ The key mathematical observation is that the golfer--club--shaft system can be m
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
-The remainder of the paper is organized as follows. Section 1 defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid--flexible system. Section 3 formalizes the drift--input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
+The remainder of the paper is organized as follows:
 
-## System Definition and Modeling Assumptions
+- **Section 1** defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables.
+- **Section 2** derives the unified control-affine form for the coupled rigid--flexible system.
+- **Section 3** formalizes the drift--input decomposition.
+- **Sections 4 and 5** introduce the ZTCF and ZVCF constructions.
+- **Section 6** discusses drift invariance and input constraints.
+- **Section 7** presents a force taxonomy based on the affine mapping.
+- **Section 8** summarizes the theoretical limitations of the framework.
+- **Section 9** concludes with directions for future theoretical and empirical work.
+
+Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
+
+## System definition and modeling assumptions
 
 In this section we define the mathematical structure of the golfer--club--shaft system and state the modeling assumptions that bound the theoretical framework. The goal is not to fix a unique anatomical model but to specify a general class of multibody systems for which the subsequent analysis is valid.
 
 ### Modeling assumptions
 
-**Modeling Assumptions for the Theoretical Framework**
-
+:::{.callout-warning}
+## Modeling Assumptions for the Theoretical Framework
 These assumptions apply strictly to the theoretical decomposition presented in this manuscript (Part I). They define the mathematical boundaries of the model; empirical validation and relaxation of these assumptions will be addressed in later work.
+:::
 
 1. **Rigid body segments.** All anatomical segments of the golfer (torso, arms, hands) are modeled as rigid bodies with fixed mass and inertia properties.
 2. **Flexible shaft via finite-dimensional modal approximation.** The shaft is modeled using $m$ vibration modes obtained from standard beam theory (e.g., Euler--Bernoulli or Timoshenko). Modal truncation approximates the distributed dynamics with a finite-dimensional representation.
@@ -51,11 +63,7 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 
 ### Generalized coordinates and state
 
-The golfer's anatomy is modeled as a multibody kinematic chain with
-
-$$q \in \mathbb{R}^{n}$$
-
-generalized coordinates, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.
+The golfer's anatomy is modeled as a multibody kinematic chain with generalized coordinates $q \in \mathbb{R}^{n}$, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.
 
 The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates
 
@@ -131,7 +139,7 @@ For reference, the following table summarizes the main symbols used in the manus
 | $\phi_{i}$ | Coefficients associated with shaft mode shapes |
 | $t$ | Time |
 
-## Unified Control-Affine Derivation (Rigid + Flexible System)
+## Unified control-affine derivation (rigid + flexible system)
 
 We now establish the control-affine structure of the coupled golfer--club--shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal--rigid coupling expressions are relegated to the Appendices.
 
