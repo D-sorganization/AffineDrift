@@ -417,9 +417,10 @@ window.Quarto = {
   <li><a href="#gravity-term-gq" id="toc-gravity-term-gq" class="nav-link" data-scroll-target="#gravity-term-gq">5.4 Gravity term (g(q))</a></li>
   <li><a href="#natural-torques-and-active-input" id="toc-natural-torques-and-active-input" class="nav-link" data-scroll-target="#natural-torques-and-active-input">5.5 Natural torques and active input</a></li>
   </ul></li>
-  <li><a href="#python-implementation-of-the-double-pendulum-model" id="toc-python-implementation-of-the-double-pendulum-model" class="nav-link" data-scroll-target="#python-implementation-of-the-double-pendulum-model">6. Python implementation of the double pendulum model</a>
+  <li><a href="#energy-transfer-decomposition" id="toc-energy-transfer-decomposition" class="nav-link" data-scroll-target="#energy-transfer-decomposition">6. Energy Transfer Decomposition</a></li>
+  <li><a href="#python-implementation-of-the-double-pendulum-model" id="toc-python-implementation-of-the-double-pendulum-model" class="nav-link" data-scroll-target="#python-implementation-of-the-double-pendulum-model">7. Python implementation of the double pendulum model</a>
   <ul class="collapse">
-  <li><a href="#imports-and-parameters" id="toc-imports-and-parameters" class="nav-link" data-scroll-target="#imports-and-parameters">6.1 Imports and parameters</a></li>
+  <li><a href="#imports-and-parameters" id="toc-imports-and-parameters" class="nav-link" data-scroll-target="#imports-and-parameters">7.1 Imports and parameters</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -710,8 +711,28 @@ g_2(q) &amp;= m_2 c_2 g \sin(q_1 + q_2).
 <hr>
 </section>
 </section>
+<section id="energy-transfer-decomposition" class="level2">
+<h2 class="anchored" data-anchor-id="energy-transfer-decomposition">6. Energy Transfer Decomposition</h2>
+<p>A critical aspect of the drift–control analysis is understanding <strong>power flow</strong>: how energy moves between segments and how much of that transfer is due to “natural” dynamics versus “active” input.</p>
+<p>For a distal segment (e.g., the club, link 2), the total energy <span class="math inline">\(E_2\)</span> changes due to work done by the joint constraint force <span class="math inline">\(\vec{F}_{21}\)</span> and the joint torque <span class="math inline">\(\tau_{21}\)</span>.</p>
+<p>[ <em>2 = </em>{21} <em>{} + </em>{21} , _2. ]</p>
+<p>We calculate the joint constraint force <span class="math inline">\(\vec{F}_{21}\)</span> from Newton’s law applied to the COM of link 2:</p>
+<p>[ <em>{21} = m_2 (</em>{c2} - ). ]</p>
+<p>Using the affine decomposition of acceleration from (3.2), [ = _{} + M(q)^{-1} B(q) u, ] the linear acceleration of the COM <span class="math inline">\(\vec{a}_{c2}\)</span> decomposes as:</p>
+<p>[ <em>{c2} = J</em>{c2} + <em>{c2} = </em>{ <em>{}} + </em>{ _{}}. ]</p>
+<p>Thus, the constraint force splits into <strong>natural</strong> and <strong>active</strong> components:</p>
+<p>[ <em>{} = m_2 (</em>{} - ), <em>{} = m_2 </em>{}. ]</p>
+<p>Depending on the actuator model, the joint torque <span class="math inline">\(\tau_{21}\)</span> also splits (e.g., into passive spring/damper <span class="math inline">\(\tau_{\text{nat}}\)</span> and active motor <span class="math inline">\(\tau_{\text{act}}\)</span>). For a purely torque-driven joint, <span class="math inline">\(\tau_{21} = \tau_{\text{act}} = u_2\)</span>.</p>
+<p>The <strong>Power Transfer</strong> then decomposes into:</p>
+<ol type="1">
+<li><p><strong>Natural Power Transfer</strong>: Energy moved into the link by passive dynamics (e.g., the arm “pulling” on the club due to centripetal acceleration). [ P_{} = <em>{} </em>{} + _{} _2. ]</p></li>
+<li><p><strong>Active Power Transfer</strong>: Energy moved into the link by the instantaneous action of the control inputs. [ P_{} = <em>{} </em>{} + _{} _2. ]</p></li>
+</ol>
+<p>This decomposition allows us to answer: <strong>“Is the club gaining energy because I am pulling on it (passive/geometric transfer) or because I am twisting it (active transfer)?”</strong></p>
+<hr>
+</section>
 <section id="python-implementation-of-the-double-pendulum-model" class="level2">
-<h2 class="anchored" data-anchor-id="python-implementation-of-the-double-pendulum-model">6. Python implementation of the double pendulum model</h2>
+<h2 class="anchored" data-anchor-id="python-implementation-of-the-double-pendulum-model">7. Python implementation of the double pendulum model</h2>
 <p>Below is a Python implementation of the double pendulum dynamics, suitable for integration into a Streamlit app. We:</p>
 <ul>
 <li>Define the system parameters.</li>
@@ -721,7 +742,7 @@ g_2(q) &amp;= m_2 c_2 g \sin(q_1 + q_2).
 <li>Provide a simple example input (u(t)) and numerical simulation.</li>
 </ul>
 <section id="imports-and-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="imports-and-parameters">6.1 Imports and parameters</h3>
+<h3 class="anchored" data-anchor-id="imports-and-parameters">7.1 Imports and parameters</h3>
 <p>import numpy as np from scipy.integrate import solve_ivp</p>
 
 
