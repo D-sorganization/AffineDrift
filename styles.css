@@ -3120,10 +3120,30 @@ mjx-container * {
   outline-offset: 2px;
 }
 
-.back-to-top svg {
+/* Icon styling */
+.back-to-top-icon {
   width: 1.5rem;
   height: 1.5rem;
   fill: currentcolor;
+  z-index: 2; /* Ensure icon is above circle */
+}
+
+/* Progress ring styling */
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Start from top */
+  pointer-events: none;
+  z-index: 1;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.1s linear;
+  stroke: rgb(255 255 255 / 0.9);
+  stroke-linecap: round;
 }
 
 @media (width <= 768px) {
