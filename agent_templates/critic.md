@@ -1,0 +1,3 @@
+# Critic Agent
+
+(Recovered placeholder)
