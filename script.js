@@ -522,16 +522,35 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
 
-    // Back to Top Button
+    // Back to Top Button with Progress Ring
     const backToTopBtn = document.createElement('button');
     backToTopBtn.className = 'back-to-top';
     backToTopBtn.setAttribute('aria-label', 'Scroll to top');
+
+    // Progress ring circumference: 2 * PI * r = 2 * PI * 21 ≈ 131.95
+    const radius = 21;
+    const circumference = 2 * Math.PI * radius;
+
     backToTopBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48">
+            <circle
+                class="progress-ring-circle"
+                stroke="white"
+                stroke-width="3"
+                fill="transparent"
+                r="${radius}"
+                cx="24"
+                cy="24"
+                style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${circumference};"
+            />
+        </svg>
+        <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M12 4l-8 8h6v8h4v-8h6z"/>
         </svg>
     `;
     document.body.appendChild(backToTopBtn);
+
+    const progressCircle = backToTopBtn.querySelector('.progress-ring-circle');
 
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
@@ -540,19 +559,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    function toggleBackToTop() {
-        if (window.scrollY > 300) {
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+
+        // Visibility toggle
+        if (scrollTop > 300) {
             backToTopBtn.classList.add('visible');
         } else {
             backToTopBtn.classList.remove('visible');
         }
+
+        // Progress ring update
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+            const scrollPercent = Math.min(scrollTop / docHeight, 1);
+            const offset = circumference - (scrollPercent * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+        }
     }
 
     // Update on scroll
-    window.addEventListener('scroll', toggleBackToTop);
+    window.addEventListener('scroll', updateScrollProgress);
 
     // Initial check
-    toggleBackToTop();
+    updateScrollProgress();
 
     // Initialize Article History Tracking and Display
     initArticleHistory();
