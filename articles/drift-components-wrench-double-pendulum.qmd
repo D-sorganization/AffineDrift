@@ -454,7 +454,61 @@ In a golf-swing context or in human biomechanics, you might replace \(B(q)\) by 
 
 ---
 
-## 6. Python implementation of the double pendulum model
+## 6. Energy Transfer Decomposition
+
+A critical aspect of the drift–control analysis is understanding **power flow**: how energy moves between segments and how much of that transfer is due to "natural" dynamics versus "active" input.
+
+For a distal segment (e.g., the club, link 2), the total energy $E_2$ changes due to work done by the joint constraint force $\vec{F}_{21}$ and the joint torque $\tau_{21}$.
+
+\[
+\dot{E}_2 = \vec{F}_{21} \cdot \vec{v}_{\text{joint}} + \tau_{21} \, \omega_2.
+\]
+
+We calculate the joint constraint force $\vec{F}_{21}$ from Newton's law applied to the COM of link 2:
+
+\[
+\vec{F}_{21} = m_2 (\vec{a}_{c2} - \vec{g}).
+\]
+
+Using the affine decomposition of acceleration from (3.2),
+\[
+\ddot{q} = \ddot{q}_{\text{nat}} + M(q)^{-1} B(q) u,
+\]
+the linear acceleration of the COM $\vec{a}_{c2}$ decomposes as:
+
+\[
+\vec{a}_{c2} 
+= J_{c2} \ddot{q} + \dot{J}_{c2} \dot{q}
+= \underbrace{(J_{c2} \ddot{q}_{\text{nat}} + \dot{J}_{c2} \dot{q})}_{\text{natural acceleration } \vec{a}_{\text{nat}}}
+  + \underbrace{(J_{c2} M(q)^{-1} B(q) u)}_{\text{active acceleration } \vec{a}_{\text{act}}}.
+\]
+
+Thus, the constraint force splits into **natural** and **active** components:
+
+\[
+\vec{F}_{\text{nat}} = m_2 (\vec{a}_{\text{nat}} - \vec{g}), \qquad
+\vec{F}_{\text{act}} = m_2 \vec{a}_{\text{act}}.
+\]
+
+Depending on the actuator model, the joint torque $\tau_{21}$ also splits (e.g., into passive spring/damper $\tau_{\text{nat}}$ and active motor $\tau_{\text{act}}$). For a purely torque-driven joint, $\tau_{21} = \tau_{\text{act}} = u_2$.
+
+The **Power Transfer** then decomposes into:
+
+1.  **Natural Power Transfer**: Energy moved into the link by passive dynamics (e.g., the arm "pulling" on the club due to centripetal acceleration).
+    \[
+    P_{\text{nat}} = \vec{F}_{\text{nat}} \cdot \vec{v}_{\text{joint}} + \tau_{\text{nat}} \omega_2.
+    \]
+
+2.  **Active Power Transfer**: Energy moved into the link by the instantaneous action of the control inputs.
+    \[
+    P_{\text{act}} = \vec{F}_{\text{act}} \cdot \vec{v}_{\text{joint}} + \tau_{\text{act}} \omega_2.
+    \]
+
+This decomposition allows us to answer: **"Is the club gaining energy because I am pulling on it (passive/geometric transfer) or because I am twisting it (active transfer)?"**
+
+---
+
+## 7. Python implementation of the double pendulum model
 
 Below is a Python implementation of the double pendulum dynamics, suitable for integration into a Streamlit app. We:
 
@@ -464,7 +518,7 @@ Below is a Python implementation of the double pendulum dynamics, suitable for i
 - Provide a helper to compute \(\tau_{\text{nat}}\) from a trajectory.
 - Provide a simple example input \(u(t)\) and numerical simulation.
 
-### 6.1 Imports and parameters
+### 7.1 Imports and parameters
 
 ```{python}
 import numpy as np
