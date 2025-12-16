@@ -122,7 +122,8 @@ def create_html_page(
 
         # Replace the main content
         content_pattern = r'<section class="article-section">.*?</section>'
-        template = re.sub(content_pattern, body_html, template, flags=re.DOTALL)
+        # Use lambda to avoid backslash escaping issues in body_html
+        template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
 
         # Remove articles-specific JavaScript for non-articles pages
         if page_type != "articles":
@@ -143,6 +144,11 @@ def main() -> None:
     # Find all .qmd files that need to be built
     # Note: Process articles.qmd LAST to avoid corrupting the template
     qmd_files = [
+        "index.qmd",
+        "about.qmd",
+        "collaborate.qmd",
+        "contact.qmd",
+        "drifter-manifesto.qmd",
         "models.qmd",
         "models-drake.qmd",
         "models-mujoco.qmd",
