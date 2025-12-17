@@ -17,7 +17,7 @@ def verify_back_to_top() -> None:
 
         # Scroll down to make it visible (> 300px)
         page.evaluate("window.scrollTo(0, 500)")
-        page.wait_for_timeout(1000) # Wait for transition
+        page.wait_for_timeout(1000)  # Wait for transition
 
         # Take a screenshot of the button area (bottom right)
         # Button is at bottom: 2rem, right: 2rem.
@@ -36,6 +36,7 @@ def verify_back_to_top() -> None:
         page.screenshot(path="verification/back_to_top_end.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     verify_back_to_top()
