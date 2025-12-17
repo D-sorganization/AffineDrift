@@ -11,6 +11,8 @@ format:
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
+The theoretical framework presented in Parts I through IV relies on precise algebraic cancellations between inertial, Coriolis, and elastic terms. While analytically guaranteed by the control-affine derivation, these cancellations must also hold in a numerical environment to be practically useful. This section documents the implementation of the AffineDrift framework within a forward-dynamics simulation (Simulink). It serves as a numerical proof-of-concept, verifying that the abstract definitions of ZTCF and ZVCF can be computed robustly in the presence of integration error and discrete-time sampling.
+
 To complement the theoretical framework developed in this manuscript and fully implement the force decomposition algorithms derived in the Appendices, a forward-dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced earlier using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
 
 The model is a planar two-hand, multi-link system with a flexible beam shaft, based on the publicly released "Two Hand Golf Swing Model" (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings.
