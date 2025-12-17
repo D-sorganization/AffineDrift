@@ -53,7 +53,8 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
                     (
                         line_num,
                         "unbalanced",
-                        f"Unbalanced $$ delimiters: {dollar_count} found " f"(should be even)",
+                        f"Unbalanced $$ delimiters: {dollar_count} found "
+                        f"(should be even)",
                     )
                 )
 
@@ -189,7 +190,7 @@ def main() -> int:
         print("SUCCESS: No equation rendering issues found!")
         return 0
     else:
-        print("\nWARNING: Some equation rendering issues were found. " "Please review and fix.")
+        print("\nWARNING: Some equation rendering issues were found. Please review and fix.")
         return 1
 
 
