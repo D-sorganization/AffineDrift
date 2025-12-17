@@ -85,16 +85,12 @@ CONVERSIONS = [
         "description": "Appendix C: Applications",
     },
     {
-        "source": (
-            "content/Affine Nature of the Golf Swing/" "Appendix_D_Lagrangian_Reference.tex"
-        ),
+        "source": ("content/Affine Nature of the Golf Swing/Appendix_D_Lagrangian_Reference.tex"),
         "target": f"{ARTICLES_DIR}/appendix-lagrangian-reference.qmd",
         "description": "Appendix D: Lagrangian Reference",
     },
     {
-        "source": (
-            "content/Affine Nature of the Golf Swing/" "Appendix_E_ScrewTheory_Reference.tex"
-        ),
+        "source": ("content/Affine Nature of the Golf Swing/Appendix_E_ScrewTheory_Reference.tex"),
         "target": f"{ARTICLES_DIR}/appendix-screw-theory-reference.qmd",
         "description": "Appendix E: Screw Theory Reference",
     },

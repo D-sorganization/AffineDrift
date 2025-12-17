@@ -1010,23 +1010,23 @@ with st.expander("📐 Model Information"):
         theta_grip_rad,
     )
 
+    pct_alpha = np.abs(np.sin(theta_grip_rad)) * 100
+    pct_gamma = np.abs(np.cos(theta_grip_rad)) * 100
+
     st.markdown(
         f"""
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
     - **Wrist Deviation Angle (φ):** {wrist_angle}°
-    ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'}
-    deviation)
+    ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'} deviation)
 
     ### Transmission Ratios
     - **Angular Velocity Ratio (ω_out/ω_in):** {omega_ratio:.4f}
     - **Torque Transmission Ratio (τ_out/τ_in):** {tau_ratio:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m
-    ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
-    - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m
-    ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
+    - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m ({pct_alpha:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m ({pct_gamma:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
     - **α-axis acceleration:** {torque_alpha/I_alpha:.4f} rad/s²

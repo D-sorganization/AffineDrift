@@ -62,7 +62,7 @@ class MATLABQualityChecker:
         """
         if not self.matlab_dir.exists():
             logger.info(
-                f"MATLAB directory not found: {self.matlab_dir} " f"(skipping MATLAB checks)",
+                f"MATLAB directory not found: {self.matlab_dir} (skipping MATLAB checks)",
             )
             return False
 
@@ -383,11 +383,9 @@ class MATLABQualityChecker:
                     "1.57": "pi/2 constant [dimensionless] - mathematical constant",
                     "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
                     "0.785": "pi/4 constant [dimensionless] - mathematical constant",
-                    "9.81": ("gravitational acceleration [m/s²] - " "approximate standard gravity"),
-                    "9.8": ("gravitational acceleration [m/s²] - " "approximate standard gravity"),
-                    "9.807": (
-                        "gravitational acceleration [m/s²] - " "approximate standard gravity"
-                    ),
+                    "9.81": "gravitational acceleration [m/s²] - approximate standard gravity",
+                    "9.8": "gravitational acceleration [m/s²] - approximate standard gravity",
+                    "9.807": ("gravitational acceleration [m/s²] - approximate standard gravity"),
                 }
 
                 for num in magic_numbers:
