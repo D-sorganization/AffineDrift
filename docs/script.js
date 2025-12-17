@@ -1,14 +1,14 @@
 /**
  * AffineDrift - Interactive JavaScript
  * Handles smooth scrolling, navigation highlights, and interactive elements
+ * ⚡ Optimized by Bolt: Implements Shared Scroll Manager & Geometry Caching
  */
 
-// Constants for scroll offsets and timing
+// Constants for scroll offsets
 // Note: Uses --scroll-offset not --header-offset because:
 // - --header-offset is for sidebar positioning (top: 120px)
 // - --scroll-offset is for scroll behavior (scroll-margin-top: 140px)
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
-// Fetch offset from CSS variable or default to 140
 const getScrollOffset = () => {
     if (typeof window !== 'undefined') {
         const value = getComputedStyle(document.documentElement).getPropertyValue('--scroll-offset');
@@ -16,10 +16,9 @@ const getScrollOffset = () => {
     }
     return 140;
 };
-const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset (matches CSS --scroll-offset)
+const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset
 const TOC_SCROLL_OFFSET = HEADER_OFFSET; // Active section detection offset
-const TOC_SCROLL_DEBOUNCE_MS = 50; // Debounce delay for scroll events
-const MAX_ID_GENERATION_ATTEMPTS = 100; // Safety limit for ID generation
+const MAX_ID_GENERATION_ATTEMPTS = 100;
 
 // Helper function to generate unique IDs
 function generateUniqueId(text, usedIds) {
@@ -48,29 +47,172 @@ function generateUniqueId(text, usedIds) {
     return id;
 }
 
-// Smooth scrolling for navigation links
+/**
+ * ⚡ SectionGeometryCache
+ * Caches element positions to prevent layout thrashing (reflows) during scroll events.
+ * Only recalculates on resize or explicit update.
+ */
+class SectionGeometryCache {
+    constructor() {
+        this.sections = [];
+        this.navLinks = [];
+        this.tocLinks = [];
+    }
+
+    scan() {
+        this.sections = [];
+        this.navLinks = [];
+        this.tocLinks = [];
+
+        // 1. Navbar Links
+        const navLinks = document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]');
+        this.navLinks = Array.from(navLinks).map(link => ({
+            element: link,
+            targetId: link.getAttribute('href').substring(1)
+        }));
+
+        // 2. TOC Links
+        const tocList = document.getElementById('toc-list');
+        if (tocList) {
+            this.tocLinks = Array.from(tocList.querySelectorAll('a')).map(link => ({
+                element: link,
+                targetId: link.getAttribute('href').substring(1)
+            }));
+        }
+
+        // 3. Identify all target sections
+        const targetIds = new Set([
+            ...this.navLinks.map(l => l.targetId),
+            ...this.tocLinks.map(l => l.targetId)
+        ]);
+
+        targetIds.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                this.sections.push({
+                    id: id,
+                    element: element,
+                    top: 0,
+                    bottom: 0
+                });
+            }
+        });
+    }
+
+    update() {
+        const scrollY = window.scrollY;
+        this.sections.forEach(section => {
+            const rect = section.element.getBoundingClientRect();
+            section.top = rect.top + scrollY;
+            section.bottom = rect.bottom + scrollY;
+        });
+    }
+}
+
+/**
+ * ⚡ ScrollManager
+ * Centralizes scroll handling using requestAnimationFrame to optimize performance.
+ */
+class ScrollManager {
+    constructor() {
+        this.cache = new SectionGeometryCache();
+        this.ticking = false;
+        this.backToTopBtn = null;
+        this.resizeTimeout = null;
+    }
+
+    init() {
+        this.backToTopBtn = document.querySelector('.back-to-top');
+
+        // Initial scan and measure
+        this.cache.scan();
+        this.cache.update();
+
+        // Bind events
+        window.addEventListener('scroll', () => this.onScroll(), { passive: true });
+        window.addEventListener('resize', () => this.onResize(), { passive: true });
+
+        // Initial visual update
+        this.updateVisuals();
+    }
+
+    onScroll() {
+        if (!this.ticking) {
+            window.requestAnimationFrame(() => {
+                this.updateVisuals();
+                this.ticking = false;
+            });
+            this.ticking = true;
+        }
+    }
+
+    onResize() {
+        if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
+        this.resizeTimeout = setTimeout(() => {
+            this.cache.update();
+            this.updateVisuals();
+        }, 100);
+    }
+
+    updateVisuals() {
+        const scrollY = window.scrollY;
+
+        // 1. Back to Top Button
+        if (this.backToTopBtn) {
+            if (scrollY > 300) {
+                this.backToTopBtn.classList.add('visible');
+            } else {
+                this.backToTopBtn.classList.remove('visible');
+            }
+        }
+
+        // 2. Active Section Highlighting
+        // Use roughly same offset as original (HEADER_OFFSET approx 140-150)
+        const checkPoint = scrollY + HEADER_OFFSET + 10;
+
+        let activeId = null;
+        for (const section of this.cache.sections) {
+            if (checkPoint >= section.top && checkPoint < section.bottom) {
+                activeId = section.id;
+            }
+        }
+
+        // Update Nav Links
+        this.cache.navLinks.forEach(link => {
+            const isActive = link.targetId === activeId;
+            // Only toggle if necessary to minimize DOM operations
+            if (isActive !== link.element.classList.contains('active')) {
+                link.element.classList.toggle('active', isActive);
+            }
+        });
+
+        // Update TOC Links
+        this.cache.tocLinks.forEach(link => {
+            const isActive = link.targetId === activeId;
+            if (isActive !== link.element.classList.contains('active')) {
+                link.element.classList.toggle('active', isActive);
+            }
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Smooth scroll for anchor links (Event Delegation)
-    // Replaces individual event listeners for better performance and handling dynamic content
+
+    // --- 1. Interactive Elements Setup ---
+
+    // Smooth scroll for anchor links
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a[href^="#"]');
         if (link) {
             const href = link.getAttribute('href');
-
-            // Only handle internal anchors
             if (href && href !== '#' && href.length > 1) {
-                // Check if this is a bootstrap tab/collapse toggle (don't interfere)
-                if (link.hasAttribute('data-bs-toggle') || link.hasAttribute('data-toggle')) {
-                    return;
-                }
+                if (link.hasAttribute('data-bs-toggle') || link.hasAttribute('data-toggle')) return;
 
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
 
                 if (targetElement) {
                     e.preventDefault();
-
-                    // Smooth scroll to target
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
 
@@ -83,70 +225,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Highlight active navigation link on scroll for Quarto/Bootstrap navbar
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]');
+    // Navbar collapse logic
     const navbarCollapse = document.getElementById('navbarCollapse');
-
-    if (navLinks.length > 0 && sections.length > 0) {
-        function highlightNavigation() {
-            const scrollPosition = window.scrollY + 150;
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('href') === `#${sectionId}`);
-                    });
+    const navLinks = document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                const collapseInstance = window.bootstrap?.Collapse?.getInstance?.(navbarCollapse);
+                if (collapseInstance) {
+                    collapseInstance.hide();
+                } else {
+                    navbarCollapse.classList.remove('show');
                 }
-            });
-        }
-
-        // Register scroll listener (Debounced)
-        let navScrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (navScrollTimeout) clearTimeout(navScrollTimeout);
-            navScrollTimeout = setTimeout(highlightNavigation, TOC_SCROLL_DEBOUNCE_MS);
+            }
         });
+    });
 
-        highlightNavigation();
-
-        // Note: Navbar collapse logic is handled by Bootstrap, but if we need custom logic:
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (navbarCollapse && navbarCollapse.classList.contains('show')) {
-                    const collapseInstance = window.bootstrap?.Collapse?.getInstance?.(navbarCollapse);
-                    if (collapseInstance) {
-                        collapseInstance.hide();
-                    } else {
-                        navbarCollapse.classList.remove('show');
-                    }
-                }
-            });
-        });
-    }
-
-    // Add fade-in animation for sections on scroll (only if not already visible)
-    // Content is visible by default - animation is optional enhancement
-    // Disabled on mobile to prevent content loading issues and improve performance
-    const NAV_BREAKPOINT = 768; // Matches @media (max-width: 768px) in styles.css
+    // Fade-in animation (IntersectionObserver)
+    const NAV_BREAKPOINT = 768;
     const isMobile = window.innerWidth <= NAV_BREAKPOINT;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!isMobile && !prefersReducedMotion) {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px 0px 0px'
-        };
-
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px 0px 0px' };
         const observer = new IntersectionObserver(function (entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Only apply animation if element doesn't already have opacity set
-                    // Use getComputedStyle to check actual rendered opacity value
                     const computedOpacity = window.getComputedStyle(entry.target).opacity;
                     if (computedOpacity === '0') {
                         entry.target.style.opacity = '1';
@@ -156,11 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }, observerOptions);
 
-        // Observe sections for fade-in effect (only apply to sections that should animate)
-        // Don't hide content initially - let it be visible
         const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
         sectionsToAnimate.forEach(section => {
-            // Only animate if section is below the fold
             const rect = section.getBoundingClientRect();
             if (rect.top > window.innerHeight) {
                 section.style.opacity = '0';
@@ -168,13 +269,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                 observer.observe(section);
             } else {
-                // Content above the fold should be immediately visible
                 section.style.opacity = '1';
                 section.style.transform = 'translateY(0)';
             }
         });
     } else {
-        // On mobile, ensure all content is immediately visible
         const allSections = document.querySelectorAll('section');
         allSections.forEach(section => {
             section.style.opacity = '1';
@@ -183,24 +282,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Navigation collapsing and sidebar overlays are handled by Quarto's Bootstrap navbar,
-    // so legacy toggle logic targeting `.top-nav`/`.nav-links` has been removed.
+    // --- 2. History & TOC Generation ---
 
-    // Page history tracking for sidebar
+    // History Sidebar
     function updateHistorySidebar() {
         const historyList = document.getElementById('history-list');
         if (!historyList) return;
 
-        // Constants
         const MAX_HISTORY_TITLE_LENGTH = 40;
         const MAX_HISTORY_ITEMS = 10;
-
-        // Get history from localStorage
         let history = JSON.parse(localStorage.getItem('affinedrift_history') || '[]');
 
-        // Get current page info with improved title extraction
         let pageTitle = document.title;
-        // Handle different title formats
         if (pageTitle.includes(' - AffineDrift')) {
             pageTitle = pageTitle.replace(' - AffineDrift', '');
         } else if (pageTitle.startsWith('AffineDrift - ')) {
@@ -217,28 +310,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Remove current page if it's already in history
         history = history.filter(item => item.url !== currentPage.url);
-
         // Add current page to front
         history.unshift(currentPage);
-
         // Keep only last N items
         history = history.slice(0, MAX_HISTORY_ITEMS);
-
-        // Save back to localStorage
         localStorage.setItem('affinedrift_history', JSON.stringify(history));
 
-        // Update sidebar display
-        // Filter to only show articles (exclude navigation pages)
         const excludedPages = [
-            'index.html', 'home.html',
-            'articles.html', 'article.html',
-            'resources.html', 'tools.html', 'programs.html',
-            'contact.html', 'about.html',
-            'research-reviews.html', 'book-reviews.html',
+            'index.html', 'home.html', 'articles.html', 'article.html',
+            'resources.html', 'tools.html', 'programs.html', 'contact.html',
+            'about.html', 'research-reviews.html', 'book-reviews.html',
             'daydreams-doodles.html', 'daydreams.html', 'doodles.html'
         ];
 
-        // Filter out current page and non-article pages
         const displayHistory = history.filter(item =>
             item.url !== currentPage.url &&
             !excludedPages.includes(item.url.toLowerCase()) &&
@@ -266,28 +350,21 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
-
-    // Initialize history sidebar
     updateHistorySidebar();
 
-    // Table of Contents functionality
+    // Table of Contents
     function generateTableOfContents() {
-        // Look for left-sidebar (for .qmd pages with standard-page-layout)
         const leftSidebar = document.querySelector('.left-sidebar');
-
-        // Fallback to history-sidebar for pages without left-sidebar (legacy pages)
         const sidebar = leftSidebar || document.getElementById('history-sidebar');
         if (!sidebar) return;
 
-        // For left-sidebar pages, add TOC section to the left-sidebar
+        let tocSection;
         if (leftSidebar) {
-            // Find or create TOC section in left-sidebar
-            let tocSection = leftSidebar.querySelector('.sidebar-toc');
+            tocSection = leftSidebar.querySelector('.sidebar-toc');
             if (!tocSection) {
                 tocSection = document.createElement('div');
                 tocSection.className = 'sidebar-toc';
                 tocSection.innerHTML = '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
-                // Insert after the existing toc-nav if it exists, otherwise at the beginning
                 const existingTocNav = leftSidebar.querySelector('.toc-nav');
                 if (existingTocNav) {
                     existingTocNav.insertAdjacentElement('afterend', tocSection);
@@ -296,12 +373,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         } else {
-            // For legacy pages with history-sidebar, use the old approach
             const sidebarNav = sidebar.querySelector('.sidebar-nav');
             if (!sidebarNav) return;
-
-            // Find or create TOC section
-            let tocSection = sidebar.querySelector('.sidebar-toc');
+            tocSection = sidebar.querySelector('.sidebar-toc');
             if (!tocSection) {
                 tocSection = document.createElement('div');
                 tocSection.className = 'sidebar-section sidebar-toc';
@@ -312,15 +386,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const tocList = document.getElementById('toc-list');
         if (!tocList) return;
-
-        // Clear existing TOC
         tocList.innerHTML = '';
 
-        // Find all section headings (h2 with IDs or page-section divs with IDs)
         const sections = [];
-        const usedIds = new Set(); // Track used IDs to prevent duplicates
+        const usedIds = new Set();
 
-        // Look for page-section divs with IDs
         const pageSections = document.querySelectorAll('.page-section[id], section[id]');
         pageSections.forEach(section => {
             const heading = section.querySelector('.section-heading, h2, h1');
@@ -328,26 +398,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 sections.push({
                     id: section.id,
                     text: heading.textContent.trim(),
-                    element: section,
                     level: 2
                 });
                 usedIds.add(section.id);
             }
         });
 
-        // Also look for article-category containers (use container ID, not heading ID)
         const categories = document.querySelectorAll('.article-category');
-        categories.forEach((category, categoryIndex) => {
-            // Fixed: use h3 because article categories use h3.category-title
+        categories.forEach(category => {
             const heading = category.querySelector('h3');
             if (heading) {
-                // Use container ID if it exists, otherwise generate one
                 let id = category.id;
                 if (!id) {
                     id = generateUniqueId(heading.textContent, usedIds);
                     category.id = id;
                 } else if (usedIds.has(id)) {
-                    // ID exists and is used - generate new unique one
                     id = generateUniqueId(id, usedIds);
                     category.id = id;
                 }
@@ -355,13 +420,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 sections.push({
                     id: id,
                     text: heading.textContent.trim(),
-                    element: category, // Use container element, not heading
                     level: 2
                 });
             }
         });
 
-        // If no sections found, look for any h2 headings
         if (sections.length === 0) {
             const h2s = document.querySelectorAll('h2');
             h2s.forEach((h2, index) => {
@@ -374,13 +437,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 sections.push({
                     id: id,
                     text: h2.textContent.trim(),
-                    element: h2,
                     level: 2
                 });
             });
         }
 
-        // Generate TOC links
         if (sections.length > 0) {
             sections.forEach(section => {
                 const li = document.createElement('li');
@@ -388,62 +449,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 a.href = `#${section.id}`;
                 a.textContent = section.text;
                 a.className = `toc-level-${section.level}`;
-                // Event listener removed here in favor of global delegation
                 li.appendChild(a);
                 tocList.appendChild(li);
             });
         } else {
-            // Hide TOC if no sections found
-            const tocSection = sidebar.querySelector('.sidebar-toc');
-            if (tocSection) {
-                tocSection.style.display = 'none';
-            } else if (tocList) {
-                // Fallback: hide the TOC list directly if tocSection wasn't found
-                tocList.style.display = 'none';
-            }
+             if (tocSection) tocSection.style.display = 'none';
+             else if (tocList) tocList.style.display = 'none';
         }
-
-        // Highlight active section on scroll
-        function highlightActiveSection() {
-            const scrollPosition = window.scrollY + TOC_SCROLL_OFFSET;
-            const tocLinks = tocList.querySelectorAll('a');
-
-            sections.forEach((section, index) => {
-                const element = section.element;
-                if (!element) return;
-
-                const rect = element.getBoundingClientRect();
-                const elementTop = rect.top + window.scrollY;
-                const elementBottom = elementTop + rect.height;
-
-                if (index < tocLinks.length) {
-                    tocLinks[index].classList.remove('active');
-
-                    if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
-                        tocLinks[index].classList.add('active');
-                    }
-                }
-            });
-        }
-
-        // Update on scroll (Debounced)
-        let tocScrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (tocScrollTimeout) clearTimeout(tocScrollTimeout);
-            tocScrollTimeout = setTimeout(highlightActiveSection, TOC_SCROLL_DEBOUNCE_MS);
-        });
-
-        // Initial highlight
-        highlightActiveSection();
     }
-
-    // Generate TOC after page loads
     generateTableOfContents();
 
     // Lazy load images
     if ('loading' in HTMLImageElement.prototype) {
-        const images = document.querySelectorAll('img[src]');
-        images.forEach(img => {
+        document.querySelectorAll('img[src]').forEach(img => {
             if (!img.hasAttribute('loading')) {
                 img.setAttribute('loading', 'lazy');
             }
@@ -454,59 +472,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const accordionHeaders = document.querySelectorAll('.accordion-header');
     accordionHeaders.forEach((header, index) => {
         const content = header.nextElementSibling;
-
-        // Accessibility: Connect header and content
         if (content && content.classList.contains('accordion-content')) {
-            // Ensure content has an ID
             if (!content.id) {
                 content.id = `accordion-content-${index}`;
             }
-
-            // Link header to content
             header.setAttribute('aria-controls', content.id);
-
-            // Set initial state
             const isExpanded = header.getAttribute('aria-expanded') === 'true';
             content.setAttribute('aria-hidden', !isExpanded);
         }
-
         header.addEventListener('click', function () {
             const isExpanded = this.getAttribute('aria-expanded') === 'true';
-            const newExpandedState = !isExpanded;
-
-            // Toggle current accordion
-            this.setAttribute('aria-expanded', newExpandedState);
-
-            // Toggle content visibility for screen readers
+            this.setAttribute('aria-expanded', !isExpanded);
             if (content && content.classList.contains('accordion-content')) {
-                content.setAttribute('aria-hidden', !newExpandedState);
+                content.setAttribute('aria-hidden', isExpanded);
             }
         });
     });
 
-    // Make repository dropdown links open in new tabs
-    const repositoryLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-    repositoryLinks.forEach(link => {
+    // Repository links
+    document.querySelectorAll('.navbar-nav a[href^="https://github.com"]').forEach(link => {
         link.setAttribute('target', '_blank');
-        // rel attribute will be handled by the generic security block below
+        // rel handled by secure external links below
     });
 
-    // Secure all external links
-    // Adds rel="noopener noreferrer" to prevent reverse tabnabbing and improve privacy
-    // Applied to all external links regardless of target, as a defense-in-depth measure
-    const allLinks = document.querySelectorAll('a[href^="http"]');
+    // Secure external links
     const currentHostname = window.location.hostname;
-
-    allLinks.forEach(link => {
+    document.querySelectorAll('a[href^="http"]').forEach(link => {
         try {
             const url = new URL(link.href);
             if (url.hostname !== currentHostname && url.hostname !== '') {
-                // Add target="_blank" if missing
                 if (!link.hasAttribute('target')) {
                     link.setAttribute('target', '_blank');
                 }
-
-                // Add security attributes
                 const rel = link.getAttribute('rel') || '';
                 const parts = rel.split(' ').filter(p => p);
                 if (!parts.includes('noopener')) parts.push('noopener');
@@ -522,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('AffineDrift loaded successfully');
     console.log('Mathematical notation rendering via MathJax');
 
-    // Back to Top Button with Progress Ring
+    // Back to Top Button
     const backToTopBtn = document.createElement('button');
     backToTopBtn.className = 'back-to-top';
     backToTopBtn.setAttribute('aria-label', 'Scroll to top');
@@ -585,11 +582,9 @@ document.addEventListener('DOMContentLoaded', function () {
     updateScrollProgress();
 
     // Initialize Article History Tracking and Display
-    initArticleHistory();
-});
 
-// Article History Logic
-function initArticleHistory() {
+    // Article History Logic
+    function initArticleHistory() {
     // List of article pages for history tracking
     const ARTICLE_PAGES = [
         'theory-part1.html',
@@ -639,90 +634,48 @@ function initArticleHistory() {
     const articlesHistoryList = document.getElementById('articles-history-list');
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-        if (!history || history.length === 0) {
             articlesHistoryList.textContent = '';
-            const li = document.createElement('li');
-            li.className = 'history-empty';
-            li.textContent = 'No recent articles yet';
-            articlesHistoryList.appendChild(li);
-        } else {
-            articlesHistoryList.textContent = '';
-            history.forEach(item => {
+            if (!history || history.length === 0) {
                 const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = item.url;
-                a.textContent = item.title;
-                li.appendChild(a);
+                li.className = 'history-empty';
+                li.textContent = 'No recent articles yet';
                 articlesHistoryList.appendChild(li);
-            });
+            } else {
+                history.forEach(item => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = item.url;
+                    a.textContent = item.title;
+                    li.appendChild(a);
+                    articlesHistoryList.appendChild(li);
+                });
+            }
         }
     }
-}
+    initArticleHistory();
 
-// Utility function for future features
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-
-// Export for potential module use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        scrollToTop
-    };
-}
-
-// Initialize on load
-// Removed duplicate DOMContentLoaded listener for initArticleHistory
-// It is now called inside the main listener
-
-
-
-// Copy to Clipboard functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Select all pre elements
+    // Copy to Clipboard
     const codeBlocks = document.querySelectorAll('pre');
-
     codeBlocks.forEach(pre => {
-        // Skip if already processed or inside a wrapper
         if (pre.parentNode.classList.contains('code-wrapper')) return;
-
-        // Check if pre is empty
         if (!pre.textContent.trim()) return;
 
-        // Create wrapper
         const wrapper = document.createElement('div');
         wrapper.className = 'code-wrapper';
-
-        // Insert wrapper before pre
         pre.parentNode.insertBefore(wrapper, pre);
-
-        // Move pre into wrapper
         wrapper.appendChild(pre);
 
-        // Create button
         const button = document.createElement('button');
         button.className = 'copy-btn';
         button.textContent = 'Copy';
         button.setAttribute('aria-label', 'Copy code to clipboard');
-        button.type = 'button'; // Prevent form submission if inside a form
+        button.type = 'button';
 
-        // Add click event
         button.addEventListener('click', async () => {
             try {
-                // Get text content
-                const code = pre.innerText || pre.textContent;
-
-                await navigator.clipboard.writeText(code);
-
-                // Success feedback
+                await navigator.clipboard.writeText(pre.innerText || pre.textContent);
                 button.textContent = 'Copied!';
                 button.classList.add('copied');
-
                 setTimeout(() => {
                     button.textContent = 'Copy';
                     button.classList.remove('copied');
@@ -733,27 +686,73 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => button.textContent = 'Copy', 2000);
             }
         });
-
         wrapper.appendChild(button);
     });
-});
 
-// Accessibility: Skip to Content Link
-// Injected dynamically to ensure it exists on all pages (especially generated ones)
-document.addEventListener('DOMContentLoaded', function() {
-    // Only add if it doesn't already exist
-    if (document.querySelector('.skip-to-content')) return;
+    // Skip to Content Link
+    if (!document.querySelector('.skip-to-content')) {
+        const skipLink = document.createElement('a');
+        skipLink.href = '#quarto-document-content';
+        skipLink.className = 'skip-to-content';
+        skipLink.textContent = 'Skip to main content';
+        skipLink.setAttribute('aria-label', 'Skip to main content');
 
-    const skipLink = document.createElement('a');
-    skipLink.href = '#quarto-document-content';
-    skipLink.className = 'skip-to-content';
-    skipLink.textContent = 'Skip to main content';
-    skipLink.setAttribute('aria-label', 'Skip to main content');
+        // Manage focus for accessibility
+        skipLink.addEventListener('click', (e) => {
+            const targetId = skipLink.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                if (!targetElement.getAttribute('tabindex')) {
+                    targetElement.setAttribute('tabindex', '-1');
+                }
+                targetElement.focus({ preventScroll: true });
+            }
+        });
 
-    // Insert as the very first element in the body
-    if (document.body.firstChild) {
-        document.body.insertBefore(skipLink, document.body.firstChild);
-    } else {
-        document.body.appendChild(skipLink);
+        if (document.body.firstChild) {
+            document.body.insertBefore(skipLink, document.body.firstChild);
+        } else {
+            document.body.appendChild(skipLink);
+        }
     }
+
+    // Form Accessibility - Required Field Indicators
+    const requiredInputs = document.querySelectorAll('input[required], textarea[required], select[required]');
+    requiredInputs.forEach(input => {
+        if (input.id) {
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label && !label.querySelector('.required-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'required-indicator';
+                indicator.textContent = ' *';
+                indicator.style.color = 'var(--accent-blue)';
+                indicator.style.fontWeight = 'bold';
+                indicator.setAttribute('aria-hidden', 'true');
+                indicator.title = 'Required field';
+                label.appendChild(indicator);
+            }
+        }
+    });
+
+    console.log('AffineDrift loaded successfully (Optimized)');
+
+    // --- 3. Initialize Scroll Manager (⚡ Optimization) ---
+    // Must run after TOC generation and element creation
+    const scrollManager = new ScrollManager();
+    scrollManager.init();
 });
+
+// Utility function for future features
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Export for potential module use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        scrollToTop
+    };
+}

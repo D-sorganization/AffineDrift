@@ -582,11 +582,9 @@ document.addEventListener('DOMContentLoaded', function () {
     updateScrollProgress();
 
     // Initialize Article History Tracking and Display
-    initArticleHistory();
-});
 
-// Article History Logic
-function initArticleHistory() {
+    // Article History Logic
+    function initArticleHistory() {
     // List of article pages for history tracking
     const ARTICLE_PAGES = [
         'theory-part1.html',
@@ -699,12 +697,42 @@ function initArticleHistory() {
         skipLink.textContent = 'Skip to main content';
         skipLink.setAttribute('aria-label', 'Skip to main content');
 
+        // Manage focus for accessibility
+        skipLink.addEventListener('click', (e) => {
+            const targetId = skipLink.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                if (!targetElement.getAttribute('tabindex')) {
+                    targetElement.setAttribute('tabindex', '-1');
+                }
+                targetElement.focus({ preventScroll: true });
+            }
+        });
+
         if (document.body.firstChild) {
             document.body.insertBefore(skipLink, document.body.firstChild);
         } else {
             document.body.appendChild(skipLink);
         }
     }
+
+    // Form Accessibility - Required Field Indicators
+    const requiredInputs = document.querySelectorAll('input[required], textarea[required], select[required]');
+    requiredInputs.forEach(input => {
+        if (input.id) {
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label && !label.querySelector('.required-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'required-indicator';
+                indicator.textContent = ' *';
+                indicator.style.color = 'var(--accent-blue)';
+                indicator.style.fontWeight = 'bold';
+                indicator.setAttribute('aria-hidden', 'true');
+                indicator.title = 'Required field';
+                label.appendChild(indicator);
+            }
+        }
+    });
 
     console.log('AffineDrift loaded successfully (Optimized)');
 
