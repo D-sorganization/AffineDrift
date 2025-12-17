@@ -7,7 +7,14 @@ RISKS = []
 
 
 class ScienceAuditor(ast.NodeVisitor):
+    """
+    AST visitor to audit scientific code.
+
+    Checks for risks like division by zero or unit ambiguity.
+    """
+
     def visit_BinOp(self, node: ast.BinOp) -> None:  # noqa: N802
+        """Visit binary operations to check for division safety."""
         # 1. Division Safety
         # Use simple nested if to avoid complex boolean expression lint struggles or
         # suppress SIM102 if preferred. Actually, combining them is cleaner.
@@ -24,6 +31,7 @@ class ScienceAuditor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call) -> None:  # noqa: N802
+        """Visit function calls to check for trigonometric unit ambiguity."""
         # 2. Trig Safety
         if isinstance(node.func, ast.Attribute) and node.func.attr in [
             "sin",
@@ -50,6 +58,7 @@ class ScienceAuditor(ast.NodeVisitor):
 
 
 def main() -> None:
+    """Run the scientific auditor on the target directory."""
     target_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path()
 
     # Use rglob to recursively find .py files

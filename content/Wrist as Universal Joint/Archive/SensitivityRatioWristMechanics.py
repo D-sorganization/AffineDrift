@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 # --- 1. Assumptions and Constants ---
 # Mass properties of a standard driver
@@ -9,12 +9,12 @@ radius_gyration_head = 0.04 # meters (approximate distance of CG from shaft axis
 
 # Inertia Calculations
 # I_alpha: Swinging the whole club (Model as point mass at end of rod)
-I_alpha = mass_head * (length_club ** 2) 
+I_alpha = mass_head * (length_club ** 2)
 
 # I_beta: Rotating the shaft (Model as point mass rotating off-axis + shaft intrinsic)
-# Note: Standard Head MOI is ~5000 g*cm^2 = 0.0005 kg*m^2. 
+# Note: Standard Head MOI is ~5000 g*cm^2 = 0.0005 kg*m^2.
 # We will use a conservative range.
-I_beta = 0.0005 
+I_beta = 0.0005
 
 # Constraint Torque Parameters
 # We simulate "noise" torque occurring over a short impact window (downswing release)
@@ -44,7 +44,7 @@ plt.figure(figsize=(10, 6))
 plt.plot(torque_range, error_finger_grip, label=f'Finger Grip (Routing to Swing Plane)\nInertia: {I_alpha:.3f} kg·m²', color='green', linewidth=2)
 
 # Plot Palm Grip (Beta Axis)
-# Note: The error is so high we might need a log scale or a secondary axis, 
+# Note: The error is so high we might need a log scale or a secondary axis,
 # but for the article, showing the massive gap is the point.
 plt.plot(torque_range, error_palm_grip, label=f'Palm Grip (Routing to Shaft Axis)\nInertia: {I_beta:.4f} kg·m²', color='red', linewidth=2)
 
@@ -56,13 +56,13 @@ plt.grid(True, which='both', linestyle='--', alpha=0.7)
 plt.legend(fontsize=10)
 
 # Annotation for the "Mic Drop" moment
-plt.annotate(f'Face twists ~{error_palm_grip[50]:.1f}°\nwith 5Nm torque!', 
-             xy=(5, error_palm_grip[50]), 
+plt.annotate(f'Face twists ~{error_palm_grip[50]:.1f}°\nwith 5Nm torque!',
+             xy=(5, error_palm_grip[50]),
              xytext=(6, error_palm_grip[50]-5),
              arrowprops=dict(facecolor='black', shrink=0.05))
 
-plt.annotate(f'Path varies only ~{error_finger_grip[50]:.2f}°', 
-             xy=(5, error_finger_grip[50]), 
+plt.annotate(f'Path varies only ~{error_finger_grip[50]:.2f}°',
+             xy=(5, error_finger_grip[50]),
              xytext=(5, error_finger_grip[50]+10),
              arrowprops=dict(facecolor='black', shrink=0.05))
 
