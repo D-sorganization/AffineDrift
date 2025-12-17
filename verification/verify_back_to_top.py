@@ -1,6 +1,8 @@
 from playwright.sync_api import sync_playwright
 
-def verify_back_to_top():
+
+def verify_back_to_top() -> None:
+    """Verify that the back-to-top button behaves correctly during scrolling."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 1280, "height": 800})
@@ -12,11 +14,11 @@ def verify_back_to_top():
         page.evaluate("document.body.style.minHeight = '5000px'")
 
         # Initial state: button should be hidden
-        btn = page.locator(".back-to-top")
+        page.locator(".back-to-top")
 
         # Scroll down to make it visible (> 300px)
         page.evaluate("window.scrollTo(0, 500)")
-        page.wait_for_timeout(1000) # Wait for transition
+        page.wait_for_timeout(1000)  # Wait for transition
 
         # Take a screenshot of the button area (bottom right)
         # Button is at bottom: 2rem, right: 2rem.
@@ -35,6 +37,7 @@ def verify_back_to_top():
         page.screenshot(path="verification/back_to_top_end.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     verify_back_to_top()

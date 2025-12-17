@@ -11,7 +11,7 @@ format:
 
 ## Abstract
 
-The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
+The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the configuration manifold, derive the Euler-Lagrange equations of motion for the coupled rigid-flexible system, and transform them into the affine state-space form $\dot{x} = f(x) + g(x)u$. This decomposition permits the definition of the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness.
 
 ## Introduction
 
@@ -21,8 +21,8 @@ This distinction is fundamental. Passive forces (drift) can be large---even domi
 
 The aim of this manuscript is to establish a rigorous, strictly theoretical foundation for decomposing forces in the golf swing into two analytically distinct components:
 
-- **Drift forces** arising purely from passive, state-dependent mechanical dynamics, and
-- **Input forces** arising solely from actively applied joint torques.
+- **Drift forces** arising purely from passive, state-dependent mechanical dynamics (geodesic flow on the Riemannian manifold plus potential forces), and
+- **Input forces** arising solely from actively applied joint torques mapping to the cotangent bundle.
 
 The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system*. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model.
 
@@ -31,7 +31,7 @@ This paper is *Part I* of a broader project. It develops the theoretical archite
 The remainder of the paper is organized as follows:
 
 - **Section 1** defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables.
-- **Section 2** derives the unified control-affine form for the coupled rigid--flexible system.
+- **Section 2** derives the unified control-affine form for the coupled rigid--flexible system via Lagrangian mechanics.
 - **Section 3** formalizes the drift--input decomposition.
 - **Sections 4 and 5** introduce the ZTCF and ZVCF constructions.
 - **Section 6** discusses drift invariance and input constraints.
@@ -61,256 +61,130 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
 
-### Generalized coordinates and state
+### Configuration Manifold and Generalized Coordinates
 
-The golfer's anatomy is modeled as a multibody kinematic chain with generalized coordinates $q \in \mathbb{R}^{n}$, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.
+The system is modeled as a kinematic chain defined on a configuration manifold $\mathcal{Q}$.
 
-The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates
+1.  **Rigid Body Coordinates ($q_r$):** The golfer's anatomy is represented by $n$ generalized coordinates $q_r \in \mathcal{Q}_r$, typically describing joint angles (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Given the fixed-base assumption, $\mathcal{Q}_r$ is typically a subset of $\mathbb{T}^n$ (the n-torus) or $\mathbb{R}^n$ if joint limits are ignored locally.
+2.  **Flexible Coordinates ($q_f$):** The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates $\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m}$. Thus, $\mathcal{Q}_f \cong \mathbb{R}^m$.
 
-$$\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m},$$
+The full configuration vector is $q = [q_r^T, \eta^T]^T \in \mathbb{R}^{N}$, where $N = n + m$. The total configuration manifold is $\mathcal{Q} = \mathcal{Q}_r \times \mathcal{Q}_f$.
 
-where each $\eta_{i}$ represents the amplitude of a particular bending or deformation mode.
+The state of the system evolves on the tangent bundle $T\mathcal{Q}$, with coordinates $(q, \dot{q})$. We define the full state vector as:
 
-We define the full state vector as
-
-$$x = [q^{T}, \dot{q}^{T}, \eta^{T}, \dot{\eta}^{T}]^{T} \in \mathbb{R}^{2(n+m)}.$$
+$$x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix} \in \mathbb{R}^{2N}$$
 
 This state structure is chosen to support the drift vector field $f(x)$ and input vector fields $g(x)$ introduced later.
 
+### Lagrangian Formulation
+
+The dynamics are derived from the Lagrangian $\mathcal{L}: T\mathcal{Q} \to \mathbb{R}$, defined as the difference between kinetic energy $\mathcal{K}$ and potential energy $\mathcal{V}$:
+
+$$\mathcal{L}(q, \dot{q}) = \mathcal{K}(q, \dot{q}) - \mathcal{V}(q)$$
+
+**Kinetic Energy:**
+The kinetic energy of the system is given by the Riemannian metric defined by the mass matrix $M(q)$:
+
+$$\mathcal{K}(q, \dot{q}) = \frac{1}{2} \dot{q}^T M(q) \dot{q}$$
+
+where $M(q) \in \mathbb{R}^{N \times N}$ is the symmetric, positive-definite inertia matrix. For the coupled rigid-flexible system, $M(q)$ includes terms for the rigid bodies, the rigid-elastic coupling, and the modal masses of the shaft.
+
+**Potential Energy:**
+The potential energy includes gravitational potential $\mathcal{V}_g(q)$ and elastic potential energy $\mathcal{V}_e(\eta)$ stored in the deformed shaft:
+
+$$\mathcal{V}(q) = \mathcal{V}_g(q) + \frac{1}{2} \eta^T K_s \eta$$
+
+where $K_s \in \mathbb{R}^{m \times m}$ is the stiffness matrix associated with the shaft modes.
+
+**Dissipative Forces:**
+We include a Rayleigh dissipation function $\mathcal{D}(\dot{q})$ to model internal structural damping in the shaft:
+
+$$\mathcal{D}(\dot{q}) = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}$$
+
+where $C_s$ is the modal damping matrix. Note that biological joint damping is often lumped into the net muscle torque or neglected in ideal models, but can be explicitly added here if needed.
+
 ### Torque inputs and actuation mapping
 
-Muscular torques are abstracted as control inputs
+Muscular torques are abstracted as control inputs $u \in \mathbb{R}^{m_{u}}$ ($m_{u} \leq n$). These inputs map to generalized forces $\tau \in \mathbb{R}^{N}$ via an input matrix $B(q) \in \mathbb{R}^{N \times m_u}$:
 
-$$u \in \mathbb{R}^{m_{u}}, \quad m_{u} \leq n,$$
+$$\tau_{ext} = B(q) u$$
 
-with
+Typically, the shaft modes are underactuated ($u$ does not directly act on $\eta$), so $B(q)$ has the block structure:
 
-$$\tau = B(q)\, u,$$
+$$B(q) = \begin{bmatrix} B_r(q_r) \\ 0_{m \times m_u} \end{bmatrix}$$
 
-where $\tau \in \mathbb{R}^{n}$ is the generalized joint torque vector and $B(q) \in \mathbb{R}^{n \times m_{u}}$ encodes actuation pathways and moment arms. In the simplest case, $B$ is constant; more generally, it may depend on configuration. In either case, torques enter *linearly* in the equations of motion.
-
-Throughout this paper we treat $u$ as the exogenous input at the mechanical level. The mapping from neural commands to $u$ is outside the scope of this theoretical work.
-
-### External forces and constraints
-
-External forces included in the model are:
-
-- gravitational loading,
-- inertial, Coriolis, and centrifugal effects arising from the multibody kinematics,
-- passive joint contributions (if modeled explicitly),
-- elastic and damping forces from shaft deformation.
-
-Aerodynamic forces, impact forces, and non-holonomic contact effects are excluded under the assumptions above. Ground contact is modeled as a holonomic constraint that effectively fixes the base of the kinematic chain.
-
-### Hand--club kinematic interface
-
-Let $r_{h}(q)$ denote the hand pose (e.g., the pose of a marker cluster or a grip reference frame) and $r_{\text{club}}(q,\eta)$ the clubhead pose. Under a modal shaft approximation, the clubhead pose can be written schematically as
-
-$$r_{\text{club}}(q,\eta) = r_{h}(q) + \sum_{i=1}^{m} \phi_{i} \, \eta_{i},$$
-
-where $\phi_{i}$ are mode-shape dependent vectors (or fields, in a more detailed representation). This coupling modifies the inertia, Coriolis, and elastic terms in the dynamics but does not introduce multiplicative torque terms; the control input still enters linearly through the joint torques.
-
-### Notation table
-
-For reference, the following table summarizes the main symbols used in the manuscript.
-
-| Symbol | Meaning |
-|--------|---------|
-| $q \in \mathbb{R}^{n}$ | Generalized joint coordinates (rigid segments) |
-| $\dot{q}, \ddot{q}$ | Joint angular velocities and accelerations |
-| $\eta \in \mathbb{R}^{m}$ | Modal coordinates of the flexible shaft |
-| $\dot{\eta}, \ddot{\eta}$ | Modal velocities and accelerations |
-| $x \in \mathbb{R}^{2(n+m)}$ | Full system state: $x = [q,\dot{q},\eta,\dot{\eta}]^{T}$ |
-| $u \in \mathbb{R}^{m_{u}}$ | Control input vector (abstracted muscular torques) |
-| $\tau \in \mathbb{R}^{n}$ | Generalized torque vector: $\tau = B(q) u$ |
-| $B(q)$ | Input mapping matrix from control channels to generalized torques |
-| $M(q,\eta)$ | Inertia matrix for coupled rigid--flexible system |
-| $C(q,\dot{q},\eta,\dot{\eta})$ | Coriolis/centrifugal matrix |
-| $G(q)$ | Gravitational torque vector |
-| $K_{s}$ | Modal stiffness matrix of the shaft |
-| $C_{s}$ | Modal damping matrix of the shaft |
-| $f(x)$ | Drift vector field (passive dynamics) |
-| $g(x)$ | Input vector fields defining linear influence of torque inputs |
-| $F_{\text{drift}}$ | Generalized drift force (passive component) |
-| $F_{\text{input}}$ | Generalized input force (torque-driven component) |
-| $F_{\text{total}}$ | Total generalized force |
-| ZTCF | Zero Torque Counterfactual |
-| ZVCF | Zero Velocity Counterfactual |
-| $\phi_{i}$ | Coefficients associated with shaft mode shapes |
-| $t$ | Time |
+where $B_r$ maps muscle inputs to rigid joint torques.
 
 ## Unified control-affine derivation (rigid + flexible system)
 
-We now establish the control-affine structure of the coupled golfer--club--shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal--rigid coupling expressions are relegated to the Appendices.
+We now derive the control-affine structure of the coupled golfer--club--shaft system using the Euler-Lagrange equations.
 
-### Equations of motion
+### Euler-Lagrange Equations
 
-Let $q \in \mathbb{R}^{n}$ and $\eta \in \mathbb{R}^{m}$ denote the rigid-body and shaft modal coordinates, respectively, and let
+The equations of motion satisfy:
 
-$$v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}$$
+$$\frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}} \right) - \frac{\partial \mathcal{L}}{\partial q} + \frac{\partial \mathcal{D}}{\partial \dot{q}} = \tau_{ext}$$
 
-collect their velocities. The multibody equations of motion for the coupled system can be written in the standard form
+Substituting $\mathcal{L} = \frac{1}{2} \dot{q}^T M(q) \dot{q} - \mathcal{V}(q)$, the first term becomes:
 
-$$M(q,\eta)
-  \begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  +
-  C(q,\dot{q},\eta,\dot{\eta})
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    \dot{\eta}
-  \end{bmatrix}
-  + G(q) +
-  \begin{bmatrix}
-    0 \\[0.2em]
-    K_{s}\eta + C_{s}\dot{\eta}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    \tau \\[0.2em]
-    0
-  \end{bmatrix},$$
+$$\frac{\partial \mathcal{L}}{\partial \dot{q}} = M(q) \dot{q}$$
+
+$$\frac{d}{dt} (M(q) \dot{q}) = M(q) \ddot{q} + \dot{M}(q) \dot{q}$$
+
+The second term is:
+
+$$\frac{\partial \mathcal{L}}{\partial q} = \frac{1}{2} \frac{\partial}{\partial q} (\dot{q}^T M(q) \dot{q}) - \frac{\partial \mathcal{V}}{\partial q}$$
+
+Combining these yields the standard manipulator equation:
+
+$$M(q) \ddot{q} + C(q, \dot{q}) \dot{q} + G(q) + D \dot{q} = B(q) u$$
 
 where:
-
-- $M(q,\eta)$ is the inertia matrix for the coupled rigid--flexible system,
-- $C(q,\dot{q},\eta,\dot{\eta})$ encodes Coriolis and centrifugal effects,
-- $G(q)$ is the gravitational torque vector,
-- $K_{s}$ and $C_{s}$ are the shaft stiffness and damping matrices,
-- $\tau = B(q) u$ is the generalized torque vector induced by control inputs $u$.
-
-The shaft degrees of freedom have no direct torque inputs; all shaft forces are passive (elastic and damping).
-
-This equation is schematic but captures the structural separation between passive mechanical effects and torque inputs.
+-   $M(q)$ is the inertia matrix.
+-   $C(q, \dot{q})$ is the Coriolis and Centrifugal matrix, with elements defined by Christoffel symbols of the first kind:
+    $$c_{kj} = \sum_{i=1}^{N} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i$$
+    This matrix is defined such that $\dot{M} - 2C$ is skew-symmetric.
+-   $G(q) = \frac{\partial \mathcal{V}}{\partial q}$ is the vector of conservative forces (gravity and elastic stiffness).
+-   $D = \text{diag}(0, C_s)$ captures the dissipative forces.
 
 ### Solving for accelerations
 
-Assuming $M(q,\eta)$ is nonsingular, we may solve for the accelerations:
+Since the mass matrix $M(q)$ is positive definite (and thus invertible) for all $q \in \mathcal{Q}$, we can solve explicitly for the joint accelerations:
 
-$$\begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})
-    \begin{bmatrix}
-      \dot{q} \\[0.2em]
-      \dot{\eta}
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\dot{\eta}
-    \end{bmatrix}
-  \right)
-  +
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\[0.2em]
-    0
-  \end{bmatrix}.$$
+$$\ddot{q} = M(q)^{-1} \left[ -C(q, \dot{q})\dot{q} - G(q) - D\dot{q} + B(q)u \right]$$
 
-Everything not multiplied by $u$ is passive; the term proportional to $u$ is the torque-driven component.
+This equation isolates the causal factors of acceleration. The terms inside the brackets represent the sum of all generalized forces acting on the system. The multiplication by $M^{-1}$ transforms these forces into kinematic accelerations.
 
-Define the drift acceleration
+### First-order State-Space Form
 
-$$a_{\text{drift}}(x)
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})
-    \begin{bmatrix}
-      \dot{q} \\[0.2em]
-      \dot{\eta}
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\dot{\eta}
-    \end{bmatrix}
-  \right),$$
+We transform the second-order dynamics into a system of first-order differential equations on the state space $x = [q^T, \dot{q}^T]^T$. The time derivative of the state is:
 
-and the input acceleration mapping
+$$\dot{x} = \frac{d}{dt} \begin{bmatrix} q \\ \dot{q} \end{bmatrix} = \begin{bmatrix} \dot{q} \\ \ddot{q} \end{bmatrix}$$
 
-$$A_{\text{input}}(x)
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q) \\[0.2em]
-    0
-  \end{bmatrix}.$$
+Substituting the expression for $\ddot{q}$:
 
-Then the acceleration equation becomes
+$$\dot{x} = \begin{bmatrix} \dot{q} \\ -M(q)^{-1} \left( C(q, \dot{q})\dot{q} + G(q) + D\dot{q} \right) \end{bmatrix} + \begin{bmatrix} 0 \\ M(q)^{-1} B(q) \end{bmatrix} u$$
 
-$$\begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.$$
+This system is **control-affine**, meaning it is linear in the control input $u$ but potentially highly nonlinear in the state $x$. We can write this compactly as:
 
-### First-order state-space form
+$$\dot{x} = f(x) + g(x)u$$
 
-We now express the dynamics in first-order form. Recall
+where the **Drift Vector Field** $f(x)$ is:
 
-$$x = [q^{T}, \dot{q}^{T}, \eta^{T}, \dot{\eta}^{T}]^{T}.$$
+$$f(x) = \begin{bmatrix} \dot{q} \\ -M(q)^{-1} \left( C(q, \dot{q})\dot{q} + G(q) + D\dot{q} \right) \end{bmatrix}$$
 
-The state derivative is
+and the **Input Vector Fields** (columns of $g(x)$) are:
 
-$$\dot{x} =
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    \ddot{q} \\[0.2em]
-    \dot{\eta} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  f(x) + g(x)\,u,$$
+$$g(x) = \begin{bmatrix} 0 \\ M(q)^{-1} B(q) \end{bmatrix}$$
 
-where
+### Geometric Interpretation and Structural Consequences
 
-$$f(x) =
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    [a_{\text{drift}}(x)]_{1:n} \\[0.2em]
-    \dot{\eta} \\[0.2em]
-    [a_{\text{drift}}(x)]_{n+1:n+m}
-  \end{bmatrix},
-  \qquad
-  g(x) =
-  \begin{bmatrix}
-    0 \\[0.2em]
-    [A_{\text{input}}(x)]_{1:n,:} \\[0.2em]
-    0 \\[0.2em]
-    [A_{\text{input}}(x)]_{n+1:n+m,:}
-  \end{bmatrix}.$$
+This formulation provides a rigorous separation of forces:
 
-Here $[\cdot]_{1:n}$ and $[\cdot]_{n+1:n+m}$ denote the rigid and flexible components of the acceleration, and $[\cdot]_{:, :}$ denotes the appropriate block of the input matrix.
+1.  **Drift Dynamics ($f(x)$):** The vector field $f(x)$ describes the natural evolution of the system in the absence of active control ($u=0$). It encapsulates the geodesic flow on the Riemannian manifold (modified by potential and damping terms). In the context of the golf swing, this represents the "passive" path of the club driven by inertia, gravity, and the release of elastic energy in the shaft.
+2.  **Control Authority ($g(x)$):** The matrix $g(x)$ defines the *local* ability of the golfer's muscles to alter the system's trajectory. Note that $g(x)$ depends on the state (specifically $M(q)^{-1}$), meaning the effectiveness of a given torque depends on the instantaneous configuration of the body and club.
+3.  **Linearity in Input:** Despite the complex nonlinearity of the multibody dynamics, the influence of the golfer's effort is strictly additive. This structural property is what permits the precise definition of counterfactual baselines.
 
-This is a nonlinear control-affine system:
+The term $f(x)$ represents the *momentum-driven* component of the swing, while $g(x)u$ represents the *torque-driven* component. This decomposition is exact under the modeling assumptions and does not rely on linearization or small-angle approximations.
 
-$$\dot{x} = f(x) + g(x)\,u.$$
-
-All nonlinearities---including those introduced by shaft flexibility---are contained in the drift vector field $f(x)$, while the input vector fields $g(x)$ multiply the control input $u$ linearly. The purely rigid-body model is recovered by setting $m = 0$.
-
-### Structural consequences
-
-Three structural observations follow:
-
-1. **Flexibility enriches drift but preserves input linearity.** Shaft flexibility introduces additional passive degrees of freedom and modifies $M, C,$ and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques.
-2. **All torque-driven effects are confined to $g(x)u$.** Any change in the dynamics caused by altering the torque profile must pass through the input term; the drift term depends only on the state and parameters.
-3. **The affine structure is independent of parameter values.** The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion. In practice, parameter uncertainty affects the *accuracy* of the decomposition but not its algebraic form.
-
-This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections.
-
-By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum. This structural separation is what permits us to define meaningful counterfactual baselines—specifically, by asking what the system would do if $u$ were removed (the drift) or if velocity were removed (the configuration load). The next section formalizes these definitions.
-
-
-
-
-
-
+The next section formalizes the counterfactual definitions that arise from this structure.

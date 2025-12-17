@@ -48,6 +48,7 @@ function generateUniqueId(text, usedIds) {
 }
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // --- 1. Interactive Elements Setup ---
@@ -399,8 +400,6 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
     document.body.appendChild(backToTopBtn);
 
-    const progressCircle = backToTopBtn.querySelector('.progress-ring-circle');
-
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -408,32 +407,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    function updateScrollProgress() {
-        const scrollTop = window.scrollY;
-
-        // Visibility toggle
-        if (scrollTop > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
-        }
-
-        // Progress ring update
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (docHeight > 0) {
-            const scrollPercent = Math.min(scrollTop / docHeight, 1);
-            const offset = circumference - (scrollPercent * circumference);
-            progressCircle.style.strokeDashoffset = offset;
-        }
-    }
-
-    // Update on scroll
-    window.addEventListener('scroll', updateScrollProgress);
-
-    // Initial check
-    updateScrollProgress();
-
     // Initialize Article History Tracking and Display
+    initArticleHistory();
 
     // Article History Logic
     function initArticleHistory() {
@@ -504,7 +479,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-    initArticleHistory();
 
     // Copy to Clipboard
     const codeBlocks = document.querySelectorAll('pre');
@@ -586,7 +560,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    console.log('AffineDrift loaded successfully (Optimized)');
+
 
 });
 
