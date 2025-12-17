@@ -1,6 +1,7 @@
 """Enhanced Wrist Universal Joint Model - Streamlit Web App.
 
-This is a web-based version of the enhanced PyQt6 GUI that models the wrist as a universal joint.
+This is a web-based version of the enhanced PyQt6 GUI that models the wrist as a
+universal joint.
 Host this on Streamlit Cloud (free) and embed via iframe in your HTML pages.
 
 Features:
@@ -67,7 +68,7 @@ def calculate_moments_of_inertia(
     m_shaft = shaft_weight_g / 1000.0  # kg
 
     # Shaft inertia (thin rod about end): I = (1/3) * m * L²
-    i_shaft_alpha = (1/3) * m_shaft * club_length_m**2
+    i_shaft_alpha = (1 / 3) * m_shaft * club_length_m**2
 
     # Clubhead inertia about shaft axis (point mass)
     i_head_alpha = m_head * cg_distance_m**2
@@ -149,8 +150,8 @@ def generate_sample_torque(
     """Generate a torque signal based on noise type."""
     if noise_type == "Golf-like Random":
         torque = np.random.normal(0, 1, len(t))
-        torque += np.exp(-50*(t-0.5)**2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10)/10, mode="same")
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Step":
         torque = np.zeros_like(t)
         torque[250:] = 3.0  # Step at midpoint
@@ -163,14 +164,15 @@ def generate_sample_torque(
         torque = np.zeros_like(t)
         burst_center = 250
         burst_width = 50
-        burst_indices = np.arange(max(0, burst_center - burst_width),
-                                 min(len(t), burst_center + burst_width))
+        burst_indices = np.arange(
+            max(0, burst_center - burst_width), min(len(t), burst_center + burst_width)
+        )
         torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
     elif noise_type == "Sinusoidal":
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
         torque = np.random.normal(0, 1.5, len(t))
-        torque = np.convolve(torque, np.ones(10)/10, mode="same")
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
         try:
@@ -188,31 +190,49 @@ def generate_sample_torque(
             result = eval(code, {"__builtins__": {}}, safe_dict)
             if isinstance(result, np.ndarray):
                 if result.shape != t.shape:
-                    st.session_state.polynomial_error = f"Polynomial result shape {result.shape} does not match time array shape {t.shape}."
+                    st.session_state.polynomial_error = (
+                        f"Polynomial result shape {result.shape} does not match "
+                        f"time array shape {t.shape}."
+                    )
                     torque = t**2 - t
                 else:
                     torque = result
-                    st.session_state.polynomial_error = None  # Only clear error on successful evaluation
+                    st.session_state.polynomial_error = (
+                        None  # Only clear error on successful evaluation
+                    )
             else:
                 torque = np.full_like(t, float(result))
-                st.session_state.polynomial_error = None  # Only clear error on successful evaluation
+                st.session_state.polynomial_error = (
+                    None  # Only clear error on successful evaluation
+                )
         except SyntaxError:
-            st.session_state.polynomial_error = "Invalid polynomial syntax. Please check your expression."
+            st.session_state.polynomial_error = (
+                "Invalid polynomial syntax. Please check your expression."
+            )
             torque = t**2 - t
         except NameError:
-            st.session_state.polynomial_error = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."
+            st.session_state.polynomial_error = (
+                "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', "
+                "'sqrt', 'log', 'pi', and 'e' are allowed."
+            )
             torque = t**2 - t
         except (TypeError, ValueError) as e:
-            st.session_state.polynomial_error = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."
+            st.session_state.polynomial_error = (
+                f"Error in polynomial expression: {type(e).__name__}. "
+                "Please check your formula."
+            )
             torque = t**2 - t
         except (ArithmeticError, OverflowError, ZeroDivisionError):
-            st.session_state.polynomial_error = "Unexpected error evaluating polynomial expression. Please check your formula."
+            st.session_state.polynomial_error = (
+                "Unexpected error evaluating polynomial expression. "
+                "Please check your formula."
+            )
             torque = t**2 - t
     else:
         # Default to golf-like
         torque = np.random.normal(0, 1, len(t))
-        torque += np.exp(-50*(t-0.5)**2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10)/10, mode="same")
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
 
     return torque
 
@@ -242,8 +262,15 @@ def draw_diagram(
     shaft_end_y = shaft_attach_y
 
     # Draw club shaft (horizontal)
-    ax.plot([shaft_end_x, shaft_attach_x], [shaft_end_y, shaft_attach_y],
-             "k-", linewidth=8, solid_capstyle="round", label="Club Shaft", zorder=3)
+    ax.plot(
+        [shaft_end_x, shaft_attach_x],
+        [shaft_end_y, shaft_attach_y],
+        "k-",
+        linewidth=8,
+        solid_capstyle="round",
+        label="Club Shaft",
+        zorder=3,
+    )
 
     # Clubhead: on left end, pointing up, trapezoid shape, tilted 30 degrees
     clubhead_width_base = 0.08
@@ -256,12 +283,14 @@ def draw_diagram(
     clubhead_base_x = shaft_end_x
     clubhead_base_y = shaft_end_y
 
-    corners = np.array([
-        [-clubhead_width_bottom/2, 0],
-        [clubhead_width_bottom/2, 0],
-        [clubhead_width_top/2, clubhead_height],
-        [-clubhead_width_top/2, clubhead_height],
-    ])
+    corners = np.array(
+        [
+            [-clubhead_width_bottom / 2, 0],
+            [clubhead_width_bottom / 2, 0],
+            [clubhead_width_top / 2, clubhead_height],
+            [-clubhead_width_top / 2, clubhead_height],
+        ]
+    )
 
     cos_a = np.cos(clubhead_angle_rad)
     sin_a = np.sin(clubhead_angle_rad)
@@ -271,8 +300,14 @@ def draw_diagram(
     rotated_corners[:, 0] += clubhead_base_x
     rotated_corners[:, 1] += clubhead_base_y
 
-    clubhead = Polygon(rotated_corners, facecolor="silver", alpha=0.9,
-                      edgecolor="gray", linewidth=2, zorder=4)
+    clubhead = Polygon(
+        rotated_corners,
+        facecolor="silver",
+        alpha=0.9,
+        edgecolor="gray",
+        linewidth=2,
+        zorder=4,
+    )
     ax.add_patch(clubhead)
 
     # Hand: attached at midpoint to wrist, rotated by grip angle
@@ -280,9 +315,17 @@ def draw_diagram(
     hand_center_x = wrist_x
     hand_center_y = wrist_y
 
-    hand = Ellipse((hand_center_x, hand_center_y), hand_length, hand_width,
-                  angle=np.degrees(theta_grip_rad), facecolor="tan", alpha=0.8,
-                  edgecolor="saddlebrown", linewidth=2, zorder=6)
+    hand = Ellipse(
+        (hand_center_x, hand_center_y),
+        hand_length,
+        hand_width,
+        angle=np.degrees(theta_grip_rad),
+        facecolor="tan",
+        alpha=0.8,
+        edgecolor="saddlebrown",
+        linewidth=2,
+        zorder=6,
+    )
     ax.add_patch(hand)
 
     # Draw 4 fingers on hand
@@ -304,9 +347,17 @@ def draw_diagram(
         finger_mid_x = (base_x + tip_x) / 2
         finger_mid_y = (base_y + tip_y) / 2
         finger_angle = np.rad2deg(np.arctan2(finger_dir_y, finger_dir_x))
-        finger = Ellipse((finger_mid_x, finger_mid_y), finger_length, finger_width,
-                       angle=finger_angle, facecolor="tan", alpha=0.9,
-                       edgecolor="saddlebrown", linewidth=1, zorder=7)
+        finger = Ellipse(
+            (finger_mid_x, finger_mid_y),
+            finger_length,
+            finger_width,
+            angle=finger_angle,
+            facecolor="tan",
+            alpha=0.9,
+            edgecolor="saddlebrown",
+            linewidth=1,
+            zorder=7,
+        )
         ax.add_patch(finger)
 
     # Forearm: attached to hand at long axis endpoints
@@ -322,14 +373,30 @@ def draw_diagram(
     forearm_center_x = hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x
     forearm_center_y = hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y
 
-    forearm = Ellipse((forearm_center_x, forearm_center_y), forearm_length, forearm_width,
-                     angle=np.degrees(forearm_angle_rad), facecolor="tan", alpha=0.8,
-                     edgecolor="saddlebrown", linewidth=2, zorder=5)
+    forearm = Ellipse(
+        (forearm_center_x, forearm_center_y),
+        forearm_length,
+        forearm_width,
+        angle=np.degrees(forearm_angle_rad),
+        facecolor="tan",
+        alpha=0.8,
+        edgecolor="saddlebrown",
+        linewidth=2,
+        zorder=5,
+    )
     ax.add_patch(forearm)
 
     # Draw wrist joint
     ax.plot(wrist_x, wrist_y, "ko", markersize=12, zorder=10)
-    ax.text(wrist_x, wrist_y - 0.1, "Wrist Joint", ha="center", fontsize=10, fontweight="bold", zorder=11)
+    ax.text(
+        wrist_x,
+        wrist_y - 0.1,
+        "Wrist Joint",
+        ha="center",
+        fontsize=10,
+        fontweight="bold",
+        zorder=11,
+    )
 
     # Draw grip angle arc (θ_grip)
     arc_center_x = wrist_x - 0.05
@@ -340,16 +407,43 @@ def draw_diagram(
     arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
     ax.plot(arc_x, arc_y, "g-", linewidth=2.5, zorder=8)
 
-    ax.arrow(arc_center_x, arc_center_y, arc_radius, 0,
-             head_width=0.012, head_length=0.018, fc="k", ec="k", linewidth=2, zorder=8)
-    ax.arrow(arc_center_x, arc_center_y, arc_radius*np.cos(theta_grip_rad),
-             arc_radius*np.sin(theta_grip_rad), head_width=0.012, head_length=0.018,
-             fc="r", ec="r", linewidth=2, zorder=8)
+    ax.arrow(
+        arc_center_x,
+        arc_center_y,
+        arc_radius,
+        0,
+        head_width=0.012,
+        head_length=0.018,
+        fc="k",
+        ec="k",
+        linewidth=2,
+        zorder=8,
+    )
+    ax.arrow(
+        arc_center_x,
+        arc_center_y,
+        arc_radius * np.cos(theta_grip_rad),
+        arc_radius * np.sin(theta_grip_rad),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
+    )
 
-    label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad/2) * 0.7
-    label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad/2) * 0.7
-    ax.text(label_x, label_y + 0.02, r"$\theta_{grip}$", color="g",
-            fontsize=13, ha="center", fontweight="bold", zorder=9)
+    label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad / 2) * 0.7
+    label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad / 2) * 0.7
+    ax.text(
+        label_x,
+        label_y + 0.02,
+        r"$\theta_{grip}$",
+        color="g",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
+    )
 
     # Draw wrist angle arc (φ)
     wrist_arc_center_x = hand_endpoint_forearm_x - 0.05
@@ -368,18 +462,44 @@ def draw_diagram(
     ax.plot(wrist_arc_x, wrist_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
 
     # Wrist angle arrows (for arc visualization)
-    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(hand_axis_angle_for_arc),
-             wrist_arc_radius*np.sin(hand_axis_angle_for_arc), head_width=0.012, head_length=0.018,
-             fc="r", ec="r", linewidth=2, zorder=8)
-    ax.arrow(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius*np.cos(forearm_axis_angle_for_arc),
-             wrist_arc_radius*np.sin(forearm_axis_angle_for_arc), head_width=0.012, head_length=0.018,
-             fc="b", ec="b", linewidth=2, zorder=8)
+    ax.arrow(
+        wrist_arc_center_x,
+        wrist_arc_center_y,
+        wrist_arc_radius * np.cos(hand_axis_angle_for_arc),
+        wrist_arc_radius * np.sin(hand_axis_angle_for_arc),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
+    )
+    ax.arrow(
+        wrist_arc_center_x,
+        wrist_arc_center_y,
+        wrist_arc_radius * np.cos(forearm_axis_angle_for_arc),
+        wrist_arc_radius * np.sin(forearm_axis_angle_for_arc),
+        head_width=0.012,
+        head_length=0.018,
+        fc="b",
+        ec="b",
+        linewidth=2,
+        zorder=8,
+    )
 
     phi_mid = (wrist_arc_start + wrist_arc_end) / 2
     phi_label_x = wrist_arc_center_x + wrist_arc_radius * np.cos(phi_mid) * 0.7
     phi_label_y = wrist_arc_center_y + wrist_arc_radius * np.sin(phi_mid) * 0.7
-    ax.text(phi_label_x, phi_label_y + 0.02, r"$\phi$", color="b",
-            fontsize=13, ha="center", fontweight="bold", zorder=9)
+    ax.text(
+        phi_label_x,
+        phi_label_y + 0.02,
+        r"$\phi$",
+        color="b",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
+    )
 
     ax.set_xlim(-1.5, 0.8)
     ax.set_ylim(-0.2, 1.2)
@@ -409,26 +529,55 @@ def plot_torque(
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_wrist_rad,
+        theta_grip_rad,
+    )
     torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
+    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
+        torque_transmitted,
+        theta_grip_rad,
+    )
 
     if show_input:
-        ax.plot(t, input_torque, label="Input Torque (forearm)",
-               color="gray", alpha=0.7, linewidth=1.5)
+        ax.plot(
+            t,
+            input_torque,
+            label="Input Torque (forearm)",
+            color="gray",
+            alpha=0.7,
+            linewidth=1.5,
+        )
     if show_transmitted:
-        ax.plot(t, torque_transmitted,
-               label=f"Transmitted (ratio={tau_ratio:.3f})",
-               color="purple", linewidth=2)
+        ax.plot(
+            t,
+            torque_transmitted,
+            label=f"Transmitted (ratio={tau_ratio:.3f})",
+            color="purple",
+            linewidth=2,
+        )
     if show_alpha:
-        ax.plot(t, torque_alpha, label="τ_α (higher MOI axis)",
-               color="red", linewidth=2)
+        ax.plot(
+            t,
+            torque_alpha,
+            label="τ_α (higher MOI axis)",
+            color="red",
+            linewidth=2,
+        )
     if show_gamma:
-        ax.plot(t, torque_gamma, label="τ_γ (lowest MOI axis)",
-               color="blue", linewidth=2)
+        ax.plot(
+            t,
+            torque_gamma,
+            label="τ_γ (lowest MOI axis)",
+            color="blue",
+            linewidth=2,
+        )
 
-    ax.set_title(f"Torque vs Time (Grip: {grip_angle_deg:.0f}°, Wrist: {wrist_angle_deg:.0f}°)",
-                 fontsize=12, fontweight="bold")
+    ax.set_title(
+        f"Torque vs Time (Grip: {grip_angle_deg:.0f}°, Wrist: {wrist_angle_deg:.0f}°)",
+        fontsize=12,
+        fontweight="bold",
+    )
     ax.set_xlabel("Time (s)", fontsize=10)
     ax.set_ylabel("Torque (N·m)", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
@@ -454,22 +603,52 @@ def plot_acceleration(
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_wrist_rad,
+        theta_grip_rad,
+    )
     torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
+    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
+        torque_transmitted,
+        theta_grip_rad,
+    )
     epsilon = 1e-6
-    accel_alpha = torque_alpha / i_alpha if i_alpha > epsilon else np.zeros_like(torque_alpha)
-    accel_gamma = torque_gamma / i_gamma if i_gamma > epsilon else np.zeros_like(torque_gamma)
+    accel_alpha = (
+        torque_alpha / i_alpha
+        if i_alpha > epsilon
+        else np.zeros_like(torque_alpha)
+    )
+    accel_gamma = (
+        torque_gamma / i_gamma
+        if i_gamma > epsilon
+        else np.zeros_like(torque_gamma)
+    )
 
     if show_alpha:
-        ax.plot(t, accel_alpha, label=f"α_α (I_α={i_alpha:.4f})",
-              color="red", linewidth=2, linestyle="--")
+        ax.plot(
+            t,
+            accel_alpha,
+            label=f"α_α (I_α={i_alpha:.4f})",
+            color="red",
+            linewidth=2,
+            linestyle="--",
+        )
     if show_gamma:
-        ax.plot(t, accel_gamma, label=f"α_γ (I_γ={i_gamma:.4f})",
-              color="blue", linewidth=2, linestyle="--")
+        ax.plot(
+            t,
+            accel_gamma,
+            label=f"α_γ (I_γ={i_gamma:.4f})",
+            color="blue",
+            linewidth=2,
+            linestyle="--",
+        )
 
-    ax.set_title(f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}°, Wrist: {wrist_angle_deg:.0f}°)",
-                 fontsize=12, fontweight="bold")
+    ax.set_title(
+        f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}°, "
+        f"Wrist: {wrist_angle_deg:.0f}°)",
+        fontsize=12,
+        fontweight="bold",
+    )
     ax.set_xlabel("Time (s)", fontsize=10)
     ax.set_ylabel("Angular Acceleration (rad/s²)", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
@@ -518,32 +697,67 @@ def plot_transmission_sweep(
     accel_gamma_ratios = np.array(accel_gamma_ratios)
 
     if show_transmission:
-        ax.plot(phi_sweep, tau_ratios, label="Torque Transmission Ratio (τ_out/τ_in)",
-                     color="purple", linewidth=2.5)
+        ax.plot(
+            phi_sweep,
+            tau_ratios,
+            label="Torque Transmission Ratio (τ_out/τ_in)",
+            color="purple",
+            linewidth=2.5,
+        )
     if show_velocity:
-        ax.plot(phi_sweep, omega_ratios, label="Velocity Ratio (ω_out/ω_in)",
-                     color="orange", linewidth=2, linestyle="--")
+        ax.plot(
+            phi_sweep,
+            omega_ratios,
+            label="Velocity Ratio (ω_out/ω_in)",
+            color="orange",
+            linewidth=2,
+            linestyle="--",
+        )
     if show_accel_alpha:
-        ax.plot(phi_sweep, accel_alpha_ratios,
-                     label="Accel_α ratio (rad/s²)/(N·m)",
-                     color="red", linewidth=1.5, alpha=0.7)
+        ax.plot(
+            phi_sweep,
+            accel_alpha_ratios,
+            label="Accel_α ratio (rad/s²)/(N·m)",
+            color="red",
+            linewidth=1.5,
+            alpha=0.7,
+        )
     if show_accel_gamma:
-        ax.plot(phi_sweep, accel_gamma_ratios,
-                     label="Accel_γ ratio (rad/s²)/(N·m)",
-                     color="blue", linewidth=1.5, alpha=0.7)
+        ax.plot(
+            phi_sweep,
+            accel_gamma_ratios,
+            label="Accel_γ ratio (rad/s²)/(N·m)",
+            color="blue",
+            linewidth=1.5,
+            alpha=0.7,
+        )
 
     # Mark current wrist angle
     current_idx = np.argmin(np.abs(phi_sweep - wrist_angle_deg))
-    ax.axvline(wrist_angle_deg, color="green", linestyle=":", linewidth=2,
-                        label=f"Current wrist angle ({wrist_angle_deg:.0f}°)")
+    ax.axvline(
+        wrist_angle_deg,
+        color="green",
+        linestyle=":",
+        linewidth=2,
+        label=f"Current wrist angle ({wrist_angle_deg:.0f}°)",
+    )
     if show_transmission:
-        ax.plot(wrist_angle_deg, tau_ratios[current_idx], "go", markersize=10,
-                    markerfacecolor="lime")
+        ax.plot(
+            wrist_angle_deg,
+            tau_ratios[current_idx],
+            "go",
+            markersize=10,
+            markerfacecolor="lime",
+        )
 
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
-    ax.set_title(f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}°)",
-                 fontsize=12, fontweight="bold")
+    ax.set_title(
+        f"Universal Joint Transmission vs Wrist Deviation Angle "
+        f"(Grip={grip_angle_deg:.0f}°)",
+        fontsize=12,
+        fontweight="bold",
+    )
     ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
     ax.set_ylabel("Transmission Ratio", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
@@ -554,7 +768,8 @@ def plot_transmission_sweep(
 
 
 # Custom CSS
-st.markdown("""
+st.markdown(
+    """
 <style>
     .main {
         padding: 2rem 1rem;
@@ -574,18 +789,26 @@ st.markdown("""
         background-clip: text;
     }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # Main app
 st.title("🏌️ Enhanced Wrist Universal Joint Model")
-st.markdown("""
-<div style='background: #f0f4f8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; border-left: 4px solid #3282b8;'>
+st.markdown(
+    """
+<div style='background: #f0f4f8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; \
+border-left: 4px solid #3282b8;'>
     <p style='margin: 0; font-size: 1.1em;'>
-    This interactive tool models the wrist as a universal joint (Hooke/Cardan) with proper kinematics,
-    showing how grip angle and wrist deviation angle affect torque transmission and angular acceleration.
+    This interactive tool models the wrist as a universal joint (Hooke/Cardan)
+    with proper kinematics,
+    showing how grip angle and wrist deviation angle affect torque transmission
+    and angular acceleration.
     </p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # Sidebar controls
 with st.sidebar:
@@ -593,40 +816,80 @@ with st.sidebar:
 
     # Angle controls
     st.subheader("Grip Angle θ_grip")
-    grip_angle = st.slider("Grip Angle (degrees)", 0, 90, 30, 1,
-                          help="0° = parallel to fingers, 90° = perpendicular to fingers")
+    grip_angle = st.slider(
+        "Grip Angle (degrees)",
+        0,
+        90,
+        30,
+        1,
+        help="0° = parallel to fingers, 90° = perpendicular to fingers",
+    )
 
     st.subheader("Wrist Deviation Angle φ")
-    wrist_angle = st.slider("Wrist Deviation (degrees)", -60, 60, 0, 1,
-                           help="+ values = radial deviation, - values = ulnar deviation")
+    wrist_angle = st.slider(
+        "Wrist Deviation (degrees)",
+        -60,
+        60,
+        0,
+        1,
+        help="+ values = radial deviation, - values = ulnar deviation",
+    )
 
     st.markdown("---")
 
     # Club Properties
     st.subheader("Club Properties")
-    clubhead_weight = st.number_input("Clubhead (g)", 50.0, 500.0, DEFAULT_CLUBHEAD_WEIGHT, 1.0)
+    clubhead_weight = st.number_input(
+        "Clubhead (g)",
+        50.0,
+        500.0,
+        DEFAULT_CLUBHEAD_WEIGHT,
+        1.0,
+    )
     shaft_weight = st.number_input("Shaft (g)", 30.0, 200.0, DEFAULT_SHAFT_WEIGHT, 1.0)
     club_length = st.number_input("Length (m)", 0.5, 1.5, DEFAULT_CLUB_LENGTH, 0.01)
-    cg_distance = st.number_input("CG Dist (m)", 0.3, 1.2, DEFAULT_CLUBHEAD_CG_DISTANCE, 0.01)
+    cg_distance = st.number_input(
+        "CG Dist (m)",
+        0.3,
+        1.2,
+        DEFAULT_CLUBHEAD_CG_DISTANCE,
+        0.01,
+    )
 
-    I_alpha, I_gamma = calculate_moments_of_inertia(clubhead_weight, shaft_weight, club_length, cg_distance)
-    st.markdown(f"""
+    I_alpha, I_gamma = calculate_moments_of_inertia(
+        clubhead_weight, shaft_weight, club_length, cg_distance
+    )
+    st.markdown(
+        f"""
     **Moments of Inertia:**
     - I_α = {I_alpha:.4f} kg·m²
     - I_γ = {I_gamma:.4f} kg·m²
-    """)
+    """
+    )
 
     st.markdown("---")
 
     # Signal Generator
     st.subheader("Input Signal Generator")
-    noise_type = st.selectbox("Signal Type",
-                              ["Golf-like Random", "Step", "Pulse", "Burst", "Sinusoidal", "Random", "Polynomial"])
+    noise_type = st.selectbox(
+        "Signal Type",
+        [
+            "Golf-like Random",
+            "Step",
+            "Pulse",
+            "Burst",
+            "Sinusoidal",
+            "Random",
+            "Polynomial",
+        ],
+    )
 
     if noise_type == "Polynomial":
-        polynomial_expr = st.text_input("Polynomial Expression",
-                                       value=st.session_state.polynomial_expression,
-                                       help="Use 't' as variable. Example: t**2 - t")
+        polynomial_expr = st.text_input(
+            "Polynomial Expression",
+            value=st.session_state.polynomial_expression,
+            help="Use 't' as variable. Example: t**2 - t",
+        )
         st.session_state.polynomial_expression = polynomial_expr
         if st.session_state.polynomial_error:
             st.error(st.session_state.polynomial_error)
@@ -638,8 +901,10 @@ with st.sidebar:
 
     # Plot type selection
     st.subheader("Plot Type")
-    plot_type = st.selectbox("Select Plot",
-                             ["Torque", "Angular Acceleration", "Transmission Ratio vs Wrist Angle"])
+    plot_type = st.selectbox(
+        "Select Plot",
+        ["Torque", "Angular Acceleration", "Transmission Ratio vs Wrist Angle"],
+    )
 
     st.markdown("---")
 
@@ -673,7 +938,11 @@ with st.sidebar:
 
 # Generate signal
 t = np.linspace(0, 1, 500)
-input_torque = generate_sample_torque(noise_type, t, st.session_state.polynomial_expression)
+input_torque = generate_sample_torque(
+    noise_type,
+    t,
+    st.session_state.polynomial_expression,
+)
 
 # Main content area
 col1, col2 = st.columns([1, 1])
@@ -688,15 +957,40 @@ with col2:
     st.subheader(f"{plot_type} Plot")
 
     if plot_type == "Torque":
-        plot_fig = plot_torque(t, input_torque, grip_angle, wrist_angle, I_alpha, I_gamma,
-                              show_input, show_transmitted, show_alpha, show_gamma)
+        plot_fig = plot_torque(
+            t,
+            input_torque,
+            grip_angle,
+            wrist_angle,
+            I_alpha,
+            I_gamma,
+            show_input,
+            show_transmitted,
+            show_alpha,
+            show_gamma,
+        )
     elif plot_type == "Angular Acceleration":
-        plot_fig = plot_acceleration(t, input_torque, grip_angle, wrist_angle, I_alpha, I_gamma,
-                                    show_alpha, show_gamma)
+        plot_fig = plot_acceleration(
+            t,
+            input_torque,
+            grip_angle,
+            wrist_angle,
+            I_alpha,
+            I_gamma,
+            show_alpha,
+            show_gamma,
+        )
     else:  # Transmission Ratio
-        plot_fig = plot_transmission_sweep(grip_angle, wrist_angle, I_alpha, I_gamma,
-                                           show_transmission, show_velocity,
-                                           show_accel_alpha, show_accel_gamma)
+        plot_fig = plot_transmission_sweep(
+            grip_angle,
+            wrist_angle,
+            I_alpha,
+            I_gamma,
+            show_transmission,
+            show_velocity,
+            show_accel_alpha,
+            show_accel_gamma,
+        )
 
     st.pyplot(plot_fig)
     plt.close(plot_fig)
@@ -706,22 +1000,33 @@ st.markdown("---")
 with st.expander("📐 Model Information"):
     theta_grip_rad = np.radians(grip_angle)
     phi_wrist_rad = np.radians(wrist_angle)
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_wrist_rad,
+        theta_grip_rad,
+    )
     torque_transmitted = np.mean(input_torque) * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
+    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
+        torque_transmitted,
+        theta_grip_rad,
+    )
 
-    st.markdown(f"""
+    st.markdown(
+        f"""
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
-    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'} deviation)
+    - **Wrist Deviation Angle (φ):** {wrist_angle}°
+    ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'}
+    deviation)
 
     ### Transmission Ratios
     - **Angular Velocity Ratio (ω_out/ω_in):** {omega_ratio:.4f}
     - **Torque Transmission Ratio (τ_out/τ_in):** {tau_ratio:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
-    - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
+    - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m
+    ({np.abs(np.sin(theta_grip_rad))*100:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m
+    ({np.abs(np.cos(theta_grip_rad))*100:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
     - **α-axis acceleration:** {torque_alpha/I_alpha:.4f} rad/s²
@@ -733,4 +1038,5 @@ with st.expander("📐 Model Information"):
     - Power conservation (P = τω)
     - Constant grip angle during motion
     - Wrist angle represents radial/ulnar deviation
-    """)
+    """
+    )

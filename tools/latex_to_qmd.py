@@ -347,7 +347,8 @@ def main() -> None:
         print("Usage: python3 latex_to_qmd.py <input.tex> [output.qmd]")
         print("\nExample:")
         print(
-            "  python3 latex_to_qmd.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
+            "  python3 latex_to_qmd.py "
+            "content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
         )
         sys.exit(1)
 

@@ -1,14 +1,16 @@
-
-from playwright.sync_api import Page, expect, sync_playwright
+import re
 import time
 
-def test_scroll_features(page: Page):
+from playwright.sync_api import Page, expect, sync_playwright
+
+
+def test_scroll_features(page: Page) -> None:  # type: ignore[no-any-unimported]
     # 1. Arrange: Go to the homepage.
     page.goto("http://localhost:8000/index.html")
 
     # Wait for the page to load and script to initialize
     page.wait_for_load_state("domcontentloaded")
-    time.sleep(1) # Give a moment for JS to run init
+    time.sleep(1)  # Give a moment for JS to run init
 
     # 2. Act: Scroll down to trigger "Back to Top"
     # Threshold is 300px. We scroll to 500px.
@@ -36,7 +38,6 @@ def test_scroll_features(page: Page):
     page.screenshot(path="verification/scroll_up.png")
     print("Screenshot taken: scroll_up.png")
 
-import re
 
 if __name__ == "__main__":
     with sync_playwright() as p:

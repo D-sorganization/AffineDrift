@@ -17,8 +17,14 @@ CONVERSIONS = [
         "root_page": None,  # This is a content page, not a root-level page
     },
     {
-        "source": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex",
-        "target": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_article.html",
+        "source": (
+            "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/"
+            "inverse_dynamics_final.tex"
+        ),
+        "target": (
+            "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/"
+            "inverse_dynamics_article.html"
+        ),
         "root_page": None,  # This is a content page
     },
 ]
