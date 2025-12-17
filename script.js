@@ -47,172 +47,6 @@ function generateUniqueId(text, usedIds) {
     return id;
 }
 
-/**
- * ⚡ SectionGeometryCache
- * Caches element positions to prevent layout thrashing (reflows) during scroll events.
- * Only recalculates on resize or explicit update.
- */
-class SectionGeometryCache {
-    constructor() {
-        this.sections = [];
-        this.navLinks = [];
-        this.tocLinks = [];
-    }
-
-    scan() {
-        this.sections = [];
-        this.navLinks = [];
-        this.tocLinks = [];
-
-        // 1. Navbar Links
-        const navLinks = document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]');
-        this.navLinks = Array.from(navLinks).map(link => ({
-            element: link,
-            targetId: link.getAttribute('href').substring(1)
-        }));
-
-        // 2. TOC Links
-        const tocList = document.getElementById('toc-list');
-        if (tocList) {
-            this.tocLinks = Array.from(tocList.querySelectorAll('a')).map(link => ({
-                element: link,
-                targetId: link.getAttribute('href').substring(1)
-            }));
-        }
-
-        // 3. Identify all target sections
-        const targetIds = new Set([
-            ...this.navLinks.map(l => l.targetId),
-            ...this.tocLinks.map(l => l.targetId)
-        ]);
-
-        targetIds.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                this.sections.push({
-                    id: id,
-                    element: element,
-                    top: 0,
-                    bottom: 0
-                });
-            }
-        });
-    }
-
-    update() {
-        const scrollY = window.scrollY;
-        this.sections.forEach(section => {
-            const rect = section.element.getBoundingClientRect();
-            section.top = rect.top + scrollY;
-            section.bottom = rect.bottom + scrollY;
-        });
-    }
-}
-
-/**
- * ⚡ ScrollManager
- * Centralizes scroll handling using requestAnimationFrame to optimize performance.
- */
-class ScrollManager {
-    constructor() {
-        this.cache = new SectionGeometryCache();
-        this.ticking = false;
-        this.backToTopBtn = null;
-        this.progressCircle = null;
-        this.circumference = 0;
-        this.resizeTimeout = null;
-    }
-
-    init() {
-        this.backToTopBtn = document.querySelector('.back-to-top');
-        if (this.backToTopBtn) {
-            this.progressCircle = this.backToTopBtn.querySelector('.progress-ring-circle');
-            // Radius is 21 as defined in the SVG creation
-            this.circumference = 2 * Math.PI * 21;
-        }
-
-        // Initial scan and measure
-        this.cache.scan();
-        this.cache.update();
-
-        // Bind events
-        window.addEventListener('scroll', () => this.onScroll(), { passive: true });
-        window.addEventListener('resize', () => this.onResize(), { passive: true });
-
-        // Initial visual update
-        this.updateVisuals();
-    }
-
-    onScroll() {
-        if (!this.ticking) {
-            window.requestAnimationFrame(() => {
-                this.updateVisuals();
-                this.ticking = false;
-            });
-            this.ticking = true;
-        }
-    }
-
-    onResize() {
-        if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
-        this.resizeTimeout = setTimeout(() => {
-            this.cache.update();
-            this.updateVisuals();
-        }, 100);
-    }
-
-    updateVisuals() {
-        const scrollY = window.scrollY;
-
-        // 1. Back to Top Button & Progress
-        if (this.backToTopBtn) {
-            // Visibility
-            if (scrollY > 300) {
-                this.backToTopBtn.classList.add('visible');
-            } else {
-                this.backToTopBtn.classList.remove('visible');
-            }
-
-            // Progress Ring
-            if (this.progressCircle) {
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                if (docHeight > 0) {
-                    const scrollPercent = Math.min(scrollY / docHeight, 1);
-                    const offset = this.circumference - (scrollPercent * this.circumference);
-                    this.progressCircle.style.strokeDashoffset = offset;
-                }
-            }
-        }
-
-        // 2. Active Section Highlighting
-        // Use roughly same offset as original (HEADER_OFFSET approx 140-150)
-        const checkPoint = scrollY + HEADER_OFFSET + 10;
-
-        let activeId = null;
-        for (const section of this.cache.sections) {
-            if (checkPoint >= section.top && checkPoint < section.bottom) {
-                activeId = section.id;
-            }
-        }
-
-        // Update Nav Links
-        this.cache.navLinks.forEach(link => {
-            const isActive = link.targetId === activeId;
-            // Only toggle if necessary to minimize DOM operations
-            if (isActive !== link.element.classList.contains('active')) {
-                link.element.classList.toggle('active', isActive);
-            }
-        });
-
-        // Update TOC Links
-        this.cache.tocLinks.forEach(link => {
-            const isActive = link.targetId === activeId;
-            if (isActive !== link.element.classList.contains('active')) {
-                link.element.classList.toggle('active', isActive);
-            }
-        });
-    }
-}
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -565,6 +399,8 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
     document.body.appendChild(backToTopBtn);
 
+    const progressCircle = backToTopBtn.querySelector('.progress-ring-circle');
+
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -572,11 +408,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Initialize Article History Tracking and Display
-    initArticleHistory();
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
 
-// Article History Logic
-function initArticleHistory() {
+        // Visibility toggle
+        if (scrollTop > 300) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+
+        // Progress ring update
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+            const scrollPercent = Math.min(scrollTop / docHeight, 1);
+            const offset = circumference - (scrollPercent * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+        }
+    }
+
+    // Update on scroll
+    window.addEventListener('scroll', updateScrollProgress);
+
+    // Initial check
+    updateScrollProgress();
+
+    // Initialize Article History Tracking and Display
+
+    // Article History Logic
+    function initArticleHistory() {
     // List of article pages for history tracking
     const ARTICLE_PAGES = [
         'theory-part1.html',
@@ -644,6 +504,7 @@ function initArticleHistory() {
             }
         }
     }
+    initArticleHistory();
 
     // Copy to Clipboard
     const codeBlocks = document.querySelectorAll('pre');
@@ -688,6 +549,18 @@ function initArticleHistory() {
         skipLink.textContent = 'Skip to main content';
         skipLink.setAttribute('aria-label', 'Skip to main content');
 
+        // Manage focus for accessibility
+        skipLink.addEventListener('click', (e) => {
+            const targetId = skipLink.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                if (!targetElement.getAttribute('tabindex')) {
+                    targetElement.setAttribute('tabindex', '-1');
+                }
+                targetElement.focus({ preventScroll: true });
+            }
+        });
+
         if (document.body.firstChild) {
             document.body.insertBefore(skipLink, document.body.firstChild);
         } else {
@@ -695,12 +568,26 @@ function initArticleHistory() {
         }
     }
 
+    // Form Accessibility - Required Field Indicators
+    const requiredInputs = document.querySelectorAll('input[required], textarea[required], select[required]');
+    requiredInputs.forEach(input => {
+        if (input.id) {
+            const label = document.querySelector(`label[for="${input.id}"]`);
+            if (label && !label.querySelector('.required-indicator')) {
+                const indicator = document.createElement('span');
+                indicator.className = 'required-indicator';
+                indicator.textContent = ' *';
+                indicator.style.color = 'var(--accent-blue)';
+                indicator.style.fontWeight = 'bold';
+                indicator.setAttribute('aria-hidden', 'true');
+                indicator.title = 'Required field';
+                label.appendChild(indicator);
+            }
+        }
+    });
+
     console.log('AffineDrift loaded successfully (Optimized)');
 
-    // --- 3. Initialize Scroll Manager (⚡ Optimization) ---
-    // Must run after TOC generation and element creation
-    const scrollManager = new ScrollManager();
-    scrollManager.init();
 });
 
 // Utility function for future features

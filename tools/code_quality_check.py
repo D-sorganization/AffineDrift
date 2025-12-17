@@ -35,7 +35,7 @@ BANNED_PATTERNS = [
     (re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
     (re.compile(r"^\s*\.\.\.\s*$"), "Ellipsis placeholder"),
     (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"),
-    # (re.compile(r"<.*>"), "Angle bracket placeholder"), # Too aggressive for HTML generation
+    (re.compile(r"<.*>"), "Angle bracket placeholder"),
     (re.compile(r"your.*here", re.IGNORECASE), "Template placeholder"),
     (re.compile(r"insert.*here", re.IGNORECASE), "Template placeholder"),
 ]
@@ -110,12 +110,7 @@ def check_banned_patterns(
     """Check for banned patterns in lines."""
     issues: list[tuple[int, str, str]] = []
     # Skip checking quality check scripts for their own patterns
-    if filepath.name in (
-        "quality_check_script.py",
-        "matlab_quality_check.py",
-        "code_quality_check.py",
-        "quality-check.py",
-    ):
+    if filepath.name in ("quality_check_script.py", "matlab_quality_check.py", "code_quality_check.py"):
         return issues
 
     for line_num, line in enumerate(lines, 1):
@@ -144,21 +139,10 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     """Check for magic numbers in lines."""
     issues: list[tuple[int, str, str]] = []
     # Skip checking quality check scripts for magic numbers (they contain patterns they check for)
-    if filepath.name in (
-        "quality_check_script.py",
-        "matlab_quality_check.py",
-        "code_quality_check.py",
-        "quality-check.py",
-    ):
+    if filepath.name in ("quality_check_script.py", "matlab_quality_check.py", "code_quality_check.py"):
         return issues
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
-        # Skip lines that are already defining constants
-        if re.search(r"GRAVITY_M_S2\s*=\s*", line_content, re.IGNORECASE):
-            continue
-        if re.search(r"MATH_PI\s*=\s*", line_content, re.IGNORECASE):
-            continue
-
         for pattern, message in MAGIC_NUMBERS:
             if pattern.search(line_content):
                 issues.append((line_num, message, line.strip()))
@@ -169,12 +153,7 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
     """Check AST for quality issues."""
     issues: list[tuple[int, str, str]] = []
     # Skip checking quality check scripts for AST issues
-    if filepath.name in (
-        "quality_check_script.py",
-        "matlab_quality_check.py",
-        "code_quality_check.py",
-        "quality-check.py",
-    ):
+    if filepath.name in ("quality_check_script.py", "matlab_quality_check.py", "code_quality_check.py"):
         return issues
     try:
         tree = ast.parse(content)
@@ -222,7 +201,6 @@ def main() -> None:
     # Exclude certain directories
     exclude_dirs = {
         "archive",
-        "Archive",
         "legacy",
         "experimental",
         ".git",
@@ -249,12 +227,16 @@ def main() -> None:
 
     # Report
     if all_issues:
-        sys.stderr.write(f"{Colors.FAIL}{Colors.BOLD}❌ Quality check FAILED{Colors.ENDC}\n\n")
+        sys.stderr.write(
+            f"{Colors.FAIL}{Colors.BOLD}❌ Quality check FAILED{Colors.ENDC}\n\n"
+        )
         for filepath, issues in all_issues:
             sys.stderr.write(f"\n{Colors.CYAN}{filepath}:{Colors.ENDC}\n")
             for line_num, message, code in issues:
                 if line_num > 0:
-                    sys.stderr.write(f"  Line {Colors.BOLD}{line_num}{Colors.ENDC}: {message}\n")
+                    sys.stderr.write(
+                        f"  Line {Colors.BOLD}{line_num}{Colors.ENDC}: {message}\n"
+                    )
                     if code:
                         sys.stderr.write(f"    > {Colors.WARNING}{code}{Colors.ENDC}\n")
                 else:
