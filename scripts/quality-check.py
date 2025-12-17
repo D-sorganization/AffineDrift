@@ -162,8 +162,7 @@ def check_banned_patterns(
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
-            # Skip angle bracket placeholder check for test files and HTML-generating files
-            # (HTML strings are valid)
+            # Skip angle bracket check for test/HTML files (valid in HTML)
             if (is_test_file or is_html_generating_file) and "Angle bracket placeholder" in message:
                 continue
             # Skip TODO/FIXME/Angle bracket checks in quality check scripts

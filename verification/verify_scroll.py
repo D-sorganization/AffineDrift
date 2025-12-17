@@ -4,7 +4,7 @@ import time
 from playwright.sync_api import Page, expect, sync_playwright
 
 
-def test_scroll_features(page: Page) -> None:  # type: ignore[no-any-unimported]
+def test_scroll_features(page: Page) -> None:
     # 1. Arrange: Go to the homepage.
     page.goto("http://localhost:8000/index.html")
 
