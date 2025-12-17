@@ -59,8 +59,8 @@ def create_html_page(
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
-        page_type: Type of page ('articles', 'models', 'resources') to set correct
-            nav active state
+        page_type: Type of page ('articles', 'models', 'resources') to set
+            correct nav active state
         template_path: Path to the HTML template file
 
     Returns:
@@ -105,7 +105,7 @@ def create_html_page(
             )
             template = re.sub(
                 r'<a class="nav-link" href="./resources.html">',
-                r'<a class="nav-link active" href="./resources.html" ' r'aria-current="page">',
+                '<a class="nav-link active" href="./resources.html" ' r'aria-current="page">',
                 template,
             )
         # For articles type, keep Articles as active (default)

@@ -5,6 +5,7 @@ from playwright.sync_api import Page, expect, sync_playwright
 
 
 def test_scroll_features(page: Page) -> None:  # type: ignore[no-any-unimported]
+    """Test scroll features including back-to-top button visibility."""
     # 1. Arrange: Go to the homepage.
     page.goto("http://localhost:8000/index.html")
 
