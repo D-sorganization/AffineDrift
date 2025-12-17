@@ -21,7 +21,10 @@ CONVERSIONS = [
         "description": "Wrist as Universal Joint article",
     },
     {
-        "source": "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/inverse_dynamics_final.tex",
+        "source": (
+            "content/Inverse Dynamics Analysis/Drafts/Inverse Dynamics Claude Current/"
+            "inverse_dynamics_final.tex"
+        ),
         "target": f"{ARTICLES_DIR}/inverse-dynamics.qmd",
         "description": "Inverse Dynamics article",
     },
@@ -63,12 +66,16 @@ CONVERSIONS = [
         "description": "Affine Nature of the Golf Swing (Main Article)",
     },
     {
-        "source": "content/Affine Nature of the Golf Swing/Appendix_A_Nonlinear_Control_Insights.tex",
+        "source": (
+            "content/Affine Nature of the Golf Swing/" "Appendix_A_Nonlinear_Control_Insights.tex"
+        ),
         "target": f"{ARTICLES_DIR}/appendix-nonlinear-control-insights.qmd",
         "description": "Appendix A: Nonlinear Control Insights",
     },
     {
-        "source": "content/Affine Nature of the Golf Swing/Appendix_B_Inverse_Dynamics_Inference.tex",
+        "source": (
+            "content/Affine Nature of the Golf Swing/" "Appendix_B_Inverse_Dynamics_Inference.tex"
+        ),
         "target": f"{ARTICLES_DIR}/appendix-inverse-dynamics-inference.qmd",
         "description": "Appendix B: Inverse Dynamics Inference",
     },
@@ -78,12 +85,12 @@ CONVERSIONS = [
         "description": "Appendix C: Applications",
     },
     {
-        "source": "content/Affine Nature of the Golf Swing/Appendix_D_Lagrangian_Reference.tex",
+        "source": ("content/Affine Nature of the Golf Swing/Appendix_D_Lagrangian_Reference.tex"),
         "target": f"{ARTICLES_DIR}/appendix-lagrangian-reference.qmd",
         "description": "Appendix D: Lagrangian Reference",
     },
     {
-        "source": "content/Affine Nature of the Golf Swing/Appendix_E_ScrewTheory_Reference.tex",
+        "source": ("content/Affine Nature of the Golf Swing/Appendix_E_ScrewTheory_Reference.tex"),
         "target": f"{ARTICLES_DIR}/appendix-screw-theory-reference.qmd",
         "description": "Appendix E: Screw Theory Reference",
     },

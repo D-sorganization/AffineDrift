@@ -261,7 +261,8 @@ class LaTeXToHTMLConverter:
     <!-- Google Fonts - Playfair Display -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
     <!-- Preconnect to CDN for faster loading -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -365,7 +366,8 @@ class LaTeXToHTMLConverter:
         <nav class="top-nav">
             <div class="container">
                 <a href="../../../index.html" class="logo-link">
-                    <img src="../../../logo/Logo Transparent/1.png" alt="AffineDrift Logo" class="logo-img">
+                    <img src="../../../logo/Logo Transparent/1.png"
+                         alt="AffineDrift Logo" class="logo-img">
                 </a>
                 <ul class="nav-links">
                     <li><a href="../../../index.html">Affine Drift</a></li>
@@ -457,7 +459,8 @@ def main() -> None:
         print("Usage: python3 latex_to_html.py <input.tex> [output.html]")
         print("\nExample:")
         print(
-            "  python3 latex_to_html.py content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
+            "  python3 latex_to_html.py "
+            "content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
         )
         sys.exit(1)
 
