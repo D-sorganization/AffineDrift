@@ -59,8 +59,13 @@ def create_html_page(
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
+<<<<<<< HEAD
         page_type: Type of page ('articles', 'models', 'resources') to set
             correct nav active state
+=======
+        page_type: Type of page ('articles', 'models', 'resources') to set correct
+            nav active state
+>>>>>>> d145f2d (Fix linting and CI issues: resolve E501, exclude legacy, and bypass strict mypy for tools)
         template_path: Path to the HTML template file
 
     Returns:
