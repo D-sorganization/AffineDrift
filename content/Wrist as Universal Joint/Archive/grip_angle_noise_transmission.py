@@ -6,14 +6,23 @@ At 0° grip angle, all noise is transmitted to the shaft axis (100%).
 At 90°, none is transmitted (0%). Transmission is cos(angle).
 """
 import sys
+
 import numpy as np
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QSlider, QGroupBox, QSplitter
-)
-from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QSlider,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
+)
+
 
 class NoiseTransmissionCanvas(FigureCanvas):
     """Shows original and transmitted noise plots."""

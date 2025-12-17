@@ -56,6 +56,7 @@ def _ensure_top_nav(html: str) -> str:
     """Attach the `top-nav` class to bare <nav> tags for styling consistency."""
 
     def _inject_class(_: re.Match[str]) -> str:
+        """Replace regex match with class-injected nav tag."""
         return '<nav class="top-nav">'
 
     return RAW_NAV_PATTERN.sub(_inject_class, html)

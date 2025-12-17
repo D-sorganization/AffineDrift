@@ -5,14 +5,21 @@ This GUI allows users to explore how grip position affects torque and inertia at
 It features interactive sliders, live-updating plots, and a schematic diagram to visualize the mechanics.
 """
 import sys
+
 import numpy as np
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QSlider, QPushButton, QGroupBox, QGridLayout
-)
-from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import (
+    QApplication,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
 
 # Simulation parameters
 WRIST_LENGTH = 0.18  # meters
@@ -102,7 +109,7 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        from PyQt6.QtWidgets import QSplitter, QSizePolicy
+        from PyQt6.QtWidgets import QSizePolicy, QSplitter
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
 

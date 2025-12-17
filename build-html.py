@@ -59,7 +59,8 @@ def create_html_page(
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
-        page_type: Type of page ('articles', 'models', 'resources') to set correct nav active state
+        page_type: Type of page ('articles', 'models', 'resources') to set
+            correct nav active state
         template_path: Path to the HTML template file
 
     Returns:
@@ -75,7 +76,9 @@ def create_html_page(
 
         # Replace title
         template = re.sub(
-            r"<title>.*?</title>", f"<title>{title_escaped} – AffineDrift</title>", template
+            r"<title>.*?</title>",
+            f"<title>{title_escaped} – AffineDrift</title>",
+            template,
         )
 
         # Replace meta description
@@ -89,27 +92,29 @@ def create_html_page(
         if page_type == "models":
             # Remove active state from Articles link
             template = re.sub(
-                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+                r'<a class="nav-link active" href="./articles.html" ' r'aria-current="page">',
                 '<a class="nav-link" href="./articles.html">',
                 template,
             )
         elif page_type == "resources":
             # Remove active state from Articles link, add to Resources
             template = re.sub(
-                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+                r'<a class="nav-link active" href="./articles.html" ' r'aria-current="page">',
                 '<a class="nav-link" href="./articles.html">',
                 template,
             )
             template = re.sub(
                 r'<a class="nav-link" href="./resources.html">',
-                '<a class="nav-link active" href="./resources.html" aria-current="page">',
+                '<a class="nav-link active" href="./resources.html" ' r'aria-current="page">',
                 template,
             )
         # For articles type, keep Articles as active (default)
 
         # Replace title block
         template = re.sub(
-            r'<h1 class="title">.*?</h1>', f'<h1 class="title">{title_escaped}</h1>', template
+            r'<h1 class="title">.*?</h1>',
+            f'<h1 class="title">{title_escaped}</h1>',
+            template,
         )
 
         # Replace description in page
@@ -129,7 +134,10 @@ def create_html_page(
         if page_type != "articles":
             # Remove updateArticlesHistory function and calls
             template = re.sub(
-                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*", "", template, flags=re.DOTALL
+                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*",
+                "",
+                template,
+                flags=re.DOTALL,
             )
             template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
 
