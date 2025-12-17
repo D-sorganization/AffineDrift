@@ -738,8 +738,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- 3. Initialize Scroll Manager (⚡ Optimization) ---
     // Must run after TOC generation and element creation
-    const scrollManager = new ScrollManager();
-    scrollManager.init();
+    // const scrollManager = new ScrollManager();
+    // scrollManager.init();
 });
 
 // Utility function for future features
