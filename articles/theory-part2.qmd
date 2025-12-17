@@ -11,6 +11,8 @@ format:
 
 ## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
+Part I established that the golfer--club--shaft system is control-affine. This mathematical structure is not merely a convenient form for simulation; it is the key to untangling causality. Because the equations of motion separate algebraically into passive and active terms, we can separate the resulting motion into passive and active components. In this section, we exploit that structural separation to define the drift--input decomposition and the counterfactual baselines necessary to interpret it.
+
 Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
@@ -167,6 +169,8 @@ $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input
 and the associated ZTCF construction are analytically exact. Outside that scope, their interpretation must be made with care and with explicit reference to model fidelity, parameter uncertainty, and unmodeled physiological effects.
 
 ## Zero Velocity Counterfactual (ZVCF)
+
+While the ZTCF provides a dynamic baseline by evolving the system forward in time, it does not distinguish between forces arising from the system's shape (configuration) and forces arising from its motion (velocity). To fully dissect the passive dynamics, we require a second, instantaneous counterfactual that freezes the system in place. The *Zero Velocity Counterfactual* (ZVCF) serves this purpose.
 
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
 
