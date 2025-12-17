@@ -118,11 +118,18 @@ class ScrollManager {
         this.cache = new SectionGeometryCache();
         this.ticking = false;
         this.backToTopBtn = null;
+        this.progressCircle = null;
+        this.circumference = 0;
         this.resizeTimeout = null;
     }
 
     init() {
         this.backToTopBtn = document.querySelector('.back-to-top');
+        if (this.backToTopBtn) {
+            this.progressCircle = this.backToTopBtn.querySelector('.progress-ring-circle');
+            // Radius is 21 as defined in the SVG creation
+            this.circumference = 2 * Math.PI * 21;
+        }
 
         // Initial scan and measure
         this.cache.scan();
@@ -157,12 +164,23 @@ class ScrollManager {
     updateVisuals() {
         const scrollY = window.scrollY;
 
-        // 1. Back to Top Button
+        // 1. Back to Top Button & Progress
         if (this.backToTopBtn) {
+            // Visibility
             if (scrollY > 300) {
                 this.backToTopBtn.classList.add('visible');
             } else {
                 this.backToTopBtn.classList.remove('visible');
+            }
+
+            // Progress Ring
+            if (this.progressCircle) {
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) {
+                    const scrollPercent = Math.min(scrollY / docHeight, 1);
+                    const offset = this.circumference - (scrollPercent * this.circumference);
+                    this.progressCircle.style.strokeDashoffset = offset;
+                }
             }
         }
 
@@ -547,8 +565,6 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
     document.body.appendChild(backToTopBtn);
 
-    const progressCircle = backToTopBtn.querySelector('.progress-ring-circle');
-
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({
             top: 0,
@@ -556,34 +572,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    function updateScrollProgress() {
-        const scrollTop = window.scrollY;
-
-        // Visibility toggle
-        if (scrollTop > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
-        }
-
-        // Progress ring update
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (docHeight > 0) {
-            const scrollPercent = Math.min(scrollTop / docHeight, 1);
-            const offset = circumference - (scrollPercent * circumference);
-            progressCircle.style.strokeDashoffset = offset;
-        }
-    }
-
-    // Update on scroll
-    window.addEventListener('scroll', updateScrollProgress);
-
-    // Initial check
-    updateScrollProgress();
-
     // Initialize Article History Tracking and Display
     initArticleHistory();
-});
 
 // Article History Logic
 function initArticleHistory() {
@@ -654,7 +644,6 @@ function initArticleHistory() {
             }
         }
     }
-    initArticleHistory();
 
     // Copy to Clipboard
     const codeBlocks = document.querySelectorAll('pre');
