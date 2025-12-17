@@ -114,7 +114,8 @@ def check_banned_patterns(
     # Check if this is a test file - exclude angle bracket check for test files
     is_test_file = "test" in filepath.name.lower() or "test" in str(filepath.parts)
 
-    # Check if this is a file that generates HTML/uses HTML strings (GUI, Streamlit, HTML conversion tools)
+    # Check if this is a file that generates HTML/uses HTML strings
+    # (GUI, Streamlit, HTML conversion tools)
     is_html_generating_file = False
     if filepath.suffix == ".py":
         # Check if it's a Streamlit file
@@ -161,10 +162,14 @@ def check_banned_patterns(
     for line_num, line in enumerate(lines, 1):
         # Check for basic banned patterns
         for pattern, message in BANNED_PATTERNS:
-            # Skip angle bracket placeholder check for test files and HTML-generating files (HTML strings are valid)
-            if (is_test_file or is_html_generating_file) and "Angle bracket placeholder" in message:
+            # Skip angle bracket placeholder check for test files and HTML-generating
+            # files (HTML strings are valid)
+            if (is_test_file or is_html_generating_file) and (
+                "Angle bracket placeholder" in message
+            ):
                 continue
-            # Skip TODO/FIXME/Angle bracket checks in quality check scripts (they're part of the pattern definitions)
+            # Skip TODO/FIXME/Angle bracket checks in quality check scripts
+            # (they're part of the pattern definitions)
             if is_quality_check_script and (
                 "TODO placeholder" in message
                 or "FIXME placeholder" in message
@@ -212,7 +217,8 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     ]
     if filepath.name in excluded_names:
         return issues
-    # Skip magic number checks in quality check scripts (they contain pattern definitions)
+    # Skip magic number checks in quality check scripts
+    # (they contain pattern definitions)
     if "quality_check" in filepath.name.lower() or "matlab_quality_check" in filepath.name.lower():
         return issues
     for line_num, line in enumerate(lines, 1):
@@ -247,7 +253,8 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
                 is_nested = len(function_stack) > 0
                 function_stack.append(node)
 
-                # Skip docstring check for nested functions (they're usually helper functions)
+                # Skip docstring check for nested functions
+                # (they're usually helper functions)
                 if not is_nested:
                     if not ast.get_docstring(node):
                         # Skip private nested functions in update_navigation.py

@@ -1,6 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
+import numpy as np
 
 # ==========================================
 # 1. Physics Parameters & Constants
@@ -30,19 +29,19 @@ def simulate_impact(angle_rad, total_torque):
     """
     # 1. Project Torque
     # Sin(angle) projects onto Shaft Axis (Palm grip maximizes this)
-    tau_beta = total_torque * np.sin(angle_rad) 
+    tau_beta = total_torque * np.sin(angle_rad)
     # Cos(angle) projects onto Swing Plane (Finger grip maximizes this)
     tau_alpha = total_torque * np.cos(angle_rad)
-    
+
     # 2. Calculate Angular Acceleration (a = tau / I)
     accel_beta = tau_beta / I_beta
     accel_alpha = tau_alpha / I_alpha
-    
+
     # 3. Calculate Displacement over time dt (d = 0.5 * a * t^2)
     # Result in Radians
     disp_beta_rad = 0.5 * accel_beta * (dt**2)
     disp_alpha_rad = 0.5 * accel_alpha * (dt**2)
-    
+
     return np.degrees(disp_beta_rad), np.degrees(disp_alpha_rad)
 
 # Run simulation
@@ -70,7 +69,7 @@ ax1.tick_params(axis='y', labelcolor=color)
 ax1.set_ylim(0, 16)
 
 # Create a second y-axis for Path Deviation (Green)
-ax2 = ax1.twinx()  
+ax2 = ax1.twinx()
 color = 'tab:blue'
 ax2.set_ylabel('Swing Path Deviation (Degrees)', color=color, fontsize=12)
 line2, = ax2.plot(angles_deg, path_deviations, color=color, linewidth=3, linestyle='--', label='Path Deviation (Speed/Line)')
