@@ -215,7 +215,8 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     ]
     if filepath.name in excluded_names:
         return issues
-    # Skip magic number checks in quality check scripts (they contain pattern definitions)
+    # Skip magic number checks in quality check scripts
+    # (they contain pattern definitions)
     if "quality_check" in filepath.name.lower() or "matlab_quality_check" in filepath.name.lower():
         return issues
     for line_num, line in enumerate(lines, 1):
@@ -250,7 +251,8 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
                 is_nested = len(function_stack) > 0
                 function_stack.append(node)
 
-                # Skip docstring check for nested functions (they're usually helper functions)
+                # Skip docstring check for nested functions
+                # (they're usually helper functions)
                 if not is_nested:
                     if not ast.get_docstring(node):
                         # Skip private nested functions in update_navigation.py

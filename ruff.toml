@@ -4,7 +4,7 @@
 
 # Target Python 3.11 (matches your CI environment)
 target-version = "py311"
-line-length = 100  # Matches Black config in pyproject.toml
+line-length = 100  # Matches Black standard (100 chars)
 
 # Exclude generated code and standard noise
 exclude = [
@@ -16,7 +16,10 @@ exclude = [
     ".env",
     "node_modules",
     "*.ipynb",  # Jupyter notebooks often fail standard linting
-    "content",  # Website content
+    "content",
+    "docs",
+    "**/Archive/**",
+    "tools/matlab_utilities/**",
 ]
 
 [lint]
