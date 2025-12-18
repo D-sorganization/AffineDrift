@@ -65,29 +65,37 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 ### Generalized coordinates and state
 {#subsec:coords_state}
 
-The golfer's anatomy is modeled as a multibody kinematic chain with
+The golfer's anatomy is modeled as a multibody kinematic chain. We define the configuration manifold for the rigid segments as \( Q_r \), a smooth manifold of dimension \( n \). The generalized coordinates for the rigid body system are denoted by \( q \in Q_r \), typically representing rotational degrees of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations).
 
-$$
-  q \in \R^{n}
-$$
-
-generalized coordinates, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.
-
-The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates
+The flexible shaft is modeled via a finite-dimensional modal approximation. The deformation state lies in a vector space \( V \cong \R^m \), with modal coordinates
 
 $$
   \eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \R^{m},
 $$
 
-where each \( \eta_{i} \) represents the amplitude of a particular bending or deformation mode.
+where each \( \eta_{i} \) represents the amplitude of a particular bending mode.
 
-We define the full state vector as
+The total configuration manifold for the coupled system is the product manifold
 
 $$
-  x = [q^{T}, \qd^{T}, \eta^{T}, \etad^{T}]^{T} \in \R^{2(n+m)}.
+  \mathcal{Q} = Q_r \times \R^m,
 $$
 
-This state structure is chosen to support the drift vector field \( f(x) \) and input vector fields \( g(x) \) introduced later.
+of dimension \( N = n + m \). A point in this manifold is denoted by \( (q, \eta) \).
+
+The state of the system evolves on the tangent bundle \( T\mathcal{Q} \). We define the full state vector as
+
+$$
+  x = (q, \eta, \qd, \etad) \in T\mathcal{Q}.
+$$
+
+Locally, we represent the state as a vector in \( \R^{2N} \):
+
+$$
+  x = [q^{T}, \eta^{T}, \qd^{T}, \etad^{T}]^{T}.
+$$
+
+This geometric structure---a dynamical system evolving on the tangent bundle of a configuration manifold---underpins the drift vector field \( f(x) \) and input vector fields \( g(x) \) derived in Section~[@sec:affine].
 
 ### Torque inputs and actuation mapping
 {#subsec:inputs}
@@ -142,15 +150,39 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
-We now establish the control-affine structure of the coupled golfer--club--shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal--rigid coupling expressions are relegated to Appendix~[@app:derivations].
+We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
-### Equations of motion
+### Lagrangian dynamics
 
-Let \(q \in \R^{n}\) and \(\eta \in \R^{m}\) denote the rigid-body and shaft modal coordinates, respectively, and let
-\[
-  v = \begin{bmatrix} \qd \\ \etad \end{bmatrix}
-\]
-collect their velocities. The multibody equations of motion for the coupled system can be written in the standard form
+Let \( \mathcal{L}: T\mathcal{Q} \to \R \) be the Lagrangian of the system, defined as the difference between kinetic energy \( T \) and potential energy \( V \):
+
+$$
+  \mathcal{L}(q, \eta, \qd, \etad) = T(q, \eta, \qd, \etad) - V(q, \eta).
+$$
+
+The kinetic energy metric defines the Riemannian mass matrix \( M(q, \eta) \). For the coupled system,
+
+$$
+  T = \frac{1}{2} \begin{bmatrix} \qd^T & \etad^T \end{bmatrix} M(q, \eta) \begin{bmatrix} \qd \\ \etad \end{bmatrix}.
+$$
+
+The potential energy \( V(q, \eta) \) includes gravitational potential \( V_g(q) \) and the elastic strain energy of the shaft \( V_s(\eta) = \frac{1}{2} \eta^T K_s \eta \).
+
+The Euler-Lagrange equations are given by
+
+$$
+  \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot{z}} - \frac{\partial \mathcal{L}}{\partial z} = \mathcal{F}, \quad \text{where } z = \begin{bmatrix} q \\ \eta \end{bmatrix}.
+$$
+
+Here, \( \mathcal{F} \) represents the generalized non-conservative forces. We separate \( \mathcal{F} \) into active control torques, passive damping, and interaction forces:
+
+$$
+  \mathcal{F} = \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \begin{bmatrix} 0 \\ C_s \etad \end{bmatrix},
+$$
+
+where \( \tau = B(q)u \) is the control torque applied to the rigid joints, and \( C_s \) is the modal damping matrix.
+
+Expanding the Euler-Lagrange equations yields the standard manipulator form:
 
 $$
   M(q,\eta)
@@ -171,25 +203,15 @@ $$
   \end{bmatrix}
   =
   \begin{bmatrix}
-    \tau \\[0.2em]
+    B(q) u \\[0.2em]
     0
-  \end{bmatrix},
+  \end{bmatrix}.
   {#eq-eom_block}
 $$
 
-where:
-- \(M(q,\eta)\) is the inertia matrix for the coupled rigid--flexible system,
-  
-- \(C(q,\qd,\eta,\etad)\) encodes Coriolis and centrifugal effects,
-  
-- \(G(q)\) is the gravitational torque vector,
-  
-- \(K_{s}\) and \(C_{s}\) are the shaft stiffness and damping matrices,
-  
-- \(\tau = B(q) u\) is the generalized torque vector induced by control inputs \(u\).
-The shaft degrees of freedom have no direct torque inputs; all shaft forces are passive (elastic and damping).
+where \( C(q,\qd,\eta,\etad) \) represents the Coriolis and centrifugal matrix derived from the Christoffel symbols of the metric \( M \), and \( G(q) = \partial V_g / \partial q \).
 
-Equation~\eqref{eq:eom_block} is schematic but captures the structural separation between passive mechanical effects and torque inputs.
+This structure explicitly separates conservative forces, dissipative forces, and external control inputs.
 
 ### Solving for accelerations
 
@@ -402,27 +424,27 @@ The drift--input decomposition in~\eqref{eq:affine_state} separates the dynamics
 
 ### Definition as a drift-only trajectory
 
-Consider the control-affine system
+Consider the control-affine system defined on \( T\mathcal{Q} \):
 
 $$
   \xd = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
   {#eq-affine_repeat}
 $$
 
-Let \(x(t)\) denote the actual trajectory of the system under some torque input \(u(t)\) on a time interval \(t \in [t_{0}, t_{f}]\), with the initial condition
+Let \( \Phi^f_t: T\mathcal{Q} \to T\mathcal{Q} \) denote the flow of the drift vector field \( f(x) \). This flow represents the natural evolution of the system under its own passive dynamics (inertia, gravity, elasticity) in the absence of control input.
+
+We define the *Zero Torque Counterfactual* trajectory, denoted \(x^{\mathrm{ZTCF}}(t)\), as the integral curve of the drift field starting from the initial state \( x_0 \):
 
 $$
-  x(t_{0}) = x_{0}.
-$$
-
-We define the *Zero Torque Counterfactual* trajectory, denoted \(x^{\mathrm{ZTCF}}(t)\), as the solution of the drift-only system
-
-$$
-  \dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big), \qquad x^{\mathrm{ZTCF}}(t_{0}) = x_{0},
+  x^{\mathrm{ZTCF}}(t) = \Phi^f_{t-t_0}(x_0), \quad t \in [t_{0}, t_{f}].
   {#eq-ztcf_def}
 $$
 
-on the same time interval \([t_{0}, t_{f}]\).
+Explicitly, it is the solution to the differential equation
+
+$$
+  \dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big), \qquad x^{\mathrm{ZTCF}}(t_{0}) = x_{0}.
+$$
 
 By construction:
 - The initial condition is identical to that of the actual swing.
@@ -529,22 +551,21 @@ The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces 
 
 ### Definition
 
-Let the actual swing at time \(t\) be characterized by the state
-\[
-x(t) = \big(q(t),\, \qd(t),\, \eta(t),\, \etad(t)\big).
-\]
-The *Zero Velocity Counterfactual state* at the same instant is defined as
+Let the actual swing at time \(t\) be characterized by the state \( x(t) \in T\mathcal{Q} \).
+Locally, \( x(t) = (q(t), \eta(t), \qd(t), \etad(t)) \).
+
+We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle. Let \( \pi: T\mathcal{Q} \to \mathcal{Q} \) be the canonical projection bundle, and \( \iota_0: \mathcal{Q} \to T\mathcal{Q} \) be the zero section embedding such that \( \iota_0(q, \eta) = (q, \eta, 0, 0) \).
+
+The ZVCF state is defined by projecting the current state to the base manifold and lifting it back to the zero section:
 
 $$
-  x^{\mathrm{ZVCF}}(t)
-  =
-  \big(q(t),\, 0,\, \eta(t),\, 0\big).
+  x^{\mathrm{ZVCF}}(t) = \iota_0( \pi( x(t) ) ) = (q(t), \eta(t), 0, 0).
   {#eq-zvcf_state}
 $$
 
-Only the configuration variables \(q(t)\) and \(\eta(t)\) are retained; all generalized velocities are set to zero.
+Physically, this operation "freezes" the system in its current configuration.
 
-Evaluating the equations of motion at this state yields the *ZVCF generalized torque*:
+Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
 $$
   \tau_{\mathrm{ZVCF}}(t)
