@@ -301,16 +301,12 @@ All nonlinearities---including those introduced by shaft flexibility---are conta
 
 Three structural observations follow:
 
-1. **Flexibility enriches drift but preserves input linearity.** Shaft flexibility introduces additional passive degrees of freedom and modifies $M, C,$ and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques.
+1. **Flexibility enriches drift but preserves input linearity.** Shaft flexibility introduces additional passive degrees of freedom and modifies $M, C,$ and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques. This implies a fundamental underactuation: the golfer cannot directly command the shaft modes. Instead, the shaft dynamics act as an environment that must be managed. Mathematically, the shaft's stiffness and damping are sequestered entirely within the drift vector field $f(x)$, categorizing them rigorously as passive effects akin to gravity, rather than active outputs of the player.
 2. **All torque-driven effects are confined to $g(x)u$.** Any change in the dynamics caused by altering the torque profile must pass through the input term; the drift term depends only on the state and parameters.
 3. **The affine structure is independent of parameter values.** The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion. In practice, parameter uncertainty affects the *accuracy* of the decomposition but not its algebraic form.
 
 This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections.
 
-By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum. This structural separation is what permits us to define meaningful counterfactual baselines—specifically, by asking what the system would do if $u$ were removed (the drift) or if velocity were removed (the configuration load). The next section formalizes these definitions.
+By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
-
-
-
-
-
+The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. The next logical step is to probe this map by asking: what happens when we turn the input off? This structural separation is what permits us to define meaningful counterfactual baselines—specifically, by asking what the system would do if $u$ were removed (the drift) or if velocity were removed (the configuration load). The next section formalizes these definitions.
