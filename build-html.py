@@ -166,6 +166,13 @@ def main() -> None:
         "resources-websites.qmd",
         "resources.qmd",
         "bibliography.qmd",
+        "book-reviews.qmd",
+        "research-reviews.qmd",
+        "daydreams-doodles.qmd",
+        "research-review-baseball-pitching.qmd",
+        "research-review-induced-acceleration-analysis.qmd",
+        "research-review-interaction-forces.qmd",
+        "research-review-shaft-flexibility.qmd",
     ]
 
     # Process articles.qmd LAST to avoid corrupting the template
