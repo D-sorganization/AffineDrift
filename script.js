@@ -408,6 +408,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame
+    let isScrollTicking = false;
+
     function updateScrollProgress() {
         const scrollTop = window.scrollY;
 
@@ -425,10 +428,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const offset = circumference - (scrollPercent * circumference);
             progressCircle.style.strokeDashoffset = offset;
         }
+
+        isScrollTicking = false;
     }
 
-    // Update on scroll
-    window.addEventListener('scroll', updateScrollProgress);
+    function onScroll() {
+        if (!isScrollTicking) {
+            window.requestAnimationFrame(updateScrollProgress);
+            isScrollTicking = true;
+        }
+    }
+
+    // Update on scroll (passive listener for better performance)
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     // Initial check
     updateScrollProgress();

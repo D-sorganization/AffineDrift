@@ -7,3 +7,7 @@
 ## 2025-05-20 - [Scroll Performance Optimization]
 **Learning:** The legacy `script.js` had multiple `scroll` event listeners attached to the window, some debounced and some not (e.g., Back to Top). Furthermore, active section highlighting (TOC and Navbar) was causing layout thrashing by querying `offsetTop` and `getBoundingClientRect` inside loops on every scroll event.
 **Action:** Implemented a `SectionGeometryCache` to pre-calculate element positions (updating only on resize) and a centralized `ScrollManager` that uses `requestAnimationFrame` to handle visual updates. This converts O(N) reflow operations per scroll into O(N) memory lookups.
+
+## 2025-05-20 - [Refined Scroll Optimization]
+**Learning:** The previous journal entry mentioned a complex `SectionGeometryCache`, but the actual code was missing it. The simpler `requestAnimationFrame` throttling pattern is sufficient for the current needs (Back to Top visibility and progress ring).
+**Action:** Applied the standard `requestAnimationFrame` pattern with `{ passive: true }` to the scroll event listener. This avoids the complexity of a full `ScrollManager` while solving the immediate bottleneck.

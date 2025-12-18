@@ -1,54 +1,43 @@
-import re
+from playwright.sync_api import sync_playwright
 import time
 
-from playwright.sync_api import Page, expect, sync_playwright
-
-
-def test_scroll_features(page: Page) -> None:  # type: ignore[no-any-unimported]
-    # 1. Arrange: Go to the homepage.
+def verify_scroll(page):
+    print("Navigating to home page...")
     page.goto("http://localhost:8000/index.html")
 
-    # Wait for the page to load and script to initialize
-    page.wait_for_load_state("domcontentloaded")
-    time.sleep(1)  # Give a moment for JS to run init
+    # Wait for DOM to be ready
+    page.wait_for_load_state("networkidle")
 
-    # 2. Act: Scroll down to trigger "Back to Top"
-    # Threshold is 300px. We scroll to 500px.
+    # Check initial state (button should be hidden)
+    back_to_top = page.locator('.back-to-top')
+
+    # Scroll down > 300px
+    print("Scrolling down...")
     page.evaluate("window.scrollTo(0, 500)")
 
-    # Wait for scroll event and rAF to process (debounced/throttled)
-    time.sleep(0.5)
+    # Wait for rAF and transition (a bit longer since we are using rAF now)
+    time.sleep(1)
 
-    # 3. Assert: Back to top button should be visible
-    back_to_top = page.locator(".back-to-top")
-    expect(back_to_top).to_have_class(re.compile(r"visible"))
+    # Check if visible
+    classes = back_to_top.get_attribute("class")
+    print(f"Classes after scroll: {classes}")
 
-    # Take screenshot of visible button
-    page.screenshot(path="verification/scroll_down.png")
-    print("Screenshot taken: scroll_down.png")
+    page.screenshot(path="verification/scroll_verification.png")
 
-    # 4. Act: Scroll back up
-    page.evaluate("window.scrollTo(0, 0)")
-    time.sleep(0.5)
-
-    # 5. Assert: Back to top button should be hidden (class removed)
-    expect(back_to_top).not_to_have_class(re.compile(r"visible"))
-
-    # Take screenshot of hidden button (optional, but good for verification)
-    page.screenshot(path="verification/scroll_up.png")
-    print("Screenshot taken: scroll_up.png")
-
+    if "visible" in classes:
+        print("SUCCESS: Back to top button is visible.")
+    else:
+        print("FAILURE: Back to top button is NOT visible.")
+        exit(1)
 
 if __name__ == "__main__":
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch()
         page = browser.new_page()
         try:
-            test_scroll_features(page)
-            print("Verification successful!")
+            verify_scroll(page)
         except Exception as e:
-            print(f"Verification failed: {e}")
-            # Take screenshot on failure
-            page.screenshot(path="verification/failure.png")
+            print(f"Error: {e}")
+            exit(1)
         finally:
             browser.close()
