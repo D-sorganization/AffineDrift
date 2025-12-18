@@ -166,6 +166,10 @@ $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input
 
 and the associated ZTCF construction are analytically exact. Outside that scope, their interpretation must be made with care and with explicit reference to model fidelity, parameter uncertainty, and unmodeled physiological effects.
 
+### Decomposing the drift
+
+While the ZTCF effectively subtracts the golfer's active contribution, the remaining drift term $f(x)$ is still complex: it lumps together static forces (gravity, stiffness) with dynamic forces (Coriolis, centrifugal, damping). To fully diagnose the mechanical load, we need a finer decomposition of the drift itself. We must distinguish between loads that exist purely because of *where* the club is (configuration) and loads that exist because of *how fast* it is moving (velocity).
+
 ## Zero Velocity Counterfactual (ZVCF)
 
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
