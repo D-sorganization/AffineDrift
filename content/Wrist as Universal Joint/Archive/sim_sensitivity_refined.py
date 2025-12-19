@@ -3,8 +3,9 @@
 Refined simulation for sensitivity to grip location on wrist mechanics.
 Augmented with improved structure, visualization, parameterization, and documentation.
 """
-import numpy as np
+import csv
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Constants and parameters
 WRIST_LENGTH = 0.18  # meters (typical wrist length)
@@ -95,7 +96,8 @@ plt.tight_layout()
 plt.show()
 
 # Augmented: Save results to CSV for further analysis
-import csv
+
+
 with open('sim_sensitivity_results.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['Grip Position (m)', 'Torque (Nm)', 'Inertia Effect (kg*m^2)'])

@@ -59,6 +59,10 @@ PASS_PATTERNS = [
     ),
 ]
 
+ALLOWED_CONSTANTS = [
+    re.compile(r"GRAVITY_M_S2\s*=\s*", re.IGNORECASE),
+]
+
 MAGIC_NUMBERS = [
     (re.compile(r"(?<![0-9])3\.141"), "Use math.pi instead of 3.141"),
     (re.compile(r"(?<![0-9])9\.8[0-9]?(?![0-9])"), "Define GRAVITY_M_S2 constant"),
@@ -114,6 +118,7 @@ def check_banned_patterns(
         "quality_check_script.py",
         "matlab_quality_check.py",
         "code_quality_check.py",
+        "quality-check.py",
     ):
         return issues
 
@@ -147,10 +152,14 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
         "quality_check_script.py",
         "matlab_quality_check.py",
         "code_quality_check.py",
+        "quality-check.py",
     ):
         return issues
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
+        # Skip lines that are already defining constants (e.g., GRAVITY_M_S2 = 9.81)
+        if any(pattern.search(line_content) for pattern in ALLOWED_CONSTANTS):
+            continue
         for pattern, message in MAGIC_NUMBERS:
             if pattern.search(line_content):
                 issues.append((line_num, message, line.strip()))
@@ -165,6 +174,7 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
         "quality_check_script.py",
         "matlab_quality_check.py",
         "code_quality_check.py",
+        "quality-check.py",
     ):
         return issues
     try:
