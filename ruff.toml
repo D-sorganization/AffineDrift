@@ -16,10 +16,6 @@ exclude = [
     ".env",
     "node_modules",
     "*.ipynb",  # Jupyter notebooks often fail standard linting
-    "content",
-    "docs",
-    "**/Archive/**",
-    "tools/matlab_utilities/**",
 ]
 
 [lint]
@@ -43,11 +39,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # Ignore "unused imports" in __init__.py files (common pattern)
 "__init__.py" = ["F401"]
 # Allow assertions in tests
-"tests/*" = ["S101", "E501"]
-# Ignore line length for all tools scripts as they often contain long strings/regex/logging
-"tools/**/*.py" = ["E501"]
-"scripts/**/*.py" = ["E501"]
-"docs/**/*.py" = ["E501"]
+"tests/*" = ["S101"]
 
 [lint.isort]
 # Tells Ruff how to group your own code vs. libraries
