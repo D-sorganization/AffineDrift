@@ -2006,6 +2006,8 @@ These examples provide explicit, low-dimensional realizations of the general con
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 {#sec-simulink}
 
+While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment.
+
 To complement the theoretical framework developed in this manuscript, a forward‐dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced in Sections~[@sec:ztcf]–[@sec:zvcf] using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
 
 The model is a planar two–hand, multi–link system with a flexible beam shaft, based on the publicly released “Two Hand Golf Swing Model” (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings. The structure of the model and its evaluation are documented in Olson (2024). 
@@ -2084,6 +2086,8 @@ The current Simulink model provides:
 - a pathway toward full Part II (simulation) and Part III (experimental) papers.
 
 Future research will incorporate these counterfactual calculations into high‐fidelity 3D multibody simulations, explore sensitivity to shaft stiffness and segment masses, and apply the decomposition to motion capture data to understand timing, effort, and mechanical efficiency in real swings.
+
+The specific numerical algorithms employed to enforce the "kill switches" and compute the ZVCF within the discrete-time solver environment are detailed in the final appendix below.
 
 ## Numerical Computation of ZTCF and ZVCF
 {#app:ztcf_zvcf}
