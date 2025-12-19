@@ -53,7 +53,8 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
                     (
                         line_num,
                         "unbalanced",
-                        f"Unbalanced $$ delimiters: {dollar_count} found (should be even)",
+                        f"Unbalanced $$ delimiters: {dollar_count} found "
+                        f"(should be even)",
                     )
                 )
 
