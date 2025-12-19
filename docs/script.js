@@ -103,19 +103,29 @@ document.addEventListener('DOMContentLoaded', function () {
         const observer = new IntersectionObserver(function (entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const computedOpacity = window.getComputedStyle(entry.target).opacity;
-                    if (computedOpacity === '0') {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target); // ⚡ Bolt Optimization: Stop observing once visible
                 }
             });
         }, observerOptions);
 
         const sectionsToAnimate = document.querySelectorAll('section:not(.page-header):not(.article-section)');
+        const animationStates = [];
+
+        // ⚡ Bolt Optimization: Batch DOM reads to prevent layout thrashing
+        // Phase 1: Read (getBoundingClientRect)
         sectionsToAnimate.forEach(section => {
             const rect = section.getBoundingClientRect();
-            if (rect.top > window.innerHeight) {
+            animationStates.push({
+                section,
+                shouldAnimate: rect.top > window.innerHeight
+            });
+        });
+
+        // Phase 2: Write (style updates)
+        animationStates.forEach(({ section, shouldAnimate }) => {
+            if (shouldAnimate) {
                 section.style.opacity = '0';
                 section.style.transform = 'translateY(20px)';
                 section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
