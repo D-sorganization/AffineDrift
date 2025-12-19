@@ -4,6 +4,7 @@ from playwright.sync_api import Page, sync_playwright
 
 
 def verify_scroll(page: Page) -> None:
+    """Verify that the scroll-to-top button appears after scrolling."""
     print("Navigating to home page...")
     page.goto("http://localhost:8000/index.html")
 
