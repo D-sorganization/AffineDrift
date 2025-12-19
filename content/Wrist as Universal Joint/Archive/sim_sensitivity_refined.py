@@ -3,6 +3,7 @@
 Refined simulation for sensitivity to grip location on wrist mechanics.
 Augmented with improved structure, visualization, parameterization, and documentation.
 """
+import csv
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -95,7 +96,7 @@ plt.tight_layout()
 plt.show()
 
 # Augmented: Save results to CSV for further analysis
-import csv
+
 
 with open('sim_sensitivity_results.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)

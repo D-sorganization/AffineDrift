@@ -1,3 +1,4 @@
+import sys
 import time
 
 from playwright.sync_api import Page, sync_playwright
@@ -39,7 +40,7 @@ def verify_animation(page: Page) -> None:  # type: ignore[no-any-unimported]
         print("SUCCESS: Section is visible.")
     else:
         print(f"FAILURE: Section opacity is {opacity}, expected 1.")
-        exit(1)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -50,6 +51,6 @@ if __name__ == "__main__":
             verify_animation(page)
         except Exception as e:
             print(f"Error: {e}")
-            exit(1)
+            sys.exit(1)
         finally:
             browser.close()

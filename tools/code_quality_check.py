@@ -59,6 +59,10 @@ PASS_PATTERNS = [
     ),
 ]
 
+ALLOWED_CONSTANTS = [
+    re.compile(r"GRAVITY_M_S2\s*=\s*", re.IGNORECASE),
+]
+
 MAGIC_NUMBERS = [
     (re.compile(r"(?<![0-9])3\.141"), "Use math.pi instead of 3.141"),
     (re.compile(r"(?<![0-9])9\.8[0-9]?(?![0-9])"), "Define GRAVITY_M_S2 constant"),
@@ -154,7 +158,7 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     for line_num, line in enumerate(lines, 1):
         line_content = line[: line.index("#")] if "#" in line else line
         # Skip lines that are already defining constants (e.g., GRAVITY_M_S2 = 9.81)
-        if re.search(r"GRAVITY_M_S2\s*=\s*", line_content, re.IGNORECASE):
+        if any(pattern.search(line_content) for pattern in ALLOWED_CONSTANTS):
             continue
         for pattern, message in MAGIC_NUMBERS:
             if pattern.search(line_content):
