@@ -1,5 +1,7 @@
 import time
+
 from playwright.sync_api import Page, sync_playwright
+
 
 def verify_animation(page: Page) -> None:
     print("Navigating to home page...")
