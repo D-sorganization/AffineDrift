@@ -52,9 +52,9 @@ These assumptions apply strictly to the theoretical decomposition presented in t
   
 3. **No ball--club impact phase.** Ball impact is excluded from the domain of analysis due to its hybrid (non-smooth) dynamics. The model applies to the pre-impact and post-impact phases only.
   
-4. **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions.
+4. **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions. Note that aerodynamic forces \(F_{aero}(q, \dot{q})\) are strictly state-dependent and thus mathematically compatible with the affine structure \(\dot{x} = f(x) + g(x)u\). Their inclusion would simply enrich the drift vector field \(f(x)\) with dissipative terms. They are omitted here to isolate the inertial and elastic energy exchange fundamental to the swing, but the theoretical framework generalizes to include them without modification.
   
-5. **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector \( \tau = B u \). These torques serve as the control inputs in the affine control formulation. The set of admissible torques may be state-dependent in practice; here we treat \(u\) as an exogenous input signal at the mechanical level.
+5. **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector \( \tau = B u \). These torques serve as the control inputs in the affine control formulation. The set of admissible torques may be state-dependent in practice; here we treat \(u\) as an exogenous input signal at the mechanical level. While we treat \(u\) as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance (stiffness/damping) alongside torque. In this framework, the term \(f(x)\) represents the **skeletal drift**—the dynamics of the system in the absence of activation-dependent stiffness. The Zero Torque Counterfactual (ZTCF) therefore describes the motion of the underlying passive mechanism, serving as a 'skeletal baseline' rather than a representation of a flaccid or neurologically relaxed golfer.
   
 6. **Ground contact modeled as holonomic constraint.** Feet--ground interaction is simplified as a fixed base with no slip or compliance; the golfer is treated as rooted at the ground.
   
@@ -1047,6 +1047,9 @@ During rapid transitions (late downswing), small errors in acceleration estimati
 
 ##### Interpretation of counterfactuals.
 ZTCF and ZVCF are mathematically defined but physically unrealizable states or trajectories. They answer precise mechanical questions but should not be interpreted as physiological or behavioral alternatives available to a real golfer.
+
+##### Mechanical vs. Control Causality.
+A common objection to 'Zero Torque' analysis in biological systems is the presence of reflex loops (e.g., stretch reflexes) that make input \(u\) functionally dependent on state \(x\). It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force). The AffineDrift framework addresses Mechanical Causality. It decomposes the net observed force into components arising from the passive inertia/elasticity (\(f(x)\)) and the active actuators (\(g(x)u\)). The ZTCF answers the question: *'Regardless of the complex sensory-motor loops that determined the input, what would the system have done if that input were instantaneously removed?'* This isolates the mechanical affordances of the body from the neural strategy of the player.
 
 ##### No claims about optimality or intent.
 The decomposition quantifies how torques shape motion, but it does not imply:
