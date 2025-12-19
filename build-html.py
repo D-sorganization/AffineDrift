@@ -59,7 +59,8 @@ def create_html_page(
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
-        page_type: Type of page ('articles', 'models', 'resources') to set correct nav active state
+        page_type: Type of page ('articles', 'models', 'resources') to set
+            correct nav active state
         template_path: Path to the HTML template file
 
     Returns:
