@@ -598,6 +598,65 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // ⚡ Bolt Optimization: Reading Time Estimate
+    function initReadingTime() {
+        // Only run on article pages in the /articles/ subdirectory
+        if (!window.location.pathname.includes('/articles/')) return;
+
+        const articleContent = document.getElementById('quarto-document-content');
+        if (!articleContent) return;
+
+        // Use the article body text for calculation
+        const text = articleContent.innerText || articleContent.textContent;
+        // Simple word count estimate
+        const wordCount = text.trim().split(/\s+/).length;
+        // Average reading speed (words per minute)
+        const wordsPerMinute = 225;
+        const minutes = Math.ceil(wordCount / wordsPerMinute);
+
+        // Create the reading time element
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'reading-time-estimate';
+        timeDiv.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px; opacity: 0.8;" aria-hidden="true">
+                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+            </svg>
+            <span>${minutes} min read</span>
+        `;
+
+        // Style the element
+        Object.assign(timeDiv.style, {
+            marginBottom: '1.5rem',
+            color: 'var(--text-light)',
+            fontStyle: 'italic',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '0.95rem',
+            fontWeight: '500'
+        });
+
+        timeDiv.setAttribute('aria-label', `Estimated reading time: ${minutes} minutes`);
+
+        // Insert logic: Try to insert after the header if it exists and is visible
+        const header = document.getElementById('title-block-header');
+        const headerDisplay = header ? getComputedStyle(header).display : 'null';
+
+        if (header && headerDisplay !== 'none') {
+            // Check if meta block exists inside header
+            const meta = header.querySelector('.quarto-title-meta');
+            if (meta) {
+                 meta.appendChild(timeDiv);
+            } else {
+                 header.appendChild(timeDiv);
+            }
+        } else {
+             // Fallback: insert at the top of the content
+             articleContent.insertBefore(timeDiv, articleContent.firstChild);
+        }
+    }
+    initReadingTime();
+
     console.log('AffineDrift loaded successfully (Optimized)');
 
 });

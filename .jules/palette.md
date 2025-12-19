@@ -13,3 +13,7 @@
 ## 2025-12-13 - Accordion Accessibility
 **Learning:** Accordions require explicit programmatic linkage between headers and content panels. Using `aria-controls` and managing `aria-hidden` states ensures screen reader users understand the relationship and state of the content, which visual cues alone don't provide.
 **Action:** Ensure all accordion headers have `aria-controls` pointing to the content ID, and synchronize `aria-hidden` on the content with the `aria-expanded` state of the header.
+
+## 2025-05-18 - Nested Path Asset Resolution
+**Learning:** Automated site generators (like Quarto) may generate nested pages (e.g., `docs/articles/`) that incorrectly reference root-level assets with relative paths (e.g., `src="script.js"` instead of `../script.js`). This silent failure breaks all JavaScript-dependent UX/accessibility features on those pages.
+**Action:** Always verify relative asset paths in generated subdirectories and use post-processing scripts to correct depth-dependent links if the generator lacks configuration for it.
