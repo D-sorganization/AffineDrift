@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 # --- 1. Assumptions and Constants ---
 # Mass properties of a standard driver
