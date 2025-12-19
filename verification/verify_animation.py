@@ -3,7 +3,7 @@ import time
 from playwright.sync_api import Page, sync_playwright
 
 
-def verify_animation(page: Page) -> None:
+def verify_animation(page: Page) -> None:  # type: ignore[no-any-unimported]
     print("Navigating to home page...")
     page.goto("http://localhost:8000/index.html")
     page.wait_for_load_state("networkidle")
@@ -34,11 +34,12 @@ def verify_animation(page: Page) -> None:
 
     page.screenshot(path="verification/animation_verification.png")
 
-    if opacity == '1':
+    if opacity == "1":
         print("SUCCESS: Section is visible.")
     else:
         print(f"FAILURE: Section opacity is {opacity}, expected 1.")
         exit(1)
+
 
 if __name__ == "__main__":
     with sync_playwright() as p:
