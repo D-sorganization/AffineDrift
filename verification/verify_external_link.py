@@ -26,18 +26,19 @@ def run():
             for i in range(count):
                 link = links.nth(i)
                 if link.is_visible():
-                    href = link.get_attribute('href')
+                    href = link.get_attribute("href")
                     print(f"Scrolling to visible link {i}: {href}")
                     link.scroll_into_view_if_needed()
                     page.screenshot(path="verification/external_links.png")
                     print("Screenshot saved to verification/external_links.png")
                     break
             else:
-                 print("No visible external links found to screenshot")
+                print("No visible external links found to screenshot")
         else:
             print("FAILURE: No external links found with class")
 
         browser.close()
+
 
 if __name__ == "__main__":
     run()
