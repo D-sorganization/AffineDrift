@@ -27,22 +27,6 @@ repos:
         additional_dependencies: ["types-requests", "types-PyYAML"]
         args: [--config-file=mypy.ini]
         types: [python] # Only Python files - MyPy won't check JavaScript/TypeScript
-        files: ^python/.* # All files under python/ and subdirectories
-        exclude: |
-          (?x)^(
-            python/matlab/|
-            python/javascript/|  # Exclude python/javascript/ directory (JS/TS code)
-            python/archive/|
-            python/legacy/|
-            python/experimental/|
-            python/\.git/|
-            python/__pycache__/|
-            python/\.pytest_cache/|
-            python/\.venv/|
-            python/venv/
-          )
-
-  # Jupyter notebook cleaner
   # DISABLED due to corrupted notebook issues (re-enabling requires careful verification)
   # - repo: https://github.com/kynan/nbstripout
   #   rev: 0.7.1
