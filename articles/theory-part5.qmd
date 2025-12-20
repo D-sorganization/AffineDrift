@@ -11,7 +11,9 @@ format:
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
-While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment.
+While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of Appendix~[@app:toy] demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
+
+The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
 To complement the theoretical framework developed in this manuscript and fully implement the force decomposition algorithms derived in the Appendices, a forward-dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced earlier using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
 

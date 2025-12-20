@@ -69,6 +69,8 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 The drift--input decomposition separates the dynamics into a passive component $f(x)$ and a torque-driven component $g(x)u$. The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
+The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *instantaneous* tendencies of the system: $f(x)$ dictates how the state evolves passively, while $g(x)$ dictates how it responds to input. However, the golf swing is not an instant; it is a trajectory unfolding over time. To understand the cumulative effect of the drift dynamics, we must move from the differential description ($\dot{x}$) to the integral description ($x(t)$). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
+
 ### Definition as a drift-only trajectory
 
 Consider the control-affine system
@@ -172,6 +174,8 @@ While the ZTCF effectively subtracts the golfer's active contribution, the remai
 
 ## Zero Velocity Counterfactual (ZVCF)
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
+
+While the ZTCF successfully isolates the system's passive dynamics from the golfer's active input, the passive drift itself remains a composite phenomenon. It aggregates both *motion-dependent* forces (such as centrifugal, Coriolis, and inertial coupling) and *configuration-dependent* forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system's instantaneous shape.
 
 ### Definition
 
