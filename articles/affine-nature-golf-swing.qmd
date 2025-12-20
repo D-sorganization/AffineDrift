@@ -152,216 +152,53 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 
 We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
-### Lagrangian dynamics
+### Lagrangian formulation
 
-Let \( \mathcal{L}: T\mathcal{Q} \to \mathbb{R} \) be the Lagrangian of the system, defined as the difference between kinetic energy \( T \) and potential energy \( V \):
+Let $q \in \mathbb{R}^{n}$ denote the generalized coordinates of the rigid golfer model (e.g., joint angles) and $\eta \in \mathbb{R}^{m}$ denote the modal coordinates of the flexible shaft. We define the composite configuration vector as:
+$$q_{\text{sys}} = \begin{bmatrix} q \\ \eta \end{bmatrix} \in \mathbb{R}^{n+m}.$$
 
-$$
-  \mathcal{L}(q, \eta, \qd, \etad) = T(q, \eta, \qd, \etad) - V(q, \eta).
-$$
+The system dynamics are derived from the Lagrangian $\mathcal{L} = T - V$, where $T$ is the total kinetic energy and $V$ is the total potential energy.
 
-The kinetic energy is defined by a Riemannian metric \( M(q, \eta) \) on the configuration manifold \( \mathcal{Q} \). For the coupled rigid--flexible system, the kinetic energy decomposes into block components:
+The kinetic energy is a quadratic form of the generalized velocities:
+$$T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}},$$
+where $M(q_{\text{sys}})$ is the symmetric, positive-definite inertia matrix. Due to the mechanical coupling between the golfer's hand and the clubhead, this matrix has a dense block structure:
+$$M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta}(q, \eta) \end{bmatrix}.$$
+Here, $M_{qq}$ represents the rigid-body inertia (augmented by the shaft's mass), $M_{\eta\eta}$ is the modal mass matrix (typically diagonal/identity by construction), and $M_{q\eta}$ represents the inertial coupling—specifically, how rigid-body accelerations induce effective forces on the flexible modes, and conversely, how flexible accelerations exert recoil forces on the hands.
 
-$$
-  T = \frac{1}{2} \begin{bmatrix} \qd^T & \etad^T \end{bmatrix}
-  \begin{bmatrix}
-    M_{rr}(q,\eta) & M_{rf}(q,\eta) \\
-    M_{fr}(q,\eta) & M_{ff}(q,\eta)
-  \end{bmatrix}
-  \begin{bmatrix} \qd \\ \etad \end{bmatrix},
-$$
+The potential energy $V$ consists of gravitational potential $V_g$ and elastic strain energy $V_e$:
+$$V(q_{\text{sys}}) = V_g(q_{\text{sys}}) + \frac{1}{2} \eta^T K_s \eta,$$
+where $K_s$ is the positive-definite modal stiffness matrix. Note that gravity may act on the deformed shaft configuration, making $V_g$ dependent on both $q$ and $\eta$.
 
-where:
-- \( M_{rr} \in \mathbb{R}^{n \times n} \) is the effective inertia of the rigid links (modified by shaft deformation),
-- \( M_{ff} \in \mathbb{R}^{m \times m} \) is the generalized inertia of the shaft modes,
-- \( M_{rf} = M_{fr}^T \) represents the inertial coupling between rigid body motion and shaft bending.
+We also introduce the Rayleigh dissipation function to model internal shaft damping:
+$$\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}.$$
 
-The potential energy \( V(q, \eta) \) is the sum of gravitational potential and elastic strain energy:
+Applying the Euler-Lagrange operator $\frac{d}{dt}(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}$ yields the equations of motion:
+$$M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.$$
 
-$$
-  V(q, \eta) = V_g(q, \eta) + \frac{1}{2} \eta^T K_s \eta,
-$$
+Here:
 
-where \( K_s \) is the diagonal matrix of modal stiffnesses. Note that \( V_g \) may depend on \( \eta \) if shaft deformation significantly shifts the center of mass.
+- $C(q,\dot{q},\eta,\dot{\eta})$ represents the Coriolis and centrifugal matrix, derived from the Christoffel symbols of $M$.
+- $G(q,\eta) = \frac{\partial V_g}{\partial q_{\text{sys}}}$ is the gravitational vector.
+- $\tau \in \mathbb{R}^n$ is the generalized torque applied by the golfer.
+- The zero vector in the lower block of the right-hand side explicitly reflects the **underactuated** nature of the system: the golfer cannot directly apply torque to the shaft modes.
 
-The equations of motion are derived via the Euler-Lagrange operator acting on the generalized coordinates \( z = [q^T, \eta^T]^T \):
+### Control-affine state space form
 
-$$
-  \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot{z}} - \frac{\partial \mathcal{L}}{\partial z} = \mathcal{F}_{ext},
-$$
+To recast this into a control-theoretic framework, we solve for the accelerations. Since $M$ is positive-definite, it is invertible. Multiplying by $M^{-1}$, we isolate the highest derivatives:
 
-where \( \mathcal{F}_{ext} \) contains the non-conservative forces. We separate these forces into active control inputs and passive dissipative terms:
+$$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).$$
 
-$$
-  \mathcal{F}_{ext} = \underbrace{\begin{bmatrix} \tau \\ 0 \end{bmatrix}}_{\text{Active Input}} - \underbrace{\begin{bmatrix} 0 \\ C_s \etad \end{bmatrix}}_{\text{Passive Damping}},
-$$
+Substituting the actuation model $\tau = B(q)u$, we can separate the terms that depend on $u$ from those that do not. Let the state vector be $x = [q^T, \eta^T, \dot{q}^T, \dot{\eta}^T]^T$. We define the **drift vector field** $f(x)$ and the **control input field** $g(x)$ as follows.
 
-where \( \tau = B(q)u \) is the vector of generalized joint torques, and \( C_s \) is the modal damping matrix.
+The **drift field** $f(x)$ captures the unforced (natural) evolution of the system:
+$$f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.$$
+This vector field contains all inertial coupling, gravitational forces, centrifugal/Coriolis effects, and the complete elastic dynamics of the shaft.
 
-Applying the differential operators yields the coupled equations of motion in block matrix form:
+The **control field** $g(x)$ defines how input torques map to state accelerations:
+$$g(x) = \begin{bmatrix} 0 \\ 0 \\ M^{-1} \begin{bmatrix} B(q) \\ 0 \end{bmatrix} \end{bmatrix}.$$
 
-$$
-  \begin{bmatrix}
-    M_{rr} & M_{rf} \\
-    M_{fr} & M_{ff}
-  \end{bmatrix}
-  \begin{bmatrix}
-    \qdd \\[0.2em]
-    \etadd
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    C_{rr} & C_{rf} \\
-    C_{fr} & C_{ff}
-  \end{bmatrix}
-  \begin{bmatrix}
-    \qd \\[0.2em]
-    \etad
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    G_r(q,\eta) \\[0.2em]
-    G_f(q,\eta) + K_{s}\eta + C_{s}\etad
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    B(q) u \\[0.2em]
-    0
-  \end{bmatrix},
-  {#eq-eom_block}
-$$
-
-where \( C(\dots) \) is the Coriolis/centrifugal matrix derived from the Christoffel symbols of \( M \), and \( G = \nabla V_g \). The zero in the input vector reflects the **underactuated** nature of the system: the golfer cannot directly apply torque to the shaft modes; they must influence the shaft indirectly through the coupling terms \( M_{rf} \) and \( C_{rf} \).
-
-This structure explicitly separates conservative forces, dissipative forces, and external control inputs.
-
-### Solving for accelerations
-
-Assuming \(M(q,\eta)\) is nonsingular, we may solve for the accelerations:
-
-$$
-  \begin{bmatrix}
-    \qdd \\[0.2em]
-    \etadd
-  \end{bmatrix}
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\qd,\eta,\etad)
-    \begin{bmatrix}
-      \qd \\[0.2em]
-      \etad
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\etad
-    \end{bmatrix}
-  \right)
-  +
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\[0.2em]
-    0
-  \end{bmatrix}.
-  {#eq-accel_split}
-$$
-
-Everything not multiplied by \(u\) is passive; the term proportional to \(u\) is the torque-driven component.
-
-Define the drift acceleration
-
-$$
-  a_{\text{drift}}(x)
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\qd,\eta,\etad)
-    \begin{bmatrix}
-      \qd \\[0.2em]
-      \etad
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\etad
-    \end{bmatrix}
-  \right),
-$$
-
-and the input acceleration mapping
-
-$$
-  A_{\text{input}}(x)
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q) \\[0.2em]
-    0
-  \end{bmatrix}.
-$$
-
-Then~\eqref{eq:accel_split} becomes
-
-$$
-  \begin{bmatrix}
-    \qdd \\[0.2em]
-    \etadd
-  \end{bmatrix}
-  =
-  a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.
-$$
-
-### First-order state-space form
-
-We now express the dynamics in first-order form. Recall
-
-$$
-  x = [q^{T}, \qd^{T}, \eta^{T}, \etad^{T}]^{T}.
-$$
-
-The state derivative is
-
-$$
-  \xd =
-  \begin{bmatrix}
-    \qd \\[0.2em]
-    \qdd \\[0.2em]
-    \etad \\[0.2em]
-    \etadd
-  \end{bmatrix}
-  =
-  f(x) + g(x)\,u,
-  {#eq-affine_state}
-$$
-
-where
-
-$$
-  f(x) =
-  \begin{bmatrix}
-    \qd \\[0.2em]
-    [a_{\text{drift}}(x)]_{1:n} \\[0.2em]
-    \etad \\[0.2em]
-    [a_{\text{drift}}(x)]_{n+1:n+m}
-  \end{bmatrix},
-  \qquad
-  g(x) =
-  \begin{bmatrix}
-    0 \\[0.2em]
-    [A_{\text{input}}(x)]_{1:n,:} \\[0.2em]
-    0 \\[0.2em]
-    [A_{\text{input}}(x)]_{n+1:n+m,:}
-  \end{bmatrix}.
-$$
-
-Here \([\cdot]_{1:n}\) and \([\cdot]_{n+1:n+m}\) denote the rigid and flexible components of the acceleration, and \([\cdot]_{:, :}\) denotes the appropriate block of the input matrix.
-
-Equation~\eqref{eq:affine_state} is a nonlinear control-affine system:
-
-$$
-  \xd = f(x) + g(x)\,u.
-$$
+The system dynamics then take the canonical affine form:
+$$\dot{x} = f(x) + g(x)u.$$
 
 All nonlinearities---including those introduced by shaft flexibility---are contained in the drift vector field \(f(x)\), while the input vector fields \(g(x)\) multiply the control input \(u\) linearly. The purely rigid-body model is recovered by setting \(m = 0\).
 
