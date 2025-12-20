@@ -1,5 +1,7 @@
-from playwright.sync_api import sync_playwright
 import os
+
+from playwright.sync_api import sync_playwright
+
 
 def run():
     os.makedirs("verification", exist_ok=True)
@@ -22,10 +24,11 @@ def run():
         if count > 0:
             # Try to find a visible one
             for i in range(count):
-                l = links.nth(i)
-                if l.is_visible():
-                    print(f"Scrolling to visible link {i}: {l.get_attribute('href')}")
-                    l.scroll_into_view_if_needed()
+                link = links.nth(i)
+                if link.is_visible():
+                    href = link.get_attribute('href')
+                    print(f"Scrolling to visible link {i}: {href}")
+                    link.scroll_into_view_if_needed()
                     page.screenshot(path="verification/external_links.png")
                     print("Screenshot saved to verification/external_links.png")
                     break
