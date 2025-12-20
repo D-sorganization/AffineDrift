@@ -4,7 +4,7 @@ import time
 from playwright.sync_api import Page, sync_playwright
 
 
-def verify_animation(page: Page) -> None:  # type: ignore[no-any-unimported]
+def verify_animation(page: Page) -> None:  # type: ignore[no-any-unimported, unused-ignore]
     """Verify animation logic by checking section opacity after scroll."""
     print("Navigating to home page...")
     page.goto("http://localhost:8000/index.html")
