@@ -17,3 +17,7 @@
 ## 2025-05-18 - Nested Path Asset Resolution
 **Learning:** Automated site generators (like Quarto) may generate nested pages (e.g., `docs/articles/`) that incorrectly reference root-level assets with relative paths (e.g., `src="script.js"` instead of `../script.js`). This silent failure breaks all JavaScript-dependent UX/accessibility features on those pages.
 **Action:** Always verify relative asset paths in generated subdirectories and use post-processing scripts to correct depth-dependent links if the generator lacks configuration for it.
+
+## 2025-05-19 - External Link Transparency
+**Learning:** Users navigating technical resources need clear distinction between internal navigation and external references. Automatically identifying external links and injecting visual indicators (like an SVG icon) via JavaScript/CSS provides this transparency without manual markup effort, but requires careful exclusion of image-based links to avoid visual clutter.
+**Action:** Use `querySelectorAll` to target external links, exclude those containing images (`!link.querySelector('img')`), and use `::after` pseudo-elements to inject consistent iconography.

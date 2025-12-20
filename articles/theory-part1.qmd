@@ -190,6 +190,163 @@ $$g(x) = \begin{bmatrix} 0 \\ 0 \\ M^{-1} \begin{bmatrix} B(q) \\ 0 \end{bmatrix
 
 The system dynamics then take the canonical affine form:
 $$\dot{x} = f(x) + g(x)u.$$
+We now establish the control-affine structure of the coupled golfer--club--shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal--rigid coupling expressions are relegated to the Appendices.
+
+The transition from the kinematic definitions of Section~1 to the dynamic equations of motion requires a formal treatment of energy. Because the golfer--club--shaft system is subject to holonomic constraints and conservative forces, its behavior is governed by the Principle of Least Action. This energetic structure imposes strict constraints on the form of the equations of motion—specifically, it guarantees that the kinetic energy metric defines the relationship between applied forces and resulting accelerations. By exploiting this property, we can demonstrate that the linearity of the control input is not an approximation, but a fundamental consequence of the mechanical structure.
+
+### Equations of motion
+
+Let $q \in \mathbb{R}^{n}$ and $\eta \in \mathbb{R}^{m}$ denote the rigid-body and shaft modal coordinates, respectively, and let
+
+$$v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}$$
+
+collect their velocities. The multibody equations of motion for the coupled system can be written in the standard form
+
+$$M(q,\eta)
+  \begin{bmatrix}
+    \ddot{q} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  +
+  C(q,\dot{q},\eta,\dot{\eta})
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    \dot{\eta}
+  \end{bmatrix}
+  + G(q) +
+  \begin{bmatrix}
+    0 \\[0.2em]
+    K_{s}\eta + C_{s}\dot{\eta}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \tau \\[0.2em]
+    0
+  \end{bmatrix},$$
+
+where:
+
+- $M(q,\eta)$ is the inertia matrix for the coupled rigid--flexible system,
+- $C(q,\dot{q},\eta,\dot{\eta})$ encodes Coriolis and centrifugal effects,
+- $G(q)$ is the gravitational torque vector,
+- $K_{s}$ and $C_{s}$ are the shaft stiffness and damping matrices,
+- $\tau = B(q) u$ is the generalized torque vector induced by control inputs $u$.
+
+The shaft degrees of freedom have no direct torque inputs; all shaft forces are passive (elastic and damping).
+
+This equation is schematic but captures the structural separation between passive mechanical effects and torque inputs.
+
+### Solving for accelerations
+
+Assuming $M(q,\eta)$ is nonsingular, we may solve for the accelerations:
+
+$$\begin{bmatrix}
+    \ddot{q} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  - M^{-1}(q,\eta)
+  \left(
+    C(q,\dot{q},\eta,\dot{\eta})
+    \begin{bmatrix}
+      \dot{q} \\[0.2em]
+      \dot{\eta}
+    \end{bmatrix}
+    + G(q) +
+    \begin{bmatrix}
+      0 \\[0.2em]
+      K_{s}\eta + C_{s}\dot{\eta}
+    \end{bmatrix}
+  \right)
+  +
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q)\,u \\[0.2em]
+    0
+  \end{bmatrix}.$$
+
+Everything not multiplied by $u$ is passive; the term proportional to $u$ is the torque-driven component.
+
+Define the drift acceleration
+
+$$a_{\text{drift}}(x)
+  =
+  - M^{-1}(q,\eta)
+  \left(
+    C(q,\dot{q},\eta,\dot{\eta})
+    \begin{bmatrix}
+      \dot{q} \\[0.2em]
+      \dot{\eta}
+    \end{bmatrix}
+    + G(q) +
+    \begin{bmatrix}
+      0 \\[0.2em]
+      K_{s}\eta + C_{s}\dot{\eta}
+    \end{bmatrix}
+  \right),$$
+
+and the input acceleration mapping
+
+$$A_{\text{input}}(x)
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q) \\[0.2em]
+    0
+  \end{bmatrix}.$$
+
+Then the acceleration equation becomes
+
+$$\begin{bmatrix}
+    \ddot{q} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.$$
+
+### First-order state-space form
+
+We now express the dynamics in first-order form. Recall
+
+$$x = [q^{T}, \dot{q}^{T}, \eta^{T}, \dot{\eta}^{T}]^{T}.$$
+
+The state derivative is
+
+$$\dot{x} =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    \ddot{q} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  f(x) + g(x)\,u,$$
+
+where
+
+$$f(x) =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    [a_{\text{drift}}(x)]_{1:n} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    [a_{\text{drift}}(x)]_{n+1:n+m}
+  \end{bmatrix},
+  \qquad
+  g(x) =
+  \begin{bmatrix}
+    0 \\[0.2em]
+    [A_{\text{input}}(x)]_{1:n,:} \\[0.2em]
+    0 \\[0.2em]
+    [A_{\text{input}}(x)]_{n+1:n+m,:}
+  \end{bmatrix}.$$
+
+Here $[\cdot]_{1:n}$ and $[\cdot]_{n+1:n+m}$ denote the rigid and flexible components of the acceleration, and $[\cdot]_{:, :}$ denotes the appropriate block of the input matrix.
+
+This is a nonlinear control-affine system:
+
+$$\dot{x} = f(x) + g(x)\,u.$$
+
+All nonlinearities---including those introduced by shaft flexibility---are contained in the drift vector field $f(x)$, while the input vector fields $g(x)$ multiply the control input $u$ linearly. The purely rigid-body model is recovered by setting $m = 0$.
 
 ### Structural consequences
 

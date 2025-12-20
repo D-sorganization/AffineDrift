@@ -152,7 +152,9 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 
 We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
-### Lagrangian formulation
+The transition from the kinematic definitions of Section~[@sec:system] to the dynamic equations of motion requires a formal treatment of energy. Because the golfer--club--shaft system is subject to holonomic constraints and conservative forces, its behavior is governed by the Principle of Least Action. This energetic structure imposes strict constraints on the form of the equations of motion—specifically, it guarantees that the kinetic energy metric defines the relationship between applied forces and resulting accelerations. By exploiting this property, we can demonstrate that the linearity of the control input is not an approximation, but a fundamental consequence of the mechanical structure.
+
+### Lagrangian dynamics
 
 Let $q \in \mathbb{R}^{n}$ denote the generalized coordinates of the rigid golfer model (e.g., joint angles) and $\eta \in \mathbb{R}^{m}$ denote the modal coordinates of the flexible shaft. We define the composite configuration vector as:
 $$q_{\text{sys}} = \begin{bmatrix} q \\ \eta \end{bmatrix} \in \mathbb{R}^{n+m}.$$
@@ -281,6 +283,8 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 The drift--input decomposition in~\eqref{eq:affine_state} separates the dynamics into a passive component \(f(x)\) and a torque-driven component \(g(x)u\). The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
+The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define the *instantaneous* tendencies of the system: \(f(x)\) dictates how the state evolves passively, while \(g(x)\) dictates how it responds to input. However, the golf swing is not an instant; it is a trajectory unfolding over time. To understand the cumulative effect of the drift dynamics, we must move from the differential description (\(\dot{x}\)) to the integral description (\(x(t)\)). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
+
 ### Definition as a drift-only trajectory
 
 Consider the control-affine system defined on \( T\mathcal{Q} \):
@@ -407,6 +411,8 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 {#sec-zvcf}
 
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
+
+While the ZTCF successfully isolates the system's passive dynamics from the golfer's active input, the passive drift itself remains a composite phenomenon. It aggregates both *motion-dependent* forces (such as centrifugal, Coriolis, and inertial coupling) and *configuration-dependent* forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system's instantaneous shape.
 
 ### Definition
 
@@ -539,6 +545,8 @@ $$
 $$
 
 is meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.
+
+The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical, often implicit, assumption: that the passive dynamics \(f(x)\) remain consistent regardless of the input applied. If the act of applying torque also fundamentally altered the system's passive properties—for example, if muscle activation significantly changed the joint stiffness or inertial distribution—then 'drift' would be a moving target, and the decomposition would lose its causal clarity. We must therefore explicitly formalize the condition of *Drift Invariance* to ensure that our counterfactuals represent a stable mechanical reality.
 
 ### Definition of drift invariance
 
@@ -1867,7 +1875,9 @@ These examples provide explicit, low-dimensional realizations of the general con
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 {#sec-simulink}
 
-While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment.
+While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of Appendix~[@app:toy] demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
+
+The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
 To complement the theoretical framework developed in this manuscript, a forward‐dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced in Sections~[@sec:ztcf]–[@sec:zvcf] using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
 

@@ -547,6 +547,25 @@ More broadly, this work illustrates the value of constraint analysis in biomecha
 
 The golf swing presents an extraordinary challenge: generating maximum clubhead speed while precisely controlling face orientation using a redundant, nonlinear kinematic chain with multiple passive degrees of freedom. By recognizing how grip orientation influences constraint torque transmission, we gain insight into one mechanism through which skilled performers may simplify this control problem—not through perfect coordination of all variables, but through mechanical configurations that naturally channel variability into performance-irrelevant directions.
 
+## Theoretical Synthesis
+
+### Affine Decomposition of Constraint Forces
+Within the control-affine formalism $\dot{x} = f(x) + g(x)u$, constraint torques occupy a unique position. Although they arise from the interaction of input forces, they are mathematically orthogonal to the local control inputs $u_{wrist}$. Consequently, they function as a component of the **Velocity Drift** (per the Part 3 Force Taxonomy)—a passive dynamic response that the controller must anticipate but cannot directly command. The 'uncontrollability' of the forearm rotation axis at the wrist means that the dimensionality of the control input ($m=2$) is lower than the dimensionality of the operational space ($n=3$), defining the wrist as a classic **underactuated subsystem**.
+
+### Geometric Rejection of Disturbance
+The grip angle hypothesis is formally equivalent to **disturbance decoupling** in geometric control theory. By aligning the grip such that the 'noise' (variable constraint torque) acts upon the Alpha axis, the system achieves a structural invariance: the sensitivity of the output $y$ (face angle) to the disturbance $d$ (constraint torque) is minimized. This is a passive mechanical implementation of what would otherwise require complex active feedback control, effectively outsourcing stability to the mechanism's geometry.
+
+### The Null Space of Performance
+The distinction between the 'safe' Alpha axis and the 'critical' Beta axis illustrates the **Task-Null Space** principle. In optimal control, variance is not eliminated but 'channeled' into dimensions that do not affect the cost function. The Finger Grip configures the Jacobian $J$ such that the constrained axis maps predominantly into the null space of the face-orientation task, allowing high variance in $\tau_{constraint}$ to coexist with low variance in impact conditions.
+
+**Implicit Assumption: Ideal Constraints**
+This analysis relies on the idealization of the wrist as a perfect universal joint with holonomic constraints. In reality, soft tissue compliance introduces viscoelastic 'slop' that may relax these constraints, potentially adding a damping term to the transmission. However, the core topological argument—that the dimensionality of actuation is lower than the dimensionality of motion—remains robust.
+
+### Conceptual Cross-References
+*   **Underactuated Robotics:** *Lynch & Park (2017), Ch 13.5* - For formal definitions of nonholonomic and Pfaffian constraints.
+*   **Null Space Control:** *Todorov (2004)* - "Optimality principles in sensorimotor control" regarding the uncontrolled manifold hypothesis.
+*   **Drift Invariance:** *Theory Part 3* - For the definition of passive force decomposition.
+
 \section*{Acknowledgments}
 
 Thanks to Mike Duffey for insightful discussion regarding the dependence of constraint torques on proximal segment motion. The Modern Robotics course and textbook from Northwestern University (Kevin Lynch and Frank Park) provided essential background on constrained dynamics in mechanical systems.
