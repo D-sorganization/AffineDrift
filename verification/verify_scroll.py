@@ -3,7 +3,7 @@ import time
 from playwright.sync_api import Page, sync_playwright
 
 
-def verify_scroll(page: Page) -> None:
+def verify_scroll(page: Page) -> None:  # type: ignore[no-any-unimported, unused-ignore]
     """Test scroll features including back-to-top button visibility."""
     print("Navigating to home page...")
     # 1. Arrange: Go to the homepage.

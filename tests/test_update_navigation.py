@@ -55,7 +55,7 @@ def test_update_navigation_raises_for_missing_nav(tmp_path: Path) -> None:
         update_navigation(page)
 
 
-def test_main_reports_missing_files(  # type: ignore[no-any-unimported]
+def test_main_reports_missing_files(  # type: ignore[no-any-unimported, unused-ignore]
     tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
     """Test that main reports missing files correctly."""
