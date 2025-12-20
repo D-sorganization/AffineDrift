@@ -17,6 +17,8 @@ $$\dot{x} = f(x) + g(x)u$$
 
 is meaningful only if the drift term $f(x)$ is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.
 
+The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical, often implicit, assumption: that the passive dynamics $f(x)$ remain consistent regardless of the input applied. If the act of applying torque also fundamentally altered the system's passive properties—for example, if muscle activation significantly changed the joint stiffness or inertial distribution—then 'drift' would be a moving target, and the decomposition would lose its causal clarity. We must therefore explicitly formalize the condition of *Drift Invariance* to ensure that our counterfactuals represent a stable mechanical reality.
+
 ### Definition of drift invariance
 
 The drift vector field $f(x)$ is said to be *input-invariant* if
