@@ -371,6 +371,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!parts.includes('noopener')) parts.push('noopener');
                 if (!parts.includes('noreferrer')) parts.push('noreferrer');
                 link.setAttribute('rel', parts.join(' '));
+                if (!link.querySelector('img, svg')) {
+                    link.classList.add('external-link');
+                }
             }
         } catch (e) {
             // Ignore invalid URLs
