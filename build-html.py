@@ -174,6 +174,12 @@ def main() -> None:
         "research-review-induced-acceleration-analysis.qmd",
         "research-review-interaction-forces.qmd",
         "research-review-shaft-flexibility.qmd",
+        "repositories.qmd",
+        "repositories-2d-model.qmd",
+        "repositories-3d-model.qmd",
+        "repositories-drake.qmd",
+        "repositories-models.qmd",
+        "repositories-pinocchio.qmd",
     ]
 
     # Process articles.qmd LAST to avoid corrupting the template
