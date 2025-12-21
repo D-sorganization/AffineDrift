@@ -2,11 +2,10 @@
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 import yaml
 
-
-from typing import Any
 
 def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
     """Extracts YAML content from a markdown file's code block."""
@@ -18,7 +17,7 @@ def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
 
         matches = re.findall(r"```yaml\n(.*?)\n```", content, re.DOTALL)
 
-        extracted_items = []
+        extracted_items: list[dict[str, Any]] = []
         for match in matches:
             try:
                 data = yaml.safe_load(match)
@@ -59,7 +58,7 @@ def main() -> None:
     output_dir = Path("docs/data")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    all_refs = {}
+    all_refs: dict[str, dict[str, Any]] = {}
 
     # 1. Load base bibliography.yaml
     base_bib_path = Path("data/bibliography.yaml")

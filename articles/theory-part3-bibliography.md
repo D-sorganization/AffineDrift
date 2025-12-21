@@ -35,7 +35,7 @@
   clusters: ["passive dynamics", "robotics"]
   concepts: ["passive gait", "limit cycles", "energy efficiency"]
   related_ids: ["tedrake2023underactuated", "collins2005efficient"]
-  references_out_ids: []
+  references_out_ids: ["collins2005efficient"]
 
 - id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
@@ -61,7 +61,7 @@
   clusters: ["biomechanics", "motor control"]
   concepts: ["induced acceleration", "muscle actuation", "multibody dynamics"]
   related_ids: ["nesbit2005three", "kepple1997three"]
-  references_out_ids: []
+  references_out_ids: ["kepple1997three"]
 
 - id: sprigings2000insight
   title: "An insight into the importance of wrist torque in driving the golf ball: a simulation study"
@@ -74,7 +74,7 @@
   clusters: ["golf biomechanics", "simulation"]
   concepts: ["wrist torque", "delayed release", "forward dynamics"]
   related_ids: ["mackenzie2009three", "nesbit2005three"]
-  references_out_ids: []
+  references_out_ids: ["mackenzie2009three"]
 
 - id: sharp2009physical
   title: "Physical limitations to the performance of the golf swing"
@@ -99,7 +99,7 @@
   clusters: ["motor control", "neuroscience"]
   concepts: ["optimal control", "minimal intervention", "redundancy"]
   related_ids: ["bernstein1967coordination", "scott2004optimal"]
-  references_out_ids: []
+  references_out_ids: ["scott2004optimal"]
 
 - id: khalil2002nonlinear
   title: "Nonlinear Systems"
@@ -137,7 +137,7 @@
   clusters: ["biomechanics", "modeling"]
   concepts: ["musculoskeletal model", "induced acceleration", "inverse dynamics"]
   related_ids: ["zajac1989determining", "delp2007opensim"]
-  references_out_ids: []
+  references_out_ids: ["delp2007opensim"]
 
 - id: bernstein1967coordination
   title: "The co-ordination and regulation of movements"
@@ -149,7 +149,7 @@
   clusters: ["motor control", "foundational"]
   concepts: ["degrees of freedom", "motor redundancy", "coordination"]
   related_ids: ["todorov2002optimal", "latash2008synergy"]
-  references_out_ids: []
+  references_out_ids: ["latash2008synergy"]
 
 - id: collins2005efficient
   title: "Efficient bipedal robots based on passive-dynamic walkers"
