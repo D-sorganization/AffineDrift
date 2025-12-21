@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 import json
 import re
-import yaml
 from pathlib import Path
+
+import yaml
+
 
 def extract_yaml_from_markdown(file_path: Path):
     """Extracts YAML content from a markdown file's code block."""
