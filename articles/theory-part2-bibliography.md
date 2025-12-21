@@ -34,7 +34,7 @@
   clusters: ["passive dynamics", "robotics", "locomotion"]
   concepts: ["limit cycles", "natural dynamics", "energy efficiency"]
   related_ids: ["tedrake2023underactuated", "collins2005efficient"]
-  references_out_ids: ["collins2005efficient", "tedrake2023underactuated"]
+  references_out_ids: []
 
 - id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
@@ -73,7 +73,7 @@
   clusters: ["motor control", "neuroscience", "optimal control"]
   concepts: ["minimum intervention principle", "uncontrolled manifold", "feedback"]
   related_ids: ["zajac1993muscle", "latash2008synergy"]
-  references_out_ids: ["latash2008synergy"]
+  references_out_ids: []
 
 - id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
@@ -149,7 +149,7 @@
   clusters: ["nonlinear control", "robotics"]
   concepts: ["partial feedback linearization", "passivity", "acrobot"]
   related_ids: ["tedrake2023underactuated", "bullo2004geometric"]
-  references_out_ids: ["bullo2004geometric"]
+  references_out_ids: []
 
 - id: vaughan1982biomechanics
   title: "The biomechanics of the golf swing"
@@ -161,7 +161,7 @@
   clusters: ["golf biomechanics"]
   concepts: ["kinematics", "kinetics", "optimization"]
   related_ids: ["nesbit2005three", "cochran1968search"]
-  references_out_ids: ["nesbit2005three"]
+  references_out_ids: []
 
 - id: nijmeijer1990nonlinear
   title: "Nonlinear Dynamical Control Systems"

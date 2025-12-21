@@ -57,7 +57,7 @@
   clusters: ["flexible multibody", "computational mechanics"]
   concepts: ["geometrically exact beam", "large deformation", "dynamics"]
   related_ids: ["shabana2020dynamics"]
-  references_out_ids: ["shabana2020dynamics"]
+  references_out_ids: []
 
 - id: book1984recursive
   title: "Recursive Lagrangian dynamics of flexible manipulator arms"
@@ -69,7 +69,7 @@
   clusters: ["robotics", "flexible bodies"]
   concepts: ["recursive algorithms", "lagrangian dynamics", "flexible manipulators"]
   related_ids: ["de_luca1991closed"]
-  references_out_ids: ["de_luca1991closed"]
+  references_out_ids: []
 
 - id: de_luca1991closed
   title: "Closed-form dynamic model of planar multi-link lightweight robots"
@@ -94,7 +94,7 @@
   clusters: ["physics", "mathematical foundations"]
   concepts: ["principle of least action", "hamilton's principle", "generalized coordinates"]
   related_ids: ["goldstein2002classical"]
-  references_out_ids: ["goldstein2002classical"]
+  references_out_ids: []
 
 - id: tedrake2023underactuated
   title: "Underactuated Robotics: Algorithms for Walking, Running, Swimming, Flying, and Manipulation"
@@ -120,7 +120,7 @@
   clusters: ["robotics", "mathematical theory"]
   concepts: ["lie algebra", "screw theory", "lagrangian dynamics"]
   related_ids: ["lynch2017modern"]
-  references_out_ids: ["lynch2017modern"]
+  references_out_ids: []
 
 - id: slotine1991applied
   title: "Applied Nonlinear Control"
@@ -133,7 +133,7 @@
   clusters: ["nonlinear control", "robotics"]
   concepts: ["lyapunov stability", "feedback linearization", "robust control"]
   related_ids: ["isidori1995nonlinear"]
-  references_out_ids: ["isidori1995nonlinear"]
+  references_out_ids: []
 
 - id: hughes1986spacecraft
   title: "Spacecraft Attitude Dynamics"
@@ -184,7 +184,7 @@
   clusters: ["multibody dynamics", "algorithms"]
   concepts: ["recursive algorithms", "articulated body algorithm", "spatial algebra"]
   related_ids: ["shabana2020dynamics"]
-  references_out_ids: ["shabana2020dynamics"]
+  references_out_ids: []
 
 - id: goldstein2002classical
   title: "Classical Mechanics"
