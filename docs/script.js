@@ -421,23 +421,49 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame
+    // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame & Cache Geometry
     let isScrollTicking = false;
+    let isBackToTopVisible = false;
+    let maxScroll = 0;
+    const SCROLL_THRESHOLD = 300;
+
+    // Cache document geometry to avoid layout thrashing in scroll loop
+    const updateGeometry = () => {
+        maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    };
+
+    // Initial calculation
+    updateGeometry();
+
+    // Update on resize
+    window.addEventListener('resize', updateGeometry);
+
+    // Update on content changes (e.g., accordions)
+    if (typeof ResizeObserver !== 'undefined') {
+        const resizeObserver = new ResizeObserver(() => {
+            updateGeometry();
+        });
+        resizeObserver.observe(document.body);
+    }
+
 
     function updateScrollProgress() {
         const scrollTop = window.scrollY;
 
-        // Visibility toggle
-        if (scrollTop > 300) {
-            backToTopBtn.classList.add('visible');
-        } else {
-            backToTopBtn.classList.remove('visible');
+        // Visibility toggle with state tracking
+        const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
+        if (shouldBeVisible !== isBackToTopVisible) {
+            isBackToTopVisible = shouldBeVisible;
+            if (shouldBeVisible) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
         }
 
-        // Progress ring update
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (docHeight > 0) {
-            const scrollPercent = Math.min(scrollTop / docHeight, 1);
+        // Progress ring update using cached geometry
+        if (maxScroll > 0) {
+            const scrollPercent = Math.min(scrollTop / maxScroll, 1);
             const offset = circumference - (scrollPercent * circumference);
             progressCircle.style.strokeDashoffset = offset;
         }
