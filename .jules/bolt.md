@@ -1,3 +1,9 @@
-## 2025-05-19 - Layout Thrashing in Animation Loop
-**Learning:** Interleaving DOM reads (getBoundingClientRect) and writes (style updates) forces the browser to recalculate layout synchronously for every iteration.
-**Action:** Batch DOM reads and writes into separate phases. Read all necessary metrics first, then apply all style changes. This reduces N reflows to 1 reflow.
+# Bolt's Journal
+
+## 2025-02-18 - First Journal Entry
+**Learning:** Initial setup of the journal.
+**Action:** Will add entries as I discover performance insights.
+
+## 2025-02-18 - Scroll Handler Optimization
+**Learning:** The `script.js` scroll handler was performing synchronous layout (reading `scrollHeight`) inside the `requestAnimationFrame` loop, potentially causing layout thrashing.
+**Action:** Implemented a caching strategy using `ResizeObserver` to separate geometry reads from the scroll loop.
