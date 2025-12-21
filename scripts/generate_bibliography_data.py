@@ -6,7 +6,9 @@ from pathlib import Path
 import yaml
 
 
-def extract_yaml_from_markdown(file_path: Path):
+from typing import Any
+
+def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
     """Extracts YAML content from a markdown file's code block."""
     try:
         content = file_path.read_text()
@@ -14,7 +16,7 @@ def extract_yaml_from_markdown(file_path: Path):
         # We assume the largest yaml block or the one explicitly under Bibliography is what we want.
         # But simply finding all yaml blocks and trying to parse them as list of dicts with 'id' is safer.
 
-        matches = re.findall(r'```yaml\n(.*?)\n```', content, re.DOTALL)
+        matches = re.findall(r"```yaml\n(.*?)\n```", content, re.DOTALL)
 
         extracted_items = []
         for match in matches:
@@ -22,7 +24,7 @@ def extract_yaml_from_markdown(file_path: Path):
                 data = yaml.safe_load(match)
                 if isinstance(data, list):
                     for item in data:
-                        if isinstance(item, dict) and 'id' in item:
+                        if isinstance(item, dict) and "id" in item:
                             extracted_items.append(item)
             except yaml.YAMLError:
                 continue
@@ -32,19 +34,21 @@ def extract_yaml_from_markdown(file_path: Path):
         print(f"Error reading {file_path}: {e}")
         return []
 
-def normalize_item(item):
+
+def normalize_item(item: dict[str, Any]) -> dict[str, Any]:
     """Normalizes keys to match what the frontend expects."""
-    if 'scholar_link' in item and 'scholar_url' not in item:
-        item['scholar_url'] = item['scholar_link']
-        del item['scholar_link']
+    if "scholar_link" in item and "scholar_url" not in item:
+        item["scholar_url"] = item["scholar_link"]
+        del item["scholar_link"]
 
     # Ensure arrays
-    if 'authors' in item and isinstance(item['authors'], str):
-        item['authors'] = [item['authors']]
-    if 'concepts' in item and isinstance(item['concepts'], str):
-        item['concepts'] = [item['concepts']]
+    if "authors" in item and isinstance(item["authors"], str):
+        item["authors"] = [item["authors"]]
+    if "concepts" in item and isinstance(item["concepts"], str):
+        item["concepts"] = [item["concepts"]]
 
     return item
+
 
 def main() -> None:
     """
@@ -65,8 +69,8 @@ def main() -> None:
                 base_data = yaml.safe_load(f)
                 if base_data:
                     for item in base_data:
-                        if 'id' in item:
-                            all_refs[item['id']] = normalize_item(item)
+                        if "id" in item:
+                            all_refs[item["id"]] = normalize_item(item)
         except Exception as e:
             print(f"Error processing {base_bib_path}: {e}")
 
@@ -81,11 +85,11 @@ def main() -> None:
                 # Overwrite or merge? For now, let's assume if ID exists, we keep the one we have
                 # OR we prefer the one from markdown if it has more info?
                 # Let's trust the one we have, but if it's new, add it.
-                if norm_item['id'] not in all_refs:
-                    all_refs[norm_item['id']] = norm_item
+                if norm_item["id"] not in all_refs:
+                    all_refs[norm_item["id"]] = norm_item
                 else:
                     # Optional: merge fields if missing
-                    existing = all_refs[norm_item['id']]
+                    existing = all_refs[norm_item["id"]]
                     for k, v in norm_item.items():
                         if k not in existing or not existing[k]:
                             existing[k] = v
@@ -94,7 +98,7 @@ def main() -> None:
     final_refs = list(all_refs.values())
 
     # Sort by year (desc) then title
-    final_refs.sort(key=lambda x: (-int(x.get('year', 0)), x.get('title', '')))
+    final_refs.sort(key=lambda x: (-int(x.get("year", 0)), x.get("title", "")))
 
     # Write bibliography.json
     bib_output_path = output_dir / "bibliography.json"
@@ -117,6 +121,7 @@ def main() -> None:
             print(f"Successfully generated {paths_output}")
         except Exception as e:
             print(f"Error processing reading paths: {e}")
+
 
 if __name__ == "__main__":
     main()

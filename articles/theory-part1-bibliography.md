@@ -38,7 +38,7 @@
   clusters: ["multibody dynamics", "nonlinear control", "robotics"]
   concepts: ["rigid body motion", "manipulator dynamics", "lagrangian mechanics"]
   related_ids: ["featherstone2008rigid", "spong2005robot", "slotine1991applied"]
-  references_out_ids: ["featherstone2008rigid"]
+  references_out_ids: []
 
 - id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
@@ -50,7 +50,7 @@
   clusters: ["multibody dynamics", "simulation", "algorithms"]
   concepts: ["recursive algorithms", "articulated body algorithm", "spatial vectors"]
   related_ids: ["murray1994mathematical", "shabana2020dynamics"]
-  references_out_ids: ["shabana2020dynamics"]
+  references_out_ids: []
 
 - id: nesbit2005three
   title: "A three dimensional kinematic and kinetic study of the golf swing"
@@ -88,7 +88,7 @@
   clusters: ["golf biomechanics", "foundational"]
   concepts: ["double pendulum", "kinematics", "impact physics"]
   related_ids: ["jorgensen1993physics"]
-  references_out_ids: ["jorgensen1993physics"]
+  references_out_ids: []
 
 - id: jorgensen1993physics
   title: "The Physics of Golf"
@@ -100,7 +100,7 @@
   clusters: ["golf biomechanics", "physics"]
   concepts: ["double pendulum", "energy transfer", "aerodynamics"]
   related_ids: ["cochran1968search"]
-  references_out_ids: ["nesbit2005three"]
+  references_out_ids: []
 
 - id: zajac1993muscle
   title: "Muscle coordination of movement: a perspective"
@@ -112,7 +112,7 @@
   clusters: ["motor control", "biomechanics"]
   concepts: ["muscle synergy", "coordination", "intersegmental dynamics"]
   related_ids: ["winter2009biomechanics", "hogan1985impedance"]
-  references_out_ids: ["winter2009biomechanics"]
+  references_out_ids: []
 
 - id: slotine1991applied
   title: "Applied Nonlinear Control"
@@ -125,7 +125,7 @@
   clusters: ["nonlinear control", "robotics"]
   concepts: ["lyapunov stability", "feedback linearization", "passivity"]
   related_ids: ["murray1994mathematical", "isidori1995nonlinear"]
-  references_out_ids: ["isidori1995nonlinear"]
+  references_out_ids: []
 
 - id: shabana2020dynamics
   title: "Dynamics of Multibody Systems"
