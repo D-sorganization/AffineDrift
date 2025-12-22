@@ -46,6 +46,7 @@ def test_toc_and_history(page: Page):
 
     page.screenshot(path="/home/jules/verification/history.png")
 
+
 if __name__ == "__main__":
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
