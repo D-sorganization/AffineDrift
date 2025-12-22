@@ -1,7 +1,7 @@
 from playwright.sync_api import Page, expect, sync_playwright
 
 
-def test_toc_and_history(page: Page):
+def test_toc_and_history(page: Page) -> None:  # type: ignore[no-any-unimported, unused-ignore]
     # Visit articles.html to check TOC and History
     print("Navigating to articles.html...")
     page.goto("http://localhost:8000/articles.html")
