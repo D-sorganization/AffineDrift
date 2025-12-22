@@ -1,7 +1,6 @@
 # Website Update Plan
 
 ## Overview
-
 This document outlines the comprehensive plan for updating the AffineDrift website with all requested changes. Each task includes specific implementation details and verification steps.
 
 ---
@@ -9,9 +8,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 1. Researchers Section Updates
 
 ### 1.1 Add Rob Neal
-
 **File**: `resources-researchers.qmd`
-
 - **Links to add**:
   - Wedgecraft: https://wedgecraft.com/dr-robert-neal/
   - World Class Golf: [To be confirmed - may be Golf BioDynamics: https://golfbiodynamics.com/]
@@ -21,9 +18,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - **Bio**: Dr. Robert Neal is a world-renowned biomechanist and co-founder of WedgeCraft, a wedge play data collective committed to developing a comprehensive model for learning the short game through coaching and science-based methods.
 
 ### 1.2 Add Steven Nesbit
-
 **File**: `resources-researchers.qmd`
-
 - **Links to add**:
   - Jacobs3dGolf: https://www.jacobs3dgolf.com/ (or https://jacobs3d.com/)
   - Google Scholar: [Search for exact profile URL]
@@ -32,9 +27,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - **Bio**: Dr. Steven M. Nesbit is a professor of mechanical engineering with extensive research in golf biomechanics, including kinematic and kinetic studies of the golf swing.
 
 ### 1.3 Remove Researchers Home Page
-
 **File**: `resources.qmd` and `_quarto.yml`
-
 - Remove "Resources Home" link from researchers navigation
 - Update navbar in `_quarto.yml` to remove "Resources Home" from Resources menu
 - Ensure direct links to all resource sub-pages work correctly
@@ -46,9 +39,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 2. Homepage Equation Formatting
 
 ### 2.1 Fix Equation Rendering
-
 **File**: `index.qmd`
-
 - **Issue**: Equations showing with `$` symbols instead of rendering
 - **Solution**:
   - Review all equations in `index.qmd` (lines 82, 111, 116-129, 161, 198, 206)
@@ -64,9 +55,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 3. Repository Dropdown Updates
 
 ### 3.1 Update Repository Links
-
 **File**: `_quarto.yml` (lines 64-77)
-
 - **Current**: Links to repository home pages
 - **Required**: Direct links to actual repositories
 - **Changes needed**:
@@ -85,9 +74,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 4. Layout Standardization (Videos Page Model)
 
 ### 4.1 Videos Page Layout Analysis
-
 **File**: `resources-videos.qmd`
-
 - **Current structure**:
   - Title: "Videos" (h2.section-heading)
   - Single column layout
@@ -95,9 +82,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
   - Clean, simple design
 
 ### 4.2 Target Layout Structure
-
 **Required layout for all pages**:
-
 - **Left Sidebar**: Table of contents / category navigation
 - **Main Content**: Single column, full width (like Videos page)
 - **Right Sidebar**: History of recent pages visited (per resource type)
@@ -107,7 +92,6 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ### 4.3 Pages Requiring Layout Updates
 
 #### 4.3.1 Models Pages
-
 - [ ] `models.qmd` - Main models page
 - [ ] `models-simulink.qmd`
 - [ ] `models-mujoco.qmd`
@@ -118,14 +102,12 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - [ ] `models-myosim.qmd`
 
 **Implementation**:
-
 - Add left sidebar with model categories (table of contents)
 - Add right sidebar with recent model pages visited
 - Update title positioning
 - Ensure single column content layout
 
 #### 4.3.2 Resources Pages
-
 - [ ] `resources.qmd` - Resources home (remove or update)
 - [ ] `resources-videos.qmd` - Add left/right sidebars
 - [ ] `resources-software.qmd`
@@ -136,19 +118,16 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - [ ] `resources-researchers.qmd`
 
 **Implementation**:
-
 - Left sidebar: Category navigation (table of contents)
 - Right sidebar: History of pages visited in that resource type
 - Middle section: Categories separated by category titles
 - Single column layout for content
 
 #### 4.3.3 Articles Pages
-
 - [ ] `articles.qmd` - Main articles page
 - [ ] Individual article pages in `articles/` directory
 
 **Implementation**:
-
 - Left sidebar: Article topics/categories (table of contents)
 - Right sidebar: Recent articles visited
 - Categories in middle section with category titles
@@ -161,9 +140,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 5. Fix "Affine Drift Matters" Repetition
 
 ### 5.1 Locate and Fix
-
 **File**: `_quarto.yml` (lines 158-161)
-
 - **Issue**: "Affine Drift matters" appears twice in footer
 - **Current**:
   ```yaml
@@ -180,9 +157,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 6. RSS Feed Implementation
 
 ### 6.1 Add RSS Feed
-
 **Location**: Near search bar in header
-
 - **File**: `_templates/partials/header.html` or `_quarto.yml`
 - **Implementation**:
   - Create `feed.xml` or `rss.xml` for static site
@@ -198,9 +173,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 7. Remove Three-Column Layouts
 
 ### 7.1 Sitewide Check
-
 **Action**: Scroll through entire site and identify all three-column layouts
-
 - **Files to check**: All `.qmd` files and rendered HTML
 - **Replace with**: Single column layout matching Videos page
 - **Width and layout**: Match Videos page exactly
@@ -212,9 +185,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 8. Add Video Links
 
 ### 8.1 Dead Fish Swimming Upstream
-
 **File**: `resources-videos.qmd`
-
 - **URL**: https://fyfluiddynamics.com/2018/07/when-i-was-a-child-my-father-would-take-me-trout/
 - **Action**:
   - Add new video card with link
@@ -229,9 +200,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 9. Add Grip Papers
 
 ### 9.1 Papers to Add
-
 **File**: `resources-papers.qmd`
-
 - **Choi and Park instrumented grip papers**: [Find and add]
 - **Koike instrumented grip paper**: [Find and add]
 - **Vaughan papers (1 and 2) on closed loop constraints on the grip**: [Find and add]
@@ -244,9 +213,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 10. Articles Page Updates
 
 ### 10.1 Change "Current Studies" to "Articles"
-
 **File**: `articles.qmd` (line 66)
-
 - **Current**: `<h2>Current studies</h2>`
 - **Change to**: `<h2>Articles</h2>`
 - **Also update**: Sidebar navigation link (line 301)
@@ -254,9 +221,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 **Status**: ⬜ Pending
 
 ### 10.2 Remove Appendix Labels
-
 **File**: `articles.qmd` (lines 168, 178, 188, 198, 208)
-
 - **Current**: "Appendix A:", "Appendix B:", etc.
 - **Change to**: Remove "Appendix" prefix, keep descriptive titles
 - **Examples**:
@@ -271,9 +236,7 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## 11. Fix Previews
 
 ### 11.1 Book Previews
-
 **File**: `resources-books.qmd`
-
 - **Issue**: Preview images not working
 - **Action**:
   - Check all book preview image sources
@@ -281,18 +244,14 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
   - Ensure proper image tags and error handling
 
 ### 11.2 Article Previews
-
 **File**: Article pages in `articles/` directory
-
 - **Issue**: Preview images not working
 - **Action**:
   - Add preview images from appropriate sources
   - Ensure images load correctly
 
 ### 11.3 Website Previews
-
 **File**: `resources-websites.qmd`
-
 - **Issue**: Previews flash and disappear
 - **Action**:
   - Fix preview iframe/embed code
@@ -306,7 +265,6 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 ## Implementation Checklist
 
 ### Phase 1: Content Updates
-
 - [ ] Add Rob Neal to researchers
 - [ ] Add Steven Nesbit to researchers
 - [ ] Remove researchers home page
@@ -316,7 +274,6 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - [ ] Remove appendix labels
 
 ### Phase 2: Layout Standardization
-
 - [ ] Update Videos page with left/right sidebars
 - [ ] Update all Models pages
 - [ ] Update all Resources pages
@@ -325,7 +282,6 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - [ ] Fix title positioning (move up under menu)
 
 ### Phase 3: Technical Fixes
-
 - [ ] Fix homepage equations
 - [ ] Update repository dropdown links
 - [ ] Fix "Affine Drift matters" repetition
@@ -335,7 +291,6 @@ This document outlines the comprehensive plan for updating the AffineDrift websi
 - [ ] Fix website previews
 
 ### Phase 4: Verification
-
 - [ ] Sitewide layout check
 - [ ] All pages match Videos page layout
 - [ ] All links work correctly

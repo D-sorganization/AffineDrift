@@ -8,8 +8,8 @@ export default {
     "selector-class-pattern": [
       "^(?:[a-z0-9\\-]+|MathJax)$",
       {
-        resolveNestedSelectors: true,
-      },
-    ],
-  },
+        resolveNestedSelectors: true
+      }
+    ]
+  }
 };

@@ -7,39 +7,32 @@ To protect the main branch and ensure quality control, configure these protectio
 ### Setting Up Branch Protection
 
 1. **Navigate to Settings**
-
    - Go to repository → Settings → Branches
    - Click "Add rule" or edit existing rule for `main`
 
 2. **Required Protection Rules**
 
    ✅ **Require pull request reviews before merging**
-
    - Minimum 1 approval required (or self-review for solo projects)
    - Dismiss stale pull request approvals when new commits are pushed
 
    ✅ **Require status checks to pass before merging**
-
    - Require branches to be up to date before merging
    - Status checks that should pass:
      - `validate` (HTML/CSS validation)
      - `build-deploy` (Quarto build succeeds)
 
    ✅ **Require conversation resolution before merging**
-
    - All comments must be resolved
 
    ✅ **Require linear history**
-
    - Prevents merge commits, enforces clean history
    - Use squash or rebase merge
 
    ✅ **Include administrators**
-
    - Apply rules to repository administrators too
 
    ✅ **Restrict who can push to matching branches**
-
    - Only allow specific users/teams to push directly
    - Or: disable direct pushes entirely (force PRs)
 
@@ -71,7 +64,6 @@ Protection Rules for 'main':
 ### Current Workflows
 
 #### 1. **Static Site Deployment** (`.github/workflows/deploy.yml`)
-
 - **Triggers**: Push to main, PRs
 - **Jobs**:
   - Validate HTML/CSS
@@ -80,7 +72,6 @@ Protection Rules for 'main':
   - Run accessibility tests (PRs only)
 
 #### 2. **Quarto Publishing** (`.github/workflows/quarto-publish.yml`)
-
 - **Triggers**: Push to main, PRs, manual
 - **Jobs**:
   - Install Quarto
@@ -90,16 +81,13 @@ Protection Rules for 'main':
 ### Best Practices
 
 #### Status Checks
-
 All PRs should pass these checks before merging:
-
 - ✅ HTML validation
 - ✅ CSS linting
 - ✅ Build succeeds (no errors)
 - ✅ Accessibility checks (warnings OK)
 
 #### Review Process
-
 1. Create feature branch from main
 2. Make changes
 3. Open pull request
@@ -111,13 +99,11 @@ All PRs should pass these checks before merging:
 #### Deployment Strategy
 
 **Main Branch:**
-
 - Protected, requires PR
 - Auto-deploys on merge
 - Always production-ready
 
 **Feature Branches:**
-
 - Claude branches: `claude/*`
 - Personal branches: `feature/*`, `fix/*`
 - Preview builds in PR (optional)
@@ -125,23 +111,18 @@ All PRs should pass these checks before merging:
 ## Security Considerations
 
 ### Secrets Management
-
 - Never commit API keys, tokens, or passwords
 - Use GitHub Secrets for sensitive data
 - Rotate credentials regularly
 
 ### Dependabot
-
 Enable Dependabot for:
-
 - Security updates
 - Version updates
 - GitHub Actions updates
 
 ### Code Scanning
-
 Consider enabling:
-
 - **CodeQL**: Automated code security scanning
 - **Secret scanning**: Detect committed secrets
 - **Dependency review**: Review new dependencies
@@ -149,40 +130,34 @@ Consider enabling:
 ## Repository Settings Checklist
 
 ### General
-
 - [ ] Set repository visibility (Public recommended for GitHub Pages)
 - [ ] Add description and topics
 - [ ] Include README.md
 - [ ] Add LICENSE file
 
 ### Branches
-
 - [ ] Set default branch to `main`
 - [ ] Configure branch protection rules
 - [ ] Enable delete head branches automatically
 
 ### Pages
-
 - [ ] Enable GitHub Pages
 - [ ] Source: GitHub Actions
 - [ ] Custom domain: affinedrift.com (configured)
 - [ ] Enforce HTTPS: ✓
 
 ### Actions
-
 - [ ] Allow all actions (needed for Quarto)
 - [ ] Workflow permissions: Read and write
 - [ ] Enable Actions cache
 
 ### Security
-
 - [ ] Enable Dependabot alerts
 - [ ] Enable Dependabot security updates
 - [ ] Enable secret scanning (if available)
 - [ ] Enable code scanning (if available)
 
 ### Collaborators & Teams
-
 - [ ] Add collaborators as needed
 - [ ] Set appropriate permissions
 - [ ] Configure team access (if organization)
@@ -190,14 +165,12 @@ Consider enabling:
 ## Monitoring & Maintenance
 
 ### Regular Tasks
-
 - **Weekly**: Review Dependabot alerts
 - **Monthly**: Check Actions usage/costs
 - **Quarterly**: Review and update dependencies
 - **Annually**: Review all settings and permissions
 
 ### Metrics to Monitor
-
 - Build success rate
 - Deployment frequency
 - PR review time
@@ -207,7 +180,6 @@ Consider enabling:
 ## Emergency Procedures
 
 ### If Main Branch is Broken
-
 1. Revert the breaking commit
 2. Push revert to main (emergency bypass protection if needed)
 3. Fix issue in separate branch
@@ -215,7 +187,6 @@ Consider enabling:
 5. Merge after CI passes
 
 ### If CI/CD Fails
-
 1. Check GitHub Actions status page
 2. Review workflow run logs
 3. Test locally: `quarto render`
@@ -225,20 +196,17 @@ Consider enabling:
 ## Recommended Tools
 
 ### Local Development
-
 - **Quarto CLI**: Site building and preview
 - **VS Code**: Code editing with extensions
 - **Git**: Version control
 - **Python 3.11+**: For conversion scripts
 
 ### Browser Extensions
-
 - **GitHub Dark Mode**: Easier reading
 - **Octotree**: Repository tree view
 - **Refined GitHub**: UI improvements
 
 ### VS Code Extensions
-
 - **Quarto**: Syntax highlighting and preview
 - **GitLens**: Enhanced git features
 - **Markdown All in One**: Markdown editing

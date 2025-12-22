@@ -42,7 +42,6 @@ AffineDrift/
 ### Viewing Locally
 
 1. Clone this repository:
-
    ```bash
    git clone https://github.com/D-sorganization/AffineDrift.git
    cd AffineDrift
@@ -82,7 +81,6 @@ See [WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md) for detailed instructions.
 ## 🔄 CI/CD Pipeline
 
 This repository includes an automated CI/CD pipeline that:
-
 - Validates HTML and CSS on every commit
 - Automatically deploys to GitHub Pages on push to main branch
 - Runs accessibility and performance checks
@@ -91,7 +89,6 @@ This repository includes an automated CI/CD pipeline that:
 ## 🤝 Contributing
 
 This is a personal research platform, but suggestions and discussions are welcome! Feel free to:
-
 - Open issues for suggestions or corrections
 - Suggest resources to add to the Resources page
 - Report any technical issues with the website
@@ -99,7 +96,6 @@ This is a personal research platform, but suggestions and discussions are welcom
 ## 📖 Learning Resources
 
 New to web development? Check out:
-
 - [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for a comprehensive introduction
 - [MDN Web Docs](https://developer.mozilla.org/) for HTML/CSS/JS reference
 - [GitHub Pages Documentation](https://docs.github.com/pages)

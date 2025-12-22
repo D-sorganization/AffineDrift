@@ -11,26 +11,21 @@
 ### Total Files Changed: 44 files
 
 #### Added Files (New)
-
 1. **Quarto Configuration**
-
    - `_quarto.yml` - Quarto project configuration
    - `.quartoignore` - Files to exclude from Quarto processing
    - `custom.scss` - Custom Quarto styling
 
 2. **Quarto Articles** (NEW)
-
    - `articles/wrist-universal-joint.qmd` - Wrist article in Quarto format
    - `articles/inverse-dynamics.qmd` - Inverse dynamics article in Quarto format
    - `articles/README.md` - Articles directory documentation
    - `articles/_metadata.yml` - Article metadata
 
 3. **Quarto Workflow**
-
    - `.github/workflows/quarto-publish.yml` - CI/CD for Quarto publishing
 
 4. **Documentation** (NEW)
-
    - `QUARTO_GUIDE.md` - Guide to using Quarto
    - `BRANCH_REVIEW_SUMMARY.md` - Branch review documentation
    - `WEBSITE_ANALYSIS.md` - Website analysis
@@ -38,7 +33,6 @@
    - `REPOSITORY_PROTECTION.md` - Repository protection guide
 
 5. **Conversion Tools** (NEW)
-
    - `tools/latex_to_qmd.py` - LaTeX to Quarto converter
    - `tools/latex_to_html.py` - LaTeX to HTML converter
    - `tools/convert_all_latex.py` - Batch LaTeX converter
@@ -52,7 +46,6 @@
 #### Modified Files
 
 **Navigation Updates** (All HTML pages):
-
 - `index.html` - Removed "About" from navigation
 - `articles.html` - Updated to include Quarto articles
 - `contact.html` - Added About section above contact form, removed "About" from nav
@@ -67,12 +60,10 @@
 - `wscg-research.html` - Navigation updated
 
 **Content Updates**:
-
 - `content/Wrist as Universal Joint/Wrist_Universal_Claude.html` - Updated
 - `content/Inverse Dynamics Analysis/Drafts/.../inverse_dynamics_article.html` - Updated
 
 #### Moved/Archived Files
-
 - `content/Wrist as Universal Joint/Wrist_Universal_ChatGPT.tex` → `Archive/`
 - `content/Wrist as Universal Joint/Wrist_Universal_Gemini.tex` → `Archive/`
 - `content/Wrist as Universal Joint/Wrist_Universal_GeminiCombined.tex` → `Archive/`
@@ -80,7 +71,6 @@
 - `content/Wrist as Universal Joint/Wrist_Universal_GrokCombined_2.tex` → `Archive/`
 
 #### Preserved Files (Critical)
-
 ✅ **Calculator**: `content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` - INTACT  
 ✅ **All HTML pages**: Structure preserved  
 ✅ **Styles**: `styles.css` - Preserved  
@@ -90,7 +80,6 @@
 ## Navigation Changes
 
 ### Main Branch Navigation
-
 ```
 - Affine Drift
 - Articles
@@ -101,7 +90,6 @@
 ```
 
 ### Current Branch Navigation
-
 ```
 - Affine Drift
 - Articles
@@ -117,14 +105,12 @@
 ## Website Structure
 
 ### Main Branch
-
 - Static HTML website
 - All pages in root directory
 - About page separate
 - Articles linked to HTML files
 
 ### Current Branch
-
 - Static HTML website (preserved)
 - Quarto articles added (`articles/*.qmd`)
 - Quarto output in `_site/` directory
@@ -143,12 +129,10 @@
 ## What Needs Attention
 
 1. **Preview Server**: Should serve `index.html` by default
-
    - **Fix**: Access `http://localhost:8080/index.html` directly
    - **Or**: Python HTTP server should auto-serve index.html (may need browser refresh)
 
 2. **Equation Rendering**: Need to verify MathJax works in Quarto articles
-
    - **Status**: MathJax configured in `_quarto.yml`
    - **Test**: View rendered articles in browser
 
@@ -159,22 +143,18 @@
 ## Preview Instructions
 
 ### Option 1: Direct Access
-
 Open in browser:
-
 - `http://localhost:8080/index.html` (Homepage)
 - `http://localhost:8080/contact.html` (Contact with About)
 - `http://localhost:8080/articles.html` (Articles)
 - `http://localhost:8080/_site/articles/wrist-universal-joint.html` (Quarto article)
 
 ### Option 2: Use Preview Script
-
 ```bash
 ./start-preview.sh
 ```
 
 ### Option 3: Manual Server
-
 ```bash
 python -m http.server 8080
 ```
@@ -183,15 +163,15 @@ Then navigate to `http://localhost:8080/index.html`
 
 ## Comparison with Main
 
-| Aspect             | Main Branch      | Current Branch                      |
-| ------------------ | ---------------- | ----------------------------------- |
-| **Website Type**   | Static HTML      | Static HTML + Quarto                |
-| **Articles**       | HTML only        | HTML + Quarto (.qmd)                |
-| **Navigation**     | Includes "About" | "About" removed, content in Contact |
-| **Calculator**     | Present          | Present (preserved)                 |
-| **About Page**     | Separate page    | Merged into Contact                 |
-| **Quarto Support** | None             | Full Quarto integration             |
-| **CI/CD**          | HTML deploy      | HTML + Quarto deploy                |
+| Aspect | Main Branch | Current Branch |
+|--------|------------|----------------|
+| **Website Type** | Static HTML | Static HTML + Quarto |
+| **Articles** | HTML only | HTML + Quarto (.qmd) |
+| **Navigation** | Includes "About" | "About" removed, content in Contact |
+| **Calculator** | Present | Present (preserved) |
+| **About Page** | Separate page | Merged into Contact |
+| **Quarto Support** | None | Full Quarto integration |
+| **CI/CD** | HTML deploy | HTML + Quarto deploy |
 
 ## Next Steps
 

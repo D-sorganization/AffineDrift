@@ -6,13 +6,11 @@
 ## Critical Issues
 
 ### 1. Broken Logo Link
-
 **File**: `resources.html:45`
 **Issue**: References non-existent path `logo/logo-transparent/logo.png`
 **Fix**: Change to `logo/Logo Transparent/1.png`
 
 ### 2. Articles Page - Remaining Meta Bubbles
-
 **File**: `articles.html` (Background Articles section)
 **Issue**: Still has `<div class="article-meta">` bubbles that should be removed
 **Lines**: 128-165 (Background Articles section)
@@ -22,7 +20,6 @@
 The following pages still use old navigation structure and should be updated:
 
 ### Pages with Old Nav (not matching current index.html):
-
 1. **book-reviews.html** - Has: Theory, Modelling, WSCG 2024, Book Reviews, Daydreams & Doodles
 2. **contact.html** - Has old nav links
 3. **daydreams-doodles.html** - Has old nav
@@ -33,7 +30,6 @@ The following pages still use old navigation structure and should be updated:
 8. **wscg-research.html** - Has old nav
 
 ### Current Navigation Should Be:
-
 - Affine Drift (index.html)
 - Articles (articles.html)
 - Reviews (research-reviews.html)
@@ -46,17 +42,14 @@ The following pages still use old navigation structure and should be updated:
 These pages exist but are NOT in the main navigation:
 
 1. **book-reviews.html** - Book reviews page
-
    - Only accessible from old nav pages
    - Decision needed: Add to nav or archive?
 
 2. **daydreams-doodles.html** - Casual thoughts/ideas
-
    - Only accessible from old nav pages
    - Decision needed: Add to nav or archive?
 
 3. **theory.html** - Appears to be umbrella page
-
    - May be redundant with articles.html
    - Has old navigation
 
@@ -74,7 +67,6 @@ These pages exist but are NOT in the main navigation:
 ### Potentially Archivable Content
 
 **Multiple versions of same content:**
-
 - `content/Wrist as Universal Joint/`
   - Wrist_Universal_ChatGPT.tex
   - Wrist_Universal_Gemini.tex
@@ -86,25 +78,21 @@ These pages exist but are NOT in the main navigation:
 **Recommendation**: Archive all except Claude version
 
 **Inverse Dynamics drafts:**
-
 - Multiple ChatGPT and Gemini versions
 - Archive folder exists but may need more organization
 
 ## Logo Issues
 
 **Multiple logo files in root:**
-
 - AffineDriftLogo.png (324K)
 - AffineDriftLogoText.png (37K)
 - AffineDriftLogo_Clean.png (268K)
 
 **Logo directories:**
-
 - logo/Logo Normal/
 - logo/Logo Transparent/ (used in current pages)
 
 **Issue**: Inconsistent logo references
-
 - Most pages use: `logo/Logo Transparent/1.png`
 - resources.html incorrectly uses: `logo/logo-transparent/logo.png`
 
@@ -122,7 +110,6 @@ These pages exist but are NOT in the main navigation:
 ### Archive Candidates:
 
 1. **Content directory cleanup**:
-
    ```
    content/Wrist as Universal Joint/Archive/
    ├── Wrist_Universal_ChatGPT.tex
@@ -156,19 +143,16 @@ These pages exist but are NOT in the main navigation:
 ## Priority Fixes
 
 **High Priority**:
-
 1. Fix resources.html logo path
 2. Update navigation on all theory pages (part1-5)
 3. Remove article-meta from articles.html
 
 **Medium Priority**:
-
 1. Update navigation on modelling, wscg-research, research-reviews
 2. Decide fate of book-reviews and daydreams-doodles
 3. Archive old content versions
 
 **Low Priority**:
-
 1. Consolidate logo files
 2. Archive theory.html if redundant
 3. Create systematic archive structure

@@ -5,7 +5,6 @@ This program demonstrates how grip angle modulates the transmission of forearm a
 At 0° grip angle, all noise is transmitted to the shaft axis (100%).
 At 90°, none is transmitted (0%). Transmission is cos(angle).
 """
-
 import sys
 
 import numpy as np
@@ -27,7 +26,6 @@ from PyQt6.QtWidgets import (
 
 class NoiseTransmissionCanvas(FigureCanvas):
     """Shows original and transmitted noise plots."""
-
     def __init__(self, grip_angle_deg, noise=None):
         fig = Figure(figsize=(6, 4))
         super().__init__(fig)
@@ -49,15 +47,15 @@ class NoiseTransmissionCanvas(FigureCanvas):
         transmitted_noise = self.noise * transmission
         self.ax1.clear()
         self.ax2.clear()
-        self.ax1.plot(t, self.noise, label="Original Noise", color="gray")
-        self.ax1.set_title("Forearm Axis Noise Input")
-        self.ax1.set_ylabel("Amplitude")
+        self.ax1.plot(t, self.noise, label='Original Noise', color='gray')
+        self.ax1.set_title('Forearm Axis Noise Input')
+        self.ax1.set_ylabel('Amplitude')
         self.ax1.grid(True)
         self.ax1.legend()
-        self.ax2.plot(t, transmitted_noise, label="Transmitted to Shaft Axis", color="blue")
-        self.ax2.set_title(f"Transmitted Noise (Grip Angle {self.grip_angle_deg:.0f}°)")
-        self.ax2.set_xlabel("Time (s)")
-        self.ax2.set_ylabel("Amplitude")
+        self.ax2.plot(t, transmitted_noise, label='Transmitted to Shaft Axis', color='blue')
+        self.ax2.set_title(f'Transmitted Noise (Grip Angle {self.grip_angle_deg:.0f}°)')
+        self.ax2.set_xlabel('Time (s)')
+        self.ax2.set_ylabel('Amplitude')
         self.ax2.grid(True)
         self.ax2.legend()
         self.draw()
@@ -66,11 +64,10 @@ class NoiseTransmissionCanvas(FigureCanvas):
         self.grip_angle_deg = grip_angle_deg
         self.plot_data()
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Grip Angle Noise Transmission Simulator")
+        self.setWindowTitle('Grip Angle Noise Transmission Simulator')
         self.setGeometry(100, 100, 900, 600)
         self.grip_angle_deg = 0  # Initial grip angle
         self.initUI()
@@ -80,9 +77,9 @@ class MainWindow(QMainWindow):
         main_layout = QHBoxLayout(main_widget)
 
         # Left panel: Controls
-        control_group = QGroupBox("Controls")
+        control_group = QGroupBox('Controls')
         control_layout = QVBoxLayout()
-        grip_label = QLabel("Grip Angle (degrees):")
+        grip_label = QLabel('Grip Angle (degrees):')
         self.grip_slider = QSlider(Qt.Orientation.Horizontal)
         self.grip_slider.setMinimum(0)
         self.grip_slider.setMaximum(90)
@@ -90,7 +87,7 @@ class MainWindow(QMainWindow):
         self.grip_slider.setTickInterval(5)
         self.grip_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.grip_slider.valueChanged.connect(self.update_grip_angle)
-        self.grip_value_label = QLabel(f"{self.grip_angle_deg}°")
+        self.grip_value_label = QLabel(f'{self.grip_angle_deg}°')
         control_layout.addWidget(grip_label)
         control_layout.addWidget(self.grip_slider)
         control_layout.addWidget(self.grip_value_label)
@@ -98,7 +95,7 @@ class MainWindow(QMainWindow):
         control_group.setMaximumWidth(250)
 
         # Info panel: Transmission percentage
-        info_group = QGroupBox("Transmission Info")
+        info_group = QGroupBox('Transmission Info')
         info_layout = QVBoxLayout()
         self.info_label = QLabel()
         self.info_label.setWordWrap(True)
@@ -126,7 +123,7 @@ class MainWindow(QMainWindow):
 
     def update_grip_angle(self, value):
         self.grip_angle_deg = value
-        self.grip_value_label.setText(f"{self.grip_angle_deg}°")
+        self.grip_value_label.setText(f'{self.grip_angle_deg}°')
         self.noise_canvas.update_grip_angle(self.grip_angle_deg)
         self.update_info()
 
@@ -143,8 +140,7 @@ class MainWindow(QMainWindow):
         )
         self.info_label.setText(explanation)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

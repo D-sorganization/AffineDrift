@@ -11,7 +11,6 @@
 ### 1.1 Dependencies
 
 The enhanced model requires:
-
 ```bash
 pip install numpy matplotlib PyQt6
 ```
@@ -30,7 +29,6 @@ python3 Universal_Joint_Model_Enhanced.py
 ### 2.1 Universal Joint Transmission Formula Validation
 
 **Test Function:**
-
 ```python
 def test_universal_joint_transmission():
     """Validate universal joint transmission ratios"""
@@ -71,15 +69,14 @@ def test_universal_joint_transmission():
 For **δ = 30° bend angle**:
 
 | Wrist Angle (φ) | ω_out/ω_in | τ_out/τ_in | Product |
-| --------------- | ---------- | ---------- | ------- |
-| 0°              | 1.1547     | 0.8660     | 1.0000  |
-| 30°             | 1.0541     | 0.9487     | 1.0000  |
-| 45°             | 1.0000     | 1.0000     | 1.0000  |
-| 60°             | 0.9487     | 1.0541     | 1.0000  |
-| 90°             | 0.8660     | 1.1547     | 1.0000  |
+|-----------------|------------|------------|---------|
+| 0° | 1.1547 | 0.8660 | 1.0000 |
+| 30° | 1.0541 | 0.9487 | 1.0000 |
+| 45° | 1.0000 | 1.0000 | 1.0000 |
+| 60° | 0.9487 | 1.0541 | 1.0000 |
+| 90° | 0.8660 | 1.1547 | 1.0000 |
 
 **Key Observations:**
-
 - Power conservation: ω × τ = 1.0 always ✓
 - Maximum torque transmission at φ = 90° ✓
 - Minimum torque transmission at φ = 0° ✓
@@ -90,13 +87,11 @@ For **δ = 30° bend angle**:
 From Seherr-Thoss et al. (2006), "Universal Joints and Driveshafts":
 
 **For δ = 20° bend:**
-
 - Maximum velocity ratio: 1/cos(20°) = 1.0642
 - Minimum velocity ratio: cos(20°) = 0.9397
 - Our model predictions match within numerical precision ✓
 
 **For δ = 40° bend:**
-
 - Maximum velocity ratio: 1/cos(40°) = 1.3054
 - Minimum velocity ratio: cos(40°) = 0.7660
 - Our model predictions match within numerical precision ✓
@@ -108,16 +103,14 @@ From Seherr-Thoss et al. (2006), "Universal Joints and Driveshafts":
 ### 3.1 Example 1: Finger Grip (θ_grip = 10°)
 
 **Setup:**
-
 - Grip angle: θ_grip = 10° (fingers)
 - Wrist angle: φ = 20° (slight flexion)
 - Input torque: τ_forearm = 10 N·m
-- Club: Standard driver (I*α = 0.005 kg·m², I*γ = 0.010 kg·m²)
+- Club: Standard driver (I_α = 0.005 kg·m², I_γ = 0.010 kg·m²)
 
 **Calculations:**
 
 Step 1: Transmission ratio
-
 ```
 R_τ = √[1 - sin²(10°)·sin²(20°)] / cos(10°)
     = √[1 - 0.0302·0.1170] / 0.9848
@@ -127,27 +120,23 @@ R_τ = √[1 - sin²(10°)·sin²(20°)] / cos(10°)
 ```
 
 Step 2: Transmitted torque
-
 ```
 τ_transmitted = 10 × 1.0136 = 10.136 N·m
 ```
 
 Step 3: Distribution
-
 ```
 τ_α = 10.136 × sin(10°) = 1.760 N·m
 τ_γ = 10.136 × cos(10°) = 9.982 N·m
 ```
 
 Step 4: Accelerations
-
 ```
 α_α = 1.760 / 0.005 = 352.0 rad/s²
 α_γ = 9.982 / 0.010 = 998.2 rad/s²
 ```
 
 **Interpretation:**
-
 - Most torque (98.5%) goes to high-inertia axis (good for stability)
 - Small amount (1.5%) to shaft axis
 - Universal joint amplifies torque by 1.4% at this configuration
@@ -156,7 +145,6 @@ Step 4: Accelerations
 ### 3.2 Example 2: Palm Grip (θ_grip = 80°)
 
 **Setup:**
-
 - Grip angle: θ_grip = 80° (palm)
 - Wrist angle: φ = 20° (slight flexion)
 - Input torque: τ_forearm = 10 N·m
@@ -165,7 +153,6 @@ Step 4: Accelerations
 **Calculations:**
 
 Step 1: Transmission ratio
-
 ```
 R_τ = √[1 - sin²(80°)·sin²(20°)] / cos(80°)
     = √[1 - 0.9698·0.1170] / 0.1736
@@ -175,27 +162,23 @@ R_τ = √[1 - sin²(80°)·sin²(20°)] / cos(80°)
 ```
 
 Step 2: Transmitted torque
-
 ```
 τ_transmitted = 10 × 5.424 = 54.24 N·m
 ```
 
 Step 3: Distribution
-
 ```
 τ_α = 54.24 × sin(80°) = 53.41 N·m
 τ_γ = 54.24 × cos(80°) = 9.42 N·m
 ```
 
 Step 4: Accelerations
-
 ```
 α_α = 53.41 / 0.005 = 10,682 rad/s²
 α_γ = 9.42 / 0.010 = 942 rad/s²
 ```
 
 **Interpretation:**
-
 - Universal joint AMPLIFIES torque by 442% at this extreme configuration!
 - Most torque (98.5%) goes to shaft axis (poor for stability)
 - Massive face angle acceleration (10,682 rad/s²)
@@ -206,7 +189,6 @@ Step 4: Accelerations
 ### 3.3 Example 3: Balanced Grip (θ_grip = 35°)
 
 **Setup:**
-
 - Grip angle: θ_grip = 35° (intermediate)
 - Wrist angle: φ = 0° (neutral)
 - Input torque: τ_forearm = 10 N·m
@@ -214,7 +196,6 @@ Step 4: Accelerations
 **Calculations:**
 
 Step 1: Transmission ratio at φ = 0°
-
 ```
 R_τ = √[1 - sin²(35°)·0] / cos(35°)
     = 1.0 / 0.8192
@@ -222,20 +203,17 @@ R_τ = √[1 - sin²(35°)·0] / cos(35°)
 ```
 
 Step 2: Transmitted torque
-
 ```
 τ_transmitted = 10 × 1.221 = 12.21 N·m
 ```
 
 Step 3: Distribution
-
 ```
 τ_α = 12.21 × sin(35°) = 7.00 N·m
 τ_γ = 12.21 × cos(35°) = 10.00 N·m
 ```
 
 **Interpretation:**
-
 - Moderate torque to both axes
 - 22% torque amplification from universal joint
 - Balanced trade-off between power and consistency
@@ -249,7 +227,6 @@ Step 3: Distribution
 When running the GUI, verify:
 
 **Test 1: Bottom Plot Shows Cyclic Variation**
-
 - Set grip angle to 30°
 - Observe bottom plot (Transmission vs Wrist Angle)
 - Should see smooth curves with max/min values
@@ -257,7 +234,6 @@ When running the GUI, verify:
 - Green marker should move when wrist slider changes
 
 **Test 2: Grip Angle Changes Curve Shape**
-
 - Vary grip angle from 0° to 90°
 - Observe how transmission curves change amplitude
 - At 0°: minimal variation (nearly flat)
@@ -265,7 +241,6 @@ When running the GUI, verify:
 - At 90°: WARNING - model may show extreme values (physically realistic for extreme palm grip)
 
 **Test 3: Transmitted Torque Varies with Wrist Angle**
-
 - Keep grip angle constant (e.g., 30°)
 - Vary wrist angle from -60° to +60°
 - Top plot: purple line (transmitted torque) should vary
@@ -273,7 +248,6 @@ When running the GUI, verify:
 - Purple should modulate around gray based on transmission ratio
 
 **Test 4: Acceleration Plots Make Physical Sense**
-
 - Higher I_γ → lower acceleration on γ axis ✓
 - Lower I_α → higher acceleration on α axis ✓
 - Acceleration should scale inversely with inertia ✓
@@ -281,7 +255,6 @@ When running the GUI, verify:
 ### 4.2 Quantitative Tests
 
 **Test 1: Verify Power Conservation**
-
 ```
 Expected: ω_ratio × τ_ratio ≈ 1.0 for all configurations
 
@@ -292,7 +265,6 @@ Procedure:
 ```
 
 **Test 2: Verify Extreme Values**
-
 ```
 Expected:
 - τ_ratio maximum at φ = ±90° (or extreme wrist angles)
@@ -306,7 +278,6 @@ Procedure:
 ```
 
 **Test 3: Compare Left and Right Plots**
-
 ```
 Expected: Different grip angles → different transmission characteristics
 
@@ -345,7 +316,6 @@ if np.abs(delta_rad) > np.radians(89):
 ### 5.3 Model Limitations
 
 **Not Modeled:**
-
 1. Compliance and damping in biological tissues
 2. Active muscle torques at the wrist
 3. Radial/ulnar deviation (ψ angle) - current model is 2D only
@@ -353,7 +323,6 @@ if np.abs(delta_rad) > np.radians(89):
 5. Grip pressure effects on coupling stiffness
 
 **Future Enhancements:**
-
 1. Full 3D model with both wrist DOF
 2. Visco-elastic tissue models
 3. Active torque generation
@@ -366,20 +335,19 @@ if np.abs(delta_rad) > np.radians(89):
 
 ### 6.1 Side-by-Side Comparison
 
-| Aspect                 | Previous Model            | Enhanced Model                        |
-| ---------------------- | ------------------------- | ------------------------------------- |
-| **Grip/Wrist Angle**   | Single angle θ            | Separate θ_grip (static), φ (dynamic) |
-| **Transmission**       | Constant: sin(θ), cos(θ)  | Variable: R_τ(φ, δ)                   |
-| **Torque to α-axis**   | τ·sin(θ)                  | τ·sin(θ*grip)·R*τ(φ,θ_grip)           |
-| **Torque to γ-axis**   | τ·cos(θ)                  | τ·cos(θ*grip)·R*τ(φ,θ_grip)           |
-| **Physics**            | Vector decomposition      | Universal joint kinematics            |
-| **Wrist angle effect** | None (static)             | Cyclical modulation                   |
-| **Predictions**        | Constant throughout swing | Variable with wrist motion            |
+| Aspect | Previous Model | Enhanced Model |
+|--------|----------------|----------------|
+| **Grip/Wrist Angle** | Single angle θ | Separate θ_grip (static), φ (dynamic) |
+| **Transmission** | Constant: sin(θ), cos(θ) | Variable: R_τ(φ, δ) |
+| **Torque to α-axis** | τ·sin(θ) | τ·sin(θ_grip)·R_τ(φ,θ_grip) |
+| **Torque to γ-axis** | τ·cos(θ) | τ·cos(θ_grip)·R_τ(φ,θ_grip) |
+| **Physics** | Vector decomposition | Universal joint kinematics |
+| **Wrist angle effect** | None (static) | Cyclical modulation |
+| **Predictions** | Constant throughout swing | Variable with wrist motion |
 
 ### 6.2 Quantitative Error Analysis
 
 For typical golf swing parameters:
-
 - Grip angle: θ_grip = 30°
 - Wrist angle range: φ ∈ [-10°, +40°]
 - Input torque: τ = 10 N·m
@@ -387,28 +355,25 @@ For typical golf swing parameters:
 **Transmission Ratio Comparison:**
 
 | Wrist Angle (φ) | Previous Model | Enhanced Model | Error (%) |
-| --------------- | -------------- | -------------- | --------- |
-| -10°            | 1.000          | 1.068          | +6.8%     |
-| 0°              | 1.000          | 1.155          | +15.5%    |
-| +10°            | 1.000          | 1.068          | +6.8%     |
-| +20°            | 1.000          | 1.014          | +1.4%     |
-| +30°            | 1.000          | 0.993          | -0.7%     |
-| +40°            | 1.000          | 1.001          | +0.1%     |
+|-----------------|----------------|----------------|-----------|
+| -10° | 1.000 | 1.068 | +6.8% |
+| 0° | 1.000 | 1.155 | +15.5% |
+| +10° | 1.000 | 1.068 | +6.8% |
+| +20° | 1.000 | 1.014 | +1.4% |
+| +30° | 1.000 | 0.993 | -0.7% |
+| +40° | 1.000 | 1.001 | +0.1% |
 
 **Key Finding:** Previous model underestimates torque transmission by up to 15.5% at neutral wrist position, and overestimates by up to 0.7% at ~30° flexion. The error varies cyclically with wrist angle.
 
 ### 6.3 Physical Interpretation of Differences
 
 **Previous Model Assumption:**
-
 > "Torque transmission is a simple geometric projection based on how you hold the club."
 
 **Reality (Enhanced Model):**
-
 > "Torque transmission varies continuously during the swing as the wrist flexes and extends, creating dynamic loading/unloading phases that affect clubhead speed and face angle control."
 
 **Practical Impact:**
-
 - **Timing:** Wrist angle at impact affects how much torque reaches the club
 - **Loading:** Natural "loading" phase occurs at certain wrist angles
 - **Consistency:** Grip angle determines where transmission variations manifest
@@ -422,7 +387,7 @@ Before accepting the model as valid, verify:
 
 - [ ] Universal joint transmission formula matches literature values
 - [ ] Power conservation: ω_ratio × τ_ratio = 1.0
-- [ ] Symmetry: R*τ(φ) = R*τ(-φ)
+- [ ] Symmetry: R_τ(φ) = R_τ(-φ)
 - [ ] Limiting case: δ→0 gives R_τ→1
 - [ ] Extrema at correct locations (φ = 0° and ±90°)
 - [ ] GUI displays three plots correctly
@@ -441,7 +406,6 @@ Before accepting the model as valid, verify:
 ### 8.1 Experimental Validation
 
 **Proposed Experiment:**
-
 1. Build physical universal joint with known bend angle
 2. Measure input and output shaft speeds/torques
 3. Compare to model predictions
@@ -452,7 +416,6 @@ Before accepting the model as valid, verify:
 ### 8.2 Biomechanical Validation
 
 **Proposed Study:**
-
 1. Collect motion capture data from golf swings
 2. Extract wrist angle trajectories φ(t)
 3. Measure clubhead kinematics
@@ -464,7 +427,6 @@ Before accepting the model as valid, verify:
 ### 8.3 Optimization Studies
 
 **Proposed Analysis:**
-
 1. For given wrist angle trajectory φ(t), optimize θ_grip
 2. Objectives: maximize clubhead speed, minimize face angle variation
 3. Explore Pareto frontier of trade-offs
@@ -479,19 +441,16 @@ Before accepting the model as valid, verify:
 The model is considered validated if:
 
 1. **Mathematical Validity:**
-
    - ✓ All analytical tests pass
    - ✓ Matches known universal joint behavior
    - ✓ Conserves energy and power
 
 2. **Numerical Accuracy:**
-
    - ✓ Stable across full parameter range (except known singularities)
    - ✓ Results match hand calculations
    - ✓ Consistent with literature values
 
 3. **Physical Plausibility:**
-
    - ✓ Predictions align with observed golf swing mechanics
    - ✓ Explains known phenomena (grip style effects)
    - ✓ Provides actionable insights
@@ -516,7 +475,6 @@ The enhanced universal joint model provides a **significant improvement** over t
 **Validation Status:** ✓ Mathematically sound, ✓ Physically plausible, ✓ Ready for testing
 
 **Next Steps:**
-
 1. Run GUI and perform visual validation
 2. Conduct numerical tests with various parameters
 3. Compare predictions to golf biomechanics data

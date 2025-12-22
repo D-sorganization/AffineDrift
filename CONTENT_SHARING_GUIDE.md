@@ -9,7 +9,6 @@ When you want to add a project from another repository to your website (e.g., in
 **How it works:** Copy the relevant files from your other repository into this one.
 
 **Pros:**
-
 - ✅ Simplest and most reliable
 - ✅ Works perfectly with static site hosting (GitHub Pages)
 - ✅ No dependencies or build complexity
@@ -18,19 +17,16 @@ When you want to add a project from another repository to your website (e.g., in
 - ✅ Can customize content for website presentation
 
 **Cons:**
-
 - ❌ Content exists in two places (need to sync manually)
 - ❌ Larger repository size
 
 **When to use:** Best for most cases, especially for:
-
 - Static HTML/JS/CSS projects
 - Documentation or articles
 - Small to medium projects
 - Projects you want to customize for the website
 
 **Example workflow:**
-
 ```bash
 # Copy project files
 cp -r ../other-repo/project-name ./daydreams/project-name/
@@ -49,41 +45,35 @@ git commit -m "Add project-name to Daydreams & Doodles"
 **How it works:** Host the project in its own repository with GitHub Pages, then link to it from your website.
 
 **Pros:**
-
 - ✅ Keep projects in separate repos
 - ✅ Each project has its own URL
 - ✅ Can update projects independently
 - ✅ No duplication
 
 **Cons:**
-
 - ❌ Projects load from different domains (not seamless)
 - ❌ Need to set up GitHub Pages for each project
 - ❌ More complex navigation
 - ❌ Different styling/theme per project
 
 **When to use:** Good for:
-
 - Large, independent projects
 - Projects that need their own domain/subdomain
 - Projects you want to keep completely separate
 
 **Example:**
-
 ```html
 <div class="resource-card">
-  <h3>My Space Flight Calculator</h3>
-  <p class="resource-description">
-    Interactive orbital mechanics calculator built with Python and JavaScript.
-  </p>
-  <a
-    href="https://your-username.github.io/space-calculator/"
-    class="resource-link"
-    target="_blank"
-    rel="noopener"
-  >
-    View Project →
-  </a>
+    <h3>My Space Flight Calculator</h3>
+    <p class="resource-description">
+        Interactive orbital mechanics calculator built with Python and JavaScript.
+    </p>
+    <a href="https://your-username.github.io/space-calculator/"
+       class="resource-link"
+       target="_blank"
+       rel="noopener">
+        View Project →
+    </a>
 </div>
 ```
 
@@ -92,13 +82,11 @@ git commit -m "Add project-name to Daydreams & Doodles"
 **How it works:** Include another repository as a subdirectory in this repository.
 
 **Pros:**
-
 - ✅ Keep projects in separate repos
 - ✅ Can pull updates from source repo
 - ✅ Version control for submodule
 
 **Cons:**
-
 - ❌ Complex to set up and maintain
 - ❌ Can be fragile (submodule pointer issues)
 - ❌ GitHub Pages may not handle submodules well
@@ -106,13 +94,11 @@ git commit -m "Add project-name to Daydreams & Doodles"
 - ❌ Team members need to know how to work with submodules
 
 **When to use:** Rarely recommended for static websites. Only if:
-
 - You're very comfortable with git submodules
 - The project is actively developed in another repo
 - You need to pull updates frequently
 
 **Example:**
-
 ```bash
 # Add submodule
 git submodule add https://github.com/username/project-name.git daydreams/project-name
@@ -126,26 +112,22 @@ git submodule update --remote daydreams/project-name
 **How it works:** Use a build script that pulls content from other repos during site generation.
 
 **Pros:**
-
 - ✅ Keep projects separate
 - ✅ Automated syncing
 - ✅ Can transform content during build
 
 **Cons:**
-
 - ❌ Requires build infrastructure
 - ❌ More complex CI/CD setup
 - ❌ Need to handle authentication for private repos
 - ❌ Build failures if source repo is unavailable
 
 **When to use:** Good for:
-
 - Automated content aggregation
 - When using Quarto or other build systems
 - Large-scale content management
 
 **Example (pseudo-code):**
-
 ```bash
 # In build script
 git clone https://github.com/username/project-name.git temp/
@@ -160,7 +142,6 @@ rm -rf temp/
 **Recommended: Copy content into this repo**
 
 1. **Create a directory structure:**
-
    ```
    daydreams/
    ├── space-flight/
@@ -174,23 +155,22 @@ rm -rf temp/
    ```
 
 2. **Copy files from other repos:**
-
    ```bash
    mkdir -p daydreams/space-flight
    cp -r ../space-flight-repo/* daydreams/space-flight/
    ```
 
 3. **Update daydreams-doodles.html:**
-
    ```html
    <div class="resource-card">
-     <h3>Space Flight Calculator</h3>
-     <p class="resource-description">
-       Interactive orbital mechanics calculator...
-     </p>
-     <a href="daydreams/space-flight/index.html" class="resource-link">
-       View Project →
-     </a>
+       <h3>Space Flight Calculator</h3>
+       <p class="resource-description">
+           Interactive orbital mechanics calculator...
+       </p>
+       <a href="daydreams/space-flight/index.html"
+          class="resource-link">
+           View Project →
+       </a>
    </div>
    ```
 
@@ -203,7 +183,6 @@ rm -rf temp/
 ### When to Use External Links
 
 Use external links when:
-
 - Project is very large (would bloat this repo)
 - Project has its own deployment/CI/CD
 - Project needs to be updated frequently and independently
@@ -254,7 +233,6 @@ git commit -m "Add space flight calculator to Daydreams & Doodles"
 ## Summary
 
 **For AffineDrift website:**
-
 - ✅ **Copy content** - Best for most projects
 - ⚠️ **External links** - Good for very large or independent projects
 - ❌ **Git submodules** - Too complex for static sites

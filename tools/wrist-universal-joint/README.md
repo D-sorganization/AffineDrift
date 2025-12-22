@@ -24,11 +24,9 @@ Interactive tool for analyzing how grip angle affects torque transmission and an
 ## Quick Start
 
 ### JavaScript Version (Recommended for GitHub Pages)
-
 Simply link to or embed `grip_angle_simulator.html` in any HTML page.
 
 ### Streamlit Version
-
 1. Deploy to [Streamlit Cloud](https://streamlit.io/cloud)
 2. Set main file: `Grip_Angle_Torque_Transmission_Streamlit.py`
 3. Embed via iframe using the URL provided by Streamlit Cloud

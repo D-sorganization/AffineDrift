@@ -17,7 +17,6 @@ quarto preview
 ```
 
 This will:
-
 - Start a local web server (usually at `http://localhost:4200`)
 - Automatically rebuild when you make changes
 - Show the rendered site in your browser
@@ -75,7 +74,6 @@ Before pushing to main, verify:
 ### Math Equations Not Rendering
 
 If MathJax equations don't render:
-
 1. Check that `html-math-method: mathjax` is in `_quarto.yml`
 2. Verify MathJax CDN is accessible
 3. Check browser console for errors
@@ -83,14 +81,12 @@ If MathJax equations don't render:
 ### Code Blocks Not Highlighting
 
 If syntax highlighting doesn't work:
-
 1. Ensure code blocks use proper language tags (e.g., ````python`)
 2. Check that `code-fold: true` is set in format options
 
 ### Missing Files
 
 If files are missing:
-
 1. Check `.gitignore` - some files may be ignored
 2. Verify all source files are in the repository
 3. Check that `output-dir: _site` matches your build directory
@@ -120,7 +116,6 @@ The `_site/` directory contains the complete static website ready for deployment
 ## Integration with CI/CD
 
 The GitHub Actions workflow (`.github/workflows/quarto-publish.yml`) will:
-
 1. Install Quarto
 2. Render the site
 3. Deploy to GitHub Pages

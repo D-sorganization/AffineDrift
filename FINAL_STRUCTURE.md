@@ -3,18 +3,15 @@
 ## Clear Separation: Published vs Drafts
 
 ### `articles/` - **All Published Articles**
-
 All published articles go here. This is the single source of truth for published content.
 
 **Current articles (19 total):**
-
 - Theory Parts 1-5
 - Current studies (inverse-dynamics, wrist-universal-joint, superposition, controllability-drift-ratio, drift-components-wrench-double-pendulum, strokes-gained-limitations)
 - Affine Nature of the Golf Swing series
 - Affine Background Articles
 
 **Workflow for new articles:**
-
 1. Create draft in `content/drafts/`
 2. Work on it there
 3. When ready: `git mv content/drafts/my-article.qmd articles/my-article.qmd`
@@ -24,7 +21,6 @@ All published articles go here. This is the single source of truth for published
 ### `content/` - **Drafts & Supporting Materials**
 
 **Purpose:**
-
 - ✅ **Drafts** - Work-in-progress articles before publishing
 - ✅ **Source materials** - LaTeX `.tex` files, Python scripts
 - ✅ **Supporting documentation** - Technical reviews, validation notes
@@ -32,7 +28,6 @@ All published articles go here. This is the single source of truth for published
 - ✅ **Archive** - Preserved duplicates and old versions
 
 **Structure:**
-
 ```
 content/
 ├── drafts/                    # Your work-in-progress articles
@@ -56,7 +51,6 @@ content/
 ## Configuration
 
 **`_quarto.yml`** now only renders:
-
 - `*.qmd` (root level pages)
 - `articles/*.qmd` (all published articles)
 

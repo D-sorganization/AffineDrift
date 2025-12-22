@@ -126,7 +126,6 @@ When suggesting resources for the Resources page:
 ## Questions?
 
 If you have questions about contributing, feel free to:
-
 - Open an issue with the "question" label
 - Reach out via the repository discussions
 

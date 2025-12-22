@@ -12,9 +12,7 @@ The features from the plan **ARE implemented on the `main` branch** (commit `fdd
 ## What's on Main Branch (Should be Live)
 
 ### ✅ Resources Page (`resources.qmd` on main)
-
 All items from the plan are present:
-
 - ✅ **Roy Featherstone's Website** - Added with description
 - ✅ **Steve Strogatz Playlist** - Added with description
 - ✅ **OpenPose** - Added with description
@@ -25,7 +23,6 @@ All items from the plan are present:
 - ✅ **MyoSim** - Already present
 
 ### ✅ Navigation (`_quarto.yml` on main)
-
 - ✅ **Articles dropdown menu** - Implemented with:
   - Articles Home
   - Drifter Manifesto
@@ -44,9 +41,7 @@ All items from the plan are present:
 - ✅ **Support** menu (renamed from About)
 
 ### ✅ Model Pages (on main)
-
 All model pages exist:
-
 - ✅ `models.qmd` - Models home page
 - ✅ `models-opensim.qmd` - OpenSim Models page
 - ✅ `models-myosim.qmd` - MyoSim Models page
@@ -59,7 +54,6 @@ All model pages exist:
 ## What's Missing on Current Branch
 
 Your current branch (`feat/add-matlab-analyzer-tools`) has:
-
 - ❌ Old navigation structure (no dropdowns)
 - ❌ Old resources page (missing new resources)
 - ❌ No model pages (models-opensim.qmd, models-myosim.qmd, etc.)
@@ -67,7 +61,6 @@ Your current branch (`feat/add-matlab-analyzer-tools`) has:
 ## Deployment Status
 
 The deployment workflow (`.github/workflows/quarto-publish.yml`) is configured to:
-
 - Deploy automatically when code is pushed to `main`
 - Build and deploy to GitHub Pages
 
@@ -91,7 +84,6 @@ The deployment workflow (`.github/workflows/quarto-publish.yml`) is configured t
 ## Next Steps
 
 If the features aren't live:
-
 1. Check GitHub Actions logs for deployment errors
 2. Verify GitHub Pages settings point to `main` branch
 3. Manually trigger a deployment if needed
