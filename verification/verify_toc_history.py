@@ -2,6 +2,12 @@ from playwright.sync_api import Page, expect, sync_playwright
 
 
 def test_toc_and_history(page: Page) -> None:  # type: ignore[no-any-unimported, unused-ignore]
+    """
+    Verifies that the Table of Contents and Article History are generated correctly.
+
+    This test checks for the presence and content of the TOC and history list on
+    articles.html and ensures the history tracking logic works.
+    """
     # Visit articles.html to check TOC and History
     print("Navigating to articles.html...")
     page.goto("http://localhost:8000/articles.html")
