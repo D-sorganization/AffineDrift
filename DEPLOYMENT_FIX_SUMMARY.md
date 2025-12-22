@@ -3,6 +3,7 @@
 ## Problem Identified
 
 The deployment is failing with:
+
 ```
 Detected Quarto project; using output directory: "docs"
 ✗ "docs"/index.html missing
@@ -23,6 +24,7 @@ I've updated `.github/workflows/deploy.yml` to:
 ## What Changed
 
 ### Before:
+
 ```yaml
 - name: Render Quarto site (if project exists)
   continue-on-error: true
@@ -36,6 +38,7 @@ I've updated `.github/workflows/deploy.yml` to:
 ```
 
 ### After:
+
 ```yaml
 - name: Render Quarto site (if project exists)
   run: |

@@ -5,6 +5,7 @@ This directory contains interactive web-based tools and simulators that compleme
 ## Structure
 
 Each tool has its own subdirectory containing:
+
 - **JavaScript/HTML5 version** - Standalone HTML file that runs entirely in the browser
 - **Streamlit version** - Python-based web app for deployment on Streamlit Cloud
 - **Documentation** - Embedding guides and usage instructions
@@ -13,11 +14,13 @@ Each tool has its own subdirectory containing:
 ## Current Tools
 
 ### `wrist-universal-joint/`
+
 **Grip Angle Torque Transmission Simulator**
 
 Interactive tool for analyzing how grip angle affects torque transmission and angular acceleration in golf swing biomechanics.
 
 **Files:**
+
 - `grip_angle_simulator.html` - JavaScript/HTML5 standalone version
 - `Grip_Angle_Torque_Transmission_Streamlit.py` - Streamlit version
 - `requirements.txt` - Python dependencies
@@ -49,6 +52,7 @@ When transferring tools from external repositories:
 ## CI/CD
 
 Tools are validated as part of the main repository CI/CD pipeline:
+
 - HTML files are validated
 - Python files are checked for syntax
 - All tools must pass validation before deployment

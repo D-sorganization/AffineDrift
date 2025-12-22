@@ -5,6 +5,7 @@ This document is the authoritative guide for layout, formatting, and typographic
 ## 1. Typography & Layout
 
 ### Headings
+
 - **H1**: Page Title only.
 - **H2**: Major sections. Sentence case (e.g., "System definition and modeling assumptions").
 - **H3**: Subsections. Sentence case.
@@ -12,11 +13,13 @@ This document is the authoritative guide for layout, formatting, and typographic
 - **No Orphans**: Headings should never be the last element of a section.
 
 ### Paragraphs
+
 - **Rhythm**: Avoid walls of text. Break paragraphs that exceed 5-6 sentences unless describing a dense mathematical derivation.
 - **Flow**: Use "bridge" sentences sparingly to connect distinct ideas.
 - **Whitespace**: Ensure adequate spacing between sections.
 
 ### Lists
+
 - Use standard Markdown lists (`-` or `1.`).
 - Consistent punctuation: If list items are sentences, end with periods. If fragments, do not.
 
@@ -25,7 +28,7 @@ This document is the authoritative guide for layout, formatting, and typographic
 - **Syntax**: Use standard LaTeX.
 - **Display Math**: Use `$$ ... $$` for block equations.
 - **Inline Math**: Use `$ ... $`.
-- **Punctuation**: Place punctuation *inside* the display math block if the equation ends a sentence.
+- **Punctuation**: Place punctuation _inside_ the display math block if the equation ends a sentence.
   - Example: `$$ x = y + z. $$`
 - **Numbering**: Only number equations that are referenced elsewhere. Use `$$ ... $$ {#eq-name}`.
 - **Notation**:
@@ -50,7 +53,7 @@ Use Quarto callouts for special blocks.
   - `![Caption text](path/to/image.png){#fig-id}`
 - **YouTube**: Use a consistent preview block format.
   - Image preview with a play button overlay or a clear text link if strict embedding is not used.
-  - *Standard*: `{{< video https://www.youtube.com/embed/... >}}` if Quarto supports it, or consistent HTML/Markdown fallback.
+  - _Standard_: `{{< video https://www.youtube.com/embed/... >}}` if Quarto supports it, or consistent HTML/Markdown fallback.
 
 ## 5. Terminology & Abbreviations
 

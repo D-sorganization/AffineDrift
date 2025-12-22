@@ -12,6 +12,7 @@
 ## Current State
 
 ### Files Successfully Merged
+
 - ✅ Quarto configuration (`_quarto.yml`)
 - ✅ Quarto articles (`articles/*.qmd`)
 - ✅ Quarto publishing workflow (`.github/workflows/quarto-publish.yml`)
@@ -43,6 +44,7 @@ quarto preview
 ### Full Site Build
 
 For production builds, you may need to:
+
 1. Ensure `.quartoignore` is properly configured
 2. Or render only specific files/directories
 3. Or use the GitHub Actions workflow which handles this automatically

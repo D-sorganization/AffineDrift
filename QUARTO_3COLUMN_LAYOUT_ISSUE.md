@@ -3,6 +3,7 @@
 ## Problem
 
 The `.qmd` source files contain the correct 3-column layout structure with:
+
 - `.standard-page-layout` container
 - `.left-sidebar` with `.toc-nav` (Table of Contents)
 - `.main-content-area` (main content)
@@ -23,7 +24,8 @@ When Quarto processes `.qmd` files with `page-layout: full` and `{=html}` blocks
 ## Evidence
 
 **Source (`articles.qmd`):**
-```html
+
+````html
 ```{=html}
 <section class="article-section">
   <div class="container">
@@ -34,8 +36,9 @@ When Quarto processes `.qmd` files with `page-layout: full` and `{=html}` blocks
     </div>
   </div>
 </section>
-```
-```
+````
+
+````
 
 **Rendered (`docs/articles.html`):**
 ```html
@@ -46,29 +49,37 @@ When Quarto processes `.qmd` files with `page-layout: full` and `{=html}` blocks
     </div>
   </div>
 </section>
-```
+````
 
 ## Potential Solutions
 
 ### Option 1: Use Custom Template (Recommended)
+
 Create a custom Quarto template that preserves the HTML structure:
+
 - Modify `_templates/partials/header.html` or create a custom layout template
 - Ensure the template doesn't strip custom HTML blocks
 
 ### Option 2: Post-Processing Script
+
 Create a post-render script that:
+
 - Runs after `quarto render`
 - Injects the sidebar structure into rendered HTML files
 - Uses the source `.qmd` files as reference
 
 ### Option 3: Use Quarto's Layout System
+
 Instead of custom HTML, use Quarto's built-in layout features:
+
 - Use `::: {.columns}` syntax
 - Configure layout in `_quarto.yml`
 - May require restructuring the HTML
 
 ### Option 4: Raw HTML Files
+
 For pages that need custom layouts:
+
 - Keep them as pure HTML files in `docs/`
 - Don't use Quarto rendering for these pages
 - Manually maintain them
@@ -76,6 +87,7 @@ For pages that need custom layouts:
 ## Immediate Workaround
 
 The current workaround (from previous investigation) was to manually extract HTML from `.qmd` files using a Python script. This bypasses Quarto entirely but:
+
 - ✅ Preserves the 3-column layout
 - ❌ Doesn't use Quarto's templating system
 - ❌ Requires manual regeneration

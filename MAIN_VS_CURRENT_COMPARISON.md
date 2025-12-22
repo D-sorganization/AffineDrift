@@ -7,6 +7,7 @@ This document compares the current state of the `merge-quarto-branch` with the `
 ## Key Changes Summary
 
 ### Files Added (New in Current Branch)
+
 - **Quarto Configuration**: `_quarto.yml`, `.quartoignore`
 - **Quarto Articles**: `articles/wrist-universal-joint.qmd`, `articles/inverse-dynamics.qmd`
 - **Quarto Workflow**: `.github/workflows/quarto-publish.yml`
@@ -16,6 +17,7 @@ This document compares the current state of the `merge-quarto-branch` with the `
 - **New HTML Page**: `reading-list.html`
 
 ### Files Modified
+
 - **Navigation**: All HTML files have navigation updates (removed "About" tab)
 - **Contact Page**: `contact.html` - Added About section above contact form
 - **Index**: `index.html` - Navigation updated
@@ -23,6 +25,7 @@ This document compares the current state of the `merge-quarto-branch` with the `
 - **Content Files**: Various HTML files in `content/` directory
 
 ### Files Moved/Archived
+
 - Several LaTeX files moved to `Archive/` subdirectory:
   - `Wrist_Universal_ChatGPT.tex`
   - `Wrist_Universal_Gemini.tex`
@@ -31,6 +34,7 @@ This document compares the current state of the `merge-quarto-branch` with the `
   - `Wrist_Universal_GrokCombined_2.tex`
 
 ### Files Preserved (Critical)
+
 - ✅ **Calculator**: `content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` - PRESERVED
 - ✅ **All HTML pages**: All existing HTML pages maintained
 - ✅ **Styles and Scripts**: `styles.css`, `script.js` - Preserved
@@ -38,6 +42,7 @@ This document compares the current state of the `merge-quarto-branch` with the `
 ## Website Structure Comparison
 
 ### Main Branch Structure
+
 ```
 AffineDrift/
 ├── index.html (Homepage)
@@ -52,6 +57,7 @@ AffineDrift/
 ```
 
 ### Current Branch Structure
+
 ```
 AffineDrift/
 ├── index.html (Homepage - navigation updated)
@@ -74,6 +80,7 @@ AffineDrift/
 ## Navigation Changes
 
 ### Main Branch Navigation
+
 ```
 - Affine Drift
 - Articles
@@ -84,6 +91,7 @@ AffineDrift/
 ```
 
 ### Current Branch Navigation
+
 ```
 - Affine Drift
 - Articles
@@ -95,22 +103,26 @@ AffineDrift/
 ## Content Changes
 
 ### Contact Page
+
 - **Main**: Just contact form
 - **Current**: About section (from about.html) + Contact form
 
 ### Articles Page
+
 - **Main**: Links to HTML articles
 - **Current**: Links to HTML articles + Quarto articles
 
 ## Quarto Integration
 
 ### What Quarto Adds
+
 1. **New Article Format**: `.qmd` files that render to HTML
 2. **Math Rendering**: MathJax configured in Quarto
 3. **Publishing Workflow**: Automated Quarto rendering in CI/CD
 4. **Better Math Support**: Native LaTeX math in articles
 
 ### What's Preserved
+
 1. **All existing HTML pages**: No changes to structure
 2. **Calculator**: `Universal_Joint_Model_Enhanced.py` intact
 3. **Styling**: Custom CSS preserved

@@ -28,6 +28,7 @@
 This document defines the unified CI/CD approach for the AffineDrift repository. AffineDrift is a Quarto-based website hosting technical writing, mathematical content, and interactive Python tools.
 
 The repository uses a **hybrid approach** for CI/CD:
+
 - **Python code**: Standard Python CI with pytest, ruff, mypy, black
 - **Quarto documents**: Validation and rendering checks
 - **Website files**: HTML/CSS/JS validation and accessibility checks
@@ -65,6 +66,7 @@ AffineDrift/
 ## Key CI/CD Principles
 
 ### 1. Pinned Versions ✅
+
 All tool versions are explicitly specified for reproducibility:
 
 ```yaml
@@ -74,6 +76,7 @@ pip install ruff==0.5.0 mypy==1.10.0 black==24.4.2 pytest==8.3.3 pytest-cov==6.0
 **Rationale:** Prevents unexpected CI failures from tool updates.
 
 ### 2. Comprehensive Detection 🔍
+
 Automatically find source directories and files:
 
 ```bash
@@ -85,6 +88,7 @@ if [ -f tools/*/requirements.txt ]; then pip install -r tools/*/requirements.txt
 **Rationale:** Works across different repository structures.
 
 ### 3. Proper Exit Codes ⚠️
+
 Preserve failure codes for GitHub Actions:
 
 ```bash
@@ -98,6 +102,7 @@ ruff check . || true
 **Exception:** Use `continue-on-error: true` in step definition for non-blocking checks.
 
 ### 4. Quarto Document Validation 📄
+
 Validate Quarto documents render correctly:
 
 ```yaml
@@ -113,6 +118,7 @@ Validate Quarto documents render correctly:
 **Rationale:** Ensures technical writing is properly formatted and renders correctly.
 
 ### 5. Website File Validation 🌐
+
 Validate HTML/CSS/JS before deployment:
 
 ```yaml
@@ -126,6 +132,7 @@ Validate HTML/CSS/JS before deployment:
 **Rationale:** Ensures website files are valid and accessible.
 
 ### 6. Security Checks 🔒
+
 Dependency scanning and secret detection:
 
 ```yaml
@@ -137,6 +144,7 @@ Dependency scanning and secret detection:
 **Rationale:** Catch security vulnerabilities early.
 
 ### 7. Documentation Checks 📚
+
 Markdown linting and docstring validation:
 
 ```yaml
@@ -150,6 +158,7 @@ Markdown linting and docstring validation:
 **Rationale:** Maintain documentation quality.
 
 ### 8. Replicant Branch Support 🌳
+
 Include replicant branches in workflow triggers:
 
 ```yaml
@@ -163,6 +172,7 @@ on:
 **Rationale:** CI runs on AI-assisted development branches.
 
 ### 9. Quality Check Scripts 📋
+
 Support standard locations:
 
 ```bash
@@ -174,13 +184,14 @@ fi
 **Rationale:** Flexibility across repositories.
 
 ### 10. Fail-Fast Strategy ⚡
+
 Always include in matrix strategies:
 
 ```yaml
 strategy:
   fail-fast: true
   matrix:
-    python-version: ['3.11', '3.12']
+    python-version: ["3.11", "3.12"]
 ```
 
 **Rationale:** Stop early on first failure to save CI time.
@@ -191,29 +202,29 @@ strategy:
 
 ### Python Tools
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| ruff | 0.5.0 | Fast Python linter |
-| mypy | 1.10.0 | Static type checker |
-| black | 24.4.2 | Code formatter |
-| pytest | 8.3.3 | Testing framework |
-| pytest-cov | 6.0.0 | Coverage plugin |
-| bandit | 1.7.7 | Security scanner |
-| pydocstyle | 6.3.0 | Docstring checker |
+| Tool       | Version | Purpose             |
+| ---------- | ------- | ------------------- |
+| ruff       | 0.5.0   | Fast Python linter  |
+| mypy       | 1.10.0  | Static type checker |
+| black      | 24.4.2  | Code formatter      |
+| pytest     | 8.3.3   | Testing framework   |
+| pytest-cov | 6.0.0   | Coverage plugin     |
+| bandit     | 1.7.7   | Security scanner    |
+| pydocstyle | 6.3.0   | Docstring checker   |
 
 ### Website Tools
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| html-validate | latest | HTML validator |
-| stylelint | latest | CSS linter |
-| markdownlint-cli2 | latest | Markdown linter |
-| pa11y-ci | latest | Accessibility checker |
+| Tool              | Version | Purpose               |
+| ----------------- | ------- | --------------------- |
+| html-validate     | latest  | HTML validator        |
+| stylelint         | latest  | CSS linter            |
+| markdownlint-cli2 | latest  | Markdown linter       |
+| pa11y-ci          | latest  | Accessibility checker |
 
 ### Quarto
 
-| Tool | Version | Purpose |
-|------|---------|---------|
+| Tool   | Version    | Purpose                           |
+| ------ | ---------- | --------------------------------- |
 | quarto | prerelease | Document rendering and validation |
 
 ---
@@ -310,7 +321,7 @@ Security checks run as part of PR quality checks:
 
 - Archive directories
 - Draft directories
-- Generated files (_site/, docs/)
+- Generated files (\_site/, docs/)
 
 ---
 
@@ -332,7 +343,7 @@ python scripts/quality-check.py
 ### Exclusions
 
 - Archive/ and Drafts/ directories
-- Generated files (_site/, docs/, .quarto/)
+- Generated files (\_site/, docs/, .quarto/)
 - Quality check scripts themselves
 
 ---
@@ -382,6 +393,7 @@ python scripts/quality-check.py
 ### Code Quality Rules
 
 See `docs/CODE_QUALITY_RULES.md` for detailed quality requirements for:
+
 - Python code
 - HTML
 - CSS
