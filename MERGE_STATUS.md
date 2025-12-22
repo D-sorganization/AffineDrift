@@ -12,6 +12,7 @@
 ## Current State
 
 ### Files Successfully Merged
+
 - ✅ Quarto configuration (`_quarto.yml`)
 - ✅ Quarto articles (`articles/*.qmd`)
 - ✅ Quarto publishing workflow (`.github/workflows/quarto-publish.yml`)
@@ -21,7 +22,7 @@
 
 ### Known Issues
 
-1. **Full Site Render**: Rendering the entire project (`quarto render`) attempts to process `.md` files that contain code blocks, causing an error. 
+1. **Full Site Render**: Rendering the entire project (`quarto render`) attempts to process `.md` files that contain code blocks, causing an error.
    - **Workaround**: Render articles individually or use `quarto preview` for development
    - **Solution**: Use `.quartoignore` file (already created) to exclude non-Quarto markdown files
 
@@ -43,6 +44,7 @@ quarto preview
 ### Full Site Build
 
 For production builds, you may need to:
+
 1. Ensure `.quartoignore` is properly configured
 2. Or render only specific files/directories
 3. Or use the GitHub Actions workflow which handles this automatically
@@ -76,9 +78,3 @@ For production builds, you may need to:
 ## Backup Location
 
 Calculator backup: `../AffineDrift_backup/Universal_Joint_Model_Enhanced.py`
-
-
-
-
-
-

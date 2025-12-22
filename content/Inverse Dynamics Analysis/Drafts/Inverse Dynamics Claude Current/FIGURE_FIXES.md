@@ -36,7 +36,7 @@
 **Solutions Applied:**
 - ✅ Reduced vertical spacing between measurement lines:
   - $d_m$ at y = -0.9
-  - $d_t$ at y = -1.5  
+  - $d_t$ at y = -1.5
   - $d_b$ at y = -2.1
 - ✅ Labels now only 1mm below arrows (was 2mm)
 - ✅ No overlap between any arrows or labels

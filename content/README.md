@@ -75,4 +75,3 @@ See `archive/README.md` for details about archived content, including:
 - What was archived and why
 - How to recover archived files
 - Archive structure
-

@@ -32,6 +32,7 @@ Changes will automatically deploy in 2-3 minutes!
 ### For Larger Changes
 
 1. **Clone or pull the repository**:
+
    ```bash
    git pull origin main
    ```
@@ -39,6 +40,7 @@ Changes will automatically deploy in 2-3 minutes!
 2. **Make changes locally** in your editor
 
 3. **Test locally**:
+
    ```bash
    python -m http.server 8000
    ```
@@ -61,8 +63,8 @@ Changes will automatically deploy in 2-3 minutes!
 
 ```html
 <blockquote class="featured-quote">
-    <p>"What we do now echoes in eternity"</p>
-    <cite>— Marcus Aurelius</cite>
+  <p>"What we do now echoes in eternity"</p>
+  <cite>— Marcus Aurelius</cite>
 </blockquote>
 ```
 
@@ -74,9 +76,7 @@ Simply replace the text and author name.
 **Location:** Lines 48-59 (Mission section)
 
 ```html
-<p class="mission-text">
-    AffineDrift is dedicated to exploring...
-</p>
+<p class="mission-text">AffineDrift is dedicated to exploring...</p>
 ```
 
 Edit the paragraph content directly.
@@ -87,6 +87,7 @@ Edit the paragraph content directly.
 **Location:** Lines 64-116 (Theory section)
 
 Key areas to edit:
+
 - Introduction paragraphs
 - Mathematical equations (see [Adding Mathematical Equations](#adding-mathematical-equations))
 - Property cards
@@ -95,8 +96,8 @@ Example - editing a property card:
 
 ```html
 <div class="property-card">
-    <h4>Property Name</h4>
-    <p>Description of the property</p>
+  <h4>Property Name</h4>
+  <p>Description of the property</p>
 </div>
 ```
 
@@ -107,9 +108,9 @@ Example - editing a property card:
 
 ```html
 <div class="goal-card">
-    <div class="goal-number">01</div>
-    <h3>Goal Title</h3>
-    <p>Goal description</p>
+  <div class="goal-number">01</div>
+  <h3>Goal Title</h3>
+  <p>Goal description</p>
 </div>
 ```
 
@@ -126,22 +127,23 @@ To add a new goal, copy an entire `<div class="goal-card">...</div>` block and m
 
 ```html
 <div class="resource-card video-card">
-    <div class="resource-header">
-        <span class="resource-type">YouTube</span>
-        <h3>Video Title Here</h3>
-    </div>
-    <p class="resource-description">
-        Brief description of what this video covers and why it's useful.
-    </p>
-    <div class="resource-tags">
-        <span class="tag">Control Theory</span>
-        <span class="tag">Beginner</span>
-    </div>
-    <p class="resource-note">Optional note or call-to-action</p>
+  <div class="resource-header">
+    <span class="resource-type">YouTube</span>
+    <h3>Video Title Here</h3>
+  </div>
+  <p class="resource-description">
+    Brief description of what this video covers and why it's useful.
+  </p>
+  <div class="resource-tags">
+    <span class="tag">Control Theory</span>
+    <span class="tag">Beginner</span>
+  </div>
+  <p class="resource-note">Optional note or call-to-action</p>
 </div>
 ```
 
 **Resource Types:**
+
 - `YouTube` - For video content
 - `Course` - For online courses
 - `Software` - For tools and programs
@@ -149,6 +151,7 @@ To add a new goal, copy an entire `<div class="goal-card">...</div>` block and m
 - `Paper` - For academic papers
 
 **Tags:**
+
 - `Control Theory`, `Differential Geometry`, `Biomechanics`, `Golf`
 - `Fundamentals`, `Advanced`, `Beginner`
 - `Open Source`, `Free`, `Commercial`
@@ -161,8 +164,8 @@ To add a new goal, copy an entire `<div class="goal-card">...</div>` block and m
 
 ```html
 <li>
-    <strong>"Book or Paper Title"</strong> by Author Name
-    <p class="resource-detail">Brief description of content and relevance</p>
+  <strong>"Book or Paper Title"</strong> by Author Name
+  <p class="resource-detail">Brief description of content and relevance</p>
 </li>
 ```
 
@@ -173,15 +176,24 @@ To add a new goal, copy an entire `<div class="goal-card">...</div>` block and m
 
 ```html
 <div class="link-card">
-    <h3>Category Name</h3>
-    <ul class="link-list">
-        <li><a href="https://example.com" target="_blank" rel="noopener">Link Title</a></li>
-        <li><a href="https://example2.com" target="_blank" rel="noopener">Another Link</a></li>
-    </ul>
+  <h3>Category Name</h3>
+  <ul class="link-list">
+    <li>
+      <a href="https://example.com" target="_blank" rel="noopener"
+        >Link Title</a
+      >
+    </li>
+    <li>
+      <a href="https://example2.com" target="_blank" rel="noopener"
+        >Another Link</a
+      >
+    </li>
+  </ul>
 </div>
 ```
 
 **Important:** Always include:
+
 - `target="_blank"` - Opens in new tab
 - `rel="noopener"` - Security best practice
 
@@ -204,40 +216,42 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
 
 ```html
 <div class="equation">
-    \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
+  \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
 </div>
 ```
 
 ### Inline Equations (Within Text)
 
 ```html
-<p>The state space \(x \in \mathbb{R}^n\) represents all possible configurations.</p>
+<p>
+  The state space \(x \in \mathbb{R}^n\) represents all possible configurations.
+</p>
 ```
 
 ### Common LaTeX Symbols
 
-| Symbol | LaTeX Code | Example |
-|--------|------------|---------|
-| Dot notation | `\dot{x}` | \(\dot{x}\) |
-| Partial derivative | `\partial` | \(\partial\) |
-| Integral | `\int` | \(\int\) |
-| Sum | `\sum_{i=1}^{n}` | \(\sum_{i=1}^{n}\) |
-| Greek letters | `\alpha`, `\beta` | \(\alpha, \beta\) |
-| Vectors | `\vec{v}` | \(\vec{v}\) |
-| Real numbers | `\mathbb{R}` | \(\mathbb{R}\) |
-| Subscript | `x_i` | \(x_i\) |
-| Superscript | `x^2` | \(x^2\) |
-| Fraction | `\frac{a}{b}` | \(\frac{a}{b}\) |
+| Symbol             | LaTeX Code        | Example             |
+| ------------------ | ----------------- | ------------------- |
+| Dot notation       | `\dot{x}`         | \(\dot{x}\)         |
+| Partial derivative | `\partial`        | \(\partial\)        |
+| Integral           | `\int`            | \(\int\)            |
+| Sum                | `\sum_{i=1}^{n}`  | \(\sum\_{i=1}^{n}\) |
+| Greek letters      | `\alpha`, `\beta` | \(\alpha, \beta\)   |
+| Vectors            | `\vec{v}`         | \(\vec{v}\)         |
+| Real numbers       | `\mathbb{R}`      | \(\mathbb{R}\)      |
+| Subscript          | `x_i`             | \(x_i\)             |
+| Superscript        | `x^2`             | \(x^2\)             |
+| Fraction           | `\frac{a}{b}`     | \(\frac{a}{b}\)     |
 
 ### Equation Explanation Block
 
 ```html
 <div class="equation-explanation">
-    <p>where:</p>
-    <ul>
-        <li>\(x \in \mathbb{R}^n\) is the state vector</li>
-        <li>\(u_i\) are the control inputs</li>
-    </ul>
+  <p>where:</p>
+  <ul>
+    <li>\(x \in \mathbb{R}^n\) is the state vector</li>
+    <li>\(u_i\) are the control inputs</li>
+  </ul>
 </div>
 ```
 
@@ -252,6 +266,7 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
    - Browser console for errors
 
 **Resources:**
+
 - [LaTeX Math Symbols Reference](https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf)
 - [MathJax Documentation](https://docs.mathjax.org/)
 
@@ -266,17 +281,18 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
 
 ```css
 :root {
-    --primary-dark: #1a1a2e;
-    --primary-blue: #0f4c75;
-    --accent-blue: #3282b8;
-    --light-blue: #bbe1fa;
-    --math-gold: #d4af37;
+  --primary-dark: #1a1a2e;
+  --primary-blue: #0f4c75;
+  --accent-blue: #3282b8;
+  --light-blue: #bbe1fa;
+  --math-gold: #d4af37;
 }
 ```
 
 Change the hex color codes to update colors site-wide.
 
 **Finding Colors:**
+
 - [Adobe Color](https://color.adobe.com/)
 - [Coolors](https://coolors.co/)
 - [HTML Color Codes](https://htmlcolorcodes.com/)
@@ -288,11 +304,16 @@ Change the hex color codes to update colors site-wide.
 
 ```css
 body {
-    font-family: 'Charter', 'Georgia', 'Times New Roman', serif;
+  font-family: "Charter", "Georgia", "Times New Roman", serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Computer Modern', 'Latin Modern', 'Palatino', serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Computer Modern", "Latin Modern", "Palatino", serif;
 }
 ```
 
@@ -310,17 +331,17 @@ Common adjustments in `styles.css`:
 ```css
 /* Section padding */
 section {
-    padding: 5rem 0;  /* Adjust this value */
+  padding: 5rem 0; /* Adjust this value */
 }
 
 /* Font sizes */
 .site-title {
-    font-size: 4rem;  /* Adjust heading size */
+  font-size: 4rem; /* Adjust heading size */
 }
 
 /* Container width */
 .container {
-    max-width: 1200px;  /* Adjust content width */
+  max-width: 1200px; /* Adjust content width */
 }
 ```
 
@@ -335,13 +356,20 @@ section {
 
 ```html
 <head>
-    <title>AffineDrift - Affine Control Theory & Golf Swing Dynamics</title>
-    <meta name="description" content="Mathematical modeling of the golf swing as an affine controllable system">
-    <meta name="keywords" content="affine control, golf swing, biomechanics, control theory">
+  <title>AffineDrift - Affine Control Theory & Golf Swing Dynamics</title>
+  <meta
+    name="description"
+    content="Mathematical modeling of the golf swing as an affine controllable system"
+  />
+  <meta
+    name="keywords"
+    content="affine control, golf swing, biomechanics, control theory"
+  />
 </head>
 ```
 
 **Best Practices:**
+
 - Title: 50-60 characters
 - Description: 150-160 characters
 - Keywords: 5-10 relevant terms
@@ -351,10 +379,13 @@ section {
 Add Open Graph tags to `<head>`:
 
 ```html
-<meta property="og:title" content="AffineDrift - Golf Swing Control Theory">
-<meta property="og:description" content="Exploring the mathematics of the golf swing">
-<meta property="og:image" content="https://affinedrift.com/preview-image.jpg">
-<meta property="og:url" content="https://affinedrift.com">
+<meta property="og:title" content="AffineDrift - Golf Swing Control Theory" />
+<meta
+  property="og:description"
+  content="Exploring the mathematics of the golf swing"
+/>
+<meta property="og:image" content="https://affinedrift.com/preview-image.jpg" />
+<meta property="og:url" content="https://affinedrift.com" />
 ```
 
 ### Favicon
@@ -366,7 +397,7 @@ Add a favicon (website icon in browser tab):
 3. Add to `<head>`:
 
 ```html
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png" />
 ```
 
 ---
@@ -399,6 +430,7 @@ Add a favicon (website icon in browser tab):
    - Be descriptive: `golf-biomechanics-resources.html`
 
 2. **Folder Structure** (if adding images/assets)
+
    ```
    AffineDrift/
    ├── index.html
@@ -460,8 +492,9 @@ Before pushing changes:
    - Limit use of large fonts
 
 2. **Lazy Load Images** (if adding many images)
+
    ```html
-   <img src="image.jpg" loading="lazy" alt="Description">
+   <img src="image.jpg" loading="lazy" alt="Description" />
    ```
 
 3. **Use CDN for Libraries**

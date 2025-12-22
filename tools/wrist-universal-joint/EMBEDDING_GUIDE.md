@@ -21,8 +21,8 @@ You now have **two beautiful versions** of the simulator that can be embedded in
 Simply link to the file from any page:
 
 ```html
-<a href="content/Wrist as Universal Joint/grip_angle_simulator.html" 
-   class="button" 
+<a href="content/Wrist as Universal Joint/grip_angle_simulator.html"
+   class="button"
    target="_blank">
    🏌️ Launch Grip Angle Simulator
 </a>
@@ -36,11 +36,11 @@ Add to any HTML page (e.g., `modelling.html`):
     <div class="container">
         <h2>Grip Angle Torque Transmission Simulator</h2>
         <p>Interactive tool to visualize how grip angle affects torque transmission and angular acceleration.</p>
-        
-        <iframe 
-            src="content/Wrist as Universal Joint/grip_angle_simulator.html" 
-            height="1000" 
-            width="100%" 
+
+        <iframe
+            src="content/Wrist as Universal Joint/grip_angle_simulator.html"
+            height="1000"
+            width="100%"
             frameborder="0"
             scrolling="auto"
             style="border: 1px solid #ddd; border-radius: 8px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -93,10 +93,10 @@ Copy the content from `grip_angle_simulator.html` and integrate it directly into
 
 4. **Embed in HTML:**
 ```html
-<iframe 
-    src="https://your-app.streamlit.app/?embed=true" 
-    height="900" 
-    width="100%" 
+<iframe
+    src="https://your-app.streamlit.app/?embed=true"
+    height="900"
+    width="100%"
     frameborder="0"
     style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
 </iframe>
@@ -140,21 +140,21 @@ Add this to `modelling.html` or create a new page:
 </head>
 <body>
     <!-- Your existing header/nav -->
-    
+
     <section id="simulator" class="interactive-section">
         <div class="container">
             <h2>Grip Angle Torque Transmission Simulator</h2>
             <p>Explore how grip angle affects torque transmission and club motion.</p>
-            
+
             <!-- JavaScript Version (Recommended) -->
-            <iframe 
-                src="content/Wrist as Universal Joint/grip_angle_simulator.html" 
-                height="1000" 
-                width="100%" 
+            <iframe
+                src="content/Wrist as Universal Joint/grip_angle_simulator.html"
+                height="1000"
+                width="100%"
                 frameborder="0"
                 style="border: 1px solid #ddd; border-radius: 8px; margin: 20px 0;">
             </iframe>
-            
+
             <!-- OR Streamlit Version (if deployed) -->
             <!--
             <iframe 
@@ -167,7 +167,7 @@ Add this to `modelling.html` or create a new page:
             -->
         </div>
     </section>
-    
+
     <!-- Your existing footer -->
 </body>
 </html>
@@ -245,4 +245,3 @@ Both versions include:
 ---
 
 Enjoy your shiny new interactive simulator! 🎉
-

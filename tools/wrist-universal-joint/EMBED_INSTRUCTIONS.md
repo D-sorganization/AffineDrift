@@ -31,17 +31,17 @@ Add this to any HTML page (e.g., `modelling.html` or create a new page):
     <div class="container">
         <h2>Grip Angle Torque Transmission Simulator</h2>
         <p>Interactive tool to visualize how grip angle affects torque transmission and angular acceleration.</p>
-        
+
         <!-- Embed Streamlit app -->
-        <iframe 
-            src="https://your-app.streamlit.app/?embed=true" 
-            height="800" 
-            width="100%" 
+        <iframe
+            src="https://your-app.streamlit.app/?embed=true"
+            height="800"
+            width="100%"
             frameborder="0"
             scrolling="auto"
             style="border: 1px solid #ddd; border-radius: 8px; margin: 20px 0;">
         </iframe>
-        
+
         <p class="note">
             <small>Note: This interactive simulator requires JavaScript to be enabled.</small>
         </p>
@@ -97,4 +97,3 @@ The Streamlit version I created includes all the same features:
 - Torque and acceleration plots
 - Side-by-side comparison
 - All calculations and physics
-

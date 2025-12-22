@@ -17,7 +17,7 @@ Quarto preview has been started in the background. The preview server should be 
 ## What You'll See
 
 - **Homepage**: Main index page
-- **Articles**: 
+- **Articles**:
   - `/articles/wrist-universal-joint.html` - Wrist Universal Joint article
   - `/articles/inverse-dynamics.html` - Inverse Dynamics article
 - **Navigation**: All navbar links should work
@@ -27,6 +27,7 @@ Quarto preview has been started in the background. The preview server should be 
 ## Stopping the Preview
 
 To stop the preview server:
+
 - Press `Ctrl+C` in the terminal where it's running
 - Or close the terminal window
 - Or find the process and kill it
@@ -34,6 +35,7 @@ To stop the preview server:
 ## Troubleshooting
 
 If the preview doesn't load:
+
 1. Check that Quarto is running: Look for the process in Task Manager
 2. Try a different port: `quarto preview --port 4201`
 3. Check for errors in the terminal output
@@ -42,6 +44,7 @@ If the preview doesn't load:
 ## Testing Checklist
 
 While preview is running, test:
+
 - [ ] Homepage loads correctly
 - [ ] Navigation links work
 - [ ] Articles display properly
@@ -49,9 +52,3 @@ While preview is running, test:
 - [ ] Code blocks have syntax highlighting
 - [ ] Links to calculator tools work
 - [ ] Mobile responsive (resize browser window)
-
-
-
-
-
-

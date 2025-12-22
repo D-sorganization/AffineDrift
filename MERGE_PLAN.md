@@ -1,11 +1,13 @@
 # Merge Plan: Quarto Branch Integration
 
 ## Overview
+
 This document outlines the plan to merge the `claude/fix-quarto-equations` branch into `main` while preserving the upgraded calculator (`Universal_Joint_Model_Enhanced.py`) that was added in the most recent commit.
 
 ## Current State
 
 ### Main Branch (be5f286)
+
 - **Upgraded Calculator**: `content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py`
   - Enhanced PyQt6 GUI with proper universal joint mechanics
   - Distinguishes grip angle (θ_grip) from wrist angle (φ)
@@ -14,16 +16,15 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
   - **This file must be preserved**
 
 ### Quarto Branch (d58b361)
+
 - **Quarto Conversion**: Converted LaTeX articles to Quarto format
   - `articles/wrist-universal-joint.qmd` - Quarto version of wrist article
   - `articles/inverse-dynamics.qmd` - Quarto version of inverse dynamics article
   - `_quarto.yml` - Quarto project configuration
   - New publishing workflow: `.github/workflows/quarto-publish.yml`
-  
 - **Removed Files**:
   - `content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` ❌ (DELETED - must restore)
   - Various documentation files (MATHEMATICAL_DERIVATION.md, README_ENHANCED_MODEL.md, etc.)
-  
 - **Modified Files**:
   - `content/Wrist as Universal Joint/Grip_Angle_Torque_Transmission.py` (modified)
   - Navigation and HTML pages updated
@@ -32,7 +33,9 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
 ## Merge Strategy
 
 ### Option 1: Merge with Conflict Resolution (Recommended)
+
 1. **Create a merge branch from main**
+
    ```bash
    git checkout main
    git pull origin main  # Ensure we're up to date
@@ -40,6 +43,7 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
    ```
 
 2. **Merge the quarto branch**
+
    ```bash
    git merge origin/claude/fix-quarto-equations-01MdB1MLoz71dWc71wjFq3cc
    ```
@@ -49,6 +53,7 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
    - Review other conflicts and resolve appropriately
 
 4. **Verify the calculator is present**:
+
    ```bash
    ls -la "content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py"
    ```
@@ -59,9 +64,11 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
    - Check that navigation links work
 
 ### Option 2: Cherry-pick Approach
+
 If merge conflicts are too complex:
 
 1. **Create integration branch**
+
    ```bash
    git checkout main
    git checkout -b integrate-quarto
@@ -133,6 +140,7 @@ If merge conflicts are too complex:
 ## Backup Location
 
 The upgraded calculator has been backed up to:
+
 - `../AffineDrift_backup/Universal_Joint_Model_Enhanced.py`
 
 This backup can be used to restore the file if needed during merge.
@@ -144,9 +152,3 @@ This backup can be used to restore the file if needed during merge.
 3. Test thoroughly
 4. Create PR for review
 5. Merge to main
-
-
-
-
-
-

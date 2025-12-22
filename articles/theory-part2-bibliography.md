@@ -2,24 +2,24 @@
 
 ## A) Concept Map
 
-*   **Decomposition Frameworks**
-    *   **Affine Control Systems**: The structural basis $\dot{x} = f(x) + g(x)u$.
-    *   **Passive vs. Active**: Separating natural dynamics ($f$) from forced response ($g$).
-    *   **Underactuation**: Systems where dim($u$) < dim($q$), relying on drift.
+- **Decomposition Frameworks**
+  - **Affine Control Systems**: The structural basis $\dot{x} = f(x) + g(x)u$.
+  - **Passive vs. Active**: Separating natural dynamics ($f$) from forced response ($g$).
+  - **Underactuation**: Systems where dim($u$) < dim($q$), relying on drift.
 
-*   **Counterfactual Diagnostics**
-    *   **Zero Torque Counterfactual (ZTCF)**: Simulating the "drift-only" trajectory ($u=0$).
-    *   **Zero Velocity Counterfactual (ZVCF)**: Isolating configuration-dependent forces (gravity, stiffness).
-    *   **Causal Attribution**: Using model interventions to assign cause to forces.
+- **Counterfactual Diagnostics**
+  - **Zero Torque Counterfactual (ZTCF)**: Simulating the "drift-only" trajectory ($u=0$).
+  - **Zero Velocity Counterfactual (ZVCF)**: Isolating configuration-dependent forces (gravity, stiffness).
+  - **Causal Attribution**: Using model interventions to assign cause to forces.
 
-*   **Dynamics & Mechanics**
-    *   **Passive Dynamic Walking**: Exploiting natural gait dynamics (McGeer).
-    *   **Impedance/Admittance**: How systems respond to external forces.
-    *   **Geometric Control**: Analyzing vector fields on manifolds.
+- **Dynamics & Mechanics**
+  - **Passive Dynamic Walking**: Exploiting natural gait dynamics (McGeer).
+  - **Impedance/Admittance**: How systems respond to external forces.
+  - **Geometric Control**: Analyzing vector fields on manifolds.
 
-*   **Biomechanics Context**
-    *   **Muscle Synergy**: Coordinated activation to manage degrees of freedom.
-    *   **Inverse Dynamics Interpretation**: The danger of interpreting net torque as "effort".
+- **Biomechanics Context**
+  - **Muscle Synergy**: Coordinated activation to manage degrees of freedom.
+  - **Inverse Dynamics Interpretation**: The danger of interpreting net torque as "effort".
 
 ## B) Bibliography (YAML)
 
@@ -71,7 +71,8 @@
   venue: "Nature Neuroscience"
   scholar_link: "https://scholar.google.com/scholar?q=Optimal+feedback+control+as+a+theory+of+motor+coordination+Todorov"
   clusters: ["motor control", "neuroscience", "optimal control"]
-  concepts: ["minimum intervention principle", "uncontrolled manifold", "feedback"]
+  concepts:
+    ["minimum intervention principle", "uncontrolled manifold", "feedback"]
   related_ids: ["zajac1993muscle", "latash2008synergy"]
   references_out_ids: []
 
@@ -230,28 +231,34 @@
 ## C) Reading Paths
 
 ### Path 1: Fast Ramp (The "Why" of Drift)
-*Target: Understand why we separate active and passive forces.*
-1.  **McGeer (1990)** - *Passive Dynamic Walking*. The classic proof that "dumb" physics can look like "smart" control.
-2.  **Collins et al. (2005)** - *Efficient bipedal robots...*. Demonstrates passive dynamics in physical robots.
-3.  **Vaughan (1982)** - *Biomechanics of the golf swing*. Early biomechanical context for golf.
-4.  **Todorov & Jordan (2002)** - *Optimal feedback control...*. Introduces the "minimum intervention" principle (only control what matters, let drift handle the rest).
-5.  **Pearl (2009)** - *Causality* (Introductory chapters). The logic of "Intervention" ($do(u=0)$) which is the basis for the ZTCF.
+
+_Target: Understand why we separate active and passive forces._
+
+1.  **McGeer (1990)** - _Passive Dynamic Walking_. The classic proof that "dumb" physics can look like "smart" control.
+2.  **Collins et al. (2005)** - _Efficient bipedal robots..._. Demonstrates passive dynamics in physical robots.
+3.  **Vaughan (1982)** - _Biomechanics of the golf swing_. Early biomechanical context for golf.
+4.  **Todorov & Jordan (2002)** - _Optimal feedback control..._. Introduces the "minimum intervention" principle (only control what matters, let drift handle the rest).
+5.  **Pearl (2009)** - _Causality_ (Introductory chapters). The logic of "Intervention" ($do(u=0)$) which is the basis for the ZTCF.
 
 ### Path 2: Deep Technical (Geometric & Control Theory)
-*Target: The mathematical machinery for $\dot{x} = f(x) + g(x)u$.*
-1.  **Bullo & Lewis (2004)** - *Geometric Control of Mechanical Systems*. Rigorous treatment of mechanical drift and controllability.
-2.  **Spong (1998)** - *Underactuated Mechanical Systems*. Analyzing systems where you can't push in every direction directly.
-3.  **Nijmeijer & van der Schaft (1990)** - *Nonlinear Dynamical Control Systems*. For the definitions of input-affine systems.
-4.  **Lynch & Park (2017)** - *Modern Robotics*. A comprehensive modern reference.
-5.  **Khatib (1987)** - *Operational Space*. How to project dynamics into task space.
-6.  **Bernstein (1967)** - *Co-ordination and Regulation of Movements*. The foundational definition of the degrees-of-freedom problem.
-7.  **Latash (2008)** - *Synergy*. Deep dive into the "Uncontrolled Manifold" hypothesis which aligns with drift.
-8.  **Harris & Wolpert (1998)** - *Signal-dependent noise*. Theoretical justification for why brains minimize active torque (input minimization).
+
+_Target: The mathematical machinery for $\dot{x} = f(x) + g(x)u$._
+
+1.  **Bullo & Lewis (2004)** - _Geometric Control of Mechanical Systems_. Rigorous treatment of mechanical drift and controllability.
+2.  **Spong (1998)** - _Underactuated Mechanical Systems_. Analyzing systems where you can't push in every direction directly.
+3.  **Nijmeijer & van der Schaft (1990)** - _Nonlinear Dynamical Control Systems_. For the definitions of input-affine systems.
+4.  **Lynch & Park (2017)** - _Modern Robotics_. A comprehensive modern reference.
+5.  **Khatib (1987)** - _Operational Space_. How to project dynamics into task space.
+6.  **Bernstein (1967)** - _Co-ordination and Regulation of Movements_. The foundational definition of the degrees-of-freedom problem.
+7.  **Latash (2008)** - _Synergy_. Deep dive into the "Uncontrolled Manifold" hypothesis which aligns with drift.
+8.  **Harris & Wolpert (1998)** - _Signal-dependent noise_. Theoretical justification for why brains minimize active torque (input minimization).
 
 ### Path 3: Implementation (Simulation & Analysis)
-*Target: Tools for calculating these counterfactuals.*
-1.  **Pandy (2001)** - *Computer modeling...*. Overview of forward dynamics simulation in biomechanics.
-2.  **Anderson & Pandy (2001)** - *Dynamic optimization...*. Practical example of large-scale forward simulation.
+
+_Target: Tools for calculating these counterfactuals._
+
+1.  **Pandy (2001)** - _Computer modeling..._. Overview of forward dynamics simulation in biomechanics.
+2.  **Anderson & Pandy (2001)** - _Dynamic optimization..._. Practical example of large-scale forward simulation.
 3.  **Drake (Tedrake et al.)** - (See Part 1) The gold standard for passive/active dynamics analysis.
 4.  **Pinocchio** - (See Part 1) Fast recursive algorithms for $M(q)$ and Coriolis terms.
 5.  **SciPy (<code>solve_ivp</code>)** - Using standard integrators to run the ZTCF ($u=0$) trajectory.

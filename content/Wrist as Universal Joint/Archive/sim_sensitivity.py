@@ -23,7 +23,7 @@ angles_rad = np.radians(angles_deg)
 
 def simulate_impact(angle_rad, total_torque):
     """
-    Projects the total constraint torque onto the Shaft (Beta) 
+    Projects the total constraint torque onto the Shaft (Beta)
     and Swing Plane (Alpha) axes based on grip angle.
     Returns the resulting angular displacement in degrees.
     """

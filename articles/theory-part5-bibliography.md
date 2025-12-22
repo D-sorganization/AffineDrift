@@ -2,24 +2,24 @@
 
 ## A) Concept Map
 
-*   **Forward Dynamics Modeling**
-    *   **Simulink Implementation**: Using a block-diagram environment for equation solving.
-    *   **Flexible Beam Theory**: Modeling the golf shaft using finite-dimensional modal approximations (Euler-Bernoulli).
-    *   **Integration**: Using stiff solvers (`ode15s`) to handle the timescale separation between rigid body motion and shaft vibrations.
+- **Forward Dynamics Modeling**
+  - **Simulink Implementation**: Using a block-diagram environment for equation solving.
+  - **Flexible Beam Theory**: Modeling the golf shaft using finite-dimensional modal approximations (Euler-Bernoulli).
+  - **Integration**: Using stiff solvers (`ode15s`) to handle the timescale separation between rigid body motion and shaft vibrations.
 
-*   **Force Decomposition**
-    *   **Zero Torque Counterfactual (ZTCF)**: Isolating the "passive" component of motion by killing active inputs.
-    *   **Zero Velocity Counterfactual (ZVCF)**: Isolating the configuration-dependent forces (gravity, stiffness) from velocity-dependent ones.
-    *   **Drift vs. Input**: $\tau_{\mathrm{total}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}}$.
-    *   **Kill-Switches**: The numerical technique used to reset integrators/torques to evaluate counterfactuals.
+- **Force Decomposition**
+  - **Zero Torque Counterfactual (ZTCF)**: Isolating the "passive" component of motion by killing active inputs.
+  - **Zero Velocity Counterfactual (ZVCF)**: Isolating the configuration-dependent forces (gravity, stiffness) from velocity-dependent ones.
+  - **Drift vs. Input**: $\tau_{\mathrm{total}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}}$.
+  - **Kill-Switches**: The numerical technique used to reset integrators/torques to evaluate counterfactuals.
 
-*   **Interaction Forces**
-    *   **Hand-Club Coupling**: The forces transmitted between the golfer and the club.
-    *   **Passive Momentum**: The contribution of the club's inertia and velocity to the felt force.
+- **Interaction Forces**
+  - **Hand-Club Coupling**: The forces transmitted between the golfer and the club.
+  - **Passive Momentum**: The contribution of the club's inertia and velocity to the felt force.
 
-*   **Validation**
-    *   **Numerical Identity**: $F_{\mathrm{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$.
-    *   **Trajectory Comparison**: Verifying that the model produces realistic clubhead speeds and kinematics.
+- **Validation**
+  - **Numerical Identity**: $F_{\mathrm{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$.
+  - **Trajectory Comparison**: Verifying that the model produces realistic clubhead speeds and kinematics.
 
 ## B) Bibliography (YAML)
 
@@ -331,28 +331,34 @@
 ## C) Reading Paths
 
 ### Path 1: Fast Ramp (Foundations)
-*Target: Understand the simulation context.*
-1.  **Olson (2024)** - *Two Hand Golf Swing Model*. The codebase for the simulation.
-2.  **MacKenzie & Sprigings (2009)** - *Forward dynamics model*. The standard for why we build these models.
-3.  **Shampine & Reichelt (1997)** - *MATLAB ODE Suite*. Essential for the numerical "kill switch" implementation.
-4.  **Featherstone (2008)** - *Rigid Body Dynamics Algorithms*. The physics engine underlying the blocks.
-5.  **Spong et al. (2005)** - *Robot Modeling and Control*. The theoretical language.
+
+_Target: Understand the simulation context._
+
+1.  **Olson (2024)** - _Two Hand Golf Swing Model_. The codebase for the simulation.
+2.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_. The standard for why we build these models.
+3.  **Shampine & Reichelt (1997)** - _MATLAB ODE Suite_. Essential for the numerical "kill switch" implementation.
+4.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_. The physics engine underlying the blocks.
+5.  **Spong et al. (2005)** - _Robot Modeling and Control_. The theoretical language.
 
 ### Path 2: Deep Technical (Theory & Methods)
-*Target: Master the flexible MBD and stiff integration.*
-1.  **Shabana (2020)** - *Dynamics of Multibody Systems*. Deep dive into flexible body dynamics.
-2.  **Simo & Vu-Quoc (1986)** - *Dynamics of flexible beams*. The rigorous beam theory.
-3.  **Hairer & Wanner (1996)** - *Solving ODEs II*. Why stiff solvers are needed.
-4.  **Kane & Levinson (1985)** - *Dynamics*. Alternate formulation often used in validation.
-5.  **Nesbit (2005)** - *Inverse dynamics*. The counter-perspective to forward simulation.
-6.  **McGeer (1990)** - *Passive Dynamic Walking*. The origin of "drift" as a useful concept.
-7.  **Lynch & Park (2017)** - *Modern Robotics*. Geometric insights.
-8.  **Meirovitch (2001)** - *Vibrations*. Modal analysis background.
+
+_Target: Master the flexible MBD and stiff integration._
+
+1.  **Shabana (2020)** - _Dynamics of Multibody Systems_. Deep dive into flexible body dynamics.
+2.  **Simo & Vu-Quoc (1986)** - _Dynamics of flexible beams_. The rigorous beam theory.
+3.  **Hairer & Wanner (1996)** - _Solving ODEs II_. Why stiff solvers are needed.
+4.  **Kane & Levinson (1985)** - _Dynamics_. Alternate formulation often used in validation.
+5.  **Nesbit (2005)** - _Inverse dynamics_. The counter-perspective to forward simulation.
+6.  **McGeer (1990)** - _Passive Dynamic Walking_. The origin of "drift" as a useful concept.
+7.  **Lynch & Park (2017)** - _Modern Robotics_. Geometric insights.
+8.  **Meirovitch (2001)** - _Vibrations_. Modal analysis background.
 
 ### Path 3: Implementation (Software & Validation)
-*Target: Replicating the results.*
-1.  **Olson (2024)** - *Two Hand Golf Swing Model*. (Download from MathWorks).
-2.  **Shampine (1997)** - *MATLAB ODE Suite*. (Reference for ode15s/ode23t).
-3.  **MathWorks (2024)** - *Simscape Multibody*. (The engine documentation).
-4.  **MacKenzie (2009)** - *Validation Data*. Compare swing speeds/torques.
-5.  **Sprigings & Neal (2000)** - *Wrist Torque*. Validation of specific joint loading.
+
+_Target: Replicating the results._
+
+1.  **Olson (2024)** - _Two Hand Golf Swing Model_. (Download from MathWorks).
+2.  **Shampine (1997)** - _MATLAB ODE Suite_. (Reference for ode15s/ode23t).
+3.  **MathWorks (2024)** - _Simscape Multibody_. (The engine documentation).
+4.  **MacKenzie (2009)** - _Validation Data_. Compare swing speeds/torques.
+5.  **Sprigings & Neal (2000)** - _Wrist Torque_. Validation of specific joint loading.
