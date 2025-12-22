@@ -3261,3 +3261,47 @@ mjx-container * {
 .external-link:hover::after {
   opacity: 1;
 }
+
+/* ===========================
+   Print Styles
+   =========================== */
+@media print {
+  /* Hide non-content elements */
+  header, footer, .left-sidebar, .right-sidebar, .resources-sidebar,
+  .nav-toggle, .sidebar-toggle, .back-to-top, .copy-btn, .skip-to-content,
+  .screen-overlay, .article-navigation, .comments-section, .footer-social {
+    display: none !important;
+  }
+
+  /* Nuclear reset for print colors/backgrounds to save ink */
+  *, *::before, *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Layout resets for print */
+  body, .main-content, .standard-page-layout,
+  #quarto-content .standard-page-layout .main-content-area,
+  body .standard-page-layout .main-content-area {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    float: none !important;
+  }
+
+  /* Link visibility */
+  a {
+    text-decoration: underline !important;
+    color: black !important;
+  }
+
+  /* Avoid breaks */
+  h2, h3, .equation-block, pre, blockquote, .component {
+    break-inside: avoid;
+  }
+}
