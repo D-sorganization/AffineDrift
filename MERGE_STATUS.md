@@ -12,6 +12,7 @@
 ## Current State
 
 ### Files Successfully Merged
+
 - ✅ Quarto configuration (`_quarto.yml`)
 - ✅ Quarto articles (`articles/*.qmd`)
 - ✅ Quarto publishing workflow (`.github/workflows/quarto-publish.yml`)
@@ -21,7 +22,8 @@
 
 ### Known Issues
 
-1. **Full Site Render**: Rendering the entire project (`quarto render`) attempts to process `.md` files that contain code blocks, causing an error. 
+1. **Full Site Render**: Rendering the entire project (`quarto render`) attempts to process `.md` files that contain code blocks, causing an error.
+
    - **Workaround**: Render articles individually or use `quarto preview` for development
    - **Solution**: Use `.quartoignore` file (already created) to exclude non-Quarto markdown files
 
@@ -43,6 +45,7 @@ quarto preview
 ### Full Site Build
 
 For production builds, you may need to:
+
 1. Ensure `.quartoignore` is properly configured
 2. Or render only specific files/directories
 3. Or use the GitHub Actions workflow which handles this automatically
@@ -50,12 +53,14 @@ For production builds, you may need to:
 ## Next Steps
 
 1. **Test Locally**:
+
    - [ ] Run `quarto preview` to test the site interactively
    - [ ] Verify all navigation links work
    - [ ] Check that math equations render correctly
    - [ ] Verify calculator still runs: `python "content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py"`
 
 2. **Before Pushing to Main**:
+
    - [ ] Test full site render (or verify CI/CD will handle it)
    - [ ] Check that all HTML pages are generated correctly
    - [ ] Verify no broken links
@@ -76,9 +81,3 @@ For production builds, you may need to:
 ## Backup Location
 
 Calculator backup: `../AffineDrift_backup/Universal_Joint_Model_Enhanced.py`
-
-
-
-
-
-

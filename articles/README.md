@@ -6,7 +6,7 @@ This directory contains Quarto articles converted from LaTeX source files.
 
 - **wrist-universal-joint.qmd**: Constraint Torques at the Wrist article
 - **inverse-dynamics.qmd**: Interpretation of Inverse Dynamics article
-- **_metadata.yml**: Shared configuration for all articles
+- **\_metadata.yml**: Shared configuration for all articles
 
 ## Editing Articles
 
@@ -15,16 +15,18 @@ Quarto uses Markdown with LaTeX equations:
 ```markdown
 ## Section Heading
 
-Regular text with **bold** and *italic*.
+Regular text with **bold** and _italic_.
 
 Inline equation: $E = mc^2$
 
 Display equation:
+
 $$
 F = ma
 $$ {#eq-force}
 
 Reference: See @eq-force
+$$
 ```
 
 ## Preview Changes
@@ -51,6 +53,7 @@ quarto render articles/wrist-universal-joint.qmd
 
 1. Create new `.qmd` file in this directory
 2. Add YAML frontmatter:
+
 ```yaml
 ---
 title: "Article Title"
@@ -58,6 +61,7 @@ author: "AffineDrift"
 date: "2025-01-26"
 ---
 ```
+
 3. Write content in Markdown with LaTeX equations
 4. Render to preview
 

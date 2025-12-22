@@ -218,14 +218,12 @@ def generate_sample_torque(
             torque = t**2 - t
         except (TypeError, ValueError) as e:
             st.session_state.polynomial_error = (
-                f"Error in polynomial expression: {type(e).__name__}. "
-                "Please check your formula."
+                f"Error in polynomial expression: {type(e).__name__}. " "Please check your formula."
             )
             torque = t**2 - t
         except (ArithmeticError, OverflowError, ZeroDivisionError):
             st.session_state.polynomial_error = (
-                "Unexpected error evaluating polynomial expression. "
-                "Please check your formula."
+                "Unexpected error evaluating polynomial expression. " "Please check your formula."
             )
             torque = t**2 - t
     else:
@@ -613,16 +611,8 @@ def plot_acceleration(
         theta_grip_rad,
     )
     epsilon = 1e-6
-    accel_alpha = (
-        torque_alpha / i_alpha
-        if i_alpha > epsilon
-        else np.zeros_like(torque_alpha)
-    )
-    accel_gamma = (
-        torque_gamma / i_gamma
-        if i_gamma > epsilon
-        else np.zeros_like(torque_gamma)
-    )
+    accel_alpha = torque_alpha / i_alpha if i_alpha > epsilon else np.zeros_like(torque_alpha)
+    accel_gamma = torque_gamma / i_gamma if i_gamma > epsilon else np.zeros_like(torque_gamma)
 
     if show_alpha:
         ax.plot(
@@ -753,8 +743,7 @@ def plot_transmission_sweep(
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
     ax.set_title(
-        f"Universal Joint Transmission vs Wrist Deviation Angle "
-        f"(Grip={grip_angle_deg:.0f}°)",
+        f"Universal Joint Transmission vs Wrist Deviation Angle " f"(Grip={grip_angle_deg:.0f}°)",
         fontsize=12,
         fontweight="bold",
     )

@@ -1,6 +1,7 @@
 # DNS Configuration for GitHub Pages Custom Domain
 
 ## Current Setup
+
 - **Repository**: D-sorganization/AffineDrift
 - **Custom Domain**: www.affinedrift.com
 - **CNAME File**: ✅ Correctly configured in repository
@@ -52,18 +53,21 @@ TTL: 3600
 ## Troubleshooting
 
 ### If DNS is configured but GitHub still shows error:
+
 1. Wait a few hours for DNS propagation
 2. Clear browser cache
 3. Check that CNAME record points to: `d-sorganization.github.io` (not `d-sorganization.github.io/AffineDrift`)
 4. Verify no conflicting DNS records exist
 
 ### Temporary Solution:
+
 If you want to use the default GitHub Pages URL while fixing DNS:
+
 - Remove or rename the `CNAME` file
 - Site will be available at: `https://d-sorganization.github.io/AffineDrift/`
 
 ## Current Status
+
 - ✅ CNAME file in repository: Correct
 - ❌ DNS records at registrar: Need to be configured
 - ⏳ Waiting for DNS propagation after configuration
-

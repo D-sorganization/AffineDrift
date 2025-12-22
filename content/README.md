@@ -39,11 +39,13 @@ content/
 **Recommended workflow:**
 
 1. **Create drafts in `content/`** - Work on articles here while developing
+
    ```
    content/drafts/my-new-article.qmd
    ```
 
 2. **When ready to publish** - Move to `articles/`
+
    ```bash
    git mv content/drafts/my-new-article.qmd articles/my-new-article.qmd
    ```
@@ -57,14 +59,17 @@ This keeps your published content clean and organized while giving you a place t
 ## Adding New Content
 
 ### For Published Articles
+
 **Add new published articles to `articles/`**, not here. See `articles/README.md` for instructions.
 
 ### For Source Material
+
 - Keep LaTeX `.tex` files here organized by topic
 - Keep drafts in subdirectories until ready to publish
 - Move to `articles/` when ready to publish
 
 ### For Specialized Content
+
 - Use topic-specific subdirectories (like `Double Pendulum Articles/`)
 - Update `_quarto.yml` if you want them rendered automatically
 - Or link to them manually from other pages
@@ -72,7 +77,7 @@ This keeps your published content clean and organized while giving you a place t
 ## Archive
 
 See `archive/README.md` for details about archived content, including:
+
 - What was archived and why
 - How to recover archived files
 - Archive structure
-

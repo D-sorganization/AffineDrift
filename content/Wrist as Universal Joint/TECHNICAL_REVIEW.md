@@ -1,4 +1,5 @@
 # Technical Review: Wrist as Universal Joint Model
+
 ## Date: 2025-11-25
 
 ## Executive Summary
@@ -8,6 +9,7 @@ This document reviews the current wrist-as-universal-joint model implementation 
 ## Current Model Review
 
 ### Files Analyzed
+
 1. `Grip_Angle_Torque_Transmission.py` (907 lines) - PyQt6 GUI
 2. `Wrist_Universal_Claude.tex` (556 lines) - Main LaTeX article
 3. `Grip_Angle_Torque_Transmission_Streamlit.py` (318 lines) - Web version
@@ -17,16 +19,19 @@ This document reviews the current wrist-as-universal-joint model implementation 
 The existing implementation makes the following assumptions:
 
 1. **Perfect Linear Transmission**
+
    - `τ_α = τ_input × sin(θ)`
    - `τ_γ = τ_input × cos(θ)`
    - This assumes torque transmission is purely a function of grip angle with no dynamic variation
 
 2. **Static Grip Angle Only**
+
    - The angle `θ` represents grip angle (how the club sits in the hand)
    - No distinction between grip angle and wrist joint angle during motion
    - The wrist angle is assumed to be perfectly aligned with the grip angle
 
 3. **Constant Transmission Ratio**
+
    - The model assumes torque transmission ratio is constant regardless of wrist position
    - No variation as the wrist moves through flexion/extension or ulnar/radial deviation
 
@@ -45,6 +50,7 @@ The existing implementation makes the following assumptions:
 For a universal joint with bend angle `δ` (angle between input and output shaft centerlines):
 
 **Angular Velocity Ratio**:
+
 ```
 ω_out(φ) = ω_in × cos(δ) / (1 - sin²(δ) × sin²(φ))^0.5
 ```
@@ -52,23 +58,27 @@ For a universal joint with bend angle `δ` (angle between input and output shaft
 Where `φ` is the instantaneous rotation angle of the input shaft.
 
 This can also be written as:
+
 ```
 ω_out(φ) = ω_in × cos(δ) / sqrt(1 - sin²(δ) × sin²(φ))
 ```
 
 **Key Characteristics**:
+
 - The output shaft speed **varies cyclically** even if input speed is constant
 - Maximum speed: `ω_max = ω_in / cos(δ)` at φ = 0°, 180°
 - Minimum speed: `ω_min = ω_in × cos(δ)` at φ = 90°, 270°
 - Two cycles per revolution
 
 **Torque Transmission** (from power conservation P = τω):
+
 ```
 τ_out(φ) = τ_in × ω_in / ω_out(φ)
 τ_out(φ) = τ_in × sqrt(1 - sin²(δ) × sin²(φ)) / cos(δ)
 ```
 
 **Implications**:
+
 - Torque transmission is **NOT constant**
 - It varies with the wrist angle (φ) throughout the motion
 - At certain angles, torque amplification occurs; at others, torque reduction
@@ -78,11 +88,13 @@ This can also be written as:
 **Problem**: The current model uses a single angle `θ` without distinguishing:
 
 1. **Grip Angle (θ_grip)**: How the club is oriented in the hand (static)
+
    - 0° = club aligned with fingers (finger grip)
    - 90° = club aligned with palm (palm grip)
    - This determines which club axes align with which wrist axes
 
 2. **Wrist Flexion Angle (φ)**: The dynamic angle of wrist flexion/extension during motion
+
    - Changes throughout the swing
    - Affects the universal joint transmission ratio
 
@@ -93,6 +105,7 @@ This can also be written as:
 **Current Implementation**: Treats `θ` as if it's both grip angle AND wrist angle, which is incorrect.
 
 **Correct Approach**: These should be separate parameters:
+
 - **θ_grip**: Fixed based on how golfer grips club (user-selected)
 - **φ(t)**: Dynamic wrist flexion angle (varies during swing)
 - **ψ(t)**: Dynamic wrist deviation angle (varies during swing)
@@ -100,6 +113,7 @@ This can also be written as:
 ### Issue 3: Oversimplified Torque Decomposition
 
 **Problem**: The current trigonometric decomposition:
+
 ```python
 torque_alpha = input_torque * sin(theta)
 torque_gamma = input_torque * cos(theta)
@@ -117,7 +131,9 @@ This is valid for **static force/torque decomposition** but doesn't account for:
 **Problem**: While the LaTeX article correctly discusses constraint torques, the Python implementation doesn't actually model them properly.
 
 **What's Missing**:
+
 1. The constraint torque about the forearm axis should vary with:
+
    - Applied torques on actuated axes (flexion/extension, radial/ulnar)
    - Angular velocities of all segments
    - Joint configuration (wrist angle)
@@ -126,10 +142,13 @@ This is valid for **static force/torque decomposition** but doesn't account for:
 2. The constraint torque should be **calculated** from the dynamics, not just **decomposed** trigonometrically
 
 **Correct Formulation** (from LaTeX article):
+
 ```
 τ_constraint = J^T(q) × λ
 ```
+
 Where:
+
 - J = constraint Jacobian (function of joint angles)
 - λ = Lagrange multipliers (solved from equations of motion)
 
@@ -138,6 +157,7 @@ Where:
 ### 1. Separate Grip Angle from Wrist Angle
 
 **New Parameter Structure**:
+
 ```python
 # Fixed grip parameter (user selects)
 theta_grip = 45  # degrees, 0 = fingers, 90 = palm
@@ -262,6 +282,7 @@ Transmitted: τ_transmitted(t) = τ_forearm(t) × R(φ,ψ)
 ```
 
 Where:
+
 - **R(φ,ψ)** = Universal joint transmission ratio (varies with wrist angles)
 - **θ_grip** = Static grip angle (how club is held)
 - **I_shaft, I_face** = Moments of inertia about respective axes
@@ -269,18 +290,21 @@ Where:
 ## Recommended Implementation Plan
 
 ### Phase 1: Enhanced Model (Current Focus)
+
 1. Add wrist angle as a separate dynamic parameter
 2. Implement universal joint transmission calculations
 3. Create visualization of transmission ratio vs. wrist angle
 4. Maintain grip angle as a separate static parameter
 
 ### Phase 2: Full Dynamic Model (Future)
+
 1. Model time-varying wrist angles φ(t), ψ(t) during swing
 2. Calculate constraint torques from equations of motion
 3. Include Coriolis and centrifugal terms
 4. Validate against motion capture data
 
 ### Phase 3: Optimization Studies (Future)
+
 1. Optimize grip angle for different swing objectives
 2. Study trade-offs between speed and consistency
 3. Investigate coupling between wrist motion and club motion
@@ -301,10 +325,12 @@ The LaTeX article should be updated to include:
 1. **Torque transmission is NOT constant** - it varies with wrist angle throughout the swing
 
 2. **Grip angle determines which club axis receives varying transmission**
+
    - Finger grip (θ→0°): Variations go to face axis (high inertia)
    - Palm grip (θ→90°): Variations go to shaft axis (low inertia)
 
 3. **Wrist angle variation creates cyclic torque modulation**
+
    - Can amplify or attenuate torque transmission
    - Creates timing challenges for coordination
 
@@ -316,18 +342,21 @@ The LaTeX article should be updated to include:
 ## References
 
 1. **Universal Joint Mechanics**:
-   - Seherr-Thoss, H. C., Schmelz, F., & Aucktor, E. (2006). *Universal Joints and Driveshafts*. Springer.
+
+   - Seherr-Thoss, H. C., Schmelz, F., & Aucktor, E. (2006). _Universal Joints and Driveshafts_. Springer.
    - Chapter 2: Kinematics and dynamics of Cardan joints
 
 2. **Biomechanics of Wrist Joint**:
-   - Crisco, J. J., et al. (2011). "In vivo radiocarpal kinematics and the dart thrower's motion." *Journal of Bone and Joint Surgery*.
+
+   - Crisco, J. J., et al. (2011). "In vivo radiocarpal kinematics and the dart thrower's motion." _Journal of Bone and Joint Surgery_.
 
 3. **Constraint Force Analysis**:
-   - Featherstone, R. (2014). *Rigid Body Dynamics Algorithms*. Springer.
+
+   - Featherstone, R. (2014). _Rigid Body Dynamics Algorithms_. Springer.
    - Chapter 5: Constrained dynamics
 
 4. **Golf Biomechanics**:
-   - Nesbit, S. M., & Serrano, M. (2005). "Work and power analysis of the golf swing." *Journal of Sports Science & Medicine*, 4(4), 520.
+   - Nesbit, S. M., & Serrano, M. (2005). "Work and power analysis of the golf swing." _Journal of Sports Science & Medicine_, 4(4), 520.
 
 ## Conclusion
 
@@ -343,6 +372,7 @@ The proposed enhancements maintain the intuitive appeal of the current model whi
 ---
 
 **Next Steps**:
+
 1. Implement enhanced Python model with separate grip/wrist angles
 2. Add universal joint transmission calculations
 3. Create new visualization showing transmission vs. wrist angle

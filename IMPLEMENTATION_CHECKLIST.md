@@ -5,21 +5,24 @@ This checklist should be used to track progress on all website updates. Check of
 ## Quick Reference: Key URLs Found
 
 ### Researchers
-- **Rob Neal**: 
+
+- **Rob Neal**:
   - Wedgecraft: https://wedgecraft.com/dr-robert-neal/
   - Golf BioDynamics: https://golfbiodynamics.com/
   - Google Scholar: [To be searched]
-- **Steven Nesbit**: 
+- **Steven Nesbit**:
   - Jacobs3dGolf: https://www.jacobs3dgolf.com/
   - Google Scholar: [To be searched]
 
 ### Repositories
+
 - **Organization**: D-sorganization (based on existing repos)
 - **Common Repos to Add**:
   - MyoSim: https://github.com/myosim/myosim (verify)
   - MuJoCo: https://github.com/deepmind/mujoco (verify)
 
 ### Video
+
 - **Dead Fish**: https://fyfluiddynamics.com/2018/07/when-i-was-a-child-my-father-would-take-me-trout/
 
 ---
@@ -27,6 +30,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Phase 1: Content Updates
 
 ### Researchers Section
+
 - [ ] Add Rob Neal card to `resources-researchers.qmd`
   - [ ] Add biography text
   - [ ] Add Wedgecraft link
@@ -43,16 +47,19 @@ This checklist should be used to track progress on all website updates. Check of
   - [ ] Update `_quarto.yml` navbar (remove "Resources Home" from Resources menu)
 
 ### Papers Section
+
 - [ ] Add Choi and Park instrumented grip papers to `resources-papers.qmd`
 - [ ] Add Koike instrumented grip paper to `resources-papers.qmd`
 - [ ] Add Vaughan papers (1 and 2) on closed loop constraints to `resources-papers.qmd`
 
 ### Videos Section
+
 - [ ] Add "Dead Fish Swimming Upstream" video to `resources-videos.qmd`
   - [ ] Add video card with proper formatting
   - [ ] Research and add link to original paper (if available)
 
 ### Articles Page
+
 - [ ] Change "Current studies" to "Articles" in `articles.qmd` (line 66)
 - [ ] Update sidebar link from "Current Studies" to "Articles" (line 301)
 - [ ] Remove "Appendix" labels from article titles in `articles.qmd`
@@ -67,6 +74,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Phase 2: Layout Standardization
 
 ### Videos Page (Model Layout)
+
 - [ ] Review current Videos page layout (`resources-videos.qmd`)
 - [ ] Add left sidebar with category navigation (if categories exist)
 - [ ] Add right sidebar with recent videos history
@@ -74,6 +82,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Ensure single column content layout
 
 ### Models Pages
+
 - [ ] `models.qmd` - Apply Videos page layout
   - [ ] Add left sidebar (table of contents for model categories)
   - [ ] Add right sidebar (recent model pages visited)
@@ -88,6 +97,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] `models-myosim.qmd` - Apply layout
 
 ### Resources Pages
+
 - [ ] `resources.qmd` - Update or remove (if redundant)
 - [ ] `resources-videos.qmd` - Add sidebars, adjust layout
 - [ ] `resources-software.qmd` - Apply layout
@@ -113,6 +123,7 @@ This checklist should be used to track progress on all website updates. Check of
   - [ ] Ensure single column layout
 
 ### Articles Pages
+
 - [ ] `articles.qmd` - Apply layout
   - [ ] Left sidebar: Article topics/categories (table of contents)
   - [ ] Right sidebar: Recent articles visited
@@ -122,6 +133,7 @@ This checklist should be used to track progress on all website updates. Check of
   - [ ] Ensure consistent layout across all articles
 
 ### Layout Requirements (All Pages)
+
 - [ ] Title style matches "Videos" page (elegant, clean)
 - [ ] Title positioned just under menu bar (reduce wasted space)
 - [ ] Left sidebar: Table of contents / category navigation
@@ -134,6 +146,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Phase 3: Technical Fixes
 
 ### Homepage Equations
+
 - [ ] Review all equations in `index.qmd`
 - [ ] Fix equation on line 82: `$\dot{x} = f(x) + g(x)u$`
 - [ ] Fix equation on line 111: `$$\dot{x} = f(x) + g(x)u$$`
@@ -145,6 +158,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Ensure no `$` symbols visible in rendered output
 
 ### Repository Dropdown
+
 - [ ] Update `_quarto.yml` Repositories menu (lines 64-77)
 - [ ] Replace "Repositories Home" with direct repo links
 - [ ] Add organization name (D-sorganization) for user repos
@@ -154,12 +168,14 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Keep dropdown structure but update all hrefs
 
 ### Footer Duplication
+
 - [ ] Fix `_quarto.yml` footer (lines 158-161)
 - [ ] Remove duplicate "Affine Drift matters" text
 - [ ] Keep one version only
 - [ ] Check all rendered pages for footer content
 
 ### RSS Feed
+
 - [ ] Research RSS implementation for static GitHub Pages sites
 - [ ] Create RSS feed file (`feed.xml` or `rss.xml`)
 - [ ] Add RSS icon/link near search bar
@@ -172,6 +188,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Phase 4: Preview Fixes
 
 ### Book Previews
+
 - [ ] Review all books in `resources-books.qmd`
 - [ ] Check each book preview image source
 - [ ] Update broken image URLs
@@ -180,6 +197,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Test all book previews load correctly
 
 ### Article Previews
+
 - [ ] Review article pages in `articles/` directory
 - [ ] Add preview images where missing
 - [ ] Source images from appropriate sources
@@ -187,6 +205,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Test all article previews
 
 ### Website Previews
+
 - [ ] Review all websites in `resources-websites.qmd`
 - [ ] Fix preview iframe/embed code
 - [ ] Ensure proper loading and display
@@ -199,6 +218,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Phase 5: Sitewide Verification
 
 ### Layout Check
+
 - [ ] Scroll through entire site
 - [ ] Identify any remaining three-column layouts
 - [ ] Convert all to single column
@@ -207,6 +227,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Verify sidebar functionality on all pages
 
 ### Link Check
+
 - [ ] Test all internal links
 - [ ] Test all external links
 - [ ] Verify repository links work
@@ -215,6 +236,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Test video links
 
 ### Functionality Check
+
 - [ ] Test RSS feed
 - [ ] Verify all previews work
 - [ ] Check equation rendering on all pages
@@ -223,6 +245,7 @@ This checklist should be used to track progress on all website updates. Check of
 - [ ] Check responsive design (mobile/tablet)
 
 ### Content Check
+
 - [ ] Verify all new researchers added
 - [ ] Check all papers added
 - [ ] Verify video added
@@ -234,7 +257,8 @@ This checklist should be used to track progress on all website updates. Check of
 
 ## Notes
 
-1. **Priority Order**: 
+1. **Priority Order**:
+
    - Layout standardization (affects UX most)
    - Content updates (researchers, papers, videos)
    - Technical fixes (equations, previews, RSS)
@@ -267,7 +291,3 @@ This checklist should be used to track progress on all website updates. Check of
 
 **Last Updated**: 2025-12-05
 **Next Review**: 2025-12-12
-
-
-
-

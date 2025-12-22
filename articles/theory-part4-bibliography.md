@@ -2,22 +2,24 @@
 
 ## A) Concept Map
 
-*   **Mathematical Physics**
-    *   **Lagrangian Mechanics**: Variational derivation ($\delta \int L dt = 0$) of equations of motion.
-    *   **Euler-Lagrange Equations**: $\frac{d}{dt}(\frac{\partial L}{\partial \dot{q}}) - \frac{\partial L}{\partial q} = \tau$.
-    *   **Configuration Manifold**: Treating the golfer-club system as a point on a manifold $Q$.
+- **Mathematical Physics**
 
-*   **Flexible Multibody Dynamics**
-    *   **Assumed Modes Method (AMM)**: Discretizing continuous shaft deformation into finite modal coordinates $\eta$.
-    *   **Euler-Bernoulli Beam Theory**: Modeling the shaft stiffness and mass distribution.
-    *   **Rigid-Flexible Coupling**: Inertia matrix blocks ($M_{rf}, M_{fr}$) describing energy transfer between body and shaft.
-    *   **Geometric Stiffness**: Effects arising from high-speed rotation (centrifugal stiffening).
+  - **Lagrangian Mechanics**: Variational derivation ($\delta \int L dt = 0$) of equations of motion.
+  - **Euler-Lagrange Equations**: $\frac{d}{dt}(\frac{\partial L}{\partial \dot{q}}) - \frac{\partial L}{\partial q} = \tau$.
+  - **Configuration Manifold**: Treating the golfer-club system as a point on a manifold $Q$.
 
-*   **Control Theory**
-    *   **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$.
-    *   **Drift Invariance**: The property that $f(x)$ encapsulates all passive dynamics (gravity, elasticity, Coriolis) and is independent of $u$.
-    *   **Underactuation**: The condition where the dimension of inputs $u$ is less than the dimension of the configuration space (due to the passive shaft).
-    *   **Input-Output Decoupling**: Separation of active torque effects from passive drift.
+- **Flexible Multibody Dynamics**
+
+  - **Assumed Modes Method (AMM)**: Discretizing continuous shaft deformation into finite modal coordinates $\eta$.
+  - **Euler-Bernoulli Beam Theory**: Modeling the shaft stiffness and mass distribution.
+  - **Rigid-Flexible Coupling**: Inertia matrix blocks ($M_{rf}, M_{fr}$) describing energy transfer between body and shaft.
+  - **Geometric Stiffness**: Effects arising from high-speed rotation (centrifugal stiffening).
+
+- **Control Theory**
+  - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$.
+  - **Drift Invariance**: The property that $f(x)$ encapsulates all passive dynamics (gravity, elasticity, Coriolis) and is independent of $u$.
+  - **Underactuation**: The condition where the dimension of inputs $u$ is less than the dimension of the configuration space (due to the passive shaft).
+  - **Input-Output Decoupling**: Separation of active torque effects from passive drift.
 
 ## B) Bibliography (YAML)
 
@@ -30,7 +32,12 @@
   venue: "Cambridge University Press"
   scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
   clusters: ["multibody dynamics", "flexible bodies"]
-  concepts: ["floating frame of reference", "finite element method", "flexible multibody"]
+  concepts:
+    [
+      "floating frame of reference",
+      "finite element method",
+      "flexible multibody",
+    ]
   related_ids: ["simo1986dynamics", "book1984recursive"]
   references_out_ids: []
 
@@ -67,7 +74,8 @@
   venue: "The International Journal of Robotics Research"
   scholar_link: "https://scholar.google.com/scholar?q=Recursive+Lagrangian+dynamics+of+flexible+manipulator+arms+Book"
   clusters: ["robotics", "flexible bodies"]
-  concepts: ["recursive algorithms", "lagrangian dynamics", "flexible manipulators"]
+  concepts:
+    ["recursive algorithms", "lagrangian dynamics", "flexible manipulators"]
   related_ids: ["de_luca1991closed"]
   references_out_ids: []
 
@@ -92,7 +100,12 @@
   venue: "Dover Publications"
   scholar_link: "https://scholar.google.com/scholar?q=The+Variational+Principles+of+Mechanics+Lanczos"
   clusters: ["physics", "mathematical foundations"]
-  concepts: ["principle of least action", "hamilton's principle", "generalized coordinates"]
+  concepts:
+    [
+      "principle of least action",
+      "hamilton's principle",
+      "generalized coordinates",
+    ]
   related_ids: ["goldstein2002classical"]
   references_out_ids: []
 
@@ -104,7 +117,12 @@
   venue: "Course Notes (MIT)"
   scholar_link: "https://scholar.google.com/scholar?q=Underactuated+Robotics+Tedrake"
   clusters: ["robotics", "nonlinear control", "optimization"]
-  concepts: ["passive dynamics", "trajectory optimization", "partial feedback linearization"]
+  concepts:
+    [
+      "passive dynamics",
+      "trajectory optimization",
+      "partial feedback linearization",
+    ]
   related_ids: ["spong2005robot", "slotine1991applied"]
   references_out_ids: []
 
@@ -182,7 +200,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
   clusters: ["multibody dynamics", "algorithms"]
-  concepts: ["recursive algorithms", "articulated body algorithm", "spatial algebra"]
+  concepts:
+    ["recursive algorithms", "articulated body algorithm", "spatial algebra"]
   related_ids: ["shabana2020dynamics"]
   references_out_ids: []
 
@@ -196,7 +215,8 @@
   venue: "Addison Wesley"
   scholar_link: "https://scholar.google.com/scholar?q=Classical+Mechanics+Goldstein"
   clusters: ["physics", "foundational"]
-  concepts: ["lagrangian mechanics", "hamiltonian mechanics", "rigid body motion"]
+  concepts:
+    ["lagrangian mechanics", "hamiltonian mechanics", "rigid body motion"]
   related_ids: ["lanczos1970variational"]
   references_out_ids: []
 
@@ -216,26 +236,32 @@
 ## C) Reading Paths
 
 ### Path 1: Fast Ramp (The Theoretical Basics)
-*Target: Understand the equation $\dot{x} = f(x) + g(x)u$ and where it comes from.*
-1.  **Spong, Hutchinson, Vidyasagar (2005)** - *Robot Modeling and Control*. Best starting point for Lagrangian dynamics.
-2.  **Slotine & Li (1991)** - *Applied Nonlinear Control*. Explains the control-affine structure.
-3.  **Tedrake (2023)** - *Underactuated Robotics*. Bridges dynamics and control for passive systems.
-4.  **Lynch & Park (2017)** - *Modern Robotics*. A comprehensive modern reference.
-5.  **Meirovitch (2001)** - *Fundamentals of Vibrations*. Intro to modes (the $\eta$ coordinates).
+
+_Target: Understand the equation $\dot{x} = f(x) + g(x)u$ and where it comes from._
+
+1.  **Spong, Hutchinson, Vidyasagar (2005)** - _Robot Modeling and Control_. Best starting point for Lagrangian dynamics.
+2.  **Slotine & Li (1991)** - _Applied Nonlinear Control_. Explains the control-affine structure.
+3.  **Tedrake (2023)** - _Underactuated Robotics_. Bridges dynamics and control for passive systems.
+4.  **Lynch & Park (2017)** - _Modern Robotics_. A comprehensive modern reference.
+5.  **Meirovitch (2001)** - _Fundamentals of Vibrations_. Intro to modes (the $\eta$ coordinates).
 
 ### Path 2: Deep Technical (Derivation Verification)
-*Target: Verify the block matrix inversions and modal approximations.*
-1.  **Lanczos (1970)** - *The Variational Principles of Mechanics*. The rigorous foundation for $\delta \int L dt = 0$.
-2.  **Shabana (2020)** - *Dynamics of Multibody Systems*. The reference for $M_{rf}$ (rigid-flexible coupling).
-3.  **Simo & Vu-Quoc (1986)** - *On the dynamics of flexible beams*. For deep understanding of why simple beam theory fails at high speeds (geometric stiffness).
-4.  **Book (1984)** - *Recursive Lagrangian dynamics*. Specific to robot arms with flexibility.
-5.  **De Luca & Siciliano (1991)** - *Closed-form dynamic model*. Directly relevant to the "planar pendulum with flexibility" example.
-6.  **Hughes (1986)** - *Spacecraft Attitude Dynamics*. Canonical text for coupled rigid-flexible systems (like a satellite with solar panels... or a golfer with a club).
-7.  **Isidori (1995)** - *Nonlinear Control Systems*. For the strict definition of drift invariance and input decoupling.
+
+_Target: Verify the block matrix inversions and modal approximations._
+
+1.  **Lanczos (1970)** - _The Variational Principles of Mechanics_. The rigorous foundation for $\delta \int L dt = 0$.
+2.  **Shabana (2020)** - _Dynamics of Multibody Systems_. The reference for $M_{rf}$ (rigid-flexible coupling).
+3.  **Simo & Vu-Quoc (1986)** - _On the dynamics of flexible beams_. For deep understanding of why simple beam theory fails at high speeds (geometric stiffness).
+4.  **Book (1984)** - _Recursive Lagrangian dynamics_. Specific to robot arms with flexibility.
+5.  **De Luca & Siciliano (1991)** - _Closed-form dynamic model_. Directly relevant to the "planar pendulum with flexibility" example.
+6.  **Hughes (1986)** - _Spacecraft Attitude Dynamics_. Canonical text for coupled rigid-flexible systems (like a satellite with solar panels... or a golfer with a club).
+7.  **Isidori (1995)** - _Nonlinear Control Systems_. For the strict definition of drift invariance and input decoupling.
 
 ### Path 3: Implementation (Simulation Engines)
-*Target: Numerical implementation of the equations.*
-1.  **Featherstone (2008)** - *Rigid Body Dynamics Algorithms*. How to compute $M$ and $C$ efficiently (recursive Newton-Euler).
+
+_Target: Numerical implementation of the equations._
+
+1.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_. How to compute $M$ and $C$ efficiently (recursive Newton-Euler).
 2.  **Pinocchio (Carpentier et al.)** - Modern C++ library implementing Featherstone's algorithms.
 3.  **SymPy (Python)** - Use `sympy.physics.mechanics` to symbolically derive the matrices in Appendix A.
 4.  **NumPy/SciPy** - For solving the linear system $M \dot{v} = \tau - C v - G$.

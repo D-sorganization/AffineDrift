@@ -110,9 +110,7 @@ def calculate_moments_of_inertia(
     return I_alpha, I_gamma
 
 
-def universal_joint_transmission_ratio(
-    phi_rad: float, delta_rad: float
-) -> tuple[float, float]:
+def universal_joint_transmission_ratio(phi_rad: float, delta_rad: float) -> tuple[float, float]:
     """
     Calculate transmission ratios for a universal (Hooke/Cardan) joint.
 
@@ -343,12 +341,8 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         # Forearm center is offset from attachment point
         forearm_dir_x = np.cos(forearm_angle_rad)
         forearm_dir_y = np.sin(forearm_angle_rad)
-        forearm_center_x = (
-            hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x
-        )
-        forearm_center_y = (
-            hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y
-        )
+        forearm_center_x = hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x
+        forearm_center_y = hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y
 
         # Forearm as ellipse (same color as hand - tan)
         forearm = Ellipse(
@@ -504,12 +498,8 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             zorder=9,
         )
         self.ax.text(
-            wrist_arc_center_x
-            + wrist_arc_radius * np.cos(hand_axis_angle_for_arc)
-            + 0.02,
-            wrist_arc_center_y
-            + wrist_arc_radius * np.sin(hand_axis_angle_for_arc)
-            + 0.02,
+            wrist_arc_center_x + wrist_arc_radius * np.cos(hand_axis_angle_for_arc) + 0.02,
+            wrist_arc_center_y + wrist_arc_radius * np.sin(hand_axis_angle_for_arc) + 0.02,
             "Hand Axis",
             color="r",
             fontsize=9,
@@ -517,12 +507,8 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             fontweight="bold",
         )
         self.ax.text(
-            wrist_arc_center_x
-            + wrist_arc_radius * np.cos(forearm_axis_angle_for_arc)
-            + 0.02,
-            wrist_arc_center_y
-            + wrist_arc_radius * np.sin(forearm_axis_angle_for_arc)
-            + 0.02,
+            wrist_arc_center_x + wrist_arc_radius * np.cos(forearm_axis_angle_for_arc) + 0.02,
+            wrist_arc_center_y + wrist_arc_radius * np.sin(forearm_axis_angle_for_arc) + 0.02,
             "Forearm Axis",
             color="b",
             fontsize=9,
@@ -537,9 +523,7 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         self.ax.set_ylim(-0.2, 1.2)
         self.ax.set_aspect("equal")
         self.ax.axis("off")
-        self.ax.set_title(
-            "Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20
-        )
+        self.ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
 
         self.figure.tight_layout()
         self.draw()
@@ -614,9 +598,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             torque = np.zeros_like(t)
             pulse_start = 200
             pulse_end = 300
-            torque[pulse_start:pulse_end] = 5.0 * np.random.randn(
-                pulse_end - pulse_start
-            )
+            torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
         elif self.noise_type == "Burst":
             torque = np.zeros_like(t)
             burst_center = 250
@@ -676,7 +658,9 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
                 torque = t**2 - t  # Use fallback polynomial
             except Exception:
                 # Other unexpected errors
-                error_msg = "Unexpected error evaluating polynomial expression. Please check your formula."
+                error_msg = (
+                    "Unexpected error evaluating polynomial expression. Please check your formula."
+                )
                 self.polynomial_error = error_msg
                 torque = t**2 - t  # Use fallback polynomial
         else:
@@ -733,9 +717,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
 
     def _plot_torque(self, theta_grip_rad: float, phi_wrist_rad: float) -> None:
         """Plot torque vs time"""
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad, theta_grip_rad
-        )
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
         torque_transmitted = self.input_torque * tau_ratio
         torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
             torque_transmitted, theta_grip_rad
@@ -785,22 +767,16 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
 
     def _plot_acceleration(self, theta_grip_rad: float, phi_wrist_rad: float) -> None:
         """Plot angular acceleration vs time"""
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad, theta_grip_rad
-        )
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
         torque_transmitted = self.input_torque * tau_ratio
         torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
             torque_transmitted, theta_grip_rad
         )
         accel_alpha = (
-            torque_alpha / self.I_alpha
-            if self.I_alpha > 1e-6
-            else np.zeros_like(torque_alpha)
+            torque_alpha / self.I_alpha if self.I_alpha > 1e-6 else np.zeros_like(torque_alpha)
         )
         accel_gamma = (
-            torque_gamma / self.I_gamma
-            if self.I_gamma > 1e-6
-            else np.zeros_like(torque_gamma)
+            torque_gamma / self.I_gamma if self.I_gamma > 1e-6 else np.zeros_like(torque_gamma)
         )
 
         if self.visible_signals["accel_alpha"]:
@@ -846,15 +822,9 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             tau_ratios.append(tau_r)
 
             torque_trans = 1.0 * tau_r
-            t_alpha, t_gamma = distribute_torque_by_grip_angle(
-                torque_trans, theta_grip_rad
-            )
-            accel_alpha_ratios.append(
-                t_alpha / self.I_alpha if self.I_alpha > 1e-6 else 0
-            )
-            accel_gamma_ratios.append(
-                t_gamma / self.I_gamma if self.I_gamma > 1e-6 else 0
-            )
+            t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
+            accel_alpha_ratios.append(t_alpha / self.I_alpha if self.I_alpha > 1e-6 else 0)
+            accel_gamma_ratios.append(t_gamma / self.I_gamma if self.I_gamma > 1e-6 else 0)
 
         omega_ratios = np.array(omega_ratios)
         tau_ratios = np.array(tau_ratios)
@@ -1062,9 +1032,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         # Grip angle
         grip_layout = QVBoxLayout()
         grip_layout.setSpacing(5)  # Consistent spacing
-        grip_layout.setContentsMargins(
-            0, 0, 0, 0
-        )  # No margins for consistent alignment
+        grip_layout.setContentsMargins(0, 0, 0, 0)  # No margins for consistent alignment
         grip_label = QLabel("Grip Angle θ<sub>grip</sub>:")
         grip_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
         grip_layout.addWidget(grip_label)
@@ -1211,9 +1179,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         clubhead_label = QLabel("Clubhead:")
         clubhead_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         clubhead_label.setFixedWidth(label_area_width)  # Fixed width for alignment
-        clubhead_label.setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-        )
+        clubhead_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         clubhead_layout.addWidget(clubhead_label)
         self.clubhead_weight = WheelIgnoringLineEdit()
         self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
@@ -1229,9 +1195,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         shaft_label = QLabel("Shaft:")
         shaft_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         shaft_label.setFixedWidth(label_area_width)  # Same fixed width
-        shaft_label.setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-        )
+        shaft_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         shaft_layout.addWidget(shaft_label)
         self.shaft_weight = WheelIgnoringLineEdit()
         self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
@@ -1247,9 +1211,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         length_label = QLabel("Length:")
         length_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         length_label.setFixedWidth(label_area_width)  # Same fixed width
-        length_label.setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-        )
+        length_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         length_layout.addWidget(length_label)
         self.club_length = WheelIgnoringLineEdit()
         self.club_length.setText(f"{DEFAULT_CLUB_LENGTH:.2f}")
@@ -1265,9 +1227,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         cg_label = QLabel("CG Dist:")
         cg_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         cg_label.setFixedWidth(label_area_width)  # Same fixed width
-        cg_label.setAlignment(
-            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
-        )
+        cg_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         cg_layout.addWidget(cg_label)
         self.cg_distance = WheelIgnoringLineEdit()
         self.cg_distance.setText(f"{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}")
@@ -1320,15 +1280,11 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
 
         # Polynomial input section (shown when Polynomial is selected)
         poly_layout = QHBoxLayout()
-        self.polynomial_label = QLabel(
-            'Polynomial (e.g., "t**2 + 2*t - 1" or "t**3 - 0.5*t"):'
-        )
+        self.polynomial_label = QLabel('Polynomial (e.g., "t**2 + 2*t - 1" or "t**3 - 0.5*t"):')
         self.polynomial_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         poly_layout.addWidget(self.polynomial_label)
         self.polynomial_input = QLineEdit()
-        self.polynomial_input.setPlaceholderText(
-            "Enter polynomial expression using t as variable"
-        )
+        self.polynomial_input.setPlaceholderText("Enter polynomial expression using t as variable")
         self.polynomial_input.setText("t**2 - t")
         self.polynomial_input.setVisible(False)  # Hidden by default
         self.polynomial_input.textChanged.connect(self.update_polynomial_signal)
@@ -1378,9 +1334,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         self.show_input_check = QCheckBox("Input Torque")
         self.show_input_check.setChecked(True)
         self.show_input_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "input_torque", self.show_input_check.isChecked()
-            )
+            lambda: self.update_signal_visibility("input_torque", self.show_input_check.isChecked())
         )
         plot_control_layout.addWidget(self.show_input_check)
         plot_control_layout.addSpacing(10)  # Space between checkboxes
@@ -1693,9 +1647,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         grip = self.grip_slider.value()
         wrist = self.wrist_slider.value()
 
-        omega, tau = universal_joint_transmission_ratio(
-            np.radians(wrist), np.radians(grip)
-        )
+        omega, tau = universal_joint_transmission_ratio(np.radians(wrist), np.radians(grip))
 
         info_text = f"""
         <b>Current Configuration:</b><br>
