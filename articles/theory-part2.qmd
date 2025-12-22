@@ -179,15 +179,15 @@ While the ZTCF successfully isolates the system's passive dynamics from the golf
 
 ### Definition
 
-Let the actual swing at time $t$ be characterized by the state
+Let the actual swing at time $t$ be characterized by the state $x(t) \in T\mathcal{Q}$. Locally,
 
-$$x(t) = \big(q(t),\, \dot{q}(t),\, \eta(t),\, \dot{\eta}(t)\big).$$
+$$x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t)).$$
 
-The *Zero Velocity Counterfactual state* at the same instant is defined as
+We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle. Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection bundle, and $\iota_0: \mathcal{Q} \to T\mathcal{Q}$ be the zero section embedding such that $\iota_0(q, \eta) = (q, \eta, 0, 0)$.
 
-$$x^{\mathrm{ZVCF}}(t)
-  =
-  \big(q(t),\, 0,\, \eta(t),\, 0\big).$$
+The *Zero Velocity Counterfactual state* is defined by projecting the current state to the base manifold and lifting it back to the zero section:
+
+$$x^{\mathrm{ZVCF}}(t) = \iota_0( \pi( x(t) ) ) = (q(t), \eta(t), 0, 0).$$
 
 Only the configuration variables $q(t)$ and $\eta(t)$ are retained; all generalized velocities are set to zero.
 
