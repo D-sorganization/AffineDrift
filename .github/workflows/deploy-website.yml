@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -38,7 +39,6 @@ jobs:
 
       # Commit the rendered changes to the docs folder on the main branch
       - name: Deploy to Docs Folder
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(website): render and deploy content [skip ci]"
