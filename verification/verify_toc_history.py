@@ -1,5 +1,6 @@
 from playwright.sync_api import Page, expect, sync_playwright
 
+
 def test_toc_and_history(page: Page):
     # Visit articles.html to check TOC and History
     print("Navigating to articles.html...")
@@ -33,9 +34,11 @@ def test_toc_and_history(page: Page):
     page.goto("http://localhost:8000/articles.html")
 
     # Now verify history has the item
-    # Note: script.js logic for history title extraction might differ slightly from exact string "Theory Part 1"
+    # Note: script.js logic for history title extraction might differ slightly from
+    # exact string "Theory Part 1"
     # It strips "AffineDrift - " etc.
-    # The title of theory-part1.html is "Affine Control Interpretation of the Golf Swing – AffineDrift"
+    # The title of theory-part1.html is
+    # "Affine Control Interpretation of the Golf Swing – AffineDrift"
     # So it should be "Affine Control Interpretation of the Golf Swing"
 
     expect(history_list).to_contain_text("Affine Control Interpretation")
