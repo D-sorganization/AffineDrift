@@ -116,28 +116,28 @@ h6 {
    =========================== */
 /* 3-Column Layout System */
 .standard-page-layout {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width) !important;
-  gap: var(--sidebar-gap);
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding-top: 1rem;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width) !important;
+    gap: var(--sidebar-gap);
+    max-width: 100%;
+    margin: 0;
+    padding-top: 1rem;
 }
 
 /* Explicit Grid Placement - High specificity to override Quarto defaults */
 #quarto-content .standard-page-layout .left-sidebar,
 body .standard-page-layout .left-sidebar {
-  grid-column: 1 !important;
+    grid-column: 1 !important;
 }
 
 #quarto-content .standard-page-layout .main-content-area,
 body .standard-page-layout .main-content-area {
-  grid-column: 2 !important;
+    grid-column: 2 !important;
 }
 
 #quarto-content .standard-page-layout .right-sidebar,
 body .standard-page-layout .right-sidebar {
-  grid-column: 3 !important;
+    grid-column: 3 !important;
 }
 
 .left-sidebar,
@@ -775,8 +775,7 @@ body.no-scroll {
   margin-bottom: 0.75rem;
   letter-spacing: 1px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  font-family:
-    "Arial", "Helvetica", "Verdana", sans-serif; /* Match logo font style */
+  font-family: "Arial", "Helvetica", "Verdana", sans-serif; /* Match logo font style */
 }
 
 .subtitle {
@@ -1284,13 +1283,13 @@ section h2::after {
 }
 
 .resources-section {
-  padding: 3rem 0;
+  padding: 1rem 0;
   background: var(--legal-pad-yellow-light);
 }
 
 .resources-section .container {
-  max-width: var(--content-max-width);
-  padding: 2rem 1.5rem;
+  max-width: 98%; /* Extend closer to edges */
+  padding: 0 1rem;
 }
 
 .alt-bg {
@@ -2128,9 +2127,7 @@ mjx-container * {
   text-decoration: none;
   border-radius: 6px;
   font-weight: 500;
-  transition:
-    background 0.3s ease,
-    transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .article-navigation .nav-prev:hover,
@@ -2184,9 +2181,7 @@ mjx-container * {
   padding: 1.75rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 1.5rem;
   border: 1px solid var(--legal-pad-yellow-border);
 }
@@ -2436,9 +2431,7 @@ mjx-container * {
   text-decoration: none;
   border-radius: 6px;
   font-weight: 600;
-  transition:
-    background 0.3s ease,
-    transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
@@ -2763,9 +2756,7 @@ mjx-container * {
   background: var(--pure-white);
   object-fit: cover;
   display: block;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .website-preview:hover {
@@ -2783,9 +2774,7 @@ mjx-container * {
   background: var(--pure-white);
   object-fit: contain;
   display: block;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .book-cover:hover {
@@ -2997,9 +2986,7 @@ mjx-container * {
 .accordion-content {
   max-height: 0;
   overflow: hidden;
-  transition:
-    max-height 0.3s ease,
-    padding 0.3s ease;
+  transition: max-height 0.3s ease, padding 0.3s ease;
   padding: 0 1.5rem;
 }
 
@@ -3196,9 +3183,7 @@ mjx-container * {
   cursor: pointer;
   opacity: 0;
   box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
-  transition:
-    opacity 0.2s,
-    background 0.2s;
+  transition: opacity 0.2s, background 0.2s;
 }
 
 .code-wrapper:hover .copy-btn,
@@ -3275,4 +3260,48 @@ mjx-container * {
 
 .external-link:hover::after {
   opacity: 1;
+}
+
+/* ===========================
+   Print Styles
+   =========================== */
+@media print {
+  /* Hide non-content elements */
+  header, footer, .left-sidebar, .right-sidebar, .resources-sidebar,
+  .nav-toggle, .sidebar-toggle, .back-to-top, .copy-btn, .skip-to-content,
+  .screen-overlay, .article-navigation, .comments-section, .footer-social {
+    display: none !important;
+  }
+
+  /* Nuclear reset for print colors/backgrounds to save ink */
+  *, *::before, *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Layout resets for print */
+  body, .main-content, .standard-page-layout,
+  #quarto-content .standard-page-layout .main-content-area,
+  body .standard-page-layout .main-content-area {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    float: none !important;
+  }
+
+  /* Link visibility */
+  a {
+    text-decoration: underline !important;
+    color: black !important;
+  }
+
+  /* Avoid breaks */
+  h2, h3, .equation-block, pre, blockquote, .component {
+    break-inside: avoid;
+  }
 }

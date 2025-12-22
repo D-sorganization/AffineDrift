@@ -13,8 +13,13 @@ page-layout: full
         <p>"What we do now echoes in eternity"</p>
         <cite>&mdash; Marcus Aurelius</cite>
 
+        <div class="drift-quote" style="margin-bottom: 2rem;">
+          <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
+          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can dominate, rendering any active, conscious control efforts by the golfer futile.</p>
+        </div>
+
         <div class="drift-quote">
-          <p>Drift is not a problem to control. It is the state you want to achieve. Drift is greatest when you move fast. It happens when you accumulate momentum in the system. It happens when you move. It is the accumulation of all of your efforts to swing the club. It is an integral sum and the mountain you must climb to get where you are going. You can't stand on top while being safe at the base, feeling safe and in control. You must climb that hill. You must use its influence like a judo artist. The goal is to accumulate not to control. Swing with reckless abandon knowing that drift will always be there as a predictable ally.</p>
+          <p>Drift, however, is not a problem to be controlled; it is the state you want to achieve. Drift is greatest when you move fast, and it occurs as you accumulate momentum in the system. It is the integral sum of all your efforts to swing the club, and it represents the 'mountain you must climb' to get where you are going. You cannot stand safely at the base, feeling in control. You must climb that hill and learn to use its influence like a judo artist. The goal is to accumulate momentum, not to control it. Swing with reckless abandon, knowing that drift will always be there as a predictable ally.</p>
         </div>
       </blockquote>
     </div>
@@ -25,14 +30,14 @@ page-layout: full
   <div class="container">
     <div class="mission-content">
       <p class="mission-text">
-        AffineDrift applies nonlinear control theory—the mathematics of taming complex, chaotic systems—to the biomechanics of the golf swing. In a control-affine system, the underlying dynamics may be highly nonlinear, but the influence of control inputs remains linear. This structure allows the system dynamics to be decomposed into two distinct components:
+        AffineDrift is named after a concept in nonlinear control theory, the mathematical framework for managing complex, chaotic systems. The structure of a control-affine system allows the total movement to be clearly separated into two distinct components:
       </p>
       <ul class="mission-list">
-        <li><strong>Drift:</strong> The passive evolution of the system driven by its current state, including inertial, Coriolis, centrifugal, and gravitational forces.</li>
-        <li><strong>Control:</strong> The active intervention arising from muscular input.</li>
+        <li><strong>Drift:</strong> The system's inherent, autonomous motion based on its current state.</li>
+        <li><strong>Control:</strong> The changes in motion that arise only from deliberate, external inputs.</li>
       </ul>
       <p class="mission-text">
-        In the drift, the past writes itself into the present. The positions and velocities of every component carry the echoes of previous actions.
+        This division reveals a profound truth: history matters. The system's past actions are encoded in its present state—its accumulated momentum, geometry, and timing. For the golfer, the implication is that every swing is a combination of your current, conscious effort and the powerful inertia of everything that has come before. As Marcus Aurelius noted, the past is always writing itself into the present.
       </p>
     </div>
   </div>
@@ -43,89 +48,31 @@ page-layout: full
     <div class="theory-content">
       <div class="theory-intro">
         <p>
-          We model the golf swing as a <strong>nonlinear control-affine system</strong>. This formulation bridges
-          multibody dynamics (Newton–Euler / Lagrangian mechanics) and geometric control theory.
+          The golf swing presents a profound coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
         </p>
       </div>
 
       <div class="coordination-section">
-        <h3>Coordination as Trajectory Optimization</h3>
         <p>
-          The golf swing is a problem of <strong>underactuated nonlinear control</strong>. The golfer must coordinate
-          a high-dimensional multibody system (torso, arms, club) to achieve a precise end-effector state (impact)
-          subject to biomechanical constraints.
+          Rather than treating the swing as a sequence of static positions (descriptive biomechanics), a control-perspective frames it as a trajectory optimization problem: the golfer must find the correct sequence of muscular forces (control inputs) to guide the system from the address position to ball contact. The system's dynamics are captured by the fundamental control-affine structure:
         </p>
-        <p>
-          From a Lagrangian perspective, the motion is governed by the principle of least action, modified by non-conservative
-          forces (muscular torques). The golfer's nervous system effectively solves a <strong>trajectory optimization</strong> problem:
-          finding a control policy \(u(t)\) that minimizes a cost function (e.g., effort, error) while satisfying the
-          system dynamics \(\dot{x} = f(x) + g(x)u\).
-        </p>
-        <p>
-          The complexity arises from the <strong>nonlinearity</strong> of the inertia matrix \(M(q)\) and the Coriolis/centrifugal
-          terms \(C(q,\dot{q})\). However, the <strong>affine structure</strong> reveals that at any instantaneous state \(x\),
-          the effect of muscular effort is linear. This allows us to rigorously separate the "drift" (what happens passively)
-          from the "input" (what is actively forced).
-        </p>
-      </div>
-
-      <div class="math-block">
-        <h3>Mathematical Derivation</h3>
-        <p>
-          Consider the golfer and club as a rigid-body system with generalized coordinates \(q \in \mathbb{R}^n\).
-          The equations of motion are given by the standard manipulator equation:
-        </p>
+        
         <div class="equation">
-          \[ M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = B(q)u \]
-        </div>
-        <div class="equation-explanation">
-            <p>where:</p>
-            <ul>
-                <li>\(M(q)\) is the positive-definite <strong>inertia matrix</strong>.</li>
-                <li>\(C(q,\dot{q})\dot{q}\) represents <strong>Coriolis and centrifugal forces</strong>.</li>
-                <li>\(G(q)\) is the <strong>gravitational vector</strong>.</li>
-                <li>\(u \in \mathbb{R}^m\) is the vector of active muscle torques.</li>
-                <li>\(B(q)\) maps active torques to generalized forces.</li>
-            </ul>
+          $$ \dot{x} = f(x) + g(x)u $$
         </div>
 
         <p>
-            To obtain the state-space form, we solve for acceleration \(\ddot{q}\):
+          This mathematical framework provides a rigorous way to separate the swing's total movement into two distinct, identifiable components:
         </p>
-        <div class="equation">
-            \[ \ddot{q} = M(q)^{-1} \Big[ B(q)u - C(q,\dot{q})\dot{q} - G(q) \Big] \]
-        </div>
+        
+        <ul class="mission-list">
+          <li><strong>Drift (\(f(x)\)):</strong> The passive dynamics of the system. This includes gravity, inertial forces, Coriolis effects, and the dynamics of the flexible club shaft. It represents how the system would naturally evolve in the complete absence of muscle input.</li>
+          <li><strong>Control (\(g(x)u\)):</strong> The active dynamics resulting only from the golfer's muscle torques (\(u\)). The term \(g(x)\) encodes the "mechanical advantage"—how effective a control input is at changing acceleration—which varies throughout the swing.</li>
+        </ul>
 
         <p>
-            Defining the state vector \(x = [q^T, \dot{q}^T]^T\), we derive the control-affine form:
+          This decomposition is crucial: it allows researchers to causally attribute observed forces to either the golfer's active effort or the powerful, passive inertia of the body and club. By framing the swing this way, we move beyond simply describing the movement to a more predictive, mechanistic understanding of how coordination emerges from the interaction between neural control and mechanical dynamics.
         </p>
-        <div class="equation">
-          \[\dot{x} = f(x) + g(x)u\]
-        </div>
-
-        <div class="equation-explanation">
-          <p>Here, the <strong>Drift Vector Field</strong> \(f(x)\) encapsulates all passive dynamics:</p>
-          <div class="equation" style="font-size: 1rem; padding: 1rem;">
-             \[ f(x) = \begin{bmatrix} \dot{q} \\ -M^{-1}(q)(C(q,\dot{q})\dot{q} + G(q)) \end{bmatrix} \]
-          </div>
-          <p>And the <strong>Control Vector Field</strong> \(g(x)\) defines the system's receptivity to input:</p>
-          <div class="equation" style="font-size: 1rem; padding: 1rem;">
-             \[ g(x) = \begin{bmatrix} 0 \\ M^{-1}(q)B(q) \end{bmatrix} \]
-          </div>
-        </div>
-      </div>
-
-      <div class="key-properties">
-        <div class="g-term-explanation">
-          <h3>Mechanical Interpretation</h3>
-          <p>
-            The term \(g(x)\) involves the inverse inertia matrix \(M^{-1}(q)\). This implies that the
-            <strong>mechanical advantage</strong> of a muscle depends heavily on the body's configuration.
-            A torque applied at the shoulder has a different effect on the clubhead depending on the wrist angle
-            due to the changing moment of inertia. The affine framework makes this configuration-dependent
-            coupling explicit.
-          </p>
-        </div>
       </div>
     </div>
   </div>

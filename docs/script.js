@@ -191,14 +191,15 @@ document.addEventListener('DOMContentLoaded', function () {
             !item.url.match(/^(tools|contact|about|resources|articles|research-reviews|book-reviews|daydreams)/i)
         );
 
+        // ⚡ Bolt Optimization: Use DocumentFragment to minimize reflows
+        historyList.textContent = '';
         if (displayHistory.length === 0) {
-            historyList.textContent = '';
             const li = document.createElement('li');
             li.className = 'history-empty';
             li.textContent = 'No recent articles yet';
             historyList.appendChild(li);
         } else {
-            historyList.textContent = '';
+            const fragment = document.createDocumentFragment();
             displayHistory.forEach(item => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
@@ -208,8 +209,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     : item.title;
                 a.textContent = displayTitle;
                 li.appendChild(a);
-                historyList.appendChild(li);
+                fragment.appendChild(li);
             });
+            historyList.appendChild(fragment);
         }
     }
     updateHistorySidebar();
@@ -304,7 +306,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        // ⚡ Bolt Optimization: Use DocumentFragment for TOC generation
         if (sections.length > 0) {
+            const fragment = document.createDocumentFragment();
             sections.forEach(section => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
@@ -312,8 +316,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 a.textContent = section.text;
                 a.className = `toc-level-${section.level}`;
                 li.appendChild(a);
-                tocList.appendChild(li);
+                fragment.appendChild(li);
             });
+            tocList.appendChild(fragment);
         } else {
              if (tocSection) tocSection.style.display = 'none';
              else if (tocList) tocList.style.display = 'none';
@@ -538,20 +543,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (articlesHistoryList) {
         const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             articlesHistoryList.textContent = '';
+            // ⚡ Bolt Optimization: Use DocumentFragment
             if (!history || history.length === 0) {
                 const li = document.createElement('li');
                 li.className = 'history-empty';
                 li.textContent = 'No recent articles yet';
                 articlesHistoryList.appendChild(li);
             } else {
+                const fragment = document.createDocumentFragment();
                 history.forEach(item => {
                     const li = document.createElement('li');
                     const a = document.createElement('a');
                     a.href = item.url;
                     a.textContent = item.title;
                     li.appendChild(a);
-                    articlesHistoryList.appendChild(li);
+                    fragment.appendChild(li);
                 });
+                articlesHistoryList.appendChild(fragment);
             }
         }
     }

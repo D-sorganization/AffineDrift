@@ -50,7 +50,7 @@ These assumptions apply strictly to the theoretical decomposition presented in t
   
 2. **Flexible shaft via finite-dimensional modal approximation.** The shaft is modeled using \( m \) vibration modes obtained from standard beam theory (e.g., Euler--Bernoulli or Timoshenko). Modal truncation approximates the distributed dynamics with a finite-dimensional representation.
   
-3. **No ball--club impact phase.** Ball impact is excluded from the domain of analysis due to its hybrid (non-smooth) dynamics. The model applies to the pre-impact and post-impact phases only.
+3. **No ball--club impact phase (Theory of Delivery).** Ball impact is excluded from the domain of analysis due to its hybrid (non-smooth) dynamics. The model applies to the pre-impact phase ("Delivery") and post-impact phase. This framework analyzes the *generation* of impact conditions, not the collision itself. Since the golfer's control authority effectively ends at the moment of contact, the drift-input decomposition is valid for analyzing how the system arrives at the terminal state.
   
 4. **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions. Note that aerodynamic forces \(F_{aero}(q, \dot{q})\) are strictly state-dependent and thus mathematically compatible with the affine structure \(\dot{x} = f(x) + g(x)u\). Their inclusion would simply enrich the drift vector field \(f(x)\) with dissipative terms. They are omitted here to isolate the inertial and elastic energy exchange fundamental to the swing, but the theoretical framework generalizes to include them without modification.
   
@@ -179,7 +179,7 @@ $$M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},
 
 Here:
 
-- $C(q,\dot{q},\eta,\dot{\eta})$ represents the Coriolis and centrifugal matrix, derived from the Christoffel symbols of $M$.
+- $C(q,\dot{q},\eta,\dot{\eta})$ represents the Coriolis and centrifugal matrix, derived from the Christoffel symbols of $M$. A key structural property, crucial for passivity-based analysis, is that the matrix $\dot{M} - 2C$ is skew-symmetric, implying $\dot{q}_{\text{sys}}^T (\dot{M} - 2C) \dot{q}_{\text{sys}} = 0$ (conservation of energy in the absence of non-conservative forces).
 - $G(q,\eta) = \frac{\partial V_g}{\partial q_{\text{sys}}}$ is the gravitational vector.
 - $\tau \in \mathbb{R}^n$ is the generalized torque applied by the golfer.
 - The zero vector in the lower block of the right-hand side explicitly reflects the **underactuated** nature of the system: the golfer cannot directly apply torque to the shaft modes.
@@ -559,6 +559,12 @@ $$
 
 meaning \( f(x) \) depends only on the state \( x \) and model parameters, and is strictly independent of the instantaneous control input \( u \).
 
+To see this rigorously, recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+$$
+f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + F_s \right) \end{bmatrix}.
+$$
+The inertia matrix $M$, Coriolis matrix $C$, gravity vector $G$, and shaft forces $F_s$ depend exclusively on $q, \eta, \dot{q}, \dot{\eta}$. The inverse inertia matrix $M^{-1}$ is similarly state-dependent but input-independent. Since the term $B(q)u$ appears only in the input field $g(x)$ and not in the drift field, the partial derivative with respect to $u$ vanishes identically.
+
 This property is structural for control-affine systems. Consider the general mechanical form:
 
 $$
@@ -778,6 +784,8 @@ Velocity-dependent drift forces include:
 
 These forces can be large---often dominant---in fast regions of the swing (e.g., late downswing).
 
+> **Note on Causal History:** While classified as "Drift" because they do not depend on the *instantaneous* torque input $u(t)$, these velocity-dependent forces are causally linked to the *history* of prior inputs that accelerated the system to its current state. They represent the "kinetic momentum" of the swing established by past effort, not an exogenous source of energy.
+
 ### Category 3: Input (torque-driven) forces
 
 These forces arise solely from the golfer’s active torque input and are defined by:
@@ -865,7 +873,7 @@ The framework developed in this manuscript provides a mathematically rigorous de
 ### Model-form limitations
 
 ##### Rigid-body anatomical representation.
-All anatomical segments of the golfer are modeled as rigid bodies with fixed inertial properties. Compliance in soft tissue, joint capsules, musculotendinous structures, and skin-mounted marker dynamics are excluded. These omissions affect how accurately inverse dynamics relates to true joint torques and internal forces.
+All anatomical segments of the golfer (torso, arms, hands) are modeled as rigid bodies with fixed inertial properties. Compliance in soft tissue, joint capsules, musculotendinous structures, and skin-mounted marker dynamics are excluded. While grip compliance acts as a low-pass filter on input transmission, it does not break the affine structure of the equations of motion on the handle side. However, assuming rigidity likely overestimates the control authority at high frequencies.
 
 ##### Finite-dimensional shaft model.
 The shaft is represented using a truncated set of bending modes. Modal truncation introduces approximation error, particularly during high-frequency events (late downswing, impact). Although the affine structure is preserved, the magnitude and timing of drift forces may shift with a more complete flexible-body representation.
@@ -877,6 +885,9 @@ Air resistance on the clubhead and shaft, ground–body compliance, and ball–c
 The feet are assumed to be rigidly fixed to the ground. In reality, golfers produce substantial torques through foot pressure modulation, shear forces, and center-of-pressure shifts. These are outside the scope of the current model and will be addressed in subsequent work.
 
 ### Physiological limitations
+
+##### Closed-chain indeterminacy.
+The golfer-club system (specifically the two-handed grip) forms a closed kinematic chain. In such topologies, the mapping from joint torques to generalized motion is not unique due to the existence of a null space (e.g., antagonistic co-contraction or internal forces between the arms). Inverse dynamics recovers only the *net motion-producing torque*. Internal forces that do not produce motion are mechanically real and metabolically costly but are invisible to this decomposition. Thus, $\tau_{\text{input}}$ represents the net effective torque, likely underestimating the total magnitude of muscle force.
 
 ##### Torques as abstract control inputs.
 The model uses joint torque inputs \(u(t)\) as the control channels. This abstracts away:
@@ -902,6 +913,9 @@ The decomposition assumes perfect knowledge of:
   
 - shaft stiffness and damping parameters.
 Real data introduces parameter uncertainty, which propagates into drift and input estimates. In practice, parameter sensitivity analysis is required for empirical interpretation.
+
+##### Residual nature of input estimation.
+Because $\tau_{\text{input}}$ is calculated as a residual ($\tau_{\text{total}} - \tau_{\text{drift}}$), it absorbs all unmodeled external forces (e.g., aerodynamics) and measurement errors. For example, unmodeled aerodynamic drag will reduce the observed acceleration, causing inverse dynamics to compute a lower total torque; the decomposition will attribute this deceleration to a negative "braking" input by the golfer. Thus, $\tau_{\text{input}}$ should be interpreted as the "Net Non-Conservative Forcing" rather than pure muscular torque in the presence of significant modeling errors.
 
 ##### Noise-free kinematics and differentiability.
 Inverse dynamics requires accurate positions, velocities, and accelerations. Marker noise, filtering choices, and numerical differentiation introduce error that may distort the partition of drift and input torques.
@@ -1169,18 +1183,21 @@ This constitutes the *drift invariance* property formalized in Section~[@sec:dri
 
 ### A.5 \quad Input acceleration mapping
 
-The input-driven acceleration is the part proportional to \(u\):
-
+The input-driven acceleration is the part proportional to \(u\). We can expand the inverse inertia matrix $M^{-1}$ in block form. Let $H = M^{-1}$. Its structure reflects the full coupling:
 $$
-  a_{\mathrm{input}}(x)\,u
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\ 0
-  \end{bmatrix}.
+H(q,\eta) = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}.
 $$
+The acceleration equation becomes:
+$$
+\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
+$$
+Thus, the input torque $u$ drives the rigid body accelerations $\ddot{q}$ through the effective inertia $H_{qq}$, and simultaneously drives the flexible mode accelerations $\ddot{\eta}$ through the inertial coupling term $H_{\eta q}$.
 
-Thus the input matrix is:
+The input matrix is:
 
 $$
   A_{\mathrm{input}}(x)
@@ -1188,7 +1205,9 @@ $$
   M^{-1}(q,\eta)
   \begin{bmatrix}
     B(q) \\ 0
-  \end{bmatrix}.
+  \end{bmatrix}
+  =
+  \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
   {#eq-appendix_Ainput}
 $$
 

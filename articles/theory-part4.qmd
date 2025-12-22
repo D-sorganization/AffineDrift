@@ -11,6 +11,10 @@ format:
 
 # Appendices
 
+The preceding parts of this manuscript have established the conceptual framework (Part I), the diagnostic tools (Part II), and the classification taxonomy (Part III) for the affine control interpretation of the golf swing. These sections relied on the assertion that the complex multibody dynamics of the golfer--club--shaft system can be rigorously cast into the control-affine form $\dot{x} = f(x) + g(x)u$.
+
+This Part IV collects the detailed mathematical proofs that substantiate those assertions. We explicitly derive the equations of motion for the coupled rigid--flexible system, demonstrate the preservation of the affine structure under modal truncation, and provide illustrative low-dimensional examples to build intuition.
+
 ## Appendix A: Mathematical Derivations
 
 This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
@@ -157,23 +161,26 @@ This constitutes the *drift invariance* property formalized in the main text.
 
 ### Input acceleration mapping
 
-The input-driven acceleration is the part proportional to $u$:
+The input-driven acceleration is the part proportional to $u$. We can expand the inverse inertia matrix $M^{-1}$ in block form. Let $H = M^{-1}$. Its structure reflects the full coupling:
+$$H(q,\eta) = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}.$$
+The acceleration equation becomes:
+$$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.$$
+Thus, the input torque $u$ drives the rigid body accelerations $\ddot{q}$ through the effective inertia $H_{qq}$, and simultaneously drives the flexible mode accelerations $\ddot{\eta}$ through the inertial coupling term $H_{\eta q}$.
 
-$$a_{\mathrm{input}}(x)\,u
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\ 0
-  \end{bmatrix}.$$
-
-Thus the input matrix is:
+The input matrix is:
 
 $$A_{\mathrm{input}}(x)
   =
   M^{-1}(q,\eta)
   \begin{bmatrix}
     B(q) \\ 0
-  \end{bmatrix}.$$
+  \end{bmatrix}
+  =
+  \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.$$
 
 Linearity of the torque input is preserved even in the presence of:
 

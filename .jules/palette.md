@@ -21,3 +21,7 @@
 ## 2025-05-19 - External Link Transparency
 **Learning:** Users navigating technical resources need clear distinction between internal navigation and external references. Automatically identifying external links and injecting visual indicators (like an SVG icon) via JavaScript/CSS provides this transparency without manual markup effort, but requires careful exclusion of image-based links to avoid visual clutter.
 **Action:** Use `querySelectorAll` to target external links, exclude those containing images (`!link.querySelector('img')`), and use `::after` pseudo-elements to inject consistent iconography.
+
+## 2025-10-17 - Print Stylesheets
+**Learning:** Users often print technical documentation to PDF for offline reading or annotation. Without dedicated print styles, they get sidebars, broken layouts, and wasted ink (background colors), making the content unreadable.
+**Action:** Always include a `@media print` block that hides navigation/UI elements (`display: none`), resets colors to black-on-white, and forces the main content to full width.

@@ -11,6 +11,8 @@ format:
 
 ## Drift Invariance and Input Constraints
 
+In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$. However, this separation is only causally valid if the "passive" term is truly independent of the "active" term.
+
 The drift--input decomposition
 
 $$\dot{x} = f(x) + g(x)u$$
@@ -23,9 +25,13 @@ The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical
 
 The drift vector field $f(x)$ is said to be *input-invariant* if
 
-$$f(x) \ \text{is independent of} \ u,$$
+$$\frac{\partial f(x)}{\partial u} = 0,$$
 
-for all states $x$ in the domain of interest.
+meaning $f(x)$ depends only on the state $x$ and model parameters, and is strictly independent of the instantaneous control input $u$.
+
+To see this rigorously, recall the definition of $f(x)$ derived in Part I:
+$$f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + F_s \right) \end{bmatrix}.$$
+The inertia matrix $M$, Coriolis matrix $C$, gravity vector $G$, and shaft forces $F_s$ depend exclusively on $q, \eta, \dot{q}, \dot{\eta}$. The inverse inertia matrix $M^{-1}$ is similarly state-dependent but input-independent. Since the term $B(q)u$ appears only in the input field $g(x)$ and not in the drift field, the partial derivative with respect to $u$ vanishes identically.
 
 For mechanical systems with generalized torques entering linearly,
 
