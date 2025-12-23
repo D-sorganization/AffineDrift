@@ -22,6 +22,16 @@ const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset
 const TOC_SCROLL_OFFSET = HEADER_OFFSET; // Active section detection offset
 const MAX_ID_GENERATION_ATTEMPTS = 100;
 
+// Helper function to debounce events
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
 // Helper function to generate unique IDs
 function generateUniqueId(text, usedIds) {
   let baseId = text
@@ -480,14 +490,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial calculation
   updateGeometry();
 
-  // Update on resize
-  window.addEventListener("resize", updateGeometry);
+  // Update on resize (Debounced)
+  window.addEventListener('resize', debounce(updateGeometry, 250));
 
   // Update on content changes (e.g., accordions)
-  if (typeof ResizeObserver !== "undefined") {
-    const resizeObserver = new ResizeObserver(() => {
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(debounce(() => {
       updateGeometry();
-    });
+    }, 250));
     resizeObserver.observe(document.body);
   }
 
