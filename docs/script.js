@@ -24,12 +24,12 @@ const MAX_ID_GENERATION_ATTEMPTS = 100;
 
 // Helper function to debounce events
 function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        const context = this;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), wait);
-    };
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
 }
 
 // Helper function to generate unique IDs
@@ -389,7 +389,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           visibleSections.add(entry.target.id);
         } else {
@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (activeId) {
-        tocLinks.forEach(link => {
+        tocLinks.forEach((link) => {
           if (link.getAttribute('href') === `#${activeId}`) {
             link.classList.add('active');
           } else {
@@ -417,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }, observerOptions);
 
-    sections.forEach(section => {
+    sections.forEach((section) => {
       if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
         observer.observe(section);
       }
