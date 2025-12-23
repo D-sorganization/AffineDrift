@@ -2,28 +2,31 @@
 
 ## A) Concept Map
 
-*   **System Modeling**
-    *   **Multibody Dynamics**: Modeling the golfer as a kinematic chain of rigid bodies.
-    *   **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
-    *   **Drift Invariance**: The property that passive dynamics $f(x)$ are independent of instantaneous torque inputs $u$.
-    *   **Flexible Multibody Dynamics**: Modeling the shaft using Assumed Modes Method (AMM) within the rigid-body framework.
+- **System Modeling**
 
-*   **Force Decomposition**
-    *   **Drift Dynamics**: Passive forces from inertia, Coriolis/centrifugal effects, gravity, and shaft elasticity.
-    *   **Input Dynamics**: Active forces arising purely from generalized joint torques.
-    *   **Counterfactuals**:
-        *   **Zero Torque Counterfactual (ZTCF)**: Trajectory integration with $u=0$ to isolate passive drift evolution.
-        *   **Zero Velocity Counterfactual (ZVCF)**: Instantaneous evaluation at $\dot{x}=0$ to isolate configuration-dependent loads (gravity, stiffness).
+  - **Multibody Dynamics**: Modeling the golfer as a kinematic chain of rigid bodies.
+  - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
+  - **Drift Invariance**: The property that passive dynamics $f(x)$ are independent of instantaneous torque inputs $u$.
+  - **Flexible Multibody Dynamics**: Modeling the shaft using Assumed Modes Method (AMM) within the rigid-body framework.
 
-*   **Causal Analysis**
-    *   **Mechanical Causality**: Attributing motion to physical mechanisms (inertia vs. torque) rather than neural intent.
-    *   **Force Taxonomy**: Classification of total force into Configuration Drift, Velocity Drift, Input, and Mixed components.
+- **Force Decomposition**
 
-*   **Key References**
-    *   **Murray, Li, Sastry**: Mathematical robotics foundation.
-    *   **Featherstone**: Efficient rigid body algorithms.
-    *   **Nesbit / MacKenzie**: Golf biomechanics baselines (Inverse/Forward dynamics).
-    *   **Todorov**: Optimal control in biological systems.
+  - **Drift Dynamics**: Passive forces from inertia, Coriolis/centrifugal effects, gravity, and shaft elasticity.
+  - **Input Dynamics**: Active forces arising purely from generalized joint torques.
+  - **Counterfactuals**:
+    - **Zero Torque Counterfactual (ZTCF)**: Trajectory integration with $u=0$ to isolate passive drift evolution.
+    - **Zero Velocity Counterfactual (ZVCF)**: Instantaneous evaluation at $\dot{x}=0$ to isolate configuration-dependent loads (gravity, stiffness).
+
+- **Causal Analysis**
+
+  - **Mechanical Causality**: Attributing motion to physical mechanisms (inertia vs. torque) rather than neural intent.
+  - **Force Taxonomy**: Classification of total force into Configuration Drift, Velocity Drift, Input, and Mixed components.
+
+- **Key References**
+  - **Murray, Li, Sastry**: Mathematical robotics foundation.
+  - **Featherstone**: Efficient rigid body algorithms.
+  - **Nesbit / MacKenzie**: Golf biomechanics baselines (Inverse/Forward dynamics).
+  - **Todorov**: Optimal control in biological systems.
 
 ## B) Bibliography (YAML)
 
@@ -51,7 +54,8 @@
   venue: "CRC Press"
   scholar_link: "https://scholar.google.com/scholar?q=A+Mathematical+Introduction+to+Robotic+Manipulation+Murray"
   clusters: ["robotics", "control theory", "multibody dynamics"]
-  concepts: ["lagrangian dynamics", "manipulator equations", "control-affine systems"]
+  concepts:
+    ["lagrangian dynamics", "manipulator equations", "control-affine systems"]
   related_ids: ["lynch2017modern", "spong2005robot"]
   references_out_ids: ["featherstone2008rigid", "isidori1995nonlinear"]
 
@@ -76,7 +80,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
   clusters: ["multibody dynamics", "simulation"]
-  concepts: ["recursive algorithms", "spatial algebra", "articulated body algorithm"]
+  concepts:
+    ["recursive algorithms", "spatial algebra", "articulated body algorithm"]
   related_ids: ["jain2010robot", "pinocchio_lib"]
   references_out_ids: ["jain2010robot", "pinocchio_lib"]
 
@@ -113,7 +118,12 @@
   venue: "Cambridge University Press"
   scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
   clusters: ["multibody dynamics", "flexible bodies"]
-  concepts: ["assumed modes method", "floating frame of reference", "flexible multibody"]
+  concepts:
+    [
+      "assumed modes method",
+      "floating frame of reference",
+      "flexible multibody",
+    ]
   related_ids: ["simo1986dynamics"]
   references_out_ids: ["book1984recursive"]
 
@@ -295,28 +305,34 @@
 ## C) Reading Paths
 
 ### Path 1: Fast Ramp (Conceptual Overview)
-*Target: Grasp the core mechanical vs. biological distinction and the golf context.*
-1.  **Cochran & Stobbs (1968)** - *The Search for the Perfect Swing* (`cochran1968search`). Canonical intro to golf physics.
-2.  **Nesbit (2005)** - *A 3D kinematic and kinetic study* (`nesbit2005three`). Introduction to inverse dynamics in golf.
-3.  **Spong, Hutchinson, Vidyasagar (2005)** - *Robot Modeling and Control* (`spong2005robot`). Accessible intro to Lagrangian dynamics.
-4.  **McGeer (1990)** - *Passive Dynamic Walking* (`mcgeer1990passive`). Inspiration for "drift" as a useful driver of motion.
-5.  **Todorov (2004)** - *Optimality principles* (`todorov2004optimality`). Understanding control cost vs. mechanical task.
+
+_Target: Grasp the core mechanical vs. biological distinction and the golf context._
+
+1.  **Cochran & Stobbs (1968)** - _The Search for the Perfect Swing_ (`cochran1968search`). Canonical intro to golf physics.
+2.  **Nesbit (2005)** - _A 3D kinematic and kinetic study_ (`nesbit2005three`). Introduction to inverse dynamics in golf.
+3.  **Spong, Hutchinson, Vidyasagar (2005)** - _Robot Modeling and Control_ (`spong2005robot`). Accessible intro to Lagrangian dynamics.
+4.  **McGeer (1990)** - _Passive Dynamic Walking_ (`mcgeer1990passive`). Inspiration for "drift" as a useful driver of motion.
+5.  **Todorov (2004)** - _Optimality principles_ (`todorov2004optimality`). Understanding control cost vs. mechanical task.
 
 ### Path 2: Deep Technical (Theory & Derivation)
-*Target: Understand the affine decomposition and flexible body math.*
-1.  **Murray, Li, Sastry (1994)** - *Mathematical Introduction to Robotic Manipulation* (`murray1994mathematical`). The rigorous geometric foundation.
-2.  **Isidori (1995)** - *Nonlinear Control Systems* (`isidori1995nonlinear`). Formal treatment of affine systems and drift vector fields.
-3.  **Featherstone (2008)** - *Rigid Body Dynamics Algorithms* (`featherstone2008rigid`). Efficient computation of $M(q)$ and $C(q,\dot{q})$.
-4.  **Shabana (2020)** - *Dynamics of Multibody Systems* (`shabana2020dynamics`). Flexible body formulations/AMM.
-5.  **Book (1984)** - *Recursive Lagrangian dynamics of flexible manipulator arms* (`book1984recursive`). Classic recursive formulation for flexible chains.
-6.  **Simo & Vu-Quoc (1986)** - *Dynamics of flexible beams* (`simo1986dynamics`). Advanced beam theory for the shaft.
-7.  **MacKenzie & Sprigings (2009)** - *Forward dynamics model* (`mackenzie2009three`). Specific application to golf.
-8.  **Lynch & Park (2017)** - *Modern Robotics* (`lynch2017modern`). Modern geometric treatment.
+
+_Target: Understand the affine decomposition and flexible body math._
+
+1.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction to Robotic Manipulation_ (`murray1994mathematical`). The rigorous geometric foundation.
+2.  **Isidori (1995)** - _Nonlinear Control Systems_ (`isidori1995nonlinear`). Formal treatment of affine systems and drift vector fields.
+3.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_ (`featherstone2008rigid`). Efficient computation of $M(q)$ and $C(q,\dot{q})$.
+4.  **Shabana (2020)** - _Dynamics of Multibody Systems_ (`shabana2020dynamics`). Flexible body formulations/AMM.
+5.  **Book (1984)** - _Recursive Lagrangian dynamics of flexible manipulator arms_ (`book1984recursive`). Classic recursive formulation for flexible chains.
+6.  **Simo & Vu-Quoc (1986)** - _Dynamics of flexible beams_ (`simo1986dynamics`). Advanced beam theory for the shaft.
+7.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_ (`mackenzie2009three`). Specific application to golf.
+8.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Modern geometric treatment.
 
 ### Path 3: Implementation (Simulation & Analysis)
-*Target: Reproducing the results or building a simulator.*
-1.  **Olson (2024)** - *Two Hand Golf Swing Model* (`olson2024twohand`). Direct implementation reference.
+
+_Target: Reproducing the results or building a simulator._
+
+1.  **Olson (2024)** - _Two Hand Golf Swing Model_ (`olson2024twohand`). Direct implementation reference.
 2.  **Pinocchio Library** - (`pinocchio_lib`). Best open-source tool for the rigid backbone.
 3.  **Drake (Tedrake)** - (`drake_lib`). For trajectory optimization extensions.
 4.  **SciPy** - (`scipy_lib`). For ODE integration and signal processing.
-5.  **Sharp (2009)** - *Influence of kick point* (`sharp2009influence`). Data/parameters for shaft modeling.
+5.  **Sharp (2009)** - _Influence of kick point_ (`sharp2009influence`). Data/parameters for shaft modeling.

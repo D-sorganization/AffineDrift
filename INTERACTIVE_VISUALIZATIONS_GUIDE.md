@@ -13,7 +13,7 @@ This guide provides specific implementations for cutting-edge interactive visual
 Create `tools/swing-visualizer-3d.html`:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -483,7 +483,7 @@ Create `tools/swing-visualizer-3d.html`:
 Create `tools/drift-input-explorer.html`:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -816,7 +816,7 @@ Create `tools/drift-input-explorer.html`:
 Add to a theory article:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -1108,7 +1108,7 @@ Add to a theory article:
 Create `tools/equation-explorer.html`:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />

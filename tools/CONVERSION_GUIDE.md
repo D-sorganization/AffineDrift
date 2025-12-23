@@ -39,30 +39,36 @@ python3 tools/convert_all_latex.py
 The converter handles:
 
 - **Equations**: Preserves LaTeX equations for MathJax rendering
+
   - Display equations: `\begin{equation}...\end{equation}`, `\[...\]`
   - Inline equations: `$...$`, `\(...\)`
   - Align environments: `\begin{align}...\end{align}`
 
 - **Sections**: Converts to HTML headings
+
   - `\section{}` → `<h2>`
   - `\subsection{}` → `<h3>`
   - `\subsubsection{}` → `<h4>`
 
 - **Text Formatting**:
+
   - `\textbf{}` → `<strong>`
   - `\textit{}`, `\emph{}` → `<em>`
   - `\texttt{}` → `<code>`
 
 - **Lists**:
+
   - `\begin{itemize}` → `<ul>`
   - `\begin{enumerate}` → `<ol>`
 
 - **Special Environments**:
+
   - `\begin{abstract}` → Styled abstract section
   - `\begin{keypoint}` → Blue highlighted box
   - `\begin{limitation}` → Red highlighted box
 
 - **Links**:
+
   - `\url{}` → `<a href="...">`
   - `\href{}{}` → `<a href="...">`
 

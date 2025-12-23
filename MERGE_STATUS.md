@@ -23,6 +23,7 @@
 ### Known Issues
 
 1. **Full Site Render**: Rendering the entire project (`quarto render`) attempts to process `.md` files that contain code blocks, causing an error.
+
    - **Workaround**: Render articles individually or use `quarto preview` for development
    - **Solution**: Use `.quartoignore` file (already created) to exclude non-Quarto markdown files
 
@@ -52,12 +53,14 @@ For production builds, you may need to:
 ## Next Steps
 
 1. **Test Locally**:
+
    - [ ] Run `quarto preview` to test the site interactively
    - [ ] Verify all navigation links work
    - [ ] Check that math equations render correctly
    - [ ] Verify calculator still runs: `python "content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py"`
 
 2. **Before Pushing to Main**:
+
    - [ ] Test full site render (or verify CI/CD will handle it)
    - [ ] Check that all HTML pages are generated correctly
    - [ ] Verify no broken links

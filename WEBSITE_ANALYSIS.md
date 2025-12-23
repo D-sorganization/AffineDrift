@@ -46,14 +46,17 @@ The following pages still use old navigation structure and should be updated:
 These pages exist but are NOT in the main navigation:
 
 1. **book-reviews.html** - Book reviews page
+
    - Only accessible from old nav pages
    - Decision needed: Add to nav or archive?
 
 2. **daydreams-doodles.html** - Casual thoughts/ideas
+
    - Only accessible from old nav pages
    - Decision needed: Add to nav or archive?
 
 3. **theory.html** - Appears to be umbrella page
+
    - May be redundant with articles.html
    - Has old navigation
 

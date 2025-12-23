@@ -104,10 +104,12 @@ Created `content/Inverse Dynamics Analysis/Drafts/Archive/` (ready for future ar
 ### Low Priority Items:
 
 1. **theory.html** - May be redundant with articles.html
+
    - Currently accessible via navigation
    - Consider archiving if truly redundant
 
 2. **Logo Consolidation**
+
    - Multiple logo files exist in root:
      - AffineDriftLogo.png (324K)
      - AffineDriftLogoText.png (37K)
@@ -115,10 +117,12 @@ Created `content/Inverse Dynamics Analysis/Drafts/Archive/` (ready for future ar
    - Could be cleaned up but not urgent
 
 3. **Old Inverse Dynamics Drafts**
+
    - Archive directory created but empty
    - Some old drafts in Archive subdirectory could be consolidated
 
 4. **404 Page**
+
    - Could add custom 404.html for better UX
 
 5. **Sitemap**

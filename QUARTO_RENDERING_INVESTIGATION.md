@@ -33,10 +33,12 @@ The table of contents (TOC) was not appearing in the left sidebar throughout the
 Investigation of git history revealed:
 
 1. **Commit 697cf51 (Nov 2025)**: 3-column layout was added to `.qmd` files
+
    - Changes made to: `articles.qmd`, `models*.qmd`, `resources-*.qmd`
    - Sidebars and 3-column structure added to all these files
 
 2. **Commit 1ddbccf**: Last change to `docs/articles.html`
+
    - Only changed script.js path (1 line)
    - NOT a Quarto render
 
@@ -93,6 +95,7 @@ However, based on Quarto documentation:
 Since Quarto couldn't be installed in the current environment, a workaround was implemented:
 
 1. Created `build-html.py` script that:
+
    - Extracts `{=html}` blocks from `.qmd` files
    - Uses existing `docs/articles.html` as a template
    - Replaces content sections while preserving Quarto's header/footer

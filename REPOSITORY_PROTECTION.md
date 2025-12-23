@@ -7,32 +7,39 @@ To protect the main branch and ensure quality control, configure these protectio
 ### Setting Up Branch Protection
 
 1. **Navigate to Settings**
+
    - Go to repository → Settings → Branches
    - Click "Add rule" or edit existing rule for `main`
 
 2. **Required Protection Rules**
 
    ✅ **Require pull request reviews before merging**
+
    - Minimum 1 approval required (or self-review for solo projects)
    - Dismiss stale pull request approvals when new commits are pushed
 
    ✅ **Require status checks to pass before merging**
+
    - Require branches to be up to date before merging
    - Status checks that should pass:
      - `validate` (HTML/CSS validation)
      - `build-deploy` (Quarto build succeeds)
 
    ✅ **Require conversation resolution before merging**
+
    - All comments must be resolved
 
    ✅ **Require linear history**
+
    - Prevents merge commits, enforces clean history
    - Use squash or rebase merge
 
    ✅ **Include administrators**
+
    - Apply rules to repository administrators too
 
    ✅ **Restrict who can push to matching branches**
+
    - Only allow specific users/teams to push directly
    - Or: disable direct pushes entirely (force PRs)
 

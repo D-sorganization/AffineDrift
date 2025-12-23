@@ -3,17 +3,20 @@
 ## A) Concept Map
 
 - **Forward Dynamics Modeling**
+
   - **Simulink Implementation**: Using a block-diagram environment for equation solving.
   - **Flexible Beam Theory**: Modeling the golf shaft using finite-dimensional modal approximations (Euler-Bernoulli).
   - **Integration**: Using stiff solvers (`ode15s`) to handle the timescale separation between rigid body motion and shaft vibrations.
 
 - **Force Decomposition**
+
   - **Zero Torque Counterfactual (ZTCF)**: Isolating the "passive" component of motion by killing active inputs.
   - **Zero Velocity Counterfactual (ZVCF)**: Isolating the configuration-dependent forces (gravity, stiffness) from velocity-dependent ones.
   - **Drift vs. Input**: $\tau_{\mathrm{total}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}}$.
   - **Kill-Switches**: The numerical technique used to reset integrators/torques to evaluate counterfactuals.
 
 - **Interaction Forces**
+
   - **Hand-Club Coupling**: The forces transmitted between the golfer and the club.
   - **Passive Momentum**: The contribution of the club's inertia and velocity to the felt force.
 
