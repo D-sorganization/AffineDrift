@@ -218,7 +218,9 @@ This control-affine structure is the backbone for the drift--input decomposition
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
 
-Given the control-affine form~\eqref{eq:affine_state}, we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
+The derivation in Section~[@sec:affine] yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$. This algebraic separation is the key to unlocking the causal structure of the swing. Because the equations of motion are linear in torque, we can physically interpret the terms not just as mathematical components, but as distinct mechanical sources of motion. The term $f(x)$ represents the system's *inertial memory* and *potential field*—the forces that exist simply because the system has a state—while $g(x)u$ represents the *current agency* of the golfer.
+
+Given the control-affine form~\eqref{eq:affine_state}, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
 
@@ -283,7 +285,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 The drift--input decomposition in~\eqref{eq:affine_state} separates the dynamics into a passive component \(f(x)\) and a torque-driven component \(g(x)u\). The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
-The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define the *instantaneous* tendencies of the system: \(f(x)\) dictates how the state evolves passively, while \(g(x)\) dictates how it responds to input. However, the golf swing is not an instant; it is a trajectory unfolding over time. To understand the cumulative effect of the drift dynamics, we must move from the differential description (\(\dot{x}\)) to the integral description (\(x(t)\)). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
+The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define the *instantaneous* tendencies of the system: \(f(x)\) dictates how the state evolves passively, while \(g(x)\) dictates how it responds to input. However, the golf swing is not an instant; it is a ballistic process where past inputs shape current passive dynamics. The 'drift' forces experienced at impact are not merely functions of the current configuration; they are the legacy of momentum generated earlier in the downswing. To capture this history-dependent nature of drift, we must move from the tangent bundle (velocities) to the integral curves (trajectories). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
 
 ### Definition as a drift-only trajectory
 
@@ -538,15 +540,15 @@ ZVCF therefore complements ZTCF in building a full picture of drift forces acros
 ## Drift Invariance and Input Constraints
 {#sec-drift_invariance}
 
+We have now constructed two powerful counterfactual baselines: the ZTCF (Section~[@sec:ztcf]) to isolate passive momentum history, and the ZVCF (Section~[@sec:zvcf]) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+
 The drift--input decomposition
 
 $$
   \xd = f(x) + g(x)u
 $$
 
-is meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.
-
-The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical, often implicit, assumption: that the passive dynamics \(f(x)\) remain consistent regardless of the input applied. If the act of applying torque also fundamentally altered the system's passive properties—for example, if muscle activation significantly changed the joint stiffness or inertial distribution—then 'drift' would be a moving target, and the decomposition would lose its causal clarity. We must therefore explicitly formalize the condition of *Drift Invariance* to ensure that our counterfactuals represent a stable mechanical reality.
+is therefore meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
 
 ### Definition of drift invariance
 

@@ -15,7 +15,9 @@ In Part I, we established that the golfer--club--shaft system is governed by the
 
 We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
 
-Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
+The derivation in Part I yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$. This algebraic separation is the key to unlocking the causal structure of the swing. Because the equations of motion are linear in torque, we can physically interpret the terms not just as mathematical components, but as distinct mechanical sources of motion. The term $f(x)$ represents the system's *inertial memory* and *potential field*—the forces that exist simply because the system has a state—while $g(x)u$ represents the *current agency* of the golfer.
+
+Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
 
@@ -73,7 +75,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 The drift--input decomposition separates the dynamics into a passive component $f(x)$ and a torque-driven component $g(x)u$. The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
-The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *instantaneous* tendencies of the system: $f(x)$ dictates how the state evolves passively, while $g(x)$ dictates how it responds to input. However, the golf swing is not an instant; it is a trajectory unfolding over time. To understand the cumulative effect of the drift dynamics, we must move from the differential description ($\dot{x}$) to the integral description ($x(t)$). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
+The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *instantaneous* tendencies of the system: $f(x)$ dictates how the state evolves passively, while $g(x)$ dictates how it responds to input. However, the golf swing is not an instant; it is a ballistic process where past inputs shape current passive dynamics. The 'drift' forces experienced at impact are not merely functions of the current configuration; they are the legacy of momentum generated earlier in the downswing. To capture this history-dependent nature of drift, we must move from the tangent bundle (velocities) to the integral curves (trajectories). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
 
 ### Definition as a drift-only trajectory
 

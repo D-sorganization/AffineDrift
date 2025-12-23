@@ -13,13 +13,13 @@ format:
 
 In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$. However, this separation is only causally valid if the "passive" term is truly independent of the "active" term.
 
+We have now constructed two powerful counterfactual baselines: the ZTCF (Part II) to isolate passive momentum history, and the ZVCF (Part II) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+
 The drift--input decomposition
 
 $$\dot{x} = f(x) + g(x)u$$
 
-is meaningful only if the drift term $f(x)$ is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.
-
-The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical, often implicit, assumption: that the passive dynamics $f(x)$ remain consistent regardless of the input applied. If the act of applying torque also fundamentally altered the system's passive properties—for example, if muscle activation significantly changed the joint stiffness or inertial distribution—then 'drift' would be a moving target, and the decomposition would lose its causal clarity. We must therefore explicitly formalize the condition of *Drift Invariance* to ensure that our counterfactuals represent a stable mechanical reality.
+is therefore meaningful only if the drift term $f(x)$ is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
 
 ### Definition of drift invariance
 
@@ -150,6 +150,8 @@ These appear in the present framework only through the feasible input set $\math
 Having established that the drift field is invariant to input, we have satisfied the necessary condition for a rigorous classification. We can now assert that every Newton of force acting on the system belongs to exactly one causal category: it is either a static configurational load, a dynamic velocity load, or an active input force. The following taxonomy operationalizes this logic into a set of definitions computable from standard inverse dynamics.
 
 ## Force and Torque Taxonomy via the Affine Mapping
+
+Having established the control-affine form (Part I), defined the physical decomposition (Part II), constructed the necessary temporal and configurational counterfactuals (Part II), and verified the invariance of the passive baseline (Section 1 of this Part), we can now synthesize these elements into a unified *Force Taxonomy*. This taxonomy is not merely a descriptive list; it is the direct algebraic consequence of the framework. It provides a comprehensive map for attributing every newton of force in the swing to its specific causal origin—whether it arises from the system's shape (Configuration Drift), its motion (Velocity Drift), or the golfer's immediate intent (Input).
 
 With the drift--input decomposition formalized, we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 
