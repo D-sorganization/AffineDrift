@@ -2,16 +2,18 @@
 
 ## Critique-Response Table
 
-| Critique                                          | Classification           | Validity                     | Core Defense Strategy                                                                                                                                                                                                                                                                                                                      | Status                      |
-| :------------------------------------------------ | :----------------------- | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- |
-| **01. Muscle Physiology**<br>(Variable Impedance) | Conceptual / Biophysical | **Partially Valid**          | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the _skeletal/inertial_ baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct _mechanical_ description of the plant. | **Applied** to Assumption 5 |
-| **02. Aerodynamics**<br>(Missing Drag)            | Empirical / Modeling     | **Valid** (but manageable)   | **Scope & Structure Argument:** Admit the omission but demonstrate that aerodynamic forces $F_{aero}(q, \dot{q})$ are purely state-dependent. Thus, they fit perfectly into the drift term $f(x)$ without breaking the affine structure. Their exclusion is a parsimonious modeling choice.                                                | **Applied** to Assumption 4 |
-| **03. Neuromuscular Control**<br>(Feedback Loops) | Methodological           | **Invalid** (Category Error) | **Plant vs. Controller Distinction:** The critique confuses _control topology_ (feedback) with _mechanical causality_ (actuation). The decomposition separates forces by _source_ (actuator vs. inertia), not by _intent_. The ZTCF probes the mechanics of the plant, regardless of the reflex loops driving the input.                   | **Applied** to Limitations  |
-| **04. Impact Evasion**<br>(No Collision Model)    | Methodological           | **Valid** (Scope Limit)      | **Theory of Delivery:** Clarify that the framework analyzes the _generation_ of impact conditions (Delivery), not the collision itself. The golfer's control authority ends at $t_{impact}$. The drift-input decomposition explains how the system arrives at the terminal state.                                                          | **Applied** to Assumption 3 |
-| **05. Soft Grip Coupling**<br>(Rigid Hands)       | Biophysical / Modeling   | **Valid** (Simplification)   | **Effective Plant Argument:** The input $u$ is defined as the _resultant torque at the handle_. Grip compliance acts as a filter but does not break the affine structure of the equations of motion on the handle side. Assuming rigidity likely _overestimates_ control authority, making the drift dominance argument stronger.          | **Applied** to Limitations  |
-| **06. Causal Masking**<br>(Drift Superposition)   | Conceptual               | **Valid** (Interpretational) | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the _passive mechanism_ at the current instant, not an exogenous energy source.                                                                   | **Applied** to Taxonomy     |
-| **07. Null Space Forces**<br>(Closed Chain)       | Methodological           | **Valid**                    | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain.                                                                                                                    | **Applied** to Limitations  |
-| **08. Residual Input**<br>(Identifiability)       | Empirical                | **Valid**                    | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present.                                                                                                                        | **Applied** to Limitations  |
+| Critique | Classification | Validity | Core Defense Strategy | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **01. Muscle Physiology**<br>(Variable Impedance) | Conceptual / Biophysical | **Partially Valid** | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the *skeletal/inertial* baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct *mechanical* description of the plant. | **Applied** to Assumption 5 |
+| **02. Aerodynamics**<br>(Missing Drag) | Empirical / Modeling | **Valid** (but manageable) | **Scope & Structure Argument:** Admit the omission but demonstrate that aerodynamic forces $F_{aero}(q, \dot{q})$ are purely state-dependent. Thus, they fit perfectly into the drift term $f(x)$ without breaking the affine structure. Their exclusion is a parsimonious modeling choice. | **Applied** to Assumption 4 |
+| **03. Neuromuscular Control**<br>(Feedback Loops) | Methodological | **Invalid** (Category Error) | **Plant vs. Controller Distinction:** The critique confuses *control topology* (feedback) with *mechanical causality* (actuation). The decomposition separates forces by *source* (actuator vs. inertia), not by *intent*. The ZTCF probes the mechanics of the plant, regardless of the reflex loops driving the input. | **Applied** to Limitations |
+| **04. Impact Evasion**<br>(No Collision Model) | Methodological | **Valid** (Scope Limit) | **Theory of Delivery:** Clarify that the framework analyzes the *generation* of impact conditions (Delivery), not the collision itself. The golfer's control authority ends at $t_{impact}$. The drift-input decomposition explains how the system arrives at the terminal state. | **Applied** to Assumption 3 |
+| **05. Soft Grip Coupling**<br>(Rigid Hands) | Biophysical / Modeling | **Valid** (Simplification) | **Effective Plant Argument:** The input $u$ is defined as the *resultant torque at the handle*. Grip compliance acts as a filter but does not break the affine structure of the equations of motion on the handle side. Assuming rigidity likely *overestimates* control authority, making the drift dominance argument stronger. | **Applied** to Limitations |
+| **06. Causal Masking**<br>(Drift Superposition) | Conceptual | **Valid** (Interpretational) | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the *passive mechanism* at the current instant, not an exogenous energy source. | **Applied** to Taxonomy |
+| **07. Null Space Forces**<br>(Closed Chain) | Methodological | **Valid** | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain. | **Applied** to Limitations |
+| **08. Residual Input**<br>(Identifiability) | Empirical | **Valid** | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present. | **Applied** to Limitations |
+| **09. Geometric Stiffness**<br>(Omission in ZVCF) | Mathematical | **Valid** | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline. | **Applied** to Taxonomy |
+| **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion. | **Applied** to Limitations |
 
 ---
 
@@ -87,4 +89,26 @@ Added **"Closed-chain indeterminacy"** to **Limitations**.
 **Implementation:**
 Added **"Residual nature of input estimation"** to **Limitations**.
 
+<<<<<<< HEAD
 > _Addition:_ "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
+=======
+> *Addition:* "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
+
+### 9. Addressing Geometric Stiffness
+
+**Analysis:** Geometric stiffness is a real physical force in flexible bodies. ZVCF removes it.
+
+**Implementation:**
+Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
+
+> *Addition:* "Geometric stiffness (centrifugal stiffening) forces, which appear as apparent stiffness changes but scale with velocity..."
+
+### 10. Addressing Parameter Causality Leakage
+
+**Analysis:** Identifying "passive" parameters from active swings risks contaminating the drift term with input information.
+
+**Implementation:**
+Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
+
+> *Addition:* "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
+>>>>>>> 4c8672e (docs: add defenses for geometric stiffness and parameter causality critiques)
