@@ -2,16 +2,16 @@
 
 ## Critique-Response Table
 
-| Critique | Classification | Validity | Core Defense Strategy | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **01. Muscle Physiology**<br>(Variable Impedance) | Conceptual / Biophysical | **Partially Valid** | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the *skeletal/inertial* baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct *mechanical* description of the plant. | **Applied** to Assumption 5 |
-| **02. Aerodynamics**<br>(Missing Drag) | Empirical / Modeling | **Valid** (but manageable) | **Scope & Structure Argument:** Admit the omission but demonstrate that aerodynamic forces $F_{aero}(q, \dot{q})$ are purely state-dependent. Thus, they fit perfectly into the drift term $f(x)$ without breaking the affine structure. Their exclusion is a parsimonious modeling choice. | **Applied** to Assumption 4 |
-| **03. Neuromuscular Control**<br>(Feedback Loops) | Methodological | **Invalid** (Category Error) | **Plant vs. Controller Distinction:** The critique confuses *control topology* (feedback) with *mechanical causality* (actuation). The decomposition separates forces by *source* (actuator vs. inertia), not by *intent*. The ZTCF probes the mechanics of the plant, regardless of the reflex loops driving the input. | **Applied** to Limitations |
-| **04. Impact Evasion**<br>(No Collision Model) | Methodological | **Valid** (Scope Limit) | **Theory of Delivery:** Clarify that the framework analyzes the *generation* of impact conditions (Delivery), not the collision itself. The golfer's control authority ends at $t_{impact}$. The drift-input decomposition explains how the system arrives at the terminal state. | **Applied** to Assumption 3 |
-| **05. Soft Grip Coupling**<br>(Rigid Hands) | Biophysical / Modeling | **Valid** (Simplification) | **Effective Plant Argument:** The input $u$ is defined as the *resultant torque at the handle*. Grip compliance acts as a filter but does not break the affine structure of the equations of motion on the handle side. Assuming rigidity likely *overestimates* control authority, making the drift dominance argument stronger. | **Applied** to Limitations |
-| **06. Causal Masking**<br>(Drift Superposition) | Conceptual | **Valid** (Interpretational) | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the *passive mechanism* at the current instant, not an exogenous energy source. | **Applied** to Taxonomy |
-| **07. Null Space Forces**<br>(Closed Chain) | Methodological | **Valid** | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain. | **Applied** to Limitations |
-| **08. Residual Input**<br>(Identifiability) | Empirical | **Valid** | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present. | **Applied** to Limitations |
+| Critique                                          | Classification           | Validity                     | Core Defense Strategy                                                                                                                                                                                                                                                                                                                      | Status                      |
+| :------------------------------------------------ | :----------------------- | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------- |
+| **01. Muscle Physiology**<br>(Variable Impedance) | Conceptual / Biophysical | **Partially Valid**          | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the _skeletal/inertial_ baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct _mechanical_ description of the plant. | **Applied** to Assumption 5 |
+| **02. Aerodynamics**<br>(Missing Drag)            | Empirical / Modeling     | **Valid** (but manageable)   | **Scope & Structure Argument:** Admit the omission but demonstrate that aerodynamic forces $F_{aero}(q, \dot{q})$ are purely state-dependent. Thus, they fit perfectly into the drift term $f(x)$ without breaking the affine structure. Their exclusion is a parsimonious modeling choice.                                                | **Applied** to Assumption 4 |
+| **03. Neuromuscular Control**<br>(Feedback Loops) | Methodological           | **Invalid** (Category Error) | **Plant vs. Controller Distinction:** The critique confuses _control topology_ (feedback) with _mechanical causality_ (actuation). The decomposition separates forces by _source_ (actuator vs. inertia), not by _intent_. The ZTCF probes the mechanics of the plant, regardless of the reflex loops driving the input.                   | **Applied** to Limitations  |
+| **04. Impact Evasion**<br>(No Collision Model)    | Methodological           | **Valid** (Scope Limit)      | **Theory of Delivery:** Clarify that the framework analyzes the _generation_ of impact conditions (Delivery), not the collision itself. The golfer's control authority ends at $t_{impact}$. The drift-input decomposition explains how the system arrives at the terminal state.                                                          | **Applied** to Assumption 3 |
+| **05. Soft Grip Coupling**<br>(Rigid Hands)       | Biophysical / Modeling   | **Valid** (Simplification)   | **Effective Plant Argument:** The input $u$ is defined as the _resultant torque at the handle_. Grip compliance acts as a filter but does not break the affine structure of the equations of motion on the handle side. Assuming rigidity likely _overestimates_ control authority, making the drift dominance argument stronger.          | **Applied** to Limitations  |
+| **06. Causal Masking**<br>(Drift Superposition)   | Conceptual               | **Valid** (Interpretational) | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the _passive mechanism_ at the current instant, not an exogenous energy source.                                                                   | **Applied** to Taxonomy     |
+| **07. Null Space Forces**<br>(Closed Chain)       | Methodological           | **Valid**                    | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain.                                                                                                                    | **Applied** to Limitations  |
+| **08. Residual Input**<br>(Identifiability)       | Empirical                | **Valid**                    | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present.                                                                                                                        | **Applied** to Limitations  |
 
 ---
 
@@ -24,7 +24,7 @@
 **Implementation:**
 We have refined **Assumption 5** in `articles/affine-nature-golf-swing.qmd` to explicitly distinguish "Skeletal Drift" from "Physiological Relaxation".
 
-> *Refinement:* "While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance... The term $f(x)$ represents the **skeletal drift**..."
+> _Refinement:_ "While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance... The term $f(x)$ represents the **skeletal drift**..."
 
 ### 2. Addressing Aerodynamics
 
@@ -33,16 +33,16 @@ We have refined **Assumption 5** in `articles/affine-nature-golf-swing.qmd` to e
 **Implementation:**
 We have added a clarification to **Assumption 4** in `articles/affine-nature-golf-swing.qmd`.
 
-> *Clarification:* "Note that aerodynamic forces $F_{aero}(q, \dot{q})$ are strictly state-dependent and thus mathematically compatible with the affine structure..."
+> _Clarification:_ "Note that aerodynamic forces $F_{aero}(q, \dot{q})$ are strictly state-dependent and thus mathematically compatible with the affine structure..."
 
 ### 3. Addressing Neuromuscular Control
 
-**Analysis:** The critique confuses the *Controller* (Golfer) with the *Plant* (Body). The AffineDrift theory models the Plant.
+**Analysis:** The critique confuses the _Controller_ (Golfer) with the _Plant_ (Body). The AffineDrift theory models the Plant.
 
 **Implementation:**
 We have added a new subsection **"Mechanical vs. Control Causality"** to the **Limitations** section in `articles/affine-nature-golf-swing.qmd`.
 
-> *Addition:* "It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force)..."
+> _Addition:_ "It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force)..."
 
 ### 4. Addressing The Impact Evasion
 
@@ -51,7 +51,7 @@ We have added a new subsection **"Mechanical vs. Control Causality"** to the **L
 **Implementation:**
 Clarified **Assumption 3** to emphasize the "Theory of Delivery".
 
-> *Refinement:* "This framework analyzes the *generation* of impact conditions (Delivery), not the collision itself. Since the golfer's control authority effectively ends at the moment of contact..."
+> _Refinement:_ "This framework analyzes the _generation_ of impact conditions (Delivery), not the collision itself. Since the golfer's control authority effectively ends at the moment of contact..."
 
 ### 5. Addressing Soft Grip Coupling
 
@@ -60,7 +60,7 @@ Clarified **Assumption 3** to emphasize the "Theory of Delivery".
 **Implementation:**
 Added "Biophysical Robustness" note to **Limitations**.
 
-> *Refinement:* "While grip compliance acts as a low-pass filter on input transmission, it does not break the affine structure... assuming rigidity likely overestimates the control authority..."
+> _Refinement:_ "While grip compliance acts as a low-pass filter on input transmission, it does not break the affine structure... assuming rigidity likely overestimates the control authority..."
 
 ### 6. Addressing Causal Masking (Drift Superposition)
 
@@ -69,7 +69,7 @@ Added "Biophysical Robustness" note to **Limitations**.
 **Implementation:**
 Added a **"Note on Causal History"** to the **Taxonomy** section (Category 2).
 
-> *Addition:* "While classified as 'Drift' because they do not depend on the *instantaneous* torque input, these velocity-dependent forces are causally linked to the *history* of prior inputs..."
+> _Addition:_ "While classified as 'Drift' because they do not depend on the _instantaneous_ torque input, these velocity-dependent forces are causally linked to the _history_ of prior inputs..."
 
 ### 7. Addressing Null Space Forces (Closed Chain)
 
@@ -78,7 +78,7 @@ Added a **"Note on Causal History"** to the **Taxonomy** section (Category 2).
 **Implementation:**
 Added **"Closed-chain indeterminacy"** to **Limitations**.
 
-> *Addition:* "Inverse dynamics recovers only the *net motion-producing torque*. Internal forces... are invisible to this decomposition."
+> _Addition:_ "Inverse dynamics recovers only the _net motion-producing torque_. Internal forces... are invisible to this decomposition."
 
 ### 8. Addressing Residual Input (Identifiability)
 
@@ -87,4 +87,4 @@ Added **"Closed-chain indeterminacy"** to **Limitations**.
 **Implementation:**
 Added **"Residual nature of input estimation"** to **Limitations**.
 
-> *Addition:* "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
+> _Addition:_ "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."

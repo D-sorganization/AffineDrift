@@ -13,20 +13,24 @@
 #### Added Files (New)
 
 1. **Quarto Configuration**
+
    - `_quarto.yml` - Quarto project configuration
    - `.quartoignore` - Files to exclude from Quarto processing
    - `custom.scss` - Custom Quarto styling
 
 2. **Quarto Articles** (NEW)
+
    - `articles/wrist-universal-joint.qmd` - Wrist article in Quarto format
    - `articles/inverse-dynamics.qmd` - Inverse dynamics article in Quarto format
    - `articles/README.md` - Articles directory documentation
    - `articles/_metadata.yml` - Article metadata
 
 3. **Quarto Workflow**
+
    - `.github/workflows/quarto-publish.yml` - CI/CD for Quarto publishing
 
 4. **Documentation** (NEW)
+
    - `QUARTO_GUIDE.md` - Guide to using Quarto
    - `BRANCH_REVIEW_SUMMARY.md` - Branch review documentation
    - `WEBSITE_ANALYSIS.md` - Website analysis
@@ -34,6 +38,7 @@
    - `REPOSITORY_PROTECTION.md` - Repository protection guide
 
 5. **Conversion Tools** (NEW)
+
    - `tools/latex_to_qmd.py` - LaTeX to Quarto converter
    - `tools/latex_to_html.py` - LaTeX to HTML converter
    - `tools/convert_all_latex.py` - Batch LaTeX converter
@@ -138,10 +143,12 @@
 ## What Needs Attention
 
 1. **Preview Server**: Should serve `index.html` by default
+
    - **Fix**: Access `http://localhost:8080/index.html` directly
    - **Or**: Python HTTP server should auto-serve index.html (may need browser refresh)
 
 2. **Equation Rendering**: Need to verify MathJax works in Quarto articles
+
    - **Status**: MathJax configured in `_quarto.yml`
    - **Test**: View rendered articles in browser
 

@@ -3,11 +3,13 @@
 ## A) Concept Map
 
 - **Mathematical Physics**
+
   - **Lagrangian Mechanics**: Variational derivation ($\delta \int L dt = 0$) of equations of motion.
   - **Euler-Lagrange Equations**: $\frac{d}{dt}(\frac{\partial L}{\partial \dot{q}}) - \frac{\partial L}{\partial q} = \tau$.
   - **Configuration Manifold**: Treating the golfer-club system as a point on a manifold $Q$.
 
 - **Flexible Multibody Dynamics**
+
   - **Assumed Modes Method (AMM)**: Discretizing continuous shaft deformation into finite modal coordinates $\eta$.
   - **Euler-Bernoulli Beam Theory**: Modeling the shaft stiffness and mass distribution.
   - **Rigid-Flexible Coupling**: Inertia matrix blocks ($M_{rf}, M_{fr}$) describing energy transfer between body and shaft.

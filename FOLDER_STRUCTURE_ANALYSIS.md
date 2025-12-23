@@ -39,19 +39,23 @@ The following files are modified but not committed (from previous work):
 ### Where Articles Are Currently Located
 
 1. **`articles/`** - Main published articles (16 `.qmd` files)
+
    - These are the **primary location** for published articles
    - All files here are rendered by Quarto
    - Examples: `theory-part1.qmd`, `wrist-universal-joint.qmd`, `inverse-dynamics.qmd`
 
 2. **`content/Affine Background Articles/`** - Background reference articles (7 `.qmd` files)
+
    - Also rendered by Quarto (configured in `_quarto.yml`)
    - Examples: `Lagrangian_Reference.qmd`, `ScrewTheory_Reference.qmd`
 
 3. **`content/Affine Nature of the Golf Swing/`** - Golf swing articles (6 `.qmd` files)
+
    - Also rendered by Quarto
    - Examples: `Draft3_Compiled_Working_Copy.qmd`, `A_Nonlinear_Control_Insights.qmd`
 
 4. **`content/Double Pendulum Articles/`** - Specialized articles (1 `.qmd` file)
+
    - Not currently in `_quarto.yml` render list
    - Example: `Drift Components of Wrench in Double Pendulum.qmd`
 

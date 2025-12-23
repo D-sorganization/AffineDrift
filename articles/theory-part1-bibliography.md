@@ -3,17 +3,20 @@
 ## A) Concept Map
 
 - **System Modeling**
+
   - **Multibody Dynamics**: Modeling the golfer as a chain of rigid bodies.
   - **Flexible Beam Theory**: Modeling the golf shaft using finite-dimensional modal approximations (Euler-Bernoulli/Timoshenko).
   - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift vector fields and control vector fields.
   - **State-Space Representation**: Unified state vector including rigid ($q, \dot{q}$) and flexible ($\eta, \dot{\eta}$) coordinates.
 
 - **Force Decomposition**
+
   - **Drift (Passive) Dynamics**: Forces arising from inertia, gravity, Coriolis/centrifugal effects, and elasticity.
   - **Input (Active) Dynamics**: Forces arising directly from generalized joint torques.
   - **Causal Attribution**: Distinguishing _source_ (muscle vs. physics) from _effect_.
 
 - **Theoretical Tools**
+
   - **Zero Torque Counterfactual (ZTCF)**: Trajectory evolution if control inputs were instantly zeroed (isolating drift).
   - **Zero Velocity Counterfactual (ZVCF)**: (Implied context) Isolating static/stiffness contributions.
   - **Inverse Dynamics**: Traditional method for estimating total joint torques.

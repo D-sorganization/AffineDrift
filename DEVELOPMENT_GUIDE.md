@@ -74,7 +74,7 @@ AffineDrift/
 Every HTML page follows this structure:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -261,11 +261,13 @@ links.forEach((link) => {
 ### Setup Your Environment
 
 1. **Install a Code Editor**
+
    - [VS Code](https://code.visualstudio.com/) (recommended)
    - [Sublime Text](https://www.sublimetext.com/)
    - [Atom](https://atom.io/)
 
 2. **Install Git**
+
    - macOS: `brew install git` or download from [git-scm.com](https://git-scm.com/)
    - Linux: `sudo apt-get install git`
    - Windows: Download from [git-scm.com](https://git-scm.com/)
@@ -384,6 +386,7 @@ git push origin add-blog-section
 ### GitHub Pages Setup
 
 1. **Enable GitHub Pages**:
+
    - Go to repository Settings
    - Scroll to "Pages" section
    - Source: Deploy from a branch
@@ -391,6 +394,7 @@ git push origin add-blog-section
    - Save
 
 2. **Custom Domain** (Optional):
+
    - Add `CNAME` file with your domain
    - Configure DNS settings with your provider
 
@@ -407,7 +411,6 @@ The GitHub Actions workflow:
 on:
   push:
     branches: [main]
-
 # Deploys to GitHub Pages
 # Validates HTML/CSS
 # Runs accessibility checks
@@ -545,9 +548,11 @@ Use LaTeX notation with MathJax:
    ```
 
 2. **Check Network Tab**:
+
    - See which files fail to load
 
 3. **Validate HTML/CSS**:
+
    - Use W3C validators
 
 4. **Test Incrementally**:

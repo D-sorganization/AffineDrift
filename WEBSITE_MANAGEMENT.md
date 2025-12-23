@@ -407,11 +407,13 @@ Add a favicon (website icon in browser tab):
 ### Content Guidelines
 
 1. **Be Consistent**
+
    - Use the same tone throughout
    - Maintain formatting patterns
    - Follow existing structure
 
 2. **Write for Your Audience**
+
    - Explain technical terms
    - Provide context for equations
    - Link to additional resources
@@ -425,6 +427,7 @@ Add a favicon (website icon in browser tab):
 ### File Organization
 
 1. **Naming Conventions**
+
    - Use lowercase
    - Use hyphens, not spaces: `new-page.html`
    - Be descriptive: `golf-biomechanics-resources.html`
@@ -454,10 +457,12 @@ Add a favicon (website icon in browser tab):
 ### Version Control
 
 1. **Commit Messages**
+
    - Be descriptive: "Add new section on Lie brackets in control theory"
    - Not vague: "Update stuff"
 
 2. **Commit Frequently**
+
    - Small, logical commits
    - Easier to revert if needed
    - Better project history
@@ -487,6 +492,7 @@ Before pushing changes:
 ### Performance
 
 1. **Keep Files Small**
+
    - Minify CSS/JS for production (optional)
    - Compress images
    - Limit use of large fonts
