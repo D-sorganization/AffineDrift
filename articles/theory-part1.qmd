@@ -163,7 +163,15 @@ where $K_s$ is the positive-definite modal stiffness matrix. Note that gravity m
 We also introduce the Rayleigh dissipation function to model internal shaft damping:
 $$\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}.$$
 
-Applying the Euler-Lagrange operator $\frac{d}{dt}(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}$ yields the equations of motion:
+Applying the Euler-Lagrange operator
+$$
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}\right) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}
+$$
+to the Lagrangian $\mathcal{L} = \frac{1}{2} \dot{q}_{\text{sys}}^T M \dot{q}_{\text{sys}} - V(q_{\text{sys}})$ yields the dynamic equations. Explicitly, the momentum term expands as:
+$$
+\frac{d}{dt}\left( M(q_{\text{sys}}) \dot{q}_{\text{sys}} \right) = M(q_{\text{sys}}) \ddot{q}_{\text{sys}} + \dot{M}(q_{\text{sys}}) \dot{q}_{\text{sys}}.
+$$
+The term $-\frac{\partial \mathcal{L}}{\partial q_{\text{sys}}}$ contributes the gravitational gradient $\nabla V_g$ and the velocity-dependent gradients of the kinetic energy metric. Grouping the velocity-dependent terms into the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$ (defined via Christoffel symbols of the first kind), we arrive at the standard second-order form:
 $$M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.$$
 
 Here:
