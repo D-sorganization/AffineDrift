@@ -22,6 +22,16 @@ const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset
 const TOC_SCROLL_OFFSET = HEADER_OFFSET; // Active section detection offset
 const MAX_ID_GENERATION_ATTEMPTS = 100;
 
+// Helper function to debounce events
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
 // Helper function to generate unique IDs
 function generateUniqueId(text, usedIds) {
   let baseId = text
@@ -364,6 +374,57 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   generateTableOfContents();
 
+  // ScrollSpy for Table of Contents
+  function initScrollSpy() {
+    const tocLinks = document.querySelectorAll('#toc-list a');
+    if (tocLinks.length === 0) return;
+
+    const sections = document.querySelectorAll('.page-section[id], section[id]');
+    const visibleSections = new Set();
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-100px 0px -60% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          visibleSections.add(entry.target.id);
+        } else {
+          visibleSections.delete(entry.target.id);
+        }
+      });
+
+      // Find the first visible section in DOM order
+      let activeId = null;
+      for (const section of sections) {
+        if (visibleSections.has(section.id)) {
+          activeId = section.id;
+          break;
+        }
+      }
+
+      if (activeId) {
+        tocLinks.forEach((link) => {
+          if (link.getAttribute('href') === `#${activeId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }, observerOptions);
+
+    sections.forEach((section) => {
+      if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
+        observer.observe(section);
+      }
+    });
+  }
+  initScrollSpy();
+
   // Lazy load images
   if ("loading" in HTMLImageElement.prototype) {
     document.querySelectorAll("img[src]").forEach((img) => {
@@ -480,14 +541,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial calculation
   updateGeometry();
 
-  // Update on resize
-  window.addEventListener("resize", updateGeometry);
+  // Update on resize (Debounced)
+  window.addEventListener('resize', debounce(updateGeometry, 250));
 
   // Update on content changes (e.g., accordions)
-  if (typeof ResizeObserver !== "undefined") {
-    const resizeObserver = new ResizeObserver(() => {
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(debounce(() => {
       updateGeometry();
-    });
+    }, 250));
     resizeObserver.observe(document.body);
   }
 

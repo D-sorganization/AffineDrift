@@ -213,6 +213,7 @@ Velocity-dependent drift forces include:
 
 - Coriolis and centrifugal forces,
 - inertial coupling terms induced by multi-segment motion,
+- geometric stiffness (centrifugal stiffening) forces, which act as a velocity-dependent restoration term,
 - shaft damping forces proportional to $\dot{\eta}$,
 - any passive joint damping.
 
@@ -329,6 +330,10 @@ Thus, the decomposition is strictly mechanical: it attributes forces to torques,
 The feasible set of torques $\mathcal{U}(x)$ may depend on configuration, strength, fatigue, or coordination. These constraints do not break the affine structure but do restrict the set of realizable torque profiles. Interpretations must therefore distinguish between "mechanically possible" and "physiologically plausible."
 
 ### Data and parameter limitations
+
+**Parameter identification and causality.**
+
+When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term $f(x)$ represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate.
 
 **Exact parameter knowledge.**
 

@@ -107,6 +107,12 @@ Use **Conventional Commits** format:
 - `feature/name`: New features.
 - `hotfix/name`: Critical bug fixes.
 
+### 3. Git Tool Preference
+
+- **GitHub CLI Priority**: Always use `gh` commands for GitHub operations (PRs, issues, etc.)
+- **MCP Git Tools**: Use only for basic git operations (status, commit, branch) when GitHub CLI is insufficient
+- **Example**: Use `gh pr list` instead of MCP PR tools, `gh pr view <number>` for PR details
+
 ---
 
 ## 📝 Documentation
