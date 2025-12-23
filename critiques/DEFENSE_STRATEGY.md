@@ -12,6 +12,8 @@
 | **06. Causal Masking**<br>(Drift Superposition) | Conceptual | **Valid** (Interpretational) | **Distinguish Instantaneous vs. Historical:** Acknowledge that velocity-dependent drift (Coriolis, Centrifugal) is "Induced Drift" caused by past inputs. Clarify that "Drift" refers to the *passive mechanism* at the current instant, not an exogenous energy source. | **Applied** to Taxonomy |
 | **07. Null Space Forces**<br>(Closed Chain) | Methodological | **Valid** | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain. | **Applied** to Limitations |
 | **08. Residual Input**<br>(Identifiability) | Empirical | **Valid** | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present. | **Applied** to Limitations |
+| **09. Geometric Stiffness**<br>(Omission in ZVCF) | Mathematical | **Valid** | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline. | **Applied** to Taxonomy |
+| **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion. | **Applied** to Limitations |
 
 ---
 
@@ -88,3 +90,21 @@ Added **"Closed-chain indeterminacy"** to **Limitations**.
 Added **"Residual nature of input estimation"** to **Limitations**.
 
 > *Addition:* "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
+
+### 9. Addressing Geometric Stiffness
+
+**Analysis:** Geometric stiffness is a real physical force in flexible bodies. ZVCF removes it.
+
+**Implementation:**
+Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
+
+> *Addition:* "Geometric stiffness (centrifugal stiffening) forces, which appear as apparent stiffness changes but scale with velocity..."
+
+### 10. Addressing Parameter Causality Leakage
+
+**Analysis:** Identifying "passive" parameters from active swings risks contaminating the drift term with input information.
+
+**Implementation:**
+Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
+
+> *Addition:* "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
