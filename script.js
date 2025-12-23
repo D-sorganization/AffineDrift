@@ -326,6 +326,57 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     generateTableOfContents();
 
+    // ScrollSpy for Table of Contents
+    function initScrollSpy() {
+        const tocLinks = document.querySelectorAll('#toc-list a');
+        if (tocLinks.length === 0) return;
+
+        const sections = document.querySelectorAll('.page-section[id], section[id]');
+        const visibleSections = new Set();
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    visibleSections.add(entry.target.id);
+                } else {
+                    visibleSections.delete(entry.target.id);
+                }
+            });
+
+            // Find the first visible section in DOM order
+            let activeId = null;
+            for (const section of sections) {
+                if (visibleSections.has(section.id)) {
+                    activeId = section.id;
+                    break;
+                }
+            }
+
+            if (activeId) {
+                tocLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${activeId}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+        }, observerOptions);
+
+        sections.forEach(section => {
+            if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
+                observer.observe(section);
+            }
+        });
+    }
+    initScrollSpy();
+
     // Lazy load images
     if ('loading' in HTMLImageElement.prototype) {
         document.querySelectorAll('img[src]').forEach(img => {
