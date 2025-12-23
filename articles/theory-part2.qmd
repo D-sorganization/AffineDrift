@@ -189,11 +189,15 @@ Let the actual swing at time $t$ be characterized by the state $x(t) \in T\mathc
 
 $$x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t)).$$
 
-We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle. Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection bundle, and $\iota_0: \mathcal{Q} \to T\mathcal{Q}$ be the zero section embedding such that $\iota_0(q, \eta) = (q, \eta, 0, 0)$.
+We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle $T\mathcal{Q}$. This construction allows us to isolate configuration-dependent forces rigorously.
 
-The *Zero Velocity Counterfactual state* is defined by projecting the current state to the base manifold and lifting it back to the zero section:
+Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical bundle projection that maps a state vector $(q, \dot{q})$ to its base configuration $q$. Let $\iota_0: \mathcal{Q} \to T\mathcal{Q}$ be the zero section embedding, which maps a configuration $q$ to the zero-velocity state $(q, 0)$ in the tangent bundle.
 
-$$x^{\mathrm{ZVCF}}(t) = \iota_0( \pi( x(t) ) ) = (q(t), \eta(t), 0, 0).$$
+The *Zero Velocity Counterfactual state* is formally defined by the composition of these operators:
+
+$$
+  x^{\mathrm{ZVCF}}(t) = (\iota_0 \circ \pi)(x(t)) = \iota_0(q(t), \eta(t)) = (q(t), \eta(t), 0, 0).
+$$
 
 Only the configuration variables $q(t)$ and $\eta(t)$ are retained; all generalized velocities are set to zero.
 
