@@ -4,16 +4,17 @@ Script to manually publish an article by converting simple Markdown to HTML
 and wrapping it in the standard template.
 """
 
+import html
 import re
 import sys
 from pathlib import Path
-import html
+
 
 def simple_markdown_to_html(md_text: str) -> str:
     """
     Very basic Markdown to HTML converter for specific article structure.
     """
-    lines = md_text.split('\n')
+    lines = md_text.split("\n")
     html_lines = []
 
     in_list = False
@@ -22,41 +23,43 @@ def simple_markdown_to_html(md_text: str) -> str:
         line = line.strip()
 
         # Skip YAML frontmatter (handled separately)
-        if line == '---':
+        if line == "---":
             continue
 
         # Headers
-        if line.startswith('## '):
+        if line.startswith("## "):
             if in_list:
-                html_lines.append('</ul>')
+                html_lines.append("</ul>")
                 in_list = False
             title = line[3:]
             # Extract section number if present
-            anchor = title.lower().replace(' ', '-').replace('.', '')
-            html_lines.append(f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>')
+            anchor = title.lower().replace(" ", "-").replace(".", "")
+            html_lines.append(
+                f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>'
+            )
             continue
 
         # Lists
-        if line.startswith('- '):
+        if line.startswith("- "):
             if not in_list:
-                html_lines.append('<ul>')
+                html_lines.append("<ul>")
                 in_list = True
             content = line[2:]
             # Bold
-            content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', content)
+            content = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", content)
             # Italics
-            content = re.sub(r'\*(.*?)\*', r'<em>\1</em>', content)
-            html_lines.append(f'<li>{content}</li>')
+            content = re.sub(r"\*(.*?)\*", r"<em>\1</em>", content)
+            html_lines.append(f"<li>{content}</li>")
             continue
 
-        if in_list and not line.startswith('- ') and line:
+        if in_list and not line.startswith("- ") and line:
             # Assume end of list
-            html_lines.append('</ul>')
+            html_lines.append("</ul>")
             in_list = False
 
         if not line:
             if in_list:
-                html_lines.append('</ul>')
+                html_lines.append("</ul>")
                 in_list = False
             continue
 
@@ -64,18 +67,19 @@ def simple_markdown_to_html(md_text: str) -> str:
         # Wrap in <p> if not empty and not header
 
         # Bold
-        line = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', line)
+        line = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", line)
         # Italics
-        line = re.sub(r'\*(.*?)\*', r'<em>\1</em>', line)
+        line = re.sub(r"\*(.*?)\*", r"<em>\1</em>", line)
 
         # Math (MathJax handles \( \) and \[ \], we just pass them through)
 
-        html_lines.append(f'<p>{line}</p>')
+        html_lines.append(f"<p>{line}</p>")
 
     if in_list:
-        html_lines.append('</ul>')
+        html_lines.append("</ul>")
 
-    return '\n'.join(html_lines)
+    return "\n".join(html_lines)
+
 
 def create_html_page(
     title: str,
@@ -146,13 +150,11 @@ def create_html_page(
 <section class="article-section">
   <div class="container">
     <div class="standard-page-layout">
-
       <main class="main-content-area" style="grid-column: 2 / 4;">
         <div class="article-content">
           {body_html}
         </div>
       </main>
-
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
             <nav id="TOC" role="doc-toc">
@@ -163,7 +165,6 @@ def create_html_page(
             </nav>
         </div>
       </aside>
-
     </div>
   </div>
 </section>
@@ -181,7 +182,8 @@ def create_html_page(
         return True
     return False
 
-def main():
+
+def main() -> None:
     qmd_path = Path("articles/intentional-constraint-collapse.qmd")
     output_path = Path("docs/articles/intentional-constraint-collapse.html")
 
@@ -215,6 +217,7 @@ def main():
         print(f"Successfully created {output_path}")
     else:
         print("Failed to create HTML page")
+
 
 if __name__ == "__main__":
     main()
