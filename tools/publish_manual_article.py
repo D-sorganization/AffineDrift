@@ -204,7 +204,7 @@ def main() -> None:
         if t_match:
             title = t_match.group(1)
 
-        body_md = content[yaml_match.end():]
+        body_md = content[yaml_match.end() :]
     else:
         body_md = content
 
