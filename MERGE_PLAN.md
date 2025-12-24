@@ -49,6 +49,7 @@ This document outlines the plan to merge the `claude/fix-quarto-equations` branc
    ```
 
 3. **Resolve conflicts**:
+
    - **CRITICAL**: When Git asks about `Universal_Joint_Model_Enhanced.py`, choose to **keep the version from main** (the upgraded calculator)
    - Review other conflicts and resolve appropriately
 
@@ -75,6 +76,7 @@ If merge conflicts are too complex:
    ```
 
 2. **Cherry-pick Quarto conversion commits** (selective commits from quarto branch)
+
    - Keep calculator from main
    - Add Quarto files manually if needed
 
@@ -93,14 +95,17 @@ If merge conflicts are too complex:
 ## Files to Add from Quarto Branch
 
 1. **Quarto Configuration**:
+
    - `_quarto.yml`
    - `articles/` directory with `.qmd` files
    - `articles/_metadata.yml`
 
 2. **Quarto Publishing Workflow**:
+
    - `.github/workflows/quarto-publish.yml`
 
 3. **Conversion Tools**:
+
    - `tools/latex_to_qmd.py`
    - `tools/convert_all_to_quarto.py`
    - `tools/convert_all_latex.py`
@@ -114,10 +119,12 @@ If merge conflicts are too complex:
 ## Files to Review/Resolve
 
 1. **Modified Calculator**:
+
    - `content/Wrist as Universal Joint/Grip_Angle_Torque_Transmission.py`
    - Check if changes are compatible or if we should keep main's version
 
 2. **CI/CD Workflows**:
+
    - `.github/workflows/deploy.yml` (modified in quarto branch)
    - `.github/workflows/ci.yml` (deleted in quarto branch - verify if needed)
    - `.github/workflows/pr-quality-check.yml` (deleted in quarto branch - verify if needed)

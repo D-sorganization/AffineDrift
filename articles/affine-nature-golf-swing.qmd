@@ -150,6 +150,8 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
+Defining the system's components is only the first step. To understand the causal relationship between the golfer's effort and the club's motion, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that guarantees the golfer's torque enters the dynamics linearly.
+
 We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
 The transition from the kinematic definitions of Section~[@sec:system] to the dynamic equations of motion requires a formal treatment of energy. Because the golfer--club--shaft system is subject to holonomic constraints and conservative forces, its behavior is governed by the Principle of Least Action. This energetic structure imposes strict constraints on the form of the equations of motion—specifically, it guarantees that the kinetic energy metric defines the relationship between applied forces and resulting accelerations. By exploiting this property, we can demonstrate that the linearity of the control input is not an approximation, but a fundamental consequence of the mechanical structure.
@@ -174,7 +176,15 @@ where $K_s$ is the positive-definite modal stiffness matrix. Note that gravity m
 We also introduce the Rayleigh dissipation function to model internal shaft damping:
 $$\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}.$$
 
-Applying the Euler-Lagrange operator $\frac{d}{dt}(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}$ yields the equations of motion:
+Applying the Euler-Lagrange operator
+$$
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}\right) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}
+$$
+to the Lagrangian $\mathcal{L} = \frac{1}{2} \dot{q}_{\text{sys}}^T M \dot{q}_{\text{sys}} - V(q_{\text{sys}})$ yields the dynamic equations. Explicitly, the momentum term expands as:
+$$
+\frac{d}{dt}\left( M(q_{\text{sys}}) \dot{q}_{\text{sys}} \right) = M(q_{\text{sys}}) \ddot{q}_{\text{sys}} + \dot{M}(q_{\text{sys}}) \dot{q}_{\text{sys}}.
+$$
+The term $-\frac{\partial \mathcal{L}}{\partial q_{\text{sys}}}$ contributes the gravitational gradient $\nabla V_g$ and the velocity-dependent gradients of the kinetic energy metric. Grouping the velocity-dependent terms into the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$ (defined via Christoffel symbols of the first kind), we arrive at the standard second-order form:
 $$M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.$$
 
 Here:
@@ -218,7 +228,13 @@ This control-affine structure is the backbone for the drift--input decomposition
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
 
-Given the control-affine form~\eqref{eq:affine_state}, we now formalize the separation of passive (drift) and active (input) contributions to the dynamics.
+The derivation in Section~[@sec:affine] yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$.
+
+The derivation above is not merely a symbolic exercise; it exposes the fundamental causality of the system. The affine form $\dot{x} = f(x) + g(x)u$ asserts that the system's evolution is a superposition of two distinct processes: a passive drift along the manifold's geodesic fabric, and an active deviation forced by the inputs. This mathematical separability forces a physical decomposition: we can no longer view the swing as a monolithic 'result' of the golfer, but rather as a dialogue between the system's inertial memory and the golfer's current intent.
+
+This algebraic separation is the key to unlocking the causal structure of the swing. Because the equations of motion are linear in torque, we can physically interpret the terms not just as mathematical components, but as distinct mechanical sources of motion. The term $f(x)$ represents the system's *inertial memory* and *potential field*—the forces that exist simply because the system has a state—while $g(x)u$ represents the *current agency* of the golfer.
+
+Given the control-affine form~\eqref{eq:affine_state}, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
 
@@ -283,7 +299,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 The drift--input decomposition in~\eqref{eq:affine_state} separates the dynamics into a passive component \(f(x)\) and a torque-driven component \(g(x)u\). The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
-The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define the *instantaneous* tendencies of the system: \(f(x)\) dictates how the state evolves passively, while \(g(x)\) dictates how it responds to input. However, the golf swing is not an instant; it is a trajectory unfolding over time. To understand the cumulative effect of the drift dynamics, we must move from the differential description (\(\dot{x}\)) to the integral description (\(x(t)\)). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
+The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define the *instantaneous* tendencies of the system: \(f(x)\) dictates how the state evolves passively, while \(g(x)\) dictates how it responds to input. However, the golf swing is not an instant; it is a ballistic process where past inputs shape current passive dynamics. The 'drift' forces experienced at impact are not merely functions of the current configuration; they are the legacy of momentum generated earlier in the downswing. To capture this history-dependent nature of drift, we must move from the tangent bundle (velocities) to the integral curves (trajectories). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
 
 ### Definition as a drift-only trajectory
 
@@ -409,6 +425,8 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 ## Zero Velocity Counterfactual (ZVCF)
 {#sec-zvcf}
+
+The ZTCF successfully purifies the motion of active torque, leaving us with the 'skeletal baseline' of the swing. However, this baseline is still dynamically dense: it entangles static loads (gravity, stiffness) with velocity-dependent effects (Coriolis, centrifugal). A golfer feeling a heavy load at the top of the backswing (static) experiences a fundamentally different mechanical challenge than one fighting centrifugal force at impact (dynamic). To resolve this ambiguity, we must dissect the drift term itself. We require an analytical scalpel that separates the *configuration-driven* loads from the *motion-driven* loads.
 
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
 
@@ -538,15 +556,15 @@ ZVCF therefore complements ZTCF in building a full picture of drift forces acros
 ## Drift Invariance and Input Constraints
 {#sec-drift_invariance}
 
+We have now constructed two powerful counterfactual baselines: the ZTCF (Section~[@sec:ztcf]) to isolate passive momentum history, and the ZVCF (Section~[@sec:zvcf]) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+
 The drift--input decomposition
 
 $$
   \xd = f(x) + g(x)u
 $$
 
-is meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.
-
-The utility of the ZTCF and ZVCF as counterfactual baselines rests on a critical, often implicit, assumption: that the passive dynamics \(f(x)\) remain consistent regardless of the input applied. If the act of applying torque also fundamentally altered the system's passive properties—for example, if muscle activation significantly changed the joint stiffness or inertial distribution—then 'drift' would be a moving target, and the decomposition would lose its causal clarity. We must therefore explicitly formalize the condition of *Drift Invariance* to ensure that our counterfactuals represent a stable mechanical reality.
+is therefore meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
 
 ### Definition of drift invariance
 
@@ -706,6 +724,8 @@ Interpretations must therefore remain explicitly mechanical.
 ## Force and Torque Taxonomy via the Affine Mapping
 {#sec-taxonomy}
 
+The formal proof of drift invariance in the preceding section provides the necessary license to classify forces. Because the passive dynamics $f(x)$ do not change when the golfer applies torque, we can rigorously define 'Drift Forces' as a stable category of mechanical load that exists independently of the golfer’s immediate action. This independence permits the construction of a comprehensive **Force Taxonomy**, which maps the algebraic terms of the affine structure directly to mechanical interpretations.
+
 With the drift--input decomposition formalized in Sections~[@sec:ztcf]--[@sec:drift_invariance], we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 \[
   \xd = f(x) + g(x)u.
@@ -778,6 +798,8 @@ Velocity-dependent drift forces include:
   
 - inertial coupling terms induced by multi-segment motion,
   
+- geometric stiffness (centrifugal stiffening) forces, which act as a velocity-dependent restoration term,
+
 - shaft damping forces proportional to \(\etad\),
   
 - any passive joint damping.
@@ -904,6 +926,9 @@ Thus, the decomposition is strictly mechanical: it attributes forces to torques,
 The feasible set of torques \(\mathcal{U}(x)\) may depend on configuration, strength, fatigue, or coordination. These constraints do not break the affine structure but do restrict the set of realizable torque profiles. Interpretations must therefore distinguish between "mechanically possible" and "physiologically plausible."
 
 ### Data and parameter limitations
+
+##### Parameter identification and causality.
+When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term \(f(x)\) represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate.
 
 ##### Exact parameter knowledge.
 The decomposition assumes perfect knowledge of:
@@ -1183,10 +1208,19 @@ This constitutes the *drift invariance* property formalized in Section~[@sec:dri
 
 ### A.5 \quad Input acceleration mapping
 
-The input-driven acceleration is the part proportional to \(u\). We can expand the inverse inertia matrix $M^{-1}$ in block form. Let $H = M^{-1}$. Its structure reflects the full coupling:
+The input-driven acceleration is the part proportional to \(u\). We can expand the inverse inertia matrix $M^{-1}$ in block form using the Schur complement. Let $H = M^{-1}$. Its structure reflects the full coupling:
 $$
 H(q,\eta) = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}.
 $$
+Using the block inversion lemma, the rigid-body effective inverse inertia $H_{qq}$ and the coupling block $H_{\eta q}$ are given explicitly by:
+$$
+H_{qq} = (M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q})^{-1},
+$$
+$$
+H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}.
+$$
+Physically, $H_{qq}$ represents the articulated inertia of the golfer seen at the joints, "stiffened" or modified by the reaction of the flexible shaft (reflected inertia). $H_{\eta q}$ defines the *transmission* of joint torque to shaft mode acceleration.
+
 The acceleration equation becomes:
 $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
@@ -1914,6 +1948,9 @@ The model consists of:
 - clubhead and hand coordinate frames for computing interaction forces.
 
 Shaft flexibility was represented using modal bending dynamics, similar to Appendix~[@app:modal], and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
+
+**Note on parameter validity.**
+The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing.
 
 ### Zero‐Torque Counterfactual evaluation via “kill switches”
 

@@ -501,7 +501,10 @@ script.onload = function () {
         return `
                 <a href="${doc.url}" class="search-result-item">
                     <div class="search-result-title">${doc.title}</div>
-                    <div class="search-result-snippet">${doc.content.substring(0, 120)}...</div>
+                    <div class="search-result-snippet">${doc.content.substring(
+                      0,
+                      120,
+                    )}...</div>
                 </a>
             `;
       })
@@ -865,13 +868,22 @@ function initCommandPalette() {
     results.innerHTML = filteredCommands
       .map(
         (cmd, index) => `
-            <div class="command-item ${index === selectedIndex ? "selected" : ""}"
-                 onclick="executeCommand(${JSON.stringify(cmd).replace(/"/g, "&quot;")})">
+            <div class="command-item ${
+              index === selectedIndex ? "selected" : ""
+            }"
+                 onclick="executeCommand(${JSON.stringify(cmd).replace(
+                   /"/g,
+                   "&quot;",
+                 )})">
                 <svg class="command-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
                 <span class="command-title">${cmd.title}</span>
-                ${cmd.shortcut ? `<kbd class="command-shortcut">${cmd.shortcut}</kbd>` : ""}
+                ${
+                  cmd.shortcut
+                    ? `<kbd class="command-shortcut">${cmd.shortcut}</kbd>`
+                    : ""
+                }
             </div>
         `,
       )

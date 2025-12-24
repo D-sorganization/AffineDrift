@@ -3,16 +3,19 @@
 ## A) Concept Map
 
 - **Decomposition Frameworks**
+
   - **Affine Control Systems**: The structural basis $\dot{x} = f(x) + g(x)u$.
   - **Passive vs. Active**: Separating natural dynamics ($f$) from forced response ($g$).
   - **Underactuation**: Systems where dim($u$) < dim($q$), relying on drift.
 
 - **Counterfactual Diagnostics**
+
   - **Zero Torque Counterfactual (ZTCF)**: Simulating the "drift-only" trajectory ($u=0$).
   - **Zero Velocity Counterfactual (ZVCF)**: Isolating configuration-dependent forces (gravity, stiffness).
   - **Causal Attribution**: Using model interventions to assign cause to forces.
 
 - **Dynamics & Mechanics**
+
   - **Passive Dynamic Walking**: Exploiting natural gait dynamics (McGeer).
   - **Impedance/Admittance**: How systems respond to external forces.
   - **Geometric Control**: Analyzing vector fields on manifolds.

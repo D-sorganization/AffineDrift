@@ -258,6 +258,7 @@ This checklist should be used to track progress on all website updates. Check of
 ## Notes
 
 1. **Priority Order**:
+
    - Layout standardization (affects UX most)
    - Content updates (researchers, papers, videos)
    - Technical fixes (equations, previews, RSS)

@@ -18,7 +18,14 @@ $$
 \dot{x} = f(x) + G(x)u,
 $$
 
-where the drift term $f(x)$ captures all passive dynamics, and the input term $G(x)u$ represents all actively applied torques. Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.
+where the drift term $f(x)$ captures all passive dynamics, and the input term $G(x)u$ represents all actively applied torques. This control-theoretic perspective is not merely an analogy; it provides the rigorous justification for the **Skeletal Baseline** defined in Part 5. By recognizing the swing as a drift-dominated maneuver, we validate the use of the Zero Torque Counterfactual (ZTCF) not just as a computational diagnostic, but as the system's "natural" trajectory from which all active deviation must be purchased.
+
+Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.
+
+::: {.callout-note}
+## Implicit Assumption: Drift Invariance
+The validity of these insights relies on the **Drift Invariance** condition (detailed in Part 3): the passive dynamics $f(x)$ must be independent of the instantaneous input $u$. If muscular activation were to instantaneously alter the passive stiffness or damping properties of the system (beyond the affine torque contribution), the causal separation of drift and input would collapse.
+:::
 
 ## Drift as the Causal Result of Prior Dynamics
 
@@ -31,6 +38,8 @@ $$
 showing that drift is the local derivative of the entire zero-input evolution. This confers a strictly causal nature to drift: it represents the accumulated result of all prior states, motions, and stored energies in the system. The state variables $(q, \dot{q}, x_s, \dot{x}_s)$ encode position history, velocity history, shaft deflection history, and loading rates. Drift expresses this entire mechanical past as present-time forces.
 
 This causal dependence gives drift its characteristic behaviors: inertial forces arising from accumulated segment velocities, elastic forces reflecting stored shaft energy, and geometric force interactions determined by the evolving athletic posture. Drift is not instantaneous; it is the residue of past configurations expressed through instantaneous mechanical laws.
+
+In the context of the AffineDrift framework, this causality is what allows the **Zero Velocity Counterfactual (ZVCF)** to function as a "state-dependent load cell." Because $f(x)$ depends only on the current state $(q, \dot{q})$ and not on the instantaneous input $u$, the drift vector field objectively quantifies the inertial and elastic burdens the golfer must overcome at any instant, regardless of their intent.
 
 ## Nonlinear Control-Theoretic Insights
 
@@ -66,6 +75,8 @@ Lie brackets measure how drift and input vector fields interact through commutat
 
 - how torque applied at one joint influences dynamics at another through geometric coupling.
 This offers a mathematically grounded explanation for the structure of reachable motions.
+
+This mathematical structure formalizes the biomechanical concept of **sequencing**. In a Lie bracket interpretation, proximal deceleration is not an aesthetic choice but a necessary control action to trigger non-holonomic acceleration in distal segments—effectively "steering" the drift field to generate clubhead speed that cannot be produced by direct torque alone.
 
 ### Partial Feedback Linearization
 
@@ -139,3 +150,10 @@ Data-driven identification can reveal conserved quantities under drift, offering
 ## Conclusion
 
 Nonlinear control theory provides a rigorous conceptual and analytical framework for understanding the structure and dynamics of the golfer--club--shaft system. The affine decomposition motivates a large set of future research directions that can greatly enhance biomechanical understanding, experimental measurement, and data-driven modeling of the golf swing.
+
+## Related Theoretical Sections
+
+*   **Part 1:** Establishes the fundamental $\dot{x} = f(x) + g(x)u$ equation.
+*   **Part 2:** Defines the **ZTCF** and **ZVCF** counterfactuals derived from this structure.
+*   **Part 3:** Proves the **Drift Invariance** property essential for causal attribution.
+*   **Part 5:** Provides the numerical **Skeletal Baseline** validation of these control-theoretic concepts.
