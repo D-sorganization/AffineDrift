@@ -1,6 +1,7 @@
 import os
-from bs4 import BeautifulSoup
 from urllib.parse import urldefrag
+
+from bs4 import BeautifulSoup
 
 DOCS_DIR = "docs"
 
@@ -56,7 +57,7 @@ def check_site_health() -> None:
     for file_path in html_files:
         full_path = os.path.join(DOCS_DIR, file_path)
         try:
-            with open(full_path, "r", encoding="utf-8") as f:
+            with open(full_path, encoding="utf-8") as f:
                 soup = BeautifulSoup(f, "html.parser")
 
             # Find all links
