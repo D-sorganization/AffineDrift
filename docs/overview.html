@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Affine control theory for golf swing dynamics">
 
-<title>Section Y: Inference from Inverse Dynamics in a Nonlinear Affine System – AffineDrift</title>
+<title>Overview – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +24,26 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../../">
-<link href="../../../../favicon.ico" rel="icon">
-<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js" defer></script>
+<script src="site_libs/quarto-nav/headroom.min.js" defer></script>
+<script src="site_libs/clipboard/clipboard.min.js" defer></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js" defer></script>
+<script src="site_libs/quarto-search/fuse.min.js" defer></script>
+<script src="site_libs/quarto-search/quarto-search.js" defer></script>
+<meta name="quarto:offset" content="./">
+<link href="./favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js" defer></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js" defer></script>
+<script src="site_libs/quarto-html/anchor.min.js" defer></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js" defer></script>
+<script src="script.js" defer></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -75,7 +77,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../../feed.xml">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
   .rss-feed-link {
     display: inline-flex;
@@ -171,51 +173,22 @@ window.MathJax = {
   });
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="../../../../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Main navigation">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../../../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../../../../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
+    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="../../../../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
   </div>
@@ -226,130 +199,114 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
-    <a class="dropdown-item" href="../../../../drifter-manifesto.html">
+    <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../articles.html">
+    <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../research-reviews.html">
+    <a class="dropdown-item" href="./research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../book-reviews.html">
+    <a class="dropdown-item" href="./book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
-    <a class="dropdown-item" href="../../../../models.html">
+    <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-simulink.html">
+    <a class="dropdown-item" href="./models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-mujoco.html">
+    <a class="dropdown-item" href="./models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-drake.html">
+    <a class="dropdown-item" href="./models-drake.html">
  <span class="dropdown-text">Drake</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-pinnochio.html">
+    <a class="dropdown-item" href="./models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-pendulum.html">
+    <a class="dropdown-item" href="./models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-opensim.html">
+    <a class="dropdown-item" href="./models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../models-myosim.html">
+    <a class="dropdown-item" href="./models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
-    <a class="dropdown-item" href="../../../../resources-videos.html">
+    <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-software.html">
+    <a class="dropdown-item" href="./resources-software.html">
  <span class="dropdown-text">Software</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-websites.html">
+    <a class="dropdown-item" href="./resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-datasets.html">
+    <a class="dropdown-item" href="./resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-books.html">
+    <a class="dropdown-item" href="./resources-books.html">
  <span class="dropdown-text">Books</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-papers.html">
+    <a class="dropdown-item" href="./resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../resources-researchers.html">
+    <a class="dropdown-item" href="./resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
+  </li>
+        <li>
+    <a class="dropdown-item" href="./bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="https://github.com/myosim/myosim">
@@ -362,20 +319,20 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
-    <a class="dropdown-item" href="../../../../contact.html">
+    <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../about.html">
+    <a class="dropdown-item" href="./about.html">
  <span class="dropdown-text">About</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../../../collaborate.html">
+    <a class="dropdown-item" href="./collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
   </li>  
     </ul>
@@ -388,21 +345,26 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Section Y: Inference from Inverse Dynamics in a Nonlinear Affine System</h1>
+<h1 class="title">Overview</h1>
+</div>
+
+<div>
+  <div class="description">
+    Affine control theory for golf swing dynamics
+  </div>
 </div>
 
 
-
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page">
 
     
   
@@ -414,70 +376,115 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>Inverse dynamics is a foundational tool in biomechanics for estimating joint torques from kinematic measurements. For a multibody system such as the golfer–club–shaft chain, the classical inverse dynamics approach solves the equations of motion for the generalized torques required to reproduce a measured motion. However, in a nonlinear control-affine system of the form <span class="math display">\[\begin{equation}
-\dot{x} = f(x) + G(x)u,
-\end{equation}\]</span> the torques recovered from classical inverse dynamics do not isolate the contributions of active muscular torques from those of drift dynamics. This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) resolve these ambiguities.</p>
+<section id="home" class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <blockquote class="featured-quote">
+        <p>"What we do now echoes in eternity"</p>
+        <cite>&mdash; Marcus Aurelius</cite>
+
+        <div class="drift-quote" style="margin-bottom: 2rem;">
+          <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
+          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can dominate, rendering any active, conscious control efforts by the golfer futile.</p>
+        </div>
+
+        <div class="drift-quote">
+          <p>Drift, however, is not a problem to be controlled; it is the state you want to achieve. Drift is greatest when you move fast, and it occurs as you accumulate momentum in the system. It is the integral sum of all your efforts to swing the club, and it represents the 'mountain you must climb' to get where you are going. You cannot stand safely at the base, feeling in control. You must climb that hill and learn to use its influence like a judo artist. The goal is to accumulate momentum, not to control it. Swing with reckless abandon, knowing that drift will always be there as a predictable ally.</p>
+        </div>
+      </blockquote>
+    </div>
+  </div>
 </section>
-<section id="classical-inverse-dynamics-and-its-limitations" class="level1">
-<h1>Classical Inverse Dynamics and Its Limitations</h1>
-<p>The classical rigid-body dynamics of the system can be written as <span class="math display">\[\begin{equation}
-M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}} = \tau_{\mathrm{input}},
-\end{equation}\]</span> where <span class="math inline">\(M(q)\)</span> is the inertia matrix, <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span> contains Coriolis and centrifugal forces, <span class="math inline">\(G(q)\)</span> contains gravitational forces, and <span class="math inline">\(\tau_{\mathrm{passive}}\)</span> includes passive elastic and damping forces. Classical inverse dynamics rearranges this equation to compute <span class="math display">\[\begin{equation}
-\tau_{\mathrm{ID}} = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}}.
-\end{equation}\]</span> This total torque <span class="math inline">\(\tau_{\mathrm{ID}}\)</span> is the torque that would need to be applied to the model to reproduce the measured motion. However, it does not distinguish between the drift torque <span class="math inline">\(\tau_{\mathrm{drift}}\)</span> and the active input torque <span class="math inline">\(\tau_{\mathrm{input}} = Bu\)</span>. In control-affine systems, <span class="math display">\[\begin{equation}
-\tau_{\mathrm{ID}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}},
-\end{equation}\]</span> which implies that classical inverse dynamics inherently conflates passive and active contributions.</p>
+
+<section id="mission" class="mission-section">
+  <div class="container">
+    <div class="mission-content">
+      <p class="mission-text">
+        AffineDrift is named after a concept in nonlinear control theory, the mathematical framework for managing complex, chaotic systems. The structure of a control-affine system allows the total movement to be clearly separated into two distinct components:
+      </p>
+      <ul class="mission-list">
+        <li><strong>Drift:</strong> The system's inherent, autonomous motion based on its current state.</li>
+        <li><strong>Control:</strong> The changes in motion that arise only from deliberate, external inputs.</li>
+      </ul>
+      <p class="mission-text">
+        This division reveals a profound truth: history matters. The system's past actions are encoded in its present state—its accumulated momentum, geometry, and timing. For the golfer, the implication is that every swing is a combination of your current, conscious effort and the powerful inertia of everything that has come before. As Marcus Aurelius noted, the past is always writing itself into the present.
+      </p>
+    </div>
+  </div>
 </section>
-<section id="why-classical-inverse-dynamics-cannot-identify-input-torques" class="level1">
-<h1>Why Classical Inverse Dynamics Cannot Identify Input Torques</h1>
-<p>The input torques satisfy <span class="math display">\[\begin{equation}
-\tau_{\mathrm{input}} = Bu,
-\end{equation}\]</span> where <span class="math inline">\(B\)</span> maps input controls into generalized joint torques. Solving for <span class="math inline">\(u\)</span> given only <span class="math inline">\(\tau_{\mathrm{ID}}\)</span> would require knowing <span class="math inline">\(\tau_{\mathrm{drift}}\)</span>, because <span class="math display">\[\begin{equation}
-Bu = \tau_{\mathrm{ID}} - \tau_{\mathrm{drift}}.
-\end{equation}\]</span> However, <span class="math inline">\(\tau_{\mathrm{drift}}\)</span> is not observable directly from kinematic measurements. Drift dynamics include inertial effects, Coriolis forces, gravitational loading, shaft deformation forces, joint passive forces, and geometric coupling terms. Many of these require full dynamic simulation or model-based estimation and cannot be separated from <span class="math inline">\(\tau_{\mathrm{input}}\)</span> using classical inverse dynamics alone.</p>
-<p>Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing.</p>
+
+<section id="theory" class="theory-section">
+  <div class="container">
+    <div class="theory-content">
+      <div class="theory-intro">
+        <p>
+          The golf swing presents a profound coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
+        </p>
+      </div>
+
+      <div class="coordination-section">
+        <p>
+          Rather than treating the swing as a sequence of static positions (descriptive biomechanics), a control-perspective frames it as a trajectory optimization problem: the golfer must find the correct sequence of muscular forces (control inputs) to guide the system from the address position to ball contact. The system's dynamics are captured by the fundamental control-affine structure:
+        </p>
+
+        <div class="equation">
+          $$ \dot{x} = f(x) + g(x)u $$
+        </div>
+
+        <p>
+          This mathematical framework provides a rigorous way to separate the swing's total movement into two distinct, identifiable components:
+        </p>
+
+        <ul class="mission-list">
+          <li><strong>Drift (\(f(x)\)):</strong> The passive dynamics of the system. This includes gravity, inertial forces, Coriolis effects, and the dynamics of the flexible club shaft. It represents how the system would naturally evolve in the complete absence of muscle input.</li>
+          <li><strong>Control (\(g(x)u\)):</strong> The active dynamics resulting only from the golfer's muscle torques (\(u\)). The term \(g(x)\) encodes the "mechanical advantage"—how effective a control input is at changing acceleration—which varies throughout the swing.</li>
+        </ul>
+
+        <p>
+          This decomposition is crucial: it allows researchers to causally attribute observed forces to either the golfer's active effort or the powerful, passive inertia of the body and club. By framing the swing this way, we move beyond simply describing the movement to a more predictive, mechanistic understanding of how coordination emerges from the interaction between neural control and mechanical dynamics.
+        </p>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="driftinput-decomposition-and-affine-structure" class="level1">
-<h1>Drift–Input Decomposition and Affine Structure</h1>
-<p>In the affine form, the decomposition of total generalized forces is <span class="math display">\[\begin{equation}
-F_{\mathrm{total}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
-\end{equation}\]</span> Therefore, the active input forces can be computed only if the drift forces are known: <span class="math display">\[\begin{equation}
-F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}.
-\end{equation}\]</span> Classical inverse dynamics attempts to recover <span class="math inline">\(F_{\mathrm{total}}\)</span> but has no mechanism for computing <span class="math inline">\(F_{\mathrm{drift}}\)</span>. This is where counterfactual simulation becomes essential.</p>
+
+<section id="golf" class="golf-section">
+  <div class="container">
+    <div class="golf-content">
+      <div class="golf-intro">
+        <p>
+          By framing the swing as a control-affine system, we move beyond static positions to analyze the flow of
+          dynamics. We can explicitly calculate the contribution of passive physics versus active intent.
+        </p>
+      </div>
+
+      <div class="golf-model">
+        <h3>System Components</h3>
+        <div class="components-grid">
+          <div class="component">
+            <h4>State Space \(x\)</h4>
+            <p>\(\mathbb{R}^{2n}\) vector containing all joint angles and velocities.</p>
+          </div>
+          <div class="component">
+            <h4>Drift \(f(x)\)</h4>
+            <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
+          </div>
+          <div class="component">
+            <h4>Control \(u\)</h4>
+            <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
+          </div>
+           <div class="component">
+            <h4>Input Field \(g(x)\)</h4>
+            <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
-<section id="ztcf-for-drift-estimation" class="level1">
-<h1>ZTCF for Drift Estimation</h1>
-<p>The Zero Torque Counterfactual (ZTCF) simulates the dynamics under <span class="math inline">\(u(t) \equiv 0\)</span>: <span class="math display">\[\begin{equation}
-\dot{x} = f(x).
-\end{equation}\]</span> This simulation produces the drift-only forces: <span class="math display">\[\begin{equation}
-F_{\mathrm{drift}}(t) = \text{forces generated in the ZTCF simulation},
-\end{equation}\]</span> including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft contributions. Drift forces therefore become computable based on the system model and the measured kinematics.</p>
-</section>
-<section id="zvcf-for-input-estimation" class="level1">
-<h1>ZVCF for Input Estimation</h1>
-<p>The Zero Velocity Counterfactual (ZVCF) holds the state fixed and disables drift contributions. Gravity, shaft elasticity, and other passive contributions are set to zero. Only the input vector fields <span class="math inline">\(G(x)u\)</span> remain active. The forces obtained from the ZVCF correspond to <span class="math display">\[\begin{equation}
-F_{\mathrm{ZVCF}} = F_{\mathrm{input}}.
-\end{equation}\]</span> The ZVCF therefore generates the pure input component of generalized forces, enabling direct inference of the joint torques required to produce the observed deviation of <span class="math inline">\(F_{\mathrm{total}}\)</span> from <span class="math inline">\(F_{\mathrm{drift}}\)</span>.</p>
-</section>
-<section id="handclub-and-ground-reaction-forces-as-mixed-forces" class="level1">
-<h1>Hand–Club and Ground Reaction Forces as Mixed Forces</h1>
-<p>Measured hand–club forces and ground reaction forces satisfy <span class="math display">\[\begin{equation}
-F_{\mathrm{measured}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
-\end{equation}\]</span> Without drift–input decomposition, classical inverse dynamics cannot distinguish passive contributions (such as inertial loading or shaft bending) from active contributions transmitted through joint torques. Counterfactual simulation enables this separation by computing drift and input terms independently.</p>
-</section>
-<section id="causal-interpretation-of-inverse-dynamics-in-affine-systems" class="level1">
-<h1>Causal Interpretation of Inverse Dynamics in Affine Systems</h1>
-<p>Because drift is the causal residue of all prior states, the generalized forces required to reproduce a motion necessarily encode the system’s history. Classical inverse dynamics at time <span class="math inline">\(t\)</span> therefore conflates contributions from past passive dynamics with present-time active inputs. The affine decomposition clarifies this causality by separating drift from input forces, allowing torque inference to be interpreted in terms of the system’s geometry and dynamic history.</p>
-</section>
-<section id="implications-for-biomechanics-research" class="level1">
-<h1>Implications for Biomechanics Research</h1>
-The affine decomposition, ZTCF, and ZVCF enable:
-<p>This section provides the conceptual and computational foundation for replacing classical inverse dynamics with a more rigorous framework grounded in nonlinear affine dynamics.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -886,7 +893,6 @@ The affine decomposition, ZTCF, and ZVCF enable:
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

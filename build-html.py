@@ -145,6 +145,7 @@ def main() -> None:
     # Note: Process articles.qmd LAST to avoid corrupting the template
     qmd_files = [
         "index.qmd",
+        "overview.qmd",
         "about.qmd",
         "collaborate.qmd",
         "contact.qmd",
@@ -159,6 +160,7 @@ def main() -> None:
         "models-simulink.qmd",
         "resources-books.qmd",
         "resources-datasets.qmd",
+        "resources-notebooklm.qmd",
         "resources-papers.qmd",
         "resources-researchers.qmd",
         "resources-software.qmd",
