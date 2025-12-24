@@ -119,9 +119,9 @@ def universal_joint_transmission_ratio(
 
 
 def distribute_torque_by_grip_angle(
-    torque_transmitted: float,
+    torque_transmitted: float | np.ndarray,
     theta_grip_rad: float,
-) -> tuple[float, float]:
+) -> tuple[float | np.ndarray, float | np.ndarray]:
     """Distribute transmitted torque to club axes based on grip angle.
 
     Args:
@@ -218,14 +218,12 @@ def generate_sample_torque(
             torque = t**2 - t
         except (TypeError, ValueError) as e:
             st.session_state.polynomial_error = (
-                f"Error in polynomial expression: {type(e).__name__}. "
-                "Please check your formula."
+                f"Error in polynomial expression: {type(e).__name__}. " "Please check your formula."
             )
             torque = t**2 - t
         except (ArithmeticError, OverflowError, ZeroDivisionError):
             st.session_state.polynomial_error = (
-                "Unexpected error evaluating polynomial expression. "
-                "Please check your formula."
+                "Unexpected error evaluating polynomial expression. " "Please check your formula."
             )
             torque = t**2 - t
     else:
@@ -613,16 +611,8 @@ def plot_acceleration(
         theta_grip_rad,
     )
     epsilon = 1e-6
-    accel_alpha = (
-        torque_alpha / i_alpha
-        if i_alpha > epsilon
-        else np.zeros_like(torque_alpha)
-    )
-    accel_gamma = (
-        torque_gamma / i_gamma
-        if i_gamma > epsilon
-        else np.zeros_like(torque_gamma)
-    )
+    accel_alpha = torque_alpha / i_alpha if i_alpha > epsilon else np.zeros_like(torque_alpha)
+    accel_gamma = torque_gamma / i_gamma if i_gamma > epsilon else np.zeros_like(torque_gamma)
 
     if show_alpha:
         ax.plot(
@@ -675,26 +665,30 @@ def plot_transmission_sweep(
     phi_sweep = np.linspace(-60, 60, 200)
     phi_sweep_rad = np.radians(phi_sweep)
 
-    omega_ratios = []
-    tau_ratios = []
-    accel_alpha_ratios = []
-    accel_gamma_ratios = []
+    omega_ratios_list = []
+    tau_ratios_list = []
+    accel_alpha_ratios_list = []
+    accel_gamma_ratios_list = []
 
     for phi_rad in phi_sweep_rad:
         omega_r, tau_r = universal_joint_transmission_ratio(phi_rad, theta_grip_rad)
-        omega_ratios.append(omega_r)
-        tau_ratios.append(tau_r)
+        omega_ratios_list.append(omega_r)
+        tau_ratios_list.append(tau_r)
 
         torque_trans = 1.0 * tau_r
         t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
         epsilon = 1e-6
-        accel_alpha_ratios.append(t_alpha / i_alpha if i_alpha > epsilon else 0)
-        accel_gamma_ratios.append(t_gamma / i_gamma if i_gamma > epsilon else 0)
+        # t_alpha and t_gamma can be ndarray or float, but here they are float because torque_trans is float
+        t_alpha_val = float(t_alpha) if isinstance(t_alpha, (float, int)) else t_alpha.item()
+        t_gamma_val = float(t_gamma) if isinstance(t_gamma, (float, int)) else t_gamma.item()
 
-    omega_ratios = np.array(omega_ratios)
-    tau_ratios = np.array(tau_ratios)
-    accel_alpha_ratios = np.array(accel_alpha_ratios)
-    accel_gamma_ratios = np.array(accel_gamma_ratios)
+        accel_alpha_ratios_list.append(t_alpha_val / i_alpha if i_alpha > epsilon else 0.0)
+        accel_gamma_ratios_list.append(t_gamma_val / i_gamma if i_gamma > epsilon else 0.0)
+
+    omega_ratios = np.array(omega_ratios_list)
+    tau_ratios = np.array(tau_ratios_list)
+    accel_alpha_ratios = np.array(accel_alpha_ratios_list)
+    accel_gamma_ratios = np.array(accel_gamma_ratios_list)
 
     if show_transmission:
         ax.plot(
@@ -753,8 +747,7 @@ def plot_transmission_sweep(
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
     ax.set_title(
-        f"Universal Joint Transmission vs Wrist Deviation Angle "
-        f"(Grip={grip_angle_deg:.0f}°)",
+        f"Universal Joint Transmission vs Wrist Deviation Angle " f"(Grip={grip_angle_deg:.0f}°)",
         fontsize=12,
         fontweight="bold",
     )
