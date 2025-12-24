@@ -133,6 +133,87 @@ bibliography:
     related_ids: ["yoshikawa1990"]
     references_out_ids: []
 
+  - id: isidori1995nonlinear
+    title: "Nonlinear Control Systems"
+    authors:
+      - "Alberto Isidori"
+    year: 1995
+    venue: "Springer"
+    scholar_link: "https://scholar.google.com/scholar?q=Nonlinear+Control+Systems+Isidori"
+    clusters: ["control theory", "nonlinear systems"]
+    concepts: ["affine systems", "lie brackets", "feedback linearization"]
+    related_ids: []
+    references_out_ids: []
+
+  - id: shabana2020dynamics
+    title: "Dynamics of Multibody Systems"
+    authors:
+      - "Ahmed A. Shabana"
+    year: 2020
+    venue: "Cambridge University Press"
+    scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
+    clusters: ["multibody dynamics", "flexible bodies"]
+    concepts:
+      [
+        "assumed modes method",
+        "floating frame of reference",
+        "flexible multibody",
+      ]
+    related_ids: []
+    references_out_ids: []
+
+  - id: lynch2017modern
+    title: "Modern Robotics: Mechanics, Planning, and Control"
+    authors:
+      - "Kevin M. Lynch"
+      - "Frank C. Park"
+    year: 2017
+    venue: "Cambridge University Press"
+    scholar_link: "https://scholar.google.com/scholar?q=Modern+Robotics+Lynch+Park"
+    clusters: ["robotics", "mechanics"]
+    concepts: ["screw theory", "dynamics", "configuration space"]
+    related_ids: ["murray1994mathematical"]
+    references_out_ids: []
+
+  - id: pinocchio_lib
+    title: "Pinocchio: An efficient and rigid multi-body dynamics library"
+    authors:
+      - "Justin Carpentier"
+      - "et al."
+    year: 2019
+    venue: "IEEE ICRA"
+    scholar_link: "https://scholar.google.com/scholar?q=Pinocchio+efficient+rigid+multi-body+dynamics+library"
+    clusters: ["software", "simulation"]
+    concepts: ["c++", "rigid body algorithms", "spatial algebra"]
+    related_ids: ["featherstone2008rigid"]
+    references_out_ids: []
+
+  - id: drake_lib
+    title: "Drake: Model-based design and verification for robotics"
+    authors:
+      - "Russ Tedrake"
+      - "et al."
+    year: 2019
+    venue: "GitHub"
+    scholar_link: "https://scholar.google.com/scholar?q=Drake+Model-based+design+and+verification+Tedrake"
+    clusters: ["software", "control"]
+    concepts: ["trajectory optimization", "symbolic dynamics", "verification"]
+    related_ids: []
+    references_out_ids: []
+
+  - id: scipy_lib
+    title: "SciPy 1.0: fundamental algorithms for scientific computing in Python"
+    authors:
+      - "Pauli Virtanen"
+      - "et al."
+    year: 2020
+    venue: "Nature Methods"
+    scholar_link: "https://scholar.google.com/scholar?q=SciPy+1.0+fundamental+algorithms"
+    clusters: ["software", "scientific computing"]
+    concepts: ["numerical integration", "optimization", "data analysis"]
+    related_ids: []
+    references_out_ids: []
+
 ## Reading Paths
 
 ### Fast ramp (Start here)
