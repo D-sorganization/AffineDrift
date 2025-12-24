@@ -89,10 +89,7 @@ Added **"Closed-chain indeterminacy"** to **Limitations**.
 **Implementation:**
 Added **"Residual nature of input estimation"** to **Limitations**.
 
-<<<<<<< HEAD
 > _Addition:_ "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
-=======
-> *Addition:* "Because $\tau_{input}$ is calculated as a residual... it absorbs all unmodeled external forces... $\tau_{input}$ should be interpreted as the 'Net Non-Conservative Forcing'..."
 
 ### 9. Addressing Geometric Stiffness
 
@@ -111,4 +108,3 @@ Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
 Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
 
 > *Addition:* "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
->>>>>>> 4c8672e (docs: add defenses for geometric stiffness and parameter causality critiques)
