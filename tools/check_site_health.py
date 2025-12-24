@@ -1,12 +1,15 @@
 import os
-from urllib.parse import urldefrag
-
 from bs4 import BeautifulSoup
+from urllib.parse import urldefrag
 
 DOCS_DIR = "docs"
 
 
 def check_site_health() -> None:
+    """
+    Scans the docs directory for HTML files and verifies internal links.
+    Generates a site map and reports broken links and orphaned files.
+    """
     print(f"Scanning {DOCS_DIR} for HTML files...")
 
     html_files = []
@@ -39,7 +42,9 @@ def check_site_health() -> None:
     subdirs = sorted(list(set([os.path.dirname(f) for f in html_files if "/" in f])))
     for d in subdirs:
         print(f"[{d}/]")
-        pages = sorted([os.path.basename(f) for f in html_files if os.path.dirname(f) == d])
+        pages = sorted(
+            [os.path.basename(f) for f in html_files if os.path.dirname(f) == d]
+        )
         for p in pages:
             print(f"   - {p}")
 
@@ -55,7 +60,7 @@ def check_site_health() -> None:
     for file_path in html_files:
         full_path = os.path.join(DOCS_DIR, file_path)
         try:
-            with open(full_path, encoding="utf-8") as f:
+            with open(full_path, "r", encoding="utf-8") as f:
                 soup = BeautifulSoup(f, "html.parser")
 
             # Find all links
@@ -85,7 +90,9 @@ def check_site_health() -> None:
                 # If file_path is "articles/foo.html" and link is "../index.html"
                 # dir is "articles"
                 current_dir = os.path.dirname(file_path)
-                target_rel_path = os.path.normpath(os.path.join(current_dir, target_url))
+                target_rel_path = os.path.normpath(
+                    os.path.join(current_dir, target_url)
+                )
 
                 # Check if file exists in all_files
                 if target_rel_path not in all_files:
