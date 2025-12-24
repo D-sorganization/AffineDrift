@@ -184,6 +184,7 @@ def create_html_page(
 
 
 def main() -> None:
+    """Main execution function to publish the article."""
     qmd_path = Path("articles/intentional-constraint-collapse.qmd")
     output_path = Path("docs/articles/intentional-constraint-collapse.html")
 
@@ -204,7 +205,7 @@ def main() -> None:
         if t_match:
             title = t_match.group(1)
 
-        body_md = content[yaml_match.end() :]
+        body_md = content[yaml_match.end():]
     else:
         body_md = content
 
