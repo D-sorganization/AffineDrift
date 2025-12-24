@@ -49,8 +49,8 @@ def create_html_page(
     description: str,
     body_html: str,
     output_file: Path,
+    template_content: str,
     page_type: str = "articles",
-    template_path: Path = Path("docs/articles.html"),
 ) -> bool:
     """Create a complete HTML page from a template
 
@@ -59,85 +59,84 @@ def create_html_page(
         description: Page description
         body_html: HTML content for the main body
         output_file: Path where the HTML file should be written
+        template_content: The HTML template string
         page_type: Type of page ('articles', 'models', 'resources') to set
             correct nav active state
-        template_path: Path to the HTML template file
 
     Returns:
         True if successful, False otherwise
     """
-    # Read template from existing articles.html (but don't modify it)
-    if template_path.exists():
-        template = template_path.read_text()
+    if not template_content:
+        return False
 
-        # Escape inputs for security
-        title_escaped = html.escape(title)
-        description_escaped = html.escape(description)
+    template = template_content
 
-        # Replace title
+    # Escape inputs for security
+    title_escaped = html.escape(title)
+    description_escaped = html.escape(description)
+
+    # Replace title
+    template = re.sub(
+        r"<title>.*?</title>", f"<title>{title_escaped} – AffineDrift</title>", template
+    )
+
+    # Replace meta description
+    template = re.sub(
+        r'<meta name="description" content="[^"]*">',
+        f'<meta name="description" content="{description_escaped}">',
+        template,
+    )
+
+    # Fix navigation active state based on page type
+    if page_type == "models":
+        # Remove active state from Articles link
         template = re.sub(
-            r"<title>.*?</title>", f"<title>{title_escaped} – AffineDrift</title>", template
-        )
-
-        # Replace meta description
-        template = re.sub(
-            r'<meta name="description" content="[^"]*">',
-            f'<meta name="description" content="{description_escaped}">',
+            r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+            '<a class="nav-link" href="./articles.html">',
             template,
         )
-
-        # Fix navigation active state based on page type
-        if page_type == "models":
-            # Remove active state from Articles link
-            template = re.sub(
-                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
-                '<a class="nav-link" href="./articles.html">',
-                template,
-            )
-        elif page_type == "resources":
-            # Remove active state from Articles link, add to Resources
-            template = re.sub(
-                r'<a class="nav-link active" href="./articles.html" aria-current="page">',
-                '<a class="nav-link" href="./articles.html">',
-                template,
-            )
-            template = re.sub(
-                r'<a class="nav-link" href="./resources.html">',
-                '<a class="nav-link active" href="./resources.html" aria-current="page">',
-                template,
-            )
-        # For articles type, keep Articles as active (default)
-
-        # Replace title block
+    elif page_type == "resources":
+        # Remove active state from Articles link, add to Resources
         template = re.sub(
-            r'<h1 class="title">.*?</h1>', f'<h1 class="title">{title_escaped}</h1>', template
-        )
-
-        # Replace description in page
-        template = re.sub(
-            r'<div class="description">\s*.*?\s*</div>',
-            f'<div class="description">\n    {description_escaped}\n  </div>',
+            r'<a class="nav-link active" href="./articles.html" aria-current="page">',
+            '<a class="nav-link" href="./articles.html">',
             template,
-            flags=re.DOTALL,
         )
+        template = re.sub(
+            r'<a class="nav-link" href="./resources.html">',
+            '<a class="nav-link active" href="./resources.html" aria-current="page">',
+            template,
+        )
+    # For articles type, keep Articles as active (default)
 
-        # Replace the main content
-        content_pattern = r'<section class="article-section">.*?</section>'
-        # Use lambda to avoid backslash escaping issues in body_html
-        template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
+    # Replace title block
+    template = re.sub(
+        r'<h1 class="title">.*?</h1>', f'<h1 class="title">{title_escaped}</h1>', template
+    )
 
-        # Remove articles-specific JavaScript for non-articles pages
-        if page_type != "articles":
-            # Remove updateArticlesHistory function and calls
-            template = re.sub(
-                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*", "", template, flags=re.DOTALL
-            )
-            template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
+    # Replace description in page
+    template = re.sub(
+        r'<div class="description">\s*.*?\s*</div>',
+        f'<div class="description">\n    {description_escaped}\n  </div>',
+        template,
+        flags=re.DOTALL,
+    )
 
-        output_file.write_text(template)
-        return True
+    # Replace the main content
+    content_pattern = r'<section class="article-section">.*?</section>'
+    # Use lambda to avoid backslash escaping issues in body_html
+    template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
 
-    return False
+    # Remove articles-specific JavaScript for non-articles pages
+    if page_type != "articles":
+        # Remove updateArticlesHistory function and calls
+        template = re.sub(
+            r"\s*function updateArticlesHistory\(\) \{.*?\}\s*", "", template, flags=re.DOTALL
+        )
+        template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
+
+    output_file.write_text(template)
+    return True
 
 
 def main() -> None:
@@ -196,6 +195,20 @@ def main() -> None:
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
 
+    # ⚡ Bolt Optimization: Read template once at the start
+    template_path = Path("docs/articles.html")
+    template_content = ""
+    if template_path.exists():
+        template_content = template_path.read_text()
+    else:
+        print(f"Error: Template file {template_path} not found.")
+        # Proceeding without template will likely fail or require skip logic,
+        # but original script logic implicitly failed inside create_html_page returning False.
+        # We will check validity in the loop.
+
+    if not template_content:
+        print("Warning: Empty or missing template. Build may fail.")
+
     for qmd_name in qmd_files:
         qmd_file = Path(qmd_name)
         if not qmd_file.exists():
@@ -226,7 +239,9 @@ def main() -> None:
         else:
             page_type = "articles"
 
-        if create_html_page(title, description, html_content, output_file, page_type):
+        if create_html_page(
+            title, description, html_content, output_file, template_content, page_type
+        ):
             print(f"  Created {output_file}")
         else:
             print(f"  Failed to create {output_file}")
