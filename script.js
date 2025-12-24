@@ -86,10 +86,25 @@ document.addEventListener("DOMContentLoaded", function () {
           const offsetPosition =
             elementPosition + window.scrollY - HEADER_OFFSET;
 
+          // 🎨 Palette UX: Update URL for sharing
+          history.pushState(null, null, href);
+
+          // 🎨 Palette UX: Smooth scroll
           window.scrollTo({
             top: offsetPosition,
             behavior: "smooth",
           });
+
+          // 🎨 Palette UX: Accessible Focus Management
+          if (!targetElement.hasAttribute('tabindex')) {
+            targetElement.setAttribute('tabindex', '-1');
+          }
+          targetElement.focus({ preventScroll: true });
+
+          // 🎨 Palette UX: Visual confirmation flash
+          targetElement.classList.remove('target-highlight');
+          void targetElement.offsetWidth; // Trigger reflow
+          targetElement.classList.add('target-highlight');
         }
       }
     }
