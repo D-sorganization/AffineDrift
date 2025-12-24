@@ -52,13 +52,18 @@ jobs:
         run: black --check .
 
       - run: pip install mypy types-PyYAML types-requests
-      - run: pip install -r python/requirements.txt
-      - run: mypy python/src/ --ignore-missing-imports
+      - run: pip install -r requirements.txt
+      - name: Install Tool Requirements
+        run: |
+          if [ -d "tools" ]; then
+            find tools -name "requirements.txt" -exec pip install -r {} \;
+          fi
+      - run: mypy tools/ --ignore-missing-imports
 
       # TODO detection now BLOCKING - Jules Auto-Repair will fix
       - name: Verify No Placeholders
         run: |
-          if grep -rE "TODO|FIXME" python/src/; then
+          if grep -rE "TODO|FIXME" tools/ scripts/ content/; then
              echo "::error::Placeholders found. Remove TODOs/FIXMEs or create tracked GitHub issues."
              exit 1
           fi
@@ -89,8 +94,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: pip install -r python/requirements.txt
-      - run: pytest python/tests/ --cov=python/src --cov-report=xml
+      - run: pip install -r requirements.txt
+      - name: Install Tool Requirements
+        run: |
+          if [ -d "tools" ]; then
+            find tools -name "requirements.txt" -exec pip install -r {} \;
+          fi
+      - run: pytest tests/ --cov=tools --cov-report=xml
       - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
