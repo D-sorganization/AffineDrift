@@ -150,6 +150,8 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
+Defining the system's components is only the first step. To understand the causal relationship between the golfer's effort and the club's motion, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that guarantees the golfer's torque enters the dynamics linearly.
+
 We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
 The transition from the kinematic definitions of Section~[@sec:system] to the dynamic equations of motion requires a formal treatment of energy. Because the golfer--club--shaft system is subject to holonomic constraints and conservative forces, its behavior is governed by the Principle of Least Action. This energetic structure imposes strict constraints on the form of the equations of motion—specifically, it guarantees that the kinetic energy metric defines the relationship between applied forces and resulting accelerations. By exploiting this property, we can demonstrate that the linearity of the control input is not an approximation, but a fundamental consequence of the mechanical structure.
@@ -226,7 +228,11 @@ This control-affine structure is the backbone for the drift--input decomposition
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
 
-The derivation in Section~[@sec:affine] yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$. This algebraic separation is the key to unlocking the causal structure of the swing. Because the equations of motion are linear in torque, we can physically interpret the terms not just as mathematical components, but as distinct mechanical sources of motion. The term $f(x)$ represents the system's *inertial memory* and *potential field*—the forces that exist simply because the system has a state—while $g(x)u$ represents the *current agency* of the golfer.
+The derivation in Section~[@sec:affine] yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$.
+
+The derivation above is not merely a symbolic exercise; it exposes the fundamental causality of the system. The affine form $\dot{x} = f(x) + g(x)u$ asserts that the system's evolution is a superposition of two distinct processes: a passive drift along the manifold's geodesic fabric, and an active deviation forced by the inputs. This mathematical separability forces a physical decomposition: we can no longer view the swing as a monolithic 'result' of the golfer, but rather as a dialogue between the system's inertial memory and the golfer's current intent.
+
+This algebraic separation is the key to unlocking the causal structure of the swing. Because the equations of motion are linear in torque, we can physically interpret the terms not just as mathematical components, but as distinct mechanical sources of motion. The term $f(x)$ represents the system's *inertial memory* and *potential field*—the forces that exist simply because the system has a state—while $g(x)u$ represents the *current agency* of the golfer.
 
 Given the control-affine form~\eqref{eq:affine_state}, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
@@ -419,6 +425,8 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 ## Zero Velocity Counterfactual (ZVCF)
 {#sec-zvcf}
+
+The ZTCF successfully purifies the motion of active torque, leaving us with the 'skeletal baseline' of the swing. However, this baseline is still dynamically dense: it entangles static loads (gravity, stiffness) with velocity-dependent effects (Coriolis, centrifugal). A golfer feeling a heavy load at the top of the backswing (static) experiences a fundamentally different mechanical challenge than one fighting centrifugal force at impact (dynamic). To resolve this ambiguity, we must dissect the drift term itself. We require an analytical scalpel that separates the *configuration-driven* loads from the *motion-driven* loads.
 
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
 
@@ -715,6 +723,8 @@ Interpretations must therefore remain explicitly mechanical.
 
 ## Force and Torque Taxonomy via the Affine Mapping
 {#sec-taxonomy}
+
+The formal proof of drift invariance in the preceding section provides the necessary license to classify forces. Because the passive dynamics $f(x)$ do not change when the golfer applies torque, we can rigorously define 'Drift Forces' as a stable category of mechanical load that exists independently of the golfer’s immediate action. This independence permits the construction of a comprehensive **Force Taxonomy**, which maps the algebraic terms of the affine structure directly to mechanical interpretations.
 
 With the drift--input decomposition formalized in Sections~[@sec:ztcf]--[@sec:drift_invariance], we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 \[
