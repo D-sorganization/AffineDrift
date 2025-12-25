@@ -14,6 +14,7 @@
 | **08. Residual Input**<br>(Identifiability) | Empirical | **Valid** | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present. | **Applied** to Limitations |
 | **09. Geometric Stiffness**<br>(Omission in ZVCF) | Mathematical | **Valid** | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline. | **Applied** to Taxonomy |
 | **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion. | **Applied** to Limitations |
+| **11. Passive Overshoot**<br>(Damping Artifact) | Empirical / Modeling | **Valid** (Conservative) | **Conservative Baseline:** Acknowledge that low damping exaggerates drift. Defend the "Skeletal Baseline" as the *conservative* lower bound of intervention. Any "braking" input reflects the net non-conservative effort required to stabilize the path. | **Applied** to Simulink Results |
 
 ---
 
@@ -108,3 +109,12 @@ Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
 Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
 
 > *Addition:* "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
+
+### 11. Addressing Passive Overshoot Artifact
+
+**Analysis:** The "overshoot" of passive momentum in the Simulink model (where drift > total force) implies the golfer is braking. Critics argue this is an artifact of under-damped modeling.
+
+**Implementation:**
+Added **"Note on Damping and Overshoot"** to the **Simulink Results** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part5.qmd`.
+
+> *Addition:* "This 'overshoot'... correctly identifies the net non-conservative effort required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory..."
