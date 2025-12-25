@@ -3169,3 +3169,47 @@ mjx-container * {
 .target-highlight {
   animation: target-flash 1.5s ease-out;
 }
+
+/* ===========================
+   Image Lightbox (Zoom)
+   =========================== */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img {
+  max-width: 90%;
+  max-height: 90vh;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.5);
+  border-radius: 4px;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+
+.lightbox-overlay.active .lightbox-img {
+  transform: scale(1);
+}
+
+img.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+img.zoomable:hover {
+  transform: scale(1.01);
+}
