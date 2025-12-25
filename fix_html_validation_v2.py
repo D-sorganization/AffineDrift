@@ -1,8 +1,9 @@
 import glob
 import re
 
+
 def fix_file(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         content = f.read()
 
     original_content = content
@@ -60,14 +61,22 @@ def fix_file(filepath):
     # Let's try to add aria-labels to sidebars if they are <aside> or <nav>
     # <nav id="TOC" ...> -> aria-label="Table of Contents"
     if '<nav id="TOC"' in content and 'aria-label' not in content:
-        content = content.replace('<nav id="TOC"', '<nav id="TOC" aria-label="Table of Contents"')
+        content = content.replace(
+            '<nav id="TOC"', '<nav id="TOC" aria-label="Table of Contents"'
+        )
 
     # <aside class="left-sidebar">
     if '<aside class="left-sidebar"' in content and 'aria-label' not in content:
-        content = content.replace('<aside class="left-sidebar"', '<aside class="left-sidebar" aria-label="Primary Sidebar"')
+        content = content.replace(
+            '<aside class="left-sidebar"',
+            '<aside class="left-sidebar" aria-label="Primary Sidebar"',
+        )
 
     if '<aside class="right-sidebar"' in content and 'aria-label' not in content:
-        content = content.replace('<aside class="right-sidebar"', '<aside class="right-sidebar" aria-label="Secondary Sidebar"')
+        content = content.replace(
+            '<aside class="right-sidebar"',
+            '<aside class="right-sidebar" aria-label="Secondary Sidebar"',
+        )
 
     if content != original_content:
         print(f"Fixing {filepath}")

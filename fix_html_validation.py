@@ -1,9 +1,9 @@
 import glob
 import re
-import os
+
 
 def fix_file(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding='utf-8') as f:
         content = f.read()
 
     original_content = content
@@ -27,7 +27,8 @@ def fix_file(filepath):
     # or just use a simple replacement for known buttons.
     # The error was on <button> is missing recommended "type" attribute
     # We can assume most buttons should be type="button" if not specified.
-    # But let's look at the specific error location: tools/wrist_universal_joint/grip_angle_simulator.html
+    # But let's look at the specific error location:
+    # tools/wrist_universal_joint/grip_angle_simulator.html
 
     # Let's fix the specific patterns first.
 

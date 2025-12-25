@@ -118,10 +118,10 @@ def universal_joint_transmission_ratio(
     return omega_ratio, tau_ratio
 
 
-def distribute_torque_by_grip_angle(  # type: ignore[no-any-unimported]
-    torque_transmitted: float | np.ndarray,
+def distribute_torque_by_grip_angle(
+    torque_transmitted: float | np.ndarray,  # type: ignore[type-arg]
     theta_grip_rad: float,
-) -> tuple[float | np.ndarray, float | np.ndarray]:
+) -> tuple[float | np.ndarray, float | np.ndarray]:  # type: ignore[type-arg]
     """Distribute transmitted torque to club axes based on grip angle.
 
     Args:
@@ -142,16 +142,16 @@ def distribute_torque_by_grip_angle(  # type: ignore[no-any-unimported]
     return torque_alpha, torque_gamma
 
 
-def generate_sample_torque(  # type: ignore[no-any-unimported]
+def generate_sample_torque(
     noise_type: str,
-    t: np.ndarray,
+    t: np.ndarray,  # type: ignore[type-arg]
     polynomial_expression: str = "t**2 - t",
-) -> np.ndarray:
+) -> np.ndarray:  # type: ignore[type-arg]
     """Generate a torque signal based on noise type."""
     if noise_type == "Golf-like Random":
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")  # type: ignore[assignment]
     elif noise_type == "Step":
         torque = np.zeros_like(t)
         torque[250:] = 3.0  # Step at midpoint
@@ -172,7 +172,7 @@ def generate_sample_torque(  # type: ignore[no-any-unimported]
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
         torque = np.random.normal(0, 1.5, len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")  # type: ignore[assignment]
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
         try:
@@ -230,12 +230,12 @@ def generate_sample_torque(  # type: ignore[no-any-unimported]
         # Default to golf-like
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")  # type: ignore[assignment]
 
     return torque
 
 
-def draw_diagram(  # type: ignore[no-any-unimported]
+def draw_diagram(
     grip_angle_deg: float,
     wrist_angle_deg: float,
 ) -> Figure:
@@ -509,9 +509,9 @@ def draw_diagram(  # type: ignore[no-any-unimported]
     return fig
 
 
-def plot_torque(  # type: ignore[no-any-unimported]
-    t: np.ndarray,
-    input_torque: np.ndarray,
+def plot_torque(
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
@@ -585,9 +585,9 @@ def plot_torque(  # type: ignore[no-any-unimported]
     return fig
 
 
-def plot_acceleration(  # type: ignore[no-any-unimported]
-    t: np.ndarray,
-    input_torque: np.ndarray,
+def plot_acceleration(
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
@@ -648,7 +648,7 @@ def plot_acceleration(  # type: ignore[no-any-unimported]
     return fig
 
 
-def plot_transmission_sweep(  # type: ignore[no-any-unimported]
+def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,

@@ -64,7 +64,7 @@ def check_site_health() -> None:
 
             # Find all links
             for a in soup.find_all("a", href=True):
-                href = a["href"]
+                href = a["href"]  # type: ignore[index]
 
                 # Handle potential list/multi-valued attributes (though href should be string)
                 if not isinstance(href, str):
