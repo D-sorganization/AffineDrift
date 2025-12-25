@@ -776,7 +776,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!articleContent) return;
 
     // Use the article body text for calculation
-    const text = articleContent.innerText || articleContent.textContent;
+    // ⚡ Bolt Optimization: Prefer textContent to avoid reflow (layout thrashing) from innerText
+    const text = articleContent.textContent || articleContent.innerText;
     // Simple word count estimate
     const wordCount = text.trim().split(/\s+/).length;
     // Average reading speed (words per minute)
