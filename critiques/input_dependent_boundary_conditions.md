@@ -39,5 +39,5 @@ If $M$ depends on $u$, the system is no longer control-affine ($\ddot{q} = M(u)^
 ## Suggested Remedies
 
 1.  **Explicit Scope Limitation**: State clearly that the model assumes **"Constant Grip Impedance"**. The decomposition effectively separates "Net Torque" from "Passive Dynamics under Fixed Grip Stiffness".
-2.  **ZTCF Redefinition**: Define ZTCF as the "Frozen Grip Counterfactual"—the motion if the golfer ceased applying *accelerating* torque but maintained *stabilizing* grip pressure.
+2.  **ZTCF Redefinition**: Define ZTCF as the "Frozen Grip Counterfactual"—the motion if the golfer ceased applying _accelerating_ torque but maintained _stabilizing_ grip pressure.
 3.  **Sensitivity Analysis**: In Part II (Simulation), test how much the ZTCF trajectory diverges if the modal frequencies are perturbed by $\pm 10\%$ (representing grip relaxation). If the divergence is small, the "Clamped" assumption is robust. If large, the theory is fragile.

@@ -3,20 +3,22 @@
 ## A) Concept Map
 
 - **Nonlinear Control Foundations**
-    - **Affine Systems**: Structure of $\dot{x} = f(x) + g(x)u$.
-    - **Drift Vector Field ($f(x)$)**: Passive dynamics as a causal "memory" of the system (inertia + elasticity).
-    - **Input Vector Field ($g(x)$)**: State-dependent effectiveness of actuation.
-    - **Lie Brackets**: Commutation $[f, g]$ to generate motion in unactuated directions (Sequencing).
+
+  - **Affine Systems**: Structure of $\dot{x} = f(x) + g(x)u$.
+  - **Drift Vector Field ($f(x)$)**: Passive dynamics as a causal "memory" of the system (inertia + elasticity).
+  - **Input Vector Field ($g(x)$)**: State-dependent effectiveness of actuation.
+  - **Lie Brackets**: Commutation $[f, g]$ to generate motion in unactuated directions (Sequencing).
 
 - **Geometric Mechanics**
-    - **Underactuation**: Fewer inputs than degrees of freedom; reliance on drift.
-    - **Geometric Phase**: Net motion from cyclic shape changes (holonomy).
-    - **Symmetry & Reduction**: Conservation laws in the absence of external forcing.
+
+  - **Underactuation**: Fewer inputs than degrees of freedom; reliance on drift.
+  - **Geometric Phase**: Net motion from cyclic shape changes (holonomy).
+  - **Symmetry & Reduction**: Conservation laws in the absence of external forcing.
 
 - **Optimality & Biological Control**
-    - **Optimal Control**: $\min J(u)$ subject to affine dynamics.
-    - **Energy Shaping**: Controlling the Hamiltonian rather than the trajectory directly.
-    - **Impedance Control**: Managing stiffness/damping rather than force/position.
+  - **Optimal Control**: $\min J(u)$ subject to affine dynamics.
+  - **Energy Shaping**: Controlling the Hamiltonian rather than the trajectory directly.
+  - **Impedance Control**: Managing stiffness/damping rather than force/position.
 
 ## B) Bibliography (YAML)
 
@@ -43,7 +45,13 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Nonlinear+Control+Systems+Isidori"
   clusters: ["control theory", "nonlinear analysis"]
-  concepts: ["affine systems", "drift vector field", "feedback linearization", "zero dynamics"]
+  concepts:
+    [
+      "affine systems",
+      "drift vector field",
+      "feedback linearization",
+      "zero dynamics",
+    ]
   related_ids: ["khalil2002nonlinear", "slotine1991applied"]
   references_out_ids: ["nijmeijer1990nonlinear"]
 
@@ -55,7 +63,12 @@
   venue: "Control Problems in Robotics and Automation"
   scholar_link: "https://scholar.google.com/scholar?q=Underactuated+mechanical+systems+Spong"
   clusters: ["underactuation", "robotics"]
-  concepts: ["partial feedback linearization", "collocated linearization", "passive dynamics"]
+  concepts:
+    [
+      "partial feedback linearization",
+      "collocated linearization",
+      "passive dynamics",
+    ]
   related_ids: ["tedrake2023underactuated", "bullo2004geometric"]
   references_out_ids: ["block2007control"]
 
@@ -83,7 +96,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Nonholonomic+Mechanics+and+Control+Bloch"
   clusters: ["mechanics", "constraints"]
-  concepts: ["nonholonomic constraints", "momentum equations", "chaplygin systems"]
+  concepts:
+    ["nonholonomic constraints", "momentum equations", "chaplygin systems"]
   related_ids: ["bullo2004geometric"]
   references_out_ids: ["ostrowski1998geometric"]
 
@@ -109,7 +123,8 @@
   venue: "The International Journal of Robotics Research"
   scholar_link: "https://scholar.google.com/scholar?q=The+geometric+mechanics+of+undulatory+robotic+locomotion+Ostrowski"
   clusters: ["locomotion", "geometric mechanics"]
-  concepts: ["connection vector field", "reconstruction equation", "body velocity"]
+  concepts:
+    ["connection vector field", "reconstruction equation", "body velocity"]
   related_ids: ["kelly1995geometric"]
   references_out_ids: ["shammas2007geometric"]
 
@@ -121,7 +136,12 @@
   venue: "Nature Neuroscience"
   scholar_link: "https://scholar.google.com/scholar?q=Optimality+principles+in+sensorimotor+control+Todorov"
   clusters: ["motor control", "neuroscience"]
-  concepts: ["optimal feedback control", "redundancy resolution", "minimal intervention"]
+  concepts:
+    [
+      "optimal feedback control",
+      "redundancy resolution",
+      "minimal intervention",
+    ]
   related_ids: ["flash1985coordination"]
   references_out_ids: ["todorov2002optimal"]
 
@@ -208,7 +228,8 @@
   venue: "Critical Reviews in Biomedical Engineering"
   scholar_link: "https://scholar.google.com/scholar?q=Muscle+and+tendon+properties+models+scaling+Zajac"
   clusters: ["biomechanics", "actuation"]
-  concepts: ["hill-type muscle model", "tendon compliance", "force-length-velocity"]
+  concepts:
+    ["hill-type muscle model", "tendon compliance", "force-length-velocity"]
   related_ids: ["winters1990biomechanics"]
   references_out_ids: ["thelen2003adjustment"]
 

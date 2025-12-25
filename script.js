@@ -25,7 +25,7 @@ const MAX_ID_GENERATION_ATTEMPTS = 100;
 // Helper function to debounce events
 function debounce(func, wait) {
   let timeout;
-  return function(...args) {
+  return function (...args) {
     const context = this;
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(context, args), wait);
@@ -96,15 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
           });
 
           // 🎨 Palette UX: Accessible Focus Management
-          if (!targetElement.hasAttribute('tabindex')) {
-            targetElement.setAttribute('tabindex', '-1');
+          if (!targetElement.hasAttribute("tabindex")) {
+            targetElement.setAttribute("tabindex", "-1");
           }
           targetElement.focus({ preventScroll: true });
 
           // 🎨 Palette UX: Visual confirmation flash
-          targetElement.classList.remove('target-highlight');
+          targetElement.classList.remove("target-highlight");
           void targetElement.offsetWidth; // Trigger reflow
-          targetElement.classList.add('target-highlight');
+          targetElement.classList.add("target-highlight");
         }
       }
     }
@@ -391,16 +391,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
-    const tocLinks = document.querySelectorAll('#toc-list a');
+    const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
-    const sections = document.querySelectorAll('.page-section[id], section[id]');
+    const sections = document.querySelectorAll(
+      ".page-section[id], section[id]",
+    );
     const visibleSections = new Set();
 
     const observerOptions = {
       root: null,
-      rootMargin: '-100px 0px -60% 0px',
-      threshold: 0
+      rootMargin: "-100px 0px -60% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -423,10 +425,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (activeId) {
         tocLinks.forEach((link) => {
-          if (link.getAttribute('href') === `#${activeId}`) {
-            link.classList.add('active');
+          if (link.getAttribute("href") === `#${activeId}`) {
+            link.classList.add("active");
           } else {
-            link.classList.remove('active');
+            link.classList.remove("active");
           }
         });
       }
@@ -557,13 +559,15 @@ document.addEventListener("DOMContentLoaded", function () {
   updateGeometry();
 
   // Update on resize (Debounced)
-  window.addEventListener('resize', debounce(updateGeometry, 250));
+  window.addEventListener("resize", debounce(updateGeometry, 250));
 
   // Update on content changes (e.g., accordions)
-  if (typeof ResizeObserver !== 'undefined') {
-    const resizeObserver = new ResizeObserver(debounce(() => {
-      updateGeometry();
-    }, 250));
+  if (typeof ResizeObserver !== "undefined") {
+    const resizeObserver = new ResizeObserver(
+      debounce(() => {
+        updateGeometry();
+      }, 250),
+    );
     resizeObserver.observe(document.body);
   }
 
