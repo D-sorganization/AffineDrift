@@ -2,23 +2,23 @@ import glob
 import re
 
 
-def fix_file(filepath):
-    with open(filepath, encoding='utf-8') as f:
+def fix_file(filepath: str) -> None:
+    with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
     original_content = content
 
     # 1. Fix crossorigin
     # <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    content = re.sub(r'crossorigin=""', 'crossorigin', content)
+    content = re.sub(r'crossorigin=""', "crossorigin", content)
 
     # 2. Fix redundant role="link"
     # role="link"
-    content = re.sub(r'\s+role="link"', '', content)
+    content = re.sub(r'\s+role="link"', "", content)
 
     # 3. Fix aria-labelledby on dropdown-menu
     # <ul class="dropdown-menu" aria-labelledby="...">
-    content = re.sub(r'(\s+class="dropdown-menu")\s+aria-labelledby="[^"]+"', r'\1', content)
+    content = re.sub(r'(\s+class="dropdown-menu")\s+aria-labelledby="[^"]+"', r"\1", content)
 
     # 4. Fix button type
     # <button class="accordion-header" ...>
@@ -37,11 +37,12 @@ def fix_file(filepath):
 
     if content != original_content:
         print(f"Fixing {filepath}")
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(content)
 
+
 # Process all HTML files in docs
-files = glob.glob('docs/**/*.html', recursive=True)
+files = glob.glob("docs/**/*.html", recursive=True)
 for file in files:
     fix_file(file)
 

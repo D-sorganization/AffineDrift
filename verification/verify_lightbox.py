@@ -73,7 +73,8 @@ def verify_lightbox() -> None:
                 # Or, we can manually call the logic.
 
                 print("Testing lightbox logic via injection...")
-                page.evaluate("""
+                page.evaluate(
+                    """
                     const img = document.getElementById('test-image');
                     img.classList.add('zoomable');
 
@@ -90,7 +91,8 @@ def verify_lightbox() -> None:
                         };
                         img.addEventListener('click', openFn);
                     }
-                """)
+                """
+                )
                 page.locator("#test-image").click()
                 print("Clicked injected test image.")
 
