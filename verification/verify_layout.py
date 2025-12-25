@@ -1,13 +1,16 @@
-
 import os
-import sys
+
 from playwright.sync_api import sync_playwright
+
 
 def verify_layout():
     # Ensure docs directory exists and we can find the file
     docs_path = os.path.abspath("docs/articles.html")
     if not os.path.exists(docs_path):
-        print(f"Error: {docs_path} does not exist. Please run build-html.py first or ensure docs are present.")
+        print(
+            f"Error: {docs_path} does not exist. "
+            "Please run build-html.py first or ensure docs are present."
+        )
         return
 
     file_url = f"file://{docs_path}"
@@ -42,6 +45,7 @@ def verify_layout():
         print("Captured layout_mobile_375.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     verify_layout()
