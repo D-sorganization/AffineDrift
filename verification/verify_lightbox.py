@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 
-def verify_lightbox():
+
+def verify_lightbox() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -15,9 +16,14 @@ def verify_lightbox():
 
         # Inject a test image to ensure we have a valid, visible target
         print("Injecting test image...")
-        page.evaluate("""
+        svg_data = (
+            "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmci"
+            "IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9MTAwIiBmaWxsPSJyZWQiLz48L3N2Zz4="
+        )
+        page.evaluate(
+            f"""
             const img = document.createElement('img');
-            img.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9MTAwIiBmaWxsPSJyZWQiLz48L3N2Zz4=';
+            img.src = '{svg_data}';
             img.id = 'test-image';
             img.style.width = '200px';
             img.style.height = '200px';
@@ -25,7 +31,8 @@ def verify_lightbox():
             img.style.margin = '20px';
             // Append to content
             document.getElementById('quarto-document-content').prepend(img);
-        """)
+        """
+        )
 
         # Important: Since script.js runs on DOMContentLoaded, and we just injected an image,
         # the event listeners from script.js won't be attached to this new image automatically
@@ -88,19 +95,23 @@ def verify_lightbox():
                 print("Clicked injected test image.")
 
         else:
-            print("FAILURE: 'zoomable' class not found on existing images. script.js might not have run or selectors didn't match.")
+            print(
+                "FAILURE: 'zoomable' class not found on existing images. "
+                "script.js might not have run or selectors didn't match."
+            )
 
         # Check for lightbox
         lightbox = page.locator(".lightbox-overlay.active")
         try:
             lightbox.wait_for(state="visible", timeout=3000)
             print("Lightbox opened successfully.")
-        except:
+        except Exception:
             print("Lightbox did not open.")
 
         # Screenshot
         page.screenshot(path="verification/lightbox_active.png")
         browser.close()
+
 
 if __name__ == "__main__":
     verify_lightbox()
