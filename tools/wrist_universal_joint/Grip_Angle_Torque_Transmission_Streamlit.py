@@ -118,7 +118,7 @@ def universal_joint_transmission_ratio(
     return omega_ratio, tau_ratio
 
 
-def distribute_torque_by_grip_angle(
+def distribute_torque_by_grip_angle(  # type: ignore[no-any-unimported]
     torque_transmitted: float | np.ndarray,
     theta_grip_rad: float,
 ) -> tuple[float | np.ndarray, float | np.ndarray]:
@@ -142,7 +142,7 @@ def distribute_torque_by_grip_angle(
     return torque_alpha, torque_gamma
 
 
-def generate_sample_torque(
+def generate_sample_torque(  # type: ignore[no-any-unimported]
     noise_type: str,
     t: np.ndarray,
     polynomial_expression: str = "t**2 - t",
@@ -235,7 +235,7 @@ def generate_sample_torque(
     return torque
 
 
-def draw_diagram(
+def draw_diagram(  # type: ignore[no-any-unimported]
     grip_angle_deg: float,
     wrist_angle_deg: float,
 ) -> Figure:
@@ -509,7 +509,7 @@ def draw_diagram(
     return fig
 
 
-def plot_torque(
+def plot_torque(  # type: ignore[no-any-unimported]
     t: np.ndarray,
     input_torque: np.ndarray,
     grip_angle_deg: float,
@@ -585,7 +585,7 @@ def plot_torque(
     return fig
 
 
-def plot_acceleration(
+def plot_acceleration(  # type: ignore[no-any-unimported]
     t: np.ndarray,
     input_torque: np.ndarray,
     grip_angle_deg: float,
@@ -648,7 +648,7 @@ def plot_acceleration(
     return fig
 
 
-def plot_transmission_sweep(
+def plot_transmission_sweep(  # type: ignore[no-any-unimported]
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
