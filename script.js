@@ -829,6 +829,62 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   initReadingTime();
 
+  // 🎨 Palette UX: Lightbox for Article Images
+  const contentImages = document.querySelectorAll("#quarto-document-content img");
+  if (contentImages.length > 0) {
+    const lightbox = document.createElement("div");
+    lightbox.className = "lightbox-overlay";
+    lightbox.setAttribute("aria-hidden", "true");
+    lightbox.setAttribute("role", "dialog");
+    lightbox.setAttribute("aria-modal", "true");
+
+    // Close on click
+    lightbox.addEventListener("click", () => {
+      lightbox.classList.remove("active");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightbox.innerHTML = ""; // Clear content
+    });
+    document.body.appendChild(lightbox);
+
+    contentImages.forEach((img) => {
+      // Skip if already inside a link or interactive element
+      if (img.closest("a") || img.closest("button")) return;
+
+      img.classList.add("zoomable");
+      img.setAttribute("tabindex", "0"); // Keyboard focusable
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", "Zoom image");
+
+      const openFn = (e) => {
+        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        const clone = img.cloneNode();
+        clone.className = "lightbox-img";
+        clone.removeAttribute("loading"); // Ensure it loads immediately
+        clone.removeAttribute("id"); // Prevent duplicate IDs
+        // Remove interactive attributes from clone
+        clone.removeAttribute("tabindex");
+        clone.removeAttribute("role");
+        clone.removeAttribute("aria-label");
+        clone.classList.remove("zoomable");
+
+        lightbox.appendChild(clone);
+        lightbox.classList.add("active");
+        lightbox.setAttribute("aria-hidden", "false");
+      };
+
+      img.addEventListener("click", openFn);
+      img.addEventListener("keydown", openFn);
+    });
+
+    // Close on Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("active")) {
+        lightbox.click();
+      }
+    });
+  }
+
   console.log("AffineDrift loaded successfully (Optimized)");
 });
 
