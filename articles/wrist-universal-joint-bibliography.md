@@ -3,16 +3,19 @@
 ## A) Concept Map
 
 - **Mechanism Analysis**
+
   - **Universal Joint (Cardan Joint)**: Modeling the wrist as two actuated orthogonal axes + one constrained axis.
   - **Constraint Torques**: Passive torques $\tau_{constraint}$ arising purely from geometric constraints ($\lambda$) to enforce non-holonomic or holonomic restrictions.
   - **Underactuation**: The wrist has $n=3$ rotational DOFs but only $m=2$ controls; the third (forearm rotation relative to hand) is constrained.
 
 - **Dynamics & Transmission**
+
   - **Force Transmission**: Constraint forces perform zero work ($\tau \cdot \dot{q} = 0$) but transmit energy/momentum between links.
   - **Disturbance Decoupling**: Aligning the system geometry so that "noise" (variable constraint torque) enters the dynamics via a "safe" subspace (Alpha axis).
   - **Inertia Tensor Shaping**: The distinction between high-inertia (swing plane, $I_{\alpha}$) and low-inertia (face rotation, $I_{\beta}$) axes.
 
 - **Control Theory Interpretation**
+
   - **Null Space / Uncontrolled Manifold**: Channelling variability into dimensions that do not affect the task variable (face angle).
   - **Geometric Rejection**: Using static configuration (grip) to solve a dynamic control problem.
 
@@ -59,7 +62,11 @@
   scholar_link: "https://scholar.google.com/scholar?q=Analytical+Dynamics+A+New+Approach+Udwadia"
   clusters: ["mechanics", "mathematical theory"]
   concepts:
-    ["fundamental equation of constrained motion", "gauss principle", "generalized inverse"]
+    [
+      "fundamental equation of constrained motion",
+      "gauss principle",
+      "generalized inverse",
+    ]
   related_ids: ["kane1985dynamics"]
   references_out_ids: ["kane1985dynamics"]
 
@@ -111,7 +118,12 @@
   venue: "Nature Neuroscience"
   scholar_link: "https://scholar.google.com/scholar?q=Optimality+principles+in+sensorimotor+control+Todorov"
   clusters: ["motor control", "neuroscience"]
-  concepts: ["uncontrolled manifold", "minimal intervention", "task-relevant variability"]
+  concepts:
+    [
+      "uncontrolled manifold",
+      "minimal intervention",
+      "task-relevant variability",
+    ]
   related_ids: ["latash2008synergy"]
   references_out_ids: ["latash2008synergy", "bernstein1967coordination"]
 
@@ -227,7 +239,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
   clusters: ["multibody dynamics", "simulation"]
-  concepts: ["recursive algorithms", "spatial vectors", "articulated body algorithm"]
+  concepts:
+    ["recursive algorithms", "spatial vectors", "articulated body algorithm"]
   related_ids: ["murray1994mathematical"]
   references_out_ids: ["pinocchio_lib"]
 
@@ -239,7 +252,8 @@
   venue: "Cambridge University Press"
   scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
   clusters: ["multibody dynamics", "flexible bodies"]
-  concepts: ["floating frame of reference", "flexible multibody", "assumed modes"]
+  concepts:
+    ["floating frame of reference", "flexible multibody", "assumed modes"]
   related_ids: ["featherstone2008rigid"]
   references_out_ids: []
 

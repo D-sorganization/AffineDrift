@@ -41,6 +41,9 @@ The remainder of the paper is organized as follows:
 
 Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
 
+To rigorously distinguish 'drift' from 'input', we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary. A force that is 'external' to a sub-component may be 'internal' to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer--club--shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).
+
+
 ## System definition and modeling assumptions
 
 In this section we define the mathematical structure of the golfer--club--shaft system and state the modeling assumptions that bound the theoretical framework. The goal is not to fix a unique anatomical model but to specify a general class of multibody systems for which the subsequent analysis is valid.
@@ -139,6 +142,9 @@ For reference, the following table summarizes the main symbols used in the manus
 | $\phi_{i}$ | Coefficients associated with shaft mode shapes |
 | $t$ | Time |
 
+
+With the kinematic structure and actuation boundaries defined, we must now determine how forces propagate through this system. Pure kinematics—the study of motion without regard to mass—cannot reveal causality. To understand how the golfer’s torque inputs actively shape the swing against the backdrop of passive inertia, we must move to kinetics. We employ the Lagrangian formalism not just to generate equations of motion, but to explicitly uncover the *control-affine* architecture—the hidden linear structure that dictates how energy flows from the golfer to the club.
+
 ## Unified control-affine derivation (rigid + flexible system)
 
 We now establish the control-affine structure of the coupled golfer--club--shaft system. While standard inverse dynamics often assumes a rigid kinematic chain, the inclusion of shaft flexibility requires a rigorous Lagrangian treatment to correctly identify which forces are passive (drift) and which are active (input).
@@ -198,82 +204,55 @@ $$g(x) = \begin{bmatrix} 0 \\ 0 \\ M^{-1} \begin{bmatrix} B(q) \\ 0 \end{bmatrix
 
 The system dynamics then take the canonical affine form:
 $$\dot{x} = f(x) + g(x)u.$$
-We now establish the control-affine structure of the coupled golfer--club--shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal--rigid coupling expressions are relegated to the Appendices.
+We now establish the control-affine structure of the coupled golfer--club--shaft system using the Lagrangian formalism. This derivation clarifies the mechanical origin of the drift and input fields.
 
 The transition from the kinematic definitions of Section~1 to the dynamic equations of motion requires a formal treatment of energy. Because the golfer--club--shaft system is subject to holonomic constraints and conservative forces, its behavior is governed by the Principle of Least Action. This energetic structure imposes strict constraints on the form of the equations of motion—specifically, it guarantees that the kinetic energy metric defines the relationship between applied forces and resulting accelerations. By exploiting this property, we can demonstrate that the linearity of the control input is not an approximation, but a fundamental consequence of the mechanical structure.
 
-### Equations of motion
+### Lagrangian dynamics
 
-Let $q \in \mathbb{R}^{n}$ and $\eta \in \mathbb{R}^{m}$ denote the rigid-body and shaft modal coordinates, respectively, and let
+Let $q \in \mathbb{R}^{n}$ denote the generalized coordinates of the rigid golfer model (e.g., joint angles) and $\eta \in \mathbb{R}^{m}$ denote the modal coordinates of the flexible shaft. We define the composite configuration vector as:
+$$q_{\text{sys}} = \begin{bmatrix} q \\ \eta \end{bmatrix} \in \mathbb{R}^{n+m}.$$
 
-$$v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}$$
+The system dynamics are derived from the Lagrangian $\mathcal{L} = T - V$, where $T$ is the total kinetic energy and $V$ is the total potential energy.
 
-collect their velocities. The multibody equations of motion for the coupled system can be written in the standard form
+The kinetic energy is a quadratic form of the generalized velocities:
+$$T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}},$$
+where $M(q_{\text{sys}})$ is the symmetric, positive-definite inertia matrix. Due to the mechanical coupling between the golfer's hand and the clubhead, this matrix has a dense block structure:
+$$M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta}(q, \eta) \end{bmatrix}.$$
+Here, $M_{qq}$ represents the rigid-body inertia (augmented by the shaft's mass), $M_{\eta\eta}$ is the modal mass matrix (typically diagonal/identity by construction), and $M_{q\eta}$ represents the inertial coupling—specifically, how rigid-body accelerations induce effective forces on the flexible modes, and conversely, how flexible accelerations exert recoil forces on the hands.
 
-$$M(q,\eta)
-  \begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  +
-  C(q,\dot{q},\eta,\dot{\eta})
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    \dot{\eta}
-  \end{bmatrix}
-  + G(q) +
-  \begin{bmatrix}
-    0 \\[0.2em]
-    K_{s}\eta + C_{s}\dot{\eta}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    \tau \\[0.2em]
-    0
-  \end{bmatrix},$$
+The potential energy $V$ consists of gravitational potential $V_g$ and elastic strain energy $V_e$:
+$$V(q_{\text{sys}}) = V_g(q_{\text{sys}}) + \frac{1}{2} \eta^T K_s \eta,$$
+where $K_s$ is the positive-definite modal stiffness matrix. Note that gravity may act on the deformed shaft configuration, making $V_g$ dependent on both $q$ and $\eta$.
 
-where:
+We also introduce the Rayleigh dissipation function to model internal shaft damping:
+$$\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}.$$
 
-- $M(q,\eta)$ is the inertia matrix for the coupled rigid--flexible system,
-- $C(q,\dot{q},\eta,\dot{\eta})$ encodes Coriolis and centrifugal effects,
-- $G(q)$ is the gravitational torque vector,
-- $K_{s}$ and $C_{s}$ are the shaft stiffness and damping matrices,
-- $\tau = B(q) u$ is the generalized torque vector induced by control inputs $u$.
+Applying the Euler-Lagrange operator
+$$
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}\right) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}
+$$
+to the Lagrangian $\mathcal{L} = \frac{1}{2} \dot{q}_{\text{sys}}^T M \dot{q}_{\text{sys}} - V(q_{\text{sys}})$ yields the dynamic equations. Explicitly, the momentum term expands as:
+$$
+\frac{d}{dt}\left( M(q_{\text{sys}}) \dot{q}_{\text{sys}} \right) = M(q_{\text{sys}}) \ddot{q}_{\text{sys}} + \dot{M}(q_{\text{sys}}) \dot{q}_{\text{sys}}.
+$$
+The term $-\frac{\partial \mathcal{L}}{\partial q_{\text{sys}}}$ contributes the gravitational gradient $\nabla V_g$ and the velocity-dependent gradients of the kinetic energy metric. Grouping the velocity-dependent terms into the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$ (defined via Christoffel symbols of the first kind), we arrive at the standard second-order form:
+$$M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.$$
 
-The shaft degrees of freedom have no direct torque inputs; all shaft forces are passive (elastic and damping).
+Here:
 
-This equation is schematic but captures the structural separation between passive mechanical effects and torque inputs.
+- $C(q,\dot{q},\eta,\dot{\eta})$ represents the Coriolis and centrifugal matrix, derived from the Christoffel symbols of $M$. A key structural property, crucial for passivity-based analysis, is that the matrix $\dot{M} - 2C$ is skew-symmetric, implying $\dot{q}_{\text{sys}}^T (\dot{M} - 2C) \dot{q}_{\text{sys}} = 0$ (conservation of energy in the absence of non-conservative forces).
+- $G(q,\eta) = \frac{\partial V_g}{\partial q_{\text{sys}}}$ is the gravitational vector.
+- $\tau \in \mathbb{R}^n$ is the generalized torque applied by the golfer.
+- The zero vector in the lower block of the right-hand side explicitly reflects the **underactuated** nature of the system: the golfer cannot directly apply torque to the shaft modes.
 
-### Solving for accelerations
+### Control-affine state space form
 
-Assuming $M(q,\eta)$ is nonsingular, we may solve for the accelerations:
+To recast this into a control-theoretic framework, we solve for the accelerations. Since $M$ is positive-definite, it is invertible. Multiplying by $M^{-1}$, we isolate the highest derivatives:
 
-$$\begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})
-    \begin{bmatrix}
-      \dot{q} \\[0.2em]
-      \dot{\eta}
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\dot{\eta}
-    \end{bmatrix}
-  \right)
-  +
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\[0.2em]
-    0
-  \end{bmatrix}.$$
+$$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).$$
 
-Everything not multiplied by $u$ is passive; the term proportional to $u$ is the torque-driven component.
+Substituting the actuation model $\tau = B(q)u$, we can separate the terms that depend on $u$ from those that do not.
 
 Define the drift acceleration
 

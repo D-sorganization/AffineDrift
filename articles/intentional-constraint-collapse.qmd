@@ -193,3 +193,21 @@ It is a consequence of redundancy, timing, and constraint-aware control in a hig
 Understanding it requires moving beyond kinematics alone—and taking constraints seriously.
 
 ---
+
+## 11. Synthesis: The AffineDrift Context
+
+**The "Effective Plant" and Drift Invariance**
+This constraint shaping mechanism resolves the "Input-Dependent Boundary Conditions" critique. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
+
+**Steering the Zero-Torque Counterfactual (ZTCF)**
+In the context of the ZTCF baseline (Theory Part 2), constraint collapse functions as the "funnel" for passive momentum. The ZTCF describes the massive kinetic potential of the double-pendulum release; the collapsed constraint Jacobian ensures this energy is not dissipated into instability (e.g., face twist) upon impact. The input $u$ does not *push* the club through impact; it *locks the gates* to force the drift $f(x)$ to exit through the ball.
+
+**Null Space as a Control Reserve**
+The "Internal Forces" described here provide the physical mechanism for the "Geometric Rejection of Disturbance" discussed in the *Universal Wrist Joint* analysis. By occupying the null space of the task Jacobian, the golfer creates a reservoir of stiffness that remains causally distinct from the motion-generating torques, validating the decomposition of torque into "Configuration-driving" and "Shape-holding" components.
+
+### See Also
+
+*   **Theory Part 3**: For the formal "Force Taxonomy" distinguishing drift from input.
+*   **Theory Part 2**: For the definition of the ZTCF and the role of passive momentum.
+*   **Wrist Universal Joint**: For the specific kinematics of the hand-wrist interface governing these constraints.
+*   **Nonlinear Control Insights**: For the Lie Bracket interpretation of deceleration as a steering mechanism.

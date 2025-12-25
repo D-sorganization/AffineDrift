@@ -35,6 +35,8 @@ This paper is *Part I* of a broader project. It develops the theoretical archite
 
 The remainder of the paper is organized as follows. Section~[@sec:system] defines the golfer--club--shaft system, the modeling assumptions, and the state and input variables. Section~[@sec:affine] derives the unified control-affine form for the coupled rigid--flexible system. Section~[@sec:drift_input] formalizes the drift--input decomposition. Sections~[@sec:ztcf] and~[@sec:zvcf] introduce the ZTCF and ZVCF constructions. Section~[@sec:drift_invariance] discusses drift invariance and input constraints. Section~[@sec:taxonomy] presents a force taxonomy based on the affine mapping. Section~[@sec:limitations] summarizes the theoretical limitations of the framework, and Section~[@sec:conclusion] concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.
 
+To rigorously distinguish 'drift' from 'input', we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary. A force that is 'external' to a sub-component may be 'internal' to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer--club--shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).
+
 ## System Definition and Modeling Assumptions
 {#sec-system}
 
@@ -147,6 +149,8 @@ For reference, Table~[@tab:notation] summarizes the main symbols used in the man
 
 [Table]
 
+With the kinematic structure and actuation boundaries defined, we must now determine how forces propagate through this system. Pure kinematics—the study of motion without regard to mass—cannot reveal causality. To understand how the golfer’s torque inputs actively shape the swing against the backdrop of passive inertia, we must move to kinetics. We employ the Lagrangian formalism not just to generate equations of motion, but to explicitly uncover the *control-affine* architecture—the hidden linear structure that dictates how energy flows from the golfer to the club.
+
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
@@ -225,10 +229,12 @@ Three structural observations follow:
 
 This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections.
 
+The Lagrangian derivation successfully recast the complex multibody dynamics into the canonical form $\dot{x} = f(x) + g(x)u$. This was not merely a symbolic exercise in algebraic manipulation; it exposed the fundamental causality of the system. We can now see that the system's evolution is a superposition of two distinct processes: a passive drift along the manifold's geodesic fabric, and an active deviation forced by the inputs. The next section formalizes this physical decomposition.
+
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
 
-The derivation in Section~[@sec:affine] yielded a mathematical structure, $\dot{x} = f(x) + g(x)u$, where the control input $u$ appears linearly and distinct from the drift term $f(x)$.
+
 
 The derivation above is not merely a symbolic exercise; it exposes the fundamental causality of the system. The affine form $\dot{x} = f(x) + g(x)u$ asserts that the system's evolution is a superposition of two distinct processes: a passive drift along the manifold's geodesic fabric, and an active deviation forced by the inputs. This mathematical separability forces a physical decomposition: we can no longer view the swing as a monolithic 'result' of the golfer, but rather as a dialogue between the system's inertial memory and the golfer's current intent.
 
@@ -553,10 +559,12 @@ This makes it especially useful for:
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
+We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $	au_{	ext{input}} = 	au_{	ext{total}} - 	au_{	ext{drift}}$ to be causally meaningful, the term being subtracted ($	au_{	ext{drift}}$) must be independent of the term being isolated ($	au_{	ext{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid. We must therefore prove the property of *Drift Invariance*.
+
 ## Drift Invariance and Input Constraints
 {#sec-drift_invariance}
 
-We have now constructed two powerful counterfactual baselines: the ZTCF (Section~[@sec:ztcf]) to isolate passive momentum history, and the ZVCF (Section~[@sec:zvcf]) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+
 
 The drift--input decomposition
 
@@ -577,11 +585,24 @@ $$
 
 meaning \( f(x) \) depends only on the state \( x \) and model parameters, and is strictly independent of the instantaneous control input \( u \).
 
-To see this rigorously, recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+To see this rigorously, we state the property as a formal proposition.
+
+**Proposition 1 (Drift Invariance).** The drift vector field $f(x)$ is invariant with respect to the control input $u$, i.e.,
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + F_s \right) \end{bmatrix}.
+\nabla_u f(x) \equiv 0.
 $$
-The inertia matrix $M$, Coriolis matrix $C$, gravity vector $G$, and shaft forces $F_s$ depend exclusively on $q, \eta, \dot{q}, \dot{\eta}$. The inverse inertia matrix $M^{-1}$ is similarly state-dependent but input-independent. Since the term $B(q)u$ appears only in the input field $g(x)$ and not in the drift field, the partial derivative with respect to $u$ vanishes identically.
+
+*Proof.* Recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+$$
+f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+$$
+The terms constituting $f(x)$ are:
+1.  **Kinematic rates** $\dot{q}, \dot{\eta}$, which are state variables.
+2.  **Inertia matrix** $M(q,\eta)$, which depends only on configuration.
+3.  **Coriolis/Centrifugal matrix** $C(x)$, which depends on state.
+4.  **Potential forces** $G$ and $F_s$, which depend on state.
+
+The control input $u$ enters the equations of motion *only* through the term $B(q)u$, which is isolated in the input vector field $g(x)$. Since no term in $f(x)$ has functional dependence on $u$, the partial derivative $\frac{\partial f(x)}{\partial u}$ is identically zero. $\square$
 
 This property is structural for control-affine systems. Consider the general mechanical form:
 
@@ -771,7 +792,11 @@ $$
   \tau_{\text{config}}\big(q(t),\eta(t)\big).
 $$
 
-These forces include:
+Explicitly, this torque corresponds to the gradient of the potential energy (gravity and elasticity) projected into the joint space:
+$$
+\tau_{\text{config}} = G(q,\eta) + J_{s}^T K_s \eta,
+$$
+where $G(q,\eta)$ is the generalized gravitational vector and $J_s^T K_s \eta$ represents the projection of shaft elastic forces onto the rigid-body coordinates. These forces include:
 - gravitational torques,
   
 - elastic shaft forces (restoring stiffness),
@@ -793,6 +818,10 @@ $$
   {#eq-veldrift_def}
 $$
 
+Analytically, this term isolates the velocity-dependent nonlinearities:
+$$
+\tau_{\mathrm{vel.\,drift}} = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + \text{Damping Terms}.
+$$
 Velocity-dependent drift forces include:
 - Coriolis and centrifugal forces,
   
@@ -886,6 +915,8 @@ In simulation (Parts II and III of this project), these categories enable:
 - mapping of how individual torque bursts shape the club path.
 
 This taxonomy completes the theoretical framework required to interpret forces and torques in the golf swing using control-affine decomposition.
+
+This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Section 2. We now catalogue these limitations to define the precise scope of validity for our causal claims.
 
 ## Limitations (Theoretical Scope)
 {#sec-limitations}
@@ -1979,6 +2010,8 @@ The analysis showed:
 - The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.
   
 - Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.
+
+  > **Note on Damping and Overshoot:** This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
 
 These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high‐velocity phases of the swing.
 

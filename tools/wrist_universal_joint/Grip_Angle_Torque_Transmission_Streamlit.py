@@ -15,6 +15,8 @@ Features:
 
 from __future__ import annotations
 
+from typing import Any, cast
+
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
@@ -119,9 +121,9 @@ def universal_joint_transmission_ratio(
 
 
 def distribute_torque_by_grip_angle(
-    torque_transmitted: float | np.ndarray,
+    torque_transmitted: float | np.ndarray[Any, Any],
     theta_grip_rad: float,
-) -> tuple[float | np.ndarray, float | np.ndarray]:
+) -> tuple[float | np.ndarray[Any, Any], float | np.ndarray[Any, Any]]:
     """Distribute transmitted torque to club axes based on grip angle.
 
     Args:
@@ -144,14 +146,14 @@ def distribute_torque_by_grip_angle(
 
 def generate_sample_torque(
     noise_type: str,
-    t: np.ndarray,
+    t: np.ndarray[Any, Any],
     polynomial_expression: str = "t**2 - t",
-) -> np.ndarray:
+) -> np.ndarray[Any, Any]:
     """Generate a torque signal based on noise type."""
     if noise_type == "Golf-like Random":
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Step":
         torque = np.zeros_like(t)
         torque[250:] = 3.0  # Step at midpoint
@@ -172,7 +174,7 @@ def generate_sample_torque(
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
         torque = np.random.normal(0, 1.5, len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
         try:
@@ -230,7 +232,7 @@ def generate_sample_torque(
         # Default to golf-like
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
 
     return torque
 
@@ -510,8 +512,8 @@ def draw_diagram(
 
 
 def plot_torque(
-    t: np.ndarray,
-    input_torque: np.ndarray,
+    t: np.ndarray[Any, Any],
+    input_torque: np.ndarray[Any, Any],
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
@@ -586,8 +588,8 @@ def plot_torque(
 
 
 def plot_acceleration(
-    t: np.ndarray,
-    input_torque: np.ndarray,
+    t: np.ndarray[Any, Any],
+    input_torque: np.ndarray[Any, Any],
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
