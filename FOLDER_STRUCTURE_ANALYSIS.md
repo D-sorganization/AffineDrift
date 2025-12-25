@@ -28,7 +28,7 @@ The following files are modified but not committed (from previous work):
 - `articles/theory-part1.qmd` (modified)
 - `scripts/quality-check.py` (modified)
 - `tools/README.md` (modified)
-- `tools/wrist-universal-joint/README.md` (modified)
+- `tools/wrist_universal_joint/README.md` (modified)
 
 **Recommendation**: These appear to be work-in-progress changes. Review and commit separately if needed.
 

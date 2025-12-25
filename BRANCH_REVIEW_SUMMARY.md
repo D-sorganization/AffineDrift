@@ -61,7 +61,7 @@
 
 **Status**: Current model only has ONE grip angle parameter
 
-**Finding**: The Streamlit script (`tools/wrist-universal-joint/Grip_Angle_Torque_Transmission_Streamlit.py`) currently supports:
+**Finding**: The Streamlit script (`tools/wrist_universal_joint/Grip_Angle_Torque_Transmission_Streamlit.py`) currently supports:
 
 - ✅ One grip angle parameter (theta)
 - ✅ Two comparison views (angle 1 vs angle 2)
@@ -88,7 +88,7 @@ grip_angle2 = st.slider("Grip Angle 2 (degrees)", 0, 90, 90, 1, key="angle2")
 
 ### 2. Streamlit Embedding Status - **VERIFICATION NEEDED**
 
-**Location**: `tools/wrist-universal-joint/`
+**Location**: `tools/wrist_universal_joint/`
 
 **Files Present**:
 
