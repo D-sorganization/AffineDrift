@@ -585,11 +585,24 @@ $$
 
 meaning \( f(x) \) depends only on the state \( x \) and model parameters, and is strictly independent of the instantaneous control input \( u \).
 
-To see this rigorously, recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+To see this rigorously, we state the property as a formal proposition.
+
+**Proposition 1 (Drift Invariance).** The drift vector field $f(x)$ is invariant with respect to the control input $u$, i.e.,
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + F_s \right) \end{bmatrix}.
+\nabla_u f(x) \equiv 0.
 $$
-The inertia matrix $M$, Coriolis matrix $C$, gravity vector $G$, and shaft forces $F_s$ depend exclusively on $q, \eta, \dot{q}, \dot{\eta}$. The inverse inertia matrix $M^{-1}$ is similarly state-dependent but input-independent. Since the term $B(q)u$ appears only in the input field $g(x)$ and not in the drift field, the partial derivative with respect to $u$ vanishes identically.
+
+*Proof.* Recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+$$
+f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+$$
+The terms constituting $f(x)$ are:
+1.  **Kinematic rates** $\dot{q}, \dot{\eta}$, which are state variables.
+2.  **Inertia matrix** $M(q,\eta)$, which depends only on configuration.
+3.  **Coriolis/Centrifugal matrix** $C(x)$, which depends on state.
+4.  **Potential forces** $G$ and $F_s$, which depend on state.
+
+The control input $u$ enters the equations of motion *only* through the term $B(q)u$, which is isolated in the input vector field $g(x)$. Since no term in $f(x)$ has functional dependence on $u$, the partial derivative $\frac{\partial f(x)}{\partial u}$ is identically zero. $\square$
 
 This property is structural for control-affine systems. Consider the general mechanical form:
 
@@ -779,7 +792,11 @@ $$
   \tau_{\text{config}}\big(q(t),\eta(t)\big).
 $$
 
-These forces include:
+Explicitly, this torque corresponds to the gradient of the potential energy (gravity and elasticity) projected into the joint space:
+$$
+\tau_{\text{config}} = G(q,\eta) + J_{s}^T K_s \eta,
+$$
+where $G(q,\eta)$ is the generalized gravitational vector and $J_s^T K_s \eta$ represents the projection of shaft elastic forces onto the rigid-body coordinates. These forces include:
 - gravitational torques,
   
 - elastic shaft forces (restoring stiffness),
@@ -801,6 +818,10 @@ $$
   {#eq-veldrift_def}
 $$
 
+Analytically, this term isolates the velocity-dependent nonlinearities:
+$$
+\tau_{\mathrm{vel.\,drift}} = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + \text{Damping Terms}.
+$$
 Velocity-dependent drift forces include:
 - Coriolis and centrifugal forces,
   
