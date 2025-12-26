@@ -64,6 +64,8 @@ These assumptions apply strictly to the theoretical decomposition presented in t
   
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
 
+To translate these assumptions into a rigorous mathematical structure, we must first define the geometric manifold on which the system evolves. The assumptions above simplify the biomechanical reality into a deterministic state space, allowing us to describe the golfer not as a collection of tissues, but as a point moving along a curved surface defined by the joint constraints.
+
 ### Generalized coordinates and state
 {#subsec:coords_state}
 
@@ -118,6 +120,8 @@ where \( \tau \in \R^{n} \) is the generalized joint torque vector and \( B(q) \
 
 Throughout this paper we treat \(u\) as the exogenous input at the mechanical level. The mapping from neural commands to \(u\) is outside the scope of this theoretical work.
 
+While inputs drive the system, they do not act in a vacuum. The golfer must contend with—and exploit—the environmental and inertial field. The effectiveness of any torque input is conditioned by the external forces that define the system's potential energy landscape and reaction constraints.
+
 ### External forces and constraints
 {#subsec:external_forces}
 
@@ -130,6 +134,8 @@ External forces included in the model are:
   
 - elastic and damping forces from shaft deformation.
 Aerodynamic forces, impact forces, and non-holonomic contact effects are excluded under the assumptions of Section~[@subsec:assumptions]. Ground contact is modeled as a holonomic constraint that effectively fixes the base of the kinematic chain.
+
+The final structural element is the coupling between the actuator (the golfer) and the payload (the club). This interface is not a simple rigid connection; it is the boundary where the active, articulated chain meets the passive, flexible object.
 
 ### Hand--club kinematic interface
 {#subsec:hand_club}
@@ -200,7 +206,9 @@ Here:
 
 ### Control-affine state space form
 
-To recast this into a control-theoretic framework, we solve for the accelerations. Since the inertia matrix $M(q,\eta)$ is symmetric and positive-definite, it admits a unique inverse $H(q,\eta) = M^{-1}(q,\eta)$. While $M$ is defined by physical mass distributions, its inverse $H$ represents the *mobility* or *admittance* of the system---how easy it is to accelerate given applied forces.
+The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system's drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle.
+
+To recast this into a control-theoretic framework, we solve for the accelerations. Since the inertia matrix $M(q,\eta)$ is symmetric and positive-definite, it admits a unique inverse $H(q,\eta) = M^{-1}(q,\eta)$. While $M$ is defined by physical mass distributions, its inverse $H$ represents the *mobility* or *admittance* of the system---how easy it is to accelerate given applied forces. Multiplying the equations of motion by $M^{-1}$ isolates the highest derivatives:
 
 Multiplying the equations of motion by $M^{-1}$ isolates the highest derivatives:
 
@@ -298,6 +306,8 @@ Within the model, this additive structure supports the following interpretation:
   
 - the *input* term \(g(x)u\) captures the incremental effect of the applied torques on top of that passive response.
 The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
+
+This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
 
 ### Role in counterfactual analysis
 
@@ -760,6 +770,8 @@ Real neuromuscular systems impose:
 These appear in the present framework only through the feasible input set \(\mathcal{U}(x)\).  
 The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints.  
 Interpretations must therefore remain explicitly mechanical.
+
+Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components \(f(x)\) and \(g(x)\) are not just vector fields; they are containers for specific physical phenomena—gravity, centrifugal force, muscular effort—that can now be labeled with precision.
 
 ## Force and Torque Taxonomy via the Affine Mapping
 {#sec-taxonomy}

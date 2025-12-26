@@ -62,6 +62,8 @@ Within the model, this additive structure supports the following interpretation:
 
 The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
 
+This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
+
 ### Role in counterfactual analysis
 
 The drift--input decomposition underlies the counterfactual tools introduced later:
@@ -114,6 +116,8 @@ $$\dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big).$$
 The drift vector field $f(x)$ is invariant with respect to the instantaneous torque input: it depends only on the state and model parameters, not on $u$. In contrast, the input term $g(x)u$ vanishes identically when $u = 0$.
 
 Conceptually, ZTCF isolates the drift dynamics by providing a full trajectory that is generated *only* by $f(x)$. The difference between the actual trajectory and its ZTCF counterpart, when interpreted via the equations of motion, captures the incremental effect of the torque input.
+
+The drift--input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics.
 
 ### Using ZTCF with inverse dynamics
 
@@ -290,4 +294,4 @@ This makes it especially useful for:
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid. We must therefore prove the property of *Drift Invariance*.
+We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid. We must therefore prove the property of *Drift Invariance*, which is the subject of the next part of this series.
