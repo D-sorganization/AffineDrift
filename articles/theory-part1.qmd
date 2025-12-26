@@ -64,6 +64,8 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
 
+To translate these assumptions into a rigorous mathematical structure, we must first define the geometric manifold on which the system evolves. The assumptions above simplify the biomechanical reality into a deterministic state space, allowing us to describe the golfer not as a collection of tissues, but as a point moving along a curved surface defined by the joint constraints.
+
 ### Generalized coordinates and state
 
 The golfer's anatomy is modeled as a multibody kinematic chain with generalized coordinates $q \in \mathbb{R}^{n}$, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.
@@ -94,6 +96,8 @@ where $\tau \in \mathbb{R}^{n}$ is the generalized joint torque vector and $B(q)
 
 Throughout this paper we treat $u$ as the exogenous input at the mechanical level. The mapping from neural commands to $u$ is outside the scope of this theoretical work.
 
+While inputs drive the system, they do not act in a vacuum. The golfer must contend with—and exploit—the environmental and inertial field. The effectiveness of any torque input is conditioned by the external forces that define the system's potential energy landscape and reaction constraints.
+
 ### External forces and constraints
 
 External forces included in the model are:
@@ -104,6 +108,8 @@ External forces included in the model are:
 - elastic and damping forces from shaft deformation.
 
 Aerodynamic forces, impact forces, and non-holonomic contact effects are excluded under the assumptions above. Ground contact is modeled as a holonomic constraint that effectively fixes the base of the kinematic chain.
+
+The final structural element is the coupling between the actuator (the golfer) and the payload (the club). This interface is not a simple rigid connection; it is the boundary where the active, articulated chain meets the passive, flexible object.
 
 ### Hand--club kinematic interface
 
@@ -188,6 +194,8 @@ Here:
 - The zero vector in the lower block of the right-hand side explicitly reflects the **underactuated** nature of the system: the golfer cannot directly apply torque to the shaft modes.
 
 ### Control-affine state space form
+
+The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system's drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle.
 
 To recast this into a control-theoretic framework, we solve for the accelerations. Since $M$ is positive-definite, it is invertible. Multiplying by $M^{-1}$, we isolate the highest derivatives:
 
