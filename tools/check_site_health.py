@@ -2,6 +2,7 @@ import os
 from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 DOCS_DIR = "docs"
 
@@ -64,6 +65,8 @@ def check_site_health() -> None:
 
             # Find all links
             for a in soup.find_all("a", href=True):
+                if not isinstance(a, Tag):
+                    continue
                 href = a["href"]
 
                 # Handle potential list/multi-valued attributes (though href should be string)

@@ -240,6 +240,11 @@ def main() -> None:
         "output",
         ".ipynb_checkpoints",  # Add checkpoint files to exclusion
         ".Trash",  # Add trash files to exclusion
+        "node_modules",
+        "site-packages",
+        "dist-packages",
+        "venv",
+        ".venv",
     }
 
     # Filter if scanning directory
