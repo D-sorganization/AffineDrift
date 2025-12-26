@@ -200,18 +200,25 @@ Here:
 
 ### Control-affine state space form
 
-To recast this into a control-theoretic framework, we solve for the accelerations. Since $M$ is positive-definite, it is invertible. Multiplying by $M^{-1}$, we isolate the highest derivatives:
+To recast this into a control-theoretic framework, we solve for the accelerations. Since the inertia matrix $M(q,\eta)$ is symmetric and positive-definite, it admits a unique inverse $H(q,\eta) = M^{-1}(q,\eta)$. While $M$ is defined by physical mass distributions, its inverse $H$ represents the *mobility* or *admittance* of the system---how easy it is to accelerate given applied forces.
 
-$$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).$$
+Multiplying the equations of motion by $M^{-1}$ isolates the highest derivatives:
 
-Substituting the actuation model $\tau = B(q)u$, we can separate the terms that depend on $u$ from those that do not. Let the state vector be $x = [q^T, \eta^T, \dot{q}^T, \dot{\eta}^T]^T$. We define the **drift vector field** $f(x)$ and the **control input field** $g(x)$ as follows.
+$$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} B(q)u \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).$$
+
+Crucially, because the flexible modes are underactuated (zero torque in the lower block), the control input $u$ enters the dynamics *only* through the rigid-body channel. However, due to the off-diagonal coupling in $M^{-1}$, this rigid-body torque instantaneously induces accelerations in the flexible modes.
+
+Let the state vector be $x = [q^T, \eta^T, \dot{q}^T, \dot{\eta}^T]^T \in \mathbb{R}^{2(n+m)}$. We define the **drift vector field** $f(x)$ and the **control input field** $g(x)$ by expanding this inverse relationship.
 
 The **drift field** $f(x)$ captures the unforced (natural) evolution of the system:
 $$f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.$$
 This vector field contains all inertial coupling, gravitational forces, centrifugal/Coriolis effects, and the complete elastic dynamics of the shaft.
 
-The **control field** $g(x)$ defines how input torques map to state accelerations:
-$$g(x) = \begin{bmatrix} 0 \\ 0 \\ M^{-1} \begin{bmatrix} B(q) \\ 0 \end{bmatrix} \end{bmatrix}.$$
+The **control field** $g(x)$ is derived by applying the inverse inertia matrix to the actuation vector:
+$$
+g(x) = \begin{bmatrix} 0 \\ 0 \\ H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
+$$
+Here, $H_{qq}$ represents the effective inverse inertia seen at the joints, while $H_{\eta q}$ defines the *transmission* of joint torque to shaft mode acceleration (see Appendix A for explicit block matrix derivations).
 
 The system dynamics then take the canonical affine form:
 $$\dot{x} = f(x) + g(x)u.$$
@@ -443,12 +450,17 @@ While the ZTCF successfully isolates the system's passive dynamics from the golf
 Let the actual swing at time \(t\) be characterized by the state \( x(t) \in T\mathcal{Q} \).
 Locally, \( x(t) = (q(t), \eta(t), \qd(t), \etad(t)) \).
 
-We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle. Let \( \pi: T\mathcal{Q} \to \mathcal{Q} \) be the canonical projection bundle, and \( \iota_0: \mathcal{Q} \to T\mathcal{Q} \) be the zero section embedding such that \( \iota_0(q, \eta) = (q, \eta, 0, 0) \).
+We formally define the *Zero Velocity Counterfactual* operator using the fiber bundle structure of the state space. Let $\mathcal{Q}$ be the configuration manifold. The state evolves on the tangent bundle $T\mathcal{Q}$.
+Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection (bundle map) that maps a state vector to its configuration: $\pi(q, v) = q$.
+Let $\zeta: \mathcal{Q} \to T\mathcal{Q}$ be the *zero section* of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: $\zeta(q) = (q, 0)$.
 
-The ZVCF state is defined by projecting the current state to the base manifold and lifting it back to the zero section:
-
+The ZVCF operator $\mathcal{Z}: T\mathcal{Q} \to T\mathcal{Q}$ is the composition of projection and zero-section embedding:
 $$
-  x^{\mathrm{ZVCF}}(t) = \iota_0( \pi( x(t) ) ) = (q(t), \eta(t), 0, 0).
+\mathcal{Z}(x) = (\zeta \circ \pi)(x).
+$$
+Applied to the state $x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))$, this yields:
+$$
+  x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
   {#eq-zvcf_state}
 $$
 
@@ -587,22 +599,27 @@ meaning \( f(x) \) depends only on the state \( x \) and model parameters, and i
 
 To see this rigorously, we state the property as a formal proposition.
 
-**Proposition 1 (Drift Invariance).** The drift vector field $f(x)$ is invariant with respect to the control input $u$, i.e.,
+**Proposition 1 (Drift Invariance).** The drift vector field $f(x)$ is invariant with respect to the control input $u$, meaning the passive evolution of the system is independent of the instantaneous actuation. Formally:
 $$
-\nabla_u f(x) \equiv 0.
+\frac{\partial f(x)}{\partial u} \equiv 0.
 $$
 
-*Proof.* Recall the definition of $f(x)$ derived in Section~[@sec:affine]:
+*Proof.* By construction in Section~[@sec:affine], the state derivative is given by:
+$$ \dot{x} = \mathcal{A}(x, u) = f(x) + g(x)u. $$
+The drift term $f(x)$ is defined as:
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.
 $$
-The terms constituting $f(x)$ are:
-1.  **Kinematic rates** $\dot{q}, \dot{\eta}$, which are state variables.
-2.  **Inertia matrix** $M(q,\eta)$, which depends only on configuration.
-3.  **Coriolis/Centrifugal matrix** $C(x)$, which depends on state.
-4.  **Potential forces** $G$ and $F_s$, which depend on state.
+Inspection of the components reveals:
+1.  The kinematic mapping $\dot{q}, \dot{\eta}$ depends only on the state vector $x$.
+2.  The mass matrix $M(q,\eta)$ and its inverse depend only on configuration coordinates.
+3.  The Coriolis matrix $C$ is quadratic in velocities and depends on configuration.
+4.  Gravitational ($G$) and elastic ($K_s \eta$) forces depend only on configuration.
+5.  Damping forces ($C_s \dot{\eta}$) depend linearly on velocity.
 
-The control input $u$ enters the equations of motion *only* through the term $B(q)u$, which is isolated in the input vector field $g(x)$. Since no term in $f(x)$ has functional dependence on $u$, the partial derivative $\frac{\partial f(x)}{\partial u}$ is identically zero. $\square$
+None of these terms contain the variable $u$. The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
+$$ \nabla_u f(x) = 0. $$
+This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs. $\square$
 
 This property is structural for control-affine systems. Consider the general mechanical form:
 
@@ -1237,42 +1254,49 @@ Importantly,
 
 This constitutes the *drift invariance* property formalized in Section~[@sec:drift_invariance].
 
-### A.5 \quad Input acceleration mapping
+### A.5 \quad Explicit Block Matrix Inversion (Schur Complement)
 
-The input-driven acceleration is the part proportional to \(u\). We can expand the inverse inertia matrix $M^{-1}$ in block form using the Schur complement. Let $H = M^{-1}$. Its structure reflects the full coupling:
-$$
-H(q,\eta) = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}.
-$$
-Using the block inversion lemma, the rigid-body effective inverse inertia $H_{qq}$ and the coupling block $H_{\eta q}$ are given explicitly by:
-$$
-H_{qq} = (M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q})^{-1},
-$$
-$$
-H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}.
-$$
-Physically, $H_{qq}$ represents the articulated inertia of the golfer seen at the joints, "stiffened" or modified by the reaction of the flexible shaft (reflected inertia). $H_{\eta q}$ defines the *transmission* of joint torque to shaft mode acceleration.
+The input-driven acceleration is defined by the action of the inverse inertia matrix on the input torque vector. To show explicitly how joint torques produce flexible mode accelerations, we perform a block inversion of the partitioned mass matrix $M$.
 
-The acceleration equation becomes:
+Let $H = M^{-1}$ be the mobility matrix. Given the block structure:
+$$
+M = \begin{bmatrix} M_{rr} & M_{rf} \\ M_{fr} & M_{ff} \end{bmatrix},
+$$
+we require the corresponding blocks of $H$:
+$$
+H = \begin{bmatrix} H_{rr} & H_{rf} \\ H_{fr} & H_{ff} \end{bmatrix}.
+$$
+Using the **Schur Complement** of the flexible inertia block, $\Delta = M_{rr} - M_{rf} M_{ff}^{-1} M_{fr}$, the block inversion lemma yields:
+
+1.  **Rigid-body effective mobility ($H_{rr}$):**
+    $$ H_{rr} = \Delta^{-1} = (M_{rr} - M_{rf} M_{ff}^{-1} M_{fr})^{-1}. $$
+    This term represents the inverse inertia seen at the joints, modified by the "reflected mass" of the flexible shaft.
+
+2.  **Cross-mobility ($H_{fr}$):**
+    $$ H_{fr} = -M_{ff}^{-1} M_{fr} H_{rr}. $$
+    This term is the crucial **transmission gain** that maps joint torques to flexible mode accelerations. It explicitly depends on the inertial coupling term $M_{fr}$.
+
+The input-driven acceleration is then:
 $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
-\begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} H_{rr} & H_{rf} \\ H_{fr} & H_{ff} \end{bmatrix}
 \begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
 =
-\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
+\begin{bmatrix} H_{rr} B(q) u \\ H_{fr} B(q) u \end{bmatrix}.
 $$
-Thus, the input torque $u$ drives the rigid body accelerations $\ddot{q}$ through the effective inertia $H_{qq}$, and simultaneously drives the flexible mode accelerations $\ddot{\eta}$ through the inertial coupling term $H_{\eta q}$.
+
+This result rigorously justifies the form of the input field $g(x)$:
+$$
+g(x) = \begin{bmatrix} 0 \\ 0 \\ H_{rr} B(q) \\ H_{fr} B(q) \end{bmatrix}.
+$$
+It shows that flexible mode acceleration ($\ddot{\eta} \propto H_{fr} B(q) u$) is physically caused by the torque input $u$, but mediated by the inertial coupling $M_{fr}$. If the system were decoupled ($M_{fr} = 0$), then $H_{fr} = 0$, and joint torque would not excite the shaft modes.
 
 The input matrix is:
 
 $$
   A_{\mathrm{input}}(x)
   =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q) \\ 0
-  \end{bmatrix}
-  =
-  \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
+  \begin{bmatrix} H_{rr} B(q) \\ H_{fr} B(q) \end{bmatrix}.
   {#eq-appendix_Ainput}
 $$
 
