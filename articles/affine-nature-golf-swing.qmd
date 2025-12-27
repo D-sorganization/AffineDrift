@@ -579,7 +579,7 @@ This makes it especially useful for:
   
 - analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.
 
-**Note on Dynamic Relevance.** A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g$ vs $100g$). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale.
+**Note on Dynamic Relevance.** A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale.
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
@@ -969,7 +969,7 @@ Air resistance on the clubhead and shaft, ground–body compliance, and ball–c
 The feet are assumed to be rigidly fixed to the ground. In reality, golfers produce substantial torques through foot pressure modulation, shear forces, and center-of-pressure shifts. These are outside the scope of the current model and will be addressed in subsequent work.
 
 ##### Input-dependent boundary conditions (Grip Impedance).
-Theoretically, the stiffness of the grip—and thus the boundary condition of the shaft—varies with muscle activation $u$. This would make the mode shapes $\phi_i$ and mass matrix $M$ dependent on $u$, formally breaking the affine structure $\dot{x} = f(x) + g(x)u$. We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint (clamped or finite-stiffness) that defines the "Effective Plant". The input $u$ is then the torque applied *to* this effective plant, rather than a parameter that reshapes it.
+Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'.
 
 ### Physiological limitations
 
