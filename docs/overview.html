@@ -18,30 +18,29 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js" defer></script>
-<script src="site_libs/quarto-nav/headroom.min.js" defer></script>
-<script src="site_libs/clipboard/clipboard.min.js" defer></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js" defer></script>
-<script src="site_libs/quarto-search/fuse.min.js" defer></script>
-<script src="site_libs/quarto-search/quarto-search.js" defer></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js" defer></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js" defer></script>
-<script src="site_libs/quarto-html/anchor.min.js" defer></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js" defer></script>
-<script src="script.js" defer></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
@@ -72,8 +71,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -123,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -174,9 +181,6 @@ window.MathJax = {
 </script>
 
 
-<!-- ⚡ Bolt Optimization: Preload critical assets -->
-<link rel="preload" href="styles.css" as="style">
-<link rel="preload" href="script.js" as="script">
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -184,12 +188,12 @@ window.MathJax = {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -201,143 +205,147 @@ window.MathJax = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./overview.html" aria-current="page"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-drake.html">
  <span class="dropdown-text">Drake</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-software.html">
  <span class="dropdown-text">Software</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-books.html">
  <span class="dropdown-text">Books</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
-  </li>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./bibliography.html">
  <span class="dropdown-text">Bibliography</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./about.html">
  <span class="dropdown-text">About</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -351,9 +359,9 @@ window.MathJax = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-
+    
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content page-columns page-full column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -369,11 +377,11 @@ window.MathJax = {
 
 <div class="quarto-title-meta column-page">
 
-
-
-
+    
+  
+    
   </div>
-
+  
 
 
 </header>
@@ -382,9 +390,9 @@ window.MathJax = {
 <section id="home" class="hero">
   <div class="container">
     <div class="hero-content">
-      <blockquote class="featured-quote">
+      <blockquote class="featured-quote blockquote">
         <p>"What we do now echoes in eternity"</p>
-        <cite>&mdash; Marcus Aurelius</cite>
+        <cite>— Marcus Aurelius</cite>
 
         <div class="drift-quote" style="margin-bottom: 2rem;">
           <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
@@ -399,19 +407,19 @@ window.MathJax = {
   </div>
 </section>
 
-<div class="container">
-  <div class="standard-page-layout">
+<div class="container page-columns page-full">
+  <div class="standard-page-layout page-columns page-full">
     <!-- Sidebar -->
     <aside class="left-sidebar">
       <div class="sidebar-sticky-content">
         <div class="sidebar-section">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <div class="resource-card" style="padding: 1rem; border: none; box-shadow: none; background: transparent; padding-left: 0;">
-             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);">Overview Podcast</h3>
+             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);" class="anchored">Overview Podcast</h3>
              <p class="resource-description" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
                 Listen to an AI-generated introduction to the core concepts of Affine Drift.
              </p>
-             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now &rarr;</a>
+             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now →</a>
           </div>
         </div>
       </div>
@@ -446,7 +454,7 @@ window.MathJax = {
             <p>
               Rather than treating the swing as a sequence of static positions (descriptive biomechanics), a control-perspective frames it as a trajectory optimization problem: the golfer must find the correct sequence of muscular forces (control inputs) to guide the system from the address position to ball contact. The system's dynamics are captured by the fundamental control-affine structure:
             </p>
-
+            
             <div class="equation">
               $$ \dot{x} = f(x) + g(x)u $$
             </div>
@@ -454,7 +462,7 @@ window.MathJax = {
             <p>
               This mathematical framework provides a rigorous way to separate the swing's total movement into two distinct, identifiable components:
             </p>
-
+            
             <ul class="mission-list">
               <li><strong>Drift (\(f(x)\)):</strong> The passive dynamics of the system. This includes gravity, inertial forces, Coriolis effects, and the dynamics of the flexible club shaft. It represents how the system would naturally evolve in the complete absence of muscle input.</li>
               <li><strong>Control (\(g(x)u\)):</strong> The active dynamics resulting only from the golfer's muscle torques (\(u\)). The term \(g(x)\) encodes the "mechanical advantage"—how effective a control input is at changing acceleration—which varies throughout the swing.</li>
@@ -477,22 +485,22 @@ window.MathJax = {
           </div>
 
           <div class="golf-model">
-            <h3>System Components</h3>
+            <h3 class="anchored">System Components</h3>
             <div class="components-grid">
               <div class="component">
-                <h4>State Space \(x\)</h4>
+                <h4 class="anchored">State Space \(x\)</h4>
                 <p>\(\mathbb{R}^{2n}\) vector containing all joint angles and velocities.</p>
               </div>
               <div class="component">
-                <h4>Drift \(f(x)\)</h4>
+                <h4 class="anchored">Drift \(f(x)\)</h4>
                 <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
               </div>
               <div class="component">
-                <h4>Control \(u\)</h4>
+                <h4 class="anchored">Control \(u\)</h4>
                 <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
               </div>
                <div class="component">
-                <h4>Input Field \(g(x)\)</h4>
+                <h4 class="anchored">Input Field \(g(x)\)</h4>
                 <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
               </div>
             </div>
@@ -518,7 +526,7 @@ window.MathJax = {
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {
+        if (clz.startsWith('code-annotation-')) {                     
           return true;
         }
       }
@@ -538,11 +546,11 @@ window.MathJax = {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button,
-          { trigger: "manual",
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();
+        tooltip.show();    
       }
       setTimeout(function() {
         if (tooltip) {
@@ -619,7 +627,7 @@ window.MathJax = {
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config);
+      window.tippy(el, config); 
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -694,7 +702,7 @@ window.MathJax = {
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined;
+        let hash = undefined; 
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -722,7 +730,7 @@ window.MathJax = {
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              }
+              } 
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -746,7 +754,7 @@ window.MathJax = {
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            }
+            } 
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -786,7 +794,7 @@ window.MathJax = {
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it
+              // cook up a div (if necessary) and position it 
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -913,6 +921,7 @@ window.MathJax = {
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

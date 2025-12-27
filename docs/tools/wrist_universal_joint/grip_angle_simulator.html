@@ -360,7 +360,7 @@
             <div class="sidebar">
                 <div class="control-group">
                     <h3>Parameters</h3>
-
+                    
                     <div class="input-group">
                         <label>Grip Angle θ_grip (degrees) <span class="value-display" id="grip-value">30</span></label>
                         <input type="range" id="grip-angle" min="0" max="90" value="30" step="1">
@@ -444,7 +444,7 @@
                         <small style="color: #6c757d; font-size: 0.85em;">Use 't' as variable. Functions: sin, cos, exp, sqrt, log, pi, e</small>
                         <div id="polynomial-error" class="error-message" style="display: none;"></div>
                     </div>
-                    <button type="button" class="button" onclick="regenerateNoise()">Regenerate Signal</button>
+                    <button class="button" onclick="regenerateNoise()">Regenerate Signal</button>
                 </div>
 
                 <div class="control-group">
@@ -546,7 +546,7 @@
             document.getElementById('cg-value').textContent = cg.toFixed(2);
 
             const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
-            document.getElementById('inertia-display').innerHTML =
+            document.getElementById('inertia-display').innerHTML = 
                 `Iα = ${I_alpha.toFixed(4)} kg·m²<br>Iγ = ${I_gamma.toFixed(4)} kg·m²`;
 
             updateAll();
@@ -555,13 +555,13 @@
         function calculateInertia(clubhead_g, shaft_g, length_m, cg_m) {
             const m_head = clubhead_g / 1000.0;
             const m_shaft = shaft_g / 1000.0;
-
+            
             const I_shaft_alpha = (1/3) * m_shaft * length_m * length_m;
             const I_head_alpha = m_head * cg_m * cg_m;
             const I_alpha = I_shaft_alpha + I_head_alpha;
             // Gamma is lowest MOI axis, alpha is higher MOI axis
             const I_gamma = 0.5 * I_alpha;
-
+            
             return [I_alpha, I_gamma];
         }
 
@@ -652,7 +652,7 @@
                         const e = Math.E;
                         const t = t_val;
                         // Use Function constructor for safer evaluation
-                        const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e',
+                        const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e', 
                             `return ${expr}`);
                         return func(t, sin, cos, exp, sqrt, log, pi, e);
                     };
@@ -687,7 +687,7 @@
             const data = generateNoise(type);
             timeData = data.time;
             noiseData = data.noise;
-
+            
             // Show polynomial error if any
             const errorDiv = document.getElementById('polynomial-error');
             if (polynomialError && type === 'polynomial') {
@@ -696,7 +696,7 @@
             } else {
                 errorDiv.style.display = 'none';
             }
-
+            
             updateAll();
         }
 
@@ -762,7 +762,7 @@
         function updateTorquePlot(grip_angle, wrist_angle, I_alpha, I_gamma) {
             const theta_grip_rad = grip_angle * Math.PI / 180;
             const phi_wrist_rad = wrist_angle * Math.PI / 180;
-
+            
             const { tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
             const torque_transmitted = noiseData.map(n => n * tau_ratio);
             const torque_alpha = torque_transmitted.map(t => t * Math.sin(theta_grip_rad));
@@ -828,12 +828,12 @@
         function updateAccelerationPlot(grip_angle, wrist_angle, I_alpha, I_gamma) {
             const theta_grip_rad = grip_angle * Math.PI / 180;
             const phi_wrist_rad = wrist_angle * Math.PI / 180;
-
+            
             const { tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
             const torque_transmitted = noiseData.map(n => n * tau_ratio);
             const torque_alpha = torque_transmitted.map(t => t * Math.sin(theta_grip_rad));
             const torque_gamma = torque_transmitted.map(t => t * Math.cos(theta_grip_rad));
-
+            
             const accel_alpha = torque_alpha.map(t => I_alpha > 1e-6 ? t / I_alpha : 0);
             const accel_gamma = torque_gamma.map(t => I_gamma > 1e-6 ? t / I_gamma : 0);
 
@@ -1137,7 +1137,7 @@
             ctx.lineWidth = 2;
             drawArrow(ctx, arc_center_x, arc_center_y, arc_center_x + arc_radius, arc_center_y);
             ctx.strokeStyle = '#dc3545';
-            drawArrow(ctx, arc_center_x, arc_center_y,
+            drawArrow(ctx, arc_center_x, arc_center_y, 
                      arc_center_x + arc_radius * Math.cos(theta_grip_rad),
                      arc_center_y + arc_radius * Math.sin(theta_grip_rad));
 
@@ -1167,7 +1167,7 @@
             // When wrist angle is negative, forearm_axis_angle_for_arc < hand_axis_angle_for_arc,
             // so we need to draw counterclockwise (anticlockwise = true)
             const anticlockwise = phi_wrist_rad < 0;
-            ctx.arc(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius,
+            ctx.arc(wrist_arc_center_x, wrist_arc_center_y, wrist_arc_radius, 
                    hand_axis_angle_for_arc, forearm_axis_angle_for_arc, anticlockwise);
             ctx.stroke();
             ctx.globalAlpha = 1.0;
@@ -1214,12 +1214,12 @@
         function updateInfoPanel(grip_angle, wrist_angle, I_alpha, I_gamma) {
             const theta_grip_rad = grip_angle * Math.PI / 180;
             const phi_wrist_rad = wrist_angle * Math.PI / 180;
-
+            
             const { omega_ratio, tau_ratio } = universalJointTransmissionRatio(phi_wrist_rad, theta_grip_rad);
             const mean_torque = noiseData.reduce((a, b) => a + b, 0) / noiseData.length;
             const torque_transmitted = mean_torque * tau_ratio;
             const { torque_alpha, torque_gamma } = distributeTorqueByGripAngle(torque_transmitted, theta_grip_rad);
-
+            
             const accel_alpha = I_alpha > 1e-6 ? torque_alpha / I_alpha : 0;
             const accel_gamma = I_gamma > 1e-6 ? torque_gamma / I_gamma : 0;
 

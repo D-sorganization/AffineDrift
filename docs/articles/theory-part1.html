@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -221,8 +221,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo dark-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -672,19 +672,9 @@ window.Quarto = {
 </section>
 <section id="control-affine-state-space-form" class="level3">
 <h3 class="anchored" data-anchor-id="control-affine-state-space-form">Control-affine state space form</h3>
-<p>The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system’s drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle.</p>
-<p>To recast this into a control-theoretic framework, we solve for the accelerations. Since <span class="math inline">\(M\)</span> is positive-definite, it is invertible. Multiplying by <span class="math inline">\(M^{-1}\)</span>, we isolate the highest derivatives:</p>
+<p>The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system’s drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle. To recast this into a control-theoretic framework, we solve for the accelerations. Since <span class="math inline">\(M\)</span> is positive-definite, it is invertible. Multiplying by <span class="math inline">\(M^{-1}\)</span>, we isolate the highest derivatives:</p>
 <p><span class="math display">\[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).\]</span></p>
-<p>To see this explicit coupling, consider the block inverse of the inertia matrix <span class="math inline">\(H = M^{-1}\)</span>. Using the Schur complement <span class="math inline">\(\Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}\)</span>, the inverse blocks are given by: <span class="math display">\[
-H = \begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
-= \begin{bmatrix} \Delta^{-1} &amp; -\Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \\ -M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} &amp; M_{\eta\eta}^{-1} + M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \end{bmatrix}.
-\]</span> The acceleration induced by the input torque <span class="math inline">\(\tau = B(q)u\)</span> is then: <span class="math display">\[
-\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
-\begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
-\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
-=
-\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
-\]</span> This derivation reveals two critical mechanical insights: 1. <strong>Effective Rigid Inertia:</strong> The term <span class="math inline">\(H_{qq} = \Delta^{-1}\)</span> represents the rigid-body mobility modified by the “reflected mass” of the flexible shaft. The golfer does not accelerate a rigid club, but rather a rigid handle coupled to a flexible load. 2. <strong>Inertial Transmission:</strong> The term <span class="math inline">\(H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}\)</span> acts as a transmission gain. It dictates how torque applied at the hands creates instantaneous acceleration in the shaft modes via the inertial coupling block <span class="math inline">\(M_{\eta q}\)</span>. If the system were decoupled (<span class="math inline">\(M_{\eta q} = 0\)</span>), joint torque would have no immediate effect on shaft bending. Substituting the actuation model <span class="math inline">\(\tau = B(q)u\)</span>, we can separate the terms that depend on <span class="math inline">\(u\)</span> from those that do not.</p>
+<p>Substituting the actuation model <span class="math inline">\(\tau = B(q)u\)</span>, we can separate the terms that depend on <span class="math inline">\(u\)</span> from those that do not.</p>
 <p>Define the drift acceleration</p>
 <p><span class="math display">\[a_{\text{drift}}(x)
   =

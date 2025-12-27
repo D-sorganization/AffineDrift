@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -121,7 +121,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -211,9 +219,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -225,11 +233,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -249,10 +265,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -288,10 +304,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -320,52 +336,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -473,10 +469,8 @@ window.Quarto = {
 <p>Human reaction time (150–250 ms) and electromechanical delay (30–50 ms) are far too slow to influence such rapid movements, implying the downswing is <strong>open-loop</strong> and <strong>pre-structured</strong>.</p>
 <p>This paper provides the first integrated:</p>
 <ul>
-<li><strong>multibody derivation</strong> of drift and control dynamics,<br>
-</li>
-<li><strong>nonlinear controllability analysis</strong>, and<br>
-</li>
+<li><strong>multibody derivation</strong> of drift and control dynamics,</li>
+<li><strong>nonlinear controllability analysis</strong>, and</li>
 <li><strong>impact stability characterization</strong></li>
 </ul>
 <p>framed around a single measure: <strong>the Drift–Control Ratio (DCR)</strong>.</p>
@@ -485,20 +479,16 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> 2. Multibody Dynamics: 3-Link Arm–Forearm–Club Model</h1>
 <p>We adopt a planar 3-DOF model (shoulder, elbow, wrist/club hinge):</p>
 <ul>
-<li>(q_1): shoulder rotation<br>
-</li>
-<li>(q_2): elbow flexion/extension<br>
-</li>
+<li>(q_1): shoulder rotation</li>
+<li>(q_2): elbow flexion/extension</li>
 <li>(q_3): wrist radial/ulnar deviation → simplified to wrist–club hinge</li>
 </ul>
 <p>Generalized coordinates:</p>
 <p>[ q = (q_1, q_2, q_3)^T ]</p>
 <p>Link lengths &amp; masses:</p>
 <ul>
-<li>( _1, m_1 ): upper arm<br>
-</li>
-<li>( _2, m_2 ): forearm<br>
-</li>
+<li>( _1, m_1 ): upper arm</li>
+<li>( _2, m_2 ): forearm</li>
 <li>( _3, m_3 ): club</li>
 </ul>
 <section id="forward-kinematics" class="level2" data-number="3.1">
@@ -565,10 +555,8 @@ M^{-1}\tau
 <p>[ ]</p>
 <p>During the downswing:</p>
 <ul>
-<li>( || ) rises 5–10×<br>
-</li>
-<li>( ||^2 ) rises 25–100×<br>
-</li>
+<li>( || ) rises 5–10×</li>
+<li>( ||^2 ) rises 25–100×</li>
 <li>( || ) decreases 20–40%</li>
 </ul>
 <p>Thus DCR skyrockets.</p>
@@ -586,8 +574,7 @@ M^{-1}\tau
 <p>This bracket measures <em>how drift distorts control directions</em>.</p>
 <p>During the downswing, we find:</p>
 <ul>
-<li>() contains ()-dependent terms<br>
-</li>
+<li>() contains ()-dependent terms</li>
 <li>bracket magnitude grows with (^2)</li>
 </ul>
 <p>Thus:</p>
@@ -605,8 +592,7 @@ M^{-1}\tau
 <p>[ (t) &lt; 0.1 (t) &gt; 10 ]</p>
 <p>Empirical swing data and derived dynamics show:</p>
 <ul>
-<li>Collapse begins ≈ <strong>70–120 ms before impact</strong><br>
-</li>
+<li>Collapse begins ≈ <strong>70–120 ms before impact</strong></li>
 <li>Complete drift domination (~DCR &gt; 50–100) occurs ≈ <strong>40–60 ms before impact</strong></li>
 </ul>
 <p>This matches EMG findings: muscular activity peaks well before peak clubhead speed.</p>
@@ -615,8 +601,7 @@ M^{-1}\tau
 <h1 data-number="7"><span class="header-section-number">7</span> 6. Stability of Impact and Clubface Closure Variance</h1>
 <p>Impact orientation determines ball flight:</p>
 <ul>
-<li>face angle: ~85% of starting direction<br>
-</li>
+<li>face angle: ~85% of starting direction</li>
 <li>path: remainder</li>
 </ul>
 <p>Let clubface angle:</p>
@@ -634,17 +619,14 @@ M^{-1}\tau
 <p>where (A_f = ).</p>
 <p>Because (A_f) contains large centripetal terms:</p>
 <ul>
-<li>(A_f) is <strong>state-dependent</strong><br>
-</li>
-<li>Exponential amplification of small upstream errors occurs<br>
-</li>
+<li>(A_f) is <strong>state-dependent</strong></li>
+<li>Exponential amplification of small upstream errors occurs</li>
 <li>Control cannot suppress divergence</li>
 </ul>
 <p>The variance in clubface angle is then:</p>
 <p>[ [] H e^{A_f t} _0 e<sup>{A_f</sup>T t} H^T ]</p>
 <p>with (H = ).</p>
-<p><strong>Interpretation:</strong><br>
-At high DCR, impact orientation is determined almost entirely by upstream structural conditions.</p>
+<p><strong>Interpretation:</strong> At high DCR, impact orientation is determined almost entirely by upstream structural conditions.</p>
 </section>
 <section id="numerical-illustration-drift-vs-control-magnitude" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> 7. Numerical Illustration: Drift vs Control Magnitude</h1>
@@ -1063,7 +1045,7 @@ At high DCR, impact orientation is determined almost entirely by upstream struct
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

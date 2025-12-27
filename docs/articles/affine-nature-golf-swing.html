@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -222,8 +222,8 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo dark-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -677,19 +677,8 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="control-affine-state-space-form">Control-affine state space form</h3>
 <p>The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system’s drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle.</p>
 <p>To recast this into a control-theoretic framework, we solve for the accelerations. Since the inertia matrix <span class="math inline">\(M(q,\eta)\)</span> is symmetric and positive-definite, it admits a unique inverse <span class="math inline">\(H(q,\eta) = M^{-1}(q,\eta)\)</span>. While <span class="math inline">\(M\)</span> is defined by physical mass distributions, its inverse <span class="math inline">\(H\)</span> represents the <em>mobility</em> or <em>admittance</em> of the system—how easy it is to accelerate given applied forces. Multiplying the equations of motion by <span class="math inline">\(M^{-1}\)</span> isolates the highest derivatives:</p>
-<p>Multiplying the equations of motion by <span class="math inline">\(M^{-1}\)</span> isolates the highest derivatives:</p>
 <p><span class="math display">\[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} B(q)u \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).\]</span></p>
 <p>Crucially, because the flexible modes are underactuated (zero torque in the lower block), the control input <span class="math inline">\(u\)</span> enters the dynamics <em>only</em> through the rigid-body channel. However, due to the off-diagonal coupling in <span class="math inline">\(M^{-1}\)</span>, this rigid-body torque instantaneously induces accelerations in the flexible modes.</p>
-<p>To see this explicit coupling, consider the block inverse of the inertia matrix <span class="math inline">\(H = M^{-1}\)</span>. Using the Schur complement <span class="math inline">\(\Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}\)</span>, the inverse blocks are given by: <span class="math display">\[
-H = \begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
-= \begin{bmatrix} \Delta^{-1} &amp; -\Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \\ -M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} &amp; M_{\eta\eta}^{-1} + M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \end{bmatrix}.
-\]</span> The acceleration induced by the input torque <span class="math inline">\(\tau = B(q)u\)</span> is then: <span class="math display">\[
-\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
-\begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
-\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
-=
-\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
-\]</span> This derivation reveals two critical mechanical insights: 1. <strong>Effective Rigid Inertia:</strong> The term <span class="math inline">\(H_{qq} = \Delta^{-1}\)</span> represents the rigid-body mobility modified by the “reflected mass” of the flexible shaft. The golfer does not accelerate a rigid club, but rather a rigid handle coupled to a flexible load. 2. <strong>Inertial Transmission:</strong> The term <span class="math inline">\(H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}\)</span> acts as a transmission gain. It dictates how torque applied at the hands creates instantaneous acceleration in the shaft modes via the inertial coupling block <span class="math inline">\(M_{\eta q}\)</span>. If the system were decoupled (<span class="math inline">\(M_{\eta q} = 0\)</span>), joint torque would have no immediate effect on shaft bending.</p>
 <p>Let the state vector be <span class="math inline">\(x = [q^T, \eta^T, \dot{q}^T, \dot{\eta}^T]^T \in \mathbb{R}^{2(n+m)}\)</span>. We define the <strong>drift vector field</strong> <span class="math inline">\(f(x)\)</span> and the <strong>control input field</strong> <span class="math inline">\(g(x)\)</span> by expanding this inverse relationship.</p>
 <p>The <strong>drift field</strong> <span class="math inline">\(f(x)\)</span> captures the unforced (natural) evolution of the system: <span class="math display">\[f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1} \left( C \dot{q}_{\text{sys}} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.\]</span> This vector field contains all inertial coupling, gravitational forces, centrifugal/Coriolis effects, and the complete elastic dynamics of the shaft.</p>
 <p>The <strong>control field</strong> <span class="math inline">\(g(x)\)</span> is derived by applying the inverse inertia matrix to the actuation vector: <span class="math display">\[
@@ -865,14 +854,14 @@ g(x) = \begin{bmatrix} 0 \\ 0 \\ H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
 <section id="definition" class="level3">
 <h3 class="anchored" data-anchor-id="definition">Definition</h3>
 <p>Let the actual swing at time (t) be characterized by the state ( x(t) T ). Locally, ( x(t) = (q(t), (t), (t), (t)) ).</p>
-<p>We formally define the <em>Zero Velocity Counterfactual</em> operator using the fiber bundle structure of the state space. Let <span class="math inline">\(\mathcal{Q}\)</span> be the configuration manifold. The state evolves on the tangent bundle <span class="math inline">\(T\mathcal{Q}\)</span>. Let <span class="math inline">\(\pi: T\mathcal{Q} \to \mathcal{Q}\)</span> be the canonical projection (bundle map) that maps a state vector to its configuration: <span class="math inline">\(\pi(q, v) = q\)</span>. Let <span class="math inline">\(\zeta_0: \mathcal{Q} \to T\mathcal{Q}\)</span> be the <em>zero section</em> of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: <span class="math inline">\(\zeta_0(q) = (q, 0)\)</span>.</p>
+<p>We formally define the <em>Zero Velocity Counterfactual</em> operator using the fiber bundle structure of the state space. Let <span class="math inline">\(\mathcal{Q}\)</span> be the configuration manifold. The state evolves on the tangent bundle <span class="math inline">\(T\mathcal{Q}\)</span>. Let <span class="math inline">\(\pi: T\mathcal{Q} \to \mathcal{Q}\)</span> be the canonical projection (bundle map) that maps a state vector to its configuration: <span class="math inline">\(\pi(q, v) = q\)</span>. Let <span class="math inline">\(\zeta: \mathcal{Q} \to T\mathcal{Q}\)</span> be the <em>zero section</em> of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: <span class="math inline">\(\zeta(q) = (q, 0)\)</span>.</p>
 <p>The ZVCF operator <span class="math inline">\(\mathcal{Z}: T\mathcal{Q} \to T\mathcal{Q}\)</span> is the composition of projection and zero-section embedding: <span class="math display">\[
-\mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
+\mathcal{Z}(x) = (\zeta \circ \pi)(x).
 \]</span> Applied to the state <span class="math inline">\(x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))\)</span>, this yields: <span class="math display">\[
   x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
   {#eq-zvcf_state}
 \]</span></p>
-<p>Physically, this operation “freezes” the system in its current configuration. It is a projection onto the submanifold of static states.</p>
+<p>Physically, this operation “freezes” the system in its current configuration.</p>
 <p>Evaluating the equations of motion at this zero-velocity state yields the <em>ZVCF generalized torque</em>:</p>
 <p><span class="math display">\[
   \tau_{\mathrm{ZVCF}}(t)
@@ -946,7 +935,7 @@ g(x) = \begin{bmatrix} 0 \\ 0 \\ H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
 <li><p>identifying configuration-driven mechanical biases (e.g., favored directions of passive motion),</p></li>
 <li><p>analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.</p></li>
 </ul>
-<p><strong>Note on Dynamic Relevance (The “Static Fallacy” Defense).</strong> A common scientific objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., <span class="math inline">\(1g\)</span> vs <span class="math inline">\(100g\)</span>), rendering the ZVCF physically irrelevant. This critique, termed the ‘Static Fallacy’, misses the analytical purpose of the counterfactual. We do not calculate ZVCF because we believe gravity “steers” the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish “Geometric Stiffness” (a velocity-dependent stiffening effect) from “Elastic Stiffness” (a static material property). The ZVCF is the necessary “tare” operation for the dynamic scale—it zeros out the scale so that the “weight” of the velocity-dependent terms can be measured accurately.</p>
+<p><strong>Note on Dynamic Relevance.</strong> A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., <span class="math inline">\(1g \ll 100g\)</span>). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity “steers” the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish “Geometric Stiffness” (a velocity-dependent stiffening effect) from “Elastic Stiffness” (a static material property). The ZVCF is the necessary “tare” operation for the dynamic scale.</p>
 <p>ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.</p>
 <p>We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span> to be causally meaningful, the term being subtracted (<span class="math inline">\(\tau_{\text{drift}}\)</span>) must be independent of the term being isolated (<span class="math inline">\(\tau_{\text{input}}\)</span>). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid. We must therefore prove the property of <em>Drift Invariance</em>.</p>
 </section>
@@ -973,17 +962,8 @@ g(x) = \begin{bmatrix} 0 \\ 0 \\ H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
 \]</span></p>
 <p><em>Proof.</em> Recall the definition of <span class="math inline">\(f(x)\)</span> derived in Section~<strong>?@sec-affine</strong>: <span class="math display">\[
 f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.
-\]</span> We compute the Jacobian of the drift field with respect to the control input vector <span class="math inline">\(u\)</span>. Let <span class="math inline">\(u_k\)</span> be the <span class="math inline">\(k\)</span>-th component of the input. <span class="math display">\[
-\frac{\partial f(x)}{\partial u_k} = \begin{bmatrix}
-\frac{\partial \dot{q}}{\partial u_k} \\
-\frac{\partial \dot{\eta}}{\partial u_k} \\
-\frac{\partial \ddot{q}_{\text{drift}}}{\partial u_k} \\
-\frac{\partial \ddot{\eta}_{\text{drift}}}{\partial u_k}
-\end{bmatrix}.
-\]</span> Inspection of the components reveals: 1. The kinematic mapping <span class="math inline">\(\dot{q}, \dot{\eta}\)</span> are state variables, thus <span class="math inline">\(\frac{\partial \dot{q}}{\partial u} = 0\)</span>. 2. The mass matrix <span class="math inline">\(M(q,\eta)\)</span> and its inverse depend only on configuration coordinates <span class="math inline">\(q,\eta\)</span>. 3. The Coriolis matrix <span class="math inline">\(C\)</span> depends on <span class="math inline">\(q,\eta, \dot{q}, \dot{\eta}\)</span>. 4. Gravitational (<span class="math inline">\(G\)</span>) and elastic (<span class="math inline">\(K_s \eta\)</span>) forces depend only on configuration. 5. Damping forces (<span class="math inline">\(C_s \dot{\eta}\)</span>) depend linearly on velocity.</p>
-<p>Since none of the constituent terms <span class="math inline">\(M, C, G, K_s, C_s\)</span> contain the variable <span class="math inline">\(u\)</span>, the partial derivative vanishes identically: <span class="math display">\[
-\frac{\partial}{\partial u} \left( -M^{-1} (C\dot{q}_{\text{sys}} + G + F_s) \right) = 0.
-\]</span> The control input <span class="math inline">\(u\)</span> appears <em>exclusively</em> in the term <span class="math inline">\(M^{-1} [B(q)u; 0]^T\)</span>. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix. <span class="math display">\[ \nabla_u f(x) \equiv 0. \]</span> This orthogonality guarantees that the “passive” dynamics identified by the model are structurally unpolluted by the “active” control inputs. <span class="math inline">\(\square\)</span></p>
+\]</span> Inspection of the components reveals: 1. The kinematic mapping <span class="math inline">\(\dot{q}, \dot{\eta}\)</span> depends only on the state vector <span class="math inline">\(x\)</span>. 2. The mass matrix <span class="math inline">\(M(q,\eta)\)</span> and its inverse depend only on configuration coordinates. 3. The Coriolis matrix <span class="math inline">\(C\)</span> is quadratic in velocities and depends on configuration. 4. Gravitational (<span class="math inline">\(G\)</span>) and elastic (<span class="math inline">\(K_s \eta\)</span>) forces depend only on configuration. 5. Damping forces (<span class="math inline">\(C_s \dot{\eta}\)</span>) depend linearly on velocity.</p>
+<p>None of these terms contain the variable <span class="math inline">\(u\)</span>. The control input <span class="math inline">\(u\)</span> appears <em>exclusively</em> in the term <span class="math inline">\(M^{-1} [B(q)u; 0]^T\)</span>. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix. <span class="math display">\[ \nabla_u f(x) = 0. \]</span> This orthogonality guarantees that the “passive” dynamics identified by the model are structurally unpolluted by the “active” control inputs. <span class="math inline">\(\square\)</span></p>
 <p>For mechanical systems with generalized torques entering linearly,</p>
 <p><span class="math display">\[\ddot{q} = M^{-1}(q,\eta)\big(\tau - h(q,\dot{q},\eta,\dot{\eta})\big),\]</span></p>
 <p>where <span class="math inline">\(h(\cdot)\)</span> collects all passive terms, linearity of <span class="math inline">\(\tau\)</span> ensures that</p>
@@ -991,7 +971,6 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(q,\dot{
   =
   -M^{-1}(q,\eta)\,h(q,\dot{q},\eta,\dot{\eta})\]</span></p>
 <p>contains no torque dependence.</p>
-<p>Thus,</p>
 <p><span class="math display">\[
   f(x) =
   \begin{bmatrix}

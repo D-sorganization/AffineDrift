@@ -71,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -121,7 +121,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -211,9 +219,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -225,11 +233,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -249,10 +265,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -288,10 +304,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -320,52 +336,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -430,6 +426,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#stability-of-impact-and-clubface-closure-variance" id="toc-stability-of-impact-and-clubface-closure-variance" class="nav-link" data-scroll-target="#stability-of-impact-and-clubface-closure-variance"><span class="header-section-number">8</span> 7. Stability of Impact and Clubface Closure Variance</a></li>
   <li><a href="#numerical-example-drift-vs-control-magnitude" id="toc-numerical-example-drift-vs-control-magnitude" class="nav-link" data-scroll-target="#numerical-example-drift-vs-control-magnitude"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</a></li>
+  <li><a href="#conceptual-linkages" id="toc-conceptual-linkages" class="nav-link" data-scroll-target="#conceptual-linkages"><span class="header-section-number">10</span> 9. Conceptual Linkages</a></li>
   </ul>
 </nav>
     </div>
@@ -497,10 +494,8 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> 2. System Modeling: The 3-Link Arm–Forearm–Club Model</h1>
 <p>We model the golfer–club chain as a 3-DOF planar system:</p>
 <ul>
-<li>(q_1): shoulder rotation<br>
-</li>
-<li>(q_2): elbow rotation<br>
-</li>
+<li>(q_1): shoulder rotation</li>
+<li>(q_2): elbow rotation</li>
 <li>(q_3): wrist/club hinge</li>
 </ul>
 <p>Generalized coordinates:</p>
@@ -551,6 +546,7 @@ M^{-1}\tau
 <p>Contrast with:</p>
 <p>[ |g(x)u| = |M^{-1}| ||. ]</p>
 <p>The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.</p>
+<p>This scaling disparity is the kinetic manifestation of the <strong>Force Taxonomy</strong> established in the broader framework. The drift term <span class="math inline">\(f(x)\)</span> aggregates the configuration-dependent potential forces and the velocity-dependent Coriolis/centripetal forces. While the former are bounded, the latter scale quadratically with swing speed. Consequently, the “Inertial Memory” of the system (embedded in <span class="math inline">\(f(x)\)</span>) energetically eclipses the “Current Agency” (available via <span class="math inline">\(g(x)u\)</span>), necessitating the “Early Delivery” strategy predicted by the ZTCF baseline.</p>
 </section>
 </section>
 <section id="driftcontrol-ratio-dcr" class="level1" data-number="4">
@@ -562,8 +558,7 @@ M^{-1}\tau
 <p>we have:</p>
 <p>[ ]</p>
 <p>Since ((t)) typically <em>decreases</em> during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.</p>
-<p><strong>Result:</strong><br>
-[ (t) 100 ]</p>
+<p><strong>Result:</strong> [ (t) 100 ]</p>
 </section>
 <section id="nonlinear-controllability-via-lie-brackets" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> 4. Nonlinear Controllability via Lie Brackets</h1>
@@ -592,13 +587,12 @@ M^{-1}\tau
 <p>[ (t) &lt; 0.1 (t) &gt; 10. ]</p>
 <p>We find:</p>
 <ul>
-<li>Collapse begins 70–120 ms before impact.<br>
-</li>
-<li>Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).<br>
-</li>
+<li>Collapse begins 70–120 ms before impact.</li>
+<li>Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).</li>
 <li>Late downswing is effectively uncontrollable.</li>
 </ul>
 <p>This matches athlete EMG studies and coaching intuition.</p>
+<p>The DCR blow-up provides the rigorous justification for the <strong>Zero Torque Counterfactual (ZTCF)</strong> as the primary baseline for swing analysis. In low-DCR regimes (putting, takeaway), the ZTCF diverges significantly from the actual path because input authorities are comparable to passive dynamics. However, in the high-DCR downswing, the actual trajectory asymptotically approaches the ZTCF. Thus, the ZTCF is not merely a hypothetical “passive” swing; it is the <strong>dominant attractor</strong> of the high-velocity dynamics.</p>
 </section>
 <section id="the-control-cone-analogy-a-relativistic-perspective" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> 6. The Control Cone Analogy: A Relativistic Perspective</h1>
@@ -608,8 +602,7 @@ M^{-1}\tau
 <p>In special relativity, the <strong>future light cone</strong> at event (p) contains all events reachable at speed ≤ (c). Points outside the cone cannot be influenced causally.</p>
 <p>Let:</p>
 <ul>
-<li>(^+(p)): forward light cone<br>
-</li>
+<li>(^+(p)): forward light cone</li>
 <li>(^-(p)): backward light cone</li>
 </ul>
 <p>Events outside (^+(p)) are unreachable.</p>
@@ -620,8 +613,7 @@ M^{-1}\tau
 <p>[ =f(x)+g(x)u ]</p>
 <p>the <strong>reachable set</strong> over time (t) from (x_0) is:</p>
 <p>[ (t;x_0) = { x(t) : u(s),; s}. ]</p>
-<p>When control dominates, the reachable set expands widely.<br>
-When drift dominates, it collapses into a narrow tube around the drift trajectory.</p>
+<p>When control dominates, the reachable set expands widely. When drift dominates, it collapses into a narrow tube around the drift trajectory.</p>
 </section>
 <section id="defining-the-control-cone" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="defining-the-control-cone"><span class="header-section-number">7.3</span> 6.3 Defining the Control Cone</h2>
@@ -646,8 +638,7 @@ When drift dominates, it collapses into a narrow tube around the drift trajector
 <p>[ _{e^{tf}} g () ]</p>
 <p>and</p>
 <p>[ ((x)) . ]</p>
-<p>Interpretation:<br>
-The future becomes <strong>nearly predetermined</strong>.</p>
+<p>Interpretation: The future becomes <strong>nearly predetermined</strong>.</p>
 <p>Just like a narrowing time cone restricts your causal influence, a narrowing control cone restricts your mechanical influence.</p>
 </section>
 <section id="application-to-the-golf-swing" class="level2" data-number="7.5">
@@ -681,6 +672,7 @@ The future becomes <strong>nearly predetermined</strong>.</p>
 <li>No meaningful correction is possible.</li>
 </ul>
 <p>This explains why golfers feel “along for the ride.”</p>
+<p>Crucially, the narrowing of the Control Cone implies that “steering” is impossible, but “selecting the tube” is not. This aligns with the <strong>Intentional Constraint Collapse</strong> theory: elite golfers do not fight the cone collapse; they structurally engineer the initial conditions (the “Effective Plant”) at the top of the backswing so that the collapsing cone naturally centers on the target state. They manage the manifold, not the trajectory.</p>
 </section>
 </section>
 </section>
@@ -697,14 +689,31 @@ The future becomes <strong>nearly predetermined</strong>.</p>
 <p>The variance at impact:</p>
 <p>[ [] H e^{A_f t} _0 e<sup>{A_f</sup>T t} H^T. ]</p>
 <p>High DCR implies large (A_f), hence exponential amplification of small errors.</p>
-<p><strong>Conclusion:</strong><br>
-Impact is extremely sensitive to early-swing structure.</p>
+<p><strong>Conclusion:</strong> Impact is extremely sensitive to early-swing structure.</p>
 </section>
 <section id="numerical-example-drift-vs-control-magnitude" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</h1>
 <p>import numpy as np import matplotlib.pyplot as plt</p>
 <p>t = np.linspace(0, 1, 500) drift = 0.2 + 2.5 * np.exp(-((t - 0.80)<strong>2) / 0.002) control = 0.6 - 0.3 * np.exp(-((t - 0.10)</strong>2) / 0.01)</p>
 <p>plt.figure(figsize=(10,5)) plt.plot(t, drift, label=“Drift Magnitude”, linewidth=3) plt.plot(t, control, label=“Control Magnitude”, linewidth=3) plt.title(“Drift vs Control Magnitude Throughout the Golf Swing”) plt.xlabel(“Normalized Swing Phase”) plt.ylabel(“Relative Magnitude”) plt.legend() plt.grid(True) plt.tight_layout() plt.show()</p>
+</section>
+<section id="conceptual-linkages" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> 9. Conceptual Linkages</h1>
+<p>To place this analysis within the broader AffineDrift framework:</p>
+<ol type="1">
+<li><strong>Implicit Assumptions</strong>:
+<ul>
+<li><strong>Drift Invariance</strong>: We assume that the passive drift field <span class="math inline">\(f(x)\)</span> remains structurally independent of the input mechanism, a condition formally proven in <strong>Proposition 1</strong> of the core theory.</li>
+<li><strong>Torque Saturation</strong>: The DCR analysis assumes physiological limits on <span class="math inline">\(\tau\)</span>, treating the golfer as an underactuated system during the ballistic phase.</li>
+</ul></li>
+<li><strong>Cross-References</strong>:
+<ul>
+<li><strong>The Drifter Manifesto</strong>: For the foundational derivation of the affine form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>.</li>
+<li><strong>Theory Part 3 (Force Taxonomy)</strong>: For the detailed breakdown of the drift components (Inertial, Coriolis, Centripetal) that drive the DCR explosion.</li>
+<li><strong>Intentional Constraint Collapse</strong>: For the mechanism by which golfers “pre-shape” the control cone to manage the high-drift impact interval.</li>
+<li><strong>Zero Torque Counterfactual (ZTCF)</strong>: For the baseline trajectory that represents the infinite-DCR limit.</li>
+</ul></li>
+</ol>
 
 
 </section>
@@ -1116,7 +1125,7 @@ Impact is extremely sensitive to early-swing structure.</p>
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

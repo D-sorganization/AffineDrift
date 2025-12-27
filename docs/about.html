@@ -18,30 +18,29 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js" defer></script>
-<script src="site_libs/quarto-nav/headroom.min.js" defer></script>
-<script src="site_libs/clipboard/clipboard.min.js" defer></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js" defer></script>
-<script src="site_libs/quarto-search/fuse.min.js" defer></script>
-<script src="site_libs/quarto-search/quarto-search.js" defer></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js" defer></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js" defer></script>
-<script src="site_libs/quarto-html/anchor.min.js" defer></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js" defer></script>
-<script src="script.js" defer></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
@@ -72,8 +71,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -123,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -174,9 +181,6 @@ window.MathJax = {
 </script>
 
 
-<!-- ⚡ Bolt Optimization: Preload critical assets -->
-<link rel="preload" href="styles.css" as="style">
-<link rel="preload" href="script.js" as="script">
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -184,12 +188,12 @@ window.MathJax = {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -201,143 +205,147 @@ window.MathJax = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-drake.html">
  <span class="dropdown-text">Drake</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-software.html">
  <span class="dropdown-text">Software</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-books.html">
  <span class="dropdown-text">Books</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
-  </li>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./bibliography.html">
  <span class="dropdown-text">Bibliography</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./about.html">
  <span class="dropdown-text">About</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -351,7 +359,7 @@ window.MathJax = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-
+    
 <!-- main -->
 <main class="content column-page" id="quarto-document-content">
 
@@ -369,11 +377,11 @@ window.MathJax = {
 
 <div class="quarto-title-meta column-page">
 
-
-
-
+    
+  
+    
   </div>
-
+  
 
 
 </header>
@@ -384,7 +392,7 @@ window.MathJax = {
     <div class="about-layout">
       <!-- Left Sidebar - Articles & Theory -->
       <div class="about-sidebar left-sidebar">
-        <h3>Articles & Theory</h3>
+        <h3 class="anchored">Articles &amp; Theory</h3>
         <ul class="resource-links">
           <li><a href="drifter-manifesto.html">Drifter Manifesto</a></li>
           <li><a href="articles.html">All Articles</a></li>
@@ -392,8 +400,8 @@ window.MathJax = {
           <li><a href="book-reviews.html">Book Reviews</a></li>
           <li><a href="bibliography.html">Bibliography</a></li>
         </ul>
-
-        <h3>Models & Simulations</h3>
+        
+        <h3 class="anchored">Models &amp; Simulations</h3>
         <ul class="resource-links">
           <li><a href="models.html">Models Home</a></li>
           <li><a href="models-simulink.html">MATLAB Simulink</a></li>
@@ -411,35 +419,35 @@ window.MathJax = {
           <p>
             At its heart, this website is an attempt to build a website I would like to read. I am an avid golf researcher with an interest in robotics and the mechanics of linked systems. After scouring the web for resources I finally came to the realization that I could just build the website I was looking for with the articles and resources that I was trying to track down.
           </p>
-
+          
           <p>
             Rather than trying to organize my notes offline across multiple devices and formats, why not collect them together in a unified place where others who are also interested can find value in them. To achieve this goal, I have leaned heavily on the assistance of AI models in developing and troubleshooting code and building the website.
           </p>
-
+          
           <p>
             Rather than curate the website myself, I have outlined articles and topics I would like to build or resources that I would like to see and then fed them to AI and importantly - iterated to improve quality. While much of AI-generated golf content can end up as correlational gibberish, there can be significant value when you know how to use it right.
           </p>
-
+          
           <p>
             Rather than asking it for answers, ask it to provide mathematical expressions that can be validated. Ask it to write code that can be reviewed. Ask it to track down sources and links for further information. Every time an article is posted, it is then reviewed by automated bots overnight and feedback is given in the morning. It has been a fun process setting up guardrails to help AI give the most value.
           </p>
-
+          
           <p>
             The agents reviewing the site have different personas. There are editors attempting to improve the fluidity and prose. There is a curator coming up with new topics or avenues to explore. There is a librarian at work in the background curating a cross-linked bibliography of all of the sources that are available. There are mathematicians and mechanics scouring the equations and validating and debugging them.
           </p>
-
+          
           <p>
             Importantly, there are also critics. My goal here is not to hide weakness, but identify it and explore it. The edge cases and shortcomings of a given paradigm often hold extreme value. There is an agent to defend and shore up any technical shortcomings identified by the critics.
           </p>
-
+          
           <p>
             By no means is the website intended to be exhaustive or comprehensive. It is just a place to store resources for myself and construct a technical argument towards the understanding of the viewpoint of the golf swing that I have developed through my years of study. This argument and the site are not complete, nor will they ever be. They will evolve and adapt when new information is identified.
           </p>
-
+          
           <p>
             If this information is of interest to you, feel free to use and share however you choose. I don't care too much about citations personally, but if the information comes from other authors whose work I have linked here, please give credit where credit is due.
           </p>
-
+          
           <p>
             Researching the golf swing is an often fruitless endeavor where you will encounter more than your fair share of critics. An atta boy or tip of the cap to those providing research into the topics we are all mutually interested in is in order when you find something to help you on your way.
           </p>
@@ -448,7 +456,7 @@ window.MathJax = {
 
       <!-- Right Sidebar - Resources & Tools -->
       <div class="about-sidebar right-sidebar">
-        <h3>Learning Resources</h3>
+        <h3 class="anchored">Learning Resources</h3>
         <ul class="resource-links">
           <li><a href="resources-videos.html">Educational Videos</a></li>
           <li><a href="resources-books.html">Books</a></li>
@@ -456,16 +464,16 @@ window.MathJax = {
           <li><a href="resources-websites.html">Websites</a></li>
           <li><a href="resources-datasets.html">Datasets</a></li>
         </ul>
-
-        <h3>Software & Tools</h3>
+        
+        <h3 class="anchored">Software &amp; Tools</h3>
         <ul class="resource-links">
           <li><a href="resources-software.html">Software Tools</a></li>
           <li><a href="tools.html">Interactive Tools</a></li>
           <li><a href="resources-researchers.html">Researchers</a></li>
           <li><a href="resources-notebooklm.html">NotebookLM</a></li>
         </ul>
-
-        <h3>Repositories</h3>
+        
+        <h3 class="anchored">Repositories</h3>
         <ul class="resource-links">
           <li><a href="repositories.html">Code Repositories</a></li>
           <li><a href="repositories-models.html">Model Collections</a></li>
@@ -547,16 +555,16 @@ window.MathJax = {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-
+  
   .about-sidebar {
     position: static;
     order: 3;
   }
-
+  
   .about-content {
     order: 1;
   }
-
+  
   .left-sidebar {
     order: 2;
   }
@@ -566,20 +574,21 @@ window.MathJax = {
   .about-layout {
     padding: 1rem;
   }
-
+  
   .about-sidebar {
     padding: 1rem;
   }
-
+  
   .about-content {
     padding: 1.5rem;
   }
-
+  
   .about-text p {
     font-size: 1rem;
   }
 }
 </style>
+<p>```</p>
 
 
 
@@ -595,7 +604,7 @@ window.MathJax = {
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {
+        if (clz.startsWith('code-annotation-')) {                     
           return true;
         }
       }
@@ -615,11 +624,11 @@ window.MathJax = {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button,
-          { trigger: "manual",
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();
+        tooltip.show();    
       }
       setTimeout(function() {
         if (tooltip) {
@@ -696,7 +705,7 @@ window.MathJax = {
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config);
+      window.tippy(el, config); 
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -771,7 +780,7 @@ window.MathJax = {
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined;
+        let hash = undefined; 
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -799,7 +808,7 @@ window.MathJax = {
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              }
+              } 
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -823,7 +832,7 @@ window.MathJax = {
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            }
+            } 
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -863,7 +872,7 @@ window.MathJax = {
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it
+              // cook up a div (if necessary) and position it 
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -990,6 +999,7 @@ window.MathJax = {
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

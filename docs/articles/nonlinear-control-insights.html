@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -123,7 +123,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -213,9 +221,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -227,11 +235,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -251,10 +267,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -290,10 +306,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -322,52 +338,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -427,6 +423,7 @@ window.Quarto = {
   <li><a href="#discovery-of-drift-invariants" id="toc-discovery-of-drift-invariants" class="nav-link" data-scroll-target="#discovery-of-drift-invariants">Discovery of Drift Invariants</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#related-theoretical-sections" id="toc-related-theoretical-sections" class="nav-link" data-scroll-target="#related-theoretical-sections">Related Theoretical Sections</a></li>
   </ul>
 </nav>
     </div>
@@ -470,7 +467,21 @@ window.Quarto = {
 <p><span class="math display">\[
 \dot{x} = f(x) + G(x)u,
 \]</span></p>
-<p>where the drift term <span class="math inline">\(f(x)\)</span> captures all passive dynamics, and the input term <span class="math inline">\(G(x)u\)</span> represents all actively applied torques. Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.</p>
+<p>where the drift term <span class="math inline">\(f(x)\)</span> captures all passive dynamics, and the input term <span class="math inline">\(G(x)u\)</span> represents all actively applied torques. This control-theoretic perspective is not merely an analogy; it provides the rigorous justification for the <strong>Skeletal Baseline</strong> defined in Part 5. By recognizing the swing as a drift-dominated maneuver, we validate the use of the Zero Torque Counterfactual (ZTCF) not just as a computational diagnostic, but as the system’s “natural” trajectory from which all active deviation must be purchased.</p>
+<p>Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Implicit Assumption: Drift Invariance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The validity of these insights relies on the <strong>Drift Invariance</strong> condition (detailed in Part 3): the passive dynamics <span class="math inline">\(f(x)\)</span> must be independent of the instantaneous input <span class="math inline">\(u\)</span>. If muscular activation were to instantaneously alter the passive stiffness or damping properties of the system (beyond the affine torque contribution), the causal separation of drift and input would collapse.</p>
+</div>
+</div>
 </section>
 <section id="drift-as-the-causal-result-of-prior-dynamics" class="level2">
 <h2 class="anchored" data-anchor-id="drift-as-the-causal-result-of-prior-dynamics">Drift as the Causal Result of Prior Dynamics</h2>
@@ -480,6 +491,7 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
 \]</span></p>
 <p>showing that drift is the local derivative of the entire zero-input evolution. This confers a strictly causal nature to drift: it represents the accumulated result of all prior states, motions, and stored energies in the system. The state variables <span class="math inline">\((q, \dot{q}, x_s, \dot{x}_s)\)</span> encode position history, velocity history, shaft deflection history, and loading rates. Drift expresses this entire mechanical past as present-time forces.</p>
 <p>This causal dependence gives drift its characteristic behaviors: inertial forces arising from accumulated segment velocities, elastic forces reflecting stored shaft energy, and geometric force interactions determined by the evolving athletic posture. Drift is not instantaneous; it is the residue of past configurations expressed through instantaneous mechanical laws.</p>
+<p>In the context of the AffineDrift framework, this causality is what allows the <strong>Zero Velocity Counterfactual (ZVCF)</strong> to function as a “state-dependent load cell.” Because <span class="math inline">\(f(x)\)</span> depends only on the current state <span class="math inline">\((q, \dot{q})\)</span> and not on the instantaneous input <span class="math inline">\(u\)</span>, the drift vector field objectively quantifies the inertial and elastic burdens the golfer must overcome at any instant, regardless of their intent.</p>
 </section>
 <section id="nonlinear-control-theoretic-insights" class="level2">
 <h2 class="anchored" data-anchor-id="nonlinear-control-theoretic-insights">Nonlinear Control-Theoretic Insights</h2>
@@ -511,6 +523,7 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
 <li><p>which degrees of freedom cannot be independently influenced,</p></li>
 <li><p>how torque applied at one joint influences dynamics at another through geometric coupling. This offers a mathematically grounded explanation for the structure of reachable motions.</p></li>
 </ul>
+<p>This mathematical structure formalizes the biomechanical concept of <strong>sequencing</strong>. In a Lie bracket interpretation, proximal deceleration is not an aesthetic choice but a necessary control action to trigger non-holonomic acceleration in distal segments—effectively “steering” the drift field to generate clubhead speed that cannot be produced by direct torque alone.</p>
 </section>
 <section id="partial-feedback-linearization" class="level3">
 <h3 class="anchored" data-anchor-id="partial-feedback-linearization">Partial Feedback Linearization</h3>
@@ -583,6 +596,15 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>Nonlinear control theory provides a rigorous conceptual and analytical framework for understanding the structure and dynamics of the golfer–club–shaft system. The affine decomposition motivates a large set of future research directions that can greatly enhance biomechanical understanding, experimental measurement, and data-driven modeling of the golf swing.</p>
+</section>
+<section id="related-theoretical-sections" class="level2">
+<h2 class="anchored" data-anchor-id="related-theoretical-sections">Related Theoretical Sections</h2>
+<ul>
+<li><strong>Part 1:</strong> Establishes the fundamental <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span> equation.</li>
+<li><strong>Part 2:</strong> Defines the <strong>ZTCF</strong> and <strong>ZVCF</strong> counterfactuals derived from this structure.</li>
+<li><strong>Part 3:</strong> Proves the <strong>Drift Invariance</strong> property essential for causal attribution.</li>
+<li><strong>Part 5:</strong> Provides the numerical <strong>Skeletal Baseline</strong> validation of these control-theoretic concepts.</li>
+</ul>
 
 
 </section>
@@ -994,7 +1016,7 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded
