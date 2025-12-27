@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 
 def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:

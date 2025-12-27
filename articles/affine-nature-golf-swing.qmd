@@ -210,6 +210,23 @@ $$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{b
 
 Crucially, because the flexible modes are underactuated (zero torque in the lower block), the control input $u$ enters the dynamics *only* through the rigid-body channel. However, due to the off-diagonal coupling in $M^{-1}$, this rigid-body torque instantaneously induces accelerations in the flexible modes.
 
+To see this explicit coupling, consider the block inverse of the inertia matrix $H = M^{-1}$. Using the Schur complement $\Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}$, the inverse blocks are given by:
+$$
+H = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+= \begin{bmatrix} \Delta^{-1} & -\Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \\ -M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} & M_{\eta\eta}^{-1} + M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \end{bmatrix}.
+$$
+The acceleration induced by the input torque $\tau = B(q)u$ is then:
+$$
+\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
+$$
+This derivation reveals two critical mechanical insights:
+1.  **Effective Rigid Inertia:** The term $H_{qq} = \Delta^{-1}$ represents the rigid-body mobility modified by the "reflected mass" of the flexible shaft. The golfer does not accelerate a rigid club, but rather a rigid handle coupled to a flexible load.
+2.  **Inertial Transmission:** The term $H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}$ acts as a transmission gain. It dictates how torque applied at the hands creates instantaneous acceleration in the shaft modes via the inertial coupling block $M_{\eta q}$. If the system were decoupled ($M_{\eta q} = 0$), joint torque would have no immediate effect on shaft bending.
+
 Let the state vector be $x = [q^T, \eta^T, \dot{q}^T, \dot{\eta}^T]^T \in \mathbb{R}^{2(n+m)}$. We define the **drift vector field** $f(x)$ and the **control input field** $g(x)$ by expanding this inverse relationship.
 
 The **drift field** $f(x)$ captures the unforced (natural) evolution of the system:
@@ -456,11 +473,11 @@ Locally, \( x(t) = (q(t), \eta(t), \qd(t), \etad(t)) \).
 
 We formally define the *Zero Velocity Counterfactual* operator using the fiber bundle structure of the state space. Let $\mathcal{Q}$ be the configuration manifold. The state evolves on the tangent bundle $T\mathcal{Q}$.
 Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection (bundle map) that maps a state vector to its configuration: $\pi(q, v) = q$.
-Let $\zeta: \mathcal{Q} \to T\mathcal{Q}$ be the *zero section* of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: $\zeta(q) = (q, 0)$.
+Let $\zeta_0: \mathcal{Q} \to T\mathcal{Q}$ be the *zero section* of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: $\zeta_0(q) = (q, 0)$.
 
 The ZVCF operator $\mathcal{Z}: T\mathcal{Q} \to T\mathcal{Q}$ is the composition of projection and zero-section embedding:
 $$
-\mathcal{Z}(x) = (\zeta \circ \pi)(x).
+\mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
 $$
 Applied to the state $x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))$, this yields:
 $$
@@ -468,7 +485,7 @@ $$
   {#eq-zvcf_state}
 $$
 
-Physically, this operation "freezes" the system in its current configuration.
+Physically, this operation "freezes" the system in its current configuration. It is a projection onto the submanifold of static states.
 
 Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
@@ -573,7 +590,7 @@ This makes it especially useful for:
   
 - analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.
 
-**Note on Dynamic Relevance.** A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale.
+**Note on Dynamic Relevance (The "Static Fallacy" Defense).** A common scientific objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g$ vs $100g$), rendering the ZVCF physically irrelevant. This critique, termed the 'Static Fallacy', misses the analytical purpose of the counterfactual. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale—it zeros out the scale so that the "weight" of the velocity-dependent terms can be measured accurately.
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
@@ -612,15 +629,28 @@ $$
 $$
 f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right) \end{bmatrix}.
 $$
+We compute the Jacobian of the drift field with respect to the control input vector $u$. Let $u_k$ be the $k$-th component of the input.
+$$
+\frac{\partial f(x)}{\partial u_k} = \begin{bmatrix}
+\frac{\partial \dot{q}}{\partial u_k} \\
+\frac{\partial \dot{\eta}}{\partial u_k} \\
+\frac{\partial \ddot{q}_{\text{drift}}}{\partial u_k} \\
+\frac{\partial \ddot{\eta}_{\text{drift}}}{\partial u_k}
+\end{bmatrix}.
+$$
 Inspection of the components reveals:
-1.  The kinematic mapping $\dot{q}, \dot{\eta}$ depends only on the state vector $x$.
-2.  The mass matrix $M(q,\eta)$ and its inverse depend only on configuration coordinates.
-3.  The Coriolis matrix $C$ is quadratic in velocities and depends on configuration.
+1.  The kinematic mapping $\dot{q}, \dot{\eta}$ are state variables, thus $\frac{\partial \dot{q}}{\partial u} = 0$.
+2.  The mass matrix $M(q,\eta)$ and its inverse depend only on configuration coordinates $q,\eta$.
+3.  The Coriolis matrix $C$ depends on $q,\eta, \dot{q}, \dot{\eta}$.
 4.  Gravitational ($G$) and elastic ($K_s \eta$) forces depend only on configuration.
 5.  Damping forces ($C_s \dot{\eta}$) depend linearly on velocity.
 
-None of these terms contain the variable $u$. The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
-$$ \nabla_u f(x) = 0. $$
+Since none of the constituent terms $M, C, G, K_s, C_s$ contain the variable $u$, the partial derivative vanishes identically:
+$$
+\frac{\partial}{\partial u} \left( -M^{-1} (C\dot{q}_{\text{sys}} + G + F_s) \right) = 0.
+$$
+The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
+$$ \nabla_u f(x) \equiv 0. $$
 This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs. $\square$
 
 For mechanical systems with generalized torques entering linearly,
