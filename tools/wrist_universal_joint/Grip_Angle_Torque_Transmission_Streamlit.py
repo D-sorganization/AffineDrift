@@ -1,5 +1,7 @@
 """Enhanced Wrist Universal Joint Model - Streamlit Web App.
 
+# mypy: disable-error-code="no-any-unimported"
+
 This is a web-based version of the enhanced PyQt6 GUI that models the wrist as a
 universal joint.
 Host this on Streamlit Cloud (free) and embed via iframe in your HTML pages.

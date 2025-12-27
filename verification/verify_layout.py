@@ -3,7 +3,7 @@ import os
 from playwright.sync_api import sync_playwright
 
 
-def verify_layout():
+def verify_layout() -> None:
     # Ensure docs directory exists and we can find the file
     docs_path = os.path.abspath("docs/articles.html")
     if not os.path.exists(docs_path):
