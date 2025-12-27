@@ -404,7 +404,9 @@ def draw_diagram(
     arc_radius = 0.12
     arc_theta = np.linspace(0, theta_grip_rad, 30)
     arc_x = arc_center_x + arc_radius * np.cos(arc_theta)
+    arc_x = cast(np.ndarray[Any, Any], arc_x)
     arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
+    arc_y = cast(np.ndarray[Any, Any], arc_y)
     ax.plot(arc_x, arc_y, "g-", linewidth=2.5, zorder=8)
 
     ax.arrow(
@@ -458,7 +460,9 @@ def draw_diagram(
     wrist_arc_end = forearm_axis_angle_for_arc
     wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
     wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
+    wrist_arc_x = cast(np.ndarray[Any, Any], wrist_arc_x)
     wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
+    wrist_arc_y = cast(np.ndarray[Any, Any], wrist_arc_y)
     ax.plot(wrist_arc_x, wrist_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
 
     # Wrist angle arrows (for arc visualization)

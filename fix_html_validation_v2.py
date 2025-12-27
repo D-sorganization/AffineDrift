@@ -3,6 +3,13 @@ import re
 
 
 def fix_file(filepath: str) -> None:
+    """Fix HTML validation issues in the given file (version 2).
+
+    Args:
+    ----
+        filepath: Path to the HTML file to fix.
+
+    """
     with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
@@ -27,6 +34,7 @@ def fix_file(filepath: str) -> None:
     # We can replace dots with dashes inside id="..." values if they look like the ones in the log.
 
     def replace_dots_in_match(match: re.Match[str]) -> str:
+        """Replace dots with dashes in the matched string."""
         return match.group(0).replace(".", "-")
 
     # Fix id="..."
@@ -40,6 +48,7 @@ def fix_file(filepath: str) -> None:
     # We'll look for <button tags that don't have type=
     # This regex is a bit simplistic but should work for the generated HTML style
     def add_button_type(match: re.Match[str]) -> str:
+        """Add type='button' attribute if missing."""
         tag = match.group(0)
         if "type=" not in tag:
             return tag.replace("<button", '<button type="button"')
@@ -49,6 +58,7 @@ def fix_file(filepath: str) -> None:
 
     # 4. Fix iframe missing title
     def add_iframe_title(match: re.Match[str]) -> str:
+        """Add title attribute to iframe if missing."""
         tag = match.group(0)
         if "title=" not in tag:
             return tag.replace("<iframe", '<iframe title="Embedded Content"')

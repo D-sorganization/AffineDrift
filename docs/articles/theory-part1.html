@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-05">
+<meta name="dcterms.date" content="2025-12-27">
 
 <title>Affine Control Interpretation of the Golf Swing – AffineDrift</title>
 <style>
@@ -72,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -122,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -212,9 +220,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -226,11 +234,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -250,10 +266,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -289,10 +305,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -321,52 +337,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -399,7 +395,7 @@ window.Quarto = {
   <ul>
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#system-definition-and-modeling-assumptions" id="toc-system-definition-and-modeling-assumptions" class="nav-link" data-scroll-target="#system-definition-and-modeling-assumptions">System Definition and Modeling Assumptions</a>
+  <li><a href="#system-definition-and-modeling-assumptions" id="toc-system-definition-and-modeling-assumptions" class="nav-link" data-scroll-target="#system-definition-and-modeling-assumptions">System definition and modeling assumptions</a>
   <ul class="collapse">
   <li><a href="#modeling-assumptions" id="toc-modeling-assumptions" class="nav-link" data-scroll-target="#modeling-assumptions">Modeling assumptions</a></li>
   <li><a href="#generalized-coordinates-and-state" id="toc-generalized-coordinates-and-state" class="nav-link" data-scroll-target="#generalized-coordinates-and-state">Generalized coordinates and state</a></li>
@@ -408,10 +404,10 @@ window.Quarto = {
   <li><a href="#handclub-kinematic-interface" id="toc-handclub-kinematic-interface" class="nav-link" data-scroll-target="#handclub-kinematic-interface">Hand–club kinematic interface</a></li>
   <li><a href="#notation-table" id="toc-notation-table" class="nav-link" data-scroll-target="#notation-table">Notation table</a></li>
   </ul></li>
-  <li><a href="#unified-control-affine-derivation-rigid-flexible-system" id="toc-unified-control-affine-derivation-rigid-flexible-system" class="nav-link" data-scroll-target="#unified-control-affine-derivation-rigid-flexible-system">Unified Control-Affine Derivation (Rigid + Flexible System)</a>
+  <li><a href="#unified-control-affine-derivation-rigid-flexible-system" id="toc-unified-control-affine-derivation-rigid-flexible-system" class="nav-link" data-scroll-target="#unified-control-affine-derivation-rigid-flexible-system">Unified control-affine derivation (rigid + flexible system)</a>
   <ul class="collapse">
-  <li><a href="#equations-of-motion" id="toc-equations-of-motion" class="nav-link" data-scroll-target="#equations-of-motion">Equations of motion</a></li>
-  <li><a href="#solving-for-accelerations" id="toc-solving-for-accelerations" class="nav-link" data-scroll-target="#solving-for-accelerations">Solving for accelerations</a></li>
+  <li><a href="#lagrangian-formulation" id="toc-lagrangian-formulation" class="nav-link" data-scroll-target="#lagrangian-formulation">Lagrangian formulation</a></li>
+  <li><a href="#control-affine-state-space-form" id="toc-control-affine-state-space-form" class="nav-link" data-scroll-target="#control-affine-state-space-form">Control-affine state space form</a></li>
   <li><a href="#first-order-state-space-form" id="toc-first-order-state-space-form" class="nav-link" data-scroll-target="#first-order-state-space-form">First-order state-space form</a></li>
   <li><a href="#structural-consequences" id="toc-structural-consequences" class="nav-link" data-scroll-target="#structural-consequences">Structural consequences</a></li>
   </ul></li>
@@ -435,7 +431,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 5, 2025</p>
+      <p class="date">December 27, 2025</p>
     </div>
   </div>
   
@@ -462,15 +458,38 @@ window.Quarto = {
 </ul>
 <p>The key mathematical observation is that the golfer–club–shaft system can be modeled as a <em>nonlinear control-affine mechanical system</em>. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels. Once the affine structure is established, counterfactual tools such as the <em>Zero Torque Counterfactual</em> (ZTCF) and <em>Zero Velocity Counterfactual</em> (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model.</p>
 <p>This paper is <em>Part I</em> of a broader project. It develops the theoretical architecture only—no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.</p>
-<p>The remainder of the paper is organized as follows. Section 1 defines the golfer–club–shaft system, the modeling assumptions, and the state and input variables. Section 2 derives the unified control-affine form for the coupled rigid–flexible system. Section 3 formalizes the drift–input decomposition. Sections 4 and 5 introduce the ZTCF and ZVCF constructions. Section 6 discusses drift invariance and input constraints. Section 7 presents a force taxonomy based on the affine mapping. Section 8 summarizes the theoretical limitations of the framework, and Section 9 concludes with directions for future theoretical and empirical work. Detailed derivations, modal approximations, and toy examples are collected in the Appendices.</p>
+<p>The remainder of the paper is organized as follows:</p>
+<ul>
+<li><strong>Section 1</strong> defines the golfer–club–shaft system, the modeling assumptions, and the state and input variables.</li>
+<li><strong>Section 2</strong> derives the unified control-affine form for the coupled rigid–flexible system.</li>
+<li><strong>Section 3</strong> formalizes the drift–input decomposition.</li>
+<li><strong>Sections 4 and 5</strong> introduce the ZTCF and ZVCF constructions.</li>
+<li><strong>Section 6</strong> discusses drift invariance and input constraints.</li>
+<li><strong>Section 7</strong> presents a force taxonomy based on the affine mapping.</li>
+<li><strong>Section 8</strong> summarizes the theoretical limitations of the framework.</li>
+<li><strong>Section 9</strong> concludes with directions for future theoretical and empirical work.</li>
+</ul>
+<p>Detailed derivations, modal approximations, and toy examples are collected in the Appendices.</p>
+<p>To rigorously distinguish ‘drift’ from ‘input’, we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary. A force that is ‘external’ to a sub-component may be ‘internal’ to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer–club–shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).</p>
 </section>
 <section id="system-definition-and-modeling-assumptions" class="level2">
-<h2 class="anchored" data-anchor-id="system-definition-and-modeling-assumptions">System Definition and Modeling Assumptions</h2>
+<h2 class="anchored" data-anchor-id="system-definition-and-modeling-assumptions">System definition and modeling assumptions</h2>
 <p>In this section we define the mathematical structure of the golfer–club–shaft system and state the modeling assumptions that bound the theoretical framework. The goal is not to fix a unique anatomical model but to specify a general class of multibody systems for which the subsequent analysis is valid.</p>
 <section id="modeling-assumptions" class="level3">
 <h3 class="anchored" data-anchor-id="modeling-assumptions">Modeling assumptions</h3>
-<p><strong>Modeling Assumptions for the Theoretical Framework</strong></p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Modeling Assumptions for the Theoretical Framework
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>These assumptions apply strictly to the theoretical decomposition presented in this manuscript (Part I). They define the mathematical boundaries of the model; empirical validation and relaxation of these assumptions will be addressed in later work.</p>
+</div>
+</div>
 <ol type="1">
 <li><strong>Rigid body segments.</strong> All anatomical segments of the golfer (torso, arms, hands) are modeled as rigid bodies with fixed mass and inertia properties.</li>
 <li><strong>Flexible shaft via finite-dimensional modal approximation.</strong> The shaft is modeled using <span class="math inline">\(m\)</span> vibration modes obtained from standard beam theory (e.g., Euler–Bernoulli or Timoshenko). Modal truncation approximates the distributed dynamics with a finite-dimensional representation.</li>
@@ -481,17 +500,16 @@ window.Quarto = {
 <li><strong>Smooth dynamical evolution (no discontinuities).</strong> Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.</li>
 <li><strong>No measurement noise or parameter uncertainty.</strong> The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.</li>
 </ol>
+<p>To translate these assumptions into a rigorous mathematical structure, we must first define the geometric manifold on which the system evolves. The assumptions above simplify the biomechanical reality into a deterministic state space, allowing us to describe the golfer not as a collection of tissues, but as a point moving along a curved surface defined by the joint constraints.</p>
 </section>
 <section id="generalized-coordinates-and-state" class="level3">
 <h3 class="anchored" data-anchor-id="generalized-coordinates-and-state">Generalized coordinates and state</h3>
-<p>The golfer’s anatomy is modeled as a multibody kinematic chain with</p>
-<p><span class="math display">\[q \in \mathbb{R}^{n}\]</span></p>
-<p>generalized coordinates, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit–Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.</p>
+<p>The golfer’s anatomy is modeled as a multibody kinematic chain with generalized coordinates <span class="math inline">\(q \in \mathbb{R}^{n}\)</span>, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit–Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible.</p>
 <p>The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates</p>
 <p><span class="math display">\[\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m},\]</span></p>
 <p>where each <span class="math inline">\(\eta_{i}\)</span> represents the amplitude of a particular bending or deformation mode.</p>
 <p>We define the full state vector as</p>
-<p><span class="math display">\[x = [q^{T}, \dot{q}^{T}, \eta^{T}, \dot{\eta}^{T}]^{T} \in \mathbb{R}^{2(n+m)}.\]</span></p>
+<p><span class="math display">\[x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in \mathbb{R}^{2(n+m)}.\]</span></p>
 <p>This state structure is chosen to support the drift vector field <span class="math inline">\(f(x)\)</span> and input vector fields <span class="math inline">\(g(x)\)</span> introduced later.</p>
 </section>
 <section id="torque-inputs-and-actuation-mapping" class="level3">
@@ -502,6 +520,7 @@ window.Quarto = {
 <p><span class="math display">\[\tau = B(q)\, u,\]</span></p>
 <p>where <span class="math inline">\(\tau \in \mathbb{R}^{n}\)</span> is the generalized joint torque vector and <span class="math inline">\(B(q) \in \mathbb{R}^{n \times m_{u}}\)</span> encodes actuation pathways and moment arms. In the simplest case, <span class="math inline">\(B\)</span> is constant; more generally, it may depend on configuration. In either case, torques enter <em>linearly</em> in the equations of motion.</p>
 <p>Throughout this paper we treat <span class="math inline">\(u\)</span> as the exogenous input at the mechanical level. The mapping from neural commands to <span class="math inline">\(u\)</span> is outside the scope of this theoretical work.</p>
+<p>While inputs drive the system, they do not act in a vacuum. The golfer must contend with—and exploit—the environmental and inertial field. The effectiveness of any torque input is conditioned by the external forces that define the system’s potential energy landscape and reaction constraints.</p>
 </section>
 <section id="external-forces-and-constraints" class="level3">
 <h3 class="anchored" data-anchor-id="external-forces-and-constraints">External forces and constraints</h3>
@@ -513,6 +532,7 @@ window.Quarto = {
 <li>elastic and damping forces from shaft deformation.</li>
 </ul>
 <p>Aerodynamic forces, impact forces, and non-holonomic contact effects are excluded under the assumptions above. Ground contact is modeled as a holonomic constraint that effectively fixes the base of the kinematic chain.</p>
+<p>The final structural element is the coupling between the actuator (the golfer) and the payload (the club). This interface is not a simple rigid connection; it is the boundary where the active, articulated chain meets the passive, flexible object.</p>
 </section>
 <section id="handclub-kinematic-interface" class="level3">
 <h3 class="anchored" data-anchor-id="handclub-kinematic-interface">Hand–club kinematic interface</h3>
@@ -553,7 +573,7 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(x \in \mathbb{R}^{2(n+m)}\)</span></td>
-<td>Full system state: <span class="math inline">\(x = [q,\dot{q},\eta,\dot{\eta}]^{T}\)</span></td>
+<td>Full system state: <span class="math inline">\(x = [q,\eta,\dot{q},\dot{\eta}]^{T}\)</span></td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(u \in \mathbb{R}^{m_{u}}\)</span></td>
@@ -628,73 +648,43 @@ window.Quarto = {
 </section>
 </section>
 <section id="unified-control-affine-derivation-rigid-flexible-system" class="level2">
-<h2 class="anchored" data-anchor-id="unified-control-affine-derivation-rigid-flexible-system">Unified Control-Affine Derivation (Rigid + Flexible System)</h2>
-<p>We now establish the control-affine structure of the coupled golfer–club–shaft system. The derivation presented here is concise; detailed algebraic expansions, block-matrix forms, and modal–rigid coupling expressions are relegated to the Appendices.</p>
-<section id="equations-of-motion" class="level3">
-<h3 class="anchored" data-anchor-id="equations-of-motion">Equations of motion</h3>
-<p>Let <span class="math inline">\(q \in \mathbb{R}^{n}\)</span> and <span class="math inline">\(\eta \in \mathbb{R}^{m}\)</span> denote the rigid-body and shaft modal coordinates, respectively, and let</p>
-<p><span class="math display">\[v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}\]</span></p>
-<p>collect their velocities. The multibody equations of motion for the coupled system can be written in the standard form</p>
-<p><span class="math display">\[M(q,\eta)
-  \begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  +
-  C(q,\dot{q},\eta,\dot{\eta})
-  \begin{bmatrix}
-    \dot{q} \\[0.2em]
-    \dot{\eta}
-  \end{bmatrix}
-  + G(q) +
-  \begin{bmatrix}
-    0 \\[0.2em]
-    K_{s}\eta + C_{s}\dot{\eta}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    \tau \\[0.2em]
-    0
-  \end{bmatrix},\]</span></p>
-<p>where:</p>
+<h2 class="anchored" data-anchor-id="unified-control-affine-derivation-rigid-flexible-system">Unified control-affine derivation (rigid + flexible system)</h2>
+<p>Defining the system’s components is only the first step. To understand the causal relationship between the golfer’s effort and the club’s motion, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane’s method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the <em>control-affine</em> structure—the energetic architecture that guarantees the golfer’s torque enters the dynamics linearly.</p>
+<section id="lagrangian-formulation" class="level3">
+<h3 class="anchored" data-anchor-id="lagrangian-formulation">Lagrangian formulation</h3>
+<p>Let <span class="math inline">\(q \in \mathbb{R}^{n}\)</span> denote the generalized coordinates of the rigid golfer model (e.g., joint angles) and <span class="math inline">\(\eta \in \mathbb{R}^{m}\)</span> denote the modal coordinates of the flexible shaft. We define the composite configuration vector as: <span class="math display">\[q_{\text{sys}} = \begin{bmatrix} q \\ \eta \end{bmatrix} \in \mathbb{R}^{n+m}.\]</span></p>
+<p>The system dynamics are derived from the Lagrangian <span class="math inline">\(\mathcal{L} = T - V\)</span>, where <span class="math inline">\(T\)</span> is the total kinetic energy and <span class="math inline">\(V\)</span> is the total potential energy.</p>
+<p>The kinetic energy is a quadratic form of the generalized velocities: <span class="math display">\[T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}},\]</span> where <span class="math inline">\(M(q_{\text{sys}})\)</span> is the symmetric, positive-definite inertia matrix. Due to the mechanical coupling between the golfer’s hand and the clubhead, this matrix has a dense block structure: <span class="math display">\[M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) &amp; M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) &amp; M_{\eta\eta}(q, \eta) \end{bmatrix}.\]</span> Here, <span class="math inline">\(M_{qq}\)</span> represents the rigid-body inertia (augmented by the shaft’s mass), <span class="math inline">\(M_{\eta\eta}\)</span> is the modal mass matrix (typically diagonal/identity by construction), and <span class="math inline">\(M_{q\eta}\)</span> represents the inertial coupling—specifically, how rigid-body accelerations induce effective forces on the flexible modes, and conversely, how flexible accelerations exert recoil forces on the hands.</p>
+<p>The potential energy <span class="math inline">\(V\)</span> consists of gravitational potential <span class="math inline">\(V_g\)</span> and elastic strain energy <span class="math inline">\(V_e\)</span>: <span class="math display">\[V(q_{\text{sys}}) = V_g(q_{\text{sys}}) + \frac{1}{2} \eta^T K_s \eta,\]</span> where <span class="math inline">\(K_s\)</span> is the positive-definite modal stiffness matrix. Note that gravity may act on the deformed shaft configuration, making <span class="math inline">\(V_g\)</span> dependent on both <span class="math inline">\(q\)</span> and <span class="math inline">\(\eta\)</span>.</p>
+<p>We also introduce the Rayleigh dissipation function to model internal shaft damping: <span class="math display">\[\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}.\]</span></p>
+<p>Applying the Euler-Lagrange operator <span class="math display">\[
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\text{sys}}}\right) - \frac{\partial \mathcal{L}}{\partial q_{\text{sys}}} + \frac{\partial \mathcal{R}}{\partial \dot{q}_{\text{sys}}} = \tau_{\text{gen}}
+\]</span> to the Lagrangian <span class="math inline">\(\mathcal{L} = \frac{1}{2} \dot{q}_{\text{sys}}^T M \dot{q}_{\text{sys}} - V(q_{\text{sys}})\)</span> yields the dynamic equations. Explicitly, the momentum term expands as: <span class="math display">\[
+\frac{d}{dt}\left( M(q_{\text{sys}}) \dot{q}_{\text{sys}} \right) = M(q_{\text{sys}}) \ddot{q}_{\text{sys}} + \dot{M}(q_{\text{sys}}) \dot{q}_{\text{sys}}.
+\]</span> The term <span class="math inline">\(-\frac{\partial \mathcal{L}}{\partial q_{\text{sys}}}\)</span> contributes the gravitational gradient <span class="math inline">\(\nabla V_g\)</span> and the velocity-dependent gradients of the kinetic energy metric. Grouping the velocity-dependent terms into the Coriolis and centrifugal matrix <span class="math inline">\(C(q_{\text{sys}}, \dot{q}_{\text{sys}})\)</span> (defined via Christoffel symbols of the first kind), we arrive at the standard second-order form: <span class="math display">\[M(q,\eta) \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} + C(q,\dot{q},\eta,\dot{\eta}) \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G(q,\eta) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.\]</span></p>
+<p>Here:</p>
 <ul>
-<li><span class="math inline">\(M(q,\eta)\)</span> is the inertia matrix for the coupled rigid–flexible system,</li>
-<li><span class="math inline">\(C(q,\dot{q},\eta,\dot{\eta})\)</span> encodes Coriolis and centrifugal effects,</li>
-<li><span class="math inline">\(G(q)\)</span> is the gravitational torque vector,</li>
-<li><span class="math inline">\(K_{s}\)</span> and <span class="math inline">\(C_{s}\)</span> are the shaft stiffness and damping matrices,</li>
-<li><span class="math inline">\(\tau = B(q) u\)</span> is the generalized torque vector induced by control inputs <span class="math inline">\(u\)</span>.</li>
+<li><span class="math inline">\(C(q,\dot{q},\eta,\dot{\eta})\)</span> represents the Coriolis and centrifugal matrix, derived from the Christoffel symbols of <span class="math inline">\(M\)</span>. A key structural property, crucial for passivity-based analysis, is that the matrix <span class="math inline">\(\dot{M} - 2C\)</span> is skew-symmetric, implying <span class="math inline">\(\dot{q}_{\text{sys}}^T (\dot{M} - 2C) \dot{q}_{\text{sys}} = 0\)</span> (conservation of energy in the absence of non-conservative forces).</li>
+<li><span class="math inline">\(G(q,\eta) = \frac{\partial V_g}{\partial q_{\text{sys}}}\)</span> is the gravitational vector.</li>
+<li><span class="math inline">\(\tau \in \mathbb{R}^n\)</span> is the generalized torque applied by the golfer.</li>
+<li>The zero vector in the lower block of the right-hand side explicitly reflects the <strong>underactuated</strong> nature of the system: the golfer cannot directly apply torque to the shaft modes.</li>
 </ul>
-<p>The shaft degrees of freedom have no direct torque inputs; all shaft forces are passive (elastic and damping).</p>
-<p>This equation is schematic but captures the structural separation between passive mechanical effects and torque inputs.</p>
 </section>
-<section id="solving-for-accelerations" class="level3">
-<h3 class="anchored" data-anchor-id="solving-for-accelerations">Solving for accelerations</h3>
-<p>Assuming <span class="math inline">\(M(q,\eta)\)</span> is nonsingular, we may solve for the accelerations:</p>
-<p><span class="math display">\[\begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})
-    \begin{bmatrix}
-      \dot{q} \\[0.2em]
-      \dot{\eta}
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\dot{\eta}
-    \end{bmatrix}
-  \right)
-  +
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\[0.2em]
-    0
-  \end{bmatrix}.\]</span></p>
-<p>Everything not multiplied by <span class="math inline">\(u\)</span> is passive; the term proportional to <span class="math inline">\(u\)</span> is the torque-driven component.</p>
+<section id="control-affine-state-space-form" class="level3">
+<h3 class="anchored" data-anchor-id="control-affine-state-space-form">Control-affine state space form</h3>
+<p>The standard second-order form derived above, while physically complete, obscures the causal separation we seek. It entangles the passive dynamics (Coriolis, gravity, elasticity) with the active inputs (torque) on the right-hand side of the equation. To isolate the control authority and reveal the system’s drift, we must invert the inertia matrix and project the dynamics onto the tangent bundle.</p>
+<p>To recast this into a control-theoretic framework, we solve for the accelerations. Since <span class="math inline">\(M\)</span> is positive-definite, it is invertible. Multiplying by <span class="math inline">\(M^{-1}\)</span>, we isolate the highest derivatives:</p>
+<p><span class="math display">\[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} \tau \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).\]</span></p>
+<p>To see this explicit coupling, consider the block inverse of the inertia matrix <span class="math inline">\(H = M^{-1}\)</span>. Using the Schur complement <span class="math inline">\(\Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}\)</span>, the inverse blocks are given by: <span class="math display">\[
+H = \begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
+= \begin{bmatrix} \Delta^{-1} &amp; -\Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \\ -M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} &amp; M_{\eta\eta}^{-1} + M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} M_{q\eta} M_{\eta\eta}^{-1} \end{bmatrix}.
+\]</span> The acceleration induced by the input torque <span class="math inline">\(\tau = B(q)u\)</span> is then: <span class="math display">\[
+\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
+\]</span> This derivation reveals two critical mechanical insights: 1. <strong>Effective Rigid Inertia:</strong> The term <span class="math inline">\(H_{qq} = \Delta^{-1}\)</span> represents the rigid-body mobility modified by the “reflected mass” of the flexible shaft. The golfer does not accelerate a rigid club, but rather a rigid handle coupled to a flexible load. 2. <strong>Inertial Transmission:</strong> The term <span class="math inline">\(H_{\eta q} = -M_{\eta\eta}^{-1} M_{\eta q} H_{qq}\)</span> acts as a transmission gain. It dictates how torque applied at the hands creates instantaneous acceleration in the shaft modes via the inertial coupling block <span class="math inline">\(M_{\eta q}\)</span>. If the system were decoupled (<span class="math inline">\(M_{\eta q} = 0\)</span>), joint torque would have no immediate effect on shaft bending. Substituting the actuation model <span class="math inline">\(\tau = B(q)u\)</span>, we can separate the terms that depend on <span class="math inline">\(u\)</span> from those that do not.</p>
 <p>Define the drift acceleration</p>
 <p><span class="math display">\[a_{\text{drift}}(x)
   =
@@ -766,11 +756,13 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="structural-consequences">Structural consequences</h3>
 <p>Three structural observations follow:</p>
 <ol type="1">
-<li><strong>Flexibility enriches drift but preserves input linearity.</strong> Shaft flexibility introduces additional passive degrees of freedom and modifies <span class="math inline">\(M, C,\)</span> and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques.</li>
+<li><strong>Flexibility enriches drift but preserves input linearity.</strong> Shaft flexibility introduces additional passive degrees of freedom and modifies <span class="math inline">\(M, C,\)</span> and the elastic terms, but all shaft forces remain in the drift. The control input still enters linearly through joint torques. This implies a fundamental underactuation: the golfer cannot directly command the shaft modes. Instead, the shaft dynamics act as an environment that must be managed. Mathematically, the shaft’s stiffness and damping are sequestered entirely within the drift vector field <span class="math inline">\(f(x)\)</span>, categorizing them rigorously as passive effects akin to gravity, rather than active outputs of the player.</li>
 <li><strong>All torque-driven effects are confined to <span class="math inline">\(g(x)u\)</span>.</strong> Any change in the dynamics caused by altering the torque profile must pass through the input term; the drift term depends only on the state and parameters.</li>
 <li><strong>The affine structure is independent of parameter values.</strong> The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion. In practice, parameter uncertainty affects the <em>accuracy</em> of the decomposition but not its algebraic form.</li>
 </ol>
 <p>This control-affine structure is the backbone for the drift–input decomposition and the counterfactual constructions developed in the next sections.</p>
+<p>By isolating the torque input <span class="math inline">\(u\)</span> into the linear term <span class="math inline">\(g(x)u\)</span>, we transform the nebulous question “how much force is active versus passive?” into a mathematically precise operation. The term <span class="math inline">\(f(x)\)</span> encapsulates the full history-dependent momentum of the system, while <span class="math inline">\(g(x)u\)</span> represents the instantaneous ability of the golfer to alter that momentum.</p>
+<p>The derivation above transforms the equations of motion from a description of <em>how the system moves</em> to a description of <em>why it moves</em>. By isolating the input <span class="math inline">\(u\)</span> in a separate linear term, we have created a causal map. The next logical step is to probe this map by asking: what happens when we turn the input off? This structural separation is what permits us to define meaningful counterfactual baselines—specifically, by asking what the system would do if <span class="math inline">\(u\)</span> were removed (the drift) or if velocity were removed (the configuration load). The next section formalizes these definitions.</p>
 
 
 </section>
@@ -1183,7 +1175,7 @@ window.Quarto = {
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded
