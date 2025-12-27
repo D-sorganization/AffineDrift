@@ -3,6 +3,13 @@ import re
 
 
 def fix_file(filepath: str) -> None:
+    """Fix HTML validation issues in the given file.
+
+    Args:
+    ----
+        filepath: Path to the HTML file to fix.
+
+    """
     with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
