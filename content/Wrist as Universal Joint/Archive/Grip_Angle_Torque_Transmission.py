@@ -18,24 +18,11 @@ matplotlib.use('QtAgg')  # Set backend explicitly for PyQt6
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QComboBox,
-    QDialog,
-    QDialogButtonBox,
-    QDoubleSpinBox,
-    QGroupBox,
-    QHBoxLayout,
-    QLabel,
-    QMainWindow,
-    QPushButton,
-    QScrollArea,
-    QSlider,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog,
+                             QDialogButtonBox, QDoubleSpinBox, QGroupBox,
+                             QHBoxLayout, QLabel, QMainWindow, QPushButton,
+                             QScrollArea, QSlider, QTextEdit, QVBoxLayout,
+                             QWidget)
 
 NOISE_TYPES = ['Golf-like Random', 'Burst', 'Step', 'Sinusoidal']
 
