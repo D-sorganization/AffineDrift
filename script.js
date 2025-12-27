@@ -483,23 +483,19 @@ document.addEventListener("DOMContentLoaded", function () {
   // Secure external links
   const currentHostname = window.location.hostname;
   document.querySelectorAll('a[href^="http"]').forEach((link) => {
-    try {
-      const url = new URL(link.href);
-      if (url.hostname !== currentHostname && url.hostname !== "") {
-        if (!link.hasAttribute("target")) {
-          link.setAttribute("target", "_blank");
-        }
-        const rel = link.getAttribute("rel") || "";
-        const parts = rel.split(" ").filter((p) => p);
-        if (!parts.includes("noopener")) parts.push("noopener");
-        if (!parts.includes("noreferrer")) parts.push("noreferrer");
-        link.setAttribute("rel", parts.join(" "));
-        if (!link.querySelector("img, svg")) {
-          link.classList.add("external-link");
-        }
+    // ⚡ Bolt Optimization: Use link.hostname instead of new URL() to avoid object creation overhead
+    if (link.hostname && link.hostname !== currentHostname) {
+      if (!link.hasAttribute("target")) {
+        link.setAttribute("target", "_blank");
       }
-    } catch (e) {
-      // Ignore invalid URLs
+      const rel = link.getAttribute("rel") || "";
+      const parts = rel.split(" ").filter((p) => p);
+      if (!parts.includes("noopener")) parts.push("noopener");
+      if (!parts.includes("noreferrer")) parts.push("noreferrer");
+      link.setAttribute("rel", parts.join(" "));
+      if (!link.querySelector("img, svg")) {
+        link.classList.add("external-link");
+      }
     }
   });
 
