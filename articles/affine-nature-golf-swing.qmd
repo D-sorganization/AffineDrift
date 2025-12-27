@@ -210,8 +210,6 @@ The standard second-order form derived above, while physically complete, obscure
 
 To recast this into a control-theoretic framework, we solve for the accelerations. Since the inertia matrix $M(q,\eta)$ is symmetric and positive-definite, it admits a unique inverse $H(q,\eta) = M^{-1}(q,\eta)$. While $M$ is defined by physical mass distributions, its inverse $H$ represents the *mobility* or *admittance* of the system---how easy it is to accelerate given applied forces. Multiplying the equations of motion by $M^{-1}$ isolates the highest derivatives:
 
-Multiplying the equations of motion by $M^{-1}$ isolates the highest derivatives:
-
 $$\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} = M^{-1} \left( \begin{bmatrix} B(q)u \\ 0 \end{bmatrix} - \underbrace{\left( C \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix} + G + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} \right)}_{\text{Total Passive Forces}} \right).$$
 
 Crucially, because the flexible modes are underactuated (zero torque in the lower block), the control input $u$ enters the dynamics *only* through the rigid-body channel. However, due to the off-diagonal coupling in $M^{-1}$, this rigid-body torque instantaneously induces accelerations in the flexible modes.
@@ -646,8 +644,6 @@ $$
 $$
 
 The drift term is entirely free of \( \tau_{input} \). Thus,
-
-Thus,
 
 $$
   f(x) =
