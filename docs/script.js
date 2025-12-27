@@ -25,7 +25,7 @@ const MAX_ID_GENERATION_ATTEMPTS = 100;
 // Helper function to debounce events
 function debounce(func, wait) {
   let timeout;
-  return function(...args) {
+  return function (...args) {
     const context = this;
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(context, args), wait);
@@ -96,15 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
           });
 
           // 🎨 Palette UX: Accessible Focus Management
-          if (!targetElement.hasAttribute('tabindex')) {
-            targetElement.setAttribute('tabindex', '-1');
+          if (!targetElement.hasAttribute("tabindex")) {
+            targetElement.setAttribute("tabindex", "-1");
           }
           targetElement.focus({ preventScroll: true });
 
           // 🎨 Palette UX: Visual confirmation flash
-          targetElement.classList.remove('target-highlight');
+          targetElement.classList.remove("target-highlight");
           void targetElement.offsetWidth; // Trigger reflow
-          targetElement.classList.add('target-highlight');
+          targetElement.classList.add("target-highlight");
         }
       }
     }
@@ -391,16 +391,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
-    const tocLinks = document.querySelectorAll('#toc-list a');
+    const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
-    const sections = document.querySelectorAll('.page-section[id], section[id]');
+    const sections = document.querySelectorAll(
+      ".page-section[id], section[id]",
+    );
     const visibleSections = new Set();
 
     const observerOptions = {
       root: null,
-      rootMargin: '-100px 0px -60% 0px',
-      threshold: 0
+      rootMargin: "-100px 0px -60% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -423,10 +425,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (activeId) {
         tocLinks.forEach((link) => {
-          if (link.getAttribute('href') === `#${activeId}`) {
-            link.classList.add('active');
+          if (link.getAttribute("href") === `#${activeId}`) {
+            link.classList.add("active");
           } else {
-            link.classList.remove('active');
+            link.classList.remove("active");
           }
         });
       }
@@ -481,23 +483,19 @@ document.addEventListener("DOMContentLoaded", function () {
   // Secure external links
   const currentHostname = window.location.hostname;
   document.querySelectorAll('a[href^="http"]').forEach((link) => {
-    try {
-      const url = new URL(link.href);
-      if (url.hostname !== currentHostname && url.hostname !== "") {
-        if (!link.hasAttribute("target")) {
-          link.setAttribute("target", "_blank");
-        }
-        const rel = link.getAttribute("rel") || "";
-        const parts = rel.split(" ").filter((p) => p);
-        if (!parts.includes("noopener")) parts.push("noopener");
-        if (!parts.includes("noreferrer")) parts.push("noreferrer");
-        link.setAttribute("rel", parts.join(" "));
-        if (!link.querySelector("img, svg")) {
-          link.classList.add("external-link");
-        }
+    // ⚡ Bolt Optimization: Use link.hostname instead of new URL() to avoid object creation overhead
+    if (link.hostname && link.hostname !== currentHostname) {
+      if (!link.hasAttribute("target")) {
+        link.setAttribute("target", "_blank");
       }
-    } catch (e) {
-      // Ignore invalid URLs
+      const rel = link.getAttribute("rel") || "";
+      const parts = rel.split(" ").filter((p) => p);
+      if (!parts.includes("noopener")) parts.push("noopener");
+      if (!parts.includes("noreferrer")) parts.push("noreferrer");
+      link.setAttribute("rel", parts.join(" "));
+      if (!link.querySelector("img, svg")) {
+        link.classList.add("external-link");
+      }
     }
   });
 
@@ -557,13 +555,15 @@ document.addEventListener("DOMContentLoaded", function () {
   updateGeometry();
 
   // Update on resize (Debounced)
-  window.addEventListener('resize', debounce(updateGeometry, 250));
+  window.addEventListener("resize", debounce(updateGeometry, 250));
 
   // Update on content changes (e.g., accordions)
-  if (typeof ResizeObserver !== 'undefined') {
-    const resizeObserver = new ResizeObserver(debounce(() => {
-      updateGeometry();
-    }, 250));
+  if (typeof ResizeObserver !== "undefined") {
+    const resizeObserver = new ResizeObserver(
+      debounce(() => {
+        updateGeometry();
+      }, 250),
+    );
     resizeObserver.observe(document.body);
   }
 
@@ -776,7 +776,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!articleContent) return;
 
     // Use the article body text for calculation
-    const text = articleContent.innerText || articleContent.textContent;
+    // ⚡ Bolt Optimization: Prefer textContent to avoid reflow (layout thrashing) from innerText
+    const text = articleContent.textContent || articleContent.innerText;
     // Simple word count estimate
     const wordCount = text.trim().split(/\s+/).length;
     // Average reading speed (words per minute)
