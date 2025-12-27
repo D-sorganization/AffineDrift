@@ -18,30 +18,29 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js" defer></script>
-<script src="site_libs/quarto-nav/headroom.min.js" defer></script>
-<script src="site_libs/clipboard/clipboard.min.js" defer></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js" defer></script>
-<script src="site_libs/quarto-search/fuse.min.js" defer></script>
-<script src="site_libs/quarto-search/quarto-search.js" defer></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js" defer></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js" defer></script>
-<script src="site_libs/quarto-html/anchor.min.js" defer></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js" defer></script>
-<script src="script.js" defer></script>
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
@@ -72,10 +71,10 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
@@ -123,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -174,9 +181,6 @@ window.MathJax = {
 </script>
 
 
-<!-- ⚡ Bolt Optimization: Preload critical assets -->
-<link rel="preload" href="styles.css" as="style">
-<link rel="preload" href="script.js" as="script">
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -184,12 +188,12 @@ window.MathJax = {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="./logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -201,143 +205,147 @@ window.MathJax = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-drake.html">
  <span class="dropdown-text">Drake</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-software.html">
  <span class="dropdown-text">Software</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-books.html">
  <span class="dropdown-text">Books</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
-  </li>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="./bibliography.html">
  <span class="dropdown-text">Bibliography</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./about.html">
  <span class="dropdown-text">About</span></a>
-  </li>
+  </li>  
         <li>
     <a class="dropdown-item" href="./collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
-  </li>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -351,9 +359,9 @@ window.MathJax = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-
+    
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content page-columns page-full column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -369,24 +377,24 @@ window.MathJax = {
 
 <div class="quarto-title-meta column-page">
 
-
-
-
+    
+  
+    
   </div>
-
+  
 
 
 </header>
 
 
-<section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="resources-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
@@ -398,9 +406,9 @@ window.MathJax = {
             <li><a href="resources-notebooklm.html">NotebookLM</a></li>
             <li><a href="bibliography.html">Bibliography</a></li>
           </ul>
-          <h3 class="sidebar-heading" style="margin-top: 2rem;">Book Categories</h3>
+          <h3 class="sidebar-heading anchored" style="margin-top: 2rem;">Book Categories</h3>
           <ul class="sidebar-links">
-            <li><a href="#robotics-screw">Robotics & Screw Theory</a></li>
+            <li><a href="#robotics-screw">Robotics &amp; Screw Theory</a></li>
             <li><a href="#nonlinear-control">Nonlinear Control</a></li>
             <li><a href="#underactuated">Underactuated Robotics</a></li>
             <li><a href="#biomechanics">Biomechanics</a></li>
@@ -414,7 +422,7 @@ window.MathJax = {
       <!-- Main Content -->
       <main class="main-content-area">
         <div class="page-section">
-          <h2 class="section-heading">Books</h2>
+          <h2 class="section-heading anchored">Books</h2>
           <p class="page-subtitle">Essential reading for robotics, screw axis theory, nonlinear control, underactuated robotics, biomechanics, golf science, and classical mechanics</p>
         </div>
 
@@ -427,18 +435,15 @@ window.MathJax = {
         </div>
 
         <div id="robotics-screw" class="category-section">
-          <h3 class="category-title">Robotics and Screw Axis Theory</h3>
+          <h3 class="category-title anchored">Robotics and Screw Axis Theory</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://books.google.com/books/publisher/content/images/frontcover/YUkTnQAACAAJ?fife=w400-h600"
-                     alt="A Mathematical Introduction to Robotic Manipulation Cover"
-                     class="book-cover"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/YUkTnQAACAAJ?fife=w400-h600" alt="A Mathematical Introduction to Robotic Manipulation Cover" class="book-cover" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>A Mathematical Introduction to Robotic Manipulation</h3>
+                <h3 class="anchored">A Mathematical Introduction to Robotic Manipulation</h3>
                 <p class="book-authors">by Richard M. Murray, Zexiang Li, and S. Shankar Sastry</p>
                 <p class="resource-description">
                   This book presents a mathematical formulation of the kinematics, dynamics, and control of robot manipulators, 
@@ -446,22 +451,11 @@ window.MathJax = {
                   applications in robotics.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/Mathematical-Introduction-Robotic-Manipulation/dp/0849379814"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/Mathematical-Introduction-Robotic-Manipulation/dp/0849379814" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/A_Mathematical_Introduction_to_Robotic_M.html?id=YUkTnQAACAAJ"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/A_Mathematical_Introduction_to_Robotic_M.html?id=YUkTnQAACAAJ" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
-                  <a href="https://www.cds.caltech.edu/~murray/mlswiki/index.php/First_edition"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://www.cds.caltech.edu/~murray/mlswiki/index.php/First_edition" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     PDF Info →</a>
                 </div>
               </div>
@@ -469,13 +463,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://books.google.com/books/publisher/content/images/frontcover/8Nw5q1pmdpEC?fife=w400-h600"
-                     alt="Rigid Body Dynamics Algorithms Cover"
-                     class="book-cover"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/8Nw5q1pmdpEC?fife=w400-h600" alt="Rigid Body Dynamics Algorithms Cover" class="book-cover" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>Rigid Body Dynamics Algorithms</h3>
+                <h3 class="anchored">Rigid Body Dynamics Algorithms</h3>
                 <p class="book-authors">by Roy Featherstone</p>
                 <p class="resource-description">
                   This book provides a comprehensive guide to the algorithms used for simulating the dynamics of rigid bodies, 
@@ -483,22 +474,11 @@ window.MathJax = {
                   spatial vector algebra.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/Rigid-Body-Dynamics-Algorithms-Featherstone/dp/0387743146"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/Rigid-Body-Dynamics-Algorithms-Featherstone/dp/0387743146" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Rigid_Body_Dynamics_Algorithms.html?id=8Nw5q1pmdpEC"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Rigid_Body_Dynamics_Algorithms.html?id=8Nw5q1pmdpEC" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
-                  <a href="https://royfeatherstone.org/"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://royfeatherstone.org/" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Author's Website →</a>
                 </div>
               </div>
@@ -506,13 +486,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://books.google.com/books/publisher/content/images/frontcover/1107156300?fife=w400-h600"
-                     alt="Modern Robotics Cover"
-                     class="book-cover"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/1107156300?fife=w400-h600" alt="Modern Robotics Cover" class="book-cover" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>Modern Robotics: Mechanics, Planning, and Control</h3>
+                <h3 class="anchored">Modern Robotics: Mechanics, Planning, and Control</h3>
                 <p class="book-authors">by Kevin M. Lynch and Frank C. Park</p>
                 <p class="resource-description">
                   This textbook offers a modern approach to the mechanics, planning, and control of robots, integrating 
@@ -520,34 +497,15 @@ window.MathJax = {
                   and control using modern mathematical tools.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/Modern-Robotics-Mechanics-Planning-Control/dp/1107156300"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/Modern-Robotics-Mechanics-Planning-Control/dp/1107156300" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Modern_Robotics.html?id=8Nw5q1pmdpEC"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Modern_Robotics.html?id=8Nw5q1pmdpEC" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
-                  <a href="http://hades.mech.northwestern.edu/images/7/7f/MR.pdf"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="http://hades.mech.northwestern.edu/images/7/7f/MR.pdf" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Free PDF →</a>
-                  <a href="https://www.youtube.com/playlist?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://www.youtube.com/playlist?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     YouTube Playlist →</a>
-                  <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Course Wiki →</a>
                 </div>
               </div>
@@ -555,12 +513,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="A Treatise on the Theory of Screws Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="A Treatise on the Theory of Screws Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>A Treatise on the Theory of Screws</h3>
+                <h3 class="anchored">A Treatise on the Theory of Screws</h3>
                 <p class="book-authors">by Robert Stawell Ball</p>
                 <p class="resource-description">
                   The foundational work on screw theory, originally published in 1900. This classic text establishes the 
@@ -568,22 +524,11 @@ window.MathJax = {
                   for understanding the geometric foundations of robotics and mechanism design.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=A+Treatise+on+the+Theory+of+Screws+Robert+Stawell+Ball"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=A+Treatise+on+the+Theory+of+Screws+Robert+Stawell+Ball" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/A_Treatise_on_the_Theory_of_Screws.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/A_Treatise_on_the_Theory_of_Screws.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
-                  <a href="https://archive.org/details/treatiseontheory00ballrich"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://archive.org/details/treatiseontheory00ballrich" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Free Archive →</a>
                 </div>
               </div>
@@ -591,12 +536,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Kinematic Geometry of Mechanisms Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Kinematic Geometry of Mechanisms Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Kinematic Geometry of Mechanisms</h3>
+                <h3 class="anchored">Kinematic Geometry of Mechanisms</h3>
                 <p class="book-authors">by Kenneth H. Hunt</p>
                 <p class="resource-description">
                   A comprehensive treatment of kinematic geometry and screw theory applied to mechanisms. This book provides 
@@ -604,16 +547,9 @@ window.MathJax = {
                   foundations laid by Ball's work on screw theory.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Kinematic+Geometry+of+Mechanisms+Hunt"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Kinematic+Geometry+of+Mechanisms+Hunt" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Kinematic_Geometry_of_Mechanisms.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Kinematic_Geometry_of_Mechanisms.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -621,12 +557,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Geometric Fundamentals of Robotics Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Geometric Fundamentals of Robotics Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Geometric Fundamentals of Robotics</h3>
+                <h3 class="anchored">Geometric Fundamentals of Robotics</h3>
                 <p class="book-authors">by J.M. Selig</p>
                 <p class="resource-description">
                   This book provides a modern treatment of the geometric foundations of robotics, including screw theory, 
@@ -634,16 +568,9 @@ window.MathJax = {
                   with modern differential geometry approaches.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Geometric+Fundamentals+of+Robotics+Selig"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Geometric+Fundamentals+of+Robotics+Selig" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Geometric_Fundamentals_of_Robotics.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Geometric_Fundamentals_of_Robotics.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -652,18 +579,15 @@ window.MathJax = {
         </div>
 
         <div id="nonlinear-control" class="category-section">
-          <h3 class="category-title">Nonlinear Control</h3>
+          <h3 class="category-title anchored">Nonlinear Control</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://books.google.com/books/publisher/content/images/frontcover/b1w4QgAACAAJ?fife=w400-h600"
-                     alt="Nonlinear Systems Cover"
-                     class="book-cover"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/b1w4QgAACAAJ?fife=w400-h600" alt="Nonlinear Systems Cover" class="book-cover" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>Nonlinear Systems</h3>
+                <h3 class="anchored">Nonlinear Systems</h3>
                 <p class="book-authors">by Hassan K. Khalil</p>
                 <p class="resource-description">
                   The most widely used textbook on nonlinear systems analysis and control. This comprehensive text covers 
@@ -671,16 +595,9 @@ window.MathJax = {
                   its clear exposition and extensive examples, it's an essential reference for students and researchers.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/Nonlinear-Systems-3rd-Hassan-Khalil/dp/0130673897"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/Nonlinear-Systems-3rd-Hassan-Khalil/dp/0130673897" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Nonlinear_Systems.html?id=b1w4QgAACAAJ"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Nonlinear_Systems.html?id=b1w4QgAACAAJ" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -688,12 +605,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Applied Nonlinear Control Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Applied Nonlinear Control Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Applied Nonlinear Control</h3>
+                <h3 class="anchored">Applied Nonlinear Control</h3>
                 <p class="book-authors">by Jean-Jacques E. Slotine and Weiping Li</p>
                 <p class="resource-description">
                   A practical and accessible introduction to nonlinear control design. This book emphasizes geometric 
@@ -701,16 +616,9 @@ window.MathJax = {
                   Particularly strong on Lyapunov-based design methods.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/Applied-Nonlinear-Control-Jean-Jacques-Slotine/dp/0130408905"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/Applied-Nonlinear-Control-Jean-Jacques-Slotine/dp/0130408905" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Applied_Nonlinear_Control.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Applied_Nonlinear_Control.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -718,12 +626,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Nonlinear Control Systems Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Nonlinear Control Systems Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Nonlinear Control Systems</h3>
+                <h3 class="anchored">Nonlinear Control Systems</h3>
                 <p class="book-authors">by Alberto Isidori</p>
                 <p class="resource-description">
                   An authoritative graduate-level text on nonlinear control systems. This book provides a rigorous 
@@ -732,22 +638,11 @@ window.MathJax = {
                   nonlinear control.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Nonlinear+Control+Systems+Isidori"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Nonlinear+Control+Systems+Isidori" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://link.springer.com/book/10.1007/978-1-84628-615-5"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://link.springer.com/book/10.1007/978-1-84628-615-5" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Springer →</a>
-                  <a href="https://books.google.com/books/about/Nonlinear_Control_Systems.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Nonlinear_Control_Systems.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -755,12 +650,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Nonlinear and Adaptive Control Design Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Nonlinear and Adaptive Control Design Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Nonlinear and Adaptive Control Design</h3>
+                <h3 class="anchored">Nonlinear and Adaptive Control Design</h3>
                 <p class="book-authors">by Miroslav Krstić, Ioannis Kanellakopoulos, and Petar V. Kokotović</p>
                 <p class="resource-description">
                   This pioneering text introduces backstepping and other adaptive control techniques for nonlinear systems. 
@@ -768,16 +661,9 @@ window.MathJax = {
                   to mechanical systems, robotics, and aerospace systems.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Nonlinear+and+Adaptive+Control+Design+Krstic"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Nonlinear+and+Adaptive+Control+Design+Krstic" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Nonlinear_and_Adaptive_Control_Design.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Nonlinear_and_Adaptive_Control_Design.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -785,12 +671,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Nonlinear Dynamical Systems and Control Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Nonlinear Dynamical Systems and Control Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Nonlinear Dynamical Systems and Control: A Lyapunov-Based Approach</h3>
+                <h3 class="anchored">Nonlinear Dynamical Systems and Control: A Lyapunov-Based Approach</h3>
                 <p class="book-authors">by Wassim M. Haddad and VijaySekhar Chellaboina</p>
                 <p class="resource-description">
                   A comprehensive treatment of nonlinear dynamical systems emphasizing Lyapunov-based stability analysis 
@@ -798,43 +682,25 @@ window.MathJax = {
                   robustness of nonlinear systems using modern mathematical tools.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Nonlinear+Dynamical+Systems+and+Control+Haddad"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Nonlinear+Dynamical+Systems+and+Control+Haddad" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Nonlinear_Dynamical_Systems_and_Control.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Nonlinear_Dynamical_Systems_and_Control.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
             </div>
 
             <div class="resource-card">
-              <h3>Open-Source Materials</h3>
+              <h3 class="anchored">Open-Source Materials</h3>
               <p class="resource-description">
                 Several open-source tools and libraries are available for nonlinear control research and implementation:
               </p>
               <div class="book-links">
-                <a href="https://arxiv.org/abs/1801.04290"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://arxiv.org/abs/1801.04290" class="resource-link" target="_blank" rel="noopener">
                   Control Toolbox (C++) →</a>
-                <a href="https://arxiv.org/abs/1910.13753"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener"
-                   style="margin-left: 1rem;">
+                <a href="https://arxiv.org/abs/1910.13753" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                   acados (Optimal Control) →</a>
-                <a href="https://arxiv.org/abs/2208.13172"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener"
-                   style="margin-left: 1rem;">
+                <a href="https://arxiv.org/abs/2208.13172" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                   xMLC (Machine Learning Control) →</a>
               </div>
             </div>
@@ -842,19 +708,15 @@ window.MathJax = {
         </div>
 
         <div id="underactuated" class="category-section">
-          <h3 class="category-title">Underactuated Robotics</h3>
+          <h3 class="category-title anchored">Underactuated Robotics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://underactuated.mit.edu/cover.png"
-                     alt="Underactuated Robotics Cover"
-                     class="book-cover"
-                     loading="lazy"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://underactuated.mit.edu/cover.png" alt="Underactuated Robotics Cover" class="book-cover" loading="lazy" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>Underactuated Robotics</h3>
+                <h3 class="anchored">Underactuated Robotics</h3>
                 <p class="book-authors">by Russ Tedrake</p>
                 <p class="resource-description">
                   A comprehensive open-source textbook on underactuated robotics covering algorithms for walking, running, swimming, 
@@ -863,22 +725,11 @@ window.MathJax = {
                   online with accompanying lecture videos and software tools.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Underactuated+Robotics+Tedrake"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Underactuated+Robotics+Tedrake" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://underactuated.mit.edu/"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://underactuated.mit.edu/" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Free Online Textbook →</a>
-                  <a href="https://www.youtube.com/playlist?list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://www.youtube.com/playlist?list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     MIT Course Videos →</a>
                 </div>
               </div>
@@ -886,12 +737,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Dynamics of Underactuated Multibody Systems Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Dynamics of Underactuated Multibody Systems Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Dynamics of Underactuated Multibody Systems</h3>
+                <h3 class="anchored">Dynamics of Underactuated Multibody Systems</h3>
                 <p class="book-authors">by Robert Seifried</p>
                 <p class="resource-description">
                   This book provides a comprehensive treatment of the dynamics, modeling, control, and optimal design of 
@@ -899,22 +748,11 @@ window.MathJax = {
                   valuable for researchers and engineers working with systems that have fewer actuators than degrees of freedom.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Dynamics+of+Underactuated+Multibody+Systems+Seifried"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Dynamics+of+Underactuated+Multibody+Systems+Seifried" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://link.springer.com/book/10.1007/978-3-319-01228-5"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://link.springer.com/book/10.1007/978-3-319-01228-5" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Springer →</a>
-                  <a href="https://books.google.com/books/about/Dynamics_of_Underactuated_Multibody_Syste.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Dynamics_of_Underactuated_Multibody_Syste.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -922,12 +760,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Motion Control of Underactuated Mechanical Systems Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Motion Control of Underactuated Mechanical Systems Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Motion Control of Underactuated Mechanical Systems</h3>
+                <h3 class="anchored">Motion Control of Underactuated Mechanical Systems</h3>
                 <p class="book-authors">by Javier Moreno-Valenzuela and Carlos Aguilar-Avelar</p>
                 <p class="resource-description">
                   This book presents a unified perspective on the control of underactuated mechanical systems, including 
@@ -936,22 +772,11 @@ window.MathJax = {
                   wheel pendulum.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Motion+Control+of+Underactuated+Mechanical+Systems"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Motion+Control+of+Underactuated+Mechanical+Systems" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://link.springer.com/book/10.1007/978-3-319-58319-8"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://link.springer.com/book/10.1007/978-3-319-58319-8" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Springer →</a>
-                  <a href="https://books.google.com/books/about/Motion_Control_of_Underactuated_Mechanical.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Motion_Control_of_Underactuated_Mechanical.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -959,12 +784,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Underactuated Robotic Hands Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Underactuated Robotic Hands Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Underactuated Robotic Hands</h3>
+                <h3 class="anchored">Underactuated Robotic Hands</h3>
                 <p class="book-authors">by Lionel Birglen, Thierry Laliberté, and Clément Gosselin</p>
                 <p class="resource-description">
                   A comprehensive treatment of the design and control of underactuated robotic hands. This book explores 
@@ -972,22 +795,11 @@ window.MathJax = {
                   degrees of freedom, making it essential for understanding adaptive grasping mechanisms.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Underactuated+Robotic+Hands+Birglen"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Underactuated+Robotic+Hands+Birglen" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://link.springer.com/book/10.1007/978-3-540-77459-4"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://link.springer.com/book/10.1007/978-3-540-77459-4" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Springer →</a>
-                  <a href="https://books.google.com/books/about/Underactuated_Robotic_Hands.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Underactuated_Robotic_Hands.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -996,18 +808,15 @@ window.MathJax = {
         </div>
 
         <div id="biomechanics" class="category-section">
-          <h3 class="category-title">Biomechanics</h3>
+          <h3 class="category-title anchored">Biomechanics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="https://books.google.com/books/publisher/content/images/frontcover/0470398183?fife=w400-h600"
-                     alt="Biomechanics and Motor Control of Human Movement Cover"
-                     class="book-cover"
-                     onerror="this.src='static/images/book_placeholder.svg'">
+                <img src="https://books.google.com/books/publisher/content/images/frontcover/0470398183?fife=w400-h600" alt="Biomechanics and Motor Control of Human Movement Cover" class="book-cover" onerror="this.src='static/images/book_placeholder.svg'">
               </div>
               <div class="resource-content">
-                <h3>Biomechanics and Motor Control of Human Movement</h3>
+                <h3 class="anchored">Biomechanics and Motor Control of Human Movement</h3>
                 <p class="book-authors">by David A. Winter</p>
                 <p class="resource-description">
                   The classic textbook on human biomechanics and motor control. This comprehensive text covers the mechanical 
@@ -1016,16 +825,9 @@ window.MathJax = {
                   movement biomechanics.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Biomechanics+and+Motor+Control+of+Human+Movement+Winter"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Biomechanics+and+Motor+Control+of+Human+Movement+Winter" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Biomechanics_and_Motor_Control_of_Human_Mo.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Biomechanics_and_Motor_Control_of_Human_Mo.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1033,12 +835,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Basic Biomechanics of the Musculoskeletal System Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Basic Biomechanics of the Musculoskeletal System Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Basic Biomechanics of the Musculoskeletal System</h3>
+                <h3 class="anchored">Basic Biomechanics of the Musculoskeletal System</h3>
                 <p class="book-authors">by Margareta Nordin and Victor H. Frankel</p>
                 <p class="resource-description">
                   A fundamental text on musculoskeletal biomechanics that provides a clear introduction to the mechanical 
@@ -1046,16 +846,9 @@ window.MathJax = {
                   mechanics, and applications to clinical problems, making it essential for students and practitioners.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Basic+Biomechanics+of+the+Musculoskeletal+System+Nordin"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Basic+Biomechanics+of+the+Musculoskeletal+System+Nordin" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Basic_Biomechanics_of_the_Musculoskeletal_S.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Basic_Biomechanics_of_the_Musculoskeletal_S.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1063,12 +856,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Biomechanics of Sport and Exercise Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Biomechanics of Sport and Exercise Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Biomechanics of Sport and Exercise</h3>
+                <h3 class="anchored">Biomechanics of Sport and Exercise</h3>
                 <p class="book-authors">by Peter M. McGinnis</p>
                 <p class="resource-description">
                   A comprehensive introduction to biomechanics applied to sport and exercise. This text covers fundamental 
@@ -1076,16 +867,9 @@ window.MathJax = {
                   It's widely used in kinesiology and exercise science programs.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Biomechanics+of+Sport+and+Exercise+McGinnis"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Biomechanics+of+Sport+and+Exercise+McGinnis" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Biomechanics_of_Sport_and_Exercise.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Biomechanics_of_Sport_and_Exercise.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1093,12 +877,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Fundamentals of Biomechanics Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Fundamentals of Biomechanics Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Fundamentals of Biomechanics</h3>
+                <h3 class="anchored">Fundamentals of Biomechanics</h3>
                 <p class="book-authors">by Duane Knudson</p>
                 <p class="resource-description">
                   An accessible introduction to biomechanics that emphasizes practical applications and quantitative analysis. 
@@ -1106,16 +888,9 @@ window.MathJax = {
                   and ergonomics. It's known for its clear explanations and practical examples.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Fundamentals+of+Biomechanics+Knudson"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Fundamentals+of+Biomechanics+Knudson" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Fundamentals_of_Biomechanics.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Fundamentals_of_Biomechanics.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1123,12 +898,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Kinetics of Human Motion Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Kinetics of Human Motion Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Kinetics of Human Motion</h3>
+                <h3 class="anchored">Kinetics of Human Motion</h3>
                 <p class="book-authors">by Vladimir M. Zatsiorsky</p>
                 <p class="resource-description">
                   A comprehensive treatment of the kinetics of human movement, covering force, torque, momentum, and energy 
@@ -1136,16 +909,9 @@ window.MathJax = {
                   essential for understanding the dynamics of human movement.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Kinetics+of+Human+Motion+Zatsiorsky"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Kinetics+of+Human+Motion+Zatsiorsky" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/Kinetics_of_Human_Motion.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Kinetics_of_Human_Motion.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1153,12 +919,10 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Introductory Biomechanics Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Introductory Biomechanics Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Introductory Biomechanics</h3>
+                <h3 class="anchored">Introductory Biomechanics</h3>
                 <p class="book-authors">by C. Ross Ethier and Craig A. Simmons</p>
                 <p class="resource-description">
                   An integrated text designed for engineering students that provides a broad overview of biomechanics, covering 
@@ -1167,22 +931,11 @@ window.MathJax = {
                   a mechanical viewpoint.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Introductory+Biomechanics+Ethier+Simmons"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Introductory+Biomechanics+Ethier+Simmons" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://www.cambridge.org/core/books/introductory-biomechanics/79733231375F00B75C84A47CCABB9386"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://www.cambridge.org/core/books/introductory-biomechanics/79733231375F00B75C84A47CCABB9386" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Cambridge →</a>
-                  <a href="https://books.google.com/books/about/Introductory_Biomechanics.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/Introductory_Biomechanics.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1191,7 +944,7 @@ window.MathJax = {
         </div>
 
         <div id="golf-science" class="category-section">
-          <h3 class="category-title">Golf Science</h3>
+          <h3 class="category-title anchored">Golf Science</h3>
           
           <div class="resource-grid">
             <div class="resource-card">
@@ -1203,33 +956,24 @@ window.MathJax = {
         </div>
 
         <div id="classical-mechanics" class="category-section">
-          <h3 class="category-title">Classical Mechanics</h3>
+          <h3 class="category-title anchored">Classical Mechanics</h3>
           
           <div class="resource-grid">
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="Lagrangian Mechanics for the Non-Physicist Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="Lagrangian Mechanics for the Non-Physicist Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>Lagrangian Mechanics for the Non-Physicist</h3>
+                <h3 class="anchored">Lagrangian Mechanics for the Non-Physicist</h3>
                 <p class="book-authors">by Michael T. Vaughn</p>
                 <p class="resource-description">
                   An accessible introduction to Lagrangian mechanics tailored for readers without a physics background. 
                   This book provides a clear explanation of the fundamental principles and applications of Lagrangian mechanics.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/s?k=Lagrangian+Mechanics+for+the+Non-Physicist+Vaughn"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/s?k=Lagrangian+Mechanics+for+the+Non-Physicist+Vaughn" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books?q=Lagrangian+Mechanics+for+the+Non-Physicist"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books?q=Lagrangian+Mechanics+for+the+Non-Physicist" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1237,28 +981,19 @@ window.MathJax = {
 
             <div class="resource-card has-media">
               <div class="resource-media">
-                <img src="static/images/book_placeholder.svg"
-                     alt="No Nonsense Classical Mechanics Cover"
-                     class="book-cover">
+                <img src="static/images/book_placeholder.svg" alt="No Nonsense Classical Mechanics Cover" class="book-cover">
               </div>
               <div class="resource-content">
-                <h3>No Nonsense Classical Mechanics</h3>
+                <h3 class="anchored">No Nonsense Classical Mechanics</h3>
                 <p class="book-authors">by Jakob Schwichtenberg</p>
                 <p class="resource-description">
                   A straightforward guide to classical mechanics that focuses on clarity and practical understanding. 
                   This book presents classical mechanics concepts in a clear, concise manner without unnecessary complexity.
                 </p>
                 <div class="book-links">
-                  <a href="https://www.amazon.com/No-Nonsense-Classical-Mechanics-Jakob-Schwichtenberg/dp/395845425X"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener">
+                  <a href="https://www.amazon.com/No-Nonsense-Classical-Mechanics-Jakob-Schwichtenberg/dp/395845425X" class="resource-link" target="_blank" rel="noopener">
                     Amazon →</a>
-                  <a href="https://books.google.com/books/about/No_Nonsense_Classical_Mechanics.html"
-                     class="resource-link"
-                     target="_blank"
-                     rel="noopener"
-                     style="margin-left: 1rem;">
+                  <a href="https://books.google.com/books/about/No_Nonsense_Classical_Mechanics.html" class="resource-link" target="_blank" rel="noopener" style="margin-left: 1rem;">
                     Preview →</a>
                 </div>
               </div>
@@ -1271,7 +1006,7 @@ window.MathJax = {
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Books</h3>
+          <h3 class="sidebar-heading anchored">Recent Books</h3>
           <ul class="sidebar-links" id="books-history-list">
             <li class="history-empty">No recent books yet</li>
           </ul>
@@ -1331,7 +1066,7 @@ document.addEventListener('DOMContentLoaded', function() {
     anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {
+        if (clz.startsWith('code-annotation-')) {                     
           return true;
         }
       }
@@ -1351,11 +1086,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
         button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button,
-          { trigger: "manual",
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
             offset: [0, -8]});
-        tooltip.show();
+        tooltip.show();    
       }
       setTimeout(function() {
         if (tooltip) {
@@ -1432,7 +1167,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (onUntriggerFn) {
         config.onUntrigger = onUntriggerFn;
       }
-      window.tippy(el, config);
+      window.tippy(el, config); 
     }
     const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
     for (var i=0; i<noterefs.length; i++) {
@@ -1507,7 +1242,7 @@ document.addEventListener('DOMContentLoaded', function() {
       tippyHover(xref, undefined, function(instance) {
         instance.disable();
         let url = xref.getAttribute('href');
-        let hash = undefined;
+        let hash = undefined; 
         if (url.startsWith('#')) {
           hash = url;
         } else {
@@ -1535,7 +1270,7 @@ document.addEventListener('DOMContentLoaded', function() {
               if (note !== null) {
                 const html = processXRef(id, note);
                 instance.setContent(html);
-              }
+              } 
             }).finally(() => {
               instance.enable();
               instance.show();
@@ -1559,7 +1294,7 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               const html = processXRef(null, note);
               instance.setContent(html);
-            }
+            } 
           }).finally(() => {
             instance.enable();
             instance.show();
@@ -1599,7 +1334,7 @@ document.addEventListener('DOMContentLoaded', function() {
               height = bottom - top;
             }
             if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it
+              // cook up a div (if necessary) and position it 
               let div = window.document.getElementById("code-annotation-line-highlight");
               if (div === null) {
                 div = window.document.createElement("div");
@@ -1726,6 +1461,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

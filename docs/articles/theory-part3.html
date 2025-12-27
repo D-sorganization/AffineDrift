@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-05">
+<meta name="dcterms.date" content="2025-12-27">
 
 <title>Affine Control Interpretation of the Golf Swing — Part 3 – AffineDrift</title>
 <style>
@@ -72,9 +72,9 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -122,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -212,9 +220,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -226,11 +234,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -250,10 +266,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -289,10 +305,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -321,52 +337,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -401,7 +397,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#definition-of-drift-invariance" id="toc-definition-of-drift-invariance" class="nav-link" data-scroll-target="#definition-of-drift-invariance">Definition of drift invariance</a></li>
   <li><a href="#consequences-of-drift-invariance" id="toc-consequences-of-drift-invariance" class="nav-link" data-scroll-target="#consequences-of-drift-invariance">Consequences of drift invariance</a></li>
-  <li><a href="#velocity-dependence-vs--torque-dependence" id="toc-velocity-dependence-vs--torque-dependence" class="nav-link" data-scroll-target="#velocity-dependence-vs.-torque-dependence">Velocity dependence vs.&nbsp;torque dependence</a></li>
+  <li><a href="#velocity-dependence-vs.-torque-dependence" id="toc-velocity-dependence-vs.-torque-dependence" class="nav-link" data-scroll-target="#velocity-dependence-vs.-torque-dependence">Velocity dependence vs.&nbsp;torque dependence</a></li>
   <li><a href="#input-constraints" id="toc-input-constraints" class="nav-link" data-scroll-target="#input-constraints">Input constraints</a></li>
   <li><a href="#interpretational-scope" id="toc-interpretational-scope" class="nav-link" data-scroll-target="#interpretational-scope">Interpretational scope</a></li>
   </ul></li>
@@ -445,7 +441,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 5, 2025</p>
+      <p class="date">December 27, 2025</p>
     </div>
   </div>
   
@@ -459,14 +455,24 @@ window.Quarto = {
 
 <section id="drift-invariance-and-input-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="drift-invariance-and-input-constraints">Drift Invariance and Input Constraints</h2>
+<p>In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term <span class="math inline">\(f(x)\)</span> and an input term <span class="math inline">\(g(x)u\)</span>. However, this separation is only causally valid if the “passive” term is truly independent of the “active” term.</p>
+<p>We have now constructed two powerful counterfactual baselines: the ZTCF (Part II) to isolate passive momentum history, and the ZVCF (Part II) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the ‘passive’ dynamics of the system are robust to the application of ‘active’ force. If the act of applying torque fundamentally altered the nature of the drift field <span class="math inline">\(f(x)\)</span>—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.</p>
 <p>The drift–input decomposition</p>
 <p><span class="math display">\[\dot{x} = f(x) + g(x)u\]</span></p>
-<p>is meaningful only if the drift term <span class="math inline">\(f(x)\)</span> is <em>invariant</em> with respect to the instantaneous torque input. This section formalizes that property and explains its consequences. We also discuss input constraints and their impact on the decomposition.</p>
+<p>is therefore meaningful only if the drift term <span class="math inline">\(f(x)\)</span> is <em>invariant</em> with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.</p>
 <section id="definition-of-drift-invariance" class="level3">
 <h3 class="anchored" data-anchor-id="definition-of-drift-invariance">Definition of drift invariance</h3>
 <p>The drift vector field <span class="math inline">\(f(x)\)</span> is said to be <em>input-invariant</em> if</p>
-<p><span class="math display">\[f(x) \ \text{is independent of} \ u,\]</span></p>
-<p>for all states <span class="math inline">\(x\)</span> in the domain of interest.</p>
+<p><span class="math display">\[\frac{\partial f(x)}{\partial u} = 0,\]</span></p>
+<p>meaning <span class="math inline">\(f(x)\)</span> depends only on the state <span class="math inline">\(x\)</span> and model parameters, and is strictly independent of the instantaneous control input <span class="math inline">\(u\)</span>.</p>
+<p>To see this rigorously, we state the property as a formal proposition.</p>
+<p><strong>Proposition 1 (Drift Invariance).</strong> The drift vector field <span class="math inline">\(f(x)\)</span> is invariant with respect to the control input <span class="math inline">\(u\)</span>, i.e., <span class="math display">\[
+\nabla_u f(x) \equiv 0.
+\]</span></p>
+<p><em>Proof.</em> Recall the definition of <span class="math inline">\(f(x)\)</span> derived in Part I: <span class="math display">\[
+f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+\]</span> The terms constituting <span class="math inline">\(f(x)\)</span> are: 1. <strong>Kinematic rates</strong> <span class="math inline">\(\dot{q}, \dot{\eta}\)</span>, which are state variables. 2. <strong>Inertia matrix</strong> <span class="math inline">\(M(q,\eta)\)</span>, which depends only on configuration. 3. <strong>Coriolis/Centrifugal matrix</strong> <span class="math inline">\(C(x)\)</span>, which depends on state. 4. <strong>Potential forces</strong> <span class="math inline">\(G\)</span> and <span class="math inline">\(F_s\)</span>, which depend on state.</p>
+<p>The control input <span class="math inline">\(u\)</span> enters the equations of motion <em>only</em> through the term <span class="math inline">\(B(q)u\)</span>, which is isolated in the input vector field <span class="math inline">\(g(x)\)</span>. Since no term in <span class="math inline">\(f(x)\)</span> has functional dependence on <span class="math inline">\(u\)</span>, the partial derivative <span class="math inline">\(\frac{\partial f(x)}{\partial u}\)</span> is identically zero. <span class="math inline">\(\square\)</span></p>
 <p>For mechanical systems with generalized torques entering linearly,</p>
 <p><span class="math display">\[\ddot{q} = M^{-1}(q,\eta)\big(\tau - h(q,\dot{q},\eta,\dot{\eta})\big),\]</span></p>
 <p>where <span class="math inline">\(h(\cdot)\)</span> collects all passive terms, linearity of <span class="math inline">\(\tau\)</span> ensures that</p>
@@ -508,8 +514,8 @@ window.Quarto = {
 <p>changes <span class="math inline">\(f(x)\)</span>.</p>
 <p>In contrast, changing the torque profile <span class="math inline">\(u(t)\)</span> leaves <span class="math inline">\(f(x)\)</span> unchanged. This separation is the foundation for counterfactual analysis, optimization of torque profiles, and sensitivity studies.</p>
 </section>
-<section id="velocity-dependence-vs--torque-dependence" class="level3">
-<h3 class="anchored" data-anchor-id="velocity-dependence-vs--torque-dependence">Velocity dependence vs.&nbsp;torque dependence</h3>
+<section id="velocity-dependence-vs.-torque-dependence" class="level3">
+<h3 class="anchored" data-anchor-id="velocity-dependence-vs.-torque-dependence">Velocity dependence vs.&nbsp;torque dependence</h3>
 <p>Although the drift is independent of torque, it may depend strongly on velocity. In particular,</p>
 <ul>
 <li>Coriolis and centrifugal forces scale with velocity,</li>
@@ -555,10 +561,12 @@ window.Quarto = {
 <li>state-dependent strength variations.</li>
 </ul>
 <p>These appear in the present framework only through the feasible input set <span class="math inline">\(\mathcal{U}(x)\)</span>. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.</p>
+<p>Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span> are not just vector fields; they are containers for specific physical phenomena—gravity, centrifugal force, muscular effort—that can now be labeled with precision.</p>
 </section>
 </section>
 <section id="force-and-torque-taxonomy-via-the-affine-mapping" class="level2">
 <h2 class="anchored" data-anchor-id="force-and-torque-taxonomy-via-the-affine-mapping">Force and Torque Taxonomy via the Affine Mapping</h2>
+<p>Having established the control-affine form (Part I), defined the physical decomposition (Part II), constructed the necessary temporal and configurational counterfactuals (Part II), and verified the invariance of the passive baseline (Section 1 of this Part), we can now synthesize these elements into a unified <em>Force Taxonomy</em>. This taxonomy is not merely a descriptive list; it is the direct algebraic consequence of the framework. It provides a comprehensive map for attributing every newton of force in the swing to its specific causal origin—whether it arises from the system’s shape (Configuration Drift), its motion (Velocity Drift), or the golfer’s immediate intent (Input).</p>
 <p>With the drift–input decomposition formalized, we now classify the generalized forces acting within the golfer–club–shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form</p>
 <p><span class="math display">\[\dot{x} = f(x) + g(x)u.\]</span></p>
 <p>It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.</p>
@@ -587,7 +595,9 @@ window.Quarto = {
 <p><span class="math display">\[\tau_{\mathrm{ZVCF}}(t)
   =
   \tau_{\text{config}}\big(q(t),\eta(t)\big).\]</span></p>
-<p>These forces include:</p>
+<p>Explicitly, this torque corresponds to the gradient of the potential energy (gravity and elasticity) projected into the joint space: <span class="math display">\[
+\tau_{\text{config}} = G(q,\eta) + J_{s}^T K_s \eta,
+\]</span> where <span class="math inline">\(G(q,\eta)\)</span> is the generalized gravitational vector and <span class="math inline">\(J_s^T K_s \eta\)</span> represents the projection of shaft elastic forces onto the rigid-body coordinates. These forces include:</p>
 <ul>
 <li>gravitational torques,</li>
 <li>elastic shaft forces (restoring stiffness),</li>
@@ -602,10 +612,13 @@ window.Quarto = {
 <p><span class="math display">\[\tau_{\mathrm{vel.\,drift}}(t)
   =
   \tau_{\text{drift}}(t) - \tau_{\mathrm{ZVCF}}(t).\]</span></p>
-<p>Velocity-dependent drift forces include:</p>
+<p>Analytically, this term isolates the velocity-dependent nonlinearities: <span class="math display">\[
+\tau_{\mathrm{vel.\,drift}} = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + \text{Damping Terms}.
+\]</span> Velocity-dependent drift forces include:</p>
 <ul>
 <li>Coriolis and centrifugal forces,</li>
 <li>inertial coupling terms induced by multi-segment motion,</li>
+<li>geometric stiffness (centrifugal stiffening) forces, which act as a velocity-dependent restoration term,</li>
 <li>shaft damping forces proportional to <span class="math inline">\(\dot{\eta}\)</span>,</li>
 <li>any passive joint damping.</li>
 </ul>
@@ -706,6 +719,7 @@ window.Quarto = {
 <li>mapping of how individual torque bursts shape the club path.</li>
 </ul>
 <p>This taxonomy completes the theoretical framework required to interpret forces and torques in the golf swing using control-affine decomposition.</p>
+<p>This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Section 2. We now catalogue these limitations to define the precise scope of validity for our causal claims.</p>
 </section>
 </section>
 <section id="limitations-theoretical-scope" class="level2">
@@ -714,7 +728,7 @@ window.Quarto = {
 <section id="model-form-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="model-form-limitations">Model-form limitations</h3>
 <p><strong>Rigid-body anatomical representation.</strong></p>
-<p>All anatomical segments of the golfer are modeled as rigid bodies with fixed inertial properties. Compliance in soft tissue, joint capsules, musculotendinous structures, and skin-mounted marker dynamics are excluded. These omissions affect how accurately inverse dynamics relates to true joint torques and internal forces.</p>
+<p>All anatomical segments of the golfer (torso, arms, hands) are modeled as rigid bodies with fixed inertial properties. Compliance in soft tissue, joint capsules, musculotendinous structures, and skin-mounted marker dynamics are excluded. These omissions affect how accurately inverse dynamics relates to true joint torques and internal forces.</p>
 <p><strong>Finite-dimensional shaft model.</strong></p>
 <p>The shaft is represented using a truncated set of bending modes. Modal truncation introduces approximation error, particularly during high-frequency events (late downswing, impact). Although the affine structure is preserved, the magnitude and timing of drift forces may shift with a more complete flexible-body representation.</p>
 <p><strong>No aerodynamic or contact modeling.</strong></p>
@@ -738,6 +752,8 @@ window.Quarto = {
 </section>
 <section id="data-and-parameter-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="data-and-parameter-limitations">Data and parameter limitations</h3>
+<p><strong>Parameter identification and causality.</strong></p>
+<p>When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the “effective” impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the “Drift” term <span class="math inline">\(f(x)\)</span> represents the dynamics of the “Effective Plant” conditioned on the task, and the clean causal separation between input and plant is approximate.</p>
 <p><strong>Exact parameter knowledge.</strong></p>
 <p>The decomposition assumes perfect knowledge of:</p>
 <ul>
@@ -816,6 +832,7 @@ Comparing a player’s measured forces to the drift-only predictions (ZTCF and Z
 <p>For equipment professionals, the framework provides a mechanically grounded way to analyze how shaft stiffness, club mass distribution, and player-specific kinematics interact. The drift–input decomposition allows shaft behavior and player torque strategies to be examined independently, improving the matching process between golfers and equipment.</p>
 <p>For researchers, the approach offers a reproducible method for quantifying torque effectiveness, evaluating technique variability, and linking high-speed motion capture to causal mechanical explanations of performance.</p>
 <p>Overall, the framework enables clearer interpretation of how golfers generate speed, control the club, and use their bodies efficiently—supporting more targeted coaching, equipment fitting, and player development.</p>
+<p>For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, including the block-matrix manipulations and modal expansion details that justify the statements made in Parts I and II, we refer to the detailed derivations collected in the Appendices (Part IV).</p>
 
 
 </section>
@@ -1227,7 +1244,7 @@ Comparing a player’s measured forces to the drift-only predictions (ZTCF and Z
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

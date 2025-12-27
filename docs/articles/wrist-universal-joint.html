@@ -73,9 +73,9 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -123,7 +123,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -213,9 +221,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -227,11 +235,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -251,10 +267,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -290,10 +306,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -322,52 +338,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -443,6 +439,13 @@ window.Quarto = {
   <li><a href="#limitations-of-the-analysis" id="toc-limitations-of-the-analysis" class="nav-link" data-scroll-target="#limitations-of-the-analysis">Limitations of the Analysis</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#theoretical-synthesis" id="toc-theoretical-synthesis" class="nav-link" data-scroll-target="#theoretical-synthesis">Theoretical Synthesis</a>
+  <ul class="collapse">
+  <li><a href="#affine-decomposition-of-constraint-forces" id="toc-affine-decomposition-of-constraint-forces" class="nav-link" data-scroll-target="#affine-decomposition-of-constraint-forces">Affine Decomposition of Constraint Forces</a></li>
+  <li><a href="#geometric-rejection-of-disturbance" id="toc-geometric-rejection-of-disturbance" class="nav-link" data-scroll-target="#geometric-rejection-of-disturbance">Geometric Rejection of Disturbance</a></li>
+  <li><a href="#the-null-space-of-performance" id="toc-the-null-space-of-performance" class="nav-link" data-scroll-target="#the-null-space-of-performance">The Null Space of Performance</a></li>
+  <li><a href="#conceptual-cross-references" id="toc-conceptual-cross-references" class="nav-link" data-scroll-target="#conceptual-cross-references">Conceptual Cross-References</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -908,6 +911,29 @@ window.Quarto = {
 <p>This analysis bridges robotics theory (constraint dynamics, universal joint mechanics) and golf biomechanics, providing a rigorous framework for understanding a widely-taught but poorly-understood fundamental principle. While empirical validation presents challenges, the hypothesis generates clear, testable predictions and provides mechanistic insight into force transmission in complex kinematic chains.</p>
 <p>More broadly, this work illustrates the value of constraint analysis in biomechanics. Constraint forces and torques—often overlooked because they perform no work—play critical roles in force transmission and control. Understanding these passive mechanical pathways provides insight into both optimal technique and the fundamental challenges faced by performers attempting to control complex, nonlinear multi-body systems.</p>
 <p>The golf swing presents an extraordinary challenge: generating maximum clubhead speed while precisely controlling face orientation using a redundant, nonlinear kinematic chain with multiple passive degrees of freedom. By recognizing how grip orientation influences constraint torque transmission, we gain insight into one mechanism through which skilled performers may simplify this control problem—not through perfect coordination of all variables, but through mechanical configurations that naturally channel variability into performance-irrelevant directions.</p>
+</section>
+<section id="theoretical-synthesis" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-synthesis">Theoretical Synthesis</h2>
+<section id="affine-decomposition-of-constraint-forces" class="level3">
+<h3 class="anchored" data-anchor-id="affine-decomposition-of-constraint-forces">Affine Decomposition of Constraint Forces</h3>
+<p>Within the control-affine formalism <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>, constraint torques occupy a unique position. Although they arise from the interaction of input forces, they are mathematically orthogonal to the local control inputs <span class="math inline">\(u_{wrist}\)</span>. Consequently, they function as a component of the <strong>Velocity Drift</strong> (per the Part 3 Force Taxonomy)—a passive dynamic response that the controller must anticipate but cannot directly command. The ‘uncontrollability’ of the forearm rotation axis at the wrist means that the dimensionality of the control input (<span class="math inline">\(m=2\)</span>) is lower than the dimensionality of the operational space (<span class="math inline">\(n=3\)</span>), defining the wrist as a classic <strong>underactuated subsystem</strong>.</p>
+</section>
+<section id="geometric-rejection-of-disturbance" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-rejection-of-disturbance">Geometric Rejection of Disturbance</h3>
+<p>The grip angle hypothesis is formally equivalent to <strong>disturbance decoupling</strong> in geometric control theory. By aligning the grip such that the ‘noise’ (variable constraint torque) acts upon the Alpha axis, the system achieves a structural invariance: the sensitivity of the output <span class="math inline">\(y\)</span> (face angle) to the disturbance <span class="math inline">\(d\)</span> (constraint torque) is minimized. This is a passive mechanical implementation of what would otherwise require complex active feedback control, effectively outsourcing stability to the mechanism’s geometry.</p>
+</section>
+<section id="the-null-space-of-performance" class="level3">
+<h3 class="anchored" data-anchor-id="the-null-space-of-performance">The Null Space of Performance</h3>
+<p>The distinction between the ‘safe’ Alpha axis and the ‘critical’ Beta axis illustrates the <strong>Task-Null Space</strong> principle. In optimal control, variance is not eliminated but ‘channeled’ into dimensions that do not affect the cost function. The Finger Grip configures the Jacobian <span class="math inline">\(J\)</span> such that the constrained axis maps predominantly into the null space of the face-orientation task, allowing high variance in <span class="math inline">\(\tau_{constraint}\)</span> to coexist with low variance in impact conditions.</p>
+<p><strong>Implicit Assumption: Ideal Constraints</strong> This analysis relies on the idealization of the wrist as a perfect universal joint with holonomic constraints. In reality, soft tissue compliance introduces viscoelastic ‘slop’ that may relax these constraints, potentially adding a damping term to the transmission. However, the core topological argument—that the dimensionality of actuation is lower than the dimensionality of motion—remains robust.</p>
+</section>
+<section id="conceptual-cross-references" class="level3">
+<h3 class="anchored" data-anchor-id="conceptual-cross-references">Conceptual Cross-References</h3>
+<ul>
+<li><strong>Underactuated Robotics:</strong> <em>Lynch &amp; Park (2017), Ch 13.5</em> - For formal definitions of nonholonomic and Pfaffian constraints.</li>
+<li><strong>Null Space Control:</strong> <em>Todorov (2004)</em> - “Optimality principles in sensorimotor control” regarding the uncontrolled manifold hypothesis.</li>
+<li><strong>Drift Invariance:</strong> <em>Theory Part 3</em> - For the definition of passive force decomposition.</li>
+</ul>
 <p>Thanks to Mike Duffey for insightful discussion regarding the dependence of constraint torques on proximal segment motion. The Modern Robotics course and textbook from Northwestern University (Kevin Lynch and Frank Park) provided essential background on constrained dynamics in mechanical systems.</p>
 <ol type="1">
 <li><p>Lynch, K. M., &amp; Park, F. C. (2017). <em>Modern Robotics: Mechanics, Planning, and Control</em>. Cambridge University Press.</p></li>
@@ -923,6 +949,7 @@ window.Quarto = {
 </ol>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1332,7 +1359,7 @@ window.Quarto = {
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded

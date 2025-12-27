@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-05">
+<meta name="dcterms.date" content="2025-12-27">
 
 <title>Affine Control Interpretation of the Golf Swing — Part 4 – AffineDrift</title>
 <style>
@@ -72,9 +72,9 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -122,7 +122,15 @@ window.MathJax = {
     tagIndent: '0.8em',
     multlineWidth: '85%',
     maxMacros: 10000,
-    maxBuffer: 5120
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
   },
   chtml: {
     scale: 1.0,
@@ -212,9 +220,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo" aria-label="Home">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo light-content">
-    <img src="../logo/Logo Transparent/1.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
@@ -226,11 +234,19 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -250,10 +266,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -289,10 +305,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -321,52 +337,32 @@ window.Quarto = {
     <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Model">
- <span class="dropdown-text">D-sorganization: Golf Model (3D)</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/2D_Golf_Model">
- <span class="dropdown-text">D-sorganization: 2D Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Drake_Golf_Model">
- <span class="dropdown-text">D-sorganization: Drake Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pinocchio_Golf_Model">
- <span class="dropdown-text">D-sorganization: Pinocchio Golf Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/MuJoCo_Golf_Swing_Model">
- <span class="dropdown-text">D-sorganization: MuJoCo Golf Swing Model</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/D-sorganization/Pendulum_Golf_Models">
- <span class="dropdown-text">D-sorganization: Pendulum Golf Models</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/myosim/myosim">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="https://github.com/deepmind/mujoco">
- <span class="dropdown-text">MuJoCo</span></a>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -442,7 +438,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 5, 2025</p>
+      <p class="date">December 27, 2025</p>
     </div>
   </div>
   
@@ -456,6 +452,8 @@ window.Quarto = {
 
 <section id="appendices" class="level1">
 <h1>Appendices</h1>
+<p>The preceding parts of this manuscript have established the conceptual framework (Part I), the diagnostic tools (Part II), and the classification taxonomy (Part III) for the affine control interpretation of the golf swing. These sections relied on the assertion that the complex multibody dynamics of the golfer–club–shaft system can be rigorously cast into the control-affine form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>.</p>
+<p>This Part IV collects the detailed mathematical proofs that substantiate those assertions. We explicitly derive the equations of motion for the coupled rigid–flexible system, demonstrate the preservation of the affine structure under modal truncation, and provide illustrative low-dimensional examples to build intuition.</p>
 <section id="appendix-a-mathematical-derivations" class="level2">
 <h2 class="anchored" data-anchor-id="appendix-a-mathematical-derivations">Appendix A: Mathematical Derivations</h2>
 <p>This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid–flexible dynamics produce the affine decomposition</p>
@@ -578,20 +576,20 @@ window.Quarto = {
 </section>
 <section id="input-acceleration-mapping" class="level3">
 <h3 class="anchored" data-anchor-id="input-acceleration-mapping">Input acceleration mapping</h3>
-<p>The input-driven acceleration is the part proportional to <span class="math inline">\(u\)</span>:</p>
-<p><span class="math display">\[a_{\mathrm{input}}(x)\,u
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q)\,u \\ 0
-  \end{bmatrix}.\]</span></p>
-<p>Thus the input matrix is:</p>
+<p>The input-driven acceleration is the part proportional to <span class="math inline">\(u\)</span>. We can expand the inverse inertia matrix <span class="math inline">\(M^{-1}\)</span> in block form. Let <span class="math inline">\(H = M^{-1}\)</span>. Its structure reflects the full coupling: <span class="math display">\[H(q,\eta) = \begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}.\]</span> The acceleration equation becomes: <span class="math display">\[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.\]</span> Thus, the input torque <span class="math inline">\(u\)</span> drives the rigid body accelerations <span class="math inline">\(\ddot{q}\)</span> through the effective inertia <span class="math inline">\(H_{qq}\)</span>, and simultaneously drives the flexible mode accelerations <span class="math inline">\(\ddot{\eta}\)</span> through the inertial coupling term <span class="math inline">\(H_{\eta q}\)</span>.</p>
+<p>The input matrix is:</p>
 <p><span class="math display">\[A_{\mathrm{input}}(x)
   =
   M^{-1}(q,\eta)
   \begin{bmatrix}
     B(q) \\ 0
-  \end{bmatrix}.\]</span></p>
+  \end{bmatrix}
+  =
+  \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.\]</span></p>
 <p>Linearity of the torque input is preserved even in the presence of:</p>
 <ul>
 <li>flexible-body modes,</li>
@@ -658,6 +656,9 @@ window.Quarto = {
 <p>for a clamped handle, and free-tip conditions at <span class="math inline">\(s=L\)</span>:</p>
 <p><span class="math display">\[EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.\]</span></p>
 <p>These constraints define the mode shapes used in the modal expansion.</p>
+<blockquote class="blockquote">
+<p><strong>Input-Dependent Boundary Conditions (Note on Grip Impedance).</strong> Theoretically, the “clamped” boundary condition (<span class="math inline">\(w(0,t)=0, w_s(0,t)=0\)</span>) implies an infinitely stiff grip. In reality, grip impedance varies with muscle activation, which is part of the input <span class="math inline">\(u\)</span>. If the boundary conditions depended on <span class="math inline">\(u\)</span>, the mode shapes <span class="math inline">\(\phi_i\)</span> and consequently the mass matrix <span class="math inline">\(M\)</span> would become input-dependent (<span class="math inline">\(M(u)\)</span>), breaking the affine structure. To preserve the validity of the decomposition <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>, we formally adopt the <strong>Constant Impedance Assumption</strong>: the grip is treated as a fixed mechanical constraint defining the “Effective Plant” for the swing. The input <span class="math inline">\(u\)</span> is the torque applied <em>to</em> this plant, not a parameter that reshapes it.</p>
+</blockquote>
 </section>
 <section id="modal-expansion" class="level3">
 <h3 class="anchored" data-anchor-id="modal-expansion">Modal expansion</h3>
@@ -1262,7 +1263,7 @@ V = m g L (1 - \cos\theta),\]</span></p>
     <p>© 2025. Affine Drift Effin Matters.</p>
   </div>
 </footer>
-<script src="../script.js"></script>
+<script src="script.js"></script>
 <script>
 // MathJax automatically typesets content after startup, but we check for
 // equations in HTML blocks that might need reprocessing after DOM is fully loaded
