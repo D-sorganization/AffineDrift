@@ -4,6 +4,7 @@ Refined simulation for sensitivity to grip location on wrist mechanics.
 Augmented with improved structure, visualization, parameterization, and documentation.
 """
 import csv
+
 import matplotlib.pyplot as plt
 import numpy as np
 
