@@ -15,8 +15,6 @@ In Part I, we established that the golfer--club--shaft system is governed by the
 
 We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
 
-The Lagrangian derivation successfully recast the complex multibody dynamics into the canonical form $\dot{x} = f(x) + g(x)u$. This was not merely a symbolic exercise in algebraic manipulation; it exposed the fundamental causality of the system. We can now see that the system's evolution is a superposition of two distinct processes: a passive drift along the manifold's geodesic fabric, and an active deviation forced by the inputs. The next section formalizes this physical decomposition.
-
 Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
@@ -291,6 +289,8 @@ This makes it especially useful for:
 - separating gravity from inertial effects,
 - identifying configuration-driven mechanical biases (e.g., favored directions of passive motion),
 - analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.
+
+**Note on Dynamic Relevance.** A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale.
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 

@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 
 
 def verify_lightbox() -> None:
+    """Verify that the lightbox feature works correctly."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -18,7 +19,7 @@ def verify_lightbox() -> None:
         print("Injecting test image...")
         svg_data = (
             "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmci"
-            "IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9MTAwIiBmaWxsPSJyZWQiLz48L3N2Zz4="
+            "IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBmaWxsPSJyZWQiLz48L3N2Zz4="
         )
         page.evaluate(
             f"""

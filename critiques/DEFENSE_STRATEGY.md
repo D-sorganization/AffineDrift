@@ -15,8 +15,8 @@
 | **09. Geometric Stiffness**<br>(Omission in ZVCF) | Mathematical | **Valid** | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline. | **Applied** to Taxonomy |
 | **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion. | **Applied** to Limitations |
 | **11. Passive Overshoot**<br>(Damping Artifact) | Empirical / Modeling | **Valid** (Conservative) | **Conservative Baseline:** Acknowledge that low damping exaggerates drift. Defend the "Skeletal Baseline" as the _conservative_ lower bound of intervention. Any "braking" input reflects the net non-conservative effort required to stabilize the path. | **Applied** to Simulink Results |
-| **12. The Static Fallacy**<br>(ZVCF Irrelevance) | Conceptual | **Invalid** (Misunderstanding) | **Diagnostic Utility Argument:** Critics argue static loads are negligible in high-speed swings. The defense is that ZVCF is a _subtractive baseline_ required to isolate dynamic forces, not a claim that static forces dominate. It is the "tare" operation for the dynamic scale. | **Pending Application** |
-| **13. Input-Dependent BCs**<br>(The Grip Paradox) | Mathematical | **Valid** (Structural Risk) | **Constant Impedance Assumption:** If grip stiffness depends on $u$, the mass matrix $M(u)$ breaks the affine form. We defend by assuming a "Constant Effective Impedance" for the plant, treating $u$ as the torque applied _to_ that plant, not a parameter that reshapes it. | **Pending Application** |
+| **12. The Static Fallacy**<br>(ZVCF Irrelevance) | Conceptual | **Invalid** (Misunderstanding) | **Diagnostic Utility Argument:** Critics argue static loads are negligible in high-speed swings. The defense is that ZVCF is a _subtractive baseline_ required to isolate dynamic forces, not a claim that static forces dominate. It is the "tare" operation for the dynamic scale. | **Applied** to ZVCF Definition |
+| **13. Input-Dependent BCs**<br>(The Grip Paradox) | Mathematical | **Valid** (Structural Risk) | **Constant Impedance Assumption:** If grip stiffness depends on $u$, the mass matrix $M(u)$ breaks the affine form. We defend by assuming a "Constant Effective Impedance" for the plant, treating $u$ as the torque applied _to_ that plant, not a parameter that reshapes it. | **Applied** to Limitations |
 
 ---
 
@@ -126,7 +126,7 @@ Added **"Note on Damping and Overshoot"** to the **Simulink Results** section in
 **Analysis:** The critic argues that ZVCF is irrelevant because static loads (gravity) are negligible in high-speed swings ($1g \ll 100g$). This misses the purpose of ZVCF: it is a diagnostic baseline used to isolate velocity-dependent terms (like geometric stiffness), not a simulation of a static swing.
 
 **Implementation:**
-Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-nature-golf-swing.qmd`.
+Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part2.qmd`.
 
 > _Addition:_ "We do not calculate ZVCF because we believe gravity 'steers' the downswing; we calculate it to mathematically subtract the configuration-dependent baseline... The ZVCF is the necessary 'tare' operation for the dynamic scale."
 
@@ -135,6 +135,6 @@ Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-
 **Analysis:** If grip stiffness varies with input $u$, the mass matrix $M$ depends on $u$, breaking the affine form. This is a critical mathematical threat.
 
 **Implementation:**
-Add **"Input-Dependent Boundary Conditions"** to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
+Add **"Input-Dependent Boundary Conditions"** to **Limitations** in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part4.qmd`.
 
 > _Addition:_ "Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'."

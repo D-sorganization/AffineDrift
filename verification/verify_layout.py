@@ -4,6 +4,7 @@ from playwright.sync_api import sync_playwright
 
 
 def verify_layout() -> None:
+    """Verify that the layout renders correctly across different device sizes."""
     # Ensure docs directory exists and we can find the file
     docs_path = os.path.abspath("docs/articles.html")
     if not os.path.exists(docs_path):
