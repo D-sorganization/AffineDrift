@@ -15,6 +15,9 @@
   --primary-blue: #0f4c75;
   --accent-blue: #3282b8;
   --light-blue: #e3f2fd;
+  --pure-white: #fff;
+  --white-transparent: rgb(255, 255, 255, 0.9);
+  --legal-pad-yellow: #fef9e7;
 
   /* Neutral scale */
   --bg-body: #fff;
@@ -26,6 +29,11 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --shadow-color: rgb(0, 0, 0, 0.1);
+
+  /* Gradients */
+  --gradient-start: #0f4c75;
+  --gradient-end: #3282b8;
 
   /* Layout dimensions */
   --sidebar-width: 280px;
@@ -47,6 +55,11 @@ body {
   font-size: 17px;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Hide duplicate title block in the main content area */
+#title-block-header {
+  display: none !important;
 }
 
 /* Typography */
@@ -170,13 +183,18 @@ body .standard-page-layout .right-sidebar {
    Header & Navigation
    =========================== */
 header {
-  background: var(--bg-body);
-  border-bottom: 1px solid var(--border-color);
-  height: var(--header-height);
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--primary-blue) 100%
+  );
+  color: var(--pure-white);
+  border-bottom: 2px solid var(--accent-blue);
+  padding: 0.8rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px var(--shadow-color);
   display: flex;
   align-items: center;
 }
@@ -192,7 +210,7 @@ nav .container {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--primary-dark);
+  color: var(--pure-white);
   font-weight: 700;
   font-family: "Playfair Display", serif;
   font-size: 1.5rem;
@@ -213,7 +231,7 @@ nav .container {
 }
 
 .nav-links a {
-  color: var(--text-muted);
+  color: var(--white-transparent);
   font-weight: 500;
   font-size: 0.95rem;
   text-decoration: none;
@@ -223,7 +241,7 @@ nav .container {
 
 .nav-links a:hover,
 .nav-links a.active {
-  color: var(--primary-blue);
+  color: var(--pure-white);
 }
 
 .nav-links a::after {
@@ -233,7 +251,7 @@ nav .container {
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--primary-blue);
+  background: var(--legal-pad-yellow);
   transition: width 0.2s ease;
 }
 
@@ -246,7 +264,7 @@ nav .container {
   display: none;
   background: transparent;
   border: none;
-  color: var(--text-main);
+  color: var(--pure-white);
   font-size: 1.5rem;
   cursor: pointer;
 }
