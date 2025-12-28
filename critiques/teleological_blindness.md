@@ -2,8 +2,9 @@
 
 ## Summary of Concern
 
-The Drift/Input decomposition ($\tau = \tau_{drift} + \tau_{input}$) is purely mechanical. It identifies *that* a torque was applied, but is structurally blind to *why*.
+The Drift/Input decomposition ($\tau = \tau_{drift} + \tau_{input}$) is purely mechanical. It identifies _that_ a torque was applied, but is structurally blind to _why_.
 Specifically, it cannot distinguish between:
+
 1.  **Trajectory Drive:** Torque applied to accelerate the clubhead (Work).
 2.  **Impedance Modulation:** Torque applied to stiffen a joint in anticipation of impact (Stability/Stiffness).
 
@@ -34,7 +35,7 @@ The framework risks misdiagnosing **Robustness** (good) as **Inefficiency** (bad
 
 ## Severity
 
-- **Medium**: It limits the *tactical* utility of the theory for coaching, though the *mechanical* decomposition remains valid (Net Torque is Net Torque).
+- **Medium**: It limits the _tactical_ utility of the theory for coaching, though the _mechanical_ decomposition remains valid (Net Torque is Net Torque).
 
 ## Suggested Remedies
 
