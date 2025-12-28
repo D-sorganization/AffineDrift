@@ -831,7 +831,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
-  const contentImages = document.querySelectorAll("#quarto-document-content img");
+  const contentImages = document.querySelectorAll(
+    "#quarto-document-content img",
+  );
   if (contentImages.length > 0) {
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";
@@ -857,7 +859,7 @@ document.addEventListener("DOMContentLoaded", function () {
       img.setAttribute("aria-label", "Zoom image");
 
       const openFn = (e) => {
-        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+        if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
         e.preventDefault();
         const clone = img.cloneNode();
         clone.className = "lightbox-img";
