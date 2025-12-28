@@ -28,8 +28,7 @@
   --border-color: #e9ecef;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
   --shadow-color: rgb(0, 0, 0, 0.1);
 
   /* Gradients */
@@ -49,20 +48,7 @@
 }
 
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    "Noto Sans",
-    "Liberation Sans",
-    Arial,
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   line-height: 1.6;
   color: var(--text-main);
   background-color: var(--bg-body);
@@ -77,12 +63,7 @@ body {
 }
 
 /* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-weight: 700;
   line-height: 1.25;
@@ -136,9 +117,7 @@ a:hover {
 /* 3-Column Grid System */
 .standard-page-layout {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
-      --sidebar-width
-    ) !important;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width) !important;
   gap: var(--sidebar-gap);
   max-width: var(--content-max-width);
   margin: 0 auto;
@@ -203,6 +182,28 @@ body .standard-page-layout .right-sidebar {
 /* ===========================
    Header & Navigation
    =========================== */
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: fixed;
+  top: -9999px;
+  left: 0.5rem;
+  background: var(--primary-blue);
+  color: var(--pure-white);
+  padding: 0.5rem 1rem;
+  z-index: 2000;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 3px solid var(--accent-blue);
+}
+
 header {
   background: linear-gradient(
     135deg,
@@ -266,7 +267,7 @@ nav .container {
 }
 
 .nav-links a::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -399,9 +400,7 @@ nav .container {
   padding: 0 1.25rem;
   max-height: 0;
   overflow: hidden;
-  transition:
-    max-height 0.3s cubic-bezier(0, 1, 0, 1),
-    padding 0.3s ease;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
 }
 
 .accordion-header[aria-expanded="true"] + .accordion-content {
@@ -433,8 +432,7 @@ nav .container {
   padding: 1rem;
   border-radius: 6px;
   overflow-x: auto;
-  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
-    monospace;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
   font-size: 0.9rem;
   margin: 1.5rem 0;
 }
@@ -447,8 +445,8 @@ nav .container {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: rgb(255, 255, 255, 0.1);
-  border: 1px solid rgb(255, 255, 255, 0.2);
+  background: rgb(255,255,255,0.1);
+  border: 1px solid rgb(255,255,255,0.2);
   color: #fff;
   padding: 0.25rem 0.5rem;
   font-size: 0.8rem;
@@ -539,25 +537,64 @@ nav .container {
 /* ===========================
    Utility Classes
    =========================== */
-.text-center {
-  text-align: center;
+
+/* Lightbox */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0, 0.85);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
 }
 
-.mt-1 {
-  margin-top: 0.25rem;
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-.mt-2 {
-  margin-top: 0.5rem;
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 5px 30px rgb(0, 0, 0, 0.5);
+  border-radius: 4px;
+  animation: zoom-in 0.3s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
-.mt-4 {
-  margin-top: 1.5rem;
+@keyframes zoom-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-.mb-4 {
-  margin-bottom: 1.5rem;
+.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
 }
+
+.zoomable:hover {
+  transform: scale(1.01);
+}
+
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mb-4 { margin-bottom: 1.5rem; }
 
 /* Back to Top */
 .back-to-top {

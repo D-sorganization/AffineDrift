@@ -831,9 +831,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
-  const contentImages = document.querySelectorAll(
-    "#quarto-document-content img",
-  );
+  const contentImages = document.querySelectorAll("#quarto-document-content img");
   if (contentImages.length > 0) {
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";
@@ -857,28 +855,41 @@ document.addEventListener("DOMContentLoaded", function () {
       img.setAttribute("tabindex", "0"); // Keyboard focusable
       img.setAttribute("role", "button");
       img.setAttribute("aria-label", "Zoom image");
-
-      const openFn = (e) => {
-        if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
-        e.preventDefault();
-        const clone = img.cloneNode();
-        clone.className = "lightbox-img";
-        clone.removeAttribute("loading"); // Ensure it loads immediately
-        clone.removeAttribute("id"); // Prevent duplicate IDs
-        // Remove interactive attributes from clone
-        clone.removeAttribute("tabindex");
-        clone.removeAttribute("role");
-        clone.removeAttribute("aria-label");
-        clone.classList.remove("zoomable");
-
-        lightbox.appendChild(clone);
-        lightbox.classList.add("active");
-        lightbox.setAttribute("aria-hidden", "false");
-      };
-
-      img.addEventListener("click", openFn);
-      img.addEventListener("keydown", openFn);
     });
+
+    // ⚡ Bolt Optimization: Event Delegation for Lightbox
+    // Instead of adding listeners to every image (O(N)), add one listener to the container (O(1))
+    const handleLightboxTrigger = (e) => {
+      const img = e.target.closest(".zoomable");
+      if (!img) return;
+
+      // Verify the image is within our content area (safety check)
+      if (!document.getElementById("quarto-document-content").contains(img))
+        return;
+
+      if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+
+      e.preventDefault();
+
+      const clone = img.cloneNode();
+      clone.className = "lightbox-img";
+      clone.removeAttribute("loading"); // Ensure it loads immediately
+      clone.removeAttribute("id"); // Prevent duplicate IDs
+      // Remove interactive attributes from clone
+      clone.removeAttribute("tabindex");
+      clone.removeAttribute("role");
+      clone.removeAttribute("aria-label");
+      clone.classList.remove("zoomable");
+
+      lightbox.innerHTML = ""; // Clear previous
+      lightbox.appendChild(clone);
+      lightbox.classList.add("active");
+      lightbox.setAttribute("aria-hidden", "false");
+    };
+
+    const container = document.getElementById("quarto-document-content");
+    container.addEventListener("click", handleLightboxTrigger);
+    container.addEventListener("keydown", handleLightboxTrigger);
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {

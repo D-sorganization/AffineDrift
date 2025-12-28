@@ -182,6 +182,28 @@ body .standard-page-layout .right-sidebar {
 /* ===========================
    Header & Navigation
    =========================== */
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: fixed;
+  top: -9999px;
+  left: 0.5rem;
+  background: var(--primary-blue);
+  color: var(--pure-white);
+  padding: 0.5rem 1rem;
+  z-index: 2000;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 3px solid var(--accent-blue);
+}
+
 header {
   background: linear-gradient(
     135deg,
@@ -515,6 +537,59 @@ nav .container {
 /* ===========================
    Utility Classes
    =========================== */
+
+/* Lightbox */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0, 0.85);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 5px 30px rgb(0, 0, 0, 0.5);
+  border-radius: 4px;
+  animation: zoom-in 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+@keyframes zoom-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+.zoomable:hover {
+  transform: scale(1.01);
+}
+
 .text-center { text-align: center; }
 .mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }

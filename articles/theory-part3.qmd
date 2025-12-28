@@ -11,9 +11,11 @@ format:
 
 ## Drift Invariance and Input Constraints
 
-In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$. However, this separation is only causally valid if the "passive" term is truly independent of the "active" term.
+In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF (Part II) to isolate passive momentum history, and the ZVCF (Part II) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. But a skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
+
+These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
 
 The drift--input decomposition
 
@@ -359,7 +361,7 @@ The feasible set of torques $\mathcal{U}(x)$ may depend on configuration, streng
 
 **Parameter identification and causality.**
 
-When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term $f(x)$ represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate.
+When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term $f(x)$ represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate. This implies that the ZTCF acts as a **"frozen strategy" baseline**: it asks how the system would evolve if the golfer ceased *driving* the motion but maintained the *structural impedance* required for the task. It does not simulate a flaccid collapse.
 
 **Exact parameter knowledge.**
 
@@ -384,6 +386,14 @@ During rapid transitions (late downswing), small errors in acceleration estimati
 **Interpretation of counterfactuals.**
 
 ZTCF and ZVCF are mathematically defined but physically unrealizable states or trajectories. They answer precise mechanical questions but should not be interpreted as physiological or behavioral alternatives available to a real golfer.
+
+**Mechanical vs. Control Causality.**
+
+It is crucial to distinguish **Control Causality** (why the nervous system selected a torque) from **Mechanical Causality** (which physical mechanism generated the force). The AffineDrift framework addresses Mechanical Causality. The ZTCF answers the question: *'Regardless of the complex sensory-motor loops that determined the input, what would the system have done if that input were instantaneously removed?'* This isolates the mechanical affordances of the body from the neural strategy of the player.
+
+**Ambiguity of "Braking" (Impedance vs. Drive).**
+
+The decomposition identifies the net torque vector but cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability). A negative or "braking" input $\tau_{\text{input}}$ may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing's momentum. Thus, "fighting the drift" should be interpreted as "modulating the drift," which may serve robustness rather than speed.
 
 **No claims about optimality or intent.**
 
