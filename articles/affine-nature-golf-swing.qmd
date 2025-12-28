@@ -255,7 +255,7 @@ This control-affine structure is the backbone for the drift--input decomposition
 
 By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
-The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. The next logical step is to probe this map by asking: what happens when we turn the input off? This structural separation is what permits us to define meaningful counterfactual baselines—specifically, by asking what the system would do if $u$ were removed (the drift) or if velocity were removed (the configuration load). The next section formalizes these definitions.
+The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are mechanically orthogonal. This orthogonality is what allows us to perform the "surgical" operations defined in the next part: amputating the input to reveal the drift.
 
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
@@ -313,6 +313,8 @@ Within the model, this additive structure supports the following interpretation:
 The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.
 
 This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
+
+To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene.
 
 ### Role in counterfactual analysis
 
@@ -456,6 +458,8 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 ### Decomposing the drift
 
 While the ZTCF effectively subtracts the golfer's active contribution, the remaining drift term $f(x)$ is still complex: it lumps together static forces (gravity, stiffness) with dynamic forces (Coriolis, centrifugal, damping). To fully diagnose the mechanical load, we need a finer decomposition of the drift itself. We must distinguish between loads that exist purely because of *where* the club is (configuration) and loads that exist because of *how fast* it is moving (velocity).
+
+The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion.
 
 ## Zero Velocity Counterfactual (ZVCF)
 {#sec-zvcf}
