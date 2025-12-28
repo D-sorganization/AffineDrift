@@ -13,10 +13,11 @@
 | **07. Null Space Forces**<br>(Closed Chain) | Methodological | **Valid** | **Net Motion Definition:** Explicitly define $\tau_{input}$ as the "Net Motion-Producing Torque". Acknowledge that the framework is blind to internal forces (co-contraction, null-space fighting) in the closed chain. | **Applied** to Limitations |
 | **08. Residual Input**<br>(Identifiability) | Empirical | **Valid** | **Net Non-Conservative Forcing:** Admit that $\tau_{input}$ absorbs unmodeled dynamics (drag, noise). Reframe it as "Net Non-Conservative Forcing" rather than pure muscle torque when modeling errors are present. | **Applied** to Limitations |
 | **09. Geometric Stiffness**<br>(Omission in ZVCF) | Mathematical | **Valid** | **Classification Defense:** Geometric stiffness is velocity-dependent ($K_g \propto \Omega^2$). Therefore, it correctly belongs to **Velocity Drift**, not Configuration Drift. The ZVCF intentionally removes it to isolate the static elastic baseline. | **Applied** to Taxonomy |
-| **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant Argument:** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. This is an epistemological limit of identifying passive dynamics from active motion. | **Applied** to Limitations |
+| **10. Parameter Causality**<br>(Fitting Active Data) | Methodological | **Valid** | **Effective Plant (Frozen Strategy):** Acknowledge that fitted parameters represent the "Effective Plant" conditioned on the task. The ZTCF asks "What if torque vanished but stiffness remained?", serving as a _frozen strategy_ baseline, not a flaccid one. | **Applied** to Limitations |
 | **11. Passive Overshoot**<br>(Damping Artifact) | Empirical / Modeling | **Valid** (Conservative) | **Conservative Baseline:** Acknowledge that low damping exaggerates drift. Defend the "Skeletal Baseline" as the _conservative_ lower bound of intervention. Any "braking" input reflects the net non-conservative effort required to stabilize the path. | **Applied** to Simulink Results |
 | **12. The Static Fallacy**<br>(ZVCF Irrelevance) | Conceptual | **Invalid** (Misunderstanding) | **Diagnostic Utility Argument:** Critics argue static loads are negligible in high-speed swings. The defense is that ZVCF is a _subtractive baseline_ required to isolate dynamic forces, not a claim that static forces dominate. It is the "tare" operation for the dynamic scale. | **Applied** to ZVCF Definition |
 | **13. Input-Dependent BCs**<br>(The Grip Paradox) | Mathematical | **Valid** (Structural Risk) | **Constant Impedance Assumption:** If grip stiffness depends on $u$, the mass matrix $M(u)$ breaks the affine form. We defend by assuming a "Constant Effective Impedance" for the plant, treating $u$ as the torque applied _to_ that plant, not a parameter that reshapes it. | **Applied** to Limitations |
+| **14. Teleological Blindness**<br>(Braking != Error) | Interpretational | **Valid** (Coach Safety) | **Impedance vs. Drive Distinction:** Clarify that "braking" torque may represent impedance modulation (stiffening) rather than inefficiency. Warn against interpreting negative input as "error". | **Applied** to Limitations |
 
 ---
 
@@ -103,38 +104,47 @@ Added to **Taxonomy** (Category 2) in `articles/theory-part3.qmd`.
 
 > _Addition:_ "Geometric stiffness (centrifugal stiffening) forces, which appear as apparent stiffness changes but scale with velocity..."
 
-### 10. Addressing Parameter Causality Leakage
+### 10. Addressing Parameter Causality & The Effective Plant Fallacy
 
-**Analysis:** Identifying "passive" parameters from active swings risks contaminating the drift term with input information.
+**Analysis:** Identifying "passive" parameters from active swings means the "Drift" baseline depends on the task (e.g., how stiff the golfer holds the club). Critics argue this makes the ZTCF a "Zombie Golfer" (stiff but passive) which is biologically impossible.
 
 **Implementation:**
-Added **"Parameter Identification and Causality"** to **Limitations** in `articles/theory-part3.qmd`.
+Added **"Parameter Identification and Causality"** to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
 
-> _Addition:_ "Parameters identified from active motion represent the 'effective' impedance... rather than a truly passive cadaveric baseline."
+> _Refinement:_ "This implies that the ZTCF acts as a **'frozen strategy' baseline**: it asks how the system would evolve if the golfer ceased *driving* the motion but maintained the *structural impedance* required for the task. It does not simulate a flaccid collapse."
 
 ### 11. Addressing Passive Overshoot Artifact
 
-**Analysis:** The "overshoot" of passive momentum in the Simulink model (where drift > total force) implies the golfer is braking. Critics argue this is an artifact of under-damped modeling.
+**Analysis:** The "overshoot" of passive momentum in the Simulink model implies the golfer is braking. Critics argue this is an artifact of insufficient damping.
 
 **Implementation:**
 Added **"Note on Damping and Overshoot"** to the **Simulink Results** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part5.qmd`.
 
-> _Addition:_ "This 'overshoot'... correctly identifies the net non-conservative effort required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory..."
+> _Addition:_ "This 'overshoot'... correctly identifies the net non-conservative effort required to restrain the system's inertia... Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance..."
 
 ### 12. Addressing The Static Fallacy (ZVCF)
 
-**Analysis:** The critic argues that ZVCF is irrelevant because static loads (gravity) are negligible in high-speed swings ($1g \ll 100g$). This misses the purpose of ZVCF: it is a diagnostic baseline used to isolate velocity-dependent terms (like geometric stiffness), not a simulation of a static swing.
+**Analysis:** The critic argues that ZVCF is irrelevant because static loads (gravity) are negligible in high-speed swings.
 
 **Implementation:**
-Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part2.qmd`.
+Add **"Note on Dynamic Relevance"** to the **ZVCF** section.
 
-> _Addition:_ "We do not calculate ZVCF because we believe gravity 'steers' the downswing; we calculate it to mathematically subtract the configuration-dependent baseline... The ZVCF is the necessary 'tare' operation for the dynamic scale."
+> _Addition:_ "We do not calculate ZVCF because we believe gravity 'steers' the downswing... The ZVCF is the necessary 'tare' operation for the dynamic scale."
 
 ### 13. Addressing Input-Dependent Boundary Conditions
 
-**Analysis:** If grip stiffness varies with input $u$, the mass matrix $M$ depends on $u$, breaking the affine form. This is a critical mathematical threat.
+**Analysis:** If grip stiffness varies with input $u$, the mass matrix $M(u)$ breaks the affine form.
 
 **Implementation:**
-Add **"Input-Dependent Boundary Conditions"** to **Limitations** in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part4.qmd`.
+Add **"Input-Dependent Boundary Conditions"** to **Limitations**.
 
-> _Addition:_ "Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'."
+> _Addition:_ "We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'."
+
+### 14. Addressing Teleological Blindness (Braking vs. Stiffness)
+
+**Analysis:** The decomposition cannot distinguish between torque used to *drive* motion (work) and torque used to *stiffen* the joint (impedance/stability). Negative input is often misdiagnosed as "inefficiency".
+
+**Implementation:**
+Add **"Ambiguity of 'Braking' (Impedance vs. Drive)"** to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
+
+> _Addition:_ "The decomposition identifies the net torque vector but cannot distinguish between torque applied to accelerate the system... and co-contraction torque applied to increase stiffness... Thus, 'fighting the drift' should be interpreted as 'modulating the drift', which may serve robustness rather than speed."
