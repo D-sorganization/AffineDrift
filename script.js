@@ -831,7 +831,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
-  const contentImages = document.querySelectorAll("#quarto-document-content img");
+  const contentImages = document.querySelectorAll(
+    "#quarto-document-content img",
+  );
   if (contentImages.length > 0) {
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";
