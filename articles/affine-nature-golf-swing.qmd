@@ -249,7 +249,7 @@ Given the control-affine form~\eqref{eq:affine_state}, we now formalize this phy
 The *drift dynamics* are defined as the evolution of the system in the absence of all muscular torques:
 
 $$
-  \xd_{\text{drift}} = f(x).
+  \dot{x}_{\text{drift}} = f(x).
 $$
 
 Physically, this includes:
@@ -269,7 +269,7 @@ Drift represents what the system would do "on its own" given its current configu
 The *input dynamics* are defined as the torque-driven component:
 
 $$
-  \xd_{\text{input}} = g(x)\,u.
+  \dot{x}_{\text{input}} = g(x)\,u.
 $$
 
 Key properties:
@@ -285,7 +285,7 @@ This term represents the portion of the dynamics directly caused by the golfer's
 Combining the two contributions yields
 
 $$
-  \xd = f(x) + g(x)\,u = \xd_{\text{drift}} + \xd_{\text{input}}.
+  \dot{x} = f(x) + g(x)\,u = \dot{x}_{\text{drift}} + \dot{x}_{\text{input}}.
 $$
 
 Within the model, this additive structure supports the following interpretation:
@@ -318,7 +318,7 @@ The vector fields \(f(x)\) and \(g(x)\) derived in the previous section define t
 Consider the control-affine system defined on \( T\mathcal{Q} \):
 
 $$
-  \xd = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
+  \dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
   {#eq-affine_repeat}
 $$
 
@@ -370,13 +370,13 @@ The drift--input decomposition and the ZTCF provide the theoretical basis for se
 In practice, we are often given a measured or simulated swing trajectory in terms of kinematics,
 
 $$
-  \big(q(t), \qd(t), \eta(t), \etad(t)\big), \qquad t \in [t_{0}, t_{f}],
+  \big(q(t), \dot{q}(t), \eta(t), \dot{\eta}(t)\big), \qquad t \in [t_{0}, t_{f}],
 $$
 
 and we obtain the generalized torque vector \(\tau_{\text{total}}(t)\) from inverse dynamics:
 
 $$
-  \tau_{\text{total}}(t) = \text{ID}\big(q(t), \qd(t), \qdd(t), \eta(t), \etad(t), \etadd(t)\big),
+  \tau_{\text{total}}(t) = \text{ID}\big(q(t), \dot{q}(t), \ddot{q}(t), \eta(t), \dot{\eta}(t), \ddot{\eta}(t)\big),
 $$
 
 where \(\text{ID}(\cdot)\) denotes the inverse dynamics operator for the coupled rigid--flexible model.
@@ -453,7 +453,7 @@ While the ZTCF successfully isolates the system's passive dynamics from the golf
 ### Definition
 
 Let the actual swing at time \(t\) be characterized by the state \( x(t) \in T\mathcal{Q} \).
-Locally, \( x(t) = (q(t), \eta(t), \qd(t), \etad(t)) \).
+Locally, \( x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t)) \).
 
 We formally define the *Zero Velocity Counterfactual* operator using the fiber bundle structure of the state space. Let $\mathcal{Q}$ be the configuration manifold. The state evolves on the tangent bundle $T\mathcal{Q}$.
 Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection (bundle map) that maps a state vector to its configuration: $\pi(q, v) = q$.
@@ -478,8 +478,8 @@ $$
   =
   \text{ID}\!\left(q(t),\, 0,\,
   \eta(t),\, 0,\,
-  \qdd^{\mathrm{ZVCF}}(t),\, 
-  \etadd^{\mathrm{ZVCF}}(t)\right)
+  \ddot{q}^{\mathrm{ZVCF}}(t),\,
+  \ddot{\eta}^{\mathrm{ZVCF}}(t)\right)
   {#eq-zvcf_id}
 $$
 
@@ -487,8 +487,8 @@ where the ZVCF accelerations are computed from the passive terms of the dynamics
 
 $$
   \begin{bmatrix}
-    \qdd^{\mathrm{ZVCF}} \\[0.2em]
-    \etadd^{\mathrm{ZVCF}}
+    \ddot{q}^{\mathrm{ZVCF}} \\[0.2em]
+    \ddot{\eta}^{\mathrm{ZVCF}}
   \end{bmatrix}
   =
   a_{\text{drift}}\big(q(t),0,\eta(t),0\big).
@@ -505,7 +505,7 @@ Intuitively, \(\tau_{\mathrm{ZVCF}}(t)\) represents the generalized torques the 
 ### What ZVCF isolates
 
 Evaluating the drift terms at zero velocity eliminates:
-- Coriolis and centrifugal forces (all terms proportional to \(\qd\) or \(\etad\)),
+- Coriolis and centrifugal forces (all terms proportional to \(\dot{q}\) or \(\dot{\eta}\)),
   
 - velocity-proportional damping in the shaft,
   
@@ -586,7 +586,7 @@ We have now constructed two powerful counterfactual baselines: the ZTCF to isola
 The drift--input decomposition
 
 $$
-  \xd = f(x) + g(x)u
+  \dot{x} = f(x) + g(x)u
 $$
 
 is therefore meaningful only if the drift term \(f(x)\) is *invariant* with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.
@@ -652,7 +652,7 @@ contains no torque dependence.
 $$
   f(x) =
   \begin{bmatrix}
-    \qd \\ a_{\text{drift}}(x) \\ \etad \\ [a_{\text{drift}}(x)]_{\text{flex}}
+    \dot{q} \\ a_{\text{drift}}(x) \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{\text{flex}}
   \end{bmatrix}
 $$
 
@@ -704,7 +704,7 @@ Although the drift is independent of torque, it may depend strongly on velocity.
 In particular,
 - Coriolis and centrifugal forces scale with velocity,
   
-- shaft damping and flexible-body coupling can depend on \(\etad\),
+- shaft damping and flexible-body coupling can depend on \(\dot{\eta}\),
   
 - inertial coupling between segments depends on motion history.
 
@@ -712,7 +712,7 @@ Thus, drift invariance means:
 \[
 f(x) \ \text{independent of } u,
 \qquad
-\text{but not independent of } \qd, \etad.
+\text{but not independent of } \dot{q}, \dot{\eta}.
 \]
 
 This distinction motivates the role of ZVCF, which isolates the configuration-dependent subset of drift forces by removing all velocity dependence.
@@ -745,7 +745,7 @@ They restrict the admissible inputs but leave
 unchanged.
 
 Thus, even with realistic physiological limitations,
-- the decomposition \( \xd = f(x) + g(x)u \) remains valid,
+- the decomposition \( \dot{x} = f(x) + g(x)u \) remains valid,
   
 - the torque decomposition \( \tau_{\text{total}} = \tau_{\text{drift}} + \tau_{\text{input}} \) remains valid,
   
@@ -780,7 +780,7 @@ Having established the control-affine form (Part I), defined the physical decomp
 
 With the drift--input decomposition formalized, we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 \[
-  \xd = f(x) + g(x)u.
+  \dot{x} = f(x) + g(x)u.
 \]
 It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.
 
@@ -801,7 +801,7 @@ At any time \(t\), inverse dynamics yields the total generalized torque:
 $$
   \tau_{\text{total}}(t)
   =
-  \text{ID}\big(x(t),\xd(t)\big),
+  \text{ID}\big(x(t),\dot{x}(t)\big),
   {#eq-total_tau}
 $$
 
@@ -860,7 +860,7 @@ Velocity-dependent drift forces include:
   
 - geometric stiffness (centrifugal stiffening) forces, which act as a velocity-dependent restoration term,
 
-- shaft damping forces proportional to \(\etad\),
+- shaft damping forces proportional to \(\dot{\eta}\),
   
 - any passive joint damping.
 
@@ -1049,7 +1049,7 @@ is exact for the model and provides a well-defined mechanical basis for analyzin
 
 This manuscript developed a theoretical framework for decomposing the forces of the golf swing within a nonlinear control-affine mechanical model. By formulating the golfer--club--shaft system as
 \[
-  \xd = f(x) + g(x)u,
+  \dot{x} = f(x) + g(x)u,
 \]
 we derived a clean separation between passive drift forces and torque-driven input forces. The model’s affine structure enabled two mathematically rigorous counterfactual tools—the Zero Torque Counterfactual (ZTCF) and the Zero Velocity Counterfactual (ZVCF)—which isolate the contributions of inertia, configuration, shaft deformation, and applied torques.
 
