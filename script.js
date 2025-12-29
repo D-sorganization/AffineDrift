@@ -394,6 +394,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
+    // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
+    const linkMap = new Map();
+    tocLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        linkMap.set(href.substring(1), link);
+      }
+    });
+    let currentActiveLink = null;
+
     const sections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
@@ -424,18 +434,20 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (activeId) {
-        tocLinks.forEach((link) => {
-          if (link.getAttribute("href") === `#${activeId}`) {
-            link.classList.add("active");
-          } else {
-            link.classList.remove("active");
+        // ⚡ Bolt Optimization: Only update classes if active link changed
+        const newActiveLink = linkMap.get(activeId);
+        if (newActiveLink && newActiveLink !== currentActiveLink) {
+          if (currentActiveLink) {
+            currentActiveLink.classList.remove("active");
           }
-        });
+          newActiveLink.classList.add("active");
+          currentActiveLink = newActiveLink;
+        }
       }
     }, observerOptions);
 
     sections.forEach((section) => {
-      if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
+      if (linkMap.has(section.id)) {
         observer.observe(section);
       }
     });
