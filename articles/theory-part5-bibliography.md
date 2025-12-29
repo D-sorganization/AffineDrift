@@ -27,7 +27,7 @@
 ## B) Bibliography (YAML)
 
 ```yaml
-- id: olson2024two
+- id: olson2024twohand
   title: Two Hand Golf Swing Model
   authors:
     - Dieter Olson
@@ -74,7 +74,7 @@
   references_out_ids:
     - nesbit2005three
     - sprigings2000insight
-    - olson2024two
+    - olson2024twohand
 
 - id: nesbit2005three
   title: A three dimensional kinematic and kinetic study of the golf swing
@@ -328,7 +328,7 @@
     - physical_modeling
     - causal_modeling
   related_ids:
-    - olson2024two
+    - olson2024twohand
 ```
 
 ## C) Reading Paths
