@@ -456,8 +456,14 @@ nav .container {
   transition: opacity 0.2s;
 }
 
-.code-wrapper:hover .copy-btn {
+.code-wrapper:hover .copy-btn,
+.copy-btn:focus {
   opacity: 1;
+}
+
+.copy-btn:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }
 
 /* ===========================
@@ -623,9 +629,15 @@ nav .container {
   visibility: visible;
 }
 
-.back-to-top:hover {
+.back-to-top:hover,
+.back-to-top:focus {
   transform: translateY(-2px);
   background: var(--accent-blue);
+}
+
+.back-to-top:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
 }
 
 .back-to-top svg {
