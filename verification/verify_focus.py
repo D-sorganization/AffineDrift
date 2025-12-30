@@ -4,6 +4,9 @@ from playwright.sync_api import sync_playwright
 
 
 def run() -> None:
+    """
+    Verifies the focus styles on the articles page by taking a screenshot.
+    """
     # Get absolute path to the HTML file
     cwd = os.getcwd()
     file_url = f"file://{cwd}/docs/articles.html"
