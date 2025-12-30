@@ -20,6 +20,7 @@
 | **14. Teleological Blindness**<br>(Mechanics vs. Intent) | Conceptual / Methodological | **Valid** (Interpretational) | **Efficiency Fallacy Defense:** The model measures mechanical cost (torque), not tactical utility. "Braking" torque may be stability-seeking, not error. We must explicitly distinguish "fighting drift" from "modulating drift for robustness." | **Applied** to Limitations |
 | **15. Intentional Constraint Collapse**<br>(Singularity vs Impedance) | Conceptual / Mathematical | **Valid** (Terminological) | **Virtual Constraint Defense:** Clarify that "collapse" is a metaphor for high impedance approaching a kinematic constraint. Reframe as "Quasi-Static Resolution" where $u$ shapes the *effective* manifold for short intervals, justifying the local affine approximation. | **Applied** to Constraint Article |
 | **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline) | Methodological / Philosophical | **Valid** (Epistemological) | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control *around* the trajectory. | **Applied** to Limitations |
+| **17. Planar DCR Blindness**<br>(Axial Rotation) | Methodological / Scope | **Valid** (Dimensionality) | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by arguing that Planar DCR dictates the *timing window* of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error. | **Applied** to DCR Article |
 
 ---
 
@@ -169,3 +170,12 @@ Updated `articles/intentional-constraint-collapse.qmd` to reframe "collapse" as 
 Added to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
 
 > _Addition:_ "We defend this by acknowledging that the ZTCF represents **'Impedance-Conditioned Drift'**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible... The 'Effective Plant' baseline is the only relevant counterfactual..."
+
+### 17. Addressing Planar DCR Blindness
+
+**Analysis:** The critic argues that DCR is derived from a planar model ($q \in \mathbb{R}^3$) and thus ignores axial rotation (supination), which is the primary mechanism for squaring the face. Since axial inertia is tiny, control authority there remains high even when planar authority collapses.
+
+**Implementation:**
+Added **"Anisotropy of the Control Cone"** to `articles/controllability-drift-ratio.qmd`.
+
+> _Addition:_ "We acknowledge that the 'Control Cone' is likely **anisotropic** (pancake-shaped)... However, Planar DCR creates a **Temporal Accuracy Constraint**. Since face angle changes rapidly ($\approx 1500^\circ/s$), timing errors (caused by uncontrollable planar path velocity) map directly to face angle errors. You can steer the face, but you cannot steer the *time* you arrive at impact."
