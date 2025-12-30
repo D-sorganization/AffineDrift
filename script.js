@@ -718,9 +718,11 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         await navigator.clipboard.writeText(pre.innerText || pre.textContent);
         button.textContent = "Copied!";
+        button.setAttribute("aria-label", "Code copied to clipboard");
         button.classList.add("copied");
         setTimeout(() => {
           button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code to clipboard");
           button.classList.remove("copied");
         }, 2000);
       } catch (err) {
