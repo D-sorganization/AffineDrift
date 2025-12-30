@@ -7,12 +7,19 @@ It features interactive sliders, live-updating plots, and a schematic diagram to
 import sys
 
 import numpy as np
-from matplotlib.backends.backend_qt5agg import \
-    FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (QApplication, QGroupBox, QHBoxLayout, QLabel,
-                             QMainWindow, QSlider, QVBoxLayout, QWidget)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QSlider,
+    QVBoxLayout,
+    QWidget,
+)
 
 # Simulation parameters
 WRIST_LENGTH = 0.18  # meters
