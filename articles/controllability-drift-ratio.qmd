@@ -127,6 +127,11 @@ The quadratic scaling of drift versus linear scaling of control is the core mech
 
 This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in the broader framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces and the velocity-dependent Coriolis/centripetal forces. While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) energetically eclipses the "Current Agency" (available via $g(x)u$), necessitating the "Early Delivery" strategy predicted by the ZTCF baseline.
 
+::: {.callout-note}
+## Scope Limitation: Planar vs. Axial Dynamics
+It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in @sec-anisotropy, this implies our DCR analysis strictly governs **path controllability**, while **face controllability** operates in an orthogonal, lower-inertia subspace.
+:::
+
 # 3. Drift–Control Ratio (DCR)
 
 We define:
@@ -337,6 +342,14 @@ This explains why golfers feel “along for the ride.”
 
 Crucially, the narrowing of the Control Cone implies that "steering" is impossible, but "selecting the tube" is not. This aligns with the **Intentional Constraint Collapse** theory: elite golfers do not fight the cone collapse; they structurally engineer the initial conditions (the "Effective Plant") at the top of the backswing so that the collapsing cone naturally centers on the target state. They manage the manifold, not the trajectory.
 
+## Anisotropy of the Control Cone: The "Pancake" Hypothesis {#sec-anisotropy}
+
+A critical nuance (see *Planar DCR Blindness* critique) is that the loss of control is not isotropic. The moment of inertia about the shaft axis ($I_{axial}$) is orders of magnitude smaller than the swing plane inertia. Thus, while the **Path Control Cone** (planar) collapses to a thin tube, the **Face Control Cone** (axial) likely remains relatively wide.
+
+This suggests the control cone is "pancake-shaped": thin in the dimension of travel, but wide in the dimension of face orientation.
+
+However, this does not rescue the golfer from the DCR imperative. The face angle $\phi$ is coupled to the path via the **closure rate** ($\dot{\phi} \approx 1500^\circ/s$). Even if axial authority remains high, the **timing window** to square the face is dictated by the planar trajectory. If the Planar DCR is high, the golfer cannot adjust the *arrival time* of the clubhead. Therefore, Planar DCR creates a **Temporal Accuracy Constraint** that indirectly bounds the Face Angle variance. You can steer the face, but you cannot steer the *time* you arrive at impact.
+
 # 7. Stability of Impact and Clubface Closure Variance
 
 Let clubface angle be:
@@ -385,7 +398,7 @@ H^T.
 High DCR implies large \(A_f\), hence exponential amplification of small errors.
 
 **Conclusion:**
-Impact is extremely sensitive to early-swing structure.
+Impact is extremely sensitive to early-swing structure. While the golfer may retain the torque authority to rotate the clubface (low axial inertia), the **high Planar DCR** denies them the ability to slow or steer the clubhead to *meet* that face angle at the correct millisecond. Thus, **Path Drift** enforces **Face Error**.
 
 # 8. Numerical Example: Drift vs Control Magnitude
 
