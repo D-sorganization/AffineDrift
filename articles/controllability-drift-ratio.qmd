@@ -15,17 +15,17 @@ format:
 
 High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the **Drift–Control Ratio (DCR)**,
 
-\[
+$$
 \mathrm{DCR}(t)=\frac{\|f(x(t))\|}{\|g(x(t))u(t)\|},
-\]
+$$
 
-for a control-affine system \( \dot{x}=f(x)+g(x)u \). We derive explicit expressions for drift and control using a 3-link arm–forearm–club model and conduct a nonlinear controllability analysis using Lie brackets. We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of practical controllability during the downswing.
+for a control-affine system $\dot{x}=f(x)+g(x)u$. We derive explicit expressions for drift and control using a 3-link arm–forearm–club model and conduct a nonlinear controllability analysis using Lie brackets. We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of practical controllability during the downswing.
 
 We introduce a novel analogy to **relativistic time cones**, showing that a golf swing has an evolving **control cone**—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation physically impossible. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.
 
 # 1. Introduction
 
-Elite golfers routinely generate clubhead speeds exceeding \(45\;\mathrm{m/s}\), wrist angular velocities exceeding \(2000^\circ/\mathrm{s}\), and torso angular velocities approaching \(900^\circ/\mathrm{s}\). Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.
+Elite golfers routinely generate clubhead speeds exceeding $45\;\mathrm{m/s}$, wrist angular velocities exceeding $2000^\circ/\mathrm{s}$, and torso angular velocities approaching $900^\circ/\mathrm{s}$. Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.
 
 This mirrors a common theme in high-speed movement: **the system transitions from control-dominated to drift-dominated dynamics** as velocity increases.
 
@@ -42,21 +42,21 @@ This unified approach establishes the Drift–Control Ratio as a foundational co
 
 We model the golfer–club chain as a 3-DOF planar system:
 
-- \(q_1\): shoulder rotation
-- \(q_2\): elbow rotation
-- \(q_3\): wrist/club hinge
+- $q_1$: shoulder rotation
+- $q_2$: elbow rotation
+- $q_3$: wrist/club hinge
 
 Generalized coordinates:
 
-\[
+$$
 q = (q_1, q_2, q_3)^T,\quad \dot{q} \in \mathbb{R}^3.
-\]
+$$
 
 ## 2.1 Forward Kinematics
 
 The clubhead position is:
 
-\[
+$$
 \begin{aligned}
 x &=
 \ell_1\cos q_1
@@ -67,61 +67,61 @@ y &=
 + \ell_2\sin(q_1+q_2)
 + \ell_3\sin(q_1+q_2+q_3).
 \end{aligned}
-\]
+$$
 
 Velocity:
 
-\[
+$$
 \dot{x} = J(q)\dot{q}.
-\]
+$$
 
 ## 2.2 Lagrangian Dynamics
 
 The equation of motion is:
 
-\[
+$$
 M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau.
-\]
+$$
 
 The drift term is:
 
-\[
+$$
 f(x)=
 \begin{bmatrix}
 \dot{q} \\
 M^{-1}(-C\dot{q}-G)
 \end{bmatrix},
-\]
+$$
 
 and the control term is:
 
-\[
+$$
 g(x)u=
 \begin{bmatrix}
 0 \\
 M^{-1}\tau
 \end{bmatrix}.
-\]
+$$
 
 ## 2.3 Dominance of Quadratic Velocity Terms
 
 Centripetal and Coriolis terms satisfy:
 
-\[
+$$
 C(q,\dot{q})\dot{q} \sim \mathcal{O}(\dot{q}^2)
-\]
+$$
 
 Hence:
 
-\[
+$$
 \|f(x)\| \sim k\|\dot{q}\|^2.
-\]
+$$
 
 Contrast with:
 
-\[
+$$
 \|g(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
-\]
+$$
 
 The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
 
@@ -136,54 +136,54 @@ It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures th
 
 We define:
 
-\[
+$$
 \mathrm{DCR}(t)
 =
 \frac{\|f(x(t))\|}{\|g(x(t))u(t)\|}.
-\]
+$$
 
 Using approximations:
 
-\[
+$$
 \|f\| \sim a\|\dot{q}\| + b\|\dot{q}\|^2,\quad
 \|g u\| \sim c\|\tau\|,
-\]
+$$
 
 we have:
 
-\[
+$$
 \boxed{
 \mathrm{DCR}(t)
 \approx
 \frac{a\|\dot{q}(t)\| + b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
 }
-\]
+$$
 
-Since \(\tau(t)\) typically *decreases* during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.
+Since $\tau(t)$ typically *decreases* during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.
 
 **Result:**
-\[
+$$
 \mathrm{DCR}(t) \text{ increases by } 100\times-300\times \text{ across the downswing.}
-\]
+$$
 
 # 4. Nonlinear Controllability via Lie Brackets
 
 A control-affine system is locally controllable if:
 
-\[
+$$
 \mathrm{span}\left\{
 g, [f,g], [f,[f,g]], \dots
 \right\}
 = T_x\mathbb{R}^n.
-\]
+$$
 
 The Lie bracket:
 
-\[
+$$
 [f,g]
 = \frac{\partial g}{\partial x}f
 - \frac{\partial f}{\partial x}g
-\]
+$$
 
 captures how drift distorts control directions.
 
@@ -191,9 +191,9 @@ captures how drift distorts control directions.
 
 As drift increases:
 
-- \(\frac{\partial f}{\partial x}\) contains terms \(\propto \dot{q}^2\)
+- $\frac{\partial f}{\partial x}$ contains terms $\propto \dot{q}^2$
 - the bracket magnitude grows, but
-- **control cannot access or excite these directions**, because \(g(x)u\) becomes tiny relative to \(f(x)\).
+- **control cannot access or excite these directions**, because $g(x)u$ becomes tiny relative to $f(x)$.
 
 Thus effective controllability collapses.
 
@@ -203,17 +203,17 @@ This is a structural, not numerical, phenomenon.
 
 Control authority:
 
-\[
+$$
 \alpha(t) = \frac{\|g u\|}{\|f\|} = \frac{1}{\mathrm{DCR}(t)}.
-\]
+$$
 
 Collapse occurs when:
 
-\[
+$$
 \alpha(t) < 0.1
 \quad\Leftrightarrow\quad
 \mathrm{DCR}(t) > 10.
-\]
+$$
 
 We find:
 
@@ -231,58 +231,58 @@ We now extend the analysis by introducing a new conceptual tool: the **Control C
 
 ## 6.1 Relativity Background
 
-In special relativity, the **future light cone** at event \(p\) contains all events reachable at speed ≤ \(c\). Points outside the cone cannot be influenced causally.
+In special relativity, the **future light cone** at event $p$ contains all events reachable at speed ≤ $c$. Points outside the cone cannot be influenced causally.
 
 Let:
 
-- \(\mathcal{C}^+(p)\): forward light cone
-- \(\mathcal{C}^-(p)\): backward light cone
+- $\mathcal{C}^+(p)$: forward light cone
+- $\mathcal{C}^-(p)$: backward light cone
 
-Events outside \(\mathcal{C}^+(p)\) are unreachable.
+Events outside $\mathcal{C}^+(p)$ are unreachable.
 
 ## 6.2 Control Theory Parallel: Reachable Sets
 
 For a control system:
 
-\[
+$$
 \dot{x}=f(x)+g(x)u
-\]
+$$
 
-the **reachable set** over time \(t\) from \(x_0\) is:
+the **reachable set** over time $t$ from $x_0$ is:
 
-\[
+$$
 \mathcal{R}(t;x_0)
 =
 \left\{
 x(t) : u(s)\in \mathcal{U},\; s\in[0,t]
 \right\}.
-\]
+$$
 
 When control dominates, the reachable set expands widely.
 When drift dominates, it collapses into a narrow tube around the drift trajectory.
 
 ## 6.3 Defining the Control Cone
 
-Define the **Control Cone** at state \(x\):
+Define the **Control Cone** at state $x$:
 
-\[
+$$
 \mathcal{C}_c(x)
 =
 \lim_{\Delta t\to 0^+}
 \mathcal{R}(\Delta t;x).
-\]
+$$
 
 This is the direction set the system can move **instantaneously** through control perturbations.
 
 ### When drift is small:
-\[
+$$
 \mathcal{C}_c(x) \text{ is wide}.
-\]
+$$
 
 ### When drift is large:
-\[
+$$
 \mathcal{C}_c(x) \text{ collapses to a thin region}.
-\]
+$$
 
 This is exactly analogous to the narrowing of reachable future states in relativity, but governed not by light speed, but by drift dominance.
 
@@ -290,29 +290,29 @@ This is exactly analogous to the narrowing of reachable future states in relativ
 
 The instantaneous reachable set is spanned by:
 
-\[
+$$
 \mathcal{V}(x)
 =
 \mathrm{span}\left\{
 g(x),\; \mathrm{Ad}_{e^{tf}} g,\;
 \mathrm{Ad}_{e^{tf}}[f,g], \dots
 \right\}.
-\]
+$$
 
 As drift grows:
 
-\[
+$$
 \mathrm{Ad}_{e^{tf}} g
 \longrightarrow 0
 \quad (\text{relative to drift})
-\]
+$$
 
 and
 
-\[
+$$
 \dim(\mathcal{V}(x))
 \longrightarrow 1.
-\]
+$$
 
 Interpretation:
 The future becomes **nearly predetermined**.
@@ -354,38 +354,38 @@ However, this does not rescue the golfer from the DCR imperative. The face angle
 
 Let clubface angle be:
 
-\[
+$$
 \phi(t) = h(q(t)).
-\]
+$$
 
 Linearizing:
 
-\[
+$$
 \delta \phi = H \delta q,
 \quad H = \frac{\partial h}{\partial q}.
-\]
+$$
 
 Perturbation dynamics:
 
-\[
+$$
 \delta \dot{x}
 \approx
 \frac{\partial f}{\partial x} \delta x
 \quad (\text{since control effects vanish}).
-\]
+$$
 
 Solution:
 
-\[
+$$
 \delta x(t)
 = e^{A_f (t-t_0)} \delta x(t_0),
 \quad
 A_f = \frac{\partial f}{\partial x}.
-\]
+$$
 
 The variance at impact:
 
-\[
+$$
 \mathrm{Var}[\phi]
 \approx
 H
@@ -393,9 +393,9 @@ e^{A_f \Delta t}
 \Sigma_0
 e^{A_f^T \Delta t}
 H^T.
-\]
+$$
 
-High DCR implies large \(A_f\), hence exponential amplification of small errors.
+High DCR implies large $A_f$, hence exponential amplification of small errors.
 
 **Conclusion:**
 Impact is extremely sensitive to early-swing structure. While the golfer may retain the torque authority to rotate the clubface (low axial inertia), the **high Planar DCR** denies them the ability to slow or steer the clubhead to *meet* that face angle at the correct millisecond. Thus, **Path Drift** enforces **Face Error**.
@@ -420,6 +420,7 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+```
 
 # 9. Conceptual Linkages
 
