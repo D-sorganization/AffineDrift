@@ -9,28 +9,43 @@ Features:
 - Checkboxes to toggle signal visibility
 - Clear labels and explanations
 """
+
 import sys
 
 import matplotlib
 import numpy as np
 
-matplotlib.use('QtAgg')  # Set backend explicitly for PyQt6
+matplotlib.use("QtAgg")  # Set backend explicitly for PyQt6
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog,
-                             QDialogButtonBox, QDoubleSpinBox, QGroupBox,
-                             QHBoxLayout, QLabel, QMainWindow, QPushButton,
-                             QScrollArea, QSlider, QTextEdit, QVBoxLayout,
-                             QWidget)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QPushButton,
+    QScrollArea,
+    QSlider,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
-NOISE_TYPES = ['Golf-like Random', 'Burst', 'Step', 'Sinusoidal']
+NOISE_TYPES = ["Golf-like Random", "Burst", "Step", "Sinusoidal"]
 
 # Default golf club properties (representative values)
 DEFAULT_CLUBHEAD_WEIGHT = 200.0  # grams
 DEFAULT_SHAFT_WEIGHT = 100.0  # grams
 DEFAULT_CLUB_LENGTH = 1.0  # meters (typical driver length)
 DEFAULT_CLUBHEAD_CG_DISTANCE = 0.85  # meters from grip (distance to center of mass)
+
 
 def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_m, cg_distance_m):
     """
@@ -52,7 +67,7 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
 
     # Shaft inertia (thin rod about its end): I = (1/3) * m * L²
     # For shaft, assume uniform distribution
-    I_shaft_alpha = (1/3) * m_shaft * club_length_m**2
+    I_shaft_alpha = (1 / 3) * m_shaft * club_length_m**2
 
     # Clubhead inertia about shaft axis (point mass at distance r)
     I_head_alpha = m_head * cg_distance_m**2
@@ -70,6 +85,7 @@ def calculate_moments_of_inertia(clubhead_weight_g, shaft_weight_g, club_length_
     I_gamma = 2.0 * I_alpha
 
     return I_alpha, I_gamma
+
 
 def calculate_acceleration(torque, moment_of_inertia):
     """
@@ -89,9 +105,21 @@ def calculate_acceleration(torque, moment_of_inertia):
         return np.zeros_like(torque)
     return torque / moment_of_inertia
 
+
 class NoiseTransmissionCanvas(FigureCanvas):
-    def __init__(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma,
-                 I_alpha, I_gamma, show_torque, show_acceleration, noise=None):
+    def __init__(
+        self,
+        grip_angle_deg,
+        noise_type,
+        show_input,
+        show_alpha,
+        show_gamma,
+        I_alpha,
+        I_gamma,
+        show_torque,
+        show_acceleration,
+        noise=None,
+    ):
         self.figure = Figure(figsize=(8, 6))
         super().__init__(self.figure)
         self.setMinimumSize(500, 400)  # Set minimum size for canvas
@@ -117,18 +145,18 @@ class NoiseTransmissionCanvas(FigureCanvas):
 
     def generate_noise(self):
         t = np.linspace(0, 1, 500)
-        if self.noise_type == 'Golf-like Random':
+        if self.noise_type == "Golf-like Random":
             # Simulate golf-like bursts and randomness
             noise = np.random.normal(0, 1, len(t))
-            noise += np.exp(-50*(t-0.5)**2)*8*np.random.randn(len(t))  # burst near middle
-            noise = np.convolve(noise, np.ones(10)/10, mode='same')  # smooth
-        elif self.noise_type == 'Burst':
+            noise += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))  # burst near middle
+            noise = np.convolve(noise, np.ones(10) / 10, mode="same")  # smooth
+        elif self.noise_type == "Burst":
             noise = np.zeros_like(t)
             noise[200:300] = np.random.normal(0, 2, 100)
-        elif self.noise_type == 'Step':
+        elif self.noise_type == "Step":
             noise = np.zeros_like(t)
             noise[250:] = 3
-        elif self.noise_type == 'Sinusoidal':
+        elif self.noise_type == "Sinusoidal":
             noise = np.sin(8 * np.pi * t)
         else:
             noise = np.random.normal(0, 1, len(t))
@@ -149,16 +177,26 @@ class NoiseTransmissionCanvas(FigureCanvas):
         self.ax_torque.clear()
         if self.show_torque:
             if self.show_input:
-                self.ax_torque.plot(t, self.noise, label='Input Torque', color='gray', alpha=0.7, linewidth=1.5)
+                self.ax_torque.plot(
+                    t, self.noise, label="Input Torque", color="gray", alpha=0.7, linewidth=1.5
+                )
             if self.show_alpha:
-                self.ax_torque.plot(t, torque_alpha, label='Torque α (sin θ)', color='red', linewidth=2)
+                self.ax_torque.plot(
+                    t, torque_alpha, label="Torque α (sin θ)", color="red", linewidth=2
+                )
             if self.show_gamma:
-                self.ax_torque.plot(t, torque_gamma, label='Torque γ (cos θ)', color='blue', linewidth=2)
+                self.ax_torque.plot(
+                    t, torque_gamma, label="Torque γ (cos θ)", color="blue", linewidth=2
+                )
 
-        self.ax_torque.set_title(f'Transmitted Torque (Grip Angle {self.grip_angle_deg:.0f}°)', fontsize=11, fontweight='bold')
-        self.ax_torque.set_ylabel('Torque (N·m)', fontsize=10)
+        self.ax_torque.set_title(
+            f"Transmitted Torque (Grip Angle {self.grip_angle_deg:.0f}°)",
+            fontsize=11,
+            fontweight="bold",
+        )
+        self.ax_torque.set_ylabel("Torque (N·m)", fontsize=10)
         self.ax_torque.grid(True, alpha=0.3)
-        self.ax_torque.legend(loc='upper left', fontsize=8)
+        self.ax_torque.legend(loc="upper left", fontsize=8)
 
         # Set torque y-axis limits
         if update_limits or self.torque_y_min is None or self.torque_y_max is None:
@@ -180,16 +218,24 @@ class NoiseTransmissionCanvas(FigureCanvas):
             inset_ax = self.ax_torque.inset_axes([0.65, 0.65, 0.32, 0.32])
             # Draw club as horizontal shaft
             shaft_y = 0.15
-            inset_ax.plot([0, 1], [shaft_y, shaft_y], 'k-', lw=6)
+            inset_ax.plot([0, 1], [shaft_y, shaft_y], "k-", lw=6)
 
             # Draw golf clubhead as rectangle pointing upwards above the shaft at far left end
             from matplotlib.patches import Rectangle
+
             clubhead_x = 0.0  # Far left end of shaft
             clubhead_y = shaft_y + 0.05  # Above the shaft
             clubhead_width = 0.1
             clubhead_height = 0.12
-            clubhead = Rectangle((clubhead_x, clubhead_y), clubhead_width, clubhead_height,
-                                facecolor='silver', alpha=0.8, edgecolor='gray', linewidth=1.5)
+            clubhead = Rectangle(
+                (clubhead_x, clubhead_y),
+                clubhead_width,
+                clubhead_height,
+                facecolor="silver",
+                alpha=0.8,
+                edgecolor="gray",
+                linewidth=1.5,
+            )
             inset_ax.add_patch(clubhead)
 
             # Draw hand as ellipse on the right side
@@ -197,7 +243,17 @@ class NoiseTransmissionCanvas(FigureCanvas):
             hand_width = 0.25
             hand_height = 0.12
             from matplotlib.patches import Ellipse
-            hand = Ellipse(hand_center, hand_width, hand_height, angle=self.grip_angle_deg, facecolor='tan', alpha=0.7, edgecolor='saddlebrown', linewidth=1.5)
+
+            hand = Ellipse(
+                hand_center,
+                hand_width,
+                hand_height,
+                angle=self.grip_angle_deg,
+                facecolor="tan",
+                alpha=0.7,
+                edgecolor="saddlebrown",
+                linewidth=1.5,
+            )
             inset_ax.add_patch(hand)
 
             # Draw 4 fingers that rotate from pointing left (at 0°) to pointing down (at 90°)
@@ -228,8 +284,16 @@ class NoiseTransmissionCanvas(FigureCanvas):
                 finger_mid_x = (base_x + tip_x) / 2
                 finger_mid_y = (base_y + tip_y) / 2
                 finger_angle = np.rad2deg(np.arctan2(finger_dir_y, finger_dir_x))
-                finger = Ellipse((finger_mid_x, finger_mid_y), finger_length, finger_width,
-                                angle=finger_angle, facecolor='tan', alpha=0.8, edgecolor='saddlebrown', linewidth=0.5)
+                finger = Ellipse(
+                    (finger_mid_x, finger_mid_y),
+                    finger_length,
+                    finger_width,
+                    angle=finger_angle,
+                    facecolor="tan",
+                    alpha=0.8,
+                    edgecolor="saddlebrown",
+                    linewidth=0.5,
+                )
                 inset_ax.add_patch(finger)
 
             # Draw theta angle arc (from club axis to hand axis)
@@ -239,23 +303,54 @@ class NoiseTransmissionCanvas(FigureCanvas):
             arc_center_y = shaft_y
             arc_x = arc_center_x + arc_radius * np.cos(arc_theta)
             arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
-            inset_ax.plot(arc_x, arc_y, 'g-', lw=2)
+            inset_ax.plot(arc_x, arc_y, "g-", lw=2)
 
             # Draw angle lines
             # Club axis (horizontal)
-            inset_ax.arrow(arc_center_x, arc_center_y, 0.18, 0, head_width=0.02, head_length=0.03, fc='k', ec='k')
+            inset_ax.arrow(
+                arc_center_x,
+                arc_center_y,
+                0.18,
+                0,
+                head_width=0.02,
+                head_length=0.03,
+                fc="k",
+                ec="k",
+            )
             # Hand axis (rotated)
-            inset_ax.arrow(arc_center_x, arc_center_y, 0.18*np.cos(theta_rad), 0.18*np.sin(theta_rad),
-                          head_width=0.02, head_length=0.03, fc='r', ec='r')
+            inset_ax.arrow(
+                arc_center_x,
+                arc_center_y,
+                0.18 * np.cos(theta_rad),
+                0.18 * np.sin(theta_rad),
+                head_width=0.02,
+                head_length=0.03,
+                fc="r",
+                ec="r",
+            )
             # Label theta
-            label_x = arc_center_x + arc_radius * np.cos(theta_rad/2)
-            label_y = arc_center_y + arc_radius * np.sin(theta_rad/2)
-            inset_ax.text(label_x, label_y+0.03, r"$\theta$", color='g', fontsize=14, ha='center')
-            inset_ax.text(arc_center_x+0.19, arc_center_y-0.04, 'Club Axis', color='k', fontsize=8, ha='center')
-            inset_ax.text(arc_center_x+0.19*np.cos(theta_rad), arc_center_y+0.19*np.sin(theta_rad)+0.04, 'Hand Axis', color='r', fontsize=8, ha='center')
+            label_x = arc_center_x + arc_radius * np.cos(theta_rad / 2)
+            label_y = arc_center_y + arc_radius * np.sin(theta_rad / 2)
+            inset_ax.text(label_x, label_y + 0.03, r"$\theta$", color="g", fontsize=14, ha="center")
+            inset_ax.text(
+                arc_center_x + 0.19,
+                arc_center_y - 0.04,
+                "Club Axis",
+                color="k",
+                fontsize=8,
+                ha="center",
+            )
+            inset_ax.text(
+                arc_center_x + 0.19 * np.cos(theta_rad),
+                arc_center_y + 0.19 * np.sin(theta_rad) + 0.04,
+                "Hand Axis",
+                color="r",
+                fontsize=8,
+                ha="center",
+            )
             inset_ax.set_xlim(0, 1)
             inset_ax.set_ylim(-0.1, 0.4)
-            inset_ax.axis('off')
+            inset_ax.axis("off")
             inset_ax.set_title(r"Schematic: $\theta$", fontsize=10)
         except Exception as e:
             print(f"Warning: Could not create inset axes: {e}")
@@ -264,16 +359,33 @@ class NoiseTransmissionCanvas(FigureCanvas):
         self.ax_accel.clear()
         if self.show_acceleration:
             if self.show_alpha:
-                self.ax_accel.plot(t, accel_alpha, label='Accel α (rad/s²)', color='red', linewidth=2, linestyle='--')
+                self.ax_accel.plot(
+                    t,
+                    accel_alpha,
+                    label="Accel α (rad/s²)",
+                    color="red",
+                    linewidth=2,
+                    linestyle="--",
+                )
             if self.show_gamma:
-                self.ax_accel.plot(t, accel_gamma, label='Accel γ (rad/s²)', color='blue', linewidth=2, linestyle='--')
+                self.ax_accel.plot(
+                    t,
+                    accel_gamma,
+                    label="Accel γ (rad/s²)",
+                    color="blue",
+                    linewidth=2,
+                    linestyle="--",
+                )
 
-        self.ax_accel.set_title(f'Angular Acceleration (Iα={self.I_alpha:.4f} kg·m², Iγ={self.I_gamma:.4f} kg·m²)',
-                               fontsize=11, fontweight='bold')
-        self.ax_accel.set_xlabel('Time (s)', fontsize=10)
-        self.ax_accel.set_ylabel('Acceleration (rad/s²)', fontsize=10)
+        self.ax_accel.set_title(
+            f"Angular Acceleration (Iα={self.I_alpha:.4f} kg·m², Iγ={self.I_gamma:.4f} kg·m²)",
+            fontsize=11,
+            fontweight="bold",
+        )
+        self.ax_accel.set_xlabel("Time (s)", fontsize=10)
+        self.ax_accel.set_ylabel("Acceleration (rad/s²)", fontsize=10)
         self.ax_accel.grid(True, alpha=0.3)
-        self.ax_accel.legend(loc='upper left', fontsize=8)
+        self.ax_accel.legend(loc="upper left", fontsize=8)
 
         # Set acceleration y-axis limits
         if update_limits or self.accel_y_min is None or self.accel_y_max is None:
@@ -293,8 +405,19 @@ class NoiseTransmissionCanvas(FigureCanvas):
         self.figure.tight_layout()
         self.draw()
 
-    def update_signals(self, grip_angle_deg, noise_type, show_input, show_alpha, show_gamma,
-                      I_alpha, I_gamma, show_torque, show_acceleration, regenerate_noise=False):
+    def update_signals(
+        self,
+        grip_angle_deg,
+        noise_type,
+        show_input,
+        show_alpha,
+        show_gamma,
+        I_alpha,
+        I_gamma,
+        show_torque,
+        show_acceleration,
+        regenerate_noise=False,
+    ):
         self.grip_angle_deg = grip_angle_deg
         self.show_input = show_input
         self.show_alpha = show_alpha
@@ -311,10 +434,11 @@ class NoiseTransmissionCanvas(FigureCanvas):
         else:
             self.update_plot(update_limits=False)  # Keep same limits when only angle changes
 
+
 class CalculationsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Calculations & Assumptions')
+        self.setWindowTitle("Calculations & Assumptions")
         self.setGeometry(200, 200, 800, 700)
         self.initUI()
 
@@ -563,6 +687,7 @@ class CalculationsDialog(QDialog):
         </html>
         """
 
+
 class AnglePanel(QWidget):
     def __init__(self, label, initial_angle=0):
         super().__init__()
@@ -574,7 +699,7 @@ class AnglePanel(QWidget):
         self.slider.setValue(self.angle)
         self.slider.setTickInterval(5)
         self.slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.value_label = QLabel(f'{self.angle}°')
+        self.value_label = QLabel(f"{self.angle}°")
 
         # Create layout with slider and labels
         main_layout = QVBoxLayout(self)
@@ -589,23 +714,24 @@ class AnglePanel(QWidget):
 
         # Bottom row: degree labels below slider
         label_row = QHBoxLayout()
-        label_row.addWidget(QLabel('0°'))  # Left label
+        label_row.addWidget(QLabel("0°"))  # Left label
         label_row.addStretch()  # Space for middle labels
-        label_row.addWidget(QLabel('45°'))  # Middle label
+        label_row.addWidget(QLabel("45°"))  # Middle label
         label_row.addStretch()  # Space for right
-        label_row.addWidget(QLabel('90°'))  # Right label
+        label_row.addWidget(QLabel("90°"))  # Right label
         main_layout.addLayout(label_row)
 
         self.slider.valueChanged.connect(self.update_value)
 
     def update_value(self, value):
         self.angle = value
-        self.value_label.setText(f'{self.angle}°')
+        self.value_label.setText(f"{self.angle}°")
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Grip Angle Torque Transmission & Acceleration Analysis')
+        self.setWindowTitle("Grip Angle Torque Transmission & Acceleration Analysis")
         self.setGeometry(100, 100, 1400, 900)
         self.initUI()
 
@@ -615,49 +741,49 @@ class MainWindow(QMainWindow):
         # Top bar with calculations button
         top_bar = QHBoxLayout()
         top_bar.addStretch()
-        calc_btn = QPushButton('📐 Calculations & Assumptions')
-        calc_btn.setToolTip('View detailed calculations, assumptions, and model information')
+        calc_btn = QPushButton("📐 Calculations & Assumptions")
+        calc_btn.setToolTip("View detailed calculations, assumptions, and model information")
         calc_btn.clicked.connect(self.show_calculations)
         top_bar.addWidget(calc_btn)
         top_bar.addStretch()
 
         # Club properties section
-        club_props_group = QGroupBox('Club Properties (affects inertia and acceleration)')
+        club_props_group = QGroupBox("Club Properties (affects inertia and acceleration)")
         club_props_layout = QHBoxLayout()
 
         # Clubhead weight
-        club_props_layout.addWidget(QLabel('Clubhead Weight (g):'))
+        club_props_layout.addWidget(QLabel("Clubhead Weight (g):"))
         self.clubhead_weight = QDoubleSpinBox()
         self.clubhead_weight.setRange(50, 500)
         self.clubhead_weight.setValue(DEFAULT_CLUBHEAD_WEIGHT)
-        self.clubhead_weight.setSuffix(' g')
+        self.clubhead_weight.setSuffix(" g")
         self.clubhead_weight.setDecimals(1)
         club_props_layout.addWidget(self.clubhead_weight)
 
         # Shaft weight
-        club_props_layout.addWidget(QLabel('Shaft Weight (g):'))
+        club_props_layout.addWidget(QLabel("Shaft Weight (g):"))
         self.shaft_weight = QDoubleSpinBox()
         self.shaft_weight.setRange(30, 200)
         self.shaft_weight.setValue(DEFAULT_SHAFT_WEIGHT)
-        self.shaft_weight.setSuffix(' g')
+        self.shaft_weight.setSuffix(" g")
         self.shaft_weight.setDecimals(1)
         club_props_layout.addWidget(self.shaft_weight)
 
         # Club length
-        club_props_layout.addWidget(QLabel('Club Length (m):'))
+        club_props_layout.addWidget(QLabel("Club Length (m):"))
         self.club_length = QDoubleSpinBox()
         self.club_length.setRange(0.5, 1.5)
         self.club_length.setValue(DEFAULT_CLUB_LENGTH)
-        self.club_length.setSuffix(' m')
+        self.club_length.setSuffix(" m")
         self.club_length.setDecimals(2)
         club_props_layout.addWidget(self.club_length)
 
         # CG distance
-        club_props_layout.addWidget(QLabel('CG Distance (m):'))
+        club_props_layout.addWidget(QLabel("CG Distance (m):"))
         self.cg_distance = QDoubleSpinBox()
         self.cg_distance.setRange(0.3, 1.2)
         self.cg_distance.setValue(DEFAULT_CLUBHEAD_CG_DISTANCE)
-        self.cg_distance.setSuffix(' m')
+        self.cg_distance.setSuffix(" m")
         self.cg_distance.setDecimals(2)
         club_props_layout.addWidget(self.cg_distance)
 
@@ -669,11 +795,11 @@ class MainWindow(QMainWindow):
         club_props_group.setLayout(club_props_layout)
 
         # Display/plot options
-        display_group = QGroupBox('Display Options')
+        display_group = QGroupBox("Display Options")
         display_layout = QHBoxLayout()
-        self.show_torque = QCheckBox('Show Torque Plots')
+        self.show_torque = QCheckBox("Show Torque Plots")
         self.show_torque.setChecked(True)
-        self.show_acceleration = QCheckBox('Show Acceleration Plots')
+        self.show_acceleration = QCheckBox("Show Acceleration Plots")
         self.show_acceleration.setChecked(True)
         display_layout.addWidget(self.show_torque)
         display_layout.addWidget(self.show_acceleration)
@@ -691,32 +817,32 @@ class MainWindow(QMainWindow):
         # Top header: sliders and options for both plots
         header_layout = QHBoxLayout()
         # Initialize all widgets before use
-        self.angle_panel1 = AnglePanel('Grip Angle 1', 0)
+        self.angle_panel1 = AnglePanel("Grip Angle 1", 0)
         self.noise_type_box1 = QComboBox()
         self.noise_type_box1.addItems(NOISE_TYPES)
-        self.show_input1 = QCheckBox('Show Total Input')
+        self.show_input1 = QCheckBox("Show Total Input")
         self.show_input1.setChecked(True)
-        self.show_alpha1 = QCheckBox('Show Local Alpha (sin θ)')
+        self.show_alpha1 = QCheckBox("Show Local Alpha (sin θ)")
         self.show_alpha1.setChecked(True)
-        self.show_gamma1 = QCheckBox('Show Local Gamma (cos θ)')
+        self.show_gamma1 = QCheckBox("Show Local Gamma (cos θ)")
         self.show_gamma1.setChecked(True)
-        self.update_btn1 = QPushButton('Update Plot 1')
+        self.update_btn1 = QPushButton("Update Plot 1")
 
-        self.angle_panel2 = AnglePanel('Grip Angle 2', 90)
+        self.angle_panel2 = AnglePanel("Grip Angle 2", 90)
         self.noise_type_box2 = QComboBox()
         self.noise_type_box2.addItems(NOISE_TYPES)
-        self.show_input2 = QCheckBox('Show Total Input')
+        self.show_input2 = QCheckBox("Show Total Input")
         self.show_input2.setChecked(True)
-        self.show_alpha2 = QCheckBox('Show Local Alpha (sin θ)')
+        self.show_alpha2 = QCheckBox("Show Local Alpha (sin θ)")
         self.show_alpha2.setChecked(True)
-        self.show_gamma2 = QCheckBox('Show Local Gamma (cos θ)')
+        self.show_gamma2 = QCheckBox("Show Local Gamma (cos θ)")
         self.show_gamma2.setChecked(True)
-        self.update_btn2 = QPushButton('Update Plot 2')
+        self.update_btn2 = QPushButton("Update Plot 2")
 
         # Plot 1 controls
         plot1_controls = QVBoxLayout()
         plot1_controls.addWidget(self.angle_panel1)
-        plot1_controls.addWidget(QLabel('Noise Type'))
+        plot1_controls.addWidget(QLabel("Noise Type"))
         plot1_controls.addWidget(self.noise_type_box1)
         plot1_controls.addWidget(self.show_input1)
         plot1_controls.addWidget(self.show_alpha1)
@@ -727,7 +853,7 @@ class MainWindow(QMainWindow):
         # Plot 2 controls
         plot2_controls = QVBoxLayout()
         plot2_controls.addWidget(self.angle_panel2)
-        plot2_controls.addWidget(QLabel('Noise Type'))
+        plot2_controls.addWidget(QLabel("Noise Type"))
         plot2_controls.addWidget(self.noise_type_box2)
         plot2_controls.addWidget(self.show_input2)
         plot2_controls.addWidget(self.show_alpha2)
@@ -746,9 +872,10 @@ class MainWindow(QMainWindow):
             self.show_input1.isChecked(),
             self.show_alpha1.isChecked(),
             self.show_gamma1.isChecked(),
-            I_alpha, I_gamma,
+            I_alpha,
+            I_gamma,
             self.show_torque.isChecked(),
-            self.show_acceleration.isChecked()
+            self.show_acceleration.isChecked(),
         )
         self.canvas2 = NoiseTransmissionCanvas(
             self.angle_panel2.angle,
@@ -756,16 +883,17 @@ class MainWindow(QMainWindow):
             self.show_input2.isChecked(),
             self.show_alpha2.isChecked(),
             self.show_gamma2.isChecked(),
-            I_alpha, I_gamma,
+            I_alpha,
+            I_gamma,
             self.show_torque.isChecked(),
-            self.show_acceleration.isChecked()
+            self.show_acceleration.isChecked(),
         )
         plot_layout = QHBoxLayout()
         plot_layout.addWidget(self.canvas1, 1)  # Add stretch factor
         plot_layout.addWidget(self.canvas2, 1)  # Add stretch factor
 
         # Bottom: Transmission functions info
-        info_group = QGroupBox('Transmission Functions')
+        info_group = QGroupBox("Transmission Functions")
         info_layout = QHBoxLayout()
         self.info_label = QLabel()
         self.info_label.setWordWrap(True)
@@ -806,15 +934,15 @@ class MainWindow(QMainWindow):
             self.clubhead_weight.value(),
             self.shaft_weight.value(),
             self.club_length.value(),
-            self.cg_distance.value()
+            self.cg_distance.value(),
         )
 
     def update_inertia(self):
         """Update inertia values and display, then update all plots"""
         I_alpha, I_gamma = self.get_inertia_values()
-        self.inertia_label.setText(f'Iα = {I_alpha:.4f} kg·m², Iγ = {I_gamma:.4f} kg·m²')
+        self.inertia_label.setText(f"Iα = {I_alpha:.4f} kg·m², Iγ = {I_gamma:.4f} kg·m²")
         # Only update plots if canvases exist (after initialization)
-        if hasattr(self, 'canvas1') and hasattr(self, 'canvas2'):
+        if hasattr(self, "canvas1") and hasattr(self, "canvas2"):
             self.update_all_plots()
 
     def update_all_plots(self):
@@ -825,7 +953,7 @@ class MainWindow(QMainWindow):
     def update_plot1(self):
         # Check if noise type changed (requires regeneration)
         current_noise_type = self.noise_type_box1.currentText()
-        regenerate = (current_noise_type != self.canvas1.noise_type)
+        regenerate = current_noise_type != self.canvas1.noise_type
         I_alpha, I_gamma = self.get_inertia_values()
         self.canvas1.update_signals(
             self.angle_panel1.angle,
@@ -833,17 +961,18 @@ class MainWindow(QMainWindow):
             self.show_input1.isChecked(),
             self.show_alpha1.isChecked(),
             self.show_gamma1.isChecked(),
-            I_alpha, I_gamma,
+            I_alpha,
+            I_gamma,
             self.show_torque.isChecked(),
             self.show_acceleration.isChecked(),
-            regenerate_noise=regenerate
+            regenerate_noise=regenerate,
         )
         self.update_info()
 
     def update_plot2(self):
         # Check if noise type changed (requires regeneration)
         current_noise_type = self.noise_type_box2.currentText()
-        regenerate = (current_noise_type != self.canvas2.noise_type)
+        regenerate = current_noise_type != self.canvas2.noise_type
         I_alpha, I_gamma = self.get_inertia_values()
         self.canvas2.update_signals(
             self.angle_panel2.angle,
@@ -851,10 +980,11 @@ class MainWindow(QMainWindow):
             self.show_input2.isChecked(),
             self.show_alpha2.isChecked(),
             self.show_gamma2.isChecked(),
-            I_alpha, I_gamma,
+            I_alpha,
+            I_gamma,
             self.show_torque.isChecked(),
             self.show_acceleration.isChecked(),
-            regenerate_noise=regenerate
+            regenerate_noise=regenerate,
         )
         self.update_info()
 
@@ -871,10 +1001,10 @@ class MainWindow(QMainWindow):
         gamma2_mag = np.abs(np.cos(theta2_rad))
 
         # Power/energy percentages (these add to 100%)
-        alpha1_power = np.sin(theta1_rad)**2
-        gamma1_power = np.cos(theta1_rad)**2
-        alpha2_power = np.sin(theta2_rad)**2
-        gamma2_power = np.cos(theta2_rad)**2
+        alpha1_power = np.sin(theta1_rad) ** 2
+        gamma1_power = np.cos(theta1_rad) ** 2
+        alpha2_power = np.sin(theta2_rad) ** 2
+        gamma2_power = np.cos(theta2_rad) ** 2
 
         info = (
             f"<b>Transmission Functions:</b><br>"
@@ -898,7 +1028,8 @@ class MainWindow(QMainWindow):
         dialog = CalculationsDialog(self)
         dialog.exec()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
