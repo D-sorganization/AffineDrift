@@ -17,6 +17,10 @@
 | **11. Passive Overshoot**<br>(Damping Artifact)      | Empirical / Modeling     | **Valid** (Conservative)       | **Conservative Baseline:** Acknowledge that low damping exaggerates drift. Defend the "Skeletal Baseline" as the _conservative_ lower bound of intervention. Any "braking" input reflects the net non-conservative effort required to stabilize the path.                                                                                  | **Applied** to Simulink Results |
 | **12. The Static Fallacy**<br>(ZVCF Irrelevance)     | Conceptual               | **Invalid** (Misunderstanding) | **Diagnostic Utility Argument:** Critics argue static loads are negligible in high-speed swings. The defense is that ZVCF is a _subtractive baseline_ required to isolate dynamic forces, not a claim that static forces dominate. It is the "tare" operation for the dynamic scale.                                                       | **Applied** to ZVCF Definition  |
 | **13. Input-Dependent BCs**<br>(The Grip Paradox)    | Mathematical             | **Valid** (Structural Risk)    | **Constant Impedance Assumption:** If grip stiffness depends on $u$, the mass matrix $M(u)$ breaks the affine form. We defend by assuming a "Constant Effective Impedance" for the plant, treating $u$ as the torque applied _to_ that plant, not a parameter that reshapes it.                                                            | **Applied** to Limitations      |
+| **14. Teleological Blindness**<br>(Mechanics vs. Intent) | Conceptual / Methodological | **Valid** (Interpretational) | **Efficiency Fallacy Defense:** The model measures mechanical cost (torque), not tactical utility. "Braking" torque may be stability-seeking, not error. We must explicitly distinguish "fighting drift" from "modulating drift for robustness." | **Applied** to Limitations |
+| **15. Intentional Constraint Collapse**<br>(Singularity vs Impedance) | Conceptual / Mathematical | **Valid** (Terminological) | **Virtual Constraint Defense:** Clarify that "collapse" is a metaphor for high impedance approaching a kinematic constraint. Reframe as "Quasi-Static Resolution" where $u$ shapes the *effective* manifold for short intervals, justifying the local affine approximation. | **Applied** to Constraint Article |
+| **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline) | Methodological / Philosophical | **Valid** (Epistemological) | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control *around* the trajectory. | **Applied** to Limitations |
+| **17. Planar DCR Blindness**<br>(Axial Rotation) | Methodological / Scope | **Valid** (Dimensionality) | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by arguing that Planar DCR dictates the *timing window* of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error. | **Applied** to DCR Article |
 
 ---
 
@@ -138,3 +142,40 @@ Add **"Note on Dynamic Relevance"** to the **ZVCF** section in `articles/affine-
 Add **"Input-Dependent Boundary Conditions"** to **Limitations** in `articles/affine-nature-golf-swing.qmd` and `articles/theory-part4.qmd`.
 
 > _Addition:_ "Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'."
+
+### 14. Addressing Teleological Blindness
+
+**Analysis:** The critique notes that the model conflates "Trajectory Drive" with "Impedance Modulation" because both appear as net torques. "Braking" might be "Stabilizing".
+
+**Implementation:**
+Added **"Ambiguity of Braking (Impedance vs. Drive)"** to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
+
+> _Addition:_ "We explicitly warn against the **Efficiency Fallacy**—the assumption that all 'braking' torque is error. 'Fighting the drift' should be interpreted neutrally as 'modulating the drift,' a process that may serve robustness rather than speed."
+
+### 15. Addressing Intentional Constraint Collapse
+
+**Analysis:** The "Constraint Collapse" metaphor risks implying a true singularity or topological change that would break the affine assumption.
+
+**Implementation:**
+Updated `articles/intentional-constraint-collapse.qmd` to reframe "collapse" as high impedance.
+
+> _Refinement:_ "While not a true geometric singularity... neuromuscular co-contraction creates a 'virtual constraint'..."
+> _Addition:_ Added "Limitations Note" clarifying that we treat this as a parameter reconfiguration of $f(x)$, not a topological change to the manifold.
+
+### 16. Addressing The Effective Plant Fallacy
+
+**Analysis:** If the passive plant is defined by the active task, the ZTCF is tautological.
+
+**Implementation:**
+Added to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
+
+> _Addition:_ "We defend this by acknowledging that the ZTCF represents **'Impedance-Conditioned Drift'**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible... The 'Effective Plant' baseline is the only relevant counterfactual..."
+
+### 17. Addressing Planar DCR Blindness
+
+**Analysis:** The critic argues that DCR is derived from a planar model ($q \in \mathbb{R}^3$) and thus ignores axial rotation (supination), which is the primary mechanism for squaring the face. Since axial inertia is tiny, control authority there remains high even when planar authority collapses.
+
+**Implementation:**
+Added **"Anisotropy of the Control Cone"** to `articles/controllability-drift-ratio.qmd`.
+
+> _Addition:_ "We acknowledge that the 'Control Cone' is likely **anisotropic** (pancake-shaped)... However, Planar DCR creates a **Temporal Accuracy Constraint**. Since face angle changes rapidly ($\approx 1500^\circ/s$), timing errors (caused by uncontrollable planar path velocity) map directly to face angle errors. You can steer the face, but you cannot steer the *time* you arrive at impact."

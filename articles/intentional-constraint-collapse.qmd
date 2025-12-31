@@ -25,33 +25,33 @@ In mechanical terms, this is not brute stiffness, nor passive locking. It is **t
 
 ## 2. The Golfer–Club System as a Constrained Mechanism
 
-Consider the golfer and club as a constrained multibody system with generalized coordinates \( q \). The club is coupled to the hands through bilateral constraints, and the hands themselves are linked through the torso and upper limbs, forming a **closed kinematic chain**.
+Consider the golfer and club as a constrained multibody system with generalized coordinates $q$. The club is coupled to the hands through bilateral constraints, and the hands themselves are linked through the torso and upper limbs, forming a **closed kinematic chain**.
 
 Let the constraint equations be written as:
 
-\[
+$$
 \phi(q) = 0
-\]
+$$
 
 with constraint Jacobian:
 
-\[
+$$
 J_c(q) = \frac{\partial \phi}{\partial q}
-\]
+$$
 
 The equations of motion under constraints are:
 
-\[
+$$
 M(q)\ddot{q} + h(q,\dot{q}) = S^\top \tau + J_c^\top \lambda
-\]
+$$
 
 where:
-- \( M(q) \) is the mass matrix,
-- \( h \) contains Coriolis, centrifugal, and gravity terms,
-- \( \tau \) are joint torques,
-- \( \lambda \) are constraint forces enforcing the hand–club coupling.
+- $M(q)$ is the mass matrix,
+- $h$ contains Coriolis, centrifugal, and gravity terms,
+- $\tau$ are joint torques,
+- $\lambda$ are constraint forces enforcing the hand–club coupling.
 
-Crucially, **forces transmitted to the club are mediated by \( \lambda \)**, not directly by joint torques.
+Crucially, **forces transmitted to the club are mediated by $\lambda$**, not directly by joint torques.
 
 ---
 
@@ -59,11 +59,11 @@ Crucially, **forces transmitted to the club are mediated by \( \lambda \)**, not
 
 The relationship between applied torques and constraint forces depends on the **constraint-space inertia**:
 
-\[
+$$
 \Lambda_c = \left(J_c M^{-1} J_c^\top\right)^{-1}
-\]
+$$
 
-When \( \Lambda_c \) becomes large in a particular direction, small joint torques can generate **large constraint forces** without requiring large accelerations.
+When $\Lambda_c$ becomes large in a particular direction, small joint torques can generate **large constraint forces** without requiring large accelerations.
 
 This is the mechanical origin of force amplification near kinematic singularities and poorly conditioned Jacobians in robotics. The same mathematics applies to human movement.
 
@@ -78,7 +78,7 @@ A “collapsed” constraint Jacobian does **not** imply complete loss of motion
 
 In golf, the goal is *not* to collapse the entire Jacobian. That would sacrifice control and robustness. Instead, elite golfers exhibit **anisotropic collapse**:
 
-- **Low mobility / high impedance** in:
+- **High mechanical impedance (stiffness/damping)** approaching the limit of a kinematic constraint. While not a true geometric singularity (which would imply bone-on-bone locking), the neuromuscular co-contraction creates a 'virtual constraint' that mimics a reduction in degrees of freedom in:
   - Clubface twist about the shaft axis,
   - Loft and lie perturbations,
   - Handle motion orthogonal to the intended delivery direction.
@@ -98,13 +98,15 @@ Because the golfer grips the club with **two hands separated along the shaft**, 
 - Forces that do *not* change the gross club motion,
 - But increase normal forces, torsional stiffness, and stability.
 
+> **Note:** These internal forces do not perform work on the club's center of mass motion (orthogonality), but they modulate the **apparent stiffness** of the grasp interface.
+
 Mathematically, internal forces lie in the nullspace of the task Jacobian:
 
-\[
+$$
 \tau = \tau_{\text{task}} + N^\top \tau_{\text{internal}}
-\]
+$$
 
-where \( N \) projects into the nullspace of the club motion task.
+where $N$ projects into the nullspace of the club motion task.
 
 Near impact, skilled golfers exploit this redundancy to:
 - Increase axial push–pull along the grip,
@@ -134,12 +136,12 @@ In control terms, the golfer increases effective constraint stiffness and dampin
 
 From an affine control perspective:
 
-\[
+$$
 \dot{x} = f(x) + g(x)u
-\]
+$$
 
-- The **drift** term \( f(x) \) dominates the high-speed motion of the club,
-- The **control** term \( g(x)u \) is primarily used to shape constraints, not drive speed.
+- The **drift** term $f(x)$ dominates the high-speed motion of the club,
+- The **control** term $g(x)u$ is primarily used to shape constraints, not drive speed.
 
 Constraint collapse is therefore not about “powering” the club through impact.
 It is about **controlling how drift-generated momentum is delivered**.
@@ -153,9 +155,9 @@ This distinction explains why elite players can look “passive” near impact w
 This framework makes concrete, testable predictions:
 
 1. **Reduced sensitivity of clubface angle to joint perturbations** near impact:
-   \[
+   $$
    \delta \theta_{\text{face}} \approx \frac{\partial \theta}{\partial q}\,\delta q \downarrow
-   \]
+   $$
 
 2. **Increased internal force proxies** (e.g., grip force asymmetry, forearm co-contraction) without increased clubhead acceleration.
 
@@ -197,7 +199,7 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 ## 11. Synthesis: The AffineDrift Context
 
 **The "Effective Plant" and Drift Invariance**
-This constraint shaping mechanism resolves the "Input-Dependent Boundary Conditions" critique. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
+This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique. By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
 
 **Steering the Zero-Torque Counterfactual (ZTCF)**
 In the context of the ZTCF baseline (Theory Part 2), constraint collapse functions as the "funnel" for passive momentum. The ZTCF describes the massive kinetic potential of the double-pendulum release; the collapsed constraint Jacobian ensures this energy is not dissipated into instability (e.g., face twist) upon impact. The input $u$ does not *push* the club through impact; it *locks the gates* to force the drift $f(x)$ to exit through the ball.

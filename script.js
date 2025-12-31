@@ -394,6 +394,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
+    // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
+    const linkMap = new Map();
+    tocLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        linkMap.set(href.substring(1), link);
+      }
+    });
+    let currentActiveLink = null;
+
     const sections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
@@ -424,18 +434,20 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (activeId) {
-        tocLinks.forEach((link) => {
-          if (link.getAttribute("href") === `#${activeId}`) {
-            link.classList.add("active");
-          } else {
-            link.classList.remove("active");
+        // ⚡ Bolt Optimization: Only update classes if active link changed
+        const newActiveLink = linkMap.get(activeId);
+        if (newActiveLink && newActiveLink !== currentActiveLink) {
+          if (currentActiveLink) {
+            currentActiveLink.classList.remove("active");
           }
-        });
+          newActiveLink.classList.add("active");
+          currentActiveLink = newActiveLink;
+        }
       }
     }, observerOptions);
 
     sections.forEach((section) => {
-      if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
+      if (linkMap.has(section.id)) {
         observer.observe(section);
       }
     });
@@ -715,9 +727,11 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         await navigator.clipboard.writeText(pre.innerText || pre.textContent);
         button.textContent = "Copied!";
+        button.setAttribute("aria-label", "Code copied to clipboard");
         button.classList.add("copied");
         setTimeout(() => {
           button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code to clipboard");
           button.classList.remove("copied");
         }, 2000);
       } catch (err) {
@@ -787,8 +801,25 @@ document.addEventListener("DOMContentLoaded", function () {
     // Use the article body text for calculation
     // ⚡ Bolt Optimization: Prefer textContent to avoid reflow (layout thrashing) from innerText
     const text = articleContent.textContent || articleContent.innerText;
-    // Simple word count estimate
-    const wordCount = text.trim().split(/\s+/).length;
+
+    // ⚡ Bolt Optimization: Manual character iteration to count words
+    // Avoids creating an array of strings like .split(/\s+/) which causes high GC pressure
+    // O(1) memory, O(N) CPU
+    let wordCount = 0;
+    let inWord = false;
+    const len = text.length;
+    for (let i = 0; i < len; i++) {
+        const c = text.charCodeAt(i);
+        // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
+        // Also Form Feed (12)
+        if (c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 12) {
+            inWord = false;
+        } else {
+            if (!inWord) wordCount++;
+            inWord = true;
+        }
+    }
+
     // Average reading speed (words per minute)
     const wordsPerMinute = 225;
     const minutes = Math.ceil(wordCount / wordsPerMinute);

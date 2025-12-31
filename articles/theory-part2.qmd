@@ -62,7 +62,7 @@ The decomposition is analytically exact for the chosen multibody model; in pract
 
 This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask 'what if' questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.
 
-To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene.
+To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
 ### Role in counterfactual analysis
 
@@ -117,7 +117,7 @@ The drift vector field $f(x)$ is invariant with respect to the instantaneous tor
 
 Conceptually, ZTCF isolates the drift dynamics by providing a full trajectory that is generated *only* by $f(x)$. The difference between the actual trajectory and its ZTCF counterpart, when interpreted via the equations of motion, captures the incremental effect of the torque input.
 
-The drift--input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics.
+The drift--input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. However, simply defining the trajectory is abstract. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics—to quantify the specific *torque cost* of deviating from this passive path.
 
 ### Using ZTCF with inverse dynamics
 
@@ -182,7 +182,7 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 While the ZTCF effectively subtracts the golfer's active contribution, the remaining drift term $f(x)$ is still complex: it lumps together static forces (gravity, stiffness) with dynamic forces (Coriolis, centrifugal, damping). To fully diagnose the mechanical load, we need a finer decomposition of the drift itself. We must distinguish between loads that exist purely because of *where* the club is (configuration) and loads that exist because of *how fast* it is moving (velocity).
 
-The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion.
+The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF lumps all these passive effects into a single baseline. To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion. We must therefore introduce a second counterfactual, one that freezes time to isolate the forces of configuration.
 
 ## Zero Velocity Counterfactual (ZVCF)
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
@@ -207,7 +207,7 @@ $$
 
 Only the configuration variables $q(t)$ and $\eta(t)$ are retained; all generalized velocities are set to zero. This geometric operation projects the system state onto the submanifold of static states.
 
-Evaluating the equations of motion at this state yields the *ZVCF generalized torque*:
+Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
 $$\tau_{\mathrm{ZVCF}}(t)
   =

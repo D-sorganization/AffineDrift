@@ -27,10 +27,9 @@
   --text-muted: #6c757d;
   --border-color: #e9ecef;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -2px rgb(0 0 0 / 0.05);
   --shadow-color: rgb(0, 0, 0, 0.1);
 
   /* Gradients */
@@ -456,8 +455,8 @@ nav .container {
   padding: 1rem;
   border-radius: 6px;
   overflow-x: auto;
-  font-family:
-    SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
   font-size: 0.9rem;
   margin: 1.5rem 0;
 }
@@ -481,8 +480,20 @@ nav .container {
   transition: opacity 0.2s;
 }
 
-.code-wrapper:hover .copy-btn {
+.code-wrapper:hover .copy-btn,
+.copy-btn:focus {
   opacity: 1;
+}
+
+.copy-btn:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.copy-btn.copied {
+  opacity: 1;
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
 }
 
 /* ===========================
@@ -618,15 +629,19 @@ nav .container {
 .text-center {
   text-align: center;
 }
+
 .mt-1 {
   margin-top: 0.25rem;
 }
+
 .mt-2 {
   margin-top: 0.5rem;
 }
+
 .mt-4 {
   margin-top: 1.5rem;
 }
+
 .mb-4 {
   margin-bottom: 1.5rem;
 }
@@ -658,9 +673,15 @@ nav .container {
   visibility: visible;
 }
 
-.back-to-top:hover {
+.back-to-top:hover,
+.back-to-top:focus {
   transform: translateY(-2px);
   background: var(--accent-blue);
+}
+
+.back-to-top:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
 }
 
 .back-to-top svg {
@@ -676,4 +697,51 @@ nav .container {
   margin-left: 0.25rem;
   font-size: 0.8em;
   opacity: 0.6;
+}
+
+/* ===========================
+   Print Optimization
+   =========================== */
+@media print {
+  /* Hide Navigation & UI */
+  header,
+  footer,
+  .left-sidebar,
+  .right-sidebar,
+  .home-sidebar,
+  .back-to-top,
+  .skip-to-content,
+  .copy-btn,
+  .nav-toggle,
+  .lightbox-overlay {
+    display: none !important;
+  }
+
+  /* Reset Layout for Paper */
+  body,
+  .standard-page-layout,
+  .main-content-area {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ink Saving & Readability */
+  a {
+    text-decoration: underline;
+    color: black !important;
+  }
+
+  h1, h2, h3 {
+    color: black !important;
+    break-after: avoid;
+  }
+
+  img, pre, blockquote {
+    break-inside: avoid;
+    border-color: #ccc;
+  }
 }
