@@ -120,9 +120,7 @@ def g_vector(q: np.ndarray) -> np.ndarray:
     """
     q1, q2 = q
 
-    g1 = (m1 * c1 + m2 * l1) * GRAVITY_M_S2 * np.sin(
-        q1
-    ) + m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
+    g1 = (m1 * c1 + m2 * l1) * GRAVITY_M_S2 * np.sin(q1) + m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
     g2 = m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
 
     return np.array([g1, g2], dtype=float)
@@ -407,9 +405,7 @@ def run_example() -> None:
     )
 
     # Compute natural torque trajectory
-    t_samples, tau_nat_traj = compute_tau_natural_trajectory(
-        sol, lambda t, x: u_pd(t, x)
-    )
+    t_samples, tau_nat_traj = compute_tau_natural_trajectory(sol, lambda t, x: u_pd(t, x))
 
     # Simple console output
     print("Simulation completed.")

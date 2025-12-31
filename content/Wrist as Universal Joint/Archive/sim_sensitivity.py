@@ -5,12 +5,12 @@ import numpy as np
 # 1. Physics Parameters & Constants
 # ==========================================
 # Inertia Properties (kg * m^2)
-I_alpha = 0.2500   # Inertia of Swing Plane (Whole club rotation)
-I_beta  = 0.0005   # Inertia of Shaft Axis (Twisting the head)
+I_alpha = 0.2500  # Inertia of Swing Plane (Whole club rotation)
+I_beta = 0.0005  # Inertia of Shaft Axis (Twisting the head)
 
 # Simulation Inputs
 torque_noise = 5.0  # Magnitude of passive constraint torque (N*m)
-dt = 0.05           # Duration of the release window (seconds)
+dt = 0.05  # Duration of the release window (seconds)
 
 # Grip Angles to simulate (0 = Fingers, 90 = Palm)
 # We simulate a continuous range for the plot
@@ -20,6 +20,7 @@ angles_rad = np.radians(angles_deg)
 # ==========================================
 # 2. The Simulation Loop (Continuous)
 # ==========================================
+
 
 def simulate_impact(angle_rad, total_torque):
     """
@@ -44,6 +45,7 @@ def simulate_impact(angle_rad, total_torque):
 
     return np.degrees(disp_beta_rad), np.degrees(disp_alpha_rad)
 
+
 # Run simulation
 face_errors = []
 path_deviations = []
@@ -57,38 +59,49 @@ for ang in angles_rad:
 # 3. Data Visualization
 # ==========================================
 
-plt.style.use('seaborn-v0_8-whitegrid')
+plt.style.use("seaborn-v0_8-whitegrid")
 fig, ax1 = plt.subplots(figsize=(10, 6))
 
 # Plot Face Angle Error (Red)
-color = 'tab:red'
-ax1.set_xlabel('Grip Angle (Degrees)\n0° = Deep Fingers | 90° = Full Palm', fontsize=12)
-ax1.set_ylabel('Face Angle Error (Degrees)', color=color, fontsize=12)
-line1, = ax1.plot(angles_deg, face_errors, color=color, linewidth=3, label='Face Angle Error (Dispersion)')
-ax1.tick_params(axis='y', labelcolor=color)
+color = "tab:red"
+ax1.set_xlabel("Grip Angle (Degrees)\n0° = Deep Fingers | 90° = Full Palm", fontsize=12)
+ax1.set_ylabel("Face Angle Error (Degrees)", color=color, fontsize=12)
+(line1,) = ax1.plot(
+    angles_deg, face_errors, color=color, linewidth=3, label="Face Angle Error (Dispersion)"
+)
+ax1.tick_params(axis="y", labelcolor=color)
 ax1.set_ylim(0, 16)
 
 # Create a second y-axis for Path Deviation (Green)
 ax2 = ax1.twinx()
-color = 'tab:blue'
-ax2.set_ylabel('Swing Path Deviation (Degrees)', color=color, fontsize=12)
-line2, = ax2.plot(angles_deg, path_deviations, color=color, linewidth=3, linestyle='--', label='Path Deviation (Speed/Line)')
-ax2.tick_params(axis='y', labelcolor=color)
-ax2.set_ylim(0, 16) # Match scales for visual comparison
+color = "tab:blue"
+ax2.set_ylabel("Swing Path Deviation (Degrees)", color=color, fontsize=12)
+(line2,) = ax2.plot(
+    angles_deg,
+    path_deviations,
+    color=color,
+    linewidth=3,
+    linestyle="--",
+    label="Path Deviation (Speed/Line)",
+)
+ax2.tick_params(axis="y", labelcolor=color)
+ax2.set_ylim(0, 16)  # Match scales for visual comparison
 
 # Title and Annotations
-plt.title(f'Grip Routing Sensitivity: Impact of {torque_noise}Nm Constraint Torque', fontsize=14, pad=20)
-plt.axvline(x=15, color='gray', linestyle=':', alpha=0.5)
-plt.text(16, 14, 'Standard Grip\nRange', color='gray')
+plt.title(
+    f"Grip Routing Sensitivity: Impact of {torque_noise}Nm Constraint Torque", fontsize=14, pad=20
+)
+plt.axvline(x=15, color="gray", linestyle=":", alpha=0.5)
+plt.text(16, 14, "Standard Grip\nRange", color="gray")
 
 # Combined Legend
 lines = [line1, line2]
 labels = [l.get_label() for l in lines]
-ax1.legend(lines, labels, loc='upper left', frameon=True)
+ax1.legend(lines, labels, loc="upper left", frameon=True)
 
 # Save
 plt.tight_layout()
-plt.savefig('grip_sensitivity_analysis.png', dpi=300)
+plt.savefig("grip_sensitivity_analysis.png", dpi=300)
 plt.show()
 
 # ==========================================

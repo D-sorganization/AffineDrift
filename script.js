@@ -463,6 +463,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Lazy load iframes
+  if ("loading" in HTMLIFrameElement.prototype) {
+    document.querySelectorAll("iframe[src]").forEach((iframe) => {
+      if (!iframe.hasAttribute("loading")) {
+        iframe.setAttribute("loading", "lazy");
+      }
+    });
+  }
+
   // Accordion functionality
   const accordionHeaders = document.querySelectorAll(".accordion-header");
   accordionHeaders.forEach((header, index) => {
