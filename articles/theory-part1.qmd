@@ -121,10 +121,23 @@ $$ \mathcal{V}_h = J_h(q) \dot{q}. $$
 The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
 
 The velocity of any point on the shaft is thus given by the transport theorem:
-$$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}, $$
-where $J_{\text{rigid}}(s, q)$ transforms joint rates into the rigid-body velocity at point $s$, and $\Phi(s)$ is the matrix of mode shape values at $s$.
+$$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}. $$
+Here, $J_{\text{rigid}}(s, q) \in \mathbb{R}^{3 \times n}$ is the Jacobian transforming joint rates into the rigid-body velocity field at point $s$, and $\Phi(s) \in \mathbb{R}^{3 \times m}$ is the matrix of spatial mode shapes.
 
-This decomposition is fundamental because the kinetic energy of the system is the integral of these squared velocities over the mass distribution. The cross-terms in the square of this sum ($ \dot{q}^T J^T \Phi \dot{\eta}$) are precisely what generate the off-diagonal inertial coupling $M_{q\eta}$ in the mass matrix. This coupling is not a "linkage" artifact; it is the physical mechanism by which hand acceleration instantaneously loads the shaft (inertial forcing) and by which shaft recoil exerts forces on the hands.
+The total kinetic energy $T$ is obtained by integrating the squared velocity over the shaft's mass distribution $\rho(s)$:
+$$
+T_{\text{shaft}} = \frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds.
+$$
+Substituting the velocity decomposition yields:
+$$
+T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \left( \int \rho J^T J ds \right) \dot{q} + \dot{q}^T \left( \int \rho J^T \Phi ds \right) \dot{\eta} + \frac{1}{2} \dot{\eta}^T \left( \int \rho \Phi^T \Phi ds \right) \dot{\eta}.
+$$
+This explicit integration reveals the structure of the mass matrix blocks:
+1.  $M_{qq} = \int \rho J^T J ds$ is the rigid-body inertia projected to joint space.
+2.  $M_{\eta\eta} = \int \rho \Phi^T \Phi ds$ is the modal mass matrix (typically identity $I_m$ by orthogonality).
+3.  $M_{q\eta} = \int \rho J^T \Phi ds$ is the **inertial coupling matrix**.
+
+The cross-term $M_{q\eta}$ is precisely what couples the rigid and flexible dynamics. It is not a "linkage" artifact; it is the physical mechanism by which hand acceleration ($ \ddot{q} $) instantaneously loads the shaft (via $-M_{q\eta}^T \ddot{q}$ in the modal equations) and by which shaft recoil exerts reaction torques on the hands.
 
 ### Notation table
 
@@ -205,12 +218,16 @@ The zero vector in the lower block of the forcing term is the defining feature o
 
 To perform the drift-input decomposition, we must solve for the accelerations, effectively inverting the inertia matrix to isolate the causal origin of motion.
 
-Since $M$ is positive-definite, $M^{-1}$ exists. We denote the inverse inertia matrix by $H(q_{\text{sys}}) = M^{-1}$. Using the **Schur Complement** decomposition, we can explicitly solve for the blockwise inverses. Let $\Delta$ be the Schur complement of $M_{\eta\eta}$ in $M$:
-$$ \Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}. $$
-In robotic mechanics, $\Delta$ is known as the **Articulated Body Inertia** of the handle. It represents the effective inertia felt by the hands when the shaft modes are free to accelerate (i.e., not locked).
-The inverse block $H_{qq}$ is simply $\Delta^{-1}$. This leads to a crucial physical insight: the effective mobility of the hands depends on the flexibility of the club.
+To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. Using the **Schur Complement** decomposition, we can explicitly write the blockwise inverse:
+$$
+H = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix},
+$$
+where the diagonal block $H_{qq}$ is given by the inverse of the **Articulated Body Inertia** $\Delta$:
+$$ \Delta = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}, \quad H_{qq} = \Delta^{-1}. $$
+Crucially, the off-diagonal block $H_{\eta q}$ determines how joint torques affect shaft modes:
+$$ H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
 
-Multiplying the equation of motion by $M^{-1}$ isolates the acceleration:
+Multiplying the equation of motion by $M^{-1}$ isolates the acceleration vector:
 $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} =
 \underbrace{-M^{-1} \left( C\dot{q}_{\text{sys}} + G + \text{Elastic/Damping} \right)}_{\text{Passive Drift Acceleration } a_{\text{drift}}}
@@ -228,9 +245,13 @@ $$
 \begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
 $$
 
+Substituting the explicit form for $H_{\eta q}$:
+$$
+\ddot{\eta}_{\text{input}} = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
+$$
 This equation provides the rigorous mechanical definition of **Input Forces**:
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$.
-2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in} = H_{\eta q} B(q) u$. This term is non-zero only because $M_{\eta q} \neq 0$. It proves that "lag" or "lead" deflection can be actively induced by hand torque, mediated strictly by the inertial coupling matrix.
+2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
 
 Substituting the actuation model, we separate the drift and input terms.
 
