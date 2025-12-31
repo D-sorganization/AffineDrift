@@ -53,7 +53,7 @@ Let $Q$ be an $n$-dimensional configuration manifold, with local coordinates $q 
 A *control-affine system* is a system of ODEs of the form
 
 $$
-\dot x = f(x) + \sum_{i=1}^m g_i(x),u_i,
+\dot x = f(x) + \sum_{i=1}^m g_i(x) u_i
 \tag{2.1}
 $$
 
@@ -96,12 +96,11 @@ $$
 then $\tilde{\mathcal{F}}_x$ is **linear in $u$**. Hence, for any $u^{(1)},u^{(2)} \in \mathbb{R}^m$ and scalars $\alpha,\beta \in \mathbb{R}$,
 
 $$
-\tilde{\mathcal{F}}_x!\left(\alpha u^{(1)} + \beta u^{(2)}\right)
-=================================================================
-
-\alpha,\tilde{\mathcal{F}}_x!\left(u^{(1)}\right)
+\tilde{\mathcal{F}}_x\left(\alpha u^{(1)} + \beta u^{(2)}\right)
+=
+\alpha \tilde{\mathcal{F}}_x\left(u^{(1)}\right)
 +
-\beta,\tilde{\mathcal{F}}_x!\left(u^{(2)}\right).
+\beta \tilde{\mathcal{F}}_x\left(u^{(2)}\right).
 \tag{2.5}
 $$
 
@@ -116,8 +115,7 @@ $$
 
 $$
 G(x) u
-======
-
+=
 G(x) u^{(g)} + G(x) u^{(c)} + G(x) u^{(d)} + \cdots.
 \tag{2.7}
 $$
@@ -166,7 +164,7 @@ We can regard $(f^\text{ext}, n^\text{ext})$ as *control-like inputs* $u \in \ma
 $$
 u =
 \begin{bmatrix}
-f^\text{ext} [3pt]
+f^\text{ext} \\[3pt]
 n^\text{ext}
 \end{bmatrix}.
 \tag{3.2}
@@ -194,32 +192,31 @@ Writing this as $\dot x = f(x) + G(x) u$, we identify:
 
 Explicitly, for $x = (p, R, v, \omega)$:
 
-[
+$$
 f(x) =
 \begin{bmatrix}
-R , v^B [3pt]
-R \widehat{\omega}^B [3pt]
-g^B [3pt]
-
-* I_B^{-1}\big(\omega \times (I_B \omega)\big)
+R v^B \\[3pt]
+R \widehat{\omega}^B \\[3pt]
+g^B \\[3pt]
+-I_B^{-1}\big(\omega \times (I_B \omega)\big)
   \end{bmatrix},
   \quad
   G(x) =
   \begin{bmatrix}
-  0_{3\times 3} & 0_{3\times 3} [3pt]
-  0_{3\times 3} & 0_{3\times 3} [3pt]
-  \frac{1}{m} I_{3} & 0_{3} [3pt]
+  0_{3\times 3} & 0_{3\times 3} \\[3pt]
+  0_{3\times 3} & 0_{3\times 3} \\[3pt]
+  \frac{1}{m} I_{3} & 0_{3} \\[3pt]
   0_{3} & I_B^{-1}
   \end{bmatrix}.
   \tag{3.5}
-  ]
+$$
 
 Then
 
-[
-\dot x = f(x) + G(x),u.
+$$
+\dot x = f(x) + G(x) u.
 \tag{3.6}
-]
+$$
 
 Note that $G(x)$ is *constant* (independent of $x$) in this simple rigid-body case, but this is not essential; in multibody systems $G(x)$ will depend on configuration.
 
@@ -240,40 +237,35 @@ for example:
 
 Define
 
-[
+$$
 \dot x(u) := f(x) + G(x) u.
 \tag{3.8}
-]
+$$
 
 Then
 
-[
+$$
+\begin{aligned}
 \dot x(u)
-=========
-
-# f(x) + G(x) \left(u^{(g)} + u^{(c)} + u^{(d)} + \cdots \right)
-
-f(x)
-
-* G(x)u^{(g)}
-* G(x)u^{(c)}
-* G(x)u^{(d)} + \cdots.
-  \tag{3.9}
-  ]
+&= f(x) + G(x) \left(u^{(g)} + u^{(c)} + u^{(d)} + \cdots \right) \\
+&= f(x) + G(x)u^{(g)} + G(x)u^{(c)} + G(x)u^{(d)} + \cdots.
+\end{aligned}
+\tag{3.9}
+$$
 
 Define
 
-[
-\Delta \dot x^{(i)} := G(x) u^{(i)},
+$$
+\Delta \dot x^{(i)} := G(x) u^{(i)}
 \tag{3.10}
-]
+$$
 
 the incremental contribution of $u^{(i)}$ to $\dot x$ relative to the drift. Then
 
-[
+$$
 \dot x(u) = f(x) + \sum_i \Delta \dot x^{(i)}.
 \tag{3.11}
-]
+$$
 
 This is the **Newton–Euler superposition principle for inputs**: the instantaneous state derivative is the drift plus a linear sum of contributions from each input.
 
@@ -285,10 +277,10 @@ Now consider a multibody system with $n$ generalized coordinates $q \in \mathbb{
 
 Using Newton–Euler and constraint kinematics, one arrives at the standard manipulator form of the equations,
 
-[
-M(q),\ddot q + C(q,\dot q),\dot q + g(q) + d(q,\dot q) = \tau + J^\top(q) f^\text{ext},
+$$
+M(q),\ddot q + C(q,\dot q) \dot q + g(q) + d(q,\dot q) = \tau + J^\top(q) f^\text{ext},
 \tag{3.12}
-]
+$$
 
 where:
 
@@ -302,21 +294,21 @@ where:
 
 We can group the right-hand side as a sum of *generalized forces*:
 
-[
+$$
 Q(q,\dot q, u) := \tau + J^\top(q) f^\text{ext},
 \tag{3.13}
-]
+$$
 
 where we think of the controls as
 
-[
+$$
 u :=
 \begin{bmatrix}
-\tau [3pt]
+\tau \\[3pt]
 f^\text{ext}
 \end{bmatrix}.
 \tag{3.14}
-]
+$$
 
 ### 3.4 Control-affine structure
 
@@ -324,8 +316,8 @@ Solve (3.12) for $\ddot q$:
 
 \begin{align}
 \ddot q
-&= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \Big) \
-&= M(q)^{-1} \Big( - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \Big)
+&= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big) \
+&= M(q)^{-1} \Big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big)
 
 * M(q)^{-1}\tau
 * M(q)^{-1} J^\top(q) f^\text{ext}.
@@ -334,43 +326,42 @@ Solve (3.12) for $\ddot q$:
 
 Define
 
-[
+$$
 f(x) :=
 \begin{bmatrix}
-\dot q [3pt]
-M(q)^{-1} \big( - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \big)
+\dot q \\[3pt]
+M(q)^{-1} \big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \big)
 \end{bmatrix},
 \tag{3.16}
-]
+$$
 
-[
+$$
 G_\tau(x) :=
 \begin{bmatrix}
-0_{n\times n} [3pt]
+0_{n\times n} \\[3pt]
 M(q)^{-1}
 \end{bmatrix},
 \quad
 G_f(x) :=
 \begin{bmatrix}
-0_{n\times r} [3pt]
+0_{n\times r} \\[3pt]
 M(q)^{-1} J^\top(q)
 \end{bmatrix},
 \tag{3.17}
-]
+$$
 
 where $r$ is the dimension of $f^\text{ext}$. Then
 
-[
+$$
 \dot x =
 \begin{bmatrix}
-\dot q [3pt]
+\dot q \\ \\[3pt]
 \ddot q
 \end{bmatrix}
-=============
-
-f(x) + G_\tau(x),\tau + G_f(x), f^\text{ext}.
+=
+f(x) + G_\tau(x)\tau + G_f(x) f^\text{ext}.
 \tag{3.18}
-]
+$$
 
 Again we see a **control-affine system** with $m = n + r$ input channels ($n$ joint torques and $r$ external wrench components). At fixed $x$, the map from $(\tau,f^\text{ext})$ to $\ddot q$ is *linear*.
 
@@ -381,60 +372,57 @@ We can now formalize the Newton–Euler version of superposition.
 ::: theorem
 Let a multibody system with generalized coordinates $q \in \mathbb{R}^n$ satisfy (3.12). Define the mapping
 
-[
+$$
 \Phi_{(q,\dot q)} : \mathbb{R}^n \times \mathbb{R}^r \to \mathbb{R}^n,
 \quad
 \Phi_{(q,\dot q)}(\tau, f^\text{ext}) := \ddot q.
-]
+$$
 
 Then, for each fixed $(q,\dot q)$, the map
-[
+$$
 (\tau, f^\text{ext}) \mapsto \Phi_{(q,\dot q)}(\tau, f^\text{ext}) - \Phi_{(q,\dot q)}(0, 0)
-]
+$$
 is linear in $(\tau,f^\text{ext})$.
 :::
 
 ::: proof
 From (3.15),
 
-[
+$$
 \ddot q = A(q,\dot q) + M(q)^{-1} \tau + M(q)^{-1} J^\top(q) f^\text{ext},
-]
+$$
 
 where
 
-[
-A(q,\dot q) := M(q)^{-1} \big( - C(q,\dot q),\dot q - g(q) - d(q,\dot q) \big)
-]
+$$
+A(q,\dot q) := M(q)^{-1} \big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \big)
+$$
 
 depends only on $(q,\dot q)$, not on $(\tau,f^\text{ext})$.
 
 Hence,
 
-[
+$$
 \Phi_{(q,\dot q)}(\tau, f^\text{ext})
-=====================================
-
+=
 A(q,\dot q) + M(q)^{-1} \tau + M(q)^{-1} J^\top(q) f^\text{ext},
-]
+$$
 
 and
 
-[
+$$
 \Phi_{(q,\dot q)}(0, 0)
-=======================
-
+=
 A(q,\dot q).
-]
+$$
 
 Thus,
 
-[
+$$
 \Phi_{(q,\dot q)}(\tau, f^\text{ext}) - \Phi_{(q,\dot q)}(0, 0)
-===============================================================
-
+=
 M(q)^{-1} \tau + M(q)^{-1} J^\top(q) f^\text{ext}.
-]
+$$
 
 The right-hand side is a linear map of $(\tau,f^\text{ext})$. ∎
 :::
@@ -452,33 +440,33 @@ Consider a planar pendulum: point mass $m$ at end of rigid massless rod length $
 
 Elementary Newtonian derivation yields:
 
-[
+$$
 I,\ddot q + mgl \sin q = \tau, \quad I = m l^2.
 \tag{3.19}
-]
+$$
 
 Rewrite as
 
-[
+$$
 \ddot q = -\frac{g}{l} \sin q + \frac{1}{m l^2} \tau.
 \tag{3.20}
-]
+$$
 
 Define state $x = (q,\dot q)$ and input $u := \tau$. Then
 
-[
+$$
 \dot x =
 \begin{bmatrix}
-\dot q [3pt]
+\dot q \\[3pt]
 -\frac{g}{l} \sin q
 \end{bmatrix}
 +
 \begin{bmatrix}
-0 [3pt]
+0 \\[3pt]
 \frac{1}{m l^2}
 \end{bmatrix} u.
 \tag{3.21}
-]
+$$
 
 This is clearly of the form (2.1) with $m=1$ input.
 
@@ -486,10 +474,10 @@ This is clearly of the form (2.1) with $m=1$ input.
 
 Suppose we decompose the torque $u$ as
 
-[
+$$
 u = u^{(g)} + u^{(c)},
 \tag{3.22}
-]
+$$
 
 where:
 
@@ -498,41 +486,41 @@ where:
 
 At some fixed $(q,\dot q)$, the gravitational acceleration term is
 
-[
+$$
 \ddot q^{(\text{drift})} = -\frac{g}{l} \sin q.
 \tag{3.23}
-]
+$$
 
 The incremental accelerations from each torque component are
 
-[
+$$
 \Delta \ddot q^{(g)} = \frac{1}{m l^2} u^{(g)}, \qquad
 \Delta \ddot q^{(c)} = \frac{1}{m l^2} u^{(c)}.
 \tag{3.24}
-]
+$$
 
 The total acceleration is
 
-[
+$$
 \ddot q = \ddot q^{(\text{drift})}
 
 * \Delta \ddot q^{(g)} + \Delta \ddot q^{(c)}.
   \tag{3.25}
-  ]
+$$
 
 For instance, if $u^{(g)} = mgl \sin q$ (exact gravity compensation), then
 
-[
+$$
 \Delta \ddot q^{(g)} = \frac{1}{m l^2} (mgl \sin q) = \frac{g}{l} \sin q,
 \tag{3.26}
-]
+$$
 
 which cancels the drift term (3.23), and we are left with
 
-[
+$$
 \ddot q = \frac{1}{m l^2} u^{(c)}.
 \tag{3.27}
-]
+$$
 
 This is a very concrete illustration of Newton–Euler superposition: *the gravitational component and control component of acceleration add linearly*.
 
@@ -546,10 +534,10 @@ We now re-derive the same structure using Lagrangian mechanics, which highlights
 
 Let $Q$ be the configuration manifold, $q \in Q$ generalized coordinates, $\dot q \in T_q Q$ generalized velocities. A mechanical system is defined by a Lagrangian
 
-[
+$$
 L(q,\dot q) = T(q,\dot q) - V(q),
 \tag{4.1}
-]
+$$
 
 with kinetic energy $T$ and potential energy $V$.
 
@@ -557,26 +545,26 @@ with kinetic energy $T$ and potential energy $V$.
 
 Assume standard mechanical type:
 
-[
+$$
 T(q,\dot q) = \frac{1}{2} \dot q^\top M(q) \dot q,
 \tag{4.2}
-]
+$$
 
 with $M(q)$ symmetric positive definite. Then
 
-[
+$$
 \frac{\partial L}{\partial \dot q} = M(q)\dot q.
 \tag{4.3}
-]
+$$
 
 #### 4.1.2 Generalized forces
 
 Let $Q(q,\dot q, t)$ denote the generalized forces, defined by
 
-[
+$$
 Q_k = \sum_{j} f_j \cdot \frac{\partial r_j}{\partial q_k},
 \tag{4.4}
-]
+$$
 
 where:
 
@@ -589,29 +577,29 @@ By construction, $Q$ is **linear in the physical forces $f_j$**. We will exploit
 
 The Lagrange–d’Alembert principle yields
 
-[
+$$
 \frac{d}{dt} \frac{\partial L}{\partial \dot q_k}
 
 * \frac{\partial L}{\partial q_k} = Q_k,
   \quad k=1,\dots,n,
   \tag{4.5}
-  ]
+$$
 
 or in vector form,
 
-[
+$$
 \frac{d}{dt} \frac{\partial L}{\partial \dot q}
 
 * \frac{\partial L}{\partial q} = Q.
   \tag{4.6}
-  ]
+$$
 
 Substituting (4.2) and $L = T-V$ gives the standard manipulator form:
 
-[
+$$
 M(q)\ddot q + C(q,\dot q)\dot q + g(q) = Q.
 \tag{4.7}
-]
+$$
 
 Here, $C$ and $g$ emerge from the time derivative and the potential term (we do not re-derive them in detail; the important point is that they depend on $(q,\dot q)$ but not on $Q$).
 
@@ -636,48 +624,48 @@ Let $f^{(1)},\dots,f^{(m)}$ denote a collection of **force components** (or wren
 
 By construction of (4.4), the generalized forces are
 
-[
+$$
 Q(q,\dot q) = \sum_{i=1}^m Q^{(i)}(q,\dot q),
 \quad
 Q^{(i)}(q,\dot q) := \sum_j f^{(i)}_j \cdot \frac{\partial r_j}{\partial q}.
 \tag{4.8}
-]
+$$
 
 Define an **input vector** $u \in \mathbb{R}^m$ that scales each force component:
 
-[
+$$
 f^{(i)} = u_i ,\bar f^{(i)},
 \tag{4.9}
-]
+$$
 
 where $\bar f^{(i)}$ is a unit "shape" of the $i$th force (for example a fixed direction at a given attachment point). Then
 
-[
+$$
 Q^{(i)}(q,\dot q;u_i) = u_i, \bar Q^{(i)}(q,\dot q),
 \tag{4.10}
-]
+$$
 
 where
 
-[
+$$
 \bar Q^{(i)}(q,\dot q)
 = \sum_j \bar f^{(i)}_j \cdot \frac{\partial r_j}{\partial q}.
 \tag{4.11}
-]
+$$
 
 Therefore,
 
-[
+$$
 Q(q,\dot q; u) = \sum_{i=1}^m u_i, \bar Q^{(i)}(q,\dot q).
 \tag{4.12}
-]
+$$
 
 In matrix form,
 
-[
+$$
 Q(q,\dot q;u) = B(q,\dot q) u,
 \tag{4.13}
-]
+$$
 
 with columns $B_i(q,\dot q) = \bar Q^{(i)}(q,\dot q)$.
 
@@ -693,28 +681,28 @@ M(q)\ddot q + C(q,\dot q)\dot q + g(q) &= B(q,\dot q) u, \
 
 Define state $x=(q,\dot q)$ and vector fields:
 
-[
+$$
 f(x) :=
 \begin{bmatrix}
-\dot q [3pt]
+\dot q \\[3pt]
 
 * M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
   \end{bmatrix},
   \quad
   G(x) :=
   \begin{bmatrix}
-  0_{n\times m} [3pt]
+  0_{n\times m} \\[3pt]
   M(q)^{-1}B(q,\dot q)
   \end{bmatrix}.
   \tag{4.15}
-  ]
+$$
 
 Then
 
-[
-\dot x = f(x) + G(x),u.
+$$
+\dot x = f(x) + G(x) u.
 \tag{4.16}
-]
+$$
 
 Hence, the Lagrangian equations of motion yield a **control-affine system** exactly as in (2.1).
 
@@ -729,31 +717,31 @@ Consider a mechanical system with Lagrangian $L(q,\dot q)$ and generalized force
 ::: proof
 From (4.14),
 
-[
+$$
 \ddot q = - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
 
 * M(q)^{-1}B(q,\dot q) u.
-  ]
+$$
 
 For fixed $(q,\dot q)$, define
 
-[
+$$
 A(q,\dot q) := - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right),
 \quad
 L(q,\dot q) := M(q)^{-1} B(q,\dot q).
-]
+$$
 
 Then
 
-[
+$$
 \ddot q = A(q,\dot q) + L(q,\dot q),u.
-]
+$$
 
 Thus the map $u \mapsto \ddot q$ is affine, and the incremental map
 
-[
+$$
 u \mapsto \ddot q - \ddot q\big|_{u=0} = L(q,\dot q),u
-]
+$$
 
 is linear. ∎
 :::
@@ -769,29 +757,29 @@ Re-derive the pendulum example from §3.6 using Lagrange–d’Alembert.
 
 Compute
 
-[
+$$
 \frac{\partial L}{\partial \dot q} = m l^2 \dot q,
 \quad
 \frac{d}{dt} \frac{\partial L}{\partial \dot q} = m l^2 \ddot q,
-]
+$$
 
-[
+$$
 \frac{\partial L}{\partial q} = - m g l \sin q.
-]
+$$
 
 Joint torque $\tau$ is the generalized force:
 
-[
+$$
 Q = \tau.
-]
+$$
 
 Lagrange–d’Alembert equation:
 
-[
+$$
 m l^2 \ddot q - (- m g l \sin q) = \tau
 \quad\Rightarrow\quad
 m l^2 \ddot q + m g l \sin q = \tau,
-]
+$$
 
 which is identical to (3.19). We then repeat the decomposition in (3.22)–(3.27); all linear superposition steps follow directly from the linearity of $Q$ in $\tau$.
 
@@ -805,39 +793,39 @@ Screw theory packages translational and rotational quantities into unified **twi
 
 A **twist** is a 6D vector
 
-[
+$$
 V =
 \begin{bmatrix}
 \omega \ v
 \end{bmatrix},
 \tag{5.1}
-]
+$$
 
 with angular velocity $\omega \in \mathbb{R}^3$ and linear velocity $v \in \mathbb{R}^3$ of a body frame.
 
 A **wrench** is a 6D vector
 
-[
+$$
 F =
 \begin{bmatrix}
 n \ f
 \end{bmatrix},
 \tag{5.2}
-]
+$$
 
 with moment $n \in \mathbb{R}^3$ and force $f \in \mathbb{R}^3$ about the body frame origin.
 
 The **spatial inertia matrix** of a rigid body is a symmetric $6\times 6$ matrix of the form
 
-[
+$$
 \mathcal{I} =
 \begin{bmatrix}
-I & m,c^\times [3pt]
+I & m,c^\times \\[3pt]
 
 * m,c^\times & m I_3
   \end{bmatrix},
   \tag{5.3}
-  ]
+$$
 
 where
 
@@ -848,10 +836,10 @@ where
 
 The spatial **momentum** is $h = \mathcal{I} V$, and Newton–Euler dynamics become
 
-[
+$$
 \mathcal{I} \dot V + \mathrm{ad}^\ast_V \mathcal{I} V = \sum F^\text{ext},
 \tag{5.4}
-]
+$$
 
 where $\mathrm{ad}^\ast_V$ is the dual of the Lie algebra adjoint operator (encoding Coriolis and gyroscopic terms), and the sum runs over all external wrenches applied to the body.
 
@@ -859,10 +847,10 @@ where $\mathrm{ad}^\ast_V$ is the dual of the Lie algebra adjoint operator (enco
 
 For a chain of rigid bodies, the dynamics can be written compactly (Featherstone-style) as
 
-[
+$$
 \mathcal{M}(q),\dot V + \mathcal{C}(q,\dot q),V = \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q),
 \tag{5.5}
-]
+$$
 
 where:
 
@@ -873,10 +861,10 @@ where:
 
 In minimal coordinate form, one recovers the manipulator equation
 
-[
+$$
 M(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J(q)^\top f^\text{ext},
 \tag{5.6}
-]
+$$
 
 but the spatial formalism keeps wrenches and twists as first-class objects.
 
@@ -891,48 +879,48 @@ The crucial property is:
 
 Consider a manipulator with end-effector twist $V_e$ and Jacobian $J(q)$ such that
 
-[
+$$
 V_e = J(q)\dot q.
 \tag{5.7}
-]
+$$
 
 The **joint torques** $\tau$ produce end-effector wrench $F_e$ related by the power duality
 
-[
+$$
 \tau^\top \dot q = F_e^\top V_e,
 \tag{5.8}
-]
+$$
 
 i.e., mechanical power at the joints equals mechanical power at the end-effector. Using (5.7),
 
-[
+$$
 \tau^\top \dot q = F_e^\top J(q)\dot q
 = (J(q)^\top F_e)^\top \dot q.
 \tag{5.9}
-]
+$$
 
 Since this must hold for all $\dot q$, we obtain
 
-[
+$$
 \tau = J(q)^\top F_e.
 \tag{5.10}
-]
+$$
 
 Thus, for fixed configuration $q$, the mapping $F_e \mapsto \tau$ is *linear* (matrix multiplication by $J(q)^\top$).
 
 If the end-effector wrench $F_e$ is itself decomposed as
 
-[
+$$
 F_e = \sum_{i=1}^m u_i F_e^{(i)},
 \tag{5.11}
-]
+$$
 
 then
 
-[
+$$
 \tau = \sum_{i=1}^m u_i J(q)^\top F_e^{(i)}.
 \tag{5.12}
-]
+$$
 
 So each input component $u_i$ contributes an additive joint torque component $J(q)^\top F_e^{(i)}$.
 
@@ -940,25 +928,25 @@ So each input component $u_i$ contributes an additive joint torque component $J(
 
 The spatial equations (5.5) can be written as
 
-[
+$$
 \mathcal{M}(q),\dot V = - \mathcal{C}(q,\dot q),V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q).
 \tag{5.13}
-]
+$$
 
 At fixed state $(q,\dot q)$, the matrix $\mathcal{M}$, operator $\mathcal{C}$, and mapping $\mathcal{W}$ are fixed. Solving,
 
-[
+$$
 \dot V(q,\dot q; u)
 = \mathcal{M}(q)^{-1} \left(- \mathcal{C}(q,\dot q),V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q) \right).
 \tag{5.14}
-]
+$$
 
 Thus,
 
-[
+$$
 \dot V(q,\dot q; u) = A(q,\dot q) + B(q,\dot q) u,
 \tag{5.15}
-]
+$$
 
 with $A(q,\dot q)$ and $B(q,\dot q)$ independent of $u$. The dependence on $u$ is linear.
 
@@ -974,38 +962,38 @@ The proof is simply (5.14)–(5.15).
 
 Consider a single rigid link actuated by a spatial wrench $F^\text{act}$. Let the link’s twist $V$ obey
 
-[
+$$
 \mathcal{I} \dot V + \mathrm{ad}^\ast_V \mathcal{I} V = F^\text{grav} + F^\text{act},
 \tag{5.16}
-]
+$$
 
 where $F^\text{grav}$ is the gravity wrench, and $F^\text{act}$ is the actuator-applied wrench. Writing explicitly,
 
-[
+$$
 \dot V = \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} + F^\text{act} \right).
 \tag{5.17}
-]
+$$
 
 Decompose $F^\text{act}$ into basis wrenches:
 
-[
+$$
 F^\text{act} = \sum_{i=1}^m u_i \bar F^{(i)}.
 \tag{5.18}
-]
+$$
 
 Then
 
-[
+$$
 \dot V
 = \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} \right)
 
 * \mathcal{I}^{-1} \sum_{i=1}^m u_i \bar F^{(i)}.
   \tag{5.19}
-  ]
+$$
 
 Define
 
-[
+$$
 A(V) := \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} \right),
 \quad
 B := \mathcal{I}^{-1}
@@ -1013,14 +1001,14 @@ B := \mathcal{I}^{-1}
 \bar F^{(1)} & \cdots & \bar F^{(m)}
 \end{bmatrix}.
 \tag{5.20}
-]
+$$
 
 Then
 
-[
+$$
 \dot V = A(V) + B u,
 \tag{5.21}
-]
+$$
 
 where $u \in \mathbb{R}^m$. This is the same control-affine structure as before, now in terms of twists and wrenches; the superposition in $u$ is again immediate.
 
@@ -1034,17 +1022,17 @@ We now summarize and compare the Newton–Euler, Lagrangian, and screw-theoretic
 
 All three approaches lead to equations of the form
 
-[
+$$
 \ddot q = f_2(q,\dot q) + H(q,\dot q) u,
 \tag{6.1}
-]
+$$
 
 with state $x=(q,\dot q)$, drift $f(x)$, and input matrix $G(x)$ such that
 
-[
+$$
 \dot x = f(x) + G(x) u.
 \tag{6.2}
-]
+$$
 
 * **Newton–Euler**: $M(q)$ arises from summing link inertias; $H(q,\dot q)$ is $M(q)^{-1}$ times a matrix that maps torques and external wrenches to generalized forces.
 * **Lagrangian**: $M(q)$ arises from the kinetic energy metric; $H(q,\dot q) = M(q)^{-1} B(q,\dot q)$ where $B$ encodes generalized forces from physical forces.
@@ -1063,7 +1051,7 @@ It is essential to stress what we *do not* get:
 * For a general nonlinear mechanical system, if $x^{(1)}(t)$ solves $\dot x = f(x) + G(x) u^{(1)}(t)$ and $x^{(2)}(t)$ solves $\dot x = f(x) + G(x) u^{(2)}(t)$, then in general
   [
   x(t) \neq x^{(1)}(t) + x^{(2)}(t)
-  ]
+$$
   except in special linear cases.
 * Superposition in this paper refers to **linear decomposition of instantaneous generalized forces and accelerations** with respect to input channels at a fixed state, not linear combination of trajectories.
 
@@ -1081,37 +1069,37 @@ Consider a 2-link planar robot arm with joint angles $q_1,q_2$, link lengths $l_
 
 The equations of motion can be written as
 
-[
+$$
 M(q) \ddot q + C(q,\dot q)\dot q + g(q) = \tau,
 \tag{7.1}
-]
+$$
 
 with $q = [q_1;q_2]^\top$, $\tau = [\tau_1;\tau_2]^\top$.
 
 Explicit expressions (standard textbook result, shown here to emphasize structure):
 
-[
+$$
 M(q) =
 \begin{bmatrix}
 a + 2b \cos q_2 & d + b \cos q_2 \
 d + b \cos q_2 & d
 \end{bmatrix},
 \tag{7.2}
-]
+$$
 
 where
 
-[
+$$
 a = I_1 + I_2 + m_2 l_1^2, \quad
 b = m_2 l_1 c_2, \quad
 d = I_2,
-]
+$$
 
 and $c_2$ is the COM distance of link 2 from joint 2.
 
 The Coriolis/centrifugal term is
 
-[
+$$
 C(q,\dot q)\dot q =
 \begin{bmatrix}
 
@@ -1119,60 +1107,60 @@ C(q,\dot q)\dot q =
   b \sin q_2, \dot q_1^2
   \end{bmatrix},
   \tag{7.3}
-  ]
+$$
 
 and the gravity vector
 
-[
+$$
 g(q) =
 \begin{bmatrix}
 (m_1 c_1 + m_2 l_1)g \cos q_1 + m_2 c_2 g \cos(q_1 + q_2) \
 m_2 c_2 g \cos(q_1 + q_2)
 \end{bmatrix}.
 \tag{7.4}
-]
+$$
 
 Rewrite (7.1) as
 
-[
+$$
 \ddot q = - M(q)^{-1}\big(C(q,\dot q)\dot q + g(q)\big) + M(q)^{-1}\tau.
 \tag{7.5}
-]
+$$
 
 At a fixed $(q,\dot q)$, define:
 
-[
+$$
 \ddot q^{(\text{drift})}(q,\dot q) := - M(q)^{-1}\big(C(q,\dot q)\dot q + g(q)\big),
-]
+$$
 
-[
+$$
 L(q,\dot q) := M(q)^{-1}.
-]
+$$
 
 Then
 
-[
+$$
 \ddot q = \ddot q^{(\text{drift})}(q,\dot q) + L(q,\dot q),\tau.
 \tag{7.6}
-]
+$$
 
 As before, if we decompose
 
-[
+$$
 \tau = \tau^{(g)} + \tau^{(c)} + \tau^{(d)},
 \tag{7.7}
-]
+$$
 
 corresponding to gravity compensation, control, and disturbance, we have
 
-[
+$$
 \ddot q = \ddot q^{(\text{drift})}
 
 * L(q,\dot q),\tau^{(g)}
 * L(q,\dot q),\tau^{(c)}
 * L(q,\dot q),\tau^{(d)}.
   \tag{7.8}
-  ]
+$$
 
 Each term $L(q,\dot q),\tau^{(i)}$ is the **instantaneous acceleration contribution** of the corresponding torque component.
 
@@ -1189,7 +1177,7 @@ The key distinction is *interpretive*: Lagrangian mechanics frames $M(q)$ as a m
 
 For the same 2R planar manipulator, consider the end-effector exerting a planar force $f_e = [f_x;f_y]^\top$ (moments ignored for simplicity). The Jacobian $J(q) \in \mathbb{R}^{2\times 2}$ satisfies
 
-[
+$$
 \begin{bmatrix}
 \dot x \ \dot y
 \end{bmatrix}
@@ -1198,21 +1186,21 @@ For the same 2R planar manipulator, consider the end-effector exerting a planar 
 \dot q_1 \ \dot q_2
 \end{bmatrix},
 \tag{7.9}
-]
+$$
 
 so that the power duality implies
 
-[
+$$
 \tau = J(q)^\top f_e.
 \tag{7.10}
-]
+$$
 
 Decompose the end-effector force as
 
-[
+$$
 f_e = f_e^{(1)} + f_e^{(2)},
 \tag{7.11}
-]
+$$
 
 with, say,
 
@@ -1221,32 +1209,32 @@ with, say,
 
 Then
 
-[
+$$
 \tau
 = J(q)^\top f_e^{(1)} + J(q)^\top f_e^{(2)}
 = \tau^{(1)} + \tau^{(2)}.
 \tag{7.12}
-]
+$$
 
 Substituting into (7.5),
 
-[
+$$
 \ddot q
 = \ddot q^{(\text{drift})}
 
 * L(q,\dot q),\tau^{(1)}
 * L(q,\dot q),\tau^{(2)}.
   \tag{7.13}
-  ]
+$$
 
 If we are interested in the acceleration "due to environment forces" versus "due to commanded forces," we can compute each term separately at a given $(q,\dot q)$:
 
-[
+$$
 \Delta \ddot q^{(1)} = L(q,\dot q),J(q)^\top f_e^{(1)},
 \quad
 \Delta \ddot q^{(2)} = L(q,\dot q),J(q)^\top f_e^{(2)}.
 \tag{7.14}
-]
+$$
 
 This is a direct screw-theoretic superposition: the **total acceleration is the sum of accelerations induced by separate wrenches**.
 
@@ -1259,7 +1247,7 @@ We have shown, in three formulations (Newton–Euler, Lagrangian, screw-theoreti
 1. Multibody mechanical systems with actuation via generalized forces admit **control-affine dynamics** of the form
    [
    \dot x = f(x) + G(x) u,
-   ]
+$$
    where $x = (q,\dot q)$ and $u$ parameterizes joint torques and/or external wrenches.
 2. For each fixed state $x$, the mapping $u \mapsto \dot x$ (or $u \mapsto \ddot q$) is **affine**, and the incremental dependence on $u$ (relative to $u=0$) is **linear**.
 3. This yields a rigorous **superposition principle for inputs**: the instantaneous contributions of different input channels (actuators, gravity compensation, disturbances, contact forces) to generalized accelerations and wrenches add linearly.

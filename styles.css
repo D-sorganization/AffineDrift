@@ -71,9 +71,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hide duplicate title block in the main content area */
+/* Style the title block in the main content area */
 #title-block-header {
-  display: none !important;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#title-block-header .title {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Typography */
@@ -143,7 +149,14 @@ a:hover {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 1rem; /* Reduce top padding for better alignment */
   align-items: start; /* Prevent sidebars from stretching unnecessarily */
+}
+
+/* Ensure grid items align at top */
+.standard-page-layout > * {
+  align-self: start;
+  margin-top: 0;
 }
 
 /* Grid Placement */
@@ -166,7 +179,8 @@ body .standard-page-layout .right-sidebar {
 .left-sidebar,
 .right-sidebar {
   background: transparent;
-  padding-top: 1rem;
+  padding-top: 0;
+  align-self: start; /* Align to top of grid */
 }
 
 /* Sticky Content in Sidebars */
@@ -182,6 +196,23 @@ body .standard-page-layout .right-sidebar {
 .main-content-area {
   min-width: 0; /* Crucial for Grid item shrinking */
   width: 100%;
+  padding-top: 0; /* Ensure content starts at top */
+}
+
+/* Reset Quarto's default margins on main content */
+#quarto-content main,
+.main-content-area > article,
+.main-content-area > .article-body {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Ensure first heading in content appears at top */
+.main-content-area > h1:first-child,
+.main-content-area > article > h1:first-child,
+.main-content-area h1.title {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 /* Constrain prose width for readability, but allow containers to be wide */
