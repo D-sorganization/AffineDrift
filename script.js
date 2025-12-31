@@ -792,8 +792,25 @@ document.addEventListener("DOMContentLoaded", function () {
     // Use the article body text for calculation
     // ⚡ Bolt Optimization: Prefer textContent to avoid reflow (layout thrashing) from innerText
     const text = articleContent.textContent || articleContent.innerText;
-    // Simple word count estimate
-    const wordCount = text.trim().split(/\s+/).length;
+
+    // ⚡ Bolt Optimization: Manual character iteration to count words
+    // Avoids creating an array of strings like .split(/\s+/) which causes high GC pressure
+    // O(1) memory, O(N) CPU
+    let wordCount = 0;
+    let inWord = false;
+    const len = text.length;
+    for (let i = 0; i < len; i++) {
+        const c = text.charCodeAt(i);
+        // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
+        // Also Form Feed (12)
+        if (c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 12) {
+            inWord = false;
+        } else {
+            if (!inWord) wordCount++;
+            inWord = true;
+        }
+    }
+
     // Average reading speed (words per minute)
     const wordsPerMinute = 225;
     const minutes = Math.ceil(wordCount / wordsPerMinute);
