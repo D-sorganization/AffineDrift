@@ -451,6 +451,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Lazy load iframes
+  if ("loading" in HTMLIFrameElement.prototype) {
+    document.querySelectorAll("iframe[src]").forEach((iframe) => {
+      if (!iframe.hasAttribute("loading")) {
+        iframe.setAttribute("loading", "lazy");
+      }
+    });
+  }
+
   // Accordion functionality
   const accordionHeaders = document.querySelectorAll(".accordion-header");
   accordionHeaders.forEach((header, index) => {
@@ -831,7 +840,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
-  const contentImages = document.querySelectorAll("#quarto-document-content img");
+  const contentImages = document.querySelectorAll(
+    "#quarto-document-content img",
+  );
   if (contentImages.length > 0) {
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";

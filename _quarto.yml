@@ -90,8 +90,6 @@ format:
     code-fold: true
     code-tools: false
     html-math-method: mathjax
-    mathjax:
-      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
     include-in-header:
       - text: |
 
@@ -128,63 +126,6 @@ format:
               align-items: center;
             }
           </style>
-          <script type="text/javascript">
-          window.MathJax = {
-            loader: {
-              load: ['[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-            },
-            tex: {
-              packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-              inlineMath: [['$', '$'], ['\\(', '\\)']],
-              displayMath: [['$$', '$$'], ['\\[', '\\]']],
-              processEscapes: true,
-              processEnvironments: true,
-              processRefs: true,
-              digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-              tags: 'ams',
-              tagSide: 'right',
-              tagIndent: '0.8em',
-              multlineWidth: '85%',
-              maxMacros: 10000,
-              maxBuffer: 5120,
-              macros: {
-                qd: "{\\dot{q}}",
-                qdd: "{\\ddot{q}}",
-                etad: "{\\dot{\\eta}}",
-                etadd: "{\\ddot{\\eta}}",
-                xd: "{\\dot{x}}",
-                R: "{\\mathbb{R}}"
-              }
-            },
-            chtml: {
-              scale: 1.0,
-              minScale: 0.5,
-              mtextInheritFont: false,
-              merrorInheritFont: true,
-              mathmlSpacing: false,
-              skipAttributes: {},
-              exFactor: 0.5,
-              displayAlign: 'center',
-              displayIndent: '0'
-            },
-            svg: {
-              scale: 1.0,
-              minScale: 0.5,
-              mtextInheritFont: false,
-              merrorInheritFont: true,
-              mathmlSpacing: false,
-              skipAttributes: {},
-              exFactor: 0.5,
-              displayAlign: 'center',
-              displayIndent: '0'
-            },
-            startup: {
-              pageReady: function() {
-                return MathJax.startup.defaultPageReady();
-              }
-            }
-          };
-          </script>
           <script>
             document.addEventListener('DOMContentLoaded', function() {
               const navbarTools = document.querySelector('.quarto-navbar-tools');
@@ -211,24 +152,6 @@ format:
             </div>
           </footer>
           <script src="script.js"></script>
-          <script>
-          // MathJax automatically typesets content after startup, but we check for
-          // equations in HTML blocks that might need reprocessing after DOM is fully loaded
-          document.addEventListener('DOMContentLoaded', function() {
-            if (window.MathJax && window.MathJax.typesetPromise) {
-              // Only manually typeset if there are unprocessed math elements
-              // MathJax automatically typesets on startup, so this is only for edge cases
-              const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-              if (hasUnprocessedMath) {
-                MathJax.startup.promise.then(function() {
-                  return MathJax.typesetPromise();
-                }).catch(function(err) {
-                  console.log('MathJax typeset error:', err);
-                });
-              }
-            }
-          });
-          </script>
 
 # Metadata for all pages
 metadata:
