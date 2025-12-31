@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 
-def find_links(file_path):
+def find_links(file_path: Path) -> list[tuple[str, int]]:
     with open(file_path, encoding="utf-8") as f:
         content = f.read()
 
@@ -27,9 +27,19 @@ def find_links(file_path):
     ]  # Approximation of line number
 
 
-def check_links(root_dir):
+def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
+    seen = set()
+    unique = []
+    for link in links:
+        if link not in seen:
+            unique.append(link)
+            seen.add(link)
+    return unique
+
+
+def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     root_path = Path(root_dir)
-    broken_links = []
+    broken_links: list[tuple[str, int, str]] = []
 
     print(f"Scanning {root_path}...")
 
@@ -87,16 +97,6 @@ def check_links(root_dir):
                     broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
-
-
-def unique_broken(links):
-    seen = set()
-    unique = []
-    for link in links:
-        if link not in seen:
-            unique.append(link)
-            seen.add(link)
-    return unique
 
 
 if __name__ == "__main__":
