@@ -1,4 +1,5 @@
 import re
+import sys
 from pathlib import Path
 
 
@@ -105,5 +106,6 @@ if __name__ == "__main__":
         print("\nBroken Links Found:")
         for file, line, link in broken:
             print(f"{file}:{line} -> {link}")
+        sys.exit(1)
     else:
         print("\nNo broken internal links found.")
