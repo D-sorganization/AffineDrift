@@ -54,8 +54,16 @@ def check_site_health() -> None:
     orphaned_files = set(html_files)
 
     # Files that are always entry points (not orphaned)
-    entry_points = {"index.html", "404.html"}
+    # These include the main index, error pages, and standalone pages
+    # that may be accessed directly via URL (e.g., easter eggs, standalone tools)
+    entry_points = {"index.html", "404.html", "daydreams-doodles.html"}
     orphaned_files -= entry_points
+
+    # Exclude archive directories from orphan check - these are intentionally not linked
+    orphaned_files = {
+        f for f in orphaned_files
+        if "/archive/" not in f and not f.startswith("archive/")
+    }
 
     for file_path in html_files:
         full_path = os.path.join(DOCS_DIR, file_path)
