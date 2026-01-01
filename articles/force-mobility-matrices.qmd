@@ -46,6 +46,12 @@ are geometric duals of one another.
 Understanding these ellipsoids reveals why certain phases of the swing offer great 
 mechanical leverage while others offer almost none.
 
+::: {.callout-note}
+## Connection to AffineDrift Framework: The "Effective Plant"
+
+In the broader context of nonlinear control, these ellipsoids define the instantaneous "Effective Plant"—the mechanical hardware through which the golfer's intent must pass. The shape of the **mobility ellipsoid** directly informs the **Drift-Control Ratio (DCR)**: directions of high mobility are where the system is most susceptible to passive drift ($f(x)$), requiring little input to move but offering little resistance to inertial fling. Conversely, the **force ellipsoid** dictates where the "Control Cone" is strongest. A "collapsed" mobility ellipsoid in a specific direction (low mobility) implies an enormous capacity to transmit force in that same direction, a property elite golfers exploit to stabilize the clubface at impact.
+:::
+
 ## The Jacobian: The Mapping Between Joint Space and Club Motion
 
 Let $q \in \mathbb{R}^n$ denote the joint coordinates of the upper body, arms, 
@@ -87,6 +93,9 @@ These directions change continuously throughout the golf swing.
 Near impact, the club has extremely high mobility in its tangential direction, 
 explaining why even tiny joint motions can dramatically alter clubhead speed.
 
+**Synthesis: Drift Dominance**
+This geometric mobility is the kinematic root of **Drift Dominance**. As the mobility ellipsoid elongates along the tangential path, the system's "Inertial Memory" (accumulated momentum) dominates. The golfer cannot "steer" effectively in high-mobility directions because the control input ($g(x)u$) is dwarfed by the massive passive dynamics ($f(x)$) already present in that subspace.
+
 ## The Force Ellipsoid
 
 Reaction forces at the clubhead map back to joint torques via the transpose of 
@@ -110,6 +119,9 @@ Its principal axes represent:
     
 - directions in which very little force can be produced or resisted 
     (low constraint).
+
+**Synthesis: Intentional Constraint Collapse**
+The duality of these ellipsoids explains the mechanism of **Intentional Constraint Collapse**. By orienting the body such that the force ellipsoid's major axis aligns with the critical stability vectors (e.g., clubface normal), the golfer utilizes the skeleton's geometric stiffness rather than active muscle torque to stabilize the club. This "collapses" the mobility in that direction, effectively turning the linkage into a solid structure at the moment of impact without requiring infinite muscular effort.
 
 ## The Double Pendulum Analogy
 
@@ -214,6 +226,9 @@ This duality guarantees that:
 This relationship is not an empirical observation but a geometric consequence of 
 the system constraints.
 
+### Synthesis: Null Space and Parallel Mechanisms
+While the double pendulum models the arm-club system as a serial chain, the two hands on the grip technically form a **Parallel Mechanism** (a closed loop). This creates an "over-constrained" system where internal forces can exist in the **Null Space** of the Jacobian. These internal forces (co-contraction between the hands) do not produce motion (mobility) but do reshape the stiffness of the joint, effectively inflating the Force Ellipsoid in specific directions without changing the kinematic configuration. This allows the golfer to modulate the "Effective Plant" impedance independent of the trajectory.
+
 ## Video Demonstration
 
 The following video provides a visual demonstration of mobility and force ellipses in action:
@@ -245,3 +260,11 @@ and why certain swing positions feel "strong" or "weak" independent of muscle
 strength.  
 Ultimately, they reveal that the geometry of the body--club system, not muscular 
 effort, determines what motions and forces are possible at each instant.
+
+::: {.callout-note}
+## Related Concepts
+*   **Drift-Control Ratio (DCR)**: How mobility ellipsoids quantify the battle between passive inertia and active control. (See: `articles/controllability-drift-ratio.qmd`)
+*   **Intentional Constraint Collapse**: The strategy of aligning the force ellipsoid's major axis with impact loads. (See: `articles/intentional-constraint-collapse.qmd`)
+*   **Null Space**: The mathematical home of internal forces in parallel mechanisms. (See: `articles/null-space-constraint-jacobian.qmd`)
+*   **The Effective Plant**: How geometry dictates the baseline mechanical impedance.
+:::
