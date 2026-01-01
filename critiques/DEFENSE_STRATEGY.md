@@ -21,6 +21,7 @@
 | **15. Intentional Constraint Collapse**<br>(Singularity vs Impedance) | Conceptual / Mathematical | **Valid** (Terminological) | **Virtual Constraint Defense:** Clarify that "collapse" is a metaphor for high impedance approaching a kinematic constraint. Reframe as "Quasi-Static Resolution" where $u$ shapes the *effective* manifold for short intervals, justifying the local affine approximation. | **Applied** to Constraint Article |
 | **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline) | Methodological / Philosophical | **Valid** (Epistemological) | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control *around* the trajectory. | **Applied** to Limitations |
 | **17. Planar DCR Blindness**<br>(Axial Rotation) | Methodological / Scope | **Valid** (Dimensionality) | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by arguing that Planar DCR dictates the *timing window* of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error. | **Applied** to DCR Article |
+| **18. Dimensional Inconsistency**<br>(Unit Mixing) | Mathematical / Dimensional | **Valid** (Formulation) | **Dynamic Fiber Definition:** Acknowledge that $\|f(x)\|$ mixes velocity and acceleration units. Redefine DCR explicitly on the **acceleration subspace** (comparing drift torque/acceleration to control torque/acceleration) to ensure dimensional homogeneity and physical meaningfulness. | **Applied** to DCR Article |
 
 ---
 
@@ -179,3 +180,13 @@ Added to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
 Added **"Anisotropy of the Control Cone"** to `articles/controllability-drift-ratio.qmd`.
 
 > _Addition:_ "We acknowledge that the 'Control Cone' is likely **anisotropic** (pancake-shaped)... However, Planar DCR creates a **Temporal Accuracy Constraint**. Since face angle changes rapidly ($\approx 1500^\circ/s$), timing errors (caused by uncontrollable planar path velocity) map directly to face angle errors. You can steer the face, but you cannot steer the *time* you arrive at impact."
+
+### 18. Addressing Dimensional Inconsistency of DCR
+
+**Analysis:**
+The critique correctly points out that the Euclidean norm of the state derivative vector $\dot{x} = [\dot{q}, \ddot{q}]^T$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). This makes the scalar DCR value sensitive to the choice of time units (e.g., seconds vs milliseconds).
+
+**Implementation:**
+We will refine the definition of DCR in `articles/controllability-drift-ratio.qmd` to focus explicitly on the **dynamic fiber** (accelerations/torques), where the competition between passive and active forces actually occurs. We will redefine DCR as the ratio of **Drift Acceleration** to **Control Acceleration Capacity**.
+
+> _Refinement:_ "To ensure dimensional consistency, we define the DCR specifically on the vertical fiber of the tangent bundle (the acceleration subspace). We compare the magnitude of the drift-induced acceleration $\|\ddot{q}_{drift}\|$ to the maximum available control acceleration $\|\ddot{q}_{control}\|..."
