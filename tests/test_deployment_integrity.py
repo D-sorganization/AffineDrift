@@ -5,7 +5,7 @@ WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "deploy-website.yml"
 REQUIREMENTS_PATH = ROOT_DIR / "requirements.txt"
 
 
-def test_deploy_workflow_integrity():
+def test_deploy_workflow_integrity() -> None:
     """Ensure critical checks are present in the deployment workflow."""
     assert WORKFLOW_PATH.exists(), "Deployment workflow file missing"
 
@@ -25,7 +25,7 @@ def test_deploy_workflow_integrity():
     assert "curl" in content, "Curl verification missing"
 
 
-def test_requirements_integrity():
+def test_requirements_integrity() -> None:
     """Ensure build dependencies are present."""
     assert REQUIREMENTS_PATH.exists()
 
@@ -37,7 +37,7 @@ def test_requirements_integrity():
     ), "beautifulsoup4 missing from requirements (needed for health check)"
 
 
-def test_check_scripts_exist():
+def test_check_scripts_exist() -> None:
     """Ensure the check scripts actually exist."""
     assert (ROOT_DIR / "tools" / "check_links.py").exists()
     assert (ROOT_DIR / "tools" / "check_site_health.py").exists()

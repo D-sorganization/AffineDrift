@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
+    """Extract all links from a file."""
     with open(file_path, encoding="utf-8") as f:
         content = f.read()
 
@@ -29,6 +30,7 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
 
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
+    """Remove duplicate broken links."""
     seen = set()
     unique = []
     for link in links:
@@ -39,6 +41,7 @@ def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str
 
 
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
+    """Check for broken internal links in the project."""
     root_path = Path(root_dir)
     broken_links: list[tuple[str, int, str]] = []
 
