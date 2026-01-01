@@ -65,8 +65,7 @@ def check_site_health() -> None:
 
             # Find all links
             for a in soup.find_all("a", href=True):
-                # mypy thinks 'a' could be NavigableString
-                href = a["href"]  # type: ignore
+                href = a["href"]
 
                 # Handle potential list/multi-valued attributes (though href should be string)
                 if not isinstance(href, str):
