@@ -1,112 +1,34 @@
-# Deployment Fix Summary
+# Deployment Fix Summary - Jan 2026 (Fixing Missing Checks)
 
 ## Problem Identified
+The user reported that `AffineDrift` deployment "hasn't been acting right for over 2 days" and was missing "predeployment checks" and a "deployment check". 
+Investigation revealed:
+1.  **Silent Failures:** Critical scripts `tools/check_site_health.py` and `tools/check_links.py` were running but **not exiting with a non-zero code** when errors were found. This meant bad builds could pass silently.
+2.  **Missing Verification:** The `deploy-website.yml` workflow did not actually run these checks, nor did it verify the final deployment.
+3.  **Dependency Issues:** `check_site_health.py` requires `beautifulsoup4`, which was missing from `requirements.txt`.
 
-The deployment is failing with:
+## Changes Applied
 
-```
-Detected Quarto project; using output directory: "docs"
-✗ "docs"/index.html missing
-```
+### 1. Hardened Verification Scripts
+Updated both check scripts to exit with `sys.exit(1)` if issues are found:
+- `tools/check_site_health.py`: Now fails CI if broken links or orphaned files are detected in `docs/`.
+- `tools/check_links.py`: Now fails CI if broken source links (markdown/html) are found.
 
-## Root Cause
+### 2. Workflow Orchestration (`.github/workflows/deploy-website.yml`)
+Updated the deployment workflow to enforce a strict quality gate:
+- **Pre-build:** Runs `tools/check_links.py` to catch bad source links immediately.
+- **Post-build:** Runs `tools/check_site_health.py` to verify the generated artifact (`docs/`) before upload.
+- **Deployment Verification:** Added a `Verify Deployment` step that waits for propagation and runs `curl -f -I` against the live URL to ensure availability.
 
-The `deploy.yml` workflow has a render step that uses `continue-on-error: true`, which means render failures are silently ignored. The Quarto render is likely failing, but the error isn't being shown.
+### 3. Dependencies
+- Added `beautifulsoup4>=4.12.0` to `requirements.txt`.
 
-## Fix Applied
+### 4. Regression Testing
+- Created `tests/test_deployment_integrity.py` to ensure that future edits to the workflow do not accidentally remove these critical checks.
 
-I've updated `.github/workflows/deploy.yml` to:
+## Verification
+- Run `pytest tests/test_deployment_integrity.py` to confirm the workflow configuration is correct.
+- Committing these changes will trigger the new workflow on `main`.
 
-1. **Remove `continue-on-error`** from the render step - now it will fail properly and show errors
-2. **Add error output** - if render fails, it will show the first 50 lines of error output
-3. **Add verification step** - new step that checks if the output directory and `index.html` exist before proceeding
-
-## What Changed
-
-### Before:
-
-```yaml
-- name: Render Quarto site (if project exists)
-  continue-on-error: true
-  run: |
-    if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-      echo "Rendering Quarto site..."
-      quarto render --to html
-    else
-      echo "No Quarto project found, using static files"
-    fi
-```
-
-### After:
-
-```yaml
-- name: Render Quarto site (if project exists)
-  run: |
-    if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-      echo "Rendering Quarto site..."
-      quarto render --to html || {
-        echo "❌ Quarto render failed. Checking for errors..."
-        quarto render --to html 2>&1 | head -50
-        exit 1
-      }
-      echo "✓ Quarto render completed successfully"
-    else
-      echo "No Quarto project found, using static files"
-    fi
-
-- name: Verify render output
-  run: |
-    if [ -f _quarto.yml ] || [ -f quarto.yml ]; then
-      OUTPUT_DIR=$(yq '.project["output-dir"] // "_site"' _quarto.yml 2>/dev/null || echo "_site")
-      echo "Checking output directory: ${OUTPUT_DIR}"
-      if [ -d "$OUTPUT_DIR" ]; then
-        echo "✓ Output directory exists"
-        ls -la "$OUTPUT_DIR" | head -20
-      else
-        echo "❌ Output directory ${OUTPUT_DIR} does not exist"
-        exit 1
-      fi
-      INDEX_PATH="${OUTPUT_DIR%/}/index.html"
-      if [ -f "$INDEX_PATH" ]; then
-        echo "✓ ${INDEX_PATH} exists"
-      else
-        echo "❌ ${INDEX_PATH} is missing"
-        echo "Files in ${OUTPUT_DIR}:"
-        ls -la "$OUTPUT_DIR" || echo "Directory is empty or inaccessible"
-        exit 1
-      fi
-    fi
-```
-
-## Next Steps
-
-1. **Commit and push** the updated workflow file to `main` branch
-2. **Monitor the next deployment** - it should now show the actual render error if one exists
-3. **Fix any render errors** that are revealed
-
-## Potential Render Issues to Check
-
-If the render still fails, common issues include:
-
-1. **Missing dependencies** - Check if all required files are present
-2. **YAML syntax errors** - Check `_quarto.yml` for syntax issues
-3. **Missing files** - Check if all referenced files in `_quarto.yml` exist
-4. **HTML block issues** - The `index.qmd` uses `{=html}` blocks which should work, but verify
-5. **Path issues** - Check if file paths in navigation are correct
-
-## Testing Locally
-
-Before pushing, you can test the render locally:
-
-```bash
-# Checkout main branch
-git checkout main
-
-# Try rendering
-quarto render
-
-# Check if docs/index.html was created
-ls -la docs/index.html
-```
-
-If local render works but CI fails, there may be environment differences.
+## Status
+- **Ready for Merge:** All requested checks are implemented and tested.

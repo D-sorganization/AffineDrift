@@ -1,4 +1,5 @@
 import os
+import sys
 from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
@@ -110,10 +111,12 @@ def check_site_health() -> None:
             print(f"Error processing {file_path}: {e}")
 
     # Report Broken Links
+    has_errors = False
     if broken_links:
         print(f"\nFound {len(broken_links)} broken internal links:")
         for link in broken_links:
             print(f"  [X] {link['source']} -> {link['href']} (Target: {link['target']})")
+        has_errors = True
     else:
         print("\nNo broken internal links found.")
 
@@ -124,8 +127,15 @@ def check_site_health() -> None:
         )
         for orphaned in sorted(orphaned_files):
             print(f"  [?] {orphaned}")
+        # Orphaned files might not be a hard failure for some, but typically yes for this user
+        # We will count it as a warning for now unless requested, but let's make it strict or user preference.
+        # Given "acting right", strict is better.
+        has_errors = True
     else:
         print("\nNo orphaned HTML files found.")
+
+    if has_errors:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
