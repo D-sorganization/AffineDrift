@@ -54,13 +54,13 @@ Let $x \in \mathbb{R}^6$ denote the instantaneous pose (position and orientation
 of the clubhead.
 
 The kinematic map is
-\[
+$$
     x = f(q) ,
-\]
+$$
 and the differential relationship is
-\[
+$$
     \dot{x} = J(q)\, \dot{q},
-\]
+$$
 where $J(q)$ is the $6 \times n$ Jacobian matrix.
 
 Each column of $J$ describes the infinitesimal motion of the clubhead resulting 
@@ -72,10 +72,10 @@ entire body at that moment.
 
 The **mobility ellipsoid** is formed by mapping a unit ball of joint 
 velocities through the Jacobian:
-\[
+$$
     \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q} 
     \; \bigg| \; \|\dot{q}\| = 1 \,\right\}.
-\]
+$$
 
 This produces an ellipsoid in task space whose principal axes represent:
 - directions of high mobility (large end-effector motion for a small 
@@ -91,16 +91,16 @@ explaining why even tiny joint motions can dramatically alter clubhead speed.
 
 Reaction forces at the clubhead map back to joint torques via the transpose of 
 the Jacobian:
-\[
+$$
     \tau = J^\top F.
-\]
+$$
 
 The **force ellipsoid** is defined as
-\[
+$$
     \mathcal{E}_{\text{force}} = 
     \left\{\, F \in \mathbb{R}^6 \; \bigg|
     \|J^\top F\| = 1 \,\right\},
-\]
+$$
 which describes all end-effector force directions that correspond to unit joint 
 torque outputs.
 
@@ -128,9 +128,9 @@ pointing perpendicular to the aligned links.
 
 Mathematically, when the links are collinear, the moment arm between joint 
 rotation and distal motion is maximized:
-\[
+$$
     v_\perp \propto (L_1 + L_2)\, \dot{\theta}.
-\]
+$$
 
 ### Low Force Capability in the Same Perpendicular Direction
 
@@ -138,9 +138,9 @@ However, the ability to resist external force *in that same perpendicular
 direction* is very poor.  
 Because joint torques must react forces through long, nearly straight lever arms, 
 a modest force at the clubhead creates a large torque at the joint:
-\[
+$$
     \tau \approx (L_1 + L_2)\, F_\perp.
-\]
+$$
 
 Thus, the system has:
 - **high mobility** transverse to the links, and
@@ -172,11 +172,11 @@ what the system can push against strongly, it cannot move easily.
 The mechanical advantage of an inclined plane provides an even simpler analogy.  
 Consider pushing a mass up a ramp of angle $\theta$:
 
-\[
+$$
     F_{\parallel} = mg \sin\theta,
     \qquad
     F_{\perp} = mg \cos\theta.
-\]
+$$
 
 As the ramp becomes shallow ($\theta \to 0$):
 - motion (mobility) along the ramp becomes easy,
@@ -194,14 +194,14 @@ constraints that shape the mobility and force ellipsoids.
 
 The force and mobility ellipsoids are duals because the Jacobian and its 
 transpose are linked by instantaneous power conservation:
-\[
+$$
     F^\top \dot{x} = \tau^\top \dot{q}.
-\]
+$$
 
 Substituting $\dot{x} = J\dot{q}$ gives
-\[
+$$
     F^\top J \dot{q} = (J^\top F)^\top \dot{q}.
-\]
+$$
 
 Since this holds for all $\dot{q}$, we obtain $\tau = J^\top F$ and the 
 fundamental duality between motion and force mappings.  
