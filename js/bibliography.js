@@ -26,7 +26,7 @@
    */
   async function loadBibliography() {
     try {
-      const response = await fetch('../data/bibliography.yaml');
+      const response = await fetch('/data/bibliography.yaml');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
