@@ -2,7 +2,7 @@ import os
 import sys
 from urllib.parse import urldefrag
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 DOCS_DIR = "docs"
 
@@ -74,7 +74,9 @@ def check_site_health() -> None:
             for a in soup.find_all("a", href=True):
                 # BeautifulSoup find_all with href=True ensures href exists
                 # Cast to str to handle potential None values
-                href_value = a.get("href")  # type: ignore[union-attr] # find_all returns Tags
+                if not isinstance(a, Tag):
+                    continue
+                href_value = a.get("href")
                 href = str(href_value) if href_value is not None else ""
 
                 # Skip empty hrefs
