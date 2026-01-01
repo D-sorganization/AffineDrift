@@ -9,6 +9,12 @@
 // - --header-offset is for sidebar positioning (top: 120px)
 // - --scroll-offset is for scroll behavior (scroll-margin-top: 140px)
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
+const MAX_ID_GENERATION_ATTEMPTS = 100;
+
+// ⚡ Bolt Optimization: Lazy initialize to avoid synchronous layout thrashing at top level
+let HEADER_OFFSET = 140;
+let TOC_SCROLL_OFFSET = 140; // Active section detection offset
+
 const getScrollOffset = () => {
   if (typeof window !== "undefined") {
     const value = getComputedStyle(document.documentElement).getPropertyValue(
@@ -18,9 +24,6 @@ const getScrollOffset = () => {
   }
   return 140;
 };
-const HEADER_OFFSET = getScrollOffset(); // Smooth scrolling offset
-const TOC_SCROLL_OFFSET = HEADER_OFFSET; // Active section detection offset
-const MAX_ID_GENERATION_ATTEMPTS = 100;
 
 // Helper function to debounce events
 function debounce(func, wait) {
@@ -63,6 +66,10 @@ function generateUniqueId(text, usedIds) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Update offset from CSS variable once DOM is ready
+  HEADER_OFFSET = getScrollOffset();
+  TOC_SCROLL_OFFSET = HEADER_OFFSET;
+
   // --- 1. Interactive Elements Setup ---
 
   // Smooth scroll for anchor links
