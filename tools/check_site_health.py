@@ -61,8 +61,7 @@ def check_site_health() -> None:
 
     # Exclude archive directories from orphan check - these are intentionally not linked
     orphaned_files = {
-        f for f in orphaned_files
-        if "/archive/" not in f and not f.startswith("archive/")
+        f for f in orphaned_files if "/archive/" not in f and not f.startswith("archive/")
     }
 
     for file_path in html_files:
@@ -75,7 +74,7 @@ def check_site_health() -> None:
             for a in soup.find_all("a", href=True):
                 # BeautifulSoup find_all with href=True ensures href exists
                 # Cast to str to handle potential None values
-                href_value = a.get("href")
+                href_value = a.get("href")  # type: ignore[union-attr] # find_all returns Tags
                 href = str(href_value) if href_value is not None else ""
 
                 # Skip empty hrefs
