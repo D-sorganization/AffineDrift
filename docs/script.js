@@ -394,6 +394,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
+    // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
+    const linkMap = new Map();
+    tocLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        linkMap.set(href.substring(1), link);
+      }
+    });
+    let currentActiveLink = null;
+
     const sections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
@@ -424,18 +434,20 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       if (activeId) {
-        tocLinks.forEach((link) => {
-          if (link.getAttribute("href") === `#${activeId}`) {
-            link.classList.add("active");
-          } else {
-            link.classList.remove("active");
+        // ⚡ Bolt Optimization: Only update classes if active link changed
+        const newActiveLink = linkMap.get(activeId);
+        if (newActiveLink && newActiveLink !== currentActiveLink) {
+          if (currentActiveLink) {
+            currentActiveLink.classList.remove("active");
           }
-        });
+          newActiveLink.classList.add("active");
+          currentActiveLink = newActiveLink;
+        }
       }
     }, observerOptions);
 
     sections.forEach((section) => {
-      if (document.querySelector(`#toc-list a[href="#${section.id}"]`)) {
+      if (linkMap.has(section.id)) {
         observer.observe(section);
       }
     });
@@ -447,6 +459,15 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("img[src]").forEach((img) => {
       if (!img.hasAttribute("loading")) {
         img.setAttribute("loading", "lazy");
+      }
+    });
+  }
+
+  // Lazy load iframes
+  if ("loading" in HTMLIFrameElement.prototype) {
+    document.querySelectorAll("iframe[src]").forEach((iframe) => {
+      if (!iframe.hasAttribute("loading")) {
+        iframe.setAttribute("loading", "lazy");
       }
     });
   }
@@ -706,9 +727,11 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         await navigator.clipboard.writeText(pre.innerText || pre.textContent);
         button.textContent = "Copied!";
+        button.setAttribute("aria-label", "Code copied to clipboard");
         button.classList.add("copied");
         setTimeout(() => {
           button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code to clipboard");
           button.classList.remove("copied");
         }, 2000);
       } catch (err) {
@@ -778,8 +801,25 @@ document.addEventListener("DOMContentLoaded", function () {
     // Use the article body text for calculation
     // ⚡ Bolt Optimization: Prefer textContent to avoid reflow (layout thrashing) from innerText
     const text = articleContent.textContent || articleContent.innerText;
-    // Simple word count estimate
-    const wordCount = text.trim().split(/\s+/).length;
+
+    // ⚡ Bolt Optimization: Manual character iteration to count words
+    // Avoids creating an array of strings like .split(/\s+/) which causes high GC pressure
+    // O(1) memory, O(N) CPU
+    let wordCount = 0;
+    let inWord = false;
+    const len = text.length;
+    for (let i = 0; i < len; i++) {
+        const c = text.charCodeAt(i);
+        // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
+        // Also Form Feed (12)
+        if (c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 12) {
+            inWord = false;
+        } else {
+            if (!inWord) wordCount++;
+            inWord = true;
+        }
+    }
+
     // Average reading speed (words per minute)
     const wordsPerMinute = 225;
     const minutes = Math.ceil(wordCount / wordsPerMinute);
@@ -831,19 +871,32 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
-  const contentImages = document.querySelectorAll("#quarto-document-content img");
+  const contentImages = document.querySelectorAll(
+    "#quarto-document-content img",
+  );
   if (contentImages.length > 0) {
+    let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
+
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";
+    lightbox.setAttribute("tabindex", "-1"); // 🎨 Palette UX: Allow programmatic focus
+    lightbox.style.outline = "none"; // 🎨 Palette UX: Remove outline on container
     lightbox.setAttribute("aria-hidden", "true");
     lightbox.setAttribute("role", "dialog");
     lightbox.setAttribute("aria-modal", "true");
+    lightbox.setAttribute("aria-label", "Image zoom"); // 🎨 Palette UX: Accessible name
 
     // Close on click
     lightbox.addEventListener("click", () => {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
       lightbox.innerHTML = ""; // Clear content
+
+      // 🎨 Palette UX: Restore focus
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+      }
     });
     document.body.appendChild(lightbox);
 
@@ -855,28 +908,47 @@ document.addEventListener("DOMContentLoaded", function () {
       img.setAttribute("tabindex", "0"); // Keyboard focusable
       img.setAttribute("role", "button");
       img.setAttribute("aria-label", "Zoom image");
-
-      const openFn = (e) => {
-        if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        const clone = img.cloneNode();
-        clone.className = "lightbox-img";
-        clone.removeAttribute("loading"); // Ensure it loads immediately
-        clone.removeAttribute("id"); // Prevent duplicate IDs
-        // Remove interactive attributes from clone
-        clone.removeAttribute("tabindex");
-        clone.removeAttribute("role");
-        clone.removeAttribute("aria-label");
-        clone.classList.remove("zoomable");
-
-        lightbox.appendChild(clone);
-        lightbox.classList.add("active");
-        lightbox.setAttribute("aria-hidden", "false");
-      };
-
-      img.addEventListener("click", openFn);
-      img.addEventListener("keydown", openFn);
     });
+
+    // ⚡ Bolt Optimization: Event Delegation for Lightbox
+    // Instead of adding listeners to every image (O(N)), add one listener to the container (O(1))
+    const handleLightboxTrigger = (e) => {
+      const img = e.target.closest(".zoomable");
+      if (!img) return;
+
+      // Verify the image is within our content area (safety check)
+      if (!document.getElementById("quarto-document-content").contains(img))
+        return;
+
+      if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
+
+      e.preventDefault();
+
+      // 🎨 Palette UX: Capture focus
+      lastFocusedElement = document.activeElement;
+
+      const clone = img.cloneNode();
+      clone.className = "lightbox-img";
+      clone.removeAttribute("loading"); // Ensure it loads immediately
+      clone.removeAttribute("id"); // Prevent duplicate IDs
+      // Remove interactive attributes from clone
+      clone.removeAttribute("tabindex");
+      clone.removeAttribute("role");
+      clone.removeAttribute("aria-label");
+      clone.classList.remove("zoomable");
+
+      lightbox.innerHTML = ""; // Clear previous
+      lightbox.appendChild(clone);
+      lightbox.classList.add("active");
+      lightbox.setAttribute("aria-hidden", "false");
+
+      // 🎨 Palette UX: Move focus to modal
+      lightbox.focus();
+    };
+
+    const container = document.getElementById("quarto-document-content");
+    container.addEventListener("click", handleLightboxTrigger);
+    container.addEventListener("keydown", handleLightboxTrigger);
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {
