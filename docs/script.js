@@ -882,17 +882,28 @@ document.addEventListener("DOMContentLoaded", function () {
     "#quarto-document-content img",
   );
   if (contentImages.length > 0) {
+    let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
+
     const lightbox = document.createElement("div");
     lightbox.className = "lightbox-overlay";
+    lightbox.setAttribute("tabindex", "-1"); // 🎨 Palette UX: Allow programmatic focus
+    lightbox.style.outline = "none"; // 🎨 Palette UX: Remove outline on container
     lightbox.setAttribute("aria-hidden", "true");
     lightbox.setAttribute("role", "dialog");
     lightbox.setAttribute("aria-modal", "true");
+    lightbox.setAttribute("aria-label", "Image zoom"); // 🎨 Palette UX: Accessible name
 
     // Close on click
     lightbox.addEventListener("click", () => {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
       lightbox.innerHTML = ""; // Clear content
+
+      // 🎨 Palette UX: Restore focus
+      if (lastFocusedElement) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+      }
     });
     document.body.appendChild(lightbox);
 
@@ -920,6 +931,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       e.preventDefault();
 
+      // 🎨 Palette UX: Capture focus
+      lastFocusedElement = document.activeElement;
+
       const clone = img.cloneNode();
       clone.className = "lightbox-img";
       clone.removeAttribute("loading"); // Ensure it loads immediately
@@ -934,6 +948,9 @@ document.addEventListener("DOMContentLoaded", function () {
       lightbox.appendChild(clone);
       lightbox.classList.add("active");
       lightbox.setAttribute("aria-hidden", "false");
+
+      // 🎨 Palette UX: Move focus to modal
+      lightbox.focus();
     };
 
     const container = document.getElementById("quarto-document-content");
