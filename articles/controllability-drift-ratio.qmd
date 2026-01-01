@@ -134,19 +134,26 @@ It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures th
 
 # 3. Drift–Control Ratio (DCR)
 
-We define:
+We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the drift vector field to the control vector field.
+
+::: {.callout-important}
+## Dimensional Consistency Note
+A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
+:::
 
 $$
 \mathrm{DCR}(t)
 =
-\frac{\|f(x(t))\|}{\|g(x(t))u(t)\|}.
+\frac{\|f_{acc}(x(t))\|}{\|g_{acc}(x(t))u(t)\|}
+\approx
+\frac{\|M^{-1}(C\dot{q} + G)\|}{\|M^{-1}\tau\|}
 $$
 
-Using approximations:
+Using approximations where drift forces scale quadratically with velocity ($C\dot{q} \sim \dot{q}^2$):
 
 $$
-\|f\| \sim a\|\dot{q}\| + b\|\dot{q}\|^2,\quad
-\|g u\| \sim c\|\tau\|,
+\|f_{acc}\| \sim b\|\dot{q}\|^2,\quad
+\|g_{acc} u\| \sim c\|\tau\|,
 $$
 
 we have:
@@ -155,7 +162,7 @@ $$
 \boxed{
 \mathrm{DCR}(t)
 \approx
-\frac{a\|\dot{q}(t)\| + b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
+\frac{b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
 }
 $$
 
