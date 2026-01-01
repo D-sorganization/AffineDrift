@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any, cast
 from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
@@ -74,7 +75,7 @@ def check_site_health() -> None:
             for a in soup.find_all("a", href=True):
                 # BeautifulSoup find_all with href=True ensures href exists
                 # Cast to str to handle potential None values
-                href_value = a.get("href")  # type: ignore[union-attr]
+                href_value = cast(Any, a).get("href")
                 href = str(href_value) if href_value is not None else ""
 
                 # Skip empty hrefs
