@@ -66,7 +66,9 @@ def check_site_health() -> None:
             # Find all links
             for a in soup.find_all("a", href=True):
                 # BeautifulSoup find_all with href=True ensures href exists
-                href = str(a.get("href", ""))  # type: ignore[union-attr]
+                # Cast to str to handle potential None values
+                href_value = a.get("href")
+                href = str(href_value) if href_value is not None else ""
 
                 # Skip empty hrefs
                 if not href:
