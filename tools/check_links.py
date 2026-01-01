@@ -47,6 +47,17 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
     print(f"Scanning {root_path}...")
 
+    # Skip documentation and guide files that contain example links
+    skip_files = {
+        "WEBSITE_ENHANCEMENT_RECOMMENDATIONS.md",
+        "WEBSITE_MANAGEMENT.md",
+        "CONTENT_SHARING_GUIDE.md",
+        "QUICK_WINS_IMPLEMENTATION.md",
+        "HOUSE_STYLE.md",
+        "CONVERSION_GUIDE.md",
+        "EMBEDDING_GUIDE.md",
+    }
+
     for file_path in root_path.rglob("*"):
         if (
             file_path.suffix not in [".qmd", ".html", ".md"]
@@ -56,6 +67,8 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             or "archive" in str(file_path)
             or "docs" in str(file_path)
             or "content" in str(file_path)
+            or "_templates" in str(file_path)
+            or file_path.name in skip_files
         ):
             continue
 
@@ -73,6 +86,10 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
             if url.startswith("http") or url.startswith("mailto:"):
                 continue  # Skip external
+
+            # Skip JavaScript template literals (e.g., ${item.url})
+            if "${" in url or url == "...":
+                continue
 
             # Internal link
             # Check if absolute (relative to domain root) or relative
