@@ -396,6 +396,38 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   generateTableOfContents();
 
+  // 🎨 Palette UX: Add Permalink Anchors
+  function initAnchorLinks() {
+    const headings = document.querySelectorAll(
+      ".main-content-area h2, .main-content-area h3",
+    );
+    // Re-scan used IDs to prevent collisions
+    const usedIds = new Set(
+      Array.from(document.querySelectorAll("[id]")).map((el) => el.id),
+    );
+
+    headings.forEach((heading) => {
+      // Skip if already has anchor
+      if (heading.querySelector(".anchor-link")) return;
+
+      // Ensure ID exists
+      if (!heading.id) {
+        heading.id = generateUniqueId(heading.textContent, usedIds);
+        usedIds.add(heading.id);
+      }
+
+      const anchor = document.createElement("a");
+      anchor.className = "anchor-link";
+      anchor.href = `#${heading.id}`;
+      anchor.setAttribute("aria-label", "Link to this section");
+      // Simple Link Icon
+      anchor.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+
+      heading.appendChild(anchor);
+    });
+  }
+  initAnchorLinks();
+
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
     const tocLinks = document.querySelectorAll("#toc-list a");
