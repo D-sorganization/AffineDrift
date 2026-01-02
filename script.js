@@ -414,7 +414,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
-    const visibleSections = new Set();
+
+    // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
+    const sectionIndexMap = new Map();
+    sections.forEach((section, index) => {
+      sectionIndexMap.set(section.id, index);
+    });
+
+    // ⚡ Bolt Optimization: Track visible sections by index rather than ID
+    // This allows finding the "first" visible section using Math.min() (O(k))
+    // instead of iterating through all sections (O(N))
+    const visibleIndices = new Set();
 
     const observerOptions = {
       root: null,
@@ -424,19 +434,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          visibleSections.add(entry.target.id);
-        } else {
-          visibleSections.delete(entry.target.id);
+        const index = sectionIndexMap.get(entry.target.id);
+        if (index !== undefined) {
+          if (entry.isIntersecting) {
+            visibleIndices.add(index);
+          } else {
+            visibleIndices.delete(index);
+          }
         }
       });
 
-      // Find the first visible section in DOM order
+      // ⚡ Bolt Optimization: Find first visible section via index math
       let activeId = null;
-      for (const section of sections) {
-        if (visibleSections.has(section.id)) {
-          activeId = section.id;
-          break;
+      if (visibleIndices.size > 0) {
+        const firstVisibleIndex = Math.min(...visibleIndices);
+        if (firstVisibleIndex >= 0 && firstVisibleIndex < sections.length) {
+          activeId = sections[firstVisibleIndex].id;
         }
       }
 
