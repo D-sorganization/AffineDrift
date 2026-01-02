@@ -396,9 +396,49 @@ where $\delta_i(d,c)$ is a player-specific deviation surface. A hierarchical (mu
 
 With such a model, we could talk meaningfully about the causal effect of, say, improving proximity from 15–25 feet on *this* player’s expected scoring, instead of relying on $J_{\text{ref}}$ as a proxy.
 
+### 7.2 The Ergodicity Problem: Ensemble vs. Time Averages
+
+A deeper statistical issue, highlighted by work in ergodicity economics (e.g., Taleb), is the confusion between **ensemble averages** and **time averages**.
+
+-   **Ensemble Average:** The expected result if 1,000 parallel versions of the golfer played the shot once.
+-   **Time Average:** The average result if *one* golfer played the shot 1,000 times sequentially.
+
+Strokes gained calculates an ensemble expectation ($J_{\text{ref}}$). However, a single golfer's career is a single time-series. In biological systems, performance is rarely ergodic—states are path-dependent (e.g., confidence, fatigue, injury). Therefore, the time-average performance of an individual may not converge to the ensemble average of the population, or even to their own "true" static skill level, because that static level doesn't exist.
+
 ---
 
-## 8. Practical implications for coaching and analysis
+## 8. Behavioral Limits: Hidden States and Risk
+
+Beyond the statistical aggregation issues, the underlying control theory of strokes gained makes two behavioral assumptions that are frequently violated in competitive golf.
+
+### 8.1 Non-Markovian Hidden States
+
+The definition $J(d, c)$ assumes the state is fully observable from the ball's position. This ignores **hidden internal states** ($\theta_t$) such as psychological pressure, biomechanical fatigue, or "flow" ("the hot hand").
+
+$$
+J_{\text{real}}(d, c, \theta) \neq J_{\text{model}}(d, c)
+$$
+
+If a player is in a high-anxiety state ($\theta_{\text{stress}}$), their effective putting probability $p(x)$ drops. The standard model, seeing only $d$ and $c$, attributes the resulting missed putt to "poor execution" (negative strokes gained) rather than "state disadvantage." This matters because the remedy for a mechanical error is different from the remedy for a regulatory state failure.
+
+### 8.2 Risk Sensitivity and Utility Functions
+
+The Bellman equation for strokes gained minimizes the expected *number* of strokes:
+
+$$
+\min_{\mu} \mathbb{E}[ \text{Score} ]
+$$
+
+This assumes **risk neutrality**. However, real players maximize a utility function $U(\text{Score})$ that varies with tournament context:
+
+-   **Risk Averse (Concave $U$):** A player protecting a lead may play away from flags to avoid double-bogeys, voluntarily accepting a lower *expected* score (worse strokes gained) to reduce *variance*.
+-   **Risk Seeking (Convex $U$):** A player needing a birdie to make the cut may take aggressive lines that worsen their average score but maximize the probability of a 3.
+
+Strokes gained penalizes both behaviors as "suboptimal," failing to capture the strategic rationality of the player's context.
+
+---
+
+## 9. Practical implications for coaching and analysis
 
 Given these limitations, how should science-based coaches and analysts use strokes gained responsibly?
 
@@ -436,7 +476,7 @@ The reference $J_{\text{ref}}$ integrates over these interactions *on average*; 
 
 ---
 
-## 9. Conclusion
+## 10. Conclusion
 
 Strokes gained is, mathematically, a value function for an **average player** in a specified reference population. It assigns a score to each shot by comparing the realized state transition to what that average player would experience. For comparing players and decomposing performance, this is extremely powerful.
 

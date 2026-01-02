@@ -22,6 +22,7 @@
 | **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline) | Methodological / Philosophical | **Valid** (Epistemological) | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control *around* the trajectory. | **Applied** to Limitations |
 | **17. Planar DCR Blindness**<br>(Axial Rotation) | Methodological / Scope | **Valid** (Dimensionality) | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by arguing that Planar DCR dictates the *timing window* of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error. | **Applied** to DCR Article |
 | **18. Dimensional Inconsistency**<br>(Unit Mixing) | Mathematical / Dimensional | **Valid** (Formulation) | **Dynamic Fiber Definition:** Acknowledge that $\|f(x)\|$ mixes velocity and acceleration units. Redefine DCR explicitly on the **acceleration subspace** (comparing drift torque/acceleration to control torque/acceleration) to ensure dimensional homogeneity and physical meaningfulness. | **Applied** to DCR Article |
+| **19. Strokes Gained Non-Ergodicity**<br>(Time vs Ensemble) | Statistical / Philosophical | **Valid** (Methodological) | **Ergodicity & Risk Defense:** Explicitly distinguish between *ensemble* averages (Strokes Gained) and *time* averages (individual career). Acknowledge that the benchmark assumes risk neutrality, whereas real players optimize non-linear utility functions (risk aversion/seeking). Defend by framing SG as a descriptive comparative tool, not a causal predictive model for individuals. | **Applied** to Limitations |
 
 ---
 
@@ -190,3 +191,14 @@ The critique correctly points out that the Euclidean norm of the state derivativ
 We will refine the definition of DCR in `articles/controllability-drift-ratio.qmd` to focus explicitly on the **dynamic fiber** (accelerations/torques), where the competition between passive and active forces actually occurs. We will redefine DCR as the ratio of **Drift Acceleration** to **Control Acceleration Capacity**.
 
 > _Refinement:_ "To ensure dimensional consistency, we define the DCR specifically on the vertical fiber of the tangent bundle (the acceleration subspace). We compare the magnitude of the drift-induced acceleration $\|\ddot{q}_{drift}\|$ to the maximum available control acceleration $\|\ddot{q}_{control}\|..."
+
+### 19. Addressing Strokes Gained Non-Ergodicity
+
+**Analysis:**
+Strokes Gained relies on ensemble averages ($J_{\text{ref}}$) which assumes ergodicity to apply to an individual's time-series performance. It also assumes risk neutrality ($\min E[\text{Score}]$), ignoring psychological state and non-linear utility (risk aversion/seeking).
+
+**Implementation:**
+Added **"The Ergodicity Problem"** and **"Behavioral Limits: Hidden States and Risk"** to `articles/strokes-gained-limitations.qmd`.
+
+> _Addition:_ "Strokes gained calculates an ensemble expectation ($J_{\text{ref}}$). However, a single golfer's career is a single time-series... performance is rarely ergodic..."
+> _Addition:_ "The Bellman equation... assumes **risk neutrality**. However, real players maximize a utility function $U(\text{Score})$..."
