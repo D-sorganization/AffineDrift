@@ -192,6 +192,39 @@ bibliography:
   concepts: [Regression, Classification, Model Selection]
   related_ids: [Gelman2006]
 
+- id: Taleb2020
+  title: "Statistical Consequences of Fat Tails: Real World Preasymptotics, Epistemology, and Applications"
+  authors: Nassim Nicholas Taleb
+  year: 2020
+  venue: STEM Academic Press
+  scholar_link: https://scholar.google.com/scholar?q=Taleb+Statistical+Consequences+of+Fat+Tails
+  clusters: [Statistics, Risk]
+  concepts: [Ergodicity, Fat Tails, Time Average vs Ensemble Average]
+  related_ids: [Gelman2006]
+  references_out_ids: [Gelman2006]
+
+- id: Kahneman1979
+  title: "Prospect Theory: An Analysis of Decision under Risk"
+  authors: Daniel Kahneman, Amos Tversky
+  year: 1979
+  venue: Econometrica, 47(2), 263-291
+  scholar_link: https://scholar.google.com/scholar?q=Kahneman+Tversky+Prospect+Theory
+  clusters: [Behavioral Economics, Psychology]
+  concepts: [Loss Aversion, Risk Sensitivity, Reference Dependence]
+  related_ids: [Todorov2002]
+  references_out_ids: [Todorov2002]
+
+- id: Todorov2002
+  title: "Optimal Feedback Control as a Theory of Motor Coordination"
+  authors: Emanuel Todorov, Michael I. Jordan
+  year: 2002
+  venue: Nature Neuroscience, 5(11), 1226-1235
+  scholar_link: https://scholar.google.com/scholar?q=Todorov+Jordan+Optimal+Feedback+Control
+  clusters: [Motor Control, Neuroscience]
+  concepts: [Optimal Control, Risk Sensitivity, Feedback]
+  related_ids: [Bellman1957]
+  references_out_ids: [Bellman1957, Sutton2018]
+
 ## Reading Paths
 
 ### Path 1: Fast Ramp (The "What" and "Why")
