@@ -1,5 +1,7 @@
-from playwright.sync_api import sync_playwright, expect
 import os
+
+from playwright.sync_api import expect, sync_playwright
+
 
 def verify_toc_scrollspy_http():
     # Use HTTP server
@@ -35,7 +37,9 @@ def verify_toc_scrollspy_http():
             page.locator(f"#{target_id}").scroll_into_view_if_needed()
 
             # Additional scroll to center it
-            page.evaluate(f"document.getElementById('{target_id}').scrollIntoView({{block: 'center'}})")
+            page.evaluate(
+                f"document.getElementById('{target_id}').scrollIntoView({{block: 'center'}})"
+            )
 
             page.wait_for_timeout(1000)
 
@@ -47,6 +51,7 @@ def verify_toc_scrollspy_http():
             page.screenshot(path="/home/jules/verification/toc_active.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     if not os.path.exists("/home/jules/verification"):

@@ -1,5 +1,7 @@
-from playwright.sync_api import sync_playwright, expect
 import os
+
+from playwright.sync_api import expect, sync_playwright
+
 
 def verify_toc_scrollspy():
     # Path to the local file
@@ -58,8 +60,8 @@ def verify_toc_scrollspy():
         page.wait_for_timeout(1000)
 
         # Check if last link has 'active' class
-        # Note: Depending on layout, the last section might not be tall enough to trigger if it's at the very bottom
-        # and previous section is still visible.
+        # Note: Depending on layout, the last section might not be tall enough to trigger
+        # if it's at the very bottom and previous section is still visible.
         # But we check if *some* link is active.
 
         active_links = toc_list.locator("a.active")
@@ -75,6 +77,7 @@ def verify_toc_scrollspy():
         page.screenshot(path="/home/jules/verification/toc_scrolled.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     if not os.path.exists("/home/jules/verification"):
