@@ -277,6 +277,8 @@ This equation provides the rigorous mechanical definition of **Input Forces**:
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$.
 2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
 
+This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As we shall see in the *Drift-Control Ratio* analysis, this efficacy is purely configuration-dependent and bounded, whereas the opposing drift forces scale quadratically with velocity. This structural asymmetry is what preordains the loss of controllability in the late downswing.
+
 Substituting the actuation model, we separate the drift and input terms.
 
 Define the drift acceleration
@@ -552,6 +554,8 @@ The ZTCF trajectory is not strictly required to compute this decomposition: eval
 - Conceptually, it is the trajectory that realizes the drift dynamics in isolation.
   
 - Computationally, simulating $x^{\mathrm{ZTCF}}(t)$ gives a concrete motion that can be analyzed or visualized alongside the actual swing to illustrate the effect of the torque input.
+
+There is a dynamical imperative hidden in this construction. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. However, as swing speed increases, the passive drift field $f(x)$ grows in magnitude while the input authority $g(x)u$ remains bounded. In this high-energy regime, the ZTCF transforms from a passive reference into a **dominant attractor**. The swing trajectory is increasingly "railroaded" by the inertial terms, meaning the ZTCF becomes a prediction of the inevitable rather than just a baseline of the passive.
 
 ### Interpretational scope and limitations
 
