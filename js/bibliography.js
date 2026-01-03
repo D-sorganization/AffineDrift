@@ -3,15 +3,15 @@
  * Loads and displays searchable bibliography from YAML data
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   let bibliographyData = [];
   let filteredData = [];
 
   // Initialize when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
@@ -26,7 +26,7 @@
    */
   async function loadBibliography() {
     try {
-      const response = await fetch('/data/bibliography.yaml');
+      const response = await fetch("/data/bibliography.yaml");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -38,8 +38,8 @@
 
       renderBibliography(filteredData);
     } catch (error) {
-      console.error('Error loading bibliography:', error);
-      const listContainer = document.getElementById('bib-list');
+      console.error("Error loading bibliography:", error);
+      const listContainer = document.getElementById("bib-list");
       if (listContainer) {
         listContainer.innerHTML = `
           <div style="padding: 2rem; color: var(--text-muted); text-align: center;">
@@ -57,14 +57,14 @@
    */
   function parseYAML(yamlText) {
     const entries = [];
-    const lines = yamlText.split('\n');
+    const lines = yamlText.split("\n");
     let currentEntry = null;
     let currentKey = null;
     let inArray = false;
 
     for (let line of lines) {
       // Skip empty lines and comments
-      if (!line.trim() || line.trim().startsWith('#')) continue;
+      if (!line.trim() || line.trim().startsWith("#")) continue;
 
       // New entry starts with "- id:"
       if (line.match(/^-\s+id:\s*(.+)/)) {
@@ -75,7 +75,7 @@
           id: line.match(/^-\s+id:\s*(.+)/)[1].trim(),
           authors: [],
           concepts: [],
-          related_ids: []
+          related_ids: [],
         };
         inArray = false;
         continue;
@@ -92,7 +92,10 @@
 
       // Handle array items
       if (inArray && line.match(/^\s+-\s+"?(.+?)"?\s*$/)) {
-        const value = line.match(/^\s+-\s+"?(.+?)"?\s*$/)[1].trim().replace(/^"|"$/g, '');
+        const value = line
+          .match(/^\s+-\s+"?(.+?)"?\s*$/)[1]
+          .trim()
+          .replace(/^"|"$/g, "");
         if (currentEntry[currentKey]) {
           currentEntry[currentKey].push(value);
         }
@@ -103,7 +106,7 @@
       const match = line.match(/^\s+(\w+):\s*"?(.+?)"?\s*$/);
       if (match && !inArray) {
         const [, key, value] = match;
-        currentEntry[key] = value.replace(/^"|"$/g, '').trim();
+        currentEntry[key] = value.replace(/^"|"$/g, "").trim();
         continue;
       }
 
@@ -125,49 +128,61 @@
    * Render bibliography entries
    */
   function renderBibliography(data) {
-    const listContainer = document.getElementById('bib-list');
+    const listContainer = document.getElementById("bib-list");
     if (!listContainer) return;
 
     if (data.length === 0) {
-      listContainer.innerHTML = '<p style="color: var(--text-muted); padding: 2rem;">No entries found matching your search.</p>';
+      listContainer.innerHTML =
+        '<p style="color: var(--text-muted); padding: 2rem;">No entries found matching your search.</p>';
       return;
     }
 
-    const html = data.map(entry => {
-      const authorStr = entry.authors && entry.authors.length > 0
-        ? entry.authors.join(', ')
-        : 'Unknown';
+    const html = data
+      .map((entry) => {
+        const authorStr =
+          entry.authors && entry.authors.length > 0
+            ? entry.authors.join(", ")
+            : "Unknown";
 
-      const typeClass = getTypeClass(entry.type);
-      const typeBadge = `<span class="type-badge ${typeClass}">${entry.type || 'unknown'}</span>`;
+        const typeClass = getTypeClass(entry.type);
+        const typeBadge = `<span class="type-badge ${typeClass}">${
+          entry.type || "unknown"
+        }</span>`;
 
-      return `
+        return `
         <div class="bib-entry" data-id="${entry.id}">
           <div class="bib-header">
-            <h3 class="bib-title">${entry.title || 'Untitled'}</h3>
+            <h3 class="bib-title">${entry.title || "Untitled"}</h3>
             ${typeBadge}
           </div>
           <div class="bib-meta">
             <span class="bib-authors">${authorStr}</span>
-            ${entry.year ? `<span class="bib-year">(${entry.year})</span>` : ''}
+            ${entry.year ? `<span class="bib-year">(${entry.year})</span>` : ""}
           </div>
-          ${entry.venue ? `<div class="bib-venue">${entry.venue}</div>` : ''}
-          ${entry.concepts && entry.concepts.length > 0 ? `
+          ${entry.venue ? `<div class="bib-venue">${entry.venue}</div>` : ""}
+          ${
+            entry.concepts && entry.concepts.length > 0
+              ? `
             <div class="bib-concepts">
-              ${entry.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+              ${entry.concepts
+                .map((c) => `<span class="concept-tag">${c}</span>`)
+                .join("")}
             </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       `;
-    }).join('');
+      })
+      .join("");
 
     listContainer.innerHTML = html;
 
     // Add click handlers
-    document.querySelectorAll('.bib-entry').forEach(el => {
-      el.addEventListener('click', () => {
+    document.querySelectorAll(".bib-entry").forEach((el) => {
+      el.addEventListener("click", () => {
         const id = el.dataset.id;
-        const entry = bibliographyData.find(e => e.id === id);
+        const entry = bibliographyData.find((e) => e.id === id);
         if (entry) {
           showDetails(entry);
         }
@@ -180,115 +195,150 @@
    */
   function getTypeClass(type) {
     const typeMap = {
-      'paper': 'type-paper',
-      'book': 'type-book',
-      'article': 'type-article',
-      'thesis': 'type-thesis',
-      'conference': 'type-conference'
+      paper: "type-paper",
+      book: "type-book",
+      article: "type-article",
+      thesis: "type-thesis",
+      conference: "type-conference",
     };
-    return typeMap[type?.toLowerCase()] || 'type-other';
+    return typeMap[type?.toLowerCase()] || "type-other";
   }
 
   /**
    * Show details for a bibliography entry
    */
   function showDetails(entry) {
-    const detailsContainer = document.getElementById('bib-details');
+    const detailsContainer = document.getElementById("bib-details");
     if (!detailsContainer) return;
 
-    const authorStr = entry.authors && entry.authors.length > 0
-      ? entry.authors.join(', ')
-      : 'Unknown';
+    const authorStr =
+      entry.authors && entry.authors.length > 0
+        ? entry.authors.join(", ")
+        : "Unknown";
 
     const html = `
       <h3 class="sidebar-heading">Details</h3>
       <div class="bib-detail-content">
-        <h4 class="detail-title">${entry.title || 'Untitled'}</h4>
+        <h4 class="detail-title">${entry.title || "Untitled"}</h4>
 
         <div class="detail-section">
           <strong>Authors:</strong>
           <p>${authorStr}</p>
         </div>
 
-        ${entry.year ? `
+        ${
+          entry.year
+            ? `
           <div class="detail-section">
             <strong>Year:</strong>
             <p>${entry.year}</p>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.type ? `
+        ${
+          entry.type
+            ? `
           <div class="detail-section">
             <strong>Type:</strong>
             <p style="text-transform: capitalize;">${entry.type}</p>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.venue ? `
+        ${
+          entry.venue
+            ? `
           <div class="detail-section">
             <strong>Venue:</strong>
             <p>${entry.venue}</p>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.description ? `
+        ${
+          entry.description
+            ? `
           <div class="detail-section">
             <strong>Description:</strong>
             <p>${entry.description}</p>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.concepts && entry.concepts.length > 0 ? `
+        ${
+          entry.concepts && entry.concepts.length > 0
+            ? `
           <div class="detail-section">
             <strong>Concepts:</strong>
             <div style="margin-top: 0.5rem;">
-              ${entry.concepts.map(c => `<span class="concept-tag">${c}</span>`).join(' ')}
+              ${entry.concepts
+                .map((c) => `<span class="concept-tag">${c}</span>`)
+                .join(" ")}
             </div>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.scholar_url ? `
+        ${
+          entry.scholar_url
+            ? `
           <div class="detail-section">
             <a href="${entry.scholar_url}" target="_blank" rel="noopener noreferrer"
                class="external-link" style="display: inline-block; margin-top: 0.5rem;">
               View on Google Scholar
             </a>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${entry.related_ids && entry.related_ids.length > 0 ? `
+        ${
+          entry.related_ids && entry.related_ids.length > 0
+            ? `
           <div class="detail-section">
             <strong>Related References:</strong>
             <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-              ${entry.related_ids.map(id => {
-                const related = bibliographyData.find(e => e.id === id);
-                return related
-                  ? `<li><a href="#" onclick="event.preventDefault()" data-related-id="${id}">${related.title || id}</a></li>`
-                  : `<li>${id}</li>`;
-              }).join('')}
+              ${entry.related_ids
+                .map((id) => {
+                  const related = bibliographyData.find((e) => e.id === id);
+                  return related
+                    ? `<li><a href="#" onclick="event.preventDefault()" data-related-id="${id}">${
+                        related.title || id
+                      }</a></li>`
+                    : `<li>${id}</li>`;
+                })
+                .join("")}
             </ul>
           </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
     `;
 
     detailsContainer.innerHTML = html;
 
     // Add handlers for related links
-    detailsContainer.querySelectorAll('[data-related-id]').forEach(link => {
-      link.addEventListener('click', (e) => {
+    detailsContainer.querySelectorAll("[data-related-id]").forEach((link) => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
         const relatedId = link.dataset.relatedId;
-        const relatedEntry = bibliographyData.find(e => e.id === relatedId);
+        const relatedEntry = bibliographyData.find((e) => e.id === relatedId);
         if (relatedEntry) {
           showDetails(relatedEntry);
 
           // Highlight the related entry in the list
-          document.querySelectorAll('.bib-entry').forEach(el => {
-            el.classList.remove('highlighted');
+          document.querySelectorAll(".bib-entry").forEach((el) => {
+            el.classList.remove("highlighted");
             if (el.dataset.id === relatedId) {
-              el.classList.add('highlighted');
-              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.classList.add("highlighted");
+              el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
           });
         }
@@ -300,12 +350,12 @@
    * Setup search functionality
    */
   function setupSearch() {
-    const searchInput = document.getElementById('bib-search');
+    const searchInput = document.getElementById("bib-search");
     if (!searchInput) return;
 
     // Debounce search
     let searchTimeout;
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener("input", (e) => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
         const query = e.target.value.toLowerCase().trim();
@@ -321,21 +371,35 @@
     if (!query) {
       filteredData = [...bibliographyData];
     } else {
-      filteredData = bibliographyData.filter(entry => {
+      filteredData = bibliographyData.filter((entry) => {
         // Search in title
-        if (entry.title && entry.title.toLowerCase().includes(query)) return true;
+        if (entry.title && entry.title.toLowerCase().includes(query))
+          return true;
 
         // Search in authors
-        if (entry.authors && entry.authors.some(a => a.toLowerCase().includes(query))) return true;
+        if (
+          entry.authors &&
+          entry.authors.some((a) => a.toLowerCase().includes(query))
+        )
+          return true;
 
         // Search in concepts
-        if (entry.concepts && entry.concepts.some(c => c.toLowerCase().includes(query))) return true;
+        if (
+          entry.concepts &&
+          entry.concepts.some((c) => c.toLowerCase().includes(query))
+        )
+          return true;
 
         // Search in description
-        if (entry.description && entry.description.toLowerCase().includes(query)) return true;
+        if (
+          entry.description &&
+          entry.description.toLowerCase().includes(query)
+        )
+          return true;
 
         // Search in venue
-        if (entry.venue && entry.venue.toLowerCase().includes(query)) return true;
+        if (entry.venue && entry.venue.toLowerCase().includes(query))
+          return true;
 
         // Search in year
         if (entry.year && entry.year.toString().includes(query)) return true;
@@ -348,7 +412,7 @@
   }
 
   // Add CSS for bibliography styling
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
     .bib-entry {
       background: var(--bg-body);
@@ -502,5 +566,4 @@
     }
   `;
   document.head.appendChild(style);
-
 })();
