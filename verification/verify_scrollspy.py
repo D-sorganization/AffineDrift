@@ -5,8 +5,11 @@ from playwright.sync_api import expect, sync_playwright
 
 def verify_toc_scrollspy() -> None:
     """
-    Verifies the Table of Contents (TOC) scrollspy functionality by navigating to the
-    local HTML file, scrolling to sections, and checking for active link states.
+    Verifies the Table of Contents (TOC) scrollspy functionality using a local file path.
+
+    This function launches a Playwright browser, navigates to the articles page using the file
+    protocol, and checks if the TOC links update correctly when scrolling to different sections.
+    It saves screenshots of the initial and scrolled states.
     """
     # Path to the local file
     file_path = os.path.abspath("docs/articles.html")
@@ -65,22 +68,22 @@ def verify_toc_scrollspy() -> None:
             # Wait for scroll and observer
             page.wait_for_timeout(1000)
 
-        # Check if last link has 'active' class
-        # Note: Depending on layout, the last section might not be tall enough to trigger
-        # if it's at the very bottom and previous section is still visible.
-        # But we check if *some* link is active.
+            # Check if last link has 'active' class
+            # Note: Depending on layout, the last section might not be tall enough to trigger
+            # if it's at the very bottom and previous section is still visible.
+            # But we check if *some* link is active.
 
-        active_links = toc_list.locator("a.active")
-        active_count = active_links.count()
-        print(f"Found {active_count} active links after scrolling to bottom")
+            active_links = toc_list.locator("a.active")
+            active_count = active_links.count()
+            print(f"Found {active_count} active links after scrolling to bottom")
 
-        if active_count > 0:
-            active_text = active_links.first.inner_text()
-            print(f"Active link text: {active_text}")
-        else:
-            print("WARNING: No active link found after scrolling.")
+            if active_count > 0:
+                active_text = active_links.first.inner_text()
+                print(f"Active link text: {active_text}")
+            else:
+                print("WARNING: No active link found after scrolling.")
 
-        page.screenshot(path="/home/jules/verification/toc_scrolled.png")
+            page.screenshot(path="/home/jules/verification/toc_scrolled.png")
 
         browser.close()
 

@@ -53,7 +53,8 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 2. **Flexible shaft via finite-dimensional modal approximation.** The shaft is modeled using $m$ vibration modes obtained from standard beam theory (e.g., Euler--Bernoulli or Timoshenko). Modal truncation approximates the distributed dynamics with a finite-dimensional representation.
 3. **No ball--club impact phase (Theory of Delivery).** Ball impact is excluded from the domain of analysis due to its hybrid (non-smooth) dynamics. The model applies to the pre-impact phase ("Delivery") and post-impact phase. This framework analyzes the *generation* of impact conditions, not the collision itself. Since the golfer's control authority effectively ends at the moment of contact, the drift-input decomposition is valid for analyzing how the system arrives at the terminal state.
 4. **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions. Note that aerodynamic forces $F_{aero}(q, \dot{q})$ are strictly state-dependent and thus mathematically compatible with the affine structure $\dot{x} = f(x) + g(x)u$. Their inclusion would simply enrich the drift vector field $f(x)$ with dissipative terms. They are omitted here to isolate the inertial and elastic energy exchange fundamental to the swing, but the theoretical framework generalizes to include them without modification.
-5. **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector $\tau = B u$. These torques serve as the control inputs in the affine control formulation. The set of admissible torques may be state-dependent in practice; here we treat $u$ as an exogenous input signal at the mechanical level. While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance (stiffness/damping) alongside torque. In this framework, the term $f(x)$ represents the **skeletal drift**—the dynamics of the system in the absence of activation-dependent stiffness. The Zero Torque Counterfactual (ZTCF) therefore describes the motion of the underlying passive mechanism, serving as a 'skeletal baseline' rather than a representation of a flaccid or neurologically relaxed golfer.
+5. **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector $\tau = B(q) u$. These torques serve as the control inputs in the affine control formulation.
+    *   *Mathematical Justification:* In a biological model, torque is a function of activation $a$, length $l(q)$, and velocity $v(\dot{q})$, i.e., $\tau = \tau_{max} \cdot f_{FL}(q) \cdot f_{FV}(\dot{q}) \cdot a$. If we treated activation $a$ as the input, the system would become control-non-affine due to the multiplicative state dependency $f_{FV}(\dot{q})$. By defining the input at the *torque level* ($u \equiv \tau$), we preserve the affine structure $\dot{x} = f(x) + g(x)u$, treating the force-velocity relationship as a constraint on the *feasible set* of inputs $\mathcal{U}(x)$ rather than a nonlinearity in the system dynamics. While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance (stiffness/damping) alongside torque. In this framework, the term $f(x)$ represents the **skeletal drift**—the dynamics of the system in the absence of activation-dependent stiffness. The Zero Torque Counterfactual (ZTCF) therefore describes the motion of the underlying passive mechanism, serving as a 'skeletal baseline' rather than a representation of a flaccid or neurologically relaxed golfer.
 6. **Ground contact modeled as holonomic constraint.** Feet--ground interaction is simplified as a fixed base with no slip or compliance; the golfer is treated as rooted at the ground.
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
@@ -243,11 +244,14 @@ Expanding the first column of the product yields the system:
 
 From (2), we isolate the off-diagonal block $H_{\eta q}$:
 $$ H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
+This relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property but a linear mapping of the rigid-body mobility $H_{qq}$, scaled by the **inertial coupling ratio** $- M_{\eta\eta}^{-1} M_{\eta q}$.
+
 Substituting this back into (1):
 $$ M_{qq} H_{qq} - M_{q\eta} (M_{\eta\eta}^{-1} M_{\eta q} H_{qq}) = I $$
-$$ (M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}) H_{qq} = I $$
-The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$, often denoted as the **Articulated Body Inertia** $\Delta$. Thus, the primary diagonal block is:
-$$ H_{qq} = \Delta^{-1} = (M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q})^{-1}. $$
+Factoring out $H_{qq}$ on the right:
+$$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
+The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$. Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space—the effective inertia felt by the golfer when the shaft modes are free to accelerate. Thus, the primary diagonal block of the inverse mass matrix is:
+$$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
 
 This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the effective mobility of the joints *after* accounting for the inertial load of the flexible shaft. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes.
 
@@ -441,7 +445,8 @@ The drift--input decomposition underlies the counterfactual tools introduced lat
 - The *Zero Torque Counterfactual* (ZTCF) trajectory integrates the drift-only dynamics from a given initial state, isolating the passive evolution of the system.
   
 - The *Zero Velocity Counterfactual* (ZVCF) evaluates forces at the same configuration with velocities set to zero, isolating configuration-dependent contributions.
-By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces and construct a force taxonomy for interpretation of measured or simulated swings.
+
+By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces. This process moves us from the instantaneous vector fields of Part I to the temporal domain of Part II. It allows us to simulate the **"Shadow Swings"**—the unobserved trajectories that *would* have occurred had the golfer chosen differently—revealing the invisible inertial currents that shape the visible swing.
 
 ## Zero Torque Counterfactual (ZTCF)
 {#sec-ztcf}
@@ -577,9 +582,7 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 ### Decomposing the drift
 
-While the ZTCF effectively subtracts the golfer's active contribution, the remaining drift term $f(x)$ is still complex: it lumps together static forces (gravity, stiffness) with dynamic forces (Coriolis, centrifugal, damping). To fully diagnose the mechanical load, we need a finer decomposition of the drift itself. We must distinguish between loads that exist purely because of *where* the club is (configuration) and loads that exist because of *how fast* it is moving (velocity).
-
-The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion.
+The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
 
 ## Zero Velocity Counterfactual (ZVCF)
 {#sec-zvcf}

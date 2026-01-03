@@ -5,8 +5,11 @@ from playwright.sync_api import expect, sync_playwright
 
 def verify_toc_scrollspy_http() -> None:
     """
-    Verifies the Table of Contents (TOC) scrollspy functionality by navigating to the
-    localhost HTTP server, scrolling to sections, and checking for active link states.
+    Verifies the Table of Contents (TOC) scrollspy functionality using an HTTP server.
+
+    This function launches a Playwright browser, navigates to the articles page served via HTTP,
+    and checks if the TOC links update correctly when scrolling to different sections.
+    It saves a screenshot of the active TOC state.
     """
     # Use HTTP server
     url = "http://localhost:8000/articles.html"
