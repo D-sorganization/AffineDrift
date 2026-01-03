@@ -149,6 +149,7 @@ references_out_ids:
 # Reading Paths
 
 ## Path 1: The Interpretation Basics (Fast Ramp)
+
 Understanding the "Interpretive Gap" requires seeing both the standard method and its critiques. Start here to understand why "Torque" is ambiguous.
 
 - **nesbit2005three**: The canonical reference for 3D inverse dynamics in golf. This represents the "standard model" that is being critiqued/refined.
@@ -158,6 +159,7 @@ Understanding the "Interpretive Gap" requires seeing both the standard method an
 - **mackenzie2009three**: Contrasts the inverse approach with forward dynamics, highlighting the need for a predictive model to establish causality.
 
 ## Path 2: Deep Technical & Theoretical
+
 For those building the math: how to formalize the ambiguity using control theory and rigid body mechanics.
 
 - **featherstone2008rigid**: The bible of spatial vector algebra. Essential for understanding the "Equivalent Couple" problem in 6D spatial notation.
@@ -168,6 +170,7 @@ For those building the math: how to formalize the ambiguity using control theory
 - **isidori1995nonlinear**: Advanced nonlinear control reference for understanding "drift" in a formal Lie algebraic sense.
 
 ## Path 3: Implementation & Validation
+
 Tools and datasets for calculating these quantities yourself.
 
 - **pinocchio_lib**: The specific rigid body dynamics library used in the AffineDrift project to compute the drift vector field $f(x)$ efficiently.

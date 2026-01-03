@@ -3,7 +3,11 @@ import os
 from playwright.sync_api import expect, sync_playwright
 
 
-def verify_toc_scrollspy():
+def verify_toc_scrollspy() -> None:
+    """
+    Verifies the Table of Contents (TOC) scrollspy functionality by navigating to the
+    local HTML file, scrolling to sections, and checking for active link states.
+    """
     # Path to the local file
     file_path = os.path.abspath("docs/articles.html")
     file_url = f"file://{file_path}"
@@ -36,28 +40,30 @@ def verify_toc_scrollspy():
         # Scroll to the first section
         first_link = links.nth(0)
         first_href = first_link.get_attribute("href")
-        target_id = first_href.replace("#", "")
+        if first_href:
+            target_id = first_href.replace("#", "")
 
-        print(f"Scrolling to first section: {target_id}")
-        page.locator(f"#{target_id}").scroll_into_view_if_needed()
+            print(f"Scrolling to first section: {target_id}")
+            page.locator(f"#{target_id}").scroll_into_view_if_needed()
 
-        # Give Observer time to fire
-        page.wait_for_timeout(500)
+            # Give Observer time to fire
+            page.wait_for_timeout(500)
 
-        # Take screenshot of initial state
-        page.screenshot(path="/home/jules/verification/toc_initial.png")
+            # Take screenshot of initial state
+            page.screenshot(path="/home/jules/verification/toc_initial.png")
 
         # 2. Scroll to the last section
         last_link = links.nth(count - 1)
         last_href = last_link.get_attribute("href")
-        last_target_id = last_href.replace("#", "")
+        if last_href:
+            last_target_id = last_href.replace("#", "")
 
-        print(f"Scrolling to last section: {last_target_id}")
-        # Use JS scroll to be sure
-        page.evaluate(f"document.getElementById('{last_target_id}').scrollIntoView()")
+            print(f"Scrolling to last section: {last_target_id}")
+            # Use JS scroll to be sure
+            page.evaluate(f"document.getElementById('{last_target_id}').scrollIntoView()")
 
-        # Wait for scroll and observer
-        page.wait_for_timeout(1000)
+            # Wait for scroll and observer
+            page.wait_for_timeout(1000)
 
         # Check if last link has 'active' class
         # Note: Depending on layout, the last section might not be tall enough to trigger

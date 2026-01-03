@@ -861,15 +861,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let inWord = false;
     const len = text.length;
     for (let i = 0; i < len; i++) {
-        const c = text.charCodeAt(i);
-        // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
-        // Also Form Feed (12)
-        if (c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 12) {
-            inWord = false;
-        } else {
-            if (!inWord) wordCount++;
-            inWord = true;
-        }
+      const c = text.charCodeAt(i);
+      // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
+      // Also Form Feed (12)
+      if (
+        c === 32 ||
+        c === 9 ||
+        c === 10 ||
+        c === 13 ||
+        c === 160 ||
+        c === 12
+      ) {
+        inWord = false;
+      } else {
+        if (!inWord) wordCount++;
+        inWord = true;
+      }
     }
 
     // Average reading speed (words per minute)
