@@ -45,12 +45,30 @@ $$
 f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
 $$
 The terms constituting $f(x)$ are:
-1.  **Kinematic rates** $\dot{q}, \dot{\eta}$, which are state variables.
-2.  **Inertia matrix** $M(q,\eta)$, which depends only on configuration.
-3.  **Coriolis/Centrifugal matrix** $C(x)$, which depends on state.
-4.  **Potential forces** $G$ and $F_s$, which depend on state.
+1.  **Kinematic rates:** The state variables $\dot{q}, \dot{\eta}$ are independent of the input $u$ by definition in the first-order form ($\dot{x} = \dots$), so $\frac{\partial \dot{q}}{\partial u} = 0$.
+2.  **Inertia:** The mass matrix $M(q,\eta)$ and its inverse $M^{-1}$ are functions of the configuration manifold coordinates only. Thus, $\frac{\partial M^{-1}}{\partial u} = 0$.
+3.  **Coriolis/Centrifugal:** The matrix $C(q,\dot{q},\eta,\dot{\eta})$ is quadratic in velocities but independent of force inputs.
+4.  **Potentials:** Gravitational ($G$) and elastic ($K_s \eta$) forces are functions of configuration $q, \eta$ only.
+5.  **Dissipation:** Damping forces ($C_s \dot{\eta}$) are linear in velocity.
 
-The control input $u$ enters the equations of motion *only* through the term $B(q)u$, which is isolated in the input vector field $g(x)$. Since no term in $f(x)$ has functional dependence on $u$, the partial derivative $\frac{\partial f(x)}{\partial u}$ is identically zero. $\square$
+We perform the differentiation explicitly block-by-block. Let $h(x) = C(x)\dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta})$ be the vector of passive forces.
+$$
+\frac{\partial f(x)}{\partial u} = \frac{\partial}{\partial u}
+\begin{bmatrix}
+\dot{q} \\ \dot{\eta} \\ -M^{-1} h(x)
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 0 \\ -\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}
+\end{bmatrix}.
+$$
+Since $M^{-1}$ depends only on $q, \eta$ and $h(x)$ depends only on $q, \eta, \dot{q}, \dot{\eta}$, both partial derivatives with respect to $u$ are zero.
+
+$$
+\frac{\partial f(x)}{\partial u} \equiv 0.
+$$
+
+The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This orthogonality is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. It guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs. $\square$
 
 For mechanical systems with generalized torques entering linearly,
 
