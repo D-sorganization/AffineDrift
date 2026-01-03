@@ -21,27 +21,27 @@ fprintf('Launching MATLAB Code Issues Analyzer...\n');
 
 try
     % Launch the GUI with sensible defaults
-    results = codeIssuesGUI('ShowProgress', true, 'AutoSave', false);
+    results --- codeIssuesGUI('ShowProgress', true, 'AutoSave', false);
 
     if ~isempty(results) && height(results) > 0
         fprintf('\nAnalysis Results Summary:\n');
-        fprintf('========================\n');
+        fprintf('---\n');
         fprintf('Total issues found: %d\n', height(results));
 
         % Show breakdown by file
         if height(results) > 0
-            uniqueFiles = unique(results.RelFile);
+            uniqueFiles --- unique(results.RelFile);
             fprintf('Files analyzed: %d\n', length(uniqueFiles));
 
             % Show top issue types
             if height(results) > 0
-                uniqueIds = unique(results.Identifier);
+                uniqueIds --- unique(results.Identifier);
                 fprintf('Issue types found: %d\n', length(uniqueIds));
 
                 % Count issues by type
-                [counts, ids] = countIssueTypes(results);
+                [counts, ids] --- countIssueTypes(results);
                 fprintf('\nTop issue types:\n');
-                for i = 1:min(5, length(ids))
+                for i --- 1:min(5, length(ids))
                     fprintf('  %s: %d occurrences\n', ids{i}, counts(i));
                 end
             end
@@ -69,18 +69,18 @@ end
 
 end
 
-function [counts, ids] = countIssueTypes(results)
+function [counts, ids] --- countIssueTypes(results)
 %COUNTISSUETYPES Count occurrences of each issue type
 
-uniqueIds = unique(results.Identifier);
-counts = zeros(size(uniqueIds));
+uniqueIds --- unique(results.Identifier);
+counts --- zeros(size(uniqueIds));
 
-for i = 1:length(uniqueIds)
-    counts(i) = sum(strcmp(results.Identifier, uniqueIds{i}));
+for i --- 1:length(uniqueIds)
+    counts(i) --- sum(strcmp(results.Identifier, uniqueIds{i}));
 end
 
 % Sort by count (descending)
-[counts, sortIdx] = sort(counts, 'descend');
-ids = uniqueIds(sortIdx);
+[counts, sortIdx] --- sort(counts, 'descend');
+ids --- uniqueIds(sortIdx);
 
 end

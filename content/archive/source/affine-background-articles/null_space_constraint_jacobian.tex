@@ -1,8 +1,8 @@
 \documentclass[11pt,a4paper]{article}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % PACKAGES
-% ============================================================================
+% ----------------------------------------------------------------------------
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathtools}
 \usepackage{physics}
@@ -17,9 +17,9 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % THEOREM ENVIRONMENTS
-% ============================================================================
+% ----------------------------------------------------------------------------
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{Theorem}[section]
@@ -29,9 +29,9 @@
 \newtheorem{remark}{Remark}[section]
 \newtheorem{example}{Example}[section]
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % CUSTOM COMMANDS
-% ============================================================================
+% ----------------------------------------------------------------------------
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\nullspace}{\mathcal{N}}
 \newcommand{\rangespace}{\mathcal{R}}
@@ -49,9 +49,9 @@
 \newcommand{\tauvec}{\bm{\tau}}
 \newcommand{\Phivec}{\bm{\Phi}}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % DOCUMENT
-% ============================================================================
+% ----------------------------------------------------------------------------
 \begin{document}
 
 \title{The Null Space of the Constraint Jacobian:\\
@@ -69,9 +69,9 @@ The golf swing represents one of the most complex coordinated movements in human
 
 \tableofcontents
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Introduction}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves \emph{loop closures}---the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.
 
@@ -86,9 +86,9 @@ Mathematically, constraints manifest through the \emph{constraint Jacobian} $\Jc
 
 This article develops these concepts systematically, with particular attention to their application in golf swing biomechanics and their deep connection to nonlinear control theory.
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Holonomic Constraints and the Constraint Jacobian}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Constraint Formulation}
 
@@ -145,9 +145,9 @@ where $\bm{d}_{\text{grip}}$ accounts for grip geometry. The constraint Jacobian
     \Jc = \frac{\partial \bm{p}_{\text{left}}}{\partial \qvec} - \frac{\partial \bm{p}_{\text{right}}}{\partial \qvec}
 \end{equation}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{The Null Space: Mathematical Foundations}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Definition and Basic Properties}
 
@@ -248,9 +248,9 @@ This provides a beautiful geometric picture: the constraint manifold is an $(n-m
 \label{fig:manifold}
 \end{figure}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Constrained Equations of Motion}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Lagrangian Formulation with Constraints}
 
@@ -309,9 +309,9 @@ The null space projection separates forces into two orthogonal components:
 
 Only the component $P\tauvec$ contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside $\nullspace(\Jc)$ are ``wasted'' in the sense that they produce no clubhead motion.
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Connection to Control-Affine Systems and Drift}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Control-Affine Structure}
 
@@ -388,9 +388,9 @@ In the golf swing, this has implications for:
     \item Exploitation of passive dynamics
 \end{itemize}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Computational Methods}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{SVD-Based Null Space Computation}
 
@@ -426,9 +426,9 @@ For serial chains with loop closures (like the golf swing model), the null space
 \end{equation}
 where $N_{\text{open}}$ is the null space of the open chain constraints and $N_{\text{closure}}$ accounts for loop closures.
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Application: Golf Swing Multi-Body Model}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Model Description}
 
@@ -487,9 +487,9 @@ Principal Component Analysis (PCA) of these synergies often reveals:
     \item \textbf{Release mechanism}: Wrist unhinging coordinated with club rotation
 \end{itemize}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Drift-Control Separation in Golf Swing Dynamics}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{The Natural Swing: Exploiting Drift}
 
@@ -532,9 +532,9 @@ This separates:
     \item Energy stored/released in constraint forces: implicitly zero (orthogonal to motion)
 \end{itemize}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Advanced Topics}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 \subsection{Configuration-Dependent Null Space Dimension}
 
@@ -573,9 +573,9 @@ These determine:
     \item Small-time local controllability properties
 \end{itemize}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 \section{Conclusions}
-% ============================================================================
+% ----------------------------------------------------------------------------
 
 The null space of the constraint Jacobian provides a powerful framework for analyzing and simulating constrained multi-body systems like the golf swing. Key takeaways include:
 
@@ -593,9 +593,9 @@ The null space of the constraint Jacobian provides a powerful framework for anal
 
 For golf swing analysis specifically, this framework explains how elite players achieve high clubhead speeds with apparent ease: they structure their technique to align muscle forces with the null space and exploit drift dynamics, rather than fighting against constraints.
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % APPENDICES
-% ============================================================================
+% ----------------------------------------------------------------------------
 \appendix
 
 \section{Proof: Orthogonality of Constraint Forces}
@@ -651,9 +651,9 @@ Control-affine form & $\dot{\xvec} = \fvec(\xvec) + G(\xvec)\uvec$ \\
 \end{tabular}
 \end{table}
 
-% ============================================================================
+% ----------------------------------------------------------------------------
 % BIBLIOGRAPHY
-% ============================================================================
+% ----------------------------------------------------------------------------
 \begin{thebibliography}{99}
 
 \bibitem{murray1994}
