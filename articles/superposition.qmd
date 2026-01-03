@@ -17,6 +17,8 @@ $$
 $$
 
 for finite-dimensional mechanical systems actuated by generalized forces, and prove that the mapping from inputs to generalized accelerations, generalized forces, and wrenches is linear at fixed state. This yields a precise superposition principle: although *trajectories in state space do not superpose* in general (due to nonlinearity), the *effects of distinct input channels on generalized forces and accelerations do*. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.
+
+In the broader context of the AffineDrift framework, this linearity provides the rigorous justification for the **Zero Torque Counterfactual (ZTCF)**. Because the input enters linearly, we can mathematically "turn off" the golfer's torque ($u=0$) without altering the passive drift vector field $f(x)$. This justifies the separation of the swing into a history-dependent passive layer (Drift) and an instantaneous active layer (Input).
 :::
 
 ## 1. Introduction
@@ -121,6 +123,8 @@ G(x) u^{(g)} + G(x) u^{(c)} + G(x) u^{(d)} + \cdots.
 $$
 
 **This is the basic superposition statement:** at a fixed state $x$, the *incremental effect of each input component* on $\dot x$ is linear and additively separable.
+
+This additive separability is the engine behind the **Drift–Input Decomposition**. It implies that the "Input Acceleration" is mechanically orthogonal to the "Drift Acceleration". Consequently, the operation of subtracting the total observed acceleration from the passive drift acceleration to recover the input is not just an approximation—it is an exact algebraic inversion permitted by the fiber-linear structure of the tangent bundle.
 
 What is *not* true in general is that full solutions $x(t)$ of the nonlinear ODE (2.1) can be written as linear sums of solutions for different inputs. That would require $f$ and $g_i$ to be linear in $x$ as well; we do **not** assume that.
 
@@ -1263,6 +1267,14 @@ This clarified view of superposition is particularly valuable for:
 * screw-theoretic modeling of force transmission and manipulability.
 
 In applications ranging from robotics to biomechanics, this perspective allows us to speak precisely about the *share* of motion "caused by" different inputs, without pretending that nonlinear trajectories themselves superpose.
+
+This structural insight connects directly to the **Drift--Control Ratio**. While the input map $u \mapsto \dot{x}$ is linear, the drift field $f(x)$ typically scales quadratically with velocity (due to $\omega^2$ terms in Coriolis/centrifugal forces). This creates the **Dominant Attractor** phenomenon: at high swing speeds, the passive drift vector $f(x)$ energetically dwarfs the maximum available control authority $g(x)u_{\text{max}}$, rendering the superposition "lopsided"—the golfer can steer, but the train is driving itself.
+
+### Related Concepts in the AffineDrift Framework
+
+*   **Zero Torque Counterfactual (ZTCF):** The integral curve of the drift field $f(x)$, justified by the independence of $f$ from $u$.
+*   **Drift Invariance:** The property $\nabla_u f(x) = 0$, which is the differential equivalent of the superposition principle derived here.
+*   **Control Efficacy:** The magnitude of the input vector field $g(x)$, representing the "leverage" the golfer has over the system state (equivalent to the Mobility Ellipsoid).
 
 ---
 
