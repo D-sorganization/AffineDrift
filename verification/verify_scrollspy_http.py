@@ -3,7 +3,14 @@ import os
 from playwright.sync_api import expect, sync_playwright
 
 
-def verify_toc_scrollspy_http():
+def verify_toc_scrollspy_http() -> None:
+    """
+    Verifies the Table of Contents (TOC) scrollspy functionality using an HTTP server.
+
+    This function launches a Playwright browser, navigates to the articles page served via HTTP,
+    and checks if the TOC links update correctly when scrolling to different sections.
+    It saves a screenshot of the active TOC state.
+    """
     # Use HTTP server
     url = "http://localhost:8000/articles.html"
 
@@ -30,25 +37,26 @@ def verify_toc_scrollspy_http():
         if count >= 2:
             target_link = links.nth(1)
             target_href = target_link.get_attribute("href")
-            target_id = target_href.replace("#", "")
-            print(f"Scrolling to section: {target_id}")
+            if target_href:
+                target_id = target_href.replace("#", "")
+                print(f"Scrolling to section: {target_id}")
 
-            # Scroll element into view
-            page.locator(f"#{target_id}").scroll_into_view_if_needed()
+                # Scroll element into view
+                page.locator(f"#{target_id}").scroll_into_view_if_needed()
 
-            # Additional scroll to center it
-            page.evaluate(
-                f"document.getElementById('{target_id}').scrollIntoView({{block: 'center'}})"
-            )
+                # Additional scroll to center it
+                page.evaluate(
+                    f"document.getElementById('{target_id}').scrollIntoView({{block: 'center'}})"
+                )
 
-            page.wait_for_timeout(1000)
+                page.wait_for_timeout(1000)
 
-            # Check if class is added
-            is_active = target_link.get_attribute("class")
-            print(f"Link class: {is_active}")
+                # Check if class is added
+                is_active = target_link.get_attribute("class")
+                print(f"Link class: {is_active}")
 
-            # Take screenshot
-            page.screenshot(path="/home/jules/verification/toc_active.png")
+                # Take screenshot
+                page.screenshot(path="/home/jules/verification/toc_active.png")
 
         browser.close()
 

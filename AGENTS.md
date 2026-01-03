@@ -255,24 +255,27 @@ This section defines the active agents within the Jules "Control Tower" Architec
 
 ## 🛠️ GitHub CLI & Workflow Reference
 
-Always use Github CLI for making pull requests. 
-Whenever you finish a task for the user, push it to remote. 
-NEVER try to use GitKraken or anything other than Github CLI for Pull request creation. 
+Always use Github CLI for making pull requests.
+Whenever you finish a task for the user, push it to remote.
+NEVER try to use GitKraken or anything other than Github CLI for Pull request creation.
 All pull requests should be verified to pass the ruff, black, and mypy requirements in the ci / cd pipeline before they are created.
 
 ### For PR Creation:
+
 - Always check if PR already exists first using `gh pr list --state open`
 - Use simple, concise titles and descriptions for initial creation
 - Wrap GitHub CLI commands in powershell `-Command "..."`
 - Use single quotes inside double quotes for string parameters
 
 ### For PR Management:
+
 - Use `gh pr view [number]` to get PR details and status
 - Use `gh pr checks [number]` to see CI/CD status
 - Use `gh run list --branch [branch-name]` to see workflow runs
 - Check for failing checks and address them systematically
 
 ### For CI/CD Issue Resolution:
+
 - Identify failing checks using `gh pr checks`
 - Examine workflow run logs using `gh run view [run-id]`
 - Make fixes on the same branch and push to update the PR

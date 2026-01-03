@@ -3,12 +3,14 @@
 ## A) Concept Map
 
 - **Rigid Body Dynamics**
+
   - **Principal Moments of Inertia**: Eigenvalues of the inertia tensor ($I_1 \le I_2 \le I_3$).
   - **Intermediate Axis Theorem**: The instability of rotation about the second principal axis ($I_2$).
   - **Euler's Equations**: Equations governing the rotation of a rigid body ($\tau = I\dot{\omega} + \omega \times I\omega$).
   - **Dzhanibekov Effect**: The "flipping" behavior observed in free-rotating bodies (e.g., wing nuts in space).
 
 - **Golf Equipment Physics**
+
   - **Moment of Inertia (MOI)**: Resistance to angular acceleration, typically maximized for forgiveness ($I_z$).
   - **Putter Design**: "Mallet" vs. "Blade" designs and their inertial properties.
   - **Effective Inertia**: The inertia tensor as seen from the rotation axis, modified by shaft orientation.

@@ -3,16 +3,19 @@
 ## A) Concept Map
 
 - **Multibody Dynamics**
+
   - **Differential-Algebraic Equations (DAEs)**: Systems described by differential equations constrained by algebraic equations (Index-3).
   - **Lagrange Multipliers**: ($\lambda$) Forces required to enforce kinematic constraints.
   - **Constraint Jacobian**: ($J_c$) The mapping from generalized velocities to constraint violation rates.
 
 - **Geometric Mechanics**
+
   - **Null Space Projector**: ($P$) Operator that separates forces into motion-inducing and constraint-absorbing components.
   - **Tangent Bundle**: ($T\mathcal{Q}$) The state space of permissible velocities at a given configuration.
   - **Riemannian Manifold**: The configuration space equipped with the mass metric.
 
 - **Control Theory**
+
   - **Control-Affine Systems**: Formulating the constrained dynamics as $\dot{x} = f(x) + g(x)u$.
   - **Drift Vector Field**: The natural evolution of the system (passive dynamics) projected onto the feasible manifold.
   - **Controllability**: The ability to steer the system using available inputs within the null space.
@@ -59,7 +62,8 @@
   venue: "Journal of Applied Mechanics"
   scholar_url: "https://scholar.google.com/scholar?q=general+form+explicit+equations+motion+constrained+mechanical+systems+Udwadia"
   clusters: ["constrained dynamics", "analytical mechanics"]
-  concepts: ["explicit equation of motion", "moore-penrose inverse", "gauss principle"]
+  concepts:
+    ["explicit equation of motion", "moore-penrose inverse", "gauss principle"]
   related_ids: ["blajer1997geometric"]
   references_out_ids: []
 

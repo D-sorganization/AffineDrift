@@ -3,21 +3,23 @@
 ## A) Concept Map
 
 - **Geometric Analysis**
-    - **Manipulability Ellipsoid**: Geometric representation of kinematic capability ($\dot{x} = J\dot{q}$).
-    - **Force Ellipsoid**: Geometric representation of static force transmission ($\tau = J^\top F$).
-    - **Singular Value Decomposition (SVD)**: Mathematical tool to extract principal axes ($\sigma_i$) of the Jacobian.
-    - **Duality**: The orthogonal relationship between motion and force capabilities ($F^\top v = \tau^\top \dot{q}$).
+
+  - **Manipulability Ellipsoid**: Geometric representation of kinematic capability ($\dot{x} = J\dot{q}$).
+  - **Force Ellipsoid**: Geometric representation of static force transmission ($\tau = J^\top F$).
+  - **Singular Value Decomposition (SVD)**: Mathematical tool to extract principal axes ($\sigma_i$) of the Jacobian.
+  - **Duality**: The orthogonal relationship between motion and force capabilities ($F^\top v = \tau^\top \dot{q}$).
 
 - **Multibody Dynamics**
-    - **Jacobian Matrix ($J$)**: The linear mapping from joint space velocities to task space velocities.
-    - **Kinematic Singularity**: Configurations where rank($J$) drops, losing mobility in certain directions.
-    - **Double Pendulum**: Canonical planar linkage model for the golf swing.
-    - **Constraint Surfaces**: Manifolds restricting motion, trading mobility for reaction force potential.
+
+  - **Jacobian Matrix ($J$)**: The linear mapping from joint space velocities to task space velocities.
+  - **Kinematic Singularity**: Configurations where rank($J$) drops, losing mobility in certain directions.
+  - **Double Pendulum**: Canonical planar linkage model for the golf swing.
+  - **Constraint Surfaces**: Manifolds restricting motion, trading mobility for reaction force potential.
 
 - **Biomechanics**
-    - **Mechanical Advantage**: Leverage ratios changing with configuration.
-    - **Effective Inertia**: The apparent mass felt at the end-effector.
-    - **Intersegmental Dynamics**: Coupling between proximal (torso/arm) and distal (club) segments.
+  - **Mechanical Advantage**: Leverage ratios changing with configuration.
+  - **Effective Inertia**: The apparent mass felt at the end-effector.
+  - **Intersegmental Dynamics**: Coupling between proximal (torso/arm) and distal (club) segments.
 
 ## B) Bibliography (YAML)
 
