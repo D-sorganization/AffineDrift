@@ -11,7 +11,7 @@ format:
 
 ## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
-In Part I, we established that the golfer--club--shaft system is governed by the nonlinear control-affine dynamics $\dot{x} = f(x) + g(x)u$. This structure is not merely a mathematical convenience; it is a direct consequence of the Lagrangian mechanics of the system, where forces are strictly partitioned into those that depend on the state (drift) and those that depend linearly on the torque input.
+In Part I, we established that the golfer--club--shaft system is governed by the nonlinear control-affine dynamics $\dot{x} = f(x) + g(x)u$. This structure is not merely a mathematical convenience; it is a direct consequence of the **Mechanical Orthogonality** derived in Part I, where the inertial memory of the system (drift) is structurally distinct from the current agency of the player (input).
 
 We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
 
@@ -71,7 +71,7 @@ The drift--input decomposition underlies the counterfactual tools introduced lat
 - The *Zero Torque Counterfactual* (ZTCF) trajectory integrates the drift-only dynamics from a given initial state, isolating the passive evolution of the system.
 - The *Zero Velocity Counterfactual* (ZVCF) evaluates forces at the same configuration with velocities set to zero, isolating configuration-dependent contributions.
 
-By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces and construct a force taxonomy for interpretation of measured or simulated swings.
+By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces. This process moves us from the instantaneous vector fields of Part I to the temporal domain of Part II. It allows us to simulate the **"Shadow Swings"**—the unobserved trajectories that *would* have occurred had the golfer chosen differently—revealing the invisible inertial currents that shape the visible swing.
 
 ## Zero Torque Counterfactual (ZTCF)
 
@@ -182,7 +182,7 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 ### Decomposing the drift
 
-While the ZTCF effectively subtracts the golfer's active contribution, the remaining drift term $f(x)$ is still a composite phenomenon. It aggregates both *motion-dependent* forces (such as centrifugal, Coriolis, and inertial coupling) and *configuration-dependent* forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system's instantaneous shape.
+The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
 
 ## Zero Velocity Counterfactual (ZVCF)
 The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a *trajectory*-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an *instantaneous* construction. It identifies the passive mechanical forces that arise *only from configuration* (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.
