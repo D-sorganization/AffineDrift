@@ -2,7 +2,6 @@
 
 ## Critique-Response Table
 
-<<<<<<< HEAD
 | Critique | Classification | Validity | Core Defense Strategy | Status |
 | :-------------------------------------------------------------------- | :----------------------------- | :----------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |
 | **01. Muscle Physiology**<br>(Variable Impedance) | Conceptual / Biophysical | **Partially Valid** | **Clarify Definition of Drift:** Acknowledge that muscle stiffness scales with input. Clarify that "Drift" $f(x)$ represents the _skeletal/inertial_ baseline (the limit as $u \to 0$), not necessarily the physiological "relaxed" state. The affine form $\dot{x}=f(x)+g(x)u$ remains the correct _mechanical_ description of the plant. | **Applied** to Assumption 5 |
