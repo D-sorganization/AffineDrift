@@ -175,40 +175,30 @@ $$
 \mathrm{DCR}(t) \text{ increases by } 100\times-300\times \text{ across the downswing.}
 $$
 
-# 4. Nonlinear Controllability via Lie Brackets
+# 4. Nonlinear Reachability and the "Effective Control Cone"
 
-A control-affine system is locally controllable if:
+While the 3-link model is technically **holonomic** and fully actuated (assuming sufficient torque), the massive scaling of the drift term creates a regime of **Practical Underactuation**. We analyze this not through Lie Brackets (which govern geometric accessibility), but through **Hamiltonian Reachability** analysis, which governs the energetic feasibility of motion.
 
-$$
-\mathrm{span}\left\{
-g, [f,g], [f,[f,g]], \dots
-\right\}
-= T_x\mathbb{R}^n.
-$$
-
-The Lie bracket:
+Consider the **Control Hamiltonian** representing the maximum rate of change along a costate vector $p$:
 
 $$
-[f,g]
-= \frac{\partial g}{\partial x}f
-- \frac{\partial f}{\partial x}g
+H(x,p) = \sup_{u \in \mathcal{U}} p^T(f(x) + g(x)u).
 $$
 
-captures how drift distorts control directions.
+As velocity increases, the "Drift Component" $p^T f(x)$ scales quadratically ($\sim \dot{q}^2$), while the "Control Component" $p^T g(x) u$ remains bounded by physiological torque limits ($u_{max}$).
 
-## 4.1 Behavior Under Increasing Drift
+## 4.1 The Anisotropy of Control Authority
 
-As drift increases:
+The result is a severe **Anisotropy of the Reachable Set**.
 
-- $\frac{\partial f}{\partial x}$ contains terms $\propto \dot{q}^2$
-- the bracket magnitude grows, but
-- **control cannot access or excite these directions**, because $g(x)u$ becomes tiny relative to $f(x)$.
+- **Along the Drift Vector:** The system possesses massive momentum. To stop or reverse the motion requires $\tau \gg M(q) f(x)$. Since $\|f(x)\|$ exceeds $\|\tau_{max}\|$ by orders of magnitude (DCR > 100), this direction is effectively uncontrollable.
+- **Orthogonal to Drift:** The control authority depends on the inertia matrix $M(q)$.
+    - **Planar Path:** High inertia ($I_{plane}$) $\to$ Low acceleration authority.
+    - **Axial Rotation (Supination):** Low inertia ($I_{axial}$) $\to$ High acceleration authority.
 
-Thus effective controllability collapses.
+Thus, the "ball of reachable states" flattens into a thin **pancake shape**.
 
-This is a structural, not numerical, phenomenon.
-
-While the DCR provides a scalar magnitude of the problem—telling us *that* control is lost—the Lie bracket analysis reveals the *geometry* of that loss. It shows us exactly which directions in the state space become inaccessible. As the drift vector field $f(x)$ lengthens, it does not merely push the system faster; it curves the reachable manifold, bending the "straight lines" of control input into complex involutions that the golfer cannot unwind in the available time.
+While the DCR provides a scalar magnitude of the problem—telling us *that* path control is lost—this reachability analysis reveals the *geometry* of that loss. It shows us that while the golfer retains the ability to rotate the shaft (low inertia), they lose the ability to steer the path of the center of mass (high inertia + high drift). The golfer is locked into a **"Drift Tube"** determined by the initial conditions set at the top of the swing.
 
 # 5. Control Authority Collapse
 
