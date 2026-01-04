@@ -181,6 +181,8 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 | $\phi_{i}$ | Coefficients associated with shaft mode shapes |
 | $t$ | Time |
 
+: Summary of main symbols {#tab:notation}
+
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
@@ -1617,7 +1619,7 @@ where:
 
 The mode shapes satisfy the eigenvalue problem:
 $$
-  EI \,\phi_i"" = \omega_i^2 \rho A \,\phi_i,
+  EI \,\phi_i'' = \omega_i^2 \rho A \,\phi_i,
 $$
 with orthogonality relations
 $$
@@ -2187,7 +2189,7 @@ A total of 56 kill‐switch times were distributed uniformly across the downswin
   
 4. the resulting hand–on–club forces were recorded at the kill instant.
 
-This procedure produced a sampled version of the drift forces across the downswing. The resulting “counterfactual” points (shown as the CF dots in Figure~1 of the PDF) represent the purely passive momentum contribution to the hand–club interaction forces.
+This procedure produced a sampled version of the drift forces across the downswing. The resulting “counterfactual” points represent the purely passive momentum contribution to the hand–club interaction forces.
 
 ### Comparison with total forces
 
@@ -2196,7 +2198,7 @@ For each kill‐switch instant, the interaction forces produced under drift‐on
 The analysis showed:
 - Passive momentum contributes substantially to both normal and axial hand forces.
   
-- The passive component can reverse direction prior to the reversal of the total force (visible in the normal‐force curves on page 2 of the PDF). 
+- The passive component can reverse direction prior to the reversal of the total force.
   
 - The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.
   
@@ -2208,7 +2210,7 @@ These findings match the theoretical prediction that drift forces do not vanish 
 
 ### Zero Velocity Counterfactual computation and validation
 
-Although not included in the slides or PDF, the Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state $x(t)$ on the simulated trajectory:
+The Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well. For each state $x(t)$ on the simulated trajectory:
 1. generalized velocities were set to zero,
   
 2. the drift term $a_{\mathrm{drift}}(q,0,\eta,0)$ was evaluated,
