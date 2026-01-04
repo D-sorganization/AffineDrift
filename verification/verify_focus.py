@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 
 
-def verify_focus_visible():
+def verify_focus_visible() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -9,7 +9,8 @@ def verify_focus_visible():
         page.goto("http://localhost:8000/index.html")
 
         # 1. Verify CSS Rule Existence - Check selector text exactly as it might appear
-        rule_exists = page.evaluate("""() => {
+        rule_exists = page.evaluate(
+            """() => {
             for (let sheet of document.styleSheets) {
                 try {
                     for (let rule of sheet.cssRules) {
@@ -20,7 +21,8 @@ def verify_focus_visible():
                 } catch(e) {}
             }
             return "NOT FOUND";
-        }""")
+        }"""
+        )
         print(f"CSS Rule Found: {rule_exists}")
 
         # 2. Visual verification
@@ -29,7 +31,7 @@ def verify_focus_visible():
 
         # Tab to skip link (1st tab)
         page.keyboard.press("Tab")
-        page.wait_for_timeout(200) # Wait for transition/render
+        page.wait_for_timeout(200)  # Wait for transition/render
         page.screenshot(path="verification/focus_01_skip.png")
 
         # Tab to Logo (2nd tab)
@@ -43,7 +45,8 @@ def verify_focus_visible():
         page.screenshot(path="verification/focus_03_home.png")
 
         # 3. Check computed style of active element
-        computed = page.evaluate("""() => {
+        computed = page.evaluate(
+            """() => {
             const el = document.activeElement;
             const style = window.getComputedStyle(el);
             return {
@@ -54,10 +57,12 @@ def verify_focus_visible():
                 style: style.outlineStyle,
                 offset: style.outlineOffset
             };
-        }""")
+        }"""
+        )
         print(f"Computed Focus Styles: {computed}")
 
         browser.close()
+
 
 if __name__ == "__main__":
     verify_focus_visible()
