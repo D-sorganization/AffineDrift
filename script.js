@@ -35,6 +35,15 @@ function debounce(func, wait) {
   };
 }
 
+// ⚡ Bolt Optimization: Helper to run non-critical tasks when idle
+function runWhenIdle(callback) {
+  if (typeof requestIdleCallback !== "undefined") {
+    requestIdleCallback(callback);
+  } else {
+    setTimeout(callback, 0);
+  }
+}
+
 // Helper function to generate unique IDs
 function generateUniqueId(text, usedIds) {
   let baseId = text
@@ -277,7 +286,8 @@ document.addEventListener("DOMContentLoaded", function () {
       historyList.appendChild(fragment);
     }
   }
-  updateHistorySidebar();
+  // ⚡ Bolt Optimization: Defer history updates to unblock main thread
+  runWhenIdle(updateHistorySidebar);
 
   // Table of Contents
   function generateTableOfContents() {
@@ -756,7 +766,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
-  initArticleHistory();
+  // ⚡ Bolt Optimization: Defer history updates to unblock main thread
+  runWhenIdle(initArticleHistory);
 
   // Copy to Clipboard
   const codeBlocks = document.querySelectorAll("pre");
@@ -912,9 +923,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Insert logic: Try to insert after the header if it exists and is visible
     const header = document.getElementById("title-block-header");
-    const headerDisplay = header ? getComputedStyle(header).display : "null";
+    // ⚡ Bolt Optimization: Check offsetParent instead of getComputedStyle to avoid forced layout
+    // offsetParent is null if display: none or parent is hidden
+    const isHeaderVisible = header && header.offsetParent !== null;
 
-    if (header && headerDisplay !== "none") {
+    if (isHeaderVisible) {
       // Check if meta block exists inside header
       const meta = header.querySelector(".quarto-title-meta");
       if (meta) {
