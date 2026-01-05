@@ -3,17 +3,20 @@
 ## A) Concept Map
 
 - **Mathematical Foundations**
+
   - **Control-Affine Systems**: $\dot{x} = f(x) + g(x)u$. Linearity of input mapping.
   - **Tangent Bundle Geometry**: State $x \in TQ$. Fiber-linearity of the tangent bundle.
   - **Superposition Principle**: Input contributions superpose linearly at a fixed state; trajectories do not.
 
 - **Mechanics Formulations**
+
   - **Newton–Euler**: Force/Torque linearity ($F=ma$).
   - **Lagrangian**: Generalized forces $Q$ as linear mappings of physical forces.
   - **Screw Theory**: Spatial vectors (Twists/Wrenches). Linearity of wrench composition.
   - **Gauss's Principle of Least Constraint**: Variation of acceleration minimized under constraints.
 
 - **Applications**
+
   - **Inverse Dynamics**: Decomposing torque into gravity, Coriolis, and task components.
   - **Induced Acceleration Analysis**: Biomechanical term for input-to-acceleration superposition.
   - **Gravity Compensation**: Feedforward cancellation of drift terms.
@@ -36,7 +39,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
   clusters: ["robotics", "mechanics", "spatial algebra"]
-  concepts: ["spatial vectors", "articulated body algorithm", "model-based control"]
+  concepts:
+    ["spatial vectors", "articulated body algorithm", "model-based control"]
   related_ids: ["jain2010robot", "pinocchio_lib"]
   references_out_ids: ["jain2010robot", "pinocchio_lib"]
 
@@ -50,7 +54,8 @@
   venue: "CRC Press"
   scholar_link: "https://scholar.google.com/scholar?q=A+Mathematical+Introduction+to+Robotic+Manipulation+Murray"
   clusters: ["robotics", "control theory"]
-  concepts: ["lagrangian dynamics", "manipulator equations", "geometric mechanics"]
+  concepts:
+    ["lagrangian dynamics", "manipulator equations", "geometric mechanics"]
   related_ids: ["lynch2017modern", "bullo2004geometric"]
   references_out_ids: ["bullo2004geometric"]
 
@@ -114,7 +119,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Robot+and+Multibody+Dynamics+Jain"
   clusters: ["multibody dynamics", "robotics"]
-  concepts: ["operator algebra", "mass matrix factorization", "spatial operators"]
+  concepts:
+    ["operator algebra", "mass matrix factorization", "spatial operators"]
   related_ids: ["featherstone2008rigid"]
   references_out_ids: []
 
@@ -163,7 +169,8 @@
   venue: "IEEE Journal of Robotics and Automation"
   scholar_link: "https://scholar.google.com/scholar?q=A+unified+approach+for+motion+and+force+control+Khatib"
   clusters: ["robotics", "control"]
-  concepts: ["operational space", "dynamically consistent inverse", "projection"]
+  concepts:
+    ["operational space", "dynamically consistent inverse", "projection"]
   related_ids: ["aghili2005unified"]
   references_out_ids: []
 

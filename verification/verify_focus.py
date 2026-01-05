@@ -2,6 +2,15 @@ from playwright.sync_api import sync_playwright
 
 
 def verify_focus_visible() -> None:
+    """
+    Verifies the accessibility focus indicators on the website.
+
+    This script launches a headless browser, navigates to the homepage,
+    checks for the existence of the `:focus-visible` CSS rule, performs
+    visual verification by tabbing through elements and capturing screenshots,
+    and inspects the computed styles of the active element to ensure
+    focus outlines are correctly applied.
+    """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
