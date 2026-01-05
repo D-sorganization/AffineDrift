@@ -188,3 +188,21 @@ Secondary axis stability provides a rigorous mechanical framework for understand
 A central-axis spine architecture offers an alternative approach, trading some vertical-axis MOI for improved rotational stability. In simplified models, this design reduces $I_3$ by approximately 45–50%, while producing a mass distribution more aligned with the stroke plane. This alignment mitigates excursions into dynamically unstable regions, potentially enhancing consistency for players who prioritize stroke stability over maximum impact forgiveness.
 
 Further work involving full 3D CAD, finite element shaft modeling, and experimental motion-capture validation would provide deeper insight into the optimal balance between MOI and dynamic stability.
+
+# Synthesis: The AffineDrift Context
+
+**Stabilizing the Passive Drift Field**
+In the AffineDrift framework ($\dot{x} = f(x) + g(x)u$), the intermediate axis instability manifests as a region in the state space where the passive drift field $f(x)$ possesses positive Lyapunov exponents. While the golfer can suppress this divergence via input $u$, a 'Central Spine' mass distribution effectively pre-conditions the drift field itself. By minimizing the off-diagonal terms in the inertia tensor relative to the stroke frame, the design ensures that the **Zero Torque Counterfactual (ZTCF)**—the club’s natural trajectory under zero active input—remains homeomorphically bound to the intended planar manifold, reducing the 'Control Effort' required to maintain path coherence.
+
+**Inertial Alignment vs. Constraint Collapse**
+This hardware-based stabilization functions as the static dual to **Intentional Constraint Collapse**. Where elite golfers use muscular co-contraction to dynamically reshape the constraint Jacobian ($J_c$) and block destabilizing degrees of freedom, the Central Spine design achieves **Tensor Diagonalization** through geometry. This minimizes **Inertial Coupling** (acceleration cross-talk), ensuring that a pure rotation torque applied by the hands does not induce parasitic twisting forces that must be actively cancelled. The design thus purifies the mapping from Intent ($u$) to Outcome ($\ddot{q}$).
+
+**The Cost of "Forgiveness"**
+The analysis highlights a critical tension in the **Force--Mobility** duality. High-MOI designs optimize the 'Impact Plant' (maximum resistance to collision shock) but degrade the 'Trajectory Plant' (resistance to steering). By expanding the separation between principal moments, perimeter weighting potentially destabilizes the drift field $f(x)$, forcing the golfer to treat the putter as an adversarial dynamic agent during the stroke to ensure it behaves like a compliant tool at impact.
+
+### See Also
+
+*   **Theory Part 2**: For the role of the ZTCF as a diagnostic baseline for stability.
+*   **Intentional Constraint Collapse**: For the dynamic biological equivalent of inertial alignment.
+*   **Force and Mobility Matrices**: For the mathematical relationship between the inertia tensor and task-space maneuverability.
+*   **Theory Part 3**: For Drift Invariance and the structure of passive dynamics.
