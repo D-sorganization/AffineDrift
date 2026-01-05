@@ -412,9 +412,13 @@ document.addEventListener("DOMContentLoaded", function () {
       ".main-content-area h2, .main-content-area h3",
     );
     // Re-scan used IDs to prevent collisions
-    const usedIds = new Set(
-      Array.from(document.querySelectorAll("[id]")).map((el) => el.id),
-    );
+    // ⚡ Bolt Optimization: Use loop to avoid creating intermediate arrays (Array.from + map)
+    const usedIds = new Set();
+    const allElements = document.querySelectorAll("[id]");
+    const len = allElements.length;
+    for (let i = 0; i < len; i++) {
+      usedIds.add(allElements[i].id);
+    }
 
     headings.forEach((heading) => {
       // Skip if already has anchor
