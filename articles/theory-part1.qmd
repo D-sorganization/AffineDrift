@@ -122,7 +122,15 @@ $$ \mathcal{V}_h = J_h(q) \dot{q}. $$
 
 The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the **Assumed Modes Method** (AMM), the spatial deformation relative to the hand frame is expressed as $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s) \in \mathbb{R}^3$ are the spatial mode shapes.
 
-The velocity of any differential mass element $dm = \rho(s)ds$ on the shaft is given by the transport theorem, summing the rigid-body transport velocity and the local elastic velocity:
+The velocity of any differential mass element $dm = \rho(s)ds$ on the shaft is obtained by differentiating the position vector with respect to time. Applying the chain rule to $p(s, q, \eta)$:
+$$
+v(s) = \frac{d}{dt} p(s, q, \eta) = \frac{\partial p}{\partial q} \dot{q} + \frac{\partial p}{\partial \eta} \dot{\eta}.
+$$
+Identifying the partial derivatives with the geometric Jacobians of the system:
+1.  **Rigid-Body Jacobian:** $J_{\text{rigid}}(s, q) \equiv \frac{\partial p}{\partial q}$. This captures the transport velocity of the point $s$ induced by the articulation of the golfer's joints.
+2.  **Modal Jacobian:** $\Phi(s) \equiv \frac{\partial p}{\partial \eta}$. This is simply the matrix of mode shapes, mapping generalized modal rates $\dot{\eta}$ to spatial velocities.
+
+Thus, the velocity field is the superposition of rigid-body transport and local elastic deformation:
 $$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}. $$
 Here:
 - $J_{\text{rigid}}(s, q) \in \mathbb{R}^{3 \times n}$ is the geometric Jacobian transforming joint rates $\dot{q}$ into the rigid-body velocity field at point $s$.
@@ -245,11 +253,11 @@ Expanding the first column of the product yields the system:
 1. $M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$
 2. $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
-From (2), we isolate the off-diagonal block $H_{\eta q}$:
+From (2), we isolate the off-diagonal block $H_{\eta q}$ by pre-multiplying by $M_{\eta\eta}^{-1}$:
 $$ H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
 This relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property but a linear mapping of the rigid-body mobility $H_{qq}$, scaled by the **inertial coupling ratio** $- M_{\eta\eta}^{-1} M_{\eta q}$.
 
-Substituting this back into (1):
+Substituting this expression for $H_{\eta q}$ back into (1):
 $$ M_{qq} H_{qq} - M_{q\eta} (M_{\eta\eta}^{-1} M_{\eta q} H_{qq}) = I $$
 Factoring out $H_{qq}$ on the right:
 $$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
@@ -276,9 +284,9 @@ $$
 \begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
 $$
 
-Substituting the explicit form for $H_{\eta q}$:
+The flexible mode acceleration $\ddot{\eta}_{\text{input}}$ is thus driven by the off-diagonal block of the inverse mass matrix. Substituting the expression for $H_{\eta q}$ derived via the Schur complement ($H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}$):
 $$
-\ddot{\eta}_{\text{input}} = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
+\ddot{\eta}_{\text{input}} = H_{\eta q} B(q) u = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
 $$
 This equation provides the rigorous mechanical definition of **Input Forces**:
 
