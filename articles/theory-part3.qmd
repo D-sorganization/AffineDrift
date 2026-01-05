@@ -445,15 +445,15 @@ we derived a clean separation between passive drift forces and torque-driven inp
 
 The resulting taxonomy classifies generalized forces into configuration drift, velocity drift, input forces, and nonlinear interaction effects. This provides a principled basis for interpreting torques and hand forces at any instant of the swing. Within the modeling assumptions stated earlier, the decomposition is analytically exact and reproducible. It offers a mechanical explanation of how the swing evolves over time, distinguishing forces that arise "on their own" from those produced directly by applied torques.
 
-This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. These will appear in subsequent phases of the project:
+This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. These are addressed in the subsequent components of this series:
 
-- **Part II: Simulation and Numerical Implementation.**  
-  This follow-up manuscript will implement the full drift--input decomposition in a high-fidelity multibody simulation environment, including flexible-shaft modeling, inverse dynamics pipelines, ZTCF trajectory integration, and numerical evaluation of the force taxonomy. It will also study sensitivity to parameter uncertainty and filtering choices for motion derivatives.
+- **Part IV: Mathematical Appendices.**
+  The detailed block matrix inversion proofs, modal approximation justifications, and derivations of the control-affine form are collected in the Appendices. These proofs provide the rigorous algebraic guarantee that the decomposition holds for the coupled rigid--flexible system.
 
-- **Part III: Experimental and Coaching Applications.**  
-  The third manuscript will apply the theoretical tools to real motion-capture data. It will quantify drift and input forces in measured swings, examine player-to-player variability, evaluate torque-timing strategies, and identify mechanical signatures associated with clubhead delivery. Practical implications for coaching and equipment design will be evaluated in the context of the "Application of Research" section required by the journal.
+- **Part V: Numerical Validation (Simulink).**
+  The theoretical framework is implemented and stress-tested in a high-fidelity Simulink environment. Part V demonstrates the numerical stability of the ZTCF integration and validates the force taxonomy against known inputs, bridging the gap between algebraic theory and computational practice.
 
-Beyond these immediate goals, several broader research directions emerge:
+Beyond these immediate validations, several broader research directions emerge:
 
 - **Modeling extensions.**  
   Incorporating foot-ground shear forces, aerodynamic loading, and non-smooth impact dynamics will generalize the framework to capture more phases of the swing.
