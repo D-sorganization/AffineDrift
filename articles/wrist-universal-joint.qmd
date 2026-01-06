@@ -52,8 +52,11 @@ A universal joint connects two rotating shafts whose axes are perpendicular (or 
 
 The key property of a universal joint is that torque applied about the longitudinal axis of one shaft is transmitted to the longitudinal axis of the connected shaft through *constraint torques* rather than through actively applied forces. These constraint torques arise because the joint geometry enforces kinematic constraints; when the system attempts to violate these constraints, reaction forces and torques automatically emerge to maintain the constraints.
 
-### Constraint Torques: Definition and Properties
+### Theoretical Formulation of Constraint Torques
 
+To understand the origin of these torques, we model the wrist dynamics using the Newton-Euler formulation for constrained rigid bodies.
+
+#### General Constraint Dynamics
 In constrained mechanical systems, the equations of motion can be written in the form:
 
 $$
@@ -62,34 +65,57 @@ $$
 
 where:
 - $\mathbf{q}$ represents generalized coordinates (joint angles)
-
 - $\mathbf{M}$ is the mass/inertia matrix
-
 - $\mathbf{C}$ contains Coriolis and centrifugal terms
-
 - $\mathbf{G}$ contains gravitational terms
-
 - $\boldsymbol{\tau}_{\text{applied}}$ represents actively applied torques (e.g., from muscles)
-
 - $\boldsymbol{\tau}_{\text{constraint}}$ represents constraint torques maintaining kinematic constraints
 
 The constraint torques can be expressed using Lagrange multipliers:
 
 $$
-\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}^T(\mathbf{q})\boldsymbol{\lambda}
+\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}_c^T(\mathbf{q})\boldsymbol{\lambda}
 $$
 
-where $\mathbf{J}$ is the constraint Jacobian matrix and $\boldsymbol{\lambda}$ is the vector of Lagrange multipliers. These constraint torques have several important properties:
+where $\mathbf{J}_c = \partial \Phi / \partial \mathbf{q}$ is the constraint Jacobian matrix derived from the holonomic constraints $\Phi(\mathbf{q}) = 0$, and $\boldsymbol{\lambda}$ is the vector of Lagrange multipliers.
+
+#### Derivation for the Wrist Universal Joint
+We define a local coordinate frame $\mathcal{F}_h$ attached to the hand, where:
+*   $\hat{x}$: Flexion/Extension axis (Actuated)
+*   $\hat{y}$: Radial/Ulnar Deviation axis (Actuated)
+*   $\hat{z}$: Pronation/Supination axis (Constrained)
+
+The kinematic constraint of the wrist joint dictates that no relative rotation occurs about the local $\hat{z}$ axis. Consequently, the wrist muscles cannot generate torque about this axis:
+$$
+\boldsymbol{\tau}_{\text{active}} = \tau_x \hat{x} + \tau_y \hat{y} + 0 \hat{z}
+$$
+However, the dynamics of the hand (and attached club) require a specific net torque to satisfy the equation of motion. Projecting Euler's equation onto the constrained $\hat{z}$ axis:
+$$
+(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})) \cdot \hat{z} = \boldsymbol{\tau}_{\text{net}} \cdot \hat{z}
+$$
+Substituting the torque decomposition $\boldsymbol{\tau}_{\text{net}} = \boldsymbol{\tau}_{\text{active}} + \boldsymbol{\tau}_{\text{constraint}} + \boldsymbol{\tau}_{\text{interaction}}$:
+$$
+(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z = \underbrace{(\boldsymbol{\tau}_{\text{active}})_z}_{0} + (\boldsymbol{\tau}_{\text{constraint}})_z + (\boldsymbol{\tau}_{\text{interaction}})_z
+$$
+Solving for the constraint torque $\tau_{c,z}$:
+$$
+\tau_{c,z} = \underbrace{(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z}_{\text{Dynamic Requirement}} - \underbrace{(\boldsymbol{\tau}_{\text{interaction}})_z}_{\text{External Load}}
+$$
+This equation explicitly proves that the constraint torque $\tau_{c,z}$ is not zero. Instead, it is the exact torque required to bridge the gap between the external loads and the inertial dynamics of the hand/club system. Critically, the "Dynamic Requirement" term depends on $\boldsymbol{\omega}$ and $\dot{\boldsymbol{\omega}}$, which are driven by the active torques $\tau_x$ and $\tau_y$.
+
+Thus, **active torques about the x and y axes generate a requisite constraint torque about the z axis** via the gyroscopic coupling term $\boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})$. This is the mathematical mechanism of transmission.
+
+These constraint torques have several important properties:
 
 1. **No mechanical work**: Constraint torques act in directions where motion is prevented, so they perform no work: $\boldsymbol{\tau}_{\text{constraint}} \cdot \dot{\mathbf{q}} = 0$
 
 2. **Force transmission**: Despite doing no work, constraint torques efficiently transmit forces between segments
 
-3. **Nonlinearity**: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques
+3. **Nonlinearity**: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques via the Coriolis term $\boldsymbol{\omega} \times \mathbf{I} \boldsymbol{\omega}$.
 
-4. **Uncontrollability**: Because they arise from constraints rather than actuation, constraint torques cannot be directly controlled
+4. **Uncontrollability**: Because they arise from constraints rather than actuation, constraint torques cannot be directly controlled. They exist in the null space of the control input matrix $B(\mathbf{q})$.
 
-5. **Variability**: The dependence on multiple system states makes constraint torques inherently variable
+5. **Variability**: The dependence on multiple system states makes constraint torques inherently variable.
 
 ### Constraint Torques in Forward Dynamics Simulation
 
