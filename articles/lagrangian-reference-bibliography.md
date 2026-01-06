@@ -21,7 +21,8 @@
   venue: "Addison Wesley"
   scholar_link: "https://scholar.google.com/scholar?q=Classical+Mechanics+Goldstein"
   clusters: ["mechanics", "physics"]
-  concepts: ["lagrangian mechanics", "hamiltonian mechanics", "variational principles"]
+  concepts:
+    ["lagrangian mechanics", "hamiltonian mechanics", "variational principles"]
   related_ids: ["lanczos2012variational", "greenwood2006advanced"]
   references_out_ids: ["arnold1989mathematical"]
 
@@ -54,7 +55,8 @@
   venue: "Cambridge University Press"
   scholar_link: "https://scholar.google.com/scholar?q=Dynamics+of+Multibody+Systems+Shabana"
   clusters: ["multibody dynamics", "flexible bodies"]
-  concepts: ["floating frame of reference", "assumed modes", "flexible dynamics"]
+  concepts:
+    ["floating frame of reference", "assumed modes", "flexible dynamics"]
   related_ids: ["simo1986dynamics", "meirovitch2010methods"]
   references_out_ids: ["simo1986dynamics"]
 
@@ -76,7 +78,8 @@
   venue: "Dover Publications"
   scholar_link: "https://scholar.google.com/scholar?q=The+Variational+Principles+of+Mechanics+Lanczos"
   clusters: ["mechanics", "mathematics"]
-  concepts: ["variational calculus", "generalized coordinates", "canonical equations"]
+  concepts:
+    ["variational calculus", "generalized coordinates", "canonical equations"]
   related_ids: ["goldstein2002classical", "arnold1989mathematical"]
   references_out_ids: []
 
@@ -98,7 +101,8 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Rigid+Body+Dynamics+Algorithms+Featherstone"
   clusters: ["algorithms", "simulation"]
-  concepts: ["recursive newton-euler", "articulated body algorithm", "spatial algebra"]
+  concepts:
+    ["recursive newton-euler", "articulated body algorithm", "spatial algebra"]
   related_ids: ["shabana2020dynamics"]
   references_out_ids: ["pinocchio_lib"]
 
@@ -164,7 +168,12 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Nonlinear+Systems+Sastry"
   clusters: ["nonlinear control", "systems theory"]
-  concepts: ["exterior differential systems", "input-output linearization", "drift vector field"]
+  concepts:
+    [
+      "exterior differential systems",
+      "input-output linearization",
+      "drift vector field",
+    ]
   related_ids: ["isidori1995nonlinear", "murray1994mathematical"]
   references_out_ids: []
 
@@ -197,7 +206,12 @@
   venue: "Springer"
   scholar_link: "https://scholar.google.com/scholar?q=Nonholonomic+Mechanics+and+Control+Bloch"
   clusters: ["geometric mechanics", "control"]
-  concepts: ["nonholonomic constraints", "lagrange-d'alembert principle", "optimal control"]
+  concepts:
+    [
+      "nonholonomic constraints",
+      "lagrange-d'alembert principle",
+      "optimal control",
+    ]
   related_ids: ["bullo2004geometric", "arnold1989mathematical"]
   references_out_ids: []
 

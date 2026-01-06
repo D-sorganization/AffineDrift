@@ -30,7 +30,7 @@ def verify_focus_visible() -> None:
                 } catch(e) {}
             }
             return "NOT FOUND";
-        }"""
+        }""",
         )
         print(f"CSS Rule Found: {rule_exists}")
 
@@ -66,7 +66,7 @@ def verify_focus_visible() -> None:
                 style: style.outlineStyle,
                 offset: style.outlineOffset
             };
-        }"""
+        }""",
         )
         print(f"Computed Focus Styles: {computed}")
 

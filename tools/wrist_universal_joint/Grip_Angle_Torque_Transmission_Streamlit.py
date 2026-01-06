@@ -17,13 +17,15 @@ Features:
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse, Polygon
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
 
 # Page config
 st.set_page_config(
@@ -155,7 +157,7 @@ def generate_sample_torque(
     if noise_type == "Golf-like Random":
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Step":
         torque = np.zeros_like(t)
         torque[250:] = 3.0  # Step at midpoint
@@ -169,14 +171,15 @@ def generate_sample_torque(
         burst_center = 250
         burst_width = 50
         burst_indices = np.arange(
-            max(0, burst_center - burst_width), min(len(t), burst_center + burst_width)
+            max(0, burst_center - burst_width),
+            min(len(t), burst_center + burst_width),
         )
         torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
     elif noise_type == "Sinusoidal":
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
         torque = np.random.normal(0, 1.5, len(t))
-        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
         try:
@@ -227,14 +230,14 @@ def generate_sample_torque(
             torque = t**2 - t
         except (ArithmeticError, OverflowError, ZeroDivisionError):
             st.session_state.polynomial_error = (
-                "Unexpected error evaluating polynomial expression. " "Please check your formula."
+                "Unexpected error evaluating polynomial expression. Please check your formula."
             )
             torque = t**2 - t
     else:
         # Default to golf-like
         torque = np.random.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-        torque = cast(np.ndarray[Any, Any], np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
 
     return torque
 
@@ -291,7 +294,7 @@ def draw_diagram(
             [clubhead_width_bottom / 2, 0],
             [clubhead_width_top / 2, clubhead_height],
             [-clubhead_width_top / 2, clubhead_height],
-        ]
+        ],
     )
 
     cos_a = np.cos(clubhead_angle_rad)
@@ -406,9 +409,9 @@ def draw_diagram(
     arc_radius = 0.12
     arc_theta = np.linspace(0, theta_grip_rad, 30)
     arc_x = arc_center_x + arc_radius * np.cos(arc_theta)
-    arc_x = cast(np.ndarray[Any, Any], arc_x)
+    arc_x = cast("np.ndarray[Any, Any]", arc_x)
     arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
-    arc_y = cast(np.ndarray[Any, Any], arc_y)
+    arc_y = cast("np.ndarray[Any, Any]", arc_y)
     ax.plot(arc_x, arc_y, "g-", linewidth=2.5, zorder=8)
 
     ax.arrow(
@@ -462,9 +465,9 @@ def draw_diagram(
     wrist_arc_end = forearm_axis_angle_for_arc
     wrist_arc_theta = np.linspace(wrist_arc_start, wrist_arc_end, 30)
     wrist_arc_x = wrist_arc_center_x + wrist_arc_radius * np.cos(wrist_arc_theta)
-    wrist_arc_x = cast(np.ndarray[Any, Any], wrist_arc_x)
+    wrist_arc_x = cast("np.ndarray[Any, Any]", wrist_arc_x)
     wrist_arc_y = wrist_arc_center_y + wrist_arc_radius * np.sin(wrist_arc_theta)
-    wrist_arc_y = cast(np.ndarray[Any, Any], wrist_arc_y)
+    wrist_arc_y = cast("np.ndarray[Any, Any]", wrist_arc_y)
     ax.plot(wrist_arc_x, wrist_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
 
     # Wrist angle arrows (for arc visualization)
@@ -535,7 +538,7 @@ def plot_torque(
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
         phi_wrist_rad,
         theta_grip_rad,
     )
@@ -609,7 +612,7 @@ def plot_acceleration(
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
         phi_wrist_rad,
         theta_grip_rad,
     )
@@ -755,7 +758,7 @@ def plot_transmission_sweep(
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
     ax.set_title(
-        f"Universal Joint Transmission vs Wrist Deviation Angle " f"(Grip={grip_angle_deg:.0f}°)",
+        f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}°)",
         fontsize=12,
         fontweight="bold",
     )
@@ -858,14 +861,17 @@ with st.sidebar:
     )
 
     I_alpha, I_gamma = calculate_moments_of_inertia(
-        clubhead_weight, shaft_weight, club_length, cg_distance
+        clubhead_weight,
+        shaft_weight,
+        club_length,
+        cg_distance,
     )
     st.markdown(
         f"""
     **Moments of Inertia:**
     - I_α = {I_alpha:.4f} kg·m²
     - I_γ = {I_gamma:.4f} kg·m²
-    """
+    """,
     )
 
     st.markdown("---")
@@ -1039,5 +1045,5 @@ with st.expander("📐 Model Information"):
     - Power conservation (P = τω)
     - Constant grip angle during motion
     - Wrist angle represents radial/ulnar deviation
-    """
+    """,
     )
