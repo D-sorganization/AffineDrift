@@ -84,6 +84,11 @@ $$x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong 
 
 This formal structure allows us to define the drift vector field $f(x)$ as a geometric object (a section of the tangent bundle) independent of the choice of local coordinates.
 
+::: {.callout-note}
+## Note on Constrained Subsystems (The Wrist)
+While the global system evolves on $T\mathcal{Q}$, specific joints may have internal constraints that reduce the local degrees of freedom. For example, the wrist joint functions as a universal joint with a constrained third axis (forearm rotation). These local constraints generate internal **constraint torques** that reside in the null space of the actuation map $B(q)$ but are critical for force transmission. For a detailed derivation of these constraint dynamics, see [Constraint Torques at the Wrist](wrist-universal-joint.qmd).
+:::
+
 ### Torque inputs and actuation mapping
 
 Muscular torques are abstracted as control inputs
