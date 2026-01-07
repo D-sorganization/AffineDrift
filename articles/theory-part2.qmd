@@ -295,7 +295,10 @@ This makes it especially useful for:
 - identifying configuration-driven mechanical biases (e.g., favored directions of passive motion),
 - analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.
 
-**Note on Dynamic Relevance.** A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale.
+::: {.callout-important}
+## Note on Dynamic Relevance (The "Static Fallacy")
+A common scientific objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$), rendering the ZVCF physically irrelevant. This critique misses the analytical purpose of the counterfactual. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale—it zeros out the scale so that the "weight" of the velocity-dependent terms can be measured accurately.
+:::
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
