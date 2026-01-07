@@ -505,8 +505,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (newActiveLink && newActiveLink !== currentActiveLink) {
           if (currentActiveLink) {
             currentActiveLink.classList.remove("active");
+            currentActiveLink.removeAttribute("aria-current");
           }
           newActiveLink.classList.add("active");
+          newActiveLink.setAttribute("aria-current", "location");
           currentActiveLink = newActiveLink;
         }
       }
@@ -625,6 +627,17 @@ document.addEventListener("DOMContentLoaded", function () {
       top: 0,
       behavior: "smooth",
     });
+    // 🎨 Palette UX: Move focus to top for keyboard users
+    document.body.setAttribute("tabindex", "-1");
+    document.body.focus({ preventScroll: true });
+    // Cleanup tabindex after blur to keep DOM clean
+    document.body.addEventListener(
+      "blur",
+      () => {
+        document.body.removeAttribute("tabindex");
+      },
+      { once: true },
+    );
   });
 
   // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame & Cache Geometry
