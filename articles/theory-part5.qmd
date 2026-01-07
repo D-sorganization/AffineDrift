@@ -73,7 +73,7 @@ The Simulink implementation has been extended to compute the Zero Velocity Count
 2. the drift term $a_{\mathrm{drift}}(q,0,\eta,0)$ was evaluated,
 3. inverse dynamics was used to compute $\tau_{\mathrm{ZVCF}}(t)$.
 
-A key empirical result emerged:
+A key numerical result was verified:
 
 > *When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.*
 
@@ -81,7 +81,7 @@ That is,
 
 $$F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),$$
 
-matching the analytical identity predicted by the force taxonomy. This serves as a strong validation of the drift--input decomposition and demonstrates that the counterfactuals behave numerically exactly as the theory predicts.
+matching the analytical identity predicted by the force taxonomy. This serves as a **Numerical Consistency Check** rather than empirical validation. It confirms that the discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts.
 
 ### Implications for future work
 

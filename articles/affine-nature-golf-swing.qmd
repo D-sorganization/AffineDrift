@@ -1118,6 +1118,9 @@ The feet are assumed to be rigidly fixed to the ground. In reality, golfers prod
 ##### Input-dependent boundary conditions (Grip Impedance).
 Theoretically, variable grip stiffness would make the mass matrix input-dependent ($M(u)$). We adopt the **Constant Impedance Assumption**, treating the grip as a fixed mechanical constraint that defines the 'Effective Plant'.
 
+##### Coulomb Friction and Input-Dependent Resistance.
+The affine decomposition $\dot{x} = f(x) + g(x)u$ assumes that all dissipative forces are viscous (state-dependent). If significant Coulomb friction $\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$ is present, and if the normal force $F_N$ depends on input torque $u$ (via constraint forces), the drift term $f(x)$ becomes input-dependent. We assume that for high-speed ballistic motions like the golf swing, inertial forces dominate frictional forces ($F_{\text{inertia}} \gg \mu F_N$), justifying the viscous-only approximation.
+
 ### Physiological limitations
 
 ##### Closed-chain indeterminacy.
@@ -2217,7 +2220,7 @@ The Simulink implementation has been extended to compute the Zero Velocity Count
   
 3. inverse dynamics was used to compute $\tau_{\mathrm{ZVCF}}(t)$.
 
-A key empirical result emerged:  
+A key numerical result was verified:
 > 
 *When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.*
 
@@ -2225,7 +2228,7 @@ That is,
 $$
   F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),
 $$
-matching the analytical identity predicted by the force taxonomy in Section~@sec-taxonomy. This serves as a strong validation of the drift–input decomposition and demonstrates that the counterfactuals behave numerically exactly as the theory predicts.
+matching the analytical identity predicted by the force taxonomy in Section~@sec-taxonomy. This serves as a **Numerical Consistency Check** rather than empirical validation. It confirms that the discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts.
 
 ### Implications for future work
 

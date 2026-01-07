@@ -26,6 +26,8 @@
 | **20. Intermediate Axis Fallacy**<br>(Putting Scale)                  | Empirical / Scaling            | **Valid** (Magnitude)          | **Inertial Alignment Defense:** Admit that gyroscopic torque ($\omega \times I \omega$) is small at putting speeds. Pivot the defense to **Tensor Diagonalization**. The "Central Spine" design aligns principal axes with the stroke frame, eliminating linear cross-coupling ($I_{xy}$) terms. The Intermediate Axis instability acts as the "topological worst-case," but the practical benefit in putting is **Kinematic Decoupling**. | **Applied** to Article            |
 | **21. Lie Bracket Overreach**<br>(Holonomic System)                   | Mathematical / Formalism       | **Valid** (Category Error)     | **Reachable Set Anisotropy:** Admit that the system is fully actuated (holonomic). Downgrade the "Rank Loss" claim to **"Control Cone Anisotropy."** The "loss of control" is not geometric (rank) but energetic (actuator saturation vs. drift). We replace Lie Brackets with Hamiltonian Reachability analysis.                                                                                                                          | **Applied** to DCR Article        |
 | **22. Sequencing Fallacy**<br>(Kinetic Chain vs Geometry)             | Mechanical                     | **Valid** (Mechanism)          | **Inertial Energy Transfer:** Acknowledge that "Sequencing" is driven by inertial coupling ($M_{ij}$) and Coriolis terms, not nonholonomic steering. Reframe the section to highlight **"Inertial Harvesting"** rather than geometric bracket generation.                                                                                                                                                                                  | **Applied** to Control Insights   |
+| **23. Coulomb Friction**<br>(Input-Dependent Passive Force)           | Mathematical / Modeling        | **Valid** (Assumption)         | **Viscous-Only Assumption:** Admit that Coulomb friction ($\mu F_N$) depends on input $u$ via constraint forces, violating affine form. Defend by assuming **Viscous-Only Damping** for the theoretical model, arguing that inertial forces dwarf friction in ballistic swing dynamics.                                                                                                                                                    | **Applied** to Limitations & Part 3 |
+| **24. Simulation Tautology**<br>(Circular Validation)                 | Methodological                 | **Valid** (Logic)              | **Verification vs Validation:** Reframe the result. Admit the simulation relies on the same equations, so it cannot physically validate them. Defend it as a **"Numerical Consistency Check"** that proves the subtraction logic is robust against integration error and discrete sampling.                                                                                                                                                 | **Applied** to Part 5 & Monolithic |
 
 ## Detailed Defense & Implementation
 
@@ -213,3 +215,23 @@ The critique correctly notes that at putting speeds ($\omega \approx 2$ rad/s), 
 We add a **"Note on Scaling and Inertial Alignment"** to `articles/secondary-axis-stability.qmd`. We explicitly acknowledge the low speed but reframe the benefit as **"Tensor Diagonalization"** (Inertial Alignment).
 
 > _Refinement:_ "While the _gyroscopic_ component of instability scales quadratically with speed and is small in putting, the **structural misalignment** of principal axes creates linear cross-coupling... The Central Spine design minimizes these off-diagonal terms, simplifying the control problem."
+
+### 23. Addressing Coulomb Friction Violation
+
+**Analysis:**
+The critique correctly identifies that Dry Friction depends on Normal Force, which depends on Input $u$. Thus $f(x)$ becomes $f(x, u)$, breaking the affine form $\dot{x} = f(x) + g(x)u$.
+
+**Implementation:**
+We add a specific **"Viscous Damping Assumption"** to **Proposition 1** in `articles/theory-part3.qmd` and a **"Friction Causality"** note to **Limitations** in `articles/affine-nature-golf-swing.qmd`.
+
+> _Refinement:_ "We explicitly assume that all dissipative forces are viscous (state-dependent). If Coulomb friction were included, the drift term would become input-dependent..."
+
+### 24. Addressing The Simulation Tautology
+
+**Analysis:**
+Using a simulation built on the theory to prove the theory is circular. It only proves the code matches the math.
+
+**Implementation:**
+We systematically replace "Empirical Validation" with **"Numerical Verification"** in `articles/theory-part5.qmd` and `articles/affine-nature-golf-swing.qmd`.
+
+> _Refinement:_ "This result does not serve as physical validation... but rather as a **Numerical Consistency Check**, confirming that discrete-time integration does not corrupt the algebraic subtraction..."
