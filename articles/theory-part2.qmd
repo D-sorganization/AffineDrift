@@ -196,17 +196,21 @@ Let the actual swing at time $t$ be characterized by the state $x(t) \in T\mathc
 
 $$x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t)).$$
 
-We define the *Zero Velocity Counterfactual* operator as a projection onto the zero section of the tangent bundle $T\mathcal{Q}$. This construction allows us to isolate configuration-dependent forces rigorously.
+We formally define the *Zero Velocity Counterfactual* operator using the fiber bundle structure of the state space. Let $\mathcal{Q}$ be the configuration manifold. The state evolves on the tangent bundle $T\mathcal{Q}$.
+Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical projection (bundle map) that maps a state vector to its configuration: $\pi(q, v) = q$.
+Let $\zeta_0: \mathcal{Q} \to T\mathcal{Q}$ be the *zero section* of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: $\zeta_0(q) = (q, 0)$.
 
-Let $\pi: T\mathcal{Q} \to \mathcal{Q}$ be the canonical bundle projection that maps a state vector $(q, \dot{q})$ to its base configuration $q$. Let $\zeta_0: \mathcal{Q} \to T\mathcal{Q}$ be the *zero section* of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: $\zeta_0(q) = (q, 0)$.
-
-The *Zero Velocity Counterfactual state* is formally defined by the composition of these operators:
-
+The ZVCF operator $\mathcal{Z}: T\mathcal{Q} \to T\mathcal{Q}$ is the composition of projection and zero-section embedding:
 $$
-  x^{\mathrm{ZVCF}}(t) = (\zeta_0 \circ \pi)(x(t)) = \zeta_0(q(t), \eta(t)) = (q(t), \eta(t), 0, 0).
+\mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
+$$
+Applied to the state $x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))$, this yields:
+$$
+  x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
+  {#eq-zvcf_state}
 $$
 
-Only the configuration variables $q(t)$ and $\eta(t)$ are retained; all generalized velocities are set to zero. This geometric operation projects the system state onto the submanifold of static states.
+Physically, this operation "freezes" the system in its current configuration. It is a projection onto the submanifold of static states.
 
 Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
