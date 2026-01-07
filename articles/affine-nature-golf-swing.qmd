@@ -248,6 +248,8 @@ From (2), we isolate the off-diagonal block $H_{\eta q}$:
 $$ H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
 This relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property but a linear mapping of the rigid-body mobility $H_{qq}$, scaled by the **inertial coupling ratio** $- M_{\eta\eta}^{-1} M_{\eta q}$.
 
+This ratio is the mechanical 'gear ratio' of the system. It dictates how much 'kick' the flexible shaft receives for every unit of acceleration the golfer produces at the hands. Crucially, this transmission is purely inertial—it depends on the mass distribution of the club, not its stiffness. This means the golfer cannot 'turn off' the interaction; they can only manage it by managing their own acceleration.
+
 Substituting this back into (1):
 $$ M_{qq} H_{qq} - M_{q\eta} (M_{\eta\eta}^{-1} M_{\eta q} H_{qq}) = I $$
 Factoring out $H_{qq}$ on the right:
@@ -385,7 +387,9 @@ The derivation above transforms the equations of motion from a description of *h
 ## Drift vs.\ Input Decomposition
 {#sec-drift_input}
 
-Given the control-affine form~@eq-affine_state, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
+Equation~@eq-affine_state represents the **physics** of the swing—a descriptive statement of how forces produce motion. We now pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
+
+This shift is enabled by the **Mechanical Orthogonality** derived in Section~@sec-affine, where the inertial memory of the system (drift) is shown to be structurally distinct from the current agency of the player (input). Given the control-affine form~@eq-affine_state, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
 ### Passive drift dynamics
 
@@ -724,6 +728,8 @@ We have now constructed two powerful counterfactual baselines: the ZTCF to isola
 
 ## Drift Invariance and Input Constraints
 {#sec-drift_invariance}
+
+We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
 
 The drift--input decomposition
 
