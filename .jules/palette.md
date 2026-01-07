@@ -9,3 +9,7 @@
 ## 2025-06-12 - Re-Implementing Standard Features in Custom Themes
 **Learning:** When disabling standard framework features (like Quarto's TOC) to implement custom versions, standard sub-features (like permalink anchors) are often lost. Users expect these "invisible" utilities on documentation sites.
 **Action:** When auditing custom implementations of standard patterns (TOCs, navbars), explicitly check for the "micro-features" that usually come for free, such as anchor links, active state tracking, and keyboard shortcuts.
+
+## 2025-06-15 - Focus Management on Scroll Actions
+**Learning:** When using JavaScript to scroll the page (like "Back to Top"), simply scrolling visually is insufficient for keyboard users. The focus remains at the trigger point (often the bottom of the page), forcing users to tab backwards through the entire document.
+**Action:** Always programmatically move focus to the target area (e.g., `document.body` or a specific heading) when triggering significant scroll actions to synchronize the visual viewport with the keyboard context.
