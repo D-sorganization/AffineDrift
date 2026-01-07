@@ -17,11 +17,7 @@ Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \t
 
 To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Part III), we require a numerical proof-of-concept.
 
-The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
-
-To complement the theoretical framework developed in this manuscript and fully implement the force decomposition algorithms derived in the Appendices, a forward-dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced earlier using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.
-
-The model is a planar two-hand, multi-link system with a flexible beam shaft, based on the publicly released "Two Hand Golf Swing Model" (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings.
+The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
 ### Model construction
 
@@ -61,7 +57,10 @@ The analysis showed:
 - The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.
 - Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.
 
-  > **Note on Damping and Overshoot:** This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
+::: {.callout-note}
+## Note on Damping and Overshoot
+This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
+:::
 
 These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing.
 
@@ -75,7 +74,10 @@ The Simulink implementation has been extended to compute the Zero Velocity Count
 
 A key empirical result emerged:
 
-> *When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.*
+::: {.callout-important}
+## Key Empirical Validation
+When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.
+:::
 
 That is,
 
