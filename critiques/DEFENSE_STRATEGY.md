@@ -28,6 +28,7 @@
 | **22. Sequencing Fallacy**<br>(Kinetic Chain vs Geometry)             | Mechanical                     | **Valid** (Mechanism)          | **Inertial Energy Transfer:** Acknowledge that "Sequencing" is driven by inertial coupling ($M_{ij}$) and Coriolis terms, not nonholonomic steering. Reframe the section to highlight **"Inertial Harvesting"** rather than geometric bracket generation.                                                                                                                                                                                  | **Applied** to Control Insights   |
 | **23. Coulomb Friction**<br>(Input-Dependent Passive Force)           | Mathematical / Modeling        | **Valid** (Assumption)         | **Viscous-Only Assumption:** Admit that Coulomb friction ($\mu F_N$) depends on input $u$ via constraint forces, violating affine form. Defend by assuming **Viscous-Only Damping** for the theoretical model, arguing that inertial forces dwarf friction in ballistic swing dynamics.                                                                                                                                                    | **Applied** to Limitations & Part 3 |
 | **24. Simulation Tautology**<br>(Circular Validation)                 | Methodological                 | **Valid** (Logic)              | **Verification vs Validation:** Reframe the result. Admit the simulation relies on the same equations, so it cannot physically validate them. Defend it as a **"Numerical Consistency Check"** that proves the subtraction logic is robust against integration error and discrete sampling.                                                                                                                                                 | **Applied** to Part 5 & Monolithic |
+| **25. Precision vs. Gross Control**<br>(The "Locked-In" Fallacy)      | Conceptual / Empirical         | **Valid** (Nuance)             | **Macro- vs. Micro-Control:** Admit that "uncontrollable" is an overstatement for fine-tuning. DCR prohibits **trajectory reshaping** (Macro) but allows **outcome biasing** (Micro). However, high DCR means micro-correction fights a massive signal-to-noise ratio, making it precarious.                                                                                                                                              | **Applied** to DCR Article         |
 
 ## Detailed Defense & Implementation
 
@@ -235,3 +236,13 @@ Using a simulation built on the theory to prove the theory is circular. It only 
 We systematically replace "Empirical Validation" with **"Numerical Verification"** in `articles/theory-part5.qmd` and `articles/affine-nature-golf-swing.qmd`.
 
 > _Refinement:_ "This result does not serve as physical validation... but rather as a **Numerical Consistency Check**, confirming that discrete-time integration does not corrupt the algebraic subtraction..."
+
+### 25. Addressing Precision vs. Gross Control
+
+**Analysis:**
+The critique correctly argues that "no meaningful correction" is false because "meaningful" in golf is defined by millimeters, not meters. A 1% control authority is useless for stopping the swing but potentially sufficient for squaring the face.
+
+**Implementation:**
+We refined the "Cone Collapse" section in `articles/controllability-drift-ratio.qmd` to distinguish between **Macro-Control** (Trajectory) and **Micro-Control** (Outcome).
+
+> _Refinement:_ "Micro-Correction remains theoretically possible but precarious. While the golfer cannot reshape the swing, they may still influence impact parameters... provided they can overcome the massive signal-to-noise ratio..."
