@@ -21,7 +21,7 @@ The golf swing represents one of the most complex coordinated movements in human
 
 The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves *loop closures*---the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.
 
-Mathematically, constraints manifest through the *constraint Jacobian* $\Jc$, a matrix that maps generalized velocities to constraint violation rates. The *null space* of this Jacobian, denoted $\nullspace(\Jc)$, represents the subspace of velocity directions that are kinematically admissible---motions that satisfy all constraints to first order. Understanding this null space is essential for:
+Mathematically, constraints manifest through the *constraint Jacobian* $\mathbf{J}_c$, a matrix that maps generalized velocities to constraint violation rates. The *null space* of this Jacobian, denoted $\operatorname{null}(\mathbf{J}_c)$, represents the subspace of velocity directions that are kinematically admissible---motions that satisfy all constraints to first order. Understanding this null space is essential for:
 
 - Reducing the dimension of the equations of motion
     
@@ -51,13 +51,13 @@ where $\phi_i: \R^n \times \R \to \R$ is a smooth function. For scleronomic (tim
 Collecting all constraints into a vector $\Phivec(\qvec) = (\phi_1, \phi_2, \ldots, \phi_m)^\top$, the constraint equations become:
 
 $$
-    \boxed{\Phivec(\qvec) = \bm{0}}
+    \boxed{\boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}}
 $$
 
 The set of all configurations satisfying these constraints forms the *constraint manifold*:
 
 $$
-    \mathcal{M} = \{\qvec \in \R^n : \Phivec(\qvec) = \bm{0}\}
+    \mathcal{M} = \{\mathbf{q} \in \mathbb{R}^n : \boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}\}
 $$
 
 ### The Constraint Jacobian
@@ -65,14 +65,14 @@ $$
 Differentiating the constraint equations with respect to time yields the velocity-level constraints:
 
 $$
-    \frac{d\Phivec}{dt} = \frac{\partial \Phivec}{\partial \qvec} \dot{\qvec} = \Jc(\qvec) \dot{\qvec} = \bm{0}
+    \frac{d\boldsymbol{\Phi}}{dt} = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} \dot{\mathbf{q}} = \mathbf{J}_c(\mathbf{q}) \dot{\mathbf{q}} = \boldsymbol{0}
 $$
 
 **definition:** [Constraint Jacobian]
 The *constraint Jacobian* is the $m \times n$ matrix:
 
 $$
-    \boxed{\Jc(\qvec) = \frac{\partial \Phivec}{\partial \qvec} = 
+    \boxed{\mathbf{J}_c(\mathbf{q}) = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} =
     \begin{pmatrix}
         \dfrac{\partial \phi_1}{\partial q_1} & \dfrac{\partial \phi_1}{\partial q_2} & \cdots & \dfrac{\partial \phi_1}{\partial q_n} \\[1em]
         \dfrac{\partial \phi_2}{\partial q_1} & \dfrac{\partial \phi_2}{\partial q_2} & \cdots & \dfrac{\partial \phi_2}{\partial q_n} \\[0.5em]
@@ -88,13 +88,13 @@ The constraint Jacobian $\Jc \in \R^{m \times n}$ is configuration-dependent and
 In the golf swing, the hands gripping the club form a closed loop. Let $\qvec = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top$ represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:
 
 $$
-    \Phivec(\qvec) = \bm{p}_{\text{left}}(\qvec) - \bm{p}_{\text{right}}(\qvec) - \bm{d}_{\text{grip}} = \bm{0}
+    \boldsymbol{\Phi}(\mathbf{q}) = \mathbf{p}_{\text{left}}(\mathbf{q}) - \mathbf{p}_{\text{right}}(\mathbf{q}) - \mathbf{d}_{\text{grip}} = \boldsymbol{0}
 $$
 
 where $\bm{d}_{\text{grip}}$ accounts for grip geometry. The constraint Jacobian becomes:
 
 $$
-    \Jc = \frac{\partial \bm{p}_{\text{left}}}{\partial \qvec} - \frac{\partial \bm{p}_{\text{right}}}{\partial \qvec}
+    \mathbf{J}_c = \frac{\partial \mathbf{p}_{\text{left}}}{\partial \mathbf{q}} - \frac{\partial \mathbf{p}_{\text{right}}}{\partial \mathbf{q}}
 $$
 
 ## The Null Space: Mathematical Foundations
@@ -105,7 +105,7 @@ $$
 The *null space* (or *kernel*) of the constraint Jacobian is:
 
 $$
-    \boxed{\nullspace(\Jc) = \{\dot{\qvec} \in \R^n : \Jc \dot{\qvec} = \bm{0}\}}
+    \boxed{\operatorname{null}(\mathbf{J}_c) = \{\dot{\mathbf{q}} \in \mathbb{R}^n : \mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}\}}
 $$
 
 This is the set of all generalized velocity vectors that satisfy the velocity-level constraints.
@@ -114,7 +114,7 @@ This is the set of all generalized velocity vectors that satisfy the velocity-le
 If $\Jc \in \R^{m \times n}$ has full row rank (i.e., $\text{rank}(\Jc) = m$), then:
 
 $$
-    \dim(\nullspace(\Jc)) = n - m
+    \dim(\operatorname{null}(\mathbf{J}_c)) = n - m
 $$
 
 The system has $n - m$ kinematic degrees of freedom.
@@ -123,10 +123,10 @@ The system has $n - m$ kinematic degrees of freedom.
 By the rank-nullity theorem:
 
 $$
-    \dim(\nullspace(\Jc)) + \text{rank}(\Jc) = n
+    \dim(\operatorname{null}(\mathbf{J}_c)) + \text{rank}(\mathbf{J}_c) = n
 $$
 
-With full row rank, $\text{rank}(\Jc) = m$, giving $\dim(\nullspace(\Jc)) = n - m$.
+With full row rank, $\text{rank}(\mathbf{J}_c) = m$, giving $\dim(\operatorname{null}(\mathbf{J}_c)) = n - m$.
 \end{proof}
 
 \begin{remark}
@@ -136,16 +136,16 @@ The full row rank assumption is equivalent to the constraints being *independent
 ### Null Space Basis and Projection
 
 **definition:** [Null Space Basis Matrix]
-A matrix $N \in \R^{n \times (n-m)}$ whose columns form an orthonormal basis for $\nullspace(\Jc)$ is called a *null space basis matrix*. It satisfies:
+A matrix $N \in \mathbb{R}^{n \times (n-m)}$ whose columns form an orthonormal basis for $\operatorname{null}(\mathbf{J}_c)$ is called a *null space basis matrix*. It satisfies:
 
 $$
-    \Jc N = \bm{0}, \quad N^\top N = I_{n-m}
+    \mathbf{J}_c N = \boldsymbol{0}, \quad N^\top N = I_{n-m}
 $$
 
 Any kinematically admissible velocity can be expressed as:
 
 $$
-    \boxed{\dot{\qvec} = N \dot{\bm{z}}}
+    \boxed{\dot{\mathbf{q}} = N \dot{\mathbf{z}}}
 $$
 
 where $\dot{\bm{z}} \in \R^{n-m}$ are the *independent velocities* or *reduced coordinates*.
@@ -154,10 +154,10 @@ where $\dot{\bm{z}} \in \R^{n-m}$ are the *independent velocities* or *reduced c
 The *null space projection matrix* is:
 
 $$
-    \boxed{P = N N^\top = I - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc}
+    \boxed{P = N N^\top = I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c}
 $$
 
-This is an orthogonal projector onto $\nullspace(\Jc)$.
+This is an orthogonal projector onto $\operatorname{null}(\mathbf{J}_c)$.
 
 **proposition:** [Properties of the Null Space Projector]
 The projector $P$ satisfies:
@@ -167,21 +167,21 @@ The projector $P$ satisfies:
     
 2. $P^\top = P$ \quad (symmetric)
     
-3. $\Jc P = \bm{0}$ \quad (projects onto null space)
+3. $\mathbf{J}_c P = \boldsymbol{0}$ \quad (projects onto null space)
     
 4. $\text{rank}(P) = n - m$ \quad (projects onto $(n-m)$-dimensional subspace)
 
 ### Geometric Interpretation
 
-The null space $\nullspace(\Jc)$ at each configuration $\qvec$ defines the *tangent space* to the constraint manifold $\mathcal{M}$:
+The null space $\operatorname{null}(\mathbf{J}_c)$ at each configuration $\mathbf{q}$ defines the *tangent space* to the constraint manifold $\mathcal{M}$:
 
 $$
-    T_\qvec \mathcal{M} = \nullspace(\Jc(\qvec))
+    T_\mathbf{q} \mathcal{M} = \operatorname{null}(\mathbf{J}_c(\mathbf{q}))
 $$
 
 This provides a beautiful geometric picture: the constraint manifold is an $(n-m)$-dimensional surface embedded in $\R^n$, and the null space at each point gives the directions along which the system can move while staying on this surface.
 
-[Figure: The null space $\nullspace(\Jc)$ forms the tangent space to the constraint manifold. Constraint forces act in the orthogonal complement $\rangespace(\Jc^\top)$.]
+[Figure: The null space $\operatorname{null}(\mathbf{J}_c)$ forms the tangent space to the constraint manifold. Constraint forces act in the orthogonal complement $\operatorname{range}(\mathbf{J}_c^\top)$.]
 
 ## Constrained Equations of Motion
 
@@ -190,53 +190,53 @@ This provides a beautiful geometric picture: the constraint manifold is an $(n-m
 The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let $M(\qvec)$ be the mass matrix, $\cvec(\qvec, \dot{\qvec})$ the Coriolis/centrifugal forces, $\gvec(\qvec)$ the gravitational forces, and $\tauvec$ the applied generalized forces. The constrained equations of motion are:
 
 $$
-    \boxed{M(\qvec)\ddot{\qvec} + \cvec(\qvec, \dot{\qvec}) + \gvec(\qvec) = \tauvec + \Jc^\top \lambdavec}
+    \boxed{M(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{c}(\mathbf{q}, \dot{\mathbf{q}}) + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau} + \mathbf{J}_c^\top \boldsymbol{\lambda}}
 $$
 
 where $\lambdavec \in \R^m$ are the Lagrange multipliers representing constraint forces.
 
-The constraint acceleration equation (obtained by differentiating $\Jc \dot{\qvec} = \bm{0}$):
+The constraint acceleration equation (obtained by differentiating $\mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}$):
 
 $$
-    \Jc \ddot{\qvec} + \dot{\Jc} \dot{\qvec} = \bm{0}
+    \mathbf{J}_c \ddot{\mathbf{q}} + \dot{\mathbf{J}}_c \dot{\mathbf{q}} = \boldsymbol{0}
 $$
 
 Together, these form the *index-3 differential-algebraic equations* (DAEs):
 
 $$
-    \begin{pmatrix} M & -\Jc^\top \\ \Jc & \bm{0} \end{pmatrix}
-    \begin{pmatrix} \ddot{\qvec} \\ \lambdavec \end{pmatrix}
-    = \begin{pmatrix} \tauvec - \cvec - \gvec \\ -\dot{\Jc}\dot{\qvec} \end{pmatrix}
+    \begin{pmatrix} M & -\mathbf{J}_c^\top \\ \mathbf{J}_c & \boldsymbol{0} \end{pmatrix}
+    \begin{pmatrix} \ddot{\mathbf{q}} \\ \boldsymbol{\lambda} \end{pmatrix}
+    = \begin{pmatrix} \boldsymbol{\tau} - \mathbf{c} - \mathbf{g} \\ -\dot{\mathbf{J}}_c\dot{\mathbf{q}} \end{pmatrix}
 $$
 
 ### Null Space Method for Constraint Elimination
 
-The null space method eliminates constraint forces by projecting onto $\nullspace(\Jc)$. Premultiplying the equations of motion by $N^\top$:
+The null space method eliminates constraint forces by projecting onto $\operatorname{null}(\mathbf{J}_c)$. Premultiplying the equations of motion by $N^\top$:
 
 $$
-    N^\top M \ddot{\qvec} + N^\top (\cvec + \gvec) = N^\top \tauvec + \underbrace{N^\top \Jc^\top}_{= \bm{0}} \lambdavec
+    N^\top M \ddot{\mathbf{q}} + N^\top (\mathbf{c} + \mathbf{g}) = N^\top \boldsymbol{\tau} + \underbrace{N^\top \mathbf{J}_c^\top}_{= \boldsymbol{0}} \boldsymbol{\lambda}
 $$
 
-Using the coordinate transformation $\dot{\qvec} = N \dot{\bm{z}}$ and differentiating:
+Using the coordinate transformation $\dot{\mathbf{q}} = N \dot{\mathbf{z}}$ and differentiating:
 
 $$
-    \ddot{\qvec} = N \ddot{\bm{z}} + \dot{N} \dot{\bm{z}}
+    \ddot{\mathbf{q}} = N \ddot{\mathbf{z}} + \dot{N} \dot{\mathbf{z}}
 $$
 
 Substituting yields the *reduced equations of motion*:
 
 $$
-    \boxed{\bar{M}(\qvec) \ddot{\bm{z}} + \bar{\cvec}(\qvec, \dot{\bm{z}}) + \bar{\gvec}(\qvec) = \bar{\tauvec}}
+    \boxed{\bar{M}(\mathbf{q}) \ddot{\mathbf{z}} + \bar{\mathbf{c}}(\mathbf{q}, \dot{\mathbf{z}}) + \bar{\mathbf{g}}(\mathbf{q}) = \bar{\boldsymbol{\tau}}}
 $$
 
 where:
 
 $$
 \begin{align}
-    \bar{M} &= N^\top M N \in \R^{(n-m) \times (n-m)} \\
-    \bar{\cvec} &= N^\top (M \dot{N} \dot{\bm{z}} + \cvec) \\
-    \bar{\gvec} &= N^\top \gvec \\
-    \bar{\tauvec} &= N^\top \tauvec
+    \bar{M} &= N^\top M N \in \mathbb{R}^{(n-m) \times (n-m)} \\
+    \bar{\mathbf{c}} &= N^\top (M \dot{N} \dot{\mathbf{z}} + \mathbf{c}) \\
+    \bar{\mathbf{g}} &= N^\top \mathbf{g} \\
+    \bar{\boldsymbol{\tau}} &= N^\top \boldsymbol{\tau}
 \end{align}
 $$
 
@@ -248,34 +248,34 @@ The reduced system has $n - m$ second-order ODEs compared to $n + m$ equations i
 The null space projection separates forces into two orthogonal components:
 
 $$
-    \tauvec = \underbrace{P \tauvec}_{\text{motion-producing}} + \underbrace{(I - P) \tauvec}_{\text{absorbed by constraints}}
+    \boldsymbol{\tau} = \underbrace{P \boldsymbol{\tau}}_{\text{motion-producing}} + \underbrace{(I - P) \boldsymbol{\tau}}_{\text{absorbed by constraints}}
 $$
 
-Only the component $P\tauvec$ contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside $\nullspace(\Jc)$ are "wasted" in the sense that they produce no clubhead motion.
+Only the component $P\boldsymbol{\tau}$ contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside $\operatorname{null}(\mathbf{J}_c)$ are "wasted" in the sense that they produce no clubhead motion.
 
 ## Connection to Control-Affine Systems and Drift
 
 ### Control-Affine Structure
 
-The constrained equations of motion can be reformulated as a *control-affine system*. Define the state $\xvec = (\qvec^\top, \dot{\qvec}^\top)^\top \in \R^{2n}$ and write:
+The constrained equations of motion can be reformulated as a *control-affine system*. Define the state $\mathbf{x} = (\mathbf{q}^\top, \dot{\mathbf{q}}^\top)^\top \in \mathbb{R}^{2n}$ and write:
 
 $$
-    \boxed{\dot{\xvec} = \fvec(\xvec) + \sum_{i=1}^{p} g_i(\xvec) u_i = \fvec(\xvec) + G(\xvec) \uvec}
+    \boxed{\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \sum_{i=1}^{p} g_i(\mathbf{x}) u_i = \mathbf{f}(\mathbf{x}) + G(\mathbf{x}) \mathbf{u}}
 $$
 
 where:
-- $\fvec(\xvec)$: the *drift vector field* (dynamics with zero control input)
+- $\mathbf{f}(\mathbf{x})$: the *drift vector field* (dynamics with zero control input)
     
-- $G(\xvec) = [g_1, g_2, \ldots, g_p]$: the *control distribution*
+- $G(\mathbf{x}) = [g_1, g_2, \ldots, g_p]$: the *control distribution*
     
-- $\uvec \in \R^p$: the control inputs (e.g., joint torques)
+- $\mathbf{u} \in \mathbb{R}^p$: the control inputs (e.g., joint torques)
 
 ### Drift Dynamics and the Null Space
 
 The drift $\fvec(\xvec)$ represents the system's natural tendency when no active control is applied:
 
 $$
-    \fvec(\xvec) = \begin{pmatrix} \dot{\qvec} \\ -M^{-1}(\cvec + \gvec - \Jc^\top \lambdavec_{\text{passive}}) \end{pmatrix}
+    \mathbf{f}(\mathbf{x}) = \begin{pmatrix} \dot{\mathbf{q}} \\ -M^{-1}(\mathbf{c} + \mathbf{g} - \mathbf{J}_c^\top \boldsymbol{\lambda}_{\text{passive}}) \end{pmatrix}
 $$
 
 Here $\lambdavec_{\text{passive}}$ are the constraint forces required to maintain constraints under passive dynamics only.
@@ -284,7 +284,7 @@ Here $\lambdavec_{\text{passive}}$ are the constraint forces required to maintai
 The drift dynamics, when projected onto the null space coordinates, become:
 
 $$
-    \dot{\bm{z}}_{\text{drift}} = -\bar{M}^{-1}(\bar{\cvec} + \bar{\gvec})
+    \dot{\mathbf{z}}_{\text{drift}} = -\bar{M}^{-1}(\bar{\mathbf{c}} + \bar{\mathbf{g}})
 $$
 
 This is independent of constraint forces---they have been naturally eliminated through the null space formulation.
@@ -299,15 +299,15 @@ The separation of drift and control has a beautiful interpretation in golf:
 In golf biomechanics, we can identify the control-affine structure:
 
 $$
-    \underbrace{\ddot{\qvec}}_{\text{acceleration}} = \underbrace{-M^{-1}(\cvec + \gvec)}_{\text{drift } \avec_0(\qvec, \dot{\qvec})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\qvec)} \tauvec_{\text{muscle}}
+    \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
 $$
 
 Key observations:
 1. The null space projector $P$ determines which muscle forces are *controllable*
     
-2. Forces in $\rangespace(\Jc^\top)$ are absorbed by constraints (joint limits, grip forces)
+2. Forces in $\operatorname{range}(\mathbf{J}_c^\top)$ are absorbed by constraints (joint limits, grip forces)
     
-3. The drift term $\avec_0$ can be exploited---elite golfers "ride" the natural dynamics
+3. The drift term $\mathbf{a}_0$ can be exploited---elite golfers "ride" the natural dynamics
 
 ### Controllability and the Null Space
 
@@ -315,16 +315,16 @@ Key observations:
 The *effective control distribution* is:
 
 $$
-    \mathcal{G}(\qvec) = \text{span}\{P(\qvec) \bvec_1, P(\qvec) \bvec_2, \ldots, P(\qvec) \bvec_p\}
+    \mathcal{G}(\mathbf{q}) = \text{span}\{P(\mathbf{q}) \mathbf{b}_1, P(\mathbf{q}) \mathbf{b}_2, \ldots, P(\mathbf{q}) \mathbf{b}_p\}
 $$
 
-where $\bvec_i$ are the directions of applied control forces.
+where $\mathbf{b}_i$ are the directions of applied control forces.
 
 **theorem:** [Constrained Controllability]
 The constrained system is locally controllable only if:
 
 $$
-    \dim(\mathcal{G}(\qvec)) = n - m
+    \dim(\mathcal{G}(\mathbf{q})) = n - m
 $$
 
 That is, the projected control inputs must span the entire null space.
@@ -343,7 +343,7 @@ In the golf swing, this has implications for:
 The Singular Value Decomposition (SVD) provides a numerically stable method for computing the null space.
 
 **theorem:** [SVD and Null Space]
-Let $\Jc = U \Sigma V^\top$ be the SVD of $\Jc$, where $\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_r, 0, \ldots, 0)$ with $r = \text{rank}(\Jc)$. Then:
+Let $\mathbf{J}_c = U \Sigma V^\top$ be the SVD of $\mathbf{J}_c$, where $\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_r, 0, \ldots, 0)$ with $r = \text{rank}(\mathbf{J}_c)$. Then:
 
 $$
     N = [v_{r+1}, v_{r+2}, \ldots, v_n]
@@ -361,7 +361,7 @@ In practice, singular values below a threshold $\epsilon \approx 10^{-10} \cdot 
 For sparse constraint Jacobians (common in multi-body systems), QR decomposition can be more efficient:
 
 $$
-    \Jc^\top = QR = \begin{pmatrix} Q_1 & Q_2 \end{pmatrix} \begin{pmatrix} R_1 \\ \bm{0} \end{pmatrix}
+    \mathbf{J}_c^\top = QR = \begin{pmatrix} Q_1 & Q_2 \end{pmatrix} \begin{pmatrix} R_1 \\ \boldsymbol{0} \end{pmatrix}
 $$
 
 The null space basis is $N = Q_2$, the columns of $Q$ corresponding to zero rows in $R$.
@@ -399,8 +399,8 @@ Total unconstrained DOF: $n = 26$
 
 $$
 \begin{align}
-    \Phivec_{\text{left grip}} &= \bm{p}_{\text{left hand}} - \bm{p}_{\text{club grip upper}} = \bm{0} \quad (3 \text{ constraints}) \\
-    \Phivec_{\text{right grip}} &= \bm{p}_{\text{right hand}} - \bm{p}_{\text{club grip lower}} = \bm{0} \quad (3 \text{ constraints})
+    \boldsymbol{\Phi}_{\text{left grip}} &= \mathbf{p}_{\text{left hand}} - \mathbf{p}_{\text{club grip upper}} = \boldsymbol{0} \quad (3 \text{ constraints}) \\
+    \boldsymbol{\Phi}_{\text{right grip}} &= \mathbf{p}_{\text{right hand}} - \mathbf{p}_{\text{club grip lower}} = \boldsymbol{0} \quad (3 \text{ constraints})
 \end{align}
 $$
 
@@ -419,10 +419,10 @@ Effective DOF: $n - m = 26 - 7 = 19$
 The constraint Jacobian has a sparse block structure:
 
 $$
-    \Jc = \begin{pmatrix}
-        \bm{0} & \bm{0} & J_{\text{left arm}} & \bm{0} & -I_3 & \bm{0} \\
-        \bm{0} & \bm{0} & \bm{0} & J_{\text{right arm}} & -I_3 & \bm{0} \\
-        J_{\text{stance}} & \bm{0} & \bm{0} & \bm{0} & \bm{0} & \bm{0}
+    \mathbf{J}_c = \begin{pmatrix}
+        \boldsymbol{0} & \boldsymbol{0} & J_{\text{left arm}} & \boldsymbol{0} & -I_3 & \boldsymbol{0} \\
+        \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & J_{\text{right arm}} & -I_3 & \boldsymbol{0} \\
+        J_{\text{stance}} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0}
     \end{pmatrix}
 $$
 
@@ -433,7 +433,7 @@ This structure can be exploited for efficient null space computation.
 The null space basis vectors $\{n_1, n_2, \ldots, n_{19}\}$ reveal the *kinematic synergies*---coordinated joint motions that satisfy all constraints:
 
 $$
-    n_i = \begin{pmatrix} \delta\theta_{\text{pelvis}} \\ \delta\theta_{\text{torso}} \\ \delta\theta_{\text{left arm}} \\ \delta\theta_{\text{right arm}} \\ \delta\bm{p}_{\text{club}} \\ \delta\bm{R}_{\text{club}} \end{pmatrix}_i
+    n_i = \begin{pmatrix} \delta\theta_{\text{pelvis}} \\ \delta\theta_{\text{torso}} \\ \delta\theta_{\text{left arm}} \\ \delta\theta_{\text{right arm}} \\ \delta\mathbf{p}_{\text{club}} \\ \delta\mathbf{R}_{\text{club}} \end{pmatrix}_i
 $$
 
 Principal Component Analysis (PCA) of these synergies often reveals:
@@ -450,7 +450,7 @@ Principal Component Analysis (PCA) of these synergies often reveals:
 Elite golfers are often described as having an "effortless" swing. From a control-theoretic perspective, this means maximally exploiting the drift dynamics:
 
 $$
-    \text{Optimal swing} \approx \fvec(\xvec) + \text{minimal control corrections}
+    \text{Optimal swing} \approx \mathbf{f}(\mathbf{x}) + \text{minimal control corrections}
 $$
 
 The drift in the downswing includes:
@@ -465,7 +465,7 @@ The drift in the downswing includes:
 The control effectiveness matrix $B(\qvec) = M^{-1} P$ determines how muscle forces translate to clubhead acceleration. Key insights:
 
 $$
-    \dot{v}_{\text{clubhead}} = J_{\text{club}}(\qvec) \left[ \avec_0(\qvec, \dot{\qvec}) + B(\qvec) \tauvec_{\text{muscle}} \right]
+    \dot{v}_{\text{clubhead}} = J_{\text{club}}(\mathbf{q}) \left[ \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}}) + B(\mathbf{q}) \boldsymbol{\tau}_{\text{muscle}} \right]
 $$
 
 where $J_{\text{club}}$ is the Jacobian mapping joint velocities to clubhead velocity.
@@ -478,13 +478,13 @@ As the swing approaches impact, the null space dimension may change (e.g., as th
 The null space formulation enables tracking of energy flow:
 
 $$
-    \frac{d}{dt}\left(\frac{1}{2} \dot{\bm{z}}^\top \bar{M} \dot{\bm{z}}\right) = \dot{\bm{z}}^\top \bar{\tauvec} - \dot{\bm{z}}^\top \bar{\gvec}
+    \frac{d}{dt}\left(\frac{1}{2} \dot{\mathbf{z}}^\top \bar{M} \dot{\mathbf{z}}\right) = \dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}} - \dot{\mathbf{z}}^\top \bar{\mathbf{g}}
 $$
 
 This separates:
-- Power input from muscles: $\dot{\bm{z}}^\top \bar{\tauvec}$
+- Power input from muscles: $\dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}}$
     
-- Gravitational power: $-\dot{\bm{z}}^\top \bar{\gvec}$
+- Gravitational power: $-\dot{\mathbf{z}}^\top \bar{\mathbf{g}}$
     
 - Energy stored/released in constraint forces: implicitly zero (orthogonal to motion)
 
@@ -495,10 +495,10 @@ This separates:
 In some configurations, constraints may become dependent (singular configurations):
 
 $$
-    \text{rank}(\Jc(\qvec^*)) < m
+    \text{rank}(\mathbf{J}_c(\mathbf{q}^*)) < m
 $$
 
-At such configurations, $\dim(\nullspace(\Jc))$ increases---the system gains degrees of freedom. In golf, this occurs at:
+At such configurations, $\dim(\operatorname{null}(\mathbf{J}_c))$ increases---the system gains degrees of freedom. In golf, this occurs at:
 - Full wrist cock position (gimbal lock-like behavior)
     
 - Extreme backswing positions
@@ -510,17 +510,17 @@ At such configurations, $\dim(\nullspace(\Jc))$ increases---the system gains deg
 For rheonomic (time-dependent) constraints or when considering acceleration analysis:
 
 $$
-    \Jc \ddot{\qvec} = -\dot{\Jc} \dot{\qvec} - \ddot{\Phivec}_{\text{prescribed}}
+    \mathbf{J}_c \ddot{\mathbf{q}} = -\dot{\mathbf{J}}_c \dot{\mathbf{q}} - \ddot{\boldsymbol{\Phi}}_{\text{prescribed}}
 $$
 
-The acceleration-level null space is still $\nullspace(\Jc)$, but the particular solution changes.
+The acceleration-level null space is still $\operatorname{null}(\mathbf{J}_c)$, but the particular solution changes.
 
 ### Lie Bracket Relationships
 
 The control distribution and drift interact through Lie brackets:
 
 $$
-    [\fvec, g_i] = \frac{\partial g_i}{\partial \xvec} \fvec - \frac{\partial \fvec}{\partial \xvec} g_i
+    [\mathbf{f}, g_i] = \frac{\partial g_i}{\partial \mathbf{x}} \mathbf{f} - \frac{\partial \mathbf{f}}{\partial \mathbf{x}} g_i
 $$
 
 These determine:
@@ -537,7 +537,7 @@ The null space of the constraint Jacobian provides a powerful framework for anal
 1. **Dimension reduction**: The null space projects the system onto its true kinematic degrees of freedom, eliminating constraint forces from the equations of motion.
     
     
-2. **Force decomposition**: Applied forces split into motion-producing (in $\nullspace(\Jc)$) and constraint-absorbed (in $\rangespace(\Jc^\top)$) components.
+2. **Force decomposition**: Applied forces split into motion-producing (in $\operatorname{null}(\mathbf{J}_c)$) and constraint-absorbed (in $\operatorname{range}(\mathbf{J}_c^\top)$) components.
     
     
 3. **Control-affine structure**: The constrained dynamics naturally exhibit drift-control separation, with profound implications for understanding optimal motor control strategies.
@@ -555,39 +555,39 @@ For golf swing analysis specifically, this framework explains how elite players 
 ## Proof: Orthogonality of Constraint Forces
 
 **theorem:** 
-Constraint forces $\Jc^\top \lambdavec$ do no work on admissible motions.
+Constraint forces $\mathbf{J}_c^\top \boldsymbol{\lambda}$ do no work on admissible motions.
 
 \begin{proof}
-For any admissible velocity $\dot{\qvec} \in \nullspace(\Jc)$:
+For any admissible velocity $\dot{\mathbf{q}} \in \operatorname{null}(\mathbf{J}_c)$:
 
 $$
-    P_{\text{constraint}} = (\Jc^\top \lambdavec)^\top \dot{\qvec} = \lambdavec^\top \Jc \dot{\qvec} = \lambdavec^\top \bm{0} = 0
+    P_{\text{constraint}} = (\mathbf{J}_c^\top \boldsymbol{\lambda})^\top \dot{\mathbf{q}} = \boldsymbol{\lambda}^\top \mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{\lambda}^\top \boldsymbol{0} = 0
 $$
 
 \end{proof}
 
 ## Derivation of the Null Space Projector
 
-Starting from the decomposition $\R^n = \nullspace(\Jc) \oplus \rangespace(\Jc^\top)$, any vector $\bm{v}$ can be written as:
+Starting from the decomposition $\mathbb{R}^n = \operatorname{null}(\mathbf{J}_c) \oplus \operatorname{range}(\mathbf{J}_c^\top)$, any vector $\mathbf{v}$ can be written as:
 
 $$
-    \bm{v} = \bm{v}_N + \bm{v}_R
+    \mathbf{v} = \mathbf{v}_N + \mathbf{v}_R
 $$
 
-where $\bm{v}_N \in \nullspace(\Jc)$ and $\bm{v}_R \in \rangespace(\Jc^\top) = \nullspace(\Jc)^\perp$.
+where $\mathbf{v}_N \in \operatorname{null}(\mathbf{J}_c)$ and $\mathbf{v}_R \in \operatorname{range}(\mathbf{J}_c^\top) = \operatorname{null}(\mathbf{J}_c)^\perp$.
 
-Since $\bm{v}_R = \Jc^\top \bm{w}$ for some $\bm{w}$, and $\Jc \bm{v}_N = \bm{0}$:
+Since $\mathbf{v}_R = \mathbf{J}_c^\top \mathbf{w}$ for some $\mathbf{w}$, and $\mathbf{J}_c \mathbf{v}_N = \boldsymbol{0}$:
 
 $$
-    \Jc \bm{v} = \Jc \Jc^\top \bm{w} \implies \bm{w} = (\Jc \Jc^\top)^{-1} \Jc \bm{v}
+    \mathbf{J}_c \mathbf{v} = \mathbf{J}_c \mathbf{J}_c^\top \mathbf{w} \implies \mathbf{w} = (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v}
 $$
 
 Therefore:
 
 $$
 \begin{align}
-    \bm{v}_N &= \bm{v} - \bm{v}_R = \bm{v} - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc \bm{v} \\
-    &= \left(I - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc\right) \bm{v} = P \bm{v}
+    \mathbf{v}_N &= \mathbf{v} - \mathbf{v}_R = \mathbf{v} - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v} \\
+    &= \left(I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c\right) \mathbf{v} = P \mathbf{v}
 \end{align}
 $$
 

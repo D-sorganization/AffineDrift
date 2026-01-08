@@ -3,7 +3,7 @@
 ## Concept Map
 
 *   **Counterfactual Analysis (ZTCF)**: Isolating passive mechanical contributions by simulating the system with zero active input ($u=0$).
-*   **Inverse Dynamics & Torque Estimation**: Reconstructing input forces ($F_{input}$) by subtracting calculated passive drift ($F_{drift}$) from total measured forces.
+*   **Inverse Dynamics & Torque Estimation**: Reconstructing input forces ($F_{\text{input}}$) by subtracting calculated passive drift ($F_{\text{drift}}$) from total measured forces.
 *   **Flexible Multibody Dynamics**: Modeling the golf shaft not just as a rigid link but as a source of elastic potential energy and structural drift.
 *   **Passive Dynamics**: The evolution of the system driven solely by inertia, gravity, and stiffness (the "Drift Field").
 *   **Physics-Informed Machine Learning**: Using physical priors (Lagrangian structure, conservation laws) to constrain data-driven models of the swing.
