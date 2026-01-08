@@ -802,25 +802,44 @@ document.addEventListener("DOMContentLoaded", function () {
     button.textContent = "Copy";
     button.setAttribute("aria-label", "Copy code to clipboard");
     button.type = "button";
+    // ⚡ Bolt Optimization: Use data attribute for delegation instead of adding N listeners
+    button.dataset.action = "copy-code";
 
-    button.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(pre.innerText || pre.textContent);
-        button.textContent = "Copied!";
-        button.setAttribute("aria-label", "Code copied to clipboard");
-        button.classList.add("copied");
-        setTimeout(() => {
-          button.textContent = "Copy";
-          button.setAttribute("aria-label", "Copy code to clipboard");
-          button.classList.remove("copied");
-        }, 2000);
-      } catch (err) {
-        console.error("Failed to copy:", err);
-        button.textContent = "Error";
-        setTimeout(() => (button.textContent = "Copy"), 2000);
-      }
-    });
     wrapper.appendChild(button);
+  });
+
+  // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
+  // Reduces memory usage by removing closures and event listeners per button
+  document.addEventListener("click", async (e) => {
+    const button = e.target.closest('button[data-action="copy-code"]');
+    if (!button) return;
+
+    // Verify it's our copy button (double check class)
+    if (!button.classList.contains("copy-btn")) return;
+
+    // Find associated pre element relative to the button
+    // Structure: .code-wrapper > pre + button
+    const wrapper = button.closest(".code-wrapper");
+    if (!wrapper) return;
+
+    const pre = wrapper.querySelector("pre");
+    if (!pre) return;
+
+    try {
+      await navigator.clipboard.writeText(pre.innerText || pre.textContent);
+      button.textContent = "Copied!";
+      button.setAttribute("aria-label", "Code copied to clipboard");
+      button.classList.add("copied");
+      setTimeout(() => {
+        button.textContent = "Copy";
+        button.setAttribute("aria-label", "Copy code to clipboard");
+        button.classList.remove("copied");
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+      button.textContent = "Error";
+      setTimeout(() => (button.textContent = "Copy"), 2000);
+    }
   });
 
   // Skip to Content Link
