@@ -11,6 +11,11 @@ on:
   schedule:
     - cron: "0 2 * * *"
 
+# SAFEGUARD: Maximum iterations to prevent infinite repair loops
+env:
+  MAX_REPAIR_ITERATIONS: 3
+  MAX_ITERATIONS_WINDOW_HOURS: 1
+
 # Prevent multiple Control Tower instances from running simultaneously
 concurrency:
   group: jules-control-tower
@@ -29,8 +34,43 @@ jobs:
       # FIX: Matched output name to what downstream jobs expect ("target")
       target: ${{ steps.decide.outputs.target }}
     steps:
+      # SAFEGUARD: Check if we've exceeded max repair iterations in the time window
+      - name: Check Iteration Limits
+        id: check-limits
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking repair iteration limits..."
+
+          # Count recent CI failures on this branch within the time window
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          HOURS_AGO=$(date -u -d "${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-${{ env.MAX_ITERATIONS_WINDOW_HOURS }}H +%Y-%m-%dT%H:%M:%SZ)
+
+          # Get count of CI Standard failures on this branch in the time window
+          FAILURE_COUNT=$(gh run list \
+            --workflow="CI Standard" \
+            --branch="$BRANCH" \
+            --limit=20 \
+            --json conclusion,createdAt,status \
+            --jq "[.[] | select(.conclusion == \"failure\" and .createdAt > \"$HOURS_AGO\")] | length" \
+            2>/dev/null || echo "0")
+
+          echo "Branch: $BRANCH"
+          echo "Failures in last ${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hour(s): $FAILURE_COUNT"
+          echo "Max allowed: ${{ env.MAX_REPAIR_ITERATIONS }}"
+
+          if [ "$FAILURE_COUNT" -ge "${{ env.MAX_REPAIR_ITERATIONS }}" ]; then
+            echo "::error::Max repair iterations ($FAILURE_COUNT >= ${{ env.MAX_REPAIR_ITERATIONS }}) reached in ${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hour(s). Manual intervention required."
+            echo "exceeded=true" >> $GITHUB_OUTPUT
+          else
+            echo "Within limits. Proceeding with repair."
+            echo "exceeded=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Analyze Event Context
         id: decide
+        if: steps.check-limits.outputs.exceeded != 'true'
         uses: actions/github-script@v7
         with:
           script: |

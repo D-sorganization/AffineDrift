@@ -27,6 +27,14 @@ from matplotlib.patches import Ellipse, Polygon
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
+# Random seed for reproducibility
+# Set to None for non-reproducible random behavior, or an integer for reproducibility
+# Reference: Essential for scientific reproducibility per AGENTS.md guidelines
+RANDOM_SEED: int | None = 42
+
+# Create random number generator with controlled seed
+rng = np.random.default_rng(RANDOM_SEED)
+
 # Page config
 st.set_page_config(
     page_title="Enhanced Wrist Universal Joint Model",
@@ -155,8 +163,8 @@ def generate_sample_torque(
 ) -> np.ndarray[Any, Any]:
     """Generate a torque signal based on noise type."""
     if noise_type == "Golf-like Random":
-        torque = np.random.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
+        torque = rng.normal(0, 1, len(t))
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
         torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Step":
         torque = np.zeros_like(t)
@@ -165,7 +173,7 @@ def generate_sample_torque(
         torque = np.zeros_like(t)
         pulse_start = 200
         pulse_end = 300
-        torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
+        torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
     elif noise_type == "Burst":
         torque = np.zeros_like(t)
         burst_center = 250
@@ -174,11 +182,11 @@ def generate_sample_torque(
             max(0, burst_center - burst_width),
             min(len(t), burst_center + burst_width),
         )
-        torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
+        torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
     elif noise_type == "Sinusoidal":
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
-        torque = np.random.normal(0, 1.5, len(t))
+        torque = rng.normal(0, 1.5, len(t))
         torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
@@ -235,8 +243,8 @@ def generate_sample_torque(
             torque = t**2 - t
     else:
         # Default to golf-like
-        torque = np.random.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
+        torque = rng.normal(0, 1, len(t))
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
         torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
 
     return torque
