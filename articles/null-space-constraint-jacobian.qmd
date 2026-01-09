@@ -37,18 +37,18 @@ This article develops these concepts systematically, with particular attention t
 
 ### Constraint Formulation
 
-Consider a mechanical system with $n$ generalized coordinates $\qvec = (q_1, q_2, \ldots, q_n)^\top \in \R^n$. In the absence of constraints, the system has $n$ degrees of freedom. However, physical constraints restrict the admissible configurations to a subset of the configuration space.
+Consider a mechanical system with $n$ generalized coordinates $\mathbf{q} = (q_1, q_2, \ldots, q_n)^\top \in \mathbb{R}^n$. In the absence of constraints, the system has $n$ degrees of freedom. However, physical constraints restrict the admissible configurations to a subset of the configuration space.
 
 **definition:** [Holonomic Constraint]
 A *holonomic constraint* is an algebraic relationship among the generalized coordinates:
 
 $$
-    \phi_i(\qvec, t) = 0, \quad i = 1, 2, \ldots, m
+    \phi_i(\mathbf{q}, t) = 0, \quad i = 1, 2, \ldots, m
 $$
 
-where $\phi_i: \R^n \times \R \to \R$ is a smooth function. For scleronomic (time-independent) constraints, $\phi_i = \phi_i(\qvec)$.
+where $\phi_i: \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}$ is a smooth function. For scleronomic (time-independent) constraints, $\phi_i = \phi_i(\mathbf{q})$.
 
-Collecting all constraints into a vector $\Phivec(\qvec) = (\phi_1, \phi_2, \ldots, \phi_m)^\top$, the constraint equations become:
+Collecting all constraints into a vector $\boldsymbol{\Phi}(\mathbf{q}) = (\phi_1, \phi_2, \ldots, \phi_m)^\top$, the constraint equations become:
 
 $$
     \boxed{\boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}}
@@ -81,11 +81,11 @@ $$
     \end{pmatrix}}
 $$
 
-The constraint Jacobian $\Jc \in \R^{m \times n}$ is configuration-dependent and plays a central role in constrained dynamics.
+The constraint Jacobian $\mathbf{J}_c \in \mathbb{R}^{m \times n}$ is configuration-dependent and plays a central role in constrained dynamics.
 
 ### Example: Closed Kinematic Chain in Golf
 
-In the golf swing, the hands gripping the club form a closed loop. Let $\qvec = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top$ represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:
+In the golf swing, the hands gripping the club form a closed loop. Let $\mathbf{q} = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top$ represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:
 
 $$
     \boldsymbol{\Phi}(\mathbf{q}) = \mathbf{p}_{\text{left}}(\mathbf{q}) - \mathbf{p}_{\text{right}}(\mathbf{q}) - \mathbf{d}_{\text{grip}} = \boldsymbol{0}
@@ -111,7 +111,7 @@ $$
 This is the set of all generalized velocity vectors that satisfy the velocity-level constraints.
 
 **theorem:** [Dimension of Null Space]
-If $\Jc \in \R^{m \times n}$ has full row rank (i.e., $\text{rank}(\Jc) = m$), then:
+If $\mathbf{J}_c \in \mathbb{R}^{m \times n}$ has full row rank (i.e., $\text{rank}(\mathbf{J}_c) = m$), then:
 
 $$
     \dim(\operatorname{null}(\mathbf{J}_c)) = n - m
@@ -148,7 +148,7 @@ $$
     \boxed{\dot{\mathbf{q}} = N \dot{\mathbf{z}}}
 $$
 
-where $\dot{\bm{z}} \in \R^{n-m}$ are the *independent velocities* or *reduced coordinates*.
+where $\dot{\mathbf{z}} \in \mathbb{R}^{n-m}$ are the *independent velocities* or *reduced coordinates*.
 
 **definition:** [Null Space Projector]
 The *null space projection matrix* is:
@@ -187,13 +187,13 @@ This provides a beautiful geometric picture: the constraint manifold is an $(n-m
 
 ### Lagrangian Formulation with Constraints
 
-The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let $M(\qvec)$ be the mass matrix, $\cvec(\qvec, \dot{\qvec})$ the Coriolis/centrifugal forces, $\gvec(\qvec)$ the gravitational forces, and $\tauvec$ the applied generalized forces. The constrained equations of motion are:
+The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let $M(\mathbf{q})$ be the mass matrix, $\mathbf{c}(\mathbf{q}, \dot{\mathbf{q}})$ the Coriolis/centrifugal forces, $\mathbf{g}(\mathbf{q})$ the gravitational forces, and $\boldsymbol{\tau}$ the applied generalized forces. The constrained equations of motion are:
 
 $$
     \boxed{M(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{c}(\mathbf{q}, \dot{\mathbf{q}}) + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau} + \mathbf{J}_c^\top \boldsymbol{\lambda}}
 $$
 
-where $\lambdavec \in \R^m$ are the Lagrange multipliers representing constraint forces.
+where $\boldsymbol{\lambda} \in \mathbb{R}^m$ are the Lagrange multipliers representing constraint forces.
 
 The constraint acceleration equation (obtained by differentiating $\mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}$):
 
@@ -272,13 +272,13 @@ where:
 
 ### Drift Dynamics and the Null Space
 
-The drift $\fvec(\xvec)$ represents the system's natural tendency when no active control is applied:
+The drift $\mathbf{f}(\mathbf{x})$ represents the system's natural tendency when no active control is applied:
 
 $$
     \mathbf{f}(\mathbf{x}) = \begin{pmatrix} \dot{\mathbf{q}} \\ -M^{-1}(\mathbf{c} + \mathbf{g} - \mathbf{J}_c^\top \boldsymbol{\lambda}_{\text{passive}}) \end{pmatrix}
 $$
 
-Here $\lambdavec_{\text{passive}}$ are the constraint forces required to maintain constraints under passive dynamics only.
+Here $\boldsymbol{\lambda}_{\text{passive}}$ are the constraint forces required to maintain constraints under passive dynamics only.
 
 **theorem:** [Drift Projection]
 The drift dynamics, when projected onto the null space coordinates, become:
@@ -407,7 +407,7 @@ $$
 **Ground contact** (stance):
 
 $$
-    \Phivec_{\text{stance}} = z_{\text{pelvis}} - h_{\text{nominal}} = 0 \quad (1 \text{ constraint, simplified})
+    \boldsymbol{\Phi}_{\text{stance}} = z_{\text{pelvis}} - h_{\text{nominal}} = 0 \quad (1 \text{ constraint, simplified})
 $$
 
 Total constraints: $m = 7$ (in this simplified model)
@@ -550,9 +550,9 @@ The null space of the constraint Jacobian provides a powerful framework for anal
 
 For golf swing analysis specifically, this framework explains how elite players achieve high clubhead speeds with apparent ease: they structure their technique to align muscle forces with the null space and exploit drift dynamics, rather than fighting against constraints.
 
-\appendix
+## Appendix {.appendix}
 
-## Proof: Orthogonality of Constraint Forces
+### Proof: Orthogonality of Constraint Forces
 
 **theorem:** 
 Constraint forces $\mathbf{J}_c^\top \boldsymbol{\lambda}$ do no work on admissible motions.
