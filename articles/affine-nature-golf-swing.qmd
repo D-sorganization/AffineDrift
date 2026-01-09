@@ -1014,7 +1014,10 @@ Velocity-dependent drift forces include:
 
 These forces can be large---often dominant---in fast regions of the swing (e.g., late downswing).
 
-> **Note on Causal History:** While classified as "Drift" because they do not depend on the *instantaneous* torque input $u(t)$, these velocity-dependent forces are causally linked to the *history* of prior inputs that accelerated the system to its current state. They represent the "kinetic momentum" of the swing established by past effort, not an exogenous source of energy.
+::: {.callout-note}
+## Note on Causal History
+While classified as "Drift" because they do not depend on the *instantaneous* torque input $u(t)$, these velocity-dependent forces are causally linked to the *history* of prior inputs that accelerated the system to its current state. They represent the "kinetic momentum" of the swing established by past effort, not an exogenous source of energy.
+:::
 
 ### Category 3: Input (torque-driven) forces
 
@@ -1150,7 +1153,10 @@ The feasible set of torques $\mathcal{U}(x)$ may depend on configuration, streng
 
 ##### Parameter identification and causality.
 When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term $f(x)$ represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate. This implies that the ZTCF acts as a **"frozen strategy" baseline**: it asks how the system would evolve if the golfer ceased *driving* the motion but maintained the *structural impedance* required for the task. It does not simulate a flaccid collapse.
-> **Defense (The Effective Plant Fallacy):** Critics argue that an "Effective Plant" that depends on the task renders the baseline tautological ("The plant is what the plant does"). We defend this by acknowledging that the ZTCF represents **"Impedance-Conditioned Drift"**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible during high-speed motion. The "Effective Plant" baseline is the only relevant counterfactual for analyzing control *around* the intended trajectory.
+::: {.callout-note}
+## Defense (The Effective Plant Fallacy)
+Critics argue that an "Effective Plant" that depends on the task renders the baseline tautological ("The plant is what the plant does"). We defend this by acknowledging that the ZTCF represents **"Impedance-Conditioned Drift"**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible during high-speed motion. The "Effective Plant" baseline is the only relevant counterfactual for analyzing control *around* the intended trajectory.
+:::
 
 ##### Exact parameter knowledge.
 The decomposition assumes perfect knowledge of:
@@ -1180,7 +1186,10 @@ A common objection to 'Zero Torque' analysis in biological systems is the presen
 
 ##### Ambiguity of "Braking" (Impedance vs. Drive) -- Teleological Blindness.
 The decomposition identifies the net torque vector $\tau_{\text{input}}$ but is structurally blind to the *intent* behind it. Specifically, it cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability) if the latter results in a net bias. A negative or "braking" input $\tau_{\text{input}}$ may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing's momentum.
-> **Defense:** We explicitly warn against the **Efficiency Fallacy**—the assumption that all "braking" torque is error. "Fighting the drift" should be interpreted neutrally as "modulating the drift," a process that may serve robustness (minimizing variance) rather than speed. The framework diagnoses the *mechanical cost* of control, not the *tactical utility* of that cost.
+::: {.callout-note}
+## Defense
+We explicitly warn against the **Efficiency Fallacy**—the assumption that all "braking" torque is error. "Fighting the drift" should be interpreted neutrally as "modulating the drift," a process that may serve robustness (minimizing variance) rather than speed. The framework diagnoses the *mechanical cost* of control, not the *tactical utility* of that cost.
+:::
 
 ##### No claims about optimality or intent.
 The decomposition quantifies how torques shape motion, but it does not imply:
