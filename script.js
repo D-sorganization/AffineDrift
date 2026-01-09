@@ -55,13 +55,20 @@ function generateUniqueId(text, usedIds) {
   let id = baseId;
   let counter = 1;
 
+  // ⚡ Bolt Optimization: Check both local set and DOM to avoid global scan
+  const exists = (candidateId) => {
+    return (
+      usedIds.has(candidateId) || document.getElementById(candidateId) !== null
+    );
+  };
+
   // First try base ID
-  if (!usedIds.has(id)) {
+  if (!exists(id)) {
     return id;
   }
 
   // Try incrementing counter
-  while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+  while (exists(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
     id = `${baseId}-${counter}`;
     counter++;
   }
@@ -411,14 +418,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const headings = document.querySelectorAll(
       ".main-content-area h2, .main-content-area h3",
     );
-    // Re-scan used IDs to prevent collisions
-    // ⚡ Bolt Optimization: Use loop to avoid creating intermediate arrays (Array.from + map)
+
+    // ⚡ Bolt Optimization: Use empty set and check DOM on demand
+    // Removing the full DOM scan (querySelectorAll("[id]")) improves performance
+    // from O(N_dom_nodes) to O(N_headings)
     const usedIds = new Set();
-    const allElements = document.querySelectorAll("[id]");
-    const len = allElements.length;
-    for (let i = 0; i < len; i++) {
-      usedIds.add(allElements[i].id);
-    }
 
     headings.forEach((heading) => {
       // Skip if already has anchor
