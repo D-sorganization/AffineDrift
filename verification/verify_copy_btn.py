@@ -2,6 +2,14 @@ from playwright.sync_api import sync_playwright
 
 
 def verify_copy_button() -> None:
+    """
+    Verifies the functionality of the copy button in code snippets.
+
+    This function launches a headless browser, navigates to a test page,
+    checks for the existence of code wrappers and copy buttons, simulates
+    a click on the first copy button, and verifies the visual feedback
+    (class change to 'copied').
+    """
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context(permissions=["clipboard-read", "clipboard-write"])
