@@ -155,7 +155,7 @@ Let $f^\text{ext} \in \mathbb{R}^3$ be the net **external force** on the body, e
 The Newton–Euler equations in body coordinates can be written as
 
 \begin{align}
-m,\dot v &= m,g^B + f^\text{ext}, \tag{3.1a} \
+m \dot v &= m g^B + f^\text{ext}, \tag{3.1a} \\
 I_B \dot \omega + \omega \times (I_B \omega) &= n^\text{ext}, \tag{3.1b}
 \end{align}
 
@@ -178,14 +178,14 @@ Then the state is $x = (p, R, v, \omega)$ and the dynamics can be written in fir
 
 * Kinematics:
   \begin{align}
-  \dot p &= R v^B \quad \text{(if $v^B$ is body velocity; or simply $\dot p = v$ if $v$ spatial)}, \tag{3.3a} \
-  \dot R &= R,\widehat{\omega}^B, \tag{3.3b}
+  \dot p &= R v^B \quad \text{(if $v^B$ is body velocity; or simply $\dot p = v$ if $v$ spatial)}, \tag{3.3a} \\
+  \dot R &= R \widehat{\omega}^B, \tag{3.3b}
   \end{align}
   where $\widehat{\omega}$ is the skew-symmetric matrix representing the cross product: $\widehat{\omega} x = \omega \times x$.
 
 * Dynamics:
   \begin{align}
-  \dot v &= g^B + \frac{1}{m} f^\text{ext}, \tag{3.4a} \
+  \dot v &= g^B + \frac{1}{m} f^\text{ext}, \tag{3.4a} \\
   \dot \omega &= I_B^{-1}\left(n^\text{ext} - \omega \times (I_B \omega)\right). \tag{3.4b}
   \end{align}
 
@@ -282,7 +282,7 @@ Now consider a multibody system with $n$ generalized coordinates $q \in \mathbb{
 Using Newton–Euler and constraint kinematics, one arrives at the standard manipulator form of the equations,
 
 $$
-M(q),\ddot q + C(q,\dot q) \dot q + g(q) + d(q,\dot q) = \tau + J^\top(q) f^\text{ext},
+M(q) \ddot q + C(q,\dot q) \dot q + g(q) + d(q,\dot q) = \tau + J^\top(q) f^\text{ext},
 \tag{3.12}
 $$
 
@@ -320,7 +320,7 @@ Solve (3.12) for $\ddot q$:
 
 \begin{align}
 \ddot q
-&= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big) \
+&= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big) \\
 &= M(q)^{-1} \Big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big)
 
 * M(q)^{-1}\tau
@@ -445,7 +445,7 @@ Consider a planar pendulum: point mass $m$ at end of rigid massless rod length $
 Elementary Newtonian derivation yields:
 
 $$
-I,\ddot q + mgl \sin q = \tau, \quad I = m l^2.
+I \ddot q + mgl \sin q = \tau, \quad I = m l^2.
 \tag{3.19}
 $$
 
@@ -638,14 +638,14 @@ $$
 Define an **input vector** $u \in \mathbb{R}^m$ that scales each force component:
 
 $$
-f^{(i)} = u_i ,\bar f^{(i)},
+f^{(i)} = u_i \bar f^{(i)},
 \tag{4.9}
 $$
 
 where $\bar f^{(i)}$ is a unit "shape" of the $i$th force (for example a fixed direction at a given attachment point). Then
 
 $$
-Q^{(i)}(q,\dot q;u_i) = u_i, \bar Q^{(i)}(q,\dot q),
+Q^{(i)}(q,\dot q;u_i) = u_i \bar Q^{(i)}(q,\dot q),
 \tag{4.10}
 $$
 
@@ -660,7 +660,7 @@ $$
 Therefore,
 
 $$
-Q(q,\dot q; u) = \sum_{i=1}^m u_i, \bar Q^{(i)}(q,\dot q).
+Q(q,\dot q; u) = \sum_{i=1}^m u_i \bar Q^{(i)}(q,\dot q).
 \tag{4.12}
 $$
 
@@ -678,7 +678,7 @@ with columns $B_i(q,\dot q) = \bar Q^{(i)}(q,\dot q)$.
 Substitute (4.13) into the Lagrange equations (4.7):
 
 \begin{align}
-M(q)\ddot q + C(q,\dot q)\dot q + g(q) &= B(q,\dot q) u, \
+M(q)\ddot q + C(q,\dot q)\dot q + g(q) &= B(q,\dot q) u, \\
 \ddot q &= - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right) + M(q)^{-1}B(q,\dot q) u.
 \tag{4.14}
 \end{align}
@@ -738,13 +738,13 @@ $$
 Then
 
 $$
-\ddot q = A(q,\dot q) + L(q,\dot q),u.
+\ddot q = A(q,\dot q) + L(q,\dot q) u.
 $$
 
 Thus the map $u \mapsto \ddot q$ is affine, and the incremental map
 
 $$
-u \mapsto \ddot q - \ddot q\big|_{u=0} = L(q,\dot q),u
+u \mapsto \ddot q - \ddot q\big|_{u=0} = L(q,\dot q) u
 $$
 
 is linear. ∎
@@ -852,7 +852,7 @@ where $\mathrm{ad}^\ast_V$ is the dual of the Lie algebra adjoint operator (enco
 For a chain of rigid bodies, the dynamics can be written compactly (Featherstone-style) as
 
 $$
-\mathcal{M}(q),\dot V + \mathcal{C}(q,\dot q),V = \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q),
+\mathcal{M}(q) \dot V + \mathcal{C}(q,\dot q) V = \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q),
 \tag{5.5}
 $$
 
@@ -933,7 +933,7 @@ So each input component $u_i$ contributes an additive joint torque component $J(
 The spatial equations (5.5) can be written as
 
 $$
-\mathcal{M}(q),\dot V = - \mathcal{C}(q,\dot q),V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q).
+\mathcal{M}(q) \dot V = - \mathcal{C}(q,\dot q) V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q).
 \tag{5.13}
 $$
 
@@ -941,7 +941,7 @@ At fixed state $(q,\dot q)$, the matrix $\mathcal{M}$, operator $\mathcal{C}$, a
 
 $$
 \dot V(q,\dot q; u)
-= \mathcal{M}(q)^{-1} \left(- \mathcal{C}(q,\dot q),V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q) \right).
+= \mathcal{M}(q)^{-1} \left(- \mathcal{C}(q,\dot q) V + \mathcal{W}(q) u + \mathcal{F}^\text{ext}(q) \right).
 \tag{5.14}
 $$
 
@@ -1053,7 +1053,7 @@ In each approach, **linearity in $u$ is inherited from:**
 It is essential to stress what we *do not* get:
 
 * For a general nonlinear mechanical system, if $x^{(1)}(t)$ solves $\dot x = f(x) + G(x) u^{(1)}(t)$ and $x^{(2)}(t)$ solves $\dot x = f(x) + G(x) u^{(2)}(t)$, then in general
-  [
+  $$
   x(t) \neq x^{(1)}(t) + x^{(2)}(t)
 $$
   except in special linear cases.
@@ -1085,7 +1085,7 @@ Explicit expressions (standard textbook result, shown here to emphasize structur
 $$
 M(q) =
 \begin{bmatrix}
-a + 2b \cos q_2 & d + b \cos q_2 \
+a + 2b \cos q_2 & d + b \cos q_2 \\
 d + b \cos q_2 & d
 \end{bmatrix},
 \tag{7.2}
@@ -1107,7 +1107,7 @@ $$
 C(q,\dot q)\dot q =
 \begin{bmatrix}
 
-* b \sin q_2, (2\dot q_1 \dot q_2 + \dot q_2^2) \
+* b \sin q_2, (2\dot q_1 \dot q_2 + \dot q_2^2) \\
   b \sin q_2, \dot q_1^2
   \end{bmatrix},
   \tag{7.3}
@@ -1118,7 +1118,7 @@ and the gravity vector
 $$
 g(q) =
 \begin{bmatrix}
-(m_1 c_1 + m_2 l_1)g \cos q_1 + m_2 c_2 g \cos(q_1 + q_2) \
+(m_1 c_1 + m_2 l_1)g \cos q_1 + m_2 c_2 g \cos(q_1 + q_2) \\
 m_2 c_2 g \cos(q_1 + q_2)
 \end{bmatrix}.
 \tag{7.4}
@@ -1144,7 +1144,7 @@ $$
 Then
 
 $$
-\ddot q = \ddot q^{(\text{drift})}(q,\dot q) + L(q,\dot q),\tau.
+\ddot q = \ddot q^{(\text{drift})}(q,\dot q) + L(q,\dot q) \tau.
 \tag{7.6}
 $$
 
@@ -1160,13 +1160,13 @@ corresponding to gravity compensation, control, and disturbance, we have
 $$
 \ddot q = \ddot q^{(\text{drift})}
 
-* L(q,\dot q),\tau^{(g)}
-* L(q,\dot q),\tau^{(c)}
-* L(q,\dot q),\tau^{(d)}.
+* L(q,\dot q) \tau^{(g)}
+* L(q,\dot q) \tau^{(c)}
+* L(q,\dot q) \tau^{(d)}.
   \tag{7.8}
 $$
 
-Each term $L(q,\dot q),\tau^{(i)}$ is the **instantaneous acceleration contribution** of the corresponding torque component.
+Each term $L(q,\dot q) \tau^{(i)}$ is the **instantaneous acceleration contribution** of the corresponding torque component.
 
 #### 7.1.1 Lagrangian viewpoint
 
@@ -1226,8 +1226,8 @@ $$
 \ddot q
 = \ddot q^{(\text{drift})}
 
-* L(q,\dot q),\tau^{(1)}
-* L(q,\dot q),\tau^{(2)}.
+* L(q,\dot q) \tau^{(1)}
+* L(q,\dot q) \tau^{(2)}.
   \tag{7.13}
 $$
 
