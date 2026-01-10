@@ -5,3 +5,7 @@
 ## 2024-05-24 - String.split() Memory Overhead
 **Learning:** `String.prototype.split` allocates an array of new strings, which is O(N) memory. For large texts (like articles), this creates unnecessary GC pressure just to count items.
 **Action:** Use a manual character loop or iterator for counting logic to maintain O(1) memory usage.
+
+## 2025-02-18 - Live Collections vs QuerySelector
+**Learning:** `document.images` and `document.links` provide O(1) access to live HTMLCollections, avoiding the overhead of `querySelectorAll` (O(N) traversal) for global element iteration.
+**Action:** Use native collections for global iterators (images, links, forms) instead of selectors when possible.

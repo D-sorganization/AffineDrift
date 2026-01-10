@@ -527,21 +527,24 @@ document.addEventListener("DOMContentLoaded", function () {
   initScrollSpy();
 
   // Lazy load images
+  // ⚡ Bolt Optimization: Use document.images (O(1)) instead of querySelectorAll (O(N))
   if ("loading" in HTMLImageElement.prototype) {
-    document.querySelectorAll("img[src]").forEach((img) => {
-      if (!img.hasAttribute("loading")) {
+    for (const img of document.images) {
+      if (img.src && !img.hasAttribute("loading")) {
         img.setAttribute("loading", "lazy");
       }
-    });
+    }
   }
 
   // Lazy load iframes
   if ("loading" in HTMLIFrameElement.prototype) {
-    document.querySelectorAll("iframe[src]").forEach((iframe) => {
-      if (!iframe.hasAttribute("loading")) {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (Live Collection)
+    const iframes = document.getElementsByTagName("iframe");
+    for (const iframe of iframes) {
+      if (iframe.src && !iframe.hasAttribute("loading")) {
         iframe.setAttribute("loading", "lazy");
       }
-    });
+    }
   }
 
   // Accordion functionality
@@ -574,10 +577,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // Secure external links
+  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
   const currentHostname = window.location.hostname;
-  document.querySelectorAll('a[href^="http"]').forEach((link) => {
+  for (const link of document.links) {
     // ⚡ Bolt Optimization: Use link.hostname instead of new URL() to avoid object creation overhead
-    if (link.hostname && link.hostname !== currentHostname) {
+    if (
+      link.hostname &&
+      link.hostname !== currentHostname &&
+      link.protocol.startsWith("http")
+    ) {
       if (!link.hasAttribute("target")) {
         link.setAttribute("target", "_blank");
       }
@@ -590,7 +598,7 @@ document.addEventListener("DOMContentLoaded", function () {
         link.classList.add("external-link");
       }
     }
-  });
+  }
 
   // Log page load for analytics (optional)
   console.log("AffineDrift loaded successfully");
@@ -790,60 +798,83 @@ document.addEventListener("DOMContentLoaded", function () {
   // ⚡ Bolt Optimization: Defer history updates to unblock main thread
   runWhenIdle(initArticleHistory);
 
-  // Copy to Clipboard
-  const codeBlocks = document.querySelectorAll("pre");
-  codeBlocks.forEach((pre) => {
-    if (pre.parentNode.classList.contains("code-wrapper")) return;
-    if (!pre.textContent.trim()) return;
+  // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
+  runWhenIdle(() => {
+    // Copy to Clipboard
+    const codeBlocks = document.querySelectorAll("pre");
+    codeBlocks.forEach((pre) => {
+      if (pre.parentNode.classList.contains("code-wrapper")) return;
+      if (!pre.textContent.trim()) return;
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "code-wrapper";
-    pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-wrapper";
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
 
-    const button = document.createElement("button");
-    button.className = "copy-btn";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", "Copy code to clipboard");
-    button.type = "button";
-    // ⚡ Bolt Optimization: Use data attribute for delegation instead of adding N listeners
-    button.dataset.action = "copy-code";
+      const button = document.createElement("button");
+      button.className = "copy-btn";
+      button.textContent = "Copy";
+      button.setAttribute("aria-label", "Copy code to clipboard");
+      button.type = "button";
+      // ⚡ Bolt Optimization: Use data attribute for delegation instead of adding N listeners
+      button.dataset.action = "copy-code";
 
-    wrapper.appendChild(button);
-  });
+      wrapper.appendChild(button);
+    });
 
-  // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
-  // Reduces memory usage by removing closures and event listeners per button
-  document.addEventListener("click", async (e) => {
-    const button = e.target.closest('button[data-action="copy-code"]');
-    if (!button) return;
+    // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
+    // Reduces memory usage by removing closures and event listeners per button
+    document.addEventListener("click", async (e) => {
+      const button = e.target.closest('button[data-action="copy-code"]');
+      if (!button) return;
 
-    // Verify it's our copy button (double check class)
-    if (!button.classList.contains("copy-btn")) return;
+      // Verify it's our copy button (double check class)
+      if (!button.classList.contains("copy-btn")) return;
 
-    // Find associated pre element relative to the button
-    // Structure: .code-wrapper > pre + button
-    const wrapper = button.closest(".code-wrapper");
-    if (!wrapper) return;
+      // Find associated pre element relative to the button
+      // Structure: .code-wrapper > pre + button
+      const wrapper = button.closest(".code-wrapper");
+      if (!wrapper) return;
 
-    const pre = wrapper.querySelector("pre");
-    if (!pre) return;
+      const pre = wrapper.querySelector("pre");
+      if (!pre) return;
 
-    try {
-      await navigator.clipboard.writeText(pre.innerText || pre.textContent);
-      button.textContent = "Copied!";
-      button.setAttribute("aria-label", "Code copied to clipboard");
-      button.classList.add("copied");
-      setTimeout(() => {
-        button.textContent = "Copy";
-        button.setAttribute("aria-label", "Copy code to clipboard");
-        button.classList.remove("copied");
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-      button.textContent = "Error";
-      setTimeout(() => (button.textContent = "Copy"), 2000);
-    }
+      try {
+        await navigator.clipboard.writeText(pre.innerText || pre.textContent);
+        button.textContent = "Copied!";
+        button.setAttribute("aria-label", "Code copied to clipboard");
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = "Copy";
+          button.setAttribute("aria-label", "Copy code to clipboard");
+          button.classList.remove("copied");
+        }, 2000);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        button.textContent = "Error";
+        setTimeout(() => (button.textContent = "Copy"), 2000);
+      }
+    });
+
+    // Form Accessibility - Required Field Indicators
+    const requiredInputs = document.querySelectorAll(
+      "input[required], textarea[required], select[required]",
+    );
+    requiredInputs.forEach((input) => {
+      if (input.id) {
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        if (label && !label.querySelector(".required-indicator")) {
+          const indicator = document.createElement("span");
+          indicator.className = "required-indicator";
+          indicator.textContent = " *";
+          indicator.style.color = "var(--accent-blue)";
+          indicator.style.fontWeight = "bold";
+          indicator.setAttribute("aria-hidden", "true");
+          indicator.title = "Required field";
+          label.appendChild(indicator);
+        }
+      }
+    });
   });
 
   // Skip to Content Link
@@ -872,26 +903,6 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(skipLink);
     }
   }
-
-  // Form Accessibility - Required Field Indicators
-  const requiredInputs = document.querySelectorAll(
-    "input[required], textarea[required], select[required]",
-  );
-  requiredInputs.forEach((input) => {
-    if (input.id) {
-      const label = document.querySelector(`label[for="${input.id}"]`);
-      if (label && !label.querySelector(".required-indicator")) {
-        const indicator = document.createElement("span");
-        indicator.className = "required-indicator";
-        indicator.textContent = " *";
-        indicator.style.color = "var(--accent-blue)";
-        indicator.style.fontWeight = "bold";
-        indicator.setAttribute("aria-hidden", "true");
-        indicator.title = "Required field";
-        label.appendChild(indicator);
-      }
-    }
-  });
 
   // ⚡ Bolt Optimization: Reading Time Estimate
   function initReadingTime() {
@@ -1078,13 +1089,15 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     const container = document.getElementById("quarto-document-content");
-    container.addEventListener("click", handleLightboxTrigger);
-    container.addEventListener("keydown", handleLightboxTrigger);
+    if (container) {
+      container.addEventListener("click", handleLightboxTrigger);
+      container.addEventListener("keydown", handleLightboxTrigger);
+    }
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lightbox.classList.contains("active")) {
-        lightbox.click();
+        closeLightbox();
       }
     });
   }
