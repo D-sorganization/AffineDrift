@@ -117,6 +117,8 @@ Aerodynamic forces, impact forces, and non-holonomic contact effects are exclude
 
 The final structural element is the coupling between the actuator (the golfer) and the payload (the club). This interface is not a simple rigid connection; it is the boundary where the active, articulated chain meets the passive, flexible object.
 
+Before we can assemble the global equations of motion, we must rigorously define this boundary. The interaction between the golfer and the club is the precise mechanism that transmits the "active" intent into the "passive" system. To capture this, we cannot simply weld the shaft to the hands; we must model the **bidirectional** flow of energy—torque going out, and recoil forces coming back. This requires a differential analysis of the interface itself, linking the rigid-body velocity of the hands to the flexible deformation of the shaft via specific Jacobians.
+
 ### Hand--club kinematic interface and Jacobian formulation
 
 The structural coupling between the golfer (actuator) and the club (payload) is the critical boundary where active kinematics meet passive dynamics. We model this interface rigorously using differential kinematics.
@@ -269,6 +271,8 @@ Factoring out $H_{qq}$ on the right:
 $$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
 The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$. Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space—the effective inertia felt by the golfer when the shaft modes are free to accelerate. Thus, the primary diagonal block of the inverse mass matrix is:
 $$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
+
+This mathematical operation has a profound physical interpretation. By inverting the Schur complement, we are not just solving a matrix equation; we are calculating the **Effective Mobility** of the system. This term $H_{qq}$ tells us exactly how much joint acceleration results from a unit of torque, accounting for the fact that some energy "leaks" into vibrating the shaft. It is the distinct mechanical signature of the golfer's agency in a flexible world.
 
 This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial load of the flexible shaft. It is physically distinct from the inverse of the locked-mode inertia ($M_{qq}^{-1}$); instead, it captures the enhanced or diminished responsiveness of the hands due to the dynamic compliance of the club. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes via the **Inertial Coupling Ratio**.
 

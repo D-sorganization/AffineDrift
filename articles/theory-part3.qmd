@@ -11,6 +11,14 @@ format:
 
 ## Drift Invariance and Input Constraints
 
+::: {.callout-note}
+## Recap of Part II
+In the previous chapter, we constructed two counterfactual baselines:
+1. The **ZTCF**, which integrates the drift field $f(x)$ over time to simulate the "Shadow Swing" (inertial memory).
+2. The **ZVCF**, which freezes velocity to isolate static loads (gravity/elasticity).
+Both tools rely on the mathematical subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$.
+:::
+
 In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
 
 However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
@@ -197,7 +205,9 @@ Having established that the drift field is a stable, invariant reference frame, 
 
 ## Force and Torque Taxonomy via the Affine Mapping
 
-Having established the control-affine form (Part I), defined the physical decomposition (Part II), constructed the necessary temporal and configurational counterfactuals (Part II), and verified the invariance of the passive baseline (Section 1 of this Part), we can now synthesize these elements into a unified *Force Taxonomy*. This taxonomy is not merely a descriptive list; it is the direct algebraic consequence of the framework. It provides a comprehensive map for attributing every newton of force in the swing to its specific causal origin—whether it arises from the system's shape (Configuration Drift), its motion (Velocity Drift), or the golfer's immediate intent (Input).
+We now have all the pieces of the puzzle. We have the **Control-Affine Form** (from Part I) which gave us the containers $f(x)$ and $g(x)$. We have the **Counterfactual Baselines** (from Part II) which gave us the logical operations (integration vs. static projection). And we have **Drift Invariance** (from Section 1) which guarantees these operations are physically distinct.
+
+We can now synthesize these elements into a unified *Force Taxonomy*.
 
 With the drift--input decomposition formalized, we now classify the generalized forces acting within the golfer--club--shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form
 
