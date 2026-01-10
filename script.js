@@ -998,8 +998,25 @@ document.addEventListener("DOMContentLoaded", function () {
     lightbox.setAttribute("aria-modal", "true");
     lightbox.setAttribute("aria-label", "Image zoom"); // 🎨 Palette UX: Accessible name
 
-    // Close on click
-    lightbox.addEventListener("click", () => {
+    // 🎨 Palette UX: Create Close Button
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "lightbox-close";
+    closeBtn.setAttribute("aria-label", "Close zoom");
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+    // Close on click (Background)
+    lightbox.addEventListener("click", (e) => {
+      if (e.target !== lightbox) return;
+      closeLightbox();
+    });
+
+    // Close on click (Button)
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+
+    function closeLightbox() {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
       lightbox.innerHTML = ""; // Clear content
@@ -1009,7 +1026,8 @@ document.addEventListener("DOMContentLoaded", function () {
         lastFocusedElement.focus();
         lastFocusedElement = null;
       }
-    });
+    }
+
     document.body.appendChild(lightbox);
 
     contentImages.forEach((img) => {
@@ -1051,11 +1069,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       lightbox.innerHTML = ""; // Clear previous
       lightbox.appendChild(clone);
+      lightbox.appendChild(closeBtn); // 🎨 Palette UX: Add close button
       lightbox.classList.add("active");
       lightbox.setAttribute("aria-hidden", "false");
 
-      // 🎨 Palette UX: Move focus to modal
-      lightbox.focus();
+      // 🎨 Palette UX: Move focus to close button for better keyboard UX
+      closeBtn.focus();
     };
 
     const container = document.getElementById("quarto-document-content");
