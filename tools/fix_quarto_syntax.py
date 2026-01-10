@@ -70,16 +70,12 @@ def fix_theory_part5(content: str) -> str:
             # Fallback for case sensitivity issue observed in review
             end_marker_effective = 'Effective Plant" for the swing.'
             if end_marker_effective in content:
-                content = content.replace(
-                    end_marker_effective, end_marker_effective + "\n:::"
-                )
+                content = content.replace(end_marker_effective, end_marker_effective + "\n:::")
     return content
 
 
 def main() -> None:
-    files = [
-        f for f in os.listdir("articles") if f.endswith(".qmd") or f.endswith(".md")
-    ]
+    files = [f for f in os.listdir("articles") if f.endswith(".qmd") or f.endswith(".md")]
 
     for f in files:
         path = os.path.join("articles", f)
