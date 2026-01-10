@@ -646,6 +646,44 @@ nav .container {
   animation: zoom-in 0.3s cubic-bezier(0.2, 0, 0.2, 1);
 }
 
+/* Lightbox Close Button */
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--pure-white);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
+  z-index: 2001;
+}
+
+.lightbox-close:hover {
+  background-color: rgb(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.lightbox-close:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  background-color: rgb(255, 255, 255, 0.1);
+}
+
+.lightbox-close svg {
+  width: 32px;
+  height: 32px;
+  stroke: currentcolor;
+  stroke-width: 2.5;
+}
+
 @keyframes zoom-in {
   from {
     transform: scale(0.9);
