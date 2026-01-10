@@ -11,6 +11,13 @@ format:
 
 ## Drift vs. Input Decomposition {#drift-vs-input-decomposition}
 
+::: {.callout-note}
+## Recap of Part I
+In the previous chapter, we derived the rigorous equations of motion for the golfer--club--shaft system, proving that they fit the standard **control-affine form**:
+$$ \dot{x} = f(x) + g(x)u $$
+This derivation was purely **descriptive**—it told us *how* the system moves. Now, in Part II, we pivot to **diagnostics**. We ask *why* it moves.
+:::
+
 In Part I, we established that the golfer--club--shaft system is governed by the nonlinear control-affine dynamics $\dot{x} = f(x) + g(x)u$. This equation represents the **physics** of the swing—a descriptive statement of how forces produce motion. In Part II, we pivot from description to **diagnostics**. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer's intent or the club's inertia.
 
 This shift is enabled by the **Mechanical Orthogonality** derived in Part I, where the inertial memory of the system (drift) is shown to be structurally distinct from the current agency of the player (input). We now exploit this structure to answer the central causal question of the swing: *which forces are the result of the golfer's immediate effort, and which are the result of the system's passive physics?*
@@ -182,7 +189,9 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 
 ### Decomposing the drift
 
-The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). To truly diagnose the mechanical load, we need a sharper scalpel—one that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
+The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
+
+To truly diagnose the mechanical load, we need a sharper instrument—a **Static Scalpel** that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
 
 ## Zero Velocity Counterfactual (ZVCF)
 
