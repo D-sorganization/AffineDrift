@@ -125,9 +125,19 @@ $$ \mathcal{V}_h = J_h(q) \dot{q}. $$
 
 The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
 
-The velocity of any point on the shaft is thus given by the transport theorem:
+The velocity of any differential mass element $dm = \rho(s)ds$ on the shaft is obtained by differentiating the position vector with respect to time. Applying the chain rule to $p(s, q, \eta)$:
+$$
+v(s) = \frac{d}{dt} p(s, q, \eta) = \frac{\partial p}{\partial q} \dot{q} + \frac{\partial p}{\partial \eta} \dot{\eta}.
+$$
+Identifying the partial derivatives with the geometric Jacobians of the system:
+1.  **Rigid-Body Jacobian:** $J_{\text{rigid}}(s, q) \equiv \frac{\partial p}{\partial q}$. This captures the transport velocity of the point $s$ induced by the articulation of the golfer's joints.
+2.  **Modal Jacobian:** $\Phi(s) \equiv \frac{\partial p}{\partial \eta}$. This is simply the matrix of mode shapes, mapping generalized modal rates $\dot{\eta}$ to spatial velocities.
+
+Thus, the velocity field is the superposition of rigid-body transport and local elastic deformation:
 $$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}. $$
-Here, $J_{\text{rigid}}(s, q) \in \mathbb{R}^{3 \times n}$ is the Jacobian transforming joint rates into the rigid-body velocity field at point $s$, and $\Phi(s) \in \mathbb{R}^{3 \times m}$ is the matrix of spatial mode shapes.
+Here:
+- $J_{\text{rigid}}(s, q) \in \mathbb{R}^{3 \times n}$ is the geometric Jacobian transforming joint rates $\dot{q}$ into the rigid-body velocity field at point $s$.
+- $\Phi(s) = [\phi_1(s), \dots, \phi_m(s)] \in \mathbb{R}^{3 \times m}$ is the matrix of spatial mode shapes.
 
 The total kinetic energy $T$ is obtained by integrating the squared velocity norm over the shaft's mass distribution $\rho(s)$:
 $$
@@ -145,9 +155,10 @@ $$
 T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \underbrace{\left( \int_0^L \rho J^T J ds \right)}_{M_{qq}} \dot{q} + \dot{q}^T \underbrace{\left( \int_0^L \rho J^T \Phi ds \right)}_{M_{q\eta}} \dot{\eta} + \frac{1}{2} \dot{\eta}^T \underbrace{\left( \int_0^L \rho \Phi^T \Phi ds \right)}_{M_{\eta\eta}} \dot{\eta}.
 $$
 This explicit derivation identifies the precise integral definitions of the mass matrix blocks:
-1.  $M_{qq} = \int \rho J^T J ds$ is the rigid-body inertia projected to joint space.
-2.  $M_{\eta\eta} = \int \rho \Phi^T \Phi ds$ is the modal mass matrix (typically identity $I_m$ by orthogonality).
-3.  $M_{q\eta} = \int \rho J^T \Phi ds$ is the **inertial coupling matrix**.
+
+1.  **Rigid Inertia** $M_{qq} = \int \rho J^T J ds$: The standard manipulator inertia, augmented by the "locked-mode" inertia of the shaft.
+2.  **Modal Inertia** $M_{\eta\eta} = \int \rho \Phi^T \Phi ds$: The mass matrix of the flexible coordinates (typically normalized to identity $I_m$ via mode orthogonality).
+3.  **Inertial Coupling** $M_{q\eta} = \int \rho J^T \Phi ds$: The cross-term that couples the rigid and flexible subspaces.
 
 The cross-term $M_{q\eta}$ is precisely what couples the rigid and flexible dynamics. It is not a "linkage" artifact; it is the physical mechanism by which hand acceleration ($\ddot{q}$) instantaneously loads the shaft (via $-M_{q\eta}^T \ddot{q}$ in the modal equations) and by which shaft recoil exerts reaction torques on the hands.
 
@@ -244,20 +255,20 @@ Expanding the first column of the product yields the system:
 1. $M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$
 2. $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
-From (2), we isolate the off-diagonal block $H_{\eta q}$:
+From (2), we isolate the off-diagonal block $H_{\eta q}$ by pre-multiplying by $M_{\eta\eta}^{-1}$:
 $$ H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
 This relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property but a linear mapping of the rigid-body mobility $H_{qq}$, scaled by the **inertial coupling ratio** $- M_{\eta\eta}^{-1} M_{\eta q}$.
 
 This ratio is the mechanical 'gear ratio' of the system. It dictates how much 'kick' the flexible shaft receives for every unit of acceleration the golfer produces at the hands. Crucially, this transmission is purely inertial—it depends on the mass distribution of the club, not its stiffness. This means the golfer cannot 'turn off' the interaction; they can only manage it by managing their own acceleration.
 
-Substituting this back into (1):
+Substituting this expression for $H_{\eta q}$ back into (1):
 $$ M_{qq} H_{qq} - M_{q\eta} (M_{\eta\eta}^{-1} M_{\eta q} H_{qq}) = I $$
 Factoring out $H_{qq}$ on the right:
 $$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
 The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$. Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space—the effective inertia felt by the golfer when the shaft modes are free to accelerate. Thus, the primary diagonal block of the inverse mass matrix is:
 $$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
 
-This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the effective mobility of the joints *after* accounting for the inertial load of the flexible shaft. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes.
+This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial load of the flexible shaft. It is physically distinct from the inverse of the locked-mode inertia ($M_{qq}^{-1}$); instead, it captures the enhanced or diminished responsiveness of the hands due to the dynamic compliance of the club. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes via the **Inertial Coupling Ratio**.
 
 Multiplying the equation of motion by $H$ isolates the acceleration vector:
 $$
@@ -277,9 +288,9 @@ $$
 \begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
 $$
 
-Substituting the explicit form for $H_{\eta q}$:
+The flexible mode acceleration $\ddot{\eta}_{\text{input}}$ is thus driven by the off-diagonal block of the inverse mass matrix. Substituting the expression for $H_{\eta q}$ derived via the Schur complement ($H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}$):
 $$
-\ddot{\eta}_{\text{input}} = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
+\ddot{\eta}_{\text{input}} = H_{\eta q} B(q) u = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
 $$
 This equation provides the rigorous mechanical definition of **Input Forces**:
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$.
@@ -783,7 +794,16 @@ $$
 $$
 The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
 $$ \nabla_u f(x) \equiv 0. $$
-This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs. $\square$
+This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
+
+::: {.callout-note}
+## Assumption of Viscous-Only Damping
+This invariance proof strictly relies on the assumption that all dissipative forces $h_{\text{dissip}}$ depend only on state $(q, \dot{q})$. Specifically, we assume damping is viscous (linear in velocity).
+If the system included **Coulomb friction** ($\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$), where the normal force $F_N$ depends on constraint forces (and thus on input $u$), the drift term $f(x)$ would become input-dependent ($\nabla_u f \neq 0$), violating the affine structure.
+For the high-speed ballistic phases of the golf swing, we assume inertial forces dominate frictional forces ($F_{\text{inertia}} \gg \mu F_N$), justifying this viscous-only approximation.
+:::
+
+$\square$
 
 For mechanical systems with generalized torques entering linearly,
 
