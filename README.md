@@ -25,16 +25,18 @@ This is a static website hosted on GitHub Pages at `AffineDrift.com`.
 
 ```
 AffineDrift/
-├── index.html          # Main homepage with theory and explanation
-├── resources.html      # Resources page for videos and materials
-├── styles.css          # Elegant, mathematical design system
-├── script.js           # Interactive JavaScript features
-├── README.md           # This file
-├── DEVELOPMENT_GUIDE.md    # Comprehensive beginner's guide
-├── WEBSITE_MANAGEMENT.md   # How to update and manage content
-└── .github/
-    └── workflows/
-        └── deploy.yml  # CI/CD pipeline for GitHub Pages
+├── index.qmd           # Main homepage (Quarto markdown)
+├── _quarto.yml         # Quarto configuration
+├── styles.css          # Custom styling
+├── script.js           # Interactive features
+├── docs/               # Additional documentation
+│   └── assessments/    # Quality assessments
+├── tests/              # Python tests
+├── .github/
+│   └── workflows/      # CI/CD pipelines
+│       ├── quarto-publish.yml  # GitHub Pages deployment
+│       └── Jules-Control-Tower.yml  # Automated maintenance
+└── *.qmd               # Content pages (Quarto markdown)
 ```
 
 ## 🚀 Quick Start
@@ -48,20 +50,18 @@ AffineDrift/
    cd AffineDrift
    ```
 
-2. Open in your browser:
-   - Simply open `index.html` in any modern web browser
-   - Or use a local server (recommended for testing):
-     ```bash
-     python -m http.server 8000
-     # Then visit http://localhost:8000
-     ```
+2. Preview with Quarto:
+   ```bash
+   quarto preview
+   # Opens browser at http://localhost:4000
+   ```
 
 ### Making Changes
 
-1. Edit the HTML files to update content
+1. Edit `.qmd` files to update content (Quarto markdown)
 2. Modify `styles.css` to change styling
-3. Update `resources.html` to add new resources
-4. Commit and push changes to automatically deploy via GitHub Actions
+3. Run `quarto preview` to see changes live
+4. Commit and push to automatically deploy via GitHub Actions
 
 See [WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md) for detailed instructions.
 
@@ -72,8 +72,8 @@ See [WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md) for detailed instructions.
 
 ## 🛠️ Technologies
 
-- **HTML5**: Semantic markup
-- **CSS3**: Modern styling with CSS Grid and Flexbox
+- **Quarto**: Scientific publishing system
+- **HTML5/CSS3**: Styling with CSS Grid and Flexbox
 - **JavaScript (ES6+)**: Interactive features
 - **MathJax**: Mathematical notation rendering
 - **GitHub Pages**: Static site hosting
