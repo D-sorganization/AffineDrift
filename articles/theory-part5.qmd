@@ -1,6 +1,6 @@
 ---
 title: "Affine Control Interpretation of the Golf Swing — Part 5"
-subtitle: "Simulink Model Documentation"
+subtitle: "Numerical Consistency Check (Planar Model)"
 date: today
 format:
   html:
@@ -18,6 +18,11 @@ Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \t
 To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Part III), we require a numerical proof-of-concept.
 
 The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
+
+::: {.callout-warning}
+## Dimensionality Gap
+We acknowledge that this planar model ($q \in \mathbb{R}^3$) cannot test the 3D gyroscopic predictions (e.g., face stability) discussed in Part III. These effects, which rely on the cross-product terms $\omega \times I \omega$, are absent by definition in 2D. The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment, leaving the verification of 3D drift invariance to future spatial simulations.
+:::
 
 ### Model construction
 
@@ -96,7 +101,7 @@ The current Simulink model provides:
 - a method for quantifying the effect of momentum on hand--club interaction forces,
 - a pathway toward full Part II (simulation) and Part III (experimental) papers.
 
-Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations, explore sensitivity to shaft stiffness and segment masses, and apply the decomposition to motion capture data to understand timing, effort, and mechanical efficiency in real swings.
+Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations. The most critical next step is the extension to 3D, as the current planar validation proves that the ZTCF subtraction logic works for $M(q)\ddot{q}$ but does not stress-test the drift invariance assumption against the complex $\omega \times I \omega$ gyroscopic terms present in the full spatial swing.
 
 The specific numerical algorithms employed to enforce the "kill switches" and compute the ZVCF within the discrete-time solver environment are detailed in the final appendix below.
 
