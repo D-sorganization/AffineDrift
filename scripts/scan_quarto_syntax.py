@@ -12,9 +12,10 @@ Checks for:
 import os
 import re
 import sys
+from typing import List, Tuple
 
 
-def scan_file(filepath):
+def scan_file(filepath: str) -> List[Tuple[int, str, str, str]]:
     issues = []
     try:
         with open(filepath, encoding="utf-8") as f:
@@ -95,7 +96,7 @@ def scan_file(filepath):
     return issues
 
 
-def main():
+def main() -> None:
     files_to_scan = []
     # Walk through articles
     if os.path.exists("articles"):
