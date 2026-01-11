@@ -12,10 +12,9 @@ Checks for:
 import os
 import re
 import sys
-from typing import List, Tuple
 
 
-def scan_file(filepath: str) -> List[Tuple[int, str, str, str]]:
+def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
     issues = []
     try:
         with open(filepath, encoding="utf-8") as f:
