@@ -13,10 +13,11 @@ import os
 import re
 import sys
 
+
 def scan_file(filepath):
     issues = []
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, encoding="utf-8") as f:
             lines = f.readlines()
     except Exception as e:
         print(f"Error reading {filepath}: {e}")
@@ -26,23 +27,23 @@ def scan_file(filepath):
         line_num = i + 1
 
         # Skip code blocks
-        if line.strip().startswith('```'):
+        if line.strip().startswith("```"):
             continue
 
         # 1. LaTeX delimiters
-        if '\\(' in line or '\\)' in line:
+        if "\\(" in line or "\\)" in line:
             issues.append((line_num, line, "LaTeX inline \\( ... \\)", "Use $ ... $"))
-        if '\\[' in line or '\\]' in line:
-             # exclude \[1em] or similar spacing commands
-             if not re.search(r'\\\[[\d\.]+[a-z]+\]', line):
-                 issues.append((line_num, line, "LaTeX display \\[ ... \\]", "Use $$ ... $$"))
+        if "\\[" in line or "\\]" in line:
+            # exclude \[1em] or similar spacing commands
+            if not re.search(r"\\\[[\d\.]+[a-z]+\]", line):
+                issues.append((line_num, line, "LaTeX display \\[ ... \\]", "Use $$ ... $$"))
 
         # 2. Math Spacing Check
         # Remove escaped \$
-        clean_line = line.replace('\\$', '__')
+        clean_line = line.replace("\\$", "__")
 
         # Split by non-escaped $
-        parts = re.split(r'(?<!\$)\$(?!\$)', clean_line)
+        parts = re.split(r"(?<!\$)\$(?!\$)", clean_line)
 
         if len(parts) > 1:
             # We have potential inline math in odd indices
@@ -52,12 +53,26 @@ def scan_file(filepath):
                     continue
 
                 # Check for leading space
-                if math_content.startswith(' ') or math_content.startswith('\t'):
-                    issues.append((line_num, line, f"Space after opening $ in segment '{math_content[:10]}...'", "Remove leading space"))
+                if math_content.startswith(" ") or math_content.startswith("\t"):
+                    issues.append(
+                        (
+                            line_num,
+                            line,
+                            f"Space after opening $ in segment '{math_content[:10]}...'",
+                            "Remove leading space",
+                        )
+                    )
 
                 # Check for trailing space
-                if math_content.endswith(' ') or math_content.endswith('\t'):
-                    issues.append((line_num, line, f"Space before closing $ in segment '...{math_content[-10:]}'", "Remove trailing space"))
+                if math_content.endswith(" ") or math_content.endswith("\t"):
+                    issues.append(
+                        (
+                            line_num,
+                            line,
+                            f"Space before closing $ in segment '...{math_content[-10:]}'",
+                            "Remove trailing space",
+                        )
+                    )
 
         # 3. Double quotes in math
         if len(parts) > 1:
@@ -65,27 +80,35 @@ def scan_file(filepath):
                 math_content = parts[j]
                 if '"' in math_content:
                     # Skip common HTML attributes in strings if they got caught
-                    if 'href=' in line or 'src=' in line:
+                    if "href=" in line or "src=" in line:
                         continue
 
-                    issues.append((line_num, line, f"Double quote in math: '{math_content}'", "Use ' or '' for derivatives"))
+                    issues.append(
+                        (
+                            line_num,
+                            line,
+                            f"Double quote in math: '{math_content}'",
+                            "Use ' or '' for derivatives",
+                        )
+                    )
 
     return issues
+
 
 def main():
     files_to_scan = []
     # Walk through articles
-    if os.path.exists('articles'):
-        for root, dirs, files in os.walk('articles'):
-            if 'archive' in dirs:
-                dirs.remove('archive')
+    if os.path.exists("articles"):
+        for root, dirs, files in os.walk("articles"):
+            if "archive" in dirs:
+                dirs.remove("archive")
             for file in files:
-                if file.endswith('.qmd') or file.endswith('.md'):
+                if file.endswith(".qmd") or file.endswith(".md"):
                     files_to_scan.append(os.path.join(root, file))
 
     # Walk through root
-    for file in os.listdir('.'):
-        if file.endswith('.qmd'):
+    for file in os.listdir("."):
+        if file.endswith(".qmd"):
             files_to_scan.append(file)
 
     print(f"Scanning {len(files_to_scan)} active files for Quarto syntax issues...")
@@ -95,7 +118,7 @@ def main():
         issues = scan_file(filepath)
         if issues:
             print(f"\nFile: {filepath}")
-            for line_num, line_content, problem, fix in issues:
+            for line_num, _line_content, problem, fix in issues:
                 print(f"  Line {line_num}: {problem} -> {fix}")
             total_issues += len(issues)
 
@@ -106,5 +129,6 @@ def main():
         print("\nNo issues found.")
         sys.exit(0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
