@@ -88,7 +88,8 @@ print(
     f"Max torque: {max(torques):.2f} Nm at grip position {GRIP_POSITIONS[np.argmax(torques)]:.2f} m"
 )
 print(
-    f"Max inertia effect: {max(inertia_effects):.4f} kg*m^2 at grip position {GRIP_POSITIONS[np.argmax(inertia_effects)]:.2f} m"
+    f"Max inertia effect: {max(inertia_effects):.4f} kg*m^2 at grip position "
+    f"{GRIP_POSITIONS[np.argmax(inertia_effects)]:.2f} m"
 )
 
 # Augmented: Allow parameter sweep for force angle
