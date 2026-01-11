@@ -3,6 +3,9 @@ import re
 
 
 def fix_superposition(content: str) -> str:
+    """
+    Fix LaTeX syntax errors in superposition.qmd.
+    """
     # Fix broken math block
     content = content.replace("[\n  x(t) \\neq", "$$\n  x(t) \\neq")
 
@@ -33,6 +36,9 @@ def fix_superposition(content: str) -> str:
 
 
 def fix_units_wrist(content: str) -> str:
+    """
+    Standardize unit formatting in wrist-universal-joint.qmd.
+    """
     # We want to replace "X kg·m²" with "$X \text{ kg}\cdot\text{m}^2$"
     # Regex: (\d+(?:-\d+(?:\.\d+)?)?) -> Captures numbers like "0.004-0.006" or "5" or "0.005"
     # Actually just match the number preceding the unit.
@@ -41,6 +47,7 @@ def fix_units_wrist(content: str) -> str:
     # Capture the number before it.
 
     def repl_kgm2(m: re.Match[str]) -> str:
+        """Helper to replace kg·m² with LaTeX."""
         return f"${m.group(1)} \\text{{ kg}}\\cdot\\text{{m}}^2$"
 
     # Matches "0.004-0.006 kg·m²" or "0.005 kg·m^2"
@@ -49,6 +56,7 @@ def fix_units_wrist(content: str) -> str:
 
     # Pattern 2: N·m
     def repl_nm(m: re.Match[str]) -> str:
+        """Helper to replace N·m with LaTeX."""
         return f"${m.group(1)} \\text{{ N}}\\cdot\\text{{m}}$"
 
     content = re.sub(r"([0-9\.\-]+) N·m", repl_nm, content)
@@ -57,6 +65,9 @@ def fix_units_wrist(content: str) -> str:
 
 
 def fix_theory_part5(content: str) -> str:
+    """
+    Convert legacy notes to callouts in theory-part5.qmd.
+    """
     # Fix Note on parameter validity
     if "**Note on parameter validity.**" in content:
         content = content.replace(
@@ -75,6 +86,9 @@ def fix_theory_part5(content: str) -> str:
 
 
 def main() -> None:
+    """
+    Main entry point for syntax fixing tool.
+    """
     files = [f for f in os.listdir("articles") if f.endswith(".qmd") or f.endswith(".md")]
 
     for f in files:
