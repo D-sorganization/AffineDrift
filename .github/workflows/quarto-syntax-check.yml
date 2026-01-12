@@ -2,11 +2,11 @@ name: Quarto Syntax Check
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
   schedule:
-    - cron: '0 0 * * *'  # Run every night at midnight
+    - cron: "0 0 * * *" # Run every night at midnight
 
 jobs:
   check-syntax:
@@ -17,7 +17,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Run Quarto Syntax Scanner
         run: python3 scripts/scan_quarto_syntax.py
+
+      # Assessment E: Security scanning for dependency vulnerabilities
+      - name: Audit Python Dependencies
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt --progress-spinner=off || true
