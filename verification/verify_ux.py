@@ -1,4 +1,3 @@
-
 from playwright.sync_api import Page, expect, sync_playwright
 
 
@@ -75,6 +74,7 @@ def verify_ux(page: Page):
     # No easy way.
 
     print("Verification complete.")
+
 
 if __name__ == "__main__":
     with sync_playwright() as p:
