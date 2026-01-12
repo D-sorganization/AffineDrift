@@ -1161,6 +1161,9 @@ Theoretically, variable grip stiffness would make the mass matrix input-dependen
 ##### Coulomb Friction and Input-Dependent Resistance.
 The affine decomposition $\dot{x} = f(x) + g(x)u$ assumes that all dissipative forces are viscous (state-dependent). If significant Coulomb friction $\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$ is present, and if the normal force $F_N$ depends on input torque $u$ (via constraint forces), the drift term $f(x)$ becomes input-dependent. We assume that for high-speed ballistic motions like the golf swing, inertial forces dominate frictional forces ($F_{\text{inertia}} \gg \mu F_N$), justifying the viscous-only approximation.
 
+##### The Stiffness Pulse Paradox (Time-Varying Impedance).
+The "Effective Plant" defense assumes that impedance parameters ($K, D$) are constant for the duration of the counterfactual analysis to preserve Drift Invariance. However, mechanisms such as "Intentional Constraint Collapse" imply a rapid "Stiffness Pulse" (high $\dot{K}$) near impact. Because this pulse is timing-dependent and correlated with the input strategy, the drift field $f(x)$ becomes effectively time-varying and input-correlated during this transient phase. The ZTCF in this regime must be interpreted as a parametric counterfactual (preserving the impedance schedule) rather than a purely passive one.
+
 ### Physiological limitations
 
 ##### Closed-chain indeterminacy.
@@ -2222,8 +2225,8 @@ The model consists of:
 
 Shaft flexibility was represented using modal bending dynamics, similar to Appendix~@app:modal, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
 
-**Note on parameter validity.**
-The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing.
+**Note on parameter validity (Validation Scope).**
+The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
 
 ### Zero‐Torque Counterfactual evaluation via “kill switches”
 
