@@ -1,6 +1,7 @@
 
 from playwright.sync_api import Page, expect, sync_playwright
 
+
 def verify_ux(page: Page):
     # Capture console logs
     page.on("console", lambda msg: print(f"CONSOLE: {msg.text}"))
@@ -32,7 +33,8 @@ def verify_ux(page: Page):
     # Check active link
     active_link = page.locator("#toc-list a.active")
     # It might be "TOC Test Section"
-    # But sometimes scrollspy selects the *visible* section, which might still be the first one if the spacer is huge and window is large?
+    # But sometimes scrollspy selects the *visible* section, which might still be
+    # the first one if the spacer is huge and window is large?
     # No, spacer is 2000px, so section 1 is definitely out of view.
 
     # Print active link text for debugging
