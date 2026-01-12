@@ -844,6 +844,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (pre.parentNode.classList.contains("code-wrapper")) return;
       if (!pre.textContent.trim()) return;
 
+      // 🎨 Palette UX: Keyboard access for overflow code
+      pre.setAttribute("tabindex", "0");
+      pre.setAttribute("role", "region");
+      pre.setAttribute("aria-label", "Code snippet");
+
       const wrapper = document.createElement("div");
       wrapper.className = "code-wrapper";
       pre.parentNode.insertBefore(wrapper, pre);
