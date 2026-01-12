@@ -13,3 +13,7 @@
 ## 2025-06-15 - Focus Management on Scroll Actions
 **Learning:** When using JavaScript to scroll the page (like "Back to Top"), simply scrolling visually is insufficient for keyboard users. The focus remains at the trigger point (often the bottom of the page), forcing users to tab backwards through the entire document.
 **Action:** Always programmatically move focus to the target area (e.g., `document.body` or a specific heading) when triggering significant scroll actions to synchronize the visual viewport with the keyboard context.
+
+## 2025-12-15 - Scrollable Regions and Accessibility
+**Learning:** Adding `overflow: auto` to containers (like tables) makes them responsive but creates a "keyboard trap" if not managed correctly. Keyboard users need to be able to focus the scrollable region (`tabindex="0"`) to scroll it using arrow keys, and screen reader users need a label (`aria-label`/`aria-labelledby`) to know what the region contains.
+**Action:** When creating responsive wrappers for content, always add `role="region"`, `tabindex="0"`, and a descriptive label to ensure the scrollable area is discoverable and operable by all users.
