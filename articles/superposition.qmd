@@ -168,7 +168,7 @@ We can regard $(f^\text{ext}, n^\text{ext})$ as *control-like inputs* $u \in \ma
 $$
 u =
 \begin{bmatrix}
-f^\text{ext} \\[3pt]
+f^\text{ext} \\
 n^\text{ext}
 \end{bmatrix}.
 \tag{3.2}
@@ -199,17 +199,17 @@ Explicitly, for $x = (p, R, v, \omega)$:
 $$
 f(x) =
 \begin{bmatrix}
-R v^B \\[3pt]
-R \widehat{\omega}^B \\[3pt]
-g^B \\[3pt]
+R v^B \\
+R \widehat{\omega}^B \\
+g^B \\
 -I_B^{-1}\big(\omega \times (I_B \omega)\big)
   \end{bmatrix},
   \quad
   G(x) =
   \begin{bmatrix}
-  0_{3\times 3} & 0_{3\times 3} \\[3pt]
-  0_{3\times 3} & 0_{3\times 3} \\[3pt]
-  \frac{1}{m} I_{3} & 0_{3} \\[3pt]
+  0_{3\times 3} & 0_{3\times 3} \\
+  0_{3\times 3} & 0_{3\times 3} \\
+  \frac{1}{m} I_{3} & 0_{3} \\
   0_{3} & I_B^{-1}
   \end{bmatrix}.
   \tag{3.5}
@@ -308,7 +308,7 @@ where we think of the controls as
 $$
 u :=
 \begin{bmatrix}
-\tau \\[3pt]
+\tau \\
 f^\text{ext}
 \end{bmatrix}.
 \tag{3.14}
@@ -333,7 +333,7 @@ Define
 $$
 f(x) :=
 \begin{bmatrix}
-\dot q \\[3pt]
+\dot q \\
 M(q)^{-1} \big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \big)
 \end{bmatrix},
 \tag{3.16}
@@ -342,13 +342,13 @@ $$
 $$
 G_\tau(x) :=
 \begin{bmatrix}
-0_{n\times n} \\[3pt]
+0_{n\times n} \\
 M(q)^{-1}
 \end{bmatrix},
 \quad
 G_f(x) :=
 \begin{bmatrix}
-0_{n\times r} \\[3pt]
+0_{n\times r} \\
 M(q)^{-1} J^\top(q)
 \end{bmatrix},
 \tag{3.17}
@@ -359,7 +359,7 @@ where $r$ is the dimension of $f^\text{ext}$. Then
 $$
 \dot x =
 \begin{bmatrix}
-\dot q \\ \\[3pt]
+\dot q \\
 \ddot q
 \end{bmatrix}
 =
@@ -461,12 +461,12 @@ Define state $x = (q,\dot q)$ and input $u := \tau$. Then
 $$
 \dot x =
 \begin{bmatrix}
-\dot q \\[3pt]
+\dot q \\
 -\frac{g}{l} \sin q
 \end{bmatrix}
 +
 \begin{bmatrix}
-0 \\[3pt]
+0 \\
 \frac{1}{m l^2}
 \end{bmatrix} u.
 \tag{3.21}
@@ -688,14 +688,13 @@ Define state $x=(q,\dot q)$ and vector fields:
 $$
 f(x) :=
 \begin{bmatrix}
-\dot q \\[3pt]
-
-* M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
+\dot q \\
+- M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
   \end{bmatrix},
   \quad
   G(x) :=
   \begin{bmatrix}
-  0_{n\times m} \\[3pt]
+  0_{n\times m} \\
   M(q)^{-1}B(q,\dot q)
   \end{bmatrix}.
   \tag{4.15}
@@ -824,9 +823,8 @@ The **spatial inertia matrix** of a rigid body is a symmetric $6\times 6$ matrix
 $$
 \mathcal{I} =
 \begin{bmatrix}
-I & m,c^\times \\[3pt]
-
-* m,c^\times & m I_3
+I & m c^\times \\
+m c^\times & m I_3
   \end{bmatrix},
   \tag{5.3}
 $$
