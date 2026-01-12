@@ -800,6 +800,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
+    // 🎨 Palette UX: Responsive Tables
+    const tables = document.querySelectorAll("#quarto-document-content table");
+    // Use a shared set for unique IDs across all tables
+    const tableUsedIds = new Set();
+    tables.forEach((table) => {
+      // Check for existing wrapper (both class and overflow style)
+      const parent = table.parentElement;
+      if (
+        parent.classList.contains("table-wrapper") ||
+        parent.style.overflowX === "auto" ||
+        window.getComputedStyle(parent).overflowX === "auto"
+      ) {
+        return;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-wrapper";
+      wrapper.setAttribute("tabindex", "0");
+      wrapper.setAttribute("role", "region");
+
+      const caption = table.querySelector("caption");
+      if (caption) {
+        if (!caption.id) {
+          caption.id = generateUniqueId(
+            caption.textContent || "table",
+            tableUsedIds,
+          );
+        }
+        tableUsedIds.add(caption.id);
+        wrapper.setAttribute("aria-labelledby", caption.id);
+      } else {
+        wrapper.setAttribute("aria-label", "Table content");
+      }
+
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
     // Copy to Clipboard
     const codeBlocks = document.querySelectorAll("pre");
     codeBlocks.forEach((pre) => {
