@@ -15,6 +15,15 @@ import sys
 
 
 def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
+    """
+    Scans a single file for Quarto syntax issues.
+
+    Args:
+        filepath: Path to the file to scan.
+
+    Returns:
+        List of tuples (line_number, line_content, problem_description, suggested_fix).
+    """
     issues = []
     try:
         with open(filepath, encoding="utf-8") as f:
@@ -96,6 +105,9 @@ def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
 
 
 def main() -> None:
+    """
+    Main entry point for the scanner.
+    """
     files_to_scan = []
     # Walk through articles
     if os.path.exists("articles"):
