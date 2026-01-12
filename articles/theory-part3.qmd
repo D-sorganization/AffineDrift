@@ -462,15 +462,15 @@ we derived a clean separation between passive drift forces and torque-driven inp
 
 The resulting taxonomy classifies generalized forces into configuration drift, velocity drift, input forces, and nonlinear interaction effects. This provides a principled basis for interpreting torques and hand forces at any instant of the swing. Within the modeling assumptions stated earlier, the decomposition is analytically exact and reproducible. It offers a mechanical explanation of how the swing evolves over time, distinguishing forces that arise "on their own" from those produced directly by applied torques.
 
-This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. These are addressed in the subsequent components of this series:
+This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. However, the theoretical structure developed here is not self-validating. It relies on complex subtraction operations $\tau_{input} = \tau_{total} - \tau_{drift}$ which are analytically exact but potentially unstable in practice. To address this, the subsequent components of this series provide the necessary verification:
 
 - **Part IV: Mathematical Appendices.**
-  The detailed block matrix inversion proofs, modal approximation justifications, and derivations of the control-affine form are collected in the Appendices. These proofs provide the rigorous algebraic guarantee that the decomposition holds for the coupled rigid--flexible system.
+  These appendices provide the **algebraic guarantee** of the theory. They contain the detailed block matrix inversion proofs and modal approximation derivations that justify the affine separation for flexible multibody systems.
 
 - **Part V: Numerical Validation (Simulink).**
-  The theoretical framework is implemented and stress-tested in a high-fidelity Simulink environment. Part V demonstrates the numerical stability of the ZTCF integration and validates the force taxonomy against known inputs, bridging the gap between algebraic theory and computational practice.
+  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V demonstrates that the delicate counterfactual subtractions remain stable under integration error, proving that the theory survives the transition from the page to the processor.
 
-Beyond these immediate validations, several broader research directions emerge:
+Beyond these verifications, future work will focus on experimental application...
 
 - **Modeling extensions.**  
   Incorporating foot-ground shear forces, aerodynamic loading, and non-smooth impact dynamics will generalize the framework to capture more phases of the swing.
