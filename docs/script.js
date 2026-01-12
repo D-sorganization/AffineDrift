@@ -35,6 +35,15 @@ function debounce(func, wait) {
   };
 }
 
+// ⚡ Bolt Optimization: Helper to run non-critical tasks when idle
+function runWhenIdle(callback) {
+  if (typeof requestIdleCallback !== "undefined") {
+    requestIdleCallback(callback);
+  } else {
+    setTimeout(callback, 0);
+  }
+}
+
 // Helper function to generate unique IDs
 function generateUniqueId(text, usedIds) {
   let baseId = text
@@ -46,13 +55,20 @@ function generateUniqueId(text, usedIds) {
   let id = baseId;
   let counter = 1;
 
+  // ⚡ Bolt Optimization: Check both local set and DOM to avoid global scan
+  const exists = (candidateId) => {
+    return (
+      usedIds.has(candidateId) || document.getElementById(candidateId) !== null
+    );
+  };
+
   // First try base ID
-  if (!usedIds.has(id)) {
+  if (!exists(id)) {
     return id;
   }
 
   // Try incrementing counter
-  while (usedIds.has(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+  while (exists(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
     id = `${baseId}-${counter}`;
     counter++;
   }
@@ -277,7 +293,8 @@ document.addEventListener("DOMContentLoaded", function () {
       historyList.appendChild(fragment);
     }
   }
-  updateHistorySidebar();
+  // ⚡ Bolt Optimization: Defer history updates to unblock main thread
+  runWhenIdle(updateHistorySidebar);
 
   // Table of Contents
   function generateTableOfContents() {
@@ -396,6 +413,39 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   generateTableOfContents();
 
+  // 🎨 Palette UX: Add Permalink Anchors
+  function initAnchorLinks() {
+    const headings = document.querySelectorAll(
+      ".main-content-area h2, .main-content-area h3",
+    );
+
+    // ⚡ Bolt Optimization: Use empty set and check DOM on demand
+    // Removing the full DOM scan (querySelectorAll("[id]")) improves performance
+    // from O(N_dom_nodes) to O(N_headings)
+    const usedIds = new Set();
+
+    headings.forEach((heading) => {
+      // Skip if already has anchor
+      if (heading.querySelector(".anchor-link")) return;
+
+      // Ensure ID exists
+      if (!heading.id) {
+        heading.id = generateUniqueId(heading.textContent, usedIds);
+        usedIds.add(heading.id);
+      }
+
+      const anchor = document.createElement("a");
+      anchor.className = "anchor-link";
+      anchor.href = `#${heading.id}`;
+      anchor.setAttribute("aria-label", "Link to this section");
+      // Simple Link Icon
+      anchor.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+
+      heading.appendChild(anchor);
+    });
+  }
+  initAnchorLinks();
+
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
     const tocLinks = document.querySelectorAll("#toc-list a");
@@ -414,7 +464,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
-    const visibleSections = new Set();
+
+    // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
+    const sectionIndexMap = new Map();
+    sections.forEach((section, index) => {
+      sectionIndexMap.set(section.id, index);
+    });
+
+    // ⚡ Bolt Optimization: Track visible sections by index rather than ID
+    // This allows finding the "first" visible section using Math.min() (O(k))
+    // instead of iterating through all sections (O(N))
+    const visibleIndices = new Set();
 
     const observerOptions = {
       root: null,
@@ -424,19 +484,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          visibleSections.add(entry.target.id);
-        } else {
-          visibleSections.delete(entry.target.id);
+        const index = sectionIndexMap.get(entry.target.id);
+        if (index !== undefined) {
+          if (entry.isIntersecting) {
+            visibleIndices.add(index);
+          } else {
+            visibleIndices.delete(index);
+          }
         }
       });
 
-      // Find the first visible section in DOM order
+      // ⚡ Bolt Optimization: Find first visible section via index math
       let activeId = null;
-      for (const section of sections) {
-        if (visibleSections.has(section.id)) {
-          activeId = section.id;
-          break;
+      if (visibleIndices.size > 0) {
+        const firstVisibleIndex = Math.min(...visibleIndices);
+        if (firstVisibleIndex >= 0 && firstVisibleIndex < sections.length) {
+          activeId = sections[firstVisibleIndex].id;
         }
       }
 
@@ -446,8 +509,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (newActiveLink && newActiveLink !== currentActiveLink) {
           if (currentActiveLink) {
             currentActiveLink.classList.remove("active");
+            currentActiveLink.removeAttribute("aria-current");
           }
           newActiveLink.classList.add("active");
+          newActiveLink.setAttribute("aria-current", "location");
           currentActiveLink = newActiveLink;
         }
       }
@@ -462,21 +527,24 @@ document.addEventListener("DOMContentLoaded", function () {
   initScrollSpy();
 
   // Lazy load images
+  // ⚡ Bolt Optimization: Use document.images (O(1)) instead of querySelectorAll (O(N))
   if ("loading" in HTMLImageElement.prototype) {
-    document.querySelectorAll("img[src]").forEach((img) => {
-      if (!img.hasAttribute("loading")) {
+    for (const img of document.images) {
+      if (img.src && !img.hasAttribute("loading")) {
         img.setAttribute("loading", "lazy");
       }
-    });
+    }
   }
 
   // Lazy load iframes
   if ("loading" in HTMLIFrameElement.prototype) {
-    document.querySelectorAll("iframe[src]").forEach((iframe) => {
-      if (!iframe.hasAttribute("loading")) {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (Live Collection)
+    const iframes = document.getElementsByTagName("iframe");
+    for (const iframe of iframes) {
+      if (iframe.src && !iframe.hasAttribute("loading")) {
         iframe.setAttribute("loading", "lazy");
       }
-    });
+    }
   }
 
   // Accordion functionality
@@ -509,10 +577,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // Secure external links
+  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
   const currentHostname = window.location.hostname;
-  document.querySelectorAll('a[href^="http"]').forEach((link) => {
+  for (const link of document.links) {
     // ⚡ Bolt Optimization: Use link.hostname instead of new URL() to avoid object creation overhead
-    if (link.hostname && link.hostname !== currentHostname) {
+    if (
+      link.hostname &&
+      link.hostname !== currentHostname &&
+      link.protocol.startsWith("http")
+    ) {
       if (!link.hasAttribute("target")) {
         link.setAttribute("target", "_blank");
       }
@@ -525,7 +598,7 @@ document.addEventListener("DOMContentLoaded", function () {
         link.classList.add("external-link");
       }
     }
-  });
+  }
 
   // Log page load for analytics (optional)
   console.log("AffineDrift loaded successfully");
@@ -566,6 +639,17 @@ document.addEventListener("DOMContentLoaded", function () {
       top: 0,
       behavior: "smooth",
     });
+    // 🎨 Palette UX: Move focus to top for keyboard users
+    document.body.setAttribute("tabindex", "-1");
+    document.body.focus({ preventScroll: true });
+    // Cleanup tabindex after blur to keep DOM clean
+    document.body.addEventListener(
+      "blur",
+      () => {
+        document.body.removeAttribute("tabindex");
+      },
+      { once: true },
+    );
   });
 
   // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame & Cache Geometry
@@ -711,26 +795,93 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
-  initArticleHistory();
+  // ⚡ Bolt Optimization: Defer history updates to unblock main thread
+  runWhenIdle(initArticleHistory);
 
-  // Copy to Clipboard
-  const codeBlocks = document.querySelectorAll("pre");
-  codeBlocks.forEach((pre) => {
-    if (pre.parentNode.classList.contains("code-wrapper")) return;
-    if (!pre.textContent.trim()) return;
+  // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
+  runWhenIdle(() => {
+    // 🎨 Palette UX: Responsive Tables
+    const tables = document.querySelectorAll("#quarto-document-content table");
+    // Use a shared set for unique IDs across all tables
+    const tableUsedIds = new Set();
+    tables.forEach((table) => {
+      // Check for existing wrapper (both class and overflow style)
+      const parent = table.parentElement;
+      if (
+        parent.classList.contains("table-wrapper") ||
+        parent.style.overflowX === "auto" ||
+        window.getComputedStyle(parent).overflowX === "auto"
+      ) {
+        return;
+      }
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "code-wrapper";
-    pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
+      const wrapper = document.createElement("div");
+      wrapper.className = "table-wrapper";
+      wrapper.setAttribute("tabindex", "0");
+      wrapper.setAttribute("role", "region");
 
-    const button = document.createElement("button");
-    button.className = "copy-btn";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", "Copy code to clipboard");
-    button.type = "button";
+      const caption = table.querySelector("caption");
+      if (caption) {
+        if (!caption.id) {
+          caption.id = generateUniqueId(
+            caption.textContent || "table",
+            tableUsedIds,
+          );
+        }
+        tableUsedIds.add(caption.id);
+        wrapper.setAttribute("aria-labelledby", caption.id);
+      } else {
+        wrapper.setAttribute("aria-label", "Table content");
+      }
 
-    button.addEventListener("click", async () => {
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    // Copy to Clipboard
+    const codeBlocks = document.querySelectorAll("pre");
+    codeBlocks.forEach((pre) => {
+      if (pre.parentNode.classList.contains("code-wrapper")) return;
+      if (!pre.textContent.trim()) return;
+
+      // 🎨 Palette UX: Keyboard access for overflow code
+      pre.setAttribute("tabindex", "0");
+      pre.setAttribute("role", "region");
+      pre.setAttribute("aria-label", "Code snippet");
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-wrapper";
+      pre.parentNode.insertBefore(wrapper, pre);
+      wrapper.appendChild(pre);
+
+      const button = document.createElement("button");
+      button.className = "copy-btn";
+      button.textContent = "Copy";
+      button.setAttribute("aria-label", "Copy code to clipboard");
+      button.type = "button";
+      // ⚡ Bolt Optimization: Use data attribute for delegation instead of adding N listeners
+      button.dataset.action = "copy-code";
+
+      wrapper.appendChild(button);
+    });
+
+    // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
+    // Reduces memory usage by removing closures and event listeners per button
+    document.addEventListener("click", async (e) => {
+      const button = e.target.closest('button[data-action="copy-code"]');
+      if (!button) return;
+
+      // Verify it's our copy button (double check class)
+      if (!button.classList.contains("copy-btn")) return;
+
+      // Find associated pre element relative to the button
+      // Structure: .code-wrapper > pre + button
+      const wrapper = button.closest(".code-wrapper");
+      if (!wrapper) return;
+
+      const pre = wrapper.querySelector("pre");
+      if (!pre) return;
+
       try {
         await navigator.clipboard.writeText(pre.innerText || pre.textContent);
         button.textContent = "Copied!";
@@ -747,7 +898,26 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => (button.textContent = "Copy"), 2000);
       }
     });
-    wrapper.appendChild(button);
+
+    // Form Accessibility - Required Field Indicators
+    const requiredInputs = document.querySelectorAll(
+      "input[required], textarea[required], select[required]",
+    );
+    requiredInputs.forEach((input) => {
+      if (input.id) {
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        if (label && !label.querySelector(".required-indicator")) {
+          const indicator = document.createElement("span");
+          indicator.className = "required-indicator";
+          indicator.textContent = " *";
+          indicator.style.color = "var(--accent-blue)";
+          indicator.style.fontWeight = "bold";
+          indicator.setAttribute("aria-hidden", "true");
+          indicator.title = "Required field";
+          label.appendChild(indicator);
+        }
+      }
+    });
   });
 
   // Skip to Content Link
@@ -777,26 +947,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Form Accessibility - Required Field Indicators
-  const requiredInputs = document.querySelectorAll(
-    "input[required], textarea[required], select[required]",
-  );
-  requiredInputs.forEach((input) => {
-    if (input.id) {
-      const label = document.querySelector(`label[for="${input.id}"]`);
-      if (label && !label.querySelector(".required-indicator")) {
-        const indicator = document.createElement("span");
-        indicator.className = "required-indicator";
-        indicator.textContent = " *";
-        indicator.style.color = "var(--accent-blue)";
-        indicator.style.fontWeight = "bold";
-        indicator.setAttribute("aria-hidden", "true");
-        indicator.title = "Required field";
-        label.appendChild(indicator);
-      }
-    }
-  });
-
   // ⚡ Bolt Optimization: Reading Time Estimate
   function initReadingTime() {
     // Only run on article pages in the /articles/ subdirectory
@@ -816,15 +966,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let inWord = false;
     const len = text.length;
     for (let i = 0; i < len; i++) {
-        const c = text.charCodeAt(i);
-        // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
-        // Also Form Feed (12)
-        if (c === 32 || c === 9 || c === 10 || c === 13 || c === 160 || c === 12) {
-            inWord = false;
-        } else {
-            if (!inWord) wordCount++;
-            inWord = true;
-        }
+      const c = text.charCodeAt(i);
+      // Check for whitespace: Space(32), Tab(9), LF(10), CR(13), NBSP(160)
+      // Also Form Feed (12)
+      if (
+        c === 32 ||
+        c === 9 ||
+        c === 10 ||
+        c === 13 ||
+        c === 160 ||
+        c === 12
+      ) {
+        inWord = false;
+      } else {
+        if (!inWord) wordCount++;
+        inWord = true;
+      }
     }
 
     // Average reading speed (words per minute)
@@ -860,9 +1017,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Insert logic: Try to insert after the header if it exists and is visible
     const header = document.getElementById("title-block-header");
-    const headerDisplay = header ? getComputedStyle(header).display : "null";
+    // ⚡ Bolt Optimization: Check offsetParent instead of getComputedStyle to avoid forced layout
+    // offsetParent is null if display: none or parent is hidden
+    const isHeaderVisible = header && header.offsetParent !== null;
 
-    if (header && headerDisplay !== "none") {
+    if (isHeaderVisible) {
       // Check if meta block exists inside header
       const meta = header.querySelector(".quarto-title-meta");
       if (meta) {
@@ -893,8 +1052,25 @@ document.addEventListener("DOMContentLoaded", function () {
     lightbox.setAttribute("aria-modal", "true");
     lightbox.setAttribute("aria-label", "Image zoom"); // 🎨 Palette UX: Accessible name
 
-    // Close on click
-    lightbox.addEventListener("click", () => {
+    // 🎨 Palette UX: Create Close Button
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "lightbox-close";
+    closeBtn.setAttribute("aria-label", "Close zoom");
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+    // Close on click (Background)
+    lightbox.addEventListener("click", (e) => {
+      if (e.target !== lightbox) return;
+      closeLightbox();
+    });
+
+    // Close on click (Button)
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+
+    function closeLightbox() {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
       lightbox.innerHTML = ""; // Clear content
@@ -904,7 +1080,8 @@ document.addEventListener("DOMContentLoaded", function () {
         lastFocusedElement.focus();
         lastFocusedElement = null;
       }
-    });
+    }
+
     document.body.appendChild(lightbox);
 
     contentImages.forEach((img) => {
@@ -946,21 +1123,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
       lightbox.innerHTML = ""; // Clear previous
       lightbox.appendChild(clone);
+      lightbox.appendChild(closeBtn); // 🎨 Palette UX: Add close button
       lightbox.classList.add("active");
       lightbox.setAttribute("aria-hidden", "false");
 
-      // 🎨 Palette UX: Move focus to modal
-      lightbox.focus();
+      // 🎨 Palette UX: Move focus to close button for better keyboard UX
+      closeBtn.focus();
     };
 
     const container = document.getElementById("quarto-document-content");
-    container.addEventListener("click", handleLightboxTrigger);
-    container.addEventListener("keydown", handleLightboxTrigger);
+    if (container) {
+      container.addEventListener("click", handleLightboxTrigger);
+      container.addEventListener("keydown", handleLightboxTrigger);
+    }
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lightbox.classList.contains("active")) {
-        lightbox.click();
+        closeLightbox();
       }
     });
   }
