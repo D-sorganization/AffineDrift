@@ -1,6 +1,11 @@
+import logging
 import re
 import sys
 from pathlib import Path
+
+# Configure logging to replace print statements
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
@@ -45,7 +50,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     root_path = Path(root_dir)
     broken_links: list[tuple[str, int, str]] = []
 
-    print(f"Scanning {root_path}...")
+    logger.info(f"Scanning {root_path}...")
 
     # Skip documentation and guide files that contain example links
     skip_files = {
@@ -75,7 +80,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
         try:
             links = find_links(file_path)
         except Exception as e:
-            print(f"Error reading {file_path}: {e}")
+            logger.error(f"Error reading {file_path}: {e}")
             continue
 
         for link, line_num in links:
@@ -123,9 +128,9 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 if __name__ == "__main__":
     broken = check_links(".")
     if broken:
-        print("\nBroken Links Found:")
+        logger.info("\nBroken Links Found:")
         for file, line, link in broken:
-            print(f"{file}:{line} -> {link}")
+            logger.info(f"{file}:{line} -> {link}")
         sys.exit(1)
     else:
-        print("\nNo broken internal links found.")
+        logger.info("\nNo broken internal links found.")
