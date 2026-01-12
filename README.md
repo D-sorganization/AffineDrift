@@ -1,5 +1,8 @@
 # AffineDrift
 
+[![Quarto Syntax Check](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml/badge.svg)](https://github.com/D-sorganization/AffineDrift/actions/workflows/quarto-syntax-check.yml)
+[![Quarto](https://img.shields.io/badge/built%20with-Quarto-blue.svg)](https://quarto.org/)
+
 **Mathematical Modeling of Golf Swing Dynamics**
 
 AffineDrift is a research-focused website exploring the golf swing through the lens of affine control theory. This platform bridges abstract mathematical concepts with real-world biomechanics, creating a rigorous framework for understanding and optimizing one of sport's most complex movements.
