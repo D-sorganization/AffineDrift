@@ -1074,6 +1074,32 @@ document.addEventListener("DOMContentLoaded", function () {
       closeLightbox();
     });
 
+    // 🎨 Palette UX: Trap focus inside lightbox
+    lightbox.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab") return;
+
+      const focusableSelector =
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const focusableContent = lightbox.querySelectorAll(focusableSelector);
+
+      if (focusableContent.length === 0) return;
+
+      const firstFocusable = focusableContent[0];
+      const lastFocusable = focusableContent[focusableContent.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          lastFocusable.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          firstFocusable.focus();
+          e.preventDefault();
+        }
+      }
+    });
+
     function closeLightbox() {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
