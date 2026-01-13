@@ -1037,10 +1037,14 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
+  // Removed length check to allow dynamic injection and more robust initialization
   const contentImages = document.querySelectorAll(
     "#quarto-document-content img",
   );
-  if (contentImages.length > 0) {
+
+  // Always initialize lightbox container if content area exists
+  const articleContainer = document.getElementById("quarto-document-content");
+  if (articleContainer) {
     let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
 
     const lightbox = document.createElement("div");
@@ -1084,6 +1088,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.appendChild(lightbox);
 
+    // Initial pass for existing images
     contentImages.forEach((img) => {
       // Skip if already inside a link or interactive element
       if (img.closest("a") || img.closest("button")) return;
@@ -1101,7 +1106,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!img) return;
 
       // Verify the image is within our content area (safety check)
-      if (!document.getElementById("quarto-document-content").contains(img))
+      if (!articleContainer.contains(img))
         return;
 
       if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
@@ -1124,6 +1129,18 @@ document.addEventListener("DOMContentLoaded", function () {
       lightbox.innerHTML = ""; // Clear previous
       lightbox.appendChild(clone);
       lightbox.appendChild(closeBtn); // 🎨 Palette UX: Add close button
+
+      // 🎨 Palette UX: Handle Caption
+      const figure = img.closest("figure");
+      if (figure) {
+        const figcaption = figure.querySelector("figcaption");
+        if (figcaption) {
+          const captionClone = figcaption.cloneNode(true);
+          captionClone.className = "lightbox-caption";
+          lightbox.appendChild(captionClone);
+        }
+      }
+
       lightbox.classList.add("active");
       lightbox.setAttribute("aria-hidden", "false");
 
@@ -1131,11 +1148,8 @@ document.addEventListener("DOMContentLoaded", function () {
       closeBtn.focus();
     };
 
-    const container = document.getElementById("quarto-document-content");
-    if (container) {
-      container.addEventListener("click", handleLightboxTrigger);
-      container.addEventListener("keydown", handleLightboxTrigger);
-    }
+    articleContainer.addEventListener("click", handleLightboxTrigger);
+    articleContainer.addEventListener("keydown", handleLightboxTrigger);
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {

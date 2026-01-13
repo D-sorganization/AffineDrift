@@ -659,10 +659,37 @@ nav .container {
 
 .lightbox-img {
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 85vh; /* Reduced slightly to make room for caption */
   box-shadow: 0 5px 30px rgb(0, 0, 0, 0.5);
   border-radius: 4px;
   animation: zoom-in 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Lightbox Caption */
+.lightbox-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: var(--pure-white);
+  padding: 1.5rem 2rem;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.9), transparent);
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  pointer-events: none; /* Let clicks pass through to background for closing */
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.3s ease 0.1s,
+    transform 0.3s ease 0.1s;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 0.5);
+}
+
+.lightbox-overlay.active .lightbox-caption {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Lightbox Close Button */
