@@ -9,3 +9,7 @@
 ## 2025-02-18 - Live Collections vs QuerySelector
 **Learning:** `document.images` and `document.links` provide O(1) access to live HTMLCollections, avoiding the overhead of `querySelectorAll` (O(N) traversal) for global element iteration.
 **Action:** Use native collections for global iterators (images, links, forms) instead of selectors when possible.
+
+## 2025-10-26 - MathJax Lazy Typesetting
+**Learning:** For long technical articles with hundreds of equations, default MathJax typesetting blocks the main thread. The `ui/lazy` extension significantly improves TTI by only typesetting equations in the viewport.
+**Action:** Always enable `ui/lazy` in MathJax v3 configuration for content-heavy pages.
