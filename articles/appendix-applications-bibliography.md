@@ -2,11 +2,11 @@
 
 ## Concept Map
 
-*   **Counterfactual Analysis (ZTCF)**: Isolating passive mechanical contributions by simulating the system with zero active input ($u=0$).
-*   **Inverse Dynamics & Torque Estimation**: Reconstructing input forces ($F_{\text{input}}$) by subtracting calculated passive drift ($F_{\text{drift}}$) from total measured forces.
-*   **Flexible Multibody Dynamics**: Modeling the golf shaft not just as a rigid link but as a source of elastic potential energy and structural drift.
-*   **Passive Dynamics**: The evolution of the system driven solely by inertia, gravity, and stiffness (the "Drift Field").
-*   **Physics-Informed Machine Learning**: Using physical priors (Lagrangian structure, conservation laws) to constrain data-driven models of the swing.
+- **Counterfactual Analysis (ZTCF)**: Isolating passive mechanical contributions by simulating the system with zero active input ($u=0$).
+- **Inverse Dynamics & Torque Estimation**: Reconstructing input forces ($F_{\text{input}}$) by subtracting calculated passive drift ($F_{\text{drift}}$) from total measured forces.
+- **Flexible Multibody Dynamics**: Modeling the golf shaft not just as a rigid link but as a source of elastic potential energy and structural drift.
+- **Passive Dynamics**: The evolution of the system driven solely by inertia, gravity, and stiffness (the "Drift Field").
+- **Physics-Informed Machine Learning**: Using physical priors (Lagrangian structure, conservation laws) to constrain data-driven models of the swing.
 
 ## Bibliography
 
@@ -270,6 +270,7 @@
 ## Reading Paths
 
 ### Path 1: Fast Ramp (Biomechanics Focus)
+
 Essential reading for understanding the application of mechanical principles to the golf swing.
 
 - **Winter (2009)**: The foundational text for biomechanics and inverse dynamics.
@@ -279,6 +280,7 @@ Essential reading for understanding the application of mechanical principles to 
 - **Todorov (2002)**: Bridges the gap between mechanics and the nervous system's control strategy.
 
 ### Path 2: Deep Technical (Dynamics & Control)
+
 Rigorous mathematical and algorithmic foundations for the simulation framework.
 
 - **Featherstone (2008)**: The bible of recursive rigid body algorithms ($O(N)$ formulations).
@@ -288,6 +290,7 @@ Rigorous mathematical and algorithmic foundations for the simulation framework.
 - **Karniadakis (2021)**: Modern techniques for blending physics (ODEs) with neural networks (PINNs).
 
 ### Path 3: Implementation (Simulation & ML)
+
 Tools and methods for building the simulators and data pipelines.
 
 - **Pinocchio Lib**: The core C++/Python library used for high-performance rigid body computations.
