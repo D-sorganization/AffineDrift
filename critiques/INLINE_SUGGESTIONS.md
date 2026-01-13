@@ -6,12 +6,14 @@
 **Section:** The Underactuated Equation of Motion
 
 **Current Text:**
+
 $$
 \dots + G(q_{\text{sys}}) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix} = \begin{bmatrix} \tau \\ 0 \end{bmatrix}.
 $$
 
 **Suggested Improvement:**
 Replace the equation block with:
+
 $$
 \begin{bmatrix} M_{qq} & M_{q\eta} \\ M_{\eta q} & M_{\eta\eta} \end{bmatrix}
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}
@@ -23,6 +25,7 @@ $$
 $$
 
 **Add the following definition immediately after:**
+
 > where $\tau_{\text{pas}}(q, \dot{q})$ represents the passive impedance (stiffness and damping) of the joints/muscles, treated here as part of the drift field $f(x)$. This ensures the Zero Torque Counterfactual ($u=0$) represents a "Frozen Strategy" rather than a flaccid collapse.
 
 ---
@@ -39,6 +42,8 @@ This decomposition allows us to answer: **"Is the club gaining energy because I 
 Add this Callout block immediately after the bolded question:
 
 ::: {.callout-warning}
+
 ## Limitation: Rigid vs Flexible Energy Transfer
-This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**. In the full flexible shaft model (Part I), active torque often does work to deform the shaft (increasing $V_{\text{elastic}}$), effectively "banking" energy that is later released passively. The rigid model here illustrates the *mechanism* of transfer but underestimates the *capacity* for delayed release.
+
+This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**. In the full flexible shaft model (Part I), active torque often does work to deform the shaft (increasing $V_{\text{elastic}}$), effectively "banking" energy that is later released passively. The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release.
 :::
