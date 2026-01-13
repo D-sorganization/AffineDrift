@@ -1,30 +1,27 @@
-# Assessment F Results: Installation & Deployment
+# Assessment F Results: Deployment
 
 ## Executive Summary
 
-*   **Deployment Automation**: Excellent. `deploy.yml` handles GitHub Pages deployment automatically on push to `main`.
-*   **Environment Reproducibility**: Weakness detected. `requirements.txt` exists but lacks version pinning (lockfile), meaning builds could break if dependencies update.
-*   **Local Setup**: Straightforward (`pip install`, `quarto preview`), but relies on user having Python/Quarto installed. No Dockerfile provided for a hermetic environment.
-
-## Scorecard
-
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Automation            | 10/10 | Fully automated GH Pages deploy.                   | Keep it up.                     |
-| Reproducibility       | 5/10  | No `requirements.lock`.                            | Add lockfile.                   |
-| Containerization      | 0/10  | No Dockerfile.                                     | Add DevContainer/Dockerfile.    |
-| Documentation         | 8/10  | Deployment is well-documented in guides.           | N/A                             |
-| **Overall Score**     | **5.8/10** | **Strong Cloud Deploy, Weak Local Repro.**   |                                 |
+*   **GitHub Pages**: Deployment is handled via standard `deploy.yml`, using the `actions/upload-pages-artifact` workflow. This is the gold standard for this stack.
+*   **Build Artifacts**: The site builds to a `docs/` (or `_site/`) directory which is then uploaded.
+*   **Environment consistency**: The workflow installs Python dependencies and sets up the environment before building.
 
 ## Top Risks
 
-1.  **Dependency Drift (Severity: MAJOR)**: Without a lockfile, a new version of `pandas` or `numpy` could break the build or tools unexpectedly.
-2.  **Environment Mismatch (Severity: MEDIUM)**: Developers on different OSs might face issues (Quarto version differences).
+1.  **Build Failures (Severity: LOW)**: If `build-html.py` fails, deployment stops (good).
+2.  **Environment Drift (Severity: LOW)**: As noted in Hygiene, lack of lockfile could cause build to break if a dep updates.
 
-## Remediation
+## Scorecard
 
-**48 Hours**
-1.  **Generate Lockfile**: `pip-compile requirements.txt`.
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Automation           | 10/10 | Fully automated on push to main.          | N/A                             |
+| Reliability          | 9/10  | Standard Actions used.                    | Add Lockfile.                   |
+| Speed                | 9/10  | Fast build (mostly text processing).      | N/A                             |
+| Rollback             | 8/10  | Git revert + push redeploys old version.  | N/A                             |
 
-**2 Weeks**
-1.  **Add DevContainer**: VS Code `.devcontainer` configuration for instant onboarding.
+**Weighted Score: 9.0/10**
+
+## Refactoring Plan
+
+1.  **Lockfile**: Add `requirements.lock` to `deploy.yml` installation step (`pip install -r requirements.lock`) to ensure the build environment is identical to dev.

@@ -1,21 +1,27 @@
-# Assessment N Results: Visualization & Export
+# Assessment N Results: Visualization & Math
 
 ## Executive Summary
 
-*   **Visualization**: The site uses MathJax for equations (currently broken in places) and Streamlit/Matplotlib for dynamic tools.
-*   **Export**: Quarto supports export to PDF/Docx, though this repo seems focused on HTML.
-*   **Quality**: Matplotlib plots in `wrist_universal_joint` are functional but could be styled better to match the web theme.
+*   **Math Rendering**: Uses MathJax via Quarto. Consistency seems high based on `Assessment_A` feedback (though `Assessment_A` noted broken delimiters in `index.qmd`).
+*   **Figures**: Uses standard Markdown images. Lightbox improves usability.
+*   **Interactive Viz**: Some mentions of Simulink/Matlab, but web-based interactive viz (e.g. JS plotting) seems limited or absent.
+
+## Top Risks
+
+1.  **Broken Math Delimiters (Severity: HIGH)**: As noted, `index.qmd` might have `$ ... $` vs `\( ... \)` issues.
+2.  **Mobile Math (Severity: MEDIUM)**: Long equations on mobile need scroll overflow handling (Quarto usually handles this, but needs verification).
 
 ## Scorecard
 
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Web Visualization     | 9/10  | Quarto handles this well.                          | Fix MathJax.                    |
-| Tool Visualization    | 7/10  | Matplotlib is standard.                            | Style consistency.              |
-| Export Capability     | 8/10  | Quarto built-in.                                   | N/A                             |
-| **Overall Score**     | **8.0/10** | **Good Visualization Foundation.**           |                                 |
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Math Typesetting     | 8/10  | Mostly standard, some syntax errors.      | Fix delimiters.                 |
+| Image Quality        | 8/10  | Good use of figures.                      | N/A                             |
+| Interactivity        | 5/10  | Static images mostly.                     | Add Plotly/JS plots.            |
 
-## Remediation
+**Weighted Score: 7.0/10**
 
-1.  **Fix MathJax**: Priority #1.
-2.  **Theme Plots**: Update Matplotlib style in tools to use the site's color palette (`styles.css` colors).
+## Refactoring Plan
+
+1.  **Fix Delimiters**: Run a regex search for `$$` vs `\[` and standardise.
+2.  **Overflow Check**: Add CSS rule `.math-display { overflow-x: auto; }` if not present.

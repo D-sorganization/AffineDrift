@@ -1,21 +1,28 @@
-# Assessment K Results: Reproducibility & Provenance
+# Assessment K Results: Reproducibility
 
 ## Executive Summary
 
-*   **Code Reproducibility**: High. Git history is preserved.
-*   **Environment Reproducibility**: Medium/Low. Lack of lockfile means environment can drift.
-*   **Data Provenance**: `data/` directory exists (`bibliography.yaml`). Source of data is version controlled.
-*   **Scientific Reproducibility**: Physics models in `tools/` are deterministic code.
+*   **Environment Definition**: `requirements.txt` defines Python environment. `package.json` (implied by `pnpm` usage in docs) likely defines Node environment (for linters).
+*   **Determinism**: Without lockfiles, builds are not strictly deterministic over time.
+*   **Documentation**: Instructions for setting up the environment are present but could be more explicit about versions.
+
+## Top Risks
+
+1.  **No Lockfiles (Severity: MEDIUM)**: `requirements.lock` and `pnpm-lock.yaml` (if applicable) should be committed.
+2.  **System Dependencies (Severity: LOW)**: Quarto version is not pinned in `_quarto.yml` or a `.tool-versions` file.
 
 ## Scorecard
 
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Version Control       | 10/10 | Git used effectively.                              | N/A                             |
-| Environment           | 5/10  | No lockfile.                                       | Add `requirements.lock`.        |
-| Data Management       | 8/10  | YAML data files are clean.                         | N/A                             |
-| **Overall Score**     | **7.6/10** | **Good, needs lockfile.**                    |                                 |
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Python Env           | 7/10  | `requirements.txt` exists, no lock.       | Add lockfile.                   |
+| Node Env             | N/A   | Need to check if `package.json` exists.   | Commit lockfile.                |
+| Build Determinism    | 6/10  | Vulnerable to dep updates.                | Pin versions.                   |
+| Quarto Versioning    | 5/10  | Version not enforced in config.           | Add `project: quarto-version`.  |
 
-## Remediation
+**Weighted Score: 6.0/10**
 
-1.  **Add Lockfile**: (Repeated recommendation).
+## Refactoring Plan
+
+1.  **Pin Quarto**: Add `project: { quarto-version: "..." }` to `_quarto.yml`.
+2.  **Generate Locks**: Ensure all package managers use lockfiles.
