@@ -1,22 +1,28 @@
-# Assessment I Results: Security & Input Validation
+# Assessment I Results: Security
 
 ## Executive Summary
 
-*   **Low Attack Surface**: As a static website and local toolset, the attack surface is minimal.
-*   **No Secrets**: Audit found no API keys or secrets in the codebase.
-*   **Input Validation**: Tools accept local files. `latex_to_html.py` parses file paths. Potential for Path Traversal if exposed as a service, but low risk for local CLI.
-*   **Dependency Security**: No `pip-audit` in CI. Dependencies are unpinned (no lockfile), allowing potential supply chain attacks via typosquatting (low prob).
+*   **Static Site Profile**: As a static site, the attack surface is minimal (no backend DB, no user auth).
+*   **Dependency Risks**: The primary risk is compromised dependencies in the build chain or frontend assets.
+*   **Secrets**: No secrets found in repo.
+
+## Top Risks
+
+1.  **Supply Chain (Severity: LOW)**: Unpinned dependencies in `requirements.txt`.
+2.  **XSS (Severity: LOW)**: `script.js` manipulates DOM. If content source (`.qmd`) is compromised or allows raw HTML injection (via PRs), XSS is possible. But contributors are trusted.
 
 ## Scorecard
 
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Secrets Management    | 10/10 | Clean repo.                                        | Maintain hooks.                 |
-| Dependency Security   | 5/10  | No lockfile, no audit.                             | Add `pip-audit`, lockfile.      |
-| Input Validation      | 7/10  | Acceptable for local tools.                        | N/A                             |
-| **Overall Score**     | **7.3/10** | **Secure by Simplicity.**                    |                                 |
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Secrets Management   | 10/10 | None found.                               | N/A                             |
+| Dep Vulnerabilities  | 8/10  | No lockfile to audit easily.              | Add lockfile + Dependabot.      |
+| Input Validation     | 9/10  | Static content.                           | N/A                             |
+| HTTPS/Headers        | 9/10  | GitHub Pages enforces HTTPS.              | N/A                             |
 
-## Remediation
+**Weighted Score: 9.0/10**
 
-**48 Hours**
-1.  **Add `pip-audit`**: Add to CI pipeline to check for vulnerabilities in `requirements.txt`.
+## Refactoring Plan
+
+1.  **Dependabot**: Enable Dependabot for `pip` and `npm` (if `package.json` exists for dev tools) to catch vulnerabilities.
+2.  **CSP**: Consider adding a Content Security Policy meta tag to `_quarto.yml` or the HTML template to restrict script sources.

@@ -1,20 +1,26 @@
-# Assessment J Results: Extensibility & Plugin Architecture
+# Assessment J Results: Extensibility
 
 ## Executive Summary
 
-*   **Monolithic Scripts**: Tools are written as standalone scripts. Extending them (e.g., adding a new format to `latex_to_html.py`) requires modifying source code.
-*   **Quarto Extensibility**: Quarto itself is extensible via filters/extensions, but this repo uses standard Quarto features.
-*   **No Plugin System**: The "Tools Repository" prompt implies a plugin system for the Launcher, which does not exist.
+*   **Content Extensibility**: Adding new articles is relatively easy (add `.qmd`), but requires manual registration in the build script.
+*   **Code Extensibility**: `tools/` scripts are largely standalone. Adding a new check or tool is easy but cluttering.
+*   **Theme Extensibility**: CSS/JS are separate from content, allowing easy theming changes.
+
+## Top Risks
+
+1.  **Manual Registration (Severity: MEDIUM)**: New articles must be added to `build-html.py` list. This is an anti-pattern for extensibility.
+2.  **Flat Tools Directory (Severity: LOW)**: As `tools/` grows, it becomes harder to find reusable components.
 
 ## Scorecard
 
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Modularity            | 4/10  | Scripts are monolithic.                            | Refactor into classes.          |
-| Plugin API            | 0/10  | None.                                              | N/A (Maybe overkill).           |
-| Configuration         | 6/10  | `_quarto.yml` handles site config well.            | N/A                             |
-| **Overall Score**     | **3.3/10** | **Not designed for extensibility.**          |                                 |
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Content Scaling      | 7/10  | Manual steps required to add pages.       | Automate page discovery.        |
+| Code Modularity      | 6/10  | Tools are scripts, not libraries.         | Refactor to package.            |
+| Config Flexibility   | 8/10  | `_quarto.yml` handles most config.        | N/A                             |
 
-## Remediation
+**Weighted Score: 7.0/10**
 
-*   **Refactor Tools**: Break large scripts (`latex_to_html.py`) into modules (Parser, Converter, Writer) to allow easier extension.
+## Refactoring Plan
+
+1.  **Automate Discovery**: Modify `build-html.py` to scan for `.qmd` files recursively in `articles/` (or specified dirs) so new content is auto-detected.

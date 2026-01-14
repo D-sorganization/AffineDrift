@@ -2,44 +2,40 @@
 
 ## Executive Summary
 
-*   **Context Alignment**: The repository correctly follows the "Static GitHub Pages + Quarto" model required for `AffineDrift.com`. This is a research website, not a "Tools Launcher" app (correcting previous assessment errors).
-*   **Architecture Soundness**: The separation of `docs/` (web root), `articles/` (content source), and `tools/` (maintenance scripts) is logical and maintainable.
-*   **Quarto Integration**: `_quarto.yml` is correctly configured for a custom website with specialized navigation and theming.
-*   **Implementation Status**: The core website infrastructure is fully functional, with advanced features like "History Sidebar" and "ScrollSpy" implemented in vanilla JS.
-*   **Tooling Organization**: While the website architecture is solid, the `tools/` directory contains a mix of "maintenance scripts" (e.g., `check_links.py`) and "scientific models" (e.g., `wrist_universal_joint/`) without clear delineation.
+The repository follows a standard "Static GitHub Pages + Quarto" architecture, which is appropriate for its research-heavy content. The separation of `docs/` (web root), `articles/` (content source), and `tools/` (maintenance) is logical. However, the `tools/` directory is cluttered, mixing scientific models (`wrist_universal_joint`) with site maintenance scripts (`check_site_health.py`). The build system relies on a custom `build-html.py` script with hardcoded file lists, which creates a maintenance bottleneck.
 
 ## Top 10 Risks
 
-1.  **Tools/Content Mixing (Severity: MEDIUM)**: `tools/` is a flat list mixing CI scripts and scientific modeling code, making it harder to onboard new devs.
-2.  **Legacy Artifacts (Severity: LOW)**: `archive/` folders exist but are correctly excluded from build.
-3.  **Config Complexity (Severity: MEDIUM)**: `_quarto.yml` is quite large; splitting it might help if Quarto supported it (it does partially).
-4.  **No "Modules" Directory (Severity: LOW)**: As per the template, a `modules/` or `components/` directory for shared Quarto snippets is missing; `articles/` does heavy lifting.
-5.  **Hardcoded Paths (Severity: MEDIUM)**: `build-html.py` has a hardcoded list of QMD files, requiring manual updates for new pages.
-6.  **CSS/JS Separation (Severity: LOW)**: `styles.css` and `script.js` are in `docs/` but also copied or managed via Quarto. The source of truth is slightly ambiguous (Edit source in root? Or `docs/`?).
-7.  **Data Management (Severity: LOW)**: `data/` exists but usage isn't fully documented in `README`.
-8.  **Template Divergence (Severity: LOW)**: The custom `docs/articles.html` template means global navigation changes require manual patching, not just YAML updates.
-9.  **Python Version Pinning (Severity: LOW)**: CI uses specific Python versions, but `runtime.txt` or `.python-version` is missing for local dev (e.g. `pyenv`).
-10. **Bus Factor (Severity: MEDIUM)**: The custom `build-html.py` logic is non-standard Quarto usage (extracting HTML bodies).
+1.  **Tools Directory Cohesion (Severity: MEDIUM)**: `tools/` contains both scientific code and infrastructure scripts, complicating dependency management and onboarding.
+2.  **Hardcoded Build Paths (Severity: MEDIUM)**: `build-html.py` requires manual updates to the file list for every new article, risking omitted pages.
+3.  **Template Divergence (Severity: LOW)**: `docs/articles.html` acts as a master template but is disconnected from the Quarto build pipeline, requiring manual synchronization.
+4.  **Config Complexity (Severity: LOW)**: `_quarto.yml` is large and monolithic, making it difficult to manage navigation changes.
+5.  **Environment Fragility (Severity: MEDIUM)**: Local environment setup (e.g., `numpy` installation) has proven inconsistent, causing test failures.
+6.  **Legacy Artifacts (Severity: LOW)**: `archive/` directories are present; while excluded from build, they clutter the file tree.
+7.  **Data Documentation (Severity: LOW)**: The `data/` directory lacks a clear schema or documentation in `README.md`.
+8.  **CSS Source Truth (Severity: LOW)**: Styles are present in both `styles.css` and `docs/styles.css`, leading to potential version skew.
+9.  **Missing Component Library (Severity: LOW)**: No dedicated directory for reusable Quarto components or partials.
+10. **Bus Factor (Custom Build) (Severity: MEDIUM)**: The custom logic in `build-html.py` for extracting HTML bodies is non-standard and requires specific knowledge to maintain.
 
 ## Scorecard
 
 | Category                    | Score | Evidence                                                                 | Remediation                               |
 | --------------------------- | ----- | ------------------------------------------------------------------------ | ----------------------------------------- |
 | Static Site Architecture    | 9/10  | Standard Quarto + GitHub Pages structure.                                | N/A                                       |
-| Directory Organization      | 8/10  | Clear split of content vs. build artifacts.                              | Group `tools/` into subfolders.           |
-| Scalability                 | 7/10  | Hardcoded file lists in build scripts limit scalability.                 | Make `build-html.py` scan directories.    |
-| Extensibility               | 8/10  | Easy to add new QMD files (if added to build script).                    | Automate file discovery.                  |
-| Infrastructure as Code      | 9/10  | `_quarto.yml` and workflows define the site.                             | N/A                                       |
-| Tech Stack Appropriateness  | 10/10 | Quarto is ideal for this math-heavy content.                             | N/A                                       |
+| Directory Organization      | 7/10  | `tools/` is mixed; `articles/` is flat.                                  | Reorganize `tools/` by function.          |
+| Scalability                 | 6/10  | Hardcoded lists in build scripts limit scalability.                      | Implement glob-based file discovery.      |
+| Extensibility               | 8/10  | Easy to add QMD content if build script is updated.                      | Automate build updates.                   |
+| Infrastructure as Code      | 9/10  | `_quarto.yml` and workflows define the site well.                        | N/A                                       |
+| Tech Stack Appropriateness  | 10/10 | Quarto is ideal for mathematical/scientific content.                     | N/A                                       |
 
-**Weighted Score: 8.5/10**
+**Weighted Score: 8.2/10**
 
 ## Refactoring Plan
 
 **Quick Wins**
-1.  **Group Tools**: Move `check_*.py` into `tools/maintenance/` and `convert_*.py` into `tools/migration/`.
-2.  **Document Build Process**: Clarify in `README` that `build-html.py` needs manual updates for new root files.
+1.  **Clean `tools/`**: Move site maintenance scripts to `tools/maintenance/` or `scripts/` (if appropriate).
+2.  **Document Build**: Add a "How to Add a New Article" section to `README.md` explicitly mentioning `build-html.py`.
 
 **Strategic Fixes**
-1.  **Automate Build Discovery**: Rewrite `build-html.py` to glob `*.qmd` files instead of using a hardcoded list.
-2.  **Standardize Tooling**: Convert `tools/` into a proper Python package or distinct folders to separate "Site Infra" from "Science Models".
+1.  **Automate Build Discovery**: Rewrite `build-html.py` to dynamically find `.qmd` files in `articles/`.
+2.  **Unify Templates**: Investigate using Quarto's native `template` functionality to replace the `docs/articles.html` workaround.

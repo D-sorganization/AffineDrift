@@ -1,27 +1,31 @@
-# Assessment F Results: Deployment
+# Assessment F Results: Installation & Deployment
 
 ## Executive Summary
 
-*   **GitHub Pages**: Deployment is handled via standard `deploy.yml`, using the `actions/upload-pages-artifact` workflow. This is the gold standard for this stack.
-*   **Build Artifacts**: The site builds to a `docs/` (or `_site/`) directory which is then uploaded.
-*   **Environment consistency**: The workflow installs Python dependencies and sets up the environment before building.
+Deployment is handled via GitHub Actions (`deploy-website.yml`), which is standard and reliable. Installation logic relies on `requirements.txt` and `package.json`. The recent failure to run tests locally due to missing `numpy` suggests that the installation instructions or dependency files might need a refresh or strict version pinning is interfering with local environments.
 
 ## Top Risks
 
-1.  **Build Failures (Severity: LOW)**: If `build-html.py` fails, deployment stops (good).
-2.  **Environment Drift (Severity: LOW)**: As noted in Hygiene, lack of lockfile could cause build to break if a dep updates.
+1.  **Dependency Definition (Severity: HIGH)**: `numpy` is needed for tests but was not present in the environment despite `requirements.txt`.
+2.  **CI/Local Parity (Severity: MEDIUM)**: CI installs dependencies successfully, but local replication failed.
+3.  **Version Pinning (Severity: MEDIUM)**: `requirements.txt` has loose pinning (`>=`) which is good for libraries but risky for applications (reproducibility).
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Automation           | 10/10 | Fully automated on push to main.          | N/A                             |
-| Reliability          | 9/10  | Standard Actions used.                    | Add Lockfile.                   |
-| Speed                | 9/10  | Fast build (mostly text processing).      | N/A                             |
-| Rollback             | 8/10  | Git revert + push redeploys old version.  | N/A                             |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Install Reliability    | 6/10  | Local install failed to provide `numpy`.           | specific `pip install` check.             |
+| CI/CD Pipeline         | 10/10 | GitHub Actions are comprehensive.                  | N/A                                       |
+| Deployment Automation  | 10/10 | Fully automated on push to main.                   | N/A                                       |
+| Environment Definition | 8/10  | `requirements.txt` and `package.json` present.     | Lock files (poetry.lock) recommended.     |
 
-**Weighted Score: 9.0/10**
+**Weighted Score: 8.5/10**
 
 ## Refactoring Plan
 
-1.  **Lockfile**: Add `requirements.lock` to `deploy.yml` installation step (`pip install -r requirements.lock`) to ensure the build environment is identical to dev.
+**Quick Wins**
+1.  **Verify Requirements**: Ensure `requirements.txt` is complete and formatted correctly (remove large gaps).
+2.  **Add Setup Script**: A simple `setup.sh` that runs `pip install -r requirements.txt && npm install` would help.
+
+**Strategic Fixes**
+1.  **Dependency Locking**: Switch to `uv` or `poetry` to generate a lock file, ensuring CI and local environments are identical.

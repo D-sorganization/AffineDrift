@@ -1,26 +1,23 @@
-# Assessment M Results: Educational & Content
+# Assessment M Results: Educational Resources
 
 ## Executive Summary
 
-*   **Pedagogy**: The content follows a clear "Part 1, Part 2..." structure, which is excellent for learning.
-*   **Clarity**: Articles use standard scientific structure (Abstract, Intro, Theory).
-*   **Navigation**: "Start Here" or clear linear path is implied by "Part X" naming.
+The content itself is educational (research articles). The repo structure supports this well. However, for a *developer* learning the codebase, the resources are split.
 
 ## Top Risks
 
-1.  **Prerequisites (Severity: LOW)**: Are prerequisites (Linear Algebra, Control Theory) clearly stated on the home page?
-2.  **Learning Objectives (Severity: LOW)**: Explicit learning objectives per article would enhance the educational value.
+1.  **Developer Docs Split**: `README`, `GUIDE`, `DEPLOYMENT` are scattered.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Curriculum Design    | 9/10  | Logical progression.                      | N/A                             |
-| Content Clarity      | 8/10  | High quality scientific writing.          | Add "Learning Objectives".      |
-| Resource Quality     | 9/10  | Good bibliography integration.            | N/A                             |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Content Quality        | 10/10 | High quality research.                             | N/A                                       |
+| Dev Education          | 7/10  | Scattered docs.                                    | Consolidate.                              |
 
-**Weighted Score: 8.6/10**
+**Weighted Score: 8.5/10**
 
 ## Refactoring Plan
 
-1.  **Learning Objectives**: Add a "Goal of this section" callout at the top of each Theory Part.
+**Quick Wins**
+1.  **Centralize Docs**: Create a `docs/dev/` folder in the repo (not website) to house `DEPLOYMENT.md`, `ARCHITECTURE.md`.

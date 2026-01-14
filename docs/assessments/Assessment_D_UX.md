@@ -1,33 +1,32 @@
-# Assessment D Results: UX (Frontend, Mobile, Accessibility)
+# Assessment D Results: User Experience & Developer Journey
 
 ## Executive Summary
 
-*   **Frontend Architecture**: Simple, robust Vanilla JS (`script.js`) and CSS (`styles.css`). No heavy frameworks (React/Vue) which is appropriate for a content-heavy site.
-*   **Accessibility (A11y)**: Strong focus on A11y. Features like "Skip to Content", "Required Field Indicators", and "Screen Reader Only" text are present.
-*   **Mobile Experience**: Responsive design via CSS Grid/Flexbox. Navigation collapses (Sidebar) but detailed testing on actual devices is needed to confirm touch targets.
-*   **UX Enhancements**: "Reading Time", "Copy to Clipboard", "ScrollSpy", and "Lightbox" enhance the reader experience significantly.
+For the end-user (reader), the Quarto site offers a high-quality experience with navigation, search, and responsive design. For the developer, the onboarding process is decent but hindered by the "hardcoded list" issue in building and potential environment setup friction (missing dependencies). The presence of "Agent" templates helps AI-assisted workflows but might confuse human contributors.
 
 ## Top Risks
 
-1.  **Mobile Navigation (Severity: MEDIUM)**: Sidebars might be hard to access on mobile if not properly collapsed into a hamburger menu (needs verification).
-2.  **Color Contrast (Severity: LOW)**: `var(--accent-blue)` and text colors need verification against WCAG AA standards.
-3.  **Motion Sensitivity (Severity: LOW)**: Smooth scrolling is enabled; ensuring `prefers-reduced-motion` is respected is a best practice.
-4.  **Focus Management (Severity: LOW)**: Custom interactions (Lightbox) manage focus manually, which is good, but needs to be robust against edge cases.
+1.  **Onboarding Friction (Severity: MEDIUM)**: `pytest` failure on fresh checkout indicates setup instructions might be incomplete regarding scientific dependencies.
+2.  **Navigation Maintenance (Severity: LOW)**: Manually updating `_quarto.yml` for every new page is tedious and error-prone.
+3.  **Search Experience (Severity: LOW)**: Quarto's default search is good, but ensuring it indexes all dynamically generated pages is key.
+4.  **Agent Overload (Severity: LOW)**: The repo is heavily optimized for AI agents (`AGENTS.md`, `agent_templates/`), which is unique but requires human developers to understand this workflow.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Visual Hierarchy     | 9/10  | Clean typography, clear headings.         | N/A                             |
-| Navigation           | 8/10  | TOC, Sidebars present.                    | Verify Mobile Nav.              |
-| Accessibility        | 9/10  | ARIA labels, focus management present.    | Audit Contrast.                 |
-| Mobile Responsiveness| 8/10  | CSS Grid used, needs device testing.      | Test on small screens.          |
-| Interactive Elements | 9/10  | Lightbox, Copy buttons work well.         | N/A                             |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| End-User UX            | 9/10  | Site is polished, responsive, and readable.        | N/A                                       |
+| Developer Onboarding   | 7/10  | Environment setup has gaps (`numpy`).              | Fix `requirements.txt` / setup scripts.   |
+| Navigation Logic       | 8/10  | Clear sidebars, but config is manual.              | Automate nav generation if possible.      |
+| Contribution Flow      | 8/10  | Clear for content; harder for infra.               | Simplify `build-html.py`.                 |
 
-**Weighted Score: 8.6/10**
+**Weighted Score: 8/10**
 
 ## Refactoring Plan
 
-1.  **Contrast Audit**: Use a tool to check all CSS color variables.
-2.  **Mobile Menu Verification**: Ensure the sidebars are accessible or collapsible on mobile viewports (<768px).
-3.  **Reduced Motion**: Add `@media (prefers-reduced-motion: reduce)` media query to disable smooth scrolling in `script.js` and CSS.
+**Quick Wins**
+1.  **Verify Setup**: Add a `make setup` or `python scripts/setup.py` to ensure all deps are installed correctly.
+2.  **Update README**: Add a "Human Developer" section if the current docs are too Agent-centric.
+
+**Strategic Fixes**
+1.  **Dev Container**: Add a `.devcontainer` configuration to standardize the environment completely, solving the `numpy` issue for good.

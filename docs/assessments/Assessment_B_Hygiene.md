@@ -1,45 +1,35 @@
-# Assessment B Results: Hygiene, Security & Quality
+# Assessment B Results: Code Quality & Hygiene
 
 ## Executive Summary
 
-*   **Exceptional Linting Status**: The repository strictly enforces `ruff`, `black`, and `mypy` via CI/CD, resulting in a very clean codebase.
-*   **AGENTS.md Violation**: The `AGENTS.md` explicitly forbids `print()` in favor of logging, yet `tools/*.py` scripts use `print()` extensively for CLI output.
-*   **Security Posture**: No secrets were found in a scan. Dependencies are managed via `requirements.txt` but lack a lockfile.
-*   **Code Quality**: Python code is well-typed (Mypy strict). JavaScript lacks a linter in the CI pipeline (only `node -c` syntax check).
-*   **HTML/CSS Validation**: `stylelint` and `html-validate` are configured, which is excellent for a static site.
+The repository maintains a high standard of Python code quality, enforced by a strict CI pipeline including `ruff`, `black`, and `mypy`. Linting checks pass cleanly on the codebase. However, there are gaps in the test execution environment (missing `numpy` locally) which prevents verification of test passing state. The presence of `TODO` placeholders is actively monitored and blocked by CI.
 
-## Top 10 Hygiene Risks
+## Top Risks
 
-1.  **Logging Violation (Severity: MEDIUM)**: `tools/` scripts use `print()` which violates `AGENTS.md`. This reduces observability in CI logs.
-2.  **Missing Lockfile (Severity: MEDIUM)**: `requirements.txt` uses range pins (e.g. `>=`), allowing transitive dependency drift.
-3.  **Missing JS Linting (Severity: LOW)**: `script.js` is verified only for syntax, not style/best practices (e.g. `eslint`).
-4.  **Complex Regex (Severity: LOW)**: `clean_latex_comments.py` and others use complex regex without abundant comments.
-5.  **Hardcoded Paths (Severity: LOW)**: Verification scripts often assume execution from repo root (documented, but fragile).
-6.  **Orphaned Scripts (Severity: LOW)**: Some scripts in `tools/` (like `latex_to_quarto.py`) seem to be one-off migration scripts that should be archived.
-7.  **Docstring Coverage (Severity: LOW)**: While typed, not all tool functions have descriptive docstrings.
-8.  **TODOs (Severity: NIT)**: A few `TODO` comments exist, but policy usually discourages them.
-9.  **File Permissions (Severity: NIT)**: Scripts in `tools/` are not executable (`chmod +x`) requiring `python tools/...`.
-10. **Magic Numbers (Severity: NIT)**: Timeout values in verification scripts are hardcoded.
+1.  **Environment Mismatch (Severity: HIGH)**: `requirements.txt` specifies `numpy`, but the test environment failed to load it, suggesting incomplete installation or path issues.
+2.  **Test Failures (Severity: HIGH)**: `pytest` collection failed due to missing dependencies, masking potential logic errors.
+3.  **Strict Type Checking Overhead (Severity: LOW)**: `mypy` is configured with `ignore-missing-imports`, which is pragmatic but might hide interface bugs with external libraries.
+4.  **Mixed Code Standards (Severity: LOW)**: Scientific code in `tools/wrist_universal_joint` may adhere to different standards than the infrastructure scripts in root.
+5.  **JS/CSS Linting (Severity: MEDIUM)**: While Python is well-linted, `script.js` and `styles.css` lack equivalent rigorous enforcement in the visible workflows (though `website-lint` job exists, it allows failure).
 
 ## Scorecard
 
-| Category                | Score | Evidence                                    | Remediation                     |
-| ----------------------- | ----- | ------------------------------------------- | ------------------------------- |
-| Python Linting          | 10/10 | Ruff/Black/Mypy enforced and passing.       | N/A                             |
-| JS/CSS Linting          | 7/10  | Stylelint/HTML-validate yes, ESLint no.     | Add ESLint.                     |
-| Security                | 9/10  | No secrets, static site.                    | Add `requirements.lock`.        |
-| Standard Adherence      | 8/10  | Fails `AGENTS.md` print rule.               | Switch to `logging`.            |
-| Code Organization       | 8/10  | Flat `tools/` folder is messy.              | Group scripts.                  |
-| Dependency Management   | 7/10  | `requirements.txt` without lock.            | Use `pip-tools` or `uv`.        |
+| Category              | Score | Evidence                                                | Remediation                               |
+| --------------------- | ----- | ------------------------------------------------------- | ----------------------------------------- |
+| Python Linting        | 10/10 | `ruff` and `black` are strictly enforced and passing.   | N/A                                       |
+| Type Safety           | 9/10  | `mypy` is in place; `ignore-missing-imports` is used.   | Gradual typing of external libs.          |
+| Dependency Hygiene    | 8/10  | `requirements.txt` exists but installation failed.      | Validate env setup in CI/local.           |
+| JS/CSS Hygiene        | 7/10  | `npm run lint` exists but `continue-on-error: true`.    | Enforce frontend linting.                 |
+| Comment Quality       | 8/10  | Docstrings are generally present (checked `tools/`).    | Audit scientific code for detail.         |
+| Formatting Consistency| 10/10 | `black` ensures uniform python style.                   | N/A                                       |
 
-**Weighted Score: 8.2/10**
+**Weighted Score: 8.7/10**
 
 ## Refactoring Plan
 
 **Quick Wins**
-1.  **Enforce Logging**: Convert `print()` to `logging.info()` in `tools/check_links.py` and `tools/check_site_health.py` as they are frequently used.
-2.  **Archive Migration Scripts**: Move `convert_*.py` and `latex_to_*.py` to `tools/archive/` or `legacy/` if they are no longer actively used for new content.
+1.  **Fix Test Environment**: Ensure `numpy` and other scientific deps are installed before running tests in CI/local.
+2.  **Enforce Frontend Linting**: Remove `continue-on-error` from `website-lint` job in CI once baseline is clean.
 
 **Strategic Fixes**
-1.  **Add ESLint**: Configure `eslint` for `docs/script.js` to catch potential browser compatibility issues or logic errors.
-2.  **Generate Lockfile**: Adopt `pip-tools` to generate `requirements.lock` for reproducible CI builds.
+1.  **Unified Dev Environment**: Create a `dev-requirements.txt` or use `poetry`/`uv` to ensure consistent development environments across all contributors.
