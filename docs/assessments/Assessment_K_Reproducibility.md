@@ -1,28 +1,29 @@
-# Assessment K Results: Reproducibility
+# Assessment K Results: Reproducibility & Provenance
 
 ## Executive Summary
 
-*   **Environment Definition**: `requirements.txt` defines Python environment. `package.json` (implied by `pnpm` usage in docs) likely defines Node environment (for linters).
-*   **Determinism**: Without lockfiles, builds are not strictly deterministic over time.
-*   **Documentation**: Instructions for setting up the environment are present but could be more explicit about versions.
+Reproducibility is hindered by the `requirements.txt` issues (`numpy` failure). While the code *exists* to reproduce the site, the *environment* is not perfectly specified. The scientific models in `tools/` should ideally have their own `requirements.txt` or environment definition to ensure results (e.g., wrist simulation) are reproducible.
 
 ## Top Risks
 
-1.  **No Lockfiles (Severity: MEDIUM)**: `requirements.lock` and `pnpm-lock.yaml` (if applicable) should be committed.
-2.  **System Dependencies (Severity: LOW)**: Quarto version is not pinned in `_quarto.yml` or a `.tool-versions` file.
+1.  **Environment Ambiguity (Severity: HIGH)**: `requirements.txt` seems insufficient for the test suite in a fresh environment.
+2.  **Scientific Reproducibility (Severity: MEDIUM)**: Models in `tools/` need strict versioning of `numpy`/`scipy` to guarantee numerical identicality.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Python Env           | 7/10  | `requirements.txt` exists, no lock.       | Add lockfile.                   |
-| Node Env             | N/A   | Need to check if `package.json` exists.   | Commit lockfile.                |
-| Build Determinism    | 6/10  | Vulnerable to dep updates.                | Pin versions.                   |
-| Quarto Versioning    | 5/10  | Version not enforced in config.           | Add `project: quarto-version`.  |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Build Reproducibility  | 8/10  | CI builds consistently.                            | N/A                                       |
+| Local Reproducibility  | 6/10  | Local setup failed.                                | Fix requirements.                         |
+| Scientific Provenance  | 7/10  | Code available, but env specs loose.               | Pin versions exactly.                     |
 
-**Weighted Score: 6.0/10**
+**Weighted Score: 7/10**
 
 ## Refactoring Plan
 
-1.  **Pin Quarto**: Add `project: { quarto-version: "..." }` to `_quarto.yml`.
-2.  **Generate Locks**: Ensure all package managers use lockfiles.
+**Quick Wins**
+1.  **Fix Requirements**: Add missing deps.
+2.  **Version Info**: Add a step in the build to log `pip freeze` to artifacts for debugging.
+
+**Strategic Fixes**
+1.  **Docker**: Provide a `Dockerfile` that builds the exact environment, guaranteeing reproducibility forever.

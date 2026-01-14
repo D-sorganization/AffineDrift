@@ -1,29 +1,29 @@
-# Assessment G Results: Testing & Validation
+# Assessment G Results: Testing
 
 ## Executive Summary
 
-*   **Test Coverage is Minimal**: The `tests/` directory contains only ~5 files (`test_wrist_simulator.py`, etc.). Major components (Quarto rendering, Navigation logic, Link integrity) rely on ad-hoc scripts rather than a robust test suite.
-*   **No Visual Regression**: There is no automated check to ensure CSS changes don't break layout (crucial for a website).
-*   **Tool Testing**: `wrist_universal_joint` has a test file (`tests/test_wrist_simulator.py`), which is a good start.
-*   **CI Integration**: Tests run in CI (`ci-standard.yml`), which is good.
-
-## Scorecard
-
-| Category              | Score | Evidence                                           | Remediation                     |
-| --------------------- | ----- | -------------------------------------------------- | ------------------------------- |
-| Unit Testing          | 3/10  | Very few tests.                                    | Expand coverage.                |
-| Integration Testing   | 2/10  | Mostly missing.                                    | Test build pipeline locally.    |
-| Visual Regression     | 0/10  | Non-existent.                                      | Add Playwright/Percy.           |
-| CI Execution          | 10/10 | Tests run on every commit.                         | Keep it up.                     |
-| **Overall Score**     | **3.8/10** | **Significantly Under-tested.**              |                                 |
+*   **Verification Scripts**: A dedicated `verification/` folder exists with scripts like `verify_focus.py`, `verify_images.py`. This is excellent for a static site.
+*   **Unit Tests**: `tests/` folder exists, likely for the Python tools. Coverage is unknown but presence is positive.
+*   **E2E Testing**: Playwright is used in verification, which is advanced for this type of project.
 
 ## Top Risks
 
-1.  **Regression Risk (Severity: HIGH)**: Changes to `styles.css` or `build-html.py` could break the site without detection until manual review.
-2.  **Logic Errors (Severity: MEDIUM)**: Physics calculations in tools are only lightly tested.
+1.  **Test Coverage (Severity: MEDIUM)**: It's unclear if *all* tools have tests. `tests/` seems small compared to `tools/`.
+2.  **Frontend Logic Testing (Severity: MEDIUM)**: `script.js` logic (reading time, scrollspy) is likely manually verified or covered by E2E, but no unit tests (Jest/Vitest).
+3.  **Visual Regression (Severity: LOW)**: No automated visual comparison (e.g. Percy/Happo) to catch layout shifts.
 
-## Remediation
+## Scorecard
 
-**2 Weeks**
-1.  **Add Playwright**: Setup a simple test to screenshot the homepage and critical articles.
-2.  **Expand Unit Tests**: Target `tools/matlab_utilities` and `tools/maintenance` scripts.
+| Category             | Score | Evidence                                  | Remediation                     |
+| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
+| Python Unit Tests    | 7/10  | Exists, strict typing helps.              | Expand coverage.                |
+| Frontend Tests       | 4/10  | No unit tests for JS.                     | Add Vitest.                     |
+| E2E/Integration      | 8/10  | Playwright scripts present.               | Run in CI.                      |
+| Link Checking        | 9/10  | `check_links.py` exists.                  | N/A                             |
+
+**Weighted Score: 7.0/10**
+
+## Refactoring Plan
+
+1.  **JS Testing**: Add a simple test runner (e.g. `node --test` or `vitest`) for `script.js` functions like `initReadingTime`.
+2.  **CI Integration**: Ensure `verification/` scripts run in the CI pipeline (currently they might only run locally).

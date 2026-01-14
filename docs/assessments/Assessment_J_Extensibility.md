@@ -1,26 +1,28 @@
-# Assessment J Results: Extensibility
+# Assessment J Results: Extensibility & Plugin Architecture
 
 ## Executive Summary
 
-*   **Content Extensibility**: Adding new articles is relatively easy (add `.qmd`), but requires manual registration in the build script.
-*   **Code Extensibility**: `tools/` scripts are largely standalone. Adding a new check or tool is easy but cluttering.
-*   **Theme Extensibility**: CSS/JS are separate from content, allowing easy theming changes.
+The project is extensible in terms of content (adding articles) but rigid in terms of structure (hardcoded build lists). Adding a new "type" of content (e.g., a blog section) would require modifying `_quarto.yml`, `build-html.py`, and potentially `script.js`.
 
 ## Top Risks
 
-1.  **Manual Registration (Severity: MEDIUM)**: New articles must be added to `build-html.py` list. This is an anti-pattern for extensibility.
-2.  **Flat Tools Directory (Severity: LOW)**: As `tools/` grows, it becomes harder to find reusable components.
+1.  **Hardcoded Logic (Severity: MEDIUM)**: The `build-html.py` script couples the content list to the code, requiring code changes for content additions.
+2.  **Monolithic Config (Severity: LOW)**: `_quarto.yml` handles everything; extracting sections into includes (if supported) would help.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Content Scaling      | 7/10  | Manual steps required to add pages.       | Automate page discovery.        |
-| Code Modularity      | 6/10  | Tools are scripts, not libraries.         | Refactor to package.            |
-| Config Flexibility   | 8/10  | `_quarto.yml` handles most config.        | N/A                             |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Content Extensibility  | 7/10  | Doable, but requires build script edits.           | Automate file discovery.                  |
+| Feature Extensibility  | 8/10  | Quarto extensions can be added.                    | N/A                                       |
+| Code Modularity        | 6/10  | `tools/` is mixed.                                 | Modularize tools.                         |
 
-**Weighted Score: 7.0/10**
+**Weighted Score: 7/10**
 
 ## Refactoring Plan
 
-1.  **Automate Discovery**: Modify `build-html.py` to scan for `.qmd` files recursively in `articles/` (or specified dirs) so new content is auto-detected.
+**Quick Wins**
+1.  **Document Extension**: Explain how to add new sections in `AGENTS.md` or `README`.
+
+**Strategic Fixes**
+1.  **Dynamic Build**: As mentioned in Architecture, automating the file list in `build-html.py` is the key enabler for extensibility.

@@ -1,31 +1,33 @@
-# Assessment C Results: Documentation
+# Assessment C Results: Documentation & Comments
 
 ## Executive Summary
 
-*   **Project Documentation**: `README.md` provides a decent overview but lacks detailed "Getting Started" for non-technical users (e.g. how to add a new article).
-*   **Contributor Experience**: `CONTRIBUTING.md` exists and covers the basics, but could be expanded with specific "House Style" guides (currently scattered in `HOUSE_STYLE.md` or `AGENTS.md`).
-*   **In-Code Documentation**: Python tools are well-typed but variable in docstring quality.
-*   **Architecture Documentation**: `AGENTS.md` serves as a high-level architecture guide, which is a strong point.
+Documentation is a strong point for this repository, with extensive `README` files, `AGENTS.md` guidelines, and Quarto-rendered content. The project code itself (Python scripts) includes docstrings, though some "maintenance" scripts could be better documented regarding their side effects. The distinction between "content" (articles) and "documentation" (how to run the repo) is mostly clear.
 
 ## Top Risks
 
-1.  **Missing "New Article" Guide (Severity: MEDIUM)**: No clear step-by-step for adding a new QMD file and ensuring it appears in the nav/build.
-2.  **Fragmented Style Guides (Severity: LOW)**: Info is split between `AGENTS.md`, `HOUSE_STYLE.md`, and `README.md`.
-3.  **Build Script Documentation (Severity: LOW)**: `build-html.py` logic (custom extraction) is documented in code but not in high-level docs.
-4.  **Dependency Documentation (Severity: LOW)**: `requirements.txt` lists deps, but system requirements (Python version, Node version for pnpm) aren't explicitly visible in `README`.
+1.  **Fragmented Developer Docs (Severity: MEDIUM)**: Usage instructions are split between `README.md`, `DEPLOYMENT_REVIEW.md`, and `QUARTO_GUIDE.md`.
+2.  **Data Schema (Severity: LOW)**: The `data/` folder (bibliography, reading paths) lacks specific documentation on the schema required for valid YAML files.
+3.  **Tooling Documentation (Severity: LOW)**: Scripts like `build-html.py` need clear inline explanations of the "HTML extraction" logic for future maintainers.
+4.  **Scientific vs. Technical Docs (Severity: LOW)**: Scientific articles are excellent, but technical architecture docs are less prominent.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Readme Quality       | 8/10  | Clear, concise, covers basics.            | Add "Quick Start" for writers.  |
-| Contribution Guide   | 7/10  | Exists, but could be more detailed.       | Merge style guides.             |
-| Code Comments        | 8/10  | Python code is readable and typed.        | Add module docstrings.          |
-| Arch Documentation   | 9/10  | `AGENTS.md` is excellent.                 | Keep updated.                   |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Readme Completeness    | 9/10  | `README.md` is comprehensive.                      | N/A                                       |
+| Code Docstrings        | 8/10  | Present in key files; coverage could be higher.    | Add module-level docs to all scripts.     |
+| Architecture Docs      | 7/10  | Implicit in code; `JULES_ARCHITECTURE.md` exists.  | Create a high-level system diagram.       |
+| Contributor Guides     | 8/10  | `AGENTS.md` is very detailed.                      | Consolidate dev guides.                   |
+| API Documentation      | N/A   | Not a library, so less critical.                   | N/A                                       |
 
-**Weighted Score: 8.0/10**
+**Weighted Score: 8/10**
 
 ## Refactoring Plan
 
-1.  **Consolidate Styles**: Merge `HOUSE_STYLE.md` content into `CONTRIBUTING.md` or link them clearly.
-2.  **Writer's Guide**: Add a section to `README.md` titled "How to Add a New Article" covering file creation, YAML header, and registering in `build-html.py` (if needed).
+**Quick Wins**
+1.  **Consolidate Guides**: Merge `DEPLOYMENT_*.md` files into a single `DEPLOYMENT.md`.
+2.  **Schema Docs**: Add a `README.md` to `data/` explaining the YAML structure.
+
+**Strategic Fixes**
+1.  **Auto-generated Docs**: Use `mkdocs` or Quarto to render the `tools/` Python documentation into the website itself (e.g., under a "Tech Stack" section).

@@ -1,28 +1,31 @@
-# Assessment H Results: Reliability
+# Assessment H Results: Reliability & Error Handling
 
 ## Executive Summary
 
-*   **Build Reliability**: The build relies on `build-html.py`, which is custom code. If this script has bugs, the site build fails.
-*   **External Dependencies**: `requirements.txt` is the main source of fragility.
-*   **Uptime**: GitHub Pages provides high uptime (99.9%+).
+The repository relies on strict CI gates ("Quality Gate") to ensure reliability. The `check_site_health.py` script is a robust mechanism for detecting broken links and orphans, acting as a reliability backstop. Error handling in scripts is basic (print and exit) but appropriate for build tools.
 
 ## Top Risks
 
-1.  **Custom Build Logic (Severity: MEDIUM)**: `build-html.py` parsing logic (regex/string manipulation) is less robust than standard Quarto rendering.
-2.  **Dependency Drift (Severity: MEDIUM)**: Lack of lockfile.
-3.  **Third-Party Assets (Severity: LOW)**: If MathJax CDN goes down (unlikely), math breaks.
+1.  **Build Fragility (Severity: MEDIUM)**: If a single file in the hardcoded list is missing, `build-html.py` likely crashes or halts deployment.
+2.  **Silent Failures (Severity: LOW)**: Some CI steps use `continue-on-error: true` (e.g., `website-lint`), potentially hiding degrading quality.
+3.  **Link Rot (Severity: LOW)**: External links are checked? `check_site_health.py` explicitly skips external links.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Build Stability      | 7/10  | Custom script introduces risk.            | Unit test `build-html.py`.      |
-| Infrastructure       | 10/10 | GitHub Pages.                             | N/A                             |
-| Dependency Mgmt      | 6/10  | No lockfile.                              | Add lockfile.                   |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Error Recovery         | 7/10  | Scripts fail fast (good), but messages basic.      | Improve error logging.                    |
+| Integrity Checks       | 9/10  | `check_site_health.py` is excellent.               | Add external link checking.               |
+| CI reliability         | 8/10  | `continue-on-error` reduces strictness.            | Remove where possible.                    |
+| Monitorability         | N/A   | Static site, monitored via GH Actions status.      | N/A                                       |
 
-**Weighted Score: 7.6/10**
+**Weighted Score: 8/10**
 
 ## Refactoring Plan
 
-1.  **Test Build Script**: Add unit tests for `build-html.py` specifically testing edge cases in HTML extraction.
-2.  **Pin Dependencies**: Use `pip-compile` to lock dependencies.
+**Quick Wins**
+1.  **External Link Check**: Add a flag or separate tool to check external links periodically (weekly), not on every push (too slow/flaky).
+2.  **Strict Linting**: Remove `continue-on-error` from CSS/HTML linting once clean.
+
+**Strategic Fixes**
+1.  **Robust Build Script**: Refactor `build-html.py` to handle missing files gracefully (warn instead of crash) or fail with very specific "Action Required" messages.

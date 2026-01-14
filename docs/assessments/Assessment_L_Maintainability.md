@@ -1,27 +1,30 @@
-# Assessment L Results: Maintainability
+# Assessment L Results: Long-Term Maintainability
 
 ## Executive Summary
 
-*   **Codebase Size**: Manageable. Clearly separated concerns (Content vs. Code).
-*   **Complexity**: `build-html.py` is the most complex piece of "infra" code. `script.js` is clean but growing.
-*   **Tech Debt**: `tools/` directory clutter is the main debt.
+The repository is generally healthy but shows signs of organic growth (mixed `tools/`, legacy `archive/`). The strong reliance on AI agents (`AGENTS.md`) is a double-edged sword: it enforces structure but creates a complex set of rules that might be hard for new human maintainers to internalize.
 
 ## Top Risks
 
-1.  **Bus Factor on Build Script (Severity: MEDIUM)**: Custom build logic.
-2.  **CSS Specificity (Severity: LOW)**: `styles.css` has some `!important` overrides which can make maintenance hard.
+1.  **Directory Clutter (Severity: LOW)**: `tools/` and `archive/`.
+2.  **Agent-Specific Docs (Severity: LOW)**: Documentation tailored for AI might drift from reality if not updated by humans.
+3.  **Custom Build Logic (Severity: MEDIUM)**: `build-html.py` is a custom artifact that requires maintenance.
 
 ## Scorecard
 
-| Category             | Score | Evidence                                  | Remediation                     |
-| -------------------- | ----- | ----------------------------------------- | ------------------------------- |
-| Code Complexity      | 8/10  | Mostly low.                               | Simplify `build-html.py`.       |
-| Tech Debt            | 7/10  | `tools/` organization.                    | Group tools.                    |
-| Documentation        | 8/10  | Good docs help maintenance.               | N/A                             |
+| Category               | Score | Evidence                                           | Remediation                               |
+| ---------------------- | ----- | -------------------------------------------------- | ----------------------------------------- |
+| Tech Debt              | 8/10  | Low debt, mostly cleanup needed.                   | Cleanup `tools/`.                         |
+| Code readability       | 9/10  | High (Python).                                     | N/A                                       |
+| Bus Factor             | 7/10  | Custom scripts reduce maintainability.             | Simplify/Standardize.                     |
 
-**Weighted Score: 7.6/10**
+**Weighted Score: 8/10**
 
 ## Refactoring Plan
 
-1.  **Refactor CSS**: Review `!important` usage and try to use specificity instead.
-2.  **Comment Build Script**: Ensure `build-html.py` is heavily commented explaining *why* it extracts HTML manually.
+**Quick Wins**
+1.  **Archive Cleanup**: Evaluate if `archive/` is needed in the repo or can be moved to a separate branch/repo.
+2.  **Refactor Tools**: Execute the plan to split `tools/`.
+
+**Strategic Fixes**
+1.  **Simplify Build**: Move as much logic as possible from `build-html.py` back into standard Quarto features (e.g. Listings, Templates).
