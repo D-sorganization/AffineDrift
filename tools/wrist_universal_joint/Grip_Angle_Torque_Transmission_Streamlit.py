@@ -165,7 +165,7 @@ def generate_sample_torque(
     if noise_type == "Golf-like Random":
         torque = rng.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Step":
         torque = np.zeros_like(t)
         torque[250:] = 3.0  # Step at midpoint
@@ -187,7 +187,7 @@ def generate_sample_torque(
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
         torque = rng.normal(0, 1.5, len(t))
-        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Polynomial":
         # Evaluate polynomial expression using safer method
         try:
@@ -245,7 +245,7 @@ def generate_sample_torque(
         # Default to golf-like
         torque = rng.normal(0, 1, len(t))
         torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = cast("np.ndarray[Any, Any]", np.convolve(torque, np.ones(10) / 10, mode="same"))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
 
     return torque
 
