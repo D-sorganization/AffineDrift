@@ -47,3 +47,29 @@ Add this Callout block immediately after the bolded question:
 
 This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**. In the full flexible shaft model (Part I), active torque often does work to deform the shaft (increasing $V_{\text{elastic}}$), effectively "banking" energy that is later released passively. The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release.
 :::
+
+---
+
+## 3. Addressing "Tip Mass Omission"
+
+**Target File:** `articles/theory-part1.qmd`
+**Section:** Hand--Club Kinematic Interface and Jacobian Formulation
+
+**Current Text:**
+$$
+T_{\text{shaft}} = \frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds.
+$$
+
+**Suggested Improvement:**
+Replace with:
+$$
+T_{\text{sys}} = \frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds + \frac{1}{2} m_{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I_{head} \omega(L).
+$$
+
+**And update the Mass Matrix component definitions:**
+> 1. **Rigid Inertia** $M_{qq} = \int \rho J^T J ds + m_{head} J(L)^T J(L)$
+> 2. **Modal Inertia** $M_{\eta\eta} = \int \rho \Phi^T \Phi ds + m_{head} \Phi(L)^T \Phi(L)$
+> 3. **Inertial Coupling** $M_{q\eta} = \int \rho J^T \Phi ds + m_{head} J(L)^T \Phi(L)$
+
+**Add Note:**
+> "Crucially, the discrete mass of the clubhead $m_{head}$ dominates these integrals, significantly enhancing the inertial coupling $M_{q\eta}$ relative to a bare shaft."
