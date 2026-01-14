@@ -424,6 +424,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // from O(N_dom_nodes) to O(N_headings)
     const usedIds = new Set();
 
+    // ⚡ Bolt Optimization: Pre-create SVG to clone instead of parsing HTML string for every heading
+    const anchorIcon = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    anchorIcon.setAttribute("aria-hidden", "true");
+    anchorIcon.setAttribute("width", "18");
+    anchorIcon.setAttribute("height", "18");
+    anchorIcon.setAttribute("viewBox", "0 0 24 24");
+    anchorIcon.setAttribute("fill", "none");
+    anchorIcon.setAttribute("stroke", "currentColor");
+    anchorIcon.setAttribute("stroke-width", "2");
+    anchorIcon.setAttribute("stroke-linecap", "round");
+    anchorIcon.setAttribute("stroke-linejoin", "round");
+    anchorIcon.innerHTML =
+      '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
+
     headings.forEach((heading) => {
       // Skip if already has anchor
       if (heading.querySelector(".anchor-link")) return;
@@ -439,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
       anchor.href = `#${heading.id}`;
       anchor.setAttribute("aria-label", "Link to this section");
       // Simple Link Icon
-      anchor.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+      anchor.appendChild(anchorIcon.cloneNode(true));
 
       heading.appendChild(anchor);
     });
