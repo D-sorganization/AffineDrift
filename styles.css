@@ -846,11 +846,24 @@ h3:hover .anchor-link,
 
 /* External Link Indicator */
 .external-link::after {
-  content: "↗";
-  display: inline-block;
+  content: none;
+  display: none;
+}
+
+.external-link-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 0.25rem;
-  font-size: 0.8em;
   opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.external-link:hover .external-link-icon {
+  opacity: 1;
+  transform: translate(1px, -1px);
 }
 
 /* ---
