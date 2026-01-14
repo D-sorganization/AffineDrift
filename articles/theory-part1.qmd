@@ -237,10 +237,18 @@ $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}
 + C(q_{\text{sys}}, \dot{q}_{\text{sys}}) \dot{q}_{\text{sys}}
 + G(q_{\text{sys}})
-+ \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}
++ \begin{bmatrix} \tau_{\text{pas}}(q, \dot{q}) \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}
 =
 \begin{bmatrix} \tau \\ 0 \end{bmatrix}.
 $$
+
+We explicitly include the term $\tau_{\text{pas}}(q, \dot{q})$ to model the **passive joint impedance** (ligament stiffness, joint friction, and intrinsic muscle viscoelasticity). While biological impedance is technically variable, for the purpose of the affine decomposition we treat it as a property of the 'Effective Plant'.
+
+::: {.callout-note}
+## Note on Biological Impedance (The "Frozen Strategy" Assumption)
+A common critique is that muscle stiffness is input-dependent ($K(u)$), which would violate the affine structure. We defend this by adopting the **Frozen Strategy** assumption: we define the "Drift" $f(x)$ as the dynamics of the system with the golfer's impedance *fixed* at its operational level, but with the *net driving torque* removed ($u=0$). This distinguishes the **Effective Plant** (which acts like a stiff, damped mechanism) from a "flaccid" ragdoll, ensuring the mathematical drift corresponds to the physically relevant "Zero Torque" baseline used in our simulations.
+:::
+
 The zero vector in the lower block of the forcing term is the defining feature of this system: it is **underactuated**. The golfer has no direct actuator on the shaft modes; control authority over $\eta$ is achieved solely through dynamic coupling (the $M_{q\eta}$ term).
 
 ### Control-affine state space form
@@ -321,7 +329,7 @@ $$a_{\text{drift}}(x)
     \end{bmatrix}
     + G(q) +
     \begin{bmatrix}
-      0 \\[0.2em]
+      \tau_{\text{pas}}(q, \dot{q}) \\[0.2em]
       K_{s}\eta + C_{s}\dot{\eta}
     \end{bmatrix}
   \right),$$
