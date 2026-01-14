@@ -145,17 +145,39 @@ $$
 T_{\text{shaft}} = \frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds.
 $$
 
-We expand the squared norm of the velocity vector explicitly. Let $J$ denote $J_{\text{rigid}}(s,q)$.
+We expand the squared norm of the velocity vector explicitly. Let $J$ denote the configuration-dependent rigid Jacobian $J_{\text{rigid}}(s,q)$ and $\Phi$ denote the spatial mode shape matrix $\Phi(s)$. The squared norm is the inner product of the velocity vector with itself:
 $$
-\| v(s) \|^2 = v(s)^T v(s) = (J\dot{q} + \Phi\dot{\eta})^T (J\dot{q} + \Phi\dot{\eta})
+\| v(s) \|^2 = v(s)^T v(s) = (J\dot{q} + \Phi\dot{\eta})^T (J\dot{q} + \Phi\dot{\eta}).
+$$
+Distributing the transpose and expanding the terms:
+$$
+\| v(s) \|^2 = (\dot{q}^T J^T + \dot{\eta}^T \Phi^T) (J\dot{q} + \Phi\dot{\eta})
 $$
 $$
 = \dot{q}^T J^T J \dot{q} + \dot{q}^T J^T \Phi \dot{\eta} + \dot{\eta}^T \Phi^T J \dot{q} + \dot{\eta}^T \Phi^T \Phi \dot{\eta}.
 $$
-Noting that the scalar cross-terms are identical ($\dot{q}^T J^T \Phi \dot{\eta} = \dot{\eta}^T \Phi^T J \dot{q}$), we group the terms by the generalized velocities $\dot{q}$ and $\dot{\eta}$. The integration is a linear operator, so we can distribute the integral across the sum:
+Since the kinetic energy is a scalar quantity, the cross-terms must be scalars. The transpose of a scalar is itself ($a = a^T$), so the two middle terms are identical:
 $$
-T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \underbrace{\left( \int_0^L \rho J^T J ds \right)}_{M_{qq}} \dot{q} + \dot{q}^T \underbrace{\left( \int_0^L \rho J^T \Phi ds \right)}_{M_{q\eta}} \dot{\eta} + \frac{1}{2} \dot{\eta}^T \underbrace{\left( \int_0^L \rho \Phi^T \Phi ds \right)}_{M_{\eta\eta}} \dot{\eta}.
+(\dot{q}^T J^T \Phi \dot{\eta})^T = \dot{\eta}^T \Phi^T J \dot{q}.
 $$
+Thus, we can group them as $2 \dot{q}^T J^T \Phi \dot{\eta}$. Substituting this back into the integral and distributing the integration operator over the sum:
+$$
+T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \left( \int_0^L \rho(s) J^T J \, ds \right) \dot{q}
++ \dot{q}^T \left( \int_0^L \rho(s) J^T \Phi \, ds \right) \dot{\eta}
++ \frac{1}{2} \dot{\eta}^T \left( \int_0^L \rho(s) \Phi^T \Phi \, ds \right) \dot{\eta}.
+$$
+
+We define the block mass matrices based on these integrals:
+$$
+M_{qq} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T J_{\text{rigid}}(s,q) \, ds,
+$$
+$$
+M_{q\eta} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T \Phi(s) \, ds,
+$$
+$$
+M_{\eta\eta} \equiv \int_0^L \rho(s) \Phi(s)^T \Phi(s) \, ds.
+$$
+
 This derivation rigorously identifies the mass matrix blocks as projections of the distributed mass properties onto the generalized coordinate basis:
 
 1.  **Rigid Inertia** $M_{qq} = \int \rho J^T J ds$: The standard manipulator inertia, augmented by the "locked-mode" inertia of the shaft.
@@ -247,45 +269,65 @@ The zero vector in the lower block of the forcing term is the defining feature o
 
 To perform the drift-input decomposition, we must solve for the accelerations, effectively inverting the inertia matrix to isolate the causal origin of motion.
 
-To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. We derive the blockwise inverse explicitly using the **Schur Complement** decomposition. We seek a matrix $H$ such that:
+To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. We derive the blockwise inverse explicitly using the **Schur Complement** decomposition. This step is critical because it reveals how the motion of the rigid golfer ($q$) is dynamically coupled to the motion of the flexible shaft ($\eta$).
+
+We seek a matrix $H$ partitioned conformably with $M$:
 $$
 \begin{bmatrix} M_{qq} & M_{q\eta} \\ M_{\eta q} & M_{\eta\eta} \end{bmatrix}
 \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
 =
-\begin{bmatrix} I & 0 \\ 0 & I \end{bmatrix}.
+\begin{bmatrix} I_n & 0 \\ 0 & I_m \end{bmatrix}.
 $$
-Expanding the first column of the product yields the system:
-1. $M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$
-2. $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
-From equation (2) ($M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$), we isolate the off-diagonal block $H_{\eta q}$. Assuming $M_{\eta\eta}$ is positive-definite (as it is a principal submatrix of the metric), we pre-multiply by its inverse $M_{\eta\eta}^{-1}$:
-$$ M_{\eta\eta}^{-1} M_{\eta q} H_{qq} + H_{\eta q} = 0 \quad \Rightarrow \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
-This algebraic relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property; it is a linear mapping of the rigid-body mobility $H_{qq}$, determined by the **Inertial Coupling Ratio**:
-$$ \Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}. $$
-We define $\Gamma$ as the system's mechanical 'gear ratio,' dictating how much 'kick' (acceleration) the flexible shaft receives for every unit of acceleration the golfer produces at the hands. Crucially, this transmission is **purely inertial**—it depends on the mass distribution of the club ($M_{q\eta}$), not its stiffness ($K_s$). This means the golfer cannot 'turn off' the interaction by relaxing their grip; the coupling is a fixed property of the club's mass matrix.
+Expanding the matrix multiplication for the first block column yields the system of linear equations:
+1.  $M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I_n$
+2.  $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
-Substituting this expression for $H_{\eta q}$ into the first row equation ($M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$):
-$$ M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I. $$
-Grouping the terms that multiply $H_{qq}$ yields the fundamental constraint on the rigid-body motion:
-$$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
+We solve for the blocks $H_{qq}$ and $H_{\eta q}$. From equation (2), assuming $M_{\eta\eta}$ is positive-definite (which holds since $M$ is a Riemannian metric), we isolate $H_{\eta q}$:
+$$
+M_{\eta\eta} H_{\eta q} = - M_{\eta q} H_{qq} \quad \implies \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}.
+$$
+
+This algebraic relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property; it is a linear mapping of the rigid-body mobility $H_{qq}$, determined by the matrix ratio:
+$$
+\Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}.
+$$
+We define $\Gamma \in \mathbb{R}^{m \times n}$ as the **Inertial Coupling Ratio**. It acts as the system's mechanical 'gear ratio,' dictating how much acceleration is transmitted to the flexible modes for every unit of acceleration the golfer produces at the joints. Crucially, this transmission depends solely on the mass distribution ($M_{q\eta}$ and $M_{\eta\eta}$), making it a fixed property of the club's design that the golfer cannot alter during the swing.
+
+Substituting the expression for $H_{\eta q}$ into equation (1):
+$$
+M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I_n.
+$$
+Factoring out $H_{qq}$ on the right:
+$$
+\left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I_n.
+$$
 The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$:
-$$ \Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}. $$
-Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space. It is the effective inertia felt by the golfer when the shaft modes are free to accelerate. This differs from the locked-mode inertia $M_{qq}$ because the shaft "gives way" under load, effectively reducing the perceived inertia in certain directions.
+$$
+\Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}.
+$$
+Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space. It is the effective inertia felt by the golfer's joints when the shaft modes are free to accelerate. This value is strictly less than the "locked-mode" inertia $M_{qq}$ (in the sense that $M_{qq} - \Delta$ is positive semi-definite), reflecting the fact that the shaft "gives way" under load, reducing the resistance to hand acceleration.
 
 Thus, the primary diagonal block of the inverse mass matrix is the inverse of the articulated inertia:
-$$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
+$$
+H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}.
+$$
 
-This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial relief provided by the flexible shaft. It is physically distinct from the inverse of the locked-mode inertia ($M_{qq}^{-1}$); it captures the enhanced responsiveness of the hands due to the dynamic compliance of the club. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes via the Inertial Coupling Ratio.
+This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial relief provided by the flexible shaft.
 
-Multiplying the equation of motion by $H$ isolates the acceleration vector:
+Multiplying the equation of motion by $H$ isolates the acceleration vector. Let $h(x)$ denote the vector of all passive forces (Coriolis, gravity, stiffness, damping):
+$$
+h(x) = C(q,\dot{q},\eta,\dot{\eta}) \dot{q}_{\text{sys}} + G(q) + \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}.
+$$
+The acceleration equation is:
 $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix} =
-\underbrace{-M^{-1} \left( C\dot{q}_{\text{sys}} + G + \text{Elastic/Damping} \right)}_{\text{Passive Drift Acceleration } a_{\text{drift}}}
+\underbrace{-M^{-1} h(x)}_{\text{Passive Drift Acceleration } a_{\text{drift}}}
 +
 \underbrace{M^{-1} \begin{bmatrix} B(q) \\ 0 \end{bmatrix}}_{\text{Control Efficacy } A_{\text{input}}} u.
 $$
 
-We examine the Input Acceleration term $A_{\text{input}} u$ specifically. Using the block inverse structure:
+We examine the Input Acceleration term $A_{\text{input}} u$ explicitly using the block inverse:
 $$
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}}
 =
@@ -295,55 +337,42 @@ $$
 \begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
 $$
 
-The flexible mode acceleration $\ddot{\eta}_{\text{input}}$ is thus driven by the off-diagonal block of the inverse mass matrix. Substituting the expression for $H_{\eta q}$ derived via the Schur complement ($H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}$):
+Substituting the derived expression $H_{\eta q} = \Gamma H_{qq}$:
 $$
-\ddot{\eta}_{\text{input}} = H_{\eta q} B(q) u = \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) B(q) u.
+\ddot{\eta}_{\text{input}} = \Gamma H_{qq} B(q) u = \left( - M_{\eta\eta}^{-1} M_{\eta q} \Delta^{-1} \right) B(q) u.
 $$
+
 This equation provides the rigorous mechanical definition of **Input Forces**:
 
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$ (the inverse of the articulated body inertia).
-2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
+2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ is driven by the joint acceleration $\ddot{q}_{in}$ transmitted through the Inertial Coupling Ratio $\Gamma$. The golfer does not push the clubhead directly; they accelerate the hands, and the clubhead is "dragged" along by the inertial coupling $M_{q\eta}$.
 
-This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As we shall see in the *Drift-Control Ratio* analysis, this efficacy is purely configuration-dependent and bounded, whereas the opposing drift forces scale quadratically with velocity. This structural asymmetry is what preordains the loss of controllability in the late downswing.
+This explicit derivation proves the **Causal Orthogonality** of the system: the golfer's only "handle" on the system is the torque vector $u$, and its influence is strictly constrained by the matrices $H_{qq}$ and $\Gamma$. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid**—which defines the geometric capacity of torque to alter the trajectory.
 
 Substituting the actuation model, we separate the drift and input terms.
 
-Define the drift acceleration
+Define the drift acceleration $a_{\text{drift}}(x)$ explicitly in terms of the block inverse $H$:
+$$
+a_{\text{drift}}(x) = - \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
+\left(
+  C(x) \dot{q}_{\text{sys}}
+  +
+  G(x)
+  +
+  \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}
+\right).
+$$
 
-$$a_{\text{drift}}(x)
-  =
-  - M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})
-    \begin{bmatrix}
-      \dot{q} \\[0.2em]
-      \dot{\eta}
-    \end{bmatrix}
-    + G(q) +
-    \begin{bmatrix}
-      0 \\[0.2em]
-      K_{s}\eta + C_{s}\dot{\eta}
-    \end{bmatrix}
-  \right),$$
-
-and the input acceleration mapping
-
-$$A_{\text{input}}(x)
-  =
-  M^{-1}(q,\eta)
-  \begin{bmatrix}
-    B(q) \\[0.2em]
-    0
-  \end{bmatrix}.$$
+And the input acceleration mapping $A_{\text{input}}(x)$:
+$$
+A_{\text{input}}(x) = \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.
+$$
 
 Then the acceleration equation becomes
-
-$$\begin{bmatrix}
-    \ddot{q} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  =
-  a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.$$
+$$
+\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}
+= a_{\text{drift}}(x) + A_{\text{input}}(x)\,u.
+$$
 
 ### First-order state-space form
 
