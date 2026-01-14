@@ -5,3 +5,7 @@
 ## 2024-05-23 - Focus Trapping in Modals
 **Learning:** When opening a modal (like a lightbox), failing to trap focus allows keyboard users to tab "behind" the modal into the main content. This breaks the mental model of a modal dialog and can leave users lost in invisible content.
 **Action:** Always implement a focus trap (cycling Tab/Shift+Tab) within any element with `role="dialog"` or `aria-modal="true"`.
+
+## 2025-05-22 - Autocomplete in Mixed Content
+**Learning:** Even in Markdown/Quarto-generated sites, raw HTML forms are often necessary for custom interactivity. Forgetting standard `autocomplete` attributes in these "embedded" forms forces users to manually re-type common data (Name, Email), breaking the seamless flow expected even in static content.
+**Action:** Audit all raw HTML forms embedded in `.qmd` or `.md` files for missing `autocomplete` attributes, especially for `name` and `email` fields.
