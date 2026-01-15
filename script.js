@@ -565,6 +565,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Accordion functionality
+  // ⚡ Bolt Optimization: Event Delegation for Accordions
+  // Separate initialization from event handling to reduce memory usage (1 listener vs N)
   const accordionHeaders = document.querySelectorAll(".accordion-header");
   accordionHeaders.forEach((header, index) => {
     const content = header.nextElementSibling;
@@ -576,13 +578,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       content.setAttribute("aria-hidden", !isExpanded);
     }
-    header.addEventListener("click", function () {
-      const isExpanded = this.getAttribute("aria-expanded") === "true";
-      this.setAttribute("aria-expanded", !isExpanded);
-      if (content && content.classList.contains("accordion-content")) {
-        content.setAttribute("aria-hidden", isExpanded);
-      }
-    });
+  });
+
+  document.addEventListener("click", (e) => {
+    const header = e.target.closest(".accordion-header");
+    if (!header) return;
+
+    const content = header.nextElementSibling;
+    if (content && content.classList.contains("accordion-content")) {
+      const isExpanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", !isExpanded);
+      content.setAttribute("aria-hidden", isExpanded);
+    }
   });
 
   // Repository links
@@ -1158,8 +1165,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!img) return;
 
       // Verify the image is within our content area (safety check)
-      if (!articleContainer.contains(img))
-        return;
+      if (!articleContainer.contains(img)) return;
 
       if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
 
