@@ -1,8 +1,9 @@
-
-from playwright.sync_api import sync_playwright
 import os
 
-def run():
+from playwright.sync_api import sync_playwright
+
+
+def run() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -23,6 +24,7 @@ def run():
         print(f"Screenshot saved to: {output_path}")
 
         browser.close()
+
 
 if __name__ == "__main__":
     run()

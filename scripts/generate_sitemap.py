@@ -3,11 +3,9 @@
 Generate comprehensive sitemap.xml with proper priorities and change frequencies.
 """
 
-import os
-import re
-from pathlib import Path
-from datetime import datetime
 import subprocess
+from datetime import datetime
+from pathlib import Path
 
 
 def get_git_last_modified(filepath: str) -> str:
@@ -61,9 +59,9 @@ def get_changefreq(filepath: str) -> str:
     return "monthly"
 
 
-def extract_frontmatter(content: str) -> dict:
+def extract_frontmatter(content: str) -> dict[str, str]:
     """Extract YAML frontmatter."""
-    frontmatter = {}
+    frontmatter: dict[str, str] = {}
     if content.startswith("---"):
         parts = content.split("---", 2)
         if len(parts) >= 3:
@@ -74,12 +72,12 @@ def extract_frontmatter(content: str) -> dict:
     return frontmatter
 
 
-def main():
+def main() -> None:
     """Generate sitemap.xml."""
     base_url = "https://affinedrift.com"
 
     # Collect all pages
-    pages = []
+    pages: list[dict[str, str]] = []
     content_dirs = [".", "articles"]
 
     for content_dir in content_dirs:

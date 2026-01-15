@@ -105,7 +105,7 @@ def add_description_to_file(filepath: Path, description: str) -> bool:
     return True
 
 
-def main():
+def main() -> None:
     """Add descriptions to all files missing them."""
     print("Adding meta descriptions to files...")
 

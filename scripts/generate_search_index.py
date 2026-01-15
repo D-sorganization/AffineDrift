@@ -5,10 +5,9 @@ Extracts content from Quarto markdown files and creates a Fuse.js compatible ind
 """
 
 import json
-import os
 import re
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Directories to index
 CONTENT_DIRS = [
@@ -23,9 +22,9 @@ EXCLUDE_FILES = {
 }
 
 
-def extract_frontmatter(content: str) -> dict:
+def extract_frontmatter(content: str) -> dict[str, str]:
     """Extract YAML frontmatter from markdown content."""
-    frontmatter = {}
+    frontmatter: dict[str, str] = {}
     if content.startswith("---"):
         parts = content.split("---", 2)
         if len(parts) >= 3:
@@ -71,9 +70,9 @@ def extract_body_text(content: str) -> str:
     return content.strip()
 
 
-def extract_headings(content: str) -> list:
+def extract_headings(content: str) -> list[str]:
     """Extract all headings from markdown content."""
-    headings = []
+    headings: list[str] = []
     for match in re.finditer(r"^#{1,4}\s+(.+)$", content, re.MULTILINE):
         heading = match.group(1).strip()
         # Clean up heading
@@ -84,9 +83,9 @@ def extract_headings(content: str) -> list:
     return headings
 
 
-def extract_concepts(content: str, frontmatter: dict) -> list:
+def extract_concepts(content: str, frontmatter: dict[str, str]) -> list[str]:
     """Extract key concepts from content and frontmatter."""
-    concepts = []
+    concepts: list[str] = []
 
     # From frontmatter keywords/concepts if present
     if "keywords" in frontmatter:
@@ -103,7 +102,7 @@ def extract_concepts(content: str, frontmatter: dict) -> list:
     return concepts[:20]  # Limit to 20 concepts
 
 
-def process_file(filepath: Path) -> dict | None:
+def process_file(filepath: Path) -> dict[str, object] | None:
     """Process a single Quarto markdown file."""
     try:
         content = filepath.read_text(encoding="utf-8")
@@ -143,7 +142,7 @@ def process_file(filepath: Path) -> dict | None:
     }
 
 
-def categorize_content(path: str, frontmatter: dict) -> str:
+def categorize_content(path: str, frontmatter: dict[str, str]) -> str:
     """Categorize content by type."""
     if "articles/" in path:
         if "theory-part" in path:
@@ -160,11 +159,11 @@ def categorize_content(path: str, frontmatter: dict) -> str:
     return "page"
 
 
-def main():
+def main() -> None:
     """Generate the search index."""
     print("Generating search index...")
 
-    index = []
+    index: list[dict[str, object]] = []
     processed = 0
     skipped = 0
 

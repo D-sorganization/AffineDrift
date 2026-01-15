@@ -5,15 +5,14 @@ Also suggests improvements based on content analysis.
 """
 
 import json
-import os
 import re
 from pathlib import Path
-from collections import defaultdict
+from typing import Any, cast
 
 
-def extract_frontmatter(content: str) -> dict:
+def extract_frontmatter(content: str) -> dict[str, str]:
     """Extract YAML frontmatter from markdown content."""
-    frontmatter = {}
+    frontmatter: dict[str, str] = {}
     if content.startswith("---"):
         parts = content.split("---", 2)
         if len(parts) >= 3:
@@ -57,9 +56,9 @@ def extract_first_paragraph(content: str) -> str:
     return ""
 
 
-def check_heading_hierarchy(content: str) -> list:
+def check_heading_hierarchy(content: str) -> list[str]:
     """Check for proper heading hierarchy (H1 -> H2 -> H3, etc.)."""
-    issues = []
+    issues: list[str] = []
 
     # Remove frontmatter
     if content.startswith("---"):
@@ -87,9 +86,9 @@ def check_heading_hierarchy(content: str) -> list:
     return issues
 
 
-def check_images(content: str) -> list:
+def check_images(content: str) -> list[str]:
     """Check for images without alt text."""
-    issues = []
+    issues: list[str] = []
 
     # Find markdown images
     images = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", content)
@@ -108,7 +107,7 @@ def check_images(content: str) -> list:
     return issues
 
 
-def audit_file(filepath: Path) -> dict:
+def audit_file(filepath: Path) -> dict[str, Any]:
     """Audit a single file for SEO issues."""
     try:
         content = filepath.read_text(encoding="utf-8")
@@ -117,7 +116,7 @@ def audit_file(filepath: Path) -> dict:
 
     frontmatter = extract_frontmatter(content)
 
-    result = {
+    result: dict[str, Any] = {
         "title": frontmatter.get("title", ""),
         "has_description": bool(frontmatter.get("description")),
         "description": frontmatter.get("description", ""),
@@ -133,9 +132,13 @@ def audit_file(filepath: Path) -> dict:
         result["suggested_description"] = extract_first_paragraph(content)
         result["issues"].append("Missing meta description")
     elif result["description_length"] < 50:
-        result["issues"].append(f"Description too short ({result['description_length']} chars, recommend 50-160)")
+        result["issues"].append(
+            f"Description too short ({result['description_length']} chars, recommend 50-160)"
+        )
     elif result["description_length"] > 160:
-        result["issues"].append(f"Description too long ({result['description_length']} chars, recommend 50-160)")
+        result["issues"].append(
+            f"Description too long ({result['description_length']} chars, recommend 50-160)"
+        )
 
     # Check headings
     result["heading_issues"] = check_heading_hierarchy(content)
@@ -150,14 +153,14 @@ def audit_file(filepath: Path) -> dict:
     return result
 
 
-def main():
+def main() -> None:
     """Run SEO audit on all content files."""
     print("=" * 70)
     print("AffineDrift SEO Audit Report")
     print("=" * 70)
 
     content_dirs = [".", "articles"]
-    results = {}
+    results: dict[str, Any] = {}
     total_issues = 0
     files_with_issues = 0
 
@@ -173,9 +176,10 @@ def main():
             result = audit_file(filepath)
             results[str(filepath)] = result
 
-            if result.get("issues"):
+            issues = result.get("issues", [])
+            if issues:
                 files_with_issues += 1
-                total_issues += len(result["issues"])
+                total_issues += len(cast(list[str], issues))
 
     # Summary
     print(f"\nFiles audited: {len(results)}")
@@ -188,24 +192,26 @@ def main():
         print(f"\n{'=' * 70}")
         print(f"MISSING META DESCRIPTIONS ({len(missing_desc)} files)")
         print("=" * 70)
-        for filepath, result in missing_desc:
-            print(f"\n{filepath}")
-            print(f"  Title: {result.get('title', 'N/A')}")
-            if result.get("suggested_description"):
-                print(f"  Suggested: {result['suggested_description'][:100]}...")
+    for filepath_str, result in missing_desc:
+        print(f"\n{filepath_str}")
+        print(f"  Title: {result.get('title', 'N/A')}")
+        if result.get("suggested_description"):
+            print(f"  Suggested: {cast(str, result['suggested_description'])[:100]}...")
 
     # Other issues
-    other_issues = [(f, r) for f, r in results.items() if r.get("issues") and r.get("has_description")]
+    other_issues = [
+        (f, r) for f, r in results.items() if r.get("issues") and r.get("has_description")
+    ]
     if other_issues:
         print(f"\n{'=' * 70}")
         print(f"OTHER SEO ISSUES ({len(other_issues)} files)")
         print("=" * 70)
-        for filepath, result in other_issues:
-            issues = [i for i in result["issues"] if "Missing meta" not in i]
-            if issues:
-                print(f"\n{filepath}")
-                for issue in issues:
-                    print(f"  - {issue}")
+    for filepath_str, result in other_issues:
+        issues = [i for i in cast(list[str], result["issues"]) if "Missing meta" not in i]
+        if issues:
+            print(f"\n{filepath_str}")
+            for issue in issues:
+                print(f"  - {issue}")
 
     # Generate JSON report
     report_path = Path("docs/data/seo_audit.json")
