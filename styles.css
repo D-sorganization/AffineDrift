@@ -449,7 +449,7 @@ nav .container {
 
 /* Navigation links styling */
 #quarto-header .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgb(255 255 255 / 0.9);
   font-weight: 500;
   padding: 0.5rem 1rem;
   transition: color 0.2s ease;
@@ -486,15 +486,17 @@ nav .container {
   margin-left: auto;
 }
 
-#quarto-header .aa-DetachedSearchButton {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton"] {
+  background: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.2);
   border-radius: 6px;
   color: var(--pure-white);
 }
 
-#quarto-header .aa-DetachedSearchButton:hover {
-  background: rgba(255, 255, 255, 0.15);
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton"]:hover {
+  background: rgb(255 255 255 / 0.15);
 }
 
 .logo-link {
@@ -692,14 +694,6 @@ nav .container {
   transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
 }
 
-.resource-link {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 600;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
 /* ---
    Resource Grid & Cards
    --- */
@@ -769,6 +763,7 @@ nav .container {
 .resource-link {
   color: var(--accent-blue);
   font-weight: 600;
+  font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -1470,9 +1465,9 @@ h3:hover .anchor-link,
    consistent output regardless of page state or JavaScript modifications
    --- */
 @media print {
-  /* Page setup for academic papers */
+  /* Page setup for academic papers - A4 for international compatibility */
   @page {
-    size: letter;
+    size: a4;
     margin: 1in;
   }
 
@@ -1501,7 +1496,7 @@ h3:hover .anchor-link,
 
   /* Reset Layout for Paper */
   body {
-    font-family: "Times New Roman", Times, serif !important;
+    font-family: Georgia, "Times New Roman", Times, serif !important;
     font-size: 12pt !important;
     line-height: 1.5 !important;
     background: white !important;
@@ -1597,16 +1592,16 @@ h3:hover .anchor-link,
     text-decoration: underline;
   }
 
-  a[href^="http"]:after {
+  a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 9pt;
     color: #666;
     word-break: break-all;
   }
 
-  a[href^="#"]:after,
-  a.resource-link:after,
-  .sidebar-links a:after {
+  a[href^="#"]::after,
+  a.resource-link::after,
+  .sidebar-links a::after {
     content: none;
   }
 
@@ -1637,7 +1632,7 @@ h3:hover .anchor-link,
     font-size: 9pt !important;
     break-inside: avoid;
     white-space: pre-wrap;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Images */

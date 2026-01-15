@@ -11,6 +11,13 @@
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
 const MAX_ID_GENERATION_ATTEMPTS = 100;
 
+// Delay before printing to ensure MathJax has fully rendered equations
+const MATHJAX_RENDER_DELAY_MS = 100;
+
+// Additional height buffer for Critics Corner content expansion
+// Accounts for padding and dynamic content sizing
+const CRITICS_CORNER_PADDING_OFFSET = 50;
+
 // ⚡ Bolt Optimization: Lazy initialize to avoid synchronous layout thrashing at top level
 let HEADER_OFFSET = 140;
 let TOC_SCROLL_OFFSET = 140; // Active section detection offset
@@ -1355,7 +1362,7 @@ function preparePDFPrint() {
       // Small delay to ensure rendering is complete
       setTimeout(() => {
         window.print();
-      }, 100);
+      }, MATHJAX_RENDER_DELAY_MS);
     }).catch((err) => {
       console.log('MathJax typeset error, printing anyway:', err);
       window.print();
@@ -1390,7 +1397,7 @@ function initCriticsCorner() {
           header.setAttribute('aria-expanded', 'false');
         } else {
           // Expand
-          content.style.maxHeight = content.scrollHeight + 50 + 'px';
+          content.style.maxHeight = content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + 'px';
           content.style.paddingTop = '1rem';
           content.style.paddingBottom = '1rem';
           header.setAttribute('aria-expanded', 'true');
