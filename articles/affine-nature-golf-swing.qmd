@@ -488,18 +488,16 @@ The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *
 Consider the control-affine system defined on $T\mathcal{Q}$:
 
 $$
-  \dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
-  {#eq-affine_repeat}
-$$
+\dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
+$$ {#eq-affine_repeat}
 
 Let $\Phi^f_t: T\mathcal{Q} \to T\mathcal{Q}$ denote the flow of the drift vector field $f(x)$. This flow represents the natural evolution of the system under its own passive dynamics (inertia, gravity, elasticity) in the absence of control input.
 
 We define the *Zero Torque Counterfactual* trajectory, denoted $x^{\mathrm{ZTCF}}(t)$, as the integral curve of the drift field starting from the initial state $x_0$:
 
 $$
-  x^{\mathrm{ZTCF}}(t) = \Phi^f_{t-t_0}(x_0), \quad t \in [t_{0}, t_{f}].
-  {#eq-ztcf_def}
-$$
+x^{\mathrm{ZTCF}}(t) = \Phi^f_{t-t_0}(x_0), \quad t \in [t_{0}, t_{f}].
+$$ {#eq-ztcf_def}
 
 Explicitly, it is the solution to the differential equation
 
@@ -554,13 +552,12 @@ where $\text{ID}(\cdot)$ denotes the inverse dynamics operator for the coupled r
 From the equations of motion~@eq-eom_block, the generalized torques can be written as
 
 $$
-  \tau_{\text{total}}(t)
-  =
-  \underbrace{\tau_{\text{drift}}\big(x(t)\big)}_{\text{passive component}}
-  +
-  \underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}},
-  {#eq-tau_split}
-$$
+\tau_{\text{total}}(t)
+=
+\underbrace{\tau_{\text{drift}}\big(x(t)\big)}_{\text{passive component}}
++
+\underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}}.
+$$ {#eq-tau_split}
 
 where the *drift torque* is defined by evaluating the passive terms at the actual state:
 
@@ -575,11 +572,10 @@ and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations 
 The *input torque* is then given by
 
 $$
-  \tau_{\text{input}}(t)
-  =
-  \tau_{\text{total}}(t) - \tau_{\text{drift}}\big(x(t)\big).
-  {#eq-tau_input_def}
-$$
+\tau_{\text{input}}(t)
+=
+\tau_{\text{total}}(t) - \tau_{\text{drift}}\big(x(t)\big).
+$$ {#eq-tau_input_def}
 
 These equations provide an algebraically exact decomposition of the total generalized torque into drift and input components within the model.
 
@@ -633,24 +629,23 @@ $$
 \mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
 $$
 Applied to the state $x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))$, this yields:
+
 $$
-  x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
-  {#eq-zvcf_state}
-$$
+x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
+$$ {#eq-zvcf_state}
 
 Physically, this operation "freezes" the system in its current configuration. It is a projection onto the submanifold of static states.
 
 Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
 $$
-  \tau_{\mathrm{ZVCF}}(t)
-  =
-  \text{ID}\!\left(q(t),\, 0,\,
-  \eta(t),\, 0,\,
-  \ddot{q}^{\mathrm{ZVCF}}(t),\,
-  \ddot{\eta}^{\mathrm{ZVCF}}(t)\right)
-  {#eq-zvcf_id}
-$$
+\tau_{\mathrm{ZVCF}}(t)
+=
+\text{ID}\!\left(q(t),\, 0,\,
+\eta(t),\, 0,\,
+\ddot{q}^{\mathrm{ZVCF}}(t),\,
+\ddot{\eta}^{\mathrm{ZVCF}}(t)\right).
+$$ {#eq-zvcf_id}
 
 where the ZVCF accelerations are computed from the passive terms of the dynamics evaluated at zero velocity:
 
