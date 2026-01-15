@@ -11,6 +11,13 @@
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
 const MAX_ID_GENERATION_ATTEMPTS = 100;
 
+// Delay before printing to ensure MathJax has fully rendered equations
+const MATHJAX_RENDER_DELAY_MS = 100;
+
+// Additional height buffer for Critics Corner content expansion
+// Accounts for padding and dynamic content sizing
+const CRITICS_CORNER_PADDING_OFFSET = 50;
+
 // ⚡ Bolt Optimization: Lazy initialize to avoid synchronous layout thrashing at top level
 let HEADER_OFFSET = 140;
 let TOC_SCROLL_OFFSET = 140; // Active section detection offset
@@ -1289,8 +1296,116 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // --- PDF Download Button ---
+  initPDFDownload();
+
+  // --- Critics Corner Toggle ---
+  initCriticsCorner();
+
   console.log("AffineDrift loaded successfully (Optimized)");
 });
+
+// --- PDF Download Functionality ---
+function initPDFDownload() {
+  // Don't add button on home page or if already exists
+  if (document.querySelector('.home-layout') || document.querySelector('.pdf-download-btn')) {
+    return;
+  }
+
+  // Create the PDF download button
+  const pdfBtn = document.createElement('button');
+  pdfBtn.className = 'pdf-download-btn';
+  pdfBtn.setAttribute('aria-label', 'Download page as PDF');
+  pdfBtn.setAttribute('title', 'Download as PDF');
+  pdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+    </svg>
+    <span>PDF</span>
+  `;
+
+  pdfBtn.addEventListener('click', function() {
+    preparePDFPrint();
+  });
+
+  document.body.appendChild(pdfBtn);
+}
+
+function preparePDFPrint() {
+  // Get page title
+  const pageTitle = document.title.replace(' – AffineDrift', '').replace('AffineDrift – ', '');
+
+  // Create print title block if it doesn't exist
+  let printTitleBlock = document.querySelector('.print-title-block');
+  if (!printTitleBlock) {
+    printTitleBlock = document.createElement('div');
+    printTitleBlock.className = 'print-title-block';
+    printTitleBlock.style.display = 'none'; // Hidden until print
+    printTitleBlock.innerHTML = `
+      <h1>${pageTitle}</h1>
+      <div class="print-author">AffineDrift</div>
+      <div class="print-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+    `;
+
+    // Insert at start of main content
+    const mainContent = document.querySelector('.main-content-area') ||
+                       document.querySelector('main.content') ||
+                       document.querySelector('#quarto-content');
+    if (mainContent) {
+      mainContent.insertBefore(printTitleBlock, mainContent.firstChild);
+    }
+  }
+
+  // Ensure MathJax is fully rendered before printing
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    MathJax.typesetPromise().then(() => {
+      // Small delay to ensure rendering is complete
+      setTimeout(() => {
+        window.print();
+      }, MATHJAX_RENDER_DELAY_MS);
+    }).catch((err) => {
+      console.log('MathJax typeset error, printing anyway:', err);
+      window.print();
+    });
+  } else {
+    window.print();
+  }
+}
+
+// --- Critics Corner Functionality ---
+function initCriticsCorner() {
+  const criticsCorners = document.querySelectorAll('.critics-corner');
+
+  criticsCorners.forEach(corner => {
+    const header = corner.querySelector('.critics-corner-header');
+    const content = corner.querySelector('.critics-corner-content');
+
+    if (header && content) {
+      // Set initial state
+      content.style.maxHeight = '0';
+      content.style.overflow = 'hidden';
+      content.style.transition = 'max-height 0.4s ease-out, padding 0.4s ease-out';
+
+      header.addEventListener('click', function() {
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+        if (isExpanded) {
+          // Collapse
+          content.style.maxHeight = '0';
+          content.style.paddingTop = '0';
+          content.style.paddingBottom = '0';
+          header.setAttribute('aria-expanded', 'false');
+        } else {
+          // Expand
+          content.style.maxHeight = content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + 'px';
+          content.style.paddingTop = '1rem';
+          content.style.paddingBottom = '1rem';
+          header.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+  });
+}
 
 // Utility function for future features
 function scrollToTop() {

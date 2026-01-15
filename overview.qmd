@@ -127,6 +127,57 @@ page-layout: full
 
         </div>
       </section>
+
+      <!-- Critics Corner - Technical Criticism Section -->
+      <section class="critics-corner">
+        <button class="critics-corner-header" aria-expanded="false">
+          <h2>Critics Corner</h2>
+          <span class="critics-corner-icon">▼</span>
+        </button>
+        <div class="critics-corner-content">
+          <div class="criticism-item">
+            <h3>Oversimplification of Neuromuscular Dynamics</h3>
+            <span class="criticism-severity moderate">Moderate</span>
+            <p>
+              The control-affine framework abstracts muscular physiology into a simple torque vector $u$, ignoring force-velocity relationships, activation dynamics, and muscle redundancy. Real neuromuscular systems exhibit time delays, saturation, and cross-coupling effects that may significantly affect the validity of the drift-input decomposition.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                This abstraction is intentional and explicitly stated in the modeling assumptions. The framework operates at the torque level precisely to preserve the affine structure. Force-velocity constraints are treated as bounds on the feasible input set $\mathcal{U}(x)$ rather than nonlinearities in the dynamics. Future work will address activation dynamics through hybrid modeling approaches.
+              </p>
+            </div>
+          </div>
+
+          <div class="criticism-item">
+            <h3>Impact Phase Exclusion</h3>
+            <span class="criticism-severity minor">Minor</span>
+            <p>
+              The theoretical framework explicitly excludes the ball-club impact phase, which is arguably the most critical moment of the swing. This limits the practical applicability of the analysis for understanding how impact conditions relate to ball flight.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                The framework is designed as a "Theory of Delivery"—analyzing how the golfer controls the system to achieve specific terminal conditions. Since control authority effectively ends at impact, the drift-input decomposition applies to the delivery phase. Impact mechanics require separate hybrid dynamics treatment, which will be addressed in subsequent work.
+              </p>
+            </div>
+          </div>
+
+          <div class="criticism-item">
+            <h3>Modal Truncation Error</h3>
+            <span class="criticism-severity minor">Minor</span>
+            <p>
+              Representing the flexible shaft with a finite number of modes ($m$) introduces truncation error, potentially missing high-frequency dynamics that may be relevant during rapid swing phases.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                Standard modal analysis bounds suggest that the first 3-5 bending modes capture >99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 </div>
