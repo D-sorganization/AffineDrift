@@ -10,7 +10,8 @@ const PRECACHE_ASSETS = [
   '/script.js',
   '/logo/logo_transparent_1.png',
   '/favicon.ico',
-  '/manifest.json'
+  '/manifest.json',
+  OFFLINE_URL
 ];
 
 // Install event - precache essential assets
@@ -51,22 +52,27 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Background cache update promise - runs outside respondWith to avoid race conditions
+  const backgroundUpdate = caches.match(event.request).then((cachedResponse) => {
+    if (!cachedResponse) return;
+
+    return fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          return caches.open(CACHE_NAME).then((cache) => {
+            return cache.put(event.request, response.clone());
+          });
+        }
+      })
+      .catch(() => {/* Network failed, but we have cache */});
+  });
+
+  event.waitUntil(backgroundUpdate);
+
   event.respondWith(
     caches.match(event.request)
       .then((cachedResponse) => {
         if (cachedResponse) {
-          // Return cached version and update cache in background
-          event.waitUntil(
-            fetch(event.request)
-              .then((response) => {
-                if (response && response.status === 200) {
-                  const responseClone = response.clone();
-                  caches.open(CACHE_NAME)
-                    .then((cache) => cache.put(event.request, responseClone));
-                }
-              })
-              .catch(() => {/* Network failed, but we have cache */})
-          );
           return cachedResponse;
         }
 
