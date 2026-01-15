@@ -1,5 +1,6 @@
 ---
 title: "Affine Control Interpretation of the Golf Swing"
+description: "Foundational derivation showing the golf swing as a control-affine mechanical system, introducing the drift/input decomposition framework for biomechanical analysis."
 subtitle: "Drift, Input, and Causal Decomposition of Forces"
 date: today
 format:
@@ -12,6 +13,54 @@ format:
 ## Abstract
 
 The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
+
+```{=html}
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        New to control theory? Here's what this foundational article covers in everyday language.
+      </p>
+
+      <div class="laymans-item">
+        <h3>The Core Question</h3>
+        <p>
+          When watching a golf swing in slow motion, you see the club moving incredibly fast. But here's the puzzle: how much of that movement is the golfer actively creating, and how much is just physics (momentum, gravity) doing its thing?
+        </p>
+        <div class="analogy">
+          Imagine you're on a skateboard going downhill. Part of your speed comes from you pushing (active effort), and part comes from gravity pulling you down (passive physics). This article builds the math to separate these two in a golf swing.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>What is a "State"?</h3>
+        <p>
+          The "state" is a complete snapshot of the golfer-club system at any moment—it includes where every joint is positioned and how fast everything is moving. Think of it as pausing a video and noting every detail about the pose and motion.
+        </p>
+        <div class="key-takeaway">
+          If you know the current state and all future muscle efforts, you can predict exactly how the swing will unfold. The state contains all the "memory" of the swing so far.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>The Modeling Simplifications</h3>
+        <p>
+          To make the math tractable, this framework makes some simplifying assumptions: body parts are treated as rigid (not squishy), the club shaft can bend but in predictable ways, and we ignore air resistance. These are standard engineering approximations.
+        </p>
+        <div class="analogy">
+          It's like how weather models don't track every raindrop—they simplify to make predictions possible while still being accurate enough to be useful.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
 
 ## Introduction
 
