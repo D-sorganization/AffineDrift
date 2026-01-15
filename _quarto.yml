@@ -6,6 +6,9 @@ project:
     - "articles/*.qmd"
   resources:
     - data/
+    - manifest.json
+    - service-worker.js
+    - offline.html
 
 website:
   title: "AffineDrift"
@@ -144,6 +147,17 @@ format:
           <link rel="preload" href="/script.js" as="script">
           <link rel="modulepreload" href="/js/metrics.js">
 
+          <!-- PWA and Mobile Optimization -->
+          <link rel="manifest" href="/manifest.json">
+          <meta name="theme-color" content="#1a1a2e">
+          <meta name="apple-mobile-web-app-capable" content="yes">
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+          <meta name="apple-mobile-web-app-title" content="AffineDrift">
+          <link rel="apple-touch-icon" href="/logo/logo_transparent_1.png">
+          <meta name="mobile-web-app-capable" content="yes">
+          <meta name="format-detection" content="telephone=no">
+
+          <!-- Preconnect and Fonts -->
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -211,9 +225,20 @@ format:
     include-after-body:
       - text: |
           <script src="script.js"></script>
-          <script src="js/metrics.js"></script>
-          <script src="js/global-search.js"></script>
-          <script src="js/seo-enhancements.js"></script>
+          <script>
+            // Register Service Worker for PWA support
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                  .then(function(registration) {
+                    console.log('ServiceWorker registered:', registration.scope);
+                  })
+                  .catch(function(error) {
+                    console.log('ServiceWorker registration failed:', error);
+                  });
+              });
+            }
+          </script>
 
 # Metadata for all pages
 metadata:
