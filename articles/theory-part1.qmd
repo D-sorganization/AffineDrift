@@ -140,9 +140,9 @@ Identifying the partial derivatives with the geometric Jacobians of the system:
 Thus, the velocity field $v(s)$ is the vector superposition of rigid-body transport and local elastic deformation:
 $$v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}.$$
 
-The total kinetic energy of the shaft, $T_{\text{shaft}}$, is the integral of the differential kinetic energy $dT = \frac{1}{2} \| v(s) \|^2 dm$ over the shaft's mass distribution. Letting $dm = \rho(s)ds$:
+The total kinetic energy of the club, $T_{\text{club}}$, is the sum of the distributed shaft kinetic energy and the discrete kinetic energy of the clubhead at the tip ($s=L$). Letting $dm = \rho(s)ds$, and denoting the clubhead mass and inertia as $m_{head}$ and $I_{head}$:
 $$
-T_{\text{shaft}} = \frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds.
+T_{\text{club}} = \underbrace{\frac{1}{2} \int_0^L \rho(s) \| v(s) \|^2 ds}_{\text{Shaft}} + \underbrace{\frac{1}{2} m_{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I_{head} \omega(L)}_{\text{Clubhead}}.
 $$
 
 We expand the squared norm of the velocity vector explicitly. Let $J$ denote the configuration-dependent rigid Jacobian $J_{\text{rigid}}(s,q)$ and $\Phi$ denote the spatial mode shape matrix $\Phi(s)$. The squared norm is the inner product of the velocity vector with itself:
@@ -160,22 +160,23 @@ Since the kinetic energy is a scalar quantity, the cross-terms must be scalars. 
 $$
 (\dot{q}^T J^T \Phi \dot{\eta})^T = \dot{\eta}^T \Phi^T J \dot{q}.
 $$
-Thus, we can group them as $2 \dot{q}^T J^T \Phi \dot{\eta}$. Substituting this back into the integral and distributing the integration operator over the sum:
+Thus, we can group them as $2 \dot{q}^T J^T \Phi \dot{\eta}$. Substituting this back into the integral (and adding the discrete tip terms) and distributing the integration operator over the sum:
 $$
-T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \left( \int_0^L \rho(s) J^T J \, ds \right) \dot{q}
-+ \dot{q}^T \left( \int_0^L \rho(s) J^T \Phi \, ds \right) \dot{\eta}
-+ \frac{1}{2} \dot{\eta}^T \left( \int_0^L \rho(s) \Phi^T \Phi \, ds \right) \dot{\eta}.
+T_{\text{club}} = \frac{1}{2} \dot{q}^T \left( \int_0^L \rho J^T J \, ds + m_{head} J(L)^T J(L) \right) \dot{q}
++ \dot{q}^T \left( \int_0^L \rho J^T \Phi \, ds + m_{head} J(L)^T \Phi(L) \right) \dot{\eta}
++ \frac{1}{2} \dot{\eta}^T \left( \int_0^L \rho \Phi^T \Phi \, ds + m_{head} \Phi(L)^T \Phi(L) \right) \dot{\eta}.
 $$
+*(Note: For brevity, we omit the rotational inertia terms of the clubhead in the expanded block form, though they follow the same structure using angular velocity Jacobians.)*
 
-We define the block mass matrices based on these integrals:
+We define the block mass matrices based on these integrals augmented with the discrete tip mass:
 $$
-M_{qq} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T J_{\text{rigid}}(s,q) \, ds,
-$$
-$$
-M_{q\eta} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T \Phi(s) \, ds,
+M_{qq} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T J_{\text{rigid}}(s,q) \, ds + m_{head} J_{\text{rigid}}(L,q)^T J_{\text{rigid}}(L,q),
 $$
 $$
-M_{\eta\eta} \equiv \int_0^L \rho(s) \Phi(s)^T \Phi(s) \, ds.
+M_{q\eta} \equiv \int_0^L \rho(s) J_{\text{rigid}}(s,q)^T \Phi(s) \, ds + m_{head} J_{\text{rigid}}(L,q)^T \Phi(L),
+$$
+$$
+M_{\eta\eta} \equiv \int_0^L \rho(s) \Phi(s)^T \Phi(s) \, ds + m_{head} \Phi(L)^T \Phi(L).
 $$
 
 This derivation rigorously identifies the mass matrix blocks as projections of the distributed mass properties onto the generalized coordinate basis:
