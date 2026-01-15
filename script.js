@@ -831,6 +831,67 @@ document.addEventListener("DOMContentLoaded", function () {
   // ⚡ Bolt Optimization: Defer history updates to unblock main thread
   runWhenIdle(initArticleHistory);
 
+  // 🎨 Palette UX: Copy Email Functionality
+  function initEmailCopy() {
+    const emailLinks = document.querySelectorAll(
+      ".contact-email a[href^='mailto:']",
+    );
+
+    emailLinks.forEach((link) => {
+      // Avoid duplicate buttons
+      if (
+        link.nextElementSibling &&
+        link.nextElementSibling.classList.contains("copy-email-btn")
+      )
+        return;
+
+      // Extract email from href to be safe (remove mailto:)
+      const href = link.getAttribute("href");
+      const email = href.replace(/^mailto:/, "").split("?")[0]; // Handle ?subject=...
+
+      const button = document.createElement("button");
+      button.className = "copy-email-btn";
+      button.setAttribute("aria-label", "Copy email address");
+      button.type = "button";
+      button.title = "Copy email address";
+      button.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      `;
+
+      button.addEventListener("click", async (e) => {
+        e.preventDefault(); // Prevent triggering the link if nested (shouldn't be, but safe)
+        try {
+          await navigator.clipboard.writeText(email);
+
+          // Visual feedback
+          const originalIcon = button.innerHTML;
+          button.classList.add("copied");
+          button.setAttribute("aria-label", "Email copied");
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          `;
+
+          setTimeout(() => {
+            button.classList.remove("copied");
+            button.setAttribute("aria-label", "Copy email address");
+            button.innerHTML = originalIcon;
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy email:", err);
+        }
+      });
+
+      // Insert button after link
+      link.parentNode.insertBefore(button, link.nextSibling);
+    });
+  }
+  runWhenIdle(initEmailCopy);
+
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
