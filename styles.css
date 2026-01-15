@@ -244,6 +244,88 @@ a:hover {
 }
 
 /* ---
+   Responsive Images
+   --- */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Lazy loading placeholder */
+img[loading="lazy"] {
+  background: linear-gradient(90deg, var(--bg-body) 25%, var(--bg-card, var(--bg-body)) 50%, var(--bg-body) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+img[loading="lazy"].loaded {
+  animation: none;
+  background: none;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  img[loading="lazy"] {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Figure styling for responsive images */
+figure {
+  margin: 1.5rem 0;
+}
+
+figure img {
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+/* Object-fit for consistent image sizing */
+.img-cover {
+  object-fit: cover;
+}
+
+.img-contain {
+  object-fit: contain;
+}
+
+/* Aspect ratio containers for responsive images */
+.aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* ---
    Header & Navigation
    --- */
 
@@ -382,7 +464,7 @@ nav .container {
 
 .sidebar-links a {
   display: block;
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 1rem; /* Increased for better touch targets on mobile */
   color: var(--text-main);
   border-radius: 4px;
   font-size: 0.95rem;
@@ -548,7 +630,7 @@ nav .container {
   background: rgb(255, 255, 255, 0.1);
   border: 1px solid rgb(255, 255, 255, 0.2);
   color: #fff;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem; /* Increased for better touch targets (min 44px tap area) */
   font-size: 0.8rem;
   border-radius: 4px;
   cursor: pointer;
@@ -603,6 +685,23 @@ nav .container {
 @media (width < 768px) {
   :root {
     --header-height: 60px;
+  }
+
+  /* Mobile typography scaling for better readability on small screens */
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
   }
 
   .page-columns.page-full .standard-page-layout,
