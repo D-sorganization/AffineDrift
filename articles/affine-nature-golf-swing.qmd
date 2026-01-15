@@ -74,10 +74,10 @@ $$\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m},$$
 where each $\eta_{i}$ represents the amplitude of a particular bending or deformation mode. The total configuration manifold is the smooth product manifold $\mathcal{Q} = \mathcal{Q}_r \times \mathbb{R}^m$ of dimension $N = n+m$.
 
 We formalize the golfer--club system as a simple mechanical system $(Q, \mathbb{G}, V)$, where the configuration space $Q$ is a smooth manifold of dimension $N = n+m$. We endow $\mathcal{Q}$ with a Riemannian metric $\mathbb{G}$ defined by the kinetic energy tensor $M(q, \eta)$. For any tangent vector $v_q \in T_q \mathcal{Q}$, the kinetic energy is given by the quadratic form:
-$$ T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T M(q,\eta) v_q. $$
+$$T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T M(q,\eta) v_q.$$
 
 The dynamics of the system evolve on the **tangent bundle** $T\mathcal{Q}$, the smooth manifold formed by the union of all tangent spaces:
-$$ T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}. $$
+$$T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}.$$
 We define the full state vector $x$ as a point in this bundle. In local coordinates:
 $$x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong \mathbb{R}^{2(n+m)}.$$
 
@@ -126,7 +126,7 @@ The final structural element is the coupling between the actuator (the golfer) a
 The structural coupling between the golfer (actuator) and the club (payload) is the critical boundary where active kinematics meet passive dynamics. We model this interface rigorously using differential kinematics.
 
 Let the hand reference frame $\mathcal{F}_h$ be attached to the distal segment of the kinematic chain. Its spatial configuration $T_{wh}(q) \in SE(3)$ relative to the world frame is determined by the forward kinematics of the rigid body chain. The spatial velocity of the hands, $\mathcal{V}_h \in \mathbb{R}^6$ (twist), is related to the joint velocities by the geometric Jacobian $J_h(q) \in \mathbb{R}^{6 \times n}$:
-$$ \mathcal{V}_h = J_h(q) \dot{q}. $$
+$$\mathcal{V}_h = J_h(q) \dot{q}.$$
 
 The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
 
@@ -140,7 +140,7 @@ Identifying the partial derivatives with the geometric Jacobians of the system:
 2.  **Modal Jacobian:** $\Phi(s) \equiv \frac{\partial p}{\partial \eta} \in \mathbb{R}^{3 \times m}$. This is the matrix of mode shapes, mapping generalized modal rates $\dot{\eta}$ to spatial velocities.
 
 Thus, the velocity field $v(s)$ is the vector superposition of rigid-body transport and local elastic deformation:
-$$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}. $$
+$$v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}.$$
 
 The total kinetic energy of the shaft, $T_{\text{shaft}}$, is the integral of the differential kinetic energy $dT = \frac{1}{2} \| v(s) \|^2 dm$ over the shaft's mass distribution. Letting $dm = \rho(s)ds$:
 $$
@@ -215,9 +215,9 @@ where $\mathcal{L} = T - V$ is the Lagrangian and $\mathcal{R}$ is the Rayleigh 
 
 #### 1. Kinetic Energy and the Inertia Tensor
 The total kinetic energy $T$ is the integral of the squared velocity over the system's mass distribution. As derived in the kinematic interface section, the velocity is linear in $\dot{q}_{\text{sys}}$, implying $T$ is a quadratic form:
-$$ T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}}. $$
+$$T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}}.$$
 The inertia matrix $M(q_{\text{sys}})$ (the Riemannian metric of the configuration manifold) exhibits a dense block structure due to the kinematic coupling:
-$$ M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta} \end{bmatrix}. $$
+$$M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta} \end{bmatrix}.$$
 Here:
 *   $M_{qq} \in \mathbb{R}^{n \times n}$ is the effective inertia of the rigid segments, augmented by the instantaneous "locked-mode" inertia of the shaft.
 *   $M_{\eta\eta} \in \mathbb{R}^{m \times m}$ is the modal mass matrix (typically identity, $I$, by orthonormal mode normalization).
@@ -225,9 +225,9 @@ Here:
 
 #### 2. Coriolis and Centrifugal Fields
 Expanding the time derivative $\frac{d}{dt}(M \dot{q}_{\text{sys}})$ yields velocity-dependent inertial forces:
-$$ \frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}. $$
+$$\frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}.$$
 Combined with the partial derivative $-\frac{\partial T}{\partial q_{\text{sys}}}$, these form the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$, defined component-wise by Christoffel symbols of the first kind:
-$$ C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i. $$
+$$C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i.$$
 A critical property for stability analysis is that $\dot{M} - 2C$ is skew-symmetric, reflecting the conservation of energy in the absence of work-doing forces.
 
 #### 3. Potentials and Dissipation
@@ -262,21 +262,21 @@ Expanding the first column of the product yields the system:
 2. $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
 From equation (2) ($M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$), we isolate the off-diagonal block $H_{\eta q}$. Assuming $M_{\eta\eta}$ is positive-definite (as it is a principal submatrix of the metric), we pre-multiply by its inverse $M_{\eta\eta}^{-1}$:
-$$ M_{\eta\eta}^{-1} M_{\eta q} H_{qq} + H_{\eta q} = 0 \quad \Rightarrow \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
+$$M_{\eta\eta}^{-1} M_{\eta q} H_{qq} + H_{\eta q} = 0 \quad \Rightarrow \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}.$$
 This algebraic relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property; it is a linear mapping of the rigid-body mobility $H_{qq}$, determined by the **Inertial Coupling Ratio**:
-$$ \Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}. $$
+$$\Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}.$$
 We define $\Gamma$ as the system's mechanical 'gear ratio,' dictating how much 'kick' (acceleration) the flexible shaft receives for every unit of acceleration the golfer produces at the hands. Crucially, this transmission is **purely inertial**—it depends on the mass distribution of the club ($M_{q\eta}$), not its stiffness ($K_s$). This means the golfer cannot 'turn off' the interaction by relaxing their grip; the coupling is a fixed property of the club's mass matrix.
 
 Substituting this expression for $H_{\eta q}$ into the first row equation ($M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$):
-$$ M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I. $$
+$$M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I.$$
 Grouping the terms that multiply $H_{qq}$ yields the fundamental constraint on the rigid-body motion:
-$$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
+$$\left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I.$$
 The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$:
-$$ \Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}. $$
+$$\Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}.$$
 Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space. It is the effective inertia felt by the golfer when the shaft modes are free to accelerate. This differs from the locked-mode inertia $M_{qq}$ because the shaft "gives way" under load, effectively reducing the perceived inertia in certain directions.
 
 Thus, the primary diagonal block of the inverse mass matrix is the inverse of the articulated inertia:
-$$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
+$$H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}.$$
 
 This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial relief provided by the flexible shaft. It is physically distinct from the inverse of the locked-mode inertia ($M_{qq}^{-1}$); it captures the enhanced responsiveness of the hands due to the dynamic compliance of the club. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes via the Inertial Coupling Ratio.
 
@@ -488,18 +488,16 @@ The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *
 Consider the control-affine system defined on $T\mathcal{Q}$:
 
 $$
-  \dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
-  {#eq-affine_repeat}
-$$
+\dot{x} = f(x) + g(x)\,u, \qquad x(t_{0}) = x_{0}.
+$$ {#eq-affine_repeat}
 
 Let $\Phi^f_t: T\mathcal{Q} \to T\mathcal{Q}$ denote the flow of the drift vector field $f(x)$. This flow represents the natural evolution of the system under its own passive dynamics (inertia, gravity, elasticity) in the absence of control input.
 
 We define the *Zero Torque Counterfactual* trajectory, denoted $x^{\mathrm{ZTCF}}(t)$, as the integral curve of the drift field starting from the initial state $x_0$:
 
 $$
-  x^{\mathrm{ZTCF}}(t) = \Phi^f_{t-t_0}(x_0), \quad t \in [t_{0}, t_{f}].
-  {#eq-ztcf_def}
-$$
+x^{\mathrm{ZTCF}}(t) = \Phi^f_{t-t_0}(x_0), \quad t \in [t_{0}, t_{f}].
+$$ {#eq-ztcf_def}
 
 Explicitly, it is the solution to the differential equation
 
@@ -554,13 +552,12 @@ where $\text{ID}(\cdot)$ denotes the inverse dynamics operator for the coupled r
 From the equations of motion~@eq-eom_block, the generalized torques can be written as
 
 $$
-  \tau_{\text{total}}(t)
-  =
-  \underbrace{\tau_{\text{drift}}\big(x(t)\big)}_{\text{passive component}}
-  +
-  \underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}},
-  {#eq-tau_split}
-$$
+\tau_{\text{total}}(t)
+=
+\underbrace{\tau_{\text{drift}}\big(x(t)\big)}_{\text{passive component}}
++
+\underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}}.
+$$ {#eq-tau_split}
 
 where the *drift torque* is defined by evaluating the passive terms at the actual state:
 
@@ -575,11 +572,10 @@ and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations 
 The *input torque* is then given by
 
 $$
-  \tau_{\text{input}}(t)
-  =
-  \tau_{\text{total}}(t) - \tau_{\text{drift}}\big(x(t)\big).
-  {#eq-tau_input_def}
-$$
+\tau_{\text{input}}(t)
+=
+\tau_{\text{total}}(t) - \tau_{\text{drift}}\big(x(t)\big).
+$$ {#eq-tau_input_def}
 
 These equations provide an algebraically exact decomposition of the total generalized torque into drift and input components within the model.
 
@@ -633,36 +629,34 @@ $$
 \mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
 $$
 Applied to the state $x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))$, this yields:
+
 $$
-  x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
-  {#eq-zvcf_state}
-$$
+x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
+$$ {#eq-zvcf_state}
 
 Physically, this operation "freezes" the system in its current configuration. It is a projection onto the submanifold of static states.
 
 Evaluating the equations of motion at this zero-velocity state yields the *ZVCF generalized torque*:
 
 $$
-  \tau_{\mathrm{ZVCF}}(t)
-  =
-  \text{ID}\!\left(q(t),\, 0,\,
-  \eta(t),\, 0,\,
-  \ddot{q}^{\mathrm{ZVCF}}(t),\,
-  \ddot{\eta}^{\mathrm{ZVCF}}(t)\right)
-  {#eq-zvcf_id}
-$$
+\tau_{\mathrm{ZVCF}}(t)
+=
+\text{ID}\!\left(q(t),\, 0,\,
+\eta(t),\, 0,\,
+\ddot{q}^{\mathrm{ZVCF}}(t),\,
+\ddot{\eta}^{\mathrm{ZVCF}}(t)\right).
+$$ {#eq-zvcf_id}
 
 where the ZVCF accelerations are computed from the passive terms of the dynamics evaluated at zero velocity:
 
 $$
-  \begin{bmatrix}
-    \ddot{q}^{\mathrm{ZVCF}} \\[0.2em]
-    \ddot{\eta}^{\mathrm{ZVCF}}
-  \end{bmatrix}
-  =
-  a_{\text{drift}}\big(q(t),0,\eta(t),0\big).
-  {#eq-zvcf_accel}
-$$
+\begin{bmatrix}
+  \ddot{q}^{\mathrm{ZVCF}} \\[0.2em]
+  \ddot{\eta}^{\mathrm{ZVCF}}
+\end{bmatrix}
+=
+a_{\text{drift}}\big(q(t),0,\eta(t),0\big).
+$$ {#eq-zvcf_accel}
 
 Intuitively, $\tau_{\mathrm{ZVCF}}(t)$ represents the generalized torques the model predicts at that configuration if:
 - the system were held momentarily at rest,
@@ -713,13 +707,12 @@ so ZVCF should be viewed as the *zero-velocity slice* of the drift torque field.
 The full drift torque can be written as
 
 $$
-  \tau_{\text{drift}}(t)
-  =
-  \tau_{\mathrm{ZVCF}}(t)
-  +
-  \tau_{\mathrm{vel.\,drift}}(t),
-  {#eq-zvcf_split}
-$$
+\tau_{\text{drift}}(t)
+=
+\tau_{\mathrm{ZVCF}}(t)
++
+\tau_{\mathrm{vel.\,drift}}(t).
+$$ {#eq-zvcf_split}
 
 where $\tau_{\mathrm{vel.\,drift}}(t)$ contains all velocity-dependent passive forces (Coriolis, centrifugal, shaft damping, etc.).
 
@@ -766,9 +759,8 @@ is therefore meaningful only if the drift term $f(x)$ is *invariant* with respec
 The drift vector field $f(x)$ is said to be *input-invariant* if
 
 $$
-  \frac{\partial f(x)}{\partial u} = 0,
-  {#eq-drift_invariance_def}
-$$
+\frac{\partial f(x)}{\partial u} = 0.
+$$ {#eq-drift_invariance_def}
 
 meaning $f(x)$ depends only on the state $x$ and model parameters, and is strictly independent of the instantaneous control input $u$.
 
@@ -804,7 +796,7 @@ $$
 \frac{\partial}{\partial u} \left( -M^{-1} (C\dot{q}_{\text{sys}} + G + F_s) \right) = 0.
 $$
 The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
-$$ \nabla_u f(x) \equiv 0. $$
+$$\nabla_u f(x) \equiv 0.$$
 This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
 ::: {.callout-note}
@@ -902,9 +894,8 @@ This distinction motivates the role of ZVCF, which isolates the configuration-de
 The affine structure admits input constraints of the form
 
 $$
-  u(t) \in \mathcal{U}(x(t)),
-  {#eq-input_constraints}
-$$
+u(t) \in \mathcal{U}(x(t)).
+$$ {#eq-input_constraints}
 
 where $\mathcal{U}(x)$ may depend on configuration or state.
 For example:
@@ -978,11 +969,10 @@ The categories are defined algebraically and can be computed from simulation or 
 At any time $t$, inverse dynamics yields the total generalized torque:
 
 $$
-  \tau_{\text{total}}(t)
-  =
-  \text{ID}\big(x(t),\dot{x}(t)\big),
-  {#eq-total_tau}
-$$
+\tau_{\text{total}}(t)
+=
+\text{ID}\big(x(t),\dot{x}(t)\big).
+$$ {#eq-total_tau}
 
 consistent with the equations of motion~@eq-eom_block. This total force is the sum of all mechanical contributions and is the unique torque vector that reproduces the observed motion.
 
@@ -1022,11 +1012,10 @@ They represent the "static loading" the system experiences if momentarily frozen
 These are passive forces that depend on velocities but not on applied torques. Subtracting the ZVCF torque from the full drift torque gives:
 
 $$
-  \tau_{\mathrm{vel.\,drift}}(t)
-  =
-  \tau_{\text{drift}}(t) - \tau_{\mathrm{ZVCF}}(t).
-  {#eq-veldrift_def}
-$$
+\tau_{\mathrm{vel.\,drift}}(t)
+=
+\tau_{\text{drift}}(t) - \tau_{\mathrm{ZVCF}}(t).
+$$ {#eq-veldrift_def}
 
 Analytically, this term isolates the velocity-dependent nonlinearities:
 $$
@@ -1055,11 +1044,10 @@ While classified as "Drift" because they do not depend on the *instantaneous* to
 These forces arise solely from the golfer’s active torque input and are defined by:
 
 $$
-  \tau_{\mathrm{input}}(t)
-  =
-  \tau_{\text{total}}(t) - \tau_{\text{drift}}(t).
-  {#eq-input_tau_tax}
-$$
+\tau_{\mathrm{input}}(t)
+=
+\tau_{\text{total}}(t) - \tau_{\text{drift}}(t).
+$$ {#eq-input_tau_tax}
 
 Here, $\tau_{\text{drift}}$ is the passive drift torque evaluated along the actual trajectory, using the same $x(t)$ as the total torque:
 
@@ -1089,15 +1077,14 @@ the external hand forces and internal forces observed along the chain may reflec
 We define:
 
 $$
-  \tau_{\mathrm{mixed}}(t)
-  =
-  \tau_{\text{total}}(t)
-  -
-  \tau_{\mathrm{ZTCF}}(t)
-  -
-  \tau_{\mathrm{ZVCF}}(t),
-  {#eq-mixed_forces}
-$$
+\tau_{\mathrm{mixed}}(t)
+=
+\tau_{\text{total}}(t)
+-
+\tau_{\mathrm{ZTCF}}(t)
+-
+\tau_{\mathrm{ZVCF}}(t).
+$$ {#eq-mixed_forces}
 
 understanding that this term does not represent a new physical force, but a nonlinear structural interaction within the model.
 
@@ -1336,20 +1323,19 @@ denote the generalized velocity.
 The equations of motion for the coupled system may be written in compact form:
 
 $$
-  M(q,\eta)\,\dot{v}
-  +
-  C(q,\dot{q},\eta,\dot{\eta})\,v
-  +
-  G(q)
-  +
-  F_{s}(\eta,\dot{\eta})
-  =
-  \begin{bmatrix}
-    \tau \\[0.2em]
-    0
-  \end{bmatrix},
-  {#eq-appendix_eom}
-$$
+M(q,\eta)\,\dot{v}
++
+C(q,\dot{q},\eta,\dot{\eta})\,v
++
+G(q)
++
+F_{s}(\eta,\dot{\eta})
+=
+\begin{bmatrix}
+  \tau \\[0.2em]
+  0
+\end{bmatrix}.
+$$ {#eq-appendix_eom}
 
 where:
 - $M(q,\eta)$ is the full inertia matrix of the rigid--flexible system,
@@ -1403,61 +1389,58 @@ These blocks arise from standard manipulator equations extended to include flexi
 Writing $\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}$, equation~@eq-appendix_eom becomes:
 
 $$
-  M
-  \begin{bmatrix}
-    \ddot{q} \\ \ddot{\eta}
-  \end{bmatrix}
-  =
-  -
-  C
-  \begin{bmatrix}
-    \dot{q} \\ \dot{\eta}
-  \end{bmatrix}
-  - 
-  G(q)
-  -
-  F_s(\eta,\dot{\eta})
-  +
-  \begin{bmatrix}
-    B(q)\,u \\ 0
-  \end{bmatrix}.
-  {#eq-appendix_accel_base}
-$$
+M
+\begin{bmatrix}
+  \ddot{q} \\ \ddot{\eta}
+\end{bmatrix}
+=
+-
+C
+\begin{bmatrix}
+  \dot{q} \\ \dot{\eta}
+\end{bmatrix}
+-
+G(q)
+-
+F_s(\eta,\dot{\eta})
++
+\begin{bmatrix}
+  B(q)\,u \\ 0
+\end{bmatrix}.
+$$ {#eq-appendix_accel_base}
 
 Assuming $M$ is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:
 
 $$
-  \begin{bmatrix}
-    \ddot{q} \\ \ddot{\eta}
-  \end{bmatrix}
-  =
-  - M^{-1}
-  \left(
-    C\,v + G + F_{s}
-  \right)
-  +
-  M^{-1}
-  \begin{bmatrix}
-    B(q)\,u \\ 0
-  \end{bmatrix}.
-  {#eq-appendix_accel_split}
-$$
+\begin{bmatrix}
+  \ddot{q} \\ \ddot{\eta}
+\end{bmatrix}
+=
+- M^{-1}
+\left(
+  C\,v + G + F_{s}
+\right)
++
+M^{-1}
+\begin{bmatrix}
+  B(q)\,u \\ 0
+\end{bmatrix}.
+$$ {#eq-appendix_accel_split}
 
 ### A.4 \quad Drift acceleration
 
 We define the drift acceleration as
 
 $$
-  a_{\mathrm{drift}}(x)
-  =
-  -M^{-1}(q,\eta)
-  \left(
-    C(q,\dot{q},\eta,\dot{\eta})\,v
-    + G(q)
-    + F_{s}(\eta,\dot{\eta})
-  \right).
-  {#eq-appendix_drift_def}
-$$
+a_{\mathrm{drift}}(x)
+=
+-M^{-1}(q,\eta)
+\left(
+  C(q,\dot{q},\eta,\dot{\eta})\,v
+  + G(q)
+  + F_{s}(\eta,\dot{\eta})
+\right).
+$$ {#eq-appendix_drift_def}
 
 All passive mechanical terms are explicitly included:
 - inertia coupling,
@@ -1515,11 +1498,10 @@ It shows that flexible mode acceleration ($\ddot{\eta} \propto H_{fr} B(q) u$) i
 The input matrix is:
 
 $$
-  A_{\mathrm{input}}(x)
-  =
-  \begin{bmatrix} H_{rr} B(q) \\ H_{fr} B(q) \end{bmatrix}.
-  {#eq-appendix_Ainput}
-$$
+A_{\mathrm{input}}(x)
+=
+\begin{bmatrix} H_{rr} B(q) \\ H_{fr} B(q) \end{bmatrix}.
+$$ {#eq-appendix_Ainput}
 
 Linearity of the torque input is preserved even in the presence of:
 - flexible-body modes,
@@ -1624,12 +1606,11 @@ $$
 where $s$ is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is
 
 $$
-  \rho A \,\frac{\partial^2 w}{\partial t^2}
-  + c_b \frac{\partial w}{\partial t}
-  + EI \,\frac{\partial^4 w}{\partial s^4}
-  = f_{\mathrm{base}}(s,t),
-  {#eq-beam_equation}
-$$
+\rho A \,\frac{\partial^2 w}{\partial t^2}
++ c_b \frac{\partial w}{\partial t}
++ EI \,\frac{\partial^4 w}{\partial s^4}
+= f_{\mathrm{base}}(s,t).
+$$ {#eq-beam_equation}
 
 where:
 - $\rho A$ is the linear mass density,
@@ -1656,11 +1637,10 @@ These constraints define the mode shapes used in the modal expansion.
 The transverse displacement is approximated using a finite set of vibration modes:
 
 $$
-  w(s,t)
-  \approx
-  \sum_{i=1}^{m} \phi_i(s)\,\eta_i(t),
-  {#eq-modal_expansion}
-$$
+w(s,t)
+\approx
+\sum_{i=1}^{m} \phi_i(s)\,\eta_i(t).
+$$ {#eq-modal_expansion}
 
 where:
 - $\phi_i(s)$ are the eigenfunctions of the beam operator with the boundary conditions above,
@@ -1685,13 +1665,12 @@ Substituting~@eq-modal_expansion into the beam equation and projecting onto each
 The projected dynamics have the form:
 
 $$
-  \ddot{\eta}_i
-  + 2\,\zeta_i \omega_i\,\dot{\eta}_i
-  + \omega_i^2 \eta_i
-  =
-  Q_i(q,\dot{q}),
-  {#eq-modal_eom_single}
-$$
+\ddot{\eta}_i
++ 2\,\zeta_i \omega_i\,\dot{\eta}_i
++ \omega_i^2 \eta_i
+=
+Q_i(q,\dot{q}).
+$$ {#eq-modal_eom_single}
 
 for $i = 1,\dots,m$, where:
 - $\omega_i$ is the natural frequency of mode $i$,
@@ -1830,9 +1809,8 @@ $$
 This yields:
 
 $$
-  m L^2 \ddot{\theta} + m g L \sin\theta = u.
-  {#eq-pendulum_planar}
-$$
+m L^2 \ddot{\theta} + m g L \sin\theta = u.
+$$ {#eq-pendulum_planar}
 
 Defining the state $x = [\theta, \dot{\theta}]^T$, we obtain the first-order system:
 
@@ -1894,9 +1872,8 @@ We now attach a single bending mode to the pendulum to emulate a flexible shaft 
 We model the shaft deformation as a linear oscillator attached at the end of the rigid pendulum:
 
 $$
-  \ddot{\eta} + 2\zeta\omega \dot{\eta} + \omega^2 \eta = -\alpha \ddot{\theta},
-  {#eq-eta_planar}
-$$
+\ddot{\eta} + 2\zeta\omega \dot{\eta} + \omega^2 \eta = -\alpha \ddot{\theta}.
+$$ {#eq-eta_planar}
 
 where:
 - $\omega$ is the natural frequency of the mode,
@@ -1922,60 +1899,58 @@ where $I_{\mathrm{eff}}$ and $L_{\mathrm{eff}}$ capture the effect of shaft defo
 The resulting equations of motion can be written schematically as:
 
 $$
-  M(\theta,\eta)
-  \begin{bmatrix}
-    \ddot{\theta} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  +
-  C(\theta,\dot{\theta},\eta,\dot{\eta})
-  \begin{bmatrix}
-    \dot{\theta} \\[0.2em]
-    \dot{\eta}
-  \end{bmatrix}
-  +
-  G(\theta,\eta)
-  +
-  \begin{bmatrix}
-    0 \\[0.2em]
-    k_\eta \eta + c_\eta \dot{\eta}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    u \\[0.2em]
-    0
-  \end{bmatrix},
-  {#eq-pendulum_flex_block}
-$$
+M(\theta,\eta)
+\begin{bmatrix}
+  \ddot{\theta} \\[0.2em]
+  \ddot{\eta}
+\end{bmatrix}
++
+C(\theta,\dot{\theta},\eta,\dot{\eta})
+\begin{bmatrix}
+  \dot{\theta} \\[0.2em]
+  \dot{\eta}
+\end{bmatrix}
++
+G(\theta,\eta)
++
+\begin{bmatrix}
+  0 \\[0.2em]
+  k_\eta \eta + c_\eta \dot{\eta}
+\end{bmatrix}
+=
+\begin{bmatrix}
+  u \\[0.2em]
+  0
+\end{bmatrix}.
+$$ {#eq-pendulum_flex_block}
 
 where $k_\eta$ and $c_\eta$ are the modal stiffness and damping derived from $\omega,\zeta$, and all coupling terms have been absorbed into the matrices $M,C,G$.
 
 Solving for accelerations:
 
 $$
+\begin{bmatrix}
+  \ddot{\theta} \\[0.2em]
+  \ddot{\eta}
+\end{bmatrix}
+=
+-M^{-1}
+\left(
+  C
   \begin{bmatrix}
-    \ddot{\theta} \\[0.2em]
-    \ddot{\eta}
+    \dot{\theta} \\ \dot{\eta}
   \end{bmatrix}
-  =
-  -M^{-1}
-  \left(
-    C
-    \begin{bmatrix}
-      \dot{\theta} \\ \dot{\eta}
-    \end{bmatrix}
-    + G +
-    \begin{bmatrix}
-      0 \\ k_\eta \eta + c_\eta \dot{\eta}
-    \end{bmatrix}
-  \right)
-  +
-  M^{-1}
+  + G +
   \begin{bmatrix}
-    1 \\ 0
-  \end{bmatrix} u.
-  {#eq-pendulum_flex_accel}
-$$
+    0 \\ k_\eta \eta + c_\eta \dot{\eta}
+  \end{bmatrix}
+\right)
++
+M^{-1}
+\begin{bmatrix}
+  1 \\ 0
+\end{bmatrix} u.
+$$ {#eq-pendulum_flex_accel}
 
 Defining
 $$
@@ -2086,35 +2061,34 @@ $$
 and the equations of motion may be written schematically as:
 
 $$
-  \begin{bmatrix}
-    I(\eta) & I_{rf}(\eta) \\
-    I_{fr}(\eta) & M_{ff}
-  \end{bmatrix}
-  \begin{bmatrix}
-    \dot{\omega} \\[0.2em]
-    \ddot{\eta}
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    C_{rr}(\omega,\eta,\dot{\eta}) & C_{rf}(\omega,\eta,\dot{\eta}) \\
-    C_{fr}(\omega,\eta,\dot{\eta}) & C_{ff}(\omega,\eta,\dot{\eta})
-  \end{bmatrix}
-  \begin{bmatrix}
-    \omega \\[0.2em]
-    \dot{\eta}
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    \tau_g(R,\eta) \\[0.2em]
-    K_s \eta + C_s \dot{\eta}
-  \end{bmatrix}
-  =
-  \begin{bmatrix}
-    \tau \\[0.2em]
-    0
-  \end{bmatrix}.
-  {#eq-3d_flex_block}
-$$
+\begin{bmatrix}
+  I(\eta) & I_{rf}(\eta) \\
+  I_{fr}(\eta) & M_{ff}
+\end{bmatrix}
+\begin{bmatrix}
+  \dot{\omega} \\[0.2em]
+  \ddot{\eta}
+\end{bmatrix}
++
+\begin{bmatrix}
+  C_{rr}(\omega,\eta,\dot{\eta}) & C_{rf}(\omega,\eta,\dot{\eta}) \\
+  C_{fr}(\omega,\eta,\dot{\eta}) & C_{ff}(\omega,\eta,\dot{\eta})
+\end{bmatrix}
+\begin{bmatrix}
+  \omega \\[0.2em]
+  \dot{\eta}
+\end{bmatrix}
++
+\begin{bmatrix}
+  \tau_g(R,\eta) \\[0.2em]
+  K_s \eta + C_s \dot{\eta}
+\end{bmatrix}
+=
+\begin{bmatrix}
+  \tau \\[0.2em]
+  0
+\end{bmatrix}.
+$$ {#eq-3d_flex_block}
 
 Solving for $(\dot{\omega},\ddot{\eta})$:
 
