@@ -74,10 +74,10 @@ $$\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m},$$
 where each $\eta_{i}$ represents the amplitude of a particular bending or deformation mode. The total configuration manifold is the smooth product manifold $\mathcal{Q} = \mathcal{Q}_r \times \mathbb{R}^m$ of dimension $N = n+m$.
 
 We formalize the golfer--club system as a simple mechanical system $(Q, \mathbb{G}, V)$, where the configuration space $Q$ is a smooth manifold of dimension $N = n+m$. We endow $\mathcal{Q}$ with a Riemannian metric $\mathbb{G}$ defined by the kinetic energy tensor $M(q, \eta)$. For any tangent vector $v_q \in T_q \mathcal{Q}$, the kinetic energy is given by the quadratic form:
-$$ T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T M(q,\eta) v_q. $$
+$$T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T M(q,\eta) v_q.$$
 
 The dynamics of the system evolve on the **tangent bundle** $T\mathcal{Q}$, the smooth manifold formed by the union of all tangent spaces:
-$$ T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}. $$
+$$T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}.$$
 We define the full state vector $x$ as a point in this bundle. In local coordinates:
 $$x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong \mathbb{R}^{2(n+m)}.$$
 
@@ -126,7 +126,7 @@ The final structural element is the coupling between the actuator (the golfer) a
 The structural coupling between the golfer (actuator) and the club (payload) is the critical boundary where active kinematics meet passive dynamics. We model this interface rigorously using differential kinematics.
 
 Let the hand reference frame $\mathcal{F}_h$ be attached to the distal segment of the kinematic chain. Its spatial configuration $T_{wh}(q) \in SE(3)$ relative to the world frame is determined by the forward kinematics of the rigid body chain. The spatial velocity of the hands, $\mathcal{V}_h \in \mathbb{R}^6$ (twist), is related to the joint velocities by the geometric Jacobian $J_h(q) \in \mathbb{R}^{6 \times n}$:
-$$ \mathcal{V}_h = J_h(q) \dot{q}. $$
+$$\mathcal{V}_h = J_h(q) \dot{q}.$$
 
 The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
 
@@ -140,7 +140,7 @@ Identifying the partial derivatives with the geometric Jacobians of the system:
 2.  **Modal Jacobian:** $\Phi(s) \equiv \frac{\partial p}{\partial \eta} \in \mathbb{R}^{3 \times m}$. This is the matrix of mode shapes, mapping generalized modal rates $\dot{\eta}$ to spatial velocities.
 
 Thus, the velocity field $v(s)$ is the vector superposition of rigid-body transport and local elastic deformation:
-$$ v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}. $$
+$$v(s) = \underbrace{J_{\text{rigid}}(s, q) \dot{q}}_{\text{Rigid Transport}} + \underbrace{\Phi(s) \dot{\eta}}_{\text{Elastic Velocity}}.$$
 
 The total kinetic energy of the shaft, $T_{\text{shaft}}$, is the integral of the differential kinetic energy $dT = \frac{1}{2} \| v(s) \|^2 dm$ over the shaft's mass distribution. Letting $dm = \rho(s)ds$:
 $$
@@ -215,9 +215,9 @@ where $\mathcal{L} = T - V$ is the Lagrangian and $\mathcal{R}$ is the Rayleigh 
 
 #### 1. Kinetic Energy and the Inertia Tensor
 The total kinetic energy $T$ is the integral of the squared velocity over the system's mass distribution. As derived in the kinematic interface section, the velocity is linear in $\dot{q}_{\text{sys}}$, implying $T$ is a quadratic form:
-$$ T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}}. $$
+$$T(q_{\text{sys}}, \dot{q}_{\text{sys}}) = \frac{1}{2} \dot{q}_{\text{sys}}^T M(q_{\text{sys}}) \dot{q}_{\text{sys}}.$$
 The inertia matrix $M(q_{\text{sys}})$ (the Riemannian metric of the configuration manifold) exhibits a dense block structure due to the kinematic coupling:
-$$ M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta} \end{bmatrix}. $$
+$$M(q, \eta) = \begin{bmatrix} M_{qq}(q, \eta) & M_{q\eta}(q, \eta) \\ M_{\eta q}(q, \eta) & M_{\eta\eta} \end{bmatrix}.$$
 Here:
 *   $M_{qq} \in \mathbb{R}^{n \times n}$ is the effective inertia of the rigid segments, augmented by the instantaneous "locked-mode" inertia of the shaft.
 *   $M_{\eta\eta} \in \mathbb{R}^{m \times m}$ is the modal mass matrix (typically identity, $I$, by orthonormal mode normalization).
@@ -225,9 +225,9 @@ Here:
 
 #### 2. Coriolis and Centrifugal Fields
 Expanding the time derivative $\frac{d}{dt}(M \dot{q}_{\text{sys}})$ yields velocity-dependent inertial forces:
-$$ \frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}. $$
+$$\frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}.$$
 Combined with the partial derivative $-\frac{\partial T}{\partial q_{\text{sys}}}$, these form the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$, defined component-wise by Christoffel symbols of the first kind:
-$$ C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i. $$
+$$C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i.$$
 A critical property for stability analysis is that $\dot{M} - 2C$ is skew-symmetric, reflecting the conservation of energy in the absence of work-doing forces.
 
 #### 3. Potentials and Dissipation
@@ -262,21 +262,21 @@ Expanding the first column of the product yields the system:
 2. $M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$
 
 From equation (2) ($M_{\eta q} H_{qq} + M_{\eta\eta} H_{\eta q} = 0$), we isolate the off-diagonal block $H_{\eta q}$. Assuming $M_{\eta\eta}$ is positive-definite (as it is a principal submatrix of the metric), we pre-multiply by its inverse $M_{\eta\eta}^{-1}$:
-$$ M_{\eta\eta}^{-1} M_{\eta q} H_{qq} + H_{\eta q} = 0 \quad \Rightarrow \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}. $$
+$$M_{\eta\eta}^{-1} M_{\eta q} H_{qq} + H_{\eta q} = 0 \quad \Rightarrow \quad H_{\eta q} = - M_{\eta\eta}^{-1} M_{\eta q} H_{qq}.$$
 This algebraic relationship reveals that the cross-mobility $H_{\eta q}$ is not an independent property; it is a linear mapping of the rigid-body mobility $H_{qq}$, determined by the **Inertial Coupling Ratio**:
-$$ \Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}. $$
+$$\Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}.$$
 We define $\Gamma$ as the system's mechanical 'gear ratio,' dictating how much 'kick' (acceleration) the flexible shaft receives for every unit of acceleration the golfer produces at the hands. Crucially, this transmission is **purely inertial**—it depends on the mass distribution of the club ($M_{q\eta}$), not its stiffness ($K_s$). This means the golfer cannot 'turn off' the interaction by relaxing their grip; the coupling is a fixed property of the club's mass matrix.
 
 Substituting this expression for $H_{\eta q}$ into the first row equation ($M_{qq} H_{qq} + M_{q\eta} H_{\eta q} = I$):
-$$ M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I. $$
+$$M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I.$$
 Grouping the terms that multiply $H_{qq}$ yields the fundamental constraint on the rigid-body motion:
-$$ \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I. $$
+$$\left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right) H_{qq} = I.$$
 The term in parentheses is the **Schur Complement** of $M_{\eta\eta}$ in $M$, denoted $\Delta$:
-$$ \Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}. $$
+$$\Delta \equiv M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}.$$
 Physically, $\Delta$ represents the **Articulated Body Inertia** projected into the joint space. It is the effective inertia felt by the golfer when the shaft modes are free to accelerate. This differs from the locked-mode inertia $M_{qq}$ because the shaft "gives way" under load, effectively reducing the perceived inertia in certain directions.
 
 Thus, the primary diagonal block of the inverse mass matrix is the inverse of the articulated inertia:
-$$ H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}. $$
+$$H_{qq} = \Delta^{-1} = \left( M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q} \right)^{-1}.$$
 
 This derivation reveals the mechanical structure of the transmission. $H_{qq}$ represents the **Effective Mobility** of the joints *after* accounting for the inertial relief provided by the flexible shaft. It is physically distinct from the inverse of the locked-mode inertia ($M_{qq}^{-1}$); it captures the enhanced responsiveness of the hands due to the dynamic compliance of the club. Crucially, the off-diagonal block $H_{\eta q}$ dictates how joint torques propagate to the flexible modes via the Inertial Coupling Ratio.
 
@@ -804,7 +804,7 @@ $$
 \frac{\partial}{\partial u} \left( -M^{-1} (C\dot{q}_{\text{sys}} + G + F_s) \right) = 0.
 $$
 The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
-$$ \nabla_u f(x) \equiv 0. $$
+$$\nabla_u f(x) \equiv 0.$$
 This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
 ::: {.callout-note}
