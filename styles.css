@@ -382,7 +382,7 @@ nav .container {
 
 .sidebar-links a {
   display: block;
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 1rem; /* Increased for better touch targets on mobile */
   color: var(--text-main);
   border-radius: 4px;
   font-size: 0.95rem;
@@ -548,7 +548,7 @@ nav .container {
   background: rgb(255, 255, 255, 0.1);
   border: 1px solid rgb(255, 255, 255, 0.2);
   color: #fff;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.75rem; /* Increased for better touch targets (min 44px tap area) */
   font-size: 0.8rem;
   border-radius: 4px;
   cursor: pointer;
@@ -603,6 +603,23 @@ nav .container {
 @media (width < 768px) {
   :root {
     --header-height: 60px;
+  }
+
+  /* Mobile typography scaling for better readability on small screens */
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
   }
 
   .page-columns.page-full .standard-page-layout,
