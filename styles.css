@@ -78,9 +78,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Style the title block in the main content area */
+/* Style the title block in the main content area
+   Note: Using high specificity to override Quarto defaults without !important */
+main#quarto-document-content #title-block-header,
+body main #title-block-header,
 #title-block-header {
-  display: none !important; /* Hide title bar completely */
+  display: none;
   margin-top: 0;
   padding-top: 0;
 }
@@ -147,18 +150,19 @@ a:hover {
   padding: 0 2rem;
 }
 
-/* 3-Column Grid System */
+/* 3-Column Grid System
+   Using specific selectors to override Quarto defaults */
+.page-columns.page-full .standard-page-layout,
+.container .standard-page-layout,
 .standard-page-layout {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
-      --sidebar-width
-    ) !important;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
   gap: var(--sidebar-gap);
-  max-width: 100%; /* Full width for sidebars at edges */
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
-  padding-top: 1rem; /* Reduce top padding for better alignment */
-  align-items: start; /* Prevent sidebars from stretching unnecessarily */
+  padding-top: 1rem;
+  align-items: start;
 }
 
 /* Ensure grid items align at top */
@@ -167,20 +171,20 @@ a:hover {
   margin-top: 0;
 }
 
-/* Grid Placement */
-#quarto-content .standard-page-layout .left-sidebar,
-body .standard-page-layout .left-sidebar {
-  grid-column: 1 !important;
+/* Grid Placement - using high specificity selectors */
+.page-columns .standard-page-layout .left-sidebar,
+.standard-page-layout .left-sidebar {
+  grid-column: 1;
 }
 
-#quarto-content .standard-page-layout .main-content-area,
-body .standard-page-layout .main-content-area {
-  grid-column: 2 !important;
+.page-columns .standard-page-layout .main-content-area,
+.standard-page-layout .main-content-area {
+  grid-column: 2;
 }
 
-#quarto-content .standard-page-layout .right-sidebar,
-body .standard-page-layout .right-sidebar {
-  grid-column: 3 !important;
+.page-columns .standard-page-layout .right-sidebar,
+.standard-page-layout .right-sidebar {
+  grid-column: 3;
 }
 
 /* Sidebars */
@@ -580,17 +584,18 @@ nav .container {
   }
 }
 
-/* Tablet: Switch to 2 columns (Left Sidebar + Content) or 1 Column */
+/* Tablet: Switch to 2 columns (Left Sidebar + Content) */
 @media (width < 992px) {
+  .page-columns.page-full .standard-page-layout,
+  .container .standard-page-layout,
   .standard-page-layout {
-    grid-template-columns: 240px minmax(0, 1fr) !important;
+    grid-template-columns: 240px minmax(0, 1fr);
     gap: 2rem;
   }
 
-  /* Hide Right Sidebar content or move it */
-  #quarto-content .standard-page-layout .right-sidebar,
-  body .standard-page-layout .right-sidebar {
-    display: none; /* For now, hide history on tablet */
+  /* Hide Right Sidebar on tablet */
+  .standard-page-layout .right-sidebar {
+    display: none;
   }
 }
 
@@ -600,6 +605,8 @@ nav .container {
     --header-height: 60px;
   }
 
+  .page-columns.page-full .standard-page-layout,
+  .container .standard-page-layout,
   .standard-page-layout {
     display: flex;
     flex-direction: column;
@@ -607,11 +614,8 @@ nav .container {
     gap: 1.5rem;
   }
 
-  #quarto-content .standard-page-layout .left-sidebar,
-  body .standard-page-layout .left-sidebar,
-  #quarto-content .standard-page-layout .main-content-area,
-  body .standard-page-layout .main-content-area {
-    grid-column: auto !important;
+  .standard-page-layout .left-sidebar,
+  .standard-page-layout .main-content-area {
     width: 100%;
   }
 
@@ -880,6 +884,8 @@ h3:hover .anchor-link,
 
 /* ---
    Print Optimization
+   Note: !important is intentionally used in print styles to ensure
+   consistent output regardless of page state or JavaScript modifications
    --- */
 @media print {
   /* Hide Navigation & UI */
@@ -971,13 +977,16 @@ h3:hover .anchor-link,
   line-height: 1.7;
 }
 
-.form-group {
+/* Contact Form - using high specificity for consistent styling */
+.contact-form .form-group,
+form.contact-form .form-group {
   margin-bottom: 1.5rem;
-  display: block !important;
+  display: block;
 }
 
-.contact-form .form-group label {
-  display: block !important; /* Force block to put label above input */
+.contact-form .form-group label,
+form.contact-form .form-group label {
+  display: block;
   width: 100%;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -986,10 +995,12 @@ h3:hover .anchor-link,
 }
 
 .contact-form .form-group input,
-.contact-form .form-group textarea {
-  display: block !important;
-  width: 100% !important; /* Force full width */
-  box-sizing: border-box !important;
+.contact-form .form-group textarea,
+form.contact-form .form-group input,
+form.contact-form .form-group textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: 4px;
@@ -1077,5 +1088,144 @@ h3:hover .anchor-link,
   .contact-main {
     order: 1;
     width: 100%;
+  }
+}
+
+/* ---
+   Home Page Layout
+   Styles moved from inline <style> in index.qmd
+   --- */
+.home-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 5rem;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.home-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--legal-pad-yellow);
+  border: 2px solid var(--legal-pad-yellow-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.home-sidebar h3 {
+  color: var(--primary-blue);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-light);
+  margin-top: 2rem;
+}
+
+.home-sidebar .sidebar-section:first-child h3 {
+  margin-top: 0;
+}
+
+.home-sidebar .resource-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-sidebar .resource-links li {
+  margin-bottom: 0.4rem;
+}
+
+.home-sidebar .resource-links a {
+  display: block;
+  color: var(--text-dark);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.home-sidebar .resource-links a:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding-left: 0.9rem;
+}
+
+.home-content {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.welcome-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--legal-pad-yellow-accent);
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.welcome-header h1 {
+  color: var(--primary-blue);
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  font-weight: 700;
+  font-family: "Playfair Display", serif;
+  line-height: 1.1;
+}
+
+.welcome-header .subtitle {
+  color: var(--text-light);
+  font-size: 1.3rem;
+  font-style: italic;
+  font-family: "Playfair Display", serif;
+}
+
+.home-text p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+  color: var(--text-dark);
+  font-size: 1.15rem;
+  font-family: "Playfair Display", serif;
+}
+
+.math-showcase {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--bg-alt);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Home Page Responsive */
+@media (max-width: 1024px) {
+  .home-layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .home-sidebar {
+    width: 100%;
+    order: 2;
+    position: static;
+  }
+
+  .home-sidebar .sidebar-sticky-content {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .home-content {
+    order: 1;
   }
 }
