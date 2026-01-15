@@ -148,6 +148,37 @@ a:hover {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 2rem;
+  width: 100%;
+}
+
+/* Override Quarto's page-columns to prevent layout conflicts */
+#quarto-content.page-columns {
+  display: block;
+}
+
+/* Ensure full-width pages use full width */
+.page-layout-full #quarto-content,
+.page-layout-full main.content {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Hide Quarto's default title block to prevent vertical space issues */
+#title-block-header {
+  display: none !important;
+}
+
+/* Reset Quarto's margin-sidebar and sidebar columns */
+#quarto-margin-sidebar,
+#quarto-sidebar {
+  display: none;
+}
+
+/* Override page-columns grid behavior */
+.page-columns.page-full,
+.page-columns.column-page {
+  display: block;
+  max-width: 100%;
 }
 
 /* 3-Column Grid System
@@ -376,6 +407,96 @@ nav .container {
   padding: 0 1rem; /* Minimal padding */
 }
 
+/* Quarto Navbar Full Width Fix */
+#quarto-header {
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--primary-blue) 100%
+  );
+  border-bottom: 2px solid var(--accent-blue);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+#quarto-header .navbar {
+  background: transparent !important;
+  padding: 0.5rem 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+#quarto-header .navbar-container {
+  max-width: 100%;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+/* Navbar brand and title styling */
+#quarto-header .navbar-brand-container {
+  margin: 0;
+}
+
+#quarto-header .navbar-brand {
+  color: var(--pure-white);
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+#quarto-header .navbar-title {
+  color: var(--pure-white);
+}
+
+/* Navigation links styling */
+#quarto-header .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease;
+}
+
+#quarto-header .navbar-nav .nav-link:hover {
+  color: var(--pure-white);
+}
+
+/* Dropdown menus in navbar */
+#quarto-header .dropdown-menu {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+}
+
+#quarto-header .dropdown-item {
+  color: var(--text-main);
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+#quarto-header .dropdown-item:hover {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+/* Search box styling */
+#quarto-header #quarto-search {
+  margin-left: auto;
+}
+
+#quarto-header .aa-DetachedSearchButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: var(--pure-white);
+}
+
+#quarto-header .aa-DetachedSearchButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .logo-link {
   display: flex;
   align-items: center;
@@ -577,6 +698,292 @@ nav .container {
   font-weight: 600;
   margin-top: 0.5rem;
   font-size: 0.9rem;
+}
+
+/* ---
+   Resource Grid & Cards
+   --- */
+.resources-section {
+  padding: 1rem 0;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.resource-card {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.resource-card.has-media {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.resource-media {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+
+.resource-media img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.resource-content h3 {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--primary-dark);
+  line-height: 1.3;
+}
+
+.resource-description {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.resource-link {
+  color: var(--accent-blue);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: auto;
+  transition: color 0.2s ease;
+}
+
+.resource-link:hover {
+  color: var(--primary-blue);
+}
+
+/* Page section heading */
+.page-section {
+  margin-bottom: 1rem;
+}
+
+.section-heading {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--accent-blue);
+}
+
+/* Responsive resource grid */
+@media (width < 768px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .resource-card.has-media {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---
+   Critics Corner
+   A section for technical criticism and discussion
+   --- */
+.critics-corner {
+  margin-top: 3rem;
+  border: 2px solid #dc3545;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+  overflow: hidden;
+}
+
+.critics-corner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.critics-corner-header:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.critics-corner-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: white;
+  border: none;
+}
+
+.critics-corner-header h2::before {
+  content: "⚠️";
+  font-size: 1.5rem;
+}
+
+.critics-corner-icon {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+  line-height: 1;
+}
+
+.critics-corner-header[aria-expanded="true"] .critics-corner-icon {
+  transform: rotate(180deg);
+}
+
+.critics-corner-content {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+}
+
+.critics-corner-header[aria-expanded="true"] + .critics-corner-content {
+  padding: 1.5rem;
+  max-height: 2000px;
+}
+
+/* Criticism items */
+.criticism-item {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-left: 4px solid #dc3545;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.criticism-item:last-child {
+  margin-bottom: 0;
+}
+
+.criticism-item h3 {
+  color: #c82333;
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.criticism-item h3::before {
+  content: "🔍";
+}
+
+.criticism-item p {
+  margin-bottom: 0.75rem;
+  color: var(--text-main);
+  line-height: 1.7;
+}
+
+.criticism-item p:last-child {
+  margin-bottom: 0;
+}
+
+/* Response/defense section within criticism */
+.criticism-response {
+  background: #e8f5e9;
+  border-left: 3px solid #4caf50;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 4px;
+}
+
+.criticism-response h4 {
+  color: #2e7d32;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.criticism-response h4::before {
+  content: "💡";
+}
+
+.criticism-response p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+/* Severity indicators */
+.criticism-severity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.criticism-severity.minor {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.criticism-severity.moderate {
+  background: #ffe0b2;
+  color: #e65100;
+}
+
+.criticism-severity.major {
+  background: #ffcdd2;
+  color: #c62828;
+}
+
+/* Empty state */
+.critics-corner-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.critics-corner-empty::before {
+  content: "✓";
+  display: block;
+  font-size: 3rem;
+  color: #4caf50;
+  margin-bottom: 1rem;
+  font-style: normal;
 }
 
 /* ---
@@ -1023,14 +1430,56 @@ h3:hover .anchor-link,
 }
 
 /* ---
-   Print Optimization
+   PDF Download Button
+   --- */
+.pdf-download-btn {
+  position: fixed;
+  bottom: 5rem;
+  right: 2rem;
+  background: var(--primary-blue);
+  color: var(--pure-white);
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  z-index: 900;
+}
+
+.pdf-download-btn:hover {
+  background: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.pdf-download-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentcolor;
+}
+
+/* ---
+   Print Optimization - Academic Paper Style
    Note: !important is intentionally used in print styles to ensure
    consistent output regardless of page state or JavaScript modifications
    --- */
 @media print {
-  /* Hide Navigation & UI */
+  /* Page setup for academic papers */
+  @page {
+    size: letter;
+    margin: 1in;
+  }
+
+  /* Hide Navigation & UI elements */
   header,
   footer,
+  #quarto-header,
   .left-sidebar,
   .right-sidebar,
   .home-sidebar,
@@ -1038,40 +1487,287 @@ h3:hover .anchor-link,
   .skip-to-content,
   .copy-btn,
   .nav-toggle,
-  .lightbox-overlay {
+  .lightbox-overlay,
+  .pdf-download-btn,
+  .critics-corner-toggle,
+  #quarto-search,
+  .quarto-navbar-tools,
+  .navbar-toggler,
+  .resource-media,
+  .toc-nav,
+  .history-nav {
     display: none !important;
   }
 
   /* Reset Layout for Paper */
-  body,
+  body {
+    font-family: "Times New Roman", Times, serif !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #quarto-content,
+  .page-columns,
   .standard-page-layout,
-  .main-content-area {
+  .main-content-area,
+  .container,
+  main.content {
     display: block !important;
     width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
     background: white !important;
     color: black !important;
   }
 
-  /* Ink Saving & Readability */
-  a {
-    text-decoration: underline;
-    color: black !important;
+  /* Show print-only title block */
+  .print-title-block {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #000;
   }
 
-  h1,
-  h2,
+  .print-title-block h1 {
+    font-size: 18pt !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .print-title-block .print-author {
+    font-size: 12pt;
+    margin-bottom: 0.25rem;
+  }
+
+  .print-title-block .print-date {
+    font-size: 10pt;
+    color: #666;
+  }
+
+  /* Typography for print */
+  h1 {
+    font-size: 18pt !important;
+    color: black !important;
+    break-after: avoid;
+    margin-top: 1.5rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  h2 {
+    font-size: 14pt !important;
+    color: black !important;
+    break-after: avoid;
+    margin-top: 1.25rem !important;
+    margin-bottom: 0.5rem !important;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.25rem;
+  }
+
   h3 {
+    font-size: 12pt !important;
+    font-weight: bold !important;
+    color: black !important;
+    break-after: avoid;
+    margin-top: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  h4 {
+    font-size: 12pt !important;
+    font-style: italic !important;
     color: black !important;
     break-after: avoid;
   }
 
-  img,
-  pre,
-  blockquote {
+  p {
+    text-align: justify;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Links - show URL for print */
+  a {
+    color: black !important;
+    text-decoration: underline;
+  }
+
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+    word-break: break-all;
+  }
+
+  a[href^="#"]:after,
+  a.resource-link:after,
+  .sidebar-links a:after {
+    content: none;
+  }
+
+  /* Math equations - preserve MathJax rendering */
+  .math.display,
+  mjx-container,
+  .MathJax {
+    break-inside: avoid !important;
+    margin: 1rem 0 !important;
+    text-align: center !important;
+  }
+
+  /* Equation boxes for print */
+  .equation {
+    background: #f5f5f5 !important;
+    border-left: 3px solid #333 !important;
+    padding: 1rem !important;
+    margin: 1rem 0 !important;
     break-inside: avoid;
-    border-color: #ccc;
+  }
+
+  /* Code blocks */
+  pre,
+  .code-block {
+    background: #f5f5f5 !important;
+    border: 1px solid #ddd !important;
+    padding: 0.75rem !important;
+    font-size: 9pt !important;
+    break-inside: avoid;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    break-inside: avoid;
+  }
+
+  figure {
+    break-inside: avoid;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  figcaption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #333;
+  }
+
+  /* Tables */
+  table {
+    break-inside: avoid;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  th, td {
+    border: 1px solid #333;
+    padding: 0.5rem;
+    text-align: left;
+  }
+
+  th {
+    background: #f0f0f0 !important;
+    font-weight: bold;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left: 3px solid #333;
+    margin: 1rem 0;
+    padding-left: 1rem;
+    font-style: italic;
+    break-inside: avoid;
+  }
+
+  /* Abstract section */
+  .abstract-section {
+    background: #f9f9f9 !important;
+    border: 1px solid #ccc !important;
+    padding: 1rem !important;
+    margin: 1rem 0 !important;
+    break-inside: avoid;
+  }
+
+  /* Key points and limitations */
+  .keypoint-box,
+  .limitation-box {
+    border: 1px solid #666 !important;
+    background: #f9f9f9 !important;
+    padding: 0.75rem !important;
+    margin: 1rem 0 !important;
+    break-inside: avoid;
+  }
+
+  /* References section */
+  .references-section,
+  #references {
+    break-before: page;
+    margin-top: 2rem;
+  }
+
+  .references-section h2,
+  #references h2 {
+    font-size: 14pt !important;
+    border-bottom: 2px solid #000;
+  }
+
+  .csl-entry,
+  .reference-item {
+    margin-bottom: 0.75rem;
+    padding-left: 2rem;
+    text-indent: -2rem;
+    font-size: 10pt;
+    break-inside: avoid;
+  }
+
+  /* Critics Corner - format for print */
+  .critics-corner {
+    break-before: page;
+    border-top: 2px solid #333;
+    padding-top: 1rem;
+    margin-top: 2rem;
+  }
+
+  .critics-corner h2 {
+    font-size: 14pt !important;
+  }
+
+  .critics-corner-content {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Resource cards - simplified for print */
+  .resource-grid {
+    display: block !important;
+  }
+
+  .resource-card {
+    border: 1px solid #ccc !important;
+    margin-bottom: 1rem !important;
+    padding: 0.75rem !important;
+    break-inside: avoid;
+  }
+
+  /* Footer for print */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-top: 0.5rem;
   }
 }
 
