@@ -824,6 +824,56 @@ document.addEventListener("DOMContentLoaded", function () {
   // ⚡ Bolt Optimization: Defer history updates to unblock main thread
   runWhenIdle(initArticleHistory);
 
+  // 🎨 Palette UX: Copy Email to Clipboard
+  function initEmailCopy() {
+    // Target specifically the contact email in sidebar or main content
+    const emailLinks = document.querySelectorAll(
+      '.contact-email a[href^="mailto:"]',
+    );
+    emailLinks.forEach((link) => {
+      // Avoid duplicate buttons
+      if (
+        link.nextElementSibling &&
+        link.nextElementSibling.classList.contains("copy-email-btn")
+      )
+        return;
+
+      const email = link.textContent.trim();
+      // Simple validation to ensure it looks like an email
+      if (!email.includes("@")) return;
+
+      const button = document.createElement("button");
+      button.className = "copy-email-btn";
+      button.type = "button";
+      button.textContent = "Copy";
+      button.setAttribute("aria-label", `Copy email address: ${email}`);
+
+      button.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await navigator.clipboard.writeText(email);
+          const originalText = button.textContent;
+          button.textContent = "Copied!";
+          button.classList.add("copied");
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove("copied");
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy email:", err);
+          button.textContent = "Error";
+          setTimeout(() => {
+            button.textContent = "Copy";
+          }, 2000);
+        }
+      });
+
+      link.parentNode.insertBefore(button, link.nextSibling);
+    });
+  }
+  runWhenIdle(initEmailCopy);
+
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
