@@ -1066,6 +1066,64 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // In Layman's Terms Collapsible Section
+  function initLaymansTerms() {
+    const laymansHeaders = document.querySelectorAll(".laymans-terms-header");
+
+    laymansHeaders.forEach((header, index) => {
+      const content = header.nextElementSibling;
+
+      // Ensure content exists and has the correct class
+      if (!content || !content.classList.contains("laymans-terms-content")) {
+        return;
+      }
+
+      // Set up ARIA attributes
+      if (!content.id) {
+        content.id = `laymans-content-${index}`;
+      }
+      header.setAttribute("aria-controls", content.id);
+
+      // Initialize to collapsed state if not already set
+      if (!header.hasAttribute("aria-expanded")) {
+        header.setAttribute("aria-expanded", "false");
+      }
+
+      const isExpanded = header.getAttribute("aria-expanded") === "true";
+      content.setAttribute("aria-hidden", !isExpanded);
+
+      // Add click handler
+      header.addEventListener("click", function () {
+        const currentlyExpanded =
+          this.getAttribute("aria-expanded") === "true";
+        this.setAttribute("aria-expanded", !currentlyExpanded);
+        content.setAttribute("aria-hidden", currentlyExpanded);
+
+        // Announce state change for screen readers
+        const sectionName =
+          this.querySelector("h2")?.textContent || "In Layman's Terms";
+        const announcement = currentlyExpanded
+          ? `${sectionName} collapsed`
+          : `${sectionName} expanded`;
+
+        // Use live region for announcement (if exists)
+        const liveRegion = document.getElementById("aria-live-region");
+        if (liveRegion) {
+          liveRegion.textContent = announcement;
+        }
+      });
+
+      // Add keyboard support
+      header.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.click();
+        }
+      });
+    });
+  }
+  initLaymansTerms();
+
   console.log("AffineDrift loaded successfully (Optimized)");
 });
 
