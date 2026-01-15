@@ -831,6 +831,62 @@ document.addEventListener("DOMContentLoaded", function () {
   // ⚡ Bolt Optimization: Defer history updates to unblock main thread
   runWhenIdle(initArticleHistory);
 
+  // 🎨 Palette UX: Copy Email Functionality
+  function initEmailCopy() {
+    // ⚡ Bolt Optimization: Use specific selector to limit scope
+    const mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
+    if (mailtoLinks.length === 0) return;
+
+    // Pre-define SVGs strings to avoid repetitive DOM creation
+    const copyIcon = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    const checkIcon = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+    mailtoLinks.forEach((link) => {
+      // Skip if already processed
+      if (
+        link.nextElementSibling &&
+        link.nextElementSibling.classList.contains("copy-email-btn")
+      )
+        return;
+
+      const href = link.getAttribute("href");
+      // Simple extraction of email (handling potential ?subject=...)
+      const email = href.replace(/^mailto:/, "").split("?")[0];
+      if (!email) return;
+
+      const button = document.createElement("button");
+      button.className = "copy-email-btn";
+      button.setAttribute("aria-label", "Copy email address");
+      button.setAttribute("type", "button");
+      button.innerHTML = copyIcon;
+      button.title = "Copy email address";
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent opening mail client if they click the button specifically
+        e.stopPropagation();
+
+        navigator.clipboard.writeText(email)
+          .then(() => {
+            button.innerHTML = checkIcon;
+            button.classList.add("success");
+            button.setAttribute("aria-label", "Email copied");
+
+            setTimeout(() => {
+              button.innerHTML = copyIcon;
+              button.classList.remove("success");
+              button.setAttribute("aria-label", "Copy email address");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy email:", err);
+          });
+      });
+
+      link.insertAdjacentElement("afterend", button);
+    });
+  }
+  runWhenIdle(initEmailCopy);
+
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
