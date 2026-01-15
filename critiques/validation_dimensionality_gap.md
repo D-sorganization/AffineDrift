@@ -53,4 +53,4 @@ The project claims to have "validated" a theory whose primary novel contribution
 **Location:** Part 5 Conclusion.
 **Concrete Edit:**
 
-> Add: "The most critical next step is the extension to 3D. The current planar validation proves that the ZTCF subtraction logic works for $M(q)\ddot{q}$, but it does not stress-test the drift invariance assumption against the complex $ \omega \times I \omega$ terms present in the full spatial swing."
+> Add: "The most critical next step is the extension to 3D. The current planar validation proves that the ZTCF subtraction logic works for $M(q)\ddot{q}$, but it does not stress-test the drift invariance assumption against the complex $\omega \times I \omega$ terms present in the full spatial swing."
