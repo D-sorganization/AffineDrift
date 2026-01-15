@@ -8,6 +8,7 @@
 
   let bibliographyData = [];
   let filteredData = [];
+  let currentSort = "year-desc"; // Default sort: newest first
 
   // Initialize when DOM is ready
   if (document.readyState === "loading") {
@@ -19,6 +20,7 @@
   function init() {
     loadBibliography();
     setupSearch();
+    setupSortControls();
   }
 
   /**
@@ -36,7 +38,14 @@
       bibliographyData = parseYAML(yamlText);
       filteredData = [...bibliographyData];
 
-      renderBibliography(filteredData);
+      // Apply initial sort and render
+      sortAndRender();
+
+      // Update entry count
+      const countEl = document.getElementById("bib-count");
+      if (countEl) {
+        countEl.textContent = `${bibliographyData.length} entries`;
+      }
     } catch (error) {
       console.error("Error loading bibliography:", error);
       const listContainer = document.getElementById("bib-list");
@@ -185,6 +194,10 @@
         const entry = bibliographyData.find((e) => e.id === id);
         if (entry) {
           showDetails(entry);
+          // Track entry click in metrics
+          if (window.AffineDriftMetrics) {
+            window.AffineDriftMetrics.trackEntryClick(id, entry.title);
+          }
         }
       });
     });
@@ -360,8 +373,102 @@
       searchTimeout = setTimeout(() => {
         const query = e.target.value.toLowerCase().trim();
         filterBibliography(query);
+        // Track search in metrics
+        if (query.length >= 2 && window.AffineDriftMetrics) {
+          window.AffineDriftMetrics.trackSearch(query);
+        }
       }, 300);
     });
+  }
+
+  /**
+   * Setup sort control buttons
+   */
+  function setupSortControls() {
+    const sortContainer = document.getElementById("bib-sort-controls");
+    if (!sortContainer) return;
+
+    // Create sort buttons
+    sortContainer.innerHTML = `
+      <span class="sort-label">Sort by:</span>
+      <button class="sort-btn active" data-sort="year-desc" title="Newest first">
+        Year ↓
+      </button>
+      <button class="sort-btn" data-sort="year-asc" title="Oldest first">
+        Year ↑
+      </button>
+      <button class="sort-btn" data-sort="author" title="Alphabetical by author">
+        Author A-Z
+      </button>
+      <button class="sort-btn" data-sort="title" title="Alphabetical by title">
+        Title A-Z
+      </button>
+    `;
+
+    // Add click handlers
+    sortContainer.querySelectorAll(".sort-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const sortType = btn.dataset.sort;
+        if (sortType === currentSort) return;
+
+        // Update active state
+        sortContainer.querySelectorAll(".sort-btn").forEach((b) => {
+          b.classList.remove("active");
+        });
+        btn.classList.add("active");
+
+        // Apply new sort
+        currentSort = sortType;
+        sortAndRender();
+      });
+    });
+  }
+
+  /**
+   * Sort entries based on current sort mode
+   */
+  function sortEntries(entries) {
+    const sorted = [...entries];
+
+    switch (currentSort) {
+      case "year-desc":
+        return sorted.sort((a, b) => {
+          const yearA = parseInt(a.year) || 0;
+          const yearB = parseInt(b.year) || 0;
+          return yearB - yearA;
+        });
+
+      case "year-asc":
+        return sorted.sort((a, b) => {
+          const yearA = parseInt(a.year) || 0;
+          const yearB = parseInt(b.year) || 0;
+          return yearA - yearB;
+        });
+
+      case "author":
+        return sorted.sort((a, b) => {
+          const authorA = (a.authors && a.authors[0]) ? a.authors[0].toLowerCase() : "zzz";
+          const authorB = (b.authors && b.authors[0]) ? b.authors[0].toLowerCase() : "zzz";
+          return authorA.localeCompare(authorB);
+        });
+
+      case "title":
+        return sorted.sort((a, b) => {
+          const titleA = (a.title || "").toLowerCase();
+          const titleB = (b.title || "").toLowerCase();
+          return titleA.localeCompare(titleB);
+        });
+
+      default:
+        return sorted;
+    }
+  }
+
+  /**
+   * Sort and re-render the current filtered data
+   */
+  function sortAndRender() {
+    renderBibliography(sortEntries(filteredData));
   }
 
   /**
@@ -408,7 +515,8 @@
       });
     }
 
-    renderBibliography(filteredData);
+    // Apply current sort and render
+    sortAndRender();
   }
 
   // Add CSS for bibliography styling
@@ -563,6 +671,61 @@
     .resource-grid {
       display: flex;
       flex-direction: column;
+    }
+
+    /* Sort Controls */
+    #bib-sort-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .sort-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-right: 0.25rem;
+    }
+
+    .sort-btn {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--bg-body);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sort-btn:hover {
+      border-color: var(--accent-blue);
+      background: var(--bg-alt);
+    }
+
+    .sort-btn.active {
+      background: var(--primary-blue);
+      border-color: var(--primary-blue);
+      color: white;
+    }
+
+    #bib-count {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    @media (max-width: 600px) {
+      #bib-sort-controls {
+        justify-content: center;
+      }
+      #bib-count {
+        width: 100%;
+        text-align: center;
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
     }
   `;
   document.head.appendChild(style);
