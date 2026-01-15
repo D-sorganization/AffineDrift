@@ -185,6 +185,10 @@
         const entry = bibliographyData.find((e) => e.id === id);
         if (entry) {
           showDetails(entry);
+          // Track entry click in metrics
+          if (window.AffineDriftMetrics) {
+            window.AffineDriftMetrics.trackEntryClick(id, entry.title);
+          }
         }
       });
     });
@@ -360,6 +364,10 @@
       searchTimeout = setTimeout(() => {
         const query = e.target.value.toLowerCase().trim();
         filterBibliography(query);
+        // Track search in metrics
+        if (query.length >= 2 && window.AffineDriftMetrics) {
+          window.AffineDriftMetrics.trackSearch(query);
+        }
       }, 300);
     });
   }

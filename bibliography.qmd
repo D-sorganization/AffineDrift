@@ -50,6 +50,9 @@ page-layout: full
                      <h3 class="sidebar-heading">Details</h3>
                      <p style="color: var(--text-light);">Select an item to view details.</p>
                 </div>
+                <div id="metrics-widget" style="margin-top: 2rem;">
+                    <!-- Metrics widget will be rendered here -->
+                </div>
              </div>
         </aside>
     </div>
@@ -57,5 +60,15 @@ page-layout: full
 </section>
 
 <script src="js/bibliography.js"></script>
+<script>
+  // Render metrics widget when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.AffineDriftMetrics) {
+      setTimeout(function() {
+        window.AffineDriftMetrics.renderStatsWidget('metrics-widget');
+      }, 500);
+    }
+  });
+</script>
 
 ```
