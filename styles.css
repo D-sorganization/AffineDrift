@@ -882,6 +882,39 @@ h3:hover .anchor-link,
   transform: translate(1px, -1px);
 }
 
+/* Email Copy Button */
+.copy-email-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+  vertical-align: middle;
+  line-height: 1;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.copy-email-btn:hover {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  border-color: var(--accent-blue);
+}
+
+.copy-email-btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.copy-email-btn.copied {
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+
 /* ---
    Print Optimization
    Note: !important is intentionally used in print styles to ensure
@@ -897,6 +930,7 @@ h3:hover .anchor-link,
   .back-to-top,
   .skip-to-content,
   .copy-btn,
+  .copy-email-btn,
   .nav-toggle,
   .lightbox-overlay {
     display: none !important;
