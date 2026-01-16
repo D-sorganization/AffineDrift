@@ -3,11 +3,11 @@ from pathlib import Path
 
 
 def wrap_file(path: Path) -> None:
-    """
-    Wrap sidebar content in a sticky div for the given file.
+    """Wrap sidebar content in a sticky div for the given file.
 
     Args:
         path: Path to the .qmd file to process.
+
     """
     content = path.read_text()
     original_content = content
@@ -62,24 +62,22 @@ def wrap_file(path: Path) -> None:
     # Re-process for resources-sidebar
     if '<aside class="resources-sidebar">' in content:
         parts = content.split('<aside class="resources-sidebar">')
-        if len(parts) > 1:
-            if not parts[1].strip().startswith(sticky_div_start):
-                subparts = parts[1].split(aside_close, 1)
-                if len(subparts) > 1:
-                    content = (
-                        parts[0]
-                        + '<aside class="resources-sidebar">\n        '
-                        + sticky_div_start
-                        + subparts[0]
-                        + sticky_div_end
-                        + "\n      "
-                        + aside_close
-                        + subparts[1]
-                    )
+        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
+            subparts = parts[1].split(aside_close, 1)
+            if len(subparts) > 1:
+                content = (
+                    parts[0]
+                    + '<aside class="resources-sidebar">\n        '
+                    + sticky_div_start
+                    + subparts[0]
+                    + sticky_div_end
+                    + "\n      "
+                    + aside_close
+                    + subparts[1]
+                )
 
     if content != original_content:
         path.write_text(content)
-        print(f"Wrapped {path}")
 
 
 files = glob.glob("*.qmd")

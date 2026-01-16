@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
+import logging
 import re
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_image_urls(content: str) -> list[str]:
@@ -16,6 +24,7 @@ def extract_image_urls(content: str) -> list[str]:
 
     Returns:
         A list of image URLs found in the content.
+
     """
     # Match HTML img tags
     html_matches = re.findall(r'<img\s+[^>]*src=["\']([^"\']+)["\']', content)
@@ -35,6 +44,7 @@ def check_url(url: str, file_path: Path) -> str | None:
 
     Returns:
         None if the URL is valid, otherwise a string describing the error.
+
     """
     if url.startswith("http"):
         try:
@@ -58,14 +68,14 @@ def check_url(url: str, file_path: Path) -> str | None:
         if url.startswith("/"):
             # Absolute path relative to site root? Or system root?
             # Usually / starts from root of website.
-            local_path = Path(".") / url.lstrip("/")
+            local_path = Path(url.lstrip("/"))
         else:
             # Relative to the file
             local_path = Path(file_path).parent / url
 
         if not local_path.exists():
             # Try checking relative to root if above fails (common in some SSGs)
-            root_path = Path(".") / url
+            root_path = Path(url)
             if root_path.exists():
                 return None  # It exists relative to root
 
@@ -83,6 +93,7 @@ def process_file(file_path: Path) -> list[str]:
 
     Returns:
         A list of error messages for broken image URLs found in the file.
+
     """
     with open(file_path, encoding="utf-8") as f:
         content = f.read()
@@ -102,26 +113,23 @@ def process_file(file_path: Path) -> list[str]:
 
 def main() -> None:
     """Main function to verify images in all relevant files."""
-    files = list(Path(".").rglob("*.qmd")) + list(Path(".").rglob("*.html"))
+    files = list(Path().rglob("*.qmd")) + list(Path().rglob("*.html"))
     # Filter out _site or docs if we are checking source
     files = [f for f in files if "_site" not in str(f) and "docs" not in str(f)]
 
     all_broken = []
 
-    print(f"Checking {len(files)} files...")
-
     for file_path in files:
-        # print(f"Scanning {file_path}...")
         broken = process_file(file_path)
         if broken:
             all_broken.extend(broken)
             for b in broken:
-                print(b)
+                logger.error(b)
 
     if not all_broken:
-        print("No broken images found!")
+        logger.info("All images verified successfully")
     else:
-        print(f"Found {len(all_broken)} broken image references.")
+        logger.error("Found %d broken image references", len(all_broken))
 
 
 if __name__ == "__main__":

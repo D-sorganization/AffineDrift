@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-r"""
-Check equation rendering in Quarto documents and HTML files.
+r"""Check equation rendering in Quarto documents and HTML files.
 
 This script validates that mathematical equations are properly formatted
 for MathJax rendering. It checks for:
@@ -10,9 +9,17 @@ for MathJax rendering. It checks for:
 - Missing MathJax configuration
 """
 
+import logging
 import re
 import sys
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
@@ -34,7 +41,7 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
                         "unbalanced",
                         f"Unbalanced \\[ \\] delimiters: {open_count} open, "
                         f"{close_count} close",
-                    )
+                    ),
                 )
 
             # Check for proper pairing
@@ -47,15 +54,14 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
 
         # Check for $$ ... $$ patterns
         dollar_count = line.count("$$")
-        if dollar_count > 0:
-            if dollar_count % 2 != 0:
-                issues.append(
-                    (
-                        line_num,
-                        "unbalanced",
-                        f"Unbalanced $$ delimiters: {dollar_count} found  (should be even)",
-                    )
-                )
+        if dollar_count > 0 and dollar_count % 2 != 0:
+            issues.append(
+                (
+                    line_num,
+                    "unbalanced",
+                    f"Unbalanced $$ delimiters: {dollar_count} found  (should be even)",
+                ),
+            )
 
         # Check for \( ... \) patterns
         if r"\(" in line or r"\)" in line:
@@ -68,7 +74,7 @@ def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
                         "unbalanced",
                         f"Unbalanced \\( \\) delimiters: {open_count} open, "
                         f"{close_count} close",
-                    )
+                    ),
                 )
 
         # Check for single $ patterns (inline math, but not $$)
@@ -134,9 +140,7 @@ def check_quarto_math_config(quarto_yml: Path) -> list[str]:
 
 def main() -> int:
     """Main function to check equations in all relevant files."""
-    print("Checking equation rendering...")
-
-    root = Path(".")
+    root = Path()
     issues_found = False
 
     # Check _quarto.yml for MathJax configuration
@@ -144,9 +148,8 @@ def main() -> int:
     if quarto_yml.exists():
         config_issues = check_quarto_math_config(quarto_yml)
         if config_issues:
-            print(f"WARNING: Configuration issues in {quarto_yml}:")
             for issue in config_issues:
-                print(f"   - {issue}")
+                logger.warning("_quarto.yml: %s", issue)
             issues_found = True
 
     # Check all .qmd files
@@ -165,13 +168,12 @@ def main() -> int:
             equation_issues = find_equations(content, str(qmd_file))
 
             if equation_issues:
-                print(f"\nWARNING: Issues found in {qmd_file}:")
-                for line_num, _issue_type, message in equation_issues:
-                    print(f"   Line {line_num}: {message}")
+                for line_num, issue_type, message in equation_issues:
+                    logger.warning("%s:%d [%s] %s", qmd_file, line_num, issue_type, message)
                 issues_found = True
 
         except Exception as e:
-            print(f"ERROR: Error reading {qmd_file}: {e}")
+            logger.error("Error processing %s: %s", qmd_file, e)
             issues_found = True
 
     # Check rendered HTML files in docs/ for MathJax configuration
@@ -180,17 +182,13 @@ def main() -> int:
     for html_file in html_files[:10]:  # Limit to first 10 to avoid too much output
         config_issues = check_mathjax_config(str(html_file))
         if config_issues:
-            print(f"\nWARNING: MathJax configuration issues in {html_file}:")
             for issue in config_issues:
-                print(f"   - {issue}")
+                logger.warning("%s: %s", html_file, issue)
             issues_found = True
 
     if not issues_found:
-        print("SUCCESS: No equation rendering issues found!")
         return 0
-    else:
-        print("\nWARNING: Some equation rendering issues were found. Please review and fix.")
-        return 1
+    return 1
 
 
 if __name__ == "__main__":

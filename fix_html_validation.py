@@ -1,8 +1,10 @@
-import glob
+"""Script to fix HTML validation issues."""
+
 import re
+from pathlib import Path
 
 
-def fix_file(filepath: str) -> None:
+def fix_file(filepath: Path) -> None:
     """Fix HTML validation issues in the given file.
 
     Args:
@@ -10,8 +12,10 @@ def fix_file(filepath: str) -> None:
         filepath: Path to the HTML file to fix.
 
     """
-    with open(filepath, encoding="utf-8") as f:
-        content = f.read()
+    try:
+        content = filepath.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return
 
     original_content = content
 
@@ -25,32 +29,18 @@ def fix_file(filepath: str) -> None:
 
     # 3. Fix aria-labelledby on dropdown-menu
     # <ul class="dropdown-menu" aria-labelledby="...">
-    content = re.sub(r'(\s+class="dropdown-menu")\s+aria-labelledby="[^"]+"', r"\1", content)
-
-    # 4. Fix button type
-    # <button class="accordion-header" ...>
-    # Add type="button" if missing.
-    # This is a bit complex with regex. Let's handle the specific case seen in logs if possible,
-    # or just use a simple replacement for known buttons.
-    # The error was on <button> is missing recommended "type" attribute
-    # We can assume most buttons should be type="button" if not specified.
-    # But let's look at the specific error location:
-    # tools/wrist_universal_joint/grip_angle_simulator.html
-
-    # Let's fix the specific patterns first.
-
-    # Fix valid-id errors (replace dots with dashes in IDs if they are just dots)
-    # This might be risky. Let's stick to the high volume structural errors first.
+    content = re.sub(
+        r'(\s+class="dropdown-menu")\s+aria-labelledby="[^"]+"',
+        r"\1",
+        content,
+    )
 
     if content != original_content:
-        print(f"Fixing {filepath}")
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
+        filepath.write_text(content, encoding="utf-8")
 
 
-# Process all HTML files in docs
-files = glob.glob("docs/**/*.html", recursive=True)
-for file in files:
-    fix_file(file)
-
-print("HTML fix complete.")
+if __name__ == "__main__":
+    # Process all HTML files in docs
+    files = Path("docs").rglob("*.html")
+    for file in files:
+        fix_file(file)

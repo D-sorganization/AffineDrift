@@ -1,18 +1,24 @@
+import logging
 import re
 import sys
 from pathlib import Path
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
 
 def find_tex_files(paths: list[str]) -> list[Path]:
-    """
-    Find all .tex files in the given paths (files or directories).
+    """Find all .tex files in the given paths (files or directories).
     Returns a list of Path objects.
     """
     tex_files = []
     for path_str in paths:
         path = Path(path_str)
         if not path.exists():
-            print(f"WARNING: {path_str} not found, skipping.")
             continue
 
         if path.is_file() and path.suffix == ".tex":
@@ -20,8 +26,7 @@ def find_tex_files(paths: list[str]) -> list[Path]:
         elif path.is_dir():
             # Find all .tex files in directory
             tex_files.extend(path.glob("*.tex"))
-        else:
-            print(f"WARNING: {path_str} is not a .tex file or directory, skipping.")
+        # Skip non-existent paths, non-.tex files, and non-directories silently
 
     return tex_files
 
@@ -40,14 +45,11 @@ def prompt_for_files() -> list[Path]:
         )
         return [Path(f) for f in file_paths]
     except ImportError:
-        print("ERROR: tkinter not available. Please provide folder or file paths as arguments.")
-        print("Usage: python latex_to_quarto.py <folder1> [folder2] ... [file1.tex] ...")
         sys.exit(1)
 
 
 def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, int]:
-    r"""
-    Convert a LaTeX article to Quarto markdown (.qmd) while preserving all body content.
+    r"""Convert a LaTeX article to Quarto markdown (.qmd) while preserving all body content.
     Only structure is changed:
       - \section / \subsection / \subsubsection -> # / ## / ###
       - \maketitle, \begin{document}, \end{document} removed
@@ -130,33 +132,23 @@ def main() -> None:
         tex_files = find_tex_files(input_paths)
 
         if not tex_files:
-            print("No .tex files found in the specified paths.")
             sys.exit(1)
     else:
         # Fall back to GUI
         tex_files = prompt_for_files()
         if not tex_files:
-            print("No files selected.")
             sys.exit(0)
-
-    print(f"Found {len(tex_files)} .tex file(s) to convert.\n")
 
     for tex_path in tex_files:
         try:
             tex_text = tex_path.read_text(encoding="utf-8")
             fallback_title = tex_path.stem.replace("_", " ")
-            md_text, before_wc, after_wc = latex_to_quarto_md(tex_text, fallback_title)
+            md_text, _before_wc, _after_wc = latex_to_quarto_md(tex_text, fallback_title)
             qmd_path = tex_path.with_suffix(".qmd")
             qmd_path.write_text(md_text, encoding="utf-8")
-            print(f"[OK] {tex_path.name} -> {qmd_path.name}")
-            print(f"  Word count before: {before_wc}")
-            print(f"  Word count after : {after_wc}")
-            print()
+            logger.info("Converted: %s -> %s", tex_path, qmd_path)
         except Exception as e:
-            print(f"[ERROR] Error converting {tex_path.name}: {e}")
-            print()
-
-    print(f"Conversion complete! Processed {len(tex_files)} file(s).")
+            logger.error("Failed to convert %s: %s", tex_path, e)
 
 
 if __name__ == "__main__":

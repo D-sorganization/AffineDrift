@@ -1,30 +1,43 @@
-import os
+"""Script to check for equation syntax errors."""
+
+import logging
 import re
+from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
-def find_qmd_md_files(root_dir: str) -> list[str]:
-    files_list: list[str] = []
+def find_qmd_md_files(root_dir: Path) -> list[Path]:
+    """Find all .qmd and .md files in the repository."""
+    files_list: list[Path] = []
     # Explicitly check root .qmd files
-    for f in os.listdir(root_dir):
-        if (f.endswith(".qmd") or f.endswith(".md")) and os.path.isfile(os.path.join(root_dir, f)):
-            files_list.append(os.path.join(root_dir, f))
+    for f in root_dir.iterdir():
+        if f.suffix in {".qmd", ".md"} and f.is_file():
+            files_list.append(f)
 
     # Check articles and critiques
     for subdir in ["articles", "critiques"]:
-        path = os.path.join(root_dir, subdir)
-        if os.path.exists(path):
-            for root, _dirs, files in os.walk(path):
-                if "archive" in root:
-                    continue
-                for file in files:
-                    if file.endswith(".qmd") or file.endswith(".md"):
-                        files_list.append(os.path.join(root, file))
+        path = root_dir / subdir
+        if path.exists():
+            # Use rglob and filter instead of os.walk
+            for f in path.rglob("*"):
+                if f.suffix in {".qmd", ".md"} and "archive" not in f.parts:
+                    files_list.append(f)
+
     return files_list
 
 
-def check_file(filepath: str) -> None:
-    with open(filepath, encoding="utf-8") as f:
-        content = f.read()
+def check_file(filepath: Path) -> None:
+    """Check a file for equation errors."""
+    try:
+        content = filepath.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return
 
     errors: list[str] = []
 
@@ -58,7 +71,7 @@ def check_file(filepath: str) -> None:
                     state = STATE_TEXT
                 i += 3
                 continue
-            elif state != STATE_CODE_BLOCK:
+            if state != STATE_CODE_BLOCK:
                 # Single backtick (inline code)
                 if state == STATE_TEXT:
                     state = STATE_INLINE_CODE
@@ -129,7 +142,7 @@ def check_file(filepath: str) -> None:
                             # Maybe it's $ .. $$ (end of math is $$?)
                             # If we see $$, it's definitely weird if we started with $.
                             errors.append(
-                                f"Line {start_line}: Encountered '$$' inside inline math starting at line {start_line}"
+                                f"Line {start_line}: Encountered '$$' inside inline math starting at line {start_line}",
                             )
                             i += 2
                             break
@@ -145,7 +158,7 @@ def check_file(filepath: str) -> None:
                             content_str = "".join(math_content)
                             if not re.match(r"^\s*[\d\.,]+\s*$", content_str):
                                 errors.append(
-                                    f"Line {start_line}: Inline math has leading space: '${content_str}$'"
+                                    f"Line {start_line}: Inline math has leading space: '${content_str}$'",
                                 )
 
                         if not math_content:
@@ -158,20 +171,17 @@ def check_file(filepath: str) -> None:
                     i += 1
                 else:
                     # Unclosed inline math. Ignore for now as it's likely non-math text.
-                    pass
+                    pass  # Explicitly allowing unclosed inline math for now
 
         else:
             i += 1
 
     if errors:
-        print(f"Errors in {filepath}:")
-        for e in errors:
-            print(f"  {e}")
-        print("-" * 20)
+        for error in errors:
+            logger.error("%s: %s", filepath, error)
 
 
 if __name__ == "__main__":
-    files = find_qmd_md_files(".")
-    print(f"Scanning {len(files)} files...")
+    files = find_qmd_md_files(Path("."))
     for f in files:
         check_file(f)

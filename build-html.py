@@ -1,23 +1,31 @@
 #!/usr/bin/env python3
-"""
-Simple script to extract HTML from .qmd files and create proper HTML files.
+"""Simple script to extract HTML from .qmd files and create proper HTML files.
 This is a workaround for when Quarto is not available.
 """
 
 import html
+import logging
 import re
 import subprocess
 from pathlib import Path
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
 
 def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str | None]:
-    """Extract HTML content from a .qmd file
+    """Extract HTML content from a .qmd file.
 
     Args:
         qmd_file: Path to the .qmd file to process
 
     Returns:
         Tuple of (title, description, html_content). Any can be None if not found.
+
     """
     content = qmd_file.read_text()
 
@@ -52,7 +60,7 @@ def create_html_page(
     template_content: str,
     page_type: str = "articles",
 ) -> bool:
-    """Create a complete HTML page from a template
+    """Create a complete HTML page from a template.
 
     Args:
         title: Page title
@@ -65,6 +73,7 @@ def create_html_page(
 
     Returns:
         True if successful, False otherwise
+
     """
     if not template_content:
         return False
@@ -77,7 +86,9 @@ def create_html_page(
 
     # Replace title
     template = re.sub(
-        r"<title>.*?</title>", f"<title>{title_escaped} – AffineDrift</title>", template
+        r"<title>.*?</title>",
+        f"<title>{title_escaped} – AffineDrift</title>",
+        template,
     )
 
     # Replace meta description
@@ -111,7 +122,9 @@ def create_html_page(
 
     # Replace title block
     template = re.sub(
-        r'<h1 class="title">.*?</h1>', f'<h1 class="title">{title_escaped}</h1>', template
+        r'<h1 class="title">.*?</h1>',
+        f'<h1 class="title">{title_escaped}</h1>',
+        template,
     )
 
     # Replace description in page
@@ -123,7 +136,7 @@ def create_html_page(
     )
 
     # Replace the main content
-    content_pattern = r'<section class="article-section">.*?</section>'
+    content_pattern = r'<section class="article-section.*?">.*?</section>'
     # Use lambda to avoid backslash escaping issues in body_html
     template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
 
@@ -131,7 +144,10 @@ def create_html_page(
     if page_type != "articles":
         # Remove updateArticlesHistory function and calls
         template = re.sub(
-            r"\s*function updateArticlesHistory\(\) \{.*?\}\s*", "", template, flags=re.DOTALL
+            r"\s*function updateArticlesHistory\(\) \{.*?\}\s*",
+            "",
+            template,
+            flags=re.DOTALL,
         )
         template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
 
@@ -188,11 +204,10 @@ def main() -> None:
     qmd_files.append("articles.qmd")
 
     # Generate bibliography data
-    print("Generating bibliography data...")
     try:
         subprocess.run(["python3", "scripts/generate_bibliography_data.py"], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Warning: Failed to generate bibliography data: {e}")
+        logger.warning("Failed to generate bibliography data: %s", e)
 
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
@@ -203,26 +218,19 @@ def main() -> None:
     if template_path.exists():
         template_content = template_path.read_text()
     else:
-        print(f"Error: Template file {template_path} not found.")
-        # Proceeding without template will likely fail or require skip logic,
-        # but original script logic implicitly failed inside create_html_page returning False.
-        # We will check validity in the loop.
+        logger.error("Template file not found: %s", template_path)
 
     if not template_content:
-        print("Warning: Empty or missing template. Build may fail.")
+        logger.error("Template content is empty, cannot proceed with HTML generation")
 
     for qmd_name in qmd_files:
         qmd_file = Path(qmd_name)
         if not qmd_file.exists():
-            print(f"Warning: {qmd_name} not found")
             continue
-
-        print(f"Processing {qmd_name}...")
 
         title, description, html_content = extract_html_from_qmd(qmd_file)
 
         if html_content is None:
-            print(f"  No HTML content found in {qmd_name}")
             continue
 
         # Ensure title and description are strings (for mypy)
@@ -242,11 +250,16 @@ def main() -> None:
             page_type = "articles"
 
         if create_html_page(
-            title, description, html_content, output_file, template_content, page_type
+            title,
+            description,
+            html_content,
+            output_file,
+            template_content,
+            page_type,
         ):
-            print(f"  Created {output_file}")
+            logger.info("Created: %s", output_file)
         else:
-            print(f"  Failed to create {output_file}")
+            logger.warning("Failed to create: %s", output_file)
 
 
 if __name__ == "__main__":

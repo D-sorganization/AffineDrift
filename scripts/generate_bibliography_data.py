@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 import json
+import logging
 import re
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
@@ -25,12 +33,13 @@ def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
                     for item in data:
                         if isinstance(item, dict) and "id" in item:
                             extracted_items.append(item)
-            except yaml.YAMLError:
+            except yaml.YAMLError as e:
+                logger.warning("YAML parse error in %s: %s", file_path, e)
                 continue
 
         return extracted_items
     except Exception as e:
-        print(f"Error reading {file_path}: {e}")
+        logger.error("Error extracting YAML from %s: %s", file_path, e)
         return []
 
 
@@ -50,8 +59,7 @@ def normalize_item(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    """
-    Generate JSON data for the interactive bibliography from YAML sources.
+    """Generate JSON data for the interactive bibliography from YAML sources.
     Reads 'data/bibliography.yaml' and 'articles/*-bibliography.md',
     and converts them to JSON in 'docs/data'.
     """
@@ -71,13 +79,12 @@ def main() -> None:
                         if "id" in item:
                             all_refs[item["id"]] = normalize_item(item)
         except Exception as e:
-            print(f"Error processing {base_bib_path}: {e}")
+            logger.error("Error loading base bibliography: %s", e)
 
     # 2. Load from articles/*-bibliography.md
     articles_dir = Path("articles")
     if articles_dir.exists():
         for md_file in articles_dir.glob("*-bibliography.md"):
-            print(f"Processing {md_file}...")
             items = extract_yaml_from_markdown(md_file)
             for item in items:
                 norm_item = normalize_item(item)
@@ -104,9 +111,6 @@ def main() -> None:
     with open(bib_output_path, "w") as f:
         json.dump(final_refs, f, indent=2)
 
-    print(f"Successfully generated {bib_output_path}")
-    print(f"Total entries: {len(final_refs)}")
-
     # 3. Process Reading Paths
     paths_source = Path("data/reading_paths.yaml")
     paths_output = output_dir / "reading_paths.json"
@@ -117,9 +121,8 @@ def main() -> None:
                 paths_data = yaml.safe_load(f)
             with open(paths_output, "w") as f:
                 json.dump(paths_data, f, indent=2)
-            print(f"Successfully generated {paths_output}")
         except Exception as e:
-            print(f"Error processing reading paths: {e}")
+            logger.error("Error processing reading paths: %s", e)
 
 
 if __name__ == "__main__":

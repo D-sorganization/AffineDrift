@@ -7,7 +7,7 @@ RISKS = []
 
 
 class ScienceAuditor(ast.NodeVisitor):
-    def visit_BinOp(self, node: ast.BinOp) -> None:  # noqa: N802
+    def visit_BinOp(self, node: ast.BinOp) -> None:
         """Check for division safety."""
         # 1. Division Safety
         # Use simple nested if to avoid complex boolean expression lint struggles or
@@ -24,7 +24,7 @@ class ScienceAuditor(ast.NodeVisitor):
             )
         self.generic_visit(node)
 
-    def visit_Call(self, node: ast.Call) -> None:  # noqa: N802
+    def visit_Call(self, node: ast.Call) -> None:
         """Check for trigonometric safety."""
         # 2. Trig Safety
         if isinstance(node.func, ast.Attribute) and node.func.attr in [

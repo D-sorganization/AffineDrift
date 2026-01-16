@@ -197,7 +197,7 @@ The critique correctly points out that the Euclidean norm of the state derivativ
 **Implementation:**
 We will refine the definition of DCR in `articles/controllability-drift-ratio.qmd` to focus explicitly on the **dynamic fiber** (accelerations/torques), where the competition between passive and active forces actually occurs. We will redefine DCR as the ratio of **Drift Acceleration** to **Control Acceleration Capacity**.
 
-> _Refinement:_ "To ensure dimensional consistency, we define the DCR specifically on the vertical fiber of the tangent bundle (the acceleration subspace). We compare the magnitude of the drift-induced acceleration $\|\ddot{q}_{drift}\|$ to the maximum available control acceleration $\|\ddot{q}\_{control}\|..."
+> _Refinement:_ "To ensure dimensional consistency, we define the DCR specifically on the vertical fiber of the tangent bundle (the acceleration subspace). We compare the magnitude of the drift-induced acceleration $\|\ddot{q}_{drift}\|$ to the maximum available control acceleration $\|\ddot{q}_{control}\|$..."
 
 ### 19. Addressing Strokes Gained Non-Ergodicity
 
