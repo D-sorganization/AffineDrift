@@ -1302,8 +1302,51 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- Critics Corner Toggle ---
   initCriticsCorner();
 
+  // --- Contact Form Feedback ---
+  initContactFormFeedback();
+
   console.log("AffineDrift loaded successfully (Optimized)");
 });
+
+// 🎨 Palette UX: Contact Form Feedback
+function initContactFormFeedback() {
+  const forms = document.querySelectorAll('form[action^="mailto:"]');
+  forms.forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      // Do NOT prevent default - let the browser open the mail client
+      // But update the UI to show something happened
+
+      const button = form.querySelector('button[type="submit"]');
+      if (!button) return;
+
+      // Save original state
+      if (!button.dataset.originalHtml) {
+        button.dataset.originalHtml = button.innerHTML;
+      }
+
+      // Update state (allow expansion)
+      button.innerHTML = "Opening Email Client...";
+
+      // Manually apply style changes if .success class is missing
+      const originalBg = button.style.backgroundColor;
+      const originalBorder = button.style.borderColor;
+
+      // Check if .success is defined in CSS, if not, apply inline
+      // Note: We use existing 'success' class if available (e.g. from copy-btn), otherwise fallback
+      button.classList.add("success");
+
+      // Disable briefly to prevent double clicks while app opens
+      button.disabled = true;
+
+      // Revert after delay
+      setTimeout(() => {
+        button.innerHTML = button.dataset.originalHtml;
+        button.classList.remove("success");
+        button.disabled = false;
+      }, 3000);
+    });
+  });
+}
 
 // --- PDF Download Functionality ---
 function initPDFDownload() {
