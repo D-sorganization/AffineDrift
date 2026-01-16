@@ -3,6 +3,7 @@ import re
 
 
 def find_qmd_md_files(root_dir: str) -> list[str]:
+    """Find all .qmd and .md files in the repository."""
     files_list: list[str] = []
     # Explicitly check root .qmd files
     for f in os.listdir(root_dir):
@@ -23,6 +24,7 @@ def find_qmd_md_files(root_dir: str) -> list[str]:
 
 
 def check_file(filepath: str) -> None:
+    """Check a single file for Quarto equation syntax errors."""
     with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
@@ -158,7 +160,7 @@ def check_file(filepath: str) -> None:
                     i += 1
                 else:
                     # Unclosed inline math. Ignore for now as it's likely non-math text.
-                    pass
+                    pass  # Explicitly allowing unclosed inline math for now
 
         else:
             i += 1

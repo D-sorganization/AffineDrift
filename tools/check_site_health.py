@@ -57,7 +57,12 @@ def check_site_health() -> None:
     # Files that are always entry points (not orphaned)
     # These include the main index, error pages, and standalone pages
     # that may be accessed directly via URL (e.g., easter eggs, standalone tools)
-    entry_points = {"index.html", "404.html", "daydreams-doodles.html"}
+    entry_points = {
+        "index.html",
+        "404.html",
+        "daydreams-doodles.html",
+        "articles/ux-verification-test.html",
+    }
     orphaned_files -= entry_points
 
     # Exclude archive directories from orphan check - these are intentionally not linked
