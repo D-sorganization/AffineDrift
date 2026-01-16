@@ -218,15 +218,25 @@ $$
 $$
 = \dot{q}^T J^T J \dot{q} + \dot{q}^T J^T \Phi \dot{\eta} + \dot{\eta}^T \Phi^T J \dot{q} + \dot{\eta}^T \Phi^T \Phi \dot{\eta}.
 $$
-Noting that the scalar cross-terms are identical ($\dot{q}^T J^T \Phi \dot{\eta} = \dot{\eta}^T \Phi^T J \dot{q}$), we group the terms by the generalized velocities $\dot{q}$ and $\dot{\eta}$. The integration is a linear operator, so we can distribute the integral across the sum:
+Since the kinetic energy is a scalar quantity, the two middle cross-terms are identical:
 $$
-T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \underbrace{\left( \int_0^L \rho J^T J ds \right)}_{M_{qq}} \dot{q} + \dot{q}^T \underbrace{\left( \int_0^L \rho J^T \Phi ds \right)}_{M_{q\eta}} \dot{\eta} + \frac{1}{2} \dot{\eta}^T \underbrace{\left( \int_0^L \rho \Phi^T \Phi ds \right)}_{M_{\eta\eta}} \dot{\eta}.
+(\dot{q}^T J^T \Phi \dot{\eta})^T = \dot{\eta}^T \Phi^T J \dot{q}.
 $$
-This derivation rigorously identifies the mass matrix blocks as projections of the distributed mass properties onto the generalized coordinate basis:
+We group these terms and integrate the local density over the shaft domain $s \in [0, L]$. Exploiting the linearity of the integral operator, we define the total kinetic energy as:
+$$
+T_{\text{shaft}} = \frac{1}{2} \dot{q}^T \left( \int_0^L \rho(s) J^T J \, ds \right) \dot{q}
++ \dot{q}^T \left( \int_0^L \rho(s) J^T \Phi \, ds \right) \dot{\eta}
++ \frac{1}{2} \dot{\eta}^T \left( \int_0^L \rho(s) \Phi^T \Phi \, ds \right) \dot{\eta}.
+$$
+This derivation explicitly identifies the block components of the system mass matrix $M(q, \eta)$:
 
-1.  **Rigid Inertia** $M_{qq} = \int \rho J^T J ds$: The standard manipulator inertia, augmented by the "locked-mode" inertia of the shaft.
-2.  **Modal Inertia** $M_{\eta\eta} = \int \rho \Phi^T \Phi ds$: The mass matrix of the flexible coordinates (typically normalized to identity $I_m$ via mode orthogonality).
-3.  **Inertial Coupling** $M_{q\eta} = \int \rho J^T \Phi ds$: The cross-term that couples the rigid and flexible subspaces.
+1.  **Rigid Inertia** $M_{qq} = \int_0^L \rho J^T J ds$: The standard manipulator inertia, augmented by the "locked-mode" inertia of the shaft.
+2.  **Modal Inertia** $M_{\eta\eta} = \int_0^L \rho \Phi^T \Phi ds$: The mass matrix of the flexible coordinates. By convention, the mode shapes $\phi_i(s)$ are chosen to be orthonormal with respect to the mass distribution $\rho(s)$, such that:
+    $$
+    \int_0^L \rho(s) \phi_i(s)^T \phi_j(s) \, ds = \delta_{ij}.
+    $$
+    Under this normalization, $M_{\eta\eta}$ simplifies to the identity matrix $I_m$.
+3.  **Inertial Coupling** $M_{q\eta} = \int_0^L \rho J^T \Phi ds$: The cross-term that couples the rigid and flexible subspaces.
 
 The existence of the non-zero block $M_{q\eta}$ is the physical mechanism by which hand acceleration ($\ddot{q}$) creates an instantaneous inertial load on the shaft (via $-M_{q\eta}^T \ddot{q}$), and conversely, how shaft vibration recoil exerts reaction torques on the hands. This coupling exists purely due to the mass distribution of the shaft and is independent of stiffness.
 
@@ -302,7 +312,16 @@ The potential energy $V = V_g(q, \eta) + V_{elastic}(\eta)$ leads to the gravita
 With the energetic scalar fields ($T, V, \mathcal{R}$) fully defined, we can now invoke the variational principle to generate the vector field of the dynamics. The Euler-Lagrange operator transforms these energy landscapes into a balance of forces, ensuring that the resulting motion adheres to the principle of least action.
 
 #### 4. The Underactuated Equation of Motion
-Assembling these terms yields the standard second-order differential equation:
+We substitute the block-partitioned energy terms into the Euler-Lagrange equations.
+For the rigid coordinates $q$:
+$$
+\frac{d}{dt} (M_{qq}\dot{q} + M_{q\eta}\dot{\eta}) - \frac{\partial T}{\partial q} + G(q) = \tau.
+$$
+For the flexible coordinates $\eta$:
+$$
+\frac{d}{dt} (M_{\eta q}\dot{q} + M_{\eta\eta}\dot{\eta}) - \frac{\partial T}{\partial \eta} + \nabla_\eta V_{elastic} + \nabla_{\dot{\eta}} \mathcal{R} = 0.
+$$
+Grouping the inertial terms and identifying the Coriolis components leads to the standard coupled block system:
 $$
 \begin{bmatrix} M_{qq} & M_{q\eta} \\ M_{\eta q} & M_{\eta\eta} \end{bmatrix}
 \begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}
@@ -362,6 +381,8 @@ $$
 =
 \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}
 \begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u + H_{q\eta} \cdot 0 \\ H_{\eta q} B(q) u + H_{\eta\eta} \cdot 0 \end{bmatrix}
 =
 \begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.
 $$
@@ -860,18 +881,25 @@ $$
 \frac{\partial \ddot{\eta}_{\text{drift}}}{\partial u_k}
 \end{bmatrix}.
 $$
-Inspection of the components reveals:
-1.  The kinematic mapping $\dot{q}, \dot{\eta}$ are state variables, thus $\frac{\partial \dot{q}}{\partial u} = 0$.
-2.  The mass matrix $M(q,\eta)$ and its inverse depend only on configuration coordinates $q,\eta$.
-3.  The Coriolis matrix $C$ depends on $q,\eta, \dot{q}, \dot{\eta}$.
-4.  Gravitational ($G$) and elastic ($K_s \eta$) forces depend only on configuration.
-5.  Damping forces ($C_s \dot{\eta}$) depend linearly on velocity.
+We proceed by evaluating the gradient of the passive acceleration term. Since the drift acceleration is a composition of state-dependent functions:
+$$
+\frac{\partial a_{\text{drift}}}{\partial u} = \frac{\partial}{\partial u} \left( -M^{-1}(x) \big( h(x) \big) \right).
+$$
+Applying the product rule:
+$$
+\frac{\partial a_{\text{drift}}}{\partial u} = - \left( \frac{\partial M^{-1}}{\partial u} \right) h(x) - M^{-1} \left( \frac{\partial h(x)}{\partial u} \right).
+$$
+By definition of the mechanical system parameters:
+1.  **Inertia:** $M(q,\eta)$ depends only on configuration, so $\frac{\partial M}{\partial u} = 0 \implies \frac{\partial M^{-1}}{\partial u} = 0$.
+2.  **Coriolis/Centrifugal:** $C(x)$ depends only on state, so $\frac{\partial C}{\partial u} = 0$.
+3.  **Potentials:** $G(q)$ and $K_s \eta$ depend only on configuration, so $\frac{\partial V}{\partial u} = 0$.
+4.  **Damping:** $F_{dissip}$ depends linearly on velocity, so $\frac{\partial F_{dissip}}{\partial u} = 0$.
 
-Since none of the constituent terms $M, C, G, K_s, C_s$ contain the variable $u$, the partial derivative vanishes identically:
+Since none of the constituent terms contain the variable $u$, the partial derivative vanishes identically:
 $$
-\frac{\partial}{\partial u} \left( -M^{-1} (C\dot{q}_{\text{sys}} + G + F_s) \right) = 0.
+\frac{\partial a_{\text{drift}}}{\partial u} = - (0) \cdot h(x) - M^{-1} \cdot (0) = 0.
 $$
-The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix.
+The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix:
 $$\nabla_u f(x) \equiv 0.$$
 This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
