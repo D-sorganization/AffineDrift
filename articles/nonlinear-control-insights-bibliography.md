@@ -2,27 +2,28 @@
 
 ## A) Concept Map
 
-- **Nonlinear Control Foundations**
+-   **Nonlinear Control Foundations**
 
-  - **Affine Systems**: Structure of $\dot{x} = f(x) + g(x)u$.
-  - **Drift Vector Field ($f(x)$)**: Passive dynamics as a causal "memory" of the system (inertia + elasticity).
-  - **Input Vector Field ($g(x)$)**: State-dependent effectiveness of actuation.
-  - **Lie Brackets**: Commutation $[f, g]$ to generate motion in unactuated directions (Sequencing).
+    -   **Affine Systems**: Structure of $\dot{x} = f(x) + g(x)u$.
+    -   **Drift Vector Field (**$f(x)$): Passive dynamics as a causal "memory" of the system (inertia + elasticity).
+    -   **Input Vector Field (**$g(x)$): State-dependent effectiveness of actuation.
+    -   **Lie Brackets**: Commutation $[f, g]$ to generate motion in unactuated directions (Sequencing).
 
-- **Geometric Mechanics**
+-   **Geometric Mechanics**
 
-  - **Underactuation**: Fewer inputs than degrees of freedom; reliance on drift.
-  - **Geometric Phase**: Net motion from cyclic shape changes (holonomy).
-  - **Symmetry & Reduction**: Conservation laws in the absence of external forcing.
+    -   **Underactuation**: Fewer inputs than degrees of freedom; reliance on drift.
+    -   **Geometric Phase**: Net motion from cyclic shape changes (holonomy).
+    -   **Symmetry & Reduction**: Conservation laws in the absence of external forcing.
 
-- **Optimality & Biological Control**
-  - **Optimal Control**: $\min J(u)$ subject to affine dynamics.
-  - **Energy Shaping**: Controlling the Hamiltonian rather than the trajectory directly.
-  - **Impedance Control**: Managing stiffness/damping rather than force/position.
+-   **Optimality & Biological Control**
+
+    -   **Optimal Control**: $\min J(u)$ subject to affine dynamics.
+    -   **Energy Shaping**: Controlling the Hamiltonian rather than the trajectory directly.
+    -   **Impedance Control**: Managing stiffness/damping rather than force/position.
 
 ## B) Bibliography (YAML)
 
-```yaml
+``` yaml
 - id: murray1994mathematical
   title: "A Mathematical Introduction to Robotic Manipulation"
   authors:
@@ -251,31 +252,31 @@
 
 ### Path 1: Fast Ramp (The Core Argument)
 
-_Target: Quickly grasp the connection between nonlinear control and biomechanical strategy._
+*Target: Quickly grasp the connection between nonlinear control and biomechanical strategy.*
 
-1.  **Spong (1998)** - _Underactuated mechanical systems_ (`spong1998underactuated`). Defines the class of problems the golf swing belongs to.
-2.  **Todorov (2004)** - _Optimality principles_ (`todorov2004optimality`). Explains why "slack" and variance exist in elite motion.
-3.  **Hogan (1985)** - _Impedance control_ (`hogan1985impedance`). Understanding interaction and stiffness management.
-4.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction_ (`murray1994mathematical`). Chapter 1-2 for the rigid body basics.
-5.  **Isidori (1995)** - _Nonlinear Control Systems_ (`isidori1995nonlinear`). For the definition of the drift vector field $f(x)$.
+1.  **Spong (1998)** - *Underactuated mechanical systems* (`spong1998underactuated`). Defines the class of problems the golf swing belongs to.
+2.  **Todorov (2004)** - *Optimality principles* (`todorov2004optimality`). Explains why "slack" and variance exist in elite motion.
+3.  **Hogan (1985)** - *Impedance control* (`hogan1985impedance`). Understanding interaction and stiffness management.
+4.  **Murray, Li, Sastry (1994)** - *Mathematical Introduction* (`murray1994mathematical`). Chapter 1-2 for the rigid body basics.
+5.  **Isidori (1995)** - *Nonlinear Control Systems* (`isidori1995nonlinear`). For the definition of the drift vector field $f(x)$.
 
 ### Path 2: Deep Technical (Geometric Mechanics)
 
-_Target: Master the "Sequencing as Lie Bracket" interpretation._
+*Target: Master the "Sequencing as Lie Bracket" interpretation.*
 
-1.  **Bullo & Lewis (2004)** - _Geometric Control of Mechanical Systems_ (`bullo2004geometric`). The bible for this domain.
-2.  **Bloch et al. (2003)** - _Nonholonomic Mechanics and Control_ (`bloch2003nonholonomic`). Handling constraints and conservation.
-3.  **Kelly & Murray (1995)** - _Geometric phases_ (`kelly1995geometric`). How "wiggling" creates net motion (analogy to swing sequencing).
-4.  **Ostrowski & Burdick (1998)** - _Geometric mechanics of locomotion_ (`ostrowski1998geometric`). Advanced application of the connection form.
-5.  **Marsden & Ratiu (1999)** - _Introduction to Mechanics and Symmetry_ (`marsden1999introduction`). For the conservation of momentum perspective.
-6.  **Slotine & Li (1991)** - _Applied Nonlinear Control_ (`slotine1991applied`). Practical stability tools (Lyapunov).
-7.  **Khalil (2002)** - _Nonlinear Systems_ (`khalil2002nonlinear`). Standard reference for analysis.
+1.  **Bullo & Lewis (2004)** - *Geometric Control of Mechanical Systems* (`bullo2004geometric`). The bible for this domain.
+2.  **Bloch et al. (2003)** - *Nonholonomic Mechanics and Control* (`bloch2003nonholonomic`). Handling constraints and conservation.
+3.  **Kelly & Murray (1995)** - *Geometric phases* (`kelly1995geometric`). How "wiggling" creates net motion (analogy to swing sequencing).
+4.  **Ostrowski & Burdick (1998)** - *Geometric mechanics of locomotion* (`ostrowski1998geometric`). Advanced application of the connection form.
+5.  **Marsden & Ratiu (1999)** - *Introduction to Mechanics and Symmetry* (`marsden1999introduction`). For the conservation of momentum perspective.
+6.  **Slotine & Li (1991)** - *Applied Nonlinear Control* (`slotine1991applied`). Practical stability tools (Lyapunov).
+7.  **Khalil (2002)** - *Nonlinear Systems* (`khalil2002nonlinear`). Standard reference for analysis.
 
 ### Path 3: Implementation & Computation
 
-_Target: Numerical methods for solving these systems._
+*Target: Numerical methods for solving these systems.*
 
-1.  **Tedrake (2023)** - _Underactuated Robotics_ (`tedrake2023underactuated`). Algorithms for trajectory optimization.
-2.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Codeable formulations of dynamics.
-3.  **Flash & Hogan (1985)** - _Coordination of arm movements_ (`flash1985coordination`). Simple, implementable jerk minimization models.
-4.  **Zajac (1989)** - _Muscle and tendon_ (`zajac1989muscle`). Implementing the actuator dynamics properly.
+1.  **Tedrake (2023)** - *Underactuated Robotics* (`tedrake2023underactuated`). Algorithms for trajectory optimization.
+2.  **Lynch & Park (2017)** - *Modern Robotics* (`lynch2017modern`). Codeable formulations of dynamics.
+3.  **Flash & Hogan (1985)** - *Coordination of arm movements* (`flash1985coordination`). Simple, implementable jerk minimization models.
+4.  **Zajac (1989)** - *Muscle and tendon* (`zajac1989muscle`). Implementing the actuator dynamics properly.

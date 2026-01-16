@@ -59,18 +59,12 @@ jobs:
             find tools -name "requirements.txt" -exec pip install -r {} \;
           fi
       - run: mypy tools/ --ignore-missing-imports
-      # TODO detection now BLOCKING - Jules Auto-Repair will fix
-      - name: Verify No Placeholders
-        run: |
-          if grep -rE "TODO|FIXME" \
-            --exclude="quality-check.py" \
-            --exclude="matlab_quality_check.py" \
-            --exclude="code_quality_check.py" \
-            --exclude="README.md" \
-            tools/ scripts/ content/; then
-             echo "::error::Placeholders found. Remove TODOs/FIXMEs or create tracked GitHub issues."
-             exit 1
-          fi
+
+      - name: Verify Code Quality
+        run: python tools/code_quality_check.py
+
+      - name: Verify Site Health
+        run: python tools/check_site_health.py
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
       # Non-blocking, archives results for legacy support

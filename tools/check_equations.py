@@ -169,7 +169,7 @@ def check_file(filepath: Path) -> None:
                     i += 1
                 else:
                     # Unclosed inline math. Ignore for now as it's likely non-math text.
-                    pass
+                    pass  # Explicitly allowing unclosed inline math for now
 
         else:
             i += 1
