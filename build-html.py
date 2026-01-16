@@ -129,7 +129,7 @@ def create_html_page(
     )
 
     # Replace the main content
-    content_pattern = r'<section class="article-section">.*?</section>'
+    content_pattern = r'<section class="article-section.*?">.*?</section>'
     # Use lambda to avoid backslash escaping issues in body_html
     template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
 

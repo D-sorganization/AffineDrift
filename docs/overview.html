@@ -391,316 +391,181 @@ window.MathJax = {
 </header>
 
 
-<section class="article-section page-columns page-full">
-  <div class="container page-columns page-full">
-    <div class="standard-page-layout page-columns page-full">
-      <!-- Left Sidebar: Table of Contents -->
-      <aside class="left-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="toc-nav">
-          <h3 class="sidebar-heading anchored">Article Topics</h3>
-          <ul class="sidebar-links">
-            <li><a href="#drifter-manifesto">The Drifter Manifesto</a></li>
-            <li><a href="#articles">Articles</a></li>
-            <li><a href="#affine-nature-golf-swing">Affine Nature of Golf Swing</a></li>
-            <li><a href="#affine-background-articles">Affine Background Articles</a></li>
-          </ul>
-        </nav>
-      </div>
-      </aside>
+<section id="home" class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <blockquote class="featured-quote">
+        <p>"What we do now echoes in eternity"</p>
+        <cite>&mdash; Marcus Aurelius</cite>
 
-      <!-- Main Content -->
-      <main class="main-content-area">
-        <div class="articles-list">
-          <div id="drifter-manifesto" class="article-category">
-            <h3 class="category-title anchored">The Drifter Manifesto</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 1 — State definition and affine derivation</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Establishes the multibody coordinates, derives the control-affine structure, and sets the notation used in every subsequent article.</p>
-            <a href="articles/theory-part1.html" class="resource-link">Read Article →</a>
-          </div>
+        <div class="drift-quote" style="margin-bottom: 2rem;">
+          <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
+          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can dominate, rendering any active, conscious control efforts by the golfer futile.</p>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 2 — Drift/input decomposition, ZTCF, ZVCF</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Formalizes how to separate passive dynamics from deliberate torque using zero torque and zero velocity counterfactuals.</p>
-            <a href="articles/theory-part2.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 3 — Drift invariance and taxonomy</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Explores invariants, introduces a force taxonomy, and discusses limitations of the affine assumption.</p>
-            <a href="articles/theory-part3.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 4 — Modal Approximation, Wrenches, and Pendulum Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Collects derivations, modal approximations, and pendulum examples that support the main theory.</p>
-            <a href="articles/theory-part4.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Theory Part 5 — Simulink Model Documentation</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Documents the Simulink implementation, numerical routines, and supporting technical notes.</p>
-            <a href="articles/theory-part5.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-      </div>
 
-          <div id="articles" class="article-category">
-            <h3 class="category-title anchored">Articles</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Intentional Constraint Collapse at Impact</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Proposes that elite golfers selectively collapse portions of the constraint Jacobian to generate high force with stable club motion.</p>
-            <a href="articles/intentional-constraint-collapse.html" class="resource-link">Read Article →</a>
-          </div>
+        <div class="drift-quote">
+          <p>Drift, however, is not a problem to be controlled; it is the state you want to achieve. Drift is greatest when you move fast, and it occurs as you accumulate momentum in the system. It is the integral sum of all your efforts to swing the club, and it represents the 'mountain you must climb' to get where you are going. You cannot stand safely at the base, feeling in control. You must climb that hill and learn to use its influence like a judo artist. The goal is to accumulate momentum, not to control it. Swing with reckless abandon, knowing that drift will always be there as a predictable ally.</p>
         </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Interpretation of Inverse Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Shows why inverse dynamics results require careful interpretation and how counterfactuals resolve the force-couple ambiguity.</p>
-            <a href="articles/inverse-dynamics.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Wrists behave as universal joints</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analyzes grip torque transmission with an accompanying interactive visualization.</p>
-            <a href="articles/wrist-universal-joint.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Superposition in Affine Control Systems</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Rigorous derivation of superposition with respect to inputs for mechanical systems whose dynamics are affine in control, presented in Newton–Euler, Lagrangian, and screw-theoretic formulations.</p>
-            <a href="articles/superposition.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Controllability and Drift–Control Ratio</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Control-theoretic and multibody dynamics analysis of the drift–control ratio in the golf swing, examining controllability using Lie brackets and impact stability.</p>
-            <a href="articles/controllability-drift-ratio.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Drift Components of Wrench in Double Pendulum</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of drift components and wrench dynamics in a double pendulum system, providing insights into passive dynamics in multibody systems.</p>
-            <a href="articles/drift-components-wrench-double-pendulum.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Strokes Gained Limitations</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of limitations in strokes gained methodology and its application to golf swing analysis.</p>
-            <a href="articles/strokes-gained-limitations.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Intermediate Axis Theorem and Golf Club Dynamics</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of how the intermediate axis theorem (secondary axis instability) applies to golf club dynamics,
-            explaining shaft behavior and rotation stability during the swing.</p>
-            <a href="articles/secondary-axis-stability.html" class="resource-link">Read Article →</a>
-            <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
-              Watch Demonstration Video →
-            </a>
-            <a href="https://www.youtube.com/watch?v=Xrf1HzFJ8jc" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
-              Watch Additional Video →
-            </a>
-          </div>
-        </div>
-      </div>
-
-          <div id="affine-nature-golf-swing" class="article-category">
-            <h3 class="category-title anchored">Affine Nature of the Golf Swing</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Affine Control Interpretation of the Golf Swing</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Main theoretical manuscript developing the control-affine framework for modeling the golfer–club–shaft system, with drift/input decomposition and force taxonomy.</p>
-            <a href="articles/affine-nature-golf-swing.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Nonlinear Control Insights</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Nonlinear control theory insights, drift causality, and future research directions.</p>
-            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Inverse Dynamics Inference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Detailed treatment of inverse dynamics inference within the affine control framework.</p>
-            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Applications</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Applications and examples of the affine control framework.</p>
-            <a href="articles/appendix-applications.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Lagrangian Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Lagrangian mechanics reference material supporting the main theory.</p>
-            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Screw Theory Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Screw theory reference material for spatial mechanics and wrenches.</p>
-            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-      </div>
-
-          <div id="affine-background-articles" class="article-category">
-            <h3 class="category-title anchored">Affine Background Articles</h3>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Nonlinear Control Theory Insights</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Nonlinear control theory insights, drift causality, and future research directions for control-affine mechanical systems.</p>
-            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Force Mobility Matrices</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of force and mobility matrices in constrained multibody systems.</p>
-            <a href="articles/force-mobility-matrices.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Inverse Dynamics Inference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Theoretical framework for inferring forces and torques from motion data in control-affine systems.</p>
-            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Lagrangian Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on Lagrangian mechanics for multibody systems.</p>
-            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Screw Theory Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on screw theory for spatial mechanics, wrenches, and twists.</p>
-            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Null Space Constraint Jacobian</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Analysis of null spaces and constraint Jacobians in constrained mechanical systems.</p>
-            <a href="articles/null-space-constraint-jacobian.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-          </div>
-        </div>
-      </main>
-
-      <!-- Right Sidebar: Recent Articles History -->
-      <aside class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading anchored">Recent Articles</h3>
-          <ul class="sidebar-links" id="articles-history-list">
-            <li class="history-empty">No recent articles yet</li>
-          </ul>
-        </nav>
-      </div>
-      </aside>
+      </blockquote>
     </div>
   </div>
 </section>
+
+<div class="container">
+  <div class="standard-page-layout">
+    <!-- Sidebar -->
+    <aside class="left-sidebar">
+      <div class="sidebar-sticky-content">
+        <div class="sidebar-section">
+          <h3 class="sidebar-heading">Resources</h3>
+          <div class="resource-card" style="padding: 1rem; border: none; box-shadow: none; background: transparent; padding-left: 0;">
+             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);">Overview Podcast</h3>
+             <p class="resource-description" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
+                Listen to an AI-generated introduction to the core concepts of Affine Drift.
+             </p>
+             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content-area">
+      <section id="mission" class="mission-section">
+        <div class="mission-content">
+          <p class="mission-text">
+            AffineDrift is named after a concept in nonlinear control theory, the mathematical framework for managing complex, chaotic systems. The structure of a control-affine system allows the total movement to be clearly separated into two distinct components:
+          </p>
+          <ul class="mission-list">
+            <li><strong>Drift:</strong> The system's inherent, autonomous motion based on its current state.</li>
+            <li><strong>Control:</strong> The changes in motion that arise only from deliberate, external inputs.</li>
+          </ul>
+          <p class="mission-text">
+            This division reveals a profound truth: history matters. The system's past actions are encoded in its present state—its accumulated momentum, geometry, and timing. For the golfer, the implication is that every swing is a combination of your current, conscious effort and the powerful inertia of everything that has come before. As Marcus Aurelius noted, the past is always writing itself into the present.
+          </p>
+        </div>
+      </section>
+
+      <section id="theory" class="theory-section">
+        <div class="theory-content">
+          <div class="theory-intro">
+            <p>
+              The golf swing presents a profound coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
+            </p>
+          </div>
+
+          <div class="coordination-section">
+            <p>
+              Rather than treating the swing as a sequence of static positions (descriptive biomechanics), a control-perspective frames it as a trajectory optimization problem: the golfer must find the correct sequence of muscular forces (control inputs) to guide the system from the address position to ball contact. The system's dynamics are captured by the fundamental control-affine structure:
+            </p>
+            
+            <div class="equation">
+              $$\dot{x} = f(x) + g(x)u$$
+            </div>
+
+            <p>
+              This mathematical framework provides a rigorous way to separate the swing's total movement into two distinct, identifiable components:
+            </p>
+            
+            <ul class="mission-list">
+              <li><strong>Drift ($f(x)$):</strong> The passive dynamics of the system. This includes gravity, inertial forces, Coriolis effects, and the dynamics of the flexible club shaft. It represents how the system would naturally evolve in the complete absence of muscle input.</li>
+              <li><strong>Control ($g(x)u$):</strong> The active dynamics resulting only from the golfer's muscle torques ($u$). The term $g(x)$ encodes the "mechanical advantage"—how effective a control input is at changing acceleration—which varies throughout the swing.</li>
+            </ul>
+
+            <p>
+              This decomposition is crucial: it allows researchers to causally attribute observed forces to either the golfer's active effort or the powerful, passive inertia of the body and club. By framing the swing this way, we move beyond simply describing the movement to a more predictive, mechanistic understanding of how coordination emerges from the interaction between neural control and mechanical dynamics.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="golf" class="golf-section">
+        <div class="golf-content">
+          <div class="golf-intro">
+            <p>
+              By framing the swing as a control-affine system, we move beyond static positions to analyze the flow of
+              dynamics. We can explicitly calculate the contribution of passive physics versus active intent.
+            </p>
+          </div>
+
+          <div class="golf-model">
+            <h3>System Components</h3>
+            <div class="components-grid">
+              <div class="component">
+                <h4>State Space $x$</h4>
+                <p>$\mathbb{R}^{2n}$ vector containing all joint angles and velocities.</p>
+              </div>
+              <div class="component">
+                <h4>Drift $f(x)$</h4>
+                <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
+              </div>
+              <div class="component">
+                <h4>Control $u$</h4>
+                <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
+              </div>
+               <div class="component">
+                <h4>Input Field $g(x)$</h4>
+                <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Critics Corner - Technical Criticism Section -->
+      <section class="critics-corner">
+        <button class="critics-corner-header" aria-expanded="false">
+          <h2>Critics Corner</h2>
+          <span class="critics-corner-icon">▼</span>
+        </button>
+        <div class="critics-corner-content">
+          <div class="criticism-item">
+            <h3>Oversimplification of Neuromuscular Dynamics</h3>
+            <span class="criticism-severity moderate">Moderate</span>
+            <p>
+              The control-affine framework abstracts muscular physiology into a simple torque vector $u$, ignoring force-velocity relationships, activation dynamics, and muscle redundancy. Real neuromuscular systems exhibit time delays, saturation, and cross-coupling effects that may significantly affect the validity of the drift-input decomposition.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                This abstraction is intentional and explicitly stated in the modeling assumptions. The framework operates at the torque level precisely to preserve the affine structure. Force-velocity constraints are treated as bounds on the feasible input set $\mathcal{U}(x)$ rather than nonlinearities in the dynamics. Future work will address activation dynamics through hybrid modeling approaches.
+              </p>
+            </div>
+          </div>
+
+          <div class="criticism-item">
+            <h3>Impact Phase Exclusion</h3>
+            <span class="criticism-severity minor">Minor</span>
+            <p>
+              The theoretical framework explicitly excludes the ball-club impact phase, which is arguably the most critical moment of the swing. This limits the practical applicability of the analysis for understanding how impact conditions relate to ball flight.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                The framework is designed as a "Theory of Delivery"—analyzing how the golfer controls the system to achieve specific terminal conditions. Since control authority effectively ends at impact, the drift-input decomposition applies to the delivery phase. Impact mechanics require separate hybrid dynamics treatment, which will be addressed in subsequent work.
+              </p>
+            </div>
+          </div>
+
+          <div class="criticism-item">
+            <h3>Modal Truncation Error</h3>
+            <span class="criticism-severity minor">Minor</span>
+            <p>
+              Representing the flexible shaft with a finite number of modes ($m$) introduces truncation error, potentially missing high-frequency dynamics that may be relevant during rapid swing phases.
+            </p>
+            <div class="criticism-response">
+              <h4>Defense</h4>
+              <p>
+                Standard modal analysis bounds suggest that the first 3-5 bending modes capture >99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
 
 
 
