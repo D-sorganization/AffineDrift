@@ -398,16 +398,12 @@ window.MathJax = {
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading anchored">Models</h3>
+          <h3 class="sidebar-heading anchored">Article Topics</h3>
           <ul class="sidebar-links">
-            <li><a href="models.html">Models Home</a></li>
-            <li><a href="models-simulink.html" class="active">Matlab Simulink</a></li>
-            <li><a href="models-mujoco.html">MuJoCo</a></li>
-            <li><a href="models-drake.html">Drake</a></li>
-            <li><a href="models-pinocchio.html">Pinocchio</a></li>
-            <li><a href="models-pendulum.html">Pendulum</a></li>
-            <li><a href="models-opensim.html">OpenSim</a></li>
-            <li><a href="models-myosim.html">MyoSim</a></li>
+            <li><a href="#drifter-manifesto">The Drifter Manifesto</a></li>
+            <li><a href="#articles">Articles</a></li>
+            <li><a href="#affine-nature-golf-swing">Affine Nature of Golf Swing</a></li>
+            <li><a href="#affine-background-articles">Affine Background Articles</a></li>
           </ul>
         </nav>
       </div>
@@ -416,92 +412,288 @@ window.MathJax = {
       <!-- Main Content -->
       <main class="main-content-area">
         <div class="articles-list">
-          <div class="article-category">
-        <div style="margin-bottom: 2rem;">
-          <img src="https://www.mathworks.com/etc/designs/mathworks/img/pic-header-mathworks-logo.svg" alt="MATLAB Simulink Logo" class="software-logo" style="max-width: 250px; margin-bottom: 1rem;" onerror="this.style.display='none'">
-          <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-dark);">
-            Matlab Simulink models for control-affine systems, drift-input decomposition, and golf swing 
-            dynamics. These models implement the theoretical framework developed in the Drifter Manifesto 
-            series, providing numerical simulations and analysis tools.
-          </p>
+          <div id="drifter-manifesto" class="article-category">
+            <h3 class="category-title anchored">The Drifter Manifesto</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 1 — State definition and affine derivation</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Establishes the multibody coordinates, derives the control-affine structure, and sets the notation used in every subsequent article.</p>
+            <a href="articles/theory-part1.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 2 — Drift/input decomposition, ZTCF, ZVCF</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Formalizes how to separate passive dynamics from deliberate torque using zero torque and zero velocity counterfactuals.</p>
+            <a href="articles/theory-part2.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 3 — Drift invariance and taxonomy</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Explores invariants, introduces a force taxonomy, and discusses limitations of the affine assumption.</p>
+            <a href="articles/theory-part3.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 4 — Modal Approximation, Wrenches, and Pendulum Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Collects derivations, modal approximations, and pendulum examples that support the main theory.</p>
+            <a href="articles/theory-part4.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 5 — Simulink Model Documentation</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Documents the Simulink implementation, numerical routines, and supporting technical notes.</p>
+            <a href="articles/theory-part5.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
       </div>
 
-          <div id="documentation" class="category-section">
-            <h3 class="category-title anchored">Model Documentation</h3>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="articles/theory-part5.html">Theory Part 5 — Simulink Model Documentation</a></h3>
-          <p>Comprehensive documentation of the Simulink implementation, including numerical routines, 
-          model structure, and supporting technical notes. This article provides detailed information 
-          on how the control-affine framework is implemented in Simulink.</p>
+          <div id="articles" class="article-category">
+            <h3 class="category-title anchored">Articles</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Intentional Constraint Collapse at Impact</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Proposes that elite golfers selectively collapse portions of the constraint Jacobian to generate high force with stable club motion.</p>
+            <a href="articles/intentional-constraint-collapse.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Interpretation of Inverse Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Shows why inverse dynamics results require careful interpretation and how counterfactuals resolve the force-couple ambiguity.</p>
+            <a href="articles/inverse-dynamics.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Wrists behave as universal joints</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analyzes grip torque transmission with an accompanying interactive visualization.</p>
+            <a href="articles/wrist-universal-joint.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Superposition in Affine Control Systems</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Rigorous derivation of superposition with respect to inputs for mechanical systems whose dynamics are affine in control, presented in Newton–Euler, Lagrangian, and screw-theoretic formulations.</p>
+            <a href="articles/superposition.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Controllability and Drift–Control Ratio</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Control-theoretic and multibody dynamics analysis of the drift–control ratio in the golf swing, examining controllability using Lie brackets and impact stability.</p>
+            <a href="articles/controllability-drift-ratio.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Drift Components of Wrench in Double Pendulum</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of drift components and wrench dynamics in a double pendulum system, providing insights into passive dynamics in multibody systems.</p>
+            <a href="articles/drift-components-wrench-double-pendulum.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Strokes Gained Limitations</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of limitations in strokes gained methodology and its application to golf swing analysis.</p>
+            <a href="articles/strokes-gained-limitations.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Intermediate Axis Theorem and Golf Club Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of how the intermediate axis theorem (secondary axis instability) applies to golf club dynamics,
+            explaining shaft behavior and rotation stability during the swing.</p>
+            <a href="articles/secondary-axis-stability.html" class="resource-link">Read Article →</a>
+            <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
+              Watch Demonstration Video →
+            </a>
+            <a href="https://www.youtube.com/watch?v=Xrf1HzFJ8jc" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
+              Watch Additional Video →
+            </a>
+          </div>
         </div>
       </div>
 
-          <div id="available-models" class="category-section">
-            <h3 class="category-title anchored">Available Models</h3>
-        <div class="article-list-item">
-          <h3 class="anchored">Golf Swing Dynamics Model</h3>
-          <p>Full multibody dynamics model of the golfer-club system implemented as a control-affine 
-          system. Includes drift/input decomposition, zero torque and zero velocity counterfactuals, 
-          and analysis tools.</p>
+          <div id="affine-nature-golf-swing" class="article-category">
+            <h3 class="category-title anchored">Affine Nature of the Golf Swing</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Affine Control Interpretation of the Golf Swing</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Main theoretical manuscript developing the control-affine framework for modeling the golfer–club–shaft system, with drift/input decomposition and force taxonomy.</p>
+            <a href="articles/affine-nature-golf-swing.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored">Pendulum Analog Models</h3>
-          <p>Simplified pendulum models that serve as analogs for understanding golf swing dynamics, 
-          including single and double pendulum implementations with control inputs.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Nonlinear Control Insights</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Nonlinear control theory insights, drift causality, and future research directions.</p>
+            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored">Drift-Input Decomposition Tools</h3>
-          <p>Simulink blocks and subsystems for performing drift-input decomposition analysis, 
-          computing zero torque and zero velocity counterfactuals, and analyzing the separation 
-          of passive dynamics from deliberate control.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Inverse Dynamics Inference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Detailed treatment of inverse dynamics inference within the affine control framework.</p>
+            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Applications</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Applications and examples of the affine control framework.</p>
+            <a href="articles/appendix-applications.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Lagrangian Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Lagrangian mechanics reference material supporting the main theory.</p>
+            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Screw Theory Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Screw theory reference material for spatial mechanics and wrenches.</p>
+            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
       </div>
 
-          <div id="software-resources" class="category-section">
-            <h3 class="category-title anchored">Software &amp; Resources</h3>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/products/simulink.html" target="_blank" rel="noopener">Matlab Simulink Official Website</a></h3>
-          <p>Visit the official Matlab Simulink website for product information, features, and capabilities.</p>
+          <div id="affine-background-articles" class="article-category">
+            <h3 class="category-title anchored">Affine Background Articles</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Nonlinear Control Theory Insights</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Nonlinear control theory insights, drift causality, and future research directions for control-affine mechanical systems.</p>
+            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/help/simulink/" target="_blank" rel="noopener">Simulink Documentation</a></h3>
-          <p>Comprehensive Simulink documentation including user guides, examples, and API reference.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Force Mobility Matrices</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of force and mobility matrices in constrained multibody systems.</p>
+            <a href="articles/force-mobility-matrices.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/help/simulink/getting-started-with-simulink.html" target="_blank" rel="noopener">Getting Started with Simulink</a></h3>
-          <p>Tutorials and guides for getting started with Simulink, including basic modeling and simulation concepts.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Inverse Dynamics Inference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Theoretical framework for inferring forces and torques from motion data in control-affine systems.</p>
+            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/academia/student-center.html" target="_blank" rel="noopener">Matlab Student Licensing</a></h3>
-          <p>Information about student licensing options for Matlab and Simulink.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Lagrangian Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Reference material on Lagrangian mechanics for multibody systems.</p>
+            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/support.html" target="_blank" rel="noopener">Matlab Support</a></h3>
-          <p>Access Matlab support resources, including technical support, documentation, and community forums.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Screw Theory Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Reference material on screw theory for spatial mechanics, wrenches, and twists.</p>
+            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-        <div class="article-list-item">
-          <h3 class="anchored"><a href="https://www.mathworks.com/matlabcentral/" target="_blank" rel="noopener">Matlab Central</a></h3>
-          <p>Matlab Central community with file exchange, answers, and discussions for Matlab and Simulink users.</p>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Null Space Constraint Jacobian</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of null spaces and constraint Jacobians in constrained mechanical systems.</p>
+            <a href="articles/null-space-constraint-jacobian.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
-      </div>
-
-          <div class="coming-soon">
-            <p style="margin-top: 3rem; font-style: italic; color: var(--text-light);">
-              Additional Simulink models and detailed documentation will be added as they are completed. 
-              Check back soon!
-            </p>
           </div>
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Models History -->
+      <!-- Right Sidebar: Recent Articles History -->
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading anchored">Recent Models</h3>
-          <ul class="sidebar-links" id="models-history-list">
-            <li class="history-empty">No recent models yet</li>
+          <h3 class="sidebar-heading anchored">Recent Articles</h3>
+          <ul class="sidebar-links" id="articles-history-list">
+            <li class="history-empty">No recent articles yet</li>
           </ul>
         </nav>
       </div>
@@ -511,50 +703,7 @@ window.MathJax = {
 </section>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const modelsHistoryList = document.getElementById('models-history-list');
-  if (!modelsHistoryList) return;
 
-  const MODEL_PAGES = [
-    'models.html',
-    'models-simulink.html',
-    'models-mujoco.html',
-    'models-drake.html',
-    'models-pinocchio.html',
-    'models-pendulum.html',
-    'models-opensim.html',
-    'models-myosim.html'
-  ];
-
-  function updateModelsHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'models-simulink.html'
-    };
-
-    if (MODEL_PAGES.includes(currentPage.url)) {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      modelsHistoryList.innerHTML = '<li class="history-empty">No recent models yet</li>';
-      return;
-    }
-
-    modelsHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
-  }
-
-  updateModelsHistory();
-});
-</script>
 
 
 
