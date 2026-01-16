@@ -8,9 +8,17 @@ Checks for:
 3. Double quotes inside math (recommends ' or '')
 """
 
+import logging
 import os
 import re
 import sys
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
@@ -123,8 +131,14 @@ def main() -> None:
     for filepath in files_to_scan:
         issues = scan_file(filepath)
         if issues:
-            for _line_num, _line_content, _problem, _fix in issues:
-                pass
+            for line_num, _line_content, problem, fix in issues:
+                logger.warning(
+                    "%s:%d: %s (suggestion: %s)",
+                    filepath,
+                    line_num,
+                    problem,
+                    fix,
+                )
             total_issues += len(issues)
 
     if total_issues > 0:

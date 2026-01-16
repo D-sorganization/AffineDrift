@@ -3,11 +3,18 @@
 This is a workaround for when Quarto is not available.
 """
 
-import contextlib
 import html
+import logging
 import re
 import subprocess
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str | None]:
@@ -197,8 +204,10 @@ def main() -> None:
     qmd_files.append("articles.qmd")
 
     # Generate bibliography data
-    with contextlib.suppress(subprocess.CalledProcessError):
+    try:
         subprocess.run(["python3", "scripts/generate_bibliography_data.py"], check=True)
+    except subprocess.CalledProcessError as e:
+        logger.warning("Failed to generate bibliography data: %s", e)
 
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
@@ -209,13 +218,10 @@ def main() -> None:
     if template_path.exists():
         template_content = template_path.read_text()
     else:
-        pass
-        # Proceeding without template will likely fail or require skip logic,
-        # but original script logic implicitly failed inside create_html_page returning False.
-        # We will check validity in the loop.
+        logger.error("Template file not found: %s", template_path)
 
     if not template_content:
-        pass
+        logger.error("Template content is empty, cannot proceed with HTML generation")
 
     for qmd_name in qmd_files:
         qmd_file = Path(qmd_name)
@@ -251,9 +257,9 @@ def main() -> None:
             template_content,
             page_type,
         ):
-            pass
+            logger.info("Created: %s", output_file)
         else:
-            pass
+            logger.warning("Failed to create: %s", output_file)
 
 
 if __name__ == "__main__":

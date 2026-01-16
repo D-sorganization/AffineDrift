@@ -278,7 +278,7 @@ def main() -> None:
         )
         sys.exit(1)
     else:
-        # success silent for pre-commit usually, but ok to print
+        # Explicitly exit with success status for pre-commit hooks
         sys.exit(0)
 
 

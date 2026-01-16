@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
+import logging
 import re
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_image_urls(content: str) -> list[str]:
@@ -112,17 +120,16 @@ def main() -> None:
     all_broken = []
 
     for file_path in files:
-        # print(f"Scanning {file_path}...")
         broken = process_file(file_path)
         if broken:
             all_broken.extend(broken)
-            for _b in broken:
-                pass
+            for b in broken:
+                logger.error(b)
 
     if not all_broken:
-        pass
+        logger.info("All images verified successfully")
     else:
-        pass
+        logger.error("Found %d broken image references", len(all_broken))
 
 
 if __name__ == "__main__":

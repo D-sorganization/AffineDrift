@@ -3,10 +3,18 @@
 Converts all LaTeX article files to Quarto .qmd format.
 """
 
+import logging
 import os
 import sys
 
 from latex_to_qmd import LaTeXToQuartoConverter
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 # Articles directory for Quarto documents
 ARTICLES_DIR = "articles"
@@ -122,7 +130,7 @@ def convert_all(dry_run: bool = False) -> bool:
     converter = LaTeXToQuartoConverter()
 
     if dry_run:
-        pass
+        logger.info("Dry run mode - no files will be converted")
 
     # Setup articles directory
     if not dry_run:
@@ -134,23 +142,27 @@ def convert_all(dry_run: bool = False) -> bool:
     for conversion in CONVERSIONS:
         source = conversion["source"]
         target = conversion["target"]
-        conversion["description"]
+        description = conversion["description"]
 
         if not os.path.exists(source):
+            logger.warning("Source file not found: %s (%s)", source, description)
             error_count += 1
             continue
 
         if dry_run:
+            logger.info("Would convert: %s -> %s", source, target)
             success_count += 1
         else:
             try:
                 converter.convert_file(source, target)
+                logger.info("Converted: %s -> %s", source, target)
                 success_count += 1
-            except Exception:
+            except Exception as e:
+                logger.error("Failed to convert %s: %s", source, e)
                 error_count += 1
 
     if not dry_run and success_count > 0:
-        pass
+        logger.info("Successfully converted %d files", success_count)
 
     return error_count == 0
 

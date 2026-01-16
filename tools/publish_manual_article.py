@@ -4,9 +4,17 @@ and wrapping it in the standard template.
 """
 
 import html
+import logging
 import re
 import sys
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def simple_markdown_to_html(md_text: str) -> str:
@@ -218,9 +226,9 @@ def main() -> None:
 
     success = create_html_page(title, description, body_html, output_path)
     if success:
-        pass
+        logger.info("Published article: %s", output_path)
     else:
-        pass
+        logger.error("Failed to publish article: %s", output_path)
 
 
 if __name__ == "__main__":

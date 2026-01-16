@@ -1,9 +1,17 @@
+import logging
 import sys
 from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 DOCS_DIR = Path("docs")
 
@@ -26,14 +34,12 @@ def check_site_health() -> None:
 
     # 1. Generate Site Map (List of pages)
     top_level_pages = sorted([f for f in html_files if len(f.parts) == 1])
-    for _p in top_level_pages:
-        pass
+    logger.info("Found %d top-level pages", len(top_level_pages))
 
     subdirs = sorted({f.parent for f in html_files if len(f.parts) > 1})
     for d in subdirs:
         pages: list[str] = sorted([f.name for f in html_files if f.parent == d])
-        for _page_name in pages:
-            pass
+        logger.debug("Directory %s contains %d pages", d, len(pages))
 
     # 2. Check Links
     broken_links = []
@@ -114,25 +120,33 @@ def check_site_health() -> None:
                 elif target_rel_path in orphaned_files:
                     orphaned_files.remove(target_rel_path)
 
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error("Error processing %s: %s", file_path, e)
 
     # Report Broken Links
     has_errors = False
     if broken_links:
-        for _link in broken_links:
-            pass
+        logger.error("Found %d broken links:", len(broken_links))
+        for link in broken_links:
+            logger.error(
+                "  %s -> %s (href: %s, text: %s)",
+                link["source"],
+                link["target"],
+                link["href"],
+                link["text"],
+            )
         has_errors = True
     else:
-        pass
+        logger.info("No broken links found")
 
     # Report Orphaned Files
     if orphaned_files:
-        for _orphaned in sorted(orphaned_files):
-            pass
+        logger.warning("Found %d orphaned files:", len(orphaned_files))
+        for orphaned in sorted(orphaned_files):
+            logger.warning("  %s", orphaned)
         has_errors = True
     else:
-        pass
+        logger.info("No orphaned files found")
 
     if has_errors:
         sys.exit(1)

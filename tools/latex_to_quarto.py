@@ -1,6 +1,14 @@
+import logging
 import re
 import sys
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def find_tex_files(paths: list[str]) -> list[Path]:
@@ -18,8 +26,7 @@ def find_tex_files(paths: list[str]) -> list[Path]:
         elif path.is_dir():
             # Find all .tex files in directory
             tex_files.extend(path.glob("*.tex"))
-        else:
-            pass
+        # Skip non-existent paths, non-.tex files, and non-directories silently
 
     return tex_files
 
@@ -139,8 +146,9 @@ def main() -> None:
             md_text, _before_wc, _after_wc = latex_to_quarto_md(tex_text, fallback_title)
             qmd_path = tex_path.with_suffix(".qmd")
             qmd_path.write_text(md_text, encoding="utf-8")
-        except Exception:
-            pass
+            logger.info("Converted: %s -> %s", tex_path, qmd_path)
+        except Exception as e:
+            logger.error("Failed to convert %s: %s", tex_path, e)
 
 
 if __name__ == "__main__":

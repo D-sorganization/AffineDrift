@@ -1,8 +1,15 @@
 """Script to check for equation syntax errors."""
 
-import os
+import logging
 import re
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def find_qmd_md_files(root_dir: Path) -> list[Path]:
@@ -17,12 +24,7 @@ def find_qmd_md_files(root_dir: Path) -> list[Path]:
     for subdir in ["articles", "critiques"]:
         path = root_dir / subdir
         if path.exists():
-            for _root, _dirs, _files in os.walk(path):  # noqa: PTH118
-                # We can't easily use rglob with exclusions like 'archive' efficiently without manual filtering
-                # so sticking to walk or manual recursion.
-                # But let's use pathlib walk if available (3.12) or os.walk and convert.
-                pass
-            # Let's use rglob and filter
+            # Use rglob and filter instead of os.walk
             for f in path.rglob("*"):
                 if f.suffix in {".qmd", ".md"} and "archive" not in f.parts:
                     files_list.append(f)
@@ -175,8 +177,8 @@ def check_file(filepath: Path) -> None:
             i += 1
 
     if errors:
-        for _e in errors:
-            pass
+        for error in errors:
+            logger.error("%s: %s", filepath, error)
 
 
 if __name__ == "__main__":

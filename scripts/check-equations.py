@@ -9,9 +9,17 @@ for MathJax rendering. It checks for:
 - Missing MathJax configuration
 """
 
+import logging
 import re
 import sys
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
@@ -140,8 +148,8 @@ def main() -> int:
     if quarto_yml.exists():
         config_issues = check_quarto_math_config(quarto_yml)
         if config_issues:
-            for _issue in config_issues:
-                pass
+            for issue in config_issues:
+                logger.warning("_quarto.yml: %s", issue)
             issues_found = True
 
     # Check all .qmd files
@@ -160,11 +168,12 @@ def main() -> int:
             equation_issues = find_equations(content, str(qmd_file))
 
             if equation_issues:
-                for _line_num, _issue_type, _message in equation_issues:
-                    pass
+                for line_num, issue_type, message in equation_issues:
+                    logger.warning("%s:%d [%s] %s", qmd_file, line_num, issue_type, message)
                 issues_found = True
 
-        except Exception:
+        except Exception as e:
+            logger.error("Error processing %s: %s", qmd_file, e)
             issues_found = True
 
     # Check rendered HTML files in docs/ for MathJax configuration
@@ -173,8 +182,8 @@ def main() -> int:
     for html_file in html_files[:10]:  # Limit to first 10 to avoid too much output
         config_issues = check_mathjax_config(str(html_file))
         if config_issues:
-            for _issue in config_issues:
-                pass
+            for issue in config_issues:
+                logger.warning("%s: %s", html_file, issue)
             issues_found = True
 
     if not issues_found:

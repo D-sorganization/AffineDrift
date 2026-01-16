@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 import json
+import logging
 import re
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
@@ -25,11 +33,13 @@ def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
                     for item in data:
                         if isinstance(item, dict) and "id" in item:
                             extracted_items.append(item)
-            except yaml.YAMLError:
+            except yaml.YAMLError as e:
+                logger.warning("YAML parse error in %s: %s", file_path, e)
                 continue
 
         return extracted_items
-    except Exception:
+    except Exception as e:
+        logger.error("Error extracting YAML from %s: %s", file_path, e)
         return []
 
 
@@ -68,8 +78,8 @@ def main() -> None:
                     for item in base_data:
                         if "id" in item:
                             all_refs[item["id"]] = normalize_item(item)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error("Error loading base bibliography: %s", e)
 
     # 2. Load from articles/*-bibliography.md
     articles_dir = Path("articles")
@@ -111,8 +121,8 @@ def main() -> None:
                 paths_data = yaml.safe_load(f)
             with open(paths_output, "w") as f:
                 json.dump(paths_data, f, indent=2)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error("Error processing reading paths: %s", e)
 
 
 if __name__ == "__main__":
