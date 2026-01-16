@@ -72,9 +72,9 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
@@ -104,6 +104,67 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
+<script type="text/javascript">
+window.MathJax = {
+  options: {
+    lazyMargin: '200px',
+    lazyAlwaysTypeset: null
+  },
+  loader: {
+    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
+  },
+  tex: {
+    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true,
+    processEnvironments: true,
+    processRefs: true,
+    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    tags: 'ams',
+    tagSide: 'right',
+    tagIndent: '0.8em',
+    multlineWidth: '85%',
+    maxMacros: 10000,
+    maxBuffer: 5120,
+    macros: {
+      qd: "{\\dot{q}}",
+      qdd: "{\\ddot{q}}",
+      etad: "{\\dot{\\eta}}",
+      etadd: "{\\ddot{\\eta}}",
+      xd: "{\\dot{x}}",
+      R: "{\\mathbb{R}}"
+    }
+  },
+  chtml: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  svg: {
+    scale: 1.0,
+    minScale: 0.5,
+    mtextInheritFont: false,
+    merrorInheritFont: true,
+    mathmlSpacing: false,
+    skipAttributes: {},
+    exFactor: 0.5,
+    displayAlign: 'center',
+    displayIndent: '0'
+  },
+  startup: {
+    pageReady: function() {
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
@@ -157,10 +218,10 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+    <ul class="dropdown-menu">
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -180,10 +241,10 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+    <ul class="dropdown-menu">
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -219,10 +280,10 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+    <ul class="dropdown-menu">
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -262,10 +323,10 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+    <ul class="dropdown-menu">
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -273,10 +334,10 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+    <ul class="dropdown-menu">
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -330,66 +391,319 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="contact-section page-columns page-full">
+<section class="article-section page-columns page-full">
   <div class="container page-columns page-full">
-    <div class="contact-layout page-columns page-full">
-      <div class="contact-main">
-        <div class="contact-intro">
-          <p>
-            Feel free to shoot me an email if you want to get in touch. I am always looking for a good riddle to think about. Feedback is appreciated and I will do my best to respond and address any comments.
-          </p>
-        </div>
+    <div class="standard-page-layout page-columns page-full">
+      <!-- Left Sidebar: Table of Contents -->
+      <aside class="left-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="toc-nav">
+          <h3 class="sidebar-heading anchored">Article Topics</h3>
+          <ul class="sidebar-links">
+            <li><a href="#drifter-manifesto">The Drifter Manifesto</a></li>
+            <li><a href="#articles">Articles</a></li>
+            <li><a href="#affine-nature-golf-swing">Affine Nature of Golf Swing</a></li>
+            <li><a href="#affine-background-articles">Affine Background Articles</a></li>
+          </ul>
+        </nav>
+      </div>
+      </aside>
 
-        <div class="contact-form-container">
-          <h2 class="anchored">Send a Message</h2>
-          <form class="contact-form" action="mailto:dieterolson@AffineDrift.com" method="post" enctype="text/plain">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" required="">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required="">
-            </div>
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input type="text" id="subject" name="subject" required="">
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" rows="6" required=""></textarea>
-            </div>
-            <button type="submit" class="btn-primary">Send Message</button>
-          </form>
+      <!-- Main Content -->
+      <main class="main-content-area">
+        <div class="articles-list">
+          <div id="drifter-manifesto" class="article-category">
+            <h3 class="category-title anchored">The Drifter Manifesto</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 1 — State definition and affine derivation</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Establishes the multibody coordinates, derives the control-affine structure, and sets the notation used in every subsequent article.</p>
+            <a href="articles/theory-part1.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 2 — Drift/input decomposition, ZTCF, ZVCF</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Formalizes how to separate passive dynamics from deliberate torque using zero torque and zero velocity counterfactuals.</p>
+            <a href="articles/theory-part2.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 3 — Drift invariance and taxonomy</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Explores invariants, introduces a force taxonomy, and discusses limitations of the affine assumption.</p>
+            <a href="articles/theory-part3.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 4 — Modal Approximation, Wrenches, and Pendulum Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Collects derivations, modal approximations, and pendulum examples that support the main theory.</p>
+            <a href="articles/theory-part4.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Theory Part 5 — Simulink Model Documentation</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Documents the Simulink implementation, numerical routines, and supporting technical notes.</p>
+            <a href="articles/theory-part5.html" class="resource-link">Read Article →</a>
+          </div>
         </div>
       </div>
 
-      <aside class="contact-sidebar">
-        <div class="contact-info">
-          <h2 class="anchored">Other Ways to Connect</h2>
-          <div class="contact-email">
-            <p><strong>Email:</strong> <a href="mailto:dieterolson@AffineDrift.com">dieterolson@AffineDrift.com</a></p>
-          </div>
-          <div class="social-links">
-            <p>Follow AffineDrift on social media:</p>
-            <ul class="social-list">
-              <li><a href="#" class="social-link" target="_blank" rel="noopener">Twitter/X (Coming Soon)</a></li>
-              <li><a href="#" class="social-link" target="_blank" rel="noopener">LinkedIn (Coming Soon)</a></li>
-              <li><a href="#" class="social-link" target="_blank" rel="noopener">GitHub</a></li>
-            </ul>
-          </div>
-          <div class="contact-note">
-            <p>
-              <strong>Note:</strong> For technical inquiries about the research or collaboration opportunities,
-              please use the contact form above. For general questions or feedback about the website,
-              feel free to reach out through any of the channels listed.
-            </p>
+          <div id="articles" class="article-category">
+            <h3 class="category-title anchored">Articles</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Intentional Constraint Collapse at Impact</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Proposes that elite golfers selectively collapse portions of the constraint Jacobian to generate high force with stable club motion.</p>
+            <a href="articles/intentional-constraint-collapse.html" class="resource-link">Read Article →</a>
           </div>
         </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Interpretation of Inverse Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Shows why inverse dynamics results require careful interpretation and how counterfactuals resolve the force-couple ambiguity.</p>
+            <a href="articles/inverse-dynamics.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Wrists behave as universal joints</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analyzes grip torque transmission with an accompanying interactive visualization.</p>
+            <a href="articles/wrist-universal-joint.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Superposition in Affine Control Systems</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Rigorous derivation of superposition with respect to inputs for mechanical systems whose dynamics are affine in control, presented in Newton–Euler, Lagrangian, and screw-theoretic formulations.</p>
+            <a href="articles/superposition.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Controllability and Drift–Control Ratio</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Control-theoretic and multibody dynamics analysis of the drift–control ratio in the golf swing, examining controllability using Lie brackets and impact stability.</p>
+            <a href="articles/controllability-drift-ratio.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Drift Components of Wrench in Double Pendulum</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of drift components and wrench dynamics in a double pendulum system, providing insights into passive dynamics in multibody systems.</p>
+            <a href="articles/drift-components-wrench-double-pendulum.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Strokes Gained Limitations</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of limitations in strokes gained methodology and its application to golf swing analysis.</p>
+            <a href="articles/strokes-gained-limitations.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Intermediate Axis Theorem and Golf Club Dynamics</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of how the intermediate axis theorem (secondary axis instability) applies to golf club dynamics,
+            explaining shaft behavior and rotation stability during the swing.</p>
+            <a href="articles/secondary-axis-stability.html" class="resource-link">Read Article →</a>
+            <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
+              Watch Demonstration Video →
+            </a>
+            <a href="https://www.youtube.com/watch?v=Xrf1HzFJ8jc" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
+              Watch Additional Video →
+            </a>
+          </div>
+        </div>
+      </div>
+
+          <div id="affine-nature-golf-swing" class="article-category">
+            <h3 class="category-title anchored">Affine Nature of the Golf Swing</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Affine Control Interpretation of the Golf Swing</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Main theoretical manuscript developing the control-affine framework for modeling the golfer–club–shaft system, with drift/input decomposition and force taxonomy.</p>
+            <a href="articles/affine-nature-golf-swing.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Nonlinear Control Insights</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Nonlinear control theory insights, drift causality, and future research directions.</p>
+            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Inverse Dynamics Inference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Detailed treatment of inverse dynamics inference within the affine control framework.</p>
+            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Applications</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Applications and examples of the affine control framework.</p>
+            <a href="articles/appendix-applications.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Lagrangian Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Lagrangian mechanics reference material supporting the main theory.</p>
+            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Screw Theory Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Screw theory reference material for spatial mechanics and wrenches.</p>
+            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+      </div>
+
+          <div id="affine-background-articles" class="article-category">
+            <h3 class="category-title anchored">Affine Background Articles</h3>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Nonlinear Control Theory Insights</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Nonlinear control theory insights, drift causality, and future research directions for control-affine mechanical systems.</p>
+            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Force Mobility Matrices</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of force and mobility matrices in constrained multibody systems.</p>
+            <a href="articles/force-mobility-matrices.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Inverse Dynamics Inference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Theoretical framework for inferring forces and torques from motion data in control-affine systems.</p>
+            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Lagrangian Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Reference material on Lagrangian mechanics for multibody systems.</p>
+            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Screw Theory Reference</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Reference material on screw theory for spatial mechanics, wrenches, and twists.</p>
+            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Null Space Constraint Jacobian</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Analysis of null spaces and constraint Jacobians in constrained mechanical systems.</p>
+            <a href="articles/null-space-constraint-jacobian.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Sidebar: Recent Articles History -->
+      <aside class="right-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading anchored">Recent Articles</h3>
+          <ul class="sidebar-links" id="articles-history-list">
+            <li class="history-empty">No recent articles yet</li>
+          </ul>
+        </nav>
+      </div>
       </aside>
     </div>
   </div>
 </section>
+
+
+
 
 
 
@@ -801,6 +1115,24 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </footer>
 <script src="script.js"></script>
+<script>
+// MathJax automatically typesets content after startup, but we check for
+// equations in HTML blocks that might need reprocessing after DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    // Only manually typeset if there are unprocessed math elements
+    // MathJax automatically typesets on startup, so this is only for edge cases
+    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
+    if (hasUnprocessedMath) {
+      MathJax.startup.promise.then(function() {
+        return MathJax.typesetPromise();
+      }).catch(function(err) {
+        console.log('MathJax typeset error:', err);
+      });
+    }
+  }
+});
+</script>
 
 
 
