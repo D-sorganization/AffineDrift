@@ -31,8 +31,8 @@ def check_site_health() -> None:
 
     subdirs = sorted({f.parent for f in html_files if len(f.parts) > 1})
     for d in subdirs:
-        pages = sorted([f.name for f in html_files if f.parent == d])
-        for _p in pages:
+        pages: list[str] = sorted([f.name for f in html_files if f.parent == d])
+        for _page_name in pages:
             pass
 
     # 2. Check Links
