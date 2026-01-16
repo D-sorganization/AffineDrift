@@ -267,6 +267,8 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 {#sec-affine}
 
+The kinematic analysis in the previous section established the mass matrix structure and the coupling mechanism. We now embed these elements into the full dynamical framework.
+
 To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that guarantees the golfer's torque enters the dynamics linearly.
 
 ### Lagrangian formulation
@@ -296,6 +298,8 @@ A critical property for stability analysis is that $\dot{M} - 2C$ is skew-symmet
 
 #### 3. Potentials and Dissipation
 The potential energy $V = V_g(q, \eta) + V_{elastic}(\eta)$ leads to the gravitational vector $G(q_{\text{sys}}) = \nabla V_g$ and the elastic restoring force $K_s \eta = \nabla V_{elastic}$. We assume linear modal damping via the Rayleigh function $\mathcal{R} = \frac{1}{2} \dot{\eta}^T C_s \dot{\eta}$.
+
+With the energetic scalar fields ($T, V, \mathcal{R}$) fully defined, we can now invoke the variational principle to generate the vector field of the dynamics. The Euler-Lagrange operator transforms these energy landscapes into a balance of forces, ensuring that the resulting motion adheres to the principle of least action.
 
 #### 4. The Underactuated Equation of Motion
 Assembling these terms yields the standard second-order differential equation:
@@ -414,6 +418,8 @@ $$\begin{bmatrix}
 
 With the accelerations isolated, we can now package the system into its final canonical form. This step is not merely notational; it formally separates the system into a drift vector field (representing the system's unforced evolution) and control vector fields (representing the actuator's leverage).
 
+The second-order formulation above describes accelerations in the configuration space. However, the standard language of control theory operates on first-order flows on the tangent bundle. To utilize the geometric tools of nonlinear control, we must promote the system to state-space form, converting the $N$ second-order differential equations into $2N$ first-order equations.
+
 ### First-order state-space form
 
 We now express the dynamics in first-order form. Recall
@@ -499,6 +505,8 @@ Physically, this includes:
 - elastic and damping forces from shaft deformation.
 Drift represents what the system would do "on its own" given its current configuration, velocities, and shaft deformation, under the modeling assumptions of Section~@subsec:assumptions.
 
+While the drift field encapsulates the system's inertial persistence—its resistance to change and its memory of past movement—the input field defines its malleability. It represents the available avenues for the golfer to intervene and reshape that momentum.
+
 ### Torque-driven input dynamics
 
 The *input dynamics* are defined as the torque-driven component:
@@ -578,6 +586,8 @@ By construction:
   
 - The only difference is that the torque input is set to zero: $u(t) \equiv 0$.
 Thus $x^{\mathrm{ZTCF}}(t)$ is the unique trajectory predicted by the model when the system is released from the same initial state but allowed to evolve purely under passive dynamics.
+
+The physical significance of the ZTCF becomes clear when we contrast its evolution with the actual observed motion. The divergence between these two paths is the direct measure of the golfer's intervention.
 
 ### Relationship to drift and input terms
 
@@ -935,6 +945,8 @@ changes $f(x)$.
 In contrast, changing the torque profile $u(t)$ leaves $f(x)$ unchanged.
 This separation is the foundation for counterfactual analysis, optimization of torque profiles, and sensitivity studies.
 
+It is crucial to distinguish between invariance to *input* and invariance to *state*. The drift field is immune to the former, but defined by the latter.
+
 ### Velocity dependence vs.\ torque dependence
 
 Although the drift is independent of torque, it may depend strongly on velocity.  
@@ -953,6 +965,8 @@ f(x) \ \text{independent of } u,
 $$
 
 This distinction motivates the role of ZVCF, which isolates the configuration-dependent subset of drift forces by removing all velocity dependence.
+
+While the *dynamics* (the vector fields $f(x)$ and $g(x)$) are input-invariant, the *controller* (the golfer) is not omnipotent. The set of available inputs is physically bounded by the architecture of the muscles and joints.
 
 ### Input constraints
 {#subsec:input_constraints}
