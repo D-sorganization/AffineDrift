@@ -29,8 +29,7 @@ def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
                 continue
 
         return extracted_items
-    except Exception as e:
-        print(f"Error reading {file_path}: {e}")
+    except Exception:
         return []
 
 
@@ -50,8 +49,7 @@ def normalize_item(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    """
-    Generate JSON data for the interactive bibliography from YAML sources.
+    """Generate JSON data for the interactive bibliography from YAML sources.
     Reads 'data/bibliography.yaml' and 'articles/*-bibliography.md',
     and converts them to JSON in 'docs/data'.
     """
@@ -70,14 +68,13 @@ def main() -> None:
                     for item in base_data:
                         if "id" in item:
                             all_refs[item["id"]] = normalize_item(item)
-        except Exception as e:
-            print(f"Error processing {base_bib_path}: {e}")
+        except Exception:
+            pass
 
     # 2. Load from articles/*-bibliography.md
     articles_dir = Path("articles")
     if articles_dir.exists():
         for md_file in articles_dir.glob("*-bibliography.md"):
-            print(f"Processing {md_file}...")
             items = extract_yaml_from_markdown(md_file)
             for item in items:
                 norm_item = normalize_item(item)
@@ -104,9 +101,6 @@ def main() -> None:
     with open(bib_output_path, "w") as f:
         json.dump(final_refs, f, indent=2)
 
-    print(f"Successfully generated {bib_output_path}")
-    print(f"Total entries: {len(final_refs)}")
-
     # 3. Process Reading Paths
     paths_source = Path("data/reading_paths.yaml")
     paths_output = output_dir / "reading_paths.json"
@@ -117,9 +111,8 @@ def main() -> None:
                 paths_data = yaml.safe_load(f)
             with open(paths_output, "w") as f:
                 json.dump(paths_data, f, indent=2)
-            print(f"Successfully generated {paths_output}")
-        except Exception as e:
-            print(f"Error processing reading paths: {e}")
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":

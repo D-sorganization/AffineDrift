@@ -2,7 +2,7 @@
 # Configuration for the Ruff linter
 # Matches standards defined in ci-standard.yml
 
-# Target Python 3.11 (matches your CI environment)
+# Target Python 3.12 (matches your CI environment)
 target-version = "py312"
 line-length = 100  # Matches Black standard (100 chars)
 
@@ -35,7 +35,8 @@ select = ["E", "F", "W", "I", "B", "UP"]
 
 # Ignore:
 # D = pydocstyle (We let the 'Doc-Scribe' agent handle docstrings, so we don't lint them strictly here)
-ignore = ["D"]
+# RUF001 = Ambiguous unicode characters (Common in scientific code with greek letters)
+ignore = ["D", "RUF001"]
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
@@ -50,6 +51,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "scripts/**/*.py" = ["E501"]
 "docs/**/*.py" = ["E501"]
 "build-html.py" = ["E501"]
+
 [lint.isort]
 # Tells Ruff how to group your own code vs. libraries
 known-first-party = ["src", "games", "tools"]

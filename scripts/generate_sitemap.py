@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate comprehensive sitemap.xml with proper priorities and change frequencies.
-"""
+"""Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
 import subprocess
 from datetime import datetime
@@ -111,7 +109,7 @@ def main() -> None:
                     "changefreq": get_changefreq(relative_path),
                     "priority": get_priority(relative_path),
                     "title": frontmatter.get("title", ""),
-                }
+                },
             )
 
     # Sort by priority
@@ -142,9 +140,6 @@ def main() -> None:
     # Write sitemap
     sitemap_path = Path("docs/sitemap.xml")
     sitemap_path.write_text("\n".join(xml_lines), encoding="utf-8")
-
-    print(f"Generated sitemap.xml with {len(pages)} URLs")
-    print(f"Saved to: {sitemap_path}")
 
     # Also copy to root for Quarto
     root_sitemap = Path("sitemap.xml")

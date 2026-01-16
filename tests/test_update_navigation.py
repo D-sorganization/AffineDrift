@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from tools.update_navigation import main as update_nav_main
 from tools.update_navigation import update_navigation
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _write_sample_html(tmp_path: Path, body: str) -> Path:
@@ -56,7 +59,8 @@ def test_update_navigation_raises_for_missing_nav(tmp_path: Path) -> None:
 
 
 def test_main_reports_missing_files(  # type: ignore[no-any-unimported, unused-ignore]
-    tmp_path: Path, caplog: pytest.LogCaptureFixture
+    tmp_path: Path,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """Test that main reports missing files correctly."""
     missing = tmp_path / "does-not-exist.html"

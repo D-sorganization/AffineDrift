@@ -80,7 +80,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
         try:
             links = find_links(file_path)
         except Exception as e:
-            logger.error(f"Error reading {file_path}: {e}")
+            logger.exception(f"Error reading {file_path}: {e}")
             continue
 
         for link, line_num in links:
@@ -89,7 +89,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             if not url:
                 continue  # Just a fragment
 
-            if url.startswith("http") or url.startswith("mailto:"):
+            if url.startswith(("http", "mailto:")):
                 continue  # Skip external
 
             # Skip JavaScript template literals (e.g., ${item.url})
@@ -118,9 +118,8 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                     # Also check if it wraps to index.html (e.g. directory/)
                     if not (target_path.is_dir() and (target_path / "index.qmd").exists()):
                         broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
-            else:
-                if not target_path.exists():
-                    broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+            elif not target_path.exists():
+                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
 

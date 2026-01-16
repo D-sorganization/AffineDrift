@@ -3,9 +3,7 @@ import re
 
 
 def fix_superposition(content: str) -> str:
-    """
-    Fix LaTeX syntax errors in superposition.qmd.
-    """
+    """Fix LaTeX syntax errors in superposition.qmd."""
     # Fix broken math block
     content = content.replace("[\n  x(t) \\neq", "$$\n  x(t) \\neq")
 
@@ -36,9 +34,7 @@ def fix_superposition(content: str) -> str:
 
 
 def fix_units_wrist(content: str) -> str:
-    """
-    Standardize unit formatting in wrist-universal-joint.qmd.
-    """
+    """Standardize unit formatting in wrist-universal-joint.qmd."""
     # We want to replace "X kg·m²" with "$X \text{ kg}\cdot\text{m}^2$"
     # Regex: (\d+(?:-\d+(?:\.\d+)?)?) -> Captures numbers like "0.004-0.006" or "5" or "0.005"
     # Actually just match the number preceding the unit.
@@ -59,15 +55,11 @@ def fix_units_wrist(content: str) -> str:
         """Helper to replace N·m with LaTeX."""
         return f"${m.group(1)} \\text{{ N}}\\cdot\\text{{m}}$"
 
-    content = re.sub(r"([0-9\.\-]+) N·m", repl_nm, content)
-
-    return content
+    return re.sub(r"([0-9\.\-]+) N·m", repl_nm, content)
 
 
 def fix_theory_part5(content: str) -> str:
-    """
-    Convert legacy notes to callouts in theory-part5.qmd.
-    """
+    """Convert legacy notes to callouts in theory-part5.qmd."""
     # Fix Note on parameter validity
     if "**Note on parameter validity.**" in content:
         content = content.replace(
@@ -86,10 +78,8 @@ def fix_theory_part5(content: str) -> str:
 
 
 def main() -> None:
-    """
-    Main entry point for syntax fixing tool.
-    """
-    files = [f for f in os.listdir("articles") if f.endswith(".qmd") or f.endswith(".md")]
+    """Main entry point for syntax fixing tool."""
+    files = [f for f in os.listdir("articles") if f.endswith((".qmd", ".md"))]
 
     for f in files:
         path = os.path.join("articles", f)
@@ -107,7 +97,6 @@ def main() -> None:
             content = fix_theory_part5(content)
 
         if content != original_content:
-            print(f"Fixing {f}")
             with open(path, "w") as fl:
                 fl.write(content)
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Script to manually publish an article by converting simple Markdown to HTML
+"""Script to manually publish an article by converting simple Markdown to HTML
 and wrapping it in the standard template.
 """
 
@@ -11,9 +10,7 @@ from pathlib import Path
 
 
 def simple_markdown_to_html(md_text: str) -> str:
-    """
-    Very basic Markdown to HTML converter for specific article structure.
-    """
+    """Very basic Markdown to HTML converter for specific article structure."""
     lines = md_text.split("\n")
     html_lines = []
 
@@ -35,7 +32,7 @@ def simple_markdown_to_html(md_text: str) -> str:
             # Extract section number if present
             anchor = title.lower().replace(" ", "-").replace(".", "")
             html_lines.append(
-                f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>'
+                f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>',
             )
             continue
 
@@ -89,7 +86,7 @@ def create_html_page(
     page_type: str = "articles",
     template_path: Path = Path("docs/articles.html"),
 ) -> bool:
-    """Create a complete HTML page from a template"""
+    """Create a complete HTML page from a template."""
     if template_path.exists():
         template = template_path.read_text()
 
@@ -98,7 +95,9 @@ def create_html_page(
 
         # Update metadata
         template = re.sub(
-            r"<title>.*?</title>", f"<title>{title_escaped} – AffineDrift</title>", template
+            r"<title>.*?</title>",
+            f"<title>{title_escaped} – AffineDrift</title>",
+            template,
         )
 
         template = re.sub(
@@ -134,7 +133,9 @@ def create_html_page(
 
         # Replace title block
         template = re.sub(
-            r'<h1 class="title">.*?</h1>', f'<h1 class="title">{title_escaped}</h1>', template
+            r'<h1 class="title">.*?</h1>',
+            f'<h1 class="title">{title_escaped}</h1>',
+            template,
         )
 
         # Replace description in page
@@ -174,7 +175,10 @@ def create_html_page(
 
         if page_type != "articles":
             template = re.sub(
-                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*", "", template, flags=re.DOTALL
+                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*",
+                "",
+                template,
+                flags=re.DOTALL,
             )
             template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
 
@@ -189,7 +193,6 @@ def main() -> None:
     output_path = Path("docs/articles/intentional-constraint-collapse.html")
 
     if not qmd_path.exists():
-        print(f"Error: {qmd_path} not found")
         sys.exit(1)
 
     content = qmd_path.read_text()
@@ -215,9 +218,9 @@ def main() -> None:
 
     success = create_html_page(title, description, body_html, output_path)
     if success:
-        print(f"Successfully created {output_path}")
+        pass
     else:
-        print("Failed to create HTML page")
+        pass
 
 
 if __name__ == "__main__":

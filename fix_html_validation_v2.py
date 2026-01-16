@@ -1,8 +1,10 @@
-import glob
+"""Script to fix HTML validation issues (version 2)."""
+
 import re
+from pathlib import Path
 
 
-def fix_file(filepath: str) -> None:
+def fix_file(filepath: Path) -> None:
     """Fix HTML validation issues in the given file (version 2).
 
     Args:
@@ -10,8 +12,10 @@ def fix_file(filepath: str) -> None:
         filepath: Path to the HTML file to fix.
 
     """
-    with open(filepath, encoding="utf-8") as f:
-        content = f.read()
+    try:
+        content = filepath.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return
 
     original_content = content
 
@@ -24,7 +28,11 @@ def fix_file(filepath: str) -> None:
             content,
         )
         # Prevent double aria-label if ran multiple times (simple check)
-        content = re.sub(r'aria-label="Home" aria-label="Home"', 'aria-label="Home"', content)
+        content = re.sub(
+            r'aria-label="Home" aria-label="Home"',
+            'aria-label="Home"',
+            content,
+        )
 
     # 2. Fix invalid IDs (containing dots)
     # This is tricky because we need to match id="..." and href="#..."
@@ -71,7 +79,10 @@ def fix_file(filepath: str) -> None:
     # Let's try to add aria-labels to sidebars if they are <aside> or <nav>
     # <nav id="TOC" ...> -> aria-label="Table of Contents"
     if '<nav id="TOC"' in content and "aria-label" not in content:
-        content = content.replace('<nav id="TOC"', '<nav id="TOC" aria-label="Table of Contents"')
+        content = content.replace(
+            '<nav id="TOC"',
+            '<nav id="TOC" aria-label="Table of Contents"',
+        )
 
     # <aside class="left-sidebar">
     if '<aside class="left-sidebar"' in content and "aria-label" not in content:
@@ -87,14 +98,11 @@ def fix_file(filepath: str) -> None:
         )
 
     if content != original_content:
-        print(f"Fixing {filepath}")
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
+        filepath.write_text(content, encoding="utf-8")
 
 
-# Process all HTML files in docs
-files = glob.glob("docs/**/*.html", recursive=True)
-for file in files:
-    fix_file(file)
-
-print("HTML fix v2 complete.")
+if __name__ == "__main__":
+    # Process all HTML files in docs
+    files = Path("docs").rglob("*.html")
+    for file in files:
+        fix_file(file)

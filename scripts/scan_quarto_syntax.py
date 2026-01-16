@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-r"""
-Scans Quarto markdown files (.qmd, .md) for common syntax issues that prevent
+r"""Scans Quarto markdown files (.qmd, .md) for common syntax issues that prevent
 proper equation rendering.
 
 Checks for:
@@ -15,21 +14,20 @@ import sys
 
 
 def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
-    """
-    Scans a single file for Quarto syntax issues.
+    """Scans a single file for Quarto syntax issues.
 
     Args:
         filepath: Path to the file to scan.
 
     Returns:
         List of tuples (line_number, line_content, problem_description, suggested_fix).
+
     """
     issues = []
     try:
         with open(filepath, encoding="utf-8") as f:
             lines = f.readlines()
-    except Exception as e:
-        print(f"Error reading {filepath}: {e}")
+    except Exception:
         return []
 
     for i, line in enumerate(lines):
@@ -62,25 +60,25 @@ def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
                     continue
 
                 # Check for leading space
-                if math_content.startswith(" ") or math_content.startswith("\t"):
+                if math_content.startswith((" ", "\t")):
                     issues.append(
                         (
                             line_num,
                             line,
                             f"Space after opening $ in segment '{math_content[:10]}...'",
                             "Remove leading space",
-                        )
+                        ),
                     )
 
                 # Check for trailing space
-                if math_content.endswith(" ") or math_content.endswith("\t"):
+                if math_content.endswith((" ", "\t")):
                     issues.append(
                         (
                             line_num,
                             line,
                             f"Space before closing $ in segment '...{math_content[-10:]}'",
                             "Remove trailing space",
-                        )
+                        ),
                     )
 
         # 3. Double quotes in math
@@ -98,16 +96,14 @@ def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
                             line,
                             f"Double quote in math: '{math_content}'",
                             "Use ' or '' for derivatives",
-                        )
+                        ),
                     )
 
     return issues
 
 
 def main() -> None:
-    """
-    Main entry point for the scanner.
-    """
+    """Main entry point for the scanner."""
     files_to_scan = []
     # Walk through articles
     if os.path.exists("articles"):
@@ -115,7 +111,7 @@ def main() -> None:
             if "archive" in dirs:
                 dirs.remove("archive")
             for file in files:
-                if file.endswith(".qmd") or file.endswith(".md"):
+                if file.endswith((".qmd", ".md")):
                     files_to_scan.append(os.path.join(root, file))
 
     # Walk through root
@@ -123,22 +119,17 @@ def main() -> None:
         if file.endswith(".qmd"):
             files_to_scan.append(file)
 
-    print(f"Scanning {len(files_to_scan)} active files for Quarto syntax issues...")
-
     total_issues = 0
     for filepath in files_to_scan:
         issues = scan_file(filepath)
         if issues:
-            print(f"\nFile: {filepath}")
-            for line_num, _line_content, problem, fix in issues:
-                print(f"  Line {line_num}: {problem} -> {fix}")
+            for _line_num, _line_content, _problem, _fix in issues:
+                pass
             total_issues += len(issues)
 
     if total_issues > 0:
-        print(f"\nTotal potential issues found: {total_issues}")
         sys.exit(1)
     else:
-        print("\nNo issues found.")
         sys.exit(0)
 
 

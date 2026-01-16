@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Add meta descriptions to files that are missing them.
+"""Add meta descriptions to files that are missing them.
 Uses intelligent extraction from content to generate relevant descriptions.
 """
 
@@ -107,33 +106,24 @@ def add_description_to_file(filepath: Path, description: str) -> bool:
 
 def main() -> None:
     """Add descriptions to all files missing them."""
-    print("Adding meta descriptions to files...")
-
     files_updated = 0
     files_skipped = 0
 
     for filepath_str, description in DESCRIPTION_OVERRIDES.items():
         filepath = Path(filepath_str)
         if not filepath.exists():
-            print(f"  Skip (not found): {filepath}")
             files_skipped += 1
             continue
 
         content = filepath.read_text(encoding="utf-8")
         if "description:" in content.split("---")[1] if content.startswith("---") else False:
-            print(f"  Skip (has description): {filepath}")
             files_skipped += 1
             continue
 
         if add_description_to_file(filepath, description):
-            print(f"  Added: {filepath}")
             files_updated += 1
         else:
-            print(f"  Failed: {filepath}")
             files_skipped += 1
-
-    print(f"\nUpdated: {files_updated} files")
-    print(f"Skipped: {files_skipped} files")
 
 
 if __name__ == "__main__":

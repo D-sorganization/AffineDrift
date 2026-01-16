@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Generate search index for full-text article search.
+"""Generate search index for full-text article search.
 Extracts content from Quarto markdown files and creates a Fuse.js compatible index.
 """
 
@@ -98,7 +97,7 @@ def extract_concepts(content: str, frontmatter: dict[str, str]) -> list[str]:
             concepts.append(term)
 
     # Deduplicate and clean
-    concepts = list(set(c.strip() for c in concepts if c.strip()))
+    concepts = list({c.strip() for c in concepts if c.strip()})
     return concepts[:20]  # Limit to 20 concepts
 
 
@@ -106,8 +105,7 @@ def process_file(filepath: Path) -> dict[str, object] | None:
     """Process a single Quarto markdown file."""
     try:
         content = filepath.read_text(encoding="utf-8")
-    except Exception as e:
-        print(f"  Warning: Could not read {filepath}: {e}")
+    except Exception:
         return None
 
     frontmatter = extract_frontmatter(content)
@@ -118,7 +116,7 @@ def process_file(filepath: Path) -> dict[str, object] | None:
         return None
 
     # Generate URL path
-    relative_path = filepath.relative_to(Path("."))
+    relative_path = filepath.relative_to(Path())
     url = "/" + str(relative_path).replace(".qmd", ".html")
 
     # Extract content
@@ -161,8 +159,6 @@ def categorize_content(path: str, frontmatter: dict[str, str]) -> str:
 
 def main() -> None:
     """Generate the search index."""
-    print("Generating search index...")
-
     index: list[dict[str, object]] = []
     processed = 0
     skipped = 0
@@ -177,7 +173,6 @@ def main() -> None:
             if filepath.name in EXCLUDE_FILES:
                 continue
 
-            print(f"  Processing: {filepath}")
             entry = process_file(filepath)
 
             if entry:
@@ -203,11 +198,6 @@ def main() -> None:
             f,
             indent=2,
         )
-
-    print(f"\nSearch index generated: {output_path}")
-    print(f"  Processed: {processed} files")
-    print(f"  Skipped: {skipped} files")
-    print(f"  Total entries: {len(index)}")
 
 
 if __name__ == "__main__":

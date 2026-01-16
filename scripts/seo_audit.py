@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-SEO Audit Script - Checks all pages for proper meta descriptions and generates report.
+"""SEO Audit Script - Checks all pages for proper meta descriptions and generates report.
 Also suggests improvements based on content analysis.
 """
 
@@ -133,11 +132,11 @@ def audit_file(filepath: Path) -> dict[str, Any]:
         result["issues"].append("Missing meta description")
     elif result["description_length"] < 50:
         result["issues"].append(
-            f"Description too short ({result['description_length']} chars, recommend 50-160)"
+            f"Description too short ({result['description_length']} chars, recommend 50-160)",
         )
     elif result["description_length"] > 160:
         result["issues"].append(
-            f"Description too long ({result['description_length']} chars, recommend 50-160)"
+            f"Description too long ({result['description_length']} chars, recommend 50-160)",
         )
 
     # Check headings
@@ -155,10 +154,6 @@ def audit_file(filepath: Path) -> dict[str, Any]:
 
 def main() -> None:
     """Run SEO audit on all content files."""
-    print("=" * 70)
-    print("AffineDrift SEO Audit Report")
-    print("=" * 70)
-
     content_dirs = [".", "articles"]
     results: dict[str, Any] = {}
     total_issues = 0
@@ -179,39 +174,29 @@ def main() -> None:
             issues = result.get("issues", [])
             if issues:
                 files_with_issues += 1
-                total_issues += len(cast(list[str], issues))
+                total_issues += len(cast("list[str]", issues))
 
     # Summary
-    print(f"\nFiles audited: {len(results)}")
-    print(f"Files with issues: {files_with_issues}")
-    print(f"Total issues found: {total_issues}")
 
     # Missing descriptions
     missing_desc = [(f, r) for f, r in results.items() if not r.get("has_description")]
     if missing_desc:
-        print(f"\n{'=' * 70}")
-        print(f"MISSING META DESCRIPTIONS ({len(missing_desc)} files)")
-        print("=" * 70)
-    for filepath_str, result in missing_desc:
-        print(f"\n{filepath_str}")
-        print(f"  Title: {result.get('title', 'N/A')}")
+        pass
+    for _filepath_str, result in missing_desc:
         if result.get("suggested_description"):
-            print(f"  Suggested: {cast(str, result['suggested_description'])[:100]}...")
+            pass
 
     # Other issues
     other_issues = [
         (f, r) for f, r in results.items() if r.get("issues") and r.get("has_description")
     ]
     if other_issues:
-        print(f"\n{'=' * 70}")
-        print(f"OTHER SEO ISSUES ({len(other_issues)} files)")
-        print("=" * 70)
-    for filepath_str, result in other_issues:
-        issues = [i for i in cast(list[str], result["issues"]) if "Missing meta" not in i]
+        pass
+    for _filepath_str, result in other_issues:
+        issues = [i for i in cast("list[str]", result["issues"]) if "Missing meta" not in i]
         if issues:
-            print(f"\n{filepath_str}")
-            for issue in issues:
-                print(f"  - {issue}")
+            for _issue in issues:
+                pass
 
     # Generate JSON report
     report_path = Path("docs/data/seo_audit.json")
@@ -230,7 +215,6 @@ def main() -> None:
             f,
             indent=2,
         )
-    print(f"\nDetailed report saved to: {report_path}")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Batch LaTeX to Quarto Converter for AffineDrift
-Converts all LaTeX article files to Quarto .qmd format
+"""Batch LaTeX to Quarto Converter for AffineDrift
+Converts all LaTeX article files to Quarto .qmd format.
 """
 
 import os
@@ -67,14 +66,14 @@ CONVERSIONS = [
     },
     {
         "source": (
-            "content/Affine Nature of the Golf Swing/" "Appendix_A_Nonlinear_Control_Insights.tex"
+            "content/Affine Nature of the Golf Swing/Appendix_A_Nonlinear_Control_Insights.tex"
         ),
         "target": f"{ARTICLES_DIR}/appendix-nonlinear-control-insights.qmd",
         "description": "Appendix A: Nonlinear Control Insights",
     },
     {
         "source": (
-            "content/Affine Nature of the Golf Swing/" "Appendix_B_Inverse_Dynamics_Inference.tex"
+            "content/Affine Nature of the Golf Swing/Appendix_B_Inverse_Dynamics_Inference.tex"
         ),
         "target": f"{ARTICLES_DIR}/appendix-inverse-dynamics-inference.qmd",
         "description": "Appendix B: Inverse Dynamics Inference",
@@ -98,7 +97,7 @@ CONVERSIONS = [
 
 
 def setup_articles_directory() -> None:
-    """Create articles directory if it doesn't exist"""
+    """Create articles directory if it doesn't exist."""
     os.makedirs(ARTICLES_DIR, exist_ok=True)
 
     # Create _metadata.yml for articles
@@ -114,28 +113,20 @@ format:
     number-sections: false
     code-fold: true
     css: ../styles.css
-"""
+""",
             )
-        print(f"✓ Created {metadata_path}")
 
 
 def convert_all(dry_run: bool = False) -> bool:
-    """Convert all LaTeX files to Quarto"""
+    """Convert all LaTeX files to Quarto."""
     converter = LaTeXToQuartoConverter()
 
-    print("=" * 70)
-    print("AffineDrift LaTeX to Quarto Batch Converter")
-    print("=" * 70)
-    print()
-
     if dry_run:
-        print("DRY RUN MODE - No files will be modified")
-        print()
+        pass
 
     # Setup articles directory
     if not dry_run:
         setup_articles_directory()
-        print()
 
     success_count = 0
     error_count = 0
@@ -143,57 +134,32 @@ def convert_all(dry_run: bool = False) -> bool:
     for conversion in CONVERSIONS:
         source = conversion["source"]
         target = conversion["target"]
-        description = conversion["description"]
-
-        print(f"Processing: {description}")
-        print(f"  Source: {source}")
-        print(f"  Target: {target}")
+        conversion["description"]
 
         if not os.path.exists(source):
-            print(f"  ✗ Source file not found: {source}")
             error_count += 1
             continue
 
         if dry_run:
-            print("  ✓ Would convert (dry run)")
             success_count += 1
         else:
             try:
                 converter.convert_file(source, target)
                 success_count += 1
-            except Exception as e:
-                print(f"  ✗ Error converting: {e}")
+            except Exception:
                 error_count += 1
 
-        print()
-
-    print("=" * 70)
-    print("Conversion Summary:")
-    print(f"  Successful: {success_count}")
-    print(f"  Errors: {error_count}")
-    print("=" * 70)
-
     if not dry_run and success_count > 0:
-        print()
-        print("Next steps:")
-        print("  1. Install Quarto: https://quarto.org/docs/get-started/")
-        print("  2. Preview site: quarto preview")
-        print("  3. Render site: quarto render")
-        print("  4. Publish: quarto publish gh-pages")
+        pass
 
     return error_count == 0
 
 
 def main() -> None:
-    """Main entry point"""
+    """Main entry point."""
     dry_run = "--dry-run" in sys.argv or "-n" in sys.argv
 
     if "--help" in sys.argv or "-h" in sys.argv:
-        print("Usage: python3 convert_all_to_quarto.py [--dry-run|-n] [--help|-h]")
-        print()
-        print("Options:")
-        print("  --dry-run, -n  : Preview what would be converted without making changes")
-        print("  --help, -h     : Show this help message")
         sys.exit(0)
 
     success = convert_all(dry_run)

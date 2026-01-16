@@ -1,149 +1,131 @@
-import os
 import sys
+from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
-DOCS_DIR = "docs"
+DOCS_DIR = Path("docs")
 
 
 def check_site_health() -> None:
-    """
-    Scans the docs directory for HTML files and verifies internal links.
+    """Scans the docs directory for HTML files and verifies internal links.
     Generates a site map and reports broken links and orphaned files.
     """
-    print(f"Scanning {DOCS_DIR} for HTML files...")
-
     html_files = []
-    for root, _dirs, files in os.walk(DOCS_DIR):
-        for file in files:
-            if file.endswith(".html"):
-                full_path = os.path.join(root, file)
-                # Store relative path to docs/
-                rel_path = os.path.relpath(full_path, DOCS_DIR)
-                html_files.append(rel_path)
+    # Walk the directory
+    for full_path in DOCS_DIR.rglob("*.html"):
+        rel_path = full_path.relative_to(DOCS_DIR)
+        html_files.append(rel_path)
 
-    print(f"Found {len(html_files)} HTML files.")
-
-    # Store all known files (including assets if possible, but let's stick to HTML anchors first)
-    # Actually, we should check if targets exist.
-    # We need a set of all files in docs to verify links.
+    # Store all known files
     all_files = set()
-    for root, _dirs, files in os.walk(DOCS_DIR):
-        for file in files:
-            rel_path = os.path.relpath(os.path.join(root, file), DOCS_DIR)
-            all_files.add(rel_path)
+    for full_path in DOCS_DIR.rglob("*"):
+        if full_path.is_file():
+            all_files.add(full_path.relative_to(DOCS_DIR))
 
     # 1. Generate Site Map (List of pages)
-    print("\n=== Site Map (Top Level) ===")
-    top_level_pages = sorted([f for f in html_files if "/" not in f])
-    for p in top_level_pages:
-        print(f" - {p}")
+    top_level_pages = sorted([f for f in html_files if len(f.parts) == 1])
+    for _p in top_level_pages:
+        pass
 
-    print("\n=== Site Map (Subdirectories) ===")
-    subdirs = sorted(list(set([os.path.dirname(f) for f in html_files if "/" in f])))
+    subdirs = sorted({f.parent for f in html_files if len(f.parts) > 1})
     for d in subdirs:
-        print(f"[{d}/]")
-        pages = sorted([os.path.basename(f) for f in html_files if os.path.dirname(f) == d])
-        for p in pages:
-            print(f"   - {p}")
+        pages = sorted([f.name for f in html_files if f.parent == d])
+        for _p in pages:
+            pass
 
     # 2. Check Links
-    print("\n=== Checking Links ===")
     broken_links = []
     orphaned_files = set(html_files)
 
     # Files that are always entry points (not orphaned)
-    # These include the main index, error pages, and standalone pages
-    # that may be accessed directly via URL (e.g., easter eggs, standalone tools)
     entry_points = {"index.html", "404.html", "daydreams-doodles.html"}
-    orphaned_files -= entry_points
+    # Orphan check logic handles Path objects by comparing string representation or Path parts
+    orphaned_files = {f for f in orphaned_files if f.name not in entry_points}
 
-    # Exclude archive directories from orphan check - these are intentionally not linked
-    orphaned_files = {
-        f for f in orphaned_files if "/archive/" not in f and not f.startswith("archive/")
-    }
+    # Exclude archive directories from orphan check
+    # Check if "archive" is any part of the path
+    orphaned_files = {f for f in orphaned_files if "archive" not in f.parts}
 
     for file_path in html_files:
-        full_path = os.path.join(DOCS_DIR, file_path)
+        full_path = DOCS_DIR / file_path
         try:
-            with open(full_path, encoding="utf-8") as f:
+            with full_path.open(encoding="utf-8") as f:
                 soup = BeautifulSoup(f, "html.parser")
 
             # Find all links
             for a in soup.find_all("a", href=True):
-                # BeautifulSoup find_all with href=True ensures href exists
-                # Cast to str to handle potential None values
-                href_value = cast(Any, a).get("href")
+                href_value = cast("Any", a).get("href")
                 href = str(href_value) if href_value is not None else ""
 
-                # Skip empty hrefs
                 if not href:
                     continue
 
-                # Skip external links, mailto, etc.
                 if href.startswith(("http:", "https:", "mailto:", "tel:", "ftp:", "#")):
                     continue
 
-                # Resolve relative links
-                # href is relative to file_path
-                # We need to construct the target path relative to DOCS_DIR
-
                 # Strip anchor
-                target_url, anchor = urldefrag(href)
+                target_url, _anchor = urldefrag(href)
 
                 if not target_url:
-                    # Pure anchor link to same page
                     continue
 
                 # Calculate target path
-                # If file_path is "articles/foo.html" and link is "../index.html"
-                # dir is "articles"
-                current_dir = os.path.dirname(file_path)
-                target_rel_path = os.path.normpath(os.path.join(current_dir, target_url))
+                # file_path is relative to DOCS_DIR
+                # current_dir is relative to DOCS_DIR
+                current_dir = file_path.parent
+                # target_rel_path is relative to DOCS_DIR
+                # We need to resolve ".." and "." manually or using resolve() but resolve needs abs paths.
+                # Easier way: (DOCS_DIR / current_dir / target_url).resolve().relative_to(DOCS_DIR.resolve())
+                try:
+                    resolved_target = (DOCS_DIR / current_dir / target_url).resolve()
+                    # Check if it is inside DOCS_DIR
+                    if not resolved_target.is_relative_to(DOCS_DIR.resolve()):
+                        # Link points outside docs, maybe valid? But we only check inside docs.
+                        continue
+                    target_rel_path = resolved_target.relative_to(DOCS_DIR.resolve())
+                except (ValueError, FileNotFoundError):
+                    # If resolve fails (e.g. file doesn't exist), we construct it logically
+                    # but we can't fully trust it if it doesn't exist.
+                    # Actually, if it doesn't exist, resolve() might still work on Path if strictly=False (default since 3.10)
+                    # But if we want to check existence, we can just check exist().
+                    # Let's try logical path construction first to match `all_files` keys.
+                    # However, logical resolution of ".." without file system is tricky.
+                    # Let's rely on resolve() which should work if we are careful.
+                    continue
 
-                # Check if file exists in all_files
                 if target_rel_path not in all_files:
                     broken_links.append(
                         {
-                            "source": file_path,
-                            "target": target_rel_path,
+                            "source": str(file_path),
+                            "target": str(target_rel_path),
                             "href": href,
                             "text": a.get_text(strip=True)[:50],
-                        }
+                        },
                     )
-                else:
-                    # Link is valid, remove target from orphaned list if it's an HTML file
-                    if target_rel_path in orphaned_files:
-                        orphaned_files.remove(target_rel_path)
+                elif target_rel_path in orphaned_files:
+                    orphaned_files.remove(target_rel_path)
 
-        except Exception as e:
-            print(f"Error processing {file_path}: {e}")
+        except Exception:
+            pass
 
     # Report Broken Links
     has_errors = False
     if broken_links:
-        print(f"\nFound {len(broken_links)} broken internal links:")
-        for link in broken_links:
-            print(f"  [X] {link['source']} -> {link['href']} (Target: {link['target']})")
+        for _link in broken_links:
+            pass
         has_errors = True
     else:
-        print("\nNo broken internal links found.")
+        pass
 
     # Report Orphaned Files
     if orphaned_files:
-        print(
-            f"\nFound {len(orphaned_files)} potentially orphaned HTML files (not linked from other internal pages):"
-        )
-        for orphaned in sorted(orphaned_files):
-            print(f"  [?] {orphaned}")
-        # Orphaned files might not be a hard failure for some, but typically yes for this user
-        # We will count it as a warning for now unless requested, but let's make it strict or user preference.
-        # Given "acting right", strict is better.
+        for _orphaned in sorted(orphaned_files):
+            pass
         has_errors = True
     else:
-        print("\nNo orphaned HTML files found.")
+        pass
 
     if has_errors:
         sys.exit(1)

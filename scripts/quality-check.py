@@ -118,12 +118,13 @@ def check_banned_patterns(
     is_html_generating_file = False
     if filepath.suffix == ".py":
         # Check if it's a Streamlit file
-        if "streamlit" in filepath.name.lower() or "Streamlit" in str(filepath.parts):
-            is_html_generating_file = True
-        # Check if it's an HTML conversion tool or navigation update tool
-        elif any(
-            tool_name in filepath.name.lower()
-            for tool_name in ["latex_to_html", "html", "convert", "update_navigation"]
+        if (
+            "streamlit" in filepath.name.lower()
+            or "Streamlit" in str(filepath.parts)
+            or any(
+                tool_name in filepath.name.lower()
+                for tool_name in ["latex_to_html", "html", "convert", "update_navigation"]
+            )
         ):
             is_html_generating_file = True
         # Check if it's a GUI file (PyQt/Qt applications)
@@ -142,14 +143,13 @@ def check_banned_patterns(
                         "streamlit",
                         "st.",
                     ]
+                ) and (
+                    "<b>" in content
+                    or "<br>" in content
+                    or "setText" in content
+                    or "st." in content
                 ):
-                    if (
-                        "<b>" in content
-                        or "<br>" in content
-                        or "setText" in content
-                        or "st." in content
-                    ):
-                        is_html_generating_file = True
+                    is_html_generating_file = True
             except (OSError, UnicodeDecodeError):
                 pass
 
@@ -224,7 +224,8 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
         if '"' in line_content or "'" in line_content:
             # Check if the magic number is inside quotes
             if re.search(r'["\'].*9\.8[0-9]?.*["\']', line_content) or re.search(
-                r'["\'].*3\.141.*["\']', line_content
+                r'["\'].*3\.141.*["\']',
+                line_content,
             ):
                 continue
         for pattern, message in MAGIC_NUMBERS:
@@ -248,19 +249,16 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
                 function_stack.append(node)
 
                 # Skip docstring check for nested functions (they're usually helper functions)
-                if not is_nested:
-                    if not ast.get_docstring(node):
-                        # Skip private nested functions in update_navigation.py
-                        if not (
-                            filepath.name == "update_navigation.py" and node.name.startswith("_")
-                        ):
-                            issues.append(
-                                (
-                                    node.lineno,
-                                    f"Function '{node.name}' missing docstring",
-                                    "",
-                                ),
-                            )
+                if not is_nested and not ast.get_docstring(node):
+                    # Skip private nested functions in update_navigation.py
+                    if not (filepath.name == "update_navigation.py" and node.name.startswith("_")):
+                        issues.append(
+                            (
+                                node.lineno,
+                                f"Function '{node.name}' missing docstring",
+                                "",
+                            ),
+                        )
 
                 if not node.returns and node.name != "__init__":
                     issues.append(

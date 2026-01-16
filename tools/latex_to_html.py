@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-LaTeX to HTML Converter for AffineDrift
-Converts LaTeX article files to HTML with MathJax rendering
+"""LaTeX to HTML Converter for AffineDrift
+Converts LaTeX article files to HTML with MathJax rendering.
 """
 
 import os
@@ -12,16 +11,16 @@ from pathlib import Path
 
 class LaTeXToHTMLConverter:
     def __init__(self, template_file: str | Path | None = None) -> None:
-        """Initialize converter with optional custom template"""
+        """Initialize converter with optional custom template."""
         self.template_file = template_file
 
     def read_latex_file(self, filepath: str | Path) -> str:
-        """Read LaTeX file content"""
+        """Read LaTeX file content."""
         with open(filepath, encoding="utf-8") as f:
             return f.read()
 
     def extract_title(self, latex_content: str) -> str:
-        """Extract title from LaTeX content"""
+        """Extract title from LaTeX content."""
         title_match = re.search(r"\\title\{([^}]+)\}", latex_content, re.DOTALL)
         if title_match:
             title = title_match.group(1)
@@ -33,21 +32,16 @@ class LaTeXToHTMLConverter:
         return "Untitled Article"
 
     def extract_sections(self, latex_content: str) -> str:
-        """Extract sections from LaTeX content"""
+        """Extract sections from LaTeX content."""
         # Remove everything before \begin{document}
         doc_match = re.search(r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL)
-        if doc_match:
-            content = doc_match.group(1)
-        else:
-            content = latex_content
+        content = doc_match.group(1) if doc_match else latex_content
 
         # Remove \maketitle
-        content = re.sub(r"\\maketitle", "", content)
-
-        return content
+        return re.sub(r"\\maketitle", "", content)
 
     def convert_latex_to_html(self, latex_content: str) -> str:
-        """Convert LaTeX content to HTML"""
+        """Convert LaTeX content to HTML."""
         html = latex_content
 
         # Convert abstract environment
@@ -99,12 +93,10 @@ class LaTeXToHTMLConverter:
         html = self.clean_latex_commands(html)
 
         # Convert paragraphs
-        html = self.convert_paragraphs(html)
-
-        return html
+        return self.convert_paragraphs(html)
 
     def convert_equations(self, content: str) -> str:
-        """Convert LaTeX equation environments to MathJax-friendly format"""
+        """Convert LaTeX equation environments to MathJax-friendly format."""
         # Display equations
         content = re.sub(
             r"\\begin\{equation\}(.*?)\\end\{equation\}",
@@ -114,7 +106,7 @@ class LaTeXToHTMLConverter:
         )
 
         # Already wrapped equations
-        content = re.sub(
+        return re.sub(
             r"\\\[(.*?)\\\]",
             r'<div class="equation">\n\\[\1\\]\n</div>',
             content,
@@ -124,10 +116,8 @@ class LaTeXToHTMLConverter:
         # Inline equations with $
         # Leave them as-is for MathJax
 
-        return content
-
     def convert_lists(self, content: str) -> str:
-        """Convert LaTeX lists to HTML lists"""
+        """Convert LaTeX lists to HTML lists."""
 
         # Itemize (unordered lists)
         def replace_itemize(match: re.Match[str]) -> str:
@@ -156,17 +146,15 @@ class LaTeXToHTMLConverter:
             items = re.sub(r"(<li>.*?)(?=<li>|$)", r"\1</li>", items, flags=re.DOTALL)
             return f"<ol>\n{items}\n</ol>"
 
-        content = re.sub(
+        return re.sub(
             r"\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
             replace_enumerate,
             content,
             flags=re.DOTALL,
         )
 
-        return content
-
     def convert_paragraphs(self, content: str) -> str:
-        """Convert LaTeX paragraphs to HTML paragraphs"""
+        """Convert LaTeX paragraphs to HTML paragraphs."""
         # Split by double newlines (paragraph breaks)
         lines = content.split("\n\n")
         result = []
@@ -177,13 +165,7 @@ class LaTeXToHTMLConverter:
                 continue
 
             # Skip if already wrapped in HTML tags
-            if line.startswith("<") and (
-                line.startswith("<h")
-                or line.startswith("<div")
-                or line.startswith("<ul")
-                or line.startswith("<ol")
-                or line.startswith("<figure")
-            ):
+            if line.startswith("<") and (line.startswith(("<h", "<div", "<ul", "<ol", "<figure"))):
                 result.append(line)
             elif line:
                 # Wrap in paragraph tag
@@ -192,7 +174,7 @@ class LaTeXToHTMLConverter:
         return "\n\n".join(result)
 
     def clean_latex_commands(self, content: str) -> str:
-        """Remove or clean LaTeX commands that don't need HTML conversion"""
+        """Remove or clean LaTeX commands that don't need HTML conversion."""
         # Remove comments
         content = re.sub(r"%.*$", "", content, flags=re.MULTILINE)
 
@@ -240,18 +222,16 @@ class LaTeXToHTMLConverter:
         content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"<strong>\1</strong>", content)
 
         # Remove tikz and pgfplots entirely
-        content = re.sub(
+        return re.sub(
             r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
             "[Figure: See PDF version]",
             content,
             flags=re.DOTALL,
         )
 
-        return content
-
     def create_html_page(self, title: str, content: str, description: str = "") -> str:
-        """Create complete HTML page with AffineDrift template"""
-        template = f"""<!DOCTYPE html>
+        """Create complete HTML page with AffineDrift template."""
+        return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -421,14 +401,11 @@ class LaTeXToHTMLConverter:
 </body>
 </html>
 """
-        return template
 
     def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> str:
-        """Convert a LaTeX file to HTML"""
+        """Convert a LaTeX file to HTML."""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".html")
-
-        print(f"Converting {input_file} -> {output_file}")
 
         # Read LaTeX content
         latex_content = self.read_latex_file(input_file)
@@ -449,26 +426,18 @@ class LaTeXToHTMLConverter:
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(full_html)
 
-        print(f"✓ Conversion complete: {output_file}")
         return str(output_file)
 
 
 def main() -> None:
-    """Main entry point"""
+    """Main entry point."""
     if len(sys.argv) < 2:
-        print("Usage: python3 latex_to_html.py <input.tex> [output.html]")
-        print("\nExample:")
-        print(
-            "  python3 latex_to_html.py "
-            "content/Wrist\\ as\\ Universal\\ Joint/Wrist_Universal_Claude.tex"
-        )
         sys.exit(1)
 
     input_file = sys.argv[1]
     output_file = sys.argv[2] if len(sys.argv) > 2 else None
 
     if not os.path.exists(input_file):
-        print(f"Error: Input file not found: {input_file}")
         sys.exit(1)
 
     converter = LaTeXToHTMLConverter()

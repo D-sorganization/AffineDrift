@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""
-Batch LaTeX to HTML Converter for AffineDrift
-Converts all LaTeX article files to HTML and updates root-level HTML files
+"""Batch LaTeX to HTML Converter for AffineDrift
+Converts all LaTeX article files to HTML and updates root-level HTML files.
 """
 
 import os
@@ -31,17 +30,11 @@ CONVERSIONS = [
 
 
 def convert_all(dry_run: bool = False) -> bool:
-    """Convert all LaTeX files to HTML"""
+    """Convert all LaTeX files to HTML."""
     converter = LaTeXToHTMLConverter()
 
-    print("=" * 70)
-    print("AffineDrift LaTeX to HTML Batch Converter")
-    print("=" * 70)
-    print()
-
     if dry_run:
-        print("DRY RUN MODE - No files will be modified")
-        print()
+        pass
 
     success_count = 0
     error_count = 0
@@ -50,50 +43,30 @@ def convert_all(dry_run: bool = False) -> bool:
         source = conversion["source"]
         target = conversion["target"]
         if not isinstance(source, str) or not isinstance(target, str):
-            print(f"  ✗ Invalid conversion entry: {conversion}")
             error_count += 1
             continue
 
-        print(f"Processing: {source}")
-        print(f"  -> Target: {target}")
-
         if not os.path.exists(source):
-            print(f"  ✗ Source file not found: {source}")
             error_count += 1
             continue
 
         if dry_run:
-            print("  ✓ Would convert (dry run)")
             success_count += 1
         else:
             try:
                 converter.convert_file(source, target)
                 success_count += 1
-            except Exception as e:
-                print(f"  ✗ Error converting: {e}")
+            except Exception:
                 error_count += 1
-
-        print()
-
-    print("=" * 70)
-    print("Conversion Summary:")
-    print(f"  Successful: {success_count}")
-    print(f"  Errors: {error_count}")
-    print("=" * 70)
 
     return error_count == 0
 
 
 def main() -> None:
-    """Main entry point"""
+    """Main entry point."""
     dry_run = "--dry-run" in sys.argv or "-n" in sys.argv
 
     if "--help" in sys.argv or "-h" in sys.argv:
-        print("Usage: python3 convert_all_latex.py [--dry-run|-n] [--help|-h]")
-        print()
-        print("Options:")
-        print("  --dry-run, -n  : Preview what would be converted without making changes")
-        print("  --help, -h     : Show this help message")
         sys.exit(0)
 
     success = convert_all(dry_run)
