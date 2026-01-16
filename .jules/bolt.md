@@ -13,3 +13,7 @@
 ## 2025-10-26 - MathJax Lazy Typesetting
 **Learning:** For long technical articles with hundreds of equations, default MathJax typesetting blocks the main thread. The `ui/lazy` extension significantly improves TTI by only typesetting equations in the viewport.
 **Action:** Always enable `ui/lazy` in MathJax v3 configuration for content-heavy pages.
+
+## 2025-10-27 - Streamlit Matplotlib Caching
+**Learning:** Matplotlib figure generation is a significant bottleneck in interactive Streamlit apps. Re-creating `Figure` objects on every script rerun causes noticeable lag.
+**Action:** Use `@st.cache_resource` (with `max_entries` limit) to cache functions that return Matplotlib `Figure` objects. This keeps the live figure object in memory and avoids expensive reconstruction, dramatically improving responsiveness.
