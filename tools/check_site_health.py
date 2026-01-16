@@ -46,7 +46,8 @@ def check_site_health() -> None:
     entry_point_paths = {"articles/ux-verification-test.html"}
     # Orphan check logic handles Path objects by comparing string representation or Path parts
     orphaned_files = {
-        f for f in orphaned_files
+        f
+        for f in orphaned_files
         if f.name not in entry_point_names and str(f) not in entry_point_paths
     }
 
