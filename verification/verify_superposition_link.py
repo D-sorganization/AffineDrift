@@ -4,6 +4,7 @@ from playwright.sync_api import expect, sync_playwright
 
 
 def run() -> None:
+    """Verify the Superposition article link displays 'Coming Soon' status."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
