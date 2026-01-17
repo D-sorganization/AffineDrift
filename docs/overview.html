@@ -70,11 +70,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="./styles.css" as="style">
+<link rel="preload" href="./script.js" as="script">
+<link rel="modulepreload" href="./js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="./logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
@@ -104,88 +162,41 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
 
 
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -214,14 +225,14 @@ window.MathJax = {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./overview.html">
+    <a class="nav-link active" href="./overview.html" aria-current="page"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -241,10 +252,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -280,10 +291,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -323,10 +334,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -334,10 +345,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -394,9 +405,9 @@ window.MathJax = {
 <section id="home" class="hero">
   <div class="container">
     <div class="hero-content">
-      <blockquote class="featured-quote">
+      <blockquote class="featured-quote blockquote">
         <p>"What we do now echoes in eternity"</p>
-        <cite>&mdash; Marcus Aurelius</cite>
+        <cite>— Marcus Aurelius</cite>
 
         <div class="drift-quote" style="margin-bottom: 2rem;">
           <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
@@ -411,19 +422,19 @@ window.MathJax = {
   </div>
 </section>
 
-<div class="container">
-  <div class="standard-page-layout">
+<div class="container page-columns page-full">
+  <div class="standard-page-layout page-columns page-full">
     <!-- Sidebar -->
     <aside class="left-sidebar">
       <div class="sidebar-sticky-content">
         <div class="sidebar-section">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <div class="resource-card" style="padding: 1rem; border: none; box-shadow: none; background: transparent; padding-left: 0;">
-             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);">Overview Podcast</h3>
+             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);" class="anchored">Overview Podcast</h3>
              <p class="resource-description" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
                 Listen to an AI-generated introduction to the core concepts of Affine Drift.
              </p>
-             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now &rarr;</a>
+             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now →</a>
           </div>
         </div>
       </div>
@@ -489,22 +500,22 @@ window.MathJax = {
           </div>
 
           <div class="golf-model">
-            <h3>System Components</h3>
+            <h3 class="anchored">System Components</h3>
             <div class="components-grid">
               <div class="component">
-                <h4>State Space $x$</h4>
+                <h4 class="anchored">State Space $x$</h4>
                 <p>$\mathbb{R}^{2n}$ vector containing all joint angles and velocities.</p>
               </div>
               <div class="component">
-                <h4>Drift $f(x)$</h4>
+                <h4 class="anchored">Drift $f(x)$</h4>
                 <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
               </div>
               <div class="component">
-                <h4>Control $u$</h4>
+                <h4 class="anchored">Control $u$</h4>
                 <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
               </div>
                <div class="component">
-                <h4>Input Field $g(x)$</h4>
+                <h4 class="anchored">Input Field $g(x)$</h4>
                 <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
               </div>
             </div>
@@ -515,20 +526,19 @@ window.MathJax = {
 
       <!-- Critics Corner - Technical Criticism Section -->
       <section class="critics-corner">
-        <h2 class="critics-corner-title">Critics Corner</h2>
-        <button type="button" class="critics-corner-header" aria-expanded="false">
-          <span class="critics-corner-label">Show/Hide Content</span>
+        <button class="critics-corner-header" aria-expanded="false">
+          <h2 class="anchored">Critics Corner</h2>
           <span class="critics-corner-icon">▼</span>
         </button>
         <div class="critics-corner-content">
           <div class="criticism-item">
-            <h3>Oversimplification of Neuromuscular Dynamics</h3>
+            <h3 class="anchored">Oversimplification of Neuromuscular Dynamics</h3>
             <span class="criticism-severity moderate">Moderate</span>
             <p>
               The control-affine framework abstracts muscular physiology into a simple torque vector $u$, ignoring force-velocity relationships, activation dynamics, and muscle redundancy. Real neuromuscular systems exhibit time delays, saturation, and cross-coupling effects that may significantly affect the validity of the drift-input decomposition.
             </p>
             <div class="criticism-response">
-              <h4>Defense</h4>
+              <h4 class="anchored">Defense</h4>
               <p>
                 This abstraction is intentional and explicitly stated in the modeling assumptions. The framework operates at the torque level precisely to preserve the affine structure. Force-velocity constraints are treated as bounds on the feasible input set $\mathcal{U}(x)$ rather than nonlinearities in the dynamics. Future work will address activation dynamics through hybrid modeling approaches.
               </p>
@@ -536,13 +546,13 @@ window.MathJax = {
           </div>
 
           <div class="criticism-item">
-            <h3>Impact Phase Exclusion</h3>
+            <h3 class="anchored">Impact Phase Exclusion</h3>
             <span class="criticism-severity minor">Minor</span>
             <p>
               The theoretical framework explicitly excludes the ball-club impact phase, which is arguably the most critical moment of the swing. This limits the practical applicability of the analysis for understanding how impact conditions relate to ball flight.
             </p>
             <div class="criticism-response">
-              <h4>Defense</h4>
+              <h4 class="anchored">Defense</h4>
               <p>
                 The framework is designed as a "Theory of Delivery"—analyzing how the golfer controls the system to achieve specific terminal conditions. Since control authority effectively ends at impact, the drift-input decomposition applies to the delivery phase. Impact mechanics require separate hybrid dynamics treatment, which will be addressed in subsequent work.
               </p>
@@ -550,15 +560,15 @@ window.MathJax = {
           </div>
 
           <div class="criticism-item">
-            <h3>Modal Truncation Error</h3>
+            <h3 class="anchored">Modal Truncation Error</h3>
             <span class="criticism-severity minor">Minor</span>
             <p>
               Representing the flexible shaft with a finite number of modes ($m$) introduces truncation error, potentially missing high-frequency dynamics that may be relevant during rapid swing phases.
             </p>
             <div class="criticism-response">
-              <h4>Defense</h4>
+              <h4 class="anchored">Defense</h4>
               <p>
-                Standard modal analysis bounds suggest that the first 3-5 bending modes capture >99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
+                Standard modal analysis bounds suggest that the first 3-5 bending modes capture &gt;99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
               </p>
             </div>
           </div>
@@ -567,9 +577,6 @@ window.MathJax = {
     </main>
   </div>
 </div>
-
-
-
 
 
 
@@ -975,29 +982,20 @@ window.MathJax = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

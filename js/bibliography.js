@@ -26,26 +26,24 @@
   /**
    * Load bibliography data from YAML file
    */
+  /**
+   * Load bibliography data from JSON file
+   */
   async function loadBibliography() {
     try {
-      const response = await fetch("/data/bibliography.yaml");
+      // Updated to fetch JSON relative to the site root or current location
+      // Using /data/ ensures it looks at the root data folder
+      const response = await fetch("/data/bibliography.json");
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Fallback for local testing or if base path differs
+        const fallbackResponse = await fetch("data/bibliography.json");
+        if (!fallbackResponse.ok) {
+           throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await processResponse(fallbackResponse);
       }
-      const yamlText = await response.text();
+      await processResponse(response);
 
-      // Parse YAML - simple parser for the bibliography format
-      bibliographyData = parseYAML(yamlText);
-      filteredData = [...bibliographyData];
-
-      // Apply initial sort and render
-      sortAndRender();
-
-      // Update entry count
-      const countEl = document.getElementById("bib-count");
-      if (countEl) {
-        countEl.textContent = `${bibliographyData.length} entries`;
-      }
     } catch (error) {
       console.error("Error loading bibliography:", error);
       const listContainer = document.getElementById("bib-list");
@@ -60,78 +58,25 @@
     }
   }
 
-  /**
-   * Simple YAML parser for bibliography format
-   * Parses the specific structure used in bibliography.yaml
-   */
-  function parseYAML(yamlText) {
-    const entries = [];
-    const lines = yamlText.split("\n");
-    let currentEntry = null;
-    let currentKey = null;
-    let inArray = false;
+  async function processResponse(response) {
+      const jsonData = await response.json();
+      
+      // No parsing needed for JSON
+      bibliographyData = jsonData;
+      filteredData = [...bibliographyData];
 
-    for (let line of lines) {
-      // Skip empty lines and comments
-      if (!line.trim() || line.trim().startsWith("#")) continue;
+      // Apply initial sort and render
+      sortAndRender();
 
-      // New entry starts with "- id:"
-      if (line.match(/^-\s+id:\s*(.+)/)) {
-        if (currentEntry) {
-          entries.push(currentEntry);
-        }
-        currentEntry = {
-          id: line.match(/^-\s+id:\s*(.+)/)[1].trim(),
-          authors: [],
-          concepts: [],
-          related_ids: [],
-        };
-        inArray = false;
-        continue;
+      // Update entry count
+      const countEl = document.getElementById("bib-count");
+      if (countEl) {
+        countEl.textContent = `${bibliographyData.length} entries`;
       }
-
-      if (!currentEntry) continue;
-
-      // Handle array fields
-      if (line.match(/^\s+(authors|concepts|related_ids):\s*$/)) {
-        currentKey = line.match(/^\s+(authors|concepts|related_ids):\s*$/)[1];
-        inArray = true;
-        continue;
-      }
-
-      // Handle array items
-      if (inArray && line.match(/^\s+-\s+"?(.+?)"?\s*$/)) {
-        const value = line
-          .match(/^\s+-\s+"?(.+?)"?\s*$/)[1]
-          .trim()
-          .replace(/^"|"$/g, "");
-        if (currentEntry[currentKey]) {
-          currentEntry[currentKey].push(value);
-        }
-        continue;
-      }
-
-      // Handle simple key-value pairs
-      const match = line.match(/^\s+(\w+):\s*"?(.+?)"?\s*$/);
-      if (match && !inArray) {
-        const [, key, value] = match;
-        currentEntry[key] = value.replace(/^"|"$/g, "").trim();
-        continue;
-      }
-
-      // End of array
-      if (line.match(/^\s+\w+:/) && inArray) {
-        inArray = false;
-      }
-    }
-
-    // Add last entry
-    if (currentEntry) {
-      entries.push(currentEntry);
-    }
-
-    return entries;
   }
+
+  // Legacy parseYAML function removed as we now use JSON
+
 
   /**
    * Render bibliography entries
