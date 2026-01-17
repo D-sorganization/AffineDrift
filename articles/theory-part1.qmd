@@ -494,3 +494,123 @@ By isolating the torque input $u$ into the linear term $g(x)u$, we transform the
 The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are **mechanically orthogonal**.
 
 This orthogonality is what allows us to perform the "surgical" operations defined in the next part. If the drift field $f(x)$ encapsulates the system's passive destiny, we can theoretically allow it to play out uninterrupted. By mathematically amputating the input term ($u \equiv 0$), we can expose the underlying inertial current that the golfer is fighting—or riding. This leads us directly to the concept of **counterfactual simulation**. However, the affine equation $\dot{x} = f(x) + g(x)u$ describes only instantaneous tendencies (a vector field), not an outcome. To see the destiny that the drift field $f(x)$ prescribes, we must **integrate** it over time. Part II performs this integration, using the affine structure not just to describe the swing that happened, but to computationally reveal the **"Shadow Swings"**—the unobserved trajectories that *would* have occurred had the golfer chosen differently.
+
+## Recommended Resources
+
+```{=html}
+<div class="resource-grid">
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/MaOGHQjz3fI"
+                title="Nonlinear Dynamical Systems - Part 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3>Primer: Nonlinear Dynamics (Steve Brunton)</h3>
+      <p class="resource-description">
+        An accessible introduction to why nonlinear systems cannot be fully understood through
+        linear approximations. Prof. Brunton explains the fundamental differences in behavior,
+        setting the stage for understanding drift fields.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Basic Linear Algebra (Eigenvalues/Eigenvectors)</li>
+            <li>Differential Equations (Linear Systems)</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>04:30 - Limitations of linearization near fixed points</li>
+            <li>12:15 - Multiple equilibria and basins of attraction</li>
+            <li>22:00 - Global vs. Local dynamics</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=MaOGHQjz3fI"
+         class="resource-link"
+         target="_blank"
+         rel="noopener">
+        Watch Lecture →
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/uyyBT-MHhLE"
+                title="Underactuated Robotics - Lecture 1"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3>Deep Technical: Underactuated Robotics (Russ Tedrake)</h3>
+      <p class="resource-description">
+        The canonical introduction to "Drift-Dominated" systems. Prof. Tedrake (MIT) defines the
+        standard form $\dot{x} = f(x) + g(x)u$ and explains how to exploit passive dynamics
+        rather than canceling them—the core philosophy of the Affine Drift framework.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Lagrangian Mechanics</li>
+            <li>Control Theory (Feedback, Stability)</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>15:45 - Definition of Underactuation ($dim(u) < dim(q)$)</li>
+            <li>32:10 - The Control-Affine Form derivation</li>
+            <li>45:00 - Input Coupling vs. Passive Dynamics</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE"
+         class="resource-link"
+         target="_blank"
+         rel="noopener">
+        Watch Lecture 1 →
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/_Az608TI-NI"
+                title="The Paradox of Human Performance"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3>Bridge: Impedance & Biological Control (Neville Hogan)</h3>
+      <p class="resource-description">
+        Prof. Hogan (MIT) discusses the "Paradox of Human Performance"—how humans achieve agile
+        control despite slow actuators. This seminar bridges the gap between the "Effective Plant"
+        theory (impedance control) and the "Input" abstraction used in this article.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Basic System Dynamics</li>
+            <li>Concept of Impedance (Stiffness/Damping)</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>12:00 - The problem of biological delays</li>
+            <li>25:30 - Impedance as a "Dynamic Primitive"</li>
+            <li>40:15 - Managing interaction forces (relevant to shaft coupling)</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=_Az608TI-NI"
+         class="resource-link"
+         target="_blank"
+         rel="noopener">
+        Watch Seminar →
+      </a>
+    </div>
+  </div>
+</div>
+```
