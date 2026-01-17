@@ -10,6 +10,44 @@ format:
     number-sections: false
 ---
 
+```{=html}
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Theory is great, but does it actually work? Part V tests the math using a sophisticated computer simulation.
+      </p>
+
+      <div class="laymans-item">
+        <h3>The "Flight Simulator" for Golf</h3>
+        <p>
+          We built a digital model of a golfer and club (using a tool called Simulink) to act as a proving ground. It allows us to perform experiments that would be impossible in real life—like instantaneously turning off a golfer's muscles to see what happens.
+        </p>
+        <div class="analogy">
+          <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF) here to ensure the math holds up under stress.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>The Kill Switch Experiment</h3>
+        <p>
+          We ran a "kill switch" test: at various points in the downswing, we cut the power to the virtual golfer's muscles.
+        </p>
+        <div class="key-takeaway">
+          The result? The club kept moving violently due to momentum. This confirms that late in the swing, the "passive" forces (Drift) are massive—often larger than what the golfer can actively produce.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
 The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.

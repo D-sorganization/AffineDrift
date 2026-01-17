@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-r"""Scans Quarto markdown files (.qmd, .md) for common syntax issues that prevent
-proper equation rendering.
+r"""
+Robust Quarto Syntax Scanner (State Machine Implementation)
+Scans .qmd and .md files for common syntax issues that prevent proper rendering.
 
-Checks for:
-1. LaTeX style delimiters: \(...\), \[...\] (recommends $...$ and $$...$$)
-2. Spaces inside inline math: $ x $ (recommends $x$)
-3. Double quotes inside math (recommends ' or '')
+Checks:
+1. LaTeX delimiters \( and \[ (recommends $ and $$)
+2. Spaces inside inline math ($ x $)
+3. Escaped underscores inside math ($x\_i$)
+4. Unclosed math environments ($$ without closing $$)
+5. Empty math blocks
 """
 
 import logging
-import os
-import re
 import sys
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
@@ -21,129 +23,252 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def scan_file(filepath: str) -> list[tuple[int, str, str, str]]:
-    """Scans a single file for Quarto syntax issues.
+def find_files(root_dir: str = ".") -> list[Path]:
+    """Find all .qmd and .md files in relevant directories."""
+    files = []
+    root = Path(root_dir)
 
-    Args:
-        filepath: Path to the file to scan.
+    # Root files
+    for f in root.iterdir():
+        if f.is_file() and f.suffix in {".qmd", ".md"} and not f.name.startswith("README"):
+            files.append(f)
 
-    Returns:
-        List of tuples (line_number, line_content, problem_description, suggested_fix).
+    # Directories to scan
+    dirs_to_scan = ["articles", "critiques"]
 
+    for d in dirs_to_scan:
+        path = root / d
+        if path.exists():
+            for f in path.rglob("*"):
+                if f.is_file() and f.suffix in {".qmd", ".md"} and "archive" not in f.parts:
+                    files.append(f)
+
+    return files
+
+
+def check_file(filepath: Path) -> list[tuple[int, str, str]]:
     """
-    issues = []
+    Scans a file for errors using a state machine.
+    Returns list of (line_number, error_message, suggestion).
+    """
     try:
-        with open(filepath, encoding="utf-8") as f:
-            lines = f.readlines()
-    except Exception:
+        content = filepath.read_text(encoding="utf-8")
+    except Exception as e:
+        logger.error(f"Failed to read {filepath}: {e}")
         return []
 
-    for i, line in enumerate(lines):
-        line_num = i + 1
+    errors = []
 
-        # Skip code blocks
-        if line.strip().startswith("```"):
-            continue
+    # States
+    STATE_TEXT = 0
+    STATE_CODE_BLOCK = 1  # ``` ... ```
+    STATE_INLINE_CODE = 2  # ` ... `
+    STATE_DISPLAY_MATH = 3  # $$ ... $$
+    STATE_INLINE_MATH = 4  # $ ... $
 
-        # 1. LaTeX delimiters
-        if "\\(" in line or "\\)" in line:
-            issues.append((line_num, line, "LaTeX inline \\( ... \\)", "Use $ ... $"))
-        if "\\[" in line or "\\]" in line:
-            # exclude \[1em] or similar spacing commands
-            if not re.search(r"\\\[[\d\.]+[a-z]+\]", line):
-                issues.append((line_num, line, "LaTeX display \\[ ... \\]", "Use $$ ... $$"))
+    state = STATE_TEXT
 
-        # 2. Math Spacing Check
-        # Remove escaped \$
-        clean_line = line.replace("\\$", "__")
+    i = 0
+    length = len(content)
+    line_num = 1
 
-        # Split by non-escaped $
-        parts = re.split(r"(?<!\$)\$(?!\$)", clean_line)
+    start_line = 0  # To track where a block started
+    math_content_start = 0
 
-        if len(parts) > 1:
-            # We have potential inline math in odd indices
-            for j in range(1, len(parts), 2):
-                math_content = parts[j]
-                if not math_content:
+    while i < length:
+        char = content[i]
+
+        # Track line numbers
+        if char == "\n":
+            line_num += 1
+            # Do not continue; let states handle newline if needed
+
+        # ---------------------------------------------------------
+        # State: TEXT
+        # ---------------------------------------------------------
+        if state == STATE_TEXT:
+            # Check for Code Block ```
+            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
+                state = STATE_CODE_BLOCK
+                i += 3
+                continue
+
+            # Check for Inline Code `
+            if char == "`":
+                state = STATE_INLINE_CODE
+                i += 1
+                continue
+
+            # Check for Display Math $$
+            if char == "$" and i + 1 < length and content[i + 1] == "$":
+                state = STATE_DISPLAY_MATH
+                start_line = line_num
+                math_content_start = i + 2
+                i += 2
+                continue
+
+            # Check for Inline Math $
+            # Must not be followed by space, tab, or newline (unless it's currency? heuristic needed)
+            # Quarto/Pandoc requires $x$ not $ x $.
+            # Actually, standard Pandoc allows $ 10 $ to be just text, but $x$ is math.
+            # However, we want to enforce strictness.
+            if char == "$":
+                # Check if it is escaped \$
+                if i > 0 and content[i - 1] == "\\":
+                    i += 1
                     continue
 
-                # Check for leading space
-                if math_content.startswith((" ", "\t")):
-                    issues.append(
-                        (
-                            line_num,
-                            line,
-                            f"Space after opening $ in segment '{math_content[:10]}...'",
-                            "Remove leading space",
-                        ),
+                state = STATE_INLINE_MATH
+                start_line = line_num
+                math_content_start = i + 1
+                i += 1
+                continue
+
+            # Check for deprecated delimiters \( and \[
+            if char == "\\" and i + 1 < length:
+                next_char = content[i + 1]
+                if next_char == "(":
+                    errors.append((line_num, "Found \\(", "Use $ ... $ for inline math"))
+                elif next_char == "[":
+                    # Check if it is part of a link/attribute syntax like \[...\] in rare cases?
+                    # But generally \[ ... \] is display math in LaTeX.
+                    # We accept it might be used for other things, but warn.
+                    # Heuristic: check if it looks like `\[ ... \]`
+                    errors.append((line_num, "Found \\[", "Use $$ ... $$ for display math"))
+                i += 2
+                continue
+
+            i += 1
+
+        # ---------------------------------------------------------
+        # State: CODE BLOCK
+        # ---------------------------------------------------------
+        elif state == STATE_CODE_BLOCK:
+            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
+                state = STATE_TEXT
+                i += 3
+            else:
+                i += 1
+
+        # ---------------------------------------------------------
+        # State: INLINE CODE
+        # ---------------------------------------------------------
+        elif state == STATE_INLINE_CODE:
+            if char == "`":
+                state = STATE_TEXT
+                i += 1
+            else:
+                i += 1
+
+        # ---------------------------------------------------------
+        # State: DISPLAY MATH
+        # ---------------------------------------------------------
+        elif state == STATE_DISPLAY_MATH:
+            if char == "$" and i + 1 < length and content[i + 1] == "$":
+                # End of display math
+                math_text = content[math_content_start:i]
+
+                # Check for escaped underscores
+                if "\\_" in math_text:
+                    errors.append(
+                        (start_line, "Escaped underscore in display math", "Use _ instead of \\_")
                     )
 
-                # Check for trailing space
-                if math_content.endswith((" ", "\t")):
-                    issues.append(
-                        (
-                            line_num,
-                            line,
-                            f"Space before closing $ in segment '...{math_content[-10:]}'",
-                            "Remove trailing space",
-                        ),
-                    )
+                state = STATE_TEXT
+                i += 2
+            else:
+                i += 1
 
-        # 3. Double quotes in math
-        if len(parts) > 1:
-            for j in range(1, len(parts), 2):
-                math_content = parts[j]
-                if '"' in math_content:
-                    # Skip common HTML attributes in strings if they got caught
-                    if "href=" in line or "src=" in line:
-                        continue
+        # ---------------------------------------------------------
+        # State: INLINE MATH
+        # ---------------------------------------------------------
+        elif state == STATE_INLINE_MATH:
+            # Check for escaped dollar inside inline math
+            if char == "\\" and i + 1 < length and content[i + 1] == "$":
+                i += 2
+                continue
 
-                    issues.append(
-                        (
-                            line_num,
-                            line,
-                            f"Double quote in math: '{math_content}'",
-                            "Use ' or '' for derivatives",
-                        ),
-                    )
+            if char == "$":
+                # End of inline math
+                math_text = content[math_content_start:i]
 
-    return issues
+                # Validation logic
+                if not math_text:
+                    errors.append((start_line, "Empty inline math", "Remove empty $...$"))
+                else:
+                    # Check for leading/trailing spaces
+                    if math_text[0].isspace():
+                        errors.append(
+                            (
+                                start_line,
+                                f"Leading space in inline math: '${math_text[:5]}...'",
+                                "Remove space after $",
+                            )
+                        )
+                    if math_text[-1].isspace() and len(math_text) > 1 and math_text[-2] != "\\":
+                        # ensure the space isn't escaped like "\ " (though rare in math mode endings)
+                        errors.append(
+                            (
+                                start_line,
+                                f"Trailing space in inline math: '...{math_text[-5:]}$'",
+                                "Remove space before $",
+                            )
+                        )
+
+                    # Check for escaped underscores
+                    if "\\_" in math_text:
+                        errors.append(
+                            (
+                                start_line,
+                                f"Escaped underscore in inline math: '${math_text[:10]}...'",
+                                "Use _ instead of \\_",
+                            )
+                        )
+
+                state = STATE_TEXT
+                i += 1
+            elif char == "\n":
+                # Inline math usually shouldn't span multiple paragraphs (double newline)
+                # But single newline is okay.
+                # If we hit a double newline, we assume the $ was just a dollar sign.
+                if i + 1 < length and content[i + 1] == "\n":
+                    # Reset state, assume it was currency or mistake
+                    # We could warn "Unclosed inline math" but that causes false positives for text like "Prices range from $10 to $20."
+                    # So we just silently reset.
+                    state = STATE_TEXT
+                    i += 1
+                else:
+                    i += 1
+            else:
+                i += 1
+
+    # End of file checks
+    if state == STATE_DISPLAY_MATH:
+        errors.append((start_line, "Unclosed display math", "Add closing $$"))
+
+    return errors
 
 
 def main() -> None:
-    """Main entry point for the scanner."""
-    files_to_scan = []
-    # Walk through articles
-    if os.path.exists("articles"):
-        for root, dirs, files in os.walk("articles"):
-            if "archive" in dirs:
-                dirs.remove("archive")
-            for file in files:
-                if file.endswith((".qmd", ".md")):
-                    files_to_scan.append(os.path.join(root, file))
-
-    # Walk through root
-    for file in os.listdir("."):
-        if file.endswith(".qmd"):
-            files_to_scan.append(file)
-
+    """Scan all Quarto files for syntax issues and report findings."""
+    files = find_files()
     total_issues = 0
-    for filepath in files_to_scan:
-        issues = scan_file(filepath)
+
+    print(f"Scanning {len(files)} files...")
+
+    for f in files:
+        issues = check_file(f)
         if issues:
-            for line_num, _line_content, problem, fix in issues:
-                logger.warning(
-                    "%s:%d: %s (suggestion: %s)",
-                    filepath,
-                    line_num,
-                    problem,
-                    fix,
-                )
+            print(f"\nFile: {f}")
+            for line, msg, fix in issues:
+                print(f"  Line {line}: {msg} -> {fix}")
             total_issues += len(issues)
 
     if total_issues > 0:
+        print(f"\nFound {total_issues} issues.")
         sys.exit(1)
     else:
+        print("\nNo issues found!")
         sys.exit(0)
 
 
