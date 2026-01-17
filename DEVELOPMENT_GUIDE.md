@@ -495,12 +495,12 @@ Use LaTeX notation with MathJax:
 
 ```html
 <div class="equation">
-  \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
+  $$\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)$$
 </div>
 ```
 
-**Inline math**: Use `\(...\)`
-**Display math**: Use `\[...\]`
+**Inline math**: Use `$ ... $`
+**Display math**: Use `$$ ... $$`
 
 ---
 

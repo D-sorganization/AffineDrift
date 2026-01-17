@@ -216,7 +216,7 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
 
 ```html
 <div class="equation">
-  \[\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)\]
+  $$\dot{x}(t) = f_0(x) + \sum_{i=1}^{m} u_i(t) \cdot f_i(x)$$
 </div>
 ```
 
@@ -224,7 +224,7 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
 
 ```html
 <p>
-  The state space \(x \in \mathbb{R}^n\) represents all possible configurations.
+  The state space $x \in \mathbb{R}^n$ represents all possible configurations.
 </p>
 ```
 
@@ -232,16 +232,16 @@ AffineDrift uses MathJax for beautiful mathematical notation. Use LaTeX syntax:
 
 | Symbol             | LaTeX Code        | Example             |
 | ------------------ | ----------------- | ------------------- |
-| Dot notation       | `\dot{x}`         | \(\dot{x}\)         |
-| Partial derivative | `\partial`        | \(\partial\)        |
-| Integral           | `\int`            | \(\int\)            |
-| Sum                | `\sum_{i=1}^{n}`  | \(\sum\_{i=1}^{n}\) |
-| Greek letters      | `\alpha`, `\beta` | \(\alpha, \beta\)   |
-| Vectors            | `\vec{v}`         | \(\vec{v}\)         |
-| Real numbers       | `\mathbb{R}`      | \(\mathbb{R}\)      |
-| Subscript          | `x_i`             | \(x_i\)             |
-| Superscript        | `x^2`             | \(x^2\)             |
-| Fraction           | `\frac{a}{b}`     | \(\frac{a}{b}\)     |
+| Dot notation       | `\dot{x}`         | $\dot{x}$         |
+| Partial derivative | `\partial`        | $\partial$        |
+| Integral           | `\int`            | $\int$            |
+| Sum                | `\sum_{i=1}^{n}`  | $\sum_{i=1}^{n}$ |
+| Greek letters      | `\alpha`, `\beta` | $\alpha, \beta$   |
+| Vectors            | `\vec{v}`         | $\vec{v}$         |
+| Real numbers       | `\mathbb{R}`      | $\mathbb{R}$      |
+| Subscript          | `x_i`             | $x_i$             |
+| Superscript        | `x^2`             | $x^2$             |
+| Fraction           | `\frac{a}{b}`     | $\frac{a}{b}$     |
 
 ### Equation Explanation Block
 
