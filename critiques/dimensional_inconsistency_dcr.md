@@ -19,7 +19,7 @@ The definition of the Drift-Control Ratio (DCR) relies on the Euclidean norm of 
 ## Why This Is a Problem
 
 In physics and control theory, valid scalar metrics must be dimensionless or dimensionally consistent. The current definition sums a velocity term ($\dot{q}$) and an acceleration term ($M^{-1}(-C\dot{q}-G)$) within a single norm:
-$$ \|f(x)\| = \sqrt{ \|\dot{q}\|^2 + \|\ddot{q}\_{drift}\|^2 } $$
+$$ \|f(x)\| = \sqrt{ \|\dot{q}\|^2 + \|\ddot{q}_{drift}\|^2 } $$
 This operation is akin to adding meters to meters per second.
 If the time unit is changed from seconds to milliseconds:
 
@@ -40,8 +40,8 @@ If the time unit is changed from seconds to milliseconds:
 ## Suggested Remedies
 
 1.  **Redefine DCR on the Dynamic Fiber:** Restrict the definition to the fiber of the tangent bundle (accelerations/forces) where units are consistent. Compare the generalized forces of drift to the generalized forces of control:
-    $$ \mathrm{DCR}(t) = \frac{\| M(q)^{-1}( -C(q,\dot{q})\dot{q} - G(q) ) \|_M}{\| M(q)^{-1} \tau \|\_M} $$
-    Or simply comparing torques: $\|\tau_{drift}\| / \|\tau\_{control}\|$.
+    $$ \mathrm{DCR}(t) = \frac{\| M(q)^{-1}( -C(q,\dot{q})\dot{q} - G(q) ) \|_M}{\| M(q)^{-1} \tau \|_M} $$
+    Or simply comparing torques: $\|\tau_{drift}\| / \|\tau_{control}\|$.
 2.  **Nondimensionalization:** Introduce a characteristic time constant $\tau_c$ (e.g., swing duration $\approx 0.2\text{s}$) to nondimensionalize the state vector before computing norms:
     $$ \tilde{\dot{q}} = \tau_c \dot{q}, \quad \tilde{\ddot{q}} = \tau_c^2 \ddot{q} $$
 3.  **Explicit Caveat:** If the current definition is retained for simplicity, an explicit caveat must be added stating that the metric is valid only under the specific SI unit system (seconds, radians) and acts as a heuristic rather than a rigorous tensor quantity.
