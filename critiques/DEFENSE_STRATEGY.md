@@ -32,6 +32,7 @@
 | **26. The Flaccid Drift Contradiction**<br>(Theory vs Sim Mismatch)   | Mathematical / Consistency     | **Valid** (Fixed)              | **Unified Passive Drift:** We explicitly include $\tau_{pas}$ in the theoretical derivation to match the "Effective Plant" simulation. This ensures the "Drift" is not a ragdoll collapse but the "Zero-Input" evolution of the structural impedance.                                                                                                                                                                                      | **Applied** to Part 1               |
 | **27. The Stiffness Pulse Paradox**<br>(Time-Varying Impedance)       | Conceptual / Control           | **Valid** (Nuance)             | **Parametric Counterfactual:** Acknowledge that ZTCF during impact represents the trajectory given the *impedance schedule*. We treat high stiffness as a "Virtual Constraint" (Parametric Control) rather than a passive property, admitting a slight deviation from strict Drift Invariance in the final milliseconds.                                                                                                                   | **Applied** to Constraint Article   |
 | **28. Tip Mass Omission**<br>(The Headless Club)                      | Mathematical / Modeling        | **Valid** (Critical)           | **Discrete Tip Inertia:** Explicitly add the clubhead mass $m_{head}$ and inertia $I_{head}$ to the kinetic energy integral. This ensures the "Inertial Coupling" term $M_{q\eta}$ captures the dominant "kick" of the clubhead, preventing the model from degenerating into a massless fishing rod.                                                                                                                                       | **Applied** to Part 1               |
+| **29. Double Pendulum Energy Blindness**<br>(Elastic Omission)        | Conceptual / Modeling          | **Valid** (Scope Limit)        | **Explicit Limitation Note:** Acknowledge that the rigid-body power analysis ignores elastic potential energy storage ($V_{elastic}$). Add a callout clarifying that the rigid model illustrates the *mechanism* of transfer (force) but underestimates the *capacity* for delayed release (energy).                                                                                                                                       | **Applied** to Article              |
 
 ## Detailed Defense & Implementation
 
@@ -276,3 +277,12 @@ We added a limitation note to `articles/intentional-constraint-collapse.qmd`.
 We modified the kinetic energy derivation in `articles/theory-part1.qmd` to include discrete tip inertia terms ($m_{head}, I_{head}$).
 
 > *Refinement:* "The total kinetic energy of the club... is the sum of the distributed shaft kinetic energy and the discrete kinetic energy of the clubhead..."
+
+### 29. Addressing Double Pendulum Energy Blindness
+
+**Analysis:** The critique correctly notes that the "Energy Transfer Decomposition" in the double pendulum article uses a rigid-body model, which is blind to the storage of active work as elastic potential energy in the shaft. This contradicts the full flexible theory where $V_{elastic}$ is central.
+
+**Implementation:**
+Added a **"Limitation: Rigid vs Flexible Energy Transfer"** callout to `articles/drift-components-wrench-double-pendulum.qmd`.
+
+> *Addition:* "This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**... The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release."
