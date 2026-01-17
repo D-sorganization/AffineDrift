@@ -48,7 +48,7 @@ def check_site_health() -> None:
     # Files that are always entry points (not orphaned)
     # These include the main index, error pages, and standalone pages
     # that may be accessed directly via URL (e.g., easter eggs, standalone tools)
-    entry_point_names = {"index.html", "404.html", "daydreams-doodles.html"}
+    entry_point_names = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
     entry_point_paths = {"articles/ux-verification-test.html"}
     # Orphan check logic handles Path objects by comparing string representation or Path parts
     orphaned_files = {
