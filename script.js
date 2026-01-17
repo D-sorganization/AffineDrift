@@ -856,15 +856,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 🎨 Palette UX: Copy Email Functionality
   function initEmailCopy() {
-    // ⚡ Bolt Optimization: Use specific selector to limit scope
-    const mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
-    if (mailtoLinks.length === 0) return;
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    const links = document.links;
+    if (links.length === 0) return;
 
     // Pre-define SVGs strings to avoid repetitive DOM creation
     const copyIcon = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
     const checkIcon = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
-    mailtoLinks.forEach((link) => {
+    for (const link of links) {
+      if (link.protocol !== "mailto:") continue;
+
       // Skip if already processed
       if (
         link.nextElementSibling &&
@@ -1150,13 +1152,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 🎨 Palette UX: Lightbox for Article Images
   // Removed length check to allow dynamic injection and more robust initialization
-  const contentImages = document.querySelectorAll(
-    "#quarto-document-content img",
-  );
-
   // Always initialize lightbox container if content area exists
   const articleContainer = document.getElementById("quarto-document-content");
   if (articleContainer) {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll (O(N))
+    const contentImages = articleContainer.getElementsByTagName("img");
     let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
 
     const lightbox = document.createElement("div");
@@ -1227,9 +1227,15 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(lightbox);
 
     // Initial pass for existing images
-    contentImages.forEach((img) => {
+    for (const img of contentImages) {
       // Skip if already inside a link or interactive element
-      if (img.closest("a") || img.closest("button")) return;
+      if (img.closest("a") || img.closest("button")) continue;
+
+      img.classList.add("zoomable");
+      img.setAttribute("tabindex", "0"); // Keyboard focusable
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", "Zoom image");
+    }
 
       img.classList.add("zoomable");
       img.setAttribute("tabindex", "0"); // Keyboard focusable
@@ -1310,8 +1316,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 🎨 Palette UX: Contact Form Feedback
 function initContactFormFeedback() {
-  const forms = document.querySelectorAll('form[action^="mailto:"]');
-  forms.forEach((form) => {
+  // ⚡ Bolt Optimization: Use document.forms (O(1)) instead of querySelectorAll (O(N))
+  for (const form of document.forms) {
+    if (!form.action || !form.action.startsWith("mailto:")) continue;
+
     form.addEventListener("submit", (e) => {
       // Do NOT prevent default - let the browser open the mail client
       // But update the UI to show something happened
