@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Welcome to AffineDrift - AI-Assisted Golf Research">
 
-<title>Home – AffineDrift</title>
+<title>Screw Theory Reference for Control-Affine Multibody Dynamics – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,25 +23,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.ico" rel="icon">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../favicon.ico" rel="icon">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,17 +113,17 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
-<link rel="preload" href="./styles.css" as="style">
-<link rel="preload" href="./script.js" as="script">
-<link rel="modulepreload" href="./js/metrics.js">
+<link rel="preload" href="../../../../styles.css" as="style">
+<link rel="preload" href="../../../../script.js" as="script">
+<link rel="modulepreload" href="../../../../js/metrics.js">
 
 <!-- PWA and Mobile Optimization -->
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="../../../../manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AffineDrift">
-<link rel="apple-touch-icon" href="./logo/logo_transparent_1.png">
+<link rel="apple-touch-icon" href="../../../../logo/logo_transparent_1.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 
@@ -134,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../../feed.xml">
 <style>
   .rss-feed-link {
     display: inline-flex;
@@ -194,23 +193,52 @@ ul.task-list li input[type="checkbox"] {
   });
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="css/search-metrics.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+<link rel="stylesheet" href="../../../../css/search-metrics.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
-    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
   </div>
@@ -221,11 +249,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./overview.html"> 
+    <a class="nav-link" href="../../../../overview.html"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -234,19 +262,19 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
-    <a class="dropdown-item" href="./drifter-manifesto.html">
+    <a class="dropdown-item" href="../../../../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./articles.html">
+    <a class="dropdown-item" href="../../../../articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./research-reviews.html">
+    <a class="dropdown-item" href="../../../../research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./book-reviews.html">
+    <a class="dropdown-item" href="../../../../book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
   </li>  
     </ul>
@@ -257,35 +285,35 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
-    <a class="dropdown-item" href="./models.html">
+    <a class="dropdown-item" href="../../../../models.html">
  <span class="dropdown-text">Models Home</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-simulink.html">
+    <a class="dropdown-item" href="../../../../models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
+    <a class="dropdown-item" href="../../../../models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-drake.html">
+    <a class="dropdown-item" href="../../../../models-drake.html">
  <span class="dropdown-text">Drake</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
+    <a class="dropdown-item" href="../../../../models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
+    <a class="dropdown-item" href="../../../../models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-opensim.html">
+    <a class="dropdown-item" href="../../../../models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-myosim.html">
+    <a class="dropdown-item" href="../../../../models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
   </li>  
     </ul>
@@ -296,39 +324,39 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
-    <a class="dropdown-item" href="./resources-videos.html">
+    <a class="dropdown-item" href="../../../../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-software.html">
+    <a class="dropdown-item" href="../../../../resources-software.html">
  <span class="dropdown-text">Software</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-websites.html">
+    <a class="dropdown-item" href="../../../../resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-datasets.html">
+    <a class="dropdown-item" href="../../../../resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-books.html">
+    <a class="dropdown-item" href="../../../../resources-books.html">
  <span class="dropdown-text">Books</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-papers.html">
+    <a class="dropdown-item" href="../../../../resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-researchers.html">
+    <a class="dropdown-item" href="../../../../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-notebooklm.html">
+    <a class="dropdown-item" href="../../../../resources-notebooklm.html">
  <span class="dropdown-text">NotebookLM</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./bibliography.html">
+    <a class="dropdown-item" href="../../../../bibliography.html">
  <span class="dropdown-text">Bibliography</span></a>
   </li>  
     </ul>
@@ -350,15 +378,15 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
-    <a class="dropdown-item" href="./contact.html">
+    <a class="dropdown-item" href="../../../../contact.html">
  <span class="dropdown-text">Contact</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./about.html">
+    <a class="dropdown-item" href="../../../../about.html">
  <span class="dropdown-text">About</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./collaborate.html">
+    <a class="dropdown-item" href="../../../../collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
   </li>  
     </ul>
@@ -371,26 +399,21 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content page-columns page-full column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Home</h1>
-</div>
-
-<div>
-  <div class="description">
-    Welcome to AffineDrift - AI-Assisted Golf Research
-  </div>
+<h1 class="title">Screw Theory Reference for Control-Affine Multibody Dynamics</h1>
 </div>
 
 
-<div class="quarto-title-meta column-page">
+
+<div class="quarto-title-meta">
 
     
   
@@ -402,128 +425,170 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="container page-columns page-full">
-  <div class="home-layout page-columns page-full">
-    <!-- Combined Left Sidebar -->
-    <aside class="home-sidebar">
-      <div class="sidebar-sticky-content">
-        <div class="sidebar-section">
-          <h3 class="anchored">Articles &amp; Theory</h3>
-          <ul class="resource-links">
-            <li><a href="drifter-manifesto.html">Drifter Manifesto</a></li>
-            <li><a href="articles.html">All Articles</a></li>
-            <li><a href="research-reviews.html">Research Reviews</a></li>
-            <li><a href="book-reviews.html">Book Reviews</a></li>
-            <li><a href="bibliography.html">Bibliography</a></li>
-            <li><a href="overview.html">Technical Overview</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Models &amp; Simulations</h3>
-          <ul class="resource-links">
-            <li><a href="models.html">Models Home</a></li>
-            <li><a href="models-simulink.html">MATLAB Simulink</a></li>
-            <li><a href="models-mujoco.html">MuJoCo Models</a></li>
-            <li><a href="models-drake.html">Drake Models</a></li>
-            <li><a href="models-pinocchio.html">Pinocchio Models</a></li>
-            <li><a href="models-opensim.html">OpenSim Models</a></li>
-            <li><a href="models-myosim.html">MyoSim Models</a></li>
-          </ul>
-        </div>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group <span class="math inline">\(SE(3)\)</span> and its Lie algebra <span class="math inline">\(\mathfrak{se}(3)\)</span>. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.</p>
+</section>
+<section id="the-lie-group-se3-and-its-algebra" class="level1">
+<h1>The Lie Group <span class="math inline">\(SE(3)\)</span> and Its Algebra</h1>
+<p>Rigid-body configurations belong to the special Euclidean group <span class="math display">\[\begin{equation}
+SE(3)
+=
+\left\{
+\begin{bmatrix}
+R &amp; p \\
+0 &amp; 1
+\end{bmatrix}
+:
+R\in SO(3), \;
+p\in \mathbb{R}^3
+\right\}.
+\end{equation}\]</span> Its Lie algebra is <span class="math display">\[\begin{equation}
+\mathfrak{se}(3)
+=
+\left\{
+\begin{bmatrix}
+\hat{\omega} &amp; v \\
+0 &amp; 0
+\end{bmatrix}
+:
+\omega, v \in \mathbb{R}^3
+\right\},
+\end{equation}\]</span> where <span class="math inline">\(\hat{\omega}\)</span> is the skew-symmetric matrix corresponding to the vector <span class="math inline">\(\omega\)</span> via the hat operator.</p>
+</section>
+<section id="twists" class="level1">
+<h1>Twists</h1>
+<p>A twist is a 6-vector <span class="math display">\[\begin{equation}
+\mathcal{V} =
+\begin{bmatrix}
+\omega \\ v
+\end{bmatrix},
+\end{equation}\]</span> representing angular velocity <span class="math inline">\(\omega\)</span> and linear velocity <span class="math inline">\(v\)</span> of a body frame. For a reference point <span class="math inline">\(q \in \mathbb{R}^3\)</span> on the axis of motion, one has <span class="math display">\[\begin{equation}
+v = -\omega \times q.
+\end{equation}\]</span> This yields the Pl"ucker representation of screws.</p>
+</section>
+<section id="wrenches" class="level1">
+<h1>Wrenches</h1>
+<p>A wrench is a 6-vector <span class="math display">\[\begin{equation}
+\mathcal{F} =
+\begin{bmatrix}
+n \\ f
+\end{bmatrix},
+\end{equation}\]</span> where <span class="math inline">\(f\)</span> is the force and <span class="math inline">\(n\)</span> is the moment about a reference point. The instantaneous power is <span class="math display">\[\begin{equation}
+\mathcal{F}^\top \mathcal{V}
+= n^\top \omega + f^\top v.
+\end{equation}\]</span> This pairing is invariant under coordinate transformations and is fundamental to screw theory.</p>
+</section>
+<section id="adjoint-transformations" class="level1">
+<h1>Adjoint Transformations</h1>
+<p>For a homogeneous transform <span class="math display">\[\begin{equation}
+g =
+\begin{bmatrix}
+R &amp; p \\
+0 &amp; 1
+\end{bmatrix}
+\in SE(3),
+\end{equation}\]</span> the adjoint representation is <span class="math display">\[\begin{equation}
+\mathrm{Ad}_g
+=
+\begin{bmatrix}
+R &amp; 0 \\
+\hat{p}R &amp; R
+\end{bmatrix}.
+\end{equation}\]</span> It maps twists and wrenches as <span class="math display">\[\begin{equation}
+\mathcal{V}_b = \mathrm{Ad}_g \,\mathcal{V}_a, \qquad
+\mathcal{F}_a = \mathrm{Ad}_g^\top \,\mathcal{F}_b,
+\end{equation}\]</span> where subscripts denote different frames.</p>
+</section>
+<section id="joint-screws-and-the-screw-jacobian" class="level1">
+<h1>Joint Screws and the Screw Jacobian</h1>
+<p>A revolute joint <span class="math inline">\(i\)</span> is represented by a screw axis <span class="math display">\[\begin{equation}
+S_i =
+\begin{bmatrix}
+\omega_i \\ -\omega_i \times q_i
+\end{bmatrix},
+\end{equation}\]</span> with <span class="math inline">\(\omega_i\)</span> the unit axis of rotation and <span class="math inline">\(q_i\)</span> a point on that axis. For an <span class="math inline">\(n\)</span>-DOF chain, the body twist can be written as <span class="math display">\[\begin{equation}
+\mathcal{V} = \sum_{i=1}^n S_i \dot{\theta}_i.
+\end{equation}\]</span> Stacking the screw axes gives the screw Jacobian <span class="math display">\[\begin{equation}
+J_s(q) = [S_1 \;\; S_2 \;\; \cdots \;\; S_n],
+\end{equation}\]</span> so that <span class="math display">\[\begin{equation}
+\mathcal{V} = J_s(q)\,\dot{\theta}.
+\end{equation}\]</span></p>
+</section>
+<section id="screw-dynamics-newtoneuler-in-screw-form" class="level1">
+<h1>Screw Dynamics (Newton–Euler in Screw Form)</h1>
+<p>The spatial Newton–Euler equation for a rigid body can be written as <span class="math display">\[\begin{equation}
+\mathcal{F} =
+I_s(q)\dot{\mathcal{V}}
++
+\mathrm{ad}^\ast_{\mathcal{V}} I_s(q)\mathcal{V},
+\end{equation}\]</span> where <span class="math inline">\(I_s(q)\)</span> is the spatial inertia and <span class="math inline">\(\mathrm{ad}^\ast_{\mathcal{V}}\)</span> is the dual adjoint operator. The first term corresponds to inertia, and the second term collects Coriolis and centrifugal effects. Additional spatial wrenches represent gravity and other external forces.</p>
+<p>Thus a drift wrench can be expressed as <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{drift}}
+=
+I_s\dot{\mathcal{V}}
++
+\mathrm{ad}^\ast_{\mathcal{V}} I_s \mathcal{V}
++
+\mathcal{F}_{g}
++
+\mathcal{F}_{\mathrm{shaft}},
+\end{equation}\]</span> where <span class="math inline">\(\mathcal{F}_g\)</span> is a gravity wrench and <span class="math inline">\(\mathcal{F}_{\mathrm{shaft}}\)</span> is the contribution of flexible shaft forces.</p>
+</section>
+<section id="control-affine-structure-in-screw-coordinates" class="level1">
+<h1>Control-Affine Structure in Screw Coordinates</h1>
+<p>Joint torques <span class="math inline">\(\tau \in \mathbb{R}^n\)</span> relate to input wrenches via <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{input}}
+=
+J_s(q)^{-T}\tau
+=
+J_s(q)^{-T} B u,
+\end{equation}\]</span> where <span class="math inline">\(B\)</span> is the input distribution matrix and <span class="math inline">\(u\)</span> is the vector of joint inputs. The total wrench at a given point is then <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{total}}
+=
+\mathcal{F}_{\mathrm{drift}}(x)
++
+\mathcal{F}_{\mathrm{input}}(x,u).
+\end{equation}\]</span> This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.</p>
+</section>
+<section id="flexible-shaft-forces-in-screw-form" class="level1">
+<h1>Flexible Shaft Forces in Screw Form</h1>
+<p>Flexible shaft forces can be modeled as distributed elastic wrenches. For mode <span class="math inline">\(i\)</span>: <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{shaft},i}
+=
+K_i x_{s,i} S_{s,i}
++
+D_i \dot{x}_{s,i} S_{s,i},
+\end{equation}\]</span> where <span class="math inline">\(x_{s,i}\)</span> and <span class="math inline">\(\dot{x}_{s,i}\)</span> are modal coordinates, <span class="math inline">\(K_i\)</span> and <span class="math inline">\(D_i\)</span> are stiffness and damping, and <span class="math inline">\(S_{s,i}\)</span> is the associated mode screw. Importantly, <span class="math display">\[\begin{equation}
+\frac{\partial \mathcal{F}_{\mathrm{shaft}}}{\partial u} = 0,
+\end{equation}\]</span> so shaft forces contribute only to drift and do not affect the linear dependence on <span class="math inline">\(u\)</span>.</p>
+</section>
+<section id="superposition-in-screw-space" class="level1">
+<h1>Superposition in Screw Space</h1>
+<p>Because wrenches add linearly, the total wrench decomposition <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{total}}
+=
+\mathcal{F}_{\mathrm{drift}}
++
+\mathcal{F}_{\mathrm{input}}
+\end{equation}\]</span> holds in any screw coordinate representation. This coordinate-free linearity is a geometric expression of the superposition principle for forces in control-affine mechanical systems.</p>
+</section>
+<section id="ztcf-and-zvcf-in-screw-coordinates" class="level1">
+<h1>ZTCF and ZVCF in Screw Coordinates</h1>
+<p>In the Zero Torque Counterfactual (ZTCF), all inputs are set to zero, so <span class="math display">\[\begin{equation}
+\dot{x} = f(x),
+\end{equation}\]</span> and the corresponding wrench is purely <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{ZTCF}} = \mathcal{F}_{\mathrm{drift}}.
+\end{equation}\]</span> In the Zero Velocity Counterfactual (ZVCF), drift mechanisms are disabled and the state is held fixed, so that only input wrenches remain: <span class="math display">\[\begin{equation}
+\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{input}}.
+\end{equation}\]</span> These constructions mirror the affine decomposition in screw space.</p>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.</p>
 
-        <div class="sidebar-section">
-          <h3 class="anchored">Learning Resources</h3>
-          <ul class="resource-links">
-            <li><a href="resources-videos.html">Educational Videos</a></li>
-            <li><a href="resources-books.html">Books</a></li>
-            <li><a href="resources-papers.html">Research Papers</a></li>
-            <li><a href="resources-websites.html">Websites</a></li>
-            <li><a href="resources-datasets.html">Datasets</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Software &amp; Tools</h3>
-          <ul class="resource-links">
-            <li><a href="resources-software.html">Software Tools</a></li>
-            <li><a href="tools.html">Interactive Tools</a></li>
-            <li><a href="resources-researchers.html">Researchers</a></li>
-            <li><a href="resources-notebooklm.html">NotebookLM</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Repositories</h3>
-          <ul class="resource-links">
-            <li><a href="repositories.html">Code Repositories</a></li>
-            <li><a href="repositories-models.html">Model Collections</a></li>
-            <li><a href="repositories-2d-model.html">2D Models</a></li>
-            <li><a href="repositories-3d-model.html">3D Models</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Connect</h3>
-          <ul class="resource-links">
-            <li><a href="about.html">About Dieter</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="collaborate.html">Collaborate</a></li>
-          </ul>
-        </div>
-      </div>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="home-content">
-      
-      <div class="home-text">
-        <p>
-          This website at its heart is an attempt to build a website I would like to read. I am an avid golf researcher with an interest in robotics and the mechanics of linked systems. After scouring the web for resources I finally came to the realization that I could just build the website I was looking for with the articles and resources that I was trying to track down.
-        </p>
-        
-        <p>
-          Rather than trying to organize my notes offline across multiple devices and formats, why not collect them together in a unified place where others who are also interested can find value in them. To achieve this goal, I have leaned heavily on the assistance of AI models in developing and troubleshooting code and building the website.
-        </p>
-        
-        <p>
-          Rather than curate the website myself, I have outlined articles and topics I would like to build or resources that I would like to see and then fed them to AI and importantly - iterated to improve quality. While much of AI generated golf content can end up as correlational gibberish, there can be significant value when you know how to use it right.
-        </p>
-        <p>
-          Rather than asking it for answers, ask it to provide mathematical expressions that can be validated. Ask it to write code that can be reviewed. Ask it to track down sources and links for further information. Every time an article is posted, it is reviewed overnight by automated bots. Feedback is then delivered the following morning. It has been a fun process setting up guardrails to help AI give the most value.
-        </p>
-
-        <div class="math-showcase">
-          $$\dot{x} = f(x) + g(x)u$$
-        </div>
-
-        <p>
-          The agents reviewing the site have different personas. There are editors attempting to improve the fluidity and prose. There is a curator coming up with new topics or avenues to explore. There is a librarian at work in the background curating a crosslinked bibliography of all of the sources that are available. There are mathematicians and mechanics scouring the equations and validating and debugging them.
-        </p>
-        
-        <p>
-          Importantly, there are also critics. My goal here is not to hide weakness, but identify it and explore it. The edge cases and shortcomings of a given paradigm often hold extreme value. There is an agent to defend and shore up any technical shortcomings identified by the critics.
-        </p>
-        
-        <p>
-          By no means is the website intended to be exhaustive or comprehensive. It is just a place to store resources for myself and construct a technical argument towards the understanding of the viewpoint of the golf swing that I have developed through my years of study. This argument and the site are not complete, nor will they ever be. They will evolve and adapt when new information is identified.
-        </p>
-        
-        <p>
-          If this information is of interest to you, feel free to use and share however you choose. I don't care too much about citations personally, but if the information comes from other authors whose work I have linked here, please give credit where credit is due.
-        </p>
-        
-        <p>
-          Researching the golf swing is an often fruitless endeavor where you will encounter more than your fair share of critics. An atta boy or tip of the cap to those providing research into the topics we are all mutually interested in is in order when you find something to help you on your way.
-        </p>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- Styles moved to styles.css - Home Page Layout section -->
-
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

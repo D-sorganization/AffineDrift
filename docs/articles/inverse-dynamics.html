@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AffineDrift">
+<meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Critical examination of inverse dynamics limitations in biomechanics, explaining why calculated torques don’t represent actual muscle contributions.">
+
+<title>Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
+    }
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinocchio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#understanding-inverse-dynamics" id="toc-understanding-inverse-dynamics" class="nav-link active" data-scroll-target="#understanding-inverse-dynamics">Understanding Inverse Dynamics</a>
+  <ul class="collapse">
+  <li><a href="#what-inverse-dynamics-calculates" id="toc-what-inverse-dynamics-calculates" class="nav-link" data-scroll-target="#what-inverse-dynamics-calculates">What Inverse Dynamics Calculates</a></li>
+  <li><a href="#the-mathematical-foundation" id="toc-the-mathematical-foundation" class="nav-link" data-scroll-target="#the-mathematical-foundation">The Mathematical Foundation</a></li>
+  <li><a href="#how-inverse-dynamics-works-step-by-step" id="toc-how-inverse-dynamics-works-step-by-step" class="nav-link" data-scroll-target="#how-inverse-dynamics-works-step-by-step">How Inverse Dynamics Works: Step by Step</a></li>
+  <li><a href="#critical-assumptions-in-inverse-dynamics" id="toc-critical-assumptions-in-inverse-dynamics" class="nav-link" data-scroll-target="#critical-assumptions-in-inverse-dynamics">Critical Assumptions in Inverse Dynamics</a></li>
+  <li><a href="#the-interpretive-gap" id="toc-the-interpretive-gap" class="nav-link" data-scroll-target="#the-interpretive-gap">The Interpretive Gap</a></li>
+  </ul></li>
+  <li><a href="#limitation-1-the-equivalent-couple-problem-spatial-ambiguity" id="toc-limitation-1-the-equivalent-couple-problem-spatial-ambiguity" class="nav-link" data-scroll-target="#limitation-1-the-equivalent-couple-problem-spatial-ambiguity">Limitation 1: The Equivalent Couple Problem (Spatial Ambiguity)</a>
+  <ul class="collapse">
+  <li><a href="#force-couple-equivalence-in-rigid-body-mechanics" id="toc-force-couple-equivalence-in-rigid-body-mechanics" class="nav-link" data-scroll-target="#force-couple-equivalence-in-rigid-body-mechanics">Force-Couple Equivalence in Rigid Body Mechanics</a></li>
+  <li><a href="#coordinate-transformation-of-force-couple-pairs" id="toc-coordinate-transformation-of-force-couple-pairs" class="nav-link" data-scroll-target="#coordinate-transformation-of-force-couple-pairs">Coordinate Transformation of Force-Couple Pairs</a></li>
+  <li><a href="#the-range-of-equivalent-couples" id="toc-the-range-of-equivalent-couples" class="nav-link" data-scroll-target="#the-range-of-equivalent-couples">The Range of Equivalent Couples</a></li>
+  <li><a href="#physical-interpretation-the-non-uniqueness-problem" id="toc-physical-interpretation-the-non-uniqueness-problem" class="nav-link" data-scroll-target="#physical-interpretation-the-non-uniqueness-problem">Physical Interpretation: The Non-Uniqueness Problem</a></li>
+  <li><a href="#implications-for-distributed-force-application" id="toc-implications-for-distributed-force-application" class="nav-link" data-scroll-target="#implications-for-distributed-force-application">Implications for Distributed Force Application</a></li>
+  </ul></li>
+  <li><a href="#limitation-2-the-control-affine-decomposition-problem" id="toc-limitation-2-the-control-affine-decomposition-problem" class="nav-link" data-scroll-target="#limitation-2-the-control-affine-decomposition-problem">Limitation 2: The Control-Affine Decomposition Problem</a>
+  <ul class="collapse">
+  <li><a href="#control-affine-systems-a-framework-for-understanding-motion" id="toc-control-affine-systems-a-framework-for-understanding-motion" class="nav-link" data-scroll-target="#control-affine-systems-a-framework-for-understanding-motion">Control-Affine Systems: A Framework for Understanding Motion</a></li>
+  <li><a href="#inverse-dynamics-in-the-lagrangian-framework" id="toc-inverse-dynamics-in-the-lagrangian-framework" class="nav-link" data-scroll-target="#inverse-dynamics-in-the-lagrangian-framework">Inverse Dynamics in the Lagrangian Framework</a></li>
+  <li><a href="#the-fundamental-problem-inseparability-of-drift-and-input" id="toc-the-fundamental-problem-inseparability-of-drift-and-input" class="nav-link" data-scroll-target="#the-fundamental-problem-inseparability-of-drift-and-input">The Fundamental Problem: Inseparability of Drift and Input</a></li>
+  <li><a href="#why-a-model-is-necessary" id="toc-why-a-model-is-necessary" class="nav-link" data-scroll-target="#why-a-model-is-necessary">Why a Model is Necessary</a></li>
+  <li><a href="#relevance-to-golf-biomechanics" id="toc-relevance-to-golf-biomechanics" class="nav-link" data-scroll-target="#relevance-to-golf-biomechanics">Relevance to Golf Biomechanics</a></li>
+  </ul></li>
+  <li><a href="#limitation-3-the-air-resistance-problem" id="toc-limitation-3-the-air-resistance-problem" class="nav-link" data-scroll-target="#limitation-3-the-air-resistance-problem">Limitation 3: The Air Resistance Problem</a>
+  <ul class="collapse">
+  <li><a href="#the-neglected-external-force" id="toc-the-neglected-external-force" class="nav-link" data-scroll-target="#the-neglected-external-force">The Neglected External Force</a></li>
+  <li><a href="#magnitude-of-air-resistance" id="toc-magnitude-of-air-resistance" class="nav-link" data-scroll-target="#magnitude-of-air-resistance">Magnitude of Air Resistance</a></li>
+  <li><a href="#effect-on-force-and-couple-calculations" id="toc-effect-on-force-and-couple-calculations" class="nav-link" data-scroll-target="#effect-on-force-and-couple-calculations">Effect on Force and Couple Calculations</a></li>
+  <li><a href="#broader-implications" id="toc-broader-implications" class="nav-link" data-scroll-target="#broader-implications">Broader Implications</a></li>
+  <li><a href="#why-air-resistance-matters-for-interpretation" id="toc-why-air-resistance-matters-for-interpretation" class="nav-link" data-scroll-target="#why-air-resistance-matters-for-interpretation">Why Air Resistance Matters for Interpretation</a></li>
+  </ul></li>
+  <li><a href="#the-path-from-inverse-dynamics-to-golfer-effort" id="toc-the-path-from-inverse-dynamics-to-golfer-effort" class="nav-link" data-scroll-target="#the-path-from-inverse-dynamics-to-golfer-effort">The Path from Inverse Dynamics to Golfer Effort</a>
+  <ul class="collapse">
+  <li><a href="#the-triple-indeterminacy" id="toc-the-triple-indeterminacy" class="nav-link" data-scroll-target="#the-triple-indeterminacy">The Triple Indeterminacy</a></li>
+  <li><a href="#required-tools-and-information" id="toc-required-tools-and-information" class="nav-link" data-scroll-target="#required-tools-and-information">Required Tools and Information</a></li>
+  </ul></li>
+  <li><a href="#quantitative-examples" id="toc-quantitative-examples" class="nav-link" data-scroll-target="#quantitative-examples">Quantitative Examples</a>
+  <ul class="collapse">
+  <li><a href="#example-1-impact-zone-force-interpretation" id="toc-example-1-impact-zone-force-interpretation" class="nav-link" data-scroll-target="#example-1-impact-zone-force-interpretation">Example 1: Impact Zone Force Interpretation</a></li>
+  <li><a href="#example-2-drift-vs.-input-decomposition" id="toc-example-2-drift-vs.-input-decomposition" class="nav-link" data-scroll-target="#example-2-drift-vs.-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</a></li>
+  </ul></li>
+  <li><a href="#implications-and-best-practices" id="toc-implications-and-best-practices" class="nav-link" data-scroll-target="#implications-and-best-practices">Implications and Best Practices</a>
+  <ul class="collapse">
+  <li><a href="#for-golf-instruction" id="toc-for-golf-instruction" class="nav-link" data-scroll-target="#for-golf-instruction">For Golf Instruction</a></li>
+  <li><a href="#for-biomechanics-research" id="toc-for-biomechanics-research" class="nav-link" data-scroll-target="#for-biomechanics-research">For Biomechanics Research</a></li>
+  <li><a href="#the-alpha-torque-debate-revisited" id="toc-the-alpha-torque-debate-revisited" class="nav-link" data-scroll-target="#the-alpha-torque-debate-revisited">The Alpha Torque Debate Revisited</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations</h1>
+</div>
+
+<div>
+  <div class="description">
+    Critical examination of inverse dynamics limitations in biomechanics, explaining why calculated torques don’t represent actual muscle contributions.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>AffineDrift </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 28, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="understanding-inverse-dynamics" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-inverse-dynamics">Understanding Inverse Dynamics</h2>
+<section id="what-inverse-dynamics-calculates" class="level3">
+<h3 class="anchored" data-anchor-id="what-inverse-dynamics-calculates">What Inverse Dynamics Calculates</h3>
+<p>Inverse dynamics is a computational method that works backward from observed motion to calculate the forces and moments that must have produced that motion. In golf biomechanics, we observe the club’s position, velocity, and acceleration through time (typically via motion capture), and inverse dynamics tells us the equivalent forces and moments acting at a chosen reference point—usually the midpoint between the hands on the grip.</p>
+<p>The method is powerful because it allows us to infer kinetic information (forces/moments) from kinematic data (motion) without requiring direct force measurement, which is technically challenging in naturalistic settings. However, understanding what these calculated forces and moments mean in terms of actual golfer effort requires careful interpretation.</p>
+</section>
+<section id="the-mathematical-foundation" class="level3">
+<h3 class="anchored" data-anchor-id="the-mathematical-foundation">The Mathematical Foundation</h3>
+<p>The equations of motion for a rigid body like a golf club are described by Euler’s laws:</p>
+<p><span class="math display">\[
+\begin{align}
+\sum \mathbf{F} &amp;= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &amp;= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
+\end{align}
+\]</span></p>
+<p>where: - <span class="math inline">\(\sum \mathbf{F}\)</span> is the sum of all forces acting on the club</p>
+<ul>
+<li><p><span class="math inline">\(m\)</span> is the club mass</p></li>
+<li><p><span class="math inline">\(\mathbf{a}_{\text{COM}}\)</span> is the acceleration of the center of mass</p></li>
+<li><p><span class="math inline">\(\sum \mathbf{M}_{\text{COM}}\)</span> is the sum of moments about the center of mass</p></li>
+<li><p><span class="math inline">\(\mathbf{I}\)</span> is the moment of inertia tensor</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\alpha}\)</span> is the angular acceleration</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\omega}\)</span> is the angular velocity (the final term is the gyroscopic effect)</p></li>
+</ul>
+</section>
+<section id="how-inverse-dynamics-works-step-by-step" class="level3">
+<h3 class="anchored" data-anchor-id="how-inverse-dynamics-works-step-by-step">How Inverse Dynamics Works: Step by Step</h3>
+<p><strong>Step 1: Measure Kinematics</strong></p>
+<p>Motion capture systems track the club’s position and orientation over time, providing: - Position of the center of mass: <span class="math inline">\(\mathbf{r}_{\text{COM}}(t)\)</span></p>
+<ul>
+<li>Orientation (typically as rotation matrix or quaternion): <span class="math inline">\(\mathbf{R}(t)\)</span></li>
+</ul>
+<p><strong>Step 2: Differentiate to Obtain Velocities and Accelerations</strong></p>
+<p>Numerical differentiation yields: - Linear velocity: <span class="math inline">\(\mathbf{v}_{\text{COM}} = \dot{\mathbf{r}}_{\text{COM}}\)</span></p>
+<ul>
+<li><p>Linear acceleration: <span class="math inline">\(\mathbf{a}_{\text{COM}} = \ddot{\mathbf{r}}_{\text{COM}}\)</span></p></li>
+<li><p>Angular velocity: <span class="math inline">\(\boldsymbol{\omega}\)</span></p></li>
+<li><p>Angular acceleration: <span class="math inline">\(\boldsymbol{\alpha} = \dot{\boldsymbol{\omega}}\)</span></p></li>
+</ul>
+<p><strong>Step 3: Account for Known Forces</strong></p>
+<p>Gravity is a known external force:</p>
+<p><span class="math display">\[
+\mathbf{F}_{\text{gravity}} = m\mathbf{g}
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{g} = [0, 0, -9.81]\)</span> m/s<span class="math inline">\(^2\)</span> (if z is vertical).</p>
+<p><strong>Step 4: Solve for Unknown Forces</strong></p>
+<p>From Equation~<span class="citation" data-cites="eq:force_balance">[@eq:force_balance]</span>, the sum of unknown forces (from the golfer’s hands) is:</p>
+<p><span class="math display">\[
+\mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
+\]</span></p>
+<p><strong>Step 5: Calculate Moments About the Reference Point</strong></p>
+<p>The moment balance about an arbitrary reference point <span class="math inline">\(P\)</span> (typically the grip midpoint) is:</p>
+<p><span class="math display">\[
+\sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
+\]</span></p>
+<p>Since we know <span class="math inline">\(\sum \mathbf{M}_{\text{COM}}\)</span> from Equation~<span class="citation" data-cites="eq:moment_balance">[@eq:moment_balance]</span>, we can calculate the required moment about point <span class="math inline">\(P\)</span>.</p>
+</section>
+<section id="critical-assumptions-in-inverse-dynamics" class="level3">
+<h3 class="anchored" data-anchor-id="critical-assumptions-in-inverse-dynamics">Critical Assumptions in Inverse Dynamics</h3>
+<p>For these calculations to be valid, we must assume:</p>
+<ol type="1">
+<li><p><strong>Rigid body:</strong> The club does not deform significantly. Shaft bending is neglected or treated separately.</p></li>
+<li><p><strong>Known mass properties:</strong> We must accurately know:</p>
+<ul>
+<li>Total mass <span class="math inline">\(m\)</span></li>
+</ul></li>
+</ol>
+<ul>
+<li><p>Center of mass location <span class="math inline">\(\mathbf{r}_{\text{COM}}\)</span></p></li>
+<li><p>Moment of inertia tensor <span class="math inline">\(\mathbf{I}\)</span></p></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Clean kinematic data:</strong> Motion capture data must be:
+<ul>
+<li>Accurate (minimal measurement error)</li>
+</ul></li>
+</ol>
+<ul>
+<li><p>Smooth enough for differentiation (or properly filtered)</p></li>
+<li><p>Sampled at sufficient frequency (typically <span class="math inline">\(&gt;\)</span> 200 Hz)</p></li>
+</ul>
+<ol start="4" type="1">
+<li><strong>Known external forces:</strong> We account for gravity but typically neglect:
+<ul>
+<li>Air resistance (discussed in Section 4 - often significant)</li>
+</ul></li>
+</ol>
+<ul>
+<li>Impact forces (only applicable during ball contact)</li>
+</ul>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> Inverse dynamics provides mathematically correct values for the forces and moments at the reference point, <em>given the assumptions above</em>. The challenges arise not in the calculation but in the interpretation: what do these values tell us about what the golfer is doing?</p>
+</div>
+</section>
+<section id="the-interpretive-gap" class="level3">
+<h3 class="anchored" data-anchor-id="the-interpretive-gap">The Interpretive Gap</h3>
+<p>The output of inverse dynamics is: - A net force <span class="math inline">\(\mathbf{F}_{\text{hands}}\)</span> at reference point <span class="math inline">\(P\)</span></p>
+<ul>
+<li>A net couple (moment) <span class="math inline">\(\mathbf{C}_{P}\)</span> at reference point <span class="math inline">\(P\)</span></li>
+</ul>
+<p>What we want to understand is: - Where on the grip is the golfer applying force?</p>
+<ul>
+<li><p>How much force from each hand? From each finger?</p></li>
+<li><p>What is the golfer actively doing versus what is happening passively?</p></li>
+<li><p>How much do unmodeled external forces (like air resistance) affect the results?</p></li>
+<li><p>What does the golfer feel and consciously control?</p></li>
+</ul>
+<p>Bridging this gap requires understanding three fundamental limitations.</p>
+</section>
+</section>
+<section id="limitation-1-the-equivalent-couple-problem-spatial-ambiguity" class="level2">
+<h2 class="anchored" data-anchor-id="limitation-1-the-equivalent-couple-problem-spatial-ambiguity">Limitation 1: The Equivalent Couple Problem (Spatial Ambiguity)</h2>
+<section id="force-couple-equivalence-in-rigid-body-mechanics" class="level3">
+<h3 class="anchored" data-anchor-id="force-couple-equivalence-in-rigid-body-mechanics">Force-Couple Equivalence in Rigid Body Mechanics</h3>
+<p><strong>definition:</strong> [Force-Couple Equivalence] Any system of forces acting on a rigid body can be reduced to a statically equivalent system consisting of: - A single resultant force <span class="math inline">\(\mathbf{F}_{\text{eq}}\)</span> acting at an arbitrary reference point</p>
+<ul>
+<li>A couple <span class="math inline">\(\mathbf{C}_{\text{eq}}\)</span> (pure moment) This equivalence is <em>dynamic</em>: both systems produce identical translational and rotational accelerations of the rigid body.</li>
+</ul>
+<p>The fundamental principle is that a couple is a <em>free vector</em>—it can act anywhere on the rigid body without changing the body’s motion. In contrast, a force is <em>bound</em> to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.</p>
+<p>[Figure: Force-couple equivalence: a force <span class="math inline">\(\mathbf{F}\)</span>]</p>
+</section>
+<section id="coordinate-transformation-of-force-couple-pairs" class="level3">
+<h3 class="anchored" data-anchor-id="coordinate-transformation-of-force-couple-pairs">Coordinate Transformation of Force-Couple Pairs</h3>
+<p>For a rigid body such as a golf club, if inverse dynamics yields force <span class="math inline">\(\mathbf{F}_{\text{eq}}\)</span> and couple <span class="math inline">\(\mathbf{C}_{\text{eq}}\)</span> at reference point <span class="math inline">\(m\)</span>, we can transform these to an equivalent force-couple pair at any other point <span class="math inline">\(i\)</span> along the grip.</p>
+<p>This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.</p>
+<p>[Figure: Golf club grip schematic showing reference points and distance measures. The center of mass (COM) is closer to the clubhead than to the hands. Distances are measured with consistent sign convention.]</p>
+</section>
+<section id="the-range-of-equivalent-couples" class="level3">
+<h3 class="anchored" data-anchor-id="the-range-of-equivalent-couples">The Range of Equivalent Couples</h3>
+<p>From Equation~<span class="citation" data-cites="eq:couple_transform">[@eq:couple_transform]</span>, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.</p>
+<p>At the top of the grip:</p>
+<p><span class="math display">\[
+C_t = M_m \left(1 - \frac{d_t}{d_m}\right) + C_m
+\]</span></p>
+<p>At the bottom of the grip:</p>
+<p><span class="math display">\[
+C_b = M_m \left(1 - \frac{d_b}{d_m}\right) + C_m
+\]</span></p>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> The range of viable equivalent couples increases linearly with the moment of force <span class="math inline">\(M_m = F \cdot d_m\)</span>. For larger forces or forces acting farther from the center of mass, the spatial ambiguity grows substantially.</p>
+</div>
+<p>[Figure: Equivalent couple as a function of position along the grip for three different moments of force, with constant <span class="math inline">\(C_m = -4.0\)</span> Nm at the midpoint. The region between dashed lines represents typical hand placement. Note how the range of possible couple values increases with <span class="math inline">\(M_m\)</span>.]</p>
+</section>
+<section id="physical-interpretation-the-non-uniqueness-problem" class="level3">
+<h3 class="anchored" data-anchor-id="physical-interpretation-the-non-uniqueness-problem">Physical Interpretation: The Non-Uniqueness Problem</h3>
+<p>The mathematical transformation in Equation~<span class="citation" data-cites="eq:couple_transform">[@eq:couple_transform]</span> has a profound physical consequence: <strong>a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer</strong>.</p>
+<p>This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena: 1. <strong>True couples:</strong> Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)</p>
+<ol start="2" type="1">
+<li><strong>Offset forces:</strong> Single or net forces applied away from the reference point</li>
+</ol>
+<p>[Figure: Two physically distinct force applications that produce identical inverse dynamics results at the reference point. Left: True couple from opposing forces. Right: Apparent couple from single offset force. Inverse dynamics cannot distinguish between them.]</p>
+</section>
+<section id="implications-for-distributed-force-application" class="level3">
+<h3 class="anchored" data-anchor-id="implications-for-distributed-force-application">Implications for Distributed Force Application</h3>
+<p>In reality, golfers apply forces at multiple points on the grip: individual fingers, palm heel, thumb pads, etc. Each force contributes to both the net force and the equivalent couple at any chosen reference point.</p>
+<p>[Figure: Inverse dynamics reduces distributed forces from multiple fingers and palm contact points to a single equivalent force and couple at the reference point. This reduction is mathematically valid but loses information about the spatial distribution.]</p>
+<div class="limitation-box">
+<p><strong>Fundamental Limitation:</strong> Without knowledge of where forces are applied along the grip, inverse dynamics results are fundamentally ambiguous. The same force-couple pair could arise from: - Strong forces applied close to the reference point</p>
+<ul>
+<li><p>Weaker forces applied far from the reference point</p></li>
+<li><p>Any combination with the same resultant and moment</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="limitation-2-the-control-affine-decomposition-problem" class="level2">
+<h2 class="anchored" data-anchor-id="limitation-2-the-control-affine-decomposition-problem">Limitation 2: The Control-Affine Decomposition Problem</h2>
+<section id="control-affine-systems-a-framework-for-understanding-motion" class="level3">
+<h3 class="anchored" data-anchor-id="control-affine-systems-a-framework-for-understanding-motion">Control-Affine Systems: A Framework for Understanding Motion</h3>
+<p>The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge rooted in the structure of the system dynamics. The golf club-golfer system is naturally described as a <em>control-affine system</em>.</p>
+<p><strong>definition:</strong> [Control-Affine System] A control-affine system is a dynamical system of the form:</p>
+<p><span class="math display">\[
+{#eq-control_affine}
+\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
+\]</span></p>
+<p>where: - <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> is the state vector (positions and velocities)</p>
+<ul>
+<li><p><span class="math inline">\(\mathbf{f}(\mathbf{x})\)</span> is the <em>drift vector field</em> (system dynamics without input)</p></li>
+<li><p><span class="math inline">\(\mathbf{G}(\mathbf{x})\)</span> is the <em>input matrix</em> (how controls affect the state)</p></li>
+<li><p><span class="math inline">\(\mathbf{u} \in \mathbb{R}^m\)</span> is the <em>control input vector</em></p></li>
+</ul>
+<p>The key feature is the <strong>additive separation</strong> of drift and input effects. This decomposition reflects a fundamental physical distinction:</p>
+<ul>
+<li><p><strong>Drift (<span class="math inline">\(\mathbf{f}(\mathbf{x})\)</span>):</strong> Passive dynamics arising from the system’s configuration, including gravitational forces, inertial effects (centrifugal, Coriolis), and constraint forces in closed kinematic chains</p></li>
+<li><p><strong>Input (<span class="math inline">\(\mathbf{G}(\mathbf{x})\mathbf{u}\)</span>):</strong> Active control—forces that the controller (golfer) can directly modulate. This is what the golfer <em>feels</em> and what they exert effort toward achieving.</p></li>
+</ul>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> The input component represents what the golfer consciously controls and experiences as effort. When a golfer “feels” like they are pulling or pushing, they are sensing the input forces they must actively generate, not the total forces (which include passive dynamics).</p>
+</div>
+</section>
+<section id="inverse-dynamics-in-the-lagrangian-framework" class="level3">
+<h3 class="anchored" data-anchor-id="inverse-dynamics-in-the-lagrangian-framework">Inverse Dynamics in the Lagrangian Framework</h3>
+<p>To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates <span class="math inline">\(\mathbf{q}\)</span>, the equations of motion are:</p>
+<p><span class="math display">\[
+{#eq-lagrange}
+\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
+\]</span></p>
+<p>where: - <span class="math inline">\(\mathbf{M}(\mathbf{q})\)</span> is the mass/inertia matrix</p>
+<ul>
+<li><p><span class="math inline">\(\mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\)</span> contains Coriolis and centrifugal terms</p></li>
+<li><p><span class="math inline">\(\mathbf{G}(\mathbf{q})\)</span> contains gravitational and other conservative force terms</p></li>
+<li><p><span class="math inline">\(\boldsymbol{\tau}\)</span> are the generalized forces (what we want to find)</p></li>
+</ul>
+<p>Inverse dynamics solves for <span class="math inline">\(\boldsymbol{\tau}\)</span> given observed <span class="math inline">\(\mathbf{q}(t)\)</span>, <span class="math inline">\(\dot{\mathbf{q}}(t)\)</span>, and <span class="math inline">\(\ddot{\mathbf{q}}(t)\)</span>:</p>
+<p><span class="math display">\[
+{#eq-inverse_dynamics}
+\boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
+\]</span></p>
+</section>
+<section id="the-fundamental-problem-inseparability-of-drift-and-input" class="level3">
+<h3 class="anchored" data-anchor-id="the-fundamental-problem-inseparability-of-drift-and-input">The Fundamental Problem: Inseparability of Drift and Input</h3>
+<p>Here is the critical observation: <strong>inverse dynamics computes the total generalized force <span class="math inline">\(\boldsymbol{\tau}\)</span>, which includes both drift and input components</strong>:</p>
+<p><span class="math display">\[
+\boldsymbol{\tau}_{\text{total}} = \boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}}
+\]</span></p>
+<p>In the control-affine formulation, these correspond to:</p>
+<p><span class="math display">\[
+\begin{align}
+\boldsymbol{\tau}_{\text{drift}} &amp;= \text{generalized forces from } \mathbf{f}(\mathbf{x}) \\
+\boldsymbol{\tau}_{\text{input}} &amp;= \text{generalized forces from } \mathbf{G}(\mathbf{x})\mathbf{u}
+\end{align}
+\]</span></p>
+<div class="limitation-box">
+<p><strong>Fundamental Limitation:</strong> Inverse dynamics cannot distinguish between these components without additional information. The calculation yields <span class="math inline">\(\boldsymbol{\tau}_{\text{total}}\)</span>, but this single measurement corresponds to infinitely many possible <span class="math inline">\((drift, input)\)</span> pairs satisfying:</p>
+<p><span class="math display">\[
+\boldsymbol{\tau}_{\text{drift}} + \boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}}
+\]</span></p>
+</div>
+<p>[Figure: Forward vs.&nbsp;inverse dynamics in control-affine systems. Forward: drift and input combine uniquely to produce motion. Inverse: given motion alone, we cannot uniquely recover the drift-input decomposition.]</p>
+</section>
+<section id="why-a-model-is-necessary" class="level3">
+<h3 class="anchored" data-anchor-id="why-a-model-is-necessary">Why a Model is Necessary</h3>
+<p>To separate drift from input, we need an <em>explicit model</em> of the system. Specifically:</p>
+<ol type="1">
+<li><p><strong>Kinematic model:</strong> How the system’s generalized coordinates relate to physical positions and orientations</p></li>
+<li><p><strong>Dynamic model:</strong> The equations of motion including:</p>
+<ul>
+<li>Mass and inertia properties</li>
+</ul></li>
+</ol>
+<ul>
+<li><p>Gravitational effects</p></li>
+<li><p>Constraint forces (for closed chains)</p></li>
+<li><p>Velocity-dependent terms (centrifugal, Coriolis)</p></li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Control model:</strong> Which degrees of freedom are directly actuated and which forces are controllable</li>
+</ol>
+<p>With such a model, we can: 1. Calculate <span class="math inline">\(\boldsymbol{\tau}_{\text{drift}}\)</span> from the observed state <span class="math inline">\((\mathbf{q}, \dot{\mathbf{q}})\)</span> using the drift dynamics</p>
+<ol start="2" type="1">
+<li>Obtain <span class="math inline">\(\boldsymbol{\tau}_{\text{input}}\)</span> by subtraction: <span class="math inline">\(\boldsymbol{\tau}_{\text{input}} = \boldsymbol{\tau}_{\text{total}} - \boldsymbol{\tau}_{\text{drift}}\)</span></li>
+</ol>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> The necessity of a model for interpreting inverse dynamics is often underappreciated. Without a model specifying how passive and active forces contribute to motion, we cannot determine “what the golfer is doing” from motion data alone—we only know “what is happening to the club.”</p>
+</div>
+</section>
+<section id="relevance-to-golf-biomechanics" class="level3">
+<h3 class="anchored" data-anchor-id="relevance-to-golf-biomechanics">Relevance to Golf Biomechanics</h3>
+<p>In the golf swing, significant forces arise from passive dynamics:</p>
+<ul>
+<li><p><strong>Gravitational forces:</strong> The club weighs approximately 0.5-1 lb, creating torques about pivot points</p></li>
+<li><p><strong>Centrifugal forces:</strong> The rotating club creates substantial outward forces that the golfer must counteract or utilize</p></li>
+<li><p><strong>Coriolis forces:</strong> Changes in angular velocity create velocity-dependent forces</p></li>
+<li><p><strong>Kinematic constraint forces:</strong> In a double-pendulum model (common for golf swing analysis), constraint forces arise from the requirement that body segments remain connected</p></li>
+</ul>
+<p>When inverse dynamics reports, for example, a radial force at the grip, we cannot determine without a model how much of that force is: - The golfer actively pulling inward (input)</p>
+<ul>
+<li><p>Centrifugal force from the club’s rotation that the golfer is passively resisting (drift)</p></li>
+<li><p>Some combination of both</p></li>
+</ul>
+<p>[Figure: In a rotating golf club system, inverse dynamics measures total force at the grip. Without a model, we cannot separate passive forces (centrifugal, gravitational) from active control inputs applied by the golfer.]</p>
+</section>
+</section>
+<section id="limitation-3-the-air-resistance-problem" class="level2">
+<h2 class="anchored" data-anchor-id="limitation-3-the-air-resistance-problem">Limitation 3: The Air Resistance Problem</h2>
+<section id="the-neglected-external-force" class="level3">
+<h3 class="anchored" data-anchor-id="the-neglected-external-force">The Neglected External Force</h3>
+<p>A factor that is often overlooked in golf swing inverse dynamics is air resistance. While air resistance cannot be significantly manipulated by the golfer, ignoring it can substantially influence our interpretation of the data. Unlike gravity, which is always included in inverse dynamics calculations, air resistance is typically neglected under the assumption that it is small. However, at the high speeds encountered in the golf swing, this assumption may not be justified.</p>
+</section>
+<section id="magnitude-of-air-resistance" class="level3">
+<h3 class="anchored" data-anchor-id="magnitude-of-air-resistance">Magnitude of Air Resistance</h3>
+<p>Research on driver aerodynamics provides insight into the magnitude of air drag forces. Henrikson and Wood measured drag forces on drivers at 100 mph ranging from 6.5 to 9 N (approximately 1.5 to 2 lbs) depending on clubhead design and orientation. A 7 iron at 95 mph likely experiences similar drag forces, as the iron’s less aerodynamic profile may offset the slightly lower speed.</p>
+<p>For typical impact conditions: - Clubhead speed: <span class="math inline">\(\approx\)</span> 95 mph (7 iron)</p>
+<ul>
+<li><p>Estimated drag force: <span class="math inline">\(\approx\)</span> 2 lbs</p></li>
+<li><p>Drag acts approximately 1 inch from the end of the club (near the aerodynamic center of the clubhead)</p></li>
+</ul>
+<p>While 2 lbs may seem small compared to the total forces on the club (which can exceed 100 lbs), the key issue is <em>where</em> this force acts and how it affects the moment balance.</p>
+</section>
+<section id="effect-on-force-and-couple-calculations" class="level3">
+<h3 class="anchored" data-anchor-id="effect-on-force-and-couple-calculations">Effect on Force and Couple Calculations</h3>
+<p>When air resistance is neglected, inverse dynamics attributes all the force required to produce the observed acceleration to the golfer’s hands. Let’s examine what happens when we account for air drag using data from Sasho MacKenzie’s user reference frame video.</p>
+<p>Consider impact conditions for a 7 iron: - Club length: 37 inches</p>
+<ul>
+<li><p>Grip midpoint location: 3.5 inches from end of grip</p></li>
+<li><p>COM location: 10 inches from end of club</p></li>
+<li><p>Reported force at midpoint (no drag): <span class="math inline">\(F_\alpha = 7.5\)</span> lbs</p></li>
+<li><p>Reported couple at midpoint (no drag): <span class="math inline">\(C_\alpha = -18.4\)</span> Nm</p></li>
+</ul>
+<p><strong>Step 1: Calculate Moment of Force Without Drag</strong></p>
+<p>Distance from midpoint to COM: <span class="math inline">\(d_m = 23.5\)</span> inches = 0.597 m</p>
+<p>Moment of force about midpoint:</p>
+<p><span class="math display">\[
+M_{mh} = F_\alpha \cdot d_m = 33.4 \text{ N} \times 0.597 \text{ m} = 19.9 \text{ Nm}
+\]</span></p>
+<p><strong>Step 2: Account for Air Drag</strong></p>
+<p>Drag force: <span class="math inline">\(F_{\text{drag}} = 2\)</span> lbs = 8.9 N acting 1 inch from club end (9 inches = 0.229 m from COM)</p>
+<p>Moment contribution from drag (negative because it opposes rotation):</p>
+<p><span class="math display">\[
+M_{\text{drag}} = -8.9 \text{ N} \times 0.229 \text{ m} = -2.0 \text{ Nm}
+\]</span></p>
+<p><strong>Step 3: Calculate Revised Force at Hands</strong></p>
+<p>If drag provides 2.0 Nm of negative moment, the remaining force at the hands must provide:</p>
+<p><span class="math display">\[
+M_{\text{hands}} = 19.9 - (-2.0) = 21.9 \text{ Nm}
+\]</span></p>
+<p>But wait—this is incorrect. The total moment must remain constant (it’s determined by the observed motion). Instead:</p>
+<p>Net force at hands after accounting for drag:</p>
+<p><span class="math display">\[
+F_{\text{hands}} = 7.5 - 2 = 5.5 \text{ lbs} = 24.5 \text{ N}
+\]</span></p>
+<p>Moment from hands force:</p>
+<p><span class="math display">\[
+M_{\text{hands}} = 24.5 \text{ N} \times 0.597 \text{ m} = 14.6 \text{ Nm}
+\]</span></p>
+<p>Total moment (hands + drag):</p>
+<p><span class="math display">\[
+M_{\text{total}} = 14.6 + (-2.0) = 12.6 \text{ Nm}
+\]</span></p>
+<p>This is 7.3 Nm less than the no-drag case! The sum of moments must equal what inverse dynamics calculated, so:</p>
+<p><span class="math display">\[
+C_{\alpha,\text{drag}} = M_{\text{total}} - M_{mh} = 12.6 - 19.9 = -7.3 \text{ Nm}
+\]</span></p>
+<p><strong>Comparison:</strong> - Without drag consideration: <span class="math inline">\(C_\alpha = -18.4\)</span> Nm</p>
+<ul>
+<li>With drag consideration: <span class="math inline">\(C_\alpha = -11.1\)</span> Nm</li>
+</ul>
+<p>This represents a **40<br>
+</p>
+<p>[Figure: Effect of accounting for air resistance on force and couple calculations. When drag is neglected, inverse dynamics attributes all forces to the golfer’s hands, leading to substantially different couple values.]</p>
+</section>
+<section id="broader-implications" class="level3">
+<h3 class="anchored" data-anchor-id="broader-implications">Broader Implications</h3>
+<p>The air resistance effect demonstrates a third source of ambiguity in inverse dynamics interpretation:</p>
+<div class="limitation-box">
+<p><strong>Fundamental Limitation:</strong> Neglecting air resistance leads to systematic errors in calculated forces and couples. Because drag acts far from the grip, its moment contribution is substantial despite its relatively modest magnitude. The resulting errors are: - Non-uniform across the swing (speed-dependent)</p>
+<ul>
+<li><p>Most significant near impact (highest speeds)</p></li>
+<li><p>Spatially biased (affects couples more than net forces)</p></li>
+</ul>
+</div>
+<p>This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The 40<br>
+</p>
+</section>
+<section id="why-air-resistance-matters-for-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="why-air-resistance-matters-for-interpretation">Why Air Resistance Matters for Interpretation</h3>
+<p>Unlike the spatial ambiguity (which requires knowing force distribution) or the drift-input ambiguity (which requires a full dynamic model), the air resistance problem is:</p>
+<ul>
+<li><p><strong>Systematic:</strong> It always acts in a known direction (opposing motion)</p></li>
+<li><p><strong>Estimable:</strong> Magnitude can be approximated from aerodynamic studies</p></li>
+<li><p><strong>Correctable:</strong> Can be included in inverse dynamics with reasonable assumptions</p></li>
+<li><p><strong>Significant:</strong> 40<br>
+</p></li>
+</ul>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation provides more accurate estimates of the forces actually applied by the golfer.</p>
+</div>
+</section>
+</section>
+<section id="the-path-from-inverse-dynamics-to-golfer-effort" class="level2">
+<h2 class="anchored" data-anchor-id="the-path-from-inverse-dynamics-to-golfer-effort">The Path from Inverse Dynamics to Golfer Effort</h2>
+<section id="the-triple-indeterminacy" class="level3">
+<h3 class="anchored" data-anchor-id="the-triple-indeterminacy">The Triple Indeterminacy</h3>
+<p>We have now identified three independent sources of ambiguity in inverse dynamics results:</p>
+<ol type="1">
+<li><p><strong>Spatial ambiguity (Section 2):</strong> Where are forces applied along the grip?</p></li>
+<li><p><strong>Drift-input ambiguity (Section 3):</strong> What portion of measured forces is passive vs.&nbsp;active?</p></li>
+<li><p><strong>External force ambiguity (Section 4):</strong> How much do neglected external forces (especially air resistance) affect the results?</p></li>
+</ol>
+<p>These ambiguities compound each other. Even perfect knowledge of one aspect leaves the others unresolved.</p>
+</section>
+<section id="required-tools-and-information" class="level3">
+<h3 class="anchored" data-anchor-id="required-tools-and-information">Required Tools and Information</h3>
+<p>To successfully interpret inverse dynamics, we need:</p>
+<p>[Table]</p>
+</section>
+</section>
+<section id="quantitative-examples" class="level2">
+<h2 class="anchored" data-anchor-id="quantitative-examples">Quantitative Examples</h2>
+<section id="example-1-impact-zone-force-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="example-1-impact-zone-force-interpretation">Example 1: Impact Zone Force Interpretation</h3>
+<p>Consider a typical scenario approaching impact. Motion capture yields the club’s acceleration, and inverse dynamics calculates: - Net force at grip midpoint: <span class="math inline">\(F_m = 60\)</span> lbs = 267 N (toward target)</p>
+<ul>
+<li>Couple at grip midpoint: <span class="math inline">\(C_m = -4.5\)</span> Nm (negative = counter-rotation)</li>
+</ul>
+<p>Assume grip parameters: - Distance from midpoint to COM: <span class="math inline">\(d_m = 30\)</span> in = 0.762 m</p>
+<ul>
+<li><p>Left hand predominantly at <span class="math inline">\(d_L = 32\)</span> in = 0.813 m from COM</p></li>
+<li><p>Right hand predominantly at <span class="math inline">\(d_R = 28\)</span> in = 0.711 m from COM</p></li>
+</ul>
+<p><strong>Spatial ambiguity analysis:</strong></p>
+<p>Equivalent couple at left hand:</p>
+<p><span class="math display">\[
+\begin{align}
+C_L &amp;= M_m \left(1 - \frac{d_L}{d_m}\right) + C_m \\
+&amp;= (267 \times 0.762) \left(1 - \frac{0.813}{0.762}\right) + (-4.5) \\
+&amp;= 203 \times (-0.067) - 4.5 \\
+&amp;= -13.6 - 4.5 = -18.1 \text{ Nm}
+\end{align}
+\]</span></p>
+<p>Equivalent couple at right hand:</p>
+<p><span class="math display">\[
+\begin{align}
+C_R &amp;= M_m \left(1 - \frac{d_R}{d_m}\right) + C_m \\
+&amp;= 203 \times (0.067) - 4.5 \\
+&amp;= 13.6 - 4.5 = 9.1 \text{ Nm}
+\end{align}
+\]</span></p>
+<div class="keypoint-box">
+<p><strong>Key Point:</strong> The equivalent couple <strong>changes sign</strong> depending on reference point! At the midpoint, inverse dynamics shows negative couple (counter-rotation). But if force is primarily applied at the right hand, the equivalent couple at that location is positive (pro-rotation).</p>
+</div>
+</section>
+<section id="example-2-drift-vs.-input-decomposition" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-drift-vs.-input-decomposition">Example 2: Drift vs.&nbsp;Input Decomposition</h3>
+<p>Consider mid-downswing with the club rotating at <span class="math inline">\(\omega = 30\)</span> rad/s. Inverse dynamics measures radial force at grip: <span class="math inline">\(F_{\text{radial}} = 100\)</span> lbs (inward).</p>
+<p><strong>Without a model:</strong> We know the club experiences 100 lbs total radial force.</p>
+<p><strong>With a model:</strong> Suppose the club has: - Mass: <span class="math inline">\(m_c = 0.5\)</span> lbs</p>
+<ul>
+<li>Effective radius from pivot: <span class="math inline">\(r = 3\)</span> ft</li>
+</ul>
+<p>Centrifugal force (drift component):</p>
+<p><span class="math display">\[
+F_{\text{centrifugal}} = \frac{m_c}{g} \omega^2 r = \frac{0.5}{32.2} \times (30)^2 \times 3 \approx 42 \text{ lbs}
+\]</span></p>
+<p>This is drift—it exists whether or not the golfer pulls. The active input component is:</p>
+<p><span class="math display">\[
+F_{\text{input}} = F_{\text{total}} - F_{\text{drift}} = 100 - 42 = 58 \text{ lbs}
+\]</span></p>
+<p>So the golfer actively pulls inward with 58 lbs (what they <em>feel</em>), while 42 lbs of the measured force is passive resistance to centrifugal effects.</p>
+<p>[Figure: Decomposition of measured radial force into drift (passive centrifugal) and input (active) components. The drift component grows quadratically with angular velocity. The input component represents what the golfer actively controls and feels.]</p>
+</section>
+</section>
+<section id="implications-and-best-practices" class="level2">
+<h2 class="anchored" data-anchor-id="implications-and-best-practices">Implications and Best Practices</h2>
+<section id="for-golf-instruction" class="level3">
+<h3 class="anchored" data-anchor-id="for-golf-instruction">For Golf Instruction</h3>
+<p>When using inverse dynamics data for instruction: - A reported couple may not correspond to twisting sensations the golfer feels</p>
+<ul>
+<li><p>Forces golfers “feel” correspond more closely to input (active control) than to total forces</p></li>
+<li><p>Passive dynamics (drift) are often substantial but may not be consciously perceived</p></li>
+<li><p>External forces like air resistance can significantly affect calculated values</p></li>
+<li><p>Different golfers may achieve similar inverse dynamics outcomes through different strategies</p></li>
+</ul>
+</section>
+<section id="for-biomechanics-research" class="level3">
+<h3 class="anchored" data-anchor-id="for-biomechanics-research">For Biomechanics Research</h3>
+<p><strong>Methodological recommendations:</strong></p>
+<ol type="1">
+<li><p><strong>Specify reference points:</strong> Always state the reference point and acknowledge spatial ambiguity</p></li>
+<li><p><strong>Report ranges:</strong> Consider reporting equivalent couples at multiple reference points</p></li>
+<li><p><strong>Include all external forces:</strong> Don’t neglect air resistance at high speeds</p></li>
+<li><p><strong>Use models:</strong> Separate drift from input whenever possible</p></li>
+<li><p><strong>Seek direct measurements:</strong> Instrumented grips reduce reliance on inverse dynamics alone</p></li>
+<li><p><strong>Be precise in language:</strong> Distinguish between:</p>
+<ul>
+<li>“What is happening to the club” (inverse dynamics can tell us)</li>
+</ul></li>
+</ol>
+<ul>
+<li>“What the golfer is doing” (requires additional interpretation)</li>
+</ul>
+</section>
+<section id="the-alpha-torque-debate-revisited" class="level3">
+<h3 class="anchored" data-anchor-id="the-alpha-torque-debate-revisited">The Alpha Torque Debate Revisited</h3>
+<p>The alpha torque debate involves all three ambiguities:</p>
+<ol type="1">
+<li><p><strong>Reference point dependence:</strong> Sign of couple changes with assumed force location</p></li>
+<li><p><strong>Drift-input conflation:</strong> Some measured torque arises from passive dynamics</p></li>
+<li><p><strong>Air resistance:</strong> Neglecting drag can cause 40<br>
+</p></li>
+</ol>
+<p>A productive path forward requires instrumented grips, validated models including drag, analysis at multiple reference points, and recognition that different golfers may use genuinely different strategies.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Inverse dynamics is a valuable tool for analyzing golf swing mechanics. However, interpreting its results requires navigating three fundamental challenges:</p>
+<ol type="1">
+<li><p><strong>Spatial ambiguity:</strong> Force-couple pairs are reference point dependent</p></li>
+<li><p><strong>Drift-input separation:</strong> Total forces include both passive and active components</p></li>
+<li><p><strong>External forces:</strong> Neglecting air resistance introduces systematic errors</p></li>
+</ol>
+<p><strong>These are inherent properties of the inverse problem, not shortcomings of the method.</strong> The path forward requires:</p>
+<ul>
+<li><p>Building validated biomechanical models</p></li>
+<li><p>Including all relevant external forces (especially drag)</p></li>
+<li><p>Using instrumented grips for direct measurement</p></li>
+<li><p>Specifying reference points clearly</p></li>
+<li><p>Recognizing that what golfers “feel” is the input component</p></li>
+</ul>
+<p>Understanding these limitations enables more informed use of inverse dynamics in both research and instruction.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script src="script.js"></script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

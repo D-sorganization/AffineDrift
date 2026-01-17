@@ -6,9 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Welcome to AffineDrift - AI-Assisted Golf Research">
+<meta name="author" content="Anonymized for Review">
+<meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Reference guide for Lagrangian mechanics applied to control-affine multibody systems, bridging classical mechanics and modern control theory.">
 
-<title>Home – AffineDrift</title>
+<title>Lagrangian Reference for Control-Affine Multibody Dynamics – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -24,25 +26,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.ico" rel="icon">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,17 +116,17 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
-<link rel="preload" href="./styles.css" as="style">
-<link rel="preload" href="./script.js" as="script">
-<link rel="modulepreload" href="./js/metrics.js">
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
 
 <!-- PWA and Mobile Optimization -->
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="AffineDrift">
-<link rel="apple-touch-icon" href="./logo/logo_transparent_1.png">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 
@@ -134,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
   .rss-feed-link {
     display: inline-flex;
@@ -194,9 +196,38 @@ ul.task-list li input[type="checkbox"] {
   });
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="css/search-metrics.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -206,11 +237,11 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
-    <img src="./logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">AffineDrift</span>
     </a>
   </div>
@@ -221,11 +252,11 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./overview.html"> 
+    <a class="nav-link" href="../overview.html"> 
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -234,19 +265,19 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
-    <a class="dropdown-item" href="./drifter-manifesto.html">
+    <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./articles.html">
+    <a class="dropdown-item" href="../articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./research-reviews.html">
+    <a class="dropdown-item" href="../research-reviews.html">
  <span class="dropdown-text">Research Reviews</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./book-reviews.html">
+    <a class="dropdown-item" href="../book-reviews.html">
  <span class="dropdown-text">Book Reviews</span></a>
   </li>  
     </ul>
@@ -257,35 +288,35 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
-    <a class="dropdown-item" href="./models.html">
+    <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-simulink.html">
+    <a class="dropdown-item" href="../models-simulink.html">
  <span class="dropdown-text">Matlab Simulink</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
+    <a class="dropdown-item" href="../models-mujoco.html">
  <span class="dropdown-text">MuJoCo</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-drake.html">
+    <a class="dropdown-item" href="../models-drake.html">
  <span class="dropdown-text">Drake</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
+    <a class="dropdown-item" href="../models-pinocchio.html">
  <span class="dropdown-text">Pinocchio</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
+    <a class="dropdown-item" href="../models-pendulum.html">
  <span class="dropdown-text">Pendulum</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-opensim.html">
+    <a class="dropdown-item" href="../models-opensim.html">
  <span class="dropdown-text">OpenSim</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./models-myosim.html">
+    <a class="dropdown-item" href="../models-myosim.html">
  <span class="dropdown-text">MyoSim</span></a>
   </li>  
     </ul>
@@ -296,39 +327,39 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
-    <a class="dropdown-item" href="./resources-videos.html">
+    <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-software.html">
+    <a class="dropdown-item" href="../resources-software.html">
  <span class="dropdown-text">Software</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-websites.html">
+    <a class="dropdown-item" href="../resources-websites.html">
  <span class="dropdown-text">Websites</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-datasets.html">
+    <a class="dropdown-item" href="../resources-datasets.html">
  <span class="dropdown-text">Datasets</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-books.html">
+    <a class="dropdown-item" href="../resources-books.html">
  <span class="dropdown-text">Books</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-papers.html">
+    <a class="dropdown-item" href="../resources-papers.html">
  <span class="dropdown-text">Papers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-researchers.html">
+    <a class="dropdown-item" href="../resources-researchers.html">
  <span class="dropdown-text">Researchers</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./resources-notebooklm.html">
+    <a class="dropdown-item" href="../resources-notebooklm.html">
  <span class="dropdown-text">NotebookLM</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./bibliography.html">
+    <a class="dropdown-item" href="../bibliography.html">
  <span class="dropdown-text">Bibliography</span></a>
   </li>  
     </ul>
@@ -350,15 +381,15 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
-    <a class="dropdown-item" href="./contact.html">
+    <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./about.html">
+    <a class="dropdown-item" href="../about.html">
  <span class="dropdown-text">About</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./collaborate.html">
+    <a class="dropdown-item" href="../collaborate.html">
  <span class="dropdown-text">Collaborate</span></a>
   </li>  
     </ul>
@@ -371,28 +402,57 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#configuration-space-and-generalized-coordinates" id="toc-configuration-space-and-generalized-coordinates" class="nav-link" data-scroll-target="#configuration-space-and-generalized-coordinates">Configuration Space and Generalized Coordinates</a></li>
+  <li><a href="#lagrangian-kinetic-and-potential-energy" id="toc-lagrangian-kinetic-and-potential-energy" class="nav-link" data-scroll-target="#lagrangian-kinetic-and-potential-energy">Lagrangian: Kinetic and Potential Energy</a></li>
+  <li><a href="#eulerlagrange-equations-with-generalized-forces" id="toc-eulerlagrange-equations-with-generalized-forces" class="nav-link" data-scroll-target="#eulerlagrange-equations-with-generalized-forces">Euler–Lagrange Equations with Generalized Forces</a></li>
+  <li><a href="#manipulator-form-from-lagrange" id="toc-manipulator-form-from-lagrange" class="nav-link" data-scroll-target="#manipulator-form-from-lagrange">Manipulator Form from Lagrange</a></li>
+  <li><a href="#drift-and-input-decomposition" id="toc-drift-and-input-decomposition" class="nav-link" data-scroll-target="#drift-and-input-decomposition">Drift and Input Decomposition</a></li>
+  <li><a href="#first-order-state-form-and-control-affine-structure" id="toc-first-order-state-form-and-control-affine-structure" class="nav-link" data-scroll-target="#first-order-state-form-and-control-affine-structure">First-Order State Form and Control-Affine Structure</a></li>
+  <li><a href="#role-of-gravity-and-flexible-shaft-in-lagrangian-terms" id="toc-role-of-gravity-and-flexible-shaft-in-lagrangian-terms" class="nav-link" data-scroll-target="#role-of-gravity-and-flexible-shaft-in-lagrangian-terms">Role of Gravity and Flexible Shaft in Lagrangian Terms</a></li>
+  <li><a href="#connection-to-ztcf-and-zvcf" id="toc-connection-to-ztcf-and-zvcf" class="nav-link" data-scroll-target="#connection-to-ztcf-and-zvcf">Connection to ZTCF and ZVCF</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content page-columns page-full column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Home</h1>
+<h1 class="title">Lagrangian Reference for Control-Affine Multibody Dynamics</h1>
 </div>
 
 <div>
   <div class="description">
-    Welcome to AffineDrift - AI-Assisted Golf Research
+    Reference guide for Lagrangian mechanics applied to control-affine multibody systems, bridging classical mechanics and modern control theory.
   </div>
 </div>
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Anonymized for Review </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 28, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -402,128 +462,192 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="container page-columns page-full">
-  <div class="home-layout page-columns page-full">
-    <!-- Combined Left Sidebar -->
-    <aside class="home-sidebar">
-      <div class="sidebar-sticky-content">
-        <div class="sidebar-section">
-          <h3 class="anchored">Articles &amp; Theory</h3>
-          <ul class="resource-links">
-            <li><a href="drifter-manifesto.html">Drifter Manifesto</a></li>
-            <li><a href="articles.html">All Articles</a></li>
-            <li><a href="research-reviews.html">Research Reviews</a></li>
-            <li><a href="book-reviews.html">Book Reviews</a></li>
-            <li><a href="bibliography.html">Bibliography</a></li>
-            <li><a href="overview.html">Technical Overview</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Models &amp; Simulations</h3>
-          <ul class="resource-links">
-            <li><a href="models.html">Models Home</a></li>
-            <li><a href="models-simulink.html">MATLAB Simulink</a></li>
-            <li><a href="models-mujoco.html">MuJoCo Models</a></li>
-            <li><a href="models-drake.html">Drake Models</a></li>
-            <li><a href="models-pinocchio.html">Pinocchio Models</a></li>
-            <li><a href="models-opensim.html">OpenSim Models</a></li>
-            <li><a href="models-myosim.html">MyoSim Models</a></li>
-          </ul>
-        </div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This reference document summarizes the Lagrangian formulation of multibody mechanical systems and shows how the control-affine structure</p>
+<p><span class="math display">\[
+\dot{x} = f(x) + G(x)u
+\]</span></p>
+<p>arises naturally from first principles. It also clarifies how the drift and input components correspond to potential, kinetic, and generalized non-conservative forces, including those associated with a flexible shaft.</p>
+</section>
+<section id="configuration-space-and-generalized-coordinates" class="level2">
+<h2 class="anchored" data-anchor-id="configuration-space-and-generalized-coordinates">Configuration Space and Generalized Coordinates</h2>
+<p>Let <span class="math inline">\(q \in \mathbb{R}^n\)</span> denote the generalized coordinates describing the rigid-body configuration of the system (e.g., joint angles, trunk rotation). Let <span class="math inline">\(x_s \in \mathbb{R}^k\)</span> denote additional generalized coordinates representing shaft deformation modes (e.g., bending, torsion). We define the extended coordinate vector</p>
+<p><span class="math display">\[
+q_{\mathrm{ext}} = \begin{bmatrix} q \\ x_s \end{bmatrix} \in \mathbb{R}^{n+k}.
+\]</span></p>
+<p>The corresponding generalized velocities are <span class="math inline">\(\dot{q}\)</span> and <span class="math inline">\(\dot{x}_s\)</span>, and we collect them in</p>
+<p><span class="math display">\[
+\dot{q}_{\mathrm{ext}} = \begin{bmatrix} \dot{q} \\ \dot{x}_s \end{bmatrix}.
+\]</span></p>
+</section>
+<section id="lagrangian-kinetic-and-potential-energy" class="level2">
+<h2 class="anchored" data-anchor-id="lagrangian-kinetic-and-potential-energy">Lagrangian: Kinetic and Potential Energy</h2>
+<p>The Lagrangian is defined as</p>
+<p><span class="math display">\[
+\mathcal{L}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) = T(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) - V(q_{\mathrm{ext}}),
+\]</span></p>
+<p>where <span class="math inline">\(T\)</span> is the total kinetic energy and <span class="math inline">\(V\)</span> is the total potential energy.</p>
+<p>For an articulated rigid-body system with flexible shaft modes, the kinetic energy can be written in quadratic form:</p>
+<p><span class="math display">\[
+T = \frac{1}{2}\dot{q}_{\mathrm{ext}}^\top M_{\mathrm{ext}}(q_{\mathrm{ext}}) \dot{q}_{\mathrm{ext}},
+\]</span></p>
+<p>where <span class="math inline">\(M_{\mathrm{ext}}(q_{\mathrm{ext}})\)</span> is the extended inertia matrix, symmetric and positive definite.</p>
+<p>The potential energy includes gravitational and elastic components:</p>
+<p><span class="math display">\[
+V(q_{\mathrm{ext}}) = V_{\mathrm{grav}}(q) + V_{\mathrm{shaft}}(x_s) + V_{\mathrm{geom}}(q,x_s),
+\]</span></p>
+<p>where <span class="math inline">\(V_{\mathrm{shaft}}\)</span> accounts for shaft bending/torsion and <span class="math inline">\(V_{\mathrm{geom}}\)</span> captures configuration-dependent geometric terms.</p>
+</section>
+<section id="eulerlagrange-equations-with-generalized-forces" class="level2">
+<h2 class="anchored" data-anchor-id="eulerlagrange-equations-with-generalized-forces">Euler–Lagrange Equations with Generalized Forces</h2>
+<p>The Euler–Lagrange equations for generalized coordinates <span class="math inline">\(q_{\mathrm{ext}}\)</span> are</p>
+<p><span class="math display">\[
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\mathrm{ext}}}\right)
+-
+\frac{\partial \mathcal{L}}{\partial q_{\mathrm{ext}}}
+=
+Q_{\mathrm{ext}},
+\]</span></p>
+<p>where <span class="math inline">\(Q_{\mathrm{ext}}\)</span> are the generalized non-conservative forces.</p>
+<p>We partition <span class="math inline">\(Q_{\mathrm{ext}}\)</span> as</p>
+<p><span class="math display">\[
+Q_{\mathrm{ext}} =
+\begin{bmatrix}
+Q_q \\ Q_s
+\end{bmatrix},
+\]</span></p>
+<p>where <span class="math inline">\(Q_q\)</span> corresponds to torques at the actuated joints and <span class="math inline">\(Q_s\)</span> corresponds to generalized forces associated with shaft modes. Typically,</p>
+<p><span class="math display">\[
+Q_q = \tau_{\mathrm{app}} + Q_{q,\mathrm{nc}}, \qquad Q_s = Q_{s,\mathrm{nc}},
+\]</span></p>
+<p>with <span class="math inline">\(\tau_{\mathrm{app}}\)</span> the applied joint torques, and <span class="math inline">\(Q_{(\cdot),\mathrm{nc}}\)</span> representing additional non-conservative effects such as damping.</p>
+</section>
+<section id="manipulator-form-from-lagrange" class="level2">
+<h2 class="anchored" data-anchor-id="manipulator-form-from-lagrange">Manipulator Form from Lagrange</h2>
+<p>Expanding the Euler–Lagrange equations yields the standard manipulator form for the extended system:</p>
+<p><span class="math display">\[
+M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
++
+C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
++
+G_{\mathrm{ext}}(q_{\mathrm{ext}})
++
+\tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+=
+Q_{\mathrm{ext}},
+\]</span></p>
+<p>where: - <span class="math inline">\(M_{\mathrm{ext}}(q_{\mathrm{ext}})\)</span> is the extended inertia matrix,</p>
+<ul>
+<li><p><span class="math inline">\(C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}\)</span> contains Coriolis and centrifugal terms,</p></li>
+<li><p><span class="math inline">\(G_{\mathrm{ext}}(q_{\mathrm{ext}}) = \partial V/\partial q_{\mathrm{ext}}\)</span> contains gravitational and elastic contributions,</p></li>
+<li><p><span class="math inline">\(\tau_{\mathrm{passive,ext}}\)</span> gathers additional modeled passive effects (e.g.&nbsp;damping).</p></li>
+</ul>
+<p>For actuated joints with input <span class="math inline">\(u \in \mathbb{R}^m\)</span>, we express</p>
+<p><span class="math display">\[
+Q_{\mathrm{ext}} =
+\begin{bmatrix}
+B u + Q_{q,\mathrm{nc}} \\
+Q_{s,\mathrm{nc}}
+\end{bmatrix},
+\]</span></p>
+<p>where <span class="math inline">\(B\)</span> maps inputs to generalized joint torques.</p>
+</section>
+<section id="drift-and-input-decomposition" class="level2">
+<h2 class="anchored" data-anchor-id="drift-and-input-decomposition">Drift and Input Decomposition</h2>
+<p>We define the extended drift generalized forces as</p>
+<p><span class="math display">\[
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+=
+- \left[
+C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
++ G_{\mathrm{ext}}(q_{\mathrm{ext}})
++ \tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+- Q_{\mathrm{ext,noninput}}
+\right],
+\]</span></p>
+<p>where <span class="math inline">\(Q_{\mathrm{ext,noninput}}\)</span> groups non-input generalized forces (e.g., certain non-conservative terms). The input generalized forces are</p>
+<p><span class="math display">\[
+\tau_{\mathrm{input,ext}} =
+\begin{bmatrix}
+B u \\ 0
+\end{bmatrix}.
+\]</span></p>
+<p>Then the extended equation of motion becomes</p>
+<p><span class="math display">\[
+M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
+=
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
++
+\tau_{\mathrm{input,ext}}.
+\]</span></p>
+</section>
+<section id="first-order-state-form-and-control-affine-structure" class="level2">
+<h2 class="anchored" data-anchor-id="first-order-state-form-and-control-affine-structure">First-Order State Form and Control-Affine Structure</h2>
+<p>Define the extended state</p>
+<p><span class="math display">\[
+x =
+\begin{bmatrix}
+q_{\mathrm{ext}} \\
+\dot{q}_{\mathrm{ext}}
+\end{bmatrix},
+\]</span></p>
+<p>and write</p>
+<p><span class="math display">\[
+\dot{x} =
+\begin{bmatrix}
+\dot{q}_{\mathrm{ext}} \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\begin{bmatrix} B \\ 0 \end{bmatrix}
+\end{bmatrix} u.
+\]</span></p>
+<p>Define</p>
+<p><span class="math display">\[
+f(x) =
+\begin{bmatrix}
+\dot{q}_{\mathrm{ext}} \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
+\end{bmatrix},
+\qquad
+G(x) =
+\begin{bmatrix}
+0 \\
+M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
+\begin{bmatrix} B \\ 0 \end{bmatrix}
+\end{bmatrix}.
+\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[
+\dot{x} = f(x) + G(x)u,
+\]</span></p>
+<p>which is exactly the control-affine structure used throughout the main text.</p>
+</section>
+<section id="role-of-gravity-and-flexible-shaft-in-lagrangian-terms" class="level2">
+<h2 class="anchored" data-anchor-id="role-of-gravity-and-flexible-shaft-in-lagrangian-terms">Role of Gravity and Flexible Shaft in Lagrangian Terms</h2>
+<p>In the Lagrangian framework, gravity arises as part of the potential energy <span class="math inline">\(V_{\mathrm{grav}}(q)\)</span>, and hence appears in <span class="math inline">\(G_{\mathrm{ext}}(q_{\mathrm{ext}})\)</span>. Shaft elasticity is included in <span class="math inline">\(V_{\mathrm{shaft}}(x_s)\)</span>, and any associated non-conservative terms (e.g.&nbsp;shaft damping) appear in <span class="math inline">\(\tau_{\mathrm{passive,ext}}\)</span>. Both gravity and shaft contributions enter the drift term and do not modify the linear dependence on <span class="math inline">\(u\)</span>.</p>
+</section>
+<section id="connection-to-ztcf-and-zvcf" class="level2">
+<h2 class="anchored" data-anchor-id="connection-to-ztcf-and-zvcf">Connection to ZTCF and ZVCF</h2>
+<p>From the Lagrangian viewpoint: - ZTCF corresponds to setting <span class="math inline">\(u = 0\)</span> in the Euler–Lagrange equations, so that <span class="math display">\[
+M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
+\]</span> and the motion is governed solely by the drift.</p>
+<ul>
+<li>ZVCF corresponds to freezing <span class="math inline">\(q_{\mathrm{ext}}\)</span> and <span class="math inline">\(\dot{q}_{\mathrm{ext}}\)</span> and disabling drift contributions (including gravity), so that the only remaining generalized forces come from <span class="math inline">\(\tau_{\mathrm{input,ext}} = [B u; 0]^\top\)</span>. Thus the Lagrangian formulation supports the same drift–input decomposition and counterfactual constructions as the Newton–Euler and screw-theoretic formulations.</li>
+</ul>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>The Lagrangian formalism provides a principled route from kinetic and potential energy to the manipulator equations, and from there to the control-affine state-space representation. Drift dynamics collect all velocity-dependent, gravitational, and elastic effects, including those of a flexible shaft, while inputs enter linearly via the actuator mapping. This alignment with the control-affine structure underpins the theoretical framework developed in the main body of the work.</p>
 
-        <div class="sidebar-section">
-          <h3 class="anchored">Learning Resources</h3>
-          <ul class="resource-links">
-            <li><a href="resources-videos.html">Educational Videos</a></li>
-            <li><a href="resources-books.html">Books</a></li>
-            <li><a href="resources-papers.html">Research Papers</a></li>
-            <li><a href="resources-websites.html">Websites</a></li>
-            <li><a href="resources-datasets.html">Datasets</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Software &amp; Tools</h3>
-          <ul class="resource-links">
-            <li><a href="resources-software.html">Software Tools</a></li>
-            <li><a href="tools.html">Interactive Tools</a></li>
-            <li><a href="resources-researchers.html">Researchers</a></li>
-            <li><a href="resources-notebooklm.html">NotebookLM</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Repositories</h3>
-          <ul class="resource-links">
-            <li><a href="repositories.html">Code Repositories</a></li>
-            <li><a href="repositories-models.html">Model Collections</a></li>
-            <li><a href="repositories-2d-model.html">2D Models</a></li>
-            <li><a href="repositories-3d-model.html">3D Models</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3 class="anchored">Connect</h3>
-          <ul class="resource-links">
-            <li><a href="about.html">About Dieter</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="collaborate.html">Collaborate</a></li>
-          </ul>
-        </div>
-      </div>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="home-content">
-      
-      <div class="home-text">
-        <p>
-          This website at its heart is an attempt to build a website I would like to read. I am an avid golf researcher with an interest in robotics and the mechanics of linked systems. After scouring the web for resources I finally came to the realization that I could just build the website I was looking for with the articles and resources that I was trying to track down.
-        </p>
-        
-        <p>
-          Rather than trying to organize my notes offline across multiple devices and formats, why not collect them together in a unified place where others who are also interested can find value in them. To achieve this goal, I have leaned heavily on the assistance of AI models in developing and troubleshooting code and building the website.
-        </p>
-        
-        <p>
-          Rather than curate the website myself, I have outlined articles and topics I would like to build or resources that I would like to see and then fed them to AI and importantly - iterated to improve quality. While much of AI generated golf content can end up as correlational gibberish, there can be significant value when you know how to use it right.
-        </p>
-        <p>
-          Rather than asking it for answers, ask it to provide mathematical expressions that can be validated. Ask it to write code that can be reviewed. Ask it to track down sources and links for further information. Every time an article is posted, it is reviewed overnight by automated bots. Feedback is then delivered the following morning. It has been a fun process setting up guardrails to help AI give the most value.
-        </p>
-
-        <div class="math-showcase">
-          $$\dot{x} = f(x) + g(x)u$$
-        </div>
-
-        <p>
-          The agents reviewing the site have different personas. There are editors attempting to improve the fluidity and prose. There is a curator coming up with new topics or avenues to explore. There is a librarian at work in the background curating a crosslinked bibliography of all of the sources that are available. There are mathematicians and mechanics scouring the equations and validating and debugging them.
-        </p>
-        
-        <p>
-          Importantly, there are also critics. My goal here is not to hide weakness, but identify it and explore it. The edge cases and shortcomings of a given paradigm often hold extreme value. There is an agent to defend and shore up any technical shortcomings identified by the critics.
-        </p>
-        
-        <p>
-          By no means is the website intended to be exhaustive or comprehensive. It is just a place to store resources for myself and construct a technical argument towards the understanding of the viewpoint of the golf swing that I have developed through my years of study. This argument and the site are not complete, nor will they ever be. They will evolve and adapt when new information is identified.
-        </p>
-        
-        <p>
-          If this information is of interest to you, feel free to use and share however you choose. I don't care too much about citations personally, but if the information comes from other authors whose work I have linked here, please give credit where credit is due.
-        </p>
-        
-        <p>
-          Researching the golf swing is an often fruitless endeavor where you will encounter more than your fair share of critics. An atta boy or tip of the cap to those providing research into the topics we are all mutually interested in is in order when you find something to help you on your way.
-        </p>
-      </div>
-    </main>
-  </div>
-</div>
-
-<!-- Styles moved to styles.css - Home Page Layout section -->
-
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

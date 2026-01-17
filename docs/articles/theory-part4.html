@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-01-16">
+<meta name="description" content="Modal approximations, wrench decomposition, and pendulum dynamics with detailed mathematical derivations for golf swing biomechanics.">
+
+<title>Affine Control Interpretation of the Golf Swing — Part 4 – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarTools = document.querySelector('.quarto-navbar-tools');
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
+    }
+  });
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Models</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
+        <li>
+    <a class="dropdown-item" href="../models.html">
+ <span class="dropdown-text">Models Home</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-simulink.html">
+ <span class="dropdown-text">Matlab Simulink</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-mujoco.html">
+ <span class="dropdown-text">MuJoCo</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-drake.html">
+ <span class="dropdown-text">Drake</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pinocchio.html">
+ <span class="dropdown-text">Pinocchio</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-pendulum.html">
+ <span class="dropdown-text">Pendulum</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-opensim.html">
+ <span class="dropdown-text">OpenSim</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../models-myosim.html">
+ <span class="dropdown-text">MyoSim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#appendices" id="toc-appendices" class="nav-link active" data-scroll-target="#appendices">Appendices</a>
+  <ul class="collapse">
+  <li><a href="#appendix-a-mathematical-derivations" id="toc-appendix-a-mathematical-derivations" class="nav-link" data-scroll-target="#appendix-a-mathematical-derivations">Appendix A: Mathematical Derivations</a>
+  <ul class="collapse">
+  <li><a href="#coupled-rigidflexible-equations-of-motion" id="toc-coupled-rigidflexible-equations-of-motion" class="nav-link" data-scroll-target="#coupled-rigidflexible-equations-of-motion">Coupled rigid–flexible equations of motion</a></li>
+  <li><a href="#block-structure-of-the-inertia-and-coriolis-matrices" id="toc-block-structure-of-the-inertia-and-coriolis-matrices" class="nav-link" data-scroll-target="#block-structure-of-the-inertia-and-coriolis-matrices">Block structure of the inertia and Coriolis matrices</a></li>
+  <li><a href="#solving-for-accelerations" id="toc-solving-for-accelerations" class="nav-link" data-scroll-target="#solving-for-accelerations">Solving for accelerations</a></li>
+  <li><a href="#drift-acceleration" id="toc-drift-acceleration" class="nav-link" data-scroll-target="#drift-acceleration">Drift acceleration</a></li>
+  <li><a href="#input-acceleration-mapping" id="toc-input-acceleration-mapping" class="nav-link" data-scroll-target="#input-acceleration-mapping">Input acceleration mapping</a></li>
+  <li><a href="#first-order-state-space-affine-form" id="toc-first-order-state-space-affine-form" class="nav-link" data-scroll-target="#first-order-state-space-affine-form">First-order state-space (affine) form</a></li>
+  </ul></li>
+  <li><a href="#appendix-b-modal-approximation-for-the-flexible-shaft" id="toc-appendix-b-modal-approximation-for-the-flexible-shaft" class="nav-link" data-scroll-target="#appendix-b-modal-approximation-for-the-flexible-shaft">Appendix B: Modal Approximation for the Flexible Shaft</a>
+  <ul class="collapse">
+  <li><a href="#continuous-beam-model" id="toc-continuous-beam-model" class="nav-link" data-scroll-target="#continuous-beam-model">Continuous beam model</a></li>
+  <li><a href="#modal-expansion" id="toc-modal-expansion" class="nav-link" data-scroll-target="#modal-expansion">Modal expansion</a></li>
+  <li><a href="#modal-equations-of-motion" id="toc-modal-equations-of-motion" class="nav-link" data-scroll-target="#modal-equations-of-motion">Modal equations of motion</a></li>
+  <li><a href="#preservation-of-linear-torque-input" id="toc-preservation-of-linear-torque-input" class="nav-link" data-scroll-target="#preservation-of-linear-torque-input">Preservation of linear torque input</a></li>
+  </ul></li>
+  <li><a href="#appendix-c-pendulum-examples" id="toc-appendix-c-pendulum-examples" class="nav-link" data-scroll-target="#appendix-c-pendulum-examples">Appendix C: Pendulum Examples</a>
+  <ul class="collapse">
+  <li><a href="#planar-rigid-pendulum-with-torque-input" id="toc-planar-rigid-pendulum-with-torque-input" class="nav-link" data-scroll-target="#planar-rigid-pendulum-with-torque-input">Planar rigid pendulum with torque input</a></li>
+  <li><a href="#planar-pendulum-with-flexible-shaft" id="toc-planar-pendulum-with-flexible-shaft" class="nav-link" data-scroll-target="#planar-pendulum-with-flexible-shaft">Planar pendulum with flexible shaft</a></li>
+  <li><a href="#summary-superposition-and-affine-structure" id="toc-summary-superposition-and-affine-structure" class="nav-link" data-scroll-target="#summary-superposition-and-affine-structure">Summary: Superposition and affine structure</a></li>
+  </ul></li>
+  <li><a href="#transition-to-numerical-validation-part-v" id="toc-transition-to-numerical-validation-part-v" class="nav-link" data-scroll-target="#transition-to-numerical-validation-part-v">Transition to Numerical Validation (Part V)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Affine Control Interpretation of the Golf Swing — Part 4</h1>
+<p class="subtitle lead">Modal Approximation, Wrenches, and Pendulum Dynamics</p>
+</div>
+
+<div>
+  <div class="description">
+    Modal approximations, wrench decomposition, and pendulum dynamics with detailed mathematical derivations for golf swing biomechanics.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="appendices" class="level1">
+<h1>Appendices</h1>
+<p>The preceding parts of this manuscript have established the conceptual framework (Part I), the diagnostic tools (Part II), and the classification taxonomy (Part III) for the affine control interpretation of the golf swing. These sections relied on the assertion that the complex multibody dynamics of the golfer–club–shaft system can be rigorously cast into the control-affine form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>.</p>
+<p>This Part IV collects the detailed mathematical proofs that substantiate those assertions. We explicitly derive the equations of motion for the coupled rigid–flexible system, demonstrate the preservation of the affine structure under modal truncation, and provide illustrative low-dimensional examples to build intuition.</p>
+<section id="appendix-a-mathematical-derivations" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-a-mathematical-derivations">Appendix A: Mathematical Derivations</h2>
+<p>This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid–flexible dynamics produce the affine decomposition</p>
+<p><span class="math display">\[\dot{x} = f(x) + g(x)u\]</span></p>
+<p>and to document all assumptions required for the formulation.</p>
+<section id="coupled-rigidflexible-equations-of-motion" class="level3">
+<h3 class="anchored" data-anchor-id="coupled-rigidflexible-equations-of-motion">Coupled rigid–flexible equations of motion</h3>
+<p>We partition the generalized coordinates into</p>
+<p><span class="math display">\[q \in \mathbb{R}^{n}, \qquad \eta \in \mathbb{R}^{m},\]</span></p>
+<p>where <span class="math inline">\(q\)</span> describes the rigid-body degrees of freedom and <span class="math inline">\(\eta\)</span> contains the modal coordinates of the flexible shaft.</p>
+<p>Let</p>
+<p><span class="math display">\[v = \begin{bmatrix} \dot{q} \\ \dot{\eta} \end{bmatrix}\]</span></p>
+<p>denote the generalized velocity.</p>
+<p>The equations of motion for the coupled system may be written in compact form:</p>
+<p><span class="math display">\[M(q,\eta)\,\dot{v}
+  +
+  C(q,\dot{q},\eta,\dot{\eta})\,v
+  +
+  G(q)
+  +
+  F_{s}(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    \tau \\[0.2em]
+    0
+  \end{bmatrix},\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(M(q,\eta)\)</span> is the full inertia matrix of the rigid–flexible system,</li>
+<li><span class="math inline">\(C(q,\dot{q},\eta,\dot{\eta})\)</span> contains Coriolis and centrifugal terms,</li>
+<li><span class="math inline">\(G(q)\)</span> contains gravitational torques acting on the rigid-body DOFs,</li>
+<li><span class="math inline">\(F_{s}(\eta,\dot{\eta}) = \begin{bmatrix} 0 \\ K_s \eta + C_s \dot{\eta} \end{bmatrix}\)</span> contains shaft restoring and damping forces,</li>
+<li><span class="math inline">\(\tau = B(q)\,u\)</span> is the generalized torque vector induced by the input <span class="math inline">\(u\)</span>.</li>
+</ul>
+<p>The flexible DOFs have no direct torque inputs.</p>
+</section>
+<section id="block-structure-of-the-inertia-and-coriolis-matrices" class="level3">
+<h3 class="anchored" data-anchor-id="block-structure-of-the-inertia-and-coriolis-matrices">Block structure of the inertia and Coriolis matrices</h3>
+<p>The inertia matrix has the block form</p>
+<p><span class="math display">\[M(q,\eta)
+  =
+  \begin{bmatrix}
+    M_{rr}(q,\eta) &amp; M_{rf}(q,\eta) \\
+    M_{fr}(q,\eta) &amp; M_{ff}(q,\eta)
+  \end{bmatrix},\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(M_{rr}\)</span> is the rigid-body inertia matrix,</li>
+<li><span class="math inline">\(M_{ff}\)</span> is the modal inertia matrix for the flexible shaft,</li>
+<li><span class="math inline">\(M_{rf}\)</span> and <span class="math inline">\(M_{fr}\)</span> represent rigid–flexible coupling.</li>
+</ul>
+<p>Similarly, the Coriolis matrix has the block structure:</p>
+<p><span class="math display">\[C(q,\dot{q},\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    C_{rr} &amp; C_{rf} \\
+    C_{fr} &amp; C_{ff}
+  \end{bmatrix},\]</span></p>
+<p>with the usual property that</p>
+<p><span class="math display">\[\dot{M} - 2C \quad \text{is skew-symmetric}.\]</span></p>
+<p>These blocks arise from standard manipulator equations extended to include flexible-body contributions.</p>
+</section>
+<section id="solving-for-accelerations" class="level3">
+<h3 class="anchored" data-anchor-id="solving-for-accelerations">Solving for accelerations</h3>
+<p>Writing <span class="math inline">\(\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}\)</span>, the equations of motion become:</p>
+<p><span class="math display">\[M
+  \begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  -
+  C
+  \begin{bmatrix}
+    \dot{q} \\ \dot{\eta}
+  \end{bmatrix}
+  -
+  G(q)
+  -
+  F_s(\eta,\dot{\eta})
+  +
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.\]</span></p>
+<p>Assuming <span class="math inline">\(M\)</span> is invertible (true for all admissible configurations of a well-defined multibody system), we solve for the generalized accelerations:</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{q} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  - M^{-1}
+  \left(
+    C\,v + G + F_{s}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    B(q)\,u \\ 0
+  \end{bmatrix}.\]</span></p>
+</section>
+<section id="drift-acceleration" class="level3">
+<h3 class="anchored" data-anchor-id="drift-acceleration">Drift acceleration</h3>
+<p>We define the drift acceleration as</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x)
+  =
+  -M^{-1}(q,\eta)
+  \left(
+    C(q,\dot{q},\eta,\dot{\eta})\,v
+    + G(q)
+    + F_{s}(\eta,\dot{\eta})
+  \right).\]</span></p>
+<p>All passive mechanical terms are explicitly included:</p>
+<ul>
+<li>inertia coupling,</li>
+<li>Coriolis and centripetal terms,</li>
+<li>gravity,</li>
+<li>elastic and damping forces from shaft deformation.</li>
+</ul>
+<p>Importantly,</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x) \quad \text{is independent of } u.\]</span></p>
+<p>This constitutes the <em>drift invariance</em> property formalized in the main text.</p>
+</section>
+<section id="input-acceleration-mapping" class="level3">
+<h3 class="anchored" data-anchor-id="input-acceleration-mapping">Input acceleration mapping</h3>
+<p>The input-driven acceleration is the part proportional to <span class="math inline">\(u\)</span>. We can expand the inverse inertia matrix <span class="math inline">\(M^{-1}\)</span> in block form. Let <span class="math inline">\(H = M^{-1}\)</span>. Its structure reflects the full coupling: <span class="math display">\[H(q,\eta) = \begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}.\]</span> The acceleration equation becomes: <span class="math display">\[\begin{bmatrix} \ddot{q} \\ \ddot{\eta} \end{bmatrix}_{\text{input}} =
+\begin{bmatrix} H_{qq} &amp; H_{q\eta} \\ H_{\eta q} &amp; H_{\eta\eta} \end{bmatrix}
+\begin{bmatrix} B(q)u \\ 0 \end{bmatrix}
+=
+\begin{bmatrix} H_{qq} B(q) u \\ H_{\eta q} B(q) u \end{bmatrix}.\]</span> Thus, the input torque <span class="math inline">\(u\)</span> drives the rigid body accelerations <span class="math inline">\(\ddot{q}\)</span> through the effective inertia <span class="math inline">\(H_{qq}\)</span>, and simultaneously drives the flexible mode accelerations <span class="math inline">\(\ddot{\eta}\)</span> through the inertial coupling term <span class="math inline">\(H_{\eta q}\)</span>.</p>
+<p>The input matrix is:</p>
+<p><span class="math display">\[A_{\mathrm{input}}(x)
+  =
+  M^{-1}(q,\eta)
+  \begin{bmatrix}
+    B(q) \\ 0
+  \end{bmatrix}
+  =
+  \begin{bmatrix} H_{qq} B(q) \\ H_{\eta q} B(q) \end{bmatrix}.\]</span></p>
+<p>Linearity of the torque input is preserved even in the presence of:</p>
+<ul>
+<li>flexible-body modes,</li>
+<li>rigid–flexible coupling,</li>
+<li>configuration-dependent <span class="math inline">\(B(q)\)</span>,</li>
+<li>velocity-dependent <span class="math inline">\(C\)</span> terms.</li>
+</ul>
+</section>
+<section id="first-order-state-space-affine-form" class="level3">
+<h3 class="anchored" data-anchor-id="first-order-state-space-affine-form">First-order state-space (affine) form</h3>
+<p>Define the full state</p>
+<p><span class="math display">\[x = \begin{bmatrix}
+    q \\ \dot{q} \\ \eta \\ \dot{\eta}
+  \end{bmatrix}.\]</span></p>
+<p>The first-order dynamics follow directly from the definitions:</p>
+<p><span class="math display">\[\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{q} \\ \ddot{q} \\ \dot{\eta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  f(x) + g(x)u,\]</span></p>
+<p>with</p>
+<p><span class="math display">\[f(x)
+  =
+  \begin{bmatrix}
+    \dot{q} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{1:n} \\[0.2em]
+    \dot{\eta} \\[0.2em]
+    \left[a_{\mathrm{drift}}(x)\right]_{n+1:n+m}
+  \end{bmatrix},\]</span></p>
+<p><span class="math display">\[g(x)
+  =
+  \begin{bmatrix}
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{1:n,:} \\[0.2em]
+    0 \\[0.2em]
+    \left[A_{\mathrm{input}}(x)\right]_{n+1:n+m,:}
+  \end{bmatrix}.\]</span></p>
+<p>This establishes the nonlinear control-affine structure used throughout the manuscript.</p>
+</section>
+</section>
+<section id="appendix-b-modal-approximation-for-the-flexible-shaft" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-b-modal-approximation-for-the-flexible-shaft">Appendix B: Modal Approximation for the Flexible Shaft</h2>
+<p>This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid–flexible dynamics of the golfer–club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates <span class="math inline">\(\eta \in \mathbb{R}^{m}\)</span> used in the main text, and why this representation preserves the linearity of the torque input in the final control-affine form.</p>
+<section id="continuous-beam-model" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-beam-model">Continuous beam model</h3>
+<p>The golf shaft is modeled as a uniform Euler–Bernoulli beam of length <span class="math inline">\(L\)</span>, with transverse displacement field</p>
+<p><span class="math display">\[w(s,t), \qquad s \in [0,L],\]</span></p>
+<p>where <span class="math inline">\(s\)</span> is the arc-length coordinate from the butt (grip) end. For small deflections, the beam equation is</p>
+<p><span class="math display">\[\rho A \,\frac{\partial^2 w}{\partial t^2}
+  + c_b \frac{\partial w}{\partial t}
+  + EI \,\frac{\partial^4 w}{\partial s^4}
+  = f_{\mathrm{base}}(s,t),\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\rho A\)</span> is the linear mass density,</li>
+<li><span class="math inline">\(c_b\)</span> is distributed damping,</li>
+<li><span class="math inline">\(E I\)</span> is the bending rigidity,</li>
+<li><span class="math inline">\(f_{\mathrm{base}}(s,t)\)</span> contains forces transmitted from the handle motion.</li>
+</ul>
+<p>Boundary conditions depend on grip modeling. We assume:</p>
+<p><span class="math display">\[w(0,t) = 0, \qquad w_s(0,t) = 0,\]</span></p>
+<p>for a clamped handle, and free-tip conditions at <span class="math inline">\(s=L\)</span>:</p>
+<p><span class="math display">\[EI\,w_{ss}(L,t) = 0, \qquad EI\,w_{sss}(L,t) = 0.\]</span></p>
+<p>These constraints define the mode shapes used in the modal expansion.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Input-Dependent Boundary Conditions (Note on Grip Impedance)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Theoretically, the “clamped” boundary condition (<span class="math inline">\(w(0,t)=0, w_s(0,t)=0\)</span>) implies an infinitely stiff grip. In reality, grip impedance varies with muscle activation, which is part of the input <span class="math inline">\(u\)</span>. If the boundary conditions depended on <span class="math inline">\(u\)</span>, the mode shapes <span class="math inline">\(\phi_i\)</span> and consequently the mass matrix <span class="math inline">\(M\)</span> would become input-dependent (<span class="math inline">\(M(u)\)</span>), breaking the affine structure. To preserve the validity of the decomposition <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>, we formally adopt the <strong>Constant Impedance Assumption</strong>: the grip is treated as a fixed mechanical constraint defining the “Effective Plant” for the swing. The input <span class="math inline">\(u\)</span> is the torque applied <em>to</em> this plant, not a parameter that reshapes it.</p>
+</div>
+</div>
+</section>
+<section id="modal-expansion" class="level3">
+<h3 class="anchored" data-anchor-id="modal-expansion">Modal expansion</h3>
+<p>The transverse displacement is approximated using a finite set of vibration modes:</p>
+<p><span class="math display">\[w(s,t)
+  \approx
+  \sum_{i=1}^{m} \phi_i(s)\,\eta_i(t),\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\phi_i(s)\)</span> are the eigenfunctions of the beam operator with the boundary conditions above,</li>
+<li><span class="math inline">\(\eta_i(t)\)</span> are the modal amplitudes,</li>
+<li><span class="math inline">\(m\)</span> is the number of modes retained.</li>
+</ul>
+<p>The mode shapes satisfy the eigenvalue problem:</p>
+<p><span class="math display">\[EI \,\phi_i'''' = \omega_i^2 \rho A \,\phi_i,\]</span></p>
+<p>with orthogonality relations</p>
+<p><span class="math display">\[\int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.\]</span></p>
+<p>Substituting the modal expansion into the beam equation and projecting onto each <span class="math inline">\(\phi_i\)</span> yields the modal equations of motion.</p>
+</section>
+<section id="modal-equations-of-motion" class="level3">
+<h3 class="anchored" data-anchor-id="modal-equations-of-motion">Modal equations of motion</h3>
+<p>The projected dynamics have the form:</p>
+<p><span class="math display">\[\ddot{\eta}_i
+  + 2\,\zeta_i \omega_i\,\dot{\eta}_i
+  + \omega_i^2 \eta_i
+  =
+  Q_i(q,\dot{q}),\]</span></p>
+<p>for <span class="math inline">\(i = 1,\dots,m\)</span>, where:</p>
+<ul>
+<li><span class="math inline">\(\omega_i\)</span> is the natural frequency of mode <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\(\zeta_i\)</span> is the modal damping ratio (derived from <span class="math inline">\(c_b\)</span>),</li>
+<li><span class="math inline">\(Q_i(q,\dot{q})\)</span> are generalized modal forces induced by handle motion.</li>
+</ul>
+<p>Collecting terms,</p>
+<p><span class="math display">\[\ddot{\eta} + C_s \dot{\eta} + K_s \eta = Q(q,\dot{q}),\]</span></p>
+<p>where:</p>
+<p><span class="math display">\[K_s = \mathrm{diag}(\omega_1^2,\dots,\omega_m^2),\qquad
+C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).\]</span></p>
+<p>These matrices match those used in the main text, where the shaft forces enter the drift term.</p>
+</section>
+<section id="preservation-of-linear-torque-input" class="level3">
+<h3 class="anchored" data-anchor-id="preservation-of-linear-torque-input">Preservation of linear torque input</h3>
+<p>From the full equations of motion:</p>
+<p><span class="math display">\[M(q,\eta)\,\ddot{v} + C(q,\dot{q},\eta,\dot{\eta})\,v + G(q) + F_s(\eta,\dot{\eta})
+  =
+  \begin{bmatrix}
+    B(q)u \\ 0
+  \end{bmatrix},\]</span></p>
+<p>the modal forces enter entirely through the drift term:</p>
+<p><span class="math display">\[F_s(\eta,\dot{\eta}) =
+  \begin{bmatrix}
+    0 \\
+    K_s \eta + C_s \dot{\eta}
+  \end{bmatrix}.\]</span></p>
+<p>Because <span class="math inline">\(u\)</span> appears only in the block <span class="math inline">\(B(q)u\)</span> associated with rigid-body torques:</p>
+<p><span class="math display">\[u \mapsto \ddot{\eta} \quad \text{is filtered through} \quad \ddot{q}.\]</span></p>
+<p>Hence: <strong>The modal representation does not create any nonlinear torque dependence.</strong></p>
+<p>All flexible-body dynamics remain embedded in the drift vector field <span class="math inline">\(f(x)\)</span>.</p>
+</section>
+</section>
+<section id="appendix-c-pendulum-examples" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-c-pendulum-examples">Appendix C: Pendulum Examples</h2>
+<p>This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:</p>
+<ul>
+<li>a planar (2D) pendulum with and without a flexible shaft, and</li>
+<li>a spatial (3D) pendulum with and without a flexible shaft.</li>
+</ul>
+<p>In each case, we show that the equations of motion can be written as</p>
+<p><span class="math display">\[\dot{x} = f(x) + g(x)u,\]</span></p>
+<p>with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input <span class="math inline">\(u\)</span>.</p>
+<section id="planar-rigid-pendulum-with-torque-input" class="level3">
+<h3 class="anchored" data-anchor-id="planar-rigid-pendulum-with-torque-input">Planar rigid pendulum with torque input</h3>
+<p>Consider a simple planar pendulum of length <span class="math inline">\(L\)</span> and mass <span class="math inline">\(m\)</span>, pivoted at the origin and moving in the vertical plane. Let <span class="math inline">\(\theta\)</span> be the angle from the downward vertical, positive counterclockwise. A torque input <span class="math inline">\(u\)</span> is applied at the pivot.</p>
+<p>The kinetic and potential energy are:</p>
+<p><span class="math display">\[T = \frac{1}{2} m L^2 \dot{\theta}^2, \qquad
+V = m g L (1 - \cos\theta),\]</span></p>
+<p>and the Lagrangian is <span class="math inline">\(\mathcal{L} = T - V\)</span>.</p>
+<p>The Euler–Lagrange equation with generalized torque <span class="math inline">\(u\)</span> is:</p>
+<p><span class="math display">\[m L^2 \ddot{\theta} + m g L \sin\theta = u.\]</span></p>
+<p>Defining the state <span class="math inline">\(x = [\theta, \dot{\theta}]^T\)</span>, we obtain the first-order system:</p>
+<p><span class="math display">\[\dot{x}
+  =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix} u.\]</span></p>
+<p>Thus,</p>
+<p><span class="math display">\[f(x) =
+  \begin{bmatrix}
+    \dot{\theta} \\
+    -\frac{g}{L} \sin\theta
+  \end{bmatrix},
+  \qquad
+  g(x) =
+  \begin{bmatrix}
+    0 \\
+    \frac{1}{m L^2}
+  \end{bmatrix},\]</span></p>
+<p>and the system is clearly control-affine.</p>
+</section>
+<section id="planar-pendulum-with-flexible-shaft" class="level3">
+<h3 class="anchored" data-anchor-id="planar-pendulum-with-flexible-shaft">Planar pendulum with flexible shaft</h3>
+<p>We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let <span class="math inline">\(\eta\)</span> be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.</p>
+<p>The resulting equations of motion can be written schematically as:</p>
+<p><span class="math display">\[M(\theta,\eta)
+  \begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  +
+  C(\theta,\dot{\theta},\eta,\dot{\eta})
+  \begin{bmatrix}
+    \dot{\theta} \\[0.2em]
+    \dot{\eta}
+  \end{bmatrix}
+  +
+  G(\theta,\eta)
+  +
+  \begin{bmatrix}
+    0 \\[0.2em]
+    k_\eta \eta + c_\eta \dot{\eta}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    u \\[0.2em]
+    0
+  \end{bmatrix},\]</span></p>
+<p>where <span class="math inline">\(k_\eta\)</span> and <span class="math inline">\(c_\eta\)</span> are the modal stiffness and damping, and all coupling terms have been absorbed into the matrices <span class="math inline">\(M,C,G\)</span>.</p>
+<p>Solving for accelerations:</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{\theta} \\[0.2em]
+    \ddot{\eta}
+  \end{bmatrix}
+  =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right)
+  +
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix} u.\]</span></p>
+<p>Defining</p>
+<p><span class="math display">\[a_{\mathrm{drift}}(x) =
+  -M^{-1}
+  \left(
+    C
+    \begin{bmatrix}
+      \dot{\theta} \\ \dot{\eta}
+    \end{bmatrix}
+    + G +
+    \begin{bmatrix}
+      0 \\ k_\eta \eta + c_\eta \dot{\eta}
+    \end{bmatrix}
+  \right),
+  \qquad
+  A_{\mathrm{input}}(x) =
+  M^{-1}
+  \begin{bmatrix}
+    1 \\ 0
+  \end{bmatrix},\]</span></p>
+<p>we obtain</p>
+<p><span class="math display">\[\begin{bmatrix}
+    \ddot{\theta} \\ \ddot{\eta}
+  \end{bmatrix}
+  =
+  a_{\mathrm{drift}}(x) + A_{\mathrm{input}}(x)\,u.\]</span></p>
+<p><strong>Superposition still holds.</strong> Even though the dynamics are now richer and nonlinear in <span class="math inline">\((\theta,\eta)\)</span>, the torque input still appears linearly as <span class="math inline">\(A_{\mathrm{input}}(x)\,u\)</span>. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs <span class="math inline">\(u_1,u_2\)</span> differ by the same linear map <span class="math inline">\(A_{\mathrm{input}}(x)\)</span> applied to the difference in inputs.</p>
+</section>
+<section id="summary-superposition-and-affine-structure" class="level3">
+<h3 class="anchored" data-anchor-id="summary-superposition-and-affine-structure">Summary: Superposition and affine structure</h3>
+<p>Across all cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:</p>
+<ul>
+<li>Flexible dynamics (shaft modes) modify the drift term <span class="math inline">\(f(x)\)</span> by adding state-dependent inertia, Coriolis, and restoring forces.</li>
+<li>The torque input <span class="math inline">\(u\)</span> enters linearly through an input matrix <span class="math inline">\(g(x)\)</span> that depends only on configuration and flexible coordinates, not on <span class="math inline">\(u\)</span>.</li>
+<li>For any fixed state <span class="math inline">\(x\)</span>, the acceleration (and hence <span class="math inline">\(\dot{x}\)</span>) is an affine function of <span class="math inline">\(u\)</span>; the passive part and active part superpose exactly.</li>
+</ul>
+<p>These examples provide explicit, low-dimensional realizations of the general control-affine structure used in the main text and highlight why the drift–input decomposition, ZTCF, and ZVCF constructions remain valid and interpretable in the presence of shaft flexibility.</p>
+</section>
+</section>
+<section id="transition-to-numerical-validation-part-v" class="level2">
+<h2 class="anchored" data-anchor-id="transition-to-numerical-validation-part-v">Transition to Numerical Validation (Part V)</h2>
+<p>The derivations in this appendix confirm the <strong>algebraic</strong> consistency of the AffineDrift framework. We have shown that the control-affine form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span> is not an approximation but a direct consequence of Lagrangian mechanics, preserved even under modal truncation of the flexible shaft.</p>
+<p>However, algebraic exactness in continuous time does not guarantee numerical stability in discrete-time simulation. The golf swing involves stiff differential equations (high-frequency shaft modes) and rapid gyroscopic coupling. It is not immediately obvious that the delicate subtraction operations required for the ZTCF (<span class="math inline">\(u=0\)</span>) and ZVCF (<span class="math inline">\(v=0\)</span>) will remain robust under integration error.</p>
+<p><strong>Part V</strong> addresses this practical challenge. It documents the Simulink forward-dynamics implementation used to validate these concepts, serving as the “numerical proof-of-concept” that bridges the gap between the clean derivations of Part IV and the messy empirical reality of the experimental applications.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script src="script.js"></script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>
