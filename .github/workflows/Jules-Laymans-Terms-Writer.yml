@@ -94,6 +94,8 @@ jobs:
 
       - name: Check Review Counts and Select Target
         id: select
+        env:
+          MODE: ${{ steps.scan.outputs.mode }}
         run: |
           REVIEW_LOG="${{ env.REVIEW_LOG }}"
           MAX_REVIEWS=5
@@ -106,7 +108,7 @@ jobs:
 
           review_log_path = os.environ.get('REVIEW_LOG', '.jules/review_logs/laymans_reviews.json')
           max_reviews = 5
-          mode = "${{ steps.scan.outputs.mode }}"
+          mode = os.environ.get('MODE', 'create')
 
           # Load review log
           try:
@@ -253,13 +255,15 @@ jobs:
 
       - name: Update Review Log
         if: steps.select.outputs.skip != 'true'
+        env:
+          TARGET: ${{ steps.select.outputs.target }}
         run: |
           python3 << 'PYEOF'
           import json
           import os
 
           review_log_path = os.environ.get('REVIEW_LOG', '.jules/review_logs/laymans_reviews.json')
-          target = "${{ steps.select.outputs.target }}"
+          target = os.environ.get('TARGET', '')
 
           try:
               with open(review_log_path, 'r') as f:

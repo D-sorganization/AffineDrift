@@ -96,6 +96,7 @@ jobs:
         id: select
         env:
           REVIEW_LOG_PATH: ${{ env.REVIEW_LOG }}
+          MODE: ${{ steps.scan.outputs.mode }}
         run: |
           MAX_REVIEWS=5
 
@@ -107,7 +108,7 @@ jobs:
 
           review_log_path = os.environ.get('REVIEW_LOG_PATH', '.jules/review_logs/critics_reviews.json')
           max_reviews = 5
-          mode = "${{ steps.scan.outputs.mode }}"
+          mode = os.environ.get('MODE', 'create')
 
           # Load review log
           try:
@@ -265,13 +266,14 @@ jobs:
         if: steps.select.outputs.skip != 'true'
         env:
           REVIEW_LOG_PATH: ${{ env.REVIEW_LOG }}
+          TARGET: ${{ steps.select.outputs.target }}
         run: |
           python3 << 'PYEOF'
           import json
           import os
 
           review_log_path = os.environ.get('REVIEW_LOG_PATH', '.jules/review_logs/critics_reviews.json')
-          target = "${{ steps.select.outputs.target }}"
+          target = os.environ.get('TARGET', '')
 
           try:
               with open(review_log_path, 'r') as f:
