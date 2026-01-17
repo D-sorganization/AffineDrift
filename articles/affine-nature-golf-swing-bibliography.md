@@ -3,14 +3,12 @@
 ## A) Concept Map
 
 - **System Modeling**
-
   - **Multibody Dynamics**: Modeling the golfer as a kinematic chain of rigid bodies.
   - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
   - **Drift Invariance**: The property that passive dynamics $f(x)$ are independent of instantaneous torque inputs $u$.
   - **Flexible Multibody Dynamics**: Modeling the shaft using Assumed Modes Method (AMM) within the rigid-body framework.
 
 - **Force Decomposition**
-
   - **Drift Dynamics**: Passive forces from inertia, Coriolis/centrifugal effects, gravity, and shaft elasticity.
   - **Input Dynamics**: Active forces arising purely from generalized joint torques.
   - **Counterfactuals**:
@@ -18,15 +16,20 @@
     - **Zero Velocity Counterfactual (ZVCF)**: Instantaneous evaluation at $\dot{x}=0$ to isolate configuration-dependent loads (gravity, stiffness).
 
 - **Causal Analysis**
-
   - **Mechanical Causality**: Attributing motion to physical mechanisms (inertia vs. torque) rather than neural intent.
   - **Force Taxonomy**: Classification of total force into Configuration Drift, Velocity Drift, Input, and Mixed components.
+
+- **Advanced Critiques & Limitations**
+  - **Stiffness Pulse Paradox**: The conflict between drift invariance and rapid impedance modulation.
+  - **Effective Plant**: The task-dependent impedance landscape serving as the background for drift.
+  - **Intentional Constraint Collapse**: Using variable stiffness to alter the system's topology during the swing.
+  - **Teleological Blindness**: The inability of mechanical decomposition to infer purpose (e.g., braking vs. stabilizing).
 
 - **Key References**
   - **Murray, Li, Sastry**: Mathematical robotics foundation.
   - **Featherstone**: Efficient rigid body algorithms.
   - **Nesbit / MacKenzie**: Golf biomechanics baselines (Inverse/Forward dynamics).
-  - **Todorov**: Optimal control in biological systems.
+  - **Todorov / Hogan**: Optimal control and Impedance control in biological systems.
 
 ## B) Bibliography (YAML)
 
@@ -84,6 +87,18 @@
     ["recursive algorithms", "spatial algebra", "articulated body algorithm"]
   related_ids: ["jain2010robot", "pinocchio_lib"]
   references_out_ids: ["jain2010robot", "pinocchio_lib"]
+
+- id: hogan1985impedance
+  title: "Impedance Control: An Approach to Manipulation: Part I—Theory"
+  authors:
+    - "Neville Hogan"
+  year: 1985
+  venue: "Journal of Dynamic Systems, Measurement, and Control"
+  scholar_link: "https://scholar.google.com/scholar?q=Impedance+Control+An+Approach+to+Manipulation+Hogan"
+  clusters: ["robotics", "impedance control"]
+  concepts: ["mechanical impedance", "programmable compliance", "interaction control"]
+  related_ids: ["todorov2004optimality"]
+  references_out_ids: []
 
 - id: nesbit2005three
   title: "A three dimensional kinematic and kinetic study of the golf swing"
@@ -149,7 +164,7 @@
   scholar_link: "https://scholar.google.com/scholar?q=Optimality+principles+in+sensorimotor+control+Todorov"
   clusters: ["motor control", "neuroscience"]
   concepts: ["optimal control", "synergies", "minimal intervention"]
-  related_ids: ["todorov2002optimal"]
+  related_ids: ["todorov2002optimal", "hogan1985impedance"]
   references_out_ids: []
 
 - id: mcgeer1990passive
@@ -322,10 +337,11 @@ _Target: Understand the affine decomposition and flexible body math._
 2.  **Isidori (1995)** - _Nonlinear Control Systems_ (`isidori1995nonlinear`). Formal treatment of affine systems and drift vector fields.
 3.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_ (`featherstone2008rigid`). Efficient computation of $M(q)$ and $C(q,\dot{q})$.
 4.  **Shabana (2020)** - _Dynamics of Multibody Systems_ (`shabana2020dynamics`). Flexible body formulations/AMM.
-5.  **Book (1984)** - _Recursive Lagrangian dynamics of flexible manipulator arms_ (`book1984recursive`). Classic recursive formulation for flexible chains.
-6.  **Simo & Vu-Quoc (1986)** - _Dynamics of flexible beams_ (`simo1986dynamics`). Advanced beam theory for the shaft.
-7.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_ (`mackenzie2009three`). Specific application to golf.
-8.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Modern geometric treatment.
+5.  **Hogan (1985)** - _Impedance Control_ (`hogan1985impedance`). Theory of mechanical interaction and effective stiffness.
+6.  **Book (1984)** - _Recursive Lagrangian dynamics of flexible manipulator arms_ (`book1984recursive`). Classic recursive formulation for flexible chains.
+7.  **Simo & Vu-Quoc (1986)** - _Dynamics of flexible beams_ (`simo1986dynamics`). Advanced beam theory for the shaft.
+8.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_ (`mackenzie2009three`). Specific application to golf.
+9.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Modern geometric treatment.
 
 ### Path 3: Implementation (Simulation & Analysis)
 
