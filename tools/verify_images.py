@@ -54,7 +54,7 @@ def check_url(url: str, file_path: Path) -> str | None:
                 "User-Agent",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
             )
-            with urllib.request.urlopen(req, timeout=5) as response:
+            with urllib.request.urlopen(req, timeout=5) as response:  # noqa: S310
                 if response.status >= 400:
                     return f"BROKEN (External): {url} in {file_path} (Status: {response.status})"
                 return None
