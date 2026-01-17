@@ -649,7 +649,9 @@ nav .container {
 
 .accordion-header {
   width: 100%;
+  min-width: 100%;
   padding: 1.25rem;
+  padding-right: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2351,13 +2353,6 @@ h1.title,
   color: #fff !important;
 }
 
-/* Fix: Accordion Header Width */
-.accordion-header {
-  width: 100%;
-  min-width: 100%;
-  padding-right: 1rem;
-}
-
 .accordion-header span:first-child {
   flex: 1;
   padding-right: 1rem;
@@ -2374,15 +2369,8 @@ h1.title,
 
 @media (width <= 1200px) {
   .standard-page-layout {
-     grid-template-columns: 220px 1fr 0; /* Hide right sidebar on medium screens if empty or push it down? */
-
-     /* Better: keep it 3 col but shrink sidebars */
-  }
-  
-  /* If right sidebar is details, we need it. */
-  .standard-page-layout {
-      grid-template-columns: 200px 1fr 250px;
-      gap: 1.5rem;
+    grid-template-columns: 200px 1fr 250px;
+    gap: 1.5rem;
   }
 }
 
