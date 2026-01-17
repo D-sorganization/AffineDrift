@@ -1,7 +1,9 @@
-from playwright.sync_api import sync_playwright
 import os
 
-def test_optimizations():
+from playwright.sync_api import sync_playwright
+
+
+def test_optimizations() -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -54,10 +56,6 @@ def test_optimizations():
         if mailto_count > 0:
             # Check if copy button exists after the link
             # The script adds a button.copy-email-btn after the link
-            first_link = mailto_links.first
-            # We can check if the next sibling is the button
-            # Playwright doesn't have direct next_sibling, but we can check if .copy-email-btn exists
-
             buttons = page.locator(".copy-email-btn")
             btn_count = buttons.count()
             print(f"Found {btn_count} copy-email-btn buttons")
@@ -71,6 +69,7 @@ def test_optimizations():
         page.screenshot(path="verification/optimization_verification.png")
 
         browser.close()
+
 
 if __name__ == "__main__":
     test_optimizations()

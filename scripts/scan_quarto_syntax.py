@@ -12,8 +12,6 @@ Checks:
 """
 
 import logging
-import os
-import re
 import sys
 from pathlib import Path
 
@@ -24,6 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def find_files(root_dir: str = ".") -> list[Path]:
     """Find all .qmd and .md files in relevant directories."""
     files = []
@@ -32,7 +31,7 @@ def find_files(root_dir: str = ".") -> list[Path]:
     # Root files
     for f in root.iterdir():
         if f.is_file() and f.suffix in {".qmd", ".md"} and not f.name.startswith("README"):
-             files.append(f)
+            files.append(f)
 
     # Directories to scan
     dirs_to_scan = ["articles", "critiques"]
@@ -45,6 +44,7 @@ def find_files(root_dir: str = ".") -> list[Path]:
                     files.append(f)
 
     return files
+
 
 def check_file(filepath: Path) -> list[tuple[int, str, str]]:
     """
@@ -61,10 +61,10 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
 
     # States
     STATE_TEXT = 0
-    STATE_CODE_BLOCK = 1       # ``` ... ```
-    STATE_INLINE_CODE = 2      # ` ... `
-    STATE_DISPLAY_MATH = 3     # $$ ... $$
-    STATE_INLINE_MATH = 4      # $ ... $
+    STATE_CODE_BLOCK = 1  # ``` ... ```
+    STATE_INLINE_CODE = 2  # ` ... `
+    STATE_DISPLAY_MATH = 3  # $$ ... $$
+    STATE_INLINE_MATH = 4  # $ ... $
 
     state = STATE_TEXT
 
@@ -72,7 +72,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
     length = len(content)
     line_num = 1
 
-    start_line = 0 # To track where a block started
+    start_line = 0  # To track where a block started
     math_content_start = 0
 
     while i < length:
@@ -88,7 +88,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
         # ---------------------------------------------------------
         if state == STATE_TEXT:
             # Check for Code Block ```
-            if char == "`" and i + 2 < length and content[i+1] == "`" and content[i+2] == "`":
+            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
                 state = STATE_CODE_BLOCK
                 i += 3
                 continue
@@ -100,7 +100,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
                 continue
 
             # Check for Display Math $$
-            if char == "$" and i + 1 < length and content[i+1] == "$":
+            if char == "$" and i + 1 < length and content[i + 1] == "$":
                 state = STATE_DISPLAY_MATH
                 start_line = line_num
                 math_content_start = i + 2
@@ -114,7 +114,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
             # However, we want to enforce strictness.
             if char == "$":
                 # Check if it is escaped \$
-                if i > 0 and content[i-1] == "\\":
+                if i > 0 and content[i - 1] == "\\":
                     i += 1
                     continue
 
@@ -126,7 +126,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
 
             # Check for deprecated delimiters \( and \[
             if char == "\\" and i + 1 < length:
-                next_char = content[i+1]
+                next_char = content[i + 1]
                 if next_char == "(":
                     errors.append((line_num, "Found \\(", "Use $ ... $ for inline math"))
                 elif next_char == "[":
@@ -144,7 +144,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
         # State: CODE BLOCK
         # ---------------------------------------------------------
         elif state == STATE_CODE_BLOCK:
-            if char == "`" and i + 2 < length and content[i+1] == "`" and content[i+2] == "`":
+            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
                 state = STATE_TEXT
                 i += 3
             else:
@@ -164,13 +164,15 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
         # State: DISPLAY MATH
         # ---------------------------------------------------------
         elif state == STATE_DISPLAY_MATH:
-            if char == "$" and i + 1 < length and content[i+1] == "$":
+            if char == "$" and i + 1 < length and content[i + 1] == "$":
                 # End of display math
                 math_text = content[math_content_start:i]
 
                 # Check for escaped underscores
                 if "\\_" in math_text:
-                    errors.append((start_line, f"Escaped underscore in display math", "Use _ instead of \\_"))
+                    errors.append(
+                        (start_line, "Escaped underscore in display math", "Use _ instead of \\_")
+                    )
 
                 state = STATE_TEXT
                 i += 2
@@ -182,7 +184,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
         # ---------------------------------------------------------
         elif state == STATE_INLINE_MATH:
             # Check for escaped dollar inside inline math
-            if char == "\\" and i + 1 < length and content[i+1] == "$":
+            if char == "\\" and i + 1 < length and content[i + 1] == "$":
                 i += 2
                 continue
 
@@ -196,14 +198,32 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
                 else:
                     # Check for leading/trailing spaces
                     if math_text[0].isspace():
-                        errors.append((start_line, f"Leading space in inline math: '${math_text[:5]}...'", "Remove space after $"))
+                        errors.append(
+                            (
+                                start_line,
+                                f"Leading space in inline math: '${math_text[:5]}...'",
+                                "Remove space after $",
+                            )
+                        )
                     if math_text[-1].isspace() and len(math_text) > 1 and math_text[-2] != "\\":
                         # ensure the space isn't escaped like "\ " (though rare in math mode endings)
-                        errors.append((start_line, f"Trailing space in inline math: '...{math_text[-5:]}$'", "Remove space before $"))
+                        errors.append(
+                            (
+                                start_line,
+                                f"Trailing space in inline math: '...{math_text[-5:]}$'",
+                                "Remove space before $",
+                            )
+                        )
 
                     # Check for escaped underscores
                     if "\\_" in math_text:
-                         errors.append((start_line, f"Escaped underscore in inline math: '${math_text[:10]}...'", "Use _ instead of \\_"))
+                        errors.append(
+                            (
+                                start_line,
+                                f"Escaped underscore in inline math: '${math_text[:10]}...'",
+                                "Use _ instead of \\_",
+                            )
+                        )
 
                 state = STATE_TEXT
                 i += 1
@@ -211,12 +231,12 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
                 # Inline math usually shouldn't span multiple paragraphs (double newline)
                 # But single newline is okay.
                 # If we hit a double newline, we assume the $ was just a dollar sign.
-                if i + 1 < length and content[i+1] == "\n":
-                     # Reset state, assume it was currency or mistake
-                     # We could warn "Unclosed inline math" but that causes false positives for text like "Prices range from $10 to $20."
-                     # So we just silently reset.
-                     state = STATE_TEXT
-                     i += 1
+                if i + 1 < length and content[i + 1] == "\n":
+                    # Reset state, assume it was currency or mistake
+                    # We could warn "Unclosed inline math" but that causes false positives for text like "Prices range from $10 to $20."
+                    # So we just silently reset.
+                    state = STATE_TEXT
+                    i += 1
                 else:
                     i += 1
             else:
@@ -228,7 +248,8 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
 
     return errors
 
-def main():
+
+def main() -> None:
     files = find_files()
     total_issues = 0
 
@@ -248,6 +269,7 @@ def main():
     else:
         print("\nNo issues found!")
         sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
