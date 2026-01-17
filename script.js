@@ -856,7 +856,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 🎨 Palette UX: Copy Email Functionality
   function initEmailCopy() {
-    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    // ⚡ Bolt Optimization: Use document.links to avoid extra DOM query; still iterates over all links
     const links = document.links;
     if (links.length === 0) return;
 
@@ -872,12 +872,12 @@ document.addEventListener("DOMContentLoaded", function () {
         link.nextElementSibling &&
         link.nextElementSibling.classList.contains("copy-email-btn")
       )
-        return;
+        continue;
 
       const href = link.getAttribute("href");
       // Simple extraction of email (handling potential ?subject=...)
       const email = href.replace(/^mailto:/, "").split("?")[0];
-      if (!email) return;
+      if (!email) continue;
 
       const button = document.createElement("button");
       button.className = "copy-email-btn";
@@ -1237,12 +1237,6 @@ document.addEventListener("DOMContentLoaded", function () {
       img.setAttribute("aria-label", "Zoom image");
     }
 
-      img.classList.add("zoomable");
-      img.setAttribute("tabindex", "0"); // Keyboard focusable
-      img.setAttribute("role", "button");
-      img.setAttribute("aria-label", "Zoom image");
-    });
-
     // ⚡ Bolt Optimization: Event Delegation for Lightbox
     // Instead of adding listeners to every image (O(N)), add one listener to the container (O(1))
     const handleLightboxTrigger = (e) => {
@@ -1348,7 +1342,7 @@ runWhenIdle(initAutoGrowTextareas);
 
 // 🎨 Palette UX: Contact Form Feedback
 function initContactFormFeedback() {
-  // ⚡ Bolt Optimization: Use document.forms (O(1)) instead of querySelectorAll (O(N))
+  // ⚡ Bolt Optimization: Use document.forms to avoid extra DOM query; still iterates over all forms
   for (const form of document.forms) {
     if (!form.action || !form.action.startsWith("mailto:")) continue;
 
