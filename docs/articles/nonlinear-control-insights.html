@@ -8,8 +8,9 @@
 
 <meta name="author" content="Anonymized for Review">
 <meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Insights from nonlinear control theory on drift causality in golf biomechanics, with future research directions for the control-affine framework.">
 
-<title>Section X: Nonlinear Control Theory Insights, Drift Causality, and Future Research Directions – AffineDrift</title>
+<title>Nonlinear Control Theory Insights, Drift Causality, and Future Research Directions – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,11 +72,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -105,82 +164,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -216,6 +227,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -248,10 +260,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -271,10 +283,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -310,10 +322,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -353,10 +365,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -364,10 +376,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -408,7 +420,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#expanded-nonlinear-control-tools-and-their-relevance" id="toc-expanded-nonlinear-control-tools-and-their-relevance" class="nav-link" data-scroll-target="#expanded-nonlinear-control-tools-and-their-relevance">Expanded Nonlinear Control Tools and Their Relevance</a>
   <ul class="collapse">
-  <li><a href="#lie-bracket-analysis" id="toc-lie-bracket-analysis" class="nav-link" data-scroll-target="#lie-bracket-analysis">Lie Bracket Analysis</a></li>
+  <li><a href="#inertial-energy-transfer-the-sequencing-mechanism" id="toc-inertial-energy-transfer-the-sequencing-mechanism" class="nav-link" data-scroll-target="#inertial-energy-transfer-the-sequencing-mechanism">Inertial Energy Transfer (The “Sequencing” Mechanism)</a></li>
   <li><a href="#partial-feedback-linearization" id="toc-partial-feedback-linearization" class="nav-link" data-scroll-target="#partial-feedback-linearization">Partial Feedback Linearization</a></li>
   <li><a href="#geometric-phase-and-dynamic-coupling" id="toc-geometric-phase-and-dynamic-coupling" class="nav-link" data-scroll-target="#geometric-phase-and-dynamic-coupling">Geometric Phase and Dynamic Coupling</a></li>
   <li><a href="#energy-shaping" id="toc-energy-shaping" class="nav-link" data-scroll-target="#energy-shaping">Energy Shaping</a></li>
@@ -428,6 +440,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#related-theoretical-sections" id="toc-related-theoretical-sections" class="nav-link" data-scroll-target="#related-theoretical-sections">Related Theoretical Sections</a></li>
+  <li><a href="#recommended-resources" id="toc-recommended-resources" class="nav-link" data-scroll-target="#recommended-resources">Recommended Resources</a></li>
   </ul>
 </nav>
     </div>
@@ -436,9 +449,14 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Section X: Nonlinear Control Theory Insights, Drift Causality, and Future Research Directions</h1>
+<h1 class="title">Nonlinear Control Theory Insights, Drift Causality, and Future Research Directions</h1>
 </div>
 
+<div>
+  <div class="description">
+    Insights from nonlinear control theory on drift causality in golf biomechanics, with future research directions for the control-affine framework.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -520,14 +538,15 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
 </section>
 <section id="expanded-nonlinear-control-tools-and-their-relevance" class="level2">
 <h2 class="anchored" data-anchor-id="expanded-nonlinear-control-tools-and-their-relevance">Expanded Nonlinear Control Tools and Their Relevance</h2>
-<section id="lie-bracket-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="lie-bracket-analysis">Lie Bracket Analysis</h3>
-<p>Lie brackets measure how drift and input vector fields interact through commutation. Their span determines the system’s controllability distribution. In the context of the golf swing, Lie bracket analysis clarifies: - which clubhead trajectories are mechanically reachable,</p>
-<ul>
-<li><p>which degrees of freedom cannot be independently influenced,</p></li>
-<li><p>how torque applied at one joint influences dynamics at another through geometric coupling. This offers a mathematically grounded explanation for the structure of reachable motions.</p></li>
-</ul>
-<p>This mathematical structure formalizes the biomechanical concept of <strong>sequencing</strong>. In a Lie bracket interpretation, proximal deceleration is not an aesthetic choice but a necessary control action to trigger non-holonomic acceleration in distal segments—effectively “steering” the drift field to generate clubhead speed that cannot be produced by direct torque alone.</p>
+<section id="inertial-energy-transfer-the-sequencing-mechanism" class="level3">
+<h3 class="anchored" data-anchor-id="inertial-energy-transfer-the-sequencing-mechanism">Inertial Energy Transfer (The “Sequencing” Mechanism)</h3>
+<p>While often described in coaching as “sequencing,” the proximal-to-distal transfer of energy is rigorously explained by the off-diagonal terms of the mass matrix (<span class="math inline">\(M_{ij}\)</span>) and the velocity-dependent Coriolis forces (<span class="math inline">\(C(q,\dot{q})\)</span>).</p>
+<p>In a linked chain, deceleration of a proximal segment (e.g., the torso or arm) creates an inertial force on the distal segment (club) via the coupling term:</p>
+<p><span class="math display">\[
+\tau_{inertial} = -M_{distal,proximal} \ddot{q}_{proximal}
+\]</span></p>
+<p>This coupling term corresponds exactly to the <span class="math inline">\(M_{q\eta}\)</span> block derived in the Unified Control-Affine Derivation (Part I and Appendix A). It is the physical conduit for the “Inertial Coupling Ratio” that dictates the transmission of energy from the rigid body to the flexible shaft.</p>
+<p>This is not “nonholonomic steering” (as in parking a car) but rather <strong>Inertial Harvesting</strong>. The golfer actively brakes the proximal links to inject energy into the distal link through the mechanical transmission of the skeleton. This confirms that “sequencing” is a mechanism of <strong>Dynamic Efficiency</strong>—amplifying speed via conservation of angular momentum—rather than a geometric necessity for reachability.</p>
 </section>
 <section id="partial-feedback-linearization" class="level3">
 <h3 class="anchored" data-anchor-id="partial-feedback-linearization">Partial Feedback Linearization</h3>
@@ -609,6 +628,138 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
 <li><strong>Part 3:</strong> Proves the <strong>Drift Invariance</strong> property essential for causal attribution.</li>
 <li><strong>Part 5:</strong> Provides the numerical <strong>Skeletal Baseline</strong> validation of these control-theoretic concepts.</li>
 </ul>
+</section>
+<section id="recommended-resources" class="level2">
+<h2 class="anchored" data-anchor-id="recommended-resources">Recommended Resources</h2>
+<div class="resource-grid">
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/MaOGHQjz3fI" title="Nonlinear Dynamical Systems - Part 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3 class="anchored">Primer: Nonlinear Dynamics (Steve Brunton)</h3>
+      <p class="resource-description">
+        An accessible introduction to why nonlinear systems cannot be fully understood through
+        linear approximations. Prof. Brunton explains the fundamental differences in behavior,
+        setting the stage for understanding drift fields.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Basic Linear Algebra (Eigenvalues/Eigenvectors)</li>
+            <li>Differential Equations (Linear Systems)</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>04:30 - Limitations of linearization near fixed points</li>
+            <li>12:15 - Multiple equilibria and basins of attraction</li>
+            <li>22:00 - Global vs. Local dynamics</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=MaOGHQjz3fI" class="resource-link" target="_blank" rel="noopener">
+        Watch Lecture →
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/uyyBT-MHhLE" title="Underactuated Robotics - Lecture 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3 class="anchored">Deep Technical: Underactuated Robotics (Russ Tedrake)</h3>
+      <p class="resource-description">
+        The canonical introduction to "Drift-Dominated" systems. Prof. Tedrake (MIT) defines the
+        standard form $\dot{x} = f(x) + g(x)u$ and explains how to exploit passive dynamics
+        rather than canceling them—the core philosophy of the Affine Drift framework.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Lagrangian Mechanics</li>
+            <li>Control Theory (Feedback, Stability)</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>15:45 - Definition of Underactuation ($dim(u) &lt; dim(q)$)</li>
+            <li>32:10 - The Control-Affine Form derivation</li>
+            <li>45:00 - Input Coupling vs. Passive Dynamics</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE" class="resource-link" target="_blank" rel="noopener">
+        Watch Lecture 1 →
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/videoseries?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" title="Modern Robotics - Chapter 13" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3 class="anchored">Deep Technical: Nonlinear Controllability (Kevin Lynch)</h3>
+      <p class="resource-description">
+        Chapter 13 of "Modern Robotics" covers nonholonomic constraints and Lie Bracket analysis.
+        These concepts provide the mathematical tools to understand "Sequencing" as a
+        geometric control problem rather than just a timing issue.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Rigid Body Kinematics (Twists/Wrenches)</li>
+            <li>Vector Fields</li>
+        </ul>
+        <strong>Seek Timestamps (Playlist):</strong>
+        <ul>
+            <li>Video 13.3.2 (Part 3) - The Lie Bracket and Noncommutativity</li>
+            <li>Video 13.3.2 (Part 4) - Small-time Local Controllability</li>
+            <li>Video 13.3.1 - Nonholonomic Constraints</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/playlist?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" class="resource-link" target="_blank" rel="noopener">
+        Watch Chapter 13 Videos →
+      </a>
+    </div>
+  </div>
+
+  <div class="resource-card video-card has-media">
+    <div class="resource-media">
+      <div class="youtube-embed">
+        <iframe src="https://www.youtube.com/embed/PGXxuAS1Scg" title="Ground Reaction Forces (Dr. Kwon)" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+      </div>
+    </div>
+    <div class="resource-content">
+      <h3 class="anchored">Applied: Ground Reaction Forces (Dr. Kwon)</h3>
+      <p class="resource-description">
+        Dr. Young-Hoo Kwon (TWU) bridges the gap between theoretical mechanics and actual
+        golf swings. This lecture on Ground Reaction Forces (GRF) illustrates how the
+        "input" $u$ (via the feet) interacts with the system's mass matrix.
+      </p>
+      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
+        <strong>Prerequisites:</strong>
+        <ul style="margin-bottom: 0.5rem;">
+            <li>Basic Newtonian Mechanics ($F=ma$)</li>
+            <li>Moment Arms and Torque</li>
+        </ul>
+        <strong>Seek Timestamps:</strong>
+        <ul>
+            <li>05:20 - Definition of Center of Pressure (COP)</li>
+            <li>12:45 - GRF Vectors vs. Body Mass Center</li>
+            <li>18:30 - Creating Moment about the COM</li>
+        </ul>
+      </div>
+      <a href="https://www.youtube.com/watch?v=PGXxuAS1Scg" class="resource-link" target="_blank" rel="noopener">
+        Watch Analysis →
+      </a>
+    </div>
+  </div>
+</div>
 
 
 </section>
@@ -1015,29 +1166,20 @@ f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

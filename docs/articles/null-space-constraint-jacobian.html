@@ -8,6 +8,7 @@
 
 <meta name="author" content="Golf Swing Dynamics Research">
 <meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Analysis of unconstrained motion within constrained biomechanical systems using null space projections, applied to golf swing joint coordination.">
 
 <title>The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems with Applications to Golf Swing Biomechanics – AffineDrift</title>
 <style>
@@ -71,11 +72,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -105,82 +164,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -216,6 +227,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -248,10 +260,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -271,10 +283,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -310,10 +322,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -353,10 +365,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -364,10 +376,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -451,7 +463,7 @@ window.Quarto = {
   <li><a href="#lie-bracket-relationships" id="toc-lie-bracket-relationships" class="nav-link" data-scroll-target="#lie-bracket-relationships">Lie Bracket Relationships</a></li>
   </ul></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
-  <li><a href="#proof-orthogonality-of-constraint-forces" id="toc-proof-orthogonality-of-constraint-forces" class="nav-link" data-scroll-target="#proof-orthogonality-of-constraint-forces">Proof: Orthogonality of Constraint Forces</a></li>
+  
   <li><a href="#derivation-of-the-null-space-projector" id="toc-derivation-of-the-null-space-projector" class="nav-link" data-scroll-target="#derivation-of-the-null-space-projector">Derivation of the Null Space Projector</a></li>
   <li><a href="#summary-table-of-key-equations" id="toc-summary-table-of-key-equations" class="nav-link" data-scroll-target="#summary-table-of-key-equations">Summary Table of Key Equations</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -466,6 +478,11 @@ window.Quarto = {
 <h1 class="title">The Null Space of the Constraint Jacobian: Unconstrained Motion in Constrained Systems with Applications to Golf Swing Biomechanics</h1>
 </div>
 
+<div>
+  <div class="description">
+    Analysis of unconstrained motion within constrained biomechanical systems using null space projections, applied to golf swing joint coordination.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -499,7 +516,7 @@ window.Quarto = {
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves <em>loop closures</em>—the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.</p>
-<p>Mathematically, constraints manifest through the <em>constraint Jacobian</em> <span class="math inline">\(\Jc\)</span>, a matrix that maps generalized velocities to constraint violation rates. The <em>null space</em> of this Jacobian, denoted <span class="math inline">\(\nullspace(\Jc)\)</span>, represents the subspace of velocity directions that are kinematically admissible—motions that satisfy all constraints to first order. Understanding this null space is essential for:</p>
+<p>Mathematically, constraints manifest through the <em>constraint Jacobian</em> <span class="math inline">\(\mathbf{J}_c\)</span>, a matrix that maps generalized velocities to constraint violation rates. The <em>null space</em> of this Jacobian, denoted <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span>, represents the subspace of velocity directions that are kinematically admissible—motions that satisfy all constraints to first order. Understanding this null space is essential for:</p>
 <ul>
 <li><p>Reducing the dimension of the equations of motion</p></li>
 <li><p>Projecting applied forces onto the feasible motion space</p></li>
@@ -512,30 +529,30 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="holonomic-constraints-and-the-constraint-jacobian">Holonomic Constraints and the Constraint Jacobian</h2>
 <section id="constraint-formulation" class="level3">
 <h3 class="anchored" data-anchor-id="constraint-formulation">Constraint Formulation</h3>
-<p>Consider a mechanical system with <span class="math inline">\(n\)</span> generalized coordinates <span class="math inline">\(\qvec = (q_1, q_2, \ldots, q_n)^\top \in \R^n\)</span>. In the absence of constraints, the system has <span class="math inline">\(n\)</span> degrees of freedom. However, physical constraints restrict the admissible configurations to a subset of the configuration space.</p>
+<p>Consider a mechanical system with <span class="math inline">\(n\)</span> generalized coordinates <span class="math inline">\(\mathbf{q} = (q_1, q_2, \ldots, q_n)^\top \in \mathbb{R}^n\)</span>. In the absence of constraints, the system has <span class="math inline">\(n\)</span> degrees of freedom. However, physical constraints restrict the admissible configurations to a subset of the configuration space.</p>
 <p><strong>definition:</strong> [Holonomic Constraint] A <em>holonomic constraint</em> is an algebraic relationship among the generalized coordinates:</p>
 <p><span class="math display">\[
-    \phi_i(\qvec, t) = 0, \quad i = 1, 2, \ldots, m
+    \phi_i(\mathbf{q}, t) = 0, \quad i = 1, 2, \ldots, m
 \]</span></p>
-<p>where <span class="math inline">\(\phi_i: \R^n \times \R \to \R\)</span> is a smooth function. For scleronomic (time-independent) constraints, <span class="math inline">\(\phi_i = \phi_i(\qvec)\)</span>.</p>
-<p>Collecting all constraints into a vector <span class="math inline">\(\Phivec(\qvec) = (\phi_1, \phi_2, \ldots, \phi_m)^\top\)</span>, the constraint equations become:</p>
+<p>where <span class="math inline">\(\phi_i: \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}\)</span> is a smooth function. For scleronomic (time-independent) constraints, <span class="math inline">\(\phi_i = \phi_i(\mathbf{q})\)</span>.</p>
+<p>Collecting all constraints into a vector <span class="math inline">\(\boldsymbol{\Phi}(\mathbf{q}) = (\phi_1, \phi_2, \ldots, \phi_m)^\top\)</span>, the constraint equations become:</p>
 <p><span class="math display">\[
-    \boxed{\Phivec(\qvec) = \bm{0}}
+    \boxed{\boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}}
 \]</span></p>
 <p>The set of all configurations satisfying these constraints forms the <em>constraint manifold</em>:</p>
 <p><span class="math display">\[
-    \mathcal{M} = \{\qvec \in \R^n : \Phivec(\qvec) = \bm{0}\}
+    \mathcal{M} = \{\mathbf{q} \in \mathbb{R}^n : \boldsymbol{\Phi}(\mathbf{q}) = \boldsymbol{0}\}
 \]</span></p>
 </section>
 <section id="the-constraint-jacobian" class="level3">
 <h3 class="anchored" data-anchor-id="the-constraint-jacobian">The Constraint Jacobian</h3>
 <p>Differentiating the constraint equations with respect to time yields the velocity-level constraints:</p>
 <p><span class="math display">\[
-    \frac{d\Phivec}{dt} = \frac{\partial \Phivec}{\partial \qvec} \dot{\qvec} = \Jc(\qvec) \dot{\qvec} = \bm{0}
+    \frac{d\boldsymbol{\Phi}}{dt} = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} \dot{\mathbf{q}} = \mathbf{J}_c(\mathbf{q}) \dot{\mathbf{q}} = \boldsymbol{0}
 \]</span></p>
 <p><strong>definition:</strong> [Constraint Jacobian] The <em>constraint Jacobian</em> is the <span class="math inline">\(m \times n\)</span> matrix:</p>
 <p><span class="math display">\[
-    \boxed{\Jc(\qvec) = \frac{\partial \Phivec}{\partial \qvec} =
+    \boxed{\mathbf{J}_c(\mathbf{q}) = \frac{\partial \boldsymbol{\Phi}}{\partial \mathbf{q}} =
     \begin{pmatrix}
         \dfrac{\partial \phi_1}{\partial q_1} &amp; \dfrac{\partial \phi_1}{\partial q_2} &amp; \cdots &amp; \dfrac{\partial \phi_1}{\partial q_n} \\[1em]
         \dfrac{\partial \phi_2}{\partial q_1} &amp; \dfrac{\partial \phi_2}{\partial q_2} &amp; \cdots &amp; \dfrac{\partial \phi_2}{\partial q_n} \\[0.5em]
@@ -543,17 +560,17 @@ window.Quarto = {
         \dfrac{\partial \phi_m}{\partial q_1} &amp; \dfrac{\partial \phi_m}{\partial q_2} &amp; \cdots &amp; \dfrac{\partial \phi_m}{\partial q_n}
     \end{pmatrix}}
 \]</span></p>
-<p>The constraint Jacobian <span class="math inline">\(\Jc \in \R^{m \times n}\)</span> is configuration-dependent and plays a central role in constrained dynamics.</p>
+<p>The constraint Jacobian <span class="math inline">\(\mathbf{J}_c \in \mathbb{R}^{m \times n}\)</span> is configuration-dependent and plays a central role in constrained dynamics.</p>
 </section>
 <section id="example-closed-kinematic-chain-in-golf" class="level3">
 <h3 class="anchored" data-anchor-id="example-closed-kinematic-chain-in-golf">Example: Closed Kinematic Chain in Golf</h3>
-<p>In the golf swing, the hands gripping the club form a closed loop. Let <span class="math inline">\(\qvec = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top\)</span> represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:</p>
+<p>In the golf swing, the hands gripping the club form a closed loop. Let <span class="math inline">\(\mathbf{q} = (\theta_{\text{shoulder}}, \theta_{\text{elbow}}, \theta_{\text{wrist}}, \theta_{\text{club}})^\top\)</span> represent joint angles. The loop closure constraint requires that the position computed via the left arm equals that via the right arm plus club geometry:</p>
 <p><span class="math display">\[
-    \Phivec(\qvec) = \bm{p}_{\text{left}}(\qvec) - \bm{p}_{\text{right}}(\qvec) - \bm{d}_{\text{grip}} = \bm{0}
+    \boldsymbol{\Phi}(\mathbf{q}) = \mathbf{p}_{\text{left}}(\mathbf{q}) - \mathbf{p}_{\text{right}}(\mathbf{q}) - \mathbf{d}_{\text{grip}} = \boldsymbol{0}
 \]</span></p>
 <p>where <span class="math inline">\(\bm{d}_{\text{grip}}\)</span> accounts for grip geometry. The constraint Jacobian becomes:</p>
 <p><span class="math display">\[
-    \Jc = \frac{\partial \bm{p}_{\text{left}}}{\partial \qvec} - \frac{\partial \bm{p}_{\text{right}}}{\partial \qvec}
+    \mathbf{J}_c = \frac{\partial \mathbf{p}_{\text{left}}}{\partial \mathbf{q}} - \frac{\partial \mathbf{p}_{\text{right}}}{\partial \mathbf{q}}
 \]</span></p>
 </section>
 </section>
@@ -563,90 +580,90 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="definition-and-basic-properties">Definition and Basic Properties</h3>
 <p><strong>definition:</strong> [Null Space] The <em>null space</em> (or <em>kernel</em>) of the constraint Jacobian is:</p>
 <p><span class="math display">\[
-    \boxed{\nullspace(\Jc) = \{\dot{\qvec} \in \R^n : \Jc \dot{\qvec} = \bm{0}\}}
+    \boxed{\operatorname{null}(\mathbf{J}_c) = \{\dot{\mathbf{q}} \in \mathbb{R}^n : \mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}\}}
 \]</span></p>
 <p>This is the set of all generalized velocity vectors that satisfy the velocity-level constraints.</p>
-<p><strong>theorem:</strong> [Dimension of Null Space] If <span class="math inline">\(\Jc \in \R^{m \times n}\)</span> has full row rank (i.e., <span class="math inline">\(\text{rank}(\Jc) = m\)</span>), then:</p>
+<p><strong>theorem:</strong> [Dimension of Null Space] If <span class="math inline">\(\mathbf{J}_c \in \mathbb{R}^{m \times n}\)</span> has full row rank (i.e., <span class="math inline">\(\text{rank}(\mathbf{J}_c) = m\)</span>), then:</p>
 <p><span class="math display">\[
-    \dim(\nullspace(\Jc)) = n - m
+    \dim(\operatorname{null}(\mathbf{J}_c)) = n - m
 \]</span></p>
 <p>The system has <span class="math inline">\(n - m\)</span> kinematic degrees of freedom.</p>
 </section>
 <section id="null-space-basis-and-projection" class="level3">
 <h3 class="anchored" data-anchor-id="null-space-basis-and-projection">Null Space Basis and Projection</h3>
-<p><strong>definition:</strong> [Null Space Basis Matrix] A matrix <span class="math inline">\(N \in \R^{n \times (n-m)}\)</span> whose columns form an orthonormal basis for <span class="math inline">\(\nullspace(\Jc)\)</span> is called a <em>null space basis matrix</em>. It satisfies:</p>
+<p><strong>definition:</strong> [Null Space Basis Matrix] A matrix <span class="math inline">\(N \in \mathbb{R}^{n \times (n-m)}\)</span> whose columns form an orthonormal basis for <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span> is called a <em>null space basis matrix</em>. It satisfies:</p>
 <p><span class="math display">\[
-    \Jc N = \bm{0}, \quad N^\top N = I_{n-m}
+    \mathbf{J}_c N = \boldsymbol{0}, \quad N^\top N = I_{n-m}
 \]</span></p>
 <p>Any kinematically admissible velocity can be expressed as:</p>
 <p><span class="math display">\[
-    \boxed{\dot{\qvec} = N \dot{\bm{z}}}
+    \boxed{\dot{\mathbf{q}} = N \dot{\mathbf{z}}}
 \]</span></p>
-<p>where <span class="math inline">\(\dot{\bm{z}} \in \R^{n-m}\)</span> are the <em>independent velocities</em> or <em>reduced coordinates</em>.</p>
+<p>where <span class="math inline">\(\dot{\mathbf{z}} \in \mathbb{R}^{n-m}\)</span> are the <em>independent velocities</em> or <em>reduced coordinates</em>.</p>
 <p><strong>definition:</strong> [Null Space Projector] The <em>null space projection matrix</em> is:</p>
 <p><span class="math display">\[
-    \boxed{P = N N^\top = I - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc}
+    \boxed{P = N N^\top = I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c}
 \]</span></p>
-<p>This is an orthogonal projector onto <span class="math inline">\(\nullspace(\Jc)\)</span>.</p>
+<p>This is an orthogonal projector onto <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span>.</p>
 <p><strong>proposition:</strong> [Properties of the Null Space Projector] The projector <span class="math inline">\(P\)</span> satisfies: [label=()]</p>
 <ol type="1">
 <li><p><span class="math inline">\(P^2 = P\)</span> (idempotent)</p></li>
 <li><p><span class="math inline">\(P^\top = P\)</span> (symmetric)</p></li>
-<li><p><span class="math inline">\(\Jc P = \bm{0}\)</span> (projects onto null space)</p></li>
+<li><p><span class="math inline">\(\mathbf{J}_c P = \boldsymbol{0}\)</span> (projects onto null space)</p></li>
 <li><p><span class="math inline">\(\text{rank}(P) = n - m\)</span> (projects onto <span class="math inline">\((n-m)\)</span>-dimensional subspace)</p></li>
 </ol>
 </section>
 <section id="geometric-interpretation" class="level3">
 <h3 class="anchored" data-anchor-id="geometric-interpretation">Geometric Interpretation</h3>
-<p>The null space <span class="math inline">\(\nullspace(\Jc)\)</span> at each configuration <span class="math inline">\(\qvec\)</span> defines the <em>tangent space</em> to the constraint manifold <span class="math inline">\(\mathcal{M}\)</span>:</p>
+<p>The null space <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span> at each configuration <span class="math inline">\(\mathbf{q}\)</span> defines the <em>tangent space</em> to the constraint manifold <span class="math inline">\(\mathcal{M}\)</span>:</p>
 <p><span class="math display">\[
-    T_\qvec \mathcal{M} = \nullspace(\Jc(\qvec))
+    T_\mathbf{q} \mathcal{M} = \operatorname{null}(\mathbf{J}_c(\mathbf{q}))
 \]</span></p>
-<p>This provides a beautiful geometric picture: the constraint manifold is an <span class="math inline">\((n-m)\)</span>-dimensional surface embedded in <span class="math inline">\(\R^n\)</span>, and the null space at each point gives the directions along which the system can move while staying on this surface.</p>
-<p>[Figure: The null space <span class="math inline">\(\nullspace(\Jc)\)</span> forms the tangent space to the constraint manifold. Constraint forces act in the orthogonal complement <span class="math inline">\(\rangespace(\Jc^\top)\)</span>.]</p>
+<p>This provides a beautiful geometric picture: the constraint manifold is an <span class="math inline">\((n-m)\)</span>-dimensional surface embedded in <span class="math inline">\(\mathbb{R}^n\)</span>, and the null space at each point gives the directions along which the system can move while staying on this surface.</p>
+<p>[Figure: The null space <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span> forms the tangent space to the constraint manifold. Constraint forces act in the orthogonal complement <span class="math inline">\(\operatorname{range}(\mathbf{J}_c^\top)\)</span>.]</p>
 </section>
 </section>
 <section id="constrained-equations-of-motion" class="level2">
 <h2 class="anchored" data-anchor-id="constrained-equations-of-motion">Constrained Equations of Motion</h2>
 <section id="lagrangian-formulation-with-constraints" class="level3">
 <h3 class="anchored" data-anchor-id="lagrangian-formulation-with-constraints">Lagrangian Formulation with Constraints</h3>
-<p>The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let <span class="math inline">\(M(\qvec)\)</span> be the mass matrix, <span class="math inline">\(\cvec(\qvec, \dot{\qvec})\)</span> the Coriolis/centrifugal forces, <span class="math inline">\(\gvec(\qvec)\)</span> the gravitational forces, and <span class="math inline">\(\tauvec\)</span> the applied generalized forces. The constrained equations of motion are:</p>
+<p>The equations of motion for a constrained mechanical system can be derived using Lagrange multipliers. Let <span class="math inline">\(M(\mathbf{q})\)</span> be the mass matrix, <span class="math inline">\(\mathbf{c}(\mathbf{q}, \dot{\mathbf{q}})\)</span> the Coriolis/centrifugal forces, <span class="math inline">\(\mathbf{g}(\mathbf{q})\)</span> the gravitational forces, and <span class="math inline">\(\boldsymbol{\tau}\)</span> the applied generalized forces. The constrained equations of motion are:</p>
 <p><span class="math display">\[
-    \boxed{M(\qvec)\ddot{\qvec} + \cvec(\qvec, \dot{\qvec}) + \gvec(\qvec) = \tauvec + \Jc^\top \lambdavec}
+    \boxed{M(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{c}(\mathbf{q}, \dot{\mathbf{q}}) + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau} + \mathbf{J}_c^\top \boldsymbol{\lambda}}
 \]</span></p>
-<p>where <span class="math inline">\(\lambdavec \in \R^m\)</span> are the Lagrange multipliers representing constraint forces.</p>
-<p>The constraint acceleration equation (obtained by differentiating <span class="math inline">\(\Jc \dot{\qvec} = \bm{0}\)</span>):</p>
+<p>where <span class="math inline">\(\boldsymbol{\lambda} \in \mathbb{R}^m\)</span> are the Lagrange multipliers representing constraint forces.</p>
+<p>The constraint acceleration equation (obtained by differentiating <span class="math inline">\(\mathbf{J}_c \dot{\mathbf{q}} = \boldsymbol{0}\)</span>):</p>
 <p><span class="math display">\[
-    \Jc \ddot{\qvec} + \dot{\Jc} \dot{\qvec} = \bm{0}
+    \mathbf{J}_c \ddot{\mathbf{q}} + \dot{\mathbf{J}}_c \dot{\mathbf{q}} = \boldsymbol{0}
 \]</span></p>
 <p>Together, these form the <em>index-3 differential-algebraic equations</em> (DAEs):</p>
 <p><span class="math display">\[
-    \begin{pmatrix} M &amp; -\Jc^\top \\ \Jc &amp; \bm{0} \end{pmatrix}
-    \begin{pmatrix} \ddot{\qvec} \\ \lambdavec \end{pmatrix}
-    = \begin{pmatrix} \tauvec - \cvec - \gvec \\ -\dot{\Jc}\dot{\qvec} \end{pmatrix}
+    \begin{pmatrix} M &amp; -\mathbf{J}_c^\top \\ \mathbf{J}_c &amp; \boldsymbol{0} \end{pmatrix}
+    \begin{pmatrix} \ddot{\mathbf{q}} \\ \boldsymbol{\lambda} \end{pmatrix}
+    = \begin{pmatrix} \boldsymbol{\tau} - \mathbf{c} - \mathbf{g} \\ -\dot{\mathbf{J}}_c\dot{\mathbf{q}} \end{pmatrix}
 \]</span></p>
 </section>
 <section id="null-space-method-for-constraint-elimination" class="level3">
 <h3 class="anchored" data-anchor-id="null-space-method-for-constraint-elimination">Null Space Method for Constraint Elimination</h3>
-<p>The null space method eliminates constraint forces by projecting onto <span class="math inline">\(\nullspace(\Jc)\)</span>. Premultiplying the equations of motion by <span class="math inline">\(N^\top\)</span>:</p>
+<p>The null space method eliminates constraint forces by projecting onto <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span>. Premultiplying the equations of motion by <span class="math inline">\(N^\top\)</span>:</p>
 <p><span class="math display">\[
-    N^\top M \ddot{\qvec} + N^\top (\cvec + \gvec) = N^\top \tauvec + \underbrace{N^\top \Jc^\top}_{= \bm{0}} \lambdavec
+    N^\top M \ddot{\mathbf{q}} + N^\top (\mathbf{c} + \mathbf{g}) = N^\top \boldsymbol{\tau} + \underbrace{N^\top \mathbf{J}_c^\top}_{= \boldsymbol{0}} \boldsymbol{\lambda}
 \]</span></p>
-<p>Using the coordinate transformation <span class="math inline">\(\dot{\qvec} = N \dot{\bm{z}}\)</span> and differentiating:</p>
+<p>Using the coordinate transformation <span class="math inline">\(\dot{\mathbf{q}} = N \dot{\mathbf{z}}\)</span> and differentiating:</p>
 <p><span class="math display">\[
-    \ddot{\qvec} = N \ddot{\bm{z}} + \dot{N} \dot{\bm{z}}
+    \ddot{\mathbf{q}} = N \ddot{\mathbf{z}} + \dot{N} \dot{\mathbf{z}}
 \]</span></p>
 <p>Substituting yields the <em>reduced equations of motion</em>:</p>
 <p><span class="math display">\[
-    \boxed{\bar{M}(\qvec) \ddot{\bm{z}} + \bar{\cvec}(\qvec, \dot{\bm{z}}) + \bar{\gvec}(\qvec) = \bar{\tauvec}}
+    \boxed{\bar{M}(\mathbf{q}) \ddot{\mathbf{z}} + \bar{\mathbf{c}}(\mathbf{q}, \dot{\mathbf{z}}) + \bar{\mathbf{g}}(\mathbf{q}) = \bar{\boldsymbol{\tau}}}
 \]</span></p>
 <p>where:</p>
 <p><span class="math display">\[
 \begin{align}
-    \bar{M} &amp;= N^\top M N \in \R^{(n-m) \times (n-m)} \\
-    \bar{\cvec} &amp;= N^\top (M \dot{N} \dot{\bm{z}} + \cvec) \\
-    \bar{\gvec} &amp;= N^\top \gvec \\
-    \bar{\tauvec} &amp;= N^\top \tauvec
+    \bar{M} &amp;= N^\top M N \in \mathbb{R}^{(n-m) \times (n-m)} \\
+    \bar{\mathbf{c}} &amp;= N^\top (M \dot{N} \dot{\mathbf{z}} + \mathbf{c}) \\
+    \bar{\mathbf{g}} &amp;= N^\top \mathbf{g} \\
+    \bar{\boldsymbol{\tau}} &amp;= N^\top \boldsymbol{\tau}
 \end{align}
 \]</span></p>
 <p><strong>theorem:</strong> [Dimension Reduction] The reduced system has <span class="math inline">\(n - m\)</span> second-order ODEs compared to <span class="math inline">\(n + m\)</span> equations in the DAE formulation. The constraint forces <span class="math inline">\(\lambdavec\)</span> have been completely eliminated.</p>
@@ -655,35 +672,35 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="physical-interpretation-force-projection">Physical Interpretation: Force Projection</h3>
 <p>The null space projection separates forces into two orthogonal components:</p>
 <p><span class="math display">\[
-    \tauvec = \underbrace{P \tauvec}_{\text{motion-producing}} + \underbrace{(I - P) \tauvec}_{\text{absorbed by constraints}}
+    \boldsymbol{\tau} = \underbrace{P \boldsymbol{\tau}}_{\text{motion-producing}} + \underbrace{(I - P) \boldsymbol{\tau}}_{\text{absorbed by constraints}}
 \]</span></p>
-<p>Only the component <span class="math inline">\(P\tauvec\)</span> contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside <span class="math inline">\(\nullspace(\Jc)\)</span> are “wasted” in the sense that they produce no clubhead motion.</p>
+<p>Only the component <span class="math inline">\(P\boldsymbol{\tau}\)</span> contributes to acceleration. The remainder is balanced by constraint forces. This has profound implications for golf swing analysis: muscle forces that lie outside <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span> are “wasted” in the sense that they produce no clubhead motion.</p>
 </section>
 </section>
 <section id="connection-to-control-affine-systems-and-drift" class="level2">
 <h2 class="anchored" data-anchor-id="connection-to-control-affine-systems-and-drift">Connection to Control-Affine Systems and Drift</h2>
 <section id="control-affine-structure" class="level3">
 <h3 class="anchored" data-anchor-id="control-affine-structure">Control-Affine Structure</h3>
-<p>The constrained equations of motion can be reformulated as a <em>control-affine system</em>. Define the state <span class="math inline">\(\xvec = (\qvec^\top, \dot{\qvec}^\top)^\top \in \R^{2n}\)</span> and write:</p>
+<p>The constrained equations of motion can be reformulated as a <em>control-affine system</em>. Define the state <span class="math inline">\(\mathbf{x} = (\mathbf{q}^\top, \dot{\mathbf{q}}^\top)^\top \in \mathbb{R}^{2n}\)</span> and write:</p>
 <p><span class="math display">\[
-    \boxed{\dot{\xvec} = \fvec(\xvec) + \sum_{i=1}^{p} g_i(\xvec) u_i = \fvec(\xvec) + G(\xvec) \uvec}
+    \boxed{\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \sum_{i=1}^{p} g_i(\mathbf{x}) u_i = \mathbf{f}(\mathbf{x}) + G(\mathbf{x}) \mathbf{u}}
 \]</span></p>
-<p>where: - <span class="math inline">\(\fvec(\xvec)\)</span>: the <em>drift vector field</em> (dynamics with zero control input)</p>
+<p>where: - <span class="math inline">\(\mathbf{f}(\mathbf{x})\)</span>: the <em>drift vector field</em> (dynamics with zero control input)</p>
 <ul>
-<li><p><span class="math inline">\(G(\xvec) = [g_1, g_2, \ldots, g_p]\)</span>: the <em>control distribution</em></p></li>
-<li><p><span class="math inline">\(\uvec \in \R^p\)</span>: the control inputs (e.g., joint torques)</p></li>
+<li><p><span class="math inline">\(G(\mathbf{x}) = [g_1, g_2, \ldots, g_p]\)</span>: the <em>control distribution</em></p></li>
+<li><p><span class="math inline">\(\mathbf{u} \in \mathbb{R}^p\)</span>: the control inputs (e.g., joint torques)</p></li>
 </ul>
 </section>
 <section id="drift-dynamics-and-the-null-space" class="level3">
 <h3 class="anchored" data-anchor-id="drift-dynamics-and-the-null-space">Drift Dynamics and the Null Space</h3>
-<p>The drift <span class="math inline">\(\fvec(\xvec)\)</span> represents the system’s natural tendency when no active control is applied:</p>
+<p>The drift <span class="math inline">\(\mathbf{f}(\mathbf{x})\)</span> represents the system’s natural tendency when no active control is applied:</p>
 <p><span class="math display">\[
-    \fvec(\xvec) = \begin{pmatrix} \dot{\qvec} \\ -M^{-1}(\cvec + \gvec - \Jc^\top \lambdavec_{\text{passive}}) \end{pmatrix}
+    \mathbf{f}(\mathbf{x}) = \begin{pmatrix} \dot{\mathbf{q}} \\ -M^{-1}(\mathbf{c} + \mathbf{g} - \mathbf{J}_c^\top \boldsymbol{\lambda}_{\text{passive}}) \end{pmatrix}
 \]</span></p>
-<p>Here <span class="math inline">\(\lambdavec_{\text{passive}}\)</span> are the constraint forces required to maintain constraints under passive dynamics only.</p>
+<p>Here <span class="math inline">\(\boldsymbol{\lambda}_{\text{passive}}\)</span> are the constraint forces required to maintain constraints under passive dynamics only.</p>
 <p><strong>theorem:</strong> [Drift Projection] The drift dynamics, when projected onto the null space coordinates, become:</p>
 <p><span class="math display">\[
-    \dot{\bm{z}}_{\text{drift}} = -\bar{M}^{-1}(\bar{\cvec} + \bar{\gvec})
+    \dot{\mathbf{z}}_{\text{drift}} = -\bar{M}^{-1}(\bar{\mathbf{c}} + \bar{\mathbf{g}})
 \]</span></p>
 <p>This is independent of constraint forces—they have been naturally eliminated through the null space formulation.</p>
 <p>The separation of drift and control has a beautiful interpretation in golf: - <strong>Drift</strong>: The passive dynamics due to gravity and centrifugal/Coriolis effects</p>
@@ -695,24 +712,24 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="the-golf-swing-as-a-control-problem">The Golf Swing as a Control Problem</h3>
 <p>In golf biomechanics, we can identify the control-affine structure:</p>
 <p><span class="math display">\[
-    \underbrace{\ddot{\qvec}}_{\text{acceleration}} = \underbrace{-M^{-1}(\cvec + \gvec)}_{\text{drift } \avec_0(\qvec, \dot{\qvec})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\qvec)} \tauvec_{\text{muscle}}
+    \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
 \]</span></p>
 <p>Key observations: 1. The null space projector <span class="math inline">\(P\)</span> determines which muscle forces are <em>controllable</em></p>
 <ol start="2" type="1">
-<li><p>Forces in <span class="math inline">\(\rangespace(\Jc^\top)\)</span> are absorbed by constraints (joint limits, grip forces)</p></li>
-<li><p>The drift term <span class="math inline">\(\avec_0\)</span> can be exploited—elite golfers “ride” the natural dynamics</p></li>
+<li><p>Forces in <span class="math inline">\(\operatorname{range}(\mathbf{J}_c^\top)\)</span> are absorbed by constraints (joint limits, grip forces)</p></li>
+<li><p>The drift term <span class="math inline">\(\mathbf{a}_0\)</span> can be exploited—elite golfers “ride” the natural dynamics</p></li>
 </ol>
 </section>
 <section id="controllability-and-the-null-space" class="level3">
 <h3 class="anchored" data-anchor-id="controllability-and-the-null-space">Controllability and the Null Space</h3>
 <p><strong>definition:</strong> [Control Distribution] The <em>effective control distribution</em> is:</p>
 <p><span class="math display">\[
-    \mathcal{G}(\qvec) = \text{span}\{P(\qvec) \bvec_1, P(\qvec) \bvec_2, \ldots, P(\qvec) \bvec_p\}
+    \mathcal{G}(\mathbf{q}) = \text{span}\{P(\mathbf{q}) \mathbf{b}_1, P(\mathbf{q}) \mathbf{b}_2, \ldots, P(\mathbf{q}) \mathbf{b}_p\}
 \]</span></p>
-<p>where <span class="math inline">\(\bvec_i\)</span> are the directions of applied control forces.</p>
+<p>where <span class="math inline">\(\mathbf{b}_i\)</span> are the directions of applied control forces.</p>
 <p><strong>theorem:</strong> [Constrained Controllability] The constrained system is locally controllable only if:</p>
 <p><span class="math display">\[
-    \dim(\mathcal{G}(\qvec)) = n - m
+    \dim(\mathcal{G}(\mathbf{q})) = n - m
 \]</span></p>
 <p>That is, the projected control inputs must span the entire null space.</p>
 <p>In the golf swing, this has implications for: - Joint actuation strategy</p>
@@ -727,17 +744,17 @@ window.Quarto = {
 <section id="svd-based-null-space-computation" class="level3">
 <h3 class="anchored" data-anchor-id="svd-based-null-space-computation">SVD-Based Null Space Computation</h3>
 <p>The Singular Value Decomposition (SVD) provides a numerically stable method for computing the null space.</p>
-<p><strong>theorem:</strong> [SVD and Null Space] Let <span class="math inline">\(\Jc = U \Sigma V^\top\)</span> be the SVD of <span class="math inline">\(\Jc\)</span>, where <span class="math inline">\(\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_r, 0, \ldots, 0)\)</span> with <span class="math inline">\(r = \text{rank}(\Jc)\)</span>. Then:</p>
+<p><strong>theorem:</strong> [SVD and Null Space] Let <span class="math inline">\(\mathbf{J}_c = U \Sigma V^\top\)</span> be the SVD of <span class="math inline">\(\mathbf{J}_c\)</span>, where <span class="math inline">\(\Sigma = \text{diag}(\sigma_1, \ldots, \sigma_r, 0, \ldots, 0)\)</span> with <span class="math inline">\(r = \text{rank}(\mathbf{J}_c)\)</span>. Then:</p>
 <p><span class="math display">\[
     N = [v_{r+1}, v_{r+2}, \ldots, v_n]
 \]</span></p>
-<p>where <span class="math inline">\(v_i\)</span> are the columns of <span class="math inline">\(V\)</span> corresponding to zero singular values. $$</p>
+<p>where <span class="math inline">\(v_i\)</span> are the columns of <span class="math inline">\(V\)</span> corresponding to zero singular values.</p>
 </section>
 <section id="qr-decomposition-approach" class="level3">
 <h3 class="anchored" data-anchor-id="qr-decomposition-approach">QR Decomposition Approach</h3>
 <p>For sparse constraint Jacobians (common in multi-body systems), QR decomposition can be more efficient:</p>
 <p><span class="math display">\[
-    \Jc^\top = QR = \begin{pmatrix} Q_1 &amp; Q_2 \end{pmatrix} \begin{pmatrix} R_1 \\ \bm{0} \end{pmatrix}
+    \mathbf{J}_c^\top = QR = \begin{pmatrix} Q_1 &amp; Q_2 \end{pmatrix} \begin{pmatrix} R_1 \\ \boldsymbol{0} \end{pmatrix}
 \]</span></p>
 <p>The null space basis is <span class="math inline">\(N = Q_2\)</span>, the columns of <span class="math inline">\(Q\)</span> corresponding to zero rows in <span class="math inline">\(R\)</span>.</p>
 </section>
@@ -768,13 +785,13 @@ window.Quarto = {
 <p><strong>Grip constraint</strong> (both hands on club):</p>
 <p><span class="math display">\[
 \begin{align}
-    \Phivec_{\text{left grip}} &amp;= \bm{p}_{\text{left hand}} - \bm{p}_{\text{club grip upper}} = \bm{0} \quad (3 \text{ constraints}) \\
-    \Phivec_{\text{right grip}} &amp;= \bm{p}_{\text{right hand}} - \bm{p}_{\text{club grip lower}} = \bm{0} \quad (3 \text{ constraints})
+    \boldsymbol{\Phi}_{\text{left grip}} &amp;= \mathbf{p}_{\text{left hand}} - \mathbf{p}_{\text{club grip upper}} = \boldsymbol{0} \quad (3 \text{ constraints}) \\
+    \boldsymbol{\Phi}_{\text{right grip}} &amp;= \mathbf{p}_{\text{right hand}} - \mathbf{p}_{\text{club grip lower}} = \boldsymbol{0} \quad (3 \text{ constraints})
 \end{align}
 \]</span></p>
 <p><strong>Ground contact</strong> (stance):</p>
 <p><span class="math display">\[
-    \Phivec_{\text{stance}} = z_{\text{pelvis}} - h_{\text{nominal}} = 0 \quad (1 \text{ constraint, simplified})
+    \boldsymbol{\Phi}_{\text{stance}} = z_{\text{pelvis}} - h_{\text{nominal}} = 0 \quad (1 \text{ constraint, simplified})
 \]</span></p>
 <p>Total constraints: <span class="math inline">\(m = 7\)</span> (in this simplified model)</p>
 <p>Effective DOF: <span class="math inline">\(n - m = 26 - 7 = 19\)</span></p>
@@ -783,10 +800,10 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="constraint-jacobian-structure">Constraint Jacobian Structure</h3>
 <p>The constraint Jacobian has a sparse block structure:</p>
 <p><span class="math display">\[
-    \Jc = \begin{pmatrix}
-        \bm{0} &amp; \bm{0} &amp; J_{\text{left arm}} &amp; \bm{0} &amp; -I_3 &amp; \bm{0} \\
-        \bm{0} &amp; \bm{0} &amp; \bm{0} &amp; J_{\text{right arm}} &amp; -I_3 &amp; \bm{0} \\
-        J_{\text{stance}} &amp; \bm{0} &amp; \bm{0} &amp; \bm{0} &amp; \bm{0} &amp; \bm{0}
+    \mathbf{J}_c = \begin{pmatrix}
+        \boldsymbol{0} &amp; \boldsymbol{0} &amp; J_{\text{left arm}} &amp; \boldsymbol{0} &amp; -I_3 &amp; \boldsymbol{0} \\
+        \boldsymbol{0} &amp; \boldsymbol{0} &amp; \boldsymbol{0} &amp; J_{\text{right arm}} &amp; -I_3 &amp; \boldsymbol{0} \\
+        J_{\text{stance}} &amp; \boldsymbol{0} &amp; \boldsymbol{0} &amp; \boldsymbol{0} &amp; \boldsymbol{0} &amp; \boldsymbol{0}
     \end{pmatrix}
 \]</span></p>
 <p>This structure can be exploited for efficient null space computation.</p>
@@ -795,7 +812,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="kinematic-synergies-via-null-space-analysis">Kinematic Synergies via Null Space Analysis</h3>
 <p>The null space basis vectors <span class="math inline">\(\{n_1, n_2, \ldots, n_{19}\}\)</span> reveal the <em>kinematic synergies</em>—coordinated joint motions that satisfy all constraints:</p>
 <p><span class="math display">\[
-    n_i = \begin{pmatrix} \delta\theta_{\text{pelvis}} \\ \delta\theta_{\text{torso}} \\ \delta\theta_{\text{left arm}} \\ \delta\theta_{\text{right arm}} \\ \delta\bm{p}_{\text{club}} \\ \delta\bm{R}_{\text{club}} \end{pmatrix}_i
+    n_i = \begin{pmatrix} \delta\theta_{\text{pelvis}} \\ \delta\theta_{\text{torso}} \\ \delta\theta_{\text{left arm}} \\ \delta\theta_{\text{right arm}} \\ \delta\mathbf{p}_{\text{club}} \\ \delta\mathbf{R}_{\text{club}} \end{pmatrix}_i
 \]</span></p>
 <p>Principal Component Analysis (PCA) of these synergies often reveals: - <strong>X-factor</strong>: Coordinated pelvis-torso separation</p>
 <ul>
@@ -810,7 +827,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="the-natural-swing-exploiting-drift">The Natural Swing: Exploiting Drift</h3>
 <p>Elite golfers are often described as having an “effortless” swing. From a control-theoretic perspective, this means maximally exploiting the drift dynamics:</p>
 <p><span class="math display">\[
-    \text{Optimal swing} \approx \fvec(\xvec) + \text{minimal control corrections}
+    \text{Optimal swing} \approx \mathbf{f}(\mathbf{x}) + \text{minimal control corrections}
 \]</span></p>
 <p>The drift in the downswing includes: - Gravitational acceleration of the club</p>
 <ul>
@@ -820,9 +837,9 @@ window.Quarto = {
 </section>
 <section id="control-authority-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="control-authority-analysis">Control Authority Analysis</h3>
-<p>The control effectiveness matrix <span class="math inline">\(B(\qvec) = M^{-1} P\)</span> determines how muscle forces translate to clubhead acceleration. Key insights:</p>
+<p>The control effectiveness matrix <span class="math inline">\(B(\mathbf{q}) = M^{-1} P\)</span> determines how muscle forces translate to clubhead acceleration. Key insights:</p>
 <p><span class="math display">\[
-    \dot{v}_{\text{clubhead}} = J_{\text{club}}(\qvec) \left[ \avec_0(\qvec, \dot{\qvec}) + B(\qvec) \tauvec_{\text{muscle}} \right]
+    \dot{v}_{\text{clubhead}} = J_{\text{club}}(\mathbf{q}) \left[ \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}}) + B(\mathbf{q}) \boldsymbol{\tau}_{\text{muscle}} \right]
 \]</span></p>
 <p>where <span class="math inline">\(J_{\text{club}}\)</span> is the Jacobian mapping joint velocities to clubhead velocity.</p>
 <p><strong>proposition:</strong> [Control Authority Near Impact] As the swing approaches impact, the null space dimension may change (e.g., as the wrists unhinge). This creates a window of enhanced control authority that skilled golfers exploit for last-instant adjustments.</p>
@@ -831,11 +848,11 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="energy-flow-analysis">Energy Flow Analysis</h3>
 <p>The null space formulation enables tracking of energy flow:</p>
 <p><span class="math display">\[
-    \frac{d}{dt}\left(\frac{1}{2} \dot{\bm{z}}^\top \bar{M} \dot{\bm{z}}\right) = \dot{\bm{z}}^\top \bar{\tauvec} - \dot{\bm{z}}^\top \bar{\gvec}
+    \frac{d}{dt}\left(\frac{1}{2} \dot{\mathbf{z}}^\top \bar{M} \dot{\mathbf{z}}\right) = \dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}} - \dot{\mathbf{z}}^\top \bar{\mathbf{g}}
 \]</span></p>
-<p>This separates: - Power input from muscles: <span class="math inline">\(\dot{\bm{z}}^\top \bar{\tauvec}\)</span></p>
+<p>This separates: - Power input from muscles: <span class="math inline">\(\dot{\mathbf{z}}^\top \bar{\boldsymbol{\tau}}\)</span></p>
 <ul>
-<li><p>Gravitational power: <span class="math inline">\(-\dot{\bm{z}}^\top \bar{\gvec}\)</span></p></li>
+<li><p>Gravitational power: <span class="math inline">\(-\dot{\mathbf{z}}^\top \bar{\mathbf{g}}\)</span></p></li>
 <li><p>Energy stored/released in constraint forces: implicitly zero (orthogonal to motion)</p></li>
 </ul>
 </section>
@@ -846,9 +863,9 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="configuration-dependent-null-space-dimension">Configuration-Dependent Null Space Dimension</h3>
 <p>In some configurations, constraints may become dependent (singular configurations):</p>
 <p><span class="math display">\[
-    \text{rank}(\Jc(\qvec^*)) &lt; m
+    \text{rank}(\mathbf{J}_c(\mathbf{q}^*)) &lt; m
 \]</span></p>
-<p>At such configurations, <span class="math inline">\(\dim(\nullspace(\Jc))\)</span> increases—the system gains degrees of freedom. In golf, this occurs at: - Full wrist cock position (gimbal lock-like behavior)</p>
+<p>At such configurations, <span class="math inline">\(\dim(\operatorname{null}(\mathbf{J}_c))\)</span> increases—the system gains degrees of freedom. In golf, this occurs at: - Full wrist cock position (gimbal lock-like behavior)</p>
 <ul>
 <li><p>Extreme backswing positions</p></li>
 <li><p>Near-singular arm configurations</p></li>
@@ -858,15 +875,15 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="velocity-level-vs.-acceleration-level-null-spaces">Velocity-Level vs.&nbsp;Acceleration-Level Null Spaces</h3>
 <p>For rheonomic (time-dependent) constraints or when considering acceleration analysis:</p>
 <p><span class="math display">\[
-    \Jc \ddot{\qvec} = -\dot{\Jc} \dot{\qvec} - \ddot{\Phivec}_{\text{prescribed}}
+    \mathbf{J}_c \ddot{\mathbf{q}} = -\dot{\mathbf{J}}_c \dot{\mathbf{q}} - \ddot{\boldsymbol{\Phi}}_{\text{prescribed}}
 \]</span></p>
-<p>The acceleration-level null space is still <span class="math inline">\(\nullspace(\Jc)\)</span>, but the particular solution changes.</p>
+<p>The acceleration-level null space is still <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span>, but the particular solution changes.</p>
 </section>
 <section id="lie-bracket-relationships" class="level3">
 <h3 class="anchored" data-anchor-id="lie-bracket-relationships">Lie Bracket Relationships</h3>
 <p>The control distribution and drift interact through Lie brackets:</p>
 <p><span class="math display">\[
-    [\fvec, g_i] = \frac{\partial g_i}{\partial \xvec} \fvec - \frac{\partial \fvec}{\partial \xvec} g_i
+    [\mathbf{f}, g_i] = \frac{\partial g_i}{\partial \mathbf{x}} \mathbf{f} - \frac{\partial \mathbf{f}}{\partial \mathbf{x}} g_i
 \]</span></p>
 <p>These determine: - Additional reachable directions (controllability)</p>
 <ul>
@@ -880,33 +897,30 @@ window.Quarto = {
 <p>The null space of the constraint Jacobian provides a powerful framework for analyzing and simulating constrained multi-body systems like the golf swing. Key takeaways include:</p>
 <ol type="1">
 <li><p><strong>Dimension reduction</strong>: The null space projects the system onto its true kinematic degrees of freedom, eliminating constraint forces from the equations of motion.</p></li>
-<li><p><strong>Force decomposition</strong>: Applied forces split into motion-producing (in <span class="math inline">\(\nullspace(\Jc)\)</span>) and constraint-absorbed (in <span class="math inline">\(\rangespace(\Jc^\top)\)</span>) components.</p></li>
+<li><p><strong>Force decomposition</strong>: Applied forces split into motion-producing (in <span class="math inline">\(\operatorname{null}(\mathbf{J}_c)\)</span>) and constraint-absorbed (in <span class="math inline">\(\operatorname{range}(\mathbf{J}_c^\top)\)</span>) components.</p></li>
 <li><p><strong>Control-affine structure</strong>: The constrained dynamics naturally exhibit drift-control separation, with profound implications for understanding optimal motor control strategies.</p></li>
 <li><p><strong>Synergy identification</strong>: Null space basis vectors reveal coordinated motion patterns—the kinematic building blocks of skilled movement.</p></li>
 <li><p><strong>Computational efficiency</strong>: Null space methods enable simulation of complex biomechanical systems with fewer equations and better numerical properties.</p></li>
 </ol>
 <p>For golf swing analysis specifically, this framework explains how elite players achieve high clubhead speeds with apparent ease: they structure their technique to align muscle forces with the null space and exploit drift dynamics, rather than fighting against constraints.</p>
 </section>
-<section id="proof-orthogonality-of-constraint-forces" class="level2">
-<h2 class="anchored" data-anchor-id="proof-orthogonality-of-constraint-forces">Proof: Orthogonality of Constraint Forces</h2>
-<p><strong>theorem:</strong> Constraint forces <span class="math inline">\(\Jc^\top \lambdavec\)</span> do no work on admissible motions.</p>
-</section>
+
 <section id="derivation-of-the-null-space-projector" class="level2">
 <h2 class="anchored" data-anchor-id="derivation-of-the-null-space-projector">Derivation of the Null Space Projector</h2>
-<p>Starting from the decomposition <span class="math inline">\(\R^n = \nullspace(\Jc) \oplus \rangespace(\Jc^\top)\)</span>, any vector <span class="math inline">\(\bm{v}\)</span> can be written as:</p>
+<p>Starting from the decomposition <span class="math inline">\(\mathbb{R}^n = \operatorname{null}(\mathbf{J}_c) \oplus \operatorname{range}(\mathbf{J}_c^\top)\)</span>, any vector <span class="math inline">\(\mathbf{v}\)</span> can be written as:</p>
 <p><span class="math display">\[
-    \bm{v} = \bm{v}_N + \bm{v}_R
+    \mathbf{v} = \mathbf{v}_N + \mathbf{v}_R
 \]</span></p>
-<p>where <span class="math inline">\(\bm{v}_N \in \nullspace(\Jc)\)</span> and <span class="math inline">\(\bm{v}_R \in \rangespace(\Jc^\top) = \nullspace(\Jc)^\perp\)</span>.</p>
-<p>Since <span class="math inline">\(\bm{v}_R = \Jc^\top \bm{w}\)</span> for some <span class="math inline">\(\bm{w}\)</span>, and <span class="math inline">\(\Jc \bm{v}_N = \bm{0}\)</span>:</p>
+<p>where <span class="math inline">\(\mathbf{v}_N \in \operatorname{null}(\mathbf{J}_c)\)</span> and <span class="math inline">\(\mathbf{v}_R \in \operatorname{range}(\mathbf{J}_c^\top) = \operatorname{null}(\mathbf{J}_c)^\perp\)</span>.</p>
+<p>Since <span class="math inline">\(\mathbf{v}_R = \mathbf{J}_c^\top \mathbf{w}\)</span> for some <span class="math inline">\(\mathbf{w}\)</span>, and <span class="math inline">\(\mathbf{J}_c \mathbf{v}_N = \boldsymbol{0}\)</span>:</p>
 <p><span class="math display">\[
-    \Jc \bm{v} = \Jc \Jc^\top \bm{w} \implies \bm{w} = (\Jc \Jc^\top)^{-1} \Jc \bm{v}
+    \mathbf{J}_c \mathbf{v} = \mathbf{J}_c \mathbf{J}_c^\top \mathbf{w} \implies \mathbf{w} = (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v}
 \]</span></p>
 <p>Therefore:</p>
 <p><span class="math display">\[
 \begin{align}
-    \bm{v}_N &amp;= \bm{v} - \bm{v}_R = \bm{v} - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc \bm{v} \\
-    &amp;= \left(I - \Jc^\top (\Jc \Jc^\top)^{-1} \Jc\right) \bm{v} = P \bm{v}
+    \mathbf{v}_N &amp;= \mathbf{v} - \mathbf{v}_R = \mathbf{v} - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c \mathbf{v} \\
+    &amp;= \left(I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c\right) \mathbf{v} = P \mathbf{v}
 \end{align}
 \]</span></p>
 </section>
@@ -929,7 +943,13 @@ window.Quarto = {
 
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section id="appendix" class="level2 appendix"><h2 class="anchored quarto-appendix-heading">Appendix</h2><div class="quarto-appendix-contents">
+
+<section id="proof-orthogonality-of-constraint-forces" class="level3">
+<h3 class="anchored" data-anchor-id="proof-orthogonality-of-constraint-forces">Proof: Orthogonality of Constraint Forces</h3>
+<p><strong>theorem:</strong> Constraint forces <span class="math inline">\(\mathbf{J}_c^\top \boldsymbol{\lambda}\)</span> do no work on admissible motions.</p>
+</section>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1331,29 +1351,20 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Analysis of the drift-to-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation.">
 
 <title>A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing – AffineDrift</title>
 <style>
@@ -19,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,11 +105,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -103,82 +197,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -214,6 +260,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -246,10 +293,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -269,10 +316,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -308,10 +355,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -351,10 +398,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -362,10 +409,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -405,9 +452,9 @@ window.Quarto = {
   <li><a href="#dominance-of-quadratic-velocity-terms" id="toc-dominance-of-quadratic-velocity-terms" class="nav-link" data-scroll-target="#dominance-of-quadratic-velocity-terms"><span class="header-section-number">3.3</span> 2.3 Dominance of Quadratic Velocity Terms</a></li>
   </ul></li>
   <li><a href="#driftcontrol-ratio-dcr" id="toc-driftcontrol-ratio-dcr" class="nav-link" data-scroll-target="#driftcontrol-ratio-dcr"><span class="header-section-number">4</span> 3. Drift–Control Ratio (DCR)</a></li>
-  <li><a href="#nonlinear-controllability-via-lie-brackets" id="toc-nonlinear-controllability-via-lie-brackets" class="nav-link" data-scroll-target="#nonlinear-controllability-via-lie-brackets"><span class="header-section-number">5</span> 4. Nonlinear Controllability via Lie Brackets</a>
+  <li><a href="#nonlinear-reachability-and-the-effective-control-cone" id="toc-nonlinear-reachability-and-the-effective-control-cone" class="nav-link" data-scroll-target="#nonlinear-reachability-and-the-effective-control-cone"><span class="header-section-number">5</span> 4. Nonlinear Reachability and the “Effective Control Cone”</a>
   <ul>
-  <li><a href="#behavior-under-increasing-drift" id="toc-behavior-under-increasing-drift" class="nav-link" data-scroll-target="#behavior-under-increasing-drift"><span class="header-section-number">5.1</span> 4.1 Behavior Under Increasing Drift</a></li>
+  <li><a href="#the-anisotropy-of-control-authority" id="toc-the-anisotropy-of-control-authority" class="nav-link" data-scroll-target="#the-anisotropy-of-control-authority"><span class="header-section-number">5.1</span> 4.1 The Anisotropy of Control Authority</a></li>
   </ul></li>
   <li><a href="#control-authority-collapse" id="toc-control-authority-collapse" class="nav-link" data-scroll-target="#control-authority-collapse"><span class="header-section-number">6</span> 5. Control Authority Collapse</a></li>
   <li><a href="#the-control-cone-analogy-a-relativistic-perspective" id="toc-the-control-cone-analogy-a-relativistic-perspective" class="nav-link" data-scroll-target="#the-control-cone-analogy-a-relativistic-perspective"><span class="header-section-number">7</span> 6. The Control Cone Analogy: A Relativistic Perspective</a>
@@ -427,10 +474,12 @@ window.Quarto = {
   <li><a href="#early-downswing-cone-narrowing" id="toc-early-downswing-cone-narrowing" class="nav-link" data-scroll-target="#early-downswing-cone-narrowing"><span class="header-section-number">7.5.3</span> Early Downswing — Cone Narrowing</a></li>
   <li><a href="#late-downswing-cone-collapse" id="toc-late-downswing-cone-collapse" class="nav-link" data-scroll-target="#late-downswing-cone-collapse"><span class="header-section-number">7.5.4</span> Late Downswing — Cone Collapse</a></li>
   </ul></li>
+  <li><a href="#sec-anisotropy" id="toc-sec-anisotropy" class="nav-link" data-scroll-target="#sec-anisotropy"><span class="header-section-number">7.6</span> Anisotropy of the Control Cone: The “Pancake” Hypothesis</a></li>
   </ul></li>
   <li><a href="#stability-of-impact-and-clubface-closure-variance" id="toc-stability-of-impact-and-clubface-closure-variance" class="nav-link" data-scroll-target="#stability-of-impact-and-clubface-closure-variance"><span class="header-section-number">8</span> 7. Stability of Impact and Clubface Closure Variance</a></li>
   <li><a href="#numerical-example-drift-vs-control-magnitude" id="toc-numerical-example-drift-vs-control-magnitude" class="nav-link" data-scroll-target="#numerical-example-drift-vs-control-magnitude"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</a></li>
   <li><a href="#conceptual-linkages" id="toc-conceptual-linkages" class="nav-link" data-scroll-target="#conceptual-linkages"><span class="header-section-number">10</span> 9. Conceptual Linkages</a></li>
+  <li><a href="#external-resources" id="toc-external-resources" class="nav-link" data-scroll-target="#external-resources"><span class="header-section-number">11</span> 10. External Resources</a></li>
   </ul>
 </nav>
     </div>
@@ -442,6 +491,11 @@ window.Quarto = {
 <h1 class="title">A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing</h1>
 </div>
 
+<div>
+  <div class="description">
+    Analysis of the drift-to-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation.
+  </div>
+</div>
 
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">Authors</div>
@@ -477,14 +531,17 @@ window.Quarto = {
 <section id="abstract" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
 <p>High-speed golf swings represent nonlinear biomechanical systems in which passive dynamics (drift) increasingly dominate over active torques (control) as angular velocities rise. We formalize this phenomenon using the <strong>Drift–Control Ratio (DCR)</strong>,</p>
-<p>[ (t)=, ]</p>
-<p>for a control-affine system ( =f(x)+g(x)u ). We derive explicit expressions for drift and control using a 3-link arm–forearm–club model and conduct a nonlinear controllability analysis using Lie brackets. We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of practical controllability during the downswing.</p>
-<p>We introduce a novel analogy to <strong>relativistic time cones</strong>, showing that a golf swing has an evolving <strong>control cone</strong>—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation physically impossible. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.</p>
+<p><span class="math display">\[
+\mathrm{DCR}(t)=\frac{\|f(x(t))\|}{\|g(x(t))u(t)\|},
+\]</span></p>
+<p>We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of <strong>gross trajectory controllability</strong> during the downswing.</p>
+<p>We introduce a novel analogy to <strong>relativistic time cones</strong>, showing that a golf swing has an evolving <strong>control cone</strong>—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation of the <em>trajectory</em> physically impossible, though micro-adjustments to the <em>outcome</em> may remain. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.</p>
 </section>
 <section id="introduction" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> 1. Introduction</h1>
-<p>Elite golfers routinely generate clubhead speeds exceeding (45;), wrist angular velocities exceeding (2000^/), and torso angular velocities approaching (900^/). Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.</p>
+<p>Elite golfers routinely generate clubhead speeds exceeding <span class="math inline">\(45\;\mathrm{m/s}\)</span>, wrist angular velocities exceeding <span class="math inline">\(2000^\circ/\mathrm{s}\)</span>, and torso angular velocities approaching <span class="math inline">\(900^\circ/\mathrm{s}\)</span>. Human neuromechanical delays (≈150–250 ms) and electromechanical activation delays (≈30–50 ms) make real-time corrections during the downswing impossible.</p>
 <p>This mirrors a common theme in high-speed movement: <strong>the system transitions from control-dominated to drift-dominated dynamics</strong> as velocity increases.</p>
+<p>Building on the foundational framework established in <em>Affine Control Interpretation of the Golf Swing</em>, we analyze this transition not as a vague loss of coordination, but as a precise algebraic consequence of the equation of motion <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>. While the primary manuscript focused on <em>decomposing</em> these forces to identify causality, this article focuses on their <em>relative magnitude</em> to quantify controllability.</p>
 <p>Our goal is to provide a rigorous treatment of this phenomenon through:</p>
 <ol type="1">
 <li><strong>Multibody dynamic derivations</strong> of drift and control.</li>
@@ -498,17 +555,19 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> 2. System Modeling: The 3-Link Arm–Forearm–Club Model</h1>
 <p>We model the golfer–club chain as a 3-DOF planar system:</p>
 <ul>
-<li>(q_1): shoulder rotation</li>
-<li>(q_2): elbow rotation</li>
-<li>(q_3): wrist/club hinge</li>
+<li><span class="math inline">\(q_1\)</span>: shoulder rotation</li>
+<li><span class="math inline">\(q_2\)</span>: elbow rotation</li>
+<li><span class="math inline">\(q_3\)</span>: wrist/club hinge</li>
 </ul>
 <p>Generalized coordinates:</p>
-<p>[ q = (q_1, q_2, q_3)^T, ^3. ]</p>
+<p><span class="math display">\[
+q = (q_1, q_2, q_3)^T,\quad \dot{q} \in \mathbb{R}^3.
+\]</span></p>
 <section id="forward-kinematics" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="forward-kinematics"><span class="header-section-number">3.1</span> 2.1 Forward Kinematics</h2>
 <p>The clubhead position is:</p>
-[
-<span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 x &amp;=
 \ell_1\cos q_1
 + \ell_2\cos(q_1+q_2)
@@ -517,78 +576,143 @@ y &amp;=
 \ell_1\sin q_1
 + \ell_2\sin(q_1+q_2)
 + \ell_3\sin(q_1+q_2+q_3).
-\end{aligned}\]</span>
-<p>]</p>
+\end{aligned}
+\]</span></p>
 <p>Velocity:</p>
-<p>[ = J(q). ]</p>
+<p><span class="math display">\[
+\dot{x} = J(q)\dot{q}.
+\]</span></p>
 </section>
 <section id="lagrangian-dynamics" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="lagrangian-dynamics"><span class="header-section-number">3.2</span> 2.2 Lagrangian Dynamics</h2>
 <p>The equation of motion is:</p>
-<p>[ M(q) + C(q,) + G(q) = . ]</p>
+<p><span class="math display">\[
+M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau.
+\]</span></p>
 <p>The drift term is:</p>
-[ f(x)=
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+f(x)=
+\begin{bmatrix}
 \dot{q} \\
 M^{-1}(-C\dot{q}-G)
-\end{bmatrix}\]</span>
-<p>, ]</p>
+\end{bmatrix},
+\]</span></p>
 <p>and the control term is:</p>
-[ g(x)u=
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+g(x)u=
+\begin{bmatrix}
 0 \\
 M^{-1}\tau
-\end{bmatrix}\]</span>
-<p>. ]</p>
+\end{bmatrix}.
+\]</span></p>
 </section>
 <section id="dominance-of-quadratic-velocity-terms" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="dominance-of-quadratic-velocity-terms"><span class="header-section-number">3.3</span> 2.3 Dominance of Quadratic Velocity Terms</h2>
 <p>Centripetal and Coriolis terms satisfy:</p>
-<p>[ C(q,) (^2) ]</p>
+<p><span class="math display">\[
+C(q,\dot{q})\dot{q} \sim \mathcal{O}(\dot{q}^2)
+\]</span></p>
 <p>Hence:</p>
-<p>[ |f(x)| k||^2. ]</p>
+<p><span class="math display">\[
+\|f(x)\| \sim k\|\dot{q}\|^2.
+\]</span></p>
 <p>Contrast with:</p>
-<p>[ |g(x)u| = |M^{-1}| ||. ]</p>
+<p><span class="math display">\[
+\|g(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
+\]</span></p>
 <p>The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.</p>
-<p>This scaling disparity is the kinetic manifestation of the <strong>Force Taxonomy</strong> established in the broader framework. The drift term <span class="math inline">\(f(x)\)</span> aggregates the configuration-dependent potential forces and the velocity-dependent Coriolis/centripetal forces. While the former are bounded, the latter scale quadratically with swing speed. Consequently, the “Inertial Memory” of the system (embedded in <span class="math inline">\(f(x)\)</span>) energetically eclipses the “Current Agency” (available via <span class="math inline">\(g(x)u\)</span>), necessitating the “Early Delivery” strategy predicted by the ZTCF baseline.</p>
+<p>This scaling disparity is the kinetic manifestation of the <strong>Force Taxonomy</strong> established in Part 3 of the framework. The drift term <span class="math inline">\(f(x)\)</span> aggregates the configuration-dependent potential forces (<span class="math inline">\(\tau_{\text{config}}\)</span>) and the velocity-dependent Coriolis/centripetal forces (<span class="math inline">\(\tau_{\text{vel.\,drift}}\)</span>). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the “Inertial Memory” of the system (embedded in <span class="math inline">\(f(x)\)</span>) energetically eclipses the “Current Agency” (available via <span class="math inline">\(g(x)u\)</span>), necessitating the “Early Delivery” strategy predicted by the ZTCF baseline.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Scope Limitation: Planar vs.&nbsp;Axial Dynamics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is critical to note that this planar model (<span class="math inline">\(q \in \mathbb{R}^3\)</span>) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in <a href="#sec-anisotropy" class="quarto-xref">Section&nbsp;7.6</a>, this implies our DCR analysis strictly governs <strong>path controllability</strong>, while <strong>face controllability</strong> operates in an orthogonal, lower-inertia subspace.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="driftcontrol-ratio-dcr" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> 3. Drift–Control Ratio (DCR)</h1>
-<p>We define:</p>
-<p>[ (t) = . ]</p>
-<p>Using approximations:</p>
-<p>[ |f| a|| + b||^2, |g u| c||, ]</p>
+<p>We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the drift vector field to the control vector field.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Dimensional Consistency Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A naïve application of the Euclidean norm to the full state vector drift <span class="math inline">\(\|f(x)\|\)</span> mixes units of velocity (<span class="math inline">\(\text{rad/s}\)</span>) and acceleration (<span class="math inline">\(\text{rad/s}^2\)</span>). To ensure physical meaningfulness, we restrict our definition to the <strong>dynamic fiber</strong> of the tangent bundle (the acceleration subspace), comparing the <strong>generalized forces</strong> (or equivalent accelerations) of drift against the available control authority.</p>
+</div>
+</div>
+<p><span class="math display">\[
+\mathrm{DCR}(t)
+=
+\frac{\|f_{acc}(x(t))\|}{\|g_{acc}(x(t))u(t)\|}
+\approx
+\frac{\|M^{-1}(C\dot{q} + G)\|}{\|M^{-1}\tau\|}
+\]</span></p>
+<p>Using approximations where drift forces scale quadratically with velocity (<span class="math inline">\(C\dot{q} \sim \dot{q}^2\)</span>):</p>
+<p><span class="math display">\[
+\|f_{acc}\| \sim b\|\dot{q}\|^2,\quad
+\|g_{acc} u\| \sim c\|\tau\|,
+\]</span></p>
 <p>we have:</p>
-<p>[ ]</p>
-<p>Since ((t)) typically <em>decreases</em> during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.</p>
-<p><strong>Result:</strong> [ (t) 100 ]</p>
+<p><span class="math display">\[
+\boxed{
+\mathrm{DCR}(t)
+\approx
+\frac{b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
+}
+\]</span></p>
+<p>Since <span class="math inline">\(\tau(t)\)</span> typically <em>decreases</em> during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.</p>
+<p><strong>Result:</strong> <span class="math display">\[
+\mathrm{DCR}(t) \text{ increases by } 100\times-300\times \text{ across the downswing.}
+\]</span></p>
 </section>
-<section id="nonlinear-controllability-via-lie-brackets" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> 4. Nonlinear Controllability via Lie Brackets</h1>
-<p>A control-affine system is locally controllable if:</p>
-<p>[ { g, [f,g], [f,[f,g]], } = T_x^n. ]</p>
-<p>The Lie bracket:</p>
-<p>[ [f,g] = f - g ]</p>
-<p>captures how drift distorts control directions.</p>
-<section id="behavior-under-increasing-drift" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="behavior-under-increasing-drift"><span class="header-section-number">5.1</span> 4.1 Behavior Under Increasing Drift</h2>
-<p>As drift increases:</p>
+<section id="nonlinear-reachability-and-the-effective-control-cone" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 4. Nonlinear Reachability and the “Effective Control Cone”</h1>
+<p>While the 3-link model is technically <strong>holonomic</strong> and fully actuated (assuming sufficient torque), the massive scaling of the drift term creates a regime of <strong>Practical Underactuation</strong>. We analyze this not through Lie Brackets (which govern geometric accessibility), but through <strong>Hamiltonian Reachability</strong> analysis, which governs the energetic feasibility of motion.</p>
+<p>Consider the <strong>Control Hamiltonian</strong> representing the maximum rate of change along a costate vector <span class="math inline">\(p\)</span>:</p>
+<p><span class="math display">\[
+H(x,p) = \sup_{u \in \mathcal{U}} p^T(f(x) + g(x)u).
+\]</span></p>
+<p>As velocity increases, the “Drift Component” <span class="math inline">\(p^T f(x)\)</span> scales quadratically (<span class="math inline">\(\sim \dot{q}^2\)</span>), while the “Control Component” <span class="math inline">\(p^T g(x) u\)</span> remains bounded by physiological torque limits (<span class="math inline">\(u_{\text{max}}\)</span>).</p>
+<section id="the-anisotropy-of-control-authority" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="the-anisotropy-of-control-authority"><span class="header-section-number">5.1</span> 4.1 The Anisotropy of Control Authority</h2>
+<p>The result is a severe <strong>Anisotropy of the Reachable Set</strong>.</p>
 <ul>
-<li>() contains terms (^2)</li>
-<li>the bracket magnitude grows, but</li>
-<li><strong>control cannot access or excite these directions</strong>, because (g(x)u) becomes tiny relative to (f(x)).</li>
+<li><strong>Along the Drift Vector:</strong> The system possesses massive momentum. To stop or reverse the motion requires <span class="math inline">\(\tau \gg M(q) f(x)\)</span>. Since <span class="math inline">\(\|f(x)\|\)</span> exceeds <span class="math inline">\(\|\tau_{\text{max}}\|\)</span> by orders of magnitude (DCR &gt; 100), this direction is effectively uncontrollable.</li>
+<li><strong>Orthogonal to Drift:</strong> The control authority depends on the inertia matrix <span class="math inline">\(M(q)\)</span>.
+<ul>
+<li><strong>Planar Path:</strong> High inertia (<span class="math inline">\(I_{plane}\)</span>) <span class="math inline">\(\to\)</span> Low acceleration authority.</li>
+<li><strong>Axial Rotation (Supination):</strong> Low inertia (<span class="math inline">\(I_{axial}\)</span>) <span class="math inline">\(\to\)</span> High acceleration authority.</li>
+</ul></li>
 </ul>
-<p>Thus effective controllability collapses.</p>
-<p>This is a structural, not numerical, phenomenon.</p>
+<p>Thus, the “ball of reachable states” flattens into a thin <strong>pancake shape</strong>.</p>
+<p>While the DCR provides a scalar magnitude of the problem—telling us <em>that</em> path control is lost—this reachability analysis reveals the <em>geometry</em> of that loss. It shows us that while the golfer retains the ability to rotate the shaft (low inertia), they lose the ability to steer the path of the center of mass (high inertia + high drift). The golfer is locked into a <strong>“Drift Tube”</strong> determined by the initial conditions set at the top of the swing.</p>
 </section>
 </section>
 <section id="control-authority-collapse" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> 5. Control Authority Collapse</h1>
 <p>Control authority:</p>
-<p>[ (t) = = . ]</p>
+<p><span class="math display">\[
+\alpha(t) = \frac{\|g u\|}{\|f\|} = \frac{1}{\mathrm{DCR}(t)}.
+\]</span></p>
 <p>Collapse occurs when:</p>
-<p>[ (t) &lt; 0.1 (t) &gt; 10. ]</p>
+<p><span class="math display">\[
+\alpha(t) &lt; 0.1
+\quad\Leftrightarrow\quad
+\mathrm{DCR}(t) &gt; 10.
+\]</span></p>
 <p>We find:</p>
 <ul>
 <li>Collapse begins 70–120 ms before impact.</li>
@@ -603,45 +727,76 @@ M^{-1}\tau
 <p>We now extend the analysis by introducing a new conceptual tool: the <strong>Control Cone</strong>, analogous to the <strong>light cone</strong> in relativity.</p>
 <section id="relativity-background" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="relativity-background"><span class="header-section-number">7.1</span> 6.1 Relativity Background</h2>
-<p>In special relativity, the <strong>future light cone</strong> at event (p) contains all events reachable at speed ≤ (c). Points outside the cone cannot be influenced causally.</p>
+<p>In special relativity, the <strong>future light cone</strong> at event <span class="math inline">\(p\)</span> contains all events reachable at speed ≤ <span class="math inline">\(c\)</span>. Points outside the cone cannot be influenced causally.</p>
 <p>Let:</p>
 <ul>
-<li>(^+(p)): forward light cone</li>
-<li>(^-(p)): backward light cone</li>
+<li><span class="math inline">\(\mathcal{C}^+(p)\)</span>: forward light cone</li>
+<li><span class="math inline">\(\mathcal{C}^-(p)\)</span>: backward light cone</li>
 </ul>
-<p>Events outside (^+(p)) are unreachable.</p>
+<p>Events outside <span class="math inline">\(\mathcal{C}^+(p)\)</span> are unreachable.</p>
 </section>
 <section id="control-theory-parallel-reachable-sets" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="control-theory-parallel-reachable-sets"><span class="header-section-number">7.2</span> 6.2 Control Theory Parallel: Reachable Sets</h2>
 <p>For a control system:</p>
-<p>[ =f(x)+g(x)u ]</p>
-<p>the <strong>reachable set</strong> over time (t) from (x_0) is:</p>
-<p>[ (t;x_0) = { x(t) : u(s),; s}. ]</p>
+<p><span class="math display">\[
+\dot{x}=f(x)+g(x)u
+\]</span></p>
+<p>the <strong>reachable set</strong> over time <span class="math inline">\(t\)</span> from <span class="math inline">\(x_0\)</span> is:</p>
+<p><span class="math display">\[
+\mathcal{R}(t;x_0)
+=
+\left\{
+x(t) : u(s)\in \mathcal{U},\; s\in[0,t]
+\right\}.
+\]</span></p>
 <p>When control dominates, the reachable set expands widely. When drift dominates, it collapses into a narrow tube around the drift trajectory.</p>
 </section>
 <section id="defining-the-control-cone" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="defining-the-control-cone"><span class="header-section-number">7.3</span> 6.3 Defining the Control Cone</h2>
-<p>Define the <strong>Control Cone</strong> at state (x):</p>
-<p>[ <em>c(x) = </em>{t^+} (t;x). ]</p>
+<p>Define the <strong>Control Cone</strong> at state <span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[
+\mathcal{C}_c(x)
+=
+\lim_{\Delta t\to 0^+}
+\mathcal{R}(\Delta t;x).
+\]</span></p>
 <p>This is the direction set the system can move <strong>instantaneously</strong> through control perturbations.</p>
 <section id="when-drift-is-small" class="level3" data-number="7.3.1">
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="when-drift-is-small"><span class="header-section-number">7.3.1</span> When drift is small:</h3>
-<p>[ _c(x) . ]</p>
+<p><span class="math display">\[
+\mathcal{C}_c(x) \text{ is wide}.
+\]</span></p>
 </section>
 <section id="when-drift-is-large" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="when-drift-is-large"><span class="header-section-number">7.3.2</span> When drift is large:</h3>
-<p>[ _c(x) . ]</p>
+<p><span class="math display">\[
+\mathcal{C}_c(x) \text{ collapses to a thin region}.
+\]</span></p>
 <p>This is exactly analogous to the narrowing of reachable future states in relativity, but governed not by light speed, but by drift dominance.</p>
 </section>
 </section>
 <section id="mathematical-representation-of-cone-narrowing" class="level2" data-number="7.4">
 <h2 data-number="7.4" class="anchored" data-anchor-id="mathematical-representation-of-cone-narrowing"><span class="header-section-number">7.4</span> 6.4 Mathematical Representation of Cone Narrowing</h2>
 <p>The instantaneous reachable set is spanned by:</p>
-<p>[ (x) = { g(x),; <em>{e^{tf}} g,; </em>{e^{tf}}[f,g], }. ]</p>
+<p><span class="math display">\[
+\mathcal{V}(x)
+=
+\mathrm{span}\left\{
+g(x),\; \mathrm{Ad}_{e^{tf}} g,\;
+\mathrm{Ad}_{e^{tf}}[f,g], \dots
+\right\}.
+\]</span></p>
 <p>As drift grows:</p>
-<p>[ _{e^{tf}} g () ]</p>
+<p><span class="math display">\[
+\mathrm{Ad}_{e^{tf}} g
+\longrightarrow 0
+\quad (\text{relative to drift})
+\]</span></p>
 <p>and</p>
-<p>[ ((x)) . ]</p>
+<p><span class="math display">\[
+\dim(\mathcal{V}(x))
+\longrightarrow 1.
+\]</span></p>
 <p>Interpretation: The future becomes <strong>nearly predetermined</strong>.</p>
 <p>Just like a narrowing time cone restricts your causal influence, a narrowing control cone restricts your mechanical influence.</p>
 </section>
@@ -672,34 +827,89 @@ M^{-1}\tau
 <h3 data-number="7.5.4" class="anchored" data-anchor-id="late-downswing-cone-collapse"><span class="header-section-number">7.5.4</span> Late Downswing — Cone Collapse</h3>
 <ul>
 <li>Cone becomes a thin tube.</li>
-<li>Only the ballistic trajectory remains reachable.</li>
-<li>No meaningful correction is possible.</li>
+<li>Only the ballistic trajectory remains reachable (Macro-Control is lost).</li>
+<li><strong>Micro-Correction</strong> remains theoretically possible but precarious. While the golfer cannot reshape the swing, they may still influence impact parameters by the small margins required for ball flight control, provided they can overcome the massive signal-to-noise ratio imposed by the drift.</li>
 </ul>
-<p>This explains why golfers feel “along for the ride.”</p>
+<p>This explains why golfers feel “along for the ride,” even as they execute subtle hand actions to square the face.</p>
 <p>Crucially, the narrowing of the Control Cone implies that “steering” is impossible, but “selecting the tube” is not. This aligns with the <strong>Intentional Constraint Collapse</strong> theory: elite golfers do not fight the cone collapse; they structurally engineer the initial conditions (the “Effective Plant”) at the top of the backswing so that the collapsing cone naturally centers on the target state. They manage the manifold, not the trajectory.</p>
 </section>
+</section>
+<section id="sec-anisotropy" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="sec-anisotropy"><span class="header-section-number">7.6</span> Anisotropy of the Control Cone: The “Pancake” Hypothesis</h2>
+<p>A critical nuance (see <em>Planar DCR Blindness</em> critique) is that the loss of control is not isotropic. The moment of inertia about the shaft axis (<span class="math inline">\(I_{axial}\)</span>) is orders of magnitude smaller than the swing plane inertia. Thus, while the <strong>Path Control Cone</strong> (planar) collapses to a thin tube, the <strong>Face Control Cone</strong> (axial) likely remains relatively wide.</p>
+<p>This suggests the control cone is “pancake-shaped”: thin in the dimension of travel, but wide in the dimension of face orientation.</p>
+<p>However, this does not rescue the golfer from the DCR imperative. The face angle <span class="math inline">\(\phi\)</span> is coupled to the path via the <strong>closure rate</strong> (<span class="math inline">\(\dot{\phi} \approx 1500^\circ/s\)</span>). Even if axial authority remains high, the <strong>timing window</strong> to square the face is dictated by the planar trajectory. If the Planar DCR is high, the golfer cannot adjust the <em>arrival time</em> of the clubhead. Therefore, Planar DCR creates a <strong>Temporal Accuracy Constraint</strong> that indirectly bounds the Face Angle variance. You can steer the face, but you cannot steer the <em>time</em> you arrive at impact.</p>
 </section>
 </section>
 <section id="stability-of-impact-and-clubface-closure-variance" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> 7. Stability of Impact and Clubface Closure Variance</h1>
 <p>Let clubface angle be:</p>
-<p>[ (t) = h(q(t)). ]</p>
+<p><span class="math display">\[
+\phi(t) = h(q(t)).
+\]</span></p>
 <p>Linearizing:</p>
-<p>[ = H q, H = . ]</p>
+<p><span class="math display">\[
+\delta \phi = H \delta q,
+\quad H = \frac{\partial h}{\partial q}.
+\]</span></p>
 <p>Perturbation dynamics:</p>
-<p>[ x (). ]</p>
+<p><span class="math display">\[
+\delta \dot{x}
+\approx
+\frac{\partial f}{\partial x} \delta x
+\quad (\text{since control effects vanish}).
+\]</span></p>
 <p>Solution:</p>
-<p>[ x(t) = e^{A_f (t-t_0)} x(t_0), A_f = . ]</p>
+<p><span class="math display">\[
+\delta x(t)
+= e^{A_f (t-t_0)} \delta x(t_0),
+\quad
+A_f = \frac{\partial f}{\partial x}.
+\]</span></p>
 <p>The variance at impact:</p>
-<p>[ [] H e^{A_f t} _0 e<sup>{A_f</sup>T t} H^T. ]</p>
-<p>High DCR implies large (A_f), hence exponential amplification of small errors.</p>
-<p><strong>Conclusion:</strong> Impact is extremely sensitive to early-swing structure.</p>
+<p><span class="math display">\[
+\mathrm{Var}[\phi]
+\approx
+H
+e^{A_f \Delta t}
+\Sigma_0
+e^{A_f^T \Delta t}
+H^T.
+\]</span></p>
+<p>High DCR implies large <span class="math inline">\(A_f\)</span>, hence exponential amplification of small errors.</p>
+<p><strong>Conclusion:</strong> Impact is extremely sensitive to early-swing structure. While the golfer may retain the torque authority to rotate the clubface (low axial inertia), the <strong>high Planar DCR</strong> denies them the ability to slow or steer the clubhead to <em>meet</em> that face angle at the correct millisecond. Thus, <strong>Path Drift</strong> enforces <strong>Face Error</strong>.</p>
 </section>
 <section id="numerical-example-drift-vs-control-magnitude" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</h1>
-<p>import numpy as np import matplotlib.pyplot as plt</p>
-<p>t = np.linspace(0, 1, 500) drift = 0.2 + 2.5 * np.exp(-((t - 0.80)<strong>2) / 0.002) control = 0.6 - 0.3 * np.exp(-((t - 0.10)</strong>2) / 0.01)</p>
-<p>plt.figure(figsize=(10,5)) plt.plot(t, drift, label=“Drift Magnitude”, linewidth=3) plt.plot(t, control, label=“Control Magnitude”, linewidth=3) plt.title(“Drift vs Control Magnitude Throughout the Golf Swing”) plt.xlabel(“Normalized Swing Phase”) plt.ylabel(“Relative Magnitude”) plt.legend() plt.grid(True) plt.tight_layout() plt.show()</p>
+<div id="74c9c3f9" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">500</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>drift <span class="op">=</span> <span class="fl">0.2</span> <span class="op">+</span> <span class="fl">2.5</span> <span class="op">*</span> np.exp(<span class="op">-</span>((t <span class="op">-</span> <span class="fl">0.80</span>)<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> <span class="fl">0.002</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> <span class="fl">0.6</span> <span class="op">-</span> <span class="fl">0.3</span> <span class="op">*</span> np.exp(<span class="op">-</span>((t <span class="op">-</span> <span class="fl">0.10</span>)<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> <span class="fl">0.01</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.plot(t, drift, label<span class="op">=</span><span class="st">"Drift Magnitude"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.plot(t, control, label<span class="op">=</span><span class="st">"Control Magnitude"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Drift vs Control Magnitude Throughout the Golf Swing"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Normalized Swing Phase"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Relative Magnitude"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="controllability-drift-ratio_files/figure-html/cell-2-output-1.png" width="950" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="conceptual-linkages" class="level1" data-number="10">
 <h1 data-number="10"><span class="header-section-number">10</span> 9. Conceptual Linkages</h1>
@@ -718,6 +928,136 @@ M^{-1}\tau
 <li><strong>Zero Torque Counterfactual (ZTCF)</strong>: For the baseline trajectory that represents the infinite-DCR limit.</li>
 </ul></li>
 </ol>
+</section>
+<section id="external-resources" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> 10. External Resources</h1>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Curator’s Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The following resources are selected to provide authoritative grounding for the concepts of Drift-Control Ratio (DCR), Signal-Dependent Noise, and the Relativistic Analogy.</p>
+</div>
+</div>
+<div class="resource-list">
+<div class="resource-card video-card has-media">
+<div class="resource-media">
+<pre><code>&lt;div class="youtube-embed"&gt;
+  &lt;iframe src="https://www.youtube.com/embed/vuZmaSyJpUY"
+          title="Phase Portrait for Double Well Potential"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="resource-content">
+<pre><code>&lt;h3&gt;Phase Portrait for Double Well Potential - Steve Brunton&lt;/h3&gt;
+&lt;div class="resource-description"&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Why it fits:&lt;/strong&gt; A masterclass in visualizing nonlinear dynamics. Brunton demonstrates how to construct the "Drift Field" ($f(x)$) for a system with multiple equilibria, directly analogous to visualizing the swing's drift dynamics.
+  &lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;Seek:&lt;/strong&gt; 0:00 (Problem Setup), 10:48 (Global Phase Portrait).&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Prereqs:&lt;/strong&gt; Basic ODEs, Linearization.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;a href="https://www.youtube.com/watch?v=vuZmaSyJpUY"
+   class="resource-link"
+   target="_blank"
+   rel="noopener"&gt;
+  Watch Video →
+&lt;/a&gt;</code></pre>
+</div>
+</div>
+<div class="resource-card video-card has-media">
+<div class="resource-media">
+<pre><code>&lt;div class="youtube-embed"&gt;
+  &lt;iframe src="https://www.youtube.com/embed/ikEzzJLrGWU"
+          title="Computational Principles of Sensorimotor Control"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="resource-content">
+<pre><code>&lt;h3&gt;Computational Principles of Sensorimotor Control - Daniel Wolpert&lt;/h3&gt;
+&lt;div class="resource-description"&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Why it fits:&lt;/strong&gt; The canonical source for Signal-Dependent Noise. Wolpert explains why "trajectory planning" fails in high-noise regimes and why optimal control (managing the variance) replaces it.
+  &lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;Seek:&lt;/strong&gt; 19:37 (Motor Noise is Signal Dependent), 29:04 (The Demise of the Desired Trajectory).&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Prereqs:&lt;/strong&gt; Probability, Control Theory basics.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;a href="https://www.youtube.com/watch?v=ikEzzJLrGWU"
+   class="resource-link"
+   target="_blank"
+   rel="noopener"&gt;
+  Watch Video →
+&lt;/a&gt;</code></pre>
+</div>
+</div>
+<div class="resource-card video-card has-media">
+<div class="resource-media">
+<pre><code>&lt;div class="youtube-embed"&gt;
+  &lt;iframe src="https://www.youtube.com/embed/_Az608TI-NI"
+          title="The Paradox of Human Performance"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="resource-content">
+<pre><code>&lt;h3&gt;The Paradox of Human Performance - Neville Hogan&lt;/h3&gt;
+&lt;div class="resource-description"&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Why it fits:&lt;/strong&gt; Hogan articulates the fundamental conflict between slow biological hardware and fast performance, introducing Impedance Control as the solution—a key parallel to the "Effective Plant" concept.
+  &lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;Seek:&lt;/strong&gt; 0:00 (The Paradox), 15:00 (Impedance as a Dynamic Primitive).&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Prereqs:&lt;/strong&gt; Mechanical Impedance concepts.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;a href="https://www.youtube.com/watch?v=_Az608TI-NI"
+   class="resource-link"
+   target="_blank"
+   rel="noopener"&gt;
+  Watch Video →
+&lt;/a&gt;</code></pre>
+</div>
+</div>
+<div class="resource-card video-card has-media">
+<div class="resource-media">
+<pre><code>&lt;div class="youtube-embed"&gt;
+  &lt;iframe src="https://www.youtube.com/embed/hZsIwDXaN0E"
+          title="What is Relativity?"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+</div>
+<div class="resource-content">
+<pre><code>&lt;h3&gt;What is Relativity? - Sean Carroll&lt;/h3&gt;
+&lt;div class="resource-description"&gt;
+  &lt;p&gt;
+    &lt;strong&gt;Why it fits:&lt;/strong&gt; Provides the conceptual bridge for the "Control Cone." Carroll explains how Light Cones delineate causal reachability in spacetime, exactly analogous to how Drift limits mechanical reachability in the swing.
+  &lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;strong&gt;Seek:&lt;/strong&gt; 20:30 (What are Light Cones?), 28:45 (Implications of Relativity).&lt;/li&gt;
+    &lt;li&gt;&lt;strong&gt;Prereqs:&lt;/strong&gt; None (Conceptual).&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+&lt;a href="https://www.youtube.com/watch?v=hZsIwDXaN0E"
+   class="resource-link"
+   target="_blank"
+   rel="noopener"&gt;
+  Watch Video →
+&lt;/a&gt;</code></pre>
+</div>
+</div>
+</div>
 
 
 </section>
@@ -1124,29 +1464,20 @@ M^{-1}\tau
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

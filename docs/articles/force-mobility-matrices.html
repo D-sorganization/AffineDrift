@@ -8,6 +8,7 @@
 
 <meta name="author" content="AffineDrift">
 <meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Force and mobility ellipsoid analysis for the golf swing, providing geometric insights into directional strength and movement capabilities.">
 
 <title>Force and Mobility Ellipsoids in the Golf Swing: A Geometric Interpretation Using the Double Pendulum – AffineDrift</title>
 <style>
@@ -71,11 +72,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -105,82 +164,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -216,6 +227,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -248,10 +260,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -271,10 +283,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -310,10 +322,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -353,10 +365,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -364,10 +376,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -411,7 +423,10 @@ window.Quarto = {
   <li><a href="#the-key-insight" id="toc-the-key-insight" class="nav-link" data-scroll-target="#the-key-insight">The Key Insight</a></li>
   </ul></li>
   <li><a href="#connection-to-the-inclined-plane" id="toc-connection-to-the-inclined-plane" class="nav-link" data-scroll-target="#connection-to-the-inclined-plane">Connection to the Inclined Plane</a></li>
-  <li><a href="#why-force-and-mobility-ellipsoids-are-duals" id="toc-why-force-and-mobility-ellipsoids-are-duals" class="nav-link" data-scroll-target="#why-force-and-mobility-ellipsoids-are-duals">Why Force and Mobility Ellipsoids Are Duals</a></li>
+  <li><a href="#why-force-and-mobility-ellipsoids-are-duals" id="toc-why-force-and-mobility-ellipsoids-are-duals" class="nav-link" data-scroll-target="#why-force-and-mobility-ellipsoids-are-duals">Why Force and Mobility Ellipsoids Are Duals</a>
+  <ul class="collapse">
+  <li><a href="#synthesis-null-space-and-parallel-mechanisms" id="toc-synthesis-null-space-and-parallel-mechanisms" class="nav-link" data-scroll-target="#synthesis-null-space-and-parallel-mechanisms">Synthesis: Null Space and Parallel Mechanisms</a></li>
+  </ul></li>
   <li><a href="#video-demonstration" id="toc-video-demonstration" class="nav-link" data-scroll-target="#video-demonstration">Video Demonstration</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
@@ -425,6 +440,11 @@ window.Quarto = {
 <h1 class="title">Force and Mobility Ellipsoids in the Golf Swing: A Geometric Interpretation Using the Double Pendulum</h1>
 </div>
 
+<div>
+  <div class="description">
+    Force and mobility ellipsoid analysis for the golf swing, providing geometric insights into directional strength and movement capabilities.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -468,33 +488,62 @@ These instantaneous capabilities are captured compactly by two geometric objects
 </ul>
 <p>Both ellipsoids arise directly from the Jacobian matrix of the system, and they are geometric duals of one another.<br>
 Understanding these ellipsoids reveals why certain phases of the swing offer great mechanical leverage while others offer almost none.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Connection to AffineDrift Framework: The “Effective Plant”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the broader context of nonlinear control, these ellipsoids define the instantaneous “Effective Plant”—the mechanical hardware through which the golfer’s intent must pass. The shape of the <strong>mobility ellipsoid</strong> directly informs the <strong>Drift-Control Ratio (DCR)</strong>: directions of high mobility are where the system is most susceptible to passive drift (<span class="math inline">\(f(x)\)</span>), requiring little input to move but offering little resistance to inertial fling. Conversely, the <strong>force ellipsoid</strong> dictates where the “Control Cone” is strongest. A “collapsed” mobility ellipsoid in a specific direction (low mobility) implies an enormous capacity to transmit force in that same direction, a property elite golfers exploit to stabilize the clubface at impact.</p>
+</div>
+</div>
 </section>
 <section id="the-jacobian-the-mapping-between-joint-space-and-club-motion" class="level2">
 <h2 class="anchored" data-anchor-id="the-jacobian-the-mapping-between-joint-space-and-club-motion">The Jacobian: The Mapping Between Joint Space and Club Motion</h2>
 <p>Let <span class="math inline">\(q \in \mathbb{R}^n\)</span> denote the joint coordinates of the upper body, arms, wrists, and club.<br>
 Let <span class="math inline">\(x \in \mathbb{R}^6\)</span> denote the instantaneous pose (position and orientation) of the clubhead.</p>
-<p>The kinematic map is [ x = f(q) , ] and the differential relationship is [ = J(q), , ] where <span class="math inline">\(J(q)\)</span> is the <span class="math inline">\(6 \times n\)</span> Jacobian matrix.</p>
+<p>The kinematic map is <span class="math display">\[
+    x = f(q) ,
+\]</span> and the differential relationship is <span class="math display">\[
+    \dot{x} = J(q)\, \dot{q},
+\]</span> where <span class="math inline">\(J(q)\)</span> is the <span class="math inline">\(6 \times n\)</span> Jacobian matrix.</p>
 <p>Each column of <span class="math inline">\(J\)</span> describes the infinitesimal motion of the clubhead resulting from a unit velocity in a single joint.<br>
 Thus, the geometry of <span class="math inline">\(J\)</span> encodes the instantaneous mechanical leverage of the entire body at that moment.</p>
 </section>
 <section id="the-mobility-ellipsoid" class="level2">
 <h2 class="anchored" data-anchor-id="the-mobility-ellipsoid">The Mobility Ellipsoid</h2>
-<p>The <strong>mobility ellipsoid</strong> is formed by mapping a unit ball of joint velocities through the Jacobian: [ _{} = {, = J ; | ; || = 1 ,}. ]</p>
+<p>The <strong>mobility ellipsoid</strong> is formed by mapping a unit ball of joint velocities through the Jacobian: <span class="math display">\[
+    \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q}
+    \; \bigg| \; \|\dot{q}\| = 1 \,\right\}.
+\]</span></p>
 <p>This produces an ellipsoid in task space whose principal axes represent: - directions of high mobility (large end-effector motion for a small joint motion),</p>
 <ul>
 <li>directions of low mobility (joint motion produces little club motion).</li>
 </ul>
+<p>In the context of the unified control-affine derivation (<span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>) presented in Part 1, this ellipsoid is the geometric representation of the input efficacy term <span class="math inline">\(H_{qq} B(q)\)</span>. The principal axes of the mobility ellipsoid correspond directly to the directions where the input vector field <span class="math inline">\(g(x)\)</span> has the greatest magnitude. Consequently, these are the directions where the golfer has the most <em>agency</em> to change the path, but also—paradoxically—where the system is most susceptible to being steered off-course by passive drift.</p>
 <p>These directions change continuously throughout the golf swing.<br>
 Near impact, the club has extremely high mobility in its tangential direction, explaining why even tiny joint motions can dramatically alter clubhead speed.</p>
+<p><strong>Synthesis: Drift Dominance</strong> This geometric mobility is the kinematic root of <strong>Drift Dominance</strong>. As the mobility ellipsoid elongates along the tangential path, the system’s “Inertial Memory” (accumulated momentum) dominates. The golfer cannot “steer” effectively in high-mobility directions because the control input (<span class="math inline">\(g(x)u\)</span>) is dwarfed by the massive passive dynamics (<span class="math inline">\(f(x)\)</span>) already present in that subspace.</p>
 </section>
 <section id="the-force-ellipsoid" class="level2">
 <h2 class="anchored" data-anchor-id="the-force-ellipsoid">The Force Ellipsoid</h2>
-<p>Reaction forces at the clubhead map back to joint torques via the transpose of the Jacobian: [ = J^F. ]</p>
-<p>The <strong>force ellipsoid</strong> is defined as [ _{} = {, F ^6 ; | |J^F| = 1 ,}, ] which describes all end-effector force directions that correspond to unit joint torque outputs.</p>
+<p>Reaction forces at the clubhead map back to joint torques via the transpose of the Jacobian: <span class="math display">\[
+    \tau = J^\top F.
+\]</span></p>
+<p>The <strong>force ellipsoid</strong> is defined as <span class="math display">\[
+    \mathcal{E}_{\text{force}} =
+    \left\{\, F \in \mathbb{R}^6 \; \bigg|
+    \|J^\top F\| = 1 \,\right\},
+\]</span> which describes all end-effector force directions that correspond to unit joint torque outputs.</p>
 <p>Its principal axes represent: - directions in which the system can generate large force or resist external load (high constraint),</p>
 <ul>
 <li>directions in which very little force can be produced or resisted (low constraint).</li>
 </ul>
+<p><strong>Synthesis: Intentional Constraint Collapse</strong> The duality of these ellipsoids explains the mechanism of <strong>Intentional Constraint Collapse</strong>. By orienting the body such that the force ellipsoid’s major axis aligns with the critical stability vectors (e.g., clubface normal), the golfer utilizes the skeleton’s geometric stiffness rather than active muscle torque to stabilize the club. This “collapses” the mobility in that direction, effectively turning the linkage into a solid structure at the moment of impact without requiring infinite muscular effort.</p>
 </section>
 <section id="the-double-pendulum-analogy" class="level2">
 <h2 class="anchored" data-anchor-id="the-double-pendulum-analogy">The Double Pendulum Analogy</h2>
@@ -504,12 +553,16 @@ Near impact, the club has extremely high mobility in its tangential direction, e
 <h3 class="anchored" data-anchor-id="high-mobility-perpendicular-to-the-links">High Mobility Perpendicular to the Links</h3>
 <p>A small rotation at the proximal joint produces a large transverse motion of the clubhead.<br>
 This corresponds to a <em>large</em> principal axis of the mobility ellipsoid pointing perpendicular to the aligned links.</p>
-<p>Mathematically, when the links are collinear, the moment arm between joint rotation and distal motion is maximized: [ v_(L_1 + L_2), . ]</p>
+<p>Mathematically, when the links are collinear, the moment arm between joint rotation and distal motion is maximized: <span class="math display">\[
+    v_\perp \propto (L_1 + L_2)\, \dot{\theta}.
+\]</span></p>
 </section>
 <section id="low-force-capability-in-the-same-perpendicular-direction" class="level3">
 <h3 class="anchored" data-anchor-id="low-force-capability-in-the-same-perpendicular-direction">Low Force Capability in the Same Perpendicular Direction</h3>
 <p>However, the ability to resist external force <em>in that same perpendicular direction</em> is very poor.<br>
-Because joint torques must react forces through long, nearly straight lever arms, a modest force at the clubhead creates a large torque at the joint: [ (L_1 + L_2), F_. ]</p>
+Because joint torques must react forces through long, nearly straight lever arms, a modest force at the clubhead creates a large torque at the joint: <span class="math display">\[
+    \tau \approx (L_1 + L_2)\, F_\perp.
+\]</span></p>
 <p>Thus, the system has: - <strong>high mobility</strong> transverse to the links, and</p>
 <ul>
 <li><strong>low force capability</strong> in that very same direction.</li>
@@ -537,7 +590,11 @@ what the system can push against strongly, it cannot move easily.</p>
 <h2 class="anchored" data-anchor-id="connection-to-the-inclined-plane">Connection to the Inclined Plane</h2>
 <p>The mechanical advantage of an inclined plane provides an even simpler analogy.<br>
 Consider pushing a mass up a ramp of angle <span class="math inline">\(\theta\)</span>:</p>
-<p>[ F_{} = mg , F_{} = mg . ]</p>
+<p><span class="math display">\[
+    F_{\parallel} = mg \sin\theta,
+    \qquad
+    F_{\perp} = mg \cos\theta.
+\]</span></p>
 <p>As the ramp becomes shallow (<span class="math inline">\(\theta \to 0\)</span>): - motion (mobility) along the ramp becomes easy,</p>
 <ul>
 <li><p>required force along the ramp becomes small,</p></li>
@@ -548,8 +605,12 @@ Likewise, the kinematic configuration of the golf swing imposes geometric constr
 </section>
 <section id="why-force-and-mobility-ellipsoids-are-duals" class="level2">
 <h2 class="anchored" data-anchor-id="why-force-and-mobility-ellipsoids-are-duals">Why Force and Mobility Ellipsoids Are Duals</h2>
-<p>The force and mobility ellipsoids are duals because the Jacobian and its transpose are linked by instantaneous power conservation: [ F^ = ^. ]</p>
-<p>Substituting <span class="math inline">\(\dot{x} = J\dot{q}\)</span> gives [ F^J = (J<sup>F)</sup>. ]</p>
+<p>The force and mobility ellipsoids are duals because the Jacobian and its transpose are linked by instantaneous power conservation: <span class="math display">\[
+    F^\top \dot{x} = \tau^\top \dot{q}.
+\]</span></p>
+<p>Substituting <span class="math inline">\(\dot{x} = J\dot{q}\)</span> gives <span class="math display">\[
+    F^\top J \dot{q} = (J^\top F)^\top \dot{q}.
+\]</span></p>
 <p>Since this holds for all <span class="math inline">\(\dot{q}\)</span>, we obtain <span class="math inline">\(\tau = J^\top F\)</span> and the fundamental duality between motion and force mappings.<br>
 This duality guarantees that:</p>
 <ul>
@@ -557,6 +618,10 @@ This duality guarantees that:</p>
 <li><p>directions of low mobility are directions of high force capability.</p></li>
 </ul>
 <p>This relationship is not an empirical observation but a geometric consequence of the system constraints.</p>
+<section id="synthesis-null-space-and-parallel-mechanisms" class="level3">
+<h3 class="anchored" data-anchor-id="synthesis-null-space-and-parallel-mechanisms">Synthesis: Null Space and Parallel Mechanisms</h3>
+<p>While the double pendulum models the arm-club system as a serial chain, the two hands on the grip technically form a <strong>Parallel Mechanism</strong> (a closed loop). This creates an “over-constrained” system where internal forces can exist in the <strong>Null Space</strong> of the Jacobian. These internal forces (co-contraction between the hands) do not produce motion (mobility) but do reshape the stiffness of the joint, effectively inflating the Force Ellipsoid in specific directions without changing the kinematic configuration. This allows the golfer to modulate the “Effective Plant” impedance independent of the trajectory.</p>
+</section>
 </section>
 <section id="video-demonstration" class="level2">
 <h2 class="anchored" data-anchor-id="video-demonstration">Video Demonstration</h2>
@@ -574,6 +639,24 @@ Using the double pendulum analogy, we see that when the club and lead arm are al
 This illustrates the universal rule: mobility and force capabilities are geometric duals arising from the Jacobian and its constraints.</p>
 <p>These ellipsoids explain why release occurs naturally, why impact loads joints, and why certain swing positions feel “strong” or “weak” independent of muscle strength.<br>
 Ultimately, they reveal that the geometry of the body–club system, not muscular effort, determines what motions and forces are possible at each instant.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Related Concepts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Drift-Control Ratio (DCR)</strong>: How mobility ellipsoids quantify the battle between passive inertia and active control. (See: <code>articles/controllability-drift-ratio.qmd</code>)</li>
+<li><strong>Intentional Constraint Collapse</strong>: The strategy of aligning the force ellipsoid’s major axis with impact loads. (See: <code>articles/intentional-constraint-collapse.qmd</code>)</li>
+<li><strong>Null Space</strong>: The mathematical home of internal forces in parallel mechanisms. (See: <code>articles/null-space-constraint-jacobian.qmd</code>)</li>
+<li><strong>The Effective Plant</strong>: How geometry dictates the baseline mechanical impedance.</li>
+</ul>
+</div>
+</div>
 
 
 </section>
@@ -980,29 +1063,20 @@ Ultimately, they reveal that the geometry of the body–club system, not muscula
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

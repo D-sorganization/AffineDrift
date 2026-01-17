@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="">
+<meta name="description" content="Statistical and methodological limitations of strokes gained analysis for individual golfer assessment, with recommendations for proper interpretation.">
 
 <title>On the Limits of Strokes-Gained Inference for Individual Golfers – AffineDrift</title>
 <style>
@@ -70,11 +71,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -104,88 +163,70 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -218,10 +259,10 @@ window.MathJax = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -241,10 +282,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -280,10 +321,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -323,10 +364,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -334,10 +375,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -396,14 +437,20 @@ window.MathJax = {
   <li><a href="#statistical-perspective-ecological-fallacy-and-heterogeneity" id="toc-statistical-perspective-ecological-fallacy-and-heterogeneity" class="nav-link" data-scroll-target="#statistical-perspective-ecological-fallacy-and-heterogeneity">7. Statistical perspective: ecological fallacy and heterogeneity</a>
   <ul class="collapse">
   <li><a href="#what-a-more-rigorous-model-would-look-like" id="toc-what-a-more-rigorous-model-would-look-like" class="nav-link" data-scroll-target="#what-a-more-rigorous-model-would-look-like">7.1 What a more rigorous model would look like</a></li>
+  <li><a href="#the-ergodicity-problem-ensemble-vs.-time-averages" id="toc-the-ergodicity-problem-ensemble-vs.-time-averages" class="nav-link" data-scroll-target="#the-ergodicity-problem-ensemble-vs.-time-averages">7.2 The Ergodicity Problem: Ensemble vs.&nbsp;Time Averages</a></li>
   </ul></li>
-  <li><a href="#practical-implications-for-coaching-and-analysis" id="toc-practical-implications-for-coaching-and-analysis" class="nav-link" data-scroll-target="#practical-implications-for-coaching-and-analysis">8. Practical implications for coaching and analysis</a>
+  <li><a href="#behavioral-limits-hidden-states-and-risk" id="toc-behavioral-limits-hidden-states-and-risk" class="nav-link" data-scroll-target="#behavioral-limits-hidden-states-and-risk">8. Behavioral Limits: Hidden States and Risk</a>
+  <ul class="collapse">
+  <li><a href="#non-markovian-hidden-states" id="toc-non-markovian-hidden-states" class="nav-link" data-scroll-target="#non-markovian-hidden-states">8.1 Non-Markovian Hidden States</a></li>
+  <li><a href="#risk-sensitivity-and-utility-functions" id="toc-risk-sensitivity-and-utility-functions" class="nav-link" data-scroll-target="#risk-sensitivity-and-utility-functions">8.2 Risk Sensitivity and Utility Functions</a></li>
+  </ul></li>
+  <li><a href="#practical-implications-for-coaching-and-analysis" id="toc-practical-implications-for-coaching-and-analysis" class="nav-link" data-scroll-target="#practical-implications-for-coaching-and-analysis">9. Practical implications for coaching and analysis</a>
   <ul class="collapse">
   <li><a href="#use-strokes-gained-for-what-it-is-excellent-at" id="toc-use-strokes-gained-for-what-it-is-excellent-at" class="nav-link" data-scroll-target="#use-strokes-gained-for-what-it-is-excellent-at">8.1 Use strokes gained for what it is excellent at</a></li>
   <li><a href="#be-explicit-when-making-causal-statements" id="toc-be-explicit-when-making-causal-statements" class="nav-link" data-scroll-target="#be-explicit-when-making-causal-statements">8.2 Be explicit when making <em>causal</em> statements</a></li>
   <li><a href="#pay-attention-to-interaction-effects" id="toc-pay-attention-to-interaction-effects" class="nav-link" data-scroll-target="#pay-attention-to-interaction-effects">8.3 Pay attention to interaction effects</a></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">9. Conclusion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">10. Conclusion</a></li>
   <li><a href="#references-informal" id="toc-references-informal" class="nav-link" data-scroll-target="#references-informal">References (informal)</a></li>
   </ul>
 </nav>
@@ -416,6 +463,11 @@ window.MathJax = {
 <h1 class="title">On the Limits of Strokes-Gained Inference for Individual Golfers</h1>
 </div>
 
+<div>
+  <div class="description">
+    Statistical and methodological limitations of strokes gained analysis for individual golfer assessment, with recommendations for proper interpretation.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -464,56 +516,78 @@ window.MathJax = {
 <h3 class="anchored" data-anchor-id="the-benchmark-value-function">2.1 The benchmark value function</h3>
 <p>Let a <em>state</em> on the golf course be described by variables such as:</p>
 <ul>
-<li>distance to the hole, (d),</li>
-<li>lie / surface / condition, (c) (e.g.&nbsp;tee, fairway, rough, sand, green, recovery).</li>
+<li>distance to the hole, <span class="math inline">\(d\)</span>,</li>
+<li>lie / surface / condition, <span class="math inline">\(c\)</span> (e.g.&nbsp;tee, fairway, rough, sand, green, recovery).</li>
 </ul>
 <p>For a reference population of golfers (e.g., PGA Tour pros measured with high-resolution shot tracking), define the <strong>benchmark value function</strong>:</p>
-<p>[ J_{}(d, c) ;=; , ]</p>
-<p>where (H) is the random number of strokes required to hole out from state ((d,c)) for a randomly chosen player from the reference population.</p>
-<p>Intuitively, (J_{}(d,c)) is “how many strokes an average player of this population needs to finish from here.”</p>
+<p><span class="math display">\[
+J_{\text{ref}}(d, c)
+\;=\; \mathbb{E}\big[H \,\big|\, D = d,\; C = c\big],
+\]</span></p>
+<p>where <span class="math inline">\(H\)</span> is the random number of strokes required to hole out from state <span class="math inline">\((d,c)\)</span> for a randomly chosen player from the reference population.</p>
+<p>Intuitively, <span class="math inline">\(J_{\text{ref}}(d,c)\)</span> is “how many strokes an average player of this population needs to finish from here.”</p>
 </section>
 <section id="per-shot-strokes-gained" class="level3">
 <h3 class="anchored" data-anchor-id="per-shot-strokes-gained">2.2 Per-shot strokes gained</h3>
-<p>Consider a single shot that starts from state ((d_i, c_i)) and finishes at state ((d_{i+1}, c_{i+1})), not yet holed. The <strong>strokes gained</strong> for that shot is defined as</p>
-<p>[ g_i ;=; J_{}(d_i, c_i) - J_{}(d_{i+1}, c_{i+1}) - 1. ]</p>
-<p>If the shot finishes in the hole, then (J_{}(d_{i+1}, c_{i+1}) = 0).</p>
+<p>Consider a single shot that starts from state <span class="math inline">\((d_i, c_i)\)</span> and finishes at state <span class="math inline">\((d_{i+1}, c_{i+1})\)</span>, not yet holed. The <strong>strokes gained</strong> for that shot is defined as</p>
+<p><span class="math display">\[
+g_i \;=\; J_{\text{ref}}(d_i, c_i) - J_{\text{ref}}(d_{i+1}, c_{i+1}) - 1.
+\]</span></p>
+<p>If the shot finishes in the hole, then <span class="math inline">\(J_{\text{ref}}(d_{i+1}, c_{i+1}) = 0\)</span>.</p>
 <p>The interpretation:</p>
 <ul>
-<li>(J_{}(d_i, c_i)): how many strokes the benchmark player needs from where you started.</li>
-<li>(J_{}(d_{i+1}, c_{i+1})): how many strokes the benchmark player needs from where your ball ended up.</li>
+<li><span class="math inline">\(J_{\text{ref}}(d_i, c_i)\)</span>: how many strokes the benchmark player needs from where you started.</li>
+<li><span class="math inline">\(J_{\text{ref}}(d_{i+1}, c_{i+1})\)</span>: how many strokes the benchmark player needs from where your ball ended up.</li>
 <li>The difference minus the one stroke you actually played is how many strokes you gained (positive) or lost (negative) relative to the benchmark.</li>
 </ul>
-<p>Strokes gained over any collection of shots (e.g., a hole, a round, a season, a category such as “putting”) is just the sum of the individual (g_i). The telescoping sum identity shows that for a hole:</p>
-<p>[ <em>{i=1}^{n} g_i = J</em>{}(d_1, c_1) - n, ]</p>
-<p>where (n) is the actual number of strokes taken on the hole and ((d_1, c_1)) is the initial state (typically the tee).</p>
+<p>Strokes gained over any collection of shots (e.g., a hole, a round, a season, a category such as “putting”) is just the sum of the individual <span class="math inline">\(g_i\)</span>. The telescoping sum identity shows that for a hole:</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n} g_i
+= J_{\text{ref}}(d_1, c_1) - n,
+\]</span></p>
+<p>where <span class="math inline">\(n\)</span> is the actual number of strokes taken on the hole and <span class="math inline">\((d_1, c_1)\)</span> is the initial state (typically the tee).</p>
 <p>Thus, total strokes gained on a hole equals “benchmark strokes from the tee” minus “actual strokes,” exactly matching the intuitive description.</p>
 </section>
 <section id="a-dynamic-programming-perspective-briefly" class="level3">
 <h3 class="anchored" data-anchor-id="a-dynamic-programming-perspective-briefly">2.3 A dynamic programming perspective (briefly)</h3>
 <p>More formally, the benchmark function satisfies a Bellman equation:</p>
-<p>[ J_{}(d, c) = _{} !, ]</p>
-<p>where () denotes the shot strategy (club, target, etc.) and ((D’, C’)) is the random next state.</p>
-<p>Under this view, the strokes-gained value of a realized shot outcome is the difference between what the dynamic program <em>expected</em> and what actually happened, again measured in strokes. That’s elegant—and, for population-level analysis, very effective. The trouble starts when we implicitly assume that (J_{}) is also the correct value function for each individual golfer.</p>
+<p><span class="math display">\[
+J_{\text{ref}}(d, c)
+= \min_{\mu} \mathbb{E}\!\left[ J_{\text{ref}}(D', C') + 1 \,\middle|\, (D, C) = (d,c), \mu \right],
+\]</span></p>
+<p>where <span class="math inline">\(\mu\)</span> denotes the shot strategy (club, target, etc.) and <span class="math inline">\((D', C')\)</span> is the random next state.</p>
+<p>Under this view, the strokes-gained value of a realized shot outcome is the difference between what the dynamic program <em>expected</em> and what actually happened, again measured in strokes. That’s elegant—and, for population-level analysis, very effective. The trouble starts when we implicitly assume that <span class="math inline">\(J_{\text{ref}}\)</span> is also the correct value function for each individual golfer.</p>
 <hr>
 </section>
 </section>
 <section id="strokes-gained-as-a-population-conditional-expectation" class="level2">
 <h2 class="anchored" data-anchor-id="strokes-gained-as-a-population-conditional-expectation">3. Strokes gained as a <em>population</em> conditional expectation</h2>
-<p>The critical statistical fact is that (J_{}(d,c)) is a <strong>population conditional expectation</strong>:</p>
-<p>[ J_{}(d,c) = _{} , ]</p>
-<p>where the expectation is taken over all shots in the reference population that begin from state ((d,c)).</p>
-<p>Now consider a particular golfer (i). They also have their own (unknown) value function:</p>
-<p>[ J_i(d,c) = , ]</p>
-<p>the expected number of strokes <em>for that golfer</em> to hole out from state ((d,c)). In general,</p>
-<p>[ J_i(d,c) ;; J_{}(d,c). ]</p>
+<p>The critical statistical fact is that <span class="math inline">\(J_{\text{ref}}(d,c)\)</span> is a <strong>population conditional expectation</strong>:</p>
+<p><span class="math display">\[
+J_{\text{ref}}(d, c)
+= \mathbb{E}_{\text{pop}} \big[ H \mid D = d, C = c \big],
+\]</span></p>
+<p>where the expectation is taken over all shots in the reference population that begin from state <span class="math inline">\((d,c)\)</span>.</p>
+<p>Now consider a particular golfer <span class="math inline">\(i\)</span>. They also have their own (unknown) value function:</p>
+<p><span class="math display">\[
+J_i(d,c)
+= \mathbb{E}\big[ H_i \mid D_i = d, C_i = c \big],
+\]</span></p>
+<p>the expected number of strokes <em>for that golfer</em> to hole out from state <span class="math inline">\((d,c)\)</span>. In general,</p>
+<p><span class="math display">\[
+J_i(d,c) \;\neq\; J_{\text{ref}}(d,c).
+\]</span></p>
 <p>This inequality is the entire issue in one line:</p>
 <ul>
-<li>Strokes gained uses (J_{}) to <strong>score shots</strong>.</li>
-<li>The player’s actual scoring future is governed by (J_i).</li>
+<li>Strokes gained uses <span class="math inline">\(J_{\text{ref}}\)</span> to <strong>score shots</strong>.</li>
+<li>The player’s actual scoring future is governed by <span class="math inline">\(J_i\)</span>.</li>
 </ul>
-<p>If we use (J_{}) not just for descriptive scoring but as a model of how changes in the state (e.g., closer approaches, better leaves) translate to changes in <em>this golfer’s</em> scoring average, we are implicitly assuming that</p>
-<p>[ J_i(d,c) J_{}(d,c) (d,c), ]</p>
-<p>and that the way (J_i) changes with (d), (c), etc. is also similar to the reference player. For elite professionals this might be “not crazy” in aggregate; for ordinary golfers the assumption is often badly wrong.</p>
+<p>If we use <span class="math inline">\(J_{\text{ref}}\)</span> not just for descriptive scoring but as a model of how changes in the state (e.g., closer approaches, better leaves) translate to changes in <em>this golfer’s</em> scoring average, we are implicitly assuming that</p>
+<p><span class="math display">\[
+J_i(d,c) \approx J_{\text{ref}}(d,c)
+\quad\text{for all relevant } (d,c),
+\]</span></p>
+<p>and that the way <span class="math inline">\(J_i\)</span> changes with <span class="math inline">\(d\)</span>, <span class="math inline">\(c\)</span>, etc. is also similar to the reference player. For elite professionals this might be “not crazy” in aggregate; for ordinary golfers the assumption is often badly wrong.</p>
 <p>What follows is a more precise description of how that mismatch creates problems when interpreting strokes-gained improvements for individuals.</p>
 <hr>
 </section>
@@ -521,21 +595,29 @@ window.MathJax = {
 <h2 class="anchored" data-anchor-id="gradients-of-expected-strokes-and-heterogeneous-skill-profiles">4. Gradients of expected strokes and heterogeneous skill profiles</h2>
 <section id="local-value-of-a-small-improvement" class="level3">
 <h3 class="anchored" data-anchor-id="local-value-of-a-small-improvement">4.1 Local value of a small improvement</h3>
-<p>Let (x) be a continuous state variable, for example, <em>distance to the hole</em> along the green surface. For simplicity, suppose the lie is fixed (putts on the green), so we write</p>
-<p>[ J_{}(x) J_i(x) ]</p>
+<p>Let <span class="math inline">\(x\)</span> be a continuous state variable, for example, <em>distance to the hole</em> along the green surface. For simplicity, suppose the lie is fixed (putts on the green), so we write</p>
+<p><span class="math display">\[
+J_{\text{ref}}(x) \quad\text{and}\quad J_i(x)
+\]</span></p>
 <p>for the benchmark and individual value functions, respectively.</p>
-<p>If a training intervention or strategy change causes the player to leave their first putt, on average, (x &lt; 0) metres closer to the hole, then (for small (x)) the change in the benchmark expectation is approximately</p>
-<p>[ J_{} (x), x, ]</p>
+<p>If a training intervention or strategy change causes the player to leave their first putt, on average, <span class="math inline">\(\Delta x &lt; 0\)</span> metres closer to the hole, then (for small <span class="math inline">\(\Delta x\)</span>) the change in the benchmark expectation is approximately</p>
+<p><span class="math display">\[
+\Delta J_{\text{ref}} \approx \frac{\partial J_{\text{ref}}}{\partial x}(x)\, \Delta x,
+\]</span></p>
 <p>while the change in the player’s <em>actual</em> expectation is</p>
-<p>[ J_i (x), x. ]</p>
-<p>The <strong>strokes-gained logic</strong> implicitly uses (J_{}) as a surrogate for (J_i). This is only valid if the <em>gradient</em> (slope) of the player’s value function matches the gradient of the benchmark:</p>
-<p>[ (x) (x). ]</p>
+<p><span class="math display">\[
+\Delta J_i \approx \frac{\partial J_i}{\partial x}(x)\, \Delta x.
+\]</span></p>
+<p>The <strong>strokes-gained logic</strong> implicitly uses <span class="math inline">\(\Delta J_{\text{ref}}\)</span> as a surrogate for <span class="math inline">\(\Delta J_i\)</span>. This is only valid if the <em>gradient</em> (slope) of the player’s value function matches the gradient of the benchmark:</p>
+<p><span class="math display">\[
+\frac{\partial J_i}{\partial x}(x) \approx \frac{\partial J_{\text{ref}}}{\partial x}(x).
+\]</span></p>
 <p>There is no reason for this to hold in general.</p>
 <ul>
-<li>If a golfer is <strong>worse than average</strong> at short putts, then their chance of holing out deteriorates <em>more</em> rapidly with distance than the reference population’s probability. Their (J_i(x)) is <strong>steeper</strong> than (J_{}(x)) for short putts, so (|J_i / x|) is <em>larger</em>.</li>
+<li>If a golfer is <strong>worse than average</strong> at short putts, then their chance of holing out deteriorates <em>more</em> rapidly with distance than the reference population’s probability. Their <span class="math inline">\(J_i(x)\)</span> is <strong>steeper</strong> than <span class="math inline">\(J_{\text{ref}}(x)\)</span> for short putts, so <span class="math inline">\(|\partial J_i / \partial x|\)</span> is <em>larger</em>.</li>
 <li>Conversely, if a golfer is <strong>better than average</strong> from short range, their value function is <em>flatter</em> there.</li>
 </ul>
-<p>This immediately implies that the same improvement in <em>leave distance</em> ((x)) will produce different changes in expected score for different players, even though strokes-gained calculations give them the same credit.</p>
+<p>This immediately implies that the same improvement in <em>leave distance</em> (<span class="math inline">\(\Delta x\)</span>) will produce different changes in expected score for different players, even though strokes-gained calculations give them the same credit.</p>
 </section>
 <section id="the-key-conceptual-error" class="level3">
 <h3 class="anchored" data-anchor-id="the-key-conceptual-error">4.2 The key conceptual error</h3>
@@ -544,9 +626,13 @@ window.MathJax = {
 <p>“Improving average leave distances from 2.5 m to 2.0 m is worth ~0.05 strokes per putt because that’s what the strokes-gained table says,”</p>
 </blockquote>
 <p>we’re really saying:</p>
-<p>[ J_{} , ]</p>
+<p><span class="math display">\[
+\Delta J_{\text{ref}} \approx 0.05 \text{ strokes per putt},
+\]</span></p>
 <p>and then smuggling in an extra assumption that</p>
-<p>[ J_i J_{}. ]</p>
+<p><span class="math display">\[
+\Delta J_i \approx \Delta J_{\text{ref}}.
+\]</span></p>
 <p>That step is what is <em>not</em> justified without additional modeling of the individual. It is a classic case of using a <strong>population regression function</strong> as if it were an <strong>individual response curve</strong>.</p>
 <hr>
 </section>
@@ -556,34 +642,53 @@ window.MathJax = {
 <p>Let’s make this more explicit with a toy model that still captures the real issue.</p>
 <section id="simple-two-putt-model" class="level3">
 <h3 class="anchored" data-anchor-id="simple-two-putt-model">5.1 Simple two-putt model</h3>
-<p>Suppose from some short-putt distance (x) (say 1–3 metres), the reference population has one-putt probability (p_{}(x)), so that:</p>
+<p>Suppose from some short-putt distance <span class="math inline">\(x\)</span> (say 1–3 metres), the reference population has one-putt probability <span class="math inline">\(p_{\text{ref}}(x)\)</span>, so that:</p>
 <ul>
-<li>Probability of holing in one: (p_{}(x)).</li>
-<li>Probability of holing in two: (1 - p_{}(x)) (we ignore three-putts at this distance for simplicity).</li>
+<li>Probability of holing in one: <span class="math inline">\(p_{\text{ref}}(x)\)</span>.</li>
+<li>Probability of holing in two: <span class="math inline">\(1 - p_{\text{ref}}(x)\)</span> (we ignore three-putts at this distance for simplicity).</li>
 </ul>
 <p>The benchmark expected strokes from this state is then</p>
-<p>[ J_{}(x) = 1p_{}(x) + 2 (1 - p_{}(x)) = 2 - p_{}(x). ]</p>
+<p><span class="math display">\[
+J_{\text{ref}}(x)
+= 1\cdot p_{\text{ref}}(x) + 2 \cdot (1 - p_{\text{ref}}(x))
+= 2 - p_{\text{ref}}(x).
+\]</span></p>
 <p>Differentiating:</p>
-<p>[ (x) = - (x). ]</p>
+<p><span class="math display">\[
+\frac{\partial J_{\text{ref}}}{\partial x}(x) = - \frac{\partial p_{\text{ref}}}{\partial x}(x).
+\]</span></p>
 <p>So the local value (per metre) of getting closer is controlled by how fast make probability increases as you move in.</p>
-<p>Now consider two golfers, both facing putts from distance (x):</p>
+<p>Now consider two golfers, both facing putts from distance <span class="math inline">\(x\)</span>:</p>
 <ul>
-<li>Golfer A: “good short putter,” with one-putt probability (p_A(x)).</li>
-<li>Golfer B: “poor short putter,” with one-putt probability (p_B(x)).</li>
+<li>Golfer A: “good short putter,” with one-putt probability <span class="math inline">\(p_A(x)\)</span>.</li>
+<li>Golfer B: “poor short putter,” with one-putt probability <span class="math inline">\(p_B(x)\)</span>.</li>
 </ul>
 <p>Their individual value functions are</p>
-<p>[ J_A(x) = 2 - p_A(x), J_B(x) = 2 - p_B(x), ]</p>
+<p><span class="math display">\[
+J_A(x) = 2 - p_A(x),
+\qquad
+J_B(x) = 2 - p_B(x),
+\]</span></p>
 <p>with local slopes</p>
-<p>[ (x) = - p_A’(x), (x) = - p_B’(x). ]</p>
-<p>For a <em>good</em> putter A, (p_A(x)) is already high near the hole and typically changes more slowly with distance; (p_A’(x)) (in magnitude) is moderate. For a <em>poor</em> short putter B, (p_B(x)) is lower and often changes more sharply with distance; (|p_B’(x)|) is larger.</p>
-<p>Now suppose improved approach play reduces their typical leave distance from (x) to (x + x) with (x &lt; 0) (closer to the hole) by the same amount for both golfers. Then, for small (x),</p>
-<p>[ J_A -p_A’(x) x, J_B -p_B’(x) x. ]</p>
-<p>If (|p_B’(x)| &gt; |p_A’(x)|), the poor short putter B gets a <strong>larger reduction in expected strokes per putt</strong> from the same distance improvement. In plain language:</p>
+<p><span class="math display">\[
+\frac{\partial J_A}{\partial x}(x) = - p_A'(x),
+\qquad
+\frac{\partial J_B}{\partial x}(x) = - p_B'(x).
+\]</span></p>
+<p>For a <em>good</em> putter A, <span class="math inline">\(p_A(x)\)</span> is already high near the hole and typically changes more slowly with distance; <span class="math inline">\(p_A'(x)\)</span> (in magnitude) is moderate. For a <em>poor</em> short putter B, <span class="math inline">\(p_B(x)\)</span> is lower and often changes more sharply with distance; <span class="math inline">\(|p_B'(x)|\)</span> is larger.</p>
+<p>Now suppose improved approach play reduces their typical leave distance from <span class="math inline">\(x\)</span> to <span class="math inline">\(x + \Delta x\)</span> with <span class="math inline">\(\Delta x &lt; 0\)</span> (closer to the hole) by the same amount for both golfers. Then, for small <span class="math inline">\(\Delta x\)</span>,</p>
+<p><span class="math display">\[
+\Delta J_A \approx -p_A'(x) \Delta x, \quad
+\Delta J_B \approx -p_B'(x) \Delta x.
+\]</span></p>
+<p>If <span class="math inline">\(|p_B'(x)| &gt; |p_A'(x)|\)</span>, the poor short putter B gets a <strong>larger reduction in expected strokes per putt</strong> from the same distance improvement. In plain language:</p>
 <blockquote class="blockquote">
 <p>A player who is bad from short range gains <em>more</em> (in real scoring terms) from leaving the ball closer than a good short putter does, even though the strokes-gained benchmark assigns the same value to the change in leave distance.</p>
 </blockquote>
 <p>However, the strokes-gained credit for the approach that yielded the closer putt is based on</p>
-<p>[ J_{} - p_{}’(x),x, ]</p>
+<p><span class="math display">\[
+\Delta J_{\text{ref}} \approx - p_{\text{ref}}'(x)\,\Delta x,
+\]</span></p>
 <p>which is common to both players. So:</p>
 <ul>
 <li>For the poor short putter, strokes gained <strong>understates</strong> the actual score benefit of leaving the ball closer.</li>
@@ -594,15 +699,17 @@ window.MathJax = {
 <section id="when-gaining-0.3-strokes-putting-is-misinterpreted" class="level3">
 <h3 class="anchored" data-anchor-id="when-gaining-0.3-strokes-putting-is-misinterpreted">5.2 When “gaining 0.3 strokes putting” is misinterpreted</h3>
 <p>When analysts say “Player X improved their strokes-gained putting by 0.3 per round this season,” they are reporting:</p>
-<p>[ ( g_i ), ]</p>
+<p><span class="math display">\[
+\Delta \big(\text{average } g_i \text{ on putts}\big),
+\]</span></p>
 <p>which is a change in <em>relative performance</em> versus the benchmark. This can be driven by many things:</p>
 <ul>
 <li>better holing from specific distances,</li>
 <li>better lag putting that changes the distribution of second-putt distances,</li>
 <li>different course sets, green speeds, or environmental conditions.</li>
 </ul>
-<p>The key: this 0.3 is a <strong>change in the sum of (J_{}(x_) - J_{}(x_) - 1)</strong> over all putts—not a direct estimate of the causal impact of a particular mechanical improvement on the player’s own (J_i).</p>
-<p>Without a model for how (J_i) changed, inferring “0.3 strokes gained putting → 0.3 strokes better scoring <em>because of putting mechanics</em>” is a leap.</p>
+<p>The key: this 0.3 is a <strong>change in the sum of <span class="math inline">\(J_{\text{ref}}(x_\text{start}) - J_{\text{ref}}(x_\text{end}) - 1\)</span></strong> over all putts—not a direct estimate of the causal impact of a particular mechanical improvement on the player’s own <span class="math inline">\(J_i\)</span>.</p>
+<p>Without a model for how <span class="math inline">\(J_i\)</span> changed, inferring “0.3 strokes gained putting → 0.3 strokes better scoring <em>because of putting mechanics</em>” is a leap.</p>
 <hr>
 </section>
 </section>
@@ -611,27 +718,35 @@ window.MathJax = {
 <p>Exactly the same logic applies off the green.</p>
 <section id="driving-distance-and-the-how-much-is-10-yards-worth-question" class="level3">
 <h3 class="anchored" data-anchor-id="driving-distance-and-the-how-much-is-10-yards-worth-question">6.1 Driving distance and the “how much is 10 yards worth?” question</h3>
-<p>Analyses that estimate the value of +10 yards of driving typically work by evaluating how much the benchmark function (J_{}) decreases when moving the starting point of the second shot 10 yards closer, conditional on lie type.</p>
-<p>Formally, if fairway distance to the hole is (d), the estimated benefit of 10 extra yards is</p>
-<p>[ J_{}(d) J_{}(d, ) - J_{}(d - 10, ). ]</p>
+<p>Analyses that estimate the value of +10 yards of driving typically work by evaluating how much the benchmark function <span class="math inline">\(J_{\text{ref}}\)</span> decreases when moving the starting point of the second shot 10 yards closer, conditional on lie type.</p>
+<p>Formally, if fairway distance to the hole is <span class="math inline">\(d\)</span>, the estimated benefit of 10 extra yards is</p>
+<p><span class="math display">\[
+\Delta J_{\text{ref}}(d)
+\approx J_{\text{ref}}(d, \text{fairway})
+      - J_{\text{ref}}(d - 10, \text{fairway}).
+\]</span></p>
 <p>To interpret this as “Golfer A gains X strokes per round from being 10 yards longer than Golfer B,” you must assume:</p>
 <ol type="1">
-<li>A and B are <strong>equally skilled at approach play and putting</strong>, so that their individual value functions (J_A) and (J_B) match (J_{}) at those distances.</li>
+<li>A and B are <strong>equally skilled at approach play and putting</strong>, so that their individual value functions <span class="math inline">\(J_A\)</span> and <span class="math inline">\(J_B\)</span> match <span class="math inline">\(J_{\text{ref}}\)</span> at those distances.</li>
 <li>A and B have similarly shaped <strong>dispersion patterns</strong> (fairway vs rough, hazards, etc.), or you explicitly account for different lie distributions.</li>
 </ol>
 <p>If Golfer A is substantially better from long irons than the reference player, and Golfer B is worse, the actual marginal value of moving both of them 10 yards closer is not the same as the benchmark calculation. The reference curve is computing something like an <strong>average treatment effect</strong> (ATE) of distance across the population; the coach really cares about a <strong>conditional individual treatment effect</strong> (CITE) for the specific golfer.</p>
 </section>
 <section id="approach-play-and-wedge-distance-optimization" class="level3">
 <h3 class="anchored" data-anchor-id="approach-play-and-wedge-distance-optimization">6.2 Approach play and wedge distance optimization</h3>
-<p>“Optimal wedge distance” discussions often use baseline curves of (J_{}(d,)) versus (d) to argue about whether a player should lay up to, say, 90 yards versus 50 yards.</p>
+<p>“Optimal wedge distance” discussions often use baseline curves of <span class="math inline">\(J_{\text{ref}}(d,\text{fairway})\)</span> versus <span class="math inline">\(d\)</span> to argue about whether a player should lay up to, say, 90 yards versus 50 yards.</p>
 <p>Again, the decision is being evaluated with the <strong>population expectation surface</strong>. But individuals vary enormously in:</p>
 <ul>
 <li>spin control,</li>
 <li>trajectory consistency,</li>
 <li>performance from partial wedges vs fuller swings.</li>
 </ul>
-<p>If a particular player is unusually strong at 50-yard shots and unusually weak at 90-yard shots, their individual (J_i(d,)) is shaped differently:</p>
-<p>[ J_i(50,) - J_i(90,) ;; J_{}(50,) - J_{}(90,). ]</p>
+<p>If a particular player is unusually strong at 50-yard shots and unusually weak at 90-yard shots, their individual <span class="math inline">\(J_i(d,\text{fairway})\)</span> is shaped differently:</p>
+<p><span class="math display">\[
+J_i(50,\text{fairway}) - J_i(90,\text{fairway})
+\;\neq\;
+J_{\text{ref}}(50,\text{fairway}) - J_{\text{ref}}(90,\text{fairway}).
+\]</span></p>
 <p>Using the reference surface to prescribe “optimal” lay-up distances can therefore systematically misguide a player whose skill profile is atypical.</p>
 </section>
 <section id="around-the-green-play" class="level3">
@@ -648,38 +763,77 @@ window.MathJax = {
 </section>
 <section id="statistical-perspective-ecological-fallacy-and-heterogeneity" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-perspective-ecological-fallacy-and-heterogeneity">7. Statistical perspective: ecological fallacy and heterogeneity</h2>
-<p>The core statistical issue is that strokes gained relies on a <strong>single regression surface</strong> (J_{}(d,c)) estimated from a pooled population. In causal-inference language:</p>
+<p>The core statistical issue is that strokes gained relies on a <strong>single regression surface</strong> <span class="math inline">\(J_{\text{ref}}(d,c)\)</span> estimated from a pooled population. In causal-inference language:</p>
 <ul>
-<li>(J_{}) approximates the <strong>average potential outcome</strong> surface across players.</li>
-<li>Player-specific surfaces (J_i) are random draws from a (usually unmodeled) distribution of skill profiles.</li>
+<li><span class="math inline">\(J_{\text{ref}}\)</span> approximates the <strong>average potential outcome</strong> surface across players.</li>
+<li>Player-specific surfaces <span class="math inline">\(J_i\)</span> are random draws from a (usually unmodeled) distribution of skill profiles.</li>
 </ul>
-<p>Using (J_{}) to make forward-looking statements about interventions on a specific individual implicitly assumes away <strong>heterogeneity of treatment effects</strong>.</p>
+<p>Using <span class="math inline">\(J_{\text{ref}}\)</span> to make forward-looking statements about interventions on a specific individual implicitly assumes away <strong>heterogeneity of treatment effects</strong>.</p>
 <p>This is analogous to:</p>
 <ul>
 <li>Taking a regression of medical outcomes on dosage for a population, then assuming the same dose-response curve holds for every patient.</li>
 <li>Using an “expected points added” (EPA) model in another sport as if the marginal value of a play call were the same for all teams, regardless of their personnel and scheme.</li>
 </ul>
 <p>From a statistical standpoint, we can view the standard strokes-gained system as estimating:</p>
-<p>[ J_{}(d,c) = _i , ]</p>
-<p>where the expectation is taken over players (i) in the reference population. The gradients, second derivatives, and other local properties of (J_{}) are then <strong>averages</strong> of the corresponding properties of the individual surfaces.</p>
-<p>But the coaching question “If this player improves factor X, what happens to their scoring?” is about (J_i), not about (_i[J_i]).</p>
+<p><span class="math display">\[
+J_{\text{ref}}(d,c) = \mathbb{E}_i \big[ J_i(d,c) \big],
+\]</span></p>
+<p>where the expectation is taken over players <span class="math inline">\(i\)</span> in the reference population. The gradients, second derivatives, and other local properties of <span class="math inline">\(J_{\text{ref}}\)</span> are then <strong>averages</strong> of the corresponding properties of the individual surfaces.</p>
+<p>But the coaching question “If this player improves factor X, what happens to their scoring?” is about <span class="math inline">\(J_i\)</span>, not about <span class="math inline">\(\mathbb{E}_i[J_i]\)</span>.</p>
 <p>This is precisely where ecological fallacy comes in: inferring individual-level behavior or treatment effects from group-level averages.</p>
 <section id="what-a-more-rigorous-model-would-look-like" class="level3">
 <h3 class="anchored" data-anchor-id="what-a-more-rigorous-model-would-look-like">7.1 What a more rigorous model would look like</h3>
 <p>A statistically coherent approach to individualized strokes-gained analysis would model:</p>
-<p>[ J_i(d,c) = J_{}(d,c) + _i(d,c), ]</p>
-<p>where (_i(d,c)) is a player-specific deviation surface. A hierarchical (multilevel) model could:</p>
+<p><span class="math display">\[
+J_i(d,c) = J_{\text{ref}}(d,c) + \delta_i(d,c),
+\]</span></p>
+<p>where <span class="math inline">\(\delta_i(d,c)\)</span> is a player-specific deviation surface. A hierarchical (multilevel) model could:</p>
 <ul>
-<li>shrink (_i) toward zero where data for player (i) are sparse,</li>
+<li>shrink <span class="math inline">\(\delta_i\)</span> toward zero where data for player <span class="math inline">\(i\)</span> are sparse,</li>
 <li>allow for structured variation, e.g., players differ mainly along a small number of latent dimensions (long game, wedge play, short putts, etc.),</li>
-<li>estimate player-specific gradients (J_i / d) that better reflect their own response to distance.</li>
+<li>estimate player-specific gradients <span class="math inline">\(\partial J_i / \partial d\)</span> that better reflect their own response to distance.</li>
 </ul>
-<p>With such a model, we could talk meaningfully about the causal effect of, say, improving proximity from 15–25 feet on <em>this</em> player’s expected scoring, instead of relying on (J_{}) as a proxy.</p>
+<p>With such a model, we could talk meaningfully about the causal effect of, say, improving proximity from 15–25 feet on <em>this</em> player’s expected scoring, instead of relying on <span class="math inline">\(J_{\text{ref}}\)</span> as a proxy.</p>
+</section>
+<section id="the-ergodicity-problem-ensemble-vs.-time-averages" class="level3">
+<h3 class="anchored" data-anchor-id="the-ergodicity-problem-ensemble-vs.-time-averages">7.2 The Ergodicity Problem: Ensemble vs.&nbsp;Time Averages</h3>
+<p>A deeper statistical issue, highlighted by work in ergodicity economics (e.g., Taleb), is the confusion between <strong>ensemble averages</strong> and <strong>time averages</strong>.</p>
+<ul>
+<li><strong>Ensemble Average:</strong> The expected result if 1,000 parallel versions of the golfer played the shot once.</li>
+<li><strong>Time Average:</strong> The average result if <em>one</em> golfer played the shot 1,000 times sequentially.</li>
+</ul>
+<p>Strokes gained calculates an ensemble expectation (<span class="math inline">\(J_{\text{ref}}\)</span>). However, a single golfer’s career is a single time-series. In biological systems, performance is rarely ergodic—states are path-dependent (e.g., confidence, fatigue, injury). Therefore, the time-average performance of an individual may not converge to the ensemble average of the population, or even to their own “true” static skill level, because that static level doesn’t exist.</p>
+<hr>
+</section>
+</section>
+<section id="behavioral-limits-hidden-states-and-risk" class="level2">
+<h2 class="anchored" data-anchor-id="behavioral-limits-hidden-states-and-risk">8. Behavioral Limits: Hidden States and Risk</h2>
+<p>Beyond the statistical aggregation issues, the underlying control theory of strokes gained makes two behavioral assumptions that are frequently violated in competitive golf.</p>
+<section id="non-markovian-hidden-states" class="level3">
+<h3 class="anchored" data-anchor-id="non-markovian-hidden-states">8.1 Non-Markovian Hidden States</h3>
+<p>The definition <span class="math inline">\(J(d, c)\)</span> assumes the state is fully observable from the ball’s position. This ignores <strong>hidden internal states</strong> (<span class="math inline">\(\theta_t\)</span>) such as psychological pressure, biomechanical fatigue, or “flow” (“the hot hand”).</p>
+<p><span class="math display">\[
+J_{\text{real}}(d, c, \theta) \neq J_{\text{model}}(d, c)
+\]</span></p>
+<p>If a player is in a high-anxiety state (<span class="math inline">\(\theta_{\text{stress}}\)</span>), their effective putting probability <span class="math inline">\(p(x)\)</span> drops. The standard model, seeing only <span class="math inline">\(d\)</span> and <span class="math inline">\(c\)</span>, attributes the resulting missed putt to “poor execution” (negative strokes gained) rather than “state disadvantage.” This matters because the remedy for a mechanical error is different from the remedy for a regulatory state failure.</p>
+</section>
+<section id="risk-sensitivity-and-utility-functions" class="level3">
+<h3 class="anchored" data-anchor-id="risk-sensitivity-and-utility-functions">8.2 Risk Sensitivity and Utility Functions</h3>
+<p>The Bellman equation for strokes gained minimizes the expected <em>number</em> of strokes:</p>
+<p><span class="math display">\[
+\min_{\mu} \mathbb{E}[ \text{Score} ]
+\]</span></p>
+<p>This assumes <strong>risk neutrality</strong>. However, real players maximize a utility function <span class="math inline">\(U(\text{Score})\)</span> that varies with tournament context:</p>
+<ul>
+<li><strong>Risk Averse (Concave <span class="math inline">\(U\)</span>):</strong> A player protecting a lead may play away from flags to avoid double-bogeys, voluntarily accepting a lower <em>expected</em> score (worse strokes gained) to reduce <em>variance</em>.</li>
+<li><strong>Risk Seeking (Convex <span class="math inline">\(U\)</span>):</strong> A player needing a birdie to make the cut may take aggressive lines that worsen their average score but maximize the probability of a 3.</li>
+</ul>
+<p>Strokes gained penalizes both behaviors as “suboptimal,” failing to capture the strategic rationality of the player’s context.</p>
 <hr>
 </section>
 </section>
 <section id="practical-implications-for-coaching-and-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="practical-implications-for-coaching-and-analysis">8. Practical implications for coaching and analysis</h2>
+<h2 class="anchored" data-anchor-id="practical-implications-for-coaching-and-analysis">9. Practical implications for coaching and analysis</h2>
 <p>Given these limitations, how should science-based coaches and analysts use strokes gained responsibly?</p>
 <section id="use-strokes-gained-for-what-it-is-excellent-at" class="level3">
 <h3 class="anchored" data-anchor-id="use-strokes-gained-for-what-it-is-excellent-at">8.1 Use strokes gained for what it is excellent at</h3>
@@ -689,7 +843,7 @@ window.MathJax = {
 <li><strong>Comparisons within a peer group</strong>: ranking players against each other within the same dataset and course conditions.</li>
 <li><strong>Tracking relative changes over time</strong>: seeing whether a player’s performance in a given facet is improving or declining relative to the same benchmark.</li>
 </ul>
-<p>For these uses, the fact that (J_{}) is population-based is a feature, not a bug.</p>
+<p>For these uses, the fact that <span class="math inline">\(J_{\text{ref}}\)</span> is population-based is a feature, not a bug.</p>
 </section>
 <section id="be-explicit-when-making-causal-statements" class="level3">
 <h3 class="anchored" data-anchor-id="be-explicit-when-making-causal-statements">8.2 Be explicit when making <em>causal</em> statements</h3>
@@ -700,7 +854,7 @@ window.MathJax = {
 </ul>
 <p>you are no longer in purely descriptive territory. At that point:</p>
 <ol type="1">
-<li>Recognize that strokes-gained tables are giving you (J_{}), not (J_i).</li>
+<li>Recognize that strokes-gained tables are giving you <span class="math inline">\(\Delta J_{\text{ref}}\)</span>, not <span class="math inline">\(\Delta J_i\)</span>.</li>
 <li>Ask how plausible it is that the player’s skill profile matches the benchmark assumptions underlying that table.</li>
 <li>Where feasible, estimate <strong>player-specific</strong> baselines from the player’s own shot-level data (even if noisy), possibly with hierarchical shrinkage.</li>
 </ol>
@@ -712,14 +866,14 @@ window.MathJax = {
 <li>A lag-putting improvement that changes the distribution of second-putt distances will be worth <em>more</em> for a player who is weak from 4–6 feet than for one who is elite from that range.</li>
 <li>A driving-distance gain is worth more to a player who is above average with mid-irons than to one who gains little from slightly shorter approaches.</li>
 </ul>
-<p>The reference (J_{}) integrates over these interactions <em>on average</em>; it does not know the player’s individual strengths and weaknesses.</p>
+<p>The reference <span class="math inline">\(J_{\text{ref}}\)</span> integrates over these interactions <em>on average</em>; it does not know the player’s individual strengths and weaknesses.</p>
 <hr>
 </section>
 </section>
 <section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">9. Conclusion</h2>
+<h2 class="anchored" data-anchor-id="conclusion">10. Conclusion</h2>
 <p>Strokes gained is, mathematically, a value function for an <strong>average player</strong> in a specified reference population. It assigns a score to each shot by comparing the realized state transition to what that average player would experience. For comparing players and decomposing performance, this is extremely powerful.</p>
-<p>However, when that same machinery is used to infer the <strong>individual causal impact</strong> of changes in technique, practice, or strategy, an important assumption is often left unstated: that the individual golfer’s conditional expectation surface (J_i) looks enough like the benchmark (J_{}) that the gradients and local changes calculated from (J_{}) are good proxies for those of (J_i).</p>
+<p>However, when that same machinery is used to infer the <strong>individual causal impact</strong> of changes in technique, practice, or strategy, an important assumption is often left unstated: that the individual golfer’s conditional expectation surface <span class="math inline">\(J_i\)</span> looks enough like the benchmark <span class="math inline">\(J_{\text{ref}}\)</span> that the gradients and local changes calculated from <span class="math inline">\(J_{\text{ref}}\)</span> are good proxies for those of <span class="math inline">\(J_i\)</span>.</p>
 <p>In reality:</p>
 <ul>
 <li>Golfers differ systematically in their skill profiles across distances and shot types.</li>
@@ -1149,29 +1303,20 @@ window.MathJax = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

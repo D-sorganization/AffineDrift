@@ -70,11 +70,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="./styles.css" as="style">
+<link rel="preload" href="./script.js" as="script">
+<link rel="modulepreload" href="./js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="./logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
@@ -104,88 +162,41 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
 
 
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -218,10 +229,10 @@ window.MathJax = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -241,10 +252,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -280,10 +291,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -323,10 +334,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -334,10 +345,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -391,14 +402,14 @@ window.MathJax = {
 </header>
 
 
-<section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="resources-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
@@ -417,18 +428,18 @@ window.MathJax = {
       <!-- Main Content -->
       <main class="main-content-area">
         <div class="page-section">
-          <h2 class="section-heading">Websites</h2>
+          <h2 class="section-heading anchored">Websites</h2>
           <p class="page-subtitle">Educational websites and online resources on robotics, biomechanics, screw theory, and golf</p>
         </div>
         <div class="resource-grid">
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://royfeatherstone.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://royfeatherstone.org&width=400&height=300" alt="Roy Featherstone's Website Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://royfeatherstone.org&amp;width=400&amp;height=300" alt="Roy Featherstone's Website Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-        <h3>Roy Featherstone's Website</h3>
+        <h3 class="anchored">Roy Featherstone's Website</h3>
         <p class="resource-description">
           Roy Featherstone is a prominent researcher in robotics and rigid-body dynamics. The site 
           offers comprehensive tutorials on spatial (6D) vectors and provides software tools for calculating 
@@ -437,10 +448,7 @@ window.MathJax = {
           about his research projects, teaching materials, publications, and talks, making it an essential 
           resource for understanding multibody dynamics and robot kinematics.
         </p>
-        <a href="https://royfeatherstone.org/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://royfeatherstone.org/" class="resource-link" target="_blank" rel="noopener">
           Visit Website →
         </a>
         </div>
@@ -449,18 +457,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.golfscience.org" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.golfscience.org&width=400&height=300" alt="GolfScience.org Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.golfscience.org&amp;width=400&amp;height=300" alt="GolfScience.org Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-        <h3>GolfScience.org</h3>
+        <h3 class="anchored">GolfScience.org</h3>
         <p class="resource-description">
           GolfScience.org is a comprehensive resource for golf biomechanics research, providing access to peer-reviewed scientific papers, research summaries, and educational materials on golf swing mechanics, equipment science, and performance analysis. The site serves as a bridge between academic research and practical golf instruction, making complex biomechanical concepts accessible to coaches, researchers, and serious students of the game.
         </p>
-        <a href="https://www.golfscience.org"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://www.golfscience.org" class="resource-link" target="_blank" rel="noopener">
           Visit Site →
         </a>
         </div>
@@ -469,18 +474,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://golf.psu.edu/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://golf.psu.edu&width=400&height=300" alt="Penn State Golf Biomechanics Course Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://golf.psu.edu&amp;width=400&amp;height=300" alt="Penn State Golf Biomechanics Course Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-        <h3>Penn State Golf Biomechanics Course</h3>
+        <h3 class="anchored">Penn State Golf Biomechanics Course</h3>
         <p class="resource-description">
           The Biomechanics of Golf: Introduction to 3D Motion Analysis is an online course from Penn State University designed for golf instructors and professionals. Developed by a team including Eric Handley (PGA), Dr. Michael Duffey (Biomechanist), and Dr. Robert Neal (Golf BioDynamics), this course provides comprehensive instruction on 3D motion analysis, kinematics, kinetics, and ground reaction forces in the golf swing. The course includes real instructional examples, interactive 3D web reports, and offers continuing education credits (LPGA CUs, PGA MSRs, UK PGA CPDs). Students can work at their own pace with 8 weeks of course access plus 4 additional weeks for review.
         </p>
-        <a href="https://golf.psu.edu/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://golf.psu.edu/" class="resource-link" target="_blank" rel="noopener">
           Visit Course Website →
         </a>
         </div>
@@ -489,18 +491,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.tutelman.com/golf/swing/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.tutelman.com/golf/swing/&width=400&height=300" alt="Dave Tutelman Golf Website Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.tutelman.com/golf/swing/&amp;width=400&amp;height=300" alt="Dave Tutelman Golf Website Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-        <h3>Dave Tutelman Golf Website</h3>
+        <h3 class="anchored">Dave Tutelman Golf Website</h3>
         <p class="resource-description">
           Dave Tutelman's comprehensive site provides in-depth technical analysis of golf swing mechanics, equipment design, and the physics of golf. The site offers detailed mathematical treatments of club dynamics, ball flight, and swing biomechanics, making it an invaluable resource for understanding the engineering principles behind golf performance.
         </p>
-        <a href="https://www.tutelman.com/golf/swing/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://www.tutelman.com/golf/swing/" class="resource-link" target="_blank" rel="noopener">
           Visit Site →
         </a>
         </div>
@@ -509,18 +508,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://openforumgolf.com/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://openforumgolf.com/&width=400&height=300" alt="Open Forum Golf Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://openforumgolf.com/&amp;width=400&amp;height=300" alt="Open Forum Golf Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Open Forum Golf</h3>
+          <h3 class="anchored">Open Forum Golf</h3>
           <p class="resource-description">
             Open Forum Golf is an online platform dedicated to golf discussion, analysis, and community engagement. The site provides a forum for golfers, instructors, and enthusiasts to share insights, discuss golf techniques, equipment, and the latest developments in the sport. It serves as a valuable resource for connecting with the golf community and accessing diverse perspectives on golf-related topics.
           </p>
-          <a href="https://openforumgolf.com/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://openforumgolf.com/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -529,18 +525,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization&width=400&height=300" alt="Motion Research Group Golf Biomechanics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization&amp;width=400&amp;height=300" alt="Motion Research Group Golf Biomechanics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Motion Research Group - Golf Biomechanics and Club Optimization</h3>
+          <h3 class="anchored">Motion Research Group - Golf Biomechanics and Club Optimization</h3>
           <p class="resource-description">
             The Motion Research Group at the University of Waterloo conducts advanced research in golf biomechanics and club optimization. Their work includes developing multibody dynamic models of golfer biomechanics, flexible shafts, ball flight aerodynamics, and clubhead-ball contact dynamics. The group uses optimization techniques to systematically evaluate the effects of swing and equipment changes, collaborating with golf-club companies and professional regulatory agencies. Model validation is provided through optical and inertial motion capture, AboutGolf simulator, pressurized air cannon, and high-speed video camera (600,000 fps). The research focuses on sports biomechanics, club design optimization, optimal golfer biomechanics, and predictive golf simulations.
           </p>
-          <a href="https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -549,11 +542,11 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://underactuated.mit.edu/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://underactuated.mit.edu&width=400&height=300" alt="MIT Underactuated Robotics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://underactuated.mit.edu&amp;width=400&amp;height=300" alt="MIT Underactuated Robotics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>MIT Underactuated Robotics</h3>
+          <h3 class="anchored">MIT Underactuated Robotics</h3>
           <p class="resource-description">
             The official website for MIT's course on underactuated robotics, featuring a complete open-source textbook, 
             lecture videos, homework assignments, and software tools. This comprehensive resource covers algorithms for 
@@ -561,10 +554,7 @@ window.MathJax = {
             materials are freely available and provide deep insights into control of systems with fewer actuators than 
             degrees of freedom.
           </p>
-          <a href="https://underactuated.mit.edu/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://underactuated.mit.edu/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -573,21 +563,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=http://hades.mech.northwestern.edu/index.php/Modern_Robotics&width=400&height=300" alt="Modern Robotics Course Wiki Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=http://hades.mech.northwestern.edu/index.php/Modern_Robotics&amp;width=400&amp;height=300" alt="Modern Robotics Course Wiki Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Modern Robotics Course Wiki</h3>
+          <h3 class="anchored">Modern Robotics Course Wiki</h3>
           <p class="resource-description">
             Northwestern University's comprehensive course wiki for Modern Robotics, featuring lecture notes, video 
             lectures, software libraries, and interactive tools. The site provides free access to the complete textbook 
             PDF, Python and MATLAB code libraries, and extensive educational materials covering robot kinematics, dynamics, 
             motion planning, and control using modern geometric methods.
           </p>
-          <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -596,21 +583,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.cds.caltech.edu/~murray/wiki/index.php?title=Main_Page" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.cds.caltech.edu/~murray/wiki&width=400&height=300" alt="Caltech MLS Wiki Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.cds.caltech.edu/~murray/wiki&amp;width=400&amp;height=300" alt="Caltech MLS Wiki Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Caltech MLS Wiki (Mathematical Introduction to Robotic Manipulation)</h3>
+          <h3 class="anchored">Caltech MLS Wiki (Mathematical Introduction to Robotic Manipulation)</h3>
           <p class="resource-description">
             The official wiki for "A Mathematical Introduction to Robotic Manipulation" by Murray, Li, and Sastry. 
             This site provides supplementary materials, errata, software tools, and additional resources related to 
             screw theory and geometric methods in robotics. It's an essential companion resource for understanding the 
             mathematical foundations of robot kinematics and dynamics.
           </p>
-          <a href="https://www.cds.caltech.edu/~murray/wiki/index.php?title=Main_Page"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.cds.caltech.edu/~murray/wiki/index.php?title=Main_Page" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -619,18 +603,15 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://eater.net/quaternions" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://eater.net/quaternions&width=400&height=300" alt="Visualizing Quaternions Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://eater.net/quaternions&amp;width=400&amp;height=300" alt="Visualizing Quaternions Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Visualizing Quaternions (Ben Eater)</h3>
+          <h3 class="anchored">Visualizing Quaternions (Ben Eater)</h3>
           <p class="resource-description">
             An explorable video series by Ben Eater that explains how quaternions—a four-dimensional number system—describe 3D rotation. Through interactive visualizations and clear explanations, this resource builds deep intuition for understanding quaternion mathematics without getting lost in abstract formulas. Essential for anyone working with 3D rotations in robotics, computer graphics, or biomechanical modeling.
           </p>
-          <a href="https://eater.net/quaternions"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://eater.net/quaternions" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -639,21 +620,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.isbweb.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.isbweb.org&width=400&height=300" alt="International Society of Biomechanics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.isbweb.org&amp;width=400&amp;height=300" alt="International Society of Biomechanics Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>International Society of Biomechanics (ISB)</h3>
+          <h3 class="anchored">International Society of Biomechanics (ISB)</h3>
           <p class="resource-description">
             The International Society of Biomechanics provides extensive educational resources, including tutorials, 
             software tools, data sets, and links to biomechanics research. The site offers access to educational 
             materials, conference proceedings, and resources for students and researchers in biomechanics. It serves 
             as a central hub for the biomechanics community with a focus on knowledge sharing and education.
           </p>
-          <a href="https://www.isbweb.org/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.isbweb.org/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -662,21 +640,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.biomech.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.biomech.org&width=400&height=300" alt="Biomechanics World Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.biomech.org&amp;width=400&amp;height=300" alt="Biomechanics World Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Biomechanics World</h3>
+          <h3 class="anchored">Biomechanics World</h3>
           <p class="resource-description">
             A comprehensive educational resource providing tutorials, software links, and educational materials on 
             biomechanics. The site offers free access to learning resources covering human movement analysis, 
             musculoskeletal biomechanics, and biomechanical modeling. It's designed to support students and 
             researchers with practical tools and educational content.
           </p>
-          <a href="https://www.biomech.org/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.biomech.org/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -685,21 +660,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.opensim.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://opensim.stanford.edu&width=400&height=300" alt="OpenSim Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://opensim.stanford.edu&amp;width=400&amp;height=300" alt="OpenSim Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>OpenSim</h3>
+          <h3 class="anchored">OpenSim</h3>
           <p class="resource-description">
             OpenSim is a freely available, open-source software platform for modeling, simulating, and analyzing 
             the neuromusculoskeletal system. The platform provides extensive documentation, tutorials, example models, 
             and educational resources. It's an essential tool for biomechanics research and education, allowing users 
             to create and analyze musculoskeletal models without commercial restrictions.
           </p>
-          <a href="https://www.opensim.org/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.opensim.org/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -708,21 +680,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.physiologyweb.com/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.physiologyweb.com&width=400&height=300" alt="Physiology Web Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.physiologyweb.com&amp;width=400&amp;height=300" alt="Physiology Web Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Physiology Web</h3>
+          <h3 class="anchored">Physiology Web</h3>
           <p class="resource-description">
             A comprehensive educational resource providing free tutorials, calculators, and reference materials on 
             physiology and biomechanics. The site offers interactive tools for learning biomechanical principles, 
             muscle mechanics, and human movement analysis. It's designed to support students with clear explanations 
             and practical examples without commercial content.
           </p>
-          <a href="https://www.physiologyweb.com/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.physiologyweb.com/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -731,20 +700,17 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.roboticslibrary.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://www.roboticslibrary.org&width=400&height=300" alt="Robotics Library Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://www.roboticslibrary.org&amp;width=400&amp;height=300" alt="Robotics Library Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Robotics Library</h3>
+          <h3 class="anchored">Robotics Library</h3>
           <p class="resource-description">
             Robotics Library is an open-source C++ library for robot kinematics, dynamics, motion planning, and control, and it provides comprehensive documentation, tutorials, and example code for implementing robotic algorithms. 
             It includes implementations of screw theory, spatial vector algebra, and modern geometric methods, making 
             it a valuable educational resource for understanding and implementing robotic algorithms.
           </p>
-          <a href="https://www.roboticslibrary.org/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.roboticslibrary.org/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -753,21 +719,18 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.drake.mit.edu/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://drake.mit.edu&width=400&height=300" alt="Drake Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://drake.mit.edu&amp;width=400&amp;height=300" alt="Drake Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Drake (MIT)</h3>
+          <h3 class="anchored">Drake (MIT)</h3>
           <p class="resource-description">
             Drake is a C++ toolbox maintained by the Robot Locomotion Group at MIT for analyzing the dynamics of 
             robots and finding their state trajectories through optimization and control. The website provides 
             extensive documentation, tutorials, and example code. It's particularly useful for underactuated systems 
             and includes tools for trajectory optimization, model-based control, and simulation of complex robotic systems.
           </p>
-          <a href="https://www.drake.mit.edu/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.drake.mit.edu/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
@@ -776,33 +739,29 @@ window.MathJax = {
       <div class="resource-card has-media">
         <div class="resource-media">
           <a href="https://www.pinocchio.org/" target="_blank" rel="noopener">
-            <img src="https://api.microlink.io/screenshot?url=https://stack-of-tasks.github.io/pinocchio&width=400&height=300" alt="Pinocchio Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
+            <img src="https://api.microlink.io/screenshot?url=https://stack-of-tasks.github.io/pinocchio&amp;width=400&amp;height=300" alt="Pinocchio Preview" class="website-preview" loading="lazy" onerror="this.style.display='none'">
           </a>
         </div>
         <div class="resource-content">
-          <h3>Pinocchio</h3>
+          <h3 class="anchored">Pinocchio</h3>
           <p class="resource-description">
             Pinocchio is a fast and flexible implementation of rigid body dynamics algorithms and their analytical derivatives. 
             The website provides comprehensive documentation, tutorials, and example code for computing robot 
             kinematics and dynamics efficiently. It implements spatial vector algebra and screw theory methods, 
             making it an excellent educational resource for understanding computational methods in robotics.
           </p>
-          <a href="https://www.pinocchio.org/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.pinocchio.org/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
         </div>
       </div>
 
       <div class="resource-card">
-        <h3>Reading List</h3>
+        <h3 class="anchored">Reading List</h3>
         <p class="resource-description">
           Curated collection of books, papers, and articles on control theory, biomechanics, and golf instruction.
         </p>
-        <a href="bibliography.html"
-           class="resource-link">
+        <a href="bibliography.html" class="resource-link">
           View Reading List →
         </a>
       </div>
@@ -813,7 +772,7 @@ window.MathJax = {
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Websites</h3>
+          <h3 class="sidebar-heading anchored">Recent Websites</h3>
           <ul class="sidebar-links" id="websites-history-list">
             <li class="history-empty">No recent websites yet</li>
           </ul>
@@ -858,9 +817,6 @@ document.addEventListener('DOMContentLoaded', function() {
   updateWebsitesHistory();
 });
 </script>
-
-
-
 
 
 
@@ -1266,29 +1222,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

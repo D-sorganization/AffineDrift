@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Decomposition of natural versus active forces and torques in affine mechanical systems, with applications to double pendulum golf swing models.">
 
 <title>Natural vs Active Forces and Torques in Affine Mechanical Systems – AffineDrift</title>
 <style>
@@ -19,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,11 +105,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -103,82 +197,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -214,6 +260,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -246,10 +293,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -269,10 +316,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -308,10 +355,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -351,10 +398,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -362,10 +409,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -412,12 +459,19 @@ window.Quarto = {
   <li><a href="#planar-double-pendulum-example" id="toc-planar-double-pendulum-example" class="nav-link" data-scroll-target="#planar-double-pendulum-example">5. Planar double pendulum example</a>
   <ul class="collapse">
   <li><a href="#configuration-and-parameters" id="toc-configuration-and-parameters" class="nav-link" data-scroll-target="#configuration-and-parameters">5.1 Configuration and parameters</a></li>
-  <li><a href="#inertia-matrix-mq" id="toc-inertia-matrix-mq" class="nav-link" data-scroll-target="#inertia-matrix-mq">5.2 Inertia matrix (M(q))</a></li>
-  <li><a href="#corioliscentrifugal-terms-cq" id="toc-corioliscentrifugal-terms-cq" class="nav-link" data-scroll-target="#corioliscentrifugal-terms-cq">5.3 Coriolis/centrifugal terms (C(q,))</a></li>
-  <li><a href="#gravity-term-gq" id="toc-gravity-term-gq" class="nav-link" data-scroll-target="#gravity-term-gq">5.4 Gravity term (g(q))</a></li>
+  <li><a href="#inertia-matrix-mq" id="toc-inertia-matrix-mq" class="nav-link" data-scroll-target="#inertia-matrix-mq">5.2 Inertia matrix <span class="math inline">\(M(q)\)</span></a></li>
+  <li><a href="#corioliscentrifugal-terms-cqdotqdotq" id="toc-corioliscentrifugal-terms-cqdotqdotq" class="nav-link" data-scroll-target="#corioliscentrifugal-terms-cqdotqdotq">5.3 Coriolis/centrifugal terms <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span></a></li>
+  <li><a href="#gravity-term-gq" id="toc-gravity-term-gq" class="nav-link" data-scroll-target="#gravity-term-gq">5.4 Gravity term <span class="math inline">\(g(q)\)</span></a></li>
   <li><a href="#natural-torques-and-active-input" id="toc-natural-torques-and-active-input" class="nav-link" data-scroll-target="#natural-torques-and-active-input">5.5 Natural torques and active input</a></li>
   </ul></li>
   <li><a href="#energy-transfer-decomposition" id="toc-energy-transfer-decomposition" class="nav-link" data-scroll-target="#energy-transfer-decomposition">6. Energy Transfer Decomposition</a></li>
+  <li><a href="#theoretical-synthesis" id="toc-theoretical-synthesis" class="nav-link" data-scroll-target="#theoretical-synthesis">Theoretical Synthesis</a>
+  <ul class="collapse">
+  <li><a href="#affine-realization-of-the-drift-wrench" id="toc-affine-realization-of-the-drift-wrench" class="nav-link" data-scroll-target="#affine-realization-of-the-drift-wrench">Affine Realization of the Drift Wrench</a></li>
+  <li><a href="#resolving-teleological-blindness" id="toc-resolving-teleological-blindness" class="nav-link" data-scroll-target="#resolving-teleological-blindness">Resolving Teleological Blindness</a></li>
+  <li><a href="#implicit-assumption-the-stiff-shaft-limit" id="toc-implicit-assumption-the-stiff-shaft-limit" class="nav-link" data-scroll-target="#implicit-assumption-the-stiff-shaft-limit">Implicit Assumption: The Stiff Shaft Limit</a></li>
+  <li><a href="#suggested-cross-references" id="toc-suggested-cross-references" class="nav-link" data-scroll-target="#suggested-cross-references">Suggested Cross-References</a></li>
+  </ul></li>
   <li><a href="#python-implementation-of-the-double-pendulum-model" id="toc-python-implementation-of-the-double-pendulum-model" class="nav-link" data-scroll-target="#python-implementation-of-the-double-pendulum-model">7. Python implementation of the double pendulum model</a>
   <ul class="collapse">
   <li><a href="#imports-and-parameters" id="toc-imports-and-parameters" class="nav-link" data-scroll-target="#imports-and-parameters">7.1 Imports and parameters</a></li>
@@ -433,6 +487,11 @@ window.Quarto = {
 <h1 class="title">Natural vs Active Forces and Torques in Affine Mechanical Systems</h1>
 </div>
 
+<div>
+  <div class="description">
+    Decomposition of natural versus active forces and torques in affine mechanical systems, with applications to double pendulum golf swing models.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -449,7 +508,9 @@ window.Quarto = {
 
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">1. Motivation</h2>
-<p>For an affine control system, we usually write [ = f(x) + G(x)u, ] and think of (f) as the <strong>drift</strong> (what the system does “on its own”) and (G(x)u) as the <strong>control effect</strong>.</p>
+<p>For an affine control system, we usually write <span class="math display">\[
+\dot{x} = f(x) + G(x)u,
+\]</span> and think of <span class="math inline">\(f\)</span> as the <strong>drift</strong> (what the system does “on its own”) and <span class="math inline">\(G(x)u\)</span> as the <strong>control effect</strong>.</p>
 <p>For mechanical systems, there is a direct analog at the level of <strong>forces, torques, and wrenches</strong>:</p>
 <ul>
 <li>A <strong>natural</strong> (or drift) component that arises purely from
@@ -476,28 +537,47 @@ window.Quarto = {
 </section>
 <section id="general-mechanical-system-natural-vs-active-torques" class="level2">
 <h2 class="anchored" data-anchor-id="general-mechanical-system-natural-vs-active-torques">2. General mechanical system: natural vs active torques</h2>
-<p>Consider an (n)-DOF mechanical system with generalized coordinates (q ^n), velocities (), accelerations (). The standard joint-space dynamics (from Lagrange or Newton–Euler) can be written as</p>
-<p>[ M(q), + C(q,), + g(q) + d(q,) = <em>{} + </em>{}, ]</p>
+<p>Consider an <span class="math inline">\(n\)</span>-DOF mechanical system with generalized coordinates <span class="math inline">\(q \in \mathbb{R}^n\)</span>, velocities <span class="math inline">\(\dot{q}\)</span>, accelerations <span class="math inline">\(\ddot{q}\)</span>. The standard joint-space dynamics (from Lagrange or Newton–Euler) can be written as</p>
+<p><span class="math display">\[
+M(q)\,\ddot{q} + C(q,\dot{q})\,\dot{q} + g(q) + d(q,\dot{q})
+= \tau_{\text{in}} + \tau_{\text{ext}},
+\tag{2.1}
+\]</span></p>
 <p>where</p>
 <ul>
-<li>(M(q) ^{n n}) is the inertia matrix,</li>
-<li>(C(q,)) is the vector of Coriolis and centrifugal terms,</li>
-<li>(g(q)) is the gravity torque vector,</li>
-<li>(d(q,)) collects dissipative effects (e.g., joint damping, friction),</li>
-<li>(_{}) are <strong>internal active torques</strong> (e.g., muscles or motors),</li>
-<li>(_{}) are generalized forces from <strong>external wrenches</strong>.</li>
+<li><span class="math inline">\(M(q) \in \mathbb{R}^{n \times n}\)</span> is the inertia matrix,</li>
+<li><span class="math inline">\(C(q,\dot{q})\dot{q}\)</span> is the vector of Coriolis and centrifugal terms,</li>
+<li><span class="math inline">\(g(q)\)</span> is the gravity torque vector,</li>
+<li><span class="math inline">\(d(q,\dot{q})\)</span> collects dissipative effects (e.g., joint damping, friction),</li>
+<li><span class="math inline">\(\tau_{\text{in}}\)</span> are <strong>internal active torques</strong> (e.g., muscles or motors),</li>
+<li><span class="math inline">\(\tau_{\text{ext}}\)</span> are generalized forces from <strong>external wrenches</strong>.</li>
 </ul>
-<p>Suppose external wrenches () (contact forces, etc.) act at some contact frames with Jacobian (J_c(q)). Then</p>
-<p>[ _{} = J_c(q)^. ]</p>
+<p>Suppose external wrenches <span class="math inline">\(\lambda\)</span> (contact forces, etc.) act at some contact frames with Jacobian <span class="math inline">\(J_c(q)\)</span>. Then</p>
+<p><span class="math display">\[
+\tau_{\text{ext}} = J_c(q)^\top \lambda.
+\tag{2.2}
+\]</span></p>
 <p>Substituting into (2.1),</p>
-<p>[ M(q), + C(q,), + g(q) + d(q,) = _{} + J_c(q)^. ]</p>
+<p><span class="math display">\[
+M(q)\,\ddot{q} + C(q,\dot{q})\,\dot{q} + g(q) + d(q,\dot{q})
+= \tau_{\text{in}} + J_c(q)^\top \lambda.
+\tag{2.3}
+\]</span></p>
 <section id="natural-torque-field" class="level3">
 <h3 class="anchored" data-anchor-id="natural-torque-field">2.1 Natural torque field</h3>
 <p>We define the <strong>natural (drift) torque field</strong> as the part entirely determined by the motion and environment:</p>
-<p>[ _{}(q,,,) := M(q) + C(q,), + g(q) + d(q,) - J_c(q)^. ]</p>
+<p><span class="math display">\[
+\tau_{\text{nat}}(q,\dot{q},\ddot{q},\lambda)
+:= M(q)\ddot{q}
++ C(q,\dot{q})\,\dot{q}
++ g(q)
++ d(q,\dot{q})
+- J_c(q)^\top \lambda.
+\tag{2.4}
+\]</span></p>
 <p>Interpretation:</p>
 <ul>
-<li>(_{}) is <strong>what the world contributes</strong>:
+<li><span class="math inline">\(\tau_{\text{nat}}\)</span> is <strong>what the world contributes</strong>:
 <ul>
 <li>inertial reaction torques,</li>
 <li>velocity-dependent terms,</li>
@@ -505,28 +585,40 @@ window.Quarto = {
 <li>dissipation,</li>
 <li>plus <strong>minus</strong> the external generalized forces (so that the remaining side is “internal”).</li>
 </ul></li>
-<li>It depends only on the <strong>trajectory and environment</strong>: ((q,,,)).</li>
+<li>It depends only on the <strong>trajectory and environment</strong>: <span class="math inline">\((q,\dot{q},\ddot{q},\lambda)\)</span>.</li>
 <li>No reference to “control design” or “desired motion” appears here.</li>
 </ul>
 <p>From (2.3) and (2.4), we have the identity</p>
-<p>[ <em>{} = </em>{}(q,,,). ]</p>
+<p><span class="math display">\[
+\tau_{\text{in}} = \tau_{\text{nat}}(q,\dot{q},\ddot{q},\lambda).
+\tag{2.5}
+\]</span></p>
 <p>In words: for whatever motion you <em>actually</em> observe or simulate, the internal active torques equal the natural torque field given by the mass matrix, Coriolis, gravity, damping, and external wrenches.</p>
 </section>
 <section id="parametrizing-active-torque-by-inputs" class="level3">
 <h3 class="anchored" data-anchor-id="parametrizing-active-torque-by-inputs">2.2 Parametrizing active torque by inputs</h3>
-<p>Now suppose the internal active torques are generated by some input vector (u ^m):</p>
-<p>[ _{} = B(q),u, ]</p>
-<p>where (B(q) ^{n m}) is a configuration-dependent <strong>actuation matrix</strong> (mapping “muscle channels” or actuators into joint space).</p>
+<p>Now suppose the internal active torques are generated by some input vector <span class="math inline">\(u \in \mathbb{R}^m\)</span>:</p>
+<p><span class="math display">\[
+\tau_{\text{in}} = B(q)\,u,
+\tag{2.6}
+\]</span></p>
+<p>where <span class="math inline">\(B(q) \in \mathbb{R}^{n \times m}\)</span> is a configuration-dependent <strong>actuation matrix</strong> (mapping “muscle channels” or actuators into joint space).</p>
 <p>Combining (2.5) and (2.6):</p>
-<p>[ B(q),u = _{}(q,,,). ]</p>
+<p><span class="math display">\[
+B(q)\,u = \tau_{\text{nat}}(q,\dot{q},\ddot{q},\lambda).
+\tag{2.7}
+\]</span></p>
 <p>This is a purely mechanical identity:</p>
 <ul>
-<li>Given the state trajectory and external forces, (_{}) is determined.</li>
-<li>Given a model of how muscles/actuators generate torque ((B(q))), the input channels (u) must satisfy (2.7).</li>
+<li>Given the state trajectory and external forces, <span class="math inline">\(\tau_{\text{nat}}\)</span> is determined.</li>
+<li>Given a model of how muscles/actuators generate torque (<span class="math inline">\(B(q)\)</span>), the input channels <span class="math inline">\(u\)</span> must satisfy (2.7).</li>
 </ul>
-<p>If (B(q)) has full column rank, a typical reconstruction of (u) is</p>
-<p>[ u = B(q)^{+},_{}, ]</p>
-<p>where (()^{+}) is a pseudoinverse.</p>
+<p>If <span class="math inline">\(B(q)\)</span> has full column rank, a typical reconstruction of <span class="math inline">\(u\)</span> is</p>
+<p><span class="math display">\[
+u = B(q)^{+}\,\tau_{\text{nat}},
+\tag{2.8}
+\]</span></p>
+<p>where <span class="math inline">\((\cdot)^{+}\)</span> is a pseudoinverse.</p>
 <hr>
 </section>
 </section>
@@ -534,16 +626,36 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="state-space-drift-vs-active-contribution">3. State-space drift vs active contribution</h2>
 <p>We can also describe the same decomposition at the <strong>state level</strong>, in the usual first-order form.</p>
 <p>Define the state</p>
-[ x =
-<span class="math display">\[\begin{bmatrix} q \\ \dot{q} \end{bmatrix}\]</span>
-<p>^{2n}. ]</p>
+<p><span class="math display">\[
+x = \begin{bmatrix} q \\ \dot{q} \end{bmatrix} \in \mathbb{R}^{2n}.
+\]</span></p>
 <p>From (2.3) and (2.6),</p>
-<p>[ M(q) = B(q)u + J_c(q)^ - C(q,) - g(q) - d(q,). ]</p>
+<p><span class="math display">\[
+M(q)\ddot{q}
+= B(q)u + J_c(q)^\top \lambda
+  - C(q,\dot{q})\dot{q}
+  - g(q)
+  - d(q,\dot{q}).
+\tag{3.1}
+\]</span></p>
 <p>Therefore</p>
-<p>[ = M(q)^{-1}, ( J_c(q)^ - C(q,) - g(q) - d(q,) ) + M(q)^{-1} B(q),u. ]</p>
+<p><span class="math display">\[
+\ddot{q}
+= M(q)^{-1}\,
+\big(
+  J_c(q)^\top \lambda
+  - C(q,\dot{q})\dot{q}
+  - g(q)
+  - d(q,\dot{q})
+\big)
++ M(q)^{-1} B(q)\,u.
+\tag{3.2}
+\]</span></p>
 <p>Thus</p>
-[ =
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+\dot{x}
+=
+\begin{bmatrix}
 \dot{q} \\
 M(q)^{-1}\big(
   J_c(q)^\top \lambda
@@ -551,19 +663,19 @@ M(q)^{-1}\big(
   - g(q)
   - d(q,\dot{q})
 \big)
-\end{bmatrix}\]</span>
-<ul>
-<li><span class="math display">\[\begin{bmatrix}
+\end{bmatrix}
++
+\begin{bmatrix}
 0 \\
 M(q)^{-1} B(q)
-\end{bmatrix}\]</span>
-<ol start="21" type="a">
-<li>]</li>
-</ol></li>
-</ul>
+\end{bmatrix} u.
+\tag{3.3}
+\]</span></p>
 <p>Define the <strong>natural drift field</strong></p>
-[ f_{}(x,) :=
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+f_{\text{nat}}(x,\lambda)
+:=
+\begin{bmatrix}
 \dot{q} \\
 M(q)^{-1}\big(
   J_c(q)^\top \lambda
@@ -571,52 +683,94 @@ M(q)^{-1}\big(
   - g(q)
   - d(q,\dot{q})
 \big)
-\end{bmatrix}\]</span>
-<p>, ]</p>
+\end{bmatrix},
+\tag{3.4}
+\]</span></p>
 <p>and the <strong>input field</strong></p>
-[ G(x) :=
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+G(x) :=
+\begin{bmatrix}
 0 \\
 M(q)^{-1} B(q)
-\end{bmatrix}\]</span>
-<p>. ]</p>
+\end{bmatrix}.
+\tag{3.5}
+\]</span></p>
 <p>Then we have the familiar affine structure:</p>
-<p>[ = f_{}(x,) + G(x)u. ]</p>
-<p>Here, (f_{}) is exactly the evolution the system would have with <strong>no active input</strong> ((u = 0)), subject to gravity, contact, damping, and current velocities.</p>
+<p><span class="math display">\[
+\dot{x} = f_{\text{nat}}(x,\lambda) + G(x)u.
+\tag{3.6}
+\]</span></p>
+<p>Here, <span class="math inline">\(f_{\text{nat}}\)</span> is exactly the evolution the system would have with <strong>no active input</strong> (<span class="math inline">\(u = 0\)</span>), subject to gravity, contact, damping, and current velocities.</p>
 <hr>
 </section>
 <section id="wrench-level-decomposition-natural-vs-active-wrench" class="level2">
 <h2 class="anchored" data-anchor-id="wrench-level-decomposition-natural-vs-active-wrench">4. Wrench-level decomposition: natural vs active wrench</h2>
-<p>Consider an end-effector (e.g., a point on the club) with a spatial Jacobian (J(q)^{6n}) that maps joint velocities to twist:</p>
-<p>[ v = J(q),, v ^6. ]</p>
-<p>The spatial wrench (w ^6) (force and moment) maps to joint space as</p>
-<p>[ <em>{} J(q)^,w + </em>{}, ]</p>
-<p>where (_{}) collects internal constraint forces that do not appear as net wrench at that end-effector. If we ignore or separately model those internal contributions, we approximate</p>
-<p>[ _{} J(q)^w. ]</p>
-<p>Given joint torques (), we can approximate the corresponding wrench by a pseudoinverse:</p>
-<p>[ w (J(q)<sup>)</sup>{+},. ]</p>
+<p>Consider an end-effector (e.g., a point on the club) with a spatial Jacobian <span class="math inline">\(J(q)\in\mathbb{R}^{6\times n}\)</span> that maps joint velocities to twist:</p>
+<p><span class="math display">\[
+v = J(q)\,\dot{q}, \qquad v \in \mathbb{R}^6.
+\]</span></p>
+<p>The spatial wrench <span class="math inline">\(w \in \mathbb{R}^6\)</span> (force and moment) maps to joint space as</p>
+<p><span class="math display">\[
+\tau_{\text{joint}} \approx J(q)^\top\,w + \tau_{\text{int}},
+\tag{4.1}
+\]</span></p>
+<p>where <span class="math inline">\(\tau_{\text{int}}\)</span> collects internal constraint forces that do not appear as net wrench at that end-effector. If we ignore or separately model those internal contributions, we approximate</p>
+<p><span class="math display">\[
+\tau_{\text{joint}} \approx J(q)^\top w.
+\tag{4.2}
+\]</span></p>
+<p>Given joint torques <span class="math inline">\(\tau\)</span>, we can approximate the corresponding wrench by a pseudoinverse:</p>
+<p><span class="math display">\[
+w \approx \big(J(q)^\top\big)^{+}\,\tau.
+\tag{4.3}
+\]</span></p>
 <section id="natural-wrench" class="level3">
 <h3 class="anchored" data-anchor-id="natural-wrench">4.1 Natural wrench</h3>
-<p>Using the natural torque field (_{}), define the <strong>natural wrench</strong> at the end-effector:</p>
-<p>[ w_{}(q,,,) := (J(q)<sup>)</sup>{+} ,_{}(q,,,). ]</p>
+<p>Using the natural torque field <span class="math inline">\(\tau_{\text{nat}}\)</span>, define the <strong>natural wrench</strong> at the end-effector:</p>
+<p><span class="math display">\[
+w_{\text{nat}}(q,\dot{q},\ddot{q},\lambda)
+:= \big(J(q)^\top\big)^{+}
+   \,\tau_{\text{nat}}(q,\dot{q},\ddot{q},\lambda).
+\tag{4.4}
+\]</span></p>
 <p>This is the wrench associated with inertia, gravity, velocity-dependent terms, dissipation, and contacts, mapped to the end-effector.</p>
 </section>
 <section id="active-wrench" class="level3">
 <h3 class="anchored" data-anchor-id="active-wrench">4.2 Active wrench</h3>
-<p>From (2.6), the active torque is (B(q)u). The associated <strong>active wrench</strong> is</p>
-<p>[ w_{}(q,u) := (J(q)<sup>)</sup>{+} B(q),u. ]</p>
+<p>From (2.6), the active torque is <span class="math inline">\(B(q)u\)</span>. The associated <strong>active wrench</strong> is</p>
+<p><span class="math display">\[
+w_{\text{act}}(q,u)
+:= \big(J(q)^\top\big)^{+} B(q)\,u.
+\tag{4.5}
+\]</span></p>
 <p>Define</p>
-<p>[ W(q) := (J(q)<sup>)</sup>{+} B(q) ^{6 m}, ]</p>
+<p><span class="math display">\[
+W(q) := \big(J(q)^\top\big)^{+} B(q) \in \mathbb{R}^{6 \times m},
+\tag{4.6}
+\]</span></p>
 <p>so that</p>
-<p>[ w_{}(q,u) = W(q),u. ]</p>
-<p>Each column of (W(q)) is the wrench direction generated by unit activation of one input channel.</p>
+<p><span class="math display">\[
+w_{\text{act}}(q,u) = W(q)\,u.
+\tag{4.7}
+\]</span></p>
+<p>Each column of <span class="math inline">\(W(q)\)</span> is the wrench direction generated by unit activation of one input channel.</p>
 </section>
 <section id="total-wrench-decomposition" class="level3">
 <h3 class="anchored" data-anchor-id="total-wrench-decomposition">4.3 Total wrench decomposition</h3>
 <p>The total wrench splits as</p>
-<p>[ w(q,,,,u) = w_{}(q,,,) + w_{}(q,u), ]</p>
+<p><span class="math display">\[
+w(q,\dot{q},\ddot{q},\lambda,u)
+=
+w_{\text{nat}}(q,\dot{q},\ddot{q},\lambda)
++
+w_{\text{act}}(q,u),
+\tag{4.8}
+\]</span></p>
 <p>i.e.</p>
-<p>[ w = w_{} + W(q),u. ]</p>
+<p><span class="math display">\[
+w = w_{\text{nat}} + W(q)\,u.
+\tag{4.9}
+\]</span></p>
 <p>This is the wrench-level analog of the usual affine decomposition: <strong>natural mechanics vs active input</strong>.</p>
 <hr>
 </section>
@@ -628,31 +782,30 @@ M(q)^{-1} B(q)
 <h3 class="anchored" data-anchor-id="configuration-and-parameters">5.1 Configuration and parameters</h3>
 <p>Let</p>
 <ul>
-<li>(q =
-<span class="math display">\[\begin{bmatrix} q_1 \\ q_2 \end{bmatrix}\]</span>
-) where
+<li><span class="math inline">\(q = \begin{bmatrix} q_1 \\ q_2 \end{bmatrix}\)</span> where
 <ul>
-<li>(q_1) = angle of link 1 from vertical (or from some fixed axis),</li>
-<li>(q_2) = relative angle of link 2 from link 1.</li>
+<li><span class="math inline">\(q_1\)</span> = angle of link 1 from vertical (or from some fixed axis),</li>
+<li><span class="math inline">\(q_2\)</span> = relative angle of link 2 from link 1.</li>
 </ul></li>
-<li>Link lengths: (l_1, l_2).</li>
-<li>Center-of-mass distances along each link: (c_1, c_2).</li>
-<li>Masses: (m_1, m_2).</li>
-<li>Inertia about COM (out of plane): (I_1, I_2).</li>
-<li>Gravity: (g &gt; 0).</li>
+<li>Link lengths: <span class="math inline">\(l_1, l_2\)</span>.</li>
+<li>Center-of-mass distances along each link: <span class="math inline">\(c_1, c_2\)</span>.</li>
+<li>Masses: <span class="math inline">\(m_1, m_2\)</span>.</li>
+<li>Inertia about COM (out of plane): <span class="math inline">\(I_1, I_2\)</span>.</li>
+<li>Gravity: <span class="math inline">\(g &gt; 0\)</span>.</li>
 </ul>
-<p>We assume no explicit damping (for simplicity), i.e.&nbsp;(d(q,) = 0), and no external contacts ((J_c^= 0)).</p>
+<p>We assume no explicit damping (for simplicity), i.e.&nbsp;<span class="math inline">\(d(q,\dot{q}) = 0\)</span>, and no external contacts (<span class="math inline">\(J_c^\top\lambda = 0\)</span>).</p>
 <p>Then the equations of motion take the canonical form</p>
-<p>[ M(q) + C(q,), + g(q) = _{}, ]</p>
-with (_{} =
-<span class="math display">\[\begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}\]</span>
-<p>) the joint torques.</p>
+<p><span class="math display">\[
+M(q)\ddot{q} + C(q,\dot{q})\,\dot{q} + g(q) = \tau_{\text{in}},
+\tag{5.1}
+\]</span></p>
+<p>with <span class="math inline">\(\tau_{\text{in}} = \begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}\)</span> the joint torques.</p>
 </section>
 <section id="inertia-matrix-mq" class="level3">
-<h3 class="anchored" data-anchor-id="inertia-matrix-mq">5.2 Inertia matrix (M(q))</h3>
+<h3 class="anchored" data-anchor-id="inertia-matrix-mq">5.2 Inertia matrix <span class="math inline">\(M(q)\)</span></h3>
 <p>A standard planar 2-link manipulator model gives:</p>
-[
-<span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 M_{11}(q) &amp;= I_1 + I_2
           + m_1 c_1^2
           + m_2 \big( l_1^2 + c_2^2 + 2 l_1 c_2 \cos q_2 \big), \\
@@ -660,54 +813,70 @@ M_{12}(q) &amp;= I_2 + m_2\big( c_2^2 + l_1 c_2 \cos q_2 \big), \\
 M_{21}(q) &amp;= M_{12}(q), \\
 M_{22}(q) &amp;= I_2 + m_2 c_2^2.
 \end{aligned}
-\tag{5.2}\]</span>
-<p>]</p>
+\tag{5.2}
+\]</span></p>
 <p>So</p>
-[ M(q) =
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+M(q) =
+\begin{bmatrix}
 M_{11}(q) &amp; M_{12}(q) \\
 M_{21}(q) &amp; M_{22}(q)
-\end{bmatrix}\]</span>
-<p>. ]</p>
+\end{bmatrix}.
+\]</span></p>
 </section>
-<section id="corioliscentrifugal-terms-cq" class="level3">
-<h3 class="anchored" data-anchor-id="corioliscentrifugal-terms-cq">5.3 Coriolis/centrifugal terms (C(q,))</h3>
+<section id="corioliscentrifugal-terms-cqdotqdotq" class="level3">
+<h3 class="anchored" data-anchor-id="corioliscentrifugal-terms-cqdotqdotq">5.3 Coriolis/centrifugal terms <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span></h3>
 <p>There are various equivalent parameterizations. A commonly used one defines</p>
-<p>[ h(q) = - m_2 l_1 c_2 q_2. ]</p>
-<p>Then the product (C(q,)) can be written as</p>
-[ C(q,) =
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+h(q) = - m_2 l_1 c_2 \sin q_2.
+\tag{5.3}
+\]</span></p>
+<p>Then the product <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span> can be written as</p>
+<p><span class="math display">\[
+C(q,\dot{q})\dot{q} =
+\begin{bmatrix}
 h(q)\dot{q}_2(2\dot{q}_1 + \dot{q}_2) \\
 - h(q)\dot{q}_1^2
-\end{bmatrix}\]</span>
-<p>. ]</p>
-<p>You can think of this as (C(q,)) without ever writing out (C) explicitly as a matrix.</p>
+\end{bmatrix}.
+\tag{5.4}
+\]</span></p>
+<p>You can think of this as <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span> without ever writing out <span class="math inline">\(C\)</span> explicitly as a matrix.</p>
 </section>
 <section id="gravity-term-gq" class="level3">
-<h3 class="anchored" data-anchor-id="gravity-term-gq">5.4 Gravity term (g(q))</h3>
+<h3 class="anchored" data-anchor-id="gravity-term-gq">5.4 Gravity term <span class="math inline">\(g(q)\)</span></h3>
 <p>Assuming angles are measured from the <strong>downward vertical</strong> for simplicity, the gravity torques are</p>
-[
-<span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 g_1(q) &amp;= (m_1 c_1 + m_2 l_1)\,g\,\sin q_1
        + m_2 c_2 g \sin(q_1 + q_2), \\
 g_2(q) &amp;= m_2 c_2 g \sin(q_1 + q_2).
 \end{aligned}
-\tag{5.5}\]</span>
-<p>]</p>
+\tag{5.5}
+\]</span></p>
 <p>So</p>
-[ g(q) =
-<span class="math display">\[\begin{bmatrix} g_1(q) \\ g_2(q) \end{bmatrix}\]</span>
-<p>. ]</p>
+<p><span class="math display">\[
+g(q) = \begin{bmatrix} g_1(q) \\ g_2(q) \end{bmatrix}.
+\]</span></p>
 </section>
 <section id="natural-torques-and-active-input" class="level3">
 <h3 class="anchored" data-anchor-id="natural-torques-and-active-input">5.5 Natural torques and active input</h3>
 <p>With no external contacts and no explicit damping, the <strong>natural torque field</strong> reduces to</p>
-<p>[ _{}(q,,) = M(q) + C(q,) + g(q). ]</p>
-<p>For a fully actuated system with inputs directly equal to torques, we can set (B(q) = I_2) (the (2) identity), so that</p>
-<p>[ _{} = u. ]</p>
+<p><span class="math display">\[
+\tau_{\text{nat}}(q,\dot{q},\ddot{q})
+= M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q).
+\tag{5.6}
+\]</span></p>
+<p>For a fully actuated system with inputs directly equal to torques, we can set <span class="math inline">\(B(q) = I_2\)</span> (the <span class="math inline">\(2\times 2\)</span> identity), so that</p>
+<p><span class="math display">\[
+\tau_{\text{in}} = u.
+\tag{5.7}
+\]</span></p>
 <p>The mechanical identity (2.7) becomes</p>
-<p>[ u = _{}(q,,). ]</p>
-<p>In a golf-swing context or in human biomechanics, you might replace (B(q)) by a more structured mapping from muscle activations to joint torques; the decomposition still holds.</p>
+<p><span class="math display">\[
+u = \tau_{\text{nat}}(q,\dot{q},\ddot{q}).
+\tag{5.8}
+\]</span></p>
+<p>In a golf-swing context or in human biomechanics, you might replace <span class="math inline">\(B(q)\)</span> by a more structured mapping from muscle activations to joint torques; the decomposition still holds.</p>
 <hr>
 </section>
 </section>
@@ -715,35 +884,83 @@ g_2(q) &amp;= m_2 c_2 g \sin(q_1 + q_2).
 <h2 class="anchored" data-anchor-id="energy-transfer-decomposition">6. Energy Transfer Decomposition</h2>
 <p>A critical aspect of the drift–control analysis is understanding <strong>power flow</strong>: how energy moves between segments and how much of that transfer is due to “natural” dynamics versus “active” input.</p>
 <p>For a distal segment (e.g., the club, link 2), the total energy <span class="math inline">\(E_2\)</span> changes due to work done by the joint constraint force <span class="math inline">\(\vec{F}_{21}\)</span> and the joint torque <span class="math inline">\(\tau_{21}\)</span>.</p>
-<p>[ <em>2 = </em>{21} <em>{} + </em>{21} , _2. ]</p>
+<p><span class="math display">\[
+\dot{E}_2 = \vec{F}_{21} \cdot \vec{v}_{\text{joint}} + \tau_{21} \, \omega_2.
+\]</span></p>
 <p>We calculate the joint constraint force <span class="math inline">\(\vec{F}_{21}\)</span> from Newton’s law applied to the COM of link 2:</p>
-<p>[ <em>{21} = m_2 (</em>{c2} - ). ]</p>
-<p>Using the affine decomposition of acceleration from (3.2), [ = _{} + M(q)^{-1} B(q) u, ] the linear acceleration of the COM <span class="math inline">\(\vec{a}_{c2}\)</span> decomposes as:</p>
-<p>[ <em>{c2} = J</em>{c2} + <em>{c2} = </em>{ <em>{}} + </em>{ _{}}. ]</p>
+<p><span class="math display">\[
+\vec{F}_{21} = m_2 (\vec{a}_{c2} - \vec{g}).
+\]</span></p>
+<p>Using the affine decomposition of acceleration from (3.2), <span class="math display">\[
+\ddot{q} = \ddot{q}_{\text{nat}} + M(q)^{-1} B(q) u,
+\]</span> the linear acceleration of the COM <span class="math inline">\(\vec{a}_{c2}\)</span> decomposes as:</p>
+<p><span class="math display">\[
+\vec{a}_{c2}
+= J_{c2} \ddot{q} + \dot{J}_{c2} \dot{q}
+= \underbrace{(J_{c2} \ddot{q}_{\text{nat}} + \dot{J}_{c2} \dot{q})}_{\text{natural acceleration } \vec{a}_{\text{nat}}}
+  + \underbrace{(J_{c2} M(q)^{-1} B(q) u)}_{\text{active acceleration } \vec{a}_{\text{act}}}.
+\]</span></p>
 <p>Thus, the constraint force splits into <strong>natural</strong> and <strong>active</strong> components:</p>
-<p>[ <em>{} = m_2 (</em>{} - ), <em>{} = m_2 </em>{}. ]</p>
+<p><span class="math display">\[
+\vec{F}_{\text{nat}} = m_2 (\vec{a}_{\text{nat}} - \vec{g}), \qquad
+\vec{F}_{\text{act}} = m_2 \vec{a}_{\text{act}}.
+\]</span></p>
 <p>Depending on the actuator model, the joint torque <span class="math inline">\(\tau_{21}\)</span> also splits (e.g., into passive spring/damper <span class="math inline">\(\tau_{\text{nat}}\)</span> and active motor <span class="math inline">\(\tau_{\text{act}}\)</span>). For a purely torque-driven joint, <span class="math inline">\(\tau_{21} = \tau_{\text{act}} = u_2\)</span>.</p>
 <p>The <strong>Power Transfer</strong> then decomposes into:</p>
 <ol type="1">
-<li><p><strong>Natural Power Transfer</strong>: Energy moved into the link by passive dynamics (e.g., the arm “pulling” on the club due to centripetal acceleration). [ P_{} = <em>{} </em>{} + _{} _2. ]</p></li>
-<li><p><strong>Active Power Transfer</strong>: Energy moved into the link by the instantaneous action of the control inputs. [ P_{} = <em>{} </em>{} + _{} _2. ]</p></li>
+<li><p><strong>Natural Power Transfer</strong>: Energy moved into the link by passive dynamics (e.g., the arm “pulling” on the club due to centripetal acceleration). <span class="math display">\[
+P_{\text{nat}} = \vec{F}_{\text{nat}} \cdot \vec{v}_{\text{joint}} + \tau_{\text{nat}} \omega_2.
+\]</span></p></li>
+<li><p><strong>Active Power Transfer</strong>: Energy moved into the link by the instantaneous action of the control inputs. <span class="math display">\[
+P_{\text{act}} = \vec{F}_{\text{act}} \cdot \vec{v}_{\text{joint}} + \tau_{\text{act}} \omega_2.
+\]</span></p></li>
 </ol>
 <p>This decomposition allows us to answer: <strong>“Is the club gaining energy because I am pulling on it (passive/geometric transfer) or because I am twisting it (active transfer)?”</strong></p>
 <hr>
+</section>
+<section id="theoretical-synthesis" class="level2">
+<h2 class="anchored" data-anchor-id="theoretical-synthesis">Theoretical Synthesis</h2>
+<section id="affine-realization-of-the-drift-wrench" class="level3">
+<h3 class="anchored" data-anchor-id="affine-realization-of-the-drift-wrench">Affine Realization of the Drift Wrench</h3>
+<p>The decomposition of the total wrench <span class="math inline">\(w\)</span> into <span class="math inline">\(w_{\text{nat}}\)</span> and <span class="math inline">\(w_{\text{act}}\)</span> provides the explicit mechanical realization of the abstract affine control form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>. Specifically, <span class="math inline">\(w_{\text{nat}}\)</span> corresponds to the “Drift Wrench” generated by the vector field <span class="math inline">\(f(x)\)</span>, encapsulating all inertial, gravitational, and centripetal history of the system. In contrast, <span class="math inline">\(w_{\text{act}}\)</span> represents the instantaneous “Control Authority” <span class="math inline">\(g(x)u\)</span>. This separation is critical for verifying the <strong>Zero Torque Counterfactual (ZTCF)</strong>: setting <span class="math inline">\(u=0\)</span> (and thus <span class="math inline">\(w_{\text{act}}=0\)</span>) isolates the <span class="math inline">\(w_{\text{nat}}\)</span> component, proving that the clubhead’s acceleration in the ZTCF is not zero, but rather driven entirely by the “Natural Wrench” of the kinematic chain.</p>
+</section>
+<section id="resolving-teleological-blindness" class="level3">
+<h3 class="anchored" data-anchor-id="resolving-teleological-blindness">Resolving Teleological Blindness</h3>
+<p>The energy transfer decomposition in Section 6 resolves the “Teleological Blindness” often found in kinetic analyses. By distinguishing <span class="math inline">\(P_{\text{nat}}\)</span> from <span class="math inline">\(P_{\text{act}}\)</span>, we can rigorously attribute clubhead speed generation to either “Geometric Work” (energy transfer via constraint forces <span class="math inline">\(\vec{F}_{\text{nat}}\)</span>, e.g., the centripetal pull of the arm) or “Active Work” (energy input via joint torques <span class="math inline">\(\tau_{\text{act}}\)</span>). This framework exposes the <strong>Drift Dominance</strong> in the late downswing, where <span class="math inline">\(P_{\text{nat}} \gg P_{\text{act}}\)</span>, confirming that the golfer’s primary role is to establish the geometric conditions (the “Effective Plant”) that maximize passive energy transfer, rather than to actively push the club.</p>
+</section>
+<section id="implicit-assumption-the-stiff-shaft-limit" class="level3">
+<h3 class="anchored" data-anchor-id="implicit-assumption-the-stiff-shaft-limit">Implicit Assumption: The Stiff Shaft Limit</h3>
+<p>It is essential to note that this derivation assumes a <strong>Rigid Body</strong> model for all links. Consequently, the “Active Wrench” <span class="math inline">\(w_{\text{act}}\)</span> is assumed to transmit instantaneously from the hands to the clubhead. This omits the <strong>elastic potential energy</strong> storage and release dynamics characteristic of a flexible shaft (the Stretch-Shortening Cycle). In a flexible model, the active input <span class="math inline">\(u\)</span> would first do work on the shaft stiffness (<span class="math inline">\(V_{elastic}\)</span>), introducing a phase delay before appearing as kinetic energy at the clubhead. Thus, this rigid-body decomposition represents the “Stiff Shaft Limit” of the true dynamics.</p>
+</section>
+<section id="suggested-cross-references" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-cross-references">Suggested Cross-References</h3>
+<ul>
+<li><strong>Theory Part 3 (Force Taxonomy):</strong> For the classification of <span class="math inline">\(f(x)\)</span> components.</li>
+<li><strong>The Static Force-Mobility Fallacy:</strong> For why examining static force transmission (<span class="math inline">\(J^T\)</span>) is insufficient without accounting for <span class="math inline">\(\tau_{nat}\)</span>.</li>
+<li><strong>Simscape Implementation:</strong> For the inclusion of flexible bodies which extends this rigid derivation.</li>
+</ul>
+<hr>
+</section>
 </section>
 <section id="python-implementation-of-the-double-pendulum-model" class="level2">
 <h2 class="anchored" data-anchor-id="python-implementation-of-the-double-pendulum-model">7. Python implementation of the double pendulum model</h2>
 <p>Below is a Python implementation of the double pendulum dynamics, suitable for integration into a Streamlit app. We:</p>
 <ul>
 <li>Define the system parameters.</li>
-<li>Implement (M(q)), (C(q,)), and (g(q)).</li>
-<li>Implement the state dynamics ( = f_{}(x) + G u).</li>
-<li>Provide a helper to compute (_{}) from a trajectory.</li>
-<li>Provide a simple example input (u(t)) and numerical simulation.</li>
+<li>Implement <span class="math inline">\(M(q)\)</span>, <span class="math inline">\(C(q,\dot{q})\dot{q}\)</span>, and <span class="math inline">\(g(q)\)</span>.</li>
+<li>Implement the state dynamics <span class="math inline">\(\dot{x} = f_{\text{nat}}(x) + G u\)</span>.</li>
+<li>Provide a helper to compute <span class="math inline">\(\tau_{\text{nat}}\)</span> from a trajectory.</li>
+<li>Provide a simple example input <span class="math inline">\(u(t)\)</span> and numerical simulation.</li>
 </ul>
 <section id="imports-and-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="imports-and-parameters">7.1 Imports and parameters</h3>
-<p>import numpy as np from scipy.integrate import solve_ivp</p>
+<div id="57370b5e" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> solve_ivp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
 
 
 
@@ -1152,29 +1369,20 @@ g_2(q) &amp;= m_2 c_2 g \sin(q_1 + q_2).
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

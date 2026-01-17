@@ -6,7 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-27">
+<meta name="dcterms.date" content="2026-01-16">
+<meta name="description" content="Establishes drift invariance properties and develops a taxonomy of forces in the golf swing, analyzing the limitations of the affine control assumption.">
 
 <title>Affine Control Interpretation of the Golf Swing — Part 3 – AffineDrift</title>
 <style>
@@ -70,11 +71,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -104,82 +163,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -215,6 +226,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -247,10 +259,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -270,10 +282,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -309,10 +321,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -352,10 +364,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -363,10 +375,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -437,6 +449,11 @@ window.Quarto = {
 <p class="subtitle lead">Drift Invariance and Force Taxonomy</p>
 </div>
 
+<div>
+  <div class="description">
+    Establishes drift invariance properties and develops a taxonomy of forces in the golf swing, analyzing the limitations of the affine control assumption.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -445,7 +462,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 27, 2025</p>
+      <p class="date">January 16, 2026</p>
     </div>
   </div>
   
@@ -459,8 +476,23 @@ window.Quarto = {
 
 <section id="drift-invariance-and-input-constraints" class="level2">
 <h2 class="anchored" data-anchor-id="drift-invariance-and-input-constraints">Drift Invariance and Input Constraints</h2>
-<p>In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term <span class="math inline">\(f(x)\)</span> and an input term <span class="math inline">\(g(x)u\)</span>. However, this separation is only causally valid if the “passive” term is truly independent of the “active” term.</p>
-<p>We have now constructed two powerful counterfactual baselines: the ZTCF (Part II) to isolate passive momentum history, and the ZVCF (Part II) to isolate passive configuration loads. These constructions rely on a fundamental premise: that the ‘passive’ dynamics of the system are robust to the application of ‘active’ force. If the act of applying torque fundamentally altered the nature of the drift field <span class="math inline">\(f(x)\)</span>—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Recap of Part II
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the previous chapter, we constructed two counterfactual baselines: 1. The <strong>ZTCF</strong>, which integrates the drift field <span class="math inline">\(f(x)\)</span> over time to simulate the “Shadow Swing” (inertial memory). 2. The <strong>ZVCF</strong>, which freezes velocity to isolate static loads (gravity/elasticity). Both tools rely on the mathematical subtraction <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span>.</p>
+</div>
+</div>
+<p>In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term <span class="math inline">\(f(x)\)</span> and an input term <span class="math inline">\(g(x)u\)</span>.</p>
+<p>However, the validity of this separation is not self-evident. A skeptic might ask: <em>Is this separation real?</em> Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the “control group” (the drift) must be immune to the “treatment” (the input).</p>
+<p>These constructions rely on a fundamental premise: that the ‘passive’ dynamics of the system are robust to the application of ‘active’ force. If the act of applying torque fundamentally altered the nature of the drift field <span class="math inline">\(f(x)\)</span>—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.</p>
+<p>For the subtraction <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span> to be causally meaningful, the term being subtracted (<span class="math inline">\(\tau_{\text{drift}}\)</span>) must be independent of the term being isolated (<span class="math inline">\(\tau_{\text{input}}\)</span>). This independence condition is not trivial. In many biological systems, active contraction changes the stiffness of the muscles, thereby altering the “plant” itself. However, by modeling the system at the skeletal level (generalized torques driving rigid bodies and a flexible shaft), we can formally prove that the drift vector field is structurally independent of the input vector field.</p>
 <p>The drift–input decomposition</p>
 <p><span class="math display">\[\dot{x} = f(x) + g(x)u\]</span></p>
 <p>is therefore meaningful only if the drift term <span class="math inline">\(f(x)\)</span> is <em>invariant</em> with respect to the instantaneous torque input. This section formalizes that property and explains its consequences, proving that in the control-affine framework, the passive substrate of the swing remains mathematically immutable regardless of the instantaneous input. We also discuss input constraints and their impact on the decomposition.</p>
@@ -475,8 +507,35 @@ window.Quarto = {
 \]</span></p>
 <p><em>Proof.</em> Recall the definition of <span class="math inline">\(f(x)\)</span> derived in Part I: <span class="math display">\[
 f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
-\]</span> The terms constituting <span class="math inline">\(f(x)\)</span> are: 1. <strong>Kinematic rates</strong> <span class="math inline">\(\dot{q}, \dot{\eta}\)</span>, which are state variables. 2. <strong>Inertia matrix</strong> <span class="math inline">\(M(q,\eta)\)</span>, which depends only on configuration. 3. <strong>Coriolis/Centrifugal matrix</strong> <span class="math inline">\(C(x)\)</span>, which depends on state. 4. <strong>Potential forces</strong> <span class="math inline">\(G\)</span> and <span class="math inline">\(F_s\)</span>, which depend on state.</p>
-<p>The control input <span class="math inline">\(u\)</span> enters the equations of motion <em>only</em> through the term <span class="math inline">\(B(q)u\)</span>, which is isolated in the input vector field <span class="math inline">\(g(x)\)</span>. Since no term in <span class="math inline">\(f(x)\)</span> has functional dependence on <span class="math inline">\(u\)</span>, the partial derivative <span class="math inline">\(\frac{\partial f(x)}{\partial u}\)</span> is identically zero. <span class="math inline">\(\square\)</span></p>
+\]</span> The terms constituting <span class="math inline">\(f(x)\)</span> are: 1. <strong>Kinematic rates:</strong> The state variables <span class="math inline">\(\dot{q}, \dot{\eta}\)</span> are independent of the input <span class="math inline">\(u\)</span> by definition in the first-order form (<span class="math inline">\(\dot{x} = \dots\)</span>), so <span class="math inline">\(\frac{\partial \dot{q}}{\partial u} = 0\)</span>. 2. <strong>Inertia:</strong> The mass matrix <span class="math inline">\(M(q,\eta)\)</span> and its inverse <span class="math inline">\(M^{-1}\)</span> are functions of the configuration manifold coordinates only. Thus, <span class="math inline">\(\frac{\partial M^{-1}}{\partial u} = 0\)</span>. 3. <strong>Coriolis/Centrifugal:</strong> The matrix <span class="math inline">\(C(q,\dot{q},\eta,\dot{\eta})\)</span> is quadratic in velocities but independent of force inputs. 4. <strong>Potentials:</strong> Gravitational (<span class="math inline">\(G\)</span>) and elastic (<span class="math inline">\(K_s \eta\)</span>) forces are functions of configuration <span class="math inline">\(q, \eta\)</span> only. 5. <strong>Dissipation:</strong> Damping forces (<span class="math inline">\(C_s \dot{\eta}\)</span>) are linear in velocity.</p>
+<p>We perform the differentiation explicitly block-by-block. Let <span class="math inline">\(h(x) = C(x)\dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta})\)</span> be the vector of passive forces. <span class="math display">\[
+\frac{\partial f(x)}{\partial u} = \frac{\partial}{\partial u}
+\begin{bmatrix}
+\dot{q} \\ \dot{\eta} \\ -M^{-1} h(x)
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 \\ 0 \\ -\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}
+\end{bmatrix}.
+\]</span> Since <span class="math inline">\(M^{-1}\)</span> depends only on <span class="math inline">\(q, \eta\)</span> and <span class="math inline">\(h(x)\)</span> depends only on <span class="math inline">\(q, \eta, \dot{q}, \dot{\eta}\)</span>, both partial derivatives with respect to <span class="math inline">\(u\)</span> are zero.</p>
+<p><span class="math display">\[
+\frac{\partial f(x)}{\partial u} \equiv 0.
+\]</span></p>
+<p>The control input <span class="math inline">\(u\)</span> appears <em>exclusively</em> in the term <span class="math inline">\(M^{-1} [B(q)u; 0]^T\)</span>. This orthogonality is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. It guarantees that the “passive” dynamics identified by the model are structurally unpolluted by the “active” control inputs.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Assumption of Viscous-Only Damping
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This invariance proof strictly relies on the assumption that all dissipative forces <span class="math inline">\(h_{\text{dissip}}\)</span> depend only on state <span class="math inline">\((q, \dot{q})\)</span>. Specifically, we assume damping is viscous (linear in velocity). If the system included <strong>Coulomb friction</strong> (<span class="math inline">\(\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})\)</span>), where the normal force <span class="math inline">\(F_N\)</span> depends on constraint forces (and thus on input <span class="math inline">\(u\)</span>), the drift term <span class="math inline">\(f(x)\)</span> would become input-dependent (<span class="math inline">\(\nabla_u f \neq 0\)</span>), violating the affine structure. For the high-speed ballistic phases of the golf swing, we assume inertial forces dominate frictional forces (<span class="math inline">\(F_{\text{inertia}} \gg \mu F_N\)</span>), justifying this viscous-only approximation.</p>
+</div>
+</div>
+<p><span class="math inline">\(\square\)</span></p>
 <p>For mechanical systems with generalized torques entering linearly,</p>
 <p><span class="math display">\[\ddot{q} = M^{-1}(q,\eta)\big(\tau - h(q,\dot{q},\eta,\dot{\eta})\big),\]</span></p>
 <p>where <span class="math inline">\(h(\cdot)\)</span> collects all passive terms, linearity of <span class="math inline">\(\tau\)</span> ensures that</p>
@@ -565,13 +624,13 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
 <li>state-dependent strength variations.</li>
 </ul>
 <p>These appear in the present framework only through the feasible input set <span class="math inline">\(\mathcal{U}(x)\)</span>. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.</p>
-<p>Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span> are not just vector fields; they are containers for specific physical phenomena—gravity, centrifugal force, muscular effort—that can now be labeled with precision.</p>
+<p>Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components <span class="math inline">\(f(x)\)</span> and <span class="math inline">\(g(x)\)</span> are not merely vector fields; they are distinct physical containers. <span class="math inline">\(f(x)\)</span> holds the system’s “nature” (gravity, inertia, stiffness), while <span class="math inline">\(g(x)u\)</span> holds the “nurture” (agency).</p>
 </section>
 </section>
 <section id="force-and-torque-taxonomy-via-the-affine-mapping" class="level2">
 <h2 class="anchored" data-anchor-id="force-and-torque-taxonomy-via-the-affine-mapping">Force and Torque Taxonomy via the Affine Mapping</h2>
-<p>Having established the control-affine form (Part I), defined the physical decomposition (Part II), constructed the necessary temporal and configurational counterfactuals (Part II), and verified the invariance of the passive baseline (Section 1 of this Part), we can now synthesize these elements into a unified <em>Force Taxonomy</em>. This taxonomy is not merely a descriptive list; it is the direct algebraic consequence of the framework. It provides a comprehensive map for attributing every newton of force in the swing to its specific causal origin—whether it arises from the system’s shape (Configuration Drift), its motion (Velocity Drift), or the golfer’s immediate intent (Input).</p>
-<p>With the drift–input decomposition formalized, we now classify the generalized forces acting within the golfer–club–shaft system. The taxonomy presented here is purely mechanical and applies directly to any control-affine multibody model of the form</p>
+<p>We can now synthesize the <strong>Control-Affine Form</strong> (Part I), the <strong>Counterfactual Baselines</strong> (Part II), and the <strong>Drift Invariance</strong> property (Section 1) into a unified <em>Force Taxonomy</em>.</p>
+<p>This taxonomy classifies the generalized forces acting within the golfer–club–shaft system. It is purely mechanical and applies directly to any control-affine multibody model of the form</p>
 <p><span class="math display">\[\dot{x} = f(x) + g(x)u.\]</span></p>
 <p>It separates forces into distinct causal categories based on their origin in the equations of motion rather than their magnitude or timing.</p>
 <p>This taxonomy applies to:</p>
@@ -639,6 +698,7 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
   =
   M_q(q,\eta)\,[a_{\text{drift}}(x(t))]_{1:n}.\]</span></p>
 <p>By construction, <span class="math inline">\(\tau_{\mathrm{input}}\)</span> contains the mechanical effect of applied torques and nothing else. It is the only category that changes when the golfer changes their motor command.</p>
+<p>This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by <span class="math inline">\(A_{\text{input}}(x)u\)</span>. The ‘Input Force’ defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the <strong>Inertial Coupling Ratio</strong> (<span class="math inline">\(\Gamma\)</span>) acting on the flexible shaft. Thus, <span class="math inline">\(\tau_{\text{input}}\)</span> represents the complete mechanical footprint of the golfer’s agency.</p>
 </section>
 <section id="category-4-mixed-forces-interaction-effects" class="level3">
 <h3 class="anchored" data-anchor-id="category-4-mixed-forces-interaction-effects">Category 4: Mixed forces (interaction effects)</h3>
@@ -722,8 +782,7 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
 <li>identification of torque timing patterns,</li>
 <li>mapping of how individual torque bursts shape the club path.</li>
 </ul>
-<p>This taxonomy completes the theoretical framework required to interpret forces and torques in the golf swing using control-affine decomposition.</p>
-<p>This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Section 2. We now catalogue these limitations to define the precise scope of validity for our causal claims.</p>
+<p>This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the precise scope of validity for our causal claims.</p>
 </section>
 </section>
 <section id="limitations-theoretical-scope" class="level2">
@@ -757,7 +816,7 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
 <section id="data-and-parameter-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="data-and-parameter-limitations">Data and parameter limitations</h3>
 <p><strong>Parameter identification and causality.</strong></p>
-<p>When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the “effective” impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the “Drift” term <span class="math inline">\(f(x)\)</span> represents the dynamics of the “Effective Plant” conditioned on the task, and the clean causal separation between input and plant is approximate.</p>
+<p>When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the “effective” impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the “Drift” term <span class="math inline">\(f(x)\)</span> represents the dynamics of the “Effective Plant” conditioned on the task, and the clean causal separation between input and plant is approximate. This implies that the ZTCF acts as a <strong>“frozen strategy” baseline</strong>: it asks how the system would evolve if the golfer ceased <em>driving</em> the motion but maintained the <em>structural impedance</em> required for the task. It does not simulate a flaccid collapse.</p>
 <p><strong>Exact parameter knowledge.</strong></p>
 <p>The decomposition assumes perfect knowledge of:</p>
 <ul>
@@ -775,6 +834,10 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
 <h3 class="anchored" data-anchor-id="conceptual-limitations">Conceptual limitations</h3>
 <p><strong>Interpretation of counterfactuals.</strong></p>
 <p>ZTCF and ZVCF are mathematically defined but physically unrealizable states or trajectories. They answer precise mechanical questions but should not be interpreted as physiological or behavioral alternatives available to a real golfer.</p>
+<p><strong>Mechanical vs.&nbsp;Control Causality.</strong></p>
+<p>It is crucial to distinguish <strong>Control Causality</strong> (why the nervous system selected a torque) from <strong>Mechanical Causality</strong> (which physical mechanism generated the force). The AffineDrift framework addresses Mechanical Causality. The ZTCF answers the question: <em>‘Regardless of the complex sensory-motor loops that determined the input, what would the system have done if that input were instantaneously removed?’</em> This isolates the mechanical affordances of the body from the neural strategy of the player.</p>
+<p><strong>Ambiguity of “Braking” (Impedance vs.&nbsp;Drive).</strong></p>
+<p>The decomposition identifies the net torque vector but cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability). A negative or “braking” input <span class="math inline">\(\tau_{\text{input}}\)</span> may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing’s momentum. Thus, “fighting the drift” should be interpreted as “modulating the drift,” which may serve robustness rather than speed.</p>
 <p><strong>No claims about optimality or intent.</strong></p>
 <p>The decomposition quantifies how torques shape motion, but it does not imply:</p>
 <ul>
@@ -799,14 +862,12 @@ f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot
 <p><span class="math display">\[\dot{x} = f(x) + g(x)u,\]</span></p>
 <p>we derived a clean separation between passive drift forces and torque-driven input forces. The model’s affine structure enabled two mathematically rigorous counterfactual tools—the Zero Torque Counterfactual (ZTCF) and the Zero Velocity Counterfactual (ZVCF)—which isolate the contributions of inertia, configuration, shaft deformation, and applied torques.</p>
 <p>The resulting taxonomy classifies generalized forces into configuration drift, velocity drift, input forces, and nonlinear interaction effects. This provides a principled basis for interpreting torques and hand forces at any instant of the swing. Within the modeling assumptions stated earlier, the decomposition is analytically exact and reproducible. It offers a mechanical explanation of how the swing evolves over time, distinguishing forces that arise “on their own” from those produced directly by applied torques.</p>
-<p>This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. These will appear in subsequent phases of the project:</p>
+<p>This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. However, the theoretical structure developed here is not self-validating. It relies on complex subtraction operations <span class="math inline">\(\tau_{input} = \tau_{total} - \tau_{drift}\)</span> which are analytically exact but potentially unstable in practice. To address this, the subsequent components of this series provide the necessary verification:</p>
 <ul>
-<li><p><strong>Part II: Simulation and Numerical Implementation.</strong><br>
-This follow-up manuscript will implement the full drift–input decomposition in a high-fidelity multibody simulation environment, including flexible-shaft modeling, inverse dynamics pipelines, ZTCF trajectory integration, and numerical evaluation of the force taxonomy. It will also study sensitivity to parameter uncertainty and filtering choices for motion derivatives.</p></li>
-<li><p><strong>Part III: Experimental and Coaching Applications.</strong><br>
-The third manuscript will apply the theoretical tools to real motion-capture data. It will quantify drift and input forces in measured swings, examine player-to-player variability, evaluate torque-timing strategies, and identify mechanical signatures associated with clubhead delivery. Practical implications for coaching and equipment design will be evaluated in the context of the “Application of Research” section required by the journal.</p></li>
+<li><p><strong>Part IV: Mathematical Appendices.</strong> These appendices provide the <strong>algebraic guarantee</strong> of the theory. They contain the detailed block matrix inversion proofs and modal approximation derivations that justify the affine separation for flexible multibody systems.</p></li>
+<li><p><strong>Part V: Numerical Validation (Simulink).</strong> This section provides the <strong>numerical stress test</strong>. By implementing the full forward dynamics in a stiff solver environment, Part V demonstrates that the delicate counterfactual subtractions remain stable under integration error, proving that the theory survives the transition from the page to the processor.</p></li>
 </ul>
-<p>Beyond these immediate goals, several broader research directions emerge:</p>
+<p>Beyond these verifications, future work will focus on experimental application…</p>
 <ul>
 <li><p><strong>Modeling extensions.</strong><br>
 Incorporating foot-ground shear forces, aerodynamic loading, and non-smooth impact dynamics will generalize the framework to capture more phases of the swing.</p></li>
@@ -836,7 +897,7 @@ Comparing a player’s measured forces to the drift-only predictions (ZTCF and Z
 <p>For equipment professionals, the framework provides a mechanically grounded way to analyze how shaft stiffness, club mass distribution, and player-specific kinematics interact. The drift–input decomposition allows shaft behavior and player torque strategies to be examined independently, improving the matching process between golfers and equipment.</p>
 <p>For researchers, the approach offers a reproducible method for quantifying torque effectiveness, evaluating technique variability, and linking high-speed motion capture to causal mechanical explanations of performance.</p>
 <p>Overall, the framework enables clearer interpretation of how golfers generate speed, control the club, and use their bodies efficiently—supporting more targeted coaching, equipment fitting, and player development.</p>
-<p>For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, including the block-matrix manipulations and modal expansion details that justify the statements made in Parts I and II, we refer to the detailed derivations collected in the Appendices (Part IV).</p>
+<p>For the mathematical reader interested in the rigorous derivation of the control-affine form from first principles, we refer to the detailed derivations collected in the Appendices (Part IV). These appendices specifically provide the <strong>block matrix inversion proofs</strong> that justify the clean separation of rigid and flexible dynamics, and demonstrate that the modal approximation of the shaft does not violate the linearity of the torque input—a critical condition for the validity of the Force Taxonomy presented above.</p>
 
 
 </section>
@@ -1243,29 +1304,20 @@ Comparing a player’s measured forces to the drift-only predictions (ZTCF and Z
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

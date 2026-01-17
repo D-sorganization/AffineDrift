@@ -6,7 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-27">
+<meta name="dcterms.date" content="2026-01-16">
+<meta name="description" content="Simulink implementation documentation for the control-affine golf swing model, including numerical routines and validation approaches.">
 
 <title>Affine Control Interpretation of the Golf Swing — Part 5 – AffineDrift</title>
 <style>
@@ -70,11 +71,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -104,82 +163,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -215,6 +226,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -247,10 +259,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -270,10 +282,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -309,10 +321,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -352,10 +364,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -363,10 +375,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -414,6 +426,7 @@ window.Quarto = {
   <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations">Practical considerations</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
+  <li><a href="#final-remarks-on-the-affinedrift-framework" id="toc-final-remarks-on-the-affinedrift-framework" class="nav-link" data-scroll-target="#final-remarks-on-the-affinedrift-framework">Final Remarks on the AffineDrift Framework</a></li>
   </ul>
 </nav>
     </div>
@@ -423,9 +436,14 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Affine Control Interpretation of the Golf Swing — Part 5</h1>
-<p class="subtitle lead">Simulink Model Documentation</p>
+<p class="subtitle lead">Numerical Consistency Check (Planar Model)</p>
 </div>
 
+<div>
+  <div class="description">
+    Simulink implementation documentation for the control-affine golf swing model, including numerical routines and validation approaches.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -434,7 +452,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 27, 2025</p>
+      <p class="date">January 16, 2026</p>
     </div>
   </div>
   
@@ -449,10 +467,22 @@ window.Quarto = {
 <section id="simulink-forward-dynamics-modeling-and-counterfactual-evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="simulink-forward-dynamics-modeling-and-counterfactual-evaluation">Simulink Forward Dynamics Modeling and Counterfactual Evaluation</h2>
 <p>The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.</p>
+<p>Specifically, while the equation <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span> is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the entire causal attribution collapses.</p>
 <p>To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Part III), we require a numerical proof-of-concept.</p>
-<p>The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.</p>
-<p>To complement the theoretical framework developed in this manuscript and fully implement the force decomposition algorithms derived in the Appendices, a forward-dynamics implementation of the golf swing was constructed in MATLAB/Simulink. The goal of this implementation was not to present simulation results (these will appear in Parts II and III), but to test and validate the counterfactual concepts introduced earlier using an operational multibody model with a flexible shaft, joint torques, and realistic momentum transfer.</p>
-<p>The model is a planar two-hand, multi-link system with a flexible beam shaft, based on the publicly released “Two Hand Golf Swing Model” (MathWorks File Exchange). The kinematics were iteratively tuned to produce a representative downswing with clubhead speed and segmental angular velocities comparable to measured professional swings.</p>
+<p>The following section documents the forward-dynamics implementation used to validate the <strong>algebraic consistency</strong> of the affine decomposition in a simplified <strong>planar</strong> environment. We acknowledge that this planar model cannot test the 3D gyroscopic predictions (e.g., face stability), which remain theoretical until 3D simulation or experiment is performed. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Dimensionality Gap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We acknowledge that this planar model (<span class="math inline">\(q \in \mathbb{R}^3\)</span>) cannot test the 3D gyroscopic predictions (e.g., face stability) discussed in Part III. These effects, which rely on the cross-product terms <span class="math inline">\(\omega \times I \omega\)</span>, are absent by definition in 2D. The simulation serves strictly to validate the <strong>algebraic consistency</strong> of the affine decomposition in a simplified environment, leaving the verification of 3D drift invariance to future spatial simulations.</p>
+</div>
+</div>
 <section id="model-construction" class="level3">
 <h3 class="anchored" data-anchor-id="model-construction">Model construction</h3>
 <p>The model consists of:</p>
@@ -463,7 +493,19 @@ window.Quarto = {
 <li>clubhead and hand coordinate frames for computing interaction forces.</li>
 </ul>
 <p>Shaft flexibility was represented using modal bending dynamics, similar to Appendix B, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control-affine decomposition.</p>
-<p><strong>Note on parameter validity.</strong> The stiffness and damping parameters used in this simulation represent the “effective” passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the “Effective Plant” for the swing.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note on parameter validity (Validation Scope)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The stiffness and damping parameters used in this simulation represent the “effective” passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the “Effective Plant” for the swing. <strong>Crucially, this simulation uses constant coefficients and therefore does not validate the “Stiffness Pulse” or “Intentional Constraint Collapse” mechanisms discussed in the theoretical articles.</strong> It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.</p>
+</div>
+</div>
 </section>
 <section id="zero-torque-counterfactual-evaluation-via-kill-switches" class="level3">
 <h3 class="anchored" data-anchor-id="zero-torque-counterfactual-evaluation-via-kill-switches">Zero-Torque Counterfactual evaluation via “kill switches”</h3>
@@ -482,14 +524,24 @@ window.Quarto = {
 <p>For each kill-switch instant, the interaction forces produced under drift-only dynamics were compared to the forces produced during the corresponding instant of the full torque-driven swing. The difference between these two represents the torque-driven contribution.</p>
 <p>The analysis showed:</p>
 <ul>
-<li><p>Passive momentum contributes substantially to both normal and axial hand forces.</p></li>
-<li><p>The passive component can reverse direction prior to the reversal of the total force.</p></li>
-<li><p>The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.</p></li>
-<li><p>Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.</p>
-<blockquote class="blockquote">
-<p><strong>Note on Damping and Overshoot:</strong> This “overshoot” of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the <em>net non-conservative effort</em> required to restrain the system’s inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by <span class="math inline">\(f(x)\)</span>.</p>
-</blockquote></li>
+<li>Passive momentum contributes substantially to both normal and axial hand forces.</li>
+<li>The passive component can reverse direction prior to the reversal of the total force.</li>
+<li>The lead hand experiences a larger passive axial force contribution than the trail hand late in the downswing.</li>
+<li>Passive momentum contributions can exceed total forces temporarily, indicating competing active and passive effects.</li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note on Damping and Overshoot
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This “overshoot” of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the <em>net non-conservative effort</em> required to restrain the system’s inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by <span class="math inline">\(f(x)\)</span>.</p>
+</div>
+</div>
 <p>These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing.</p>
 </section>
 <section id="zero-velocity-counterfactual-computation-and-validation" class="level3">
@@ -500,13 +552,23 @@ window.Quarto = {
 <li>the drift term <span class="math inline">\(a_{\mathrm{drift}}(q,0,\eta,0)\)</span> was evaluated,</li>
 <li>inverse dynamics was used to compute <span class="math inline">\(\tau_{\mathrm{ZVCF}}(t)\)</span>.</li>
 </ol>
-<p>A key empirical result emerged:</p>
-<blockquote class="blockquote">
-<p><em>When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.</em></p>
-</blockquote>
+<p>A key numerical result was verified:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key Empirical Validation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.</p>
+</div>
+</div>
 <p>That is,</p>
 <p><span class="math display">\[F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),\]</span></p>
-<p>matching the analytical identity predicted by the force taxonomy. This serves as a strong validation of the drift–input decomposition and demonstrates that the counterfactuals behave numerically exactly as the theory predicts.</p>
+<p>matching the analytical identity predicted by the force taxonomy. This serves as a <strong>Numerical Consistency Check</strong> rather than empirical validation. It confirms that the discrete-time integration algorithms and “kill-switch” logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts.</p>
 </section>
 <section id="implications-for-future-work" class="level3">
 <h3 class="anchored" data-anchor-id="implications-for-future-work">Implications for future work</h3>
@@ -517,7 +579,7 @@ window.Quarto = {
 <li>a method for quantifying the effect of momentum on hand–club interaction forces,</li>
 <li>a pathway toward full Part II (simulation) and Part III (experimental) papers.</li>
 </ul>
-<p>Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations, explore sensitivity to shaft stiffness and segment masses, and apply the decomposition to motion capture data to understand timing, effort, and mechanical efficiency in real swings.</p>
+<p>Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations. The most critical next step is the extension to 3D, as the current planar validation proves that the ZTCF subtraction logic works for <span class="math inline">\(M(q)\ddot{q}\)</span> but does not stress-test the drift invariance assumption against the complex <span class="math inline">\(\omega \times I \omega\)</span> gyroscopic terms present in the full spatial swing.</p>
 <p>The specific numerical algorithms employed to enforce the “kill switches” and compute the ZVCF within the discrete-time solver environment are detailed in the final appendix below.</p>
 </section>
 </section>
@@ -644,9 +706,14 @@ window.Quarto = {
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary</h3>
 <p>The algorithms in this appendix show how ZTCF and ZVCF are computed numerically and how they integrate with inverse dynamics to yield drift, input, and configuration torque components. These numerical procedures provide the operational backbone for validating the theoretical framework and are used extensively in the forward-dynamics modeling described in the Simulink section above.</p>
-
-
 </section>
+</section>
+<section id="final-remarks-on-the-affinedrift-framework" class="level2">
+<h2 class="anchored" data-anchor-id="final-remarks-on-the-affinedrift-framework">Final Remarks on the AffineDrift Framework</h2>
+<p>This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>, proving that the mechanical structure of the golfer–club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.</p>
+<p>The framework is now complete. It stands as a rigorous, falsifiable mechanical theory of the golf swing—one that replaces the monolithic “net moment” of inverse dynamics with a nuanced, causally articulated map of interaction. The next phase of this project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1051,29 +1118,20 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

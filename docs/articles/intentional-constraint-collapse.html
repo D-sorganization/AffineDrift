@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="">
+<meta name="description" content="Analysis of how golfers generate high impact forces while maintaining stable club motion through intentional constraint release at ball contact.">
 
 <title>Intentional Constraint Collapse at Impact: How Golfers Generate High Force with Stable Club Motion – AffineDrift</title>
 <style>
@@ -70,11 +71,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -104,82 +163,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -215,6 +226,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -247,10 +259,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -270,10 +282,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -309,10 +321,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -352,10 +364,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -363,10 +375,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -422,6 +434,11 @@ window.Quarto = {
 <h1 class="title">Intentional Constraint Collapse at Impact: How Golfers Generate High Force with Stable Club Motion</h1>
 </div>
 
+<div>
+  <div class="description">
+    Analysis of how golfers generate high impact forces while maintaining stable club motion through intentional constraint release at ball contact.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -445,22 +462,30 @@ window.Quarto = {
 </section>
 <section id="the-golferclub-system-as-a-constrained-mechanism" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="the-golferclub-system-as-a-constrained-mechanism"><span class="header-section-number">2</span> 2. The Golfer–Club System as a Constrained Mechanism</h2>
-<p>Consider the golfer and club as a constrained multibody system with generalized coordinates ( q ). The club is coupled to the hands through bilateral constraints, and the hands themselves are linked through the torso and upper limbs, forming a <strong>closed kinematic chain</strong>.</p>
+<p>Consider the golfer and club as a constrained multibody system with generalized coordinates <span class="math inline">\(q\)</span>. The club is coupled to the hands through bilateral constraints, and the hands themselves are linked through the torso and upper limbs, forming a <strong>closed kinematic chain</strong>.</p>
 <p>Let the constraint equations be written as:</p>
-<p>[ (q) = 0 ]</p>
+<p><span class="math display">\[
+\phi(q) = 0
+\]</span></p>
 <p>with constraint Jacobian:</p>
-<p>[ J_c(q) = ]</p>
+<p><span class="math display">\[
+J_c(q) = \frac{\partial \phi}{\partial q}
+\]</span></p>
 <p>The equations of motion under constraints are:</p>
-<p>[ M(q) + h(q,) = S^+ J_c^ ]</p>
-<p>where: - ( M(q) ) is the mass matrix, - ( h ) contains Coriolis, centrifugal, and gravity terms, - ( ) are joint torques, - ( ) are constraint forces enforcing the hand–club coupling.</p>
-<p>Crucially, <strong>forces transmitted to the club are mediated by ( )</strong>, not directly by joint torques.</p>
+<p><span class="math display">\[
+M(q)\ddot{q} + h(q,\dot{q}) = S^\top \tau + J_c^\top \lambda
+\]</span></p>
+<p>where: - <span class="math inline">\(M(q)\)</span> is the mass matrix, - <span class="math inline">\(h\)</span> contains Coriolis, centrifugal, and gravity terms, - <span class="math inline">\(\tau\)</span> are joint torques, - <span class="math inline">\(\lambda\)</span> are constraint forces enforcing the hand–club coupling.</p>
+<p>Crucially, <strong>forces transmitted to the club are mediated by <span class="math inline">\(\lambda\)</span></strong>, not directly by joint torques.</p>
 <hr>
 </section>
 <section id="constraint-space-inertia-and-force-amplification" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="constraint-space-inertia-and-force-amplification"><span class="header-section-number">3</span> 3. Constraint-Space Inertia and Force Amplification</h2>
 <p>The relationship between applied torques and constraint forces depends on the <strong>constraint-space inertia</strong>:</p>
-<p>[ _c = (J_c M^{-1} J_c<sup>)</sup>{-1} ]</p>
-<p>When ( _c ) becomes large in a particular direction, small joint torques can generate <strong>large constraint forces</strong> without requiring large accelerations.</p>
+<p><span class="math display">\[
+\Lambda_c = \left(J_c M^{-1} J_c^\top\right)^{-1}
+\]</span></p>
+<p>When <span class="math inline">\(\Lambda_c\)</span> becomes large in a particular direction, small joint torques can generate <strong>large constraint forces</strong> without requiring large accelerations.</p>
 <p>This is the mechanical origin of force amplification near kinematic singularities and poorly conditioned Jacobians in robotics. The same mathematics applies to human movement.</p>
 <p>A “collapsed” constraint Jacobian does <strong>not</strong> imply complete loss of motion. Instead, it implies:</p>
 <ul>
@@ -473,7 +498,7 @@ window.Quarto = {
 <h2 data-number="4" class="anchored" data-anchor-id="what-constraint-collapse-means-in-golf-biomechanically"><span class="header-section-number">4</span> 4. What “Constraint Collapse” Means in Golf (Biomechanically)</h2>
 <p>In golf, the goal is <em>not</em> to collapse the entire Jacobian. That would sacrifice control and robustness. Instead, elite golfers exhibit <strong>anisotropic collapse</strong>:</p>
 <ul>
-<li><strong>Low mobility / high impedance</strong> in:
+<li><strong>High mechanical impedance (stiffness/damping)</strong> approaching the limit of a kinematic constraint. While not a true geometric singularity (which would imply bone-on-bone locking), the neuromuscular co-contraction creates a ‘virtual constraint’ that mimics a reduction in degrees of freedom in:
 <ul>
 <li>Clubface twist about the shaft axis,</li>
 <li>Loft and lie perturbations,</li>
@@ -495,9 +520,24 @@ window.Quarto = {
 <li>Forces that do <em>not</em> change the gross club motion,</li>
 <li>But increase normal forces, torsional stiffness, and stability.</li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>These internal forces do not perform work on the club’s center of mass motion (orthogonality), but they modulate the <strong>apparent stiffness</strong> of the grasp interface.</p>
+</div>
+</div>
 <p>Mathematically, internal forces lie in the nullspace of the task Jacobian:</p>
-<p>[ = <em>{} + N^</em>{} ]</p>
-<p>where ( N ) projects into the nullspace of the club motion task.</p>
+<p><span class="math display">\[
+\tau = \tau_{\text{task}} + N^\top \tau_{\text{internal}}
+\]</span></p>
+<p>where <span class="math inline">\(N\)</span> projects into the nullspace of the club motion task.</p>
 <p>Near impact, skilled golfers exploit this redundancy to: - Increase axial push–pull along the grip, - Generate counter-torques about the shaft axis, - Suppress small perturbations that would otherwise rotate the clubface.</p>
 <p>Importantly, these internal forces <strong>do not add speed</strong>—they add <em>control</em>.</p>
 <hr>
@@ -513,10 +553,12 @@ window.Quarto = {
 <section id="relationship-to-drift-and-control-affine-dynamics-view" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="relationship-to-drift-and-control-affine-dynamics-view"><span class="header-section-number">7</span> 7. Relationship to Drift and Control (Affine Dynamics View)</h2>
 <p>From an affine control perspective:</p>
-<p>[ = f(x) + g(x)u ]</p>
+<p><span class="math display">\[
+\dot{x} = f(x) + g(x)u
+\]</span></p>
 <ul>
-<li>The <strong>drift</strong> term ( f(x) ) dominates the high-speed motion of the club,</li>
-<li>The <strong>control</strong> term ( g(x)u ) is primarily used to shape constraints, not drive speed.</li>
+<li>The <strong>drift</strong> term <span class="math inline">\(f(x)\)</span> dominates the high-speed motion of the club,</li>
+<li>The <strong>control</strong> term <span class="math inline">\(g(x)u\)</span> is primarily used to shape constraints, not drive speed.</li>
 </ul>
 <p>Constraint collapse is therefore not about “powering” the club through impact. It is about <strong>controlling how drift-generated momentum is delivered</strong>.</p>
 <p>This distinction explains why elite players can look “passive” near impact while still producing enormous forces.</p>
@@ -526,7 +568,9 @@ window.Quarto = {
 <h2 data-number="8" class="anchored" data-anchor-id="observable-consequences-and-testable-predictions"><span class="header-section-number">8</span> 8. Observable Consequences and Testable Predictions</h2>
 <p>This framework makes concrete, testable predictions:</p>
 <ol type="1">
-<li><p><strong>Reduced sensitivity of clubface angle to joint perturbations</strong> near impact: [ _{} ,q ]</p></li>
+<li><p><strong>Reduced sensitivity of clubface angle to joint perturbations</strong> near impact: <span class="math display">\[
+\delta \theta_{\text{face}} \approx \frac{\partial \theta}{\partial q}\,\delta q \downarrow
+\]</span></p></li>
 <li><p><strong>Increased internal force proxies</strong> (e.g., grip force asymmetry, forearm co-contraction) without increased clubhead acceleration.</p></li>
 <li><p><strong>Anisotropic operational-space inertia</strong> at the clubhead:</p>
 <ul>
@@ -562,7 +606,20 @@ window.Quarto = {
 </section>
 <section id="synthesis-the-affinedrift-context" class="level2" data-number="11">
 <h2 data-number="11" class="anchored" data-anchor-id="synthesis-the-affinedrift-context"><span class="header-section-number">11</span> 11. Synthesis: The AffineDrift Context</h2>
-<p><strong>The “Effective Plant” and Drift Invariance</strong> This constraint shaping mechanism resolves the “Input-Dependent Boundary Conditions” critique. While the Affine Control framework assumes a separation of passive drift (<span class="math inline">\(f(x)\)</span>) and active input (<span class="math inline">\(g(x)u\)</span>), constraint collapse illustrates how input <span class="math inline">\(u\)</span> modifies the <em>effective</em> topology of the system. By stiffening the constraint Jacobian <span class="math inline">\(J_c\)</span>, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient “effective plant” without violating the causal independence of the underlying Lagrangian mechanics.</p>
+<p><strong>The “Effective Plant” and Drift Invariance</strong> This constraint shaping mechanism offers a <strong>quasi-static resolution</strong> to the “Input-Dependent Boundary Conditions” critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary “Effective Plant,” we can analyze the impact dynamics <em>as if</em> they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift (<span class="math inline">\(f(x)\)</span>) and active input (<span class="math inline">\(g(x)u\)</span>), constraint collapse illustrates how input <span class="math inline">\(u\)</span> modifies the <em>effective</em> topology of the system. By stiffening the constraint Jacobian <span class="math inline">\(J_c\)</span>, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient “effective plant” without violating the causal independence of the underlying Lagrangian mechanics.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Limitation: The Stiffness Pulse Paradox
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We must strictly qualify this “Effective Plant” argument. The “Stiffness Pulse” described in Section 6 implies a rapid time-variation of the impedance parameters <span class="math inline">\(\dot{K} \neq 0\)</span> during the counterfactual integration window. This violates the strict <strong>Drift Invariance</strong> condition (<span class="math inline">\(\nabla_u f(x) = 0\)</span>) because the drift field parameters are changing in correlation with the input strategy. Consequently, the ZTCF in this regime should be interpreted as a <strong>Parametric Counterfactual</strong> (“What if torque ceased but the impedance schedule continued?”) rather than a purely passive mechanical baseline.</p>
+</div>
+</div>
 <p><strong>Steering the Zero-Torque Counterfactual (ZTCF)</strong> In the context of the ZTCF baseline (Theory Part 2), constraint collapse functions as the “funnel” for passive momentum. The ZTCF describes the massive kinetic potential of the double-pendulum release; the collapsed constraint Jacobian ensures this energy is not dissipated into instability (e.g., face twist) upon impact. The input <span class="math inline">\(u\)</span> does not <em>push</em> the club through impact; it <em>locks the gates</em> to force the drift <span class="math inline">\(f(x)\)</span> to exit through the ball.</p>
 <p><strong>Null Space as a Control Reserve</strong> The “Internal Forces” described here provide the physical mechanism for the “Geometric Rejection of Disturbance” discussed in the <em>Universal Wrist Joint</em> analysis. By occupying the null space of the task Jacobian, the golfer creates a reservoir of stiffness that remains causally distinct from the motion-generating torques, validating the decomposition of torque into “Configuration-driving” and “Shape-holding” components.</p>
 <section id="see-also" class="level3" data-number="11.1">
@@ -980,29 +1037,20 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

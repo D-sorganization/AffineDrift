@@ -6,7 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-12-27">
+<meta name="dcterms.date" content="2026-01-16">
+<meta name="description" content="Diagnostic tools for analyzing golf swing dynamics: the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) for separating passive and active forces.">
 
 <title>Affine Control Interpretation of the Golf Swing — Part 2 – AffineDrift</title>
 <style>
@@ -70,11 +71,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -104,82 +163,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -215,6 +226,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -247,10 +259,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -270,10 +282,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -309,10 +321,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -352,10 +364,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -363,10 +375,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -431,6 +443,11 @@ window.Quarto = {
 <p class="subtitle lead">Drift/Input Decomposition and Counterfactual Diagnostics</p>
 </div>
 
+<div>
+  <div class="description">
+    Diagnostic tools for analyzing golf swing dynamics: the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) for separating passive and active forces.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -439,7 +456,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 27, 2025</p>
+      <p class="date">January 16, 2026</p>
     </div>
   </div>
   
@@ -453,8 +470,21 @@ window.Quarto = {
 
 <section id="drift-vs-input-decomposition" class="level2">
 <h2 class="anchored" data-anchor-id="drift-vs-input-decomposition">Drift vs.&nbsp;Input Decomposition</h2>
-<p>In Part I, we established that the golfer–club–shaft system is governed by the nonlinear control-affine dynamics <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>. This structure is not merely a mathematical convenience; it is a direct consequence of the Lagrangian mechanics of the system, where forces are strictly partitioned into those that depend on the state (drift) and those that depend linearly on the torque input.</p>
-<p>We now exploit this structure to answer the central causal question of the swing: <em>which forces are the result of the golfer’s immediate effort, and which are the result of the system’s passive physics?</em></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Recap of Part I
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the previous chapter, we derived the rigorous equations of motion for the golfer–club–shaft system, proving that they fit the standard <strong>control-affine form</strong>: <span class="math display">\[\dot{x} = f(x) + g(x)u\]</span> This derivation was purely <strong>descriptive</strong>—it told us <em>how</em> the system moves. Now, in Part II, we pivot to <strong>diagnostics</strong>. We ask <em>why</em> it moves.</p>
+</div>
+</div>
+<p>In Part I, we established that the golfer–club–shaft system is governed by the nonlinear control-affine dynamics <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>. This equation represents the <strong>physics</strong> of the swing—a descriptive statement of how forces produce motion. In Part II, we pivot from description to <strong>diagnostics</strong>. We seek to transform this equation of motion into a causal map that can attribute specific features of the swing trajectory to either the golfer’s intent or the club’s inertia.</p>
+<p>This shift is enabled by the <strong>Mechanical Orthogonality</strong> derived in Part I, where the inertial memory of the system (drift) is shown to be structurally distinct from the current agency of the player (input). We now exploit this structure to answer the central causal question of the swing: <em>which forces are the result of the golfer’s immediate effort, and which are the result of the system’s passive physics?</em></p>
 <p>Given the control-affine form <span class="math inline">\(\dot{x} = f(x) + g(x)u\)</span>, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.</p>
 <section id="passive-drift-dynamics" class="level3">
 <h3 class="anchored" data-anchor-id="passive-drift-dynamics">Passive drift dynamics</h3>
@@ -493,6 +523,7 @@ window.Quarto = {
 </ul>
 <p>The decomposition is analytically exact for the chosen multibody model; in practice it is limited by parameter accuracy and the validity of the modeling assumptions.</p>
 <p>This analytical separation does more than simplify the equations; it provides the logic for determining causality. Because the components are distinct, we can selectively deactivate them to ask ‘what if’ questions. We can mute the input to see the drift, or mute the velocity to see the static load. These operations are not merely hypothetical; they are mathematical projections defined by the affine structure.</p>
+<p>To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field <span class="math inline">\(f(x)\)</span> is not static; it describes a flow. To understand the burden of “passive dynamics,” we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what <em>would have happened</em> if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).</p>
 </section>
 <section id="role-in-counterfactual-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="role-in-counterfactual-analysis">Role in counterfactual analysis</h3>
@@ -501,7 +532,7 @@ window.Quarto = {
 <li>The <em>Zero Torque Counterfactual</em> (ZTCF) trajectory integrates the drift-only dynamics from a given initial state, isolating the passive evolution of the system.</li>
 <li>The <em>Zero Velocity Counterfactual</em> (ZVCF) evaluates forces at the same configuration with velocities set to zero, isolating configuration-dependent contributions.</li>
 </ul>
-<p>By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces and construct a force taxonomy for interpretation of measured or simulated swings.</p>
+<p>By comparing total forces to these counterfactual constructions via inverse dynamics, we can separate drift and input forces. This process moves us from the instantaneous vector fields of Part I to the temporal domain of Part II. It allows us to simulate the <strong>“Shadow Swings”</strong>—the unobserved trajectories that <em>would</em> have occurred had the golfer chosen differently—revealing the invisible inertial currents that shape the visible swing.</p>
 </section>
 </section>
 <section id="zero-torque-counterfactual-ztcf" class="level2">
@@ -533,7 +564,7 @@ window.Quarto = {
 <p><span class="math display">\[\dot{x}^{\mathrm{ZTCF}}(t) = f\big(x^{\mathrm{ZTCF}}(t)\big).\]</span></p>
 <p>The drift vector field <span class="math inline">\(f(x)\)</span> is invariant with respect to the instantaneous torque input: it depends only on the state and model parameters, not on <span class="math inline">\(u\)</span>. In contrast, the input term <span class="math inline">\(g(x)u\)</span> vanishes identically when <span class="math inline">\(u = 0\)</span>.</p>
 <p>Conceptually, ZTCF isolates the drift dynamics by providing a full trajectory that is generated <em>only</em> by <span class="math inline">\(f(x)\)</span>. The difference between the actual trajectory and its ZTCF counterpart, when interpreted via the equations of motion, captures the incremental effect of the torque input.</p>
-<p>The drift–input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics.</p>
+<p>The drift–input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. However, simply defining the trajectory is abstract. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics—to quantify the specific <em>torque cost</em> of deviating from this passive path.</p>
 </section>
 <section id="using-ztcf-with-inverse-dynamics" class="level3">
 <h3 class="anchored" data-anchor-id="using-ztcf-with-inverse-dynamics">Using ZTCF with inverse dynamics</h3>
@@ -553,6 +584,7 @@ window.Quarto = {
   =
   M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},\]</span></p>
 <p>and <span class="math inline">\(M_{q}\)</span> denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see the Appendices for details).</p>
+<p>Physically, <span class="math inline">\(\tau_{\text{drift}}\)</span> represents the generalized torque required to sustain the passive acceleration <span class="math inline">\(a_{\text{drift}}\)</span>. Since <span class="math inline">\(a_{\text{drift}}\)</span> is the system’s natural response to its own internal state (gravity, elasticity, velocity coupling), <span class="math inline">\(\tau_{\text{drift}}\)</span> captures the ‘inertial cost’ of the system’s current momentum and configuration. Subtracting this cost from the total torque reveals the surplus provided by the input.</p>
 <p>The <em>input torque</em> is then given by</p>
 <p><span class="math display">\[\tau_{\text{input}}(t)
   =
@@ -563,6 +595,7 @@ window.Quarto = {
 <li>Conceptually, it is the trajectory that realizes the drift dynamics in isolation.</li>
 <li>Computationally, simulating <span class="math inline">\(x^{\mathrm{ZTCF}}(t)\)</span> gives a concrete motion that can be analyzed or visualized alongside the actual swing to illustrate the effect of the torque input.</li>
 </ul>
+<p>There is a dynamical imperative hidden in this construction. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. However, as swing speed increases, the passive drift field <span class="math inline">\(f(x)\)</span> grows energetically while the input authority <span class="math inline">\(g(x)u\)</span> remains bounded by physiological limits. In this high-energy regime, the ZTCF transforms from a passive reference into a <strong>Dominant Attractor</strong>. As the <strong>Drift-Control Ratio</strong> (defined in subsequent work) rises, the swing trajectory is increasingly “railroaded” by the inertial terms. The ZTCF thus evolves from a mere counterfactual “what-if” into a prediction of the inevitable, revealing that late-swing mechanics are governed more by <strong>Inertial Memory</strong> than by current agency.</p>
 </section>
 <section id="interpretational-scope-and-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="interpretational-scope-and-limitations">Interpretational scope and limitations</h3>
@@ -582,25 +615,27 @@ window.Quarto = {
 </section>
 <section id="decomposing-the-drift" class="level3">
 <h3 class="anchored" data-anchor-id="decomposing-the-drift">Decomposing the drift</h3>
-<p>While the ZTCF effectively subtracts the golfer’s active contribution, the remaining drift term <span class="math inline">\(f(x)\)</span> is still complex: it lumps together static forces (gravity, stiffness) with dynamic forces (Coriolis, centrifugal, damping). To fully diagnose the mechanical load, we need a finer decomposition of the drift itself. We must distinguish between loads that exist purely because of <em>where</em> the club is (configuration) and loads that exist because of <em>how fast</em> it is moving (velocity).</p>
+<p>The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the <em>total</em> passive tendency, but it lumps these distinct physical phenomena together.</p>
+<p>To truly diagnose the mechanical load, we need a sharper instrument—a <strong>Static Scalpel</strong> that can separate the “static” weight of the club from the “dynamic” weight of its motion. This motivates the <strong>Zero Velocity Counterfactual</strong>.</p>
 </section>
 </section>
 <section id="zero-velocity-counterfactual-zvcf" class="level2">
 <h2 class="anchored" data-anchor-id="zero-velocity-counterfactual-zvcf">Zero Velocity Counterfactual (ZVCF)</h2>
-<p>The Zero Velocity Counterfactual (ZVCF) isolates configuration-dependent forces by evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero. Whereas the ZTCF is a <em>trajectory</em>-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an <em>instantaneous</em> construction. It identifies the passive mechanical forces that arise <em>only from configuration</em> (such as gravity and elastic shaft deformation), without contributions from inertial, Coriolis, or velocity-dependent damping terms.</p>
 <p>While the ZTCF successfully isolates the system’s passive dynamics from the golfer’s active input, the passive drift itself remains a composite phenomenon. It aggregates both <em>motion-dependent</em> forces (such as centrifugal, Coriolis, and inertial coupling) and <em>configuration-dependent</em> forces (such as gravity and elastic stiffness). In high-speed motions like the golf swing, velocity-driven terms often obscure the underlying static loads. To fully deconstruct the drift, we require a second analytical slice—one that freezes motion to reveal the forces arising purely from the system’s instantaneous shape.</p>
+<p>The <strong>Zero Velocity Counterfactual (ZVCF)</strong> performs this isolation. By evaluating the system at the same configuration as the actual swing but with all generalized velocities set to zero, it functions as an “analytical tare.” Whereas the ZTCF is a <em>trajectory</em>-level counterfactual that simulates the drift dynamics forward in time, the ZVCF is an <em>instantaneous</em> snapshot. It identifies the passive mechanical forces that arise <em>only from configuration</em> (such as gravity and elastic shaft deformation), stripping away the contributions from inertial, Coriolis, and damping terms.</p>
 <section id="definition" class="level3">
 <h3 class="anchored" data-anchor-id="definition">Definition</h3>
 <p>Let the actual swing at time <span class="math inline">\(t\)</span> be characterized by the state <span class="math inline">\(x(t) \in T\mathcal{Q}\)</span>. Locally,</p>
 <p><span class="math display">\[x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t)).\]</span></p>
-<p>We define the <em>Zero Velocity Counterfactual</em> operator as a projection onto the zero section of the tangent bundle <span class="math inline">\(T\mathcal{Q}\)</span>. This construction allows us to isolate configuration-dependent forces rigorously.</p>
-<p>Let <span class="math inline">\(\pi: T\mathcal{Q} \to \mathcal{Q}\)</span> be the canonical bundle projection that maps a state vector <span class="math inline">\((q, \dot{q})\)</span> to its base configuration <span class="math inline">\(q\)</span>. Let <span class="math inline">\(\iota_0: \mathcal{Q} \to T\mathcal{Q}\)</span> be the zero section embedding, which maps a configuration <span class="math inline">\(q\)</span> to the zero-velocity state <span class="math inline">\((q, 0)\)</span> in the tangent bundle.</p>
-<p>The <em>Zero Velocity Counterfactual state</em> is formally defined by the composition of these operators:</p>
-<p><span class="math display">\[
-  x^{\mathrm{ZVCF}}(t) = (\iota_0 \circ \pi)(x(t)) = \iota_0(q(t), \eta(t)) = (q(t), \eta(t), 0, 0).
-\]</span></p>
-<p>Only the configuration variables <span class="math inline">\(q(t)\)</span> and <span class="math inline">\(\eta(t)\)</span> are retained; all generalized velocities are set to zero.</p>
-<p>Evaluating the equations of motion at this state yields the <em>ZVCF generalized torque</em>:</p>
+<p>We formally define the <em>Zero Velocity Counterfactual</em> operator using the fiber bundle structure of the state space. Let <span class="math inline">\(\mathcal{Q}\)</span> be the configuration manifold. The state evolves on the tangent bundle <span class="math inline">\(T\mathcal{Q}\)</span>. Let <span class="math inline">\(\pi: T\mathcal{Q} \to \mathcal{Q}\)</span> be the canonical projection (bundle map) that maps a state vector to its configuration: <span class="math inline">\(\pi(q, v) = q\)</span>. Let <span class="math inline">\(\zeta_0: \mathcal{Q} \to T\mathcal{Q}\)</span> be the <em>zero section</em> of the tangent bundle, which embeds the configuration manifold into the state space as the locus of zero velocities: <span class="math inline">\(\zeta_0(q) = (q, 0)\)</span>.</p>
+<p>The ZVCF operator <span class="math inline">\(\mathcal{Z}: T\mathcal{Q} \to T\mathcal{Q}\)</span> is the composition of projection and zero-section embedding: <span class="math display">\[
+\mathcal{Z}(x) = (\zeta_0 \circ \pi)(x).
+\]</span> Applied to the state <span class="math inline">\(x(t) = (q(t), \eta(t), \dot{q}(t), \dot{\eta}(t))\)</span>, this yields:</p>
+<p><span id="eq-zvcf_state"><span class="math display">\[
+x^{\mathrm{ZVCF}}(t) = \mathcal{Z}(x(t)) = (q(t), \eta(t), 0, 0).
+\tag{1}\]</span></span></p>
+<p>Physically, this operation “freezes” the system in its current configuration. It is a projection onto the submanifold of static states.</p>
+<p>Evaluating the equations of motion at this zero-velocity state yields the <em>ZVCF generalized torque</em>:</p>
 <p><span class="math display">\[\tau_{\mathrm{ZVCF}}(t)
   =
   \text{ID}\!\left(q(t),\, 0,\,
@@ -677,9 +712,22 @@ window.Quarto = {
 <li>identifying configuration-driven mechanical biases (e.g., favored directions of passive motion),</li>
 <li>analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.</li>
 </ul>
-<p><strong>Note on Dynamic Relevance.</strong> A common objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., <span class="math inline">\(1g \ll 100g\)</span>). This misses the point of the ZVCF. We do not calculate ZVCF because we believe gravity “steers” the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish “Geometric Stiffness” (a velocity-dependent stiffening effect) from “Elastic Stiffness” (a static material property). The ZVCF is the necessary “tare” operation for the dynamic scale.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Note on Dynamic Relevance (The “Static Fallacy”)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A common scientific objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., <span class="math inline">\(1g \ll 100g\)</span>), rendering the ZVCF physically irrelevant. This critique misses the analytical purpose of the counterfactual. We do not calculate ZVCF because we believe gravity “steers” the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish “Geometric Stiffness” (a velocity-dependent stiffening effect) from “Elastic Stiffness” (a static material property). The ZVCF is the necessary “tare” operation for the dynamic scale—it zeros out the scale so that the “weight” of the velocity-dependent terms can be measured accurately.</p>
+</div>
+</div>
 <p>ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.</p>
-<p>We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span> to be causally meaningful, the term being subtracted (<span class="math inline">\(\tau_{\text{drift}}\)</span>) must be independent of the term being isolated (<span class="math inline">\(\tau_{\text{input}}\)</span>). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid. We must therefore prove the property of <em>Drift Invariance</em>, which is the subject of the next part of this series.</p>
+<p>We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction <span class="math inline">\(\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}\)</span> to be causally meaningful, the term being subtracted (<span class="math inline">\(\tau_{\text{drift}}\)</span>) must be independent of the term being isolated (<span class="math inline">\(\tau_{\text{input}}\)</span>). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.</p>
+<p>But is this separation scientifically valid? A skeptic might argue that in a biological system, the “passive” plant changes when the “active” input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of <em>Drift Invariance</em>—showing that the passive drift field is structurally immune to the active input. This is the subject of the next part of this series.</p>
 
 
 </section>
@@ -1087,29 +1135,20 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

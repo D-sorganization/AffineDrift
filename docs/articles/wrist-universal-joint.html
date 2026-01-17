@@ -8,6 +8,7 @@
 
 <meta name="author" content="Dieter Butz">
 <meta name="dcterms.date" content="2025-11-28">
+<meta name="description" content="Biomechanical model of the left wrist as a universal joint, analyzing how grip angle influences force transmission and clubface angle variability.">
 
 <title>Constraint Torques at the Wrist: How Grip Angle Influences Force Transmission and Face Angle Variability in the Golf Swing – AffineDrift</title>
 <style>
@@ -71,11 +72,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../styles.css" as="style">
+<link rel="preload" href="../script.js" as="script">
+<link rel="modulepreload" href="../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../feed.xml">
 <style>
@@ -105,82 +164,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -216,6 +227,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -248,10 +260,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -271,10 +283,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -310,10 +322,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -353,10 +365,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -364,10 +376,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -406,7 +418,7 @@ window.Quarto = {
   <li><a href="#universal-joints-and-constraint-torques" id="toc-universal-joints-and-constraint-torques" class="nav-link" data-scroll-target="#universal-joints-and-constraint-torques">Universal Joints and Constraint Torques</a>
   <ul class="collapse">
   <li><a href="#mechanical-properties-of-universal-joints" id="toc-mechanical-properties-of-universal-joints" class="nav-link" data-scroll-target="#mechanical-properties-of-universal-joints">Mechanical Properties of Universal Joints</a></li>
-  <li><a href="#constraint-torques-definition-and-properties" id="toc-constraint-torques-definition-and-properties" class="nav-link" data-scroll-target="#constraint-torques-definition-and-properties">Constraint Torques: Definition and Properties</a></li>
+  <li><a href="#theoretical-formulation-of-constraint-torques" id="toc-theoretical-formulation-of-constraint-torques" class="nav-link" data-scroll-target="#theoretical-formulation-of-constraint-torques">Theoretical Formulation of Constraint Torques</a></li>
   <li><a href="#constraint-torques-in-forward-dynamics-simulation" id="toc-constraint-torques-in-forward-dynamics-simulation" class="nav-link" data-scroll-target="#constraint-torques-in-forward-dynamics-simulation">Constraint Torques in Forward Dynamics Simulation</a></li>
   <li><a href="#physical-demonstration-of-constraint-torque-generation" id="toc-physical-demonstration-of-constraint-torque-generation" class="nav-link" data-scroll-target="#physical-demonstration-of-constraint-torque-generation">Physical Demonstration of Constraint Torque Generation</a></li>
   </ul></li>
@@ -450,6 +462,8 @@ window.Quarto = {
   <li><a href="#the-null-space-of-performance" id="toc-the-null-space-of-performance" class="nav-link" data-scroll-target="#the-null-space-of-performance">The Null Space of Performance</a></li>
   <li><a href="#conceptual-cross-references" id="toc-conceptual-cross-references" class="nav-link" data-scroll-target="#conceptual-cross-references">Conceptual Cross-References</a></li>
   </ul></li>
+  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -461,6 +475,11 @@ window.Quarto = {
 <h1 class="title">Constraint Torques at the Wrist: How Grip Angle Influences Force Transmission and Face Angle Variability in the Golf Swing</h1>
 </div>
 
+<div>
+  <div class="description">
+    Biomechanical model of the left wrist as a universal joint, analyzing how grip angle influences force transmission and clubface angle variability.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -489,7 +508,7 @@ window.Quarto = {
 
 <section id="abstract" class="level2 abstract-section">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<p>The left wrist in the golf swing can be modeled as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through forward dynamics simulation in MATLAB Simulink, we demonstrate that universal joints generate constraint torques—passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These constraint torques serve as efficient pathways for force and torque transmission from proximal to distal segments but are inherently variable and uncontrollable. We hypothesize that the angle at which the club is gripped relative to the wrist joint axes fundamentally determines whether these constraint torques are transmitted into high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing face angle variability). This analysis provides a mechanical framework for understanding the widely-taught principle of gripping “in the fingers” versus “in the palm” and may explain why arm and club planes are typically not aligned during the downswing.</p>
+<p>The left wrist in the golf swing can be modeled as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, we demonstrate that universal joints generate constraint torques—passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These constraint torques serve as efficient pathways for force and torque transmission from proximal to distal segments but are inherently variable and uncontrollable. We hypothesize that the angle at which the club is gripped relative to the wrist joint axes fundamentally determines whether these constraint torques are transmitted into high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing face angle variability). This analysis provides a mechanical framework for understanding the widely-taught principle of gripping “in the fingers” versus “in the palm” and may explain why arm and club planes are typically not aligned during the downswing.</p>
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
@@ -519,35 +538,60 @@ window.Quarto = {
 <p>A universal joint connects two rotating shafts whose axes are perpendicular (or nearly so) and typically intersect. The joint permits rotation about two axes while constraining rotation about a third axis and translation along all axes. This configuration is widely used in mechanical systems—most famously in automotive drive shafts—specifically because of its ability to transmit torque through the constrained rotational axis.</p>
 <p>The key property of a universal joint is that torque applied about the longitudinal axis of one shaft is transmitted to the longitudinal axis of the connected shaft through <em>constraint torques</em> rather than through actively applied forces. These constraint torques arise because the joint geometry enforces kinematic constraints; when the system attempts to violate these constraints, reaction forces and torques automatically emerge to maintain the constraints.</p>
 </section>
-<section id="constraint-torques-definition-and-properties" class="level3">
-<h3 class="anchored" data-anchor-id="constraint-torques-definition-and-properties">Constraint Torques: Definition and Properties</h3>
+<section id="theoretical-formulation-of-constraint-torques" class="level3">
+<h3 class="anchored" data-anchor-id="theoretical-formulation-of-constraint-torques">Theoretical Formulation of Constraint Torques</h3>
+<p>To understand the origin of these torques, we model the wrist dynamics using the Newton-Euler formulation for constrained rigid bodies.</p>
+<section id="general-constraint-dynamics" class="level4">
+<h4 class="anchored" data-anchor-id="general-constraint-dynamics">General Constraint Dynamics</h4>
 <p>In constrained mechanical systems, the equations of motion can be written in the form:</p>
 <p><span class="math display">\[
 \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}_{\text{applied}} + \boldsymbol{\tau}_{\text{constraint}}
 \]</span></p>
-<p>where: - <span class="math inline">\(\mathbf{q}\)</span> represents generalized coordinates (joint angles)</p>
-<ul>
-<li><p><span class="math inline">\(\mathbf{M}\)</span> is the mass/inertia matrix</p></li>
-<li><p><span class="math inline">\(\mathbf{C}\)</span> contains Coriolis and centrifugal terms</p></li>
-<li><p><span class="math inline">\(\mathbf{G}\)</span> contains gravitational terms</p></li>
-<li><p><span class="math inline">\(\boldsymbol{\tau}_{\text{applied}}\)</span> represents actively applied torques (e.g., from muscles)</p></li>
-<li><p><span class="math inline">\(\boldsymbol{\tau}_{\text{constraint}}\)</span> represents constraint torques maintaining kinematic constraints</p></li>
-</ul>
+<p>where: - <span class="math inline">\(\mathbf{q}\)</span> represents generalized coordinates (joint angles) - <span class="math inline">\(\mathbf{M}\)</span> is the mass/inertia matrix - <span class="math inline">\(\mathbf{C}\)</span> contains Coriolis and centrifugal terms - <span class="math inline">\(\mathbf{G}\)</span> contains gravitational terms - <span class="math inline">\(\boldsymbol{\tau}_{\text{applied}}\)</span> represents actively applied torques (e.g., from muscles) - <span class="math inline">\(\boldsymbol{\tau}_{\text{constraint}}\)</span> represents constraint torques maintaining kinematic constraints</p>
 <p>The constraint torques can be expressed using Lagrange multipliers:</p>
 <p><span class="math display">\[
-\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}^T(\mathbf{q})\boldsymbol{\lambda}
+\boldsymbol{\tau}_{\text{constraint}} = \mathbf{J}_c^T(\mathbf{q})\boldsymbol{\lambda}
 \]</span></p>
-<p>where <span class="math inline">\(\mathbf{J}\)</span> is the constraint Jacobian matrix and <span class="math inline">\(\boldsymbol{\lambda}\)</span> is the vector of Lagrange multipliers. These constraint torques have several important properties:</p>
+<p>where <span class="math inline">\(\mathbf{J}_c = \partial \Phi / \partial \mathbf{q}\)</span> is the constraint Jacobian matrix derived from the holonomic constraints <span class="math inline">\(\Phi(\mathbf{q}) = 0\)</span>, and <span class="math inline">\(\boldsymbol{\lambda}\)</span> is the vector of Lagrange multipliers.</p>
+</section>
+<section id="derivation-for-the-wrist-universal-joint" class="level4">
+<h4 class="anchored" data-anchor-id="derivation-for-the-wrist-universal-joint">Derivation for the Wrist Universal Joint</h4>
+<p>We define a local coordinate frame <span class="math inline">\(\mathcal{F}_h\)</span> attached to the hand, where: * <span class="math inline">\(\hat{x}\)</span>: Flexion/Extension axis (Actuated) * <span class="math inline">\(\hat{y}\)</span>: Radial/Ulnar Deviation axis (Actuated) * <span class="math inline">\(\hat{z}\)</span>: Pronation/Supination axis (Constrained)</p>
+<p>The kinematic constraint of the wrist joint dictates that no relative rotation occurs about the local <span class="math inline">\(\hat{z}\)</span> axis. Consequently, the wrist muscles cannot generate torque about this axis: <span class="math display">\[
+\boldsymbol{\tau}_{\text{active}} = \tau_x \hat{x} + \tau_y \hat{y} + 0 \hat{z}
+\]</span> However, the dynamics of the hand (and attached club) require a specific net torque to satisfy the equation of motion. Projecting Euler’s equation onto the constrained <span class="math inline">\(\hat{z}\)</span> axis: <span class="math display">\[
+(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})) \cdot \hat{z} = \boldsymbol{\tau}_{\text{net}} \cdot \hat{z}
+\]</span> Substituting the torque decomposition <span class="math inline">\(\boldsymbol{\tau}_{\text{net}} = \boldsymbol{\tau}_{\text{active}} + \boldsymbol{\tau}_{\text{constraint}} + \boldsymbol{\tau}_{\text{interaction}}\)</span>: <span class="math display">\[
+(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z = \underbrace{(\boldsymbol{\tau}_{\text{active}})_z}_{0} + (\boldsymbol{\tau}_{\text{constraint}})_z + (\boldsymbol{\tau}_{\text{interaction}})_z
+\]</span> Solving for the constraint torque <span class="math inline">\(\tau_{c,z}\)</span>: <span class="math display">\[
+\tau_{c,z} = \underbrace{(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z}_{\text{Dynamic Requirement}} - \underbrace{(\boldsymbol{\tau}_{\text{interaction}})_z}_{\text{External Load}}
+\]</span> This equation explicitly proves that the constraint torque <span class="math inline">\(\tau_{c,z}\)</span> is not zero. Instead, it is the exact torque required to bridge the gap between the external loads and the inertial dynamics of the hand/club system. Critically, the “Dynamic Requirement” term depends on <span class="math inline">\(\boldsymbol{\omega}\)</span> and <span class="math inline">\(\dot{\boldsymbol{\omega}}\)</span>, which are driven by the active torques <span class="math inline">\(\tau_x\)</span> and <span class="math inline">\(\tau_y\)</span>.</p>
+<p>Thus, <strong>active torques about the x and y axes generate a requisite constraint torque about the z axis</strong> via the gyroscopic coupling term <span class="math inline">\(\boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})\)</span>. This is the mathematical mechanism of transmission.</p>
+<p>These constraint torques have several important properties:</p>
 <ol type="1">
 <li><p><strong>No mechanical work</strong>: Constraint torques act in directions where motion is prevented, so they perform no work: <span class="math inline">\(\boldsymbol{\tau}_{\text{constraint}} \cdot \dot{\mathbf{q}} = 0\)</span></p></li>
 <li><p><strong>Force transmission</strong>: Despite doing no work, constraint torques efficiently transmit forces between segments</p></li>
-<li><p><strong>Nonlinearity</strong>: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques</p></li>
-<li><p><strong>Uncontrollability</strong>: Because they arise from constraints rather than actuation, constraint torques cannot be directly controlled</p></li>
-<li><p><strong>Variability</strong>: The dependence on multiple system states makes constraint torques inherently variable</p></li>
+<li><p><strong>Nonlinearity</strong>: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques via the Coriolis term <span class="math inline">\(\boldsymbol{\omega} \times \mathbf{I} \boldsymbol{\omega}\)</span>.</p></li>
+<li><p><strong>Uncontrollability</strong>: Because they arise from constraints rather than actuation, constraint torques cannot be directly controlled. They exist in the null space of the control input matrix <span class="math inline">\(B(\mathbf{q})\)</span>.</p></li>
+<li><p><strong>Variability</strong>: The dependence on multiple system states makes constraint torques inherently variable.</p></li>
 </ol>
+</section>
 </section>
 <section id="constraint-torques-in-forward-dynamics-simulation" class="level3">
 <h3 class="anchored" data-anchor-id="constraint-torques-in-forward-dynamics-simulation">Constraint Torques in Forward Dynamics Simulation</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Note on 3D Validation Scope
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The constraint torque analysis presented in this section is derived from the theoretical equations of motion for a 3D universal joint. While the underlying physics are demonstrated here using isolated joint simulations, the full-swing validation model presented in <strong>Part 5</strong> is currently restricted to 2D planar dynamics (<span class="math inline">\(q \in \mathbb{R}^3\)</span>) and does not yet capture these out-of-plane “Beta axis” effects. Verification of the “Grip Angle” hypothesis in a full-swing context requires future 3D multibody implementation.</p>
+</div>
+</div>
 <p>In MATLAB Simulink’s Simscape Multibody environment, joint blocks allow specification of input torques and sensing of output torques. For a universal joint driven by input torques about its two actuated axes, the sensed output torques include three components:</p>
 <p><span class="math display">\[
 \begin{align}
@@ -650,7 +694,7 @@ window.Quarto = {
 <p><span class="math display">\[
 \alpha_{\text{swing plane}} = \frac{\tau_c}{I_{\alpha}}
 \]</span></p>
-<p>where <span class="math inline">\(I_{\alpha}\)</span> is the club’s moment of inertia about the alpha axis (typically 0.004-0.006 kg·m² for drivers).</p>
+<p>where <span class="math inline">\(I_{\alpha}\)</span> is the club’s moment of inertia about the alpha axis (typically <span class="math inline">\(0.004-0.006 \text{ kg}\cdot\text{m}^2\)</span> for drivers).</p>
 <p>Because <span class="math inline">\(I_{\alpha}\)</span> is large, even substantial constraint torques produce relatively modest angular accelerations. More importantly, rotation about the alpha axis produces <em>translation</em> of the clubhead through the impact zone—the very motion we want for generating clubhead speed. The constraint torques are channeled into productive work.</p>
 <p>Furthermore, face angle is minimally affected by alpha axis rotation near impact (when the shaft is near the ball). The relationship between alpha rotation and face angle change is approximately:</p>
 <p><span class="math display">\[
@@ -666,7 +710,7 @@ window.Quarto = {
 <li><p>The shaft passes through or above the base of the fingers</p></li>
 <li><p>The hand’s <span class="math inline">\(z\)</span>-axis is more closely aligned with the shaft axis</p></li>
 </ul>
-<p>In this configuration, constraint torques transmitted through the wrist are directed more closely along the club’s <strong>beta axis</strong>—the shaft rotation axis that controls face angle. This axis has low moment of inertia (typically 0.0001-0.0002 kg·m² about shaft rotation).</p>
+<p>In this configuration, constraint torques transmitted through the wrist are directed more closely along the club’s <strong>beta axis</strong>—the shaft rotation axis that controls face angle. This axis has low moment of inertia (typically <span class="math inline">\(0.0001-0.0002 \text{ kg}\cdot\text{m}^2\)</span> about shaft rotation).</p>
 <p>The angular acceleration produced by the same constraint torque <span class="math inline">\(\tau_c\)</span> is now:</p>
 <p><span class="math display">\[
 \alpha_{\text{face rotation}} = \frac{\tau_c}{I_{\beta}}
@@ -938,7 +982,14 @@ window.Quarto = {
 <li><strong>Null Space Control:</strong> <em>Todorov (2004)</em> - “Optimality principles in sensorimotor control” regarding the uncontrolled manifold hypothesis.</li>
 <li><strong>Drift Invariance:</strong> <em>Theory Part 3</em> - For the definition of passive force decomposition.</li>
 </ul>
+</section>
+</section>
+<section id="acknowledgments" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
 <p>Thanks to Mike Duffey for insightful discussion regarding the dependence of constraint torques on proximal segment motion. The Modern Robotics course and textbook from Northwestern University (Kevin Lynch and Frank Park) provided essential background on constrained dynamics in mechanical systems.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 <ol type="1">
 <li><p>Lynch, K. M., &amp; Park, F. C. (2017). <em>Modern Robotics: Mechanics, Planning, and Control</em>. Cambridge University Press.</p></li>
 <li><p>Northwestern University Modern Robotics Course. “Constrained Dynamics.” Available at: <a href="https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/" class="uri">https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/</a></p></li>
@@ -953,7 +1004,6 @@ window.Quarto = {
 </ol>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1358,29 +1408,20 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

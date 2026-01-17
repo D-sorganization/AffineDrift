@@ -69,11 +69,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../styles.css" as="style">
+<link rel="preload" href="../../script.js" as="script">
+<link rel="modulepreload" href="../../js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../feed.xml">
 <style>
@@ -103,82 +161,34 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
@@ -214,6 +224,7 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -246,10 +257,10 @@ window.Quarto = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="../../drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -269,10 +280,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="../../models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -308,10 +319,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="../../resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -351,10 +362,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -362,10 +373,10 @@ window.Quarto = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="../../contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -459,16 +470,19 @@ window.Quarto = {
 <section id="abstract" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Abstract</h1>
 <p>High-speed golf swings present an extreme example of a drift-dominated nonlinear dynamic system, where segmental angular velocities exceed the neuromechanical bandwidth of voluntary control. To formalize this, we define the <strong>Drift–Control Ratio (DCR)</strong>:</p>
-<p>[ (t) = ]</p>
-<p>for a nonlinear control-affine system (=f(x)+g(x)u) applied to a multibody model of the golfer–club system. We derive closed-form expressions for the drift and control contributions of a 3-link shoulder–forearm–club model and examine controllability using Lie brackets. We show analytically and numerically that DCR grows by two orders of magnitude from takeaway to impact. This growth places the downswing firmly in a <em>drift-dominated regime</em>, restricting effective control inputs to early parts of the swing. Finally, we analyze the stability of impact dynamics and demonstrate how DCR directly predicts clubface closure variability, offering a quantitative rationale for early structural work in golf coaching.</p>
+<p><span class="math display">\[
+\mathrm{DCR}(t)
+= \frac{\|f(x(t))\|}{\|g(x(t))\,u(t)\|}
+\]</span></p>
+<p>for a nonlinear control-affine system <span class="math inline">\(\dot{x}=f(x)+g(x)u\)</span> applied to a multibody model of the golfer–club system. We derive closed-form expressions for the drift and control contributions of a 3-link shoulder–forearm–club model and examine controllability using Lie brackets. We show analytically and numerically that DCR grows by two orders of magnitude from takeaway to impact. This growth places the downswing firmly in a <em>drift-dominated regime</em>, restricting effective control inputs to early parts of the swing. Finally, we analyze the stability of impact dynamics and demonstrate how DCR directly predicts clubface closure variability, offering a quantitative rationale for early structural work in golf coaching.</p>
 </section>
 <section id="introduction" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> 1. Introduction</h1>
 <p>The modern golf swing is an exceptionally fast whole-body movement. Elite players routinely generate:</p>
 <ul>
-<li>Clubhead speeds: ( 4050; )</li>
-<li>Wrist angular velocities: ( &gt; 2000^/ )</li>
-<li>Torso rotation velocities: ( 700900^/ )</li>
+<li>Clubhead speeds: $ 4050; $</li>
+<li>Wrist angular velocities: $ &gt; 2000^/ $</li>
+<li>Torso rotation velocities: $ 700900^/ $</li>
 </ul>
 <p>Human reaction time (150–250 ms) and electromechanical delay (30–50 ms) are far too slow to influence such rapid movements, implying the downswing is <strong>open-loop</strong> and <strong>pre-structured</strong>.</p>
 <p>This paper provides the first integrated:</p>
@@ -483,106 +497,153 @@ window.Quarto = {
 <h1 data-number="3"><span class="header-section-number">3</span> 2. Multibody Dynamics: 3-Link Arm–Forearm–Club Model</h1>
 <p>We adopt a planar 3-DOF model (shoulder, elbow, wrist/club hinge):</p>
 <ul>
-<li>(q_1): shoulder rotation</li>
-<li>(q_2): elbow flexion/extension</li>
-<li>(q_3): wrist radial/ulnar deviation → simplified to wrist–club hinge</li>
+<li><span class="math inline">\(q_1\)</span>: shoulder rotation</li>
+<li><span class="math inline">\(q_2\)</span>: elbow flexion/extension</li>
+<li><span class="math inline">\(q_3\)</span>: wrist radial/ulnar deviation → simplified to wrist–club hinge</li>
 </ul>
 <p>Generalized coordinates:</p>
-<p>[ q = (q_1, q_2, q_3)^T ]</p>
+<p><span class="math display">\[
+q = (q_1, q_2, q_3)^T
+\]</span></p>
 <p>Link lengths &amp; masses:</p>
 <ul>
-<li>( _1, m_1 ): upper arm</li>
-<li>( _2, m_2 ): forearm</li>
-<li>( _3, m_3 ): club</li>
+<li>$ _1, m_1 $: upper arm</li>
+<li>$ _2, m_2 $: forearm</li>
+<li>$ _3, m_3 $: club</li>
 </ul>
 <section id="forward-kinematics" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="forward-kinematics"><span class="header-section-number">3.1</span> 2.1 Forward Kinematics</h2>
 <p>End-of-club (clubhead) position:</p>
-[
-<span class="math display">\[\begin{aligned}
+<p><span class="math display">\[
+\begin{aligned}
 x &amp;= \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) + \ell_3\cos(q_1+q_2+q_3) \\
 y &amp;= \ell_1\sin q_1 + \ell_2\sin(q_1+q_2) + \ell_3\sin(q_1+q_2+q_3)
-\end{aligned}\]</span>
-<p>]</p>
+\end{aligned}
+\]</span></p>
 <p>Jacobian:</p>
-<p>[ = J(q) ]</p>
-<p>where (J) is the usual geometric Jacobian.</p>
+<p><span class="math display">\[
+\dot{x} = J(q)\dot{q}
+\]</span></p>
+<p>where <span class="math inline">\(J\)</span> is the usual geometric Jacobian.</p>
 </section>
 <section id="lagrangian-dynamics" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="lagrangian-dynamics"><span class="header-section-number">3.2</span> 2.2 Lagrangian Dynamics</h2>
 <p>The Lagrangian:</p>
-<p>[ (q,) = T - V ]</p>
+<p><span class="math display">\[
+\mathcal{L}(q,\dot{q}) = T - V
+\]</span></p>
 <p>with</p>
-<p>[ T = ^T M(q) ]</p>
-<p>[ V = _i m_i g y_i(q) ]</p>
+<p><span class="math display">\[
+T = \frac12 \dot{q}^T M(q)\dot{q}
+\]</span></p>
+<p><span class="math display">\[
+V = \sum_i m_i g y_i(q)
+\]</span></p>
 <p>Using the Euler–Lagrange equations:</p>
-<p>[ - = ]</p>
+<p><span class="math display">\[
+\frac{\mathrm{d}}{\mathrm{d}t}\frac{\partial\mathcal{L}}{\partial \dot{q}}
+- \frac{\partial\mathcal{L}}{\partial q} = \tau
+\]</span></p>
 <p>we obtain:</p>
-<p>[ M(q) + C(q,) + G(q) = ]</p>
+<p><span class="math display">\[
+M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau
+\]</span></p>
 <p>We omit the full expanded matrices (40+ terms) for brevity, but provide the key drift-driving terms.</p>
 </section>
 <section id="dominant-drift-terms" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="dominant-drift-terms"><span class="header-section-number">3.3</span> 2.3 Dominant Drift Terms</h2>
 <p>Centripetal &amp; Coriolis contributions scale as:</p>
-[ C(q,)
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+C(q,\dot{q})\dot{q} \sim
+\begin{bmatrix}
 k_{11}(q)\dot{q}_1\dot{q}_2 + k_{12}(q)\dot{q}_2^2 + k_{13}(q)\dot{q}_3^2 + \dots \\
 k_{21}(q)\dot{q}_1^2 + k_{22}(q)\dot{q}_1\dot{q}_3 + \dots \\
 k_{31}(q)\dot{q}_1^2 + k_{32}(q)\dot{q}_2^2 + \dots
-\end{bmatrix}\]</span>
-<p>]</p>
+\end{bmatrix}
+\]</span></p>
 <p>All terms are <strong>quadratic</strong> in velocity.</p>
 <p>This formalizes the well-known statement:</p>
-<p>[ |f(x)| ||^2 ]</p>
+<p><span class="math display">\[
+\|f(x)\| \propto \|\dot{q}\|^2
+\]</span></p>
 </section>
 <section id="control-term" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="control-term"><span class="header-section-number">3.4</span> 2.4 Control Term</h2>
 <p>Control enters linearly:</p>
-<p>[ g(x)u = M(q)^{-1} ]</p>
+<p><span class="math display">\[
+g(x)u = M(q)^{-1}\tau
+\]</span></p>
 <p>Since humans cannot meaningfully increase torque with increasing velocity, and in fact torque <em>drops</em> due to the muscle force–velocity relationship, the control term’s magnitude is bounded and often diminishing.</p>
 </section>
 </section>
 <section id="driftcontrol-ratio-dcr" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> 3. Drift–Control Ratio (DCR)</h1>
 <p>We define:</p>
-[ (t) = {|
-<span class="math display">\[\begin{bmatrix}
+<p><span class="math display">\[
+\mathrm{DCR}(t)
+= \frac{\left\|
+\begin{bmatrix}
+\dot{q} \\
+M^{-1}(-C\dot{q} - G)
+\end{bmatrix}
+\right\|}
+{\left\|
+\begin{bmatrix}
 0 \\
 M^{-1}\tau
-\end{bmatrix}\]</span>
-<p>|} ]</p>
+\end{bmatrix}
+\right\|}
+\]</span></p>
 <p>Approximating:</p>
-<p>[ |f(x)| a || + b||^2 ]</p>
+<p><span class="math display">\[
+\|f(x)\| \sim a \|\dot{q}\| + b\|\dot{q}\|^2
+\]</span></p>
 <p>and</p>
-<p>[ |g(x)u| c|| ]</p>
+<p><span class="math display">\[
+\|g(x)u\| \sim c\|\tau\|
+\]</span></p>
 <p>we have:</p>
-<p>[ ]</p>
+<p><span class="math display">\[
+\boxed{
+\mathrm{DCR}(t) \sim
+\frac{a\|\dot{q}(t)\| + b\|\dot{q}(t)\|^2}{c\|\tau(t)\|}
+}
+\]</span></p>
 <p>During the downswing:</p>
 <ul>
-<li>( || ) rises 5–10×</li>
-<li>( ||^2 ) rises 25–100×</li>
-<li>( || ) decreases 20–40%</li>
+<li>$ || $ rises 5–10×</li>
+<li>$ ||^2 $ rises 25–100×</li>
+<li>$ || $ decreases 20–40%</li>
 </ul>
 <p>Thus DCR skyrockets.</p>
 </section>
 <section id="nonlinear-controllability-and-lie-bracket-analysis" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> 4. Nonlinear Controllability and Lie Bracket Analysis</h1>
 <p>A system:</p>
-<p>[ =f(x)+g(x)u ]</p>
-<p>is locally controllable if the Lie algebra generated by ({f,g}) spans the tangent space:</p>
-<p>[ {g, [f,g], [f,[f,g]], } = T_x^n ]</p>
+<p><span class="math display">\[
+\dot{x}=f(x)+g(x)u
+\]</span></p>
+<p>is locally controllable if the Lie algebra generated by <span class="math inline">\(\{f,g\}\)</span> spans the tangent space:</p>
+<p><span class="math display">\[
+\mathrm{span}\{g, [f,g], [f,[f,g]], \dots\} = T_x\mathbb{R}^n
+\]</span></p>
 <section id="lie-bracket-relevance-to-golf" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="lie-bracket-relevance-to-golf"><span class="header-section-number">5.1</span> 4.1 Lie Bracket Relevance to Golf</h2>
 <p>Compute the first-order Lie bracket:</p>
-<p>[ [f,g] = f - g ]</p>
+<p><span class="math display">\[
+[f,g] =
+\frac{\partial g}{\partial x}f - \frac{\partial f}{\partial x}g
+\]</span></p>
 <p>This bracket measures <em>how drift distorts control directions</em>.</p>
 <p>During the downswing, we find:</p>
 <ul>
-<li>() contains ()-dependent terms</li>
-<li>bracket magnitude grows with (^2)</li>
+<li><span class="math inline">\(\frac{\partial f}{\partial x}\)</span> contains <span class="math inline">\(\dot{q}\)</span>-dependent terms</li>
+<li>bracket magnitude grows with <span class="math inline">\(\dot{q}^2\)</span></li>
 </ul>
 <p>Thus:</p>
-<p>[ |[f,g]| ||^2 ]</p>
+<p><span class="math display">\[
+\|[f,g]\| \propto \|\dot{q}\|^2
+\]</span></p>
 <p>but this bracket contributes to controllability <em>only if control inputs can excite it</em>. When drift dominates, control cannot excite high-order terms.</p>
 <p><strong>Result: Effective controllability collapses at high velocity.</strong></p>
 <p>This is not a numerical phenomenon; it is structural.</p>
@@ -591,9 +652,16 @@ M^{-1}\tau
 <section id="when-does-control-authority-collapse" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> 5. When Does Control Authority Collapse?</h1>
 <p>Define the control authority function:</p>
-<p>[ (t) = = ]</p>
+<p><span class="math display">\[
+\alpha(t) = \frac{\|g(x(t))u(t)\|}{\|f(x(t))\|}
+= \frac{1}{\mathrm{DCR}(t)}
+\]</span></p>
 <p>Control authority collapses when:</p>
-<p>[ (t) &lt; 0.1 (t) &gt; 10 ]</p>
+<p><span class="math display">\[
+\alpha(t) &lt; 0.1
+\quad\text{or equivalently}\quad
+\mathrm{DCR}(t) &gt; 10
+\]</span></p>
 <p>Empirical swing data and derived dynamics show:</p>
 <ul>
 <li>Collapse begins ≈ <strong>70–120 ms before impact</strong></li>
@@ -609,27 +677,49 @@ M^{-1}\tau
 <li>path: remainder</li>
 </ul>
 <p>Let clubface angle:</p>
-<p>[ (t) = h(q(t)) ]</p>
+<p><span class="math display">\[
+\phi(t) = h(q(t))
+\]</span></p>
 <p>Linearizing near impact:</p>
-<p>[ (t) = q ]</p>
-<p>The dynamics of (q) follow the variational equation:</p>
-<p>[ = x + u,x ]</p>
+<p><span class="math display">\[
+\delta \phi(t) =
+\frac{\partial h}{\partial q}\delta q
+\]</span></p>
+<p>The dynamics of <span class="math inline">\(\delta q\)</span> follow the variational equation:</p>
+<p><span class="math display">\[
+\delta \dot{x}
+= \frac{\partial f}{\partial x}\delta x
++ \frac{\partial g}{\partial x}u\,\delta x
+\]</span></p>
 <p>But at high DCR:</p>
-<p>[ || |u| ]</p>
+<p><span class="math display">\[
+\left\|\frac{\partial f}{\partial x}\right\|
+\gg
+\left\|\frac{\partial g}{\partial x}u\right\|
+\]</span></p>
 <p>Thus errors evolve approximately as:</p>
-<p>[ x ]</p>
+<p><span class="math display">\[
+\delta \dot{x} \approx
+\frac{\partial f}{\partial x}\delta x
+\]</span></p>
 <p>The solution:</p>
-<p>[ x(t) = e^{A_f (t-t_0)} x(t_0) ]</p>
-<p>where (A_f = ).</p>
-<p>Because (A_f) contains large centripetal terms:</p>
+<p><span class="math display">\[
+\delta x(t) = e^{A_f (t-t_0)} \delta x(t_0)
+\]</span></p>
+<p>where <span class="math inline">\(A_f = \frac{\partial f}{\partial x}\)</span>.</p>
+<p>Because <span class="math inline">\(A_f\)</span> contains large centripetal terms:</p>
 <ul>
-<li>(A_f) is <strong>state-dependent</strong></li>
+<li><span class="math inline">\(A_f\)</span> is <strong>state-dependent</strong></li>
 <li>Exponential amplification of small upstream errors occurs</li>
 <li>Control cannot suppress divergence</li>
 </ul>
 <p>The variance in clubface angle is then:</p>
-<p>[ [] H e^{A_f t} _0 e<sup>{A_f</sup>T t} H^T ]</p>
-<p>with (H = ).</p>
+<p><span class="math display">\[
+\mathrm{Var}[\phi]
+\approx
+H e^{A_f \Delta t} \Sigma_0 e^{A_f^T \Delta t} H^T
+\]</span></p>
+<p>with <span class="math inline">\(H = \frac{\partial h}{\partial q}\)</span>.</p>
 <p><strong>Interpretation:</strong> At high DCR, impact orientation is determined almost entirely by upstream structural conditions.</p>
 </section>
 <section id="numerical-illustration-drift-vs-control-magnitude" class="level1" data-number="8">
@@ -1044,29 +1134,20 @@ M^{-1}\tau
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

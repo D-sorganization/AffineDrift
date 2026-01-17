@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Review of Masahide Hirashima&#x27;s work on baseball pitching and related throwing biomechanics research">
+<meta name="description" content="Review of Masahide Hirashima’s work on baseball pitching and related throwing biomechanics research">
 
 <title>Research Review: Baseball Pitching Biomechanics – AffineDrift</title>
 <style>
@@ -70,11 +70,69 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
 
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="./styles.css" as="style">
+<link rel="preload" href="./script.js" as="script">
+<link rel="modulepreload" href="./js/metrics.js">
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="./logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="./feed.xml">
 <style>
@@ -104,88 +162,41 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script type="text/javascript">
-window.MathJax = {
-  options: {
-    lazyMargin: '200px',
-    lazyAlwaysTypeset: null
-  },
-  loader: {
-    load: ['ui/lazy', '[tex]/ams', '[tex]/newcommand', '[tex]/mathtools']
-  },
-  tex: {
-    packages: {'[+]': ['ams', 'newcommand', 'mathtools']},
-    inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']],
-    processEscapes: true,
-    processEnvironments: true,
-    processRefs: true,
-    digits: /^(?:[0-9]+(?:,[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-    tags: 'ams',
-    tagSide: 'right',
-    tagIndent: '0.8em',
-    multlineWidth: '85%',
-    maxMacros: 10000,
-    maxBuffer: 5120,
-    macros: {
-      qd: "{\\dot{q}}",
-      qdd: "{\\ddot{q}}",
-      etad: "{\\dot{\\eta}}",
-      etadd: "{\\ddot{\\eta}}",
-      xd: "{\\dot{x}}",
-      R: "{\\mathbb{R}}"
-    }
-  },
-  chtml: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  svg: {
-    scale: 1.0,
-    minScale: 0.5,
-    mtextInheritFont: false,
-    merrorInheritFont: true,
-    mathmlSpacing: false,
-    skipAttributes: {},
-    exFactor: 0.5,
-    displayAlign: 'center',
-    displayIndent: '0'
-  },
-  startup: {
-    pageReady: function() {
-      return MathJax.startup.defaultPageReady();
-    }
-  }
-};
-</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools && !navbarTools.querySelector('.rss-feed-link')) {
-      const rssLink = document.createElement('a');
-      rssLink.href = '/feed.xml';
-      rssLink.className = 'rss-feed-link';
-      rssLink.title = 'RSS Feed';
-      rssLink.setAttribute('aria-label', 'RSS Feed');
-      rssLink.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
-        </svg>
-      `;
-      navbarTools.appendChild(rssLink);
+    if (navbarTools) {
+      // Add search button
+      if (!navbarTools.querySelector('.search-trigger')) {
+        const searchBtn = document.createElement('button');
+        searchBtn.className = 'search-trigger';
+        searchBtn.title = 'Search (Ctrl+K)';
+        searchBtn.setAttribute('aria-label', 'Open search');
+        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
+        searchBtn.onclick = function() {
+          if (window.AffineDriftSearch) {
+            window.AffineDriftSearch.openModal();
+          }
+        };
+        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
+      }
+      // Add RSS link
+      if (!navbarTools.querySelector('.rss-feed-link')) {
+        const rssLink = document.createElement('a');
+        rssLink.href = '/feed.xml';
+        rssLink.className = 'rss-feed-link';
+        rssLink.title = 'RSS Feed';
+        rssLink.setAttribute('aria-label', 'RSS Feed');
+        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
+        navbarTools.appendChild(rssLink);
+      }
     }
   });
 </script>
 
 
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/search-metrics.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -218,10 +229,10 @@ window.MathJax = {
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Articles</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
         <li>
     <a class="dropdown-item" href="./drifter-manifesto.html">
  <span class="dropdown-text">Drifter Manifesto</span></a>
@@ -241,10 +252,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Models</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
         <li>
     <a class="dropdown-item" href="./models.html">
  <span class="dropdown-text">Models Home</span></a>
@@ -280,10 +291,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
         <li>
     <a class="dropdown-item" href="./resources-videos.html">
  <span class="dropdown-text">Videos</span></a>
@@ -323,10 +334,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Repositories</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
         <li>
     <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
  <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
@@ -334,10 +345,10 @@ window.MathJax = {
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Contact</span>
     </a>
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
         <li>
     <a class="dropdown-item" href="./contact.html">
  <span class="dropdown-text">Contact</span></a>
@@ -365,7 +376,7 @@ window.MathJax = {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content page-columns page-full column-page" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -374,7 +385,7 @@ window.MathJax = {
 
 <div>
   <div class="description">
-    Review of Masahide Hirashima&#x27;s work on baseball pitching and related throwing biomechanics research
+    Review of Masahide Hirashima’s work on baseball pitching and related throwing biomechanics research
   </div>
 </div>
 
@@ -401,7 +412,7 @@ window.MathJax = {
     <div class="reviews-content">
       <article class="review-article">
         <div class="review-header">
-          <h2>Overview</h2>
+          <h2 class="anchored">Overview</h2>
         </div>
         <div class="review-content">
           <p>
@@ -420,7 +431,7 @@ window.MathJax = {
 
       <article class="review-article">
         <div class="review-header">
-          <h2>Researcher Profile</h2>
+          <h2 class="anchored">Researcher Profile</h2>
         </div>
         <div class="review-content">
           <p>
@@ -428,10 +439,7 @@ window.MathJax = {
             his important contributions to understanding the biomechanics of baseball pitching. His work has provided 
             valuable insights into the mechanics of throwing motions.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching" class="resource-link" target="_blank" rel="noopener">
             View Google Scholar Profile →
           </a>
         </div>
@@ -439,50 +447,40 @@ window.MathJax = {
 
       <article class="review-article">
         <div class="review-header">
-          <h2>Key Papers</h2>
+          <h2 class="anchored">Key Papers</h2>
         </div>
         <div class="review-content">
-          <h3>Masahide Hirashima's Research</h3>
+          <h3 class="anchored">Masahide Hirashima's Research</h3>
           <ul>
             <li>
-              <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching+biomechanics"
-                 target="_blank"
-                 rel="noopener">
+              <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching+biomechanics" target="_blank" rel="noopener">
                 Baseball pitching biomechanics papers
               </a>
             </li>
             <li>
-              <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+pitching+mechanics"
-                 target="_blank"
-                 rel="noopener">
+              <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+pitching+mechanics" target="_blank" rel="noopener">
                 Pitching mechanics research
               </a>
             </li>
           </ul>
           
-          <h3>Related Research in Throwing Biomechanics</h3>
+          <h3 class="anchored">Related Research in Throwing Biomechanics</h3>
           <p>
             The following researchers have made significant contributions to understanding throwing mechanics:
           </p>
           <ul>
             <li>
-              <a href="https://scholar.google.com/scholar?q=baseball+pitching+biomechanics+ground+reaction+forces"
-                 target="_blank"
-                 rel="noopener">
+              <a href="https://scholar.google.com/scholar?q=baseball+pitching+biomechanics+ground+reaction+forces" target="_blank" rel="noopener">
                 Ground reaction forces in pitching
               </a>
             </li>
             <li>
-              <a href="https://scholar.google.com/scholar?q=throwing+biomechanics+proximal+distal+sequencing"
-                 target="_blank"
-                 rel="noopener">
+              <a href="https://scholar.google.com/scholar?q=throwing+biomechanics+proximal+distal+sequencing" target="_blank" rel="noopener">
                 Proximal-to-distal sequencing in throwing
               </a>
             </li>
             <li>
-              <a href="https://scholar.google.com/scholar?q=baseball+pitching+kinematics+kinetics"
-                 target="_blank"
-                 rel="noopener">
+              <a href="https://scholar.google.com/scholar?q=baseball+pitching+kinematics+kinetics" target="_blank" rel="noopener">
                 Kinematics and kinetics of pitching
               </a>
             </li>
@@ -492,10 +490,10 @@ window.MathJax = {
 
       <article class="review-article">
         <div class="review-header">
-          <h2>Research Highlights</h2>
+          <h2 class="anchored">Research Highlights</h2>
         </div>
         <div class="review-content">
-          <h3>Segment Coordination in Pitching</h3>
+          <h3 class="anchored">Segment Coordination in Pitching</h3>
           <p>
             Hirashima's research has contributed to understanding how body segments coordinate during the pitching motion:
           </p>
@@ -506,7 +504,7 @@ window.MathJax = {
             <li>Timing and sequencing of segment movements</li>
           </ul>
 
-          <h3>Ground Reaction Forces</h3>
+          <h3 class="anchored">Ground Reaction Forces</h3>
           <p>
             Understanding how ground reaction forces contribute to pitching performance:
           </p>
@@ -516,7 +514,7 @@ window.MathJax = {
             <li>Relationship between ground forces and arm velocity</li>
           </ul>
 
-          <h3>Energy Transfer Mechanisms</h3>
+          <h3 class="anchored">Energy Transfer Mechanisms</h3>
           <p>
             Research on how energy is transferred from the lower body through the trunk to the arm:
           </p>
@@ -530,7 +528,7 @@ window.MathJax = {
 
       <article class="review-article">
         <div class="review-header">
-          <h2>Connections to Golf Biomechanics</h2>
+          <h2 class="anchored">Connections to Golf Biomechanics</h2>
         </div>
         <div class="review-content">
           <p>
@@ -556,7 +554,7 @@ window.MathJax = {
 
       <article class="review-article">
         <div class="review-header">
-          <h2>Future Research Directions</h2>
+          <h2 class="anchored">Future Research Directions</h2>
         </div>
         <div class="review-content">
           <p>
@@ -574,9 +572,6 @@ window.MathJax = {
     </div>
   </div>
 </section>
-
-
-
 
 
 
@@ -982,29 +977,20 @@ window.MathJax = {
   });
   </script>
 </div> <!-- /content -->
-<footer>
-  <div class="container">
-    <p>© 2025. Affine Drift Effin Matters.</p>
-  </div>
-</footer>
 <script src="script.js"></script>
 <script>
-// MathJax automatically typesets content after startup, but we check for
-// equations in HTML blocks that might need reprocessing after DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    // Only manually typeset if there are unprocessed math elements
-    // MathJax automatically typesets on startup, so this is only for edge cases
-    const hasUnprocessedMath = document.querySelector('mjx-container:not([processed]), [class*="math"]:not([processed])');
-    if (hasUnprocessedMath) {
-      MathJax.startup.promise.then(function() {
-        return MathJax.typesetPromise();
-      }).catch(function(err) {
-        console.log('MathJax typeset error:', err);
-      });
-    }
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('ServiceWorker registered:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('ServiceWorker registration failed:', error);
+        });
+    });
   }
-});
 </script>
 
 

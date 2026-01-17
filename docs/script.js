@@ -11,6 +11,13 @@
 // JS smooth scrolling must match CSS scroll-margin-top for consistency
 const MAX_ID_GENERATION_ATTEMPTS = 100;
 
+// Delay before printing to ensure MathJax has fully rendered equations
+const MATHJAX_RENDER_DELAY_MS = 100;
+
+// Additional height buffer for Critics Corner content expansion
+// Accounts for padding and dynamic content sizing
+const CRITICS_CORNER_PADDING_OFFSET = 50;
+
 // ⚡ Bolt Optimization: Lazy initialize to avoid synchronous layout thrashing at top level
 let HEADER_OFFSET = 140;
 let TOC_SCROLL_OFFSET = 140; // Active section detection offset
@@ -206,6 +213,22 @@ document.addEventListener("DOMContentLoaded", function () {
       section.style.visibility = "visible";
     });
   }
+
+  // --- 1b. Lazy Loading Images ---
+  // Add 'loaded' class to lazy images once they load for CSS animation removal
+  const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+  lazyImages.forEach((img) => {
+    if (img.complete) {
+      img.classList.add("loaded");
+    } else {
+      img.addEventListener("load", function () {
+        this.classList.add("loaded");
+      });
+      img.addEventListener("error", function () {
+        this.classList.add("loaded"); // Remove shimmer even on error
+      });
+    }
+  });
 
   // --- 2. History & TOC Generation ---
 
@@ -424,6 +447,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // from O(N_dom_nodes) to O(N_headings)
     const usedIds = new Set();
 
+    // ⚡ Bolt Optimization: Pre-create SVG to clone instead of parsing HTML string for every heading
+    const anchorIcon = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    anchorIcon.setAttribute("aria-hidden", "true");
+    anchorIcon.setAttribute("width", "18");
+    anchorIcon.setAttribute("height", "18");
+    anchorIcon.setAttribute("viewBox", "0 0 24 24");
+    anchorIcon.setAttribute("fill", "none");
+    anchorIcon.setAttribute("stroke", "currentColor");
+    anchorIcon.setAttribute("stroke-width", "2");
+    anchorIcon.setAttribute("stroke-linecap", "round");
+    anchorIcon.setAttribute("stroke-linejoin", "round");
+    anchorIcon.innerHTML =
+      '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
+
     headings.forEach((heading) => {
       // Skip if already has anchor
       if (heading.querySelector(".anchor-link")) return;
@@ -439,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
       anchor.href = `#${heading.id}`;
       anchor.setAttribute("aria-label", "Link to this section");
       // Simple Link Icon
-      anchor.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+      anchor.appendChild(anchorIcon.cloneNode(true));
 
       heading.appendChild(anchor);
     });
@@ -548,6 +588,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Accordion functionality
+  // ⚡ Bolt Optimization: Event Delegation for Accordions
+  // Separate initialization from event handling to reduce memory usage (1 listener vs N)
   const accordionHeaders = document.querySelectorAll(".accordion-header");
   accordionHeaders.forEach((header, index) => {
     const content = header.nextElementSibling;
@@ -559,13 +601,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       content.setAttribute("aria-hidden", !isExpanded);
     }
-    header.addEventListener("click", function () {
-      const isExpanded = this.getAttribute("aria-expanded") === "true";
-      this.setAttribute("aria-expanded", !isExpanded);
-      if (content && content.classList.contains("accordion-content")) {
-        content.setAttribute("aria-hidden", isExpanded);
-      }
-    });
+  });
+
+  document.addEventListener("click", (e) => {
+    const header = e.target.closest(".accordion-header");
+    if (!header) return;
+
+    const content = header.nextElementSibling;
+    if (content && content.classList.contains("accordion-content")) {
+      const isExpanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", !isExpanded);
+      content.setAttribute("aria-hidden", isExpanded);
+    }
   });
 
   // Repository links
@@ -594,8 +641,17 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!parts.includes("noopener")) parts.push("noopener");
       if (!parts.includes("noreferrer")) parts.push("noreferrer");
       link.setAttribute("rel", parts.join(" "));
-      if (!link.querySelector("img, svg")) {
+      if (
+        !link.querySelector("img, svg") &&
+        !link.classList.contains("external-link")
+      ) {
         link.classList.add("external-link");
+        // 🎨 Palette UX: Add accessible SVG icon for external links
+        const icon = document.createElement("span");
+        icon.className = "external-link-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+        link.appendChild(icon);
       }
     }
   }
@@ -797,6 +853,62 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   // ⚡ Bolt Optimization: Defer history updates to unblock main thread
   runWhenIdle(initArticleHistory);
+
+  // 🎨 Palette UX: Copy Email Functionality
+  function initEmailCopy() {
+    // ⚡ Bolt Optimization: Use specific selector to limit scope
+    const mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
+    if (mailtoLinks.length === 0) return;
+
+    // Pre-define SVGs strings to avoid repetitive DOM creation
+    const copyIcon = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+    const checkIcon = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+    mailtoLinks.forEach((link) => {
+      // Skip if already processed
+      if (
+        link.nextElementSibling &&
+        link.nextElementSibling.classList.contains("copy-email-btn")
+      )
+        return;
+
+      const href = link.getAttribute("href");
+      // Simple extraction of email (handling potential ?subject=...)
+      const email = href.replace(/^mailto:/, "").split("?")[0];
+      if (!email) return;
+
+      const button = document.createElement("button");
+      button.className = "copy-email-btn";
+      button.setAttribute("aria-label", "Copy email address");
+      button.setAttribute("type", "button");
+      button.innerHTML = copyIcon;
+      button.title = "Copy email address";
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent opening mail client if they click the button specifically
+        e.stopPropagation();
+
+        navigator.clipboard.writeText(email)
+          .then(() => {
+            button.innerHTML = checkIcon;
+            button.classList.add("success");
+            button.setAttribute("aria-label", "Email copied");
+
+            setTimeout(() => {
+              button.innerHTML = copyIcon;
+              button.classList.remove("success");
+              button.setAttribute("aria-label", "Copy email address");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Failed to copy email:", err);
+          });
+      });
+
+      link.insertAdjacentElement("afterend", button);
+    });
+  }
+  runWhenIdle(initEmailCopy);
 
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
@@ -1037,10 +1149,14 @@ document.addEventListener("DOMContentLoaded", function () {
   initReadingTime();
 
   // 🎨 Palette UX: Lightbox for Article Images
+  // Removed length check to allow dynamic injection and more robust initialization
   const contentImages = document.querySelectorAll(
     "#quarto-document-content img",
   );
-  if (contentImages.length > 0) {
+
+  // Always initialize lightbox container if content area exists
+  const articleContainer = document.getElementById("quarto-document-content");
+  if (articleContainer) {
     let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
 
     const lightbox = document.createElement("div");
@@ -1070,6 +1186,32 @@ document.addEventListener("DOMContentLoaded", function () {
       closeLightbox();
     });
 
+    // 🎨 Palette UX: Trap focus inside lightbox
+    lightbox.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab") return;
+
+      const focusableSelector =
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const focusableContent = lightbox.querySelectorAll(focusableSelector);
+
+      if (focusableContent.length === 0) return;
+
+      const firstFocusable = focusableContent[0];
+      const lastFocusable = focusableContent[focusableContent.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          lastFocusable.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          firstFocusable.focus();
+          e.preventDefault();
+        }
+      }
+    });
+
     function closeLightbox() {
       lightbox.classList.remove("active");
       lightbox.setAttribute("aria-hidden", "true");
@@ -1084,6 +1226,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.appendChild(lightbox);
 
+    // Initial pass for existing images
     contentImages.forEach((img) => {
       // Skip if already inside a link or interactive element
       if (img.closest("a") || img.closest("button")) return;
@@ -1101,8 +1244,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!img) return;
 
       // Verify the image is within our content area (safety check)
-      if (!document.getElementById("quarto-document-content").contains(img))
-        return;
+      if (!articleContainer.contains(img)) return;
 
       if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") return;
 
@@ -1124,6 +1266,18 @@ document.addEventListener("DOMContentLoaded", function () {
       lightbox.innerHTML = ""; // Clear previous
       lightbox.appendChild(clone);
       lightbox.appendChild(closeBtn); // 🎨 Palette UX: Add close button
+
+      // 🎨 Palette UX: Handle Caption
+      const figure = img.closest("figure");
+      if (figure) {
+        const figcaption = figure.querySelector("figcaption");
+        if (figcaption) {
+          const captionClone = figcaption.cloneNode(true);
+          captionClone.className = "lightbox-caption";
+          lightbox.appendChild(captionClone);
+        }
+      }
+
       lightbox.classList.add("active");
       lightbox.setAttribute("aria-hidden", "false");
 
@@ -1131,11 +1285,8 @@ document.addEventListener("DOMContentLoaded", function () {
       closeBtn.focus();
     };
 
-    const container = document.getElementById("quarto-document-content");
-    if (container) {
-      container.addEventListener("click", handleLightboxTrigger);
-      container.addEventListener("keydown", handleLightboxTrigger);
-    }
+    articleContainer.addEventListener("click", handleLightboxTrigger);
+    articleContainer.addEventListener("keydown", handleLightboxTrigger);
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {
@@ -1145,8 +1296,159 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // --- PDF Download Button ---
+  initPDFDownload();
+
+  // --- Critics Corner Toggle ---
+  initCriticsCorner();
+
+  // --- Contact Form Feedback ---
+  initContactFormFeedback();
+
   console.log("AffineDrift loaded successfully (Optimized)");
 });
+
+// 🎨 Palette UX: Contact Form Feedback
+function initContactFormFeedback() {
+  const forms = document.querySelectorAll('form[action^="mailto:"]');
+  forms.forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      // Do NOT prevent default - let the browser open the mail client
+      // But update the UI to show something happened
+
+      const button = form.querySelector('button[type="submit"]');
+      if (!button) return;
+
+      // Save original state
+      if (!button.dataset.originalHtml) {
+        button.dataset.originalHtml = button.innerHTML;
+      }
+
+      // Update state (allow expansion)
+      button.innerHTML = "Opening Email Client...";
+
+      // Manually apply style changes if .success class is missing
+      const originalBg = button.style.backgroundColor;
+      const originalBorder = button.style.borderColor;
+
+      // Check if .success is defined in CSS, if not, apply inline
+      // Note: We use existing 'success' class if available (e.g. from copy-btn), otherwise fallback
+      button.classList.add("success");
+
+      // Disable briefly to prevent double clicks while app opens
+      button.disabled = true;
+
+      // Revert after delay
+      setTimeout(() => {
+        button.innerHTML = button.dataset.originalHtml;
+        button.classList.remove("success");
+        button.disabled = false;
+      }, 3000);
+    });
+  });
+}
+
+// --- PDF Download Functionality ---
+function initPDFDownload() {
+  // Don't add button on home page or if already exists
+  if (document.querySelector('.home-layout') || document.querySelector('.pdf-download-btn')) {
+    return;
+  }
+
+  // Create the PDF download button
+  const pdfBtn = document.createElement('button');
+  pdfBtn.className = 'pdf-download-btn';
+  pdfBtn.setAttribute('aria-label', 'Download page as PDF');
+  pdfBtn.setAttribute('title', 'Download as PDF');
+  pdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
+    </svg>
+    <span>PDF</span>
+  `;
+
+  pdfBtn.addEventListener('click', function() {
+    preparePDFPrint();
+  });
+
+  document.body.appendChild(pdfBtn);
+}
+
+function preparePDFPrint() {
+  // Get page title
+  const pageTitle = document.title.replace(' – AffineDrift', '').replace('AffineDrift – ', '');
+
+  // Create print title block if it doesn't exist
+  let printTitleBlock = document.querySelector('.print-title-block');
+  if (!printTitleBlock) {
+    printTitleBlock = document.createElement('div');
+    printTitleBlock.className = 'print-title-block';
+    printTitleBlock.style.display = 'none'; // Hidden until print
+    printTitleBlock.innerHTML = `
+      <h1>${pageTitle}</h1>
+      <div class="print-author">AffineDrift</div>
+      <div class="print-date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+    `;
+
+    // Insert at start of main content
+    const mainContent = document.querySelector('.main-content-area') ||
+                       document.querySelector('main.content') ||
+                       document.querySelector('#quarto-content');
+    if (mainContent) {
+      mainContent.insertBefore(printTitleBlock, mainContent.firstChild);
+    }
+  }
+
+  // Ensure MathJax is fully rendered before printing
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    MathJax.typesetPromise().then(() => {
+      // Small delay to ensure rendering is complete
+      setTimeout(() => {
+        window.print();
+      }, MATHJAX_RENDER_DELAY_MS);
+    }).catch((err) => {
+      console.log('MathJax typeset error, printing anyway:', err);
+      window.print();
+    });
+  } else {
+    window.print();
+  }
+}
+
+// --- Critics Corner Functionality ---
+function initCriticsCorner() {
+  const criticsCorners = document.querySelectorAll('.critics-corner');
+
+  criticsCorners.forEach(corner => {
+    const header = corner.querySelector('.critics-corner-header');
+    const content = corner.querySelector('.critics-corner-content');
+
+    if (header && content) {
+      // Set initial state
+      content.style.maxHeight = '0';
+      content.style.overflow = 'hidden';
+      content.style.transition = 'max-height 0.4s ease-out, padding 0.4s ease-out';
+
+      header.addEventListener('click', function() {
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+        if (isExpanded) {
+          // Collapse
+          content.style.maxHeight = '0';
+          content.style.paddingTop = '0';
+          content.style.paddingBottom = '0';
+          header.setAttribute('aria-expanded', 'false');
+        } else {
+          // Expand
+          content.style.maxHeight = content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + 'px';
+          content.style.paddingTop = '1rem';
+          content.style.paddingBottom = '1rem';
+          header.setAttribute('aria-expanded', 'true');
+        }
+      });
+    }
+  });
+}
 
 // Utility function for future features
 function scrollToTop() {
