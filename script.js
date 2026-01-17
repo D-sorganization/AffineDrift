@@ -1314,6 +1314,38 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("AffineDrift loaded successfully (Optimized)");
 });
 
+// 🎨 Palette UX: Auto-growing Textareas
+function initAutoGrowTextareas() {
+  const textareas = document.querySelectorAll("textarea");
+  if (textareas.length === 0) return;
+
+  function adjustHeight(el) {
+    el.style.height = "auto";
+    const newHeight = Math.min(el.scrollHeight, 500); // Max height 500px
+    el.style.height = newHeight + "px";
+    el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+  }
+
+  textareas.forEach((textarea) => {
+    // Initial adjustment if content exists
+    if (textarea.value) {
+      // Defer slightly to ensure styles are applied
+      setTimeout(() => adjustHeight(textarea), 0);
+    }
+
+    textarea.addEventListener("input", () => adjustHeight(textarea));
+  });
+
+  // Single resize listener for all
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      textareas.forEach(adjustHeight);
+    }, 250),
+  );
+}
+runWhenIdle(initAutoGrowTextareas);
+
 // 🎨 Palette UX: Contact Form Feedback
 function initContactFormFeedback() {
   // ⚡ Bolt Optimization: Use document.forms (O(1)) instead of querySelectorAll (O(N))
