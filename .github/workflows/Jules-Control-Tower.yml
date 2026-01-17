@@ -9,16 +9,24 @@ on:
     workflows: ["CI Standard"]
     types: [completed]
   schedule:
-    - cron: "0 2 * * *"
+    # OVERNIGHT SCHEDULE - All work done before morning (midnight-6 AM UTC)
+    - cron: "0 0 * * *"   # Midnight - Assessment Generator
+    - cron: "30 0 * * *"  # 12:30 AM - Code Quality Reviewer
+    - cron: "0 1 * * *"   # 1 AM - Completist (incomplete impl)
+    - cron: "30 1 * * *"  # 1:30 AM - Layman's Terms Writer
+    - cron: "0 2 * * *"   # 2 AM - Critics Comments Writer
+    - cron: "30 2 * * *"  # 2:30 AM - Sentinel (security)
+    - cron: "0 3 * * *"   # 3 AM - Tech Custodian / Thesis Defender (Thu)
+    - cron: "30 3 * * *"  # 3:30 AM - Issue Resolver (daily fix)
+    - cron: "0 4 * * *"   # 4 AM - PR Compiler (consolidate PRs)
 
 # SAFEGUARD: Maximum iterations to prevent infinite repair loops
 env:
   MAX_REPAIR_ITERATIONS: 3
   MAX_ITERATIONS_WINDOW_HOURS: 1
 
-# Prevent multiple Control Tower instances from running simultaneously
 concurrency:
-  group: jules-control-tower
+  group: jules-control-tower-${{ github.run_id }}
   cancel-in-progress: false
 
 permissions:
@@ -31,7 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor != 'jules-bot'
     outputs:
-      # FIX: Matched output name to what downstream jobs expect ("target")
       target: ${{ steps.decide.outputs.target }}
     steps:
       # SAFEGUARD: Check if we've exceeded max repair iterations in the time window
@@ -42,12 +49,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Checking repair iteration limits..."
-
-          # Count recent CI failures on this branch within the time window
           BRANCH="${{ github.event.workflow_run.head_branch }}"
           HOURS_AGO=$(date -u -d "${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-${{ env.MAX_ITERATIONS_WINDOW_HOURS }}H +%Y-%m-%dT%H:%M:%SZ)
 
-          # Get count of CI Standard failures on this branch in the time window
           FAILURE_COUNT=$(gh run list \
             --workflow="CI Standard" \
             --branch="$BRANCH" \
@@ -56,15 +60,10 @@ jobs:
             --jq "[.[] | select(.conclusion == \"failure\" and .createdAt > \"$HOURS_AGO\")] | length" \
             2>/dev/null || echo "0")
 
-          echo "Branch: $BRANCH"
-          echo "Failures in last ${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hour(s): $FAILURE_COUNT"
-          echo "Max allowed: ${{ env.MAX_REPAIR_ITERATIONS }}"
-
           if [ "$FAILURE_COUNT" -ge "${{ env.MAX_REPAIR_ITERATIONS }}" ]; then
-            echo "::error::Max repair iterations ($FAILURE_COUNT >= ${{ env.MAX_REPAIR_ITERATIONS }}) reached in ${{ env.MAX_ITERATIONS_WINDOW_HOURS }} hour(s). Manual intervention required."
+            echo "::error::Max repair iterations reached. Manual intervention required."
             echo "exceeded=true" >> $GITHUB_OUTPUT
           else
-            echo "Within limits. Proceeding with repair."
             echo "exceeded=false" >> $GITHUB_OUTPUT
           fi
 
@@ -76,7 +75,8 @@ jobs:
           script: |
             const event = context.eventName;
             let target = "none";
-            // 1. CI FAILURE -> AUTO-REPAIR or HOTFIX-CREATOR (if protected branch)
+
+            // 1. CI FAILURE -> AUTO-REPAIR or HOTFIX-CREATOR
             if (event === "workflow_run" && context.payload.workflow_run.conclusion === "failure") {
                const failedBranch = context.payload.workflow_run.head_branch;
                if (failedBranch === "main" || failedBranch === "master") {
@@ -85,16 +85,41 @@ jobs:
                   target = "auto-repair";
                }
             }
-            // 2. NIGHTLY SCHEDULE -> AUDITOR (Daily) or CUSTODIAN (Weekly)
+            // 2. SCHEDULED RUNS - Route by hour:minute (overnight schedule midnight-4 AM)
             else if (event === "schedule") {
-              const day = new Date().getDay();
-              if (day === 2) { // Tuesday
-                 target = "tech-custodian";
+              const now = new Date();
+              const hour = now.getUTCHours();
+              const minute = now.getUTCMinutes();
+              const day = now.getDay();
+
+              if (hour === 0 && minute < 30) {
+                target = "assessment-generator";
+              } else if (hour === 0 && minute >= 30) {
+                target = "code-quality-reviewer";
+              } else if (hour === 1 && minute < 30) {
+                target = "completist";
+              } else if (hour === 1 && minute >= 30) {
+                target = "laymans-terms-writer";
+              } else if (hour === 2 && minute < 30) {
+                target = "critics-comments-writer";
+              } else if (hour === 2 && minute >= 30) {
+                target = "sentinel";
+              } else if (hour === 3 && minute < 30) {
+                // Thesis defender on Thursday, Tech Custodian other days
+                if (day === 4) {
+                  target = "thesis-defender";
+                } else {
+                  target = "tech-custodian";
+                }
+              } else if (hour === 3 && minute >= 30) {
+                target = "issue-resolver";
+              } else if (hour === 4) {
+                target = "pr-compiler";
               } else {
-                 target = "scientific-auditor";
+                target = "none";
               }
             }
-            // 3. PUSH TO MAIN -> DOCS (CodeWiki Feeder)
+            // 3. PUSH TO MAIN -> DOCS
             else if (event === "push" && context.ref === "refs/heads/main") {
               target = "doc-scribe";
             }
@@ -106,6 +131,7 @@ jobs:
             else if (event === "pull_request" && context.payload.action === 'closed' && context.payload.pull_request.merged) {
                target = "archivist";
             }
+
             console.log(`Decision: Dispatching [${target}]`);
             core.setOutput("target", target);
 
@@ -114,11 +140,19 @@ jobs:
   call-repair:
     needs: triage
     if: needs.triage.outputs.target == 'auto-repair'
-    # FIX: Pass the specific Run ID so we repair the *exact* failure, not just "the latest one"
     uses: ./.github/workflows/Jules-Auto-Repair.yml
     with:
       run_id: ${{ github.event.workflow_run.id }}
       branch: ${{ github.event.workflow_run.head_branch }}
+    secrets: inherit
+
+  call-hotfix-creator:
+    needs: triage
+    if: needs.triage.outputs.target == 'hotfix-creator'
+    uses: ./.github/workflows/Jules-Hotfix-Creator.yml
+    with:
+      run_id: ${{ github.event.workflow_run.id }}
+      failed_branch: ${{ github.event.workflow_run.head_branch }}
     secrets: inherit
 
   call-auditor:
@@ -150,11 +184,57 @@ jobs:
     if: needs.triage.outputs.target == 'archivist'
     uses: ./.github/workflows/Jules-Archivist.yml
     secrets: inherit
-  call-hotfix-creator:
+
+  call-sentinel:
     needs: triage
-    if: needs.triage.outputs.target == 'hotfix-creator'
-    uses: ./.github/workflows/Jules-Hotfix-Creator.yml
-    with:
-      run_id: ${{ github.event.workflow_run.id }}
-      failed_branch: ${{ github.event.workflow_run.head_branch }}
+    if: needs.triage.outputs.target == 'sentinel'
+    uses: ./.github/workflows/Jules-Sentinel.yml
+    secrets: inherit
+
+  call-code-quality-reviewer:
+    needs: triage
+    if: needs.triage.outputs.target == 'code-quality-reviewer'
+    uses: ./.github/workflows/Jules-Code-Quality-Reviewer.yml
+    secrets: inherit
+
+  call-assessment-generator:
+    needs: triage
+    if: needs.triage.outputs.target == 'assessment-generator'
+    uses: ./.github/workflows/Jules-Assessment-Generator.yml
+    secrets: inherit
+
+  call-thesis-defender:
+    needs: triage
+    if: needs.triage.outputs.target == 'thesis-defender'
+    uses: ./.github/workflows/Jules-Thesis-Defender.yml
+    secrets: inherit
+
+  call-issue-resolver:
+    needs: triage
+    if: needs.triage.outputs.target == 'issue-resolver'
+    uses: ./.github/workflows/Jules-Issue-Resolver.yml
+    secrets: inherit
+
+  call-completist:
+    needs: triage
+    if: needs.triage.outputs.target == 'completist'
+    uses: ./.github/workflows/Jules-Completist.yml
+    secrets: inherit
+
+  call-laymans-terms-writer:
+    needs: triage
+    if: needs.triage.outputs.target == 'laymans-terms-writer'
+    uses: ./.github/workflows/Jules-Laymans-Terms-Writer.yml
+    secrets: inherit
+
+  call-critics-comments-writer:
+    needs: triage
+    if: needs.triage.outputs.target == 'critics-comments-writer'
+    uses: ./.github/workflows/Jules-Critics-Comments.yml
+    secrets: inherit
+
+  call-pr-compiler:
+    needs: triage
+    if: needs.triage.outputs.target == 'pr-compiler'
+    uses: ./.github/workflows/Jules-PR-Compiler.yml
     secrets: inherit

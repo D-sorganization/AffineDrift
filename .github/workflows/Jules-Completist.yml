@@ -1,0 +1,132 @@
+name: Jules Completist (Incomplete Implementation Auditor)
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"  # Daily at 4 AM UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  audit-completeness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt || true
+          npm install -g @google/jules
+
+      - name: Scan for Incomplete Patterns
+        id: scan
+        run: |
+          mkdir -p .jules/completist_data
+
+          # Find TODO/FIXME/XXX comments in Python, TypeScript, JavaScript, Quarto
+          grep -rn "TODO\|FIXME\|XXX\|HACK\|TEMP" \
+            --include="*.py" --include="*.ts" --include="*.js" --include="*.qmd" --include="*.tsx" . \
+            --exclude-dir=".git" --exclude-dir="venv" --exclude-dir="node_modules" --exclude-dir="env" \
+            > .jules/completist_data/todo_markers.txt 2>/dev/null || true
+
+          # Find NotImplementedError
+          grep -rn "NotImplementedError\|raise NotImplemented\|pass  #" --include="*.py" . \
+            --exclude-dir=".git" --exclude-dir="venv" --exclude-dir="env" \
+            > .jules/completist_data/not_implemented.txt 2>/dev/null || true
+
+          # Find incomplete docstrings
+          grep -rn '""".*TODO\|""".*WIP\|# TODO:' --include="*.py" . \
+            --exclude-dir=".git" --exclude-dir="venv" --exclude-dir="env" \
+            > .jules/completist_data/incomplete_docs.txt 2>/dev/null || true
+
+          # Find placeholder content in Quarto files
+          grep -rn "PLACEHOLDER\|TBD\|Coming soon\|Under construction" \
+            --include="*.qmd" --include="*.md" . \
+            --exclude-dir=".git" --exclude-dir="node_modules" \
+            > .jules/completist_data/placeholder_content.txt 2>/dev/null || true
+
+          # Count findings
+          TODO_COUNT=$(wc -l < .jules/completist_data/todo_markers.txt 2>/dev/null || echo "0")
+          echo "todo_count=$TODO_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Jules Completist Analysis
+        env:
+          JULES_TOKEN: ${{ secrets.JULES_API_KEY }}
+        run: |
+          jules auth --token $JULES_TOKEN
+          DATE=$(date +%Y-%m-%d)
+
+          jules task fix --prompt "$(cat << 'PROMPT_EOF'
+          You are the COMPLETIST agent - an auditor for incomplete implementations.
+
+          ## Your Mission
+          Identify and catalog all incomplete, partial, or placeholder implementations.
+          AffineDrift is a Quarto website supporting the Golf Modeling Suite.
+
+          ## Input Data
+          Review .jules/completist_data/:
+          - todo_markers.txt - TODO/FIXME/XXX comments
+          - not_implemented.txt - NotImplementedError and pass statements
+          - incomplete_docs.txt - Incomplete documentation
+          - placeholder_content.txt - Placeholder website content
+
+          ## Analysis Categories
+
+          ### 1. Critical Incomplete (Blocking)
+          - Functions that raise NotImplementedError in core paths
+          - Pages with placeholder content visible to users
+          - Broken links or missing resources
+
+          ### 2. Feature Gaps
+          - TODO comments indicating missing features
+          - Partial implementations
+          - Mock data instead of real content
+
+          ### 3. Content Gaps (Website Specific)
+          - Incomplete documentation pages
+          - Missing tutorials or guides
+          - Placeholder images or diagrams
+
+          ### 4. Technical Debt
+          - FIXME/HACK/TEMP markers
+          - Workarounds that should be proper implementations
+
+          ## Output Files
+
+          1. Create docs/assessments/completist/Completist_Report_$DATE.md with:
+             - Executive Summary
+             - Critical Incomplete (priority list)
+             - Content Gaps (website pages needing work)
+             - Feature Gap Matrix
+             - Technical Debt Register
+
+          2. Update docs/assessments/completist/COMPLETIST_LATEST.md (overwrite)
+
+          3. For CRITICAL items blocking user experience:
+             - Create GitHub Issue with label 'incomplete-implementation,critical'
+
+          DO NOT MAKE CODE CHANGES. This is an AUDIT workflow.
+          PROMPT_EOF
+          )"
+
+      - name: Commit Report
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs(completist): daily incomplete implementation audit"
+          file_pattern: |
+            docs/assessments/completist/*.md
+            .jules/completist.md

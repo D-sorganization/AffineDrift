@@ -1,0 +1,122 @@
+name: Jules Thesis Defender (Worker)
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      critique_path:
+        description: 'Path to critique document(s)'
+        required: false
+        default: 'docs/critiques/'
+        type: string
+  push:
+    paths:
+      - 'docs/critiques/**'
+      - 'docs/reviews/**'
+      - 'docs/objections/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  defend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Jules
+        run: npm install -g @google/jules
+
+      - name: Find Critique Documents
+        id: find
+        run: |
+          mkdir -p docs/critiques docs/defenses
+
+          CRITIQUES=""
+          for dir in docs/critiques docs/reviews docs/objections; do
+            if [ -d "$dir" ]; then
+              for file in "$dir"/*.md; do
+                [ -f "$file" ] && CRITIQUES="$CRITIQUES $file"
+              done
+            fi
+          done
+
+          if [ -z "$CRITIQUES" ]; then
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "found=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Jules Thesis Defender Analysis
+        if: steps.find.outputs.found == 'true'
+        env:
+          JULES_TOKEN: ${{ secrets.JULES_API_KEY }}
+        run: |
+          jules auth --token $JULES_TOKEN
+          DATE=$(date +%Y-%m-%d)
+
+          jules task fix --prompt "$(cat << 'PROMPT_EOF'
+          You are the THESIS DEFENDER agent for AffineDrift.
+
+          ## Core Mandate
+          Act like a skeptical critic, then help preemptively defend with precise counterarguments.
+
+          ## Analyze critique documents in:
+          - docs/critiques/
+          - docs/reviews/
+          - docs/objections/
+
+          ## Process
+
+          ### 1. ANALYZE - Classify each critique as:
+          conceptual, mathematical, empirical, methodological, or philosophical
+
+          ### 2. IDENTIFY for each:
+          - Legitimate weaknesses
+          - Misunderstandings
+          - Category errors
+          - Unstated assumptions by critic
+
+          ### 3. PROPOSE DEFENSE:
+          - Clarifications
+          - Added derivations
+          - Explicit assumptions
+          - Boundary conditions
+          - Preemptive counterarguments
+
+          ## Output
+
+          1. docs/defenses/critique_response_table_$DATE.md
+             | Critique | Type | Validity | Response | Injection Point |
+
+          2. docs/defenses/defense_paragraphs_$DATE.md
+             Paste-ready paragraphs, organized by injection location
+
+          3. docs/defenses/defense_report_$DATE.md
+             Executive summary, strongest critiques, areas to strengthen
+
+          ## Constraints
+          - DO NOT be argumentative or dismissive
+          - DO NOT over-defend weak points - acknowledge limits
+          - Preserve scientific tone and rigor
+          - Be fair to critics
+
+          For genuine weaknesses: Create Issue with label 'thesis-defense,needs-work'
+          PROMPT_EOF
+          )"
+
+      - name: Commit Defense Materials
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs(defense): thesis defense analysis $(date +%Y-%m-%d)"
+          file_pattern: |
+            docs/defenses/*.md
+            .jules/*.md
