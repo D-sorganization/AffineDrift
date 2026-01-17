@@ -2341,7 +2341,7 @@ form.contact-form .form-group textarea {
 #quarto-header .navbar-title,
 h1.title,
 .title {
-  color: #ffffff !important;
+  color: #fff !important;
 }
 
 /* Fix: Accordion Header Width */
@@ -2357,16 +2357,18 @@ h1.title,
 }
 
 /* Fix: Bibliography Layout */
+
 /* Ensure the grid doesn't collapse the main content too aggressively */
-@media (min-width: 1200px) {
+@media (width >= 1200px) {
   .standard-page-layout {
     grid-template-columns: 250px 1fr 300px; /* Slightly reduced sidebars */
   }
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .standard-page-layout {
      grid-template-columns: 220px 1fr 0; /* Hide right sidebar on medium screens if empty or push it down? */
+
      /* Better: keep it 3 col but shrink sidebars */
   }
   
