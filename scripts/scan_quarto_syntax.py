@@ -250,6 +250,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
 
 
 def main() -> None:
+    """Scan all Quarto files for syntax issues and report findings."""
     files = find_files()
     total_issues = 0
 
