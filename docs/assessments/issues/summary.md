@@ -1,6 +1,21 @@
-# Code Quality Review Summary
+# Issue Tracking Summary
 
-## Critical Issues Fixed
+**Last Updated:** January 17, 2026
+**Maintainer:** D-sorganization Team
+
+## Active GitHub Issues
+
+| Issue # | Title | Priority | Status |
+| ------- | ----- | -------- | ------ |
+| [#410](https://github.com/D-sorganization/AffineDrift/issues/410) | CI/CD: Make quality gates blocking | 🟡 High | Open |
+| [#411](https://github.com/D-sorganization/AffineDrift/issues/411) | Cleanup: Remove committed build artifacts and logs | 🔴 Critical | Open |
+| [#412](https://github.com/D-sorganization/AffineDrift/issues/412) | Refactor: Break down monolithic script.js and styles.css | 🟢 Medium | Open |
+
+---
+
+## Code Quality Review Summary (Historical)
+
+### Critical Issues Fixed
 
 ### Security
 1.  **`tools/verify_images.py`**: Suppressed `S310` (URL open with file scheme) as the function explicitly handles local file paths separately and guards external URLs with `startswith("http")`.
