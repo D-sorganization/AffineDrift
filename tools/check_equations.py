@@ -182,6 +182,6 @@ def check_file(filepath: Path) -> None:
 
 
 if __name__ == "__main__":
-    files = find_qmd_md_files(Path("."))
+    files = find_qmd_md_files(Path())
     for f in files:
         check_file(f)

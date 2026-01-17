@@ -1,25 +1,31 @@
 #!/usr/bin/env python3
 """Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
+import logging
 import subprocess
 from datetime import datetime
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_git_last_modified(filepath: str) -> str:
     """Get last modified date from git history."""
     try:
         result = subprocess.run(
-            ["git", "log", "-1", "--format=%cI", "--", filepath],
+            ["git", "log", "-1", "--format=%cI", "--", filepath],  # noqa: S603, S607
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,
+            check=False,
         )
         if result.returncode == 0 and result.stdout.strip():
             # Convert to W3C datetime format
             return result.stdout.strip()[:10]
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning("Failed to get git modified date for %s: %s", filepath, e)
     return datetime.now().strftime("%Y-%m-%d")
 
 
