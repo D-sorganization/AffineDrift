@@ -242,6 +242,8 @@ The existence of the non-zero block $M_{q\eta}$ is the physical mechanism by whi
 
 This inertial coupling is the mechanism that transmits the golfer's agency to the club, but it is also the conduit through which the club's passive momentum fights back. To capture this bidirectional energy flow, we must move from a kinematic description of velocities to a dynamic description of forces. The kinetic energy terms derived above provide the necessary scalar foundation for this step, allowing us to build the system **Lagrangian** in the following section.
 
+Before proceeding to the dynamical derivation, we summarize the mathematical symbols that will be used to describe these interactions.
+
 ### Notation table
 {#subsec:notation}
 
@@ -395,6 +397,8 @@ This equation provides the rigorous mechanical definition of **Input Forces**:
 
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$ (the inverse of the articulated body inertia).
 2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
+
+This result has a profound implication for swing mechanics. It means that the "lag" often attributed to specific muscular activation patterns is, at the fundamental level of the equation of motion, an inertial reaction dictated by the mass distribution of the club. The golfer creates the *acceleration* ($\ddot{q}$), but the *coupling* ($\Gamma$) determines the shaft's response. The only way to alter this ratio is to alter the physical properties of the club itself; no amount of 'technique' can change the value of $\Gamma$.
 
 This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As we shall see in the *Drift-Control Ratio* analysis, this efficacy is purely configuration-dependent and bounded, whereas the opposing drift forces scale quadratically with velocity. This structural asymmetry is what preordains the loss of controllability in the late downswing.
 
@@ -841,8 +845,6 @@ We have now constructed two powerful counterfactual baselines: the ZTCF to isola
 ## Drift Invariance and Input Constraints
 {#sec-drift_invariance}
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
-
 The drift--input decomposition
 
 $$
@@ -1196,7 +1198,7 @@ $$
 \tau_{\mathrm{ZVCF}}(t).
 $$ {#eq-mixed_forces}
 
-understanding that this term does not represent a new physical force, but a nonlinear structural interaction within the model.
+understanding that this term does not represent a new physical force, but a nonlinear structural interaction within the model. It serves as a diagnostic metric for the "coupling gain"—a measure of how the input torque, by altering the system's trajectory, has indirectly shifted the drift landscape compared to the passive baseline.
 
 ### Taxonomy summary
 
