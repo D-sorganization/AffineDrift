@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from matplotlib.patches import Ellipse, Polygon
+from simpleeval import EvalWithCompoundTypes
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
@@ -189,20 +190,23 @@ def generate_sample_torque(
         torque = rng.normal(0, 1.5, len(t))
         torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Polynomial":
-        # Evaluate polynomial expression using safer method
+        # Evaluate polynomial expression using simpleeval for safe evaluation
         try:
-            safe_dict = {
-                "t": t,
-                "sin": np.sin,
-                "cos": np.cos,
-                "exp": np.exp,
-                "sqrt": np.sqrt,
-                "log": np.log,
-                "pi": np.pi,
-                "e": np.e,
-            }
-            code = compile(polynomial_expression, "<string>", "eval")
-            result = eval(code, {"__builtins__": {}}, safe_dict)  # noqa: S307
+            evaluator = EvalWithCompoundTypes(
+                names={
+                    "t": t,
+                    "pi": np.pi,
+                    "e": np.e,
+                },
+                functions={
+                    "sin": np.sin,
+                    "cos": np.cos,
+                    "exp": np.exp,
+                    "sqrt": np.sqrt,
+                    "log": np.log,
+                },
+            )
+            result = evaluator.eval(polynomial_expression)
             if isinstance(result, np.ndarray):
                 if result.shape != t.shape:
                     st.session_state.polynomial_error = (
