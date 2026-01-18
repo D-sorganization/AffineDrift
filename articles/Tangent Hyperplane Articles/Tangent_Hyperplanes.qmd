@@ -1,0 +1,290 @@
+---
+title: "Tangent Hyperplanes"
+subtitle: "Exact Local Superposition in Nonlinear Dynamics"
+author: "Dieter"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    fig-cap-location: bottom
+execute:
+  echo: false
+---
+
+::: {.callout-note appearance="minimal"}
+## Abstract
+
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This article argues that this characterization, while globally accurate, obscures a fundamental mathematical fact: nonlinear systems admit exact linear superposition in the tangent space at every point. We develop this claim rigorously, showing that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics. The derivative of a vector field is, by definition, a linear map; the tangent space is, by construction, a linear vector space. We illustrate these ideas with the simple pendulum, connect them to practical techniques such as Linear Quadratic Regulation and Lyapunov stability analysis, and delineate the scope of validity—namely, systems with continuously differentiable dynamics. The geometric perspective presented here—trajectories as curves on manifolds with tangent spaces attached at each point—provides the conceptual foundation for modern nonlinear control theory.
+:::
+
+## Introduction
+
+Nonlinear dynamics are often described as systems in which superposition does not apply. Students of differential equations learn early that while linear systems permit the combination of solutions—if $x_1(t)$ and $x_2(t)$ are solutions, then so is $\alpha x_1(t) + \beta x_2(t)$—nonlinear systems deny this convenience. The narrative typically stops there, leaving the impression that nonlinearity and superposition are fundamentally incompatible.
+
+This statement, while true in a global sense, obscures a more precise and mathematically exact fact:
+
+**Nonlinear systems admit exact linear superposition in the infinitesimal.**
+
+The purpose of this article is to develop that statement rigorously. The argument presented here is not heuristic, approximate, or model-dependent. It is a direct consequence of the definition of derivatives, limits, and smooth manifolds—the same mathematical foundations that underpin calculus itself. Linearization is not an approximation layered on top of nonlinear mechanics; rather, it *is* the exact local structure of the dynamics as the timestep tends to zero.
+
+This perspective has profound implications for how we understand nonlinear systems. It explains why linear control techniques such as LQR and pole placement succeed in practice, even when applied to inherently nonlinear plants. It clarifies why stability analysis via linearization (Lyapunov's indirect method) yields rigorous conclusions about nonlinear behavior. And it provides the geometric foundation for modern nonlinear control theory, where trajectories are understood as curves on manifolds with tangent spaces attached at every point.
+
+The goal of this article is to formalize these ideas, prove them cleanly, and demonstrate why they underpin modern nonlinear analysis and control.
+
+------------------------------------------------------------------------
+
+## Nonlinear Dynamics and Smoothness
+
+Consider a nonlinear dynamical system described by the ordinary differential equation
+
+$$
+\dot{x} = f(x,u), \quad x \in \mathbb{R}^n, \; u \in \mathbb{R}^m
+$$
+
+where $x$ represents the state vector (positions, velocities, temperatures, concentrations, or any other quantities that characterize the system's configuration) and $u$ represents the control input or external forcing. The function $f$ encodes the physics of the system—it tells us how the state evolves given the current state and input.
+
+The critical assumption we make is that $f$ is continuously differentiable, denoted $C^1$, in both its arguments. This means that not only is $f$ continuous, but its partial derivatives with respect to $x$ and $u$ exist and are themselves continuous functions. This assumption is minimal in the sense that it represents the bare mathematical requirement for the derivative to be well-defined. It is also physically reasonable: virtually all systems derived from classical mechanics—pendulums, robotic arms, aircraft, chemical reactors—satisfy this smoothness condition. The laws of physics, expressed through Newton's equations, Lagrangian mechanics, or thermodynamic principles, generically produce smooth vector fields.
+
+What does smoothness buy us? It guarantees that at every point in state-input space, the vector field $f$ has a well-defined derivative. This derivative, as we shall see, is a linear map—and it is through this linear map that superposition re-enters the picture.
+
+------------------------------------------------------------------------
+
+## Derivatives as Linear Maps
+
+The key insight comes from understanding what a derivative truly is. In single-variable calculus, the derivative of a function at a point is a number—the slope of the tangent line. In multivariable calculus, this generalizes: the derivative of a vector-valued function is not a number but a *linear map*. This is the Fréchet derivative, and it is the mathematically precise formulation of differentiation in higher dimensions.
+
+For our vector field $f$, the Jacobian matrix $A = \frac{\partial f}{\partial x}(x_0, u_0)$ is defined as the unique linear map satisfying
+
+$$
+f(x_0 + \delta x, u_0) = f(x_0, u_0) + A \cdot \delta x + o(\|\delta x\|)
+$$
+
+The notation $o(\|\delta x\|)$ denotes terms that vanish faster than $\|\delta x\|$ as $\|\delta x\| \to 0$. This is little-o notation from asymptotic analysis, and it captures precisely what we mean by "the error becomes negligible." The equation states that near the point $(x_0, u_0)$, the nonlinear function $f$ is exactly equal to a linear function plus terms that become arbitrarily small relative to the perturbation size.
+
+An equivalent definition, perhaps more intuitive, uses directional derivatives. For any direction $h \in \mathbb{R}^n$:
+
+$$
+A \cdot h = \lim_{t \to 0} \frac{f(x_0 + th, u_0) - f(x_0, u_0)}{t}
+$$
+
+This limit computes the rate of change of $f$ as we move from $x_0$ in the direction $h$. The crucial point is that this rate of change depends linearly on the direction $h$. If we double the direction vector, the rate of change doubles. If we add two direction vectors, the rates of change add. This is not an approximation or simplification—it is a mathematical theorem following from the definition of the derivative and the smoothness of $f$.
+
+The same construction applies to the input derivative, yielding the matrix $B = \frac{\partial f}{\partial u}(x_0, u_0)$. Together, these matrices capture how the vector field responds to infinitesimal changes in state and input.
+
+------------------------------------------------------------------------
+
+## Tangent Spaces and Linearization
+
+At a fixed operating point $(x_0, u_0)$, the derivatives computed in the previous section define two matrices:
+
+$$
+A = \left.\frac{\partial f}{\partial x}\right|_{(x_0,u_0)}, \quad B = \left.\frac{\partial f}{\partial u}\right|_{(x_0,u_0)}
+$$
+
+The matrix $A$ is the state Jacobian—an $n \times n$ matrix whose entries $A_{ij} = \partial f_i / \partial x_j$ describe how each component of the vector field depends on each state variable. The matrix $B$ is the input Jacobian—an $n \times m$ matrix describing how the vector field responds to changes in the control input. Together, the pair $(A, B)$ defines what we call the **tangent space linearization** of the nonlinear vector field at that point.
+
+To understand this terminology, we must briefly invoke the language of differential geometry. A smooth manifold is a space that locally resembles Euclidean space—think of the surface of a sphere, which is curved globally but flat in small neighborhoods. At each point on a manifold, there exists a tangent space: the collection of all possible velocity vectors for curves passing through that point. For the surface of a sphere, the tangent space at any point is a flat plane touching the sphere at that point.
+
+For dynamical systems with state spaces embedded in $\mathbb{R}^n$, the tangent space $T_{x_0}\mathcal{M}$ at a point $x_0$ is itself an $n$-dimensional vector space. This tangent space is where linearization lives. When we perturb the state by a small amount $\delta x$ and the input by $\delta u$, the resulting perturbation to the state derivative is governed by
+
+$$
+\delta \dot{x} = A \, \delta x + B \, \delta u
+$$
+
+This equation deserves careful attention. It states that in the tangent space, the dynamics are *exactly* linear. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. This is not an approximation of the nonlinear system—it *is* the differential structure of the system at that state. The linearization captures the infinitesimal behavior exactly, in the same sense that the derivative of a curve gives its exact instantaneous velocity.
+
+------------------------------------------------------------------------
+
+## Example: The Simple Pendulum
+
+To make these abstract ideas concrete, consider the simple pendulum—perhaps the most studied nonlinear system in physics. A mass hangs from a rigid rod of length $L$, swinging under gravity. Let $\theta$ denote the angle from vertical and $\omega = \dot{\theta}$ the angular velocity. Newton's second law yields
+
+$$
+\ddot{\theta} = -\frac{g}{L}\sin\theta
+$$
+
+where $g$ is gravitational acceleration. This is manifestly nonlinear: the restoring torque depends on $\sin\theta$, not $\theta$ itself.
+
+To apply our framework, we rewrite this second-order equation as a first-order system in state-space form. Defining the state vector $x = [\theta, \omega]^T$:
+
+$$
+\dot{x} = f(x) = \begin{bmatrix} \omega \\ -\frac{g}{L}\sin\theta \end{bmatrix}
+$$
+
+The function $f$ is smooth (infinitely differentiable), so our theory applies. The $\sin\theta$ term is what prevents global superposition—if $x_1(t)$ and $x_2(t)$ are solutions, their sum is generally not a solution because $\sin(\theta_1 + \theta_2) \neq \sin\theta_1 + \sin\theta_2$.
+
+Now consider the equilibrium point $x_0 = [0, 0]^T$, corresponding to the pendulum hanging straight down at rest. To compute the Jacobian, we take partial derivatives:
+
+$$
+A = \left.\frac{\partial f}{\partial x}\right|_{x_0} = \begin{bmatrix} \frac{\partial f_1}{\partial \theta} & \frac{\partial f_1}{\partial \omega} \\ \frac{\partial f_2}{\partial \theta} & \frac{\partial f_2}{\partial \omega} \end{bmatrix}_{x_0} = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L}\cos(0) & 0 \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L} & 0 \end{bmatrix}
+$$
+
+The linearized dynamics in the tangent space are therefore
+
+$$
+\delta\dot{x} = A\,\delta x \quad \Rightarrow \quad \ddot{\theta} = -\frac{g}{L}\theta
+$$
+
+This is the familiar harmonic oscillator equation, predicting sinusoidal oscillations with frequency $\sqrt{g/L}$. Every physics student knows this as the "small angle approximation"—but our analysis reveals it as something more fundamental.
+
+The eigenvalues of $A$ are $\lambda = \pm i\sqrt{g/L}$, pure imaginary numbers indicating oscillatory behavior with no damping. These eigenvalues exactly characterize the local behavior of the nonlinear system near equilibrium. For small perturbations, the linear and nonlinear trajectories are indistinguishable to first order—they agree up to terms of order $\|\delta x\|^2$. As $\|\delta x\| \to 0$, this agreement becomes exact.
+
+The nonlinearity of the full pendulum—the amplitude-dependent period, the possibility of full rotations—emerges only as perturbations grow large enough that higher-order terms in the Taylor expansion of $\sin\theta$ become significant. Near equilibrium, the tangent space dynamics reign.
+
+------------------------------------------------------------------------
+
+## Exact Superposition in the Infinitesimal
+
+We now arrive at the central claim of this article. Because the tangent space is a linear vector space, it inherits all the properties of linear algebra—including, crucially, the superposition principle.
+
+Recall that a linear map satisfies two fundamental properties. The first is *additivity*: the map applied to a sum equals the sum of the map applied to each term. For the input matrix $B$, this means
+
+$$
+B(\delta u_1 + \delta u_2) = B\delta u_1 + B\delta u_2
+$$
+
+The second property is *homogeneity* (or scaling): the map applied to a scaled vector equals the scaled result of the map. Mathematically,
+
+$$
+B(\alpha \, \delta u) = \alpha \, B \delta u
+$$
+
+for any scalar $\alpha$. Together, these two properties constitute what physicists and engineers call the **superposition principle**: the response to a combination of inputs equals the combination of responses to individual inputs.
+
+The profound implication is this: superposition holds exactly in the tangent space. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately. There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level.
+
+This is not an approximation we impose for convenience. It is a mathematical theorem, inherited directly from the properties of matrix multiplication and the definition of the derivative. The tangent space is linear by construction, and linear spaces obey superposition by definition. The nonlinearity of the original system has not disappeared; rather, it has been localized to the relationship between different tangent spaces, as we shall see in the next section.
+
+------------------------------------------------------------------------
+
+## Time Evolution and Moving Tangent Spaces
+
+If superposition holds exactly in the tangent space, why do we say that nonlinear systems violate superposition? The answer lies in time evolution, and understanding this point resolves much confusion about the relationship between linear and nonlinear dynamics.
+
+The key observation is that as the system evolves along a trajectory, the operating point changes—and with it, the tangent space. The Jacobian matrices are not constants; they are functions of the current state:
+
+$$
+A(t) = \frac{\partial f}{\partial x}(x(t),u(t)), \quad B(t) = \frac{\partial f}{\partial u}(x(t),u(t))
+$$
+
+At each instant, the tangent space provides an exact linear description of the local dynamics. But the tangent space itself moves as the system evolves. Imagine a hiker walking along a mountain ridge: at each point, the ground is locally flat (the tangent plane), but the tangent plane rotates and tilts as the hiker moves. The mountain is curved even though every tangent plane is flat.
+
+This is precisely the geometric picture for nonlinear dynamics. The state space is a manifold—possibly curved, possibly with complex topology—and at each point there is a tangent space where the dynamics are exactly linear. As a trajectory winds through state space, it passes through a continuous family of tangent spaces, each with its own linearization.
+
+Global superposition fails not because linearity breaks down at any particular instant, but because the linear structure itself evolves. Two solutions that we might wish to superpose live in different tangent spaces at each moment in time. Adding them together is geometrically meaningless—like trying to add vectors that live in different vector spaces.
+
+This perspective transforms how we think about nonlinearity. The "nonlinear effects" that distinguish, say, a large-amplitude pendulum swing from a small one are not violations of linearity per se. They are consequences of the trajectory passing through regions of state space where the tangent spaces differ significantly from each other and from the tangent space at equilibrium.
+
+------------------------------------------------------------------------
+
+## Exactness in the Limit
+
+We have claimed that linearization is "exact" in the tangent space, but what does exactness mean here? This section makes the claim precise using the language of limits and asymptotic analysis.
+
+Consider a finite timestep $\Delta t$. The state at time $t + \Delta t$ can be expressed via Taylor expansion as
+
+$$
+x(t + \Delta t) = x(t) + f(x(t),u(t)) \, \Delta t + O(\Delta t^2)
+$$
+
+The first term, $x(t)$, is the current state. The second term, $f(x(t),u(t)) \, \Delta t$, represents the linear (first-order) contribution—this is what the tangent space dynamics predict. The third term, $O(\Delta t^2)$, collects all higher-order contributions: quadratic, cubic, and so on.
+
+As $\Delta t \to 0$, something important happens: the higher-order terms become negligible compared to the first-order term. Specifically, the ratio of the error to the timestep vanishes:
+
+$$
+\lim_{\Delta t \to 0} \frac{O(\Delta t^2)}{\Delta t} = 0
+$$
+
+This is what we mean when we say the linearization is exact in the limit. The first-order evolution—governed entirely by the tangent space dynamics—captures the behavior of the nonlinear system up to terms that become arbitrarily small relative to the timestep.
+
+**Linearization is exact in the limit $\Delta t \to 0$.**
+
+This is not a weaker form of exactness than we find elsewhere in mathematics. It is the same sense in which derivatives, integrals, and differential equations themselves are exact. The derivative $\dot{x} = f(x,u)$ is defined as a limit; it tells us the instantaneous rate of change, not the change over any finite interval. Linearization inherits this same infinitesimal exactness. The tangent space is not an approximation to the nonlinear system—it is the infinitesimal structure of the system, captured exactly.
+
+------------------------------------------------------------------------
+
+## Counterfactual Decomposition
+
+The exactness of superposition in the tangent space has important practical implications, particularly for understanding how different inputs contribute to system behavior. Consider the following scenario: at a fixed time, we apply multiple input perturbations $\delta u_1, \delta u_2, \ldots, \delta u_k$ to a system. We might ask: how does each input contribute to the resulting state change?
+
+In the tangent space, the answer is unambiguous. Each input perturbation $\delta u_i$ produces a corresponding state perturbation $\delta x_i = B \delta u_i$, and the total state perturbation is simply the sum:
+
+$$
+\delta x = \sum_i \delta x_i = B \sum_i \delta u_i
+$$
+
+This *counterfactual decomposition* allows us to attribute portions of the state change to individual inputs. We can meaningfully say that "this much of the change came from input 1, and that much came from input 2." The contributions are additive and non-interacting.
+
+This equality holds strictly within the tangent space—that is, for infinitesimal perturbations at a single instant. When we integrate over finite time intervals, deviations from additivity appear. These deviations arise from the curvature of the manifold: as the state evolves, it passes through different tangent spaces, and the accumulated effect of the inputs depends on the path taken through state space.
+
+Importantly, these deviations are not errors or approximation artifacts. They are the genuine nonlinear interaction terms that distinguish nonlinear from linear systems. The cross-coupling between inputs, the path-dependence of the final state, the sensitivity to initial conditions—all emerge from the geometry of how tangent spaces vary across the manifold. The tangent space decomposition is exact at each instant; the complexity arises from how those instants accumulate.
+
+------------------------------------------------------------------------
+
+## Connection to Linear Quadratic Regulation
+
+The theoretical framework developed in this article is not merely of academic interest—it underlies some of the most successful techniques in control engineering. Linear Quadratic Regulation (LQR) provides a striking example.
+
+LQR solves the following problem: given a linear system $\dot{x} = Ax + Bu$ and a quadratic cost functional that penalizes state deviations and control effort, find the optimal feedback control law. The solution is elegant—a linear state feedback $u = -Kx$ where the gain matrix $K$ can be computed by solving an algebraic Riccati equation.
+
+But real systems are rarely linear. Why, then, does LQR work so well in practice? The answer lies in the exactness of tangent space linearization. When we apply LQR to a nonlinear system, we are not making a crude approximation. At each operating point, the linearization $(A, B)$ captures the exact infinitesimal dynamics. The quadratic cost approximation is similarly justified: any smooth cost function is quadratic to leading order near a minimum.
+
+The resulting controller operates in a sequence of tangent spaces along the trajectory. At each instant, it computes the optimal action based on the local linear-quadratic structure—and this local structure is exact, not approximate. The success of LQR stems from exploiting the exactness of the tangent-space representation, not from any assumption that the true system is globally linear.
+
+This connection extends beyond control to stability analysis. Lyapunov's indirect method—one of the most powerful tools for analyzing nonlinear stability—relies on the same principle. The method states that the stability of an equilibrium point of a nonlinear system can be determined by examining the eigenvalues of the linearization $A$. If all eigenvalues have strictly negative real parts, the equilibrium is locally asymptotically stable: trajectories starting nearby will converge to the equilibrium. If any eigenvalue has a positive real part, the equilibrium is unstable.
+
+This is a remarkable result. We are drawing conclusions about a nonlinear system—which may exhibit chaos, limit cycles, or other complex behaviors—based solely on a linear analysis. The justification is precisely the exactness we have established: near the equilibrium, the tangent space dynamics dominate, and the linear analysis captures the essential character of nearby trajectories.
+
+------------------------------------------------------------------------
+
+## Scope of Validity
+
+The framework developed in this article rests on a single mathematical assumption: that the vector field $f(x,u)$ is continuously differentiable. This assumption is satisfied by an enormous class of physical systems, but it is not universal. Understanding where the framework applies—and where it fails—is essential for practitioners.
+
+The framework applies directly to smooth mechanical systems governed by Newton's laws or their Lagrangian and Hamiltonian reformulations. This includes rigid-body dynamics such as the rotation and translation of spacecraft, aircraft, and underwater vehicles. It encompasses robotic manipulators, where the dynamics arise from kinetic and potential energy through the Euler-Lagrange equations. It covers classical control systems in continuous time, from simple servo mechanisms to complex multi-input multi-output plants. In all these cases, the vector field is smooth, derivatives are well-defined, and the tangent space linearization provides exact local information.
+
+The framework fails—or requires significant modification—when the smoothness assumption breaks down. Several important classes of systems exhibit nonsmoothness.
+
+Discontinuous systems arise when the governing equations change abruptly based on the state. Switching systems, common in power electronics and variable-structure control, exhibit this behavior: the dynamics in one region of state space differ discretely from the dynamics in another. Relay controllers, which switch between fixed output values, create similar discontinuities. At the switching surface, the vector field is not differentiable, and the tangent space is not well-defined.
+
+Impact dynamics occur when rigid bodies collide. At the moment of impact, velocities change instantaneously—a mathematical discontinuity in the state trajectory. The bouncing of a ball, the walking of a legged robot, the closing of a mechanical latch all involve such events. Between impacts the dynamics may be perfectly smooth, but the impact events themselves lie outside the smooth framework.
+
+Coulomb friction exemplifies nonsmooth phenomena that arise from the physics of contact. The frictional force depends discontinuously on velocity: static friction differs from kinetic friction, and the transition between them creates a set-valued force law rather than a smooth function. Stick-slip dynamics, where surfaces alternate between sticking and sliding, exhibit similar nonsmoothness.
+
+Hybrid systems combine continuous dynamics with discrete state transitions. A thermostat-controlled heating system, a bouncing ball with discrete impact events, a manufacturing process with distinct operational modes—all are hybrid systems. The continuous portions may admit tangent space analysis, but the discrete transitions require different mathematical tools.
+
+State constraints impose hard boundaries on the allowable states. A robotic arm cannot pass through a wall; a tank level cannot go negative. When trajectories reach these boundaries, the dynamics change character in ways that smooth analysis cannot capture.
+
+For all these cases, generalizations of the tangent space framework exist—differential inclusions, Filippov solutions, complementarity systems, and hybrid automata theory—but they lie beyond the scope of this article. The key point is that the exactness results we have established require smoothness, and practitioners should verify this assumption before applying tangent space methods.
+
+------------------------------------------------------------------------
+
+## Conclusion
+
+The central message of this article can be stated simply: nonlinearity does not invalidate superposition—it relocates it.
+
+We began with the observation that nonlinear systems are often described as systems where superposition fails. This characterization, while not incorrect, is incomplete. It obscures the deeper geometric truth that at every point in state space, for every smooth nonlinear system, there exists a tangent space where superposition holds exactly. The failure of global superposition arises not from any local breakdown of linearity, but from the way these tangent spaces vary across the manifold.
+
+This perspective offers both conceptual clarity and practical power. Conceptually, it reveals linearization not as an engineering expedient or a first-order approximation, but as the exact infinitesimal structure of nonlinear dynamics. The tangent space is not approximately linear—it is exactly linear, by construction. The derivative is not almost a linear map—it is a linear map, by definition.
+
+Practically, this perspective explains why linear techniques work so well for nonlinear systems. LQR succeeds because it exploits exact local structure. Lyapunov's indirect method provides rigorous stability conclusions because the linearization captures the essential character of nearby dynamics. The entire edifice of modern nonlinear control—gain scheduling, feedback linearization, model predictive control—rests on the foundation we have described.
+
+The geometric picture is worth holding in mind: a trajectory winding through state space, passing through a continuous family of tangent spaces, each providing an exact linear snapshot of the local dynamics. The complexity of nonlinear behavior emerges from how these snapshots fit together—from the curvature and topology of the underlying manifold. But at each instant, in each tangent space, the dynamics are as linear and superposable as any textbook example.
+
+This is not an approximation theory. It is the geometric foundation of nonlinear mechanics.
+
+------------------------------------------------------------------------
+
+## References
+
+1. Khalil, H. K. (2002). *Nonlinear Systems* (3rd ed.). Prentice Hall. — The standard graduate text on nonlinear control, with rigorous treatment of linearization and Lyapunov stability.
+
+2. Abraham, R., & Marsden, J. E. (1978). *Foundations of Mechanics* (2nd ed.). Benjamin/Cummings. — Comprehensive treatment of geometric mechanics and tangent bundle structures.
+
+3. Lee, J. M. (2012). *Introduction to Smooth Manifolds* (2nd ed.). Springer. — Rigorous development of tangent spaces and differential geometry.
+
+4. Sastry, S. (1999). *Nonlinear Systems: Analysis, Stability, and Control*. Springer. — Accessible treatment bridging differential geometry and control theory.
+
+5. Arnold, V. I. (1989). *Mathematical Methods of Classical Mechanics* (2nd ed.). Springer. — Elegant geometric perspective on classical dynamics and tangent structures.
