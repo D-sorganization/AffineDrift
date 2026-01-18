@@ -3,7 +3,7 @@
 
 **Affine Drift** is currently a **High-Performing Content Repository**.
 
--   **Strengths**: Exceptional educational content and interactive visualizations. The repository structure is clean and conductive to frequent publishing.
+-   **Strengths**: Exceptional educational content and interactive visualizations. The repository structure is clean and conducive to frequent publishing.
 -   **Weaknesses**: None significant. Minor opportunities in mobile optimization for complex visualizations.
 -   **Status**: **ACTIVE** and **HEALTHY**.
 
