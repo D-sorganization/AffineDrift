@@ -2,6 +2,12 @@ name: Jules PR Compiler (Consolidate Open PRs)
 
 on:
   workflow_call:
+    inputs:
+      dry_run:
+        description: 'Dry run - report only, no changes'
+        required: false
+        default: false
+        type: boolean
   workflow_dispatch:
     inputs:
       dry_run:

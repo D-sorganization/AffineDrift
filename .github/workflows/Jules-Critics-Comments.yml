@@ -2,6 +2,16 @@ name: Jules Critics Comments Writer
 
 on:
   workflow_call:
+    inputs:
+      target_file:
+        description: 'Specific .qmd file to update (leave empty for all)'
+        required: false
+        type: string
+      mode:
+        description: 'Mode: create (new sections) or refine (improve existing)'
+        required: false
+        default: 'auto'
+        type: string
   workflow_dispatch:
     inputs:
       target_file:
