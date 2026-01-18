@@ -603,8 +603,10 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             # Evaluate polynomial expression using safer method
             # Note: We don't expose 'np' module to prevent sandbox escape via object introspection
             try:
+                # Use simpleeval for safe expression evaluation (no code execution)
+                from simpleeval import simple_eval
+
                 # Create a safe evaluation environment with only specific allowed functions
-                # Exposing the full 'np' module is a security risk - use only specific functions
                 safe_dict = {
                     "t": t,
                     "sin": np.sin,
@@ -615,10 +617,8 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
                     "pi": np.pi,
                     "e": np.e,
                 }
-                # Compile the expression first to validate syntax
-                code = compile(self.polynomial_expression, "<string>", "eval")
-                # Evaluate with restricted namespace (no builtins, only safe_dict)
-                result = eval(code, {"__builtins__": {}}, safe_dict)
+                # Evaluate using simpleeval (secure, no arbitrary code execution)
+                result = simple_eval(self.polynomial_expression, names=safe_dict)
                 # Ensure it's a numpy array (check outside eval for safety)
                 if isinstance(result, np.ndarray):
                     torque = result
