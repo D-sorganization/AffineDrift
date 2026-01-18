@@ -2,6 +2,12 @@ name: Jules Issue Resolver (Daily Priority Fixer)
 
 on:
   workflow_call:
+    inputs:
+      max_issues:
+        description: 'Maximum issues to fix per run'
+        required: false
+        default: '5'
+        type: string
   workflow_dispatch:
     inputs:
       max_issues:
