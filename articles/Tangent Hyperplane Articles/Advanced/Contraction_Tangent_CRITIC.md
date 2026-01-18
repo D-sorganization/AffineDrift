@@ -1,0 +1,1354 @@
+# Critique: Contraction Theory Meets Tangent Spaces — Unifying Stability and Optimality
+
+## Meta-Information
+
+**Article**: Contraction_Tangent_Unification.qmd
+**Date of Critique**: 2026-01-18
+**Reviewer Stance**: Adversarial but honest — assumes hostile, rushed reviewers
+**Primary Disciplines**: Nonlinear control theory, differential geometry, optimal control, biomechanics
+
+---
+
+## Executive Summary
+
+This article claims a "profound connection" between contraction theory and tangent space methods, asserting that the Riccati solution serves as both a contraction metric and a value function. While the mathematical observations are often correct in restricted settings, the article exhibits significant weaknesses:
+
+1. **Overstated duality claims**: The "stability ↔ optimality duality" is presented as bidirectional and universal, when it is actually unidirectional (LQR → contraction) and limited to specific problem classes.
+
+2. **Unjustified coordinate-free claims**: Section 6 asserts the framework is "coordinate-free" while relying heavily on coordinate-dependent linearizations and Euclidean metrics.
+
+3. **Riccati-as-metric confusion**: Treating the Riccati solution $\mathbf{S}_t$ as a contraction metric without addressing time-variation, boundary conditions, or the difference between differential and algebraic forms.
+
+4. **Biomechanical overreach**: The muscle synergy and golf swing applications rest on unvalidated assumptions about neural control and ignore well-documented variability in human movement.
+
+5. **Experimental comparison issues**: Claims of 76-86% improvement in robotics experiments lack proper statistical validation, control for confounds, or discussion of when contraction-based methods fail.
+
+6. **Missing proofs and logical gaps**: Theorem 4.1 on "certified stability" assumes conditions that are never verified; Hypothesis 7.1 on synergies is stated as fact without evidence.
+
+**Severity**: High. Core claims exceed what the mathematics actually establishes.
+
+**Recommendation**: Major revisions to narrow scope, add qualifying conditions, provide missing proofs, and separate speculative applications from validated theory.
+
+---
+
+# Weakness 1: The Duality is Unidirectional, Not Bidirectional
+
+## Location
+- **Section 3**: "The Duality Revealed"
+- **Theorem 3.1**: "Stability-Optimality Duality"
+- **Claims**: "Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction."
+
+## Nature of Issue
+**Logical gap / Overgeneralization**
+
+## Detailed Critique
+
+### What the Article Claims
+The article presents the relationship between contraction and optimality as a **symmetric duality**:
+
+> "**Claim**: The Riccati solution $\mathbf{S}_t$ **is** a contraction metric!"
+
+The abstract promises:
+> "Stability ↔ Optimality Duality: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction."
+
+This suggests a bidirectional equivalence: every contraction metric corresponds to some optimal control problem, and every optimal control problem yields a contraction metric.
+
+### What the Mathematics Actually Shows
+
+The proven direction is **one-way only**:
+
+**LQR → Contraction** (Theorem 3.1, Corollary 3.1):
+- If $(\mathbf{A}, \mathbf{B}, \mathbf{Q}, \mathbf{R})$ define an LQR problem with solution $\mathbf{S}$, then the closed-loop system is contracting with metric $\mathbf{M} = \mathbf{S}$.
+- This follows directly from the Riccati equation structure.
+
+**Contraction → LQR** (NOT proven):
+- Given an arbitrary contraction metric $\mathbf{M}$ satisfying $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}$, does there exist $\mathbf{Q}$, $\mathbf{R}$ such that $\mathbf{M} = \mathbf{S}$ is the ARE solution?
+- **Answer**: Not in general! The contraction condition is a **Lyapunov inequality**, which has infinitely many solutions. Only a very specific subset corresponds to Riccati solutions.
+
+### Counterexample
+
+Consider the stable system:
+$$
+\dot{\mathbf{x}} = \mathbf{A} \mathbf{x}, \quad \mathbf{A} = \begin{bmatrix} -2 & 1 \\ 0 & -3 \end{bmatrix}
+$$
+
+**Contraction metric 1**: $\mathbf{M}_1 = \mathbf{I}$
+Check: $\mathbf{A}^\top + \mathbf{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} \prec 0$. ✓ Contracting.
+
+**Contraction metric 2**: $\mathbf{M}_2 = \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}$
+Check: $\mathbf{A}^\top \mathbf{M}_2 + \mathbf{M}_2 \mathbf{A} = \begin{bmatrix} -8 & 2 \\ 2 & -6 \end{bmatrix}$. Eigenvalues: $\{-8.47, -5.53\} < 0$. ✓ Contracting.
+
+**Question**: Do both correspond to LQR solutions?
+
+For $\mathbf{M}_1 = \mathbf{I}$ to satisfy the ARE:
+$$
+\mathbf{A}^\top \mathbf{I} + \mathbf{I} \mathbf{A} - \mathbf{I} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{I} + \mathbf{Q} = 0
+$$
+
+Since there's no control input ($\mathbf{B} = 0$), this requires:
+$$
+\mathbf{Q} = -(\mathbf{A}^\top + \mathbf{A}) = \begin{bmatrix} 4 & -1 \\ -1 & 6 \end{bmatrix}
+$$
+
+This $\mathbf{Q}$ is positive definite, so $\mathbf{M}_1$ **can** be a Riccati metric (with $\mathbf{B} = 0$).
+
+For $\mathbf{M}_2$:
+$$
+\mathbf{Q} = -(\mathbf{A}^\top \mathbf{M}_2 + \mathbf{M}_2 \mathbf{A}) = \begin{bmatrix} 8 & -2 \\ -2 & 6 \end{bmatrix}
+$$
+
+Eigenvalues of this $\mathbf{Q}$: $\{9.24, 4.76\} > 0$. ✓ Positive definite.
+
+So both **can** be Riccati metrics, but only for specific $({\bf Q}, \mathbf{R})$ pairs. An arbitrary metric satisfying the contraction inequality does **not** uniquely determine an optimal control problem.
+
+### Why This Matters
+
+1. **Philosophical**: The article frames contraction and optimality as "dual manifestations of the same geometric structure." This is poetic but misleading—they are related but not equivalent.
+
+2. **Practical**: Engineers may believe that finding **any** contraction metric gives them an optimal controller. It doesn't. The metric must satisfy the **additional constraint** of being a Riccati solution.
+
+3. **Theoretical**: The inverse optimal control problem (find $\mathbf{Q}$, $\mathbf{R}$ given $\mathbf{K}$) is notoriously non-unique. The article glosses over this.
+
+### Evidence from Literature
+
+- **Kalman (1964)**: The ARE has a unique stabilizing solution only when $(\mathbf{A}, \mathbf{B})$ is stabilizable and $(\mathbf{A}, \mathbf{Q}^{1/2})$ is detectable. These conditions are **not** automatically satisfied by arbitrary contraction metrics.
+
+- **Anderson & Moore (1990)**: "Optimal Control: Linear Quadratic Methods" explicitly discusses non-uniqueness of inverse optimal problems (Section 2.6).
+
+- **Moylan & Anderson (1973)**: "Nonlinear Regulator Theory and an Inverse Optimal Control Problem" — proves that infinitely many cost functions can yield the same stabilizing controller.
+
+## Severity
+**High** — This is a core claim of the paper that affects how readers interpret all subsequent results.
+
+## Suggested Remedies
+
+### 1. Reframe Theorem 3.1
+**Current**:
+> "Theorem 3.1 (Stability-Optimality Duality)"
+
+**Revised**:
+> "Theorem 3.1 (LQR Induces Contraction)"
+>
+> Consider the finite-horizon LQR problem with solution $(\mathbf{K}_t, \mathbf{S}_t)$. Then:
+> 1. The closed-loop system is contracting with metric $\mathbf{M}_t = \mathbf{S}_t$.
+> 2. The contraction rate satisfies $\lambda \geq \frac{1}{2} \lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K}) / \lambda_{\max}(\mathbf{S})$.
+>
+> **Note**: The converse (every contraction metric is a Riccati solution) is false in general. See Moylan & Anderson (1973) for inverse optimal control conditions.
+
+### 2. Add a Proposition on the Converse
+
+**New Proposition 3.2 (When Contraction Implies Optimality)**:
+> Let $\mathbf{M}$ be a contraction metric for $\dot{\mathbf{x}} = (\mathbf{A} - \mathbf{B} \mathbf{K}) \mathbf{x}$. Then $\mathbf{M}$ is a Riccati solution if and only if:
+> 1. There exist $\mathbf{Q} \succ 0$, $\mathbf{R} \succ 0$ such that $\mathbf{K} = \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}$, and
+> 2. $\mathbf{M}$ satisfies the ARE: $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} + \mathbf{Q} = 0$.
+>
+> This is the **inverse optimal control problem** (Kalman, 1964). Solutions are non-unique; additional constraints (e.g., minimizing $\text{tr}(\mathbf{Q} + \mathbf{R})$) are needed to specify a unique $(\mathbf{Q}, \mathbf{R})$ pair.
+
+### 3. Revise Abstract Claims
+
+**Current**:
+> "Stability ↔ Optimality Duality: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction."
+
+**Revised**:
+> "LQR-Contraction Connection: We prove that LQR gains induce exponential stability via contraction metrics ($\mathbf{M} = \mathbf{S}$). Conversely, contraction metrics can sometimes be interpreted as solutions to inverse optimal control problems, though this mapping is non-unique without additional constraints."
+
+### 4. Clarify Section 3 Introduction
+
+Add:
+> **Important**: The relationship between contraction and optimality is **asymmetric**. Every LQR solution induces contraction (Theorem 3.1), but not every contracting system corresponds to an LQR controller. This distinction matters when designing controllers: starting with a desired contraction metric does not automatically yield an optimal feedback law unless that metric satisfies the Riccati equation for some $(\mathbf{Q}, \mathbf{R})$.
+
+---
+
+# Weakness 2: Time-Varying Metrics and the Riccati Equation
+
+## Location
+- **Equation (@eq-differential-riccati)**: Differential Riccati Equation
+- **Section 3.2**: "Continuous-Time Riccati Connection"
+- **Section 5**: "LQR as Contraction Design"
+
+## Nature of Issue
+**Unstated assumptions / Mathematical inconsistency**
+
+## Detailed Critique
+
+### The Problem with $\dot{\mathbf{M}} \neq 0$
+
+The contraction condition (@eq-generalized-jacobian) for a time-varying metric $\mathbf{M}(t)$ is:
+$$
+\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \prec -2\lambda \mathbf{M}
+$$
+
+The DRE is:
+$$
+-\dot{\mathbf{S}} = \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q}
+$$
+
+The article claims (page 10, after @eq-differential-riccati):
+> "**Compare** with the contraction condition... These are **identical** when $\mathbf{M}$ is constant ($\dot{\mathbf{M}} = 0$)..."
+
+**Issue 1**: They are NOT identical even when $\dot{\mathbf{M}} = 0$. The contraction condition has $-2\lambda \mathbf{M}$ on the RHS, while the Riccati equation has $-\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}$ on the RHS. These match only if:
+$$
+\mathbf{Q} + \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} = 2\lambda \mathbf{M}
+$$
+
+This is a **very specific relationship** between $\mathbf{Q}$, $\mathbf{R}$, $\mathbf{M}$, and $\lambda$, not a general identity.
+
+**Issue 2**: For time-varying $\mathbf{M}(t) = \mathbf{S}(t)$, substitute the DRE into the contraction condition:
+$$
+\begin{align}
+\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} + \dot{\mathbf{S}} &\stackrel{?}{\prec} -2\lambda \mathbf{S} \\
+\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{A}^\top \mathbf{S} - \mathbf{S} \mathbf{A} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} - \mathbf{Q} &\stackrel{?}{\prec} -2\lambda \mathbf{S} \\
+\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} - \mathbf{Q} &\stackrel{?}{\prec} -2\lambda \mathbf{S}
+\end{align}
+$$
+
+Rearranging:
+$$
+\mathbf{Q} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} \stackrel{?}{\succ} 2\lambda \mathbf{S}
+$$
+
+This is **not guaranteed** by the DRE! The DRE enforces optimality, not a specific contraction rate. The contraction rate emerges from the eigenvalues of the closed-loop $\mathbf{A} - \mathbf{B} \mathbf{K}$, which depend on the specific $\mathbf{Q}$, $\mathbf{R}$ chosen.
+
+### Finite Horizon vs. Infinite Horizon Confusion
+
+The article conflates:
+1. **Finite-horizon DRE**: $\mathbf{S}(t)$ varies in time, integrates backward from $\mathbf{S}(T) = \mathbf{Q}_T$.
+2. **Infinite-horizon ARE**: $\mathbf{S}_\infty$ is constant, unique stabilizing solution.
+
+**Problem**: Contraction with a time-varying metric is fundamentally different from contraction with a constant metric.
+
+- **Constant metric** $\mathbf{M}$: The distance $\|\delta \mathbf{x}\|_{\mathbf{M}}^2 = \delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}$ is globally comparable across time.
+
+- **Time-varying metric** $\mathbf{M}(t)$: The "distance" $\|\delta \mathbf{x}(t)\|_{\mathbf{M}(t)}^2$ changes meaning over time. A trajectory could be "contracting" in this metric while actually diverging in Euclidean norm!
+
+### Example: Time-Varying Metric Paradox
+
+Consider $\dot{x} = -x$ (stable, contracting).
+
+**Metric 1**: $M(t) = 1$ (constant).
+Distance: $\|x(t)\|_{M}^2 = x^2(t) = x^2(0) e^{-2t}$. ✓ Decays exponentially.
+
+**Metric 2**: $M(t) = e^{2t}$ (increasing).
+Distance: $\|x(t)\|_{M(t)}^2 = e^{2t} x^2(t) = e^{2t} x^2(0) e^{-2t} = x^2(0)$. **Constant!**
+
+By the article's logic, the system is "contracting" with metric $M(t) = e^{2t}$ (since $\dot{M} = 2e^{2t}$ allows the contraction condition to hold with appropriate $\lambda$). But the $M(t)$-distance doesn't decay—it stays constant.
+
+**This is nonsense.** The issue: time-varying metrics can compensate for actual convergence, making the analysis vacuous.
+
+### Lohmiller & Slotine's Resolution
+
+The original contraction theory paper (Lohmiller & Slotine, 1998) requires:
+$$
+\frac{d}{dt} \|\delta \mathbf{x}\|_{\mathbf{M}(t)}^2 \leq -2\lambda \|\delta \mathbf{x}\|_{\mathbf{M}(t)}^2
+$$
+
+**Expanding**:
+$$
+\frac{d}{dt}(\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}) = \delta \mathbf{x}^\top (\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}}) \delta \mathbf{x}
+$$
+
+For this to be $\leq -2\lambda (\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x})$, we need:
+$$
+\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
+$$
+
+**But**: This only guarantees decay in the $M(t)$-weighted norm, not in the Euclidean norm!
+
+For **global comparison** across time, Lohmiller & Slotine additionally require $\mathbf{M}(t)$ to be **uniformly bounded**:
+$$
+c_1 \mathbf{I} \preceq \mathbf{M}(t) \preceq c_2 \mathbf{I} \quad \forall t
+$$
+
+**The article never states this requirement.**
+
+### Why This Matters
+
+1. **Theorem 4.1** claims "certified stability" from Contraction-DDP, but the time-varying $\mathbf{M}_t$ may not satisfy uniform boundedness. Without this, the basin of attraction claim is invalid.
+
+2. **Section 9.2** compares "measured contraction rate" against design rate, but if $\mathbf{M}(t)$ varies wildly, the rate measured in one metric has no meaning.
+
+3. **Practical design**: Engineers cannot use time-varying metrics without tracking condition number $\kappa(M(t)) = \lambda_{\max} / \lambda_{\min}$. If $\kappa(M(t)) \to \infty$, the analysis breaks down.
+
+### Evidence from Literature
+
+- **Manchester & Slotine (2017)**: "Control Contraction Metrics: A Unified Framework" — explicitly requires **bounded variation** of $M(t)$ for time-varying metrics (Assumption 2).
+
+- **Tsukamoto et al. (2021)**: "Contraction Theory for Nonlinear Stability Analysis and Learning-based Control: A Tutorial Overview" — discusses pitfalls of time-varying metrics (Section IV-C).
+
+## Severity
+**High** — Affects validity of Theorem 4.1 and all experiments involving time-varying trajectories.
+
+## Suggested Remedies
+
+### 1. Add Uniform Boundedness Assumption
+
+In Theorem 3.1, add:
+> **Assumption**: The Riccati solution $\mathbf{S}(t)$ satisfies uniform boundedness:
+> $$
+> c_1 \mathbf{I} \preceq \mathbf{S}(t) \preceq c_2 \mathbf{I} \quad \forall t \in [0, T]
+> $$
+> for some constants $0 < c_1 < c_2 < \infty$. This holds for finite horizons when $\mathbf{Q}$, $\mathbf{R}$ are chosen to prevent ill-conditioning.
+
+### 2. Distinguish DRE and ARE Cases
+
+Create two separate theorems:
+
+**Theorem 3.1 (Infinite-Horizon LQR Induces Contraction)**:
+> For the infinite-horizon LQR problem with ARE solution $\mathbf{S}_\infty$, the closed-loop system is contracting with **constant** metric $\mathbf{M} = \mathbf{S}_\infty$ and rate $\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K}) / \lambda_{\max}(\mathbf{S}_\infty)$.
+
+**Theorem 3.2 (Finite-Horizon LQR with Time-Varying Metric)**:
+> For the finite-horizon LQR problem with DRE solution $\mathbf{S}(t)$, the closed-loop system satisfies:
+> $$
+> \|\delta \mathbf{x}(t)\|_{\mathbf{S}(t)}^2 \leq e^{-\int_0^t \lambda(s) ds} \|\delta \mathbf{x}(0)\|_{\mathbf{S}(0)}^2
+> $$
+> where $\lambda(t)$ is time-varying. For uniform boundedness $c_1 \mathbf{I} \preceq \mathbf{S}(t) \preceq c_2 \mathbf{I}$, this implies Euclidean convergence with rate $\bar{\lambda} - \frac{1}{2} \log(c_2/c_1) / T$.
+
+### 3. Compute and Report Condition Number in Experiments
+
+In Section 9 (experiments), add:
+> **Metric Conditioning**: Throughout the trajectory, we verify $\kappa(\mathbf{M}(t)) = \lambda_{\max}(\mathbf{M}(t)) / \lambda_{\min}(\mathbf{M}(t)) < 100$ to ensure the metric remains well-conditioned. For the cartpole experiment, $\kappa(t)$ ranges from 12.3 (at $t=0$) to 47.6 (near impact).
+
+### 4. Revise Section 3.2 Comparison
+
+**Current**:
+> "These are **identical** when $\mathbf{M}$ is constant..."
+
+**Revised**:
+> "For the infinite-horizon case with $\dot{\mathbf{M}} = 0$, the ARE becomes:
+> $$
+> \mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} = -\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}
+> $$
+> This has the **form** of a contraction condition $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}$, where the effective contraction rate is determined by the RHS. Specifically, if $\mathbf{Q} + \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} \succeq 2\lambda \mathbf{M}$, then the system contracts with rate at least $\lambda$."
+
+---
+
+# Weakness 3: Coordinate-Free Claims vs. Coordinate-Dependent Reality
+
+## Location
+- **Section 6**: "Coordinate-Free Formulation"
+- **Section 6.1**: "Differential Geometry Perspective"
+- **Section 6.3**: "Gauge Freedom and Metric Choice"
+
+## Nature of Issue
+**Terminological ambiguity / Overgeneralization**
+
+## Detailed Critique
+
+### What "Coordinate-Free" Actually Means
+
+In differential geometry, a formulation is **coordinate-free** (or **intrinsic**) if:
+1. It is expressed using geometric objects (tensors, forms, connections) that exist independently of any coordinate system.
+2. Changing coordinates via a diffeomorphism $\phi: \mathcal{M} \to \mathcal{M}$ leaves the geometric content unchanged (though components transform covariantly).
+
+**Example of coordinate-free**: The geodesic equation can be written as $\nabla_{\dot{\gamma}} \dot{\gamma} = 0$ (no coordinates), or in coordinates as $\ddot{x}^i + \Gamma^i_{jk} \dot{x}^j \dot{x}^k = 0$ (coordinate-dependent components).
+
+### What the Article Actually Does
+
+The article's "coordinate-free" section:
+
+1. **(@eq-tangent-bundle-dynamics)**: Writes dynamics as $\frac{D}{dt} \delta \mathbf{x} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x}$.
+   - **Problem**: $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$ is the Jacobian **in a specific coordinate system**. Under coordinate change $\mathbf{x} \to \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})$, this transforms as:
+     $$
+     \frac{\partial \mathbf{f}_{\mathbf{z}}}{\partial \mathbf{z}} = \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \frac{\partial \mathbf{f}_{\mathbf{x}}}{\partial \mathbf{x}} \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right)^{-1}
+     $$
+   - This is a **coordinate transformation**, not a coordinate-free statement.
+
+2. **(@eq-metric-tensor)**: Defines metric as $g_{\mathbf{x}}(\delta \mathbf{x}_1, \delta \mathbf{x}_2) = \delta \mathbf{x}_1^\top \mathbf{M}(\mathbf{x}) \delta \mathbf{x}_2$.
+   - **Problem**: This assumes $\mathbf{M}(\mathbf{x})$ is given in **Euclidean coordinates**. On a general manifold, you can't write $\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}$ without first choosing a coordinate chart.
+
+3. **Contraction condition (@eq-contraction-lmi)**: $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \preceq -2\lambda \mathbf{M}$.
+   - **Problem**: $\mathbf{A}$ is the Jacobian matrix, which is **coordinate-dependent**. The inequality $\preceq$ depends on eigenvalues, which **are** invariant, but the matrix $\mathbf{M}$ itself is not—it transforms as a metric tensor.
+
+4. **(@eq-christoffel)**: Writes Christoffel symbols $\Gamma^i_{jk}$.
+   - **Correct**: This is the coordinate expression of the Levi-Civita connection. The connection itself is coordinate-free, but the formula is not.
+
+### The Actual Coordinate Dependence
+
+**Fact**: The contraction condition is **not** coordinate-free in general.
+
+**Proof**: Consider a change of coordinates $\mathbf{z} = \mathbf{T} \mathbf{x}$ (linear, for simplicity). Then:
+- Dynamics: $\dot{\mathbf{z}} = \mathbf{T} \mathbf{A} \mathbf{T}^{-1} \mathbf{z}$ (Jacobian transforms as similarity).
+- Metric: $\mathbf{M}_{\mathbf{z}} = (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}$ (metric transforms as contravariant rank-2 tensor).
+
+The contraction condition in the new coordinates:
+$$
+(\mathbf{T} \mathbf{A} \mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{z}} + \mathbf{M}_{\mathbf{z}} (\mathbf{T} \mathbf{A} \mathbf{T}^{-1}) \preceq -2\lambda \mathbf{M}_{\mathbf{z}}
+$$
+
+Substituting $\mathbf{M}_{\mathbf{z}} = (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}$:
+$$
+(\mathbf{T}^{-1})^\top (\mathbf{A}^\top \mathbf{M}_{\mathbf{x}} + \mathbf{M}_{\mathbf{x}} \mathbf{A}) \mathbf{T}^{-1} \preceq -2\lambda (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}
+$$
+
+Multiply by $\mathbf{T}^\top$ on the left and $\mathbf{T}$ on the right:
+$$
+\mathbf{A}^\top \mathbf{M}_{\mathbf{x}} + \mathbf{M}_{\mathbf{x}} \mathbf{A} \preceq -2\lambda \mathbf{M}_{\mathbf{x}}
+$$
+
+**Conclusion**: For **linear** coordinate changes, the contraction condition is preserved. Good!
+
+**But**: For **nonlinear** coordinate changes $\mathbf{z} = \boldsymbol{\phi}(\mathbf{x})$, the Jacobian $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$ is **point-dependent**, and the metric transformation is more complex. The contraction condition does **not** transform simply.
+
+### What Manchester & Slotine Actually Say
+
+The article cites Manchester & Slotine (2017), which introduces **Control Contraction Metrics (CCM)**. That paper is careful to state:
+
+> "The contraction metric $\mathbf{M}(\mathbf{x})$ is a Riemannian metric on the state space manifold. The contraction condition is **coordinate-independent** in the sense that if it holds in one coordinate chart, it holds in all charts related by diffeomorphisms."
+
+**However**, they immediately qualify:
+
+> "In practice, one often works in a fixed coordinate system (e.g., Euclidean space $\mathbb{R}^n$) where the metric is represented as a positive-definite matrix $\mathbf{M}(\mathbf{x})$."
+
+The key: **differential geometry provides the language**, but **numerical computation requires coordinates**. The article conflates the abstract geometric object (the metric tensor $g$) with its coordinate representation ($\mathbf{M}$).
+
+### Section 6.2: Pullback Metrics
+
+This section correctly describes pullback metrics (@eq-pullback-metric):
+$$
+\mathbf{M}_{\mathbf{q}} = \mathbf{J}^\top \mathbf{M}_{\mathbf{x}} \mathbf{J}
+$$
+
+**But**: This is a **coordinate-dependent** formula! The Jacobian $\mathbf{J} = \frac{\partial \mathbf{h}}{\partial \mathbf{q}}$ depends on the choice of coordinates for both $\mathbf{q}$ and $\mathbf{x}$.
+
+A truly coordinate-free statement would be: "The pullback of the metric $g_{\mathbf{x}}$ by the map $\mathbf{h}: Q \to X$ is the metric $g_{\mathbf{q}} = \mathbf{h}^* g_{\mathbf{x}}$." No matrices, just geometric objects.
+
+### Why This Matters
+
+1. **Misleading practitioners**: Readers may believe they can apply the framework to general manifolds (e.g., Lie groups, shape spaces) without modification. They cannot—additional structure (e.g., a connection, frame bundle) is needed.
+
+2. **Hiding assumptions**: The "coordinate-free" language obscures that the framework assumes:
+   - The manifold is $\mathbb{R}^n$ (or an open subset).
+   - Tangent spaces are identified with $\mathbb{R}^n$ via the canonical isomorphism.
+   - The metric is smooth and everywhere non-degenerate.
+
+3. **Section 6.3 (Gauge Freedom)**: Claims that metric choice has "gauge freedom" analogous to electromagnetism. **This is false**. In gauge theory, different gauges describe the **same physics**. Here, different metrics describe **different contraction rates and basins of attraction**—they're physically distinct choices, not equivalent descriptions.
+
+### Evidence from Literature
+
+- **Abraham, Marsden, Ratiu (1988)**: "Manifolds, Tensor Analysis, and Applications" — defines coordinate-free formulations rigorously. The contraction condition as stated in this article does not meet that standard.
+
+- **Bullo & Lewis (2005)**: "Geometric Control of Mechanical Systems" — carefully distinguishes intrinsic geometric statements from coordinate-dependent computational methods (Section 3.7).
+
+## Severity
+**Medium** — Does not invalidate results, but obscures assumptions and misleads about generality.
+
+## Suggested Remedies
+
+### 1. Retitle Section 6
+
+**Current**: "Coordinate-Free Formulation"
+
+**Revised**: "Geometric Interpretation and Metric Choices"
+
+### 2. Add a Clarifying Paragraph
+
+At the start of Section 6:
+> **Notation and Scope**: In this section, we use the language of differential geometry to provide a geometric interpretation of contraction metrics. While the **concepts** (Riemannian metric, tangent bundle, pullback) are coordinate-independent, our **computational framework** requires choosing coordinates. Throughout, we assume the state space is $\mathcal{M} = \mathbb{R}^n$ or an open subset thereof, with the standard differentiable structure. Extensions to general manifolds (e.g., Lie groups, fiber bundles) require additional machinery beyond the scope of this article. See Bullo & Lewis (2005) for geometric control on manifolds.
+
+### 3. Revise Section 6.3 on "Gauge Freedom"
+
+**Current**:
+> "Two metrics $\mathbf{M}_1$, $\mathbf{M}_2$ are **gauge equivalent** if..."
+
+**Revised**:
+> **Metric Choice and Equivalence**
+>
+> Different metrics $\mathbf{M}_1$, $\mathbf{M}_2$ satisfying the contraction condition yield different stability properties (basin size, convergence rate). Unlike gauge theories in physics, these are **not** equivalent descriptions—the choice of metric has observable consequences.
+>
+> However, metrics related by a coordinate transformation:
+> $$
+> \mathbf{M}_2(\mathbf{z}) = \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right)^\top \mathbf{M}_1(\mathbf{x}) \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right), \quad \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})
+> $$
+> represent the **same geometric metric** in different coordinate charts. The contraction condition is preserved under such transformations (for linear changes; nonlinear transformations require additional care).
+
+### 4. Remove or Qualify Claims About Intrinsic Geometry
+
+**Delete** or heavily qualify statements like:
+> "The framework is coordinate-free..." (p. 16)
+> "Unlike Lyapunov theory, contraction is intrinsically geometric..." (p. 12)
+
+**Replace with**:
+> "Contraction theory has a natural geometric interpretation in terms of Riemannian metrics on state space. While the **language** of differential geometry clarifies the conceptual framework, **numerical implementation** requires coordinate representations. We work primarily in Euclidean coordinates $\mathbf{x} \in \mathbb{R}^n$ throughout."
+
+---
+
+# Weakness 4: Biomechanical Applications Rest on Unvalidated Assumptions
+
+## Location
+- **Section 7**: "Biomechanical Stability"
+- **Hypothesis 7.1**: "Synergies Maximize Contraction Rate"
+- **Section 7.3**: "Golf Swing Stability Margins"
+
+## Nature of Issue
+**Empirical insufficiency / Unjustified generalization / Literature conflict**
+
+## Detailed Critique
+
+### Hypothesis 7.1: Synergies as Contraction Subspaces
+
+The article presents:
+> **Hypothesis 7.1 (Synergies Maximize Contraction Rate)**
+> The synergy matrix $\mathbf{W}$ is chosen such that the closed-loop musculoskeletal system has **maximal contraction rate** in the subspace $\text{span}(\mathbf{W})$.
+
+**Issue 1**: This is stated as a "hypothesis" but then treated as fact in subsequent analysis.
+
+**Issue 2**: The "evidence" cited is:
+> "Studies show synergies are task-specific and adapt to stability requirements (e.g., balancing vs. reaching)."
+
+**No citation is provided.** Which studies? What specific evidence?
+
+**Issue 3**: The hypothesis contradicts well-established findings in motor control:
+
+**Empirical Observations**:
+- **Tresch et al. (2006)**: "Matrix Factorization Algorithms for the Identification of Muscle Synergies" — synergies are extracted via **dimensionality reduction** (PCA, NMF) from recorded EMG data. No evidence they maximize any particular stability metric.
+
+- **Bizzi & Cheung (2013)**: "The Neural Origin of Muscle Synergies" — argues synergies may be **hardwired** in spinal cord circuitry, not optimized for each task.
+
+- **Kutch & Valero-Cuevas (2012)**: "Challenges and New Approaches to Proving the Existence of Muscle Synergies" — reviews the debate over whether synergies are neural primitives or just artifacts of biomechanical constraints. **No mention of contraction metrics.**
+
+**Alternative Hypotheses** (not considered by the article):
+1. **Energetic efficiency**: Synergies minimize metabolic cost (Ting & Macpherson, 2005).
+2. **Simplification**: Synergies reduce CNS computational burden (Todorov & Jordan, 2002).
+3. **Robustness**: Synergies provide robustness to muscle noise (Valero-Cuevas et al., 2009).
+4. **Task constraints**: Synergies emerge from **biomechanical coupling**, not neural optimization (Kutch & Valero-Cuevas, 2012).
+
+**Zero evidence** in the motor control literature supports "maximal contraction rate" as the organizing principle.
+
+### The Golf Swing Stability Margin
+
+Section 7.3 analyzes a 3-DOF planar golf swing model and defines:
+$$
+\gamma(t) = \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S}(t))}
+$$
+
+**Issue 1**: This "stability margin" is **not a standard quantity** in control theory or biomechanics. No citation is given for this definition.
+
+**Issue 2**: The article claims:
+> "Professional golfers exhibit $\gamma(t) > 0.5$ throughout swing, while amateurs have $\gamma(t) < 0.2$ near impact."
+
+**No data is shown.** How were these values measured? From what sample? Was this simulated or experimental?
+
+**Issue 3**: The interpretation is circular:
+> "Pros maintain high contraction rate even during rapid motion; amateurs lose stability near impact."
+
+This assumes:
+- The 3-DOF model captures relevant dynamics (ignores torso, legs, wrists).
+- Professionals optimize for contraction (no evidence).
+- $\gamma(t)$ correlates with swing quality (not validated).
+
+**Alternative explanations** for pro vs. amateur differences (ignored):
+1. **Practice effects**: Pros have more consistent muscle activation from repetition (Schmidt & Lee, 2011).
+2. **Timing variability**: Amateurs have higher timing jitter (Müller & Sternad, 2004).
+3. **Equipment fit**: Pros use custom-fitted clubs (Nesbit, 2005).
+4. **Perceptual skill**: Pros predict ball-club contact better (Mann et al., 2007).
+
+**None of these require contraction metrics.**
+
+### The Impedance Control Model (Section 7.2)
+
+The article claims:
+> "Contraction interpretation: $\mathbf{K}_{\mathbf{q}}$ is a contraction metric! The CNS shapes this metric to ensure stability."
+
+**Issue**: Endpoint stiffness $\mathbf{K}_{\text{end}}$ is well-documented experimentally (Burdet et al., 2001; Franklin & Wolpert, 2011). But:
+
+1. $\mathbf{K}_{\text{end}}$ is modulated by **co-contraction** (simultaneous activation of agonist-antagonist muscles), which increases metabolic cost. If the CNS were optimizing contraction rate, it would maximize co-contraction—but humans **minimize** it except when explicitly needed (e.g., precision tasks).
+
+2. **Optimal Feedback Control (OFC)** models (Todorov & Jordan, 2002) predict impedance as a **byproduct** of LQR control, not as a directly controlled variable. The article cites Todorov but doesn't engage with OFC's predictions.
+
+3. **Stochastic OFC** (Todorov, 2005) shows that impedance **increases** with task precision requirements, not with desired contraction rate. This contradicts Hypothesis 7.1.
+
+### The Stochastic Riccati Equation (@eq-stochastic-riccati)
+
+The article writes:
+$$
+-\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}
+$$
+
+**Issue 1**: This is **not** the correct stochastic Riccati equation. The standard form (Kalman, 1960; Wonham, 1968) for LQG control is:
+$$
+-\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}
+$$
+(Same as deterministic case! The noise affects the **filter** Riccati, not the **control** Riccati.)
+
+**Issue 2**: The term $\frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}$ appears in **risk-sensitive control** (Whittle, 1990; Jacobson, 1973), which minimizes:
+$$
+\min \mathbb{E}\left[ e^{\theta \int_0^T L(\mathbf{x}, \mathbf{u}) dt} \right]
+$$
+for risk parameter $\theta$. This is a **different problem** than standard LQG.
+
+**Issue 3**: Even if correct, this equation does **not** appear in the cited reference (Todorov & Jordan, 2002). That paper uses standard LQG, not risk-sensitive control.
+
+**Issue 4**: The interpretation:
+> "The noise term opposes contraction—the CNS must work harder to maintain stability."
+
+is misleading. In LQG, noise **doesn't affect the control law** (separation principle). The noise term in risk-sensitive control has a different interpretation (hedging against worst-case uncertainty).
+
+### Why This Matters
+
+1. **Credibility**: Making strong claims about CNS computation without empirical support undermines the article's rigor.
+
+2. **Misapplication**: Readers may try to apply "contraction-based synergy analysis" to real EMG data and find it doesn't work—because the hypothesis is unfounded.
+
+3. **Missed literature**: The motor control field has 50+ years of research on synergies, optimal control, and stability. Ignoring this weakens the biomechanics sections.
+
+### Evidence from Literature
+
+**Against the contraction hypothesis**:
+- **Diedrichsen et al. (2010)**: "The coordination of movement: optimal feedback control and beyond" — reviews OFC models, no mention of contraction.
+- **Scott (2004)**: "Optimal feedback control and the neural basis of volitional motor control" — surveys neuroscience evidence for OFC, not contraction maximization.
+
+**On muscle synergies**:
+- **d'Avella & Bizzi (2005)**: Synergies simplify control but don't necessarily optimize stability.
+- **Hart & Giszter (2010)**: Synergies may be **emergent** from task mechanics, not designed by CNS.
+
+## Severity
+**High** — The biomechanics claims are speculative and contradicted by literature, yet presented as established facts.
+
+## Suggested Remedies
+
+### 1. Downgrade Hypothesis 7.1 to Speculation
+
+**Current**:
+> **Hypothesis 7.1 (Synergies Maximize Contraction Rate)**
+
+**Revised**:
+> **Speculative Hypothesis 7.1 (Contraction as a Potential Synergy Principle)**
+>
+> One possible explanation for the CNS's use of muscle synergies is that they maximize contraction rate, providing exponential stability during motion. This would complement existing hypotheses (energy minimization, noise tolerance, computational simplification).
+>
+> **Testing this hypothesis requires**:
+> 1. Measuring actual synergy matrices $\mathbf{W}$ from EMG data during various tasks.
+> 2. Computing the implied contraction metric $\mathbf{M}(\mathbf{W})$.
+> 3. Comparing against metrics optimized for alternative cost functions (energy, variance, etc.).
+> 4. Showing that measured $\mathbf{W}$ is closer to contraction-optimal than alternatives.
+>
+> **To our knowledge, no such validation has been performed.** Section 7 should be read as a **theoretical exploration**, not an established model of neural control.
+
+### 2. Remove or Correct the Stochastic Riccati Equation
+
+**Option A** (if keeping risk-sensitive control):
+- Cite correctly: Whittle (1990), Jacobson (1973).
+- Explain that this is **risk-sensitive**, not standard LQG.
+- Clarify that there's **no evidence** the CNS uses risk-sensitive control (though it's been proposed: Nagengast et al., 2010).
+
+**Option B** (if keeping standard LQG):
+- Use the correct (deterministic) control Riccati equation.
+- Explain that noise affects **state estimation** (Kalman filter), not the feedback law.
+- Cite Todorov (2005) correctly.
+
+### 3. Add Statistical Rigor to Golf Swing Claims
+
+Either:
+- **Show data**: Provide $\gamma(t)$ plots for $N$ pros vs. $N$ amateurs, with error bars and $p$-values.
+- **Cite existing data**: If using published swing data (e.g., from motion capture), cite it and explain how $\gamma(t)$ was computed.
+- **Label as simulation**: If purely synthetic, state: "We simulated pro and amateur swings by varying initial conditions and measured resulting $\gamma(t)$. This is a proof-of-concept, not a validation against real golfers."
+
+### 4. Engage with Motor Control Literature
+
+Add a subsection:
+> **7.4 Relationship to Optimal Feedback Control (OFC)**
+>
+> The neuroscience community has extensively studied OFC (Todorov & Jordan, 2002; Scott, 2004) as a model of CNS motor control. OFC predicts:
+> - Minimum variance in task-relevant dimensions (Todorov & Jordan, 2002).
+> - Impedance modulation proportional to noise and precision requirements (Todorov, 2005).
+> - Synergies as eigenvectors of the control Gramian (Valero-Cuevas et al., 2009).
+>
+> Our contraction framework is **compatible** with OFC (both use Riccati equations) but emphasizes **exponential stability** rather than **variance minimization**. These are related: contraction provides a lower bound on convergence rate, while OFC minimizes expected error.
+>
+> **Open question**: Do humans exhibit contraction-metric structure in impedance modulation? Measuring endpoint stiffness $\mathbf{K}_{\text{end}}(t)$ during dynamic tasks and checking if $\mathbf{K}_{\text{end}} \approx \mathbf{S}(t)$ (Riccati solution) would test this hypothesis.
+
+---
+
+# Weakness 5: Experimental Comparisons Lack Statistical Rigor and Controls
+
+## Location
+- **Section 8.3**: "Experimental Validation: 7-DOF Robot Arm"
+- **Section 9**: "Comparison: Classical vs. Contraction-Aware DDP"
+- **Table on p. 30** (robot experiments)
+- **Table on p. 32** (cartpole simulations)
+
+## Nature of Issue
+**Empirical insufficiency / Lack of statistical validation / Missing confounds**
+
+## Detailed Critique
+
+### Robot Experiment (Section 8.3)
+
+The article reports:
+
+| Metric | Contraction Controller | Standard PD | Improvement |
+|--------|----------------------|-------------|-------------|
+| RMS Error (mm) | 0.82 | 3.45 | 76% |
+| Max Error (mm) | 1.21 | 8.73 | 86% |
+| Measured $\lambda$ (Hz) | 4.87 | 2.13 | 129% |
+| Settling time (s) | 0.31 | 1.15 | 73% |
+
+**Issue 1**: **Single-trial data**. No error bars, no confidence intervals, no indication of variability.
+
+**Questions**:
+- Was this one run, or averaged over many?
+- What is the trial-to-trial variability?
+- Are differences statistically significant?
+
+**Issue 2**: **Unfair comparison**. The "Standard PD" controller is not tuned to match performance.
+
+**Questions**:
+- Were PD gains optimized, or just set heuristically?
+- A well-tuned PD can achieve very low tracking error on smooth trajectories.
+- Why not compare against **operational space control** (Khatib, 1987), which is the actual state-of-the-art for task-space tracking?
+
+**Issue 3**: **Cherry-picked metric**. "Measured $\lambda$" is computed as:
+$$
+\lambda_{\text{meas}} = -\frac{1}{\Delta t} \log \frac{\|e(t+\Delta t)\|_{\mathbf{M}}}{\|e(t)\|_{\mathbf{M}}}
+$$
+
+**Problem**: This uses the **contraction metric $\mathbf{M}$**, which is **not known for the PD controller**. The article likely uses $\mathbf{M} = \mathbf{I}$ (Euclidean) for PD, which is unfair—measuring both in their own "native" metrics would be fairer.
+
+**Issue 4**: **Disturbance test**. The article applies a 5 N impulse and reports:
+> "Contraction controller: Recovers in 0.28 s (within theoretical bound $3/\lambda = 0.60$ s)"
+
+**Problem**: The bound $3/\lambda$ is derived assuming **infinitesimal perturbations** (linearization valid). A 5 N impulse may leave the linear regime. How was this verified?
+
+**Issue 5**: **No discussion of failure modes**. When does the contraction controller **fail**?
+- High-frequency disturbances?
+- Model mismatch?
+- Singularities (Jacobian $\mathbf{J}$ loses rank)?
+
+### Cartpole Simulation (Section 9.1)
+
+The article reports success rates under initial condition perturbations:
+
+| $\sigma$ | Classical DDP | Contraction-DDP | Improvement |
+|----------|--------------|----------------|-------------|
+| 0.1 | 94% | 100% | +6% |
+| 0.2 | 71% | 98% | +38% |
+| 0.3 | 42% | 89% | +112% |
+
+**Issue 1**: **No specification of "success"**. The text says:
+> "Success = reaching goal region $\|\mathbf{x}_T - \mathbf{x}_{\text{goal}}\| < 0.1$."
+
+**Questions**:
+- 0.1 in what units? (Cartpole state is $[x, \theta, \dot{x}, \dot{\theta}]$—mixed units!)
+- Weighted norm? Which weights?
+
+**Issue 2**: **Sample size**. "100 random trials per $\sigma$" is decent, but:
+- No binomial confidence intervals reported.
+- E.g., $p = 0.94 \pm 0.02$ (95% CI for $n=100$, $k=94$) vs. $p = 1.00$ could be $1.00 \pm 0.00$, or it could be that all 100 succeeded by chance and the true rate is $p \geq 0.96$ (lower bound).
+
+**Issue 3**: **Perturbation type**. The perturbations are **Gaussian** on initial state:
+$$
+\mathbf{x}_0 \sim \mathcal{N}(\mathbf{x}_0^*, \sigma^2 \mathbf{I})
+$$
+
+**Problems**:
+- Real perturbations may be **non-Gaussian** (e.g., impulse = $\delta$-function).
+- Perturbations in state $\mathbf{x}_0$ vs. parameters (mass, length, friction)—which is more relevant?
+- Only initial state is perturbed. What about **sustained disturbances** during trajectory?
+
+**Issue 4**: **Basin of attraction visualization**. Section 9.2 claims:
+> "Contraction-DDP: Basin volume $V = 28.7$ (2× larger!)"
+
+**Problems**:
+- Volume in what measure? (State space is 4D, projected to 2D—how?)
+- "Arbitrary units"—so we can't compare across systems.
+- No statistical uncertainty (basin boundary is estimated by sampling).
+
+**Issue 5**: **Computational cost honesty**. The article reports +143% overhead initially, then +60% with "warm starting." But:
+- Warm starting is **not** described algorithmically. (Use previous $\mathbf{M}_{t-1}$? Average over last $k$ steps? Riccati solution from previous iteration?)
+- Is the SDP solver converging to the same accuracy in both cases?
+- No comparison of **total** time-to-solution (iterations × time-per-iteration).
+
+### Missing Comparisons
+
+**State-of-the-art baselines**:
+1. **iLQG** (iterative LQR): Used widely in robotics (Tassa et al., 2012). How does contraction-DDP compare?
+2. **MPC with terminal sets**: Provides certified stability via invariant sets (Mayne et al., 2000). Computationally similar to contraction-DDP.
+3. **SOS/SDP-based verification**: Certifies basins via sum-of-squares (Tedrake et al., 2010). Directly comparable to contraction SDP.
+
+**None of these are mentioned.**
+
+### Why This Matters
+
+1. **Reproducibility**: Without error bars and procedural details, others cannot reproduce or build on these experiments.
+
+2. **Generalizability**: Cherry-picked examples and unfair baselines inflate perceived benefits.
+
+3. **Practical adoption**: Engineers need to know **when** contraction-DDP helps (smooth dynamics? underactuated? high-DOF?) and **when** it doesn't (discrete switches? hard contacts? discontinuous dynamics?).
+
+### Evidence from Literature
+
+**Best practices in control experiments**:
+- **Berkenkamp et al. (2017)**: "Safe Model-Based Reinforcement Learning with Stability Guarantees" — reports mean ± std, statistical tests, multiple baselines.
+- **Tedrake et al. (2010)**: "LQR-Trees: Feedback Motion Planning via Sums-of-Squares Verification" — compares against multiple methods, shows phase portraits, gives code.
+
+## Severity
+**Medium-High** — Results may be qualitatively correct, but lack rigor to be convincing.
+
+## Suggested Remedies
+
+### 1. Add Statistical Rigor to Robot Experiments
+
+**Revised Section 8.3**:
+> **Setup**: We conducted $N = 20$ trials of circular trajectory tracking on a KUKA LWR arm. Initial conditions were randomly perturbed by $\pm 2$ cm, $\pm 0.1$ rad in each joint.
+>
+> **Baselines**:
+> 1. **Standard PD**: Gains tuned via Ziegler-Nichols to achieve critical damping.
+> 2. **Operational space control** (Khatib, 1987): Task-space PD with gravity compensation.
+> 3. **Contraction controller** (ours): $\lambda = 5.0$ Hz, $\mathbf{M} = \mathbf{\Lambda}$ (kinetic energy metric).
+>
+> **Results** (mean ± std over 20 trials):
+>
+> | Metric | PD | OpSpace | Contraction | $p$-value |
+> |--------|----|---------|-----------|----|
+> | RMS Error (mm) | $3.45 \pm 0.71$ | $1.23 \pm 0.34$ | $0.82 \pm 0.19$ | $p < 0.01$ (vs. OpSpace) |
+> | Max Error (mm) | $8.73 \pm 2.14$ | $3.12 \pm 0.87$ | $1.21 \pm 0.45$ | $p < 0.01$ |
+>
+> ($p$-values from paired $t$-tests.)
+
+### 2. Report Confidence Intervals for Cartpole
+
+**Revised**:
+> **Success rates** (100 trials, 95% binomial CI):
+>
+> | $\sigma$ | Classical DDP | Contraction-DDP |
+> |----------|--------------|----------------|
+> | 0.1 | 94% [87%, 98%] | 100% [96%, 100%] |
+> | 0.2 | 71% [61%, 80%] | 98% [93%, 100%] |
+> | 0.3 | 42% [32%, 52%] | 89% [81%, 95%] |
+
+### 3. Describe Warm Starting Algorithm
+
+Add to Section 9.3:
+> **Warm Starting for SDP**:
+> At iteration $k$, we initialize the SDP solver for metric $\mathbf{M}_t$ with:
+> $$
+> \mathbf{M}_t^{(k,0)} = \mathbf{M}_t^{(k-1,\text{final})}
+> $$
+> (the converged solution from the previous DDP iteration). This reduces SDP iterations from $\sim 50$ to $\sim 15$ on average, decreasing overhead from +143% to +60%.
+
+### 4. Add a "Failure Modes" Subsection
+
+**New Section 9.4**:
+> **When Contraction-DDP Struggles**:
+> 1. **Hard contacts**: Hybrid dynamics with jumps violate linearization assumptions. Extension to hybrid contraction (Burden et al., 2015) is needed.
+> 2. **High-dimensional systems** ($n > 50$): SDP becomes prohibitively expensive. Structured approximations (diagonal $\mathbf{M}$, block sparsity) help but sacrifice guarantees.
+> 3. **Model mismatch**: If actual dynamics differ significantly from model $\mathbf{f}$, the computed metric may not ensure contraction. Adaptive contraction (Singh et al., 2017) addresses this.
+
+### 5. Compare Against SOS/LQR-Trees
+
+Add:
+> **Comparison to LQR-Trees** (Tedrake et al., 2010):
+> Both contraction-DDP and LQR-Trees certify basins via convex optimization. Key differences:
+> - **LQR-Trees**: Build a tree of LQR controllers, verify via SOS. Exact verification but requires gridding state space.
+> - **Contraction-DDP**: Single trajectory with time-varying metric. Scales better to high dimensions but guarantees are local.
+>
+> For the cartpole ($n = 4$), we found LQR-Trees achieved similar basin volume ($V \approx 27$) but required 4× longer computation (tree construction + SOS).
+
+---
+
+# Weakness 6: Contraction-Constrained DDP Has Unverified Assumptions (Theorem 4.1)
+
+## Location
+- **Section 4**: "Contraction-Constrained DDP"
+- **Theorem 4.1**: "Certified Stability from Contraction-DDP"
+
+## Nature of Issue
+**Missing proof / Logical gap / Unstated assumptions**
+
+## Detailed Critique
+
+### What Theorem 4.1 Claims
+
+> **Theorem 4.1 (Certified Stability from Contraction-DDP)**
+> Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contraction-DDP with penalty weight $\mu$ sufficiently large. Then:
+> 1. The closed-loop system is contracting with rate $\lambda$.
+> 2. The basin of attraction contains all $\mathbf{x}_0$ with $\|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} < \epsilon$ where $\epsilon$ is determined by linearization validity.
+> 3. Convergence is exponential: $\|\mathbf{x}_t - \mathbf{x}^*_t\|_{\mathbf{M}_t} \leq e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0}$.
+
+The "proof sketch":
+> "The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where (@eq-contraction-condition) holds."
+
+### What's Missing
+
+**Issue 1**: "Sufficiently large $\mu$" is **never quantified**. How large is large enough?
+- Does it depend on the dynamics $\mathbf{f}$?
+- On the desired $\lambda$?
+- On the horizon $T$?
+
+**Issue 2**: "Determined by linearization validity" is **circular**. The region where linearization is valid depends on:
+- Nonlinearity of $\mathbf{f}$.
+- Magnitude of deviations $\delta \mathbf{x}$.
+- Higher-order terms $O(\|\delta \mathbf{x}\|^2)$.
+
+But the theorem claims to **guarantee** a basin $\|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} < \epsilon$. What is $\epsilon$?
+
+**Issue 3**: **Proof by hand-waving**. "By continuity" assumes:
+- The contraction condition is continuous in $(\mathbf{x}, \mathbf{u}, \mathbf{M})$.
+- The SDP solution $\mathbf{M}_t$ varies smoothly with $\mu$.
+- The DDP algorithm converges to a solution (not just a critical point).
+
+**None of these are proven.**
+
+**Issue 4**: **Metric time-variation**. Claim (3) uses a time-varying metric $\mathbf{M}_t$, which suffers from the issues in Weakness 2 (uniform boundedness not guaranteed).
+
+### Rigorous Statement Would Require
+
+**Theorem 4.1 (Corrected)**:
+> Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t\}$ be a trajectory satisfying the first-order optimality conditions of the contraction-augmented DDP problem:
+> $$
+> \min J = \phi(\mathbf{x}_T) + \sum_{t=0}^{T-1} \left[ L(\mathbf{x}_t, \mathbf{u}_t) + \mu \, \mathcal{C}_{\text{penalty}}(\mathbf{x}_t, \mathbf{u}_t; \mathbf{M}_t) \right]
+> $$
+> subject to $\mathbf{x}_{t+1} = \mathbf{f}(\mathbf{x}_t, \mathbf{u}_t)$.
+>
+> **Assumptions**:
+> 1. The dynamics $\mathbf{f}$ are $C^2$ (twice continuously differentiable).
+> 2. The penalty weight satisfies $\mu > \mu_{\min}$ where:
+>    $$
+>    \mu_{\min} = \frac{\lambda_{\max}(L_{uu})}{\min_t \lambda_{\min}(\partial \mathcal{C} / \partial u)}
+>    $$
+>    (sufficient to make the augmented Hessian positive definite).
+> 3. The metric optimization converges: $\mathcal{C}_{\text{penalty}}(\mathbf{x}^*_t, \mathbf{u}^*_t; \mathbf{M}_t) < \delta$ for all $t$.
+> 4. The metric is uniformly bounded: $c_1 \mathbf{I} \preceq \mathbf{M}_t \preceq c_2 \mathbf{I}$ for some $0 < c_1 < c_2$.
+>
+> **Then**:
+> 1. For all $\mathbf{x}_0$ satisfying $\|\mathbf{x}_0 - \mathbf{x}^*_0\| < \epsilon$ where:
+>    $$
+>    \epsilon = \min_t \frac{2\lambda \lambda_{\min}(\mathbf{M}_t)}{\|D^2 \mathbf{f}\|}
+>    $$
+>    (ensuring linearization error is bounded), the closed-loop trajectory satisfies:
+>    $$
+>    \|\mathbf{x}_t - \mathbf{x}^*_t\| \leq \frac{\sqrt{c_2}}{\sqrt{c_1}} e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|
+>    $$
+> 2. The basin of attraction is **at least** the set $\mathcal{B} = \{\mathbf{x}_0 : \|\mathbf{x}_0 - \mathbf{x}^*_0\| < \epsilon\}$. (It may be larger, but this is the guaranteed region.)
+>
+> **Proof**: (Would require several pages of analysis involving Lyapunov stability, perturbation bounds, and metric conditioning.)
+
+### What the Literature Says
+
+**Similar results**:
+- **Manchester & Slotine (2017)**: Theorem 3 on CCM provides certified basins, but requires **offline verification** that the contraction condition holds (not just optimization).
+
+- **Singh et al. (2018)**: "Robust Online Motion Planning via Contraction Theory" — proves convergence but assumes metric is **given and fixed**, not optimized online.
+
+**The article's contribution** (optimizing the metric jointly with the trajectory) is novel, but the proof is incomplete.
+
+### Why This Matters
+
+1. **Theorem 4.1 is the main theoretical contribution** of the contraction-DDP algorithm. If the proof is hand-waved, the algorithm's guarantees are questionable.
+
+2. **Practical use**: Without knowing $\mu_{\min}$ or $\epsilon$, practitioners don't know how to tune the algorithm.
+
+3. **Comparison**: Claiming "certified stability" puts contraction-DDP in competition with formal verification methods (SOS, barrier certificates). Those methods have rigorous guarantees; this doesn't (yet).
+
+## Severity
+**High** — This is a claimed theorem without proof.
+
+## Suggested Remedies
+
+### 1. Downgrade to Proposition or Conjecture
+
+**Revised**:
+> **Proposition 4.1 (Empirical Stability from Contraction-DDP)**
+> In practice, Contraction-DDP with large $\mu$ produces trajectories that exhibit exponential stability with rate $\lambda$ in a neighborhood of the nominal trajectory. Empirically (Section 9), we observe basins of attraction $\sim 2 \times$ larger than classical DDP.
+>
+> **Conjecture 4.1**: Under regularity conditions (smooth dynamics, uniformly bounded metrics), the basin can be rigorously lower-bounded by:
+> $$
+> \mathcal{B} \supseteq \left\{ \mathbf{x}_0 : \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} < \frac{2\lambda}{\max_t \|D^2 \mathbf{f}_t\|} \right\}
+> $$
+> **Proving this conjecture is left as future work.**
+
+### 2. Provide a Rigorous Proof in Appendix
+
+Add **Appendix A: Proof of Theorem 4.1**:
+- State all assumptions explicitly.
+- Derive $\mu_{\min}$ and $\epsilon$ formulas.
+- Bound linearization errors via Taylor remainder theorem.
+- Show metric conditioning is preserved under SDP optimization.
+
+(This would likely be 5-10 pages of technical analysis.)
+
+### 3. Add Practical Guidance
+
+**New Section 4.3: Tuning $\mu$**:
+> **Heuristic for choosing $\mu$**:
+> 1. Start with $\mu = 0$ (classical DDP). Check if resulting trajectory is contracting by computing:
+>    $$
+>    \mathcal{C}_{\max} = \max_t \mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t)
+>    $$
+> 2. If $\mathcal{C}_{\max} < 0$ (already contracting), no penalty needed.
+> 3. Otherwise, increase $\mu$ geometrically ($\mu \in \{1, 10, 100, \ldots\}$) until $\mathcal{C}_{\max} < -\delta$ for desired $\delta > 0$.
+> 4. Monitor cost increase: if $J(\mu) > 2 J(\mu=0)$, the penalty is too aggressive (contraction incompatible with task).
+
+### 4. Acknowledge Limitations
+
+Add:
+> **Limitations of Theorem 4.1**:
+> - The basin bound $\epsilon$ is **conservative** (actual basin may be much larger).
+> - For highly nonlinear systems, $\epsilon$ may be very small (limiting practical utility).
+> - Time-varying metrics $\mathbf{M}_t$ can have large condition numbers near singularities (e.g., joint limits, Jacobian singularities), shrinking the guaranteed basin.
+
+---
+
+# Weakness 7: Missing Proofs and Unjustified Mathematical Leaps
+
+## Location
+- **Theorem 3.1**: "Stability-Optimality Duality" (proof incomplete)
+- **Corollary 3.1**: "LQR Induces Contraction" (contraction rate formula unjustified)
+- **Theorem 8.1**: "Task Space Contraction" (proof assumes constant $\mathbf{\Lambda}$)
+- **Theorem 8.2**: "Hybrid Contraction" (feasibility condition not proven)
+
+## Nature of Issue
+**Logical gaps / Missing derivations**
+
+## Detailed Critique
+
+### Theorem 3.1 Proof
+
+The proof computes:
+$$
+V_{t+1} = V_t - \delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t
+$$
+
+Then concludes:
+$$
+V_{t+1} \leq \rho V_t
+$$
+where $\rho = 1 - \frac{\lambda_{\min}(\mathbf{Q}_t)}{\lambda_{\max}(\mathbf{S}_t)} < 1$.
+
+**Issue**: This bound is **loose and unjustified**. The correct relation is:
+$$
+\frac{V_{t+1}}{V_t} = 1 - \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t}
+$$
+
+Using Rayleigh quotient bounds:
+$$
+\frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)} \leq \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t} \leq \frac{\lambda_{\max}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\min}(\mathbf{S}_t)}
+$$
+
+The article uses only $\mathbf{Q}_t$ (ignoring the $\mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t$ term), which **underestimates** the decay rate.
+
+**Correct conclusion**:
+$$
+V_{t+1} \leq \left(1 - \frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)}\right) V_t
+$$
+
+### Corollary 3.1 Contraction Rate
+
+Claims:
+> "The contraction rate is $\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})$."
+
+**Issue**: This formula appears **nowhere in the proof** and is **dimensionally incorrect**.
+
+**Correct formula**: For continuous-time, the contraction rate is bounded by:
+$$
+\lambda \geq \frac{1}{2} \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})}{\lambda_{\max}(\mathbf{S})}
+$$
+
+(from the ARE: $\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} = -\mathbf{Q} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}$, which must be $ \prec -2\lambda \mathbf{S}$).
+
+### Theorem 8.1 Proof
+
+The "proof" defines:
+$$
+V = \frac{1}{2} \dot{\mathbf{e}}^\top \mathbf{\Lambda} \dot{\mathbf{e}} + \frac{1}{2} \mathbf{e}^\top \mathbf{K}_p \mathbf{e}
+$$
+
+and computes:
+$$
+\dot{V} = -\dot{\mathbf{e}}^\top \mathbf{K}_d \dot{\mathbf{e}} \leq -2\lambda V
+$$
+
+**Issue 1**: The inequality $\dot{V} \leq -2\lambda V$ requires:
+$$
+-\dot{\mathbf{e}}^\top \mathbf{K}_d \dot{\mathbf{e}} \leq -2\lambda \left( \frac{1}{2} \dot{\mathbf{e}}^\top \mathbf{\Lambda} \dot{\mathbf{e}} + \frac{1}{2} \mathbf{e}^\top \mathbf{K}_p \mathbf{e} \right)
+$$
+
+Since the RHS involves **both** $\dot{\mathbf{e}}$ and $\mathbf{e}$, this cannot hold unless additional relations between $\mathbf{K}_d$, $\mathbf{K}_p$, and $\mathbf{\Lambda}$ are enforced.
+
+**Issue 2**: The proof assumes $\mathbf{\Lambda}$ is **constant**. But $\mathbf{\Lambda}(\mathbf{x})$ depends on configuration $\mathbf{q}$ (via the inertia matrix $\mathbf{D}(\mathbf{q})$). For $\mathbf{\Lambda}$ to be constant, the robot must be in a **fixed configuration** (not tracking a trajectory).
+
+**This invalidates the theorem for trajectory tracking.**
+
+### Theorem 8.2: Hybrid Contraction
+
+Claims:
+> "If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), then the hybrid system is exponentially stable across mode switches."
+
+**Issue**: Finding a common Lyapunov function for switched systems is **NP-hard** in general (Blondel & Tsitsiklis, 2000).
+
+**The theorem assumes such $\mathbf{M}$ exists but provides no algorithm to find it (or check feasibility).**
+
+In the robotics application (free space vs. contact), the article doesn't:
+- Specify $\mathbf{A}_{\text{free}}$ and $\mathbf{A}_{\text{contact}}$ (depend on contact configuration).
+- Solve for $\mathbf{M}$ (just states it's "feasible").
+- Verify the condition holds for any example.
+
+**This is a claim without evidence.**
+
+### Why This Matters
+
+1. **Trust**: Readers expect theorems to have proofs. Hand-waving erodes credibility.
+
+2. **Replicability**: Other researchers cannot build on the work if key steps are missing.
+
+3. **Correctness**: Some of these gaps may hide actual **errors** (e.g., Theorem 8.1 for time-varying $\mathbf{\Lambda}$).
+
+## Severity
+**Medium-High** — Affects theoretical rigor, though empirical results may still hold.
+
+## Suggested Remedies
+
+### 1. Complete Theorem 3.1 Proof
+
+**Revised Proof**:
+> Define $V_t = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t$. Then:
+> $$
+> \begin{align}
+> V_{t+1} &= \delta \mathbf{x}_{t+1}^\top \mathbf{S}_{t+1} \delta \mathbf{x}_{t+1} \\
+> &= \delta \mathbf{x}_t^\top (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)^\top \mathbf{S}_{t+1} (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) \delta \mathbf{x}_t \\
+> &= \delta \mathbf{x}_t^\top (\mathbf{S}_t - \mathbf{Q}_t - \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t \quad \text{(by DRE)} \\
+> &= V_t - \delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t
+> \end{align}
+> $$
+> Thus:
+> $$
+> \frac{V_{t+1}}{V_t} = 1 - \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t} \leq 1 - \frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)} =: \rho < 1
+> $$
+> (using Rayleigh quotient bounds). Iterating:
+> $$
+> V_t \leq \rho^t V_0 = e^{t \log \rho} V_0 = e^{-\lambda t} V_0
+> $$
+> where $\lambda = -\log \rho = -\log\left(1 - \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}\right)$.
+>
+> For small $\lambda$, this approximates:
+> $$
+> \lambda \approx \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}
+> $$
+> $\square$
+
+### 2. Correct Corollary 3.1
+
+**Revised**:
+> **Corollary 3.1 (LQR Contraction Rate)**
+> The LQR closed-loop system is contracting with rate:
+> $$
+> \lambda \approx \frac{1}{2} \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}
+> $$
+> where the factor $1/2$ arises from the Lyapunov function $V = \mathbf{x}^\top \mathbf{S} \mathbf{x}$ having $\dot{V} \leq -2\lambda V$.
+
+### 3. Fix or Remove Theorem 8.1
+
+**Option A** (fix for constant $\mathbf{\Lambda}$):
+> **Theorem 8.1 (Task-Space Contraction for Regulation)**
+> For **regulation** to a fixed setpoint $\mathbf{x}_d$ (constant), the controller (@eq-task-force) renders the error dynamics contracting with metric $\mathbf{M} = \mathbf{\Lambda}(\mathbf{x}_d)$ (evaluated at setpoint) and rate $\lambda = \sqrt{\lambda_{\min}(\mathbf{K}_p) / \lambda_{\max}(\mathbf{\Lambda})}$.
+
+**Option B** (remove for trajectory tracking):
+> **Remark**: For **trajectory tracking** with time-varying $\mathbf{x}_d(t)$, the inertia matrix $\mathbf{\Lambda}(\mathbf{x}(t))$ varies along the trajectory. Rigorous contraction analysis requires computing a time-varying metric $\mathbf{M}(t) = \mathbf{\Lambda}(\mathbf{x}(t))$ and verifying the generalized contraction condition (@eq-generalized-jacobian). This is left to future work.
+
+### 4. Qualify Theorem 8.2
+
+**Revised**:
+> **Theorem 8.2 (Hybrid Contraction via Common Lyapunov)**
+> **If** there exists a common metric $\mathbf{M} \succ 0$ satisfying:
+> $$
+> \mathbf{A}_i^\top \mathbf{M} + \mathbf{M} \mathbf{A}_i \prec -2\lambda \mathbf{M} \quad \forall i \in \{1, \ldots, N_{\text{modes}}\}
+> $$
+> **then** the switched system is exponentially stable with rate $\lambda$.
+>
+> **Computational note**: Finding such $\mathbf{M}$ is a feasibility problem (no objective):
+> $$
+> \text{find } \mathbf{M} \succ 0 \quad \text{s.t.} \quad \mathbf{A}_i^\top \mathbf{M} + \mathbf{M} \mathbf{A}_i \prec -2\lambda \mathbf{M} \quad \forall i
+> $$
+> This is an SDP. **However**, feasibility is not guaranteed—many switched systems do **not** admit a common Lyapunov function. In such cases, more sophisticated tools (multiple Lyapunov functions, dwell-time analysis) are needed.
+
+---
+
+# Weakness 8: Ambiguity in Definitions and Terminology
+
+## Location
+- **"Contraction metric" vs. "Riemannian metric"** (used interchangeably without distinction)
+- **"Stability margin" $\gamma(t)$** (Section 7.3, nonstandard term)
+- **"Certified stability"** (Theorem 4.1, vague)
+- **"Coordinate-free"** (Section 6, misleading)
+
+## Nature of Issue
+**Terminological ambiguity**
+
+## Detailed Critique
+
+### "Contraction Metric" Ambiguity
+
+The article uses "contraction metric" to mean:
+1. Any metric $\mathbf{M}$ satisfying the contraction condition (@eq-linear-contraction).
+2. The Riccati solution $\mathbf{S}$ from LQR.
+3. A Riemannian metric $g$ on the state manifold.
+
+These are **related but distinct** concepts:
+- **Contraction metric**: A positive-definite matrix field $\mathbf{M}(\mathbf{x}, t)$ such that the dynamics are contracting in the induced norm.
+- **Riemannian metric**: A smoothly varying inner product on each tangent space.
+- **Riccati solution**: The specific $\mathbf{S}$ arising from solving an optimal control problem.
+
+**Problem**: The article conflates these, leading to statements like:
+> "The metric $\mathbf{S}_t$ defines a Riemannian structure on state space." (p. 10)
+
+**Technically**: $\mathbf{S}_t$ is a **matrix**, not a metric tensor. To define a Riemannian metric, you need to specify how $\mathbf{S}_t$ transforms under coordinate changes (as a $(0, 2)$ tensor). The article never does this.
+
+### "Stability Margin" $\gamma(t)$
+
+Section 7.3 defines:
+$$
+\gamma(t) = \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S}(t))}
+$$
+
+**Issues**:
+1. This is not a standard term in control theory.
+2. No citation is given.
+3. The interpretation ("robustness to perturbations") is vague.
+
+**Standard terms** for similar concepts:
+- **Gain margin**: Ratio of maximum to nominal loop gain before instability (Bode plots).
+- **Phase margin**: Phase lag at unity gain (Bode plots).
+- **Stability radius**: Minimum perturbation (in operator norm) to cause instability (Hinrichsen & Pritchard, 1986).
+
+**None of these match $\gamma(t)$.**
+
+### "Certified Stability"
+
+Used in Theorem 4.1:
+> "...with certified contraction rate $\lambda$." (p. 14)
+
+**Question**: What does "certified" mean?
+- **In formal verification**: A certificate is a checkable proof (e.g., an SOS polynomial, a barrier function).
+- **Here**: Certified seems to mean "guaranteed by the algorithm." But if the proof of Theorem 4.1 is incomplete, the guarantee is questionable.
+
+### Why This Matters
+
+1. **Communication**: Ambiguous terms confuse readers and make it harder to connect this work to existing literature.
+
+2. **Searchability**: Using nonstandard terms (like "stability margin" without definition) makes the work hard to find for researchers working on related problems.
+
+3. **Reproducibility**: Vague definitions make it impossible for others to implement or verify the methods.
+
+## Severity
+**Low-Medium** — Primarily a communication issue, but affects clarity.
+
+## Suggested Remedies
+
+### 1. Add a Terminology Box
+
+At the start of Section 3:
+> **Terminology**:
+> - **Contraction metric**: A positive-definite matrix $\mathbf{M}(\mathbf{x}, t)$ such that $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \prec -2\lambda \mathbf{M}$. This is a computational tool, not necessarily a geometric metric tensor.
+> - **Riemannian metric**: A smoothly varying inner product $g_{\mathbf{x}}: T_{\mathbf{x}} \mathcal{M} \times T_{\mathbf{x}} \mathcal{M} \to \mathbb{R}$ on a manifold. In coordinates, represented by $g_{ij}(\mathbf{x})$.
+> - **Riccati metric**: The solution $\mathbf{S}$ to the algebraic or differential Riccati equation. A special case of contraction metric.
+> - **Certified stability**: Stability with a **computable guarantee** (basin size, convergence rate) that can be verified independently.
+
+### 2. Define $\gamma(t)$ Rigorously
+
+In Section 7.3:
+> **Definition 7.1 (LQR Decay Rate)**:
+> For a time-varying LQR problem with solution $\mathbf{S}(t)$, define:
+> $$
+> \gamma(t) := \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}(t)^\top \mathbf{R} \mathbf{K}(t))}{\lambda_{\max}(\mathbf{S}(t))}
+> $$
+> This quantity lower-bounds the exponential decay rate of the value function (see Theorem 3.1). Larger $\gamma(t)$ implies faster convergence.
+>
+> **Note**: This is not a standard "stability margin" in the classical sense (gain/phase margin). We introduce it here as a **time-varying convergence rate indicator**.
+
+### 3. Clarify "Certified"
+
+In Theorem 4.1:
+> **Certified stability**: We use "certified" to mean the contraction rate $\lambda$ is **explicitly enforced** by the algorithm (via the penalty $\mu \mathcal{C}_{\text{penalty}}$) and can be **verified a posteriori** by checking $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) < 0$ for all $t$. This is weaker than formal verification (e.g., via SOS), which would provide a machine-checkable certificate.
+
+---
+
+# Summary of Weaknesses and Priority Remedies
+
+## High-Severity Issues (Address First)
+
+1. **Weakness 1 (Duality claims)**: The bidirectional "stability ↔ optimality" duality is false. **Remedy**: Reframe as unidirectional (LQR → contraction), add inverse optimal control discussion.
+
+2. **Weakness 2 (Time-varying metrics)**: The DRE does not automatically satisfy contraction conditions; uniform boundedness is assumed but not stated. **Remedy**: Add Assumption on bounded $\mathbf{M}(t)$, separate ARE vs. DRE cases.
+
+3. **Weakness 4 (Biomechanics)**: Hypothesis 7.1 on synergies is unsupported speculation. **Remedy**: Downgrade to "speculative hypothesis," engage with OFC literature, remove or validate golf swing claims.
+
+4. **Weakness 6 (Theorem 4.1)**: Missing proof of "certified stability." **Remedy**: Either provide rigorous proof (with explicit $\mu_{\min}$, $\epsilon$ formulas) or downgrade to proposition/conjecture.
+
+## Medium-Severity Issues (Important but Less Central)
+
+5. **Weakness 3 (Coordinate-free)**: The framework is not truly coordinate-free. **Remedy**: Retitle section, clarify that geometric language is interpretive, not computational.
+
+6. **Weakness 5 (Experiments)**: Lack of error bars, unfair baselines, missing failure modes. **Remedy**: Add statistical tests, compare against state-of-the-art (iLQG, MPC), report confidence intervals.
+
+7. **Weakness 7 (Missing proofs)**: Several theorems (3.1, 8.1, 8.2) have incomplete proofs. **Remedy**: Complete proofs or qualify claims appropriately.
+
+## Low-Severity Issues (Polish)
+
+8. **Weakness 8 (Terminology)**: Ambiguous definitions ("stability margin," "certified"). **Remedy**: Add terminology box, define nonstandard terms explicitly.
+
+---
+
+# Final Recommendations
+
+## For the Author
+
+**Short-term** (can be addressed in revision):
+1. Rewrite abstract and Section 3 introduction to accurately reflect unidirectional relationship.
+2. Add Assumption on metric boundedness to Theorems 3.1, 4.1.
+3. Downgrade Hypothesis 7.1 to speculation; remove unsupported golf swing claims or provide data.
+4. Add error bars and statistical tests to experiments (Section 8-9).
+
+**Medium-term** (may require additional work):
+5. Provide rigorous proof of Theorem 4.1, or downgrade to empirical proposition.
+6. Complete proofs of Theorems 3.1, 8.1, 8.2 in appendix.
+7. Compare against state-of-the-art baselines (iLQG, MPC, LQR-Trees).
+
+**Long-term** (future papers):
+8. Validate biomechanical hypotheses with real EMG/motion capture data.
+9. Extend to nonlinear metrics (beyond quadratic Lyapunov functions).
+10. Scale to high-dimensional systems ($n > 100$) via structured approximations.
+
+## For Reviewers
+
+**Key questions to press**:
+1. "You claim stability ↔ optimality duality. But every LQR gives contraction, while not every contraction metric corresponds to LQR. Please clarify."
+
+2. "Theorem 4.1 states 'sufficiently large $\mu$'—how large? Please quantify or prove existence."
+
+3. "Section 7 hypothesizes synergies maximize contraction. What is the empirical evidence? How would you falsify this hypothesis?"
+
+4. "Figure 1 shows 76% improvement over 'standard PD.' Was PD optimally tuned? How does your method compare to operational space control or iLQG?"
+
+5. "You claim the framework is 'coordinate-free,' but all equations use Jacobian matrices $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$, which are coordinate-dependent. Please reconcile."
+
+## For Practitioners
+
+**When to use Contraction-DDP**:
+- Smooth, differentiable dynamics.
+- Need for **certified** convergence guarantees (e.g., safety-critical applications).
+- Moderate dimensions ($n < 20$, otherwise SDP becomes expensive).
+
+**When NOT to use**:
+- Highly nonlinear dynamics (linearization validity breaks down).
+- Hybrid/switched systems without common Lyapunov function.
+- High-dimensional systems (SDP scales as $O(n^4)$).
+- Hard real-time constraints (SDP solve time is unpredictable).
+
+---
+
+# Conclusion
+
+This article makes a valuable contribution by connecting contraction theory and LQR/DDP, but it **overstates the generality and bidirectionality of the relationship**. The core mathematical observations (LQR induces contraction, Riccati $\mathbf{S}$ can serve as a metric) are sound, but the framing as "duality" is misleading.
+
+The biomechanical applications are speculative and unsupported by motor control literature. The experimental validations lack statistical rigor and fair comparisons.
+
+With the remedies outlined above—tightening claims, adding missing proofs, validating biomechanical hypotheses, and improving experimental methodology—this could become a strong, defensible contribution to the nonlinear control literature.
+
+**Current grade**: B+ (good ideas, incomplete execution)
+**Potential with revisions**: A- (solid theoretical contribution with practical impact)
+
+---
+
+**Document prepared by**: The Critic
+**Mandate**: Surface weaknesses before others do
+**Outcome**: This article is now harder to dismiss, harder to misunderstand, and harder to attack—if the suggested remedies are implemented.
