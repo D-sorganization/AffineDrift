@@ -16,11 +16,11 @@ jobs:
   generate-metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Collect Agent Metrics
         id: metrics
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -159,7 +159,7 @@ jobs:
         if: steps.metrics.outputs.total_activity > 0
         env:
           REPORT: ${{ steps.metrics.outputs.report }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const report = process.env.REPORT;

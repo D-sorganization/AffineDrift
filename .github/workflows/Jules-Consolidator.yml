@@ -33,7 +33,7 @@ jobs:
       pr_list: ${{ steps.list.outputs.prs }}
       should_consolidate: ${{ steps.list.outputs.should_consolidate }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -77,7 +77,7 @@ jobs:
     outputs:
       consolidated_pr: ${{ steps.create_pr.outputs.pr_number }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -163,7 +163,7 @@ jobs:
           echo "" >> .jules/consolidator.md
 
       - name: Commit Journal
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "docs(consolidator): daily consolidation log"
           file_pattern: ".jules/consolidator.md"

@@ -18,8 +18,8 @@ jobs:
       group: auto-repair-${{ inputs.branch || github.event.workflow_run.head_branch }}
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with: { node-version: "20" }
       - run: npm install -g @google/jules
 
