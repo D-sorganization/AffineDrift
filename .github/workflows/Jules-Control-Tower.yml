@@ -9,16 +9,16 @@ on:
     workflows: ["CI Standard"]
     types: [completed]
   schedule:
-    # OVERNIGHT SCHEDULE - All work done before morning (midnight-6 AM UTC)
-    - cron: "0 0 * * *"   # Midnight - Assessment Generator
-    - cron: "30 0 * * *"  # 12:30 AM - Code Quality Reviewer
-    - cron: "0 1 * * *"   # 1 AM - Completist (incomplete impl)
-    - cron: "30 1 * * *"  # 1:30 AM - Layman's Terms Writer
-    - cron: "0 2 * * *"   # 2 AM - Critics Comments Writer
-    - cron: "30 2 * * *"  # 2:30 AM - Sentinel (security)
-    - cron: "0 3 * * *"   # 3 AM - Tech Custodian / Thesis Defender (Thu)
-    - cron: "30 3 * * *"  # 3:30 AM - Issue Resolver (daily fix)
-    - cron: "0 4 * * *"   # 4 AM - PR Compiler (consolidate PRs)
+    # OVERNIGHT SCHEDULE - All work done before morning (midnight-6 AM PST / 8 AM-2 PM UTC)
+    - cron: "0 8 * * *"   # Midnight PST - Assessment Generator
+    - cron: "30 8 * * *"  # 12:30 AM PST - Code Quality Reviewer
+    - cron: "0 9 * * *"   # 1 AM PST - Completist (incomplete impl)
+    - cron: "30 9 * * *"  # 1:30 AM PST - Layman's Terms Writer
+    - cron: "0 10 * * *"  # 2 AM PST - Critics Comments Writer
+    - cron: "30 10 * * *" # 2:30 AM PST - Sentinel (security)
+    - cron: "0 11 * * *"  # 3 AM PST - Tech Custodian / Thesis Defender (Thu)
+    - cron: "30 11 * * *" # 3:30 AM PST - Issue Resolver (daily fix)
+    - cron: "0 12 * * *"  # 4 AM PST - PR Compiler (consolidate PRs)
 
 # SAFEGUARD: Maximum iterations to prevent infinite repair loops
 env:
@@ -69,7 +69,7 @@ jobs:
 
       - name: Analyze Event Context
         id: decide
-        if: steps.check-limits.outputs.exceeded != 'true'
+        if: steps.check-limits.outcome == 'skipped' || steps.check-limits.outputs.exceeded != 'true'
         uses: actions/github-script@v8
         with:
           script: |
@@ -85,35 +85,35 @@ jobs:
                   target = "auto-repair";
                }
             }
-            // 2. SCHEDULED RUNS - Route by hour:minute (overnight schedule midnight-4 AM)
+            // 2. SCHEDULED RUNS - Route by hour:minute (overnight schedule midnight-4 AM PST / 8 AM-12 PM UTC)
             else if (event === "schedule") {
               const now = new Date();
               const hour = now.getUTCHours();
               const minute = now.getUTCMinutes();
               const day = now.getUTCDay();
 
-              if (hour === 0 && minute < 30) {
+              if (hour === 8 && minute < 30) {
                 target = "assessment-generator";
-              } else if (hour === 0 && minute >= 30) {
+              } else if (hour === 8 && minute >= 30) {
                 target = "code-quality-reviewer";
-              } else if (hour === 1 && minute < 30) {
+              } else if (hour === 9 && minute < 30) {
                 target = "completist";
-              } else if (hour === 1 && minute >= 30) {
+              } else if (hour === 9 && minute >= 30) {
                 target = "laymans-terms-writer";
-              } else if (hour === 2 && minute < 30) {
+              } else if (hour === 10 && minute < 30) {
                 target = "critics-comments-writer";
-              } else if (hour === 2 && minute >= 30) {
+              } else if (hour === 10 && minute >= 30) {
                 target = "sentinel";
-              } else if (hour === 3 && minute < 30) {
+              } else if (hour === 11 && minute < 30) {
                 // Thesis defender on Thursday, Tech Custodian other days
                 if (day === 4) {
                   target = "thesis-defender";
                 } else {
                   target = "tech-custodian";
                 }
-              } else if (hour === 3 && minute >= 30) {
+              } else if (hour === 11 && minute >= 30) {
                 target = "issue-resolver";
-              } else if (hour === 4) {
+              } else if (hour === 12) {
                 target = "pr-compiler";
               } else {
                 target = "none";
