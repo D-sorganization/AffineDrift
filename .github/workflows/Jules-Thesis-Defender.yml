@@ -24,11 +24,11 @@ jobs:
   defend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
 
@@ -114,7 +114,7 @@ jobs:
           )"
 
       - name: Commit Defense Materials
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "docs(defense): thesis defense analysis $(date +%Y-%m-%d)"
           file_pattern: |
