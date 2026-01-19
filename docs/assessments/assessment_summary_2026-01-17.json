@@ -1,0 +1,485 @@
+{
+  "timestamp": "2026-01-19T08:16:57.982887",
+  "overall_score": 45.44,
+  "category_scores": {
+    "L": {
+      "score": 82.0,
+      "name": "Long-Term Maintainability",
+      "weight": 1.5
+    },
+    "M": {
+      "score": 86.0,
+      "name": "Educational Resources",
+      "weight": 1.0
+    },
+    "C": {
+      "score": 3.7,
+      "name": "Documentation & Integration",
+      "weight": 1.5
+    },
+    "G": {
+      "score": 30.0,
+      "name": "Testing & Validation",
+      "weight": 2.0
+    },
+    "K": {
+      "score": 85.0,
+      "name": "Reproducibility & Provenance",
+      "weight": 1.0
+    },
+    "F": {
+      "score": 7.0,
+      "name": "Installation & Deployment",
+      "weight": 1.0
+    },
+    "H": {
+      "score": 7.0,
+      "name": "Error Handling",
+      "weight": 1.0
+    },
+    "B": {
+      "score": 14.0,
+      "name": "Hygiene, Security & Quality",
+      "weight": 2.0
+    },
+    "D": {
+      "score": 6.8,
+      "name": "User Experience",
+      "weight": 1.5
+    },
+    "O": {
+      "score": 91.0,
+      "name": "CI/CD & DevOps",
+      "weight": 2.0
+    },
+    "N": {
+      "score": 80.0,
+      "name": "Visualization & Export",
+      "weight": 1.0
+    },
+    "A": {
+      "score": 85.0,
+      "name": "Architecture & Implementation",
+      "weight": 2.0
+    },
+    "E": {
+      "score": 90.0,
+      "name": "Performance & Scalability",
+      "weight": 1.5
+    },
+    "J": {
+      "score": 7.0,
+      "name": "Extensibility & Plugins",
+      "weight": 1.0
+    },
+    "I": {
+      "score": 7.0,
+      "name": "Security & Input Validation",
+      "weight": 2.0
+    }
+  },
+  "critical_issues": [
+    {
+      "severity": "CRITICAL",
+      "description": "** Bus factor of 1 (single primary maintainer)",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** | Document architecture; onboard contributor |",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** | Single-author modules; no cross-training |",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 (2 areas)  - Bus factor, knowledge silos",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")**",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| 48h (docs) |",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** Bus factor = 1 (target >2)",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "to MODERATE. The project is otherwise well-positioned for long-term sustainability with minor improvements.",
+      "source": "Assessment_L_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** Learning curve <2h (actual ~1h) - Exceeds target",
+      "source": "Assessment_M_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** No video content (modern expectation unmet)",
+      "source": "Assessment_M_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "]** No tool comparison matrix or decision tree - 19 tools with overlapping functionality, no guidance on which to use when (`tools/README.md` line 31 says \"Adding New Tools\" but provides no discovery mechanism).",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: 16/19 tools have no README, forcing source code reading",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No examples showing actual usage - must reverse-engineer from code",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No CONTRIBUTING.md file exists",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No tool template file or cookiecutter template",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No API documentation exists",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No `tools/__init__.py` with public exports",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: No type hints in many modules - unclear what parameters accept",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "]** Missing docstrings in 28+ Python files - `tools/clean_latex_comments.py`, `tools/convert_all_latex.py`, `tools/fix_quarto_syntax.py`, `tools/publish_manual_article.py`, `tools/wrap_sidebars.py` all lack module-level docstrings.",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "]** No integration architecture diagram - No visual or textual explanation of how Quarto \u2192 Python tools \u2192 CI/CD \u2192 GitHub Pages flow works.",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "]** No API documentation for programmatic usage - All 19 tools are CLI-focused with no examples of importing and using them as Python modules.",
+      "source": "Assessment_C_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "| 0     | Prevents deployment                      |",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "GAPS IDENTIFIED**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "threshold: <60%)",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "GAP**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": ")",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| 6     | Missing tests for critical functionality |",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**G-002: JavaScript Has Zero Test Coverage**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**G-004: Quarto Rendering Not Tested**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**G-005: No End-to-End Tests**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**G-011: Critical User Paths Have Zero Coverage**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**G-012: Build Pipeline Steps Not Tested**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "### Major Issues",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "GAPS - NOT PRODUCTION-READY**",
+      "source": "Assessment_G_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** None identified",
+      "source": "Assessment_K_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "| 0     | Prevents any installation                |",
+      "source": "Assessment_F_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| 0     | Breaks installation on major platforms   |",
+      "source": "Assessment_F_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "|",
+      "source": "Assessment_H_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "# Lines: 318-319, 324-325",
+      "source": "Assessment_H_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**: Two eval() usages in production code (`Universal_Joint_Model_Enhanced.py` locations: content/ and docs/content/) attempting sandboxed execution but inherently dangerous",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "** |",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "** |",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**Location:**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "(for production readiness)",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**: 40+ print() statements across 11 files violating AGENTS.md logging standard",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**: Missing .env.example file despite AGENTS.md requirement for secrets management template",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**Location:** File duplication",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "VIOLATION**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** |",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "**",
+      "source": "Assessment_B_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "S (no template, unclear structure) | <30 min |",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "1: Quarto Installation Completely Missing from README**",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| Blocks first contribution | 30 min | P0 |",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| Cannot create standard article | 2 hours | P0 |",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| Wrong technology stack! | 3 hours | P0 |",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** - Actively misleads contributors",
+      "source": "Assessment_D_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** CI pass rate >95% (actual ~95%)",
+      "source": "Assessment_O_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "** CI time <30min (actual ~12min fast path)",
+      "source": "Assessment_O_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "Zero Test Coverage for JavaScript (1,500+ LOC)**",
+      "source": "Assessment_A_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "Duplicate Source Files Between Root and docs/**",
+      "source": "Assessment_A_Results_2026-01-17"
+    },
+    {
+      "severity": "BLOCKER",
+      "description": "| 0     | Issues preventing production deployment  |",
+      "source": "Assessment_E_Results_2026-01-17"
+    },
+    {
+      "severity": "CRITICAL",
+      "description": "| 0     | Severe performance degradation           |",
+      "source": "Assessment_E_Results_2026-01-17"
+    }
+  ],
+  "total_issues": 197,
+  "reports_analyzed": 15
+}
