@@ -1109,7 +1109,7 @@ where $\langle \mathbf{C}, \mathbf{M} \rangle = \text{tr}(\mathbf{C}^\top \mathb
 import cvxpy as cp
 import numpy as np
 
-def compute_contraction_metric(A, Q, lam=1.0, dt=0.01):
+def compute_contraction_metric(A, Q, lam=1.0):
     """
     Compute contraction metric M such that:
         A.T @ M + M @ A <= -2*lam*M - Q
@@ -1118,7 +1118,6 @@ def compute_contraction_metric(A, Q, lam=1.0, dt=0.01):
         A: State transition matrix (n, n)
         Q: State cost matrix (n, n)
         lam: Desired contraction rate
-        dt: Time step (for discrete-time approximation)
 
     Returns:
         M: Contraction metric (n, n)
@@ -1322,7 +1321,7 @@ Success! The metric satisfies the contraction condition.
 ```python
 import jax
 import jax.numpy as jnp
-from jax import jit, grad, vmap
+from jax import jit, grad, vmap, jacfwd
 import matplotlib.pyplot as plt
 
 # ========== Dynamics ==========
@@ -1426,8 +1425,8 @@ def backward_pass(xs, us, params, Q, R, QT, dt, mu=0.0, lam=1.0):
         k = -Q_uu_inv * Q_u
 
         # Value function update
-        v = Q_x + K.T * Q_u
-        S = Q_xx + K.T * Q_uu * K
+        v = Q_x + K.T @ Q_u
+        S = Q_xx - K.T @ Q_uu @ K
 
         Ks = Ks.at[t].set(K)
         ks = ks.at[t].set(k)
@@ -1436,7 +1435,7 @@ def backward_pass(xs, us, params, Q, R, QT, dt, mu=0.0, lam=1.0):
 
 # ========== DDP Forward Pass ==========
 @jit
-def forward_pass(x0, us, Ks, ks, params, dt, alpha=1.0):
+def forward_pass(x0, us, xs, Ks, ks, params, dt, alpha=1.0):
     """Rollout with updated policy"""
     T = len(us)
     n = len(x0)
@@ -1454,12 +1453,13 @@ def forward_pass(x0, us, Ks, ks, params, dt, alpha=1.0):
     return xs_new, us_new
 
 # ========== Main DDP Loop ==========
-def ddp_solve(x0, xT, T_horizon, params, Q, R, QT,
+def ddp_solve(x0, xT, T_horizon, params, Q, R, QT, dt,
               max_iters=50, mu=0.0, lam=1.0):
     """
     Solve trajectory optimization via DDP
 
     Args:
+        dt: Time step for discretization
         mu: Contraction penalty weight (0 = classical DDP)
         lam: Desired contraction rate
     """
@@ -1477,8 +1477,9 @@ def ddp_solve(x0, xT, T_horizon, params, Q, R, QT,
         Ks, ks = backward_pass(xs, us, params, Q, R, QT, dt, mu, lam)
 
         # Forward pass with line search
+        step_accepted = False
         for alpha in [1.0, 0.5, 0.25, 0.1]:
-            xs_new, us_new = forward_pass(x0, us, Ks, ks, params, dt, alpha)
+            xs_new, us_new = forward_pass(x0, us, xs, Ks, ks, params, dt, alpha)
 
             # Compute cost
             cost = sum([running_cost(xs_new[t], us_new[t], Q, R)
@@ -1488,7 +1489,12 @@ def ddp_solve(x0, xT, T_horizon, params, Q, R, QT,
             # Accept step
             if iter == 0 or cost < costs[-1]:
                 xs, us = xs_new, us_new
+                step_accepted = True
                 break
+
+        if not step_accepted:
+            print(f"Line search failed at iteration {iter}")
+            break
 
         costs.append(cost)
 
@@ -1517,13 +1523,13 @@ QT = jnp.diag(jnp.array([100.0, 10.0]))
 # Solve with classical DDP
 print("Solving with classical DDP...")
 xs_classical, us_classical, costs_classical = ddp_solve(
-    x0, xT, T_horizon, params, Q, R, QT, mu=0.0
+    x0, xT, T_horizon, params, Q, R, QT, dt, mu=0.0
 )
 
 # Solve with contraction-DDP
 print("\nSolving with contraction-DDP...")
 xs_contraction, us_contraction, costs_contraction = ddp_solve(
-    x0, xT, T_horizon, params, Q, R, QT, mu=10.0, lam=2.0
+    x0, xT, T_horizon, params, Q, R, QT, dt, mu=10.0, lam=2.0
 )
 
 # ========== Visualization ==========
