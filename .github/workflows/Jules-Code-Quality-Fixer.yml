@@ -8,6 +8,8 @@ on:
         required: false
         type: string
         default: 'docs/assessments/Code_Quality_Review_Latest.md'
+  schedule:
+    - cron: "0 12 * * *"  # Daily at 4 AM PST (12:00 UTC)
   workflow_dispatch:
     inputs:
       assessment_file:

@@ -3,7 +3,7 @@ name: Jules Curie (Data Hygiene)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 1 * *" # 1st of every month
+    - cron: "30 13 * * 5" # Weekly on Friday at 5:30 AM PST (13:30 UTC)
 
 jobs:
   hygiene-check:
@@ -18,7 +18,7 @@ jobs:
 
       - name: Curie Journal Entry
         run: |
-          echo "## $(date +'%Y-%m-%d') - Monthly Hygiene Check" >> .jules/curie.md
+          echo "## $(date +'%Y-%m-%d') - Weekly Hygiene Check" >> .jules/curie.md
           if [ -s large_files.txt ]; then
             echo "**⚠️ Large Files Detected:**" >> .jules/curie.md
             cat large_files.txt >> .jules/curie.md
@@ -30,5 +30,5 @@ jobs:
       - name: Commit Journal Updates
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: "docs(curie): monthly hygiene report"
+          commit_message: "docs(curie): weekly hygiene report"
           file_pattern: ".jules/curie.md"
