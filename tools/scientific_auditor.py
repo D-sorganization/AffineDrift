@@ -1,3 +1,4 @@
+import argparse
 import ast
 import json
 import sys
@@ -51,9 +52,29 @@ class ScienceAuditor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Scan Python files for basic scientific risk patterns.",
+    )
+    parser.add_argument(
+        "path",
+        nargs="?",
+        default=".",
+        help="Path to scan (default: current directory).",
+    )
+    parser.add_argument(
+        "--fail-on-risk",
+        action="store_true",
+        help="Exit with code 1 if risks are detected.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
     """Run the scientific auditor."""
-    target_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path()
+    args = parse_args()
+    target_dir = Path(args.path)
 
     # Use rglob to recursively find .py files
     for py_file in target_dir.rglob("*.py"):
@@ -71,9 +92,11 @@ def main() -> None:
 
     if RISKS:
         print(json.dumps(RISKS, indent=2))  # noqa: T201
-        sys.exit(1)
-    else:
-        print("[]")  # noqa: T201
+        if args.fail_on_risk:
+            sys.exit(1)
+        return
+
+    print("[]")  # noqa: T201
 
 
 if __name__ == "__main__":
