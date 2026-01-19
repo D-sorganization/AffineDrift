@@ -37,7 +37,7 @@ permissions:
 jobs:
   triage:
     runs-on: ubuntu-latest
-    if: github.actor != 'jules-bot'
+    # Removed global actor check to allow scheduled runs even if file modified by bot
     outputs:
       target: ${{ steps.decide.outputs.target }}
     steps:
@@ -74,10 +74,14 @@ jobs:
         with:
           script: |
             const event = context.eventName;
+            const actor = context.actor;
             let target = "none";
+
+            console.log(`Event: ${event}, Actor: ${actor}`);
 
             // 1. CI FAILURE -> AUTO-REPAIR or HOTFIX-CREATOR
             if (event === "workflow_run" && context.payload.workflow_run.conclusion === "failure") {
+               // Allow bot to trigger repair (handled by check-limits loop protection)
                const failedBranch = context.payload.workflow_run.head_branch;
                if (failedBranch === "main" || failedBranch === "master") {
                   target = "hotfix-creator";
@@ -87,6 +91,7 @@ jobs:
             }
             // 2. SCHEDULED RUNS - Route by hour:minute (overnight schedule midnight-4 AM PST / 8 AM-12 PM UTC)
             else if (event === "schedule") {
+              // Always run schedules regardless of actor
               const now = new Date();
               const hour = now.getUTCHours();
               const minute = now.getUTCMinutes();
@@ -121,11 +126,21 @@ jobs:
             }
             // 3. PUSH TO MAIN -> DOCS
             else if (event === "push" && context.ref === "refs/heads/main") {
-              target = "doc-scribe";
+              if (actor === 'jules-bot' || actor === 'jules-ai[bot]') {
+                 console.log("Ignoring push by bot to prevent doc-scribe loops.");
+                 target = "none";
+              } else {
+                 target = "doc-scribe";
+              }
             }
             // 4. NEW PR -> TEST GENERATOR
             else if (event === "pull_request" && context.payload.action === 'opened') {
-               target = "test-generator";
+               if (actor === 'jules-bot' || actor === 'jules-ai[bot]') {
+                  console.log("Ignoring PR open by bot.");
+                  target = "none";
+               } else {
+                  target = "test-generator";
+               }
             }
             // 5. PR CLOSED -> ARCHIVIST
             else if (event === "pull_request" && context.payload.action === 'closed' && context.payload.pull_request.merged) {
