@@ -11,7 +11,12 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version: "20" }
       - run: npm install -g @google/jules
-      - run: jules auth --token ${{ secrets.JULES_API_KEY }}
+      - name: Jules Auth (Disabled)
+        run: |
+          # TODO: Jules CLI API changed in v0.1.x - needs migration
+          # Old: jules auth --token ${{ secrets.JULES_API_KEY }}
+          # New: See https://jules.google for updated authentication
+          echo "::warning::Jules CLI integration disabled pending API migration"
 
       - name: Scan for Conflicted PRs
         env:
@@ -25,11 +30,11 @@ jobs:
 
           for PR in $PRS; do
             STATE=$(gh pr view $PR --json mergeable --jq '.mergeable')
-            
+
             if [ "$STATE" == "CONFLICTING" ]; then
               # FIX: Robustly count comments containing the keyword
               ATTEMPTS=$(gh pr view $PR --json comments --jq '[.comments[] | select(.body | contains("conflict resolution attempt"))] | length')
-              
+
               # Default to 0 if null/empty
               ATTEMPTS=${ATTEMPTS:-0}
 
@@ -38,11 +43,8 @@ jobs:
                  continue
               fi
 
-              jules task fix \
-                --pr $PR \
-                --prompt "Merge conflict detected. Resolve textual conflicts ONLY. 
-                1. Merge 'origin/main'.
-                2. Do NOT change logic or function signatures.
-                3. This is conflict resolution attempt #$((ATTEMPTS+1))."
+              # TODO: Jules CLI API changed - original command:
+              # jules task fix --pr $PR --prompt "Merge conflict detected..."
+              echo "::warning::Skipping PR $PR - Jules CLI disabled"
             fi
           done

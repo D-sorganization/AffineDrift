@@ -311,9 +311,9 @@ jobs:
             TARGET="${{ steps.select.outputs.target }}"
 
             if [ "$MODE" = "create" ]; then
-              MSG="content(critics): add Critics' Comments to $(basename $TARGET)"
+              MSG="content(critics): add Critics' Comments to $(basename "$TARGET")"
             else
-              MSG="content(critics): refine section (review $REVIEW/5) - $(basename $TARGET)"
+              MSG="content(critics): refine section (review $REVIEW/5) - $(basename "$TARGET")"
             fi
 
             git commit -m "$MSG
@@ -325,7 +325,7 @@ jobs:
             git push origin "$BRANCH_NAME"
 
             gh pr create \
-              --title "Content: Critics' Comments - $(basename $TARGET) [$MODE $REVIEW/5]" \
+              --title "Content: Critics' Comments - $(basename "$TARGET") [$MODE $REVIEW/5]" \
               --body "$(cat << EOF
           ## Summary
           **Mode**: $MODE | **Review**: $REVIEW of 5 | **Target**: $TARGET
