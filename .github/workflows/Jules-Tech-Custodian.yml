@@ -36,18 +36,27 @@ jobs:
         env:
           TARGET: ${{ steps.target.outputs.file }}
         run: |
-          BRANCH_NAME="refactor/custodian-$(date +%Y%m%d)-$(basename $TARGET)"
-          git checkout -b $BRANCH_NAME
-          git push -u origin $BRANCH_NAME
+          # Quote $TARGET to handle paths with spaces
+          BRANCH_NAME="refactor/custodian-$(date +%Y%m%d)-$(basename "$TARGET")"
+          git checkout -b "$BRANCH_NAME"
+          git push -u origin "$BRANCH_NAME"
           # FIX: This output now belongs to step 'branch', not 'target'
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
-      - name: Authenticate Jules
+      - name: Jules Integration (Disabled - API Migration Required)
         if: steps.target.outputs.has_issues == 'true'
-        run: jules auth --token ${{ secrets.JULES_API_KEY }}
+        run: |
+          # TODO: Jules CLI API changed in v0.1.x
+          # Old: jules auth --token / jules task fix --prompt
+          # New: jules new "prompt" / jules remote pull --session <id>
+          # See: workflow-fixes/2026-01-19-jules-cli-migration in Repository_Management
+          echo "::warning::Jules CLI integration disabled pending API migration"
+          echo "Target: ${{ steps.target.outputs.file }}"
+          echo "Branch: ${{ steps.branch.outputs.branch_name }}"
+          # Exit gracefully - PR creation below will be skipped since no changes made
 
-      - name: Dispatch Jules
-        if: steps.target.outputs.has_issues == 'true'
+      - name: Dispatch Jules (Disabled)
+        if: false  # Disabled until Jules CLI migration complete
         env:
           TARGET: ${{ steps.target.outputs.file }}
           # FIX: Reference the correct step output
