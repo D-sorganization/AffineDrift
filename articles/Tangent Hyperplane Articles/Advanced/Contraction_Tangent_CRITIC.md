@@ -1044,7 +1044,7 @@ $$
 \lambda \geq \frac{1}{2} \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})}{\lambda_{\max}(\mathbf{S})}
 $$
 
-(from the ARE: $\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} = -\mathbf{Q} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}$, which must be $ \prec -2\lambda \mathbf{S}$).
+(from the ARE: $\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} = -\mathbf{Q} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}$, which must be $\prec -2\lambda \mathbf{S}$).
 
 ### Theorem 8.1 Proof
 
