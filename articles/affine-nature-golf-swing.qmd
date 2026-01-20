@@ -77,6 +77,65 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
     </div>
   </div>
 </section>
+
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Biological Constraint:</span>
+          <h3>Is the "Zero Torque" Baseline Biologically Valid?</h3>
+        </div>
+        <p class="critic-argument">
+          Skeptics argue that defining a "Zero Torque" baseline ($u=0$) while maintaining the high stiffness of a swinging golfer ("Effective Plant") is physically contradictory. In a biological system, high impedance requires high muscle activation. Therefore, a true $u=0$ state would be a flaccid ragdoll, making the ZTCF trajectory structurally unstable and dynamically irrelevant compared to the actual stiffened swing.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge this biological coupling. However, the AffineDrift framework separates <em>Mechanical Causality</em> from <em>Neural Strategy</em>. The ZTCF simulates the "Frozen Strategy": it isolates the motion that results purely from the system's impedance parameters (stiffness/damping) without the active driving torque. This allows us to separate the <em>cost of stiffness</em> from the <em>cost of drive</em>.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Relevance Critique:</span>
+          <h3>Does Gravity Matter at 100 mph?</h3>
+        </div>
+        <p class="critic-argument">
+          The Zero Velocity Counterfactual (ZVCF) analyzes static forces like gravity and shaft droop. Critics point out that in a high-speed swing, centripetal accelerations exceed $100g$, making gravity negligible ($<1\%$). They argue that analyzing ZVCF is akin to studying the aerodynamics of a parked car to understand racing.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> While the <em>magnitude</em> of static forces is small relative to peak dynamic loads, the ZVCF is analytically essential. It serves as a necessary "tare" operation to distinguish "Geometric Stiffness" (velocity-dependent stiffening) from "Elastic Stiffness" (material properties). Without explicitly subtracting the configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Modeling Limitation:</span>
+          <h3>The Limits of Rigid-Body Analogies</h3>
+        </div>
+        <p class="critic-argument">
+          The framework frequently employs rigid double-pendulum analogies to explain "drift" versus "input". However, the primary mechanism of the golf shaft is the "Catapult Effect"—the storage and release of elastic potential energy. A rigid model is structurally blind to this mechanism, potentially leading readers to underestimate the role of the shaft as an energy buffer.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by defining the boundaries of the model.
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
 ## Introduction

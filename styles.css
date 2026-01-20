@@ -2374,3 +2374,143 @@ h1.title,
   }
 }
 
+
+/* ---
+   Critics' Comments Section
+   Refined for 'AffineDrift' - Critics Agent
+   --- */
+.critics-comments {
+  margin: 2rem 0;
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.critics-comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: white;
+  text-align: left;
+}
+
+.critics-comments-header:hover {
+  background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.critics-comments-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: white;
+  font-family: "Playfair Display", serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.critics-comments-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.critics-comments-header[aria-expanded="true"] .critics-comments-icon {
+  transform: rotate(180deg);
+}
+
+.critics-comments-content {
+  /* Hidden by default, toggled via JS or just CSS max-height transition */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+}
+
+.critics-comments-header[aria-expanded="true"] + .critics-comments-content {
+  max-height: 5000px; /* Large enough to fit content */
+  transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
+}
+
+.critics-comments-inner {
+  padding: 1.5rem;
+}
+
+.critics-intro {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #dc3545;
+  font-style: italic;
+}
+
+.critic-item {
+  background: white;
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid #f1f1f1;
+  border-left: 4px solid #dc3545;
+  box-shadow: var(--shadow-sm);
+}
+
+.critic-item:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.critic-perspective {
+  margin-bottom: 0.75rem;
+}
+
+.critic-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #dc3545;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.critic-perspective h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--primary-dark);
+}
+
+.critic-argument {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.author-response {
+  background: #f8f9fa;
+  border-left: 3px solid #28a745;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.author-response strong {
+  color: #155724;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.academic-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+  opacity: 0.8;
+}
