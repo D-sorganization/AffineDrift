@@ -225,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./overview.html" aria-current="page"> 
+    <a class="nav-link" href="./overview.html">
 <span class="menu-text">Overview</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -405,9 +405,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="home" class="hero">
   <div class="container">
     <div class="hero-content">
-      <blockquote class="featured-quote blockquote">
+      <blockquote class="featured-quote">
         <p>"What we do now echoes in eternity"</p>
-        <cite>— Marcus Aurelius</cite>
+        <cite>&mdash; Marcus Aurelius</cite>
 
         <div class="drift-quote" style="margin-bottom: 2rem;">
           <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This begs the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
@@ -422,19 +422,19 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </section>
 
-<div class="container page-columns page-full">
-  <div class="standard-page-layout page-columns page-full">
+<div class="container">
+  <div class="standard-page-layout">
     <!-- Sidebar -->
     <aside class="left-sidebar">
       <div class="sidebar-sticky-content">
         <div class="sidebar-section">
-          <h3 class="sidebar-heading anchored">Resources</h3>
+          <h3 class="sidebar-heading">Resources</h3>
           <div class="resource-card" style="padding: 1rem; border: none; box-shadow: none; background: transparent; padding-left: 0;">
-             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);" class="anchored">Overview Podcast</h3>
+             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);">Overview Podcast</h3>
              <p class="resource-description" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
                 Listen to an AI-generated introduction to the core concepts of Affine Drift.
              </p>
-             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now →</a>
+             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now &rarr;</a>
           </div>
         </div>
       </div>
@@ -500,22 +500,22 @@ ul.task-list li input[type="checkbox"] {
           </div>
 
           <div class="golf-model">
-            <h3 class="anchored">System Components</h3>
+            <h3>System Components</h3>
             <div class="components-grid">
               <div class="component">
-                <h4 class="anchored">State Space $x$</h4>
+                <h4>State Space $x$</h4>
                 <p>$\mathbb{R}^{2n}$ vector containing all joint angles and velocities.</p>
               </div>
               <div class="component">
-                <h4 class="anchored">Drift $f(x)$</h4>
+                <h4>Drift $f(x)$</h4>
                 <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
               </div>
               <div class="component">
-                <h4 class="anchored">Control $u$</h4>
+                <h4>Control $u$</h4>
                 <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
               </div>
                <div class="component">
-                <h4 class="anchored">Input Field $g(x)$</h4>
+                <h4>Input Field $g(x)$</h4>
                 <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
               </div>
             </div>
@@ -527,18 +527,18 @@ ul.task-list li input[type="checkbox"] {
       <!-- Critics Corner - Technical Criticism Section -->
       <section class="critics-corner">
         <button class="critics-corner-header" aria-expanded="false">
-          <h2 class="anchored">Critics Corner</h2>
+          <h2>Critics Corner</h2>
           <span class="critics-corner-icon">▼</span>
         </button>
         <div class="critics-corner-content">
           <div class="criticism-item">
-            <h3 class="anchored">Oversimplification of Neuromuscular Dynamics</h3>
+            <h3>Oversimplification of Neuromuscular Dynamics</h3>
             <span class="criticism-severity moderate">Moderate</span>
             <p>
               The control-affine framework abstracts muscular physiology into a simple torque vector $u$, ignoring force-velocity relationships, activation dynamics, and muscle redundancy. Real neuromuscular systems exhibit time delays, saturation, and cross-coupling effects that may significantly affect the validity of the drift-input decomposition.
             </p>
             <div class="criticism-response">
-              <h4 class="anchored">Defense</h4>
+              <h4>Defense</h4>
               <p>
                 This abstraction is intentional and explicitly stated in the modeling assumptions. The framework operates at the torque level precisely to preserve the affine structure. Force-velocity constraints are treated as bounds on the feasible input set $\mathcal{U}(x)$ rather than nonlinearities in the dynamics. Future work will address activation dynamics through hybrid modeling approaches.
               </p>
@@ -546,13 +546,13 @@ ul.task-list li input[type="checkbox"] {
           </div>
 
           <div class="criticism-item">
-            <h3 class="anchored">Impact Phase Exclusion</h3>
+            <h3>Impact Phase Exclusion</h3>
             <span class="criticism-severity minor">Minor</span>
             <p>
               The theoretical framework explicitly excludes the ball-club impact phase, which is arguably the most critical moment of the swing. This limits the practical applicability of the analysis for understanding how impact conditions relate to ball flight.
             </p>
             <div class="criticism-response">
-              <h4 class="anchored">Defense</h4>
+              <h4>Defense</h4>
               <p>
                 The framework is designed as a "Theory of Delivery"—analyzing how the golfer controls the system to achieve specific terminal conditions. Since control authority effectively ends at impact, the drift-input decomposition applies to the delivery phase. Impact mechanics require separate hybrid dynamics treatment, which will be addressed in subsequent work.
               </p>
@@ -560,15 +560,15 @@ ul.task-list li input[type="checkbox"] {
           </div>
 
           <div class="criticism-item">
-            <h3 class="anchored">Modal Truncation Error</h3>
+            <h3>Modal Truncation Error</h3>
             <span class="criticism-severity minor">Minor</span>
             <p>
               Representing the flexible shaft with a finite number of modes ($m$) introduces truncation error, potentially missing high-frequency dynamics that may be relevant during rapid swing phases.
             </p>
             <div class="criticism-response">
-              <h4 class="anchored">Defense</h4>
+              <h4>Defense</h4>
               <p>
-                Standard modal analysis bounds suggest that the first 3-5 bending modes capture &gt;99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
+                Standard modal analysis bounds suggest that the first 3-5 bending modes capture >99% of shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes—practitioners can include additional modes as needed for their application. Convergence analysis will be presented in Part II.
               </p>
             </div>
           </div>
@@ -577,6 +577,9 @@ ul.task-list li input[type="checkbox"] {
     </main>
   </div>
 </div>
+
+
+
 
 
 
