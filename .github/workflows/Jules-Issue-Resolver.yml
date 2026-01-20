@@ -140,7 +140,10 @@ jobs:
             gh pr create \
               --title "Issue Resolution - $(date +%Y-%m-%d)" \
               --body "Daily issue resolution from assessments. See docs/assessments/issues/resolved/ for details." \
-              --label "jules:issue-resolver,automated-fix"
+              --label "jules:issue-resolver,automated-fix" || \
+            gh pr create \
+              --title "Issue Resolution - $(date +%Y-%m-%d)" \
+              --body "Daily issue resolution from assessments. See docs/assessments/issues/resolved/ for details."
           else
             echo "No changes to commit"
           fi
