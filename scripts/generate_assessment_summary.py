@@ -14,11 +14,16 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, TypedDict
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
+
+
+class CategoryInfo(TypedDict):
+    name: str
+    weight: float
 
 
 def extract_score_from_report(report_path: Path) -> float:
@@ -29,6 +34,7 @@ def extract_score_from_report(report_path: Path) -> float:
 
         # Look for score patterns like "Overall: 8.5" or "Score: 8.5/10"
         patterns = [
+            r"Grade:\s*(\d+\.?\d*)",
             r"Overall.*?(\d+\.?\d*)",
             r"Score.*?(\d+\.?\d*)",
             r"\*\*(\d+\.?\d*)\*\*.*?/10",
@@ -99,31 +105,32 @@ def generate_summary(
     logger.info(f"Generating assessment summary from {len(input_reports)} reports...")
 
     # Category mapping
-    categories = {
-        "A": {"name": "Architecture & Implementation", "weight": 2.0},
-        "B": {"name": "Hygiene, Security & Quality", "weight": 2.0},
-        "C": {"name": "Documentation & Integration", "weight": 1.5},
-        "D": {"name": "User Experience", "weight": 1.5},
-        "E": {"name": "Performance & Scalability", "weight": 1.5},
-        "F": {"name": "Installation & Deployment", "weight": 1.0},
-        "G": {"name": "Testing & Validation", "weight": 2.0},
-        "H": {"name": "Error Handling", "weight": 1.0},
-        "I": {"name": "Security & Input Validation", "weight": 2.0},
-        "J": {"name": "Extensibility & Plugins", "weight": 1.0},
-        "K": {"name": "Reproducibility & Provenance", "weight": 1.0},
-        "L": {"name": "Long-Term Maintainability", "weight": 1.5},
-        "M": {"name": "Educational Resources", "weight": 1.0},
-        "N": {"name": "Visualization & Export", "weight": 1.0},
-        "O": {"name": "CI/CD & DevOps", "weight": 2.0},
+    categories: Dict[str, CategoryInfo] = {
+        "A": {"name": "Code Structure", "weight": 2.0},
+        "B": {"name": "Documentation", "weight": 1.5},
+        "C": {"name": "Test Coverage", "weight": 2.0},
+        "D": {"name": "Error Handling", "weight": 1.0},
+        "E": {"name": "Performance", "weight": 1.5},
+        "F": {"name": "Security", "weight": 2.0},
+        "G": {"name": "Dependencies", "weight": 1.0},
+        "H": {"name": "CI/CD", "weight": 2.0},
+        "I": {"name": "Code Style", "weight": 2.0},
+        "J": {"name": "API Design", "weight": 1.0},
+        "K": {"name": "Data Handling", "weight": 1.0},
+        "L": {"name": "Logging", "weight": 1.5},
+        "M": {"name": "Configuration", "weight": 1.0},
+        "N": {"name": "Scalability", "weight": 1.0},
+        "O": {"name": "Maintainability", "weight": 1.5},
     }
 
     # Collect scores and issues
-    scores = {}
+    scores: Dict[str, float] = {}
     all_issues = []
 
     for report in input_reports:
         # Extract assessment ID from filename (e.g., Assessment_A_Results_2026-01-17.md)
-        match = re.search(r"Assessment_([A-O])_Results", report.name)
+        # Modified to catch "Assessment_A_Code_Structure.md" style
+        match = re.search(r"Assessment_([A-O])_", report.name)
         if match:
             assessment_id = match.group(1)
             scores[assessment_id] = extract_score_from_report(report)
@@ -254,7 +261,7 @@ def main() -> int:
     args = parser.parse_args()
 
     # Expand wildcards if needed
-    input_reports = []
+    input_reports: list[Path] = []
     for pattern in args.input:
         if "*" in str(pattern):
             # Expand glob pattern
