@@ -4,7 +4,7 @@
 import re
 from pathlib import Path
 
-import markdown
+import markdown  # type: ignore[import-untyped]
 from weasyprint import CSS, HTML
 
 # Custom CSS for beautiful PDFs
@@ -148,9 +148,9 @@ dd {
 """
 
 
-def extract_frontmatter(content: str) -> tuple[dict, str]:
+def extract_frontmatter(content: str) -> tuple[dict[str, str], str]:
     """Extract YAML frontmatter from quarto/markdown file."""
-    frontmatter = {}
+    frontmatter: dict[str, str] = {}
     body = content
 
     if content.startswith('---'):
@@ -212,7 +212,7 @@ def md_to_html(md_content: str, title: str = "") -> str:
     return html
 
 
-def generate_pdf(input_path: Path, output_path: Path):
+def generate_pdf(input_path: Path, output_path: Path) -> Path:
     """Generate PDF from a .qmd or .md file."""
     print(f"Processing: {input_path.name}")
 
@@ -238,7 +238,7 @@ def generate_pdf(input_path: Path, output_path: Path):
     return output_path
 
 
-def main():
+def main() -> list[Path]:
     """Generate PDFs for the 4-part Tangent Hyperplane series."""
     base_dir = Path(__file__).parent
     output_dir = base_dir / "PDFs_for_NotebookLM"

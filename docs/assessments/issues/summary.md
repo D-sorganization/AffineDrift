@@ -15,6 +15,11 @@
 
 ## Code Quality Review Summary (Historical)
 
+### 2026-01-20 Fixes (Agent: Code Quality Fixer)
+- **Cleanup**: Removed `console.log` from `docs/script.js` and resolved `TODO` in `archive/handcrafted-site/wrist-universal-joint.html`.
+- **Type Safety**: Fixed MyPy errors in `tools/wrist_universal_joint/` (Streamlit decorators) and `articles/Tangent Hyperplane Articles/archive/` (type annotations for PDF generator).
+- **Verification**: `ruff`, `black`, and `mypy` now pass cleanly.
+
 ### Critical Issues Fixed
 
 ### Security
