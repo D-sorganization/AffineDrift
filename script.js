@@ -32,6 +32,14 @@ const getScrollOffset = () => {
   return 140;
 };
 
+const runOnDomReady = (callback) => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback);
+  } else {
+    callback();
+  }
+};
+
 // Helper function to debounce events
 function debounce(func, wait) {
   let timeout;
@@ -88,7 +96,7 @@ function generateUniqueId(text, usedIds) {
   return id;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+runOnDomReady(function () {
   // Update offset from CSS variable once DOM is ready
   HEADER_OFFSET = getScrollOffset();
   TOC_SCROLL_OFFSET = HEADER_OFFSET;
@@ -1299,6 +1307,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // --- PDF Download Button ---
   initPDFDownload();
 
+  // --- Layman's Terms Toggle ---
+  initLaymansTermsToggle();
+
   // --- Critics Corner Toggle ---
   initCriticsCorner();
 
@@ -1447,6 +1458,33 @@ function preparePDFPrint() {
   } else {
     window.print();
   }
+}
+
+// --- Layman's Terms Functionality ---
+function initLaymansTermsToggle() {
+  const laymansSections = document.querySelectorAll(".laymans-terms");
+
+  laymansSections.forEach((section, index) => {
+    const header = section.querySelector(".laymans-terms-header");
+    const content = section.querySelector(".laymans-terms-content");
+
+    if (!header || !content) return;
+
+    if (!content.id) {
+      content.id = `laymans-terms-content-${index + 1}`;
+    }
+
+    header.setAttribute("aria-controls", content.id);
+
+    const isExpanded = header.getAttribute("aria-expanded") === "true";
+    content.setAttribute("aria-hidden", String(!isExpanded));
+
+    header.addEventListener("click", () => {
+      const expanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", String(!expanded));
+      content.setAttribute("aria-hidden", String(expanded));
+    });
+  });
 }
 
 // --- Critics Corner Functionality ---
