@@ -187,90 +187,176 @@ jobs:
       - name: Jules Critics Comments Writer
         if: steps.select.outputs.skip != 'true'
         env:
-          JULES_TOKEN: ${{ secrets.JULES_API_KEY }}
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           TARGET_FILE: ${{ steps.select.outputs.target }}
           MODE: ${{ steps.scan.outputs.mode }}
           REVIEW_NUM: ${{ steps.select.outputs.current_review }}
         run: |
-          jules auth --token $JULES_TOKEN
+                    set -e
+                    DATE=$(date +%Y-%m-%d)
+                    REPO="${{ github.repository }}"
+                    API_BASE="https://jules.googleapis.com/v1alpha"
+          
+                    # Check if API key is configured
+                    if [ -z "$JULES_API_KEY" ]; then
+                      echo "::warning::JULES_API_KEY not configured. Skipping Jules task."
+                      exit 0
+                    fi
+          
+                    echo "Looking up repository source..."
+                    SOURCES=$(curl -sf -H "X-Goog-Api-Key: $JULES_API_KEY" "$API_BASE/sources" || echo '{"sources":[]}')
+          
+                    OWNER=$(echo "$REPO" | cut -d'/' -f1)
+                    REPO_NAME=$(echo "$REPO" | cut -d'/' -f2)
+          
+                    SOURCE_ID=$(echo "$SOURCES" | jq -r ".sources[] | select(.githubRepo.owner == \"$OWNER\" and .githubRepo.repo == \"$REPO_NAME\") | .name" | head -1)
+          
+                    if [ -z "$SOURCE_ID" ] || [ "$SOURCE_ID" = "null" ]; then
+                      echo "::warning::Repository $REPO not found in Jules sources."
+                      exit 0
+                    fi
+          
+                    echo "Found source: $SOURCE_ID"
+          
+                    # Create session prompt
+                    PROMPT=$(cat << 'PROMPT_EOF'
+          '
+                    You are the CRITICS COMMENTS WRITER for AffineDrift - a technical golf science website.
+          
+                    ## Current Task
+                    - MODE: $MODE
+                    - TARGET: $TARGET_FILE
+                    - REVIEW: $REVIEW_NUM of 5
+          
+                    ## Mode-Specific Instructions
+          
+                    ### If MODE = "create":
+                    Add a NEW "Critics' Comments" section to the target article.
+                    Follow the HTML structure exactly. Also add CSS if not present.
+          
+                    ### If MODE = "refine":
+                    IMPROVE the existing section. This is review $REVIEW_NUM:
+                    - Review 1-2: Focus on FAIRNESS - ensure critiques are steel-manned
+                    - Review 3: Focus on RESPONSES - make rebuttals more thoughtful
+                    - Review 4: Focus on COMPLETENESS - add missing perspectives
+                    - Review 5: Final POLISH - tone, clarity, academic rigor
+          
+                    ## HTML Structure (MUST FOLLOW EXACTLY)
+                    ```html
+                    <section class="critics-comments">
+                      <button class="critics-comments-header" aria-expanded="false">
+                        <h2>Critics' Comments</h2>
+                        <span class="critics-comments-icon">💬</span>
+                      </button>
+                      <div class="critics-comments-content">
+                        <div class="critics-comments-inner">
+                          <p class="critics-intro">
+                            Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+                          </p>
+          
+                          <div class="critic-item">
+                            <div class="critic-perspective">
+                              <span class="critic-label">Alternative View:</span>
+                              <h3>[Counterpoint Title]</h3>
+                            </div>
+                            <p class="critic-argument">[The counterargument or alternative interpretation]</p>
+                            <div class="author-response">
+                              <strong>Our Response:</strong> [Brief rebuttal or acknowledgment]
+                            </div>
+                          </div>
+          
+                          <div class="academic-note">
+                            <strong>Note:</strong> Scientific discourse thrives on debate.
+                            These critiques strengthen our understanding.
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    ```
+          
+                    ## Content Guidelines
+                    1. Read the FULL article to understand the claims being made
+                    2. Identify 2-4 points where reasonable people might disagree
+                    3. Present LEGITIMATE academic counterarguments (STEEL-MAN, not strawmen)
+                    4. Provide thoughtful responses that acknowledge valid concerns
+                    5. Sources of critique can include:
+                       - Alternative biomechanical theories
+                       - Different physics interpretations
+                       - Practical vs theoretical concerns
+                       - Equipment manufacturer perspectives
+                       - Traditional teaching method advocates
+                    6. Place the section AFTER "In Layman's Terms", BEFORE references
+          
+                    ## Quality Checks
+                    - Critiques must be intellectually honest (steel-manned)
+                    - Responses should be measured, not dismissive
+                    - Maintain academic tone throughout
+                    - Acknowledge uncertainty where appropriate
+          
+                    IMPORTANT: You ARE authorized to modify .qmd files and styles.css.
+                    ONLY modify the target file: $TARGET_FILE (and styles.css if CSS needed)
+                    PROMPT_EOF
+                    )
+          
+                    echo "Creating Jules session..."
+                    REQUEST_JSON=$(jq -n \
+                      --arg prompt "$PROMPT" \
+                      --arg source "$SOURCE_ID" \
+                      '{
+                        prompt: $prompt,
+                        sourceContext: {
+                          source: $source,
+                          githubRepoContext: {
+                            startingBranch: "main"
+                          }
+                        },
+                        automationMode: "AUTO_CREATE_PR"
+                      }')
+          
+                    echo "Request: $REQUEST_JSON"
+          
+                    HTTP_CODE=$(curl -s -o /tmp/session_response.json -w "%{http_code}" -X POST \
+                      -H "X-Goog-Api-Key: $JULES_API_KEY" \
+                      -H "Content-Type: application/json" \
+                      -d "$REQUEST_JSON" \
+                      "$API_BASE/sessions")
+          
+                    SESSION_RESPONSE=$(cat /tmp/session_response.json)
+                    echo "HTTP Status: $HTTP_CODE"
+          
+                    if [ "$HTTP_CODE" != "200" ]; then
+                      echo "::error::Jules API returned HTTP $HTTP_CODE"
+                      exit 1
+                    fi
+          
+                    SESSION_ID=$(echo "$SESSION_RESPONSE" | jq -r '.name')
+                    echo "Created session: $SESSION_ID"
+          
+                    # Poll for completion
+                    MAX_WAIT=1800
+                    POLL_INTERVAL=30
+                    ELAPSED=0
+          
+                    while [ $ELAPSED -lt $MAX_WAIT ]; do
+                      SESSION_STATUS=$(curl -sf -H "X-Goog-Api-Key: $JULES_API_KEY" "$API_BASE/$SESSION_ID")
+                      STATE=$(echo "$SESSION_STATUS" | jq -r '.state')
+                      echo "Session state: $STATE (elapsed: ${ELAPSED}s)"
+          
+                      case "$STATE" in
+                        "COMPLETED"|"SUBMITTED")
+                          echo "Session completed successfully!"
+                          break
+                          ;;
+                        "FAILED"|"CANCELLED")
+                          echo "::error::Session $STATE"
+                          exit 1
+                          ;;
+                      esac
+                      sleep $POLL_INTERVAL
+                      ELAPSED=$((ELAPSED + POLL_INTERVAL))
+                    done
+          
 
-          jules task fix --prompt "$(cat << 'PROMPT_EOF'
-          You are the CRITICS COMMENTS WRITER for AffineDrift - a technical golf science website.
-
-          ## Current Task
-          - MODE: $MODE
-          - TARGET: $TARGET_FILE
-          - REVIEW: $REVIEW_NUM of 5
-
-          ## Mode-Specific Instructions
-
-          ### If MODE = "create":
-          Add a NEW "Critics' Comments" section to the target article.
-          Follow the HTML structure exactly. Also add CSS if not present.
-
-          ### If MODE = "refine":
-          IMPROVE the existing section. This is review $REVIEW_NUM:
-          - Review 1-2: Focus on FAIRNESS - ensure critiques are steel-manned
-          - Review 3: Focus on RESPONSES - make rebuttals more thoughtful
-          - Review 4: Focus on COMPLETENESS - add missing perspectives
-          - Review 5: Final POLISH - tone, clarity, academic rigor
-
-          ## HTML Structure (MUST FOLLOW EXACTLY)
-          ```html
-          <section class="critics-comments">
-            <button class="critics-comments-header" aria-expanded="false">
-              <h2>Critics' Comments</h2>
-              <span class="critics-comments-icon">💬</span>
-            </button>
-            <div class="critics-comments-content">
-              <div class="critics-comments-inner">
-                <p class="critics-intro">
-                  Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-                </p>
-
-                <div class="critic-item">
-                  <div class="critic-perspective">
-                    <span class="critic-label">Alternative View:</span>
-                    <h3>[Counterpoint Title]</h3>
-                  </div>
-                  <p class="critic-argument">[The counterargument or alternative interpretation]</p>
-                  <div class="author-response">
-                    <strong>Our Response:</strong> [Brief rebuttal or acknowledgment]
-                  </div>
-                </div>
-
-                <div class="academic-note">
-                  <strong>Note:</strong> Scientific discourse thrives on debate.
-                  These critiques strengthen our understanding.
-                </div>
-              </div>
-            </div>
-          </section>
-          ```
-
-          ## Content Guidelines
-          1. Read the FULL article to understand the claims being made
-          2. Identify 2-4 points where reasonable people might disagree
-          3. Present LEGITIMATE academic counterarguments (STEEL-MAN, not strawmen)
-          4. Provide thoughtful responses that acknowledge valid concerns
-          5. Sources of critique can include:
-             - Alternative biomechanical theories
-             - Different physics interpretations
-             - Practical vs theoretical concerns
-             - Equipment manufacturer perspectives
-             - Traditional teaching method advocates
-          6. Place the section AFTER "In Layman's Terms", BEFORE references
-
-          ## Quality Checks
-          - Critiques must be intellectually honest (steel-manned)
-          - Responses should be measured, not dismissive
-          - Maintain academic tone throughout
-          - Acknowledge uncertainty where appropriate
-
-          IMPORTANT: You ARE authorized to modify .qmd files and styles.css.
-          ONLY modify the target file: $TARGET_FILE (and styles.css if CSS needed)
-          PROMPT_EOF
-          )"
 
       - name: Update Review Log
         if: steps.select.outputs.skip != 'true'
