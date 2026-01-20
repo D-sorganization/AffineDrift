@@ -28,7 +28,8 @@ def get_existing_issues() -> list[dict[str, Any]]:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)
+        # Explicitly cast to Any because json.loads returns Any
+        return list(json.loads(result.stdout))
     except Exception as e:
         logger.warning(f"Could not fetch existing issues: {e}")
         return []
