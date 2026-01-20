@@ -39,7 +39,7 @@ def test_optimizations() -> None:
             # Verify class contains 'zoomable'
             classes = first_image.get_attribute("class")
             print(f"Image classes: {classes}")
-            if "zoomable" in classes:
+            if classes and "zoomable" in classes:
                 print("SUCCESS: Lightbox initialized (zoomable class added)")
             else:
                 print("FAILURE: Lightbox NOT initialized")

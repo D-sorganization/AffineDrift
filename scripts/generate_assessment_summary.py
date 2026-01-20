@@ -135,7 +135,7 @@ def generate_summary(
 
     for assessment_id, score in scores.items():
         if assessment_id in categories:
-            weight = categories[assessment_id]["weight"]
+            weight = float(str(categories[assessment_id]["weight"]))
             total_weighted_score += score * weight
             total_weight += weight
 
@@ -254,7 +254,7 @@ def main() -> int:
     args = parser.parse_args()
 
     # Expand wildcards if needed
-    input_reports = []
+    input_reports: list[Path] = []
     for pattern in args.input:
         if "*" in str(pattern):
             # Expand glob pattern
