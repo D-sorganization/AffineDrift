@@ -149,6 +149,7 @@ dd {
 """
 
 
+
 def extract_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """Extract YAML frontmatter from quarto/markdown file."""
     frontmatter = {}
