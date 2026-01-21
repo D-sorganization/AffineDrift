@@ -130,3 +130,52 @@ The affine decomposition, ZTCF, and ZVCF enable:
 
 - improved machine learning models based on drift-removed data.
 This section provides the conceptual and computational foundation for replacing classical inverse dynamics with a more rigorous framework grounded in nonlinear affine dynamics.
+
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Why standard measurements might be giving us the wrong picture of how hard a golfer is working.
+      </p>
+
+      <div class="laymans-item">
+        <h3>The Problem with "Total Force"</h3>
+        <p>
+          Traditional biomechanics measures the total force at a joint, but it can't tell the difference between force you create (muscles) and force that happens automatically (physics). It treats them as one big number.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> A car speeding downhill. If the speedometer says 60 mph, you don't know if the engine is working hard (active force) or if gravity is just pulling the car down the hill (passive force). Traditional methods only see the 60 mph.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Separating "Drift" from "Input"</h3>
+        <p>
+          To understand the golfer's actual effort, we need to split the total force into two parts: "Drift" (passive physics like centrifugal force) and "Input" (active muscle torque).
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Riding an electric bike. You move because of both your pedaling (Input) and the motor's assist (Drift). To judge your fitness, we need to ignore the speed from the motor and measure only the power coming from your legs.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>The Solution: The "Tare" Method</h3>
+        <p>
+          We use computer simulations to "zero out" the passive forces. By calculating what the swing would look like with <em>zero</em> muscle effort, we can subtract that from the total to find the true muscle contribution.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Weighing a pet. You can't weigh a cat directly. So you weigh yourself holding the cat (Total), then weigh yourself alone (Drift). Subtracting your weight gives you the cat's weight (Input).
+        </div>
+      </div>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> You can't judge effort just by looking at the outcome. By mathematically removing the "free speed" provided by physics, we reveal the true contribution of the athlete.
+      </div>
+    </div>
+  </div>
+</section>
