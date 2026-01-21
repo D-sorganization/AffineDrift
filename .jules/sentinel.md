@@ -23,3 +23,17 @@
     - `scripts/generate_sitemap.py`
     - `tools/matlab_utilities/scripts/matlab_quality_check.py`
 - Action: Review to ensure inputs are trusted.
+
+## 2026-01-21 - Security Audit
+
+**Scan Results:**
+- Dependencies: 0 vulnerabilities
+- Code Analysis: 1 issue (Medium), 12 issues (Low) - Excluding test asserts
+- Pattern Scan: Skipped (Report missing)
+
+**Issues Created:** #3
+**Deferred:**
+- `tools/verify_images.py`: S310 - Audit url open. Permitted for verification tools per policy.
+
+**Low Severity Findings:**
+- Subprocess usage in build tools (`build-html.py`, `scripts/create_issues_from_assessment.py`, etc.).
