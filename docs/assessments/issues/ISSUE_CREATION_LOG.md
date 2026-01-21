@@ -37,3 +37,15 @@ The following issues would be created based on assessment grades below 5.
   1. Remove `workflow_runs_affine.txt`.
   2. Revert or split `8c8a930`.
   3. Ensure commits match their descriptions.
+
+## Issue 4: Completist Audit Verification (2026-01-21)
+- **Title**: Critical Incomplete: User-facing 'Coming Soon' Placeholders
+- **Labels**: `incomplete-implementation`, `critical`, `jules:completist`
+- **Body**:
+  Re-verified critical incomplete implementations on 2026-01-21.
+  - `tools.qmd`
+  - `daydreams-doodles.qmd`
+  - `contact.qmd`
+  - `resources-videos.qmd` (Placeholder images)
+
+  **Action**: See `docs/assessments/issues/ISSUE_Critical_Incomplete_Implementation.md`.

@@ -1,10 +1,9 @@
-# Assessment: M - Configuration
+# Assessment: Configuration
 
-## Score: 8/10
+## Grade: 8.0/10
 
-## Analysis
-Use of .env, ruff.toml, and other standard config files is consistent and correct.
+## Details
+Config files: .env.example, pyproject.toml; Env vars used in 1 files
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- See detailed findings

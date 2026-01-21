@@ -157,7 +157,9 @@ runOnDomReady(function () {
     link.addEventListener("click", () => {
       if (navbarCollapse && navbarCollapse.classList.contains("show")) {
         const collapseInstance =
-          window.bootstrap?.Collapse?.getInstance?.(navbarCollapse);
+          window.bootstrap?.Collapse?.getInstance
+            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+            : null;
         if (collapseInstance) {
           collapseInstance.hide();
         } else {
@@ -912,7 +914,7 @@ runOnDomReady(function () {
       });
 
       link.insertAdjacentElement("afterend", button);
-    });
+    }
   }
   runWhenIdle(initEmailCopy);
 
@@ -1384,7 +1386,7 @@ function initContactFormFeedback() {
         button.disabled = false;
       }, 3000);
     });
-  });
+  }
 }
 
 // --- PDF Download Functionality ---

@@ -1,10 +1,9 @@
-# Assessment: L - Logging
+# Assessment: Logging
 
-## Score: 5/10
+## Grade: 8.0/10
 
-## Analysis
-Heavy reliance on print() statements. No structured logging configuration found.
+## Details
+Files using logging: 19, Files using print: 9
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- See detailed findings

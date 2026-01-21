@@ -5,11 +5,20 @@ Converts LaTeX article files to Quarto Markdown with preserved equations.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sys
 from datetime import date
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger(__name__)
 
 
 class LaTeXToQuartoConverter:
@@ -19,8 +28,12 @@ class LaTeXToQuartoConverter:
 
     def read_latex_file(self, filepath: str | Path) -> str:
         """Read LaTeX file content."""
-        with open(filepath, encoding="utf-8") as f:
-            return f.read()
+        try:
+            with open(filepath, encoding="utf-8") as f:
+                return f.read()
+        except Exception as e:
+            logger.error(f"Error reading file {filepath}: {e}")
+            raise
 
     def extract_metadata(self, latex_content: str) -> dict[str, str]:
         """Extract title, author, and other metadata from LaTeX."""
@@ -293,22 +306,38 @@ class LaTeXToQuartoConverter:
 
         return frontmatter + content.strip() + "\n"
 
-    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> Path:
+    def convert_file(
+        self, input_file: str | Path, output_file: str | Path | None = None
+    ) -> Path | None:
         """Convert a LaTeX file to Quarto .qmd."""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".qmd")
 
+        logger.info(f"Converting {input_file} to {output_file}...")
+
         # Read LaTeX content
-        latex_content = self.read_latex_file(input_file)
+        try:
+            latex_content = self.read_latex_file(input_file)
+        except Exception:
+            return None  # Error logged in read_latex_file
 
         # Convert to Quarto
-        qmd_content = self.convert_to_qmd(latex_content)
+        try:
+            qmd_content = self.convert_to_qmd(latex_content)
+        except Exception as e:
+            logger.error(f"Error during conversion: {e}")
+            raise
 
         # Write output
         output_path = Path(output_file)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(qmd_content)
+        try:
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(qmd_content)
+            logger.info(f"Successfully converted {input_file}")
+        except Exception as e:
+            logger.error(f"Error writing to {output_path}: {e}")
+            raise
 
         return output_path
 
@@ -316,16 +345,21 @@ class LaTeXToQuartoConverter:
 def main() -> None:
     """Main entry point."""
     if len(sys.argv) < 2:
+        logger.error("Usage: latex_to_qmd.py <input_file> [output_file]")
         sys.exit(1)
 
     input_file = sys.argv[1]
     output_file = sys.argv[2] if len(sys.argv) > 2 else None
 
     if not os.path.exists(input_file):
+        logger.error(f"Input file not found: {input_file}")
         sys.exit(1)
 
     converter = LaTeXToQuartoConverter()
-    converter.convert_file(input_file, output_file)
+    try:
+        converter.convert_file(input_file, output_file)
+    except Exception:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

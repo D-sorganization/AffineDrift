@@ -18,7 +18,8 @@ from pathlib import Path
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format="%(levelname)s: %(message)s",
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
 
@@ -254,21 +255,21 @@ def main() -> None:
     files = find_files()
     total_issues = 0
 
-    print(f"Scanning {len(files)} files...")
+    logger.info(f"Scanning {len(files)} files...")
 
     for f in files:
         issues = check_file(f)
         if issues:
-            print(f"\nFile: {f}")
+            logger.warning(f"File: {f}")
             for line, msg, fix in issues:
-                print(f"  Line {line}: {msg} -> {fix}")
+                logger.warning(f"  Line {line}: {msg} -> {fix}")
             total_issues += len(issues)
 
     if total_issues > 0:
-        print(f"\nFound {total_issues} issues.")
+        logger.error(f"Found {total_issues} issues.")
         sys.exit(1)
     else:
-        print("\nNo issues found!")
+        logger.info("No issues found!")
         sys.exit(0)
 
 
