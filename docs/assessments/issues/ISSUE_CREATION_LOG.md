@@ -22,3 +22,15 @@ The following issues would be created based on assessment grades below 5.
   - `contact.qmd`: Social media links.
 
   **Action**: Hide these sections or implement the missing features.
+
+## Issue 3: Migrate Jules Agents to CLI v0.1.x API
+- **Title**: CRITICAL: Migrate Jules Agents to CLI v0.1.x API
+- **Labels**: `jules:code-quality`, `critical`, `maintenance`
+- **Body**:
+  Key maintenance workflows are explicitly disabled because they rely on an outdated Jules CLI API.
+  - `Jules-Tech-Custodian.yml`: "Jules Integration (Disabled - API Migration Required)"
+  - `Jules-Conflict-Fix.yml`: "Jules CLI integration disabled pending API migration"
+
+  This causes the "Control Tower" automation to fail silently or warn without performing necessary maintenance.
+
+  **Action**: Update the workflows to use the new Jules CLI v0.1.x API syntax (e.g., `jules new`, `jules remote`) as noted in the TODO comments.
