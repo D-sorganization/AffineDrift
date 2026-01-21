@@ -4,6 +4,13 @@ from playwright.sync_api import sync_playwright
 
 
 def test_console_logs() -> None:
+    """
+    Tests that the console does not contain banned logs when loading the index page.
+
+    This test launches a headless browser, navigates to the docs/index.html page,
+    and captures console messages. It asserts that specific banned messages
+    are not present in the logs.
+    """
     cwd = os.getcwd()
     url = f"file://{cwd}/docs/index.html"
 
@@ -14,6 +21,12 @@ def test_console_logs() -> None:
         logs: list[str] = []
 
         def on_console(msg: object) -> None:
+            """
+            Callback function to handle console messages.
+
+            Args:
+                msg: The console message object from Playwright.
+            """
             # Playwright msg has typed properties, but in callback we just hint loosely or specific
             # Using 'Any' or proper types if imported. msg is ConsoleMessage.
             # But let's use dynamic access or 'Any' to avoid deep imports if not needed,
