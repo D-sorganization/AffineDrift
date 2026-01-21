@@ -23,3 +23,18 @@
     - `scripts/generate_sitemap.py`
     - `tools/matlab_utilities/scripts/matlab_quality_check.py`
 - Action: Review to ensure inputs are trusted.
+
+## 2026-01-21 - Security Audit
+
+**Scan Results:**
+- Dependencies: 0 vulnerabilities (H/M/L)
+- Code Analysis: 1 issue (Medium), 75 issues (Low)
+- Pattern Scan: Skipped (File missing)
+
+**Issues Created:** None
+**Deferred:**
+- `tools/verify_images.py`: S310 (URL open) - Permitted exception for verification tools per policy.
+
+**Low Severity Findings:**
+- Subprocess usage (B404, B603, B607): 12 occurrences in build and maintenance scripts.
+- Assert statements (B101): 63 occurrences in test files (standard practice).
