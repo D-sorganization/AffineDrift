@@ -12,6 +12,7 @@ def test_console_logs() -> None:
         page = browser.new_page()
 
         logs: list[str] = []
+
         def on_console(msg: object) -> None:
             # Playwright msg has typed properties, but in callback we just hint loosely or specific
             # Using 'Any' or proper types if imported. msg is ConsoleMessage.
