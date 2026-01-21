@@ -1,0 +1,452 @@
+name: Jules Mobile Friendliness Evaluator (Worker)
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 12 * * *"  # 4:30 AM PST - After PR Compiler
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  evaluate-mobile-friendliness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt || true
+          sudo apt-get install -y jq
+          npm install -g lighthouse
+
+      - name: Archive Existing Mobile Assessments
+        run: |
+          mkdir -p docs/assessments/mobile/archive
+          DATE=$(date +%Y-%m-%d)
+
+          # Archive previous mobile assessment if it exists
+          if [ -f "docs/assessments/mobile/Mobile_Friendliness_Assessment.md" ]; then
+            mv "docs/assessments/mobile/Mobile_Friendliness_Assessment.md" \
+               "docs/assessments/mobile/archive/Mobile_Friendliness_Assessment_archived_$DATE.md"
+          fi
+
+          echo "Archive step completed successfully"
+
+      - name: Run Mobile Friendliness Checks
+        id: mobile-checks
+        run: |
+          set -e
+          mkdir -p docs/assessments/mobile
+          DATE=$(date +%Y-%m-%d)
+
+          echo "# Mobile Friendliness Assessment - $DATE" > docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "## Summary" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          # Initialize counters
+          TOTAL_FILES=0
+          VIEWPORT_MISSING=0
+          TOUCH_TARGETS_SMALL=0
+          FONT_SIZE_ISSUES=0
+          RESPONSIVE_ISSUES=0
+          FILES_WITH_ISSUES=""
+
+          # Check HTML files for mobile friendliness
+          echo "### HTML File Analysis" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "| File | Viewport | Touch Targets | Font Size | Responsive | Status |" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "|------|----------|---------------|-----------|------------|--------|" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          for html_file in docs/*.html docs/articles/*.html docs/tools/**/*.html; do
+            [ -f "$html_file" ] || continue
+            TOTAL_FILES=$((TOTAL_FILES + 1))
+            FILE_STATUS="✅"
+            FILE_ISSUES=""
+
+            VIEWPORT="✅"
+            TOUCH="✅"
+            FONT="✅"
+            RESPONSIVE="✅"
+
+            # Check for viewport meta tag
+            if ! grep -q 'viewport' "$html_file" 2>/dev/null; then
+              VIEWPORT="❌"
+              VIEWPORT_MISSING=$((VIEWPORT_MISSING + 1))
+              FILE_STATUS="❌"
+              FILE_ISSUES="$FILE_ISSUES viewport"
+            fi
+
+            # Check for small touch targets (links/buttons without adequate sizing)
+            if grep -qE 'font-size:\s*(8|9|10|11)px' "$html_file" 2>/dev/null; then
+              TOUCH="⚠️"
+              TOUCH_TARGETS_SMALL=$((TOUCH_TARGETS_SMALL + 1))
+              FILE_STATUS="⚠️"
+              FILE_ISSUES="$FILE_ISSUES touch"
+            fi
+
+            # Check for absolute font sizes that may be too small on mobile
+            if grep -qE 'font-size:\s*(8|9|10)px' "$html_file" 2>/dev/null; then
+              FONT="❌"
+              FONT_SIZE_ISSUES=$((FONT_SIZE_ISSUES + 1))
+              FILE_STATUS="❌"
+              FILE_ISSUES="$FILE_ISSUES font"
+            fi
+
+            # Check for responsive design (media queries or percentage widths)
+            if ! grep -qE '@media|width:\s*[0-9]+%|max-width|min-width' "$html_file" 2>/dev/null; then
+              # Check if there's external CSS that might handle this
+              if grep -q 'styles.css\|bootstrap' "$html_file" 2>/dev/null; then
+                RESPONSIVE="✅"
+              else
+                RESPONSIVE="⚠️"
+                RESPONSIVE_ISSUES=$((RESPONSIVE_ISSUES + 1))
+                if [ "$FILE_STATUS" = "✅" ]; then
+                  FILE_STATUS="⚠️"
+                fi
+                FILE_ISSUES="$FILE_ISSUES responsive"
+              fi
+            fi
+
+            # Record files with issues
+            if [ "$FILE_STATUS" != "✅" ]; then
+              FILES_WITH_ISSUES="$FILES_WITH_ISSUES\n- $html_file:$FILE_ISSUES"
+            fi
+
+            BASENAME=$(basename "$html_file")
+            echo "| $BASENAME | $VIEWPORT | $TOUCH | $FONT | $RESPONSIVE | $FILE_STATUS |" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          done
+
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          # Check CSS files for mobile-friendly patterns
+          echo "### CSS Analysis" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          CSS_ISSUES=0
+          for css_file in styles.css docs/styles.css css/*.css docs/css/*.css; do
+            [ -f "$css_file" ] || continue
+
+            echo "#### $(basename $css_file)" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+            # Check for media queries
+            MEDIA_COUNT=$(grep -c '@media' "$css_file" 2>/dev/null || echo "0")
+            echo "- Media queries found: $MEDIA_COUNT" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+            # Check for flexible layouts
+            if grep -qE 'display:\s*flex|display:\s*grid' "$css_file" 2>/dev/null; then
+              echo "- Flexible layouts: ✅ Uses flexbox/grid" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            else
+              echo "- Flexible layouts: ⚠️ Consider using flexbox/grid" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+              CSS_ISSUES=$((CSS_ISSUES + 1))
+            fi
+
+            # Check for relative units
+            if grep -qE 'rem|em|%|vw|vh' "$css_file" 2>/dev/null; then
+              echo "- Relative units: ✅ Uses rem/em/%" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            else
+              echo "- Relative units: ⚠️ Consider using relative units" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+              CSS_ISSUES=$((CSS_ISSUES + 1))
+            fi
+
+            echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          done
+
+          # Calculate overall score
+          TOTAL_ISSUES=$((VIEWPORT_MISSING + TOUCH_TARGETS_SMALL + FONT_SIZE_ISSUES + RESPONSIVE_ISSUES + CSS_ISSUES))
+          if [ $TOTAL_FILES -eq 0 ]; then
+            SCORE=100
+          else
+            ISSUE_RATIO=$((TOTAL_ISSUES * 100 / TOTAL_FILES))
+            SCORE=$((100 - ISSUE_RATIO))
+            [ $SCORE -lt 0 ] && SCORE=0
+          fi
+
+          # Determine grade
+          if [ $SCORE -ge 90 ]; then GRADE="A"; GRADE_NUM=10;
+          elif [ $SCORE -ge 80 ]; then GRADE="B"; GRADE_NUM=8;
+          elif [ $SCORE -ge 70 ]; then GRADE="C"; GRADE_NUM=7;
+          elif [ $SCORE -ge 60 ]; then GRADE="D"; GRADE_NUM=6;
+          else GRADE="F"; GRADE_NUM=4;
+          fi
+
+          # Write summary
+          {
+            echo "## Overall Score: $SCORE/100 (Grade: $GRADE)"
+            echo ""
+            echo "### Issue Summary"
+            echo ""
+            echo "| Category | Issues Found |"
+            echo "|----------|--------------|"
+            echo "| Missing Viewport | $VIEWPORT_MISSING |"
+            echo "| Small Touch Targets | $TOUCH_TARGETS_SMALL |"
+            echo "| Font Size Issues | $FONT_SIZE_ISSUES |"
+            echo "| Responsive Design | $RESPONSIVE_ISSUES |"
+            echo "| CSS Best Practices | $CSS_ISSUES |"
+            echo "| **Total Issues** | **$TOTAL_ISSUES** |"
+            echo ""
+            echo "### Files Analyzed: $TOTAL_FILES"
+            echo ""
+          } | cat - docs/assessments/mobile/Mobile_Friendliness_Assessment.md > /tmp/mobile_temp.md
+          mv /tmp/mobile_temp.md docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          # Add recommendations
+          echo "## Recommendations" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          if [ $VIEWPORT_MISSING -gt 0 ]; then
+            echo "### 1. Add Viewport Meta Tags" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "Add the following to the \`<head>\` of all HTML files:" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo '```html' >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">' >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo '```' >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          fi
+
+          if [ $FONT_SIZE_ISSUES -gt 0 ]; then
+            echo "### 2. Increase Minimum Font Size" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "Ensure all text is at least 16px (1rem) for readability on mobile devices." >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          fi
+
+          if [ $TOUCH_TARGETS_SMALL -gt 0 ]; then
+            echo "### 3. Increase Touch Target Sizes" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "Ensure all interactive elements are at least 44x44 pixels for easy tapping." >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          fi
+
+          if [ $RESPONSIVE_ISSUES -gt 0 ]; then
+            echo "### 4. Improve Responsive Design" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "Add CSS media queries to adapt layouts for different screen sizes." >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+            echo "" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          fi
+
+          echo "---" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+          echo "*Generated automatically by Jules Mobile Friendliness Evaluator*" >> docs/assessments/mobile/Mobile_Friendliness_Assessment.md
+
+          # Output for next steps
+          echo "score=$SCORE" >> $GITHUB_OUTPUT
+          echo "grade=$GRADE" >> $GITHUB_OUTPUT
+          echo "grade_num=$GRADE_NUM" >> $GITHUB_OUTPUT
+          echo "total_issues=$TOTAL_ISSUES" >> $GITHUB_OUTPUT
+
+      - name: Jules Mobile Improvements (REST API)
+        if: steps.mobile-checks.outputs.total_issues > 0
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          DATE=$(date +%Y-%m-%d)
+          REPO="${{ github.repository }}"
+          API_BASE="https://jules.googleapis.com/v1alpha"
+          SCORE="${{ steps.mobile-checks.outputs.score }}"
+          TOTAL_ISSUES="${{ steps.mobile-checks.outputs.total_issues }}"
+
+          # Check if API key is configured
+          if [ -z "$JULES_API_KEY" ]; then
+            echo "::warning::JULES_API_KEY not configured. Skipping Jules mobile improvements."
+            exit 0
+          fi
+
+          echo "Looking up repository source..."
+          SOURCES=$(curl -sf -H "X-Goog-Api-Key: $JULES_API_KEY" "$API_BASE/sources" || echo '{"sources":[]}')
+
+          # Parse owner/repo from github.repository (format: "owner/repo")
+          OWNER=$(echo "$REPO" | cut -d'/' -f1)
+          REPO_NAME=$(echo "$REPO" | cut -d'/' -f2)
+
+          # Jules API uses githubRepo.owner and githubRepo.repo fields
+          SOURCE_ID=$(echo "$SOURCES" | jq -r ".sources[] | select(.githubRepo.owner == \"$OWNER\" and .githubRepo.repo == \"$REPO_NAME\") | .name" | head -1)
+
+          if [ -z "$SOURCE_ID" ] || [ "$SOURCE_ID" = "null" ]; then
+            echo "::warning::Repository $REPO not found in Jules sources."
+            exit 0
+          fi
+
+          echo "Found source: $SOURCE_ID"
+          echo "Current mobile friendliness score: $SCORE/100 with $TOTAL_ISSUES issues"
+
+          # Read the assessment for context
+          ASSESSMENT_CONTENT=$(cat docs/assessments/mobile/Mobile_Friendliness_Assessment.md | head -100)
+
+          # Create improvement session
+          PROMPT=$(cat << 'PROMPT_EOF'
+          You are the MOBILE FRIENDLINESS IMPROVER agent.
+
+          ## Mission
+          Improve mobile friendliness of the website based on the assessment report.
+
+          ## Assessment Summary
+          ASSESSMENT_PLACEHOLDER
+
+          ## Tasks
+          1. **Viewport Meta Tags**: Add missing viewport meta tags to HTML files
+             - Use: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+          2. **Font Sizes**: Fix font sizes that are too small for mobile
+             - Minimum base font size should be 16px (1rem)
+             - Use relative units (rem, em) instead of px
+
+          3. **Touch Targets**: Ensure clickable elements are at least 44x44px
+             - Add appropriate padding to buttons and links
+             - Increase spacing between interactive elements
+
+          4. **Responsive Design**: Add/improve CSS media queries
+             - Add breakpoints for mobile (max-width: 768px)
+             - Use flexible layouts (flexbox, grid)
+             - Avoid fixed widths
+
+          5. **CSS Improvements**: Update styles.css with mobile-first patterns
+             - Add appropriate media queries
+             - Use relative units
+             - Ensure images scale properly
+
+          ## Constraints
+          - Only make changes that improve mobile friendliness
+          - Do not break existing desktop layouts
+          - Preserve all existing functionality
+          - Test changes don't cause regressions
+
+          ## Output
+          Create a PR with all mobile friendliness improvements and document changes made.
+          PROMPT_EOF
+          )
+
+          # Inject assessment content into prompt
+          PROMPT=$(echo "$PROMPT" | sed "s|ASSESSMENT_PLACEHOLDER|$ASSESSMENT_CONTENT|g")
+
+          echo "Creating Jules session for mobile improvements..."
+          REQUEST_JSON=$(jq -n \
+            --arg prompt "$PROMPT" \
+            --arg source "$SOURCE_ID" \
+            '{
+              prompt: $prompt,
+              sourceContext: {
+                source: $source,
+                githubRepoContext: {
+                  startingBranch: "main"
+                }
+              },
+              automationMode: "AUTO_CREATE_PR"
+            }')
+
+          HTTP_CODE=$(curl -s -o /tmp/session_response.json -w "%{http_code}" -X POST \
+            -H "X-Goog-Api-Key: $JULES_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$REQUEST_JSON" \
+            "$API_BASE/sessions")
+
+          SESSION_RESPONSE=$(cat /tmp/session_response.json)
+          echo "HTTP Status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::warning::Jules API returned HTTP $HTTP_CODE - continuing without automated fixes"
+            exit 0
+          fi
+
+          SESSION_ID=$(echo "$SESSION_RESPONSE" | jq -r '.name')
+          if [ -z "$SESSION_ID" ] || [ "$SESSION_ID" = "null" ]; then
+            echo "::warning::Failed to create Jules session"
+            exit 0
+          fi
+
+          echo "Created session: $SESSION_ID"
+
+          # Poll for session completion (max 30 minutes)
+          MAX_WAIT=1800
+          POLL_INTERVAL=30
+          ELAPSED=0
+
+          while [ $ELAPSED -lt $MAX_WAIT ]; do
+            SESSION_STATUS=$(curl -sf -H "X-Goog-Api-Key: $JULES_API_KEY" "$API_BASE/$SESSION_ID" || echo '{}')
+            STATE=$(echo "$SESSION_STATUS" | jq -r '.state // "UNKNOWN"')
+
+            echo "Session state: $STATE (elapsed: ${ELAPSED}s)"
+
+            case "$STATE" in
+              "COMPLETED"|"SUBMITTED")
+                echo "Session completed successfully!"
+                break
+                ;;
+              "FAILED"|"CANCELLED")
+                echo "::warning::Session $STATE"
+                break
+                ;;
+            esac
+
+            sleep $POLL_INTERVAL
+            ELAPSED=$((ELAPSED + POLL_INTERVAL))
+          done
+
+          if [ $ELAPSED -ge $MAX_WAIT ]; then
+            echo "::warning::Session timed out after ${MAX_WAIT}s. Check Jules dashboard for results."
+          fi
+
+          echo "Mobile improvements session complete."
+
+      - name: Create Issue for Low Scores
+        if: steps.mobile-checks.outputs.grade_num < 5
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCORE: ${{ steps.mobile-checks.outputs.score }}
+          GRADE: ${{ steps.mobile-checks.outputs.grade }}
+        run: |
+          # Check for existing open issue
+          EXISTING=$(gh issue list --label "jules:mobile,needs-attention" --state open --limit 1 --json number --jq '.[0].number' || echo "")
+
+          if [ -n "$EXISTING" ]; then
+            echo "Updating existing issue #$EXISTING"
+            gh issue comment "$EXISTING" --body "📱 **Mobile Friendliness Update** - $(date +%Y-%m-%d)
+
+          Current Score: **$SCORE/100** (Grade: $GRADE)
+
+          See the latest assessment: docs/assessments/mobile/Mobile_Friendliness_Assessment.md"
+          else
+            echo "Creating new issue for low mobile friendliness score"
+            gh issue create \
+              --title "📱 Mobile Friendliness Needs Attention (Score: $SCORE/100)" \
+              --label "jules:mobile,needs-attention" \
+              --body "## Mobile Friendliness Assessment
+
+          The website has scored **$SCORE/100** (Grade: $GRADE) on mobile friendliness.
+
+          ### Key Issues
+          - Missing viewport meta tags
+          - Font sizes too small for mobile
+          - Touch targets may be too small
+          - Responsive design improvements needed
+
+          ### Next Steps
+          1. Review the detailed assessment: \`docs/assessments/mobile/Mobile_Friendliness_Assessment.md\`
+          2. Prioritize fixes based on impact
+          3. Consider running Lighthouse audits for more detailed analysis
+
+          ### Resources
+          - [Google Mobile-Friendly Test](https://search.google.com/test/mobile-friendly)
+          - [Web.dev Mobile Guide](https://web.dev/mobile/)
+
+          ---
+          *This issue was created automatically by the Jules Mobile Friendliness Evaluator*"
+          fi
+
+      - name: Commit Assessment Results
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs(mobile): mobile friendliness assessment $(date +%Y-%m-%d)"
+          file_pattern: "docs/assessments/mobile/**"
+          branch: main

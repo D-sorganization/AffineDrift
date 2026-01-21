@@ -19,6 +19,7 @@ on:
     - cron: "0 11 * * *"  # 3 AM PST - Tech Custodian / Thesis Defender (Thu)
     - cron: "30 11 * * *" # 3:30 AM PST - Issue Resolver (daily fix)
     - cron: "0 12 * * *"  # 4 AM PST - PR Compiler (consolidate PRs)
+    - cron: "30 12 * * *" # 4:30 AM PST - Mobile Friendliness Evaluator
   workflow_dispatch:
     inputs:
       target:
@@ -38,6 +39,7 @@ on:
           - thesis-defender
           - issue-resolver
           - pr-compiler
+          - mobile-friendliness-evaluator
 
 # SAFEGUARD: Maximum iterations to prevent infinite repair loops
 env:
@@ -151,6 +153,9 @@ jobs:
                   case "0 12 * * *":
                     target = "pr-compiler";
                     break;
+                  case "30 12 * * *":
+                    target = "mobile-friendliness-evaluator";
+                    break;
                   default:
                     target = "none";
                 }
@@ -178,8 +183,10 @@ jobs:
                   target = day === 4 ? "thesis-defender" : "tech-custodian";
                 } else if (hour === 11 && minute >= 30) {
                   target = "issue-resolver";
-                } else if (hour === 12) {
+                } else if (hour === 12 && minute < 30) {
                   target = "pr-compiler";
+                } else if (hour === 12 && minute >= 30) {
+                  target = "mobile-friendliness-evaluator";
                 } else {
                   target = "none";
                 }
@@ -307,4 +314,10 @@ jobs:
     needs: triage
     if: needs.triage.outputs.target == 'pr-compiler'
     uses: ./.github/workflows/Jules-PR-Compiler.yml
+    secrets: inherit
+
+  call-mobile-friendliness-evaluator:
+    needs: triage
+    if: needs.triage.outputs.target == 'mobile-friendliness-evaluator'
+    uses: ./.github/workflows/Jules-Mobile-Friendliness-Evaluator.yml
     secrets: inherit
