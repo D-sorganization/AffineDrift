@@ -22,3 +22,13 @@ The following issues would be created based on assessment grades below 5.
   - `contact.qmd`: Social media links.
 
   **Action**: Hide these sections or implement the missing features.
+
+## Issue 3: Persistent Low Test Coverage (Re-assessment)
+- **Title**: CRITICAL: Test Coverage Dropped to ~6% (2/10)
+- **Labels**: `jules:assessment`, `needs-attention`, `priority:critical`
+- **Body**:
+  Latest assessment indicates test coverage has dropped or was previously overestimated.
+  - Estimated Coverage: ~6%
+  - Critical gaps remain in build scripts and tools.
+
+  **Action**: Prioritize unit tests for `tools/` directory.

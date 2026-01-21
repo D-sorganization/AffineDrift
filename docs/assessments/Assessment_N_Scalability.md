@@ -1,10 +1,12 @@
-# Assessment: N - Scalability
+# Assessment: Scalability
 
-## Score: 7/10
+## Grade: 9/10
 
 ## Analysis
-Static site architecture scales well for read traffic. Build times may grow linearly with content.
+Scalability is inherent to the architecture.
+- **Architecture**: Static site (GitHub Pages) scales globally via CDN.
+- **Build**: Quarto builds are relatively fast.
+- **Content**: Structure allows adding unlimited articles without code changes.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- As content grows, `quarto render` time might increase; consider incremental builds if supported.

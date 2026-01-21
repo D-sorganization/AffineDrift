@@ -1,10 +1,12 @@
-# Assessment: K - Data Handling
+# Assessment: Data Handling
 
-## Score: 6/10
+## Grade: 8/10
 
 ## Analysis
-Data is mostly static files. Simple and effective, but lacks schema enforcement for content metadata.
+Data handling is minimal but appropriate.
+- **Data Sources**: Content is in `.qmd` files.
+- **Storage**: No database; relies on file system and Git.
+- **Processing**: Python scripts process text/files efficiently.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- If data analysis articles grow, consider standardizing data input formats (e.g., CSV/JSON in `data/` folder).

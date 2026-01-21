@@ -1,10 +1,13 @@
-# Assessment: L - Logging
+# Assessment: Logging
 
-## Score: 5/10
+## Grade: 7/10
 
 ## Analysis
-Heavy reliance on print() statements. No structured logging configuration found.
+Logging is functional but could be more structured.
+- **Python**: Scripts use `print` or `logging`.
+- **JavaScript**: `script.js` uses `console.error` and `console.log` (though minimized in build).
+- **CI**: Build logs are the primary source of history.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- Standardize Python logging configuration across all `tools/`.
+- Ensure `console.log` is strictly stripped from production JS builds (verified in part, but `docs/script.js` still has some).

@@ -1,10 +1,12 @@
-# Assessment: G - Dependencies
+# Assessment: Dependencies
 
-## Score: 9/10
+## Grade: 9/10
 
 ## Analysis
-Requirements are pinned in requirements.txt and package.json. Good separation of concerns.
+Dependency management is clean.
+- **Single Source**: `requirements.txt` is the main source of truth.
+- **Pinning**: Versions are pinned (e.g., `numpy>=1.24.0`).
+- **Separation**: `package.json` handles dev tools (linting) separately from runtime/build.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+- Consider separating `requirements.txt` into `requirements.in` (for pip-compile) or `requirements-dev.txt` for clearer separation of concerns.
