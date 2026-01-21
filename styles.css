@@ -1381,6 +1381,74 @@ h3:hover .anchor-link,
   fill: currentcolor;
 }
 
+/* Export to PDF Button */
+.export-to-pdf {
+  position: fixed;
+  bottom: 6rem;
+  right: 2rem;
+  background: var(--accent-blue);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  border: none;
+  z-index: 900;
+}
+
+.export-to-pdf.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.export-to-pdf:hover,
+.export-to-pdf:focus {
+  transform: translateY(-2px);
+  background: var(--primary-blue);
+}
+
+.export-to-pdf:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.export-to-pdf svg {
+  width: 24px;
+  height: 24px;
+  fill: currentcolor;
+}
+
+.export-to-pdf .tooltip {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-dark);
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+}
+
+.export-to-pdf:hover .tooltip,
+.export-to-pdf:focus .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* External Link Indicator */
 .external-link::after {
   content: none;
@@ -1499,6 +1567,7 @@ h3:hover .anchor-link,
   .right-sidebar,
   .home-sidebar,
   .back-to-top,
+  .export-to-pdf,
   .skip-to-content,
   .copy-btn,
   .nav-toggle,
