@@ -1313,6 +1313,9 @@ runOnDomReady(function () {
   // --- Critics Corner Toggle ---
   initCriticsCorner();
 
+  // --- Critics Comments Toggle (New) ---
+  initCriticsComments();
+
   // --- Contact Form Feedback ---
   initContactFormFeedback();
 
@@ -1517,6 +1520,34 @@ function initCriticsCorner() {
         }
       });
     }
+  });
+}
+
+// --- Critics Comments Functionality ---
+function initCriticsComments() {
+  const criticsSections = document.querySelectorAll(".critics-comments");
+
+  criticsSections.forEach((section, index) => {
+    const header = section.querySelector(".critics-comments-header");
+    const content = section.querySelector(".critics-comments-content");
+
+    if (!header || !content) return;
+
+    if (!content.id) {
+      content.id = `critics-comments-content-${index + 1}`;
+    }
+
+    header.setAttribute("aria-controls", content.id);
+
+    // Ensure initial state matches attribute
+    const isExpanded = header.getAttribute("aria-expanded") === "true";
+    content.setAttribute("aria-hidden", String(!isExpanded));
+
+    header.addEventListener("click", () => {
+      const expanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", String(!expanded));
+      content.setAttribute("aria-hidden", String(expanded));
+    });
   });
 }
 
