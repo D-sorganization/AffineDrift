@@ -26,7 +26,7 @@ The Completist Agent performed a comprehensive audit of the AffineDrift codebase
 | Feature Area | File Path | Description | Status |
 | :--- | :--- | :--- | :--- |
 | **CI/CD** | `.github/workflows/Jules-Tech-Custodian.yml` | `TODO: Jules CLI API changed in v0.1.x` - Workflow needs update to match new CLI arguments. | **Pending** |
-| **CI/CD** | `.github/workflows/Jules-Conflict-Fix.yml` | `TODO: Jules CLI API changed in v0.1.x - needs migration` - Conflict resolution workflow needs update. | **Pending** |
+| **CI/CD** | `.github/workflows/Jules-Conflict-Fix.yml` | `TODO: Jules CLI API changed in v0.1.x` - Conflict resolution workflow needs update. | **Pending** |
 
 ## Technical Debt Register
 *Priority: Low - Maintenance*
