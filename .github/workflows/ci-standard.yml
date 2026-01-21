@@ -67,9 +67,9 @@ jobs:
         run: python tools/check_site_health.py
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
-      # Non-blocking, archives results for legacy support
+      # Blocking: Enforces code quality on MATLAB files
       - name: MATLAB Quality Check
-        continue-on-error: true
+        continue-on-error: false
         run: |
           python tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
           cat matlab_quality_report.txt

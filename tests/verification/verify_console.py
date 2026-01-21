@@ -3,7 +3,7 @@ import os
 from playwright.sync_api import sync_playwright
 
 
-def test_console_logs():
+def test_console_logs() -> None:
     cwd = os.getcwd()
     url = f"file://{cwd}/docs/index.html"
 
@@ -11,11 +11,18 @@ def test_console_logs():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
-        logs = []
-
-        def on_console(msg):
-            logs.append(msg.text)
-            print(f"Console {msg.type}: {msg.text}")
+        logs: list[str] = []
+        def on_console(msg: object) -> None:
+            # Playwright msg has typed properties, but in callback we just hint loosely or specific
+            # Using 'Any' or proper types if imported. msg is ConsoleMessage.
+            # But let's use dynamic access or 'Any' to avoid deep imports if not needed,
+            # or just 'msg' without type if we can avoid untyped error.
+            # Actually, the error was 'Function is missing a type annotation'.
+            # msg is likely ConsoleMessage.
+            text = getattr(msg, "text", str(msg))
+            logs.append(text)
+            type_str = getattr(msg, "type", "info")
+            print(f"Console {type_str}: {text}")
 
         page.on("console", on_console)
 
