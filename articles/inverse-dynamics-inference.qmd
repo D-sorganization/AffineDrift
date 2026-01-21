@@ -172,3 +172,61 @@ This section provides the conceptual and computational foundation for replacing 
     </div>
   </div>
 </section>
+
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Is "Drift" Just a Semantic Rebranding?</h3>
+        </div>
+        <p class="critic-argument">
+          Classical inverse dynamics already calculates inertial, Coriolis, and gravitational terms ($M\ddot{q} + C\dot{q} + G$). Skeptics argue that defining "drift" as the sum of these passive terms does not introduce a new physical insight but merely groups existing terms differently. If the model ($M, C, G$) is known, standard methods can already isolate the "net muscle moment" by simple subtraction, making the affine decomposition mathematically equivalent to existing practices rather than a novel inference method.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> While the equations are algebraically equivalent, the <em>inference</em> capability differs. Classical methods treat the total residual torque as the input. Our framework treats the <em>counterfactual trajectory</em> (ZTCF) as the baseline. The distinction is critical when the system is under-actuated or when we need to estimate what the system <em>would have done</em> without input, which is a trajectory question, not just an instantaneous torque subtraction.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>The Static Fallacy of ZVCF</h3>
+        </div>
+        <p class="critic-argument">
+          The Zero Velocity Counterfactual (ZVCF) isolates input forces by holding the state fixed (zero velocity). However, biological actuators (muscles) have intrinsic force-velocity properties (Hill-type mechanics) where force capacity drops significantly with contraction speed. Estimating input contributions based on a static context may grossly misrepresent the actual force-generating capacity of muscles during a high-velocity movement like the golf swing, confusing "theoretical input" with "biologically feasible input."
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a valid limitation. The ZVCF isolates the <em>control signal contribution</em> to the generalized force, not the maximal muscular capacity. We assume the control input $u$ enters linearly ($G(x)u$). Future work must integrate muscle dynamics into $f(x)$ so that "drift" includes passive muscle properties, but for rigid-body analysis, ZVCF correctly identifies the component of force attributable to the controller's command at that instant.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Model Sensitivity & Error Propagation</h3>
+        </div>
+        <p class="critic-argument">
+          Separating "Drift" and "Input" relies on a perfect forward model. In practice, errors in mass properties or joint parameters are inevitable. Because the "Drift" forces (inertial/centrifugal) are often orders of magnitude larger than the "Input" forces in a ballistic swing, a small percentage error in the drift model could result in a calculated input error that is larger than the input signal itself. Classical inverse dynamics suffers this too, but the explicit separation might imply a false precision.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge that model error is the primary limiting factor. However, explicit drift estimation allows us to bound this error more effectively than lumped inverse dynamics. By validating the passive ZTCF trajectory against passive physical swing experiments (e.g., the "Iron Byron" without motor torque), we can calibrate the drift model independently of the active inputs.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding of the limitations and requirements of affine decomposition.
+      </div>
+    </div>
+  </div>
+</section>
