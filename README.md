@@ -28,18 +28,25 @@ This is a static website hosted on GitHub Pages at `AffineDrift.com`.
 
 ```
 AffineDrift/
-├── index.qmd           # Main homepage (Quarto markdown)
-├── _quarto.yml         # Quarto configuration
-├── styles.css          # Custom styling
-├── script.js           # Interactive features
-├── docs/               # Additional documentation
-│   └── assessments/    # Quality assessments
-├── tests/              # Python tests
+├── index.qmd              # Main homepage (Quarto markdown)
+├── _quarto.yml            # Quarto configuration
+├── styles.css             # Custom styling
+├── script.js              # Interactive features
+├── documentation/         # Project documentation
+│   ├── guides/            # User-facing guides
+│   ├── developer/         # Developer documentation
+│   ├── quarto/            # Quarto-specific docs
+│   ├── internal/          # Internal process notes
+│   └── archive/           # Archived documentation
+├── docs/                  # GitHub Pages output + assessments
+│   └── assessments/       # Quality assessments
+├── articles/              # Research articles
+├── content/               # Drafts and source materials
+├── tools/                 # Interactive tools and simulators
+├── tests/                 # Python tests
 ├── .github/
-│   └── workflows/      # CI/CD pipelines
-│       ├── quarto-publish.yml  # GitHub Pages deployment
-│       └── Jules-Control-Tower.yml  # Automated maintenance
-└── *.qmd               # Content pages (Quarto markdown)
+│   └── workflows/         # CI/CD pipelines
+└── *.qmd                  # Content pages (Quarto markdown)
 ```
 
 ## 🚀 Quick Start
@@ -66,12 +73,22 @@ AffineDrift/
 3. Run `quarto preview` to see changes live
 4. Commit and push to automatically deploy via GitHub Actions
 
-See [WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md) for detailed instructions.
+See [Website Management Guide](documentation/guides/WEBSITE_MANAGEMENT.md) for detailed instructions.
 
 ## 📚 Documentation
 
-- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
-- **[WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
+All documentation is organized in the [`documentation/`](documentation/) directory:
+
+### User Guides
+- **[Development Guide](documentation/guides/DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
+- **[Website Management](documentation/guides/WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
+- **[House Style](documentation/guides/HOUSE_STYLE.md)**: Typography, layout, and formatting standards
+
+### Technical Documentation
+- **[Quarto Guide](documentation/quarto/QUARTO_GUIDE.md)**: Quarto setup and usage
+- **[Developer Docs](documentation/developer/)**: Infrastructure and CI/CD documentation
+
+See [documentation/README.md](documentation/README.md) for the complete documentation index.
 
 ## 🛠️ Technologies
 
@@ -103,7 +120,7 @@ This is a personal research platform, but suggestions and discussions are welcom
 
 New to web development? Check out:
 
-- [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for a comprehensive introduction
+- [Development Guide](documentation/guides/DEVELOPMENT_GUIDE.md) for a comprehensive introduction
 - [MDN Web Docs](https://developer.mozilla.org/) for HTML/CSS/JS reference
 - [GitHub Pages Documentation](https://docs.github.com/pages)
 
