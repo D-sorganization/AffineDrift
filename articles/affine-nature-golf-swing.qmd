@@ -96,10 +96,10 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           <h3>Is the "Zero Torque" Baseline Biologically Valid?</h3>
         </div>
         <p class="critic-argument">
-          Skeptics argue that defining a "Zero Torque" baseline ($u=0$) while maintaining the high stiffness of a swinging golfer ("Effective Plant") is physically contradictory. In a biological system, high impedance requires high muscle activation. Therefore, a true $u=0$ state would be a flaccid ragdoll, making the ZTCF trajectory structurally unstable and dynamically irrelevant compared to the actual stiffened swing.
+          Critics argue that the "Zero Torque" baseline ($u=0$) is physically contradictory because biological stiffness requires muscle activation. They contend that a true $u=0$ state implies a "ragdoll" collapse, rendering the ZTCF trajectory dynamically irrelevant. By decoupling torque from impedance, the model creates a "Zombie Golfer"—a fictional entity that maintains the stiffness of an athlete but applies the torque of a cadaver.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge this biological coupling. However, the AffineDrift framework separates <em>Mechanical Causality</em> from <em>Neural Strategy</em>. The ZTCF simulates the "Frozen Strategy": it isolates the motion that results purely from the system's impedance parameters (stiffness/damping) without the active driving torque. This allows us to separate the <em>cost of stiffness</em> from the <em>cost of drive</em>.
+          <strong>Our Response:</strong> This distinction is intentional. The ZTCF simulates a "Frozen Strategy": it asks how the system would evolve if the golfer maintained their structural impedance (stiffness/damping) but ceased their driving effort. This allows us to separate the metabolic cost of <em>stabilization</em> from the mechanical cost of <em>acceleration</em>. The "Zombie Golfer" is not a physiological prediction; it is a diagnostic control.
         </div>
       </div>
 
@@ -109,10 +109,10 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           <h3>Does Gravity Matter at 100 mph?</h3>
         </div>
         <p class="critic-argument">
-          The Zero Velocity Counterfactual (ZVCF) analyzes static forces like gravity and shaft droop. Critics point out that in a high-speed swing, centripetal accelerations exceed $100g$, making gravity negligible ($<1\%$). They argue that analyzing ZVCF is akin to studying the aerodynamics of a parked car to understand racing.
+          The Zero Velocity Counterfactual (ZVCF) analyzes static forces like gravity and shaft droop. Skeptics argue that in a high-speed swing, centripetal accelerations exceed $100g$, making gravity negligible ($<1\%$). They claim that analyzing the ZVCF is akin to studying the aerodynamics of a parked car to understand Formula 1 racing—technically correct, but practically meaningless.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> While the <em>magnitude</em> of static forces is small relative to peak dynamic loads, the ZVCF is analytically essential. It serves as a necessary "tare" operation to distinguish "Geometric Stiffness" (velocity-dependent stiffening) from "Elastic Stiffness" (material properties). Without explicitly subtracting the configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing.
+          <strong>Our Response:</strong> While the <em>magnitude</em> of static forces is small, the ZVCF is analytically essential as a "tare" operation. It distinguishes "Geometric Stiffness" (velocity-dependent stiffening, which is part of the drift) from "Elastic Stiffness" (material properties). Without explicitly subtracting the configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing dynamics.
         </div>
       </div>
 
@@ -122,10 +122,10 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           <h3>The Limits of Rigid-Body Analogies</h3>
         </div>
         <p class="critic-argument">
-          The framework frequently employs rigid double-pendulum analogies to explain "drift" versus "input". However, the primary mechanism of the golf shaft is the "Catapult Effect"—the storage and release of elastic potential energy. A rigid model is structurally blind to this mechanism, potentially leading readers to underestimate the role of the shaft as an energy buffer.
+          The framework frequently relies on rigid double-pendulum analogies to explain "drift". However, the golf shaft functions as an energy storage device (the "Catapult Effect"). Critics argue that treating the system as a rigid chain obscures the primary mechanism of power generation: the loading and unloading of elastic potential energy.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+          <strong>Our Response:</strong> We agree that rigid analogies are insufficient for detailed analysis. For this reason, the full mathematical framework (Section @sec-affine) explicitly includes flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$. This ensures that the "Catapult Effect" is fully accounted for in the passive baseline, distinguishing it from active torque input.
         </div>
       </div>
 
