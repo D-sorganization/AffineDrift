@@ -99,7 +99,7 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           Skeptics argue that defining a "Zero Torque" baseline ($u=0$) while maintaining the high stiffness of a swinging golfer ("Effective Plant") is physically contradictory. In a biological system, high impedance requires high muscle activation. Therefore, a true $u=0$ state would be a flaccid ragdoll, making the ZTCF trajectory structurally unstable and dynamically irrelevant compared to the actual stiffened swing.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge this biological coupling. However, the AffineDrift framework separates <em>Mechanical Causality</em> from <em>Neural Strategy</em>. The ZTCF simulates the "Frozen Strategy": it isolates the motion that results purely from the system's impedance parameters (stiffness/damping) without the active driving torque. This allows us to separate the <em>cost of stiffness</em> from the <em>cost of drive</em>.
+          <strong>Our Response:</strong> This is a profound physiological insight. While we acknowledge the biological coupling between stiffness and torque, the AffineDrift framework separates <em>Mechanical Causality</em> from <em>Neural Strategy</em>. The ZTCF simulates a "Frozen Strategy": it isolates the motion that results purely from the system's structural impedance (stiffness/damping) without the active driving torque. This allows us to analytically separate the <em>cost of stability</em> from the <em>cost of propulsion</em>.
         </div>
       </div>
 
@@ -112,7 +112,7 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           The Zero Velocity Counterfactual (ZVCF) analyzes static forces like gravity and shaft droop. Critics point out that in a high-speed swing, centripetal accelerations exceed $100g$, making gravity negligible ($<1\%$). They argue that analyzing ZVCF is akin to studying the aerodynamics of a parked car to understand racing.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> While the <em>magnitude</em> of static forces is small relative to peak dynamic loads, the ZVCF is analytically essential. It serves as a necessary "tare" operation to distinguish "Geometric Stiffness" (velocity-dependent stiffening) from "Elastic Stiffness" (material properties). Without explicitly subtracting the configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing.
+          <strong>Our Response:</strong> We accept that the <em>magnitude</em> of static forces is dwarfed by dynamic loads. However, the ZVCF is not a model of a slow swing; it is an analytical "tare" operation. It distinguishes "Geometric Stiffness" (velocity-dependent stiffening) from "Elastic Stiffness" (material properties). Without explicitly subtracting this configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing.
         </div>
       </div>
 
@@ -125,7 +125,20 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           The framework frequently employs rigid double-pendulum analogies to explain "drift" versus "input". However, the primary mechanism of the golf shaft is the "Catapult Effect"—the storage and release of elastic potential energy. A rigid model is structurally blind to this mechanism, potentially leading readers to underestimate the role of the shaft as an energy buffer.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+          <strong>Our Response:</strong> We agree that rigid analogies are merely pedagogical. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Methodological Concern:</span>
+          <h3>Sensitivity to Measurement Noise</h3>
+        </div>
+        <p class="critic-argument">
+          Calculating the inverse inertia matrix $M^{-1}$ and differentiating motion capture data ($\ddot{q}$) tends to amplify sensor noise. Critics argue that the resulting "Input Torque" $\tau_{input}$ may simply be an artifact of this noise, effectively fitting a model to error rather than measuring true intent.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a valid challenge for all inverse dynamics studies. The decomposition is theoretically exact but empirically sensitive. In Part II, we address this by employing high-order Savitzky-Golay filtering and conducting parameter sensitivity analyses. We report "Input" as a confidence interval rather than a point estimate where signal-to-noise ratios are low.
         </div>
       </div>
 
@@ -136,6 +149,24 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
     </div>
   </div>
 </section>
+
+<!-- Auto-repair for Critics' Comments Toggle (Fixes misalignment with script.js) -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const headers = document.querySelectorAll(".critics-comments-header");
+    headers.forEach(header => {
+      // Prevent duplicate listeners if script.js eventually gets updated
+      if (header.dataset.listenerAttached === "true") return;
+
+      header.addEventListener("click", () => {
+        const isExpanded = header.getAttribute("aria-expanded") === "true";
+        header.setAttribute("aria-expanded", !isExpanded);
+      });
+
+      header.dataset.listenerAttached = "true";
+    });
+  });
+</script>
 ```
 
 ## Introduction
