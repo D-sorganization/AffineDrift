@@ -57,9 +57,6 @@
       if (typeof Fuse !== "undefined") {
         fuse = new Fuse(searchIndex.entries, fuseOptions);
         isLoaded = true;
-        console.log(
-          `Global search loaded: ${searchIndex.count} entries indexed`
-        );
         return true;
       } else {
         console.warn("Fuse.js not available, search disabled");

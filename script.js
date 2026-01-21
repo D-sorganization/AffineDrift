@@ -664,10 +664,6 @@ runOnDomReady(function () {
     }
   }
 
-  // Log page load for analytics (optional)
-  console.log("AffineDrift loaded successfully");
-  console.log("Mathematical notation rendering via MathJax");
-
   // Back to Top Button
   const backToTopBtn = document.createElement("button");
   backToTopBtn.className = "back-to-top";
@@ -1315,8 +1311,6 @@ runOnDomReady(function () {
 
   // --- Contact Form Feedback ---
   initContactFormFeedback();
-
-  console.log("AffineDrift loaded successfully (Optimized)");
 });
 
 // 🎨 Palette UX: Auto-growing Textareas
@@ -1452,7 +1446,7 @@ function preparePDFPrint() {
         window.print();
       }, MATHJAX_RENDER_DELAY_MS);
     }).catch((err) => {
-      console.log('MathJax typeset error, printing anyway:', err);
+      console.error('MathJax typeset error, printing anyway:', err);
       window.print();
     });
   } else {

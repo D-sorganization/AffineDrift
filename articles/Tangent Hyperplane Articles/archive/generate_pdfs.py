@@ -3,6 +3,7 @@
 
 import re
 from pathlib import Path
+from typing import Any
 
 import markdown
 from weasyprint import CSS, HTML
@@ -147,8 +148,6 @@ dd {
 }
 """
 
-
-from typing import Any
 
 def extract_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """Extract YAML frontmatter from quarto/markdown file."""
