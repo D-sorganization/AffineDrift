@@ -23,3 +23,21 @@
     - `scripts/generate_sitemap.py`
     - `tools/matlab_utilities/scripts/matlab_quality_check.py`
 - Action: Review to ensure inputs are trusted.
+
+## 2026-01-21 - Security Audit
+
+**Scan Results:**
+- Dependencies: 0 vulnerabilities (H/M/L)
+- Code Analysis: 1 issue (Medium), 12 issues (Low) - Excluding test asserts
+- Pattern Scan: N/A (Report missing)
+
+**Issues Created:** .jules/security_issues/ISSUE_S310_verify_images.md
+**Deferred:** None
+
+**Low Severity Findings:**
+- Subprocess usage detected (B404, B603, B607) in multiple build/utility scripts:
+    - `build-html.py`
+    - `scripts/create_issues_from_assessment.py`
+    - `scripts/generate_sitemap.py`
+    - `tools/matlab_utilities/scripts/matlab_quality_check.py`
+- Action: Review to ensure inputs are trusted.
