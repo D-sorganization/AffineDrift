@@ -1,3 +1,5 @@
+"""Verification script for console logs in the documentation."""
+
 import os
 
 from playwright.sync_api import sync_playwright
