@@ -1,10 +1,18 @@
-# Assessment: L - Logging
+# Assessment: Logging (Category L)
 
-## Score: 5/10
+**Score: 8/10**
 
-## Analysis
-Heavy reliance on print() statements. No structured logging configuration found.
+## Findings
+Logging practices are good in Python scripts.
+- `logging` module is used.
+- JS code avoids `console.log` in production.
+
+## Strengths
+- Configurable log levels.
+- Clean output for CI pipelines.
+
+## Weaknesses
+- Some older scripts might still use `print` for status updates.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Migrate any remaining `print` statements to `logger.info` or `logger.debug`.

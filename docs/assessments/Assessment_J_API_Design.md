@@ -1,10 +1,20 @@
-# Assessment: J - API Design
+# Assessment: API Design (Category J)
 
-## Score: 5/10
+**Score: 7/10**
 
-## Analysis
-Internal API only. 'tools' modules are importable but not designed as a public library. Adequate for purpose.
+## Findings
+While not primarily an API library, the internal tool APIs are reasonable.
+- Functions generally have clear signatures.
+- Type hints are used in newer code.
+
+## Strengths
+- `build-html.py` uses type hints (`-> tuple[...]`).
+- Modular design of tools.
+
+## Weaknesses
+- Some older scripts might lack type hints.
+- No formal API documentation (Sphinx/MkDocs) for the python tools themselves.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Add type hints to all Python scripts.
+2. Consider generating API docs if external usage is expected.

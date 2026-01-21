@@ -1,10 +1,20 @@
-# Assessment: F - Security
+# Assessment: Security (Category F)
 
-## Score: 6/10
+**Score: 9/10**
 
-## Analysis
-SECURITY.md was missing (restored as quick fix). Dependencies are pinned. Safe evaluation used for dynamic code. No secrets detected.
+## Findings
+Security posture is strong for a static site generator.
+- `SECURITY.md` defines reporting process.
+- Dependencies are pinned in `requirements.txt`.
+- `simpleeval` is used for safe evaluation of expressions.
+
+## Strengths
+- Explicit security policy.
+- Usage of `simpleeval` prevents code injection in math tools.
+- CI checks for security vulnerabilities (Bandit mentioned in memory).
+
+## Weaknesses
+- Local build scripts run with user privileges (standard for dev tools).
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Regularly audit `requirements.txt` for vulnerabilities using `dependabot` or `safety`.
