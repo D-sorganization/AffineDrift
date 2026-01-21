@@ -23,3 +23,14 @@
     - `scripts/generate_sitemap.py`
     - `tools/matlab_utilities/scripts/matlab_quality_check.py`
 - Action: Review to ensure inputs are trusted.
+
+## 2026-01-21 - Security Audit
+
+**Scan Results:**
+- Dependencies: 0 vulnerabilities (H/M/L)
+- Code Analysis: 1 issues (Medium), 75 issues (Low)
+- Pattern Scan: 0 findings (Report missing)
+
+**Issues Created:** #3
+**Deferred:**
+- `tools/verify_images.py` (S310): Matches policy exception for verification tools, but flagged for manual verification as per procedure.
