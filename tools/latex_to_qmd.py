@@ -306,7 +306,9 @@ class LaTeXToQuartoConverter:
 
         return frontmatter + content.strip() + "\n"
 
-    def convert_file(self, input_file: str | Path, output_file: str | Path | None = None) -> Path | None:
+    def convert_file(
+        self, input_file: str | Path, output_file: str | Path | None = None
+    ) -> Path | None:
         """Convert a LaTeX file to Quarto .qmd."""
         if output_file is None:
             output_file = Path(input_file).with_suffix(".qmd")
