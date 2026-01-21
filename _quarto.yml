@@ -95,6 +95,7 @@ format:
     theme:
       light: [cosmo, custom.scss]
     css:
+      - css/startup-launcher.css
       - styles.css
       - css/search-metrics.css
     toc: false
@@ -149,9 +150,14 @@ format:
           <link rel="canonical" href="https://affinedrift.com">
 
           <!-- Performance: Preload critical resources -->
+          <link rel="preload" href="/css/startup-launcher.css" as="style">
           <link rel="preload" href="/styles.css" as="style">
           <link rel="preload" href="/script.js" as="script">
+          <link rel="preload" href="/js/startup-launcher.js" as="script">
           <link rel="modulepreload" href="/js/metrics.js">
+
+          <!-- Startup Launcher: Load immediately for splash screen -->
+          <script src="/js/startup-launcher.js"></script>
 
           <!-- PWA and Mobile Optimization -->
           <link rel="manifest" href="/manifest.json">
