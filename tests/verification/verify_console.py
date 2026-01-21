@@ -1,3 +1,11 @@
+"""
+Verification script for checking console logs in the documentation.
+
+This script uses Playwright to navigate to the docs/index.html page and
+ensures that no banned logs (errors, warnings, or specific forbidden strings)
+are present in the browser console.
+"""
+
 import os
 
 from playwright.sync_api import sync_playwright
