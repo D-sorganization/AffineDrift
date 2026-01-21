@@ -1,10 +1,16 @@
-# Assessment: M - Configuration
+# Assessment: Configuration
 
-## Score: 8/10
+## Grade: 9/10
 
 ## Analysis
-Use of .env, ruff.toml, and other standard config files is consistent and correct.
+Configuration is managed via files (`ruff.toml`, `_quarto.yml`, `.env.example`). This is standard and effective.
+
+### Strengths
+- Centralized config files.
+- `.env.example` for secrets/env vars.
+
+### Weaknesses
+- None.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. None.

@@ -1,10 +1,18 @@
-# Assessment: O - Maintainability
+# Assessment: Maintainability
 
-## Score: 7/10
+## Grade: 7/10
 
 ## Analysis
-Clean code and strong linting help, but the lack of tests makes refactoring risky.
+The code is clean, but the fragmentation of tools (root vs tools vs scripts) hurts maintainability slightly. The `AGENTS.md` file is a huge plus for AI-assisted maintenance.
+
+### Strengths
+- Clean code.
+- Strong documentation.
+
+### Weaknesses
+- Directory structure clutter.
+- Lack of JS tests makes JS refactoring risky.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Refactor directory structure (clean up root).
+2. Add JS tests.

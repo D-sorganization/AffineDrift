@@ -1,7 +1,15 @@
 """Script to fix HTML validation issues (version 2)."""
 
+import logging
 import re
 from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def fix_file(filepath: Path) -> None:
@@ -15,6 +23,7 @@ def fix_file(filepath: Path) -> None:
     try:
         content = filepath.read_text(encoding="utf-8")
     except UnicodeDecodeError:
+        logger.warning("Could not read %s as UTF-8. Skipping.", filepath)
         return
 
     original_content = content
@@ -98,11 +107,13 @@ def fix_file(filepath: Path) -> None:
         )
 
     if content != original_content:
+        logger.info("Fixed validation issues in: %s", filepath)
         filepath.write_text(content, encoding="utf-8")
 
 
 if __name__ == "__main__":
     # Process all HTML files in docs
-    files = Path("docs").rglob("*.html")
+    files = list(Path("docs").rglob("*.html"))
+    logger.info("Scanning %d HTML files...", len(files))
     for file in files:
         fix_file(file)

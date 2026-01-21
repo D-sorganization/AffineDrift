@@ -1,10 +1,16 @@
-# Assessment: J - API Design
+# Assessment: API Design
 
-## Score: 5/10
+## Grade: 7/10
 
 ## Analysis
-Internal API only. 'tools' modules are importable but not designed as a public library. Adequate for purpose.
+This is primarily a static site, so "API Design" refers to internal tool interfaces. Functions in `build-html.py` and `tools/` have clear signatures and type hints.
+
+### Strengths
+- Type hints used.
+- Clear function names.
+
+### Weaknesses
+- Internal APIs are ad-hoc; no formal contract for tool interaction.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Standardize CLI arguments for all tools using `argparse` or `typer`.

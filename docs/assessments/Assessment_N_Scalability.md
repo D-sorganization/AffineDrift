@@ -1,10 +1,16 @@
-# Assessment: N - Scalability
+# Assessment: Scalability
 
-## Score: 7/10
+## Grade: 8/10
 
 ## Analysis
-Static site architecture scales well for read traffic. Build times may grow linearly with content.
+The static site architecture is highly scalable for read traffic. The build process (Python scripts) is linear but fast enough for current size.
+
+### Strengths
+- Static site (GitHub Pages).
+- "Bolt" optimizations in JS.
+
+### Weaknesses
+- Build time might increase with content growth if not parallelized.
 
 ## Recommendations
-* [ ] Address identified weaknesses.
-* [ ] Maintain strengths.
+1. Monitor build times.
