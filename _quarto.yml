@@ -224,7 +224,16 @@ format:
           </script>
     include-after-body:
       - text: |
-          <script src="script.js"></script>
+          <script>
+            (function() {
+              const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+              const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+              const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+              const script = document.createElement('script');
+              script.src = `${normalizedBase}script.js`;
+              document.body.appendChild(script);
+            })();
+          </script>
           <script>
             // Register Service Worker for PWA support
             if ('serviceWorker' in navigator) {

@@ -151,14 +151,14 @@ a:hover {
   width: 100%;
 }
 
-/* Override Quarto's page-columns to prevent layout conflicts */
-#quarto-content.page-columns {
+/* Override Quarto's page-columns only on full-layout pages */
+#quarto-content.page-layout-full.page-columns {
   display: block;
 }
 
 /* Ensure full-width pages use full width */
-.page-layout-full #quarto-content,
-.page-layout-full main.content {
+#quarto-content.page-layout-full,
+#quarto-content.page-layout-full main.content {
   max-width: 100%;
   width: 100%;
 }
@@ -168,15 +168,27 @@ a:hover {
   display: none !important;
 }
 
-/* Reset Quarto's margin-sidebar and sidebar columns */
-#quarto-margin-sidebar,
-#quarto-sidebar {
+/* Article pages: keep margins tighter and sidebars visible */
+#quarto-content.page-layout-article {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+  column-gap: var(--sidebar-gap);
+}
+
+#quarto-content.page-layout-article main.content {
+  max-width: 100%;
+}
+
+/* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
+#quarto-content.page-layout-full #quarto-margin-sidebar,
+#quarto-content.page-layout-full #quarto-sidebar {
   display: none;
 }
 
-/* Override page-columns grid behavior */
-.page-columns.page-full,
-.page-columns.column-page {
+/* Override page-columns grid behavior on full-layout pages */
+#quarto-content.page-layout-full .page-columns.page-full,
+#quarto-content.page-layout-full .page-columns.column-page {
   display: block;
   max-width: 100%;
 }
