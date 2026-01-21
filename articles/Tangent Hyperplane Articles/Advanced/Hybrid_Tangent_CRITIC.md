@@ -774,7 +774,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
 
    > **Open-source implementation:**
    > A minimal JAX implementation of hybrid DDP for the bouncing ball is available at:
-   > [github.com/affinedrift/hybrid-tangent-spaces](github.com/affinedrift/hybrid-tangent-spaces) (hypothetical link)
+   > [github.com/affinedrift/hybrid-tangent-spaces](https://github.com/affinedrift/hybrid-tangent-spaces) (hypothetical link)
    >
    > This allows readers to verify the convergence claims and experiment with different parameters.
 

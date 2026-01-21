@@ -2,6 +2,7 @@ import logging
 import re
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 # Configure logging to replace print statements
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -73,6 +74,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             or "docs" in str(file_path)
             or "content" in str(file_path)
             or "_templates" in str(file_path)
+            or ".jules" in str(file_path)
             or file_path.name in skip_files
         ):
             continue
@@ -96,7 +98,14 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             if "${" in url or url == "...":
                 continue
 
+            # Skip single-character links (often mathematical notation like [f,g](x))
+            if len(url) == 1:
+                continue
+
             # Internal link
+            # URL-decode the path to handle %20 and other encoded characters
+            url = unquote(url)
+
             # Check if absolute (relative to domain root) or relative
             if url.startswith("/"):
                 # Assumes root_path is the site root
