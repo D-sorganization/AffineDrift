@@ -1,13 +1,13 @@
 # Comprehensive Repository Assessment
 
-## Overall Grade: 7.36/10
+## Overall Grade: 7.41/10
 
 ## Category Breakdown
 
 | Category | Grade | Weight |
 |----------|-------|--------|
 | Code Structure | 6.0 | - |
-| Documentation | 9.3 | - |
+| Documentation | 9.8 | - |
 | Test Coverage | 3.0 | - |
 | Error Handling | 8.0 | - |
 | Performance | 7.0 | - |

@@ -64,6 +64,9 @@ GROUP_MAPPING = {
 
 
 def get_python_files(root: Path) -> list[Path]:
+    """
+    Recursively finds all Python files in the given directory, excluding common ignored directories.
+    """
     return [
         p
         for p in root.rglob("*.py")
@@ -72,6 +75,9 @@ def get_python_files(root: Path) -> list[Path]:
 
 
 def assess_code_structure(files: list[Path]) -> dict[str, Any]:
+    """
+    Analyzes code structure metrics such as lines of code and file depth.
+    """
     lines_counts = []
     for f in files:
         try:
@@ -103,6 +109,9 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_documentation(files: list[Path]) -> dict[str, Any]:
+    """
+    Evaluates documentation coverage by counting docstrings in functions and classes.
+    """
     docstring_count = 0
     function_count = 0
     class_count = 0
@@ -138,6 +147,9 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_test_coverage(root: Path) -> dict[str, Any]:
+    """
+    Estimates test coverage based on the presence and quantity of test files.
+    """
     test_files = list(root.rglob("test_*.py")) + list(root.rglob("*_test.py"))
 
     # Heuristic based on file count, memory note says 19%
@@ -154,6 +166,9 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
 
 
 def assess_error_handling(files: list[Path]) -> dict[str, Any]:
+    """
+    Assesses error handling quality by checking for try/except blocks and bare excepts.
+    """
     try_count = 0
     bare_except_count = 0
 
@@ -177,6 +192,9 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_logging(files: list[Path]) -> dict[str, Any]:
+    """
+    Evaluates logging practices by comparing usage of the logging module versus print statements.
+    """
     logging_usage = 0
     print_usage = 0
 
@@ -202,6 +220,9 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_security(root: Path) -> dict[str, Any]:
+    """
+    Checks for security audit tools in GitHub workflows.
+    """
     score = 7
     workflows = list(root.glob(".github/workflows/*.yml"))
     has_audit = False
@@ -221,6 +242,9 @@ def assess_security(root: Path) -> dict[str, Any]:
 
 
 def assess_dependencies(root: Path) -> dict[str, Any]:
+    """
+    Reviews dependency management practices, checking for requirements.txt and package.json.
+    """
     score = 0
     details = []
 
@@ -250,6 +274,9 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
 
 
 def assess_cicd(root: Path) -> dict[str, Any]:
+    """
+    Analyzes CI/CD configuration, looking for workflows and test jobs.
+    """
     score = 0
     details = []
     workflows_dir = root / ".github" / "workflows"
@@ -277,6 +304,9 @@ def assess_cicd(root: Path) -> dict[str, Any]:
 
 
 def assess_code_style(root: Path) -> dict[str, Any]:
+    """
+    Checks for the presence of code style configuration files.
+    """
     score = 0
     details = []
 
@@ -300,6 +330,9 @@ def assess_code_style(root: Path) -> dict[str, Any]:
 
 
 def assess_api_design(files: list[Path]) -> dict[str, Any]:
+    """
+    Evaluates API design by checking for type hint usage in function signatures.
+    """
     total_funcs = 0
     typed_funcs = 0
 
@@ -326,6 +359,9 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_data_handling(files: list[Path]) -> dict[str, Any]:
+    """
+    Scans for common data I/O patterns to assess data handling practices.
+    """
     io_patterns = ["open(", "json.load", "csv.reader", "pd.read", "sqlite3"]
     hits = 0
     for f in files:
@@ -339,6 +375,9 @@ def assess_data_handling(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_configuration(root: Path) -> dict[str, Any]:
+    """
+    Checks for configuration files and environment variable usage.
+    """
     score = 0
     details = []
 
@@ -365,6 +404,9 @@ def assess_configuration(root: Path) -> dict[str, Any]:
 
 
 def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
+    """
+    Estimates scalability and maintainability based on code complexity metrics.
+    """
     total_branches = 0
     total_funcs = 0
 
@@ -395,6 +437,9 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
 def generate_report(
     category: str, category_name: str, grade: float, details: str, recommendations: list[str]
 ):
+    """
+    Writes a markdown report for a specific assessment category.
+    """
     filename = f"docs/assessments/Assessment_{category}_{category_name.replace(' ', '_')}.md"
     content = f"""# Assessment: {category_name}
 
@@ -414,6 +459,9 @@ def generate_report(
 
 
 def main():
+    """
+    Main function to execute the full repository assessment and generate reports.
+    """
     root = Path.cwd()
     py_files = get_python_files(root)
 
