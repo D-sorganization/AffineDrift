@@ -12,7 +12,7 @@ on:
       dry_run:
         description: 'Dry run - analyze only'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
@@ -45,6 +45,12 @@ jobs:
           pip install -r requirements.txt || true
           pip install ruff black mypy || true
           npm install -g @google/jules
+
+      - name: Create Fix Branch
+        run: |
+          BRANCH_NAME="jules/code-quality-fix-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Check and Fix
         if: inputs.dry_run != 'true'
@@ -81,7 +87,6 @@ jobs:
           
           # Create session prompt
           PROMPT=$(cat << 'PROMPT_EOF'
-          '
           You are the CODE QUALITY FIXER agent.
           
           Fix issues in the assessment file. Priority: CRITICAL > HIGH > MEDIUM > LOW
@@ -107,7 +112,7 @@ jobs:
                   startingBranch: "main"
                 }
               },
-              automationMode: "AUTO_CREATE_PR"
+              # automationMode: "AUTO_CREATE_PR"
             }')
           
           echo "Request: $REQUEST_JSON"
@@ -160,11 +165,21 @@ jobs:
 
           git add -A
           if ! git diff --staged --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
             git commit -m "fix: code quality improvements"
-            git push origin "$BRANCH_NAME"
+            git push -u origin "$BRANCH_NAME"
 
             gh pr create \
               --title "Code Quality Fixes - $(date +%Y-%m-%d)" \
               --body "Automated code quality fixes" \
+              --base main \
+              --head "$BRANCH_NAME" \
               --label "jules:code-quality,automated-fix"
+            
+            # Post-processing: Remove reviewers to reduce noise
+            PR_NUM=$(gh pr list --head "$BRANCH_NAME" --json number -q '.[0].number')
+            if [ -n "$PR_NUM" ]; then
+               gh pr edit "$PR_NUM" --remove-reviewer "dieterolson" || true
+            fi
           fi
