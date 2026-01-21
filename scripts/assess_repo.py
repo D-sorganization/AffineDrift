@@ -69,15 +69,18 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
     max_loc = max(lines_counts) if lines_counts else 0
 
     score = 10
-    if avg_loc > 200: score -= 2
-    if max_loc > 500: score -= 2
+    if avg_loc > 200:
+        score -= 2
+    if max_loc > 500:
+        score -= 2
 
     max_depth = 0
     for f in files:
         depth = len(f.relative_to(Path.cwd()).parts)
         max_depth = max(max_depth, depth)
 
-    if max_depth > 5: score -= 2
+    if max_depth > 5:
+        score -= 2
 
     return {
         "grade": max(0, score),
@@ -93,7 +96,7 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
         try:
             tree = ast.parse(f.read_text(encoding="utf-8"))
             for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                     function_count += 1
                     if ast.get_docstring(node):
                         docstring_count += 1
@@ -110,7 +113,8 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
     score = coverage / 10
 
     readmes = list(Path.cwd().rglob("README.md"))
-    if len(readmes) > 5: score += 1
+    if len(readmes) > 5:
+        score += 1
 
     return {
         "grade": min(10, max(0, score)),
@@ -122,8 +126,10 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
 
     # Heuristic based on file count, memory note says 19%
     score = 3
-    if len(test_files) > 5: score += 1
-    if len(test_files) > 20: score += 2
+    if len(test_files) > 5:
+        score += 1
+    if len(test_files) > 20:
+        score += 2
 
     return {
         "grade": min(10, score),
@@ -140,9 +146,12 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
         bare_except_count += len(re.findall(r"except\s*:", content))
 
     score = 7
-    if bare_except_count > 5: score -= 2
-    if try_count == 0: score -= 3
-    elif try_count > 20: score += 1
+    if bare_except_count > 5:
+        score -= 2
+    if try_count == 0:
+        score -= 3
+    elif try_count > 20:
+        score += 1
 
     return {
         "grade": max(0, min(10, score)),
@@ -154,7 +163,8 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
     print_usage = 0
 
     for f in files:
-        if "test" in f.name: continue
+        if "test" in f.name:
+            continue
         content = f.read_text(encoding="utf-8", errors="ignore")
         if "logging." in content or "logger." in content:
             logging_usage += 1
@@ -162,8 +172,10 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
             print_usage += 1
 
     score = 5
-    if logging_usage > print_usage: score += 3
-    elif logging_usage > 0: score += 1
+    if logging_usage > print_usage:
+        score += 3
+    elif logging_usage > 0:
+        score += 1
 
     return {
         "grade": min(10, score),
@@ -180,7 +192,8 @@ def assess_security(root: Path) -> dict[str, Any]:
             has_audit = True
             break
 
-    if has_audit: score += 2
+    if has_audit:
+        score += 2
 
     return {
         "grade": min(10, score),
@@ -197,7 +210,7 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
         details.append("requirements.txt found")
         content = req_txt.read_text(encoding="utf-8")
         pinned = len(re.findall(r"==\d", content))
-        total = len([l for l in content.splitlines() if l.strip() and not l.startswith("#")])
+        total = len([line for line in content.splitlines() if line.strip() and not line.startswith("#")])
         if total > 0 and pinned / total > 0.5:
             score += 3
             details.append(f"Most dependencies pinned ({pinned}/{total})")
@@ -273,7 +286,7 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
                     total_funcs += 1
                     if node.returns:
                         typed_funcs += 1
-        except:
+        except Exception:
             pass
 
     score = 5
@@ -331,18 +344,20 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
         try:
             tree = ast.parse(f.read_text(encoding="utf-8"))
             for node in ast.walk(tree):
-                if isinstance(node, (ast.If, ast.For, ast.While, ast.ExceptHandler)):
+                if isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
                     total_branches += 1
                 if isinstance(node, ast.FunctionDef):
                     total_funcs += 1
-        except:
+        except Exception:
             pass
 
     avg_complexity = total_branches / total_funcs if total_funcs > 0 else 0
 
     score = 10
-    if avg_complexity > 10: score -= 5
-    elif avg_complexity > 5: score -= 2
+    if avg_complexity > 10:
+        score -= 5
+    elif avg_complexity > 5:
+        score -= 2
 
     details = f"Avg Complexity (branches/func): {avg_complexity:.1f}"
 
