@@ -912,7 +912,7 @@ runOnDomReady(function () {
       });
 
       link.insertAdjacentElement("afterend", button);
-    });
+    }
   }
   runWhenIdle(initEmailCopy);
 
@@ -1309,6 +1309,9 @@ runOnDomReady(function () {
   // --- Critics Corner Toggle ---
   initCriticsCorner();
 
+  // --- Critics Comments Toggle ---
+  initCriticsComments();
+
   // --- Contact Form Feedback ---
   initContactFormFeedback();
 });
@@ -1384,7 +1387,7 @@ function initContactFormFeedback() {
         button.disabled = false;
       }, 3000);
     });
-  });
+  }
 }
 
 // --- PDF Download Functionality ---
@@ -1511,6 +1514,23 @@ function initCriticsCorner() {
           content.style.paddingBottom = '1rem';
           header.setAttribute('aria-expanded', 'true');
         }
+      });
+    }
+  });
+}
+
+// --- Critics Comments Functionality ---
+function initCriticsComments() {
+  const criticsComments = document.querySelectorAll('.critics-comments');
+
+  criticsComments.forEach(section => {
+    const header = section.querySelector('.critics-comments-header');
+    const content = section.querySelector('.critics-comments-content');
+
+    if (header && content) {
+      header.addEventListener('click', function() {
+        const expanded = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', String(!expanded));
       });
     }
   });
