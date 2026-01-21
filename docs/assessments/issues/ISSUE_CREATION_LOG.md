@@ -22,3 +22,18 @@ The following issues would be created based on assessment grades below 5.
   - `contact.qmd`: Social media links.
 
   **Action**: Hide these sections or implement the missing features.
+
+## Issue 3: Misleading Commit & Committed Artifacts
+- **Title**: CRITICAL: Misleading Commit Message & Artifacts in Repo
+- **Labels**: `jules:code-quality`, `critical`, `integrity`
+- **Body**:
+  Commit `8c8a930` ("fix(ci): repair remaining yaml indentation issues") contains unrelated feature work and build artifacts.
+
+  **Violations:**
+  1. **Misleading Message:** Claims CI fix, adds `grip_angle_simulator.html`.
+  2. **Artifacts:** `workflow_runs_affine.txt` (50KB log) committed to root.
+
+  **Action**:
+  1. Remove `workflow_runs_affine.txt`.
+  2. Revert or split `8c8a930`.
+  3. Ensure commits match their descriptions.
