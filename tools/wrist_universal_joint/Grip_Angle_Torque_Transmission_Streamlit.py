@@ -256,7 +256,7 @@ def generate_sample_torque(
 
 # ⚡ Bolt Optimization: Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def draw_diagram(
     grip_angle_deg: float,
     wrist_angle_deg: float,
@@ -537,7 +537,7 @@ def draw_diagram(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -616,7 +616,7 @@ def plot_torque(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -682,7 +682,7 @@ def plot_acceleration(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
