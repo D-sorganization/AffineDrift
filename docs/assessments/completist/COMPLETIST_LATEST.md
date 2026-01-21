@@ -1,42 +1,322 @@
-# Completist Audit Report - 2026-01-21
+# Completist Report - 2026-01-21
 
 ## Executive Summary
-The Completist Agent performed a comprehensive audit of the AffineDrift codebase on 2026-01-21. The audit identified **Critical Incomplete** implementations in the form of user-visible placeholder content on public pages. Additionally, the previously identified **Feature Gaps** regarding CI/CD workflow migration remain pending.
+- **Critical Incomplete Items:** 11
+- **Feature Gaps:** 19
+- **Content Gaps:** 248
+- **Technical Debt Items:** 29
 
-## Critical Incomplete (Blocking)
-*Priority: High - Immediate Action Required*
+## 1. Critical Incomplete (Blocking)
+- **Placeholder (Coming Soon)** in `contact.qmd:52`: <li><a href="#" class="social-link" target="_blank" rel="noopener">Twitter/X (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `contact.qmd:53`: <li><a href="#" class="social-link" target="_blank" rel="noopener">LinkedIn (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `tools.qmd:26`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `tools.qmd:34`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `tools.qmd:38`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `tools.qmd:46`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `tools.qmd:50`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `tools.qmd:62`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `tools.qmd:69`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `tools.qmd:76`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `tools.qmd:83`: <span class="resource-type">Coming Soon</span>
 
-*   **User-Visible Placeholders**
-    *   **Page**: `tools.qmd` (and `docs/tools.html`)
-        *   **Issue**: Multiple sections labeled "Coming Soon", including "Control Theory & Simulation Tools" and "General Purpose Calculators".
-    *   **Page**: `daydreams-doodles.qmd` (and `docs/daydreams-doodles.html`)
-        *   **Issue**: Resource cards for "Unit Converter", "RRT Path Planner", "Solar System Model", and "Games" are marked "Coming Soon".
-    *   **Page**: `contact.qmd` (and `docs/contact.html`)
-        *   **Issue**: Social media links for Twitter/X and LinkedIn are text placeholders `(Coming Soon)` and link to `#`.
+## 2. Feature Gaps
+- **TODO** in `UNIFIED_CI_APPROACH.md:276`: TODO comments, console.log statements
+- **TODO** in `UNIFIED_CI_APPROACH.md:292`: TODO, FIXME, or NotImplementedError
+- **TODO** in `UNIFIED_CI_APPROACH.md:332`: TODO, FIXME, NotImplementedError
+- **TODO** in `UNIFIED_CI_APPROACH.md:364`: TODO/FIXME comments
+- **TODO** in `JULES_ARCHITECTURE.md:175`: TODO\|FIXME" --include="*.py" src/; then
+- **TODO** in `tools/code_quality_check.py:34`: TODO placeholder found"),
+- **Partial Implementation** in `tools/code_quality_check.py:189`: pass
+- **TODO** in `tools/matlab_utilities/README.md:261`: TODO, FIXME, HACK, XXX placeholders
+- **TODO** in `tools/matlab_utilities/scripts/matlab_quality_check.py:285`: TODO placeholder found"),
+- **TODO** in `.github/workflows/Jules-Code-Quality-Reviewer.yml:104`: TODO, FIXME, NotImplemented)
+- **TODO** in `.github/workflows/Jules-Tech-Custodian.yml:49`: TODO: Jules CLI API changed in v0.1.x
+- **TODO** in `.github/workflows/Jules-Completist.yml:40`: TODO/FIXME/XXX comments in Python, TypeScript, JavaScript, Quarto
+- **TODO** in `.github/workflows/Jules-Completist.yml:41`: TODO\|FIXME\|XXX\|HACK\|TEMP" \
+- **TODO** in `.github/workflows/Jules-Completist.yml:52`: TODO\|""".*WIP\|# TODO:' --include="*.py" . \
+- **TODO** in `.github/workflows/Jules-Completist.yml:107`: TODO/FIXME/XXX comments
+- **TODO** in `.github/workflows/Jules-Completist.yml:120`: TODO comments indicating missing features
+- **TODO** in `.github/workflows/Jules-Conflict-Fix.yml:16`: TODO: Jules CLI API changed in v0.1.x - needs migration
+- **TODO** in `.github/workflows/Jules-Conflict-Fix.yml:46`: TODO: Jules CLI API changed - original command:
+- **TODO** in `archive/handcrafted-site/wrist-universal-joint.html:231`: TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment.
 
-## Content Gaps (Website Specific)
-*Priority: Medium - Scheduled Updates*
+## 3. Content Gaps (Website Specific)
+- **Placeholder (placeholder)** in `research-review-interaction-forces.qmd:73`: a placeholder reminder for the upcoming comprehensive review.
+- **Placeholder (placeholder)** in `WEBSITE_ANALYSIS_COMPLETED.md:151`: - **Reading List** - reading-list.html (placeholder for future)
+- **Placeholder (Placeholder)** in `resources-videos.qmd:203`: <!-- Placeholder for Channel Preview - Video ID to be added -->
+- **Placeholder (Placeholder)** in `resources-videos.qmd:342`: <!-- Placeholder for Channel Preview - Video ID to be added -->
+- **Placeholder (placeholder)** in `INTERACTIVE_VISUALIZATIONS_GUIDE.md:1246`: placeholder="e.g., x^2, sin(x), exp(x)"
+- **Placeholder (placeholder)** in `WEBSITE_LINK_HEALTH.md:7`: - Legacy placeholder pages display archived notices with links to relevant current sections instead of rendering blank screens.
+- **Placeholder (placeholder)** in `bibliography.qmd:38`: <input type="text" id="bib-search" placeholder="Search references by title, author, or concept..." style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem;">
+- **Placeholder (Coming Soon)** in `daydreams-doodles.qmd:42`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `daydreams-doodles.qmd:52`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `daydreams-doodles.qmd:62`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `daydreams-doodles.qmd:72`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (placeholder)** in `resources-books.qmd:64`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:101`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:138`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:184`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:220`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:250`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:289`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:317`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:347`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:384`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:414`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:480`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:515`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:551`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:588`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:633`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-books.qmd:662`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:692`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:722`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:752`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:782`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:837`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-books.qmd:866`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `resources-researchers.qmd:40`: <img src="https://www.stfx.ca/sites/default/files/styles/person/public/images/Human-Kinetics-Sasho%20MacKenzie.png?h=c1788fc8&itok=ka_v5jaE" alt="Sasho MacKenzie" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:72`: <img src="https://webspace.yale.edu/Yale-golf-history/images/grober-2.jpg" alt="Robert Groeber" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:125`: <img src="https://www.drkwongolf.info/images/drkwon.jpg" alt="Dr. Young-Hoo Kwon" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:157`: <img src="http://wedgecraft.com/wp-content/uploads/2018/12/robjneal.png" alt="Rob Neal" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:189`: <img src="https://me-future.lafayette.edu/wp-content/uploads/sites/511/2016/03/steve-160x160.png" alt="Steven Nesbit" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:214`: <img src="static/images/placeholder.svg" alt="Carol Putnam" class="website-preview">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:239`: <img src="https://engineering.stanford.edu/sites/default/files/styles/large_square/public/media/image/stanford-person-default-profile-image.png?h=55541bb6&itok=iT3JNdt_" alt="Felix Zajac" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:271`: <img src="static/images/placeholder.svg" alt="Phil Cheetham" class="website-preview">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:303`: <img src="static/images/placeholder.svg" alt="Masahide Hirashima" class="website-preview">
+- **Placeholder (placeholder)** in `resources-researchers.qmd:328`: <img src="static/images/placeholder.svg" alt="John McPhee" class="website-preview">
+- **Placeholder (coming soon)** in `book-reviews.qmd:26`: <li>Book recommendations coming soon...</li>
+- **Placeholder (coming soon)** in `book-reviews.qmd:32`: <li>Book recommendations coming soon...</li>
+- **Placeholder (placeholder)** in `UNIFIED_CI_APPROACH.md:292`: 3. **No placeholders**: No TODO, FIXME, or NotImplementedError
+- **Placeholder (Placeholder)** in `UNIFIED_CI_APPROACH.md:332`: - **Placeholders**: TODO, FIXME, NotImplementedError
+- **Placeholder (Placeholder)** in `UNIFIED_CI_APPROACH.md:364`: 3. **Placeholders**: Remove TODO/FIXME comments
+- **Placeholder (placeholder)** in `resources-software.qmd:39`: <img src="static/images/placeholder.svg" alt="OpenSim Logo" class="software-logo">
+- **Placeholder (placeholder)** in `resources-software.qmd:62`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/MyoSim/MyoSim" alt="MyoSim Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:82`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/CMU-Perceptual-Computing-Lab/openpose" alt="OpenPose Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:126`: <img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
+- **Placeholder (placeholder)** in `resources-software.qmd:154`: <img src="static/images/placeholder.svg" alt="Pinocchio Logo" class="software-logo">
+- **Placeholder (placeholder)** in `resources-software.qmd:183`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/MingHanLee/GolfPose" alt="GolfPose GitHub Repository Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:210`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://arxiv.org/abs/1903.06528" alt="SwingNet Paper Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:230`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="Golf Swing Analysis GitHub Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:250`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="AI Golf Swing Discrepancy Detector Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `resources-software.qmd:270`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="Golf Swing Analyzer GitHub Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `QUICK_WINS_IMPLEMENTATION.md:359`: placeholder="Search articles..."
+- **Placeholder (placeholder)** in `QUICK_WINS_IMPLEMENTATION.md:392`: #search-input::placeholder {
+- **Placeholder (placeholder)** in `QUICK_WINS_IMPLEMENTATION.md:594`: src="placeholder.jpg"
+- **Placeholder (placeholder)** in `QUICK_WINS_IMPLEMENTATION.md:686`: placeholder="Type a command or search..."
+- **Placeholder (coming soon)** in `resources-papers.qmd:65`: Note: Detailed review of Carol Putnam's work on interaction forces and proximal-to-distal sequencing coming soon.
+- **Placeholder (Placeholder)** in `JULES_ARCHITECTURE.md:173`: - name: Check Placeholders
+- **Placeholder (Placeholder)** in `JULES_ARCHITECTURE.md:176`: echo "::warning::Placeholders found."
+- **Placeholder (placeholder)** in `WEBSITE_BUG_DEPRECATION_REVIEW.md:5`: This review records fixes for previously reported navigation typos, legacy JavaScript, and empty placeholder pages.
+- **Placeholder (placeholder)** in `WEBSITE_BUG_DEPRECATION_REVIEW.md:17`: ### Legacy placeholder pages shipped as blank HTML
+- **Placeholder (Placeholder)** in `articles/inverse-dynamics-bibliography.md:104`: # Note: Placeholder for a review if specific one exists, otherwise rely on Tutelman
+- **Placeholder (placeholder)** in `tools/CONVERSION_GUIDE.md:76`: - Displays `[Figure: See PDF version]` placeholder
+- **Placeholder (Placeholder)** in `tools/CONVERSION_GUIDE.md:88`: | Figures/TikZ    | Placeholder text             | Not converted          |
+- **Placeholder (placeholder)** in `tools/wrist_universal_joint/grip_angle_simulator.html:443`: <input type="text" id="polynomial-expr" value="t**2 - t" placeholder="e.g., t**2 - t">
+- **Placeholder (placeholder)** in `tools/matlab_utilities/README.md:261`: - TODO, FIXME, HACK, XXX placeholders
+- **Placeholder (placeholder)** in `tools/matlab_utilities/README.md:262`: - Template placeholders (`<VAR>`, `{{var}}`)
+- **Placeholder (placeholder)** in `.github/workflows/templates/assessment-fix-template.md:32`: - [ ] Added image alt text placeholders
+- **Placeholder (placeholder)** in `archive/handcrafted-site/theory-part2.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `archive/handcrafted-site/theory-part3.html:68`: "search-text-placeholder": "",
+- **Placeholder (coming soon)** in `archive/handcrafted-site/articles.html:169`: <p>More reviews coming soon. Check back regularly for new analyses of golf science research.</p>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/articles.html:188`: <li>Book recommendations coming soon...</li>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/articles.html:194`: <li>Book recommendations coming soon...</li>
+- **Placeholder (placeholder)** in `archive/handcrafted-site/theory-part5.html:68`: "search-text-placeholder": "",
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/daydreams-doodles.html:54`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/daydreams-doodles.html:64`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/daydreams-doodles.html:74`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/daydreams-doodles.html:84`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/research-reviews.html:93`: <p class="comments-note">Comments coming soon</p>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/research-reviews.html:99`: <p>More reviews coming soon. Check back regularly for new analyses of golf science research.</p>
+- **Placeholder (placeholder)** in `archive/handcrafted-site/theory-part4.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `archive/handcrafted-site/theory-part1.html:68`: "search-text-placeholder": "",
+- **Placeholder (coming soon)** in `archive/handcrafted-site/theory.html:274`: Comments and discussion are coming soon. This section will allow readers to engage with
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:223`: <p><strong>Note:</strong> If the Streamlit app is not yet deployed, this iframe will show a placeholder.
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:227`: <div id="streamlit-placeholder" style="display: block; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:231`: <!-- TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment.
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:299`: const streamlitPlaceholder = document.getElementById('streamlit-placeholder');
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:300`: if (streamlitIframe && streamlitPlaceholder) {
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:301`: // Check if URL is still a placeholder
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:302`: const isPlaceholder = streamlitIframe.src.includes('your-app-name.streamlit.app');
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:304`: if (!isPlaceholder) {
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:307`: streamlitPlaceholder.style.display = 'none';
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:310`: // If iframe loads successfully, ensure it's visible and hide placeholder
+- **Placeholder (Placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:311`: streamlitPlaceholder.style.display = 'none';
+- **Placeholder (placeholder)** in `archive/handcrafted-site/wrist-universal-joint.html:315`: // If URL is still a placeholder, placeholder is already shown by default (display: block)
+- **Placeholder (coming soon)** in `archive/handcrafted-site/book-reviews.html:83`: <li>Book recommendations coming soon...</li>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/book-reviews.html:89`: <li>Book recommendations coming soon...</li>
+- **Placeholder (coming soon)** in `archive/handcrafted-site/book-reviews.html:119`: <p class="comments-note">Comments coming soon</p>
+- **Placeholder (placeholder)** in `archive/handcrafted-site/reading-list.html:66`: <div class="placeholder-message" style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, rgba(15, 76, 117, 0.05), rgba(50, 130, 184, 0.05)); border-radius: 12px; border-left: 5px solid #3282b8;">
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/reading-list.html:67`: <h2 style="color: #0f4c75; margin-bottom: 1.5rem;">Coming Soon</h2>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/about.html:141`: <li><a href="#" class="social-link" target="_blank" rel="noopener">Twitter/X (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/about.html:142`: <li><a href="#" class="social-link" target="_blank" rel="noopener">LinkedIn (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/contact.html:141`: <li><a href="#" class="social-link" target="_blank" rel="noopener">Twitter/X (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/contact.html:142`: <li><a href="#" class="social-link" target="_blank" rel="noopener">LinkedIn (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/tools.html:91`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/tools.html:99`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/tools.html:103`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/tools.html:111`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `archive/handcrafted-site/tools.html:115`: <h3><a href="#">Coming Soon</a></h3>
+- **Placeholder (placeholder)** in `docs/research-review-interaction-forces.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/research-review-interaction-forces.html:470`: a placeholder reminder for the upcoming comprehensive review.
+- **Placeholder (placeholder)** in `docs/repositories-2d-model.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-videos.html:67`: "search-text-placeholder": "",
+- **Placeholder (Placeholder)** in `docs/resources-videos.html:600`: <!-- Placeholder for Channel Preview - Video ID to be added -->
+- **Placeholder (Placeholder)** in `docs/resources-videos.html:739`: <!-- Placeholder for Channel Preview - Video ID to be added -->
+- **Placeholder (placeholder)** in `docs/research-review-shaft-flexibility.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/daydreams-doodles.html:67`: "search-text-placeholder": "",
+- **Placeholder (Coming Soon)** in `docs/daydreams-doodles.html:439`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/daydreams-doodles.html:449`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/daydreams-doodles.html:459`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/daydreams-doodles.html:469`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (placeholder)** in `docs/collaborate.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/research-reviews.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/drifter-manifesto.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/research-review-baseball-pitching.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/repositories-models.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-books.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-books.html:461`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:498`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:535`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:581`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:617`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:647`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:686`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:714`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:744`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:781`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:811`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:877`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:912`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:948`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:985`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1030`: onerror="this.src='static/images/book_placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-books.html:1059`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1089`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1119`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1149`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1179`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1234`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/resources-books.html:1263`: <img src="static/images/book_placeholder.svg"
+- **Placeholder (placeholder)** in `docs/overview.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models-mujoco.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models-drake.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/research-review-induced-acceleration-analysis.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:437`: <img src="https://www.stfx.ca/sites/default/files/styles/person/public/images/Human-Kinetics-Sasho%20MacKenzie.png?h=c1788fc8&itok=ka_v5jaE" alt="Sasho MacKenzie" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:469`: <img src="https://webspace.yale.edu/Yale-golf-history/images/grober-2.jpg" alt="Robert Groeber" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:522`: <img src="https://www.drkwongolf.info/images/drkwon.jpg" alt="Dr. Young-Hoo Kwon" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:554`: <img src="http://wedgecraft.com/wp-content/uploads/2018/12/robjneal.png" alt="Rob Neal" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:586`: <img src="https://me-future.lafayette.edu/wp-content/uploads/sites/511/2016/03/steve-160x160.png" alt="Steven Nesbit" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:611`: <img src="static/images/placeholder.svg" alt="Carol Putnam" class="website-preview">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:636`: <img src="https://engineering.stanford.edu/sites/default/files/styles/large_square/public/media/image/stanford-person-default-profile-image.png?h=55541bb6&itok=iT3JNdt_" alt="Felix Zajac" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:668`: <img src="static/images/placeholder.svg" alt="Phil Cheetham" class="website-preview">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:700`: <img src="static/images/placeholder.svg" alt="Masahide Hirashima" class="website-preview">
+- **Placeholder (placeholder)** in `docs/resources-researchers.html:725`: <img src="static/images/placeholder.svg" alt="John McPhee" class="website-preview">
+- **Placeholder (placeholder)** in `docs/repositories-3d-model.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-datasets.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/repositories-pinocchio.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/book-reviews.html:67`: "search-text-placeholder": "",
+- **Placeholder (coming soon)** in `docs/book-reviews.html:423`: <li>Book recommendations coming soon...</li>
+- **Placeholder (coming soon)** in `docs/book-reviews.html:429`: <li>Book recommendations coming soon...</li>
+- **Placeholder (placeholder)** in `docs/models-pinocchio.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/repositories.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/repositories-drake.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/about.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/bibliography.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/bibliography.html:435`: <input type="text" id="bib-search" placeholder="Search references by title, author, or concept..." style="width: 100%; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem;">
+- **Placeholder (placeholder)** in `docs/resources-websites.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-software.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-software.html:436`: <img src="static/images/placeholder.svg" alt="OpenSim Logo" class="software-logo">
+- **Placeholder (placeholder)** in `docs/resources-software.html:459`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/MyoSim/MyoSim" alt="MyoSim Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:479`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/CMU-Perceptual-Computing-Lab/openpose" alt="OpenPose Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:523`: <img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
+- **Placeholder (placeholder)** in `docs/resources-software.html:551`: <img src="static/images/placeholder.svg" alt="Pinocchio Logo" class="software-logo">
+- **Placeholder (placeholder)** in `docs/resources-software.html:580`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com/MingHanLee/GolfPose" alt="GolfPose GitHub Repository Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:607`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://arxiv.org/abs/1903.06528" alt="SwingNet Paper Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:627`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="Golf Swing Analysis GitHub Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:647`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="AI Golf Swing Discrepancy Detector Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/resources-software.html:667`: <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="Golf Swing Analyzer GitHub Preview" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+- **Placeholder (placeholder)** in `docs/models-simulink.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models-myosim.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/contact.html:67`: "search-text-placeholder": "",
+- **Placeholder (Coming Soon)** in `docs/contact.html:448`: <li><a href="#" class="social-link" target="_blank" rel="noopener">Twitter/X (Coming Soon)</a></li>
+- **Placeholder (Coming Soon)** in `docs/contact.html:449`: <li><a href="#" class="social-link" target="_blank" rel="noopener">LinkedIn (Coming Soon)</a></li>
+- **Placeholder (placeholder)** in `docs/index.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models-pendulum.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/resources-notebooklm.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/models-opensim.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/tools.html:67`: "search-text-placeholder": "",
+- **Placeholder (Coming Soon)** in `docs/tools.html:423`: <h3 class="anchored"><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `docs/tools.html:431`: <h3 class="anchored"><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `docs/tools.html:435`: <h3 class="anchored"><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `docs/tools.html:443`: <h3 class="anchored"><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `docs/tools.html:447`: <h3 class="anchored"><a href="#">Coming Soon</a></h3>
+- **Placeholder (Coming Soon)** in `docs/tools.html:459`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/tools.html:466`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/tools.html:473`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (Coming Soon)** in `docs/tools.html:480`: <span class="resource-type">Coming Soon</span>
+- **Placeholder (placeholder)** in `docs/resources-papers.html:67`: "search-text-placeholder": "",
+- **Placeholder (coming soon)** in `docs/resources-papers.html:462`: Note: Detailed review of Carol Putnam's work on interaction forces and proximal-to-distal sequencing coming soon.
+- **Placeholder (placeholder)** in `docs/articles/affine-nature-golf-swing.html:104`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/theory-part2.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/theory-part3.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/theory-part5.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/controllability-drift-ratio.html:102`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/theory-part4.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/screw-theory-reference.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/inverse-dynamics-inference.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/nonlinear-control-insights.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/theory-part1.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/appendix-applications.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/drift-components-wrench-double-pendulum.html:102`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/null-space-constraint-jacobian.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/wrist-universal-joint.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/force-mobility-matrices.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/intentional-constraint-collapse.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/superposition.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/inverse-dynamics.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/strokes-gained-limitations.html:68`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/lagrangian-reference.html:69`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/secondary-axis-stability.html:67`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/archive/secondary-axis-stability-v1.html:66`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/articles/archive/controllability-drift-ratio-v1.html:66`: "search-text-placeholder": "",
+- **Placeholder (placeholder)** in `docs/tools/wrist_universal_joint/grip_angle_simulator.html:443`: <input type="text" id="polynomial-expr" value="t**2 - t" placeholder="e.g., t**2 - t">
+- **Placeholder (placeholder)** in `docs/workflows/ASSESSMENT_REMEDIATION_GUIDE.md:290`: - Adds placeholder values (never real secrets)
+- **Placeholder (placeholder)** in `docs/workflows/ASSESSMENT_REMEDIATION_GUIDE.md:296`: - Uses placeholders like "Diagram of [topic]"
+- **Placeholder (placeholder)** in `docs/workflows/ASSESSMENT_REMEDIATION_GUIDE.md:649`: - **Never commit secrets:** .env files should only have placeholders
+- **Placeholder (placeholder)** in `docs/content/archive/drafts/Draft3_Compiled_Working_Copy.html:66`: "search-text-placeholder": "",
 
-*   **Missing Calculators**: The tools page promises specific tools that are not yet linked or deployed.
-*   **Missing Social Presence**: Social media integration is partially implemented but inactive.
-
-## Feature Gap Matrix
-*Priority: Medium - Planned Development*
-
-| Feature Area | File Path | Description | Status |
-| :--- | :--- | :--- | :--- |
-| **CI/CD** | `.github/workflows/Jules-Tech-Custodian.yml` | `TODO: Jules CLI API changed in v0.1.x` - Workflow needs update to match new CLI arguments. | **Pending** |
-| **CI/CD** | `.github/workflows/Jules-Conflict-Fix.yml` | `TODO: Jules CLI API changed in v0.1.x - needs migration` - Conflict resolution workflow needs update. | **Pending** |
-
-## Technical Debt Register
-*Priority: Low - Maintenance*
-
-1.  **Archived Content Cleanliness**
-    *   `archive/handcrafted-site/wrist-universal-joint.html`: Contains comment `<!-- TODO: Replace the placeholder Streamlit URL... -->`.
-
-2.  **Documentation False Positives**
-    *   `UNIFIED_CI_APPROACH.md`, `JULES_ARCHITECTURE.md`: Contain "TODO" in instructional text.
-
-## Next Steps
-1.  **Resolve Placeholders**: Either implement the "Coming Soon" features or hide/remove the placeholder sections from the production build to improve user perception.
-2.  **Migrate CI/CD**: Update the Jules CLI integration in the maintenance workflows.
+## 4. Technical Debt
+- **TEMP** in `CONTENT_SHARING_GUIDE.md:151`: temp/
+- **TEMP** in `CONTENT_SHARING_GUIDE.md:152`: temp/src ./daydreams/project-name/
+- **TEMP** in `CONTENT_SHARING_GUIDE.md:153`: temp/
+- **FIXME** in `UNIFIED_CI_APPROACH.md:292`: FIXME, or NotImplementedError
+- **FIXME** in `UNIFIED_CI_APPROACH.md:332`: FIXME, NotImplementedError
+- **FIXME** in `UNIFIED_CI_APPROACH.md:364`: FIXME comments
+- **FIXME** in `JULES_ARCHITECTURE.md:175`: FIXME" --include="*.py" src/; then
+- **HACK** in `articles/Tangent Hyperplane Articles/LAYMANS_TERMS_SUMMARY.md:132`: hack—it's the exact local structure of smooth systems.
+- **FIXME** in `tools/code_quality_check.py:35`: FIXME placeholder found"),
+- **FIXME** in `tools/matlab_utilities/README.md:261`: FIXME, HACK, XXX placeholders
+- **HACK** in `tools/matlab_utilities/README.md:261`: HACK, XXX placeholders
+- **XXX** in `tools/matlab_utilities/README.md:261`: XXX placeholders
+- **FIXME** in `tools/matlab_utilities/scripts/matlab_quality_check.py:286`: FIXME placeholder found"),
+- **HACK** in `tools/matlab_utilities/scripts/matlab_quality_check.py:287`: HACK comment found"),
+- **XXX** in `tools/matlab_utilities/scripts/matlab_quality_check.py:288`: XXX comment found"),
+- **FIXME** in `.github/workflows/Jules-Code-Quality-Reviewer.yml:104`: FIXME, NotImplemented)
+- **TEMP** in `.github/workflows/Jules-Hypatia.yml:34`: temp file
+- **FIXME** in `.github/workflows/Jules-Completist.yml:40`: FIXME/XXX comments in Python, TypeScript, JavaScript, Quarto
+- **XXX** in `.github/workflows/Jules-Completist.yml:40`: XXX comments in Python, TypeScript, JavaScript, Quarto
+- **FIXME** in `.github/workflows/Jules-Completist.yml:41`: FIXME\|XXX\|HACK\|TEMP" \
+- **HACK** in `.github/workflows/Jules-Completist.yml:41`: HACK\|TEMP" \
+- **TEMP** in `.github/workflows/Jules-Completist.yml:41`: TEMP" \
+- **XXX** in `.github/workflows/Jules-Completist.yml:41`: XXX\|HACK\|TEMP" \
+- **FIXME** in `.github/workflows/Jules-Completist.yml:107`: FIXME/XXX comments
+- **XXX** in `.github/workflows/Jules-Completist.yml:107`: XXX comments
+- **FIXME** in `.github/workflows/Jules-Completist.yml:130`: FIXME/HACK/TEMP markers
+- **HACK** in `.github/workflows/Jules-Completist.yml:130`: HACK/TEMP markers
+- **TEMP** in `.github/workflows/Jules-Completist.yml:130`: TEMP markers
+- **XXX** in `docs/workflows/ASSESSMENT_REMEDIATION_GUIDE.md:582`: XXX: Refactor module architecture
