@@ -1,42 +1,56 @@
 # Completist Audit Report - 2026-01-21
 
 ## Executive Summary
-The Completist Agent performed a comprehensive audit of the AffineDrift codebase on 2026-01-21. The audit identified **Critical Incomplete** implementations in the form of user-visible placeholder content on public pages. Additionally, the previously identified **Feature Gaps** regarding CI/CD workflow migration remain pending.
+This report identifies incomplete implementations, placeholders, and technical debt across the AffineDrift repository.
 
-## Critical Incomplete (Blocking)
-*Priority: High - Immediate Action Required*
+**Summary Statistics:**
+- **Critical Incomplete Items:** 4 Categories (Multiple pages affected)
+- **Feature Gaps:** 2 Categories (Workflows)
+- **Content Gaps:** 2 Categories
+- **Technical Debt:** 1 Item
 
-*   **User-Visible Placeholders**
-    *   **Page**: `tools.qmd` (and `docs/tools.html`)
-        *   **Issue**: Multiple sections labeled "Coming Soon", including "Control Theory & Simulation Tools" and "General Purpose Calculators".
-    *   **Page**: `daydreams-doodles.qmd` (and `docs/daydreams-doodles.html`)
-        *   **Issue**: Resource cards for "Unit Converter", "RRT Path Planner", "Solar System Model", and "Games" are marked "Coming Soon".
-    *   **Page**: `contact.qmd` (and `docs/contact.html`)
-        *   **Issue**: Social media links for Twitter/X and LinkedIn are text placeholders `(Coming Soon)` and link to `#`.
+## 1. Critical Incomplete (Blocking)
+*Items that directly impact user experience or core functionality.*
 
-## Content Gaps (Website Specific)
-*Priority: Medium - Scheduled Updates*
+### Priority 1: User-Visible Placeholders
+The following pages contain "Coming Soon" text or empty links (`#`) visible to end-users:
+- **tools.qmd**: Multiple "Coming Soon" sections and empty links.
+- **contact.qmd**: Social links (Twitter/X, LinkedIn) are placeholders.
+- **daydreams-doodles.qmd**: Multiple "Coming Soon" spans.
+- **resources-videos.qmd**: Placeholder comment for Channel Preview (Video ID missing).
 
-*   **Missing Calculators**: The tools page promises specific tools that are not yet linked or deployed.
-*   **Missing Social Presence**: Social media integration is partially implemented but inactive.
+### Priority 2: Broken Links
+- **contact.qmd**: `href="#"` for social links.
+- **tools.qmd**: `href="#"` for tool links.
 
-## Feature Gap Matrix
-*Priority: Medium - Planned Development*
+## 2. Feature Gaps
+*Missing features or partial implementations indicated by comments.*
 
-| Feature Area | File Path | Description | Status |
-| :--- | :--- | :--- | :--- |
-| **CI/CD** | `.github/workflows/Jules-Tech-Custodian.yml` | `TODO: Jules CLI API changed in v0.1.x` - Workflow needs update to match new CLI arguments. | **Pending** |
-| **CI/CD** | `.github/workflows/Jules-Conflict-Fix.yml` | `TODO: Jules CLI API changed in v0.1.x - needs migration` - Conflict resolution workflow needs update. | **Pending** |
+### Workflow Maintenance
+- **.github/workflows/Jules-Tech-Custodian.yml**: `# TODO: Jules CLI API changed in v0.1.x`
+- **.github/workflows/Jules-Conflict-Fix.yml**: `# TODO: Jules CLI API changed in v0.1.x - needs migration`
 
-## Technical Debt Register
-*Priority: Low - Maintenance*
+These TODOs indicate that the automation bots may fail or behave unexpectedly due to API changes.
 
-1.  **Archived Content Cleanliness**
-    *   `archive/handcrafted-site/wrist-universal-joint.html`: Contains comment `<!-- TODO: Replace the placeholder Streamlit URL... -->`.
+## 3. Content Gaps (Website Specific)
+*Missing documentation or content.*
 
-2.  **Documentation False Positives**
-    *   `UNIFIED_CI_APPROACH.md`, `JULES_ARCHITECTURE.md`: Contain "TODO" in instructional text.
+- **articles/inverse-dynamics-bibliography.md**: Contains `# Note: Placeholder for a review`.
+- **tools/CONVERSION_GUIDE.md**: Explicit "Placeholder text" entry in table.
 
-## Next Steps
-1.  **Resolve Placeholders**: Either implement the "Coming Soon" features or hide/remove the placeholder sections from the production build to improve user perception.
-2.  **Migrate CI/CD**: Update the Jules CLI integration in the maintenance workflows.
+## 4. Technical Debt
+*Code marked for improvement or temporary workarounds.*
+
+- **tools/code_quality_check.py**: Use of `pass` in exception handling (suppressed error).
+  ```python
+  except Exception as e:
+      # We rely on mypy for type checking...
+      pass
+  ```
+
+## 5. Completist Scan Data
+*Raw data sources used for this audit.*
+
+- **todo_markers.txt**: Scanned for TODO, FIXME, XXX, HACK, TEMP.
+- **not_implemented.txt**: Scanned for NotImplementedError.
+- **placeholder_content.txt**: Scanned for "Coming Soon", "Placeholder".
