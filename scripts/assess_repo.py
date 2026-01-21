@@ -41,21 +41,35 @@ GROUP_WEIGHTS = {
     "Security": 0.15,
     "Perf": 0.15,
     "Ops": 0.10,
-    "Design": 0.10
+    "Design": 0.10,
 }
 
 GROUP_MAPPING = {
-    "A": "Code", "D": "Code", "I": "Code", "O": "Code", "K": "Code", "L": "Code",
+    "A": "Code",
+    "D": "Code",
+    "I": "Code",
+    "O": "Code",
+    "K": "Code",
+    "L": "Code",
     "C": "Testing",
     "B": "Docs",
-    "F": "Security", "G": "Security",
+    "F": "Security",
+    "G": "Security",
     "E": "Perf",
-    "H": "Ops", "M": "Ops",
-    "J": "Design", "N": "Design"
+    "H": "Ops",
+    "M": "Ops",
+    "J": "Design",
+    "N": "Design",
 }
 
+
 def get_python_files(root: Path) -> list[Path]:
-    return [p for p in root.rglob("*.py") if "node_modules" not in p.parts and ".git" not in p.parts and "venv" not in p.parts]
+    return [
+        p
+        for p in root.rglob("*.py")
+        if "node_modules" not in p.parts and ".git" not in p.parts and "venv" not in p.parts
+    ]
+
 
 def assess_code_structure(files: list[Path]) -> dict[str, Any]:
     lines_counts = []
@@ -84,8 +98,9 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
 
     return {
         "grade": max(0, score),
-        "details": f"Files: {len(files)}, Avg LOC: {avg_loc:.1f}, Max LOC: {max_loc}, Max Depth: {max_depth}"
+        "details": f"Files: {len(files)}, Avg LOC: {avg_loc:.1f}, Max LOC: {max_loc}, Max Depth: {max_depth}",
     }
+
 
 def assess_documentation(files: list[Path]) -> dict[str, Any]:
     docstring_count = 0
@@ -118,8 +133,9 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
 
     return {
         "grade": min(10, max(0, score)),
-        "details": f"Docstring Coverage: {coverage:.1f}% ({docstring_count}/{total_defs}), READMEs found: {len(readmes)}"
+        "details": f"Docstring Coverage: {coverage:.1f}% ({docstring_count}/{total_defs}), READMEs found: {len(readmes)}",
     }
+
 
 def assess_test_coverage(root: Path) -> dict[str, Any]:
     test_files = list(root.rglob("test_*.py")) + list(root.rglob("*_test.py"))
@@ -133,8 +149,9 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
 
     return {
         "grade": min(10, score),
-        "details": f"Test files found: {len(test_files)}. Historic coverage is low (~19%)."
+        "details": f"Test files found: {len(test_files)}. Historic coverage is low (~19%).",
     }
+
 
 def assess_error_handling(files: list[Path]) -> dict[str, Any]:
     try_count = 0
@@ -155,8 +172,9 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
 
     return {
         "grade": max(0, min(10, score)),
-        "details": f"Try blocks: {try_count}, Bare excepts: {bare_except_count}"
+        "details": f"Try blocks: {try_count}, Bare excepts: {bare_except_count}",
     }
+
 
 def assess_logging(files: list[Path]) -> dict[str, Any]:
     logging_usage = 0
@@ -179,8 +197,9 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
 
     return {
         "grade": min(10, score),
-        "details": f"Files using logging: {logging_usage}, Files using print: {print_usage}"
+        "details": f"Files using logging: {logging_usage}, Files using print: {print_usage}",
     }
+
 
 def assess_security(root: Path) -> dict[str, Any]:
     score = 7
@@ -197,8 +216,9 @@ def assess_security(root: Path) -> dict[str, Any]:
 
     return {
         "grade": min(10, score),
-        "details": f"Security audit tools present in workflows: {has_audit}"
+        "details": f"Security audit tools present in workflows: {has_audit}",
     }
+
 
 def assess_dependencies(root: Path) -> dict[str, Any]:
     score = 0
@@ -210,7 +230,9 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
         details.append("requirements.txt found")
         content = req_txt.read_text(encoding="utf-8")
         pinned = len(re.findall(r"==\d", content))
-        total = len([line for line in content.splitlines() if line.strip() and not line.startswith("#")])
+        total = len(
+            [line for line in content.splitlines() if line.strip() and not line.startswith("#")]
+        )
         if total > 0 and pinned / total > 0.5:
             score += 3
             details.append(f"Most dependencies pinned ({pinned}/{total})")
@@ -225,6 +247,7 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
         details.append("package.json found")
 
     return {"grade": min(10, score), "details": "; ".join(details)}
+
 
 def assess_cicd(root: Path) -> dict[str, Any]:
     score = 0
@@ -252,6 +275,7 @@ def assess_cicd(root: Path) -> dict[str, Any]:
 
     return {"grade": min(10, score), "details": "; ".join(details)}
 
+
 def assess_code_style(root: Path) -> dict[str, Any]:
     score = 0
     details = []
@@ -273,6 +297,7 @@ def assess_code_style(root: Path) -> dict[str, Any]:
         details.append("Pre-commit config found")
 
     return {"grade": min(10, score), "details": "; ".join(details)}
+
 
 def assess_api_design(files: list[Path]) -> dict[str, Any]:
     total_funcs = 0
@@ -299,6 +324,7 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
 
     return {"grade": min(10, score), "details": details}
 
+
 def assess_data_handling(files: list[Path]) -> dict[str, Any]:
     io_patterns = ["open(", "json.load", "csv.reader", "pd.read", "sqlite3"]
     hits = 0
@@ -310,6 +336,7 @@ def assess_data_handling(files: list[Path]) -> dict[str, Any]:
     score = 7
     details = f"Files with data I/O: {hits}"
     return {"grade": score, "details": details}
+
 
 def assess_configuration(root: Path) -> dict[str, Any]:
     score = 0
@@ -327,14 +354,15 @@ def assess_configuration(root: Path) -> dict[str, Any]:
 
     environ_usage = 0
     for f in list(root.rglob("*.py")):
-         if "os.environ" in f.read_text(encoding="utf-8", errors="ignore"):
-             environ_usage += 1
+        if "os.environ" in f.read_text(encoding="utf-8", errors="ignore"):
+            environ_usage += 1
 
     if environ_usage > 0:
         score += 3
         details.append(f"Env vars used in {environ_usage} files")
 
     return {"grade": min(10, score), "details": "; ".join(details)}
+
 
 def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     total_branches = 0
@@ -363,7 +391,10 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
 
     return {"grade": max(0, score), "details": details}
 
-def generate_report(category: str, category_name: str, grade: float, details: str, recommendations: list[str]):
+
+def generate_report(
+    category: str, category_name: str, grade: float, details: str, recommendations: list[str]
+):
     filename = f"docs/assessments/Assessment_{category}_{category_name.replace(' ', '_')}.md"
     content = f"""# Assessment: {category_name}
 
@@ -381,6 +412,7 @@ def generate_report(category: str, category_name: str, grade: float, details: st
     Path(filename).write_text(content, encoding="utf-8")
     return filename
 
+
 def main():
     root = Path.cwd()
     py_files = get_python_files(root)
@@ -390,7 +422,10 @@ def main():
         "B": assess_documentation(py_files),
         "C": assess_test_coverage(root),
         "D": assess_error_handling(py_files),
-        "E": {"grade": 7.0, "details": "Performance analysis requires runtime profiling"}, # Placeholder
+        "E": {
+            "grade": 7.0,
+            "details": "Performance analysis requires runtime profiling",
+        },  # Placeholder
         "F": assess_security(root),
         "G": assess_dependencies(root),
         "H": assess_cicd(root),
@@ -400,7 +435,7 @@ def main():
         "L": assess_logging(py_files),
         "M": assess_configuration(root),
         "N": assess_scalability_maintainability(py_files),
-        "O": assess_scalability_maintainability(py_files), # Reuse complexity for maintainability
+        "O": assess_scalability_maintainability(py_files),  # Reuse complexity for maintainability
     }
 
     # Generate Individual Reports
@@ -456,7 +491,9 @@ def main():
 
     for cat_code, info in scores.items():
         if info["grade"] < 5:
-            issue_filename = f"ISSUE_Assessment_{cat_code}_{CATEGORIES[cat_code].replace(' ', '_')}.md"
+            issue_filename = (
+                f"ISSUE_Assessment_{cat_code}_{CATEGORIES[cat_code].replace(' ', '_')}.md"
+            )
             issue_path = issues_dir / issue_filename
             issue_content = f"""---
 title: "Assessment Finding: Low Score in {CATEGORIES[cat_code]}"
@@ -477,6 +514,7 @@ labels: jules:assessment, needs-attention
 
     Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
     print("Assessment complete.")
+
 
 if __name__ == "__main__":
     main()

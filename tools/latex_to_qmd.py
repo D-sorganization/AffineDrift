@@ -317,7 +317,7 @@ class LaTeXToQuartoConverter:
         try:
             latex_content = self.read_latex_file(input_file)
         except Exception:
-            return None # Error logged in read_latex_file
+            return None  # Error logged in read_latex_file
 
         # Convert to Quarto
         try:
