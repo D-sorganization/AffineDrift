@@ -169,7 +169,7 @@
 
       container.innerHTML = html;
     } catch (error) {
-      console.log("Could not load related articles:", error);
+      console.warn("Could not load related articles:", error);
     }
   }
 
