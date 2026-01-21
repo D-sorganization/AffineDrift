@@ -22,3 +22,14 @@ The following issues would be created based on assessment grades below 5.
   - `contact.qmd`: Social media links.
 
   **Action**: Hide these sections or implement the missing features.
+
+## Issue 3: Security: Audit url open for permitted schemes in tools/verify_images.py
+- **Title**: Security: Audit url open for permitted schemes (S310) in tools/verify_images.py
+- **Labels**: `security`, `jules:sentinel`
+- **Body**:
+  A Medium severity security issue was found in `tools/verify_images.py`.
+  - **Issue**: Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected.
+  - **Location**: Line 57
+  - **Remediation**: Ensure that the URL schemes are restricted to http/https or properly validated before use.
+
+  **Note**: This finding may fall under the project's exception policy for verification tools, but is reported for tracking and manual verification.
