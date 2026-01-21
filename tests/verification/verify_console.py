@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 import os
 
 def test_console_logs():
+    """Verify that the console does not contain banned logs."""
     cwd = os.getcwd()
     url = f"file://{cwd}/docs/index.html"
 
@@ -11,6 +12,7 @@ def test_console_logs():
 
         logs = []
         def on_console(msg):
+            """Capture console messages."""
             logs.append(msg.text)
             print(f"Console {msg.type}: {msg.text}")
 

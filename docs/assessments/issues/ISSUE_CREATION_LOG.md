@@ -22,3 +22,14 @@ The following issues would be created based on assessment grades below 5.
   - `contact.qmd`: Social media links.
 
   **Action**: Hide these sections or implement the missing features.
+
+## Issue 3: Critical Test Coverage Gaps (2026-05-21)
+- **Title**: CRITICAL: Test Coverage Gaps (3/10)
+- **Labels**: `jules:assessment`, `needs-attention`, `priority:critical`
+- **Body**:
+  Test coverage remains low (19%), with critical infrastructure tools completely untested.
+  - `build-html.py`: 0%
+  - `tools/code_quality_check.py`: 0%
+  - `tools/latex_to_html.py`: 0%
+
+  **Action**: Prioritize writing unit tests for `build-html.py` and `tools/code_quality_check.py` to reach >50% coverage.
