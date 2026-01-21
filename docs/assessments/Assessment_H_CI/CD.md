@@ -1,9 +1,9 @@
-# Assessment: Logging
+# Assessment: CI/CD
 
 ## Grade: 8.0/10
 
 ## Details
-Files using logging: 19, Files using print: 9
+Found 35 workflows; 1 workflows run tests
 
 ## Recommendations
 - See detailed findings
