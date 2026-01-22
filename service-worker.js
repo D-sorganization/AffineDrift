@@ -1,14 +1,22 @@
 // AffineDrift Service Worker for offline support
-const CACHE_NAME = 'affinedrift-v1';
+// Version 2: Added startup launcher for improved perceived performance
+const CACHE_NAME = 'affinedrift-v2';
 const OFFLINE_URL = '/offline.html';
+
+// Critical startup assets - loaded first for fast splash screen
+const STARTUP_ASSETS = [
+  '/css/startup-launcher.css',
+  '/js/startup-launcher.js',
+  '/logo/logo_transparent_1.png'
+];
 
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
+  ...STARTUP_ASSETS,
   '/styles.css',
   '/script.js',
-  '/logo/logo_transparent_1.png',
   '/favicon.ico',
   '/manifest.json',
   OFFLINE_URL
@@ -64,7 +72,7 @@ self.addEventListener('fetch', (event) => {
           });
         }
       })
-      .catch(() => {/* Network failed, but we have cache */});
+      .catch(() => {/* Network failed, but we have cache */ });
   });
 
   event.waitUntil(backgroundUpdate);
