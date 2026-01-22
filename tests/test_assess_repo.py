@@ -1,12 +1,12 @@
 import sys
 from pathlib import Path
-import pytest
 
 # Add scripts dir to path so we can import assess_repo
 scripts_dir = Path(__file__).parents[1] / "scripts"
 sys.path.append(str(scripts_dir))
 
-import assess_repo
+import assess_repo  # noqa: E402
+
 
 def test_get_python_files(tmp_path):
     (tmp_path / "test.py").touch()
