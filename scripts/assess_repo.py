@@ -561,7 +561,7 @@ labels: jules:assessment, needs-attention
             comp_content += f"- Created issue: `{issue_filename}` (Grade: {info['grade']:.1f})\n"
 
     Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
-    print("Assessment complete.")
+    logger.info("Assessment complete.")
 
 
 if __name__ == "__main__":
