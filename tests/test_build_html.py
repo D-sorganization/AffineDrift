@@ -10,9 +10,11 @@ def load_module_from_path(module_name, file_path):
     spec.loader.exec_module(module)
     return module
 
+
 # Load build-html.py
 repo_root = Path(__file__).parents[1]
 build_html = load_module_from_path("build_html", repo_root / "build-html.py")
+
 
 def test_extract_html_from_qmd(tmp_path):
     qmd_content = """---
@@ -31,6 +33,7 @@ description: "Test Description"
     assert title == "Test Title"
     assert desc == "Test Description"
     assert "Test Content" in html_content
+
 
 def test_extract_html_no_frontmatter(tmp_path):
     qmd_content = "Just some text"

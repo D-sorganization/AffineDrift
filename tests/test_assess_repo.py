@@ -17,6 +17,7 @@ def test_get_python_files(tmp_path):
     assert len(files) == 1
     assert files[0].name == "test.py"
 
+
 def test_assess_documentation(tmp_path):
     f = tmp_path / "test_doc.py"
     f.write_text('def foo():\n    """Docstring."""\n    pass\n')
@@ -25,13 +26,15 @@ def test_assess_documentation(tmp_path):
     assert result["grade"] > 0
     assert "Docstring Coverage: 100.0%" in result["details"]
 
+
 def test_assess_error_handling(tmp_path):
     f = tmp_path / "test_err.py"
-    f.write_text('try:\n    pass\nexcept Exception:\n    pass\n')
+    f.write_text("try:\n    pass\nexcept Exception:\n    pass\n")
 
     result = assess_repo.assess_error_handling([f])
     assert result["grade"] >= 0
     # It counts bare excepts (except:) not caught excepts (except Exception:)
+
 
 def test_assess_test_coverage_files_count(tmp_path):
     # Setup dummy test files
