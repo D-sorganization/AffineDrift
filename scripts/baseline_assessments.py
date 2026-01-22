@@ -1,4 +1,8 @@
-import os
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
+
 from pathlib import Path
 
 repo_name = "AffineDrift"
@@ -25,7 +29,7 @@ categories = {
 output_dir = Path("docs/assessments")
 output_dir.mkdir(parents=True, exist_ok=True)
 
-# Analysis findings for Golf
+# Analysis findings for AffineDrift
 findings = {
     "A": "Good monorepo structure with engines/ and shared/. PyQt6 and Tkinter launchers present.",
     "B": "Ruff and Black configured. .gitignore updated to include coverage artifacts.",
@@ -47,4 +51,4 @@ Category: {cat_name}
     with open(output_dir / f"Assessment_{cat_id}_Results_{date}.md", "w") as f:
         f.write(content)
 
-print("Generated A-O assessments for Golf.")
+logger.info("Generated A-O assessments for AffineDrift.")
