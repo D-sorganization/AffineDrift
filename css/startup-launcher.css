@@ -23,15 +23,15 @@
     var(--ad-splash-bg-mid) 50%,
     var(--ad-splash-bg-end) 100%
   );
-  --ad-splash-text: #ffffff;
-  --ad-splash-text-muted: rgba(255, 255, 255, 0.7);
+  --ad-splash-text: #fff;
+  --ad-splash-text-muted: rgb(255, 255, 255, 0.7);
   --ad-splash-accent: #3282b8;
-  --ad-splash-accent-glow: rgba(50, 130, 184, 0.4);
+  --ad-splash-accent-glow: rgb(50, 130, 184, 0.4);
 
   /* Progress bar */
-  --ad-progress-track: rgba(255, 255, 255, 0.1);
+  --ad-progress-track: rgb(255, 255, 255, 0.1);
   --ad-progress-fill: linear-gradient(90deg, #3282b8, #0f4c75, #3282b8);
-  --ad-progress-glow: 0 0 20px rgba(50, 130, 184, 0.5);
+  --ad-progress-glow: 0 0 20px rgb(50, 130, 184, 0.5);
 
   /* Animation durations */
   --ad-splash-fade: 400ms;
@@ -98,6 +98,7 @@ html.ad-splash-active body {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -138,7 +139,7 @@ html.ad-splash-active body {
 
 /* Inner ring - counter-rotates */
 .ad-splash-ring-inner {
-  stroke: rgba(255, 255, 255, 0.3);
+  stroke: rgb(255, 255, 255, 0.3);
   stroke-dasharray: 264;
   stroke-dashoffset: 264;
   animation:
@@ -175,6 +176,7 @@ html.ad-splash-active body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -184,6 +186,7 @@ html.ad-splash-active body {
   from {
     transform: rotate(360deg);
   }
+
   to {
     transform: rotate(0deg);
   }
@@ -194,6 +197,7 @@ html.ad-splash-active body {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.7;
     transform: scale(1.2);
@@ -216,7 +220,7 @@ html.ad-splash-active body {
   color: var(--ad-splash-text);
   margin: 0 0 0.5rem;
   letter-spacing: 0.02em;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 20px rgb(0, 0, 0, 0.3);
   animation: ad-text-fade-in 0.6s ease-out forwards;
   animation-delay: 0.3s;
   opacity: 0;
@@ -273,6 +277,7 @@ html.ad-splash-active body {
   from {
     background-position: 200% 0;
   }
+
   to {
     background-position: -200% 0;
   }
@@ -301,9 +306,9 @@ html.ad-splash-active body {
   font-size: 0.75rem;
   color: var(--ad-splash-text-muted);
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(255, 255, 255, 0.05);
   border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(255, 255, 255, 0.1);
 }
 
 /* ==========================================================================
@@ -318,6 +323,7 @@ html.ad-page-revealed body {
     opacity: 0.9;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -361,6 +367,7 @@ html.ad-page-revealed .home-content > *:nth-child(n+4) {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -385,10 +392,7 @@ html.ad-page-revealed .home-content > *:nth-child(n+4) {
 .ad-skeleton::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(
     90deg,
     transparent 0%,
@@ -402,6 +406,7 @@ html.ad-page-revealed .home-content > *:nth-child(n+4) {
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(100%);
   }
@@ -510,7 +515,7 @@ html.ad-page-revealed .home-content > *:nth-child(n+4) {
 /* ==========================================================================
    Mobile Optimizations
    ========================================================================== */
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .ad-splash-content {
     padding: 1.5rem;
   }
@@ -532,13 +537,13 @@ html.ad-page-revealed .home-content > *:nth-child(n+4) {
 /* ==========================================================================
    High Contrast Mode Support
    ========================================================================== */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   .ad-splash-screen {
-    background: #000000;
+    background: #000;
   }
 
   .ad-splash-progress-track {
-    background: #ffffff;
+    background: #fff;
   }
 
   .ad-splash-progress-bar {
