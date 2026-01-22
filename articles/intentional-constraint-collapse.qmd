@@ -51,6 +51,52 @@ format:
     </div>
   </div>
 </section>
+
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Robotics / Biomechanics:</span>
+          <h3>Singularity vs. Impedance</h3>
+        </div>
+        <p class="critic-argument">
+          Critics argue that "Jacobian Collapse" implies a kinematic singularity (rank loss), which provides infinite force advantage but infinite inertia (loss of control). Biomechanists contend this is actually "Variable Impedance Control" (stiffness modulation), which requires metabolic energy, unlike a true geometric constraint. Conflating the two obscures the active cost of stability.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge the distinction. "Collapse" is used here to describe the <em>limiting behavior</em> of high-impedance control. While not a geometric singularity (bone-on-bone), the neuromuscular co-contraction creates a 'virtual constraint' that mimics rank loss to stabilize the clubface against impact shock.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Control Theory:</span>
+          <h3>Input-Dependent Dynamics</h3>
+        </div>
+        <p class="critic-argument">
+          The Affine Control framework assumes $\dot{x} = f(x) + g(x)u$, where drift $f(x)$ is independent of input. If "Constraint Collapse" means the input $u$ alters the constraint structure (manifold topology), then $f(x)$ becomes $f(x,u)$, violating the **Drift Invariance** assumption required for the Zero Torque Counterfactual (ZTCF) baseline.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a critical nuance. We view the high-impedance state as a temporary "Effective Plant." The collapse is a parametric reconfiguration of stiffness within $f(x)$ rather than a topological change. For the short impact duration, the affine approximation holds, but we accept that the ZTCF must be interpreted as a "Parametric Counterfactual" in this regime.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding of the limitations of the affine model.
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
 ## 1. Introduction
