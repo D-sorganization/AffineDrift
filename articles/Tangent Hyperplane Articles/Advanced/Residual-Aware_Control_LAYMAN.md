@@ -467,4 +467,4 @@ This isn't magic. It's just **listening to what the system is telling you** thro
 
 **For the underlying framework:** See [Tangent_Hyperplanes_Unified_Thesis.qmd](../Tangent_Hyperplanes_Unified_Thesis.qmd)
 
-**For related concepts:** See [Part_III_Algorithms.qmd](../Part_III_Algorithms.qmd) (DDP/iLQR basics)
+**For related concepts:** See [Contraction_Tangent_Unification.qmd](Contraction_Tangent_Unification.qmd) (stability and control geometry)
