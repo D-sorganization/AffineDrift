@@ -1,0 +1,49 @@
+name: Nightly Documentation Organizer
+
+on:
+  schedule:
+    - cron: "0 5 * * *"  # 5 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  organize-docs:
+    runs-on: ubuntu-latest
+    if: hashFiles('.github/WORKFLOWS_PAUSED') == ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Organize Review Archive
+        run: |
+          mkdir -p docs/review_archive
+          find docs/review_archive -name "*.md" -maxdepth 1 -mtime +30 -exec gzip {} \; || true
+
+      - name: Update Workflow Documentation
+        run: |
+          mkdir -p docs/maintenance
+          cat > docs/maintenance/WORKFLOWS_MD_CONTENT << 'EOF'
+          # Repository Workflows (AffineDrift)
+
+          This document lists all active GEI (GitHub Engineering Infrastructure) workflows and their status.
+
+          ## How to Pause Workflows
+          Run the **Maintenance Global Control** workflow and select "pause". This creates `.github/WORKFLOWS_PAUSED`.
+
+          ## Featured Workflows
+          - **CI Standard**: (ci-standard.yml) Main CI pipeline.
+          - **Website Deploy**: (deploy-website.yml) Deploys Quarto docs to GitHub Pages.
+          - **Jules Suite**: Automated AI agents for research and maintenance.
+          EOF
+          mv docs/maintenance/WORKFLOWS_MD_CONTENT docs/maintenance/WORKFLOW_STATUS.md
+
+      - name: Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: nightly documentation organization"
+          file_pattern: "docs/maintenance/* docs/review_archive/*"
