@@ -778,6 +778,68 @@ runOnDomReady(function () {
   // Initial check
   updateScrollProgress();
 
+  // Export to PDF Button
+  const exportToPdfBtn = document.createElement("button");
+  exportToPdfBtn.className = "export-to-pdf";
+  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
+  exportToPdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="12" y1="18" x2="12" y2="12"></line>
+      <line x1="9" y1="15" x2="15" y2="15"></line>
+    </svg>
+    <span class="tooltip">Export to PDF</span>
+  `;
+  document.body.appendChild(exportToPdfBtn);
+
+  // Show/hide export button based on scroll (same as back-to-top)
+  function updateExportButtonVisibility() {
+    const scrollTop = window.scrollY;
+    const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
+    if (shouldBeVisible) {
+      exportToPdfBtn.classList.add("visible");
+    } else {
+      exportToPdfBtn.classList.remove("visible");
+    }
+  }
+
+  // Update visibility on scroll
+  window.addEventListener(
+    "scroll",
+    debounce(updateExportButtonVisibility, 100),
+    { passive: true },
+  );
+
+  // Initial visibility check
+  updateExportButtonVisibility();
+
+  // Export to PDF functionality
+  exportToPdfBtn.addEventListener("click", () => {
+    // Wait for MathJax to finish rendering if present
+    const mathjaxDelay =
+      typeof MathJax !== "undefined" ? MATHJAX_RENDER_DELAY_MS : 0;
+
+    // Add print-specific class to body for CSS targeting
+    document.body.classList.add("printing");
+
+    setTimeout(() => {
+      window.print();
+      // Remove print class after print dialog closes
+      window.addEventListener(
+        "afterprint",
+        () => {
+          document.body.classList.remove("printing");
+        },
+        { once: true },
+      );
+      // Fallback for browsers that don't support afterprint
+      setTimeout(() => {
+        document.body.classList.remove("printing");
+      }, 1000);
+    }, mathjaxDelay);
+  });
+
   // Initialize Article History Tracking and Display
 
   // Article History Logic
