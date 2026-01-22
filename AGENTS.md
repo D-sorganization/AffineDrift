@@ -107,12 +107,6 @@ Use **Conventional Commits** format:
 - `feature/name`: New features.
 - `hotfix/name`: Critical bug fixes.
 
-### 3. Git Tool Preference
-
-- **GitHub CLI Priority**: Always use `gh` commands for GitHub operations (PRs, issues, etc.)
-- **MCP Git Tools**: Use only for basic git operations (status, commit, branch) when GitHub CLI is insufficient
-- **Example**: Use `gh pr list` instead of MCP PR tools, `gh pr view <number>` for PR details
-
 ---
 
 ## 📝 Documentation
@@ -191,95 +185,98 @@ If sensitive data is accidentally committed:
 This section defines the active agents within the Jules "Control Tower" Architecture. All agents must operate within their defined scope.
 
 ### 1. The Control Tower (Orchestrator)
-
 **Role:** Air Traffic Controller
-**Workflow:** `.github/workflows/jules-control-tower.yml`
+**Workflow:** `.github/workflows/Jules-Control-Tower.yml`
 **Responsibilities:**
-
-- **Sole Trigger:** The only agent that listens to GitHub events (Push, PR, Schedule).
-- **Decision Maker:** Analyzes the event context (Triage) and dispatches the appropriate specialized worker.
-- **Loop Prevention:** Enforces `if: github.actor != 'jules-bot'` to prevent infinite recursion.
+-  **Orchestrator:** Coordinates specialized agent workflows. Note that CI and Guard workflows run independently.
+-  **Decision Maker:** Analyzes the event context (Triage) and dispatches the appropriate specialized worker.
+-  **Loop Prevention:** Enforces `if: github.actor != 'jules-bot'` to prevent infinite recursion.
 
 ### 2. Auto-Repair (Medic)
-
 **Role:** Fixer of Broken Builds
-**Workflow:** `.github/workflows/jules-auto-repair.yml`
+**Workflow:** `.github/workflows/Jules-Auto-Repair.yml`
 **Triggered By:** CI Failure (Standard CI)
 **Capabilities:**
-
-- **Read:** CI Failure Logs
-- **Write:** Fixes to syntax, imports, and simple logic errors.
-- **Constraint:** limited retries (max 2) to prevent "flailing".
+-  **Read:** CI Failure Logs
+-  **Write:** Fixes to syntax, imports, and simple logic errors.
+-  **Constraint:** limited retries (max 3) to prevent "flailing".
 
 ### 3. Test-Generator (Architect)
-
 **Role:** Quality Assurance Engineer
-**Workflow:** `.github/workflows/jules-test-generator.yml`
+**Workflow:** `.github/workflows/Jules-Test-Generator.yml`
 **Triggered By:** New PR with `.py` changes
 **Capabilities:**
-
-- **Write:** New test files in `tests/`.
-- **Constraint:** Must not modify existing application code, only add tests.
+-  **Write:** New test files in `tests/`.
+-  **Constraint:** Must not modify existing application code, only add tests.
 
 ### 4. Doc-Scribe (Librarian)
-
 **Role:** Documentation Maintainer
-**Workflow:** `.github/workflows/jules-documentation-scribe.yml`
+**Workflow:** `.github/workflows/Jules-Documentation-Scribe.yml`
 **Triggered By:** Push to `main`
 **Capabilities:**
-
-- **Write:** Updates to `docs/` and markdown files.
-- **Mode:** "CodeWiki" - treats the codebase as a living encyclopedia.
+-  **Write:** Updates to `docs/` and markdown files.
+-  **Mode:** "CodeWiki" - treats the codebase as a living encyclopedia.
 
 ### 5. Scientific-Auditor (The Professor)
-
 **Role:** Peer Reviewer
-**Workflow:** `.github/workflows/jules-scientific-auditor.yml`
+**Workflow:** `.github/workflows/Jules-Scientific-Auditor.yml`
 **Triggered By:** Nightly Schedule
 **Capabilities:**
-
-- **Read-Only:** CANNOT modify code.
-- **Output:** Comments on PRs or Issues regarding mathematical correctness and physics fidelity.
+-  **Read/Write:** Analyzes mathematical correctness; can commit reports to `docs/assessments/` or open GitHub Issues.
 
 ### 6. Conflict-Fix (Diplomat)
-
 **Role:** Merge Conflict Resolver
-**Workflow:** `.github/workflows/jules-conflict-fix.yml`
+**Workflow:** `.github/workflows/Jules-Conflict-Fix.yml`
 **Triggered By:** Manual dispatch or specific conflict events (if configured)
 **Capabilities:**
-
-- **Write:** Merge resolution commits.
-- **Constraint:** Prioritizes "Incoming" changes unless specified otherwise.
+-  **Write:** Merge resolution commits.
+-  **Constraint:** Prioritizes "Incoming" changes unless specified otherwise.
 
 ---
 
 ## 🛠️ GitHub CLI & Workflow Reference
 
-Always use Github CLI for making pull requests.
-Whenever you finish a task for the user, push it to remote.
-NEVER try to use GitKraken or anything other than Github CLI for Pull request creation.
+Always use Github CLI for making pull requests. 
+Whenever you finish a task for the user, push it to remote. 
+NEVER try to use GitKraken or anything other than Github CLI for Pull request creation. 
 All pull requests should be verified to pass the ruff, black, and mypy requirements in the ci / cd pipeline before they are created.
 
 ### For PR Creation:
-
 - Always check if PR already exists first using `gh pr list --state open`
 - Use simple, concise titles and descriptions for initial creation
 - Wrap GitHub CLI commands in powershell `-Command "..."`
 - Use single quotes inside double quotes for string parameters
 
 ### For PR Management:
-
 - Use `gh pr view [number]` to get PR details and status
 - Use `gh pr checks [number]` to see CI/CD status
 - Use `gh run list --branch [branch-name]` to see workflow runs
 - Check for failing checks and address them systematically
 
 ### For CI/CD Issue Resolution:
-
 - Identify failing checks using `gh pr checks`
 - Examine workflow run logs using `gh run view [run-id]`
 - Make fixes on the same branch and push to update the PR
 - Verify fixes by checking updated CI status
+
+### Command Templates for Future Use:
+
+```bash
+# Create PR:
+powershell -Command "gh pr create --title 'Your Title' --body 'Your description'"
+
+# Check PR status:
+powershell -Command "gh pr view [PR_NUMBER]"
+
+# Check CI/CD status:
+powershell -Command "gh pr checks [PR_NUMBER]"
+
+# List recent runs:
+powershell -Command "gh run list --branch [BRANCH_NAME] --limit 5"
+
+# View specific run:
+powershell -Command "gh run view [RUN_ID]"
+```
 
 ---
 
@@ -366,21 +363,19 @@ Before pushing workflow changes:
 
 See `Repository_Management/workflow-fixes/` for documented fixes and patterns to avoid.
 
-### Command Templates for Future Use:
+---
 
-```bash
-# Create PR:
-powershell -Command "gh pr create --title 'Your Title' --body 'Your description'"
 
-# Check PR status:
-powershell -Command "gh pr view [PR_NUMBER]"
+### 🔄 Workflow & Automation Governance
 
-# Check CI/CD status:
-powershell -Command "gh pr checks [PR_NUMBER]"
+Agents must refer to the [Workflow Tracking Document](docs/workflows/WORKFLOW_TRACKING.md) to understand available tools.
+All workflows follow the [Governing Workflow Guidance](../../Repository_Management/docs/architecture/WORKFLOW_GOVERNANCE.md).
+The **GitHub Issue Tracker** is the primary authority for tasking and gap remediation. Check existing issues before starting work.
 
-# List recent runs:
-powershell -Command "gh run list --branch [BRANCH_NAME] --limit 5"
+---
 
-# View specific run:
-powershell -Command "gh run view [RUN_ID]"
-```
+
+### 📂 Repository Decluttering & Organization
+To maintain a clean repository root, all development-related documentation (summaries, plans, analysis reports, technical debt assessments, etc.) MUST be stored in the `docs/development/` directory. 
+- **DO NOT** create new `.md` files in the root unless they are critical project-wide files (e.g., README, AGENTS, CHANGELOG).
+- Prefer creating issues for task tracking rather than temporary markdown files.
