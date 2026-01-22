@@ -14,11 +14,9 @@ const STARTUP_ASSETS = [
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
-  '/css/startup-launcher.css',
-  '/js/startup-launcher.js',
+  ...STARTUP_ASSETS,
   '/styles.css',
   '/script.js',
-  '/logo/logo_transparent_1.png',
   '/favicon.ico',
   '/manifest.json',
   OFFLINE_URL
@@ -74,7 +72,7 @@ self.addEventListener('fetch', (event) => {
           });
         }
       })
-      .catch(() => {/* Network failed, but we have cache */});
+      .catch(() => {/* Network failed, but we have cache */ });
   });
 
   event.waitUntil(backgroundUpdate);

@@ -13,7 +13,7 @@
  * - Startup optimization hints
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Configuration
@@ -29,7 +29,7 @@
 
   // Performance metrics storage
   const metrics = {
-    navigationStart: performance.timing?.navigationStart || performance.now(),
+    navigationStart: 0, // performance.now() is relative to navigation start
     splashShown: null,
     domContentLoaded: null,
     resourcesLoaded: null,
@@ -143,7 +143,7 @@
       document.body.insertBefore(splash, document.body.firstChild);
     } else {
       // If body not ready, wait for it
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function () {
         document.body.insertBefore(splash, document.body.firstChild);
       });
     }
@@ -207,7 +207,7 @@
   function trackCriticalResources() {
     // Check for font loading
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function() {
+      document.fonts.ready.then(function () {
         state.criticalResourcesLoaded = true;
         updateProgress(60, 'Loading fonts...');
         log('Fonts loaded');
@@ -225,7 +225,7 @@
   function capturePaintMetrics() {
     if (window.PerformanceObserver) {
       try {
-        const paintObserver = new PerformanceObserver(function(list) {
+        const paintObserver = new PerformanceObserver(function (list) {
           for (const entry of list.getEntries()) {
             if (entry.name === 'first-paint') {
               metrics.firstPaint = entry.startTime;
@@ -252,7 +252,7 @@
     state.progressValue = 0;
     state.targetProgress = 20;
 
-    state.progressInterval = setInterval(function() {
+    state.progressInterval = setInterval(function () {
       if (state.progressValue < state.targetProgress) {
         // Smooth easing toward target
         const diff = state.targetProgress - state.progressValue;
@@ -274,11 +274,14 @@
    * Update progress to a new target value
    */
   function updateProgress(target, statusText) {
-    state.targetProgress = Math.max(state.targetProgress, target);
+    // Only update status and progress if we're moving forward
+    if (target > state.targetProgress) {
+      state.targetProgress = target;
 
-    const statusElement = document.getElementById('ad-splash-status');
-    if (statusElement && statusText) {
-      statusElement.textContent = statusText;
+      const statusElement = document.getElementById('ad-splash-status');
+      if (statusElement && statusText) {
+        statusElement.textContent = statusText;
+      }
     }
   }
 
@@ -319,7 +322,7 @@
     // Handle reduced motion
     const fadeDuration = prefersReducedMotion ? 0 : CONFIG.SPLASH_FADE_DURATION;
 
-    setTimeout(function() {
+    setTimeout(function () {
       state.splashElement.classList.add('ad-splash-hidden');
       document.documentElement.classList.remove('ad-splash-active');
 
@@ -330,7 +333,7 @@
       logFinalMetrics();
 
       // Clean up splash screen from DOM after animation
-      setTimeout(function() {
+      setTimeout(function () {
         if (state.splashElement && state.splashElement.parentNode) {
           state.splashElement.parentNode.removeChild(state.splashElement);
         }
@@ -372,20 +375,20 @@
    */
   function setupSkeletonLoading() {
     // Add skeleton class to main content areas
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const contentAreas = document.querySelectorAll(
         '.main-content-area, #quarto-document-content, .home-content'
       );
 
-      contentAreas.forEach(function(area) {
+      contentAreas.forEach(function (area) {
         if (!area.classList.contains('ad-skeleton-ready')) {
           area.classList.add('ad-skeleton-container');
         }
       });
 
       // Remove skeleton loading after page is revealed
-      document.addEventListener('affinedrift:ready', function() {
-        contentAreas.forEach(function(area) {
+      document.addEventListener('affinedrift:ready', function () {
+        contentAreas.forEach(function (area) {
           area.classList.remove('ad-skeleton-container');
           area.classList.add('ad-skeleton-ready');
         });
@@ -411,7 +414,7 @@
     };
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
-    Object.entries(summary).forEach(function([key, value]) {
+    Object.entries(summary).forEach(function ([key, value]) {
       console.log(`%c${key}: %c${value}`, 'color: #666;', 'color: #0f4c75; font-weight: bold;');
     });
     console.groupEnd();
@@ -431,8 +434,8 @@
 
   // Expose API for external use
   window.AffineDriftStartup = {
-    getMetrics: function() { return { ...metrics }; },
-    isReady: function() { return state.isReady; },
+    getMetrics: function () { return { ...metrics }; },
+    isReady: function () { return state.isReady; },
     forceHide: forceHideSplash
   };
 
