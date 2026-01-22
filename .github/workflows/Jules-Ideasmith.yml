@@ -1,0 +1,266 @@
+name: Jules Ideasmith (Topic Discovery)
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: 'Focus category for idea generation'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - research-papers
+          - control-theory
+          - computational
+          - biomechanics
+          - equipment
+      count:
+        description: 'Number of ideas to generate'
+        required: false
+        default: '5'
+        type: choice
+        options:
+          - '3'
+          - '5'
+          - '8'
+  schedule:
+    - cron: "0 15 * * 3"  # Weekly on Wednesday at 7 AM PST (15:00 UTC)
+
+permissions:
+  contents: write
+
+jobs:
+  generate-ideas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Setup Ideas Directory
+        run: |
+          mkdir -p .jules
+          if [ ! -f .jules/ideas.md ]; then
+            echo "# Ideas Brainstorm Log" > .jules/ideas.md
+            echo "" >> .jules/ideas.md
+            echo "A running log of potential topics, resources, and content ideas for AffineDrift." >> .jules/ideas.md
+            echo "" >> .jules/ideas.md
+            echo "---" >> .jules/ideas.md
+          fi
+
+      - name: Generate New Ideas
+        id: generate
+        env:
+          CATEGORY: ${{ inputs.category || 'all' }}
+          COUNT: ${{ inputs.count || '5' }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+
+          # Topic pools organized by category (purely scientific, no opinion)
+
+          # Research paper topics
+          RESEARCH_TOPICS=(
+            "Inverse dynamics analysis of the golf swing"
+            "Electromyographic patterns in skilled vs novice golfers"
+            "Three-dimensional kinematic analysis of the downswing"
+            "Ground reaction force asymmetries in rotational athletes"
+            "Shaft deflection measurement using strain gauges"
+            "Inter-segmental coordination variability studies"
+            "Trunk rotation velocity and low back loading"
+            "Wrist kinetics during impact phase"
+            "Hip rotation kinematics in long drive competitors"
+            "Shoulder plane tilt and swing path relationships"
+            "Pelvis-thorax timing differentials"
+            "Lead arm supination through impact"
+            "Trail leg extension patterns"
+            "Head stability metrics during swing"
+            "Energy flow analysis using joint power calculations"
+            "Comparison of one-plane vs two-plane swing mechanics"
+            "Biarticular muscle contributions to power generation"
+            "Effect of stance width on hip kinematics"
+            "Ball speed prediction from kinematic variables"
+            "Force plate analysis of weight transfer patterns"
+          )
+
+          # Control theory topics
+          CONTROL_TOPICS=(
+            "Lie bracket calculations for golf swing controllability"
+            "Lyapunov stability analysis of swing trajectories"
+            "Sliding mode control for robust swing execution"
+            "State estimation from partial observations"
+            "Pontryagin's maximum principle applied to swing optimization"
+            "Hamilton-Jacobi-Bellman equations for optimal control"
+            "Koopman operator methods for nonlinear dynamics"
+            "Data-driven control using dynamic mode decomposition"
+            "Port-Hamiltonian modeling of musculoskeletal systems"
+            "Underactuated mechanical systems and swing dynamics"
+            "Input-output linearization for trajectory tracking"
+            "Zero dynamics and internal stability"
+            "Backstepping control design methods"
+            "Adaptive control for uncertain biomechanical parameters"
+            "Iterative learning control for repetitive movements"
+            "Robust control synthesis using H-infinity methods"
+            "Linear parameter-varying system representations"
+            "Switched system modeling of swing phases"
+            "Reachability analysis for movement constraints"
+            "Barrier certificates for safety guarantees"
+          )
+
+          # Computational modeling topics
+          COMPUTATIONAL_TOPICS=(
+            "Pinocchio library for analytical derivatives"
+            "CasADi optimization framework for biomechanics"
+            "PyBullet simulation environment setup"
+            "RBDL (Rigid Body Dynamics Library) integration"
+            "Symbolic computation with SymPy for equations of motion"
+            "Automatic differentiation in biomechanical models"
+            "GPU-accelerated multibody simulation"
+            "Real-time simulation requirements and benchmarks"
+            "Model order reduction techniques"
+            "Mesh generation for finite element analysis"
+            "Contact modeling algorithms comparison"
+            "Muscle wrapping geometry computation"
+            "Forward dynamics vs inverse dynamics solvers"
+            "Quaternion vs Euler angle representations"
+            "Recursive Newton-Euler algorithm implementation"
+            "Articulated body algorithm optimization"
+            "Collision detection for equipment interaction"
+            "Motion capture data processing pipelines"
+            "Kalman filtering for state estimation"
+            "Uncertainty quantification in simulations"
+          )
+
+          # Biomechanics topics
+          BIOMECHANICS_TOPICS=(
+            "Muscle synergy analysis in golf swing"
+            "Joint reaction force calculations"
+            "Moment arm variations through range of motion"
+            "Tendon elasticity and energy storage"
+            "Fascicle length changes during movement"
+            "Rate of force development measurements"
+            "Stretch-shortening cycle utilization"
+            "Muscle co-activation patterns"
+            "Kinetic chain efficiency metrics"
+            "Center of pressure trajectory analysis"
+            "Segment inertial parameters estimation"
+            "Body segment parameter databases"
+            "Joint coordinate system definitions (ISB standards)"
+            "Marker placement protocols for golf"
+            "Soft tissue artifact quantification"
+            "Inverse kinematics algorithms"
+            "Scaling musculoskeletal models"
+            "Muscle recruitment optimization criteria"
+            "Joint angular velocity calculations"
+            "Whole-body angular momentum analysis"
+          )
+
+          # Equipment science topics
+          EQUIPMENT_TOPICS=(
+            "Clubhead speed vs ball speed relationships"
+            "Spin loft and vertical launch angle"
+            "Dynamic loft measurement methods"
+            "Face angle vs path angle effects"
+            "Gear effect spin generation"
+            "Shaft EI profile characterization"
+            "Natural frequency of golf shafts"
+            "Damping ratio in club vibration"
+            "Ball compression and COR testing"
+            "High-speed camera impact analysis"
+            "Pressure mapping in grip studies"
+            "Shaft droop and lead measurements"
+            "Club MOI measurement techniques"
+            "Sweet spot location optimization"
+            "Aerodynamic testing in wind tunnels"
+            "Ball trajectory modeling with Magnus effect"
+            "Temperature effects on equipment performance"
+            "Humidity and altitude ball flight corrections"
+            "Wear patterns on clubface grooves"
+            "Material fatigue in shafts"
+          )
+
+          # Select topics based on category
+          declare -a SELECTED_TOPICS
+
+          case "$CATEGORY" in
+            "research-papers")
+              SELECTED_TOPICS=("${RESEARCH_TOPICS[@]}")
+              SECTION_NAME="Research Papers to Review"
+              ;;
+            "control-theory")
+              SELECTED_TOPICS=("${CONTROL_TOPICS[@]}")
+              SECTION_NAME="Control Theory Topics"
+              ;;
+            "computational")
+              SELECTED_TOPICS=("${COMPUTATIONAL_TOPICS[@]}")
+              SECTION_NAME="Computational Modeling Ideas"
+              ;;
+            "biomechanics")
+              SELECTED_TOPICS=("${BIOMECHANICS_TOPICS[@]}")
+              SECTION_NAME="Biomechanics Research Areas"
+              ;;
+            "equipment")
+              SELECTED_TOPICS=("${EQUIPMENT_TOPICS[@]}")
+              SECTION_NAME="Equipment Science"
+              ;;
+            *)
+              # Combine all topics for 'all' category
+              SELECTED_TOPICS=(
+                "${RESEARCH_TOPICS[@]}"
+                "${CONTROL_TOPICS[@]}"
+                "${COMPUTATIONAL_TOPICS[@]}"
+                "${BIOMECHANICS_TOPICS[@]}"
+                "${EQUIPMENT_TOPICS[@]}"
+              )
+              SECTION_NAME="Mixed Topics"
+              ;;
+          esac
+
+          # Shuffle and select COUNT topics
+          TOTAL=${#SELECTED_TOPICS[@]}
+
+          # Create temp file with new ideas
+          echo "" >> .jules/ideas.md
+          echo "## $DATE - $SECTION_NAME (Auto-generated)" >> .jules/ideas.md
+          echo "" >> .jules/ideas.md
+
+          # Use shuf to randomize and select topics
+          PICKED=0
+          USED_INDICES=""
+
+          while [ $PICKED -lt $COUNT ] && [ $PICKED -lt $TOTAL ]; do
+            # Generate random index
+            INDEX=$((RANDOM % TOTAL))
+
+            # Check if already used
+            if [[ ! " $USED_INDICES " =~ " $INDEX " ]]; then
+              TOPIC="${SELECTED_TOPICS[$INDEX]}"
+              echo "- [ ] **$TOPIC**" >> .jules/ideas.md
+              USED_INDICES="$USED_INDICES $INDEX"
+              PICKED=$((PICKED + 1))
+            fi
+          done
+
+          echo "" >> .jules/ideas.md
+          echo "*Generated by Jules Ideasmith*" >> .jules/ideas.md
+          echo "" >> .jules/ideas.md
+          echo "---" >> .jules/ideas.md
+
+          echo "ideas_count=$PICKED" >> $GITHUB_OUTPUT
+          echo "section=$SECTION_NAME" >> $GITHUB_OUTPUT
+
+      - name: Commit Ideas
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "docs(ideas): add ${{ steps.generate.outputs.ideas_count }} new topic ideas [${{ steps.generate.outputs.section }}]"
+          file_pattern: ".jules/ideas.md"
+
+      - name: Summary
+        run: |
+          echo "### Ideas Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Category**: ${{ inputs.category || 'all' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Count**: ${{ steps.generate.outputs.ideas_count }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Section**: ${{ steps.generate.outputs.section }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View the updated ideas at \`.jules/ideas.md\`" >> $GITHUB_STEP_SUMMARY
