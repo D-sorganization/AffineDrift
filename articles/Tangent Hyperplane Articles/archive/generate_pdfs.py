@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
-"""Generate PDFs from Tangent Hyperplane articles for NotebookLM."""
-
+import logging
 import re
 from pathlib import Path
 from typing import Any
 
 import markdown
 from weasyprint import CSS, HTML
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger(__name__)
 
 # Custom CSS for beautiful PDFs
 PDF_CSS = """
@@ -215,8 +217,16 @@ def md_to_html(md_content: str, title: str = "") -> str:
 
 
 def generate_pdf(input_path: Path, output_path: Path) -> Path:
-    """Generate PDF from a .qmd or .md file."""
-    print(f"Processing: {input_path.name}")
+    """Generate professional PDF from a .qmd or .md file with custom styling.
+
+    Args:
+        input_path: Path to the source markdown/quarto file
+        output_path: Path where the PDF will be saved
+
+    Returns:
+        The path to the generated PDF
+    """
+    logger.info(f"Processing: {input_path.name}")
 
     content = input_path.read_text(encoding='utf-8')
 
@@ -236,7 +246,7 @@ def generate_pdf(input_path: Path, output_path: Path) -> Path:
     css = CSS(string=PDF_CSS)
     html.write_pdf(output_path, stylesheets=[css])
 
-    print(f"  ✓ Generated: {output_path.name}")
+    logger.info(f"  ✓ Generated: {output_path.name}")
     return output_path
 
 
@@ -276,38 +286,38 @@ def main() -> list[Path]:
         (base_dir / "TABLE_OF_CONTENTS.md", "Supplement_Table_of_Contents.pdf"),
     ]
 
-    print("=" * 60)
-    print("Generating PDFs for Tangent Hyperplane Framework")
-    print("=" * 60)
-    print()
+    logger.info("=" * 60)
+    logger.info("Generating PDFs for Tangent Hyperplane Framework")
+    logger.info("=" * 60)
+    logger.info("")
 
     generated = []
 
-    print("Main 4-Part Series:")
-    print("-" * 40)
+    logger.info("Main 4-Part Series:")
+    logger.info("-" * 40)
     for input_file, output_name in articles:
         if input_file.exists():
             output_path = output_dir / output_name
             generate_pdf(input_file, output_path)
             generated.append(output_path)
         else:
-            print(f"  ⚠ Missing: {input_file.name}")
+            logger.info(f"  ⚠ Missing: {input_file.name}")
 
-    print()
-    print("Supplementary Materials:")
-    print("-" * 40)
+    logger.info("")
+    logger.info("Supplementary Materials:")
+    logger.info("-" * 40)
     for input_file, output_name in supplements:
         if input_file.exists():
             output_path = output_dir / output_name
             generate_pdf(input_file, output_path)
             generated.append(output_path)
         else:
-            print(f"  ⚠ Missing: {input_file.name}")
+            logger.info(f"  ⚠ Missing: {input_file.name}")
 
-    print()
-    print("=" * 60)
-    print(f"Generated {len(generated)} PDFs in: {output_dir}")
-    print("=" * 60)
+    logger.info("")
+    logger.info("=" * 60)
+    logger.info(f"Generated {len(generated)} PDFs in: {output_dir}")
+    logger.info("=" * 60)
 
     return generated
 
