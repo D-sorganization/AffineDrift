@@ -29,7 +29,7 @@
 
   // Performance metrics storage
   const metrics = {
-    navigationStart: 0, // performance.now() is relative to navigation start
+    navigationStart: performance.timing?.navigationStart || Date.now() - performance.now(),
     splashShown: null,
     domContentLoaded: null,
     resourcesLoaded: null,
@@ -140,16 +140,17 @@
 
     // Insert at the very beginning of body
     if (document.body) {
-      document.body.insertBefore(splash, document.body.firstChild);
+      document.body.prepend(splash);
+      state.progressElement = document.getElementById('ad-splash-progress-bar');
     } else {
       // If body not ready, wait for it
       document.addEventListener('DOMContentLoaded', function () {
-        document.body.insertBefore(splash, document.body.firstChild);
+        document.body.prepend(splash);
+        state.progressElement = document.getElementById('ad-splash-progress-bar');
       });
     }
 
     state.splashElement = splash;
-    state.progressElement = document.getElementById('ad-splash-progress-bar');
 
     // Add body class to prevent scrolling during splash
     document.documentElement.classList.add('ad-splash-active');
@@ -275,9 +276,10 @@
    */
   function updateProgress(target, statusText) {
     // Only update status and progress if we're moving forward
-    if (target > state.targetProgress) {
-      state.targetProgress = target;
+    state.targetProgress = Math.max(state.targetProgress, target);
 
+    // Only update text if target is greater (prevent regression)
+    if (target >= state.targetProgress) {
       const statusElement = document.getElementById('ad-splash-status');
       if (statusElement && statusText) {
         statusElement.textContent = statusText;
@@ -309,7 +311,7 @@
     }
 
     metrics.splashHidden = performance.now();
-    metrics.timeToInteractive = metrics.splashHidden - metrics.navigationStart;
+    metrics.timeToInteractive = metrics.splashHidden;
 
     // Clear progress interval
     if (state.progressInterval) {
@@ -359,6 +361,7 @@
    */
   function revealPage() {
     document.documentElement.classList.add('ad-page-revealed');
+    state.isReady = true;
 
     // Dispatch custom event for other scripts
     const event = new CustomEvent('affinedrift:ready', {
@@ -405,12 +408,12 @@
     metrics.fullyLoaded = performance.now();
 
     const summary = {
-      'Navigation Start to DOM Ready': (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Navigation Start to All Resources': (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Time to Interactive': metrics.timeToInteractive.toFixed(2) + 'ms',
+      'Navigation Start to DOM Ready': metrics.domContentLoaded ? metrics.domContentLoaded.toFixed(2) + 'ms' : 'N/A',
+      'Navigation Start to All Resources': metrics.resourcesLoaded ? metrics.resourcesLoaded.toFixed(2) + 'ms' : 'N/A',
+      'Time to Interactive': metrics.timeToInteractive ? metrics.timeToInteractive.toFixed(2) + 'ms' : 'N/A',
       'First Paint': metrics.firstPaint ? metrics.firstPaint.toFixed(2) + 'ms' : 'N/A',
       'First Contentful Paint': metrics.firstContentfulPaint ? metrics.firstContentfulPaint.toFixed(2) + 'ms' : 'N/A',
-      'Splash Duration': (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms'
+      'Splash Duration': (metrics.splashHidden && metrics.splashShown) ? (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms' : 'N/A'
     };
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
