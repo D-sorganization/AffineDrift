@@ -179,7 +179,7 @@ def check_dry_violations(files: list[Path]) -> list[dict]:
                 magic_strings[string].append((file_path, line_no))
 
     # Report duplicates
-    for chunk_hash, locations in code_blocks.items():
+    for _, locations in code_blocks.items():
         if len(locations) > 1:
             files_involved = list(set(str(loc[0]) for loc in locations))
             issues.append(
@@ -750,7 +750,7 @@ def run_review(root_path: Path) -> dict[str, Any]:
 
     # Calculate scores per principle
     scores = {}
-    for principle_id, principle_info in PRINCIPLES.items():
+    for principle_id, _ in PRINCIPLES.items():
         principle_issues = [i for i in all_issues if i["principle"] == principle_id]
 
         # Start with 10, deduct based on severity
@@ -807,7 +807,7 @@ def generate_markdown_report(results: dict[str, Any], output_path: Path) -> None
 |-----------|-------|--------|--------|
 """
 
-    for pid, info in results["principle_scores"].items():
+    for _, info in results["principle_scores"].items():
         status = (
             "Pass" if info["score"] >= 7 else "Needs Work" if info["score"] >= 4 else "Critical"
         )
@@ -1007,7 +1007,7 @@ def main():
 
     # Print summary
     print(f"\n{'=' * 60}")
-    print(f"PRAGMATIC PROGRAMMER REVIEW SUMMARY")
+    print("PRAGMATIC PROGRAMMER REVIEW SUMMARY")
     print(f"{'=' * 60}")
     print(f"Overall Score: {results['overall_score']:.1f}/10")
     print(f"Critical Issues: {results['issue_summary']['CRITICAL']}")
