@@ -3,18 +3,13 @@
 const CACHE_NAME = 'affinedrift-v2';
 const OFFLINE_URL = '/offline.html';
 
-// Critical startup assets - loaded first for fast splash screen
-const STARTUP_ASSETS = [
-  '/css/startup-launcher.css',
-  '/js/startup-launcher.js',
-  '/logo/logo_transparent_1.png'
-];
-
 // Assets to cache immediately on install
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
-  ...STARTUP_ASSETS,
+  '/css/startup-launcher.css',
+  '/js/startup-launcher.js',
+  '/logo/logo_transparent_1.png',
   '/styles.css',
   '/script.js',
   '/favicon.ico',
