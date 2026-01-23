@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+
 from playwright.sync_api import sync_playwright
 
 # Get logger
@@ -23,7 +24,7 @@ def verify_startup():
 
         # Wait for splash screen to appear
         try:
-            splash = page.wait_for_selector("#ad-splash-screen", state="attached", timeout=1000)
+            page.wait_for_selector("#ad-splash-screen", state="attached", timeout=1000)
         except Exception:
             logger.error("Splash screen not found!")
             sys.exit(1)
