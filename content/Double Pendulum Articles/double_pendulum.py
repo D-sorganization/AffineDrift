@@ -21,11 +21,7 @@ from collections.abc import Callable
 import numpy as np
 from scipy.integrate import OdeResult, solve_ivp
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# Get logger for this module (don't configure at module level)
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -397,6 +393,11 @@ def run_example() -> None:
     """
     Run a simple simulation with PD input and print some diagnostics.
     """
+    # Configure logging when run as standalone script
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+
     # Initial condition: some arbitrary initial angles/velocities
     x0 = np.array([0.5, -0.5, 0.0, 0.0], dtype=float)
     t_span = (0.0, 5.0)

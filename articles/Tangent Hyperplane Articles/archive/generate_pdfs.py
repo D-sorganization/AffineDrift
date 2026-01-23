@@ -11,8 +11,7 @@ from weasyprint import CSS, HTML
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -157,21 +156,20 @@ dd {
 """
 
 
-
 def extract_frontmatter(content: str) -> tuple[dict[str, Any], str]:
     """Extract YAML frontmatter from quarto/markdown file."""
     frontmatter = {}
     body = content
 
-    if content.startswith('---'):
-        parts = content.split('---', 2)
+    if content.startswith("---"):
+        parts = content.split("---", 2)
         if len(parts) >= 3:
             yaml_content = parts[1]
             body = parts[2]
             # Simple YAML parsing for title/author
-            for line in yaml_content.split('\n'):
-                if ':' in line:
-                    key, value = line.split(':', 1)
+            for line in yaml_content.split("\n"):
+                if ":" in line:
+                    key, value = line.split(":", 1)
                     frontmatter[key.strip()] = value.strip().strip('"').strip("'")
 
     return frontmatter, body
@@ -180,16 +178,16 @@ def extract_frontmatter(content: str) -> tuple[dict[str, Any], str]:
 def clean_qmd_to_md(content: str) -> str:
     """Clean QMD (Quarto) specific syntax to standard markdown."""
     # Remove quarto code block options like {python} #| fig-cap: "..."
-    content = re.sub(r'\{[a-z]+\}.*?\n', '\n', content)
-    content = re.sub(r'#\|.*?\n', '', content)
+    content = re.sub(r"\{[a-z]+\}.*?\n", "\n", content)
+    content = re.sub(r"#\|.*?\n", "", content)
 
     # Convert callout blocks to blockquotes
-    content = re.sub(r'::: \{\.callout-(\w+)\}', r'> **\1:**', content)
-    content = re.sub(r':::', '', content)
+    content = re.sub(r"::: \{\.callout-(\w+)\}", r"> **\1:**", content)
+    content = re.sub(r":::", "", content)
 
     # Keep LaTeX math as-is for display (WeasyPrint won't render it but it's readable)
     # Wrap display math in code blocks for readability
-    content = re.sub(r'\$\$(.+?)\$\$', r'```\n\1\n```', content, flags=re.DOTALL)
+    content = re.sub(r"\$\$(.+?)\$\$", r"```\n\1\n```", content, flags=re.DOTALL)
 
     return content
 
@@ -198,11 +196,11 @@ def md_to_html(md_content: str, title: str = "") -> str:
     """Convert markdown to HTML with proper structure."""
     md = markdown.Markdown(
         extensions=[
-            'tables',
-            'fenced_code',
-            'codehilite',
-            'toc',
-            'meta',
+            "tables",
+            "fenced_code",
+            "codehilite",
+            "toc",
+            "meta",
         ]
     )
 
@@ -224,17 +222,17 @@ def md_to_html(md_content: str, title: str = "") -> str:
 
 def generate_pdf(input_path: Path, output_path: Path) -> Path:
     """Generate PDF from a .qmd or .md file."""
-    logger.info(f"Processing: {input_path.name}")
     print(f"Processing: {input_path.name}")
+    logger.debug(f"Processing file: {input_path} -> {output_path}")
 
-    content = input_path.read_text(encoding='utf-8')
+    content = input_path.read_text(encoding="utf-8")
 
     # Extract frontmatter
     frontmatter, body = extract_frontmatter(content)
-    title = frontmatter.get('title', input_path.stem)
+    title = frontmatter.get("title", input_path.stem)
 
     # Clean QMD syntax
-    if input_path.suffix == '.qmd':
+    if input_path.suffix == ".qmd":
         body = clean_qmd_to_md(body)
 
     # Convert to HTML
@@ -245,8 +243,8 @@ def generate_pdf(input_path: Path, output_path: Path) -> Path:
     css = CSS(string=PDF_CSS)
     html.write_pdf(output_path, stylesheets=[css])
 
-    logger.info(f"Generated: {output_path.name}")
     print(f"  ✓ Generated: {output_path.name}")
+    logger.info(f"Successfully generated PDF: {output_path}")
     return output_path
 
 
@@ -293,36 +291,36 @@ def main() -> list[Path]:
 
     generated = []
 
-    logger.info("Processing Main 4-Part Series")
     print("Main 4-Part Series:")
     print("-" * 40)
+    logger.info("Starting Main 4-Part Series processing")
     for input_file, output_name in articles:
         if input_file.exists():
             output_path = output_dir / output_name
             generate_pdf(input_file, output_path)
             generated.append(output_path)
         else:
-            logger.warning(f"Missing input file: {input_file.name}")
             print(f"  ⚠ Missing: {input_file.name}")
+            logger.warning(f"Missing input file: {input_file}")
 
     print()
-    logger.info("Processing Supplementary Materials")
     print("Supplementary Materials:")
     print("-" * 40)
+    logger.info("Starting Supplementary Materials processing")
     for input_file, output_name in supplements:
         if input_file.exists():
             output_path = output_dir / output_name
             generate_pdf(input_file, output_path)
             generated.append(output_path)
         else:
-            logger.warning(f"Missing input file: {input_file.name}")
             print(f"  ⚠ Missing: {input_file.name}")
+            logger.warning(f"Missing input file: {input_file}")
 
     print()
     print("=" * 60)
-    logger.info(f"Generated {len(generated)} PDFs in: {output_dir}")
     print(f"Generated {len(generated)} PDFs in: {output_dir}")
     print("=" * 60)
+    logger.info(f"PDF generation complete: {len(generated)} files generated in {output_dir}")
 
     return generated
 

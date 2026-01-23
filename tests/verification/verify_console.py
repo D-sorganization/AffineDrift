@@ -11,10 +11,7 @@ import os
 
 from playwright.sync_api import sync_playwright
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# Get logger for this module (don't configure at module level)
 logger = logging.getLogger(__name__)
 
 
@@ -76,4 +73,9 @@ def test_console_logs() -> None:
 
 
 if __name__ == "__main__":
+    # Configure logging when run as standalone script
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    test_console_logs()
     test_console_logs()
