@@ -268,6 +268,7 @@ This issue was identified during automated repository assessment and requires at
 
 
 def main():
+    """Parse arguments and run the issue creation process."""
     parser = argparse.ArgumentParser(description="Create GitHub issues from assessment")
     parser.add_argument(
         "--input",
