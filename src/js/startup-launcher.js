@@ -140,16 +140,18 @@
 
     // Insert at the very beginning of body
     if (document.body) {
-      document.body.insertBefore(splash, document.body.firstChild);
+      document.body.prepend(splash);
     } else {
       // If body not ready, wait for it
       document.addEventListener('DOMContentLoaded', function () {
-        document.body.insertBefore(splash, document.body.firstChild);
+        document.body.prepend(splash);
       });
     }
 
     state.splashElement = splash;
-    state.progressElement = document.getElementById('ad-splash-progress-bar');
+    // Use querySelector on the detached element (if not yet in DOM) or attached element
+    // This fixes the issue where getElementById returns null if splash isn't in DOM yet
+    state.progressElement = splash.querySelector('#ad-splash-progress-bar');
 
     // Add body class to prevent scrolling during splash
     document.documentElement.classList.add('ad-splash-active');
@@ -359,6 +361,7 @@
    */
   function revealPage() {
     document.documentElement.classList.add('ad-page-revealed');
+    state.isReady = true;
 
     // Dispatch custom event for other scripts
     const event = new CustomEvent('affinedrift:ready', {
@@ -405,8 +408,8 @@
     metrics.fullyLoaded = performance.now();
 
     const summary = {
-      'Navigation Start to DOM Ready': (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Navigation Start to All Resources': (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms',
+      'Navigation Start to DOM Ready': metrics.domContentLoaded ? (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms' : 'N/A',
+      'Navigation Start to All Resources': metrics.resourcesLoaded ? (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms' : 'N/A',
       'Time to Interactive': metrics.timeToInteractive.toFixed(2) + 'ms',
       'First Paint': metrics.firstPaint ? metrics.firstPaint.toFixed(2) + 'ms' : 'N/A',
       'First Contentful Paint': metrics.firstContentfulPaint ? metrics.firstContentfulPaint.toFixed(2) + 'ms' : 'N/A',
