@@ -217,6 +217,7 @@ This assessment was generated automatically. For detailed analysis:
 
 
 def main() -> None:
+    """Main entry point for the script."""
     parser = argparse.ArgumentParser(description="Run repository assessment")
     parser.add_argument(
         "--assessment",
