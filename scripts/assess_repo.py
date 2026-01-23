@@ -550,11 +550,11 @@ labels: jules:assessment, needs-attention
 
 # Issue: Low Score in {CATEGORIES[cat_code]}
 
-**Grade**: {info['grade']:.1f}/10
-**Details**: {info['details']}
+**Grade**: {info["grade"]:.1f}/10
+**Details**: {info["details"]}
 
 ## Recommended Actions
-- Review the detailed assessment in `docs/assessments/Assessment_{cat_code}_{CATEGORIES[cat_code].replace(' ', '_')}.md`
+- Review the detailed assessment in `docs/assessments/Assessment_{cat_code}_{CATEGORIES[cat_code].replace(" ", "_")}.md`
 - Create a remediation plan.
 """
             issue_path.write_text(issue_content, encoding="utf-8")

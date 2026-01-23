@@ -1,13 +1,27 @@
+#!/usr/bin/env python3
+"""Generate baseline assessment reports for repository quality tracking.
+
+This script creates standardized assessment reports across multiple categories
+(A-O) to establish a baseline for tracking repository quality improvements over time.
+Each category represents a different aspect of code quality, documentation, testing, etc.
+
+Usage:
+    python scripts/baseline_assessments.py
+
+Output:
+    Creates assessment files in docs/assessments/ directory
+"""
+
 import logging
+from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
-from pathlib import Path  # noqa: E402
-
 repo_name = "AffineDrift"
 date = "2026-01-22"
 
+# Assessment categories mapping
 categories = {
     "A": "Architecture & Implementation",
     "B": "Hygiene, Security & Quality",
@@ -26,10 +40,11 @@ categories = {
     "O": "CI/CD & DevOps",
 }
 
+# Create output directory
 output_dir = Path("docs/assessments")
 output_dir.mkdir(parents=True, exist_ok=True)
 
-# Analysis findings for AffineDrift
+# Analysis findings for AffineDrift by category
 findings = {
     "A": "Good monorepo structure with engines/ and shared/. Good launchers.",
     "B": "Ruff and Black configured. Coverage artifacts in .gitignore.",
@@ -38,17 +53,42 @@ findings = {
     "O": "Global pause mechanism. Control tower and nightly organizer added.",
 }
 
-for cat_id, cat_name in categories.items():
-    content = f"""# Assessment {cat_id} for {repo_name}
+
+def generate_assessment_report(
+    category_id: str, category_name: str, finding: str, output_path: Path
+) -> None:
+    """Generate a single assessment report file.
+
+    Args:
+        category_id: Single letter category identifier (A-O)
+        category_name: Full name of the assessment category
+        finding: Assessment findings text
+        output_path: Path where the report should be written
+
+    Returns:
+        None
+    """
+    content = f"""# Assessment {category_id} for {repo_name}
 Date: {date}
-Category: {cat_name}
+Category: {category_name}
 
 ## Findings
-{findings.get(cat_id, "Standard patterns followed. No blockers in this category.")}
+{finding}
 
 ## Score: 8.5/10
 """
-    with open(output_dir / f"Assessment_{cat_id}_Results_{date}.md", "w") as f:
-        f.write(content)
+    output_path.write_text(content, encoding="utf-8")
 
-logger.info("Generated A-O assessments for AffineDrift.")
+
+def main() -> None:
+    """Generate all baseline assessment reports."""
+    for cat_id, cat_name in categories.items():
+        finding = findings.get(cat_id, "Standard patterns followed. No blockers in this category.")
+        output_path = output_dir / f"Assessment_{cat_id}_Results_{date}.md"
+        generate_assessment_report(cat_id, cat_name, finding, output_path)
+
+    logger.info("Generated A-O assessments for AffineDrift.")
+
+
+if __name__ == "__main__":
+    main()
