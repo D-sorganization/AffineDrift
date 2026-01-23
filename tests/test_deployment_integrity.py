@@ -16,9 +16,9 @@ def test_deploy_workflow_integrity() -> None:
     assert "tools/check_links.py" in content, "Pre-build link check missing from workflow"
 
     # Check for Post-build checks
-    assert "tools/check_site_health.py" in content, (
-        "Post-build site health check missing from workflow"
-    )
+    assert (
+        "tools/check_site_health.py" in content
+    ), "Post-build site health check missing from workflow"
 
     # Check for Verification
     assert "Verify Deployment" in content, "Deployment verification step missing"
@@ -32,9 +32,9 @@ def test_requirements_integrity() -> None:
     with open(REQUIREMENTS_PATH, encoding="utf-8") as f:
         reqs = f.read()
 
-    assert "beautifulsoup4" in reqs, (
-        "beautifulsoup4 missing from requirements (needed for health check)"
-    )
+    assert (
+        "beautifulsoup4" in reqs
+    ), "beautifulsoup4 missing from requirements (needed for health check)"
 
 
 def test_check_scripts_exist() -> None:

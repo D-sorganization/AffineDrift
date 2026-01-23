@@ -1,9 +1,22 @@
+#!/usr/bin/env python3
+"""Generate baseline assessment reports for repository quality tracking.
+
+This script creates standardized assessment reports across multiple categories
+(A-O) to establish a baseline for tracking repository quality improvements over time.
+Each category represents a different aspect of code quality, documentation, testing, etc.
+
+Usage:
+    python scripts/baseline_assessments.py
+
+Output:
+    Creates assessment files in docs/assessments/ directory
+"""
+
 import logging
+from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
-
-from pathlib import Path  # noqa: E402
 
 repo_name = "AffineDrift"
 date = "2026-01-22"
