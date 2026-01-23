@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 
 
 class LaTeXToQuartoConverter:
+    """Converter class for handling LaTeX to Quarto transformation."""
+
     def __init__(self) -> None:
         """Initialize converter."""
         # Converter initialized with default settings

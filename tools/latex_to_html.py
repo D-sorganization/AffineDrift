@@ -10,6 +10,8 @@ from pathlib import Path
 
 
 class LaTeXToHTMLConverter:
+    """Converter class for handling LaTeX to HTML transformation."""
+
     def __init__(self, template_file: str | Path | None = None) -> None:
         """Initialize converter with optional custom template."""
         self.template_file = template_file
