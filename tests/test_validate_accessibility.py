@@ -13,7 +13,7 @@ class TestAltTextValidation:
     """Test alt text validation in QMD files."""
 
     def test_markdown_image_with_alt_text(self, tmp_path):
-        """Test that markdown images with alt text pass validation."""
+        """Test that markdown images with valid alt text pass validation."""
         test_file = tmp_path / "test.qmd"
         test_file.write_text("![Valid alt text](image.png)")
 
