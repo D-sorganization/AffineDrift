@@ -290,6 +290,7 @@
    */
   function checkReadyState() {
     if (state.domReady && state.resourcesLoaded && state.criticalResourcesLoaded) {
+      state.isReady = true;
       updateProgress(100, 'Ready!');
 
       // Ensure minimum splash duration for branding
@@ -405,12 +406,12 @@
     metrics.fullyLoaded = performance.now();
 
     const summary = {
-      'Navigation Start to DOM Ready': (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Navigation Start to All Resources': (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Time to Interactive': metrics.timeToInteractive.toFixed(2) + 'ms',
+      'Navigation Start to DOM Ready': metrics.domContentLoaded ? (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms' : 'N/A',
+      'Navigation Start to All Resources': metrics.resourcesLoaded ? (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms' : 'N/A',
+      'Time to Interactive': metrics.timeToInteractive ? metrics.timeToInteractive.toFixed(2) + 'ms' : 'N/A',
       'First Paint': metrics.firstPaint ? metrics.firstPaint.toFixed(2) + 'ms' : 'N/A',
       'First Contentful Paint': metrics.firstContentfulPaint ? metrics.firstContentfulPaint.toFixed(2) + 'ms' : 'N/A',
-      'Splash Duration': (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms'
+      'Splash Duration': (metrics.splashHidden && metrics.splashShown) ? (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms' : 'N/A'
     };
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
