@@ -1,7 +1,7 @@
 import os
-import sys
-import time
+
 from playwright.sync_api import sync_playwright
+
 
 def verify_startup():
     html_path = os.path.abspath("tests/verification/verify_startup.html")
