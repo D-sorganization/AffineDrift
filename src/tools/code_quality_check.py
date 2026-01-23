@@ -121,6 +121,7 @@ def check_banned_patterns(
         "matlab_quality_check.py",
         "code_quality_check.py",
         "quality-check.py",
+        "pragmatic_programmer_review.py",
     ):
         return issues
 
