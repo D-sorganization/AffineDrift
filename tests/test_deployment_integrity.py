@@ -39,5 +39,5 @@ def test_requirements_integrity() -> None:
 
 def test_check_scripts_exist() -> None:
     """Ensure the check scripts actually exist."""
-    assert (ROOT_DIR / "tools" / "check_links.py").exists()
-    assert (ROOT_DIR / "tools" / "check_site_health.py").exists()
+    assert (ROOT_DIR / "src" / "tools" / "check_links.py").exists()
+    assert (ROOT_DIR / "src" / "tools" / "check_site_health.py").exists()
