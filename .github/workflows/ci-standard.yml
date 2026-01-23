@@ -103,7 +103,10 @@ jobs:
           if [ -d "tools" ]; then
             find tools -name "requirements.txt" -exec pip install -r {} \;
           fi
-      - run: pytest tests/ --cov=tools --cov-report=xml
+      - name: Run Tests
+        env:
+          PYTHONPATH: src
+        run: pytest tests/ --cov=src/tools --cov-report=xml
       - uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
