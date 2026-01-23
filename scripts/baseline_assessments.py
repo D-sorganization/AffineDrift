@@ -83,9 +83,7 @@ Category: {category_name}
 def main() -> None:
     """Generate all baseline assessment reports."""
     for cat_id, cat_name in categories.items():
-        finding = findings.get(
-            cat_id, "Standard patterns followed. No blockers in this category."
-        )
+        finding = findings.get(cat_id, "Standard patterns followed. No blockers in this category.")
         output_path = output_dir / f"Assessment_{cat_id}_Results_{date}.md"
         generate_assessment_report(cat_id, cat_name, finding, output_path)
 
