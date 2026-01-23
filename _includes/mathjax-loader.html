@@ -1,7 +1,34 @@
 <script>
+  // MathJax Configuration - MUST be defined before loading MathJax
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      tags: 'ams'
+    },
+    svg: {
+      fontCache: 'global'
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      ignoreHtmlClass: 'tex2jax_ignore'
+    },
+    startup: {
+      ready: function() {
+        MathJax.startup.defaultReady();
+        // Process any math that was added dynamically
+        MathJax.startup.promise.then(function() {
+          MathJax.typeset();
+        });
+      }
+    }
+  };
+
   window.Quarto = window.Quarto || {};
   window.Quarto.typesetMath = function(el) {
-    if (window.MathJax) {
+    if (window.MathJax && window.MathJax.typeset) {
       window.MathJax.typeset([el]);
       return;
     }
@@ -25,26 +52,36 @@
     }
   };
 
-  document.addEventListener("DOMContentLoaded", function() {
-    const hasMath = document.querySelector(".math, .math-display, .equation, .math-showcase");
-    if (!hasMath) {
-      return;
-    }
-
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+  (function() {
+    // Check if MathJax is already loaded
     if (document.querySelector('script[src*="mathjax"]')) {
       return;
     }
 
+    // Load polyfill for older browsers
     const polyfill = document.createElement("script");
     polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+    polyfill.async = true;
     polyfill.dataset.adMathjax = "polyfill";
-
-    const mathjax = document.createElement("script");
-    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js";
-    mathjax.type = "text/javascript";
-    mathjax.dataset.adMathjax = "mathjax";
-
     document.head.appendChild(polyfill);
+
+    // Load MathJax
+    const mathjax = document.createElement("script");
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    mathjax.async = true;
+    mathjax.id = "MathJax-script";
+    mathjax.dataset.adMathjax = "mathjax";
     document.head.appendChild(mathjax);
+  })();
+
+  // Also process math on DOMContentLoaded as a fallback
+  document.addEventListener("DOMContentLoaded", function() {
+    if (window.MathJax && window.MathJax.typeset) {
+      // Re-typeset to catch any math that wasn't processed
+      setTimeout(function() {
+        MathJax.typeset();
+      }, 100);
+    }
   });
 </script>
