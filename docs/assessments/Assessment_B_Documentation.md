@@ -1,9 +1,9 @@
 # Assessment: Documentation
 
-## Grade: 9.8/10
+## Grade: 9.9/10
 
 ## Details
-Docstring Coverage: 88.3% (326/369), READMEs found: 10
+Docstring Coverage: 88.8% (333/375), READMEs found: 11
 
 ## Recommendations
 - See detailed findings

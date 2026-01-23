@@ -9,6 +9,8 @@ from pathlib import Path
 
 # ANSI colors for terminal output
 class Colors:
+    """ANSI color codes for terminal output formatting."""
+
     if sys.stderr.isatty():
         HEADER = "\033[95m"
         BLUE = "\033[94m"

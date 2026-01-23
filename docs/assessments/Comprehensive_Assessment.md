@@ -7,7 +7,7 @@
 | Category | Grade | Weight |
 |----------|-------|--------|
 | Code Structure | 6.0 | - |
-| Documentation | 9.8 | - |
+| Documentation | 9.9 | - |
 | Test Coverage | 3.0 | - |
 | Error Handling | 8.0 | - |
 | Performance | 7.0 | - |
@@ -15,7 +15,7 @@
 | Dependencies | 7.0 | - |
 | CI/CD | 8.0 | - |
 | Code Style | 8.0 | - |
-| API Design | 9.3 | - |
+| API Design | 9.2 | - |
 | Data Handling | 7.0 | - |
 | Logging | 8.0 | - |
 | Configuration | 8.0 | - |
