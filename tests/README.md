@@ -170,7 +170,12 @@ pytest --cov=. --cov-report=term-missing
 
 ### Coverage Goals
 
-- **Target:** 60-80% code coverage
+- **Current:** ~30% (as of January 2026)
+- **Target:** 60-80% code coverage for critical paths
+- **Priority areas:**
+  - Build scripts (scripts/)
+  - Core utilities (tools/)
+  - Deployment validation
 - **Critical paths:** 90%+ coverage
 - **Utilities:** 70%+ coverage
 
