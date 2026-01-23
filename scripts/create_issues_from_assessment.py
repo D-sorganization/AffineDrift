@@ -12,7 +12,7 @@ import logging
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -28,7 +28,7 @@ def get_existing_issues() -> list[dict[str, Any]]:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)
+        return cast(list[dict[str, Any]], json.loads(result.stdout))
     except Exception as e:
         logger.warning(f"Could not fetch existing issues: {e}")
         return []
@@ -183,7 +183,8 @@ def process_assessment_findings(
     return issues_created
 
 
-def main():
+def main() -> None:
+    """Parse arguments and create issues from assessment findings."""
     parser = argparse.ArgumentParser(description="Create GitHub issues from assessment findings")
     parser.add_argument(
         "--input",
