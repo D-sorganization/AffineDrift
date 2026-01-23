@@ -59,13 +59,13 @@ jobs:
           if [ -d "tools" ]; then
             find tools -name "requirements.txt" -exec pip install -r {} \;
           fi
-      - run: mypy tools/ --ignore-missing-imports
+      - run: mypy src/tools/ scripts/ --ignore-missing-imports
 
       - name: Verify Code Quality
-        run: python tools/code_quality_check.py
+        run: python src/tools/code_quality_check.py
 
       - name: Verify Site Health
-        run: python tools/check_site_health.py
+        run: python src/tools/check_site_health.py
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
       # Blocking: Enforces code quality on MATLAB files
