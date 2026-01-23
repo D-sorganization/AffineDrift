@@ -29,7 +29,7 @@
 
   // Performance metrics storage
   const metrics = {
-    navigationStart: 0, // performance.now() is relative to navigation start
+    navigationStart: performance.timing?.navigationStart || (Date.now() - performance.now()),
     splashShown: null,
     domContentLoaded: null,
     resourcesLoaded: null,
@@ -140,16 +140,16 @@
 
     // Insert at the very beginning of body
     if (document.body) {
-      document.body.insertBefore(splash, document.body.firstChild);
+      document.body.prepend(splash);
     } else {
       // If body not ready, wait for it
       document.addEventListener('DOMContentLoaded', function () {
-        document.body.insertBefore(splash, document.body.firstChild);
+        document.body.prepend(splash);
       });
     }
 
     state.splashElement = splash;
-    state.progressElement = document.getElementById('ad-splash-progress-bar');
+    state.progressElement = splash.querySelector('#ad-splash-progress-bar');
 
     // Add body class to prevent scrolling during splash
     document.documentElement.classList.add('ad-splash-active');
@@ -186,7 +186,7 @@
     metrics.domContentLoaded = performance.now();
     state.domReady = true;
     updateProgress(40, 'Preparing content...');
-    log('DOM Content Loaded', metrics.domContentLoaded - metrics.navigationStart, 'ms');
+    log('DOM Content Loaded', metrics.domContentLoaded.toFixed(2), 'ms');
     checkReadyState();
   }
 
@@ -197,7 +197,7 @@
     metrics.resourcesLoaded = performance.now();
     state.resourcesLoaded = true;
     updateProgress(80, 'Finalizing...');
-    log('All resources loaded', metrics.resourcesLoaded - metrics.navigationStart, 'ms');
+    log('All resources loaded', metrics.resourcesLoaded.toFixed(2), 'ms');
     checkReadyState();
   }
 
@@ -290,6 +290,7 @@
    */
   function checkReadyState() {
     if (state.domReady && state.resourcesLoaded && state.criticalResourcesLoaded) {
+      state.isReady = true;
       updateProgress(100, 'Ready!');
 
       // Ensure minimum splash duration for branding
@@ -309,7 +310,7 @@
     }
 
     metrics.splashHidden = performance.now();
-    metrics.timeToInteractive = metrics.splashHidden - metrics.navigationStart;
+    metrics.timeToInteractive = metrics.splashHidden;
 
     // Clear progress interval
     if (state.progressInterval) {
@@ -405,12 +406,12 @@
     metrics.fullyLoaded = performance.now();
 
     const summary = {
-      'Navigation Start to DOM Ready': (metrics.domContentLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Navigation Start to All Resources': (metrics.resourcesLoaded - metrics.navigationStart).toFixed(2) + 'ms',
-      'Time to Interactive': metrics.timeToInteractive.toFixed(2) + 'ms',
+      'Navigation Start to DOM Ready': metrics.domContentLoaded ? metrics.domContentLoaded.toFixed(2) + 'ms' : 'N/A',
+      'Navigation Start to All Resources': metrics.resourcesLoaded ? metrics.resourcesLoaded.toFixed(2) + 'ms' : 'N/A',
+      'Time to Interactive': metrics.timeToInteractive ? metrics.timeToInteractive.toFixed(2) + 'ms' : 'N/A',
       'First Paint': metrics.firstPaint ? metrics.firstPaint.toFixed(2) + 'ms' : 'N/A',
       'First Contentful Paint': metrics.firstContentfulPaint ? metrics.firstContentfulPaint.toFixed(2) + 'ms' : 'N/A',
-      'Splash Duration': (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms'
+      'Splash Duration': (metrics.splashHidden && metrics.splashShown) ? (metrics.splashHidden - metrics.splashShown).toFixed(2) + 'ms' : 'N/A'
     };
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
