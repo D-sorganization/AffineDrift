@@ -237,7 +237,7 @@ def generate_sample_torque(
             torque = t**2 - t
         except (TypeError, ValueError) as e:
             st.session_state.polynomial_error = (
-                f"Error in polynomial expression: {type(e).__name__}. " "Please check your formula."
+                f"Error in polynomial expression: {type(e).__name__}. Please check your formula."
             )
             torque = t**2 - t
         except (ArithmeticError, OverflowError, ZeroDivisionError):
@@ -1050,7 +1050,7 @@ with st.expander("📐 Model Information"):
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
     - **Wrist Deviation Angle (φ):** {wrist_angle}°
-    ({'radial' if wrist_angle > 0 else 'ulnar' if wrist_angle < 0 else 'neutral'} deviation)
+    ({"radial" if wrist_angle > 0 else "ulnar" if wrist_angle < 0 else "neutral"} deviation)
 
     ### Transmission Ratios
     - **Angular Velocity Ratio (ω_out/ω_in):** {omega_ratio:.4f}
@@ -1061,8 +1061,8 @@ with st.expander("📐 Model Information"):
     - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m ({pct_gamma:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
-    - **α-axis acceleration:** {torque_alpha/I_alpha:.4f} rad/s²
-    - **γ-axis acceleration:** {torque_gamma/I_gamma:.4f} rad/s²
+    - **α-axis acceleration:** {torque_alpha / I_alpha:.4f} rad/s²
+    - **γ-axis acceleration:** {torque_gamma / I_gamma:.4f} rad/s²
 
     ### Model Assumptions
     - Universal joint (Hooke/Cardan) kinematics

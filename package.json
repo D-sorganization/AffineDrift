@@ -1,27 +1,26 @@
 {
   "name": "affinedrift",
   "version": "1.0.0",
-  "description": "Tooling utilities for the AffineDrift website build pipeline.",
-  "main": "script.js",
+  "description": "AffineDrift website - Golf biomechanics and control theory",
   "scripts": {
-    "lint:html": "html-validate \"docs/**/*.html\"",
-    "lint:css": "stylelint \"**/*.css\" --allow-empty-input"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/D-sorganization/AffineDrift.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/D-sorganization/AffineDrift/issues"
-  },
-  "homepage": "https://github.com/D-sorganization/AffineDrift#readme",
+  "keywords": [
+    "golf",
+    "biomechanics",
+    "control-theory"
+  ],
+  "author": "Dieter Olson",
+  "license": "MIT",
   "devDependencies": {
-    "html-validate": "^10.6.0",
-    "stylelint": "^17.0.0",
-    "stylelint-config-standard": "^40.0.0"
+    "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.40.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   }
 }
