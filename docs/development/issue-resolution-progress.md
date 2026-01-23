@@ -8,7 +8,7 @@
 
 ### ✅ Issue #428 - Tools Missing READMEs and Documentation
 **Status:** RESOLVED
-**PR:** #628
+**PR:** #629
 
 **Actions Taken:**
 - Created comprehensive README.md for `tools/` directory
@@ -24,7 +24,7 @@
 
 ### ✅ Issue #430 - Improve CONTRIBUTING.md with Quarto-Specific Guidance
 **Status:** RESOLVED
-**PR:** #628
+**PR:** #629
 
 **Actions Taken:**
 - Added Quarto-specific development workflow section
@@ -39,19 +39,38 @@
 - Reduced barrier to entry for contributions
 - Established quality standards and best practices
 
+### ✅ Issue #429 - Create Tool Comparison Matrix for Discovery
+**Status:** RESOLVED
+**PR:** #629
+
+**Actions Taken:**
+- Created comprehensive tool-comparison-matrix.md
+- Categorized all tools by purpose (Build, Content, Quality, MATLAB, Python)
+- Documented input/output, dependencies, and use cases for each tool
+- Added tool selection guide for contributors and maintainers
+- Included common workflows and troubleshooting section
+- Documented performance characteristics
+
+**Impact:**
+- Easy tool discovery for new contributors
+- Clear guidance on which tool to use for specific tasks
+- Reduced time to productivity for developers
+
 ## In Progress Issues
 
 ### 🔄 Issue #427 - Low Docstring Coverage (37%) in Python Modules
 **Status:** IN PROGRESS
 **Estimated Effort:** 8-12 hours
 
+**Actions Taken:**
+- Improved baseline_assessments.py with module docstring and function docstrings
+- Added type hints and better structure
+
 **Next Steps:**
-1. Run docstring coverage analysis
-2. Add docstrings to all public functions in `scripts/` directory
-3. Add docstrings to all public functions in `tools/` directory
-4. Add type hints where missing
-5. Configure pydocstyle in CI/CD
-6. Target: 70%+ docstring coverage
+1. Add docstrings to remaining functions in `tools/` directory
+2. Add type hints where missing
+3. Configure pydocstyle in CI/CD
+4. Target: 70%+ docstring coverage
 
 ### 🔄 Issue #422 - Zero JavaScript Test Coverage
 **Status:** PLANNED
@@ -163,11 +182,11 @@
 
 ## Summary Statistics
 
-- **Issues Resolved:** 2/9 (22%)
-- **Issues In Progress:** 7/9 (78%)
-- **PRs Created:** 1 (#628)
-- **PRs Pending Review:** 3 (#41, #42, #43)
-- **Documentation Added:** 5 new README files
+- **Issues Resolved:** 3/9 (33%)
+- **Issues In Progress:** 6/9 (67%)
+- **PRs Created:** 1 (#629 - Comprehensive)
+- **PRs Pending Review:** 0
+- **Documentation Added:** 6 new files (5 READMEs + 1 comparison matrix)
 - **Code Quality:** All linting checks passing
 
 ## Recommendations
