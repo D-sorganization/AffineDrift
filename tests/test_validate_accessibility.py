@@ -10,7 +10,7 @@ from scripts.validate_accessibility import (
 
 
 class TestAltTextValidation:
-    """Test alt text validation in QMD files."""
+    """Test alt text validation in QMD files (QMD/HTML)."""
 
     def test_markdown_image_with_alt_text(self, tmp_path):
         """Test that markdown images with valid alt text pass validation."""
