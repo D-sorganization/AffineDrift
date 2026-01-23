@@ -142,9 +142,7 @@ def generate_summary(
     overall_score = total_weighted_score / total_weight if total_weight > 0 else 7.0
 
     # Count critical issues
-    critical_issues = [
-        i for i in all_issues if i["severity"] in ("BLOCKER", "CRITICAL")
-    ]
+    critical_issues = [i for i in all_issues if i["severity"] in ("BLOCKER", "CRITICAL")]
 
     # Generate markdown summary
     md_content = f"""# Comprehensive Assessment Summary
@@ -179,7 +177,9 @@ Found {len(critical_issues)} critical issues requiring immediate attention:
 """
 
     for i, issue in enumerate(critical_issues[:10], 1):
-        md_content += f"{i}. **[{issue['severity']}]** {issue['description']} (Source: {issue['source']})\n"
+        md_content += (
+            f"{i}. **[{issue['severity']}]** {issue['description']} (Source: {issue['source']})\n"
+        )
 
     md_content += """
 ## Recommendations

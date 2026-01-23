@@ -23,7 +23,7 @@ categories = {
     "L": "Long-Term Maintainability",
     "M": "Educational Resources",
     "N": "Visualization & Export",
-    "O": "CI/CD & DevOps"
+    "O": "CI/CD & DevOps",
 }
 
 output_dir = Path("docs/assessments")
@@ -35,7 +35,7 @@ findings = {
     "B": "Ruff and Black configured. Coverage artifacts in .gitignore.",
     "C": "Comprehensive README. Added .env.example. Good documentation.",
     "G": "Test coverage crisis: 0.7%. Need more tests in the suite.",
-    "O": "Global pause mechanism. Control tower and nightly organizer added."
+    "O": "Global pause mechanism. Control tower and nightly organizer added.",
 }
 
 for cat_id, cat_name in categories.items():
