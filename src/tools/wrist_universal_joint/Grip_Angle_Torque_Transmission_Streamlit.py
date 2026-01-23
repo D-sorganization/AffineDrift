@@ -713,9 +713,14 @@ def plot_transmission_sweep(
         torque_trans = 1.0 * tau_r
         t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
         epsilon = 1e-6
-        # t_alpha and t_gamma can be ndarray or float, but here they are float because torque_trans is float
-        t_alpha_val = float(t_alpha) if isinstance(t_alpha, float | int) else t_alpha.item()
-        t_gamma_val = float(t_gamma) if isinstance(t_gamma, float | int) else t_gamma.item()
+        # t_alpha and t_gamma can be ndarray or float, but here they are float
+        # because torque_trans is float
+        t_alpha_val = (
+            float(t_alpha) if isinstance(t_alpha, float | int) else t_alpha.item()
+        )
+        t_gamma_val = (
+            float(t_gamma) if isinstance(t_gamma, float | int) else t_gamma.item()
+        )
 
         accel_alpha_ratios_list.append(t_alpha_val / i_alpha if i_alpha > epsilon else 0.0)
         accel_gamma_ratios_list.append(t_gamma_val / i_gamma if i_gamma > epsilon else 0.0)
