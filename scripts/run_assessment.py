@@ -216,6 +216,7 @@ This assessment was generated automatically. For detailed analysis:
 
 
 def main():
+    """Execute the repository assessment."""
     parser = argparse.ArgumentParser(description="Run repository assessment")
     parser.add_argument(
         "--assessment",
