@@ -15,10 +15,18 @@ This file is intended as a standalone module that you can
 import into a Streamlit app or run directly.
 """
 
+import logging
 from collections.abc import Callable
 
 import numpy as np
 from scipy.integrate import OdeResult, solve_ivp
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Physical parameters for the double pendulum
@@ -408,10 +416,10 @@ def run_example() -> None:
     t_samples, tau_nat_traj = compute_tau_natural_trajectory(sol, lambda t, x: u_pd(t, x))
 
     # Simple console output
-    print("Simulation completed.")
-    print(f"Number of time steps: {len(t_samples)}")
-    print("First few natural torque samples:")
-    print(tau_nat_traj[:5, :])
+    logger.info("Simulation completed.")
+    logger.info(f"Number of time steps: {len(t_samples)}")
+    logger.info("First few natural torque samples:")
+    logger.info(f"{tau_nat_traj[:5, :]}")
 
 
 if __name__ == "__main__":

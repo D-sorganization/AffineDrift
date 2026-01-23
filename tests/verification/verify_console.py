@@ -6,9 +6,17 @@ ensures that no banned logs (errors, warnings, or specific forbidden strings)
 are present in the browser console.
 """
 
+import logging
 import os
 
 from playwright.sync_api import sync_playwright
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 
 def test_console_logs() -> None:
@@ -44,11 +52,11 @@ def test_console_logs() -> None:
             text = getattr(msg, "text", str(msg))
             logs.append(text)
             type_str = getattr(msg, "type", "info")
-            print(f"Console {type_str}: {text}")
+            logger.debug(f"Console {type_str}: {text}")
 
         page.on("console", on_console)
 
-        print(f"Navigating to {url}")
+        logger.info(f"Navigating to {url}")
         page.goto(url)
 
         # Wait a bit for scripts to execute
@@ -63,7 +71,7 @@ def test_console_logs() -> None:
                     "Found banned console log: 'Mathematical notation rendering via MathJax'"
                 )
 
-        print("Verification passed: No banned logs found.")
+        logger.info("Verification passed: No banned logs found.")
 
         page.screenshot(path="tests/verification/verification.png")
 
