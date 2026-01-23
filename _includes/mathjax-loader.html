@@ -1,0 +1,50 @@
+<script>
+  window.Quarto = window.Quarto || {};
+  window.Quarto.typesetMath = function(el) {
+    if (window.MathJax) {
+      window.MathJax.typeset([el]);
+      return;
+    }
+
+    if (!window.katex) {
+      return;
+    }
+
+    const mathElements = el.getElementsByClassName("math");
+    const macros = [];
+    for (let i = 0; i < mathElements.length; i++) {
+      const texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains("display"),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const hasMath = document.querySelector(".math, .math-display, .equation, .math-showcase");
+    if (!hasMath) {
+      return;
+    }
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+      return;
+    }
+
+    const polyfill = document.createElement("script");
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+    polyfill.dataset.adMathjax = "polyfill";
+
+    const mathjax = document.createElement("script");
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js";
+    mathjax.type = "text/javascript";
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(polyfill);
+    document.head.appendChild(mathjax);
+  });
+</script>
