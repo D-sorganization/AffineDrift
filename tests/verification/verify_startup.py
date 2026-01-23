@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def verify_startup():
+    """Verify the startup launcher functionality using Playwright."""
     cwd = os.getcwd()
     url = f"file://{cwd}/tests/verification/test_startup.html"
 
