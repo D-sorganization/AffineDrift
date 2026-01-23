@@ -1,5 +1,7 @@
 import os
+
 from playwright.sync_api import sync_playwright
+
 
 def verify_startup():
     with sync_playwright() as p:
@@ -15,7 +17,9 @@ def verify_startup():
         print("Splash screen found")
 
         # Wait for isReady
-        page.wait_for_function("() => window.AffineDriftStartup && window.AffineDriftStartup.isReady()")
+        page.wait_for_function(
+            "() => window.AffineDriftStartup && window.AffineDriftStartup.isReady()"
+        )
         print("isReady is true")
 
         # Take screenshot of the "revealed" state (which is what isReady implies, or close to it)
