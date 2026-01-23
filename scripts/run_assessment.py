@@ -7,9 +7,7 @@ based on actual code analysis.
 """
 
 import argparse
-import json
 import logging
-import os
 import subprocess
 import sys
 from datetime import datetime
@@ -156,7 +154,7 @@ def run_assessment(assessment_id: str, output_path: Path) -> int:
     elif assessment_id == "G":  # Testing
         test_count = count_test_files()
         findings.append(f"- Test files found: {test_count}")
-        findings.append(f"- Test coverage: Run pytest --cov for details")
+        findings.append("- Test coverage: Run pytest --cov for details")
         if test_count == 0:
             score -= 5
         elif test_count < 5:
