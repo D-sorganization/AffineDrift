@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from tools.latex_to_qmd import LaTeXToQuartoConverter
+from src.tools.latex_to_qmd import LaTeXToQuartoConverter
 
 
 class TestLaTeXToQuartoConverter:
