@@ -68,7 +68,10 @@ def run_black_check() -> dict:
             capture_output=True,
             text=True,
         )
-        return {"exit_code": result.returncode, "files_to_format": result.stdout.count("would reformat")}
+        return {
+            "exit_code": result.returncode,
+            "files_to_format": result.stdout.count("would reformat"),
+        }
     except FileNotFoundError:
         return {"exit_code": -1, "files_to_format": 0, "errors": "black not installed"}
 
@@ -134,8 +137,12 @@ def run_assessment(assessment_id: str, output_path: Path) -> int:
     elif assessment_id == "B":  # Hygiene & Quality
         ruff_result = run_ruff_check()
         black_result = run_black_check()
-        findings.append(f"- Ruff check: {'✓ passed' if ruff_result['exit_code'] == 0 else '✗ issues found'}")
-        findings.append(f"- Black formatting: {'✓ formatted' if black_result['exit_code'] == 0 else '✗ needs formatting'}")
+        findings.append(
+            f"- Ruff check: {'✓ passed' if ruff_result['exit_code'] == 0 else '✗ issues found'}"
+        )
+        findings.append(
+            f"- Black formatting: {'✓ formatted' if black_result['exit_code'] == 0 else '✗ needs formatting'}"
+        )
         if ruff_result["exit_code"] != 0:
             score -= 2
         if black_result["exit_code"] != 0:
