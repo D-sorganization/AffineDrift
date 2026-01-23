@@ -1,0 +1,56 @@
+./docs/assessments/Assessment_L_Results_2026-01-17.md:552:    """Test quality checker catches TODO/FIXME."""
+./docs/assessments/Assessment_L_Results_2026-01-17.md:553:    # Create temp file with TODO, verify detection
+./docs/assessments/Assessment_L_Results_2026-01-17.md:621:              body: '## Tasks\n- [ ] Audit dependencies\n- [ ] Review TODOs\n- [ ] Update documentation\n- [ ] Performance review',
+./docs/assessments/Assessment_J_Results_2026-01-17.md:166:    (re.compile(r"\bTODO\b"), "TODO placeholder found"),
+./docs/assessments/Assessment_J_Results_2026-01-17.md:167:    (re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
+./docs/assessments/change_log_reviews/review_2026_01_16_merge.md:58:*   **Issue:** The project includes `tools/code_quality_check.py` which checks for `TODO` and placeholders.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-23.md:40:*   **Placeholders:** TODOs found in `.github/workflows/` regarding API migration.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:23:    *   `.github/workflows/Jules-Tech-Custodian.yml`: **Disabled** (`if: false`). Contains `TODO: Jules CLI API changed in v0.1.x`.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:24:    *   `.github/workflows/Jules-Conflict-Fix.yml`: **Disabled**. Contains `TODO: Jules CLI API changed in v0.1.x`.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:27:    *   `archive/handcrafted-site/wrist-universal-joint.html`: Contains `<!-- TODO: Replace the placeholder Streamlit URL... -->`.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:29:## 4. Placeholders (TODO, FIXME, NotImplemented)
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:30:*   **Workflows:** 3 TODOs related to Jules CLI API migration.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:32:    *   `tools/matlab_utilities/README.md`: Mentions TODOs.
+./docs/assessments/changelog_reviews/Code_Quality_Review_2026-01-21.md:34:*   **Acceptable:** TODOs in `tools/code_quality_check.py` and `tools/matlab_utilities/scripts/matlab_quality_check.py` (part of scanner logic).
+./docs/assessments/completist/COMPLETIST_LATEST.md:4:This audit identified significant incomplete implementation in the user-facing documentation and tools sections. While the codebase itself appears free of explicit "TODO" or "FIXME" markers (excluding false positives), several key pages contain "Coming Soon" placeholders and placeholder images, blocking the user experience.
+./docs/assessments/completist/COMPLETIST_LATEST.md:26:No explicit `TODO` comments or `NotImplementedError` exceptions were found in the active source code (excluding build tools and false positives).
+./docs/assessments/completist/COMPLETIST_LATEST.md:28:*   **Missing Tests:** While not explicitly marked with TODO, the coverage for new tools (like the ones mentioned in "Coming Soon") is naturally 0%.
+./docs/assessments/completist/COMPLETIST_LATEST.md:31:*   **False Positive Noise:** The codebase contains many terms (e.g., "template", "attempt", "Todorov") that trigger standard "TODO/TEMP" scans. Future audits should refine regex patterns to exclude these known false positives.
+./docs/assessments/completist/Completist_Report_2026-01-20.md:28:| **CI/CD** | `.github/workflows/Jules-Tech-Custodian.yml` | `TODO: Jules CLI API changed in v0.1.x` - Workflow needs update to match new CLI arguments. | **Pending** |
+./docs/assessments/completist/Completist_Report_2026-01-20.md:29:| **CI/CD** | `.github/workflows/Jules-Conflict-Fix.yml` | `TODO: Jules CLI API changed in v0.1.x - needs migration` - Conflict resolution workflow needs update. | **Pending** |
+./docs/assessments/completist/Completist_Report_2026-01-20.md:35:    *   `archive/handcrafted-site/wrist-universal-joint.html`: Contains comment `<!-- TODO: Replace the placeholder Streamlit URL... -->`.
+./docs/assessments/completist/Completist_Report_2026-01-20.md:43:    *   Several documentation files (e.g., `UNIFIED_CI_APPROACH.md`, `JULES_ARCHITECTURE.md`) contain "TODO" as part of their instructional content. These are **not** actionable technical debt but were flagged by the scanner.
+./docs/assessments/completist/Completist_Report_2026-01-21.md:4:This audit identified significant incomplete implementation in the user-facing documentation and tools sections. While the codebase itself appears free of explicit "TODO" or "FIXME" markers (excluding false positives), several key pages contain "Coming Soon" placeholders and placeholder images, blocking the user experience.
+./docs/assessments/completist/Completist_Report_2026-01-21.md:26:No explicit `TODO` comments or `NotImplementedError` exceptions were found in the active source code (excluding build tools and false positives).
+./docs/assessments/completist/Completist_Report_2026-01-21.md:28:*   **Missing Tests:** While not explicitly marked with TODO, the coverage for new tools (like the ones mentioned in "Coming Soon") is naturally 0%.
+./docs/assessments/completist/Completist_Report_2026-01-21.md:31:*   **False Positive Noise:** The codebase contains many terms (e.g., "template", "attempt", "Todorov") that trigger standard "TODO/TEMP" scans. Future audits should refine regex patterns to exclude these known false positives.
+./docs/assessments/issues/ISSUE_Disabled_Workflows_2026-01-21.md:15:    *   **Reason:** `# TODO: Jules CLI API changed in v0.1.x`
+./docs/assessments/issues/ISSUE_Disabled_Workflows_2026-01-21.md:18:    *   **Reason:** `# TODO: Jules CLI API changed in v0.1.x - needs migration`
+./docs/workflows/ASSESSMENT_REMEDIATION_GUIDE.md:582:- Issue #XXX: Refactor module architecture
+./.github/workflows/Jules-Conflict-Fix.yml:16:          # TODO: Jules CLI API changed in v0.1.x - needs migration
+./.github/workflows/Jules-Conflict-Fix.yml:46:              # TODO: Jules CLI API changed - original command:
+./.github/workflows/Jules-Completist.yml:40:          # Find TODO/FIXME/XXX comments in Python, TypeScript, JavaScript, Quarto
+./.github/workflows/Jules-Completist.yml:41:          grep -rn "TODO\|FIXME\|XXX\|HACK\|TEMP" \
+./.github/workflows/Jules-Completist.yml:52:          grep -rn '""".*TODO\|""".*WIP\|# TODO:' --include="*.py" . \
+./.github/workflows/Jules-Completist.yml:63:          TODO_COUNT=$(wc -l < .jules/completist_data/todo_markers.txt 2>/dev/null || echo "0")
+./.github/workflows/Jules-Completist.yml:64:          echo "todo_count=$TODO_COUNT" >> $GITHUB_OUTPUT
+./.github/workflows/Jules-Completist.yml:107:          - todo_markers.txt - TODO/FIXME/XXX comments
+./.github/workflows/Jules-Completist.yml:120:          - TODO comments indicating missing features
+./.github/workflows/Jules-Completist.yml:130:          - FIXME/HACK/TEMP markers
+./.github/workflows/Jules-Code-Quality-Reviewer.yml:104:          4. Placeholders (TODO, FIXME, NotImplemented)
+./.github/workflows/Jules-Tech-Custodian.yml:49:          # TODO: Jules CLI API changed in v0.1.x
+./agent_templates/pragmatist.md:58:- TODOs that never move
+./JULES_ARCHITECTURE.md:140:- **Fixes applied:** Less aggressive Ruff, specific MyPy paths, fixed grep regex for TODOs.
+./JULES_ARCHITECTURE.md:172:      # FIX: Correct Regex for TODOs
+./JULES_ARCHITECTURE.md:175:          if grep -r "TODO\|FIXME" --include="*.py" src/; then
+./archive/handcrafted-site/wrist-universal-joint.html:231:                                    <!-- TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment.
+./tools/matlab_utilities/README.md:261:- TODO, FIXME, HACK, XXX placeholders
+./tools/matlab_utilities/scripts/matlab_quality_check.py:285:                    (r"\bTODO\b", "TODO placeholder found"),
+./tools/matlab_utilities/scripts/matlab_quality_check.py:286:                    (r"\bFIXME\b", "FIXME placeholder found"),
+./tools/matlab_utilities/scripts/matlab_quality_check.py:288:                    (r"\bXXX\b", "XXX comment found"),
+./tools/code_quality_check.py:34:    (re.compile(r"\bTODO\b"), "TODO placeholder found"),
+./tools/code_quality_check.py:35:    (re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
+./UNIFIED_CI_APPROACH.md:276:- **Common Issues**: TODO comments, console.log statements
+./UNIFIED_CI_APPROACH.md:292:3. **No placeholders**: No TODO, FIXME, or NotImplementedError
+./UNIFIED_CI_APPROACH.md:332:- **Placeholders**: TODO, FIXME, NotImplementedError
+./UNIFIED_CI_APPROACH.md:364:3. **Placeholders**: Remove TODO/FIXME comments
