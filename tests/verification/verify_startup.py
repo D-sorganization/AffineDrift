@@ -7,6 +7,7 @@ from playwright.sync_api import sync_playwright
 # Get logger
 logger = logging.getLogger(__name__)
 
+
 def verify_startup():
     cwd = os.getcwd()
     url = f"file://{cwd}/tests/verification/test_startup.html"
@@ -42,11 +43,11 @@ def verify_startup():
         logger.info(f"Progress bar width: '{width}'")
 
         if not width or width == "0%":
-             logger.error("FAIL: Progress bar did not move! (Likely state.progressElement is null)")
-             # We don't exit here to check other things, but we flag it
-             progress_failed = True
+            logger.error("FAIL: Progress bar did not move! (Likely state.progressElement is null)")
+            # We don't exit here to check other things, but we flag it
+            progress_failed = True
         else:
-             progress_failed = False
+            progress_failed = False
 
         # Wait for splash to disappear (max 5s, but usually faster)
         # We wait for hidden class
@@ -54,7 +55,7 @@ def verify_startup():
             page.wait_for_selector("#ad-splash-screen.ad-splash-hidden", timeout=6000)
             logger.info("Splash screen hidden.")
         except Exception:
-             logger.error("Splash screen did not hide!")
+            logger.error("Splash screen did not hide!")
 
         # Check isReady
         is_ready = page.evaluate("window.AffineDriftStartup && window.AffineDriftStartup.isReady()")
@@ -68,6 +69,7 @@ def verify_startup():
 
         logger.info("Verification passed!")
         browser.close()
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
