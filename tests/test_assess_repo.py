@@ -62,9 +62,8 @@ except Exception:
     pass
 """
     result = assess_repo.assess_error_handling([mock_file])
-    # 1 try, 0 bare except (except Exception is not bare in the regex check? regex is "except\s*:")
-    # The regex r"except\s*:" matches "except:" or "except :" but NOT "except Exception:"
-    # So 0 bare excepts.
-    # Score start 7. Bare except count 0. Try count 1 (which is <= 20).
-    # Score = 7.
+    # 1 try, 0 bare except (except Exception is not bare in the regex check; regex is r"except\s*:").
+    # The regex r"except\s*:" matches "except:" or "except :" but NOT "except Exception:", so bare_excepts = 0.
+    # Base score is 7. With 0 bare excepts, no penalty is applied. If try_count > 20, the score increases by 1
+    # (capped at 8), but here try_count == 1 (<= 20), so no bonus is applied and the final score remains 7.
     assert result["grade"] == 7
