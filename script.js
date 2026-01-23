@@ -1594,3 +1594,109 @@ if (typeof module !== "undefined" && module.exports) {
     scrollToTop,
   };
 }
+
+
+// Accessibility: Add ARIA labels to navigation elements
+function initAriaLabels() {
+  // Add ARIA labels to navigation elements
+  const navElements = document.querySelectorAll('nav');
+  navElements.forEach((nav) => {
+    if (!nav.hasAttribute('aria-label')) {
+      // Determine label based on class or heading
+      if (nav.classList.contains('toc-nav')) {
+        nav.setAttribute('aria-label', 'Table of contents navigation');
+      } else if (nav.classList.contains('history-nav')) {
+        nav.setAttribute('aria-label', 'Recent history navigation');
+      } else if (nav.classList.contains('resources-nav')) {
+        nav.setAttribute('aria-label', 'Resources navigation');
+      } else {
+        nav.setAttribute('aria-label', 'Navigation');
+      }
+    }
+  });
+
+  // Add ARIA labels to sidebar elements
+  const sidebars = document.querySelectorAll('aside');
+  sidebars.forEach((sidebar) => {
+    if (!sidebar.hasAttribute('aria-label')) {
+      if (sidebar.classList.contains('left-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Left sidebar navigation');
+      } else if (sidebar.classList.contains('right-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Right sidebar navigation');
+      } else if (sidebar.classList.contains('home-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Main navigation sidebar');
+      } else {
+        sidebar.setAttribute('aria-label', 'Sidebar');
+      }
+    }
+  });
+
+  // Add ARIA labels to main content areas
+  const mainElements = document.querySelectorAll('main');
+  mainElements.forEach((main) => {
+    if (!main.hasAttribute('aria-label') && !main.hasAttribute('role')) {
+      main.setAttribute('role', 'main');
+      main.setAttribute('aria-label', 'Main content');
+    }
+  });
+
+  // Add ARIA labels to search inputs
+  const searchInputs = document.querySelectorAll('input[type="search"]');
+  searchInputs.forEach((input) => {
+    if (!input.hasAttribute('aria-label') && !input.id) {
+      input.setAttribute('aria-label', 'Search');
+    }
+  });
+
+  // Add ARIA labels to social links
+  const socialLinks = document.querySelectorAll('.social-link');
+  socialLinks.forEach((link) => {
+    if (!link.hasAttribute('aria-label')) {
+      const text = link.textContent.trim();
+      link.setAttribute('aria-label', `Visit ${text}`);
+    }
+  });
+
+  // Add ARIA labels to resource cards
+  const resourceCards = document.querySelectorAll('.resource-card');
+  resourceCards.forEach((card) => {
+    if (!card.hasAttribute('aria-label')) {
+      const heading = card.querySelector('h3');
+      if (heading) {
+        card.setAttribute('aria-label', `Resource: ${heading.textContent.trim()}`);
+      }
+    }
+  });
+
+  // Add ARIA labels to article cards
+  const articleCards = document.querySelectorAll('.article-card');
+  articleCards.forEach((card) => {
+    if (!card.hasAttribute('aria-label')) {
+      const heading = card.querySelector('h3');
+      if (heading) {
+        card.setAttribute('aria-label', `Article: ${heading.textContent.trim()}`);
+      }
+    }
+  });
+
+  // Add ARIA live region for dynamic content
+  const historyLists = document.querySelectorAll('[id$="-history-list"]');
+  historyLists.forEach((list) => {
+    if (!list.hasAttribute('aria-live')) {
+      list.setAttribute('aria-live', 'polite');
+      list.setAttribute('aria-atomic', 'false');
+    }
+  });
+
+  // Add ARIA labels to form elements without labels
+  const formInputs = document.querySelectorAll('input:not([aria-label]):not([id])');
+  formInputs.forEach((input) => {
+    const placeholder = input.getAttribute('placeholder');
+    if (placeholder) {
+      input.setAttribute('aria-label', placeholder);
+    }
+  });
+}
+
+// Run ARIA labels initialization when DOM is ready
+runOnDomReady(initAriaLabels);
