@@ -411,7 +411,7 @@ jobs:
             git push origin "$BRANCH_NAME"
 
             gh pr create \
-              --title "Content: Critics' Comments - $(basename "$TARGET") [$MODE $REVIEW/5]" \
+              --title "[Jules/Critics-Comments] Content: Critics' Comments - $(basename "$TARGET") [$MODE $REVIEW/5]" \
               --body "$(cat << EOF
           ## Summary
           **Mode**: $MODE | **Review**: $REVIEW of 5 | **Target**: $TARGET
@@ -429,8 +429,7 @@ jobs:
 
           🤖 Generated with Jules Critics Comments Writer
           EOF
-          )" \
-              --label "jules:content,critics-comments"
+          )"
           else
             echo "No changes to commit"
           fi

@@ -401,7 +401,7 @@ jobs:
             git push origin "$BRANCH_NAME"
 
             gh pr create \
-              --title "Content: Layman's Terms - $(basename "$TARGET") [$MODE $REVIEW/5]" \
+              --title "[Jules/Laymans-Terms] Content: Layman's Terms - $(basename "$TARGET") [$MODE $REVIEW/5]" \
               --body "$(cat << EOF
           ## Summary
           **Mode**: $MODE | **Review**: $REVIEW of 5 | **Target**: $TARGET
@@ -419,8 +419,7 @@ jobs:
 
           🤖 Generated with Jules Layman's Terms Writer
           EOF
-          )" \
-              --label "jules:content,laymans-terms"
+          )"
           else
             echo "No changes to commit"
           fi
