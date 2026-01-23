@@ -522,26 +522,26 @@ def main() -> None:
 
     # Output results
     if args.output_format == "json":
-        print(json.dumps(results, indent=2, default=str))  # noqa: T201
+        logger.info(json.dumps(results, indent=2, default=str))
     else:
-        print("\n" + "=" * 60)  # noqa: T201
-        print("MATLAB QUALITY CHECK RESULTS")  # noqa: T201
-        print("=" * 60)  # noqa: T201
-        print(f"Timestamp: {results.get('timestamp', 'N/A')}")  # noqa: T201
-        print(f"Total Files: {results.get('total_files', 0)}")  # noqa: T201
-        print(
+        logger.info("\n" + "=" * 60)
+        logger.info("MATLAB QUALITY CHECK RESULTS")
+        logger.info("=" * 60)
+        logger.info(f"Timestamp: {results.get('timestamp', 'N/A')}")
+        logger.info(f"Total Files: {results.get('total_files', 0)}")
+        logger.info(
             f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}",
         )
-        print(f"Summary: {results.get('summary', 'N/A')}")  # noqa: T201
+        logger.info(f"Summary: {results.get('summary', 'N/A')}")
 
         issues_raw = results.get("issues", [])
         issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
         if issues:
-            print(f"\nIssues Found ({len(issues)}):")  # noqa: T201
+            logger.info(f"\nIssues Found ({len(issues)}):")
             for i, issue in enumerate(issues, 1):
-                print(f"  {i}. {issue}")  # noqa: T201
+                logger.info(f"  {i}. {issue}")
 
-        print("\n" + "=" * 60)  # noqa: T201
+        logger.info("\n" + "=" * 60)
 
     # Exit with appropriate code
     # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass

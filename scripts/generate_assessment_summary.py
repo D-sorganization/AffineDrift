@@ -135,7 +135,7 @@ def generate_summary(
 
     for assessment_id, score in scores.items():
         if assessment_id in categories:
-            weight = float(str(categories[assessment_id]["weight"]))
+            weight = categories[assessment_id]["weight"]
             total_weighted_score += score * weight
             total_weight += weight
 
@@ -210,7 +210,11 @@ Recommended: 30 days from today
         "timestamp": datetime.now().isoformat(),
         "overall_score": round(overall_score, 2),
         "category_scores": {
-            k: {"score": v, "name": categories[k]["name"], "weight": categories[k]["weight"]}
+            k: {
+                "score": v,
+                "name": categories[k]["name"],
+                "weight": categories[k]["weight"],
+            }
             for k, v in scores.items()
             if k in categories
         },
@@ -228,7 +232,7 @@ Recommended: 30 days from today
     return 0
 
 
-def main() -> int:
+def main():
     """Parse CLI arguments and generate assessment summary."""
     parser = argparse.ArgumentParser(description="Generate assessment summary")
     parser.add_argument(
@@ -254,7 +258,7 @@ def main() -> int:
     args = parser.parse_args()
 
     # Expand wildcards if needed
-    input_reports: list[Path] = []
+    input_reports = []
     for pattern in args.input:
         if "*" in str(pattern):
             # Expand glob pattern
@@ -270,8 +274,8 @@ def main() -> int:
         return 1
 
     exit_code = generate_summary(input_reports, args.output, args.json_output)
-    sys.exit(exit_code)
+    return exit_code
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

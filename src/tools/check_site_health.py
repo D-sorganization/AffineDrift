@@ -89,8 +89,10 @@ def check_site_health() -> None:
                 # current_dir is relative to DOCS_DIR
                 current_dir = file_path.parent
                 # target_rel_path is relative to DOCS_DIR
-                # We need to resolve ".." and "." manually or using resolve() but resolve needs abs paths.
-                # Easier way: (DOCS_DIR / current_dir / target_url).resolve().relative_to(DOCS_DIR.resolve())
+                # We need to resolve ".." and "." manually or using resolve()
+                # but resolve needs abs paths.
+                # Easier way: (DOCS_DIR / current_dir / target_url).resolve()
+                # .relative_to(DOCS_DIR.resolve())
                 try:
                     resolved_target = (DOCS_DIR / current_dir / target_url).resolve()
                     # Check if it is inside DOCS_DIR
@@ -101,7 +103,8 @@ def check_site_health() -> None:
                 except (ValueError, FileNotFoundError):
                     # If resolve fails (e.g. file doesn't exist), we construct it logically
                     # but we can't fully trust it if it doesn't exist.
-                    # Actually, if it doesn't exist, resolve() might still work on Path if strictly=False (default since 3.10)
+                    # Actually, if it doesn't exist, resolve() might still work
+                    # on Path if strictly=False (default since 3.10)
                     # But if we want to check existence, we can just check exist().
                     # Let's try logical path construction first to match `all_files` keys.
                     # However, logical resolution of ".." without file system is tricky.

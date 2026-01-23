@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tools.update_navigation import main as update_nav_main
-from tools.update_navigation import update_navigation
+from src.tools.update_navigation import main as update_nav_main
+from src.tools.update_navigation import update_navigation
 
 if TYPE_CHECKING:
     from pathlib import Path
