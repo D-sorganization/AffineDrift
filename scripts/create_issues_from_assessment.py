@@ -267,7 +267,8 @@ This issue was identified during automated repository assessment and requires at
     return 0
 
 
-def main():
+def main() -> None:
+    """Parse arguments and process assessment findings."""
     parser = argparse.ArgumentParser(description="Create GitHub issues from assessment")
     parser.add_argument(
         "--input",
