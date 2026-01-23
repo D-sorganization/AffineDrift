@@ -16,19 +16,68 @@ Thank you for your interest in contributing to AffineDrift! This document provid
 
 ## Getting Started
 
-1. **Fork the repository**
+### Prerequisites
+
+- **Git** - Version control
+- **Python 3.8+** - For build scripts and tools
+- **Quarto** - Static site generator ([Install Quarto](https://quarto.org/docs/get-started/))
+- **Node.js** (optional) - For JavaScript linting and testing
+
+### Initial Setup
+
+1. **Fork the repository** on GitHub
+
 2. **Clone your fork**:
    ```bash
    git clone https://github.com/YOUR-USERNAME/AffineDrift.git
+   cd AffineDrift
    ```
-3. **Create a branch**:
+
+3. **Install Python dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Verify Quarto installation**:
+   ```bash
+   quarto check
+   ```
+
+5. **Create a branch**:
    ```bash
    git checkout -b feature/your-feature-name
    ```
-4. **Make your changes**
-5. **Test locally**
-6. **Commit and push**
-7. **Open a pull request**
+
+### Development Workflow
+
+1. **Make your changes** to `.qmd` files (Quarto markdown)
+2. **Preview locally**:
+   ```bash
+   quarto preview
+   ```
+3. **Run quality checks**:
+   ```bash
+   # Python linting
+   ruff check .
+   ruff format .
+   
+   # Type checking
+   mypy .
+   
+   # Run tests
+   pytest
+   ```
+4. **Build the site**:
+   ```bash
+   quarto render
+   ```
+5. **Commit and push**:
+   ```bash
+   git add .
+   git commit -m "feat: your descriptive commit message"
+   git push origin feature/your-feature-name
+   ```
+6. **Open a pull request** on GitHub
 
 ## Code Guidelines
 
