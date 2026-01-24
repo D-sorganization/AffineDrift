@@ -208,10 +208,21 @@ describe('DOM Manipulation', () => {
       element.style.top = '500px';
       document.body.appendChild(element);
 
+      // Mock getBoundingClientRect to return expected position
+      element.getBoundingClientRect = jest.fn(() => ({
+        top: 500,
+        left: 0,
+        right: 100,
+        bottom: 600,
+        width: 100,
+        height: 100
+      }));
+
       const offset = 140;
       const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset;
 
       expect(targetPosition).toBeGreaterThanOrEqual(0);
+      expect(targetPosition).toBe(360); // 500 + 0 - 140
     });
   });
 
