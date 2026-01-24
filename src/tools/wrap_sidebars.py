@@ -20,7 +20,13 @@ Note:
 """
 
 import glob
+import sys
 from pathlib import Path
+
+# Add repo root to sys.path to allow imports from src
+repo_root = Path(__file__).resolve().parent.parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.append(str(repo_root))
 
 from src.tools.utils import setup_logging
 

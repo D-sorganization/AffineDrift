@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
 
+# Add repo root to sys.path to allow imports from src
+repo_root = Path(__file__).resolve().parent.parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.append(str(repo_root))
+
 from bs4 import BeautifulSoup
 
 from src.tools.utils import setup_logging

@@ -2,10 +2,16 @@
 """Verify image URLs in markdown and HTML files."""
 
 import re
+import sys
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+# Add repo root to sys.path to allow imports from src
+repo_root = Path(__file__).resolve().parent.parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.append(str(repo_root))
 
 from src.tools.utils import setup_logging
 
