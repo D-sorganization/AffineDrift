@@ -151,10 +151,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
                         # Check src/<path>
                         src_p = root_path / "src" / rel_path
-                        if (
-                            src_p.with_suffix(".qmd").exists()
-                            or src_p.with_suffix(".md").exists()
-                        ):
+                        if src_p.with_suffix(".qmd").exists() or src_p.with_suffix(".md").exists():
                             found_in_source = True
 
                         # Check docs/<path>
