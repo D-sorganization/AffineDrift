@@ -10,7 +10,7 @@ from scripts.validate_accessibility import (
 
 
 class TestAltTextValidation:
-    """Test alt text validation in QMD files."""
+    """Tests alt text validation in QMD files."""
 
     def test_markdown_image_with_alt_text(self, tmp_path):
         """Test that markdown images with alt text pass validation."""
@@ -47,7 +47,7 @@ class TestAltTextValidation:
 
 
 class TestColorblindSafeColors:
-    """Test colorblind-safe color validation."""
+    """Tests colorblind-safe color validation."""
 
     def test_okabe_ito_colors_pass(self, tmp_path):
         """Test that Okabe-Ito palette colors pass validation."""
@@ -94,7 +94,7 @@ class TestColorblindSafeColors:
 
 
 class TestAriaLabels:
-    """Test ARIA label validation in JavaScript."""
+    """Tests ARIA label validation in JavaScript."""
 
     def test_aria_labels_present(self, tmp_path):
         """Test that JavaScript with ARIA labels passes validation."""
@@ -121,7 +121,7 @@ class TestAriaLabels:
 
 
 class TestHeadingHierarchy:
-    """Test heading hierarchy validation."""
+    """Tests heading hierarchy validation."""
 
     def test_proper_hierarchy(self, tmp_path):
         """Test that proper heading hierarchy passes validation."""
