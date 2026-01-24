@@ -21,6 +21,10 @@ from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
+# Add project root to sys.path to allow importing from src
+# This is necessary when running the script directly from the root
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
