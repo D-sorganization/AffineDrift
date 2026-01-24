@@ -139,8 +139,16 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
                 # For qmd files, also check src/ and docs/ prefixed paths
                 # (qmd files link to output paths like tools/... which exist in src/tools/ or docs/tools/)
-                src_html = root_path / "src" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
-                docs_html = root_path / "docs" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+                src_html = (
+                    root_path / "src" / target_path.relative_to(root_path)
+                    if target_path.is_relative_to(root_path)
+                    else None
+                )
+                docs_html = (
+                    root_path / "docs" / target_path.relative_to(root_path)
+                    if target_path.is_relative_to(root_path)
+                    else None
+                )
 
                 # If target is generated from qmd, the source qmd should exist
                 # But we are checking source files, so we look for source qmd
@@ -156,8 +164,16 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                         broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
             elif not target_path.exists():
                 # For non-HTML files, also check src/ and docs/ prefixed paths
-                src_path = root_path / "src" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
-                docs_path = root_path / "docs" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+                src_path = (
+                    root_path / "src" / target_path.relative_to(root_path)
+                    if target_path.is_relative_to(root_path)
+                    else None
+                )
+                docs_path = (
+                    root_path / "docs" / target_path.relative_to(root_path)
+                    if target_path.is_relative_to(root_path)
+                    else None
+                )
 
                 exists_check = False
                 if src_path:
