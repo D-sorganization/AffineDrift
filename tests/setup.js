@@ -50,3 +50,8 @@ window.getComputedStyle = jest.fn((element) => {
     }),
   };
 });
+
+// Clean up timers after each test to prevent worker process hang
+afterEach(() => {
+  jest.clearAllTimers();
+});
