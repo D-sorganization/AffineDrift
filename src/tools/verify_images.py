@@ -13,7 +13,7 @@ repo_root = Path(__file__).resolve().parent.parent.parent
 if str(repo_root) not in sys.path:
     sys.path.append(str(repo_root))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import setup_logging  # noqa: E402
 
 logger = setup_logging(__name__)
 

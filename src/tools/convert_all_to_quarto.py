@@ -12,9 +12,9 @@ repo_root = Path(__file__).resolve().parent.parent.parent
 if str(repo_root) not in sys.path:
     sys.path.append(str(repo_root))
 
-from latex_to_qmd import LaTeXToQuartoConverter
+from latex_to_qmd import LaTeXToQuartoConverter  # noqa: E402
 
-from src.tools.utils import setup_logging
+from src.tools.utils import setup_logging  # noqa: E402
 
 logger = setup_logging(__name__)
 
