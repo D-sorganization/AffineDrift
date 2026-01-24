@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for accessibility validation script."""
+"""Tests for the accessibility validation script."""
 
 from scripts.validate_accessibility import (
     check_alt_text_in_qmd,
