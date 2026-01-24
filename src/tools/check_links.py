@@ -77,6 +77,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
         "HOUSE_STYLE.md",
         "CONVERSION_GUIDE.md",
         "EMBEDDING_GUIDE.md",
+        "CONTRIBUTING.md",  # Contains example syntax like ![Description](image.png)
     }
 
     for file_path in root_path.rglob("*"):
@@ -136,14 +137,36 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                 p_md = target_path.with_suffix(".md")
                 p_html = target_path  # The html itself might exist if it's a static asset
 
+                # For qmd files, also check src/ and docs/ prefixed paths
+                # (qmd files link to output paths like tools/... which exist in src/tools/ or docs/tools/)
+                src_html = root_path / "src" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+                docs_html = root_path / "docs" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+
                 # If target is generated from qmd, the source qmd should exist
                 # But we are checking source files, so we look for source qmd
-                if not (p_qmd.exists() or p_md.exists() or p_html.exists()):
+                exists_check = p_qmd.exists() or p_md.exists() or p_html.exists()
+                if src_html:
+                    exists_check = exists_check or src_html.exists()
+                if docs_html:
+                    exists_check = exists_check or docs_html.exists()
+
+                if not exists_check:
                     # Also check if it wraps to index.html (e.g. directory/)
                     if not (target_path.is_dir() and (target_path / "index.qmd").exists()):
                         broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
             elif not target_path.exists():
-                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+                # For non-HTML files, also check src/ and docs/ prefixed paths
+                src_path = root_path / "src" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+                docs_path = root_path / "docs" / target_path.relative_to(root_path) if target_path.is_relative_to(root_path) else None
+
+                exists_check = False
+                if src_path:
+                    exists_check = exists_check or src_path.exists()
+                if docs_path:
+                    exists_check = exists_check or docs_path.exists()
+
+                if not exists_check:
+                    broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
 

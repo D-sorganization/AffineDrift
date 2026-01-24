@@ -37,4 +37,4 @@ See `EMBEDDING_GUIDE.md` for detailed instructions.
 
 ## Article
 
-This tool is featured in: [Wrists Behave as Universal Joints](../../docs/articles/wrist-universal-joint.html)
+This tool is featured in: [Wrists Behave as Universal Joints](../../../docs/articles/wrist-universal-joint.html)
