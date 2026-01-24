@@ -124,7 +124,7 @@ def find_files_by_extension(
     # Normalize extensions
     extensions = [ext if ext.startswith(".") else f".{ext}" for ext in extensions]
 
-    found_files = []
+    found_files: list[Path] = []
 
     if paths is None:
         # Search root directory
