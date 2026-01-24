@@ -1,13 +1,26 @@
 #!/usr/bin/env python3
 """Simple script to extract HTML from .qmd files and create proper HTML files.
-This is a workaround for when Quarto is not available.
+
+This is a workaround for when Quarto is not available. It processes .qmd files
+containing raw HTML blocks and generates proper HTML pages using a template.
+
+Usage:
+    python build-html.py
+
+The script reads .qmd files from the current directory and generates
+corresponding HTML files in the docs/ directory.
 """
 
-import html
 import logging
 import re
 import subprocess
+import sys
 from pathlib import Path
+
+# Add src to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
+
+from src.tools.utils import create_html_page, extract_frontmatter, extract_title_description
 
 # Configure logging
 logging.basicConfig(
@@ -21,27 +34,24 @@ def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str |
     """Extract HTML content from a .qmd file.
 
     Args:
-        qmd_file: Path to the .qmd file to process
+        qmd_file: Path to the .qmd file to process.
 
     Returns:
         Tuple of (title, description, html_content). Any can be None if not found.
-
     """
     content = qmd_file.read_text()
 
-    # Extract YAML frontmatter
-    yaml_match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
-    if not yaml_match:
+    # Extract YAML frontmatter using shared utility
+    yaml_content, _ = extract_frontmatter(content)
+    if yaml_content is None:
         return None, None, None
 
-    yaml_content = yaml_match.group(1)
-
-    # Extract title and description
-    title_match = re.search(r'^title:\s*"([^"]+)"', yaml_content, re.MULTILINE)
-    desc_match = re.search(r'^description:\s*"([^"]+)"', yaml_content, re.MULTILINE)
-
-    title = title_match.group(1) if title_match else qmd_file.stem
-    description = desc_match.group(1) if desc_match else ""
+    # Extract title and description using shared utility
+    title, description = extract_title_description(
+        yaml_content,
+        default_title=qmd_file.stem,
+        default_description="",
+    )
 
     # Extract HTML block
     html_match = re.search(r"```{=html}\s*\n(.*?)\n\s*```", content, re.DOTALL)
@@ -52,113 +62,9 @@ def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str |
     return title, description, html_content
 
 
-def create_html_page(
-    title: str,
-    description: str,
-    body_html: str,
-    output_file: Path,
-    template_content: str,
-    page_type: str = "articles",
-) -> bool:
-    """Create a complete HTML page from a template.
-
-    Args:
-        title: Page title
-        description: Page description
-        body_html: HTML content for the main body
-        output_file: Path where the HTML file should be written
-        template_content: The HTML template string
-        page_type: Type of page ('articles', 'models', 'resources') to set
-            correct nav active state
-
-    Returns:
-        True if successful, False otherwise
-
-    """
-    if not template_content:
-        return False
-
-    template = template_content
-
-    # Escape inputs for security
-    title_escaped = html.escape(title)
-    description_escaped = html.escape(description)
-
-    # Replace title
-    template = re.sub(
-        r"<title>.*?</title>",
-        f"<title>{title_escaped} – AffineDrift</title>",
-        template,
-    )
-
-    # Replace meta description
-    template = re.sub(
-        r'<meta name="description" content="[^"]*">',
-        f'<meta name="description" content="{description_escaped}">',
-        template,
-    )
-
-    # Fix navigation active state based on page type
-    if page_type == "models":
-        # Remove active state from Articles link
-        template = re.sub(
-            r'<a class="nav-link active" href="./articles.html" aria-current="page">',
-            '<a class="nav-link" href="./articles.html">',
-            template,
-        )
-    elif page_type == "resources":
-        # Remove active state from Articles link, add to Resources
-        template = re.sub(
-            r'<a class="nav-link active" href="./articles.html" aria-current="page">',
-            '<a class="nav-link" href="./articles.html">',
-            template,
-        )
-        template = re.sub(
-            r'<a class="nav-link" href="./resources.html">',
-            '<a class="nav-link active" href="./resources.html" aria-current="page">',
-            template,
-        )
-    # For articles type, keep Articles as active (default)
-
-    # Replace title block
-    template = re.sub(
-        r'<h1 class="title">.*?</h1>',
-        f'<h1 class="title">{title_escaped}</h1>',
-        template,
-    )
-
-    # Replace description in page
-    template = re.sub(
-        r'<div class="description">\s*.*?\s*</div>',
-        f'<div class="description">\n    {description_escaped}\n  </div>',
-        template,
-        flags=re.DOTALL,
-    )
-
-    # Replace the main content
-    content_pattern = r'<section class="article-section.*?">.*?</section>'
-    # Use lambda to avoid backslash escaping issues in body_html
-    template = re.sub(content_pattern, lambda _: body_html, template, flags=re.DOTALL)
-
-    # Remove articles-specific JavaScript for non-articles pages
-    if page_type != "articles":
-        # Remove updateArticlesHistory function and calls
-        template = re.sub(
-            r"\s*function updateArticlesHistory\(\) \{.*?\}\s*",
-            "",
-            template,
-            flags=re.DOTALL,
-        )
-        template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
-
-    output_file.write_text(template)
-    return True
-
-
 def main() -> None:
-    """Main function to process all .qmd files and generate HTML pages."""
-    # Find all .qmd files that need to be built
-    # Note: Process articles.qmd LAST to avoid corrupting the template
+    """Process all .qmd files and generate HTML pages."""
+    # List of .qmd files to process (articles.qmd processed last as template source)
     qmd_files = [
         "index.qmd",
         "overview.qmd",
@@ -197,16 +103,14 @@ def main() -> None:
         "repositories-drake.qmd",
         "repositories-models.qmd",
         "repositories-pinocchio.qmd",
+        "articles.qmd",  # Process last (template source)
     ]
-
-    # Process articles.qmd LAST to avoid corrupting the template
-    # (articles.html is used as the template for all other pages)
-    qmd_files.append("articles.qmd")
 
     # Generate bibliography data
     try:
         subprocess.run(
-            ["python3", "scripts/generate_bibliography_data.py"], check=True
+            ["python3", "scripts/generate_bibliography_data.py"],
+            check=True,
         )  # noqa: S603, S607
     except subprocess.CalledProcessError as e:
         logger.warning("Failed to generate bibliography data: %s", e)
@@ -214,16 +118,18 @@ def main() -> None:
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
 
-    # ⚡ Bolt Optimization: Read template once at the start
+    # Read template once at the start
     template_path = Path("docs/articles.html")
     template_content = ""
     if template_path.exists():
         template_content = template_path.read_text()
     else:
         logger.error("Template file not found: %s", template_path)
+        return
 
     if not template_content:
-        logger.error("Template content is empty, cannot proceed with HTML generation")
+        logger.error("Template content is empty, cannot proceed")
+        return
 
     for qmd_name in qmd_files:
         qmd_file = Path(qmd_name)
@@ -235,11 +141,9 @@ def main() -> None:
         if html_content is None:
             continue
 
-        # Ensure title and description are strings (for mypy)
-        if title is None:
-            title = qmd_file.stem
-        if description is None:
-            description = ""
+        # Ensure title and description are strings
+        title = title or qmd_file.stem
+        description = description or ""
 
         output_file = docs_dir / qmd_file.with_suffix(".html").name
 
@@ -252,12 +156,12 @@ def main() -> None:
             page_type = "articles"
 
         if create_html_page(
-            title,
-            description,
-            html_content,
-            output_file,
-            template_content,
-            page_type,
+            title=title,
+            description=description,
+            body_html=html_content,
+            output_file=output_file,
+            template_content=template_content,
+            page_type=page_type,
         ):
             logger.info("Created: %s", output_file)
         else:
