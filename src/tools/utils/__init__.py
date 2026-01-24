@@ -12,6 +12,7 @@ from .file_utils import (
     find_html_files,
     find_markdown_files,
     find_qmd_files,
+    process_file_content,
 )
 from .frontmatter import extract_frontmatter, extract_title_description
 from .html_utils import (
@@ -32,6 +33,7 @@ __all__ = [
     "find_html_files",
     "find_markdown_files",
     "find_qmd_files",
+    "process_file_content",
     "replace_content_section",
     "setup_logging",
     "setup_logging_with_timestamp",
