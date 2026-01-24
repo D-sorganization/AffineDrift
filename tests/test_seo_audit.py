@@ -5,8 +5,8 @@ from scripts.seo_audit import (
     check_heading_hierarchy,
     check_images,
     extract_first_paragraph,
-    extract_frontmatter,
 )
+from src.tools.utils import parse_frontmatter_dict
 
 
 class TestFrontmatterExtraction:
@@ -21,7 +21,7 @@ description: "A test description"
 
 Content here.
 """
-        frontmatter = extract_frontmatter(content)
+        frontmatter = parse_frontmatter_dict(content)
 
         assert frontmatter["title"] == "Test Page"
         assert frontmatter["description"] == "A test description"
@@ -30,7 +30,7 @@ Content here.
         """Test content without frontmatter."""
         content = "Just regular content without frontmatter."
 
-        frontmatter = extract_frontmatter(content)
+        frontmatter = parse_frontmatter_dict(content)
 
         assert len(frontmatter) == 0
 
@@ -41,7 +41,7 @@ Content here.
 
 Content here.
 """
-        frontmatter = extract_frontmatter(content)
+        frontmatter = parse_frontmatter_dict(content)
 
         assert len(frontmatter) == 0
 
@@ -192,7 +192,7 @@ This is the first paragraph with good content.
 
 More content here.
 """
-        frontmatter = extract_frontmatter(content)
+        frontmatter = parse_frontmatter_dict(content)
         heading_issues = check_heading_hierarchy(content)
         image_issues = check_images(content)
 
@@ -214,7 +214,7 @@ title: "Page Without Description"
 
 # Second H1
 """
-        frontmatter = extract_frontmatter(content)
+        frontmatter = parse_frontmatter_dict(content)
         heading_issues = check_heading_hierarchy(content)
         image_issues = check_images(content)
 
