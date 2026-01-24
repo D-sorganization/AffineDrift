@@ -21,6 +21,9 @@ from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
+# Add project root to sys.path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
