@@ -138,7 +138,8 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                 p_html = target_path  # The html itself might exist if it's a static asset
 
                 # For qmd files, also check src/ and docs/ prefixed paths
-                # (qmd files link to output paths like tools/... which exist in src/tools/ or docs/tools/)
+                # (qmd files link to output paths like tools/... which exist in
+                # src/tools/ or docs/tools/)
                 src_html = (
                     root_path / "src" / target_path.relative_to(root_path)
                     if target_path.is_relative_to(root_path)
