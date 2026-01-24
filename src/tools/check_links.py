@@ -140,8 +140,37 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                 # But we are checking source files, so we look for source qmd
                 if not (p_qmd.exists() or p_md.exists() or p_html.exists()):
                     # Also check if it wraps to index.html (e.g. directory/)
-                    if not (target_path.is_dir() and (target_path / "index.qmd").exists()):
-                        broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+                    if target_path.is_dir() and (target_path / "index.qmd").exists():
+                        continue
+
+                    # Check if file exists in src/ or docs/ (for generated files)
+                    # This handles cases where output structure mirrors source in src/ or docs/
+                    found_in_source = False
+                    try:
+                        rel_path = target_path.relative_to(root_path)
+
+                        # Check src/<path>
+                        src_p = root_path / "src" / rel_path
+                        if (
+                            src_p.with_suffix(".qmd").exists()
+                            or src_p.with_suffix(".md").exists()
+                        ):
+                            found_in_source = True
+
+                        # Check docs/<path>
+                        docs_p = root_path / "docs" / rel_path
+                        if (
+                            docs_p.with_suffix(".qmd").exists()
+                            or docs_p.with_suffix(".md").exists()
+                        ):
+                            found_in_source = True
+                    except ValueError:
+                        pass  # target_path is not relative to root_path
+
+                    if found_in_source:
+                        continue
+
+                    broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
             elif not target_path.exists():
                 broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
