@@ -11,40 +11,15 @@ Checks:
 5. Empty math blocks
 """
 
-import logging
 import sys
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
 
+from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
 
-def find_files(root_dir: str = ".") -> list[Path]:
-    """Find all .qmd and .md files in relevant directories."""
-    files = []
-    root = Path(root_dir)
-
-    # Root files
-    for f in root.iterdir():
-        if f.is_file() and f.suffix in {".qmd", ".md"} and not f.name.startswith("README"):
-            files.append(f)
-
-    # Directories to scan
-    dirs_to_scan = ["articles", "critiques"]
-
-    for d in dirs_to_scan:
-        path = root / d
-        if path.exists():
-            for f in path.rglob("*"):
-                if f.is_file() and f.suffix in {".qmd", ".md"} and "archive" not in f.parts:
-                    files.append(f)
-
-    return files
+logger = setup_logging_with_timestamp(__name__)
 
 
 def check_file(filepath: Path) -> list[tuple[int, str, str]]:
@@ -252,7 +227,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
 
 def main() -> None:
     """Scan all Quarto files for syntax issues and report findings."""
-    files = find_files()
+    files = find_markdown_files()
     total_issues = 0
 
     logger.info(f"Scanning {len(files)} files...")

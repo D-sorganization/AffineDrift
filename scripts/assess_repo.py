@@ -5,15 +5,18 @@ Generates assessments for 15 categories (A-O) and a comprehensive report.
 """
 
 import ast
-import logging
 import re
 import statistics
+import sys
 from pathlib import Path
 from typing import Any
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(message)s")
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__, format_string="%(message)s")
 
 # Categories
 CATEGORIES = {

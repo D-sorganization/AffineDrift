@@ -20,10 +20,11 @@ Note:
 """
 
 import glob
-import logging
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__, format_string="%(message)s")
 
 
 def wrap_file(path: Path) -> None:
@@ -111,7 +112,6 @@ def main() -> None:
     Finds all Quarto markdown files and wraps their sidebar content
     in sticky div containers for improved scroll behavior.
     """
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
     files = glob.glob("*.qmd")
     logger.info("Found %d .qmd files to process", len(files))
 

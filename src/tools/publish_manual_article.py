@@ -13,7 +13,6 @@ Note:
     in main() to publish different articles.
 """
 
-import logging
 import re
 import sys
 from pathlib import Path
@@ -25,14 +24,10 @@ from src.tools.utils import (
     create_html_page,
     extract_frontmatter,
     extract_title_description,
+    setup_logging,
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+logger = setup_logging(__name__)
 
 
 def simple_markdown_to_html(md_text: str) -> str:

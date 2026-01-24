@@ -13,19 +13,19 @@ Output:
 """
 
 import json
-import logging
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__)
 
 
 def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:

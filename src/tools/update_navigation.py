@@ -3,11 +3,12 @@
 
 from __future__ import annotations
 
-import logging
 import re
 from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
+
+from src.tools.utils import setup_logging
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -49,7 +50,7 @@ NAV_LIST_PATTERN = re.compile(
     re.DOTALL,
 )
 RAW_NAV_PATTERN = re.compile(r"<nav(?![^>]*class=)", re.IGNORECASE)
-LOGGER = logging.getLogger(__name__)
+LOGGER = setup_logging(__name__, format_string="%(message)s")
 
 
 def _ensure_top_nav(html: str) -> str:
@@ -109,9 +110,6 @@ def update_navigation(file_path: Path, nav_markup: str = NEW_NAV) -> bool:
 
 def main(pages: Sequence[str] | None = None) -> int:
     """CLI entry point for batch-updating navigation markup."""
-    if not logging.getLogger().handlers:
-        logging.basicConfig(level=logging.INFO, format="%(message)s")
-
     targets = _resolve_targets(pages or PAGES_TO_UPDATE)
     exit_code = 0
     for target in targets:

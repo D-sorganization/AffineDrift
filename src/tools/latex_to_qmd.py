@@ -5,20 +5,15 @@ Converts LaTeX article files to Quarto Markdown with preserved equations.
 
 from __future__ import annotations
 
-import logging
 import os
 import re
 import sys
 from datetime import date
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+from src.tools.utils import setup_logging_with_timestamp
+
+logger = setup_logging_with_timestamp(__name__)
 
 
 class LaTeXToQuartoConverter:

@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
-import logging
 import re
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__)
 
 
 def extract_image_urls(content: str) -> list[str]:
