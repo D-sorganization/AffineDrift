@@ -154,6 +154,47 @@ def find_files_by_extension(
     return found_files
 
 
+def process_file_content(
+    filepath: Path,
+    transform_fn: callable,
+    encoding: str = "utf-8",
+) -> bool:
+    """Read a file, apply a transformation, and write back if changed.
+
+    This is a common pattern for file processing scripts that modify content.
+    It handles encoding errors gracefully and only writes if content changed.
+
+    Args:
+        filepath: Path to the file to process.
+        transform_fn: Function that takes content string and returns transformed content.
+        encoding: File encoding (default: utf-8).
+
+    Returns:
+        True if file was modified, False otherwise.
+
+    Example:
+        def fix_whitespace(content: str) -> str:
+            return content.rstrip() + "\\n"
+
+        modified = process_file_content(Path("file.txt"), fix_whitespace)
+    """
+    try:
+        content = filepath.read_text(encoding=encoding)
+    except UnicodeDecodeError:
+        return False
+    except FileNotFoundError:
+        return False
+
+    original_content = content
+    new_content = transform_fn(content)
+
+    if new_content != original_content:
+        filepath.write_text(new_content, encoding=encoding)
+        return True
+
+    return False
+
+
 def find_html_files(
     root_dir: str | Path = ".",
     docs_only: bool = True,
