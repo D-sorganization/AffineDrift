@@ -128,7 +128,7 @@ def main():
         "O": "Maintainability",
     }
 
-    for cat, res in results.items():
+    for cat, _ in results.items():
         old_path = DOCS_DIR / f"Assessment_{cat}.md"
         new_name = f"Assessment_{cat}_{category_names.get(cat, 'Unknown')}.md"
         new_path = DOCS_DIR / new_name
