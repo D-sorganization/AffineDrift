@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""Generate bibliography data from markdown YAML blocks.
+
+This script extracts bibliography entries from markdown files containing
+YAML code blocks and generates JSON data for the website's bibliography
+and citation features.
+
+Usage:
+    python generate_bibliography_data.py
+
+Output:
+    Creates bibliography.json with extracted citation data.
+"""
+
 import json
 import logging
 import re

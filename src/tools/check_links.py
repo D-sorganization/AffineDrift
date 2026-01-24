@@ -1,3 +1,16 @@
+"""Extract and validate links from HTML and Markdown files.
+
+This tool scans files for both Markdown-style [text](url) links and
+HTML href="url" links, then validates that internal links resolve to
+existing files and external links are properly formatted.
+
+Usage:
+    python check_links.py <file_path>
+
+Example:
+    python check_links.py docs/articles/my-article.html
+"""
+
 import logging
 import re
 import sys

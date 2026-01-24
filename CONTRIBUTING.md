@@ -472,6 +472,271 @@ python scripts/seo_audit.py
 python scripts/check-equations.py
 ```
 
+### Developing New Tools
+
+When creating a new utility tool for the `src/tools/` directory:
+
+#### Tool Template
+
+```python
+"""Brief description of what the tool does.
+
+This tool [longer description of functionality and use cases].
+
+Usage:
+    python tool_name.py [options]
+
+Example:
+    python tool_name.py --input file.qmd --output result.html
+    python tool_name.py --verbose
+
+Note:
+    Any important notes about usage or limitations.
+"""
+
+import argparse
+import logging
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
+
+
+def process_file(path: Path, options: dict[str, str]) -> bool:
+    """Process a single file.
+
+    Args:
+        path: Path to the file to process.
+        options: Dictionary of processing options.
+
+    Returns:
+        True if processing succeeded, False otherwise.
+
+    Raises:
+        FileNotFoundError: If the input file doesn't exist.
+        ValueError: If the file format is invalid.
+    """
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: {path}")
+
+    logger.info("Processing %s", path)
+    # Implementation here
+    return True
+
+
+def main() -> None:
+    """Main entry point for the tool."""
+    parser = argparse.ArgumentParser(
+        description="Tool description",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("input", type=Path, help="Input file path")
+    parser.add_argument("--output", "-o", type=Path, help="Output file path")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+
+    args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(levelname)s: %(message)s",
+    )
+
+    try:
+        process_file(args.input, {"output": args.output})
+        logger.info("Processing complete")
+    except FileNotFoundError as e:
+        logger.error("File error: %s", e)
+        raise SystemExit(1) from e
+
+
+if __name__ == "__main__":
+    main()
+```
+
+#### Tool Development Checklist
+
+1. **Structure**
+   - [ ] Module-level docstring with usage examples
+   - [ ] `main()` function as entry point
+   - [ ] `if __name__ == "__main__":` guard
+   - [ ] Argument parsing with `argparse`
+
+2. **Documentation**
+   - [ ] Google-style docstrings for all functions
+   - [ ] Type hints for parameters and return values
+   - [ ] Usage examples in module docstring
+
+3. **Error Handling**
+   - [ ] Specific exceptions (not bare `except:`)
+   - [ ] Informative error messages
+   - [ ] Proper exit codes
+
+4. **Logging**
+   - [ ] Use `logging` module (NO `print()`)
+   - [ ] Configurable verbosity level
+   - [ ] Meaningful log messages
+
+5. **Testing**
+   - [ ] Create `tests/test_<tool_name>.py`
+   - [ ] Test happy path and error cases
+   - [ ] Mock file I/O where appropriate
+
+6. **Integration**
+   - [ ] Add to `src/tools/README.md`
+   - [ ] Update Quick Reference table
+   - [ ] Add usage examples
+
+### Extension Points
+
+The AffineDrift project can be extended in several ways:
+
+#### Custom Quarto Filters
+
+Create custom Lua filters in `_extensions/`:
+
+```lua
+-- _extensions/my-filter/my-filter.lua
+function Pandoc(doc)
+  -- Process the entire document
+  return doc
+end
+```
+
+Register in `_quarto.yml`:
+
+```yaml
+filters:
+  - _extensions/my-filter/my-filter.lua
+```
+
+#### Custom JavaScript Modules
+
+Add interactive features in `src/js/`:
+
+```javascript
+// src/js/my-module.js
+/**
+ * Module description
+ * @module my-module
+ */
+
+export const myFeature = {
+  init() {
+    // Initialization code
+  },
+
+  /**
+   * Process data
+   * @param {Object} data - Input data
+   * @returns {Object} Processed result
+   */
+  process(data) {
+    return data;
+  }
+};
+```
+
+Import in `script.js`:
+
+```javascript
+import { myFeature } from './src/js/my-module.js';
+myFeature.init();
+```
+
+#### Custom CSS Components
+
+Add styles in `custom.scss`:
+
+```scss
+// Use existing variables
+.my-component {
+  color: var(--text-color);
+  background: var(--bg-secondary);
+
+  &__element {
+    // BEM naming
+  }
+
+  &--modifier {
+    // Variant styles
+  }
+}
+```
+
+## Example Pull Requests
+
+### Example: New Article PR
+
+**Title:** `feat(articles): add article on drift ratio analysis`
+
+**Description:**
+```markdown
+## Summary
+- Add new article explaining drift ratio concepts
+- Include interactive examples with MathJax
+- Add to Articles navigation
+
+## Changes
+- `articles/drift-ratio-analysis.qmd` - New article
+- `_quarto.yml` - Updated navigation
+- `docs/` - Generated HTML
+
+## Testing
+- [ ] `quarto preview` shows article correctly
+- [ ] Math equations render properly
+- [ ] Navigation links work
+- [ ] Mobile responsive
+
+Fixes #123
+```
+
+### Example: Bug Fix PR
+
+**Title:** `fix(navigation): correct broken sidebar links`
+
+**Description:**
+```markdown
+## Summary
+Fix broken links in the right sidebar that were pointing to old URLs.
+
+## Root Cause
+Links were using relative paths that broke after restructuring.
+
+## Solution
+Updated to use absolute paths from site root.
+
+## Testing
+- Verified all sidebar links in Chrome, Firefox, Safari
+- Checked mobile navigation
+
+Fixes #456
+```
+
+### Example: Tool Enhancement PR
+
+**Title:** `feat(tools): add batch processing to latex_to_qmd`
+
+**Description:**
+```markdown
+## Summary
+Add ability to process multiple LaTeX files in one command.
+
+## Changes
+- Add `--batch` flag for directory processing
+- Add progress reporting
+- Add summary statistics
+
+## Usage
+```bash
+python latex_to_qmd.py --batch articles/latex/
+```
+
+## Testing
+- Added tests in `tests/test_latex_to_qmd.py`
+- Tested with 50+ files
+
+Relates to #789
+```
+
 ## Code of Conduct
 
 ### Be Respectful

@@ -1,5 +1,29 @@
+"""Wrap sidebar content in sticky divs for better scroll behavior.
+
+This tool processes Quarto markdown (.qmd) files to wrap sidebar content
+(left-sidebar, right-sidebar, resources-sidebar) in sticky div containers.
+This enables CSS-based sticky positioning for sidebar navigation.
+
+Usage:
+    python wrap_sidebars.py
+
+The script processes all .qmd files in the current directory.
+
+Example:
+    $ cd articles/
+    $ python ../src/tools/wrap_sidebars.py
+
+Note:
+    - Files are modified in-place
+    - Already-wrapped sidebars are skipped to avoid double-wrapping
+    - Backup files before running if unsure
+"""
+
 import glob
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def wrap_file(path: Path) -> None:
@@ -78,8 +102,24 @@ def wrap_file(path: Path) -> None:
 
     if content != original_content:
         path.write_text(content)
+        logger.info("Wrapped sidebars in %s", path)
 
 
-files = glob.glob("*.qmd")
-for f in files:
-    wrap_file(Path(f))
+def main() -> None:
+    """Process all .qmd files in the current directory.
+
+    Finds all Quarto markdown files and wraps their sidebar content
+    in sticky div containers for improved scroll behavior.
+    """
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    files = glob.glob("*.qmd")
+    logger.info("Found %d .qmd files to process", len(files))
+
+    for f in files:
+        wrap_file(Path(f))
+
+    logger.info("Sidebar wrapping complete")
+
+
+if __name__ == "__main__":
+    main()
