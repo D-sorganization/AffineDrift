@@ -77,4 +77,4 @@ python3 ../tools/convert_all_to_quarto.py
 
 ## Documentation
 
-See [QUARTO_GUIDE.md](../QUARTO_GUIDE.md) for complete documentation.
+See [QUARTO_GUIDE.md](../docs/development/QUARTO_GUIDE.md) for complete documentation.

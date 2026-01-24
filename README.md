@@ -66,12 +66,12 @@ AffineDrift/
 3. Run `quarto preview` to see changes live
 4. Commit and push to automatically deploy via GitHub Actions
 
-See [WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md) for detailed instructions.
+See [WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md) for detailed instructions.
 
 ## 📚 Documentation
 
-- **[DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
-- **[WEBSITE_MANAGEMENT.md](WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
+- **[DEVELOPMENT_GUIDE.md](docs/development/DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
+- **[WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
 
 ## 🛠️ Technologies
 
@@ -103,7 +103,7 @@ This is a personal research platform, but suggestions and discussions are welcom
 
 New to web development? Check out:
 
-- [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for a comprehensive introduction
+- [DEVELOPMENT_GUIDE.md](docs/development/DEVELOPMENT_GUIDE.md) for a comprehensive introduction
 - [MDN Web Docs](https://developer.mozilla.org/) for HTML/CSS/JS reference
 - [GitHub Pages Documentation](https://docs.github.com/pages)
 
