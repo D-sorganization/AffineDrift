@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
-import logging
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__)
 
 
 def get_git_last_modified(filepath: str) -> str:

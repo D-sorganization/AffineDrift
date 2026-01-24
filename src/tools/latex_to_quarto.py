@@ -17,37 +17,13 @@ Features:
 - Generates appropriate YAML frontmatter
 """
 
-import logging
 import re
 import sys
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+from src.tools.utils import find_files_by_extension, setup_logging
 
-
-def find_tex_files(paths: list[str]) -> list[Path]:
-    """Find all .tex files in the given paths (files or directories).
-    Returns a list of Path objects.
-    """
-    tex_files = []
-    for path_str in paths:
-        path = Path(path_str)
-        if not path.exists():
-            continue
-
-        if path.is_file() and path.suffix == ".tex":
-            tex_files.append(path)
-        elif path.is_dir():
-            # Find all .tex files in directory
-            tex_files.extend(path.glob("*.tex"))
-        # Skip non-existent paths, non-.tex files, and non-directories silently
-
-    return tex_files
+logger = setup_logging(__name__)
 
 
 def prompt_for_files() -> list[Path]:
@@ -148,7 +124,7 @@ def main() -> None:
     if len(sys.argv) > 1:
         # Use command-line arguments (folders or files)
         input_paths = sys.argv[1:]
-        tex_files = find_tex_files(input_paths)
+        tex_files = find_files_by_extension([".tex"], paths=input_paths)
 
         if not tex_files:
             sys.exit(1)

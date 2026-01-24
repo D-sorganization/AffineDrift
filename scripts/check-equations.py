@@ -9,17 +9,16 @@ for MathJax rendering. It checks for:
 - Missing MathJax configuration
 """
 
-import logging
 import re
 import sys
 from pathlib import Path
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import find_html_files, find_qmd_files, setup_logging
+
+logger = setup_logging(__name__)
 
 
 def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
@@ -150,13 +149,8 @@ def main() -> int:
                 logger.warning("_quarto.yml: %s", issue)
             issues_found = True
 
-    # Check all .qmd files
-    qmd_files = list(root.rglob("*.qmd"))
-    qmd_files = [
-        f
-        for f in qmd_files
-        if "_site" not in str(f) and ".quarto" not in str(f) and "docs" not in str(f)
-    ]
+    # Check all .qmd files using shared utility
+    qmd_files = find_qmd_files(root)
 
     for qmd_file in qmd_files:
         try:
@@ -175,9 +169,9 @@ def main() -> int:
             issues_found = True
 
     # Check rendered HTML files in docs/ for MathJax configuration
-    html_files = list((root / "docs").rglob("*.html")) if (root / "docs").exists() else []
+    html_files = find_html_files(root, limit=10)
 
-    for html_file in html_files[:10]:  # Limit to first 10 to avoid too much output
+    for html_file in html_files:
         config_issues = check_mathjax_config(str(html_file))
         if config_issues:
             for issue in config_issues:

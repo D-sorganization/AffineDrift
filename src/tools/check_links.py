@@ -11,15 +11,14 @@ Example:
     python check_links.py docs/articles/my-article.html
 """
 
-import logging
 import re
 import sys
 from pathlib import Path
 from urllib.parse import unquote
 
-# Configure logging to replace print statements
-logging.basicConfig(level=logging.INFO, format="%(message)s")
-logger = logging.getLogger(__name__)
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__, format_string="%(message)s")
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:

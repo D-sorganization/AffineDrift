@@ -20,7 +20,6 @@ import argparse
 import ast
 import hashlib
 import json
-import logging
 import re
 import subprocess
 import sys
@@ -29,9 +28,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__)
 
 # Pragmatic Programmer principles and their assessment criteria
 PRINCIPLES = {

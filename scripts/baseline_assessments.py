@@ -12,11 +12,15 @@ Output:
     Creates assessment files in docs/assessments/ directory
 """
 
-import logging
+import sys
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
-logger = logging.getLogger(__name__)
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__, format_string="%(message)s")
 
 repo_name = "AffineDrift"
 date = "2026-01-22"

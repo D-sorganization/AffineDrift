@@ -11,7 +11,6 @@ The script reads .qmd files from the current directory and generates
 corresponding HTML files in the docs/ directory.
 """
 
-import logging
 import re
 import subprocess
 import sys
@@ -20,14 +19,14 @@ from pathlib import Path
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.tools.utils import create_html_page, extract_frontmatter, extract_title_description
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
+from src.tools.utils import (
+    create_html_page,
+    extract_frontmatter,
+    extract_title_description,
+    setup_logging,
 )
-logger = logging.getLogger(__name__)
+
+logger = setup_logging(__name__)
 
 
 def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str | None]:

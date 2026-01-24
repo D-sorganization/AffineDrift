@@ -3,18 +3,14 @@
 Converts all LaTeX article files to Quarto .qmd format.
 """
 
-import logging
 import os
 import sys
 
 from latex_to_qmd import LaTeXToQuartoConverter
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(levelname)s: %(message)s",
-)
-logger = logging.getLogger(__name__)
+from src.tools.utils import setup_logging
+
+logger = setup_logging(__name__)
 
 # Articles directory for Quarto documents
 ARTICLES_DIR = "articles"
