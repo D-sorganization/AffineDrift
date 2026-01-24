@@ -3,7 +3,7 @@
 ## Grade: 8.0/10
 
 ## Details
-Try blocks: 71, Bare excepts: 3
+Try blocks: 79, Bare excepts: 4
 
 ## Recommendations
 - See detailed findings
