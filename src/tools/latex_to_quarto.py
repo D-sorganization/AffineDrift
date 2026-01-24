@@ -1,3 +1,22 @@
+"""Convert LaTeX documents to Quarto markdown format.
+
+This tool converts individual LaTeX (.tex) files to Quarto markdown (.qmd)
+format, preserving mathematical equations, document structure, and formatting.
+
+Usage:
+    python latex_to_quarto.py <input.tex> [output.qmd]
+
+Example:
+    python latex_to_quarto.py article.tex
+    python latex_to_quarto.py article.tex articles/article.qmd
+
+Features:
+- Preserves LaTeX math environments
+- Converts document structure to Quarto equivalents
+- Handles bibliographic references
+- Generates appropriate YAML frontmatter
+"""
+
 import logging
 import re
 import sys

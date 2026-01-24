@@ -1,3 +1,19 @@
+"""Verify site health by checking internal links and generating sitemap.
+
+This tool scans the generated HTML files in the docs/ directory to verify
+that all internal links resolve to existing files, helping maintain site
+integrity after builds.
+
+Usage:
+    python check_site_health.py
+
+The script will:
+- Find all HTML files in docs/
+- Extract and validate internal links
+- Report broken or missing links
+- Optionally generate a sitemap
+"""
+
 import logging
 import sys
 from pathlib import Path

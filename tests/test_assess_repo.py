@@ -1,3 +1,9 @@
+"""Tests for the repository assessment script.
+
+These tests verify the assess_repo module's ability to analyze code structure,
+find Python files, and generate assessment reports.
+"""
+
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock

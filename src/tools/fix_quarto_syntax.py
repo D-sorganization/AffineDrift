@@ -1,3 +1,18 @@
+"""Fix common Quarto markdown syntax issues in converted files.
+
+This tool corrects LaTeX syntax errors, broken math blocks, and formatting
+issues that can occur when converting from LaTeX to Quarto markdown format.
+
+Usage:
+    python fix_quarto_syntax.py <file_path>
+
+The script applies various fixes including:
+- Broken math block delimiters
+- Stray commas in equations
+- Incorrect backslash escaping
+- Malformed LaTeX commands
+"""
+
 import os
 import re
 

@@ -1,3 +1,9 @@
+"""Tests for deployment workflow integrity.
+
+Verifies that critical checks and dependencies are properly configured
+in the GitHub Actions deployment workflow.
+"""
+
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent
