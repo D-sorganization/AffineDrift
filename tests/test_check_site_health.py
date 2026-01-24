@@ -1,4 +1,4 @@
-"""Tests for the site health check tool."""
+"""Tests for the site health check tool and link validation."""
 
 import sys
 import tempfile

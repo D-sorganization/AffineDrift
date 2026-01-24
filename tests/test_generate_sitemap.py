@@ -1,4 +1,4 @@
-"""Tests for the sitemap generator script."""
+"""Tests for the sitemap generator script functionality."""
 
 import sys
 from pathlib import Path
