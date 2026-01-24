@@ -118,10 +118,7 @@ def add_landmark_aria_labels(content: str) -> str:
         )
 
     # Left sidebar
-    if (
-        '<aside class="left-sidebar"' in content
-        and 'aria-label="Primary Sidebar"' not in content
-    ):
+    if '<aside class="left-sidebar"' in content and 'aria-label="Primary Sidebar"' not in content:
         content = content.replace(
             '<aside class="left-sidebar"',
             '<aside class="left-sidebar" aria-label="Primary Sidebar"',
