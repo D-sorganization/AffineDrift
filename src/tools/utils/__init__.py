@@ -14,7 +14,7 @@ from .file_utils import (
     find_qmd_files,
     process_file_content,
 )
-from .frontmatter import extract_frontmatter, extract_title_description
+from .frontmatter import extract_frontmatter, extract_title_description, parse_frontmatter_dict
 from .html_utils import (
     create_html_page,
     escape_html,
@@ -29,6 +29,7 @@ __all__ = [
     "escape_html",
     "extract_frontmatter",
     "extract_title_description",
+    "parse_frontmatter_dict",
     "find_files_by_extension",
     "find_html_files",
     "find_markdown_files",

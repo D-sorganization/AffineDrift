@@ -79,3 +79,50 @@ def extract_title_description(
     description = desc_match.group(1) if desc_match else default_description
 
     return title, description
+
+
+def parse_frontmatter_dict(content: str) -> dict[str, str]:
+    """Parse YAML frontmatter into a dictionary.
+
+    This is a convenience function that extracts frontmatter and parses
+    it into a simple key-value dictionary. Nested values are skipped.
+
+    Args:
+        content: The full file content with optional YAML frontmatter.
+
+    Returns:
+        Dictionary of frontmatter key-value pairs. Empty dict if no frontmatter.
+
+    Example:
+        >>> content = '''---
+        ... title: "My Article"
+        ... description: "A great article"
+        ... ---
+        ... Body content here.'''
+        >>> parse_frontmatter_dict(content)
+        {'title': 'My Article', 'description': 'A great article'}
+    """
+    frontmatter: dict[str, str] = {}
+
+    if not content.startswith("---"):
+        return frontmatter
+
+    parts = content.split("---", 2)
+    if len(parts) < 3:
+        return frontmatter
+
+    yaml_content = parts[1].strip()
+    current_key: str | None = None
+
+    for line in yaml_content.split("\n"):
+        # Skip nested/indented content
+        if line.startswith("  ") and current_key is not None:
+            continue
+        if ":" in line:
+            key, value = line.split(":", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            frontmatter[key] = value
+            current_key = key
+
+    return frontmatter

@@ -12,29 +12,9 @@ from typing import Any, cast
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import parse_frontmatter_dict, setup_logging
 
 logger = setup_logging(__name__)
-
-
-def extract_frontmatter(content: str) -> dict[str, str]:
-    """Extract YAML frontmatter from markdown content."""
-    frontmatter: dict[str, str] = {}
-    if content.startswith("---"):
-        parts = content.split("---", 2)
-        if len(parts) >= 3:
-            yaml_content = parts[1].strip()
-            current_key: str | None = None
-            for line in yaml_content.split("\n"):
-                if line.startswith("  ") and current_key is not None:
-                    continue  # Skip nested content
-                if ":" in line:
-                    key, value = line.split(":", 1)
-                    key = key.strip()
-                    value = value.strip().strip('"').strip("'")
-                    frontmatter[key] = value
-                    current_key = key
-    return frontmatter
 
 
 def extract_first_paragraph(content: str) -> str:
@@ -121,7 +101,7 @@ def audit_file(filepath: Path) -> dict[str, Any]:
     except Exception as e:
         return {"error": str(e)}
 
-    frontmatter = extract_frontmatter(content)
+    frontmatter = parse_frontmatter_dict(content)
 
     result: dict[str, Any] = {
         "title": frontmatter.get("title", ""),

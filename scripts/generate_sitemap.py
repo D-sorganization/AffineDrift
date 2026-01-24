@@ -9,7 +9,7 @@ from pathlib import Path
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import parse_frontmatter_dict, setup_logging
 
 logger = setup_logging(__name__)
 
@@ -66,19 +66,6 @@ def get_changefreq(filepath: str) -> str:
     return "monthly"
 
 
-def extract_frontmatter(content: str) -> dict[str, str]:
-    """Extract YAML frontmatter."""
-    frontmatter: dict[str, str] = {}
-    if content.startswith("---"):
-        parts = content.split("---", 2)
-        if len(parts) >= 3:
-            for line in parts[1].strip().split("\n"):
-                if ":" in line and not line.startswith(" "):
-                    key, value = line.split(":", 1)
-                    frontmatter[key.strip()] = value.strip().strip('"').strip("'")
-    return frontmatter
-
-
 def main() -> None:
     """Generate sitemap.xml."""
     base_url = "https://affinedrift.com"
@@ -103,7 +90,7 @@ def main() -> None:
 
             try:
                 content = filepath.read_text(encoding="utf-8")
-                frontmatter = extract_frontmatter(content)
+                frontmatter = parse_frontmatter_dict(content)
             except Exception:
                 frontmatter = {}
 

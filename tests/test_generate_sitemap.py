@@ -8,10 +8,10 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 
 # Import after path setup
 from scripts.generate_sitemap import (
-    extract_frontmatter,
     get_changefreq,
     get_priority,
 )
+from src.tools.utils import parse_frontmatter_dict
 
 
 class TestGetPriority:
@@ -85,8 +85,8 @@ class TestGetChangefreq:
         assert get_changefreq("about.qmd") == "monthly"
 
 
-class TestExtractFrontmatter:
-    """Tests for the extract_frontmatter function."""
+class TestParseFrontmatterDict:
+    """Tests for the parse_frontmatter_dict function."""
 
     def test_extracts_simple_frontmatter(self):
         """Should extract simple key-value pairs."""
@@ -96,7 +96,7 @@ author: Test Author
 ---
 Content here
 """
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result["title"] == "Test Title"
         assert result["author"] == "Test Author"
 
@@ -107,7 +107,7 @@ title: "Quoted Title"
 description: 'Single Quoted'
 ---
 """
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result["title"] == "Quoted Title"
         assert result["description"] == "Single Quoted"
 
@@ -117,19 +117,19 @@ description: 'Single Quoted'
 ---
 Content
 """
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result == {}
 
     def test_handles_no_frontmatter(self):
         """Should return empty dict when no frontmatter exists."""
         content = "Just content without frontmatter"
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result == {}
 
     def test_handles_content_starting_with_dashes_but_no_frontmatter(self):
         """Should handle content that starts with dashes but isn't frontmatter."""
         content = "---This is not frontmatter"
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result == {}
 
     def test_ignores_nested_content(self):
@@ -141,7 +141,7 @@ metadata:
 author: Author
 ---
 """
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result["title"] == "Test"
         assert result["author"] == "Author"
         assert "nested" not in result
@@ -152,7 +152,7 @@ author: Author
 title: Test: A Subtitle
 ---
 """
-        result = extract_frontmatter(content)
+        result = parse_frontmatter_dict(content)
         assert result["title"] == "Test: A Subtitle"
 
 

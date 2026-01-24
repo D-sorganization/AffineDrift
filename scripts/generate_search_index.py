@@ -5,8 +5,14 @@ Extracts content from Quarto markdown files and creates a Fuse.js compatible ind
 
 import json
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[1]))
+
+from src.tools.utils import parse_frontmatter_dict
 
 # Directories to index
 CONTENT_DIRS = [
@@ -19,22 +25,6 @@ EXCLUDE_FILES = {
     "404.qmd",
     "_quarto.yml",
 }
-
-
-def extract_frontmatter(content: str) -> dict[str, str]:
-    """Extract YAML frontmatter from markdown content."""
-    frontmatter: dict[str, str] = {}
-    if content.startswith("---"):
-        parts = content.split("---", 2)
-        if len(parts) >= 3:
-            yaml_content = parts[1].strip()
-            for line in yaml_content.split("\n"):
-                if ":" in line:
-                    key, value = line.split(":", 1)
-                    key = key.strip()
-                    value = value.strip().strip('"').strip("'")
-                    frontmatter[key] = value
-    return frontmatter
 
 
 def extract_body_text(content: str) -> str:
@@ -108,7 +98,7 @@ def process_file(filepath: Path) -> dict[str, object] | None:
     except Exception:
         return None
 
-    frontmatter = extract_frontmatter(content)
+    frontmatter = parse_frontmatter_dict(content)
 
     # Skip if no title
     title = frontmatter.get("title", "")
