@@ -1,13 +1,31 @@
 #!/usr/bin/env python3
-"""Script to manually publish an article by converting simple Markdown to HTML
-and wrapping it in the standard template.
+"""Script to manually publish an article by converting simple Markdown to HTML.
+
+This tool converts a simple Markdown article to HTML and wraps it in the
+standard AffineDrift template. It's useful for publishing articles that
+don't need full Quarto processing.
+
+Usage:
+    python publish_manual_article.py
+
+Note:
+    This script is configured for a specific article. Modify the paths
+    in main() to publish different articles.
 """
 
-import html
 import logging
 import re
 import sys
 from pathlib import Path
+
+# Add project root to path for imports
+sys.path.insert(0, str(Path(__file__).parents[2]))
+
+from src.tools.utils import (
+    create_html_page,
+    extract_frontmatter,
+    extract_title_description,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -18,16 +36,25 @@ logger = logging.getLogger(__name__)
 
 
 def simple_markdown_to_html(md_text: str) -> str:
-    """Very basic Markdown to HTML converter for specific article structure."""
+    """Convert simple Markdown to HTML.
+
+    This is a basic converter that handles headers, lists, bold, and italics.
+    For more complex Markdown, use a full parser like markdown or mistune.
+
+    Args:
+        md_text: The Markdown text to convert.
+
+    Returns:
+        HTML string.
+    """
     lines = md_text.split("\n")
     html_lines = []
-
     in_list = False
 
     for line in lines:
         line = line.strip()
 
-        # Skip YAML frontmatter (handled separately)
+        # Skip YAML frontmatter markers
         if line == "---":
             continue
 
@@ -37,7 +64,6 @@ def simple_markdown_to_html(md_text: str) -> str:
                 html_lines.append("</ul>")
                 in_list = False
             title = line[3:]
-            # Extract section number if present
             anchor = title.lower().replace(" ", "-").replace(".", "")
             html_lines.append(
                 f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>',
@@ -50,15 +76,12 @@ def simple_markdown_to_html(md_text: str) -> str:
                 html_lines.append("<ul>")
                 in_list = True
             content = line[2:]
-            # Bold
             content = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", content)
-            # Italics
             content = re.sub(r"\*(.*?)\*", r"<em>\1</em>", content)
             html_lines.append(f"<li>{content}</li>")
             continue
 
         if in_list and not line.startswith("- ") and line:
-            # Assume end of list
             html_lines.append("</ul>")
             in_list = False
 
@@ -68,16 +91,9 @@ def simple_markdown_to_html(md_text: str) -> str:
                 in_list = False
             continue
 
-        # Paragraphs
-        # Wrap in <p> if not empty and not header
-
-        # Bold
+        # Paragraphs with inline formatting
         line = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", line)
-        # Italics
         line = re.sub(r"\*(.*?)\*", r"<em>\1</em>", line)
-
-        # Math (MathJax handles \( \) and \[ \], we just pass them through)
-
         html_lines.append(f"<p>{line}</p>")
 
     if in_list:
@@ -86,76 +102,16 @@ def simple_markdown_to_html(md_text: str) -> str:
     return "\n".join(html_lines)
 
 
-def create_html_page(
-    title: str,
-    description: str,
-    body_html: str,
-    output_file: Path,
-    page_type: str = "articles",
-    template_path: Path = Path("docs/articles.html"),
-) -> bool:
-    """Create a complete HTML page from a template."""
-    if template_path.exists():
-        template = template_path.read_text()
+def wrap_in_article_section(body_html: str) -> str:
+    """Wrap body HTML in the standard article section structure.
 
-        title_escaped = html.escape(title)
-        description_escaped = html.escape(description)
+    Args:
+        body_html: The article body HTML content.
 
-        # Update metadata
-        template = re.sub(
-            r"<title>.*?</title>",
-            f"<title>{title_escaped} – AffineDrift</title>",
-            template,
-        )
-
-        template = re.sub(
-            r'<meta name="description" content="[^"]*">',
-            f'<meta name="description" content="{description_escaped}">',
-            template,
-        )
-
-        # FIX PATHS for subdirectory
-        # 1. ./ prefixes
-        template = template.replace('href="./', 'href="../')
-        template = template.replace('src="./', 'src="../')
-
-        # 2. site_libs (usually no prefix)
-        template = template.replace('src="site_libs/', 'src="../site_libs/')
-        template = template.replace('href="site_libs/', 'href="../site_libs/')
-
-        # 3. specific assets
-        template = template.replace('src="script.js"', 'src="../script.js"')
-        template = template.replace('href="styles.css"', 'href="../styles.css"')
-        template = template.replace('src="logo/', 'src="../logo/')
-
-        # 4. other root links that might be bare
-        template = template.replace('href="index.html"', 'href="../index.html"')
-        template = template.replace('href="about.html"', 'href="../about.html"')
-        template = template.replace('href="feed.xml"', 'href="../feed.xml"')
-        template = template.replace('href="favicon.ico"', 'href="../favicon.ico"')
-
-        # 5. Fix the self-reference to articles.html (which became ../articles.html)
-        # Ensure the 'Articles' nav link is active
-        # The template has <a class="nav-link active" ...> or similar.
-        # We just need to make sure links to other pages are correct.
-
-        # Replace title block
-        template = re.sub(
-            r'<h1 class="title">.*?</h1>',
-            f'<h1 class="title">{title_escaped}</h1>',
-            template,
-        )
-
-        # Replace description in page
-        template = re.sub(
-            r'<div class="description">\s*.*?\s*</div>',
-            f'<div class="description">\n    {description_escaped}\n  </div>',
-            template,
-            flags=re.DOTALL,
-        )
-
-        # Wrap body in the container structure
-        full_body = f"""
+    Returns:
+        HTML string with the article section wrapper.
+    """
+    return f"""
 <section class="article-section">
   <div class="container">
     <div class="standard-page-layout">
@@ -178,57 +134,56 @@ def create_html_page(
   </div>
 </section>
 """
-        content_pattern = r'<section class="article-section">.*?</section>'
-        template = re.sub(content_pattern, lambda _: full_body, template, flags=re.DOTALL)
-
-        if page_type != "articles":
-            template = re.sub(
-                r"\s*function updateArticlesHistory\(\) \{.*?\}\s*",
-                "",
-                template,
-                flags=re.DOTALL,
-            )
-            template = re.sub(r"\s*updateArticlesHistory\(\);?\s*", "", template)
-
-        output_file.write_text(template)
-        return True
-    return False
 
 
 def main() -> None:
-    """Main execution function to publish the article."""
+    """Publish a manually-authored article."""
     qmd_path = Path("articles/intentional-constraint-collapse.qmd")
     output_path = Path("docs/articles/intentional-constraint-collapse.html")
+    template_path = Path("docs/articles.html")
 
     if not qmd_path.exists():
+        logger.error("Source file not found: %s", qmd_path)
+        sys.exit(1)
+
+    if not template_path.exists():
+        logger.error("Template file not found: %s", template_path)
         sys.exit(1)
 
     content = qmd_path.read_text()
+    template_content = template_path.read_text()
 
-    # Extract frontmatter
-    yaml_match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
-    title = "Intentional Constraint Collapse at Impact"
-    description = "How Golfers Generate High Force with Stable Club Motion"
+    # Extract frontmatter using shared utility
+    yaml_content, body_md = extract_frontmatter(content)
 
-    if yaml_match:
-        yaml_content = yaml_match.group(1)
-        t_match = re.search(r'^title:\s*"([^"]+)"', yaml_content, re.MULTILINE)
-        if t_match:
-            title = t_match.group(1)
+    # Extract title and description using shared utility
+    title, description = extract_title_description(
+        yaml_content,
+        default_title="Intentional Constraint Collapse at Impact",
+        default_description="How Golfers Generate High Force with Stable Club Motion",
+    )
 
-        body_md = content[yaml_match.end() :]
-    else:
-        body_md = content
-
+    # Convert markdown to HTML and wrap in article section
     body_html = simple_markdown_to_html(body_md)
+    wrapped_body = wrap_in_article_section(body_html)
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    # Create HTML page using shared utility
+    success = create_html_page(
+        title=title,
+        description=description,
+        body_html=wrapped_body,
+        output_file=output_path,
+        template_content=template_content,
+        page_type="articles",
+        fix_paths=True,
+        path_depth=1,
+    )
 
-    success = create_html_page(title, description, body_html, output_path)
     if success:
         logger.info("Published article: %s", output_path)
     else:
         logger.error("Failed to publish article: %s", output_path)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
