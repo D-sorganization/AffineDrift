@@ -4,7 +4,6 @@ Repository Assessment Script
 Generates assessments for 15 categories (A-O) and a comprehensive report.
 """
 
-import ast
 import re
 import statistics
 import sys

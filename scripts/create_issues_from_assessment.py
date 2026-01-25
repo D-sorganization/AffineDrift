@@ -74,7 +74,9 @@ def create_github_issue(
         return False
 
 
-def prepare_issue_data(issue: dict[str, Any], summary: dict[str, Any], repo_short: str) -> dict[str, Any]:
+def prepare_issue_data(
+    issue: dict[str, Any], summary: dict[str, Any], repo_short: str
+) -> dict[str, Any]:
     """Prepare issue title, body, and labels from a finding."""
     severity = issue.get("severity", "UNKNOWN")
     description = issue.get("description", "No description")

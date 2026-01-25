@@ -518,7 +518,9 @@ def check_documentation(root_path: Path, files: list[Path]) -> list[dict]:
     total_functions = 0
 
     for file_path in files:
-        functions = get_detailed_function_metrics(file_path.read_text(encoding="utf-8", errors="ignore"))
+        functions = get_detailed_function_metrics(
+            file_path.read_text(encoding="utf-8", errors="ignore")
+        )
         for func in functions:
             if not func["name"].startswith("_"):  # Public functions
                 total_functions += 1

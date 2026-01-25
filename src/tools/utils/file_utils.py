@@ -259,7 +259,5 @@ def get_python_files(
 
     root = Path(root_dir)
     return [
-        p
-        for p in root.rglob("*.py")
-        if not any(excluded in p.parts for excluded in exclude_dirs)
+        p for p in root.rglob("*.py") if not any(excluded in p.parts for excluded in exclude_dirs)
     ]
