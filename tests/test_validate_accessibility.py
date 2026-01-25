@@ -174,7 +174,7 @@ class TestHeadingHierarchy:
 
 
 class TestIntegration:
-    """Integration tests for accessibility validation."""
+    """Integration tests for the accessibility validation script."""
 
     def test_valid_qmd_file(self, tmp_path):
         """Test a complete valid QMD file."""
