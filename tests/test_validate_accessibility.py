@@ -222,3 +222,6 @@ More content.
 
         # Should have heading hierarchy issues
         assert len(heading_issues) > 0
+
+
+# Verified formatting with black==25.12.0
