@@ -10,6 +10,7 @@ from __future__ import annotations
 import ast
 import re
 from pathlib import Path
+from typing import Any
 
 
 def get_python_metrics(filepath: Path) -> dict[str, int]:
