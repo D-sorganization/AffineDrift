@@ -53,13 +53,14 @@ class TestColorblindSafeColors:
     def test_okabe_ito_colors_pass(self, tmp_path):
         """Test that Okabe-Ito palette colors pass validation."""
         test_file = tmp_path / "test.css"
-        test_file.write_text("""
+        content = """
             .element {
                 color: #E69F00;
                 background: #56B4E9;
                 border: #009E73;
             }
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_colorblind_safe_colors(test_file)
         assert len(issues) == 0
@@ -67,13 +68,14 @@ class TestColorblindSafeColors:
     def test_neutral_colors_pass(self, tmp_path):
         """Test that neutral colors (grays, whites) pass validation."""
         test_file = tmp_path / "test.css"
-        test_file.write_text("""
+        content = """
             .element {
                 color: #FFFFFF;
                 background: #000000;
                 border: #6C757D;
             }
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_colorblind_safe_colors(test_file)
         assert len(issues) == 0
@@ -81,12 +83,13 @@ class TestColorblindSafeColors:
     def test_problematic_colors_flagged(self, tmp_path):
         """Test that potentially problematic colors are flagged."""
         test_file = tmp_path / "test.css"
-        test_file.write_text("""
+        content = """
             .element {
                 color: #FF0000;
                 background: #00FF00;
             }
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_colorblind_safe_colors(test_file)
         # These bright reds and greens should be flagged
@@ -100,10 +103,11 @@ class TestAriaLabels:
     def test_aria_labels_present(self, tmp_path):
         """Test that JavaScript with ARIA labels passes validation."""
         test_file = tmp_path / "test.js"
-        test_file.write_text("""
+        content = """
             element.setAttribute('aria-label', 'Description');
             button.setAttribute("aria-label", "Click me");
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_aria_labels_in_js(test_file)
         assert len(issues) == 0
@@ -111,10 +115,11 @@ class TestAriaLabels:
     def test_no_aria_labels(self, tmp_path):
         """Test that JavaScript without ARIA labels is flagged."""
         test_file = tmp_path / "test.js"
-        test_file.write_text("""
+        content = """
             element.setAttribute('class', 'button');
             button.addEventListener('click', handler);
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_aria_labels_in_js(test_file)
         assert len(issues) == 1
@@ -127,12 +132,13 @@ class TestHeadingHierarchy:
     def test_proper_hierarchy(self, tmp_path):
         """Test that proper heading hierarchy passes validation."""
         test_file = tmp_path / "test.qmd"
-        test_file.write_text("""
+        content = """
 # Heading 1
 ## Heading 2
 ### Heading 3
 #### Heading 4
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_heading_hierarchy(test_file)
         assert len(issues) == 0
@@ -140,11 +146,12 @@ class TestHeadingHierarchy:
     def test_minor_skip_allowed(self, tmp_path):
         """Test that minor heading skips (h2 to h4) are allowed."""
         test_file = tmp_path / "test.qmd"
-        test_file.write_text("""
+        content = """
 # Heading 1
 ## Heading 2
 #### Heading 4
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_heading_hierarchy(test_file)
         # Minor skips (1-2 levels) should be allowed
@@ -153,11 +160,12 @@ class TestHeadingHierarchy:
     def test_major_skip_flagged(self, tmp_path):
         """Test that major heading skips (h2 to h5) are flagged."""
         test_file = tmp_path / "test.qmd"
-        test_file.write_text("""
+        content = """
 # Heading 1
 ## Heading 2
 ##### Heading 5
-        """)
+        """
+        test_file.write_text(content)
 
         issues = check_heading_hierarchy(test_file)
         assert len(issues) == 1
@@ -179,7 +187,7 @@ class TestIntegration:
     def test_valid_qmd_file(self, tmp_path):
         """Test a complete valid QMD file."""
         test_file = tmp_path / "valid.qmd"
-        test_file.write_text("""
+        content = """
 # Main Title
 
 ![Descriptive alt text](image.png)
@@ -191,7 +199,8 @@ Some content here.
 ### Subsection
 
 More content.
-        """)
+        """
+        test_file.write_text(content)
 
         alt_issues = check_alt_text_in_qmd(test_file)
         heading_issues = check_heading_hierarchy(test_file)
@@ -202,7 +211,7 @@ More content.
     def test_problematic_qmd_file(self, tmp_path):
         """Test a QMD file with multiple issues."""
         test_file = tmp_path / "problematic.qmd"
-        test_file.write_text("""
+        content = """
 # Main Title
 
 ![](image.png)
@@ -212,7 +221,8 @@ More content.
 ##### Deep heading
 
 <img src="another.png">
-        """)
+        """
+        test_file.write_text(content)
 
         alt_issues = check_alt_text_in_qmd(test_file)
         heading_issues = check_heading_hierarchy(test_file)
