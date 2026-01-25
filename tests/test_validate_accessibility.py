@@ -16,7 +16,9 @@ class TestAltTextValidation:
         """Test that markdown images with valid alt text pass validation."""
         # Setup test file with valid alt text content
         test_file = tmp_path / "test.qmd"
-        test_file.write_text("![Valid alt text](image.png)")
+        test_file.write_text(
+            "![Valid alt text](image.png)",
+        )
 
         issues = check_alt_text_in_qmd(test_file)
         assert len(issues) == 0
