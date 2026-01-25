@@ -1,9 +1,9 @@
 # Assessment: Code Structure
 
-## Grade: 6.0/10
+## Grade: 4.0/10
 
 ## Details
-Files: 62, Avg LOC: 269.3, Max LOC: 1697, Max Depth: 5
+Files: 2006, Avg LOC: 526.2, Max LOC: 95622, Max Depth: 10
 
 ## Recommendations
 - See detailed findings

@@ -1,9 +1,9 @@
 # Assessment: API Design
 
-## Grade: 8.6/10
+## Grade: 5.8/10
 
 ## Details
-Type hint coverage: 71.9% (333/463)
+Type hint coverage: 15.4% (7089/46064)
 
 ## Recommendations
 - See detailed findings

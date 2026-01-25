@@ -1,9 +1,9 @@
 # Assessment: Logging
 
-## Grade: 8.0/10
+## Grade: 6.0/10
 
 ## Details
-Files using logging: 27, Files using print: 6
+Files using logging: 269, Files using print: 318
 
 ## Recommendations
 - See detailed findings
