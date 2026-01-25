@@ -228,3 +228,38 @@ def find_html_files(
         files = files[:limit]
 
     return files
+
+
+def get_python_files(
+    root_dir: str | Path = ".",
+    exclude_dirs: list[str] | None = None,
+) -> list[Path]:
+    """Find all .py files excluding common non-source directories.
+
+    Args:
+        root_dir: Root directory to search from.
+        exclude_dirs: Directory names to exclude (default: .git, .venv, etc.).
+
+    Returns:
+        List of Path objects for found .py files.
+    """
+    if exclude_dirs is None:
+        exclude_dirs = [
+            ".git",
+            "__pycache__",
+            ".venv",
+            "venv",
+            "node_modules",
+            ".tox",
+            "build",
+            "dist",
+            ".mypy_cache",
+            ".ruff_cache",
+        ]
+
+    root = Path(root_dir)
+    return [
+        p
+        for p in root.rglob("*.py")
+        if not any(excluded in p.parts for excluded in exclude_dirs)
+    ]
