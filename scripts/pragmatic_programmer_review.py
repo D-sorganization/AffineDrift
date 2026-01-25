@@ -31,75 +31,14 @@ from typing import Any
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import (
+    get_python_files,
+    setup_logging,
+)
+from src.tools.utils.analysis_utils import get_detailed_function_metrics
+from src.tools.utils.assessment_utils import PRAGMATIC_PRINCIPLES as PRINCIPLES
 
 logger = setup_logging(__name__)
-
-# Pragmatic Programmer principles and their assessment criteria
-PRINCIPLES = {
-    "DRY": {
-        "name": "Don't Repeat Yourself",
-        "description": "Every piece of knowledge must have a single, unambiguous representation",
-        "weight": 2.0,
-    },
-    "ORTHOGONALITY": {
-        "name": "Orthogonality & Decoupling",
-        "description": "Eliminate effects between unrelated things",
-        "weight": 1.5,
-    },
-    "REVERSIBILITY": {
-        "name": "Reversibility & Flexibility",
-        "description": "Make decisions reversible; avoid painting yourself into a corner",
-        "weight": 1.0,
-    },
-    "QUALITY": {
-        "name": "Code Quality & Craftsmanship",
-        "description": "Good enough software; know when to stop",
-        "weight": 1.5,
-    },
-    "ROBUSTNESS": {
-        "name": "Error Handling & Robustness",
-        "description": "Crash early; use assertions; handle errors gracefully",
-        "weight": 2.0,
-    },
-    "TESTING": {
-        "name": "Testing & Validation",
-        "description": "Test early, test often, test automatically",
-        "weight": 2.0,
-    },
-    "DOCUMENTATION": {
-        "name": "Documentation & Communication",
-        "description": "It's all writing; document the why, not just the what",
-        "weight": 1.0,
-    },
-    "AUTOMATION": {
-        "name": "Automation & Tooling",
-        "description": "Don't use manual procedures; automate everything",
-        "weight": 1.5,
-    },
-}
-
-
-def find_python_files(root_path: Path) -> list[Path]:
-    """Find all Python files, excluding common non-source directories."""
-    excluded = {
-        ".git",
-        "__pycache__",
-        ".venv",
-        "venv",
-        "env",
-        "node_modules",
-        ".tox",
-        "build",
-        "dist",
-        ".eggs",
-        "*.egg-info",
-    }
-    python_files = []
-    for f in root_path.rglob("*.py"):
-        if not any(ex in f.parts for ex in excluded):
-            python_files.append(f)
-    return python_files
 
 
 def compute_file_hash(content: str) -> str:
@@ -112,29 +51,6 @@ def compute_file_hash(content: str) -> str:
             lines.append(line)
     normalized = "\n".join(lines)
     return hashlib.md5(normalized.encode()).hexdigest()
-
-
-def extract_functions(content: str) -> list[dict]:
-    """Extract function definitions from Python code."""
-    functions = []
-    try:
-        tree = ast.parse(content)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
-                functions.append(
-                    {
-                        "name": node.name,
-                        "lineno": node.lineno,
-                        "args": len(node.args.args),
-                        "body_lines": (
-                            node.end_lineno - node.lineno + 1 if hasattr(node, "end_lineno") else 0
-                        ),
-                        "has_docstring": (ast.get_docstring(node) is not None),
-                    }
-                )
-    except SyntaxError:
-        pass
-    return functions
 
 
 def check_dry_violations(files: list[Path]) -> list[dict]:
@@ -257,7 +173,7 @@ def check_orthogonality(files: list[Path]) -> list[dict]:
                     )
 
         # Check for god functions (too many lines)
-        functions = extract_functions(content)
+        functions = get_detailed_function_metrics(content)
         for func in functions:
             if func["body_lines"] > 50:
                 issues.append(
@@ -307,7 +223,7 @@ def check_reversibility(root_path: Path) -> list[dict]:
         (r'database\s*=\s*["\'][^"\']+["\']', "Hardcoded database"),
     ]
 
-    python_files = find_python_files(root_path)
+    python_files = get_python_files(root_path)
     for file_path in python_files:
         try:
             content = file_path.read_text(encoding="utf-8", errors="ignore")
@@ -381,7 +297,7 @@ def check_quality(files: list[Path]) -> list[dict]:
                 fixmes.append((file_path, i, line.strip()))
 
         # Check for type hints in function definitions
-        functions = extract_functions(content)
+        functions = get_detailed_function_metrics(content)
         for func in functions:
             # Simple heuristic: check if 'def func(arg: type)' pattern exists
             func_pattern = rf"def\s+{func['name']}\s*\([^)]*:\s*\w+"
@@ -509,7 +425,7 @@ def check_testing(root_path: Path) -> list[dict]:
         test_files.update(root_path.glob(pattern))
 
     # Find source files
-    source_files = find_python_files(root_path)
+    source_files = get_python_files(root_path)
     source_files = [f for f in source_files if "test" not in str(f).lower()]
 
     # Calculate test ratio
@@ -602,7 +518,9 @@ def check_documentation(root_path: Path, files: list[Path]) -> list[dict]:
     total_functions = 0
 
     for file_path in files:
-        functions = extract_functions(file_path.read_text(encoding="utf-8", errors="ignore"))
+        functions = get_detailed_function_metrics(
+            file_path.read_text(encoding="utf-8", errors="ignore")
+        )
         for func in functions:
             if not func["name"].startswith("_"):  # Public functions
                 total_functions += 1
@@ -724,7 +642,7 @@ def run_review(root_path: Path) -> dict[str, Any]:
     """
     logger.info(f"Running Pragmatic Programmer review on: {root_path}")
 
-    python_files = find_python_files(root_path)
+    python_files = get_python_files(root_path)
     logger.info(f"Found {len(python_files)} Python files")
 
     all_issues = []

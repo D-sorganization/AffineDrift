@@ -7,7 +7,6 @@ based on actual code analysis.
 """
 
 import argparse
-import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -15,67 +14,14 @@ from pathlib import Path
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import (
+    get_python_files,
+    setup_logging,
+)
+from src.tools.utils.assessment_utils import ASSESSMENT_DEFINITIONS as ASSESSMENTS
+from src.tools.utils.shell_utils import run_black_check, run_ruff_check
 
 logger = setup_logging(__name__)
-
-# Assessment definitions
-ASSESSMENTS = {
-    "A": {"name": "Architecture", "description": "Code structure and organization"},
-    "B": {"name": "Hygiene & Quality", "description": "Linting, formatting, code quality"},
-    "C": {"name": "Documentation", "description": "README, docstrings, comments"},
-    "D": {"name": "User Experience", "description": "CLI, API usability"},
-    "E": {"name": "Performance", "description": "Efficiency, optimization"},
-    "F": {"name": "Installation", "description": "Setup, dependencies, packaging"},
-    "G": {"name": "Testing", "description": "Test coverage, test quality"},
-    "H": {"name": "Error Handling", "description": "Exception handling, logging"},
-    "I": {"name": "Security", "description": "Vulnerabilities, best practices"},
-    "J": {"name": "API Design", "description": "Interface consistency"},
-    "K": {"name": "Data Handling", "description": "Data validation, serialization"},
-    "L": {"name": "Logging", "description": "Logging practices"},
-    "M": {"name": "Configuration", "description": "Config management"},
-    "N": {"name": "Scalability", "description": "Performance at scale"},
-    "O": {"name": "Maintainability", "description": "Code maintainability"},
-}
-
-
-def find_python_files() -> list[Path]:
-    """Find all Python files in the repository."""
-    python_files = []
-    for pattern in ["**/*.py"]:
-        python_files.extend(Path(".").glob(pattern))
-    # Exclude common non-source directories
-    excluded = {".git", "__pycache__", ".venv", "venv", "node_modules", ".tox", "build", "dist"}
-    return [f for f in python_files if not any(p in f.parts for p in excluded)]
-
-
-def run_ruff_check() -> dict:
-    """Run ruff and return statistics."""
-    try:
-        result = subprocess.run(
-            ["ruff", "check", ".", "--statistics", "--output-format=json"],
-            capture_output=True,
-            text=True,
-        )
-        return {"exit_code": result.returncode, "output": result.stdout, "errors": result.stderr}
-    except FileNotFoundError:
-        return {"exit_code": -1, "output": "", "errors": "ruff not installed"}
-
-
-def run_black_check() -> dict:
-    """Run black check and return results."""
-    try:
-        result = subprocess.run(
-            ["black", "--check", "--quiet", "."],
-            capture_output=True,
-            text=True,
-        )
-        return {
-            "exit_code": result.returncode,
-            "files_to_format": result.stdout.count("would reformat"),
-        }
-    except FileNotFoundError:
-        return {"exit_code": -1, "files_to_format": 0, "errors": "black not installed"}
 
 
 def count_test_files() -> int:
@@ -121,7 +67,7 @@ def run_assessment(assessment_id: str, output_path: Path) -> int:
     findings = []
     score = 10  # Start with perfect score
 
-    python_files = find_python_files()
+    python_files = get_python_files()
     file_count = len(python_files)
 
     if assessment_id == "A":  # Architecture

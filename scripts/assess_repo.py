@@ -4,7 +4,6 @@ Repository Assessment Script
 Generates assessments for 15 categories (A-O) and a comprehensive report.
 """
 
-import ast
 import re
 import statistics
 import sys
@@ -14,67 +13,27 @@ from typing import Any
 # Add project root to path for imports
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-from src.tools.utils import setup_logging
+from src.tools.utils import (
+    get_python_files,
+    setup_logging,
+)
+from src.tools.utils.analysis_utils import (
+    assess_error_handling_content,
+    assess_logging_content,
+    calculate_complexity,
+    get_python_metrics,
+)
+from src.tools.utils.assessment_utils import (
+    CATEGORIES,
+    GROUP_MAPPING,
+    GROUP_WEIGHTS,
+)
+from src.tools.utils.report_utils import (
+    generate_issue_document,
+    generate_markdown_report,
+)
 
 logger = setup_logging(__name__, format_string="%(message)s")
-
-# Categories
-CATEGORIES = {
-    "A": "Code Structure",
-    "B": "Documentation",
-    "C": "Test Coverage",
-    "D": "Error Handling",
-    "E": "Performance",
-    "F": "Security",
-    "G": "Dependencies",
-    "H": "CI/CD",
-    "I": "Code Style",
-    "J": "API Design",
-    "K": "Data Handling",
-    "L": "Logging",
-    "M": "Configuration",
-    "N": "Scalability",
-    "O": "Maintainability",
-}
-
-GROUP_WEIGHTS = {
-    "Code": 0.25,
-    "Testing": 0.15,
-    "Docs": 0.10,
-    "Security": 0.15,
-    "Perf": 0.15,
-    "Ops": 0.10,
-    "Design": 0.10,
-}
-
-GROUP_MAPPING = {
-    "A": "Code",
-    "D": "Code",
-    "I": "Code",
-    "O": "Code",
-    "K": "Code",
-    "L": "Code",
-    "C": "Testing",
-    "B": "Docs",
-    "F": "Security",
-    "G": "Security",
-    "E": "Perf",
-    "H": "Ops",
-    "M": "Ops",
-    "J": "Design",
-    "N": "Design",
-}
-
-
-def get_python_files(root: Path) -> list[Path]:
-    """
-    Recursively finds all Python files in the given directory, excluding common ignored directories.
-    """
-    return [
-        p
-        for p in root.rglob("*.py")
-        if "node_modules" not in p.parts and ".git" not in p.parts and "venv" not in p.parts
-    ]
 
 
 def assess_code_structure(files: list[Path]) -> dict[str, Any]:
@@ -116,27 +75,14 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
     Evaluates documentation coverage by counting docstrings in functions and classes.
     """
     docstring_count = 0
-    function_count = 0
-    class_count = 0
+    total_defs = 0
 
     for f in files:
-        try:
-            tree = ast.parse(f.read_text(encoding="utf-8"))
-            for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
-                    function_count += 1
-                    if ast.get_docstring(node):
-                        docstring_count += 1
-                elif isinstance(node, ast.ClassDef):
-                    class_count += 1
-                    if ast.get_docstring(node):
-                        docstring_count += 1
-        except Exception:
-            pass
+        metrics = get_python_metrics(f)
+        docstring_count += metrics["docstrings"]
+        total_defs += metrics["functions"] + metrics["classes"]
 
-    total_defs = function_count + class_count
     coverage = (docstring_count / total_defs) * 100 if total_defs > 0 else 0
-
     score = coverage / 10
 
     readmes = list(Path.cwd().rglob("README.md"))
@@ -176,9 +122,13 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
     bare_except_count = 0
 
     for f in files:
-        content = f.read_text(encoding="utf-8", errors="ignore")
-        try_count += content.count("try:")
-        bare_except_count += len(re.findall(r"except\s*:", content))
+        try:
+            content = f.read_text(encoding="utf-8", errors="ignore")
+            results = assess_error_handling_content(content)
+            try_count += results["try_count"]
+            bare_except_count += results["bare_except_count"]
+        except Exception:
+            pass
 
     score = 7
     if bare_except_count > 5:
@@ -204,11 +154,13 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
     for f in files:
         if "test" in f.name:
             continue
-        content = f.read_text(encoding="utf-8", errors="ignore")
-        if "logging." in content or "logger." in content:
-            logging_usage += 1
-        if "print(" in content:
-            print_usage += 1
+        try:
+            content = f.read_text(encoding="utf-8", errors="ignore")
+            results = assess_logging_content(content)
+            logging_usage += results["logging_usage"]
+            print_usage += results["print_usage"]
+        except Exception:
+            pass
 
     score = 5
     if logging_usage > print_usage:
@@ -340,15 +292,9 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
     typed_funcs = 0
 
     for f in files:
-        try:
-            tree = ast.parse(f.read_text(encoding="utf-8"))
-            for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef):
-                    total_funcs += 1
-                    if node.returns:
-                        typed_funcs += 1
-        except Exception:
-            pass
+        metrics = get_python_metrics(f)
+        total_funcs += metrics["functions"]
+        typed_funcs += metrics["typed_returns"]
 
     score = 5
     if total_funcs > 0:
@@ -410,21 +356,14 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     """
     Estimates scalability and maintainability based on code complexity metrics.
     """
-    total_branches = 0
-    total_funcs = 0
+    total_metrics = {"functions": 0, "branches": 0}
 
     for f in files:
-        try:
-            tree = ast.parse(f.read_text(encoding="utf-8"))
-            for node in ast.walk(tree):
-                if isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
-                    total_branches += 1
-                if isinstance(node, ast.FunctionDef):
-                    total_funcs += 1
-        except Exception:
-            pass
+        metrics = get_python_metrics(f)
+        total_metrics["functions"] += metrics["functions"]
+        total_metrics["branches"] += metrics["branches"]
 
-    avg_complexity = total_branches / total_funcs if total_funcs > 0 else 0
+    avg_complexity = calculate_complexity(total_metrics)
 
     score = 10
     if avg_complexity > 10:
@@ -435,30 +374,6 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     details = f"Avg Complexity (branches/func): {avg_complexity:.1f}"
 
     return {"grade": max(0, score), "details": details}
-
-
-def generate_report(
-    category: str, category_name: str, grade: float, details: str, recommendations: list[str]
-):
-    """
-    Writes a markdown report for a specific assessment category.
-    """
-    filename = f"docs/assessments/Assessment_{category}_{category_name.replace(' ', '_')}.md"
-    content = f"""# Assessment: {category_name}
-
-## Grade: {grade:.1f}/10
-
-## Details
-{details}
-
-## Recommendations
-"""
-    for rec in recommendations:
-        content += f"- {rec}\n"
-
-    Path(filename).parent.mkdir(parents=True, exist_ok=True)
-    Path(filename).write_text(content, encoding="utf-8")
-    return filename
 
 
 def main():
@@ -492,12 +407,17 @@ def main():
     # Generate Individual Reports
     for cat_code, info in scores.items():
         name = CATEGORIES[cat_code]
-        generate_report(cat_code, name, info["grade"], info["details"], ["See detailed findings"])
+        generate_markdown_report(
+            category_id=cat_code,
+            category_name=name,
+            grade=info["grade"],
+            details=info["details"],
+            recommendations=["See detailed findings"],
+        )
 
     # Generate Comprehensive Report
     weighted_sum = 0
     total_weight = 0
-
     group_scores = {g: [] for g in GROUP_WEIGHTS}
 
     for cat_code, info in scores.items():
@@ -521,10 +441,8 @@ def main():
 | Category | Grade | Weight |
 |----------|-------|--------|
 """
-    for cat_code in sorted(scores.keys()):
-        name = CATEGORIES[cat_code]
-        info = scores[cat_code]
-        comp_content += f"| {name} | {info['grade']:.1f} | - |\n"
+    for cat_code, info in scores.items():
+        comp_content += f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |\n"
 
     comp_content += """
 ## Top Recommendations
@@ -536,32 +454,18 @@ def main():
 
 ## Issues Created
 """
-
     issues_dir = Path("docs/assessments/issues")
     issues_dir.mkdir(parents=True, exist_ok=True)
 
     for cat_code, info in scores.items():
         if info["grade"] < 5:
-            issue_filename = (
-                f"ISSUE_Assessment_{cat_code}_{CATEGORIES[cat_code].replace(' ', '_')}.md"
+            issue_path = generate_issue_document(
+                category_id=cat_code,
+                category_name=CATEGORIES[cat_code],
+                grade=info["grade"],
+                details=info["details"],
             )
-            issue_path = issues_dir / issue_filename
-            issue_content = f"""---
-title: "Assessment Finding: Low Score in {CATEGORIES[cat_code]}"
-labels: jules:assessment, needs-attention
----
-
-# Issue: Low Score in {CATEGORIES[cat_code]}
-
-**Grade**: {info["grade"]:.1f}/10
-**Details**: {info["details"]}
-
-## Recommended Actions
-- Review the detailed assessment in `docs/assessments/Assessment_{cat_code}_{CATEGORIES[cat_code].replace(" ", "_")}.md`
-- Create a remediation plan.
-"""
-            issue_path.write_text(issue_content, encoding="utf-8")
-            comp_content += f"- Created issue: `{issue_filename}` (Grade: {info['grade']:.1f})\n"
+            comp_content += f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})\n"
 
     Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
     logger.info("Assessment complete.")
