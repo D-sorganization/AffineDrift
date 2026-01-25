@@ -3,7 +3,7 @@
 ## Grade: 5.8/10
 
 ## Details
-Type hint coverage: 15.4% (7089/46064)
+Type hint coverage: 71.1% (340/478)
 
 ## Recommendations
 - See detailed findings

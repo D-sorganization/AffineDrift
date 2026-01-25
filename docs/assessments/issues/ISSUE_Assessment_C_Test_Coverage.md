@@ -6,7 +6,7 @@ labels: jules:assessment, needs-attention
 # Issue: Low Score in Test Coverage
 
 **Grade**: 4.0/10
-**Details**: Test files found: 9. Historic coverage is low (~19%).
+**Details**: Test files found: 10. Historic coverage is low (~19%).
 
 ## Recommended Actions
 - Review the detailed assessment in `docs/assessments/Assessment_C_Test_Coverage.md`
