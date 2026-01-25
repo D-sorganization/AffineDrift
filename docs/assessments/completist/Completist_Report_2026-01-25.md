@@ -1,4 +1,4 @@
-# Completist Audit Report - Latest (2026-01-25)
+# Completist Audit Report - 2026-01-25
 
 ## Executive Summary
 The Completist Audit performed on 2026-01-25 has identified critical gaps in automation workflows, startup logic, and user-facing content. Critical automation workflows are disabled due to API changes. The startup launcher script has a logic bug where the ready state is never finalized. Additionally, several public documentation pages contain "Coming Soon" placeholders.
