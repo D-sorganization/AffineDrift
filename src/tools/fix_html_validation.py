@@ -75,6 +75,7 @@ def fix_dots_in_ids(content: str) -> str:
     """Replace dots with dashes in ID attributes (invalid characters)."""
 
     def replace_dots(match: re.Match[str]) -> str:
+        """Replace dots with dashes in the matched string."""
         return match.group(0).replace(".", "-")
 
     # Fix id="..." attributes
@@ -88,6 +89,7 @@ def add_button_type(content: str) -> str:
     """Add type='button' to buttons missing type attribute."""
 
     def add_type(match: re.Match[str]) -> str:
+        """Add type='button' to the matched button tag if missing."""
         tag = match.group(0)
         if "type=" not in tag:
             return tag.replace("<button", '<button type="button"')
@@ -100,6 +102,7 @@ def add_iframe_title(content: str) -> str:
     """Add title attribute to iframes for accessibility."""
 
     def add_title(match: re.Match[str]) -> str:
+        """Add title attribute to the matched iframe tag if missing."""
         tag = match.group(0)
         if "title=" not in tag:
             return tag.replace("<iframe", '<iframe title="Embedded Content"')
