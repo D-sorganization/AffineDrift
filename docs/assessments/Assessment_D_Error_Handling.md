@@ -1,9 +1,9 @@
 # Assessment: Error Handling
 
-## Grade: 6.0/10
+## Grade: 8.0/10
 
 ## Details
-Try blocks: 4899, Bare excepts: 29
+Try blocks: 79, Bare excepts: 4
 
 ## Recommendations
 - See detailed findings

@@ -1,14 +1,11 @@
 # Auto-Fixed Issues
 
-The following issues were automatically identified and fixed as part of the assessment process.
+This document tracks automated fixes applied during the assessment process.
 
-## Category C: Test Coverage
+## 2026-01-23
 
-- **Action**: Created unit tests for `src/tools/fix_html_validation.py`.
-- **File**: `tests/test_fix_html_validation.py`
-- **Impact**: Added 8 new test cases covering all functions in the module. Increased test file count to 10.
-- **Status**: Verified (Tests Passed).
+### Technical Debt in `scripts/assess_repo.py`
 
-## Future Recommendations
-- Continue adding tests for other tools in `src/tools/`.
-- Address the "Code Structure" findings by refactoring large files.
+**Issue:** Bare `except:` blocks were swallowing errors in `assess_code_structure`, `assess_error_handling`, and `assess_logging` functions.
+**Fix:** Replaced bare `except:` blocks with `except Exception as e: logger.warning(...)` to ensure errors are logged rather than silently ignored.
+**Status:** FIXED
