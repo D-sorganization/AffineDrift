@@ -47,9 +47,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # Safety limits
-  MAX_ISSUES_PER_RUN: 3
-  MAX_ISSUES_PER_WEEK: 10
+  # Cooldown period before re-assigning the same issue
   COOLDOWN_DAYS: 7
 
 jobs:
@@ -121,7 +119,8 @@ jobs:
           COMMENT
           )"
 
-                # Add tracking labels
+                # Create label if it doesn't exist, then add tracking label
+                gh label create "jules-assigned" --repo "$REPO" --color "7057ff" --description "Issue assigned to Jules AI" 2>/dev/null || true
                 gh issue edit "$SPECIFIC_ISSUE" --repo "$REPO" --add-label "jules-assigned" || true
 
                 assigned_issues="$SPECIFIC_ISSUE"
@@ -222,7 +221,8 @@ jobs:
           COMMENT
           )"
 
-                  # Add tracking label
+                  # Create label if it doesn't exist, then add tracking label
+                  gh label create "jules-assigned" --repo "$REPO" --color "7057ff" --description "Issue assigned to Jules AI" 2>/dev/null || true
                   gh issue edit "$issue_num" --repo "$REPO" --add-label "jules-assigned" || true
 
                   assigned_issues="$assigned_issues $issue_num"
