@@ -116,19 +116,22 @@ def run_assessment(assessment_id: str, output_path: Path) -> int:
             score -= 2
 
     else:
-        # Generic assessment
+        # Generic assessment - use conservative score since no real checks performed
+        # IMPORTANT: Default 7.0 instead of 10.0 to avoid inflated scores
+        score = 7.0
         findings.append(f"- Python files analyzed: {file_count}")
-        findings.append("- Manual review recommended for detailed assessment")
+        findings.append("- **NOTE**: This category requires manual review for accurate scoring")
+        findings.append("- Score is conservative estimate (7.0) - actual score may differ")
 
     # Ensure score is within bounds
     score = max(0, min(10, score))
 
     # Generate report
-    report_content = f"""# Assessment {assessment_id}: {assessment['name']}
+    report_content = f"""# Assessment {assessment_id}: {assessment["name"]}
 
 **Date**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-**Assessment**: {assessment_id} - {assessment['name']}
-**Description**: {assessment['description']}
+**Assessment**: {assessment_id} - {assessment["name"]}
+**Description**: {assessment["description"]}
 **Generated**: Automated via Jules Assessment Auto-Fix workflow
 
 ## Score: {score}/10
