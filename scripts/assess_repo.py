@@ -44,8 +44,8 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
     for f in files:
         try:
             lines_counts.append(len(f.read_text(encoding="utf-8").splitlines()))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Error reading file {f} in assess_code_structure: {e}")
 
     avg_loc = statistics.mean(lines_counts) if lines_counts else 0
     max_loc = max(lines_counts) if lines_counts else 0
@@ -127,8 +127,8 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
             results = assess_error_handling_content(content)
             try_count += results["try_count"]
             bare_except_count += results["bare_except_count"]
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Error reading file {f} in assess_error_handling: {e}")
 
     score = 7
     if bare_except_count > 5:
@@ -159,8 +159,8 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
             results = assess_logging_content(content)
             logging_usage += results["logging_usage"]
             print_usage += results["print_usage"]
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Error reading file {f} in assess_logging: {e}")
 
     score = 5
     if logging_usage > print_usage:
