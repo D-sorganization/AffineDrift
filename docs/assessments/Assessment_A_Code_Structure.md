@@ -3,7 +3,7 @@
 ## Grade: 6.0/10
 
 ## Details
-Files: 67, Avg LOC: 257.4, Max LOC: 1711, Max Depth: 5
+Files: 68, Avg LOC: 253.8, Max LOC: 1711, Max Depth: 5
 
 ## Recommendations
 - See detailed findings
