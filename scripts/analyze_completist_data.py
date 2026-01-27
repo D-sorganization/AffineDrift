@@ -256,7 +256,9 @@ Implement missing logic or document the rationale for the gap.
     return filepath
 
 
-def generate_mermaid_charts(criticals: list[Finding], todos: list[Finding], fixmes: list[Finding], docs: list[Finding]) -> str:
+def generate_mermaid_charts(
+    criticals: list[Finding], todos: list[Finding], fixmes: list[Finding], docs: list[Finding]
+) -> str:
     """Generate Mermaid charts for the report."""
     chart = []
     chart.append("## Visualization")
@@ -288,7 +290,7 @@ def generate_mermaid_charts(criticals: list[Finding], todos: list[Finding], fixm
         chart.append("```mermaid")
         chart.append("pie title Issues by Module")
         for mod, count in sorted_mods:
-             chart.append(f'    "{mod}" : {count}')
+            chart.append(f'    "{mod}" : {count}')
         chart.append("```")
 
     return "\n".join(chart)
@@ -345,9 +347,7 @@ def generate_report() -> None:
     report.append("|---|---|---|---|")
     for item in fixmes:
         text = item.get("text", "").replace("|", "\\|")
-        report.append(
-            f"| `{item['file']}` | {item['line']} | {text[:100]} | {item['type']} |"
-        )
+        report.append(f"| `{item['file']}` | {item['line']} | {text[:100]} | {item['type']} |")
 
     # Recommended Implementation Order
     report.append("\n## Recommended Implementation Order")
