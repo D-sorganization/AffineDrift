@@ -8,7 +8,7 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'https://affinedrift.com',
+    baseURL: process.env.CI ? 'https://affinedrift.com' : 'http://localhost:8000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

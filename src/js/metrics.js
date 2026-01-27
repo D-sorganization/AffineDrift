@@ -80,6 +80,8 @@
     const metrics = getMetrics();
     const normalizedTerm = term.toLowerCase().trim();
 
+    if (!normalizedTerm) return;
+
     metrics.totalSearches++;
     metrics.searchTerms[normalizedTerm] =
       (metrics.searchTerms[normalizedTerm] || 0) + 1;
@@ -292,4 +294,20 @@
     renderStatsWidget,
     clearData,
   };
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      initializeMetrics,
+      getMetrics,
+      saveMetrics,
+      trackPageView,
+      trackSearch,
+      trackEntryClick,
+      trackConceptClick,
+      getStatistics,
+      clearData,
+      escapeHtml,
+      truncate
+    };
+  }
 })();

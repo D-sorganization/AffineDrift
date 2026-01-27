@@ -3,6 +3,20 @@
  * Testing privacy-friendly local metrics tracking
  */
 
+const {
+  initializeMetrics,
+  getMetrics,
+  saveMetrics,
+  trackPageView,
+  trackSearch,
+  trackEntryClick,
+  trackConceptClick,
+  getStatistics,
+  clearData,
+  escapeHtml,
+  truncate
+} = require('../src/js/metrics.js');
+
 describe('Metrics Module', () => {
   const STORAGE_KEY = 'affinedrift_metrics';
   const SESSION_KEY = 'affinedrift_session';
@@ -88,6 +102,10 @@ describe('Metrics Module', () => {
   });
 
   describe('trackPageView', () => {
+    beforeEach(() => {
+      window.history.pushState({}, '', '/');
+    });
+
     test('should increment totalPageViews', () => {
       trackPageView();
       const metrics = getMetrics();
@@ -95,11 +113,7 @@ describe('Metrics Module', () => {
     });
 
     test('should track page path', () => {
-      // Mock window.location
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: { pathname: '/articles/test-article' }
-      });
+      window.history.pushState({}, '', '/articles/test-article');
 
       trackPageView();
       const metrics = getMetrics();
@@ -107,10 +121,7 @@ describe('Metrics Module', () => {
     });
 
     test('should increment count for repeated visits to same page', () => {
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: { pathname: '/test-page' }
-      });
+      window.history.pushState({}, '', '/test-page');
 
       trackPageView();
       trackPageView();
@@ -308,138 +319,3 @@ describe('Metrics Module', () => {
     });
   });
 });
-
-// Function implementations for testing
-// These mirror the actual implementations from src/js/metrics.js
-
-const STORAGE_KEY = 'affinedrift_metrics';
-const SESSION_KEY = 'affinedrift_session';
-
-function initializeMetrics() {
-  return {
-    version: 1,
-    firstVisit: new Date().toISOString(),
-    totalPageViews: 0,
-    totalSearches: 0,
-    totalBibClicks: 0,
-    searchTerms: {},
-    popularEntries: {},
-    pageViews: {},
-    conceptClicks: {},
-    sessions: 0,
-    lastVisit: null,
-  };
-}
-
-function getMetrics() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : initializeMetrics();
-  } catch {
-    return initializeMetrics();
-  }
-}
-
-function saveMetrics(metrics) {
-  try {
-    metrics.lastVisit = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(metrics));
-  } catch {
-    // Storage full or disabled - fail silently
-  }
-}
-
-function trackPageView() {
-  const metrics = getMetrics();
-  const path = window.location.pathname;
-
-  metrics.totalPageViews++;
-  metrics.pageViews[path] = (metrics.pageViews[path] || 0) + 1;
-
-  saveMetrics(metrics);
-}
-
-function trackSearch(term) {
-  if (!term || term.length < 2) return;
-
-  const metrics = getMetrics();
-  const normalizedTerm = term.toLowerCase().trim();
-
-  if (!normalizedTerm) return;
-
-  metrics.totalSearches++;
-  metrics.searchTerms[normalizedTerm] =
-    (metrics.searchTerms[normalizedTerm] || 0) + 1;
-
-  saveMetrics(metrics);
-}
-
-function trackEntryClick(entryId, entryTitle) {
-  const metrics = getMetrics();
-
-  metrics.totalBibClicks++;
-  metrics.popularEntries[entryId] = {
-    count: (metrics.popularEntries[entryId]?.count || 0) + 1,
-    title: entryTitle,
-    lastClick: new Date().toISOString(),
-  };
-
-  saveMetrics(metrics);
-}
-
-function trackConceptClick(concept) {
-  const metrics = getMetrics();
-  metrics.conceptClicks[concept] = (metrics.conceptClicks[concept] || 0) + 1;
-  saveMetrics(metrics);
-}
-
-function getStatistics() {
-  const metrics = getMetrics();
-
-  const topSearches = Object.entries(metrics.searchTerms)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
-
-  const topEntries = Object.entries(metrics.popularEntries)
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, 10)
-    .map(([id, data]) => ({ id, ...data }));
-
-  const topConcepts = Object.entries(metrics.conceptClicks)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
-
-  const topPages = Object.entries(metrics.pageViews)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
-
-  return {
-    summary: {
-      totalPageViews: metrics.totalPageViews,
-      totalSearches: metrics.totalSearches,
-      totalBibClicks: metrics.totalBibClicks,
-      totalSessions: metrics.sessions,
-      firstVisit: metrics.firstVisit,
-      lastVisit: metrics.lastVisit,
-    },
-    topSearches,
-    topEntries,
-    topConcepts,
-    topPages,
-  };
-}
-
-function clearData() {
-  localStorage.removeItem(STORAGE_KEY);
-  sessionStorage.removeItem(SESSION_KEY);
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function truncate(str, len) {
-  return str.length > len ? str.substring(0, len) + '...' : str;
-}
