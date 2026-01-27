@@ -3,10 +3,10 @@
 
 import re
 import sys
-import urllib.error
-import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+
+import requests
 
 # Add project root to sys.path for imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -48,41 +48,22 @@ def check_url(url: str, file_path: Path) -> str | None:
     """
     if url.startswith("http"):
         try:
-            req = urllib.request.Request(url, method="HEAD")
-            # Add a user agent to avoid 403s from some sites
-            req.add_header(
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/91.0.4472.124 Safari/537.36",
-            )
-            with urllib.request.urlopen(req, timeout=5) as response:  # noqa: S310
-                if response.status >= 400:
-                    return f"BROKEN (External): {url} in {file_path} (Status: {response.status})"
-                return None
-        except urllib.error.HTTPError as e:
-            # Handle 405 Method Not Allowed by retrying with GET
-            if e.code == 405:
-                try:
-                    req = urllib.request.Request(url, method="GET")
-                    req.add_header(
-                        "User-Agent",
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                        "AppleWebKit/537.36 (KHTML, like Gecko) "
-                        "Chrome/91.0.4472.124 Safari/537.36",
-                    )
-                    with urllib.request.urlopen(req, timeout=5) as response:  # noqa: S310
-                        if response.status >= 400:
-                            return (
-                                f"BROKEN (External): {url} in {file_path} "
-                                f"(Status: {response.status})"
-                            )
-                        return None
-                except urllib.error.HTTPError as e2:
-                    return f"BROKEN (External): {url} in {file_path} (Status: {e2.code})"
-                except Exception as e2:
-                    return f"BROKEN (External): {url} in {file_path} (Error: {e2})"
-            return f"BROKEN (External): {url} in {file_path} (Status: {e.code})"
+            }
+            response = requests.head(url, headers=headers, timeout=5, allow_redirects=True)
+
+            if response.status_code == 405:  # Method Not Allowed
+                response = requests.get(url, headers=headers, timeout=5, stream=True)
+                response.close()
+
+            if response.status_code >= 400:
+                return f"BROKEN (External): {url} in {file_path} (Status: {response.status_code})"
+            return None
+        except requests.exceptions.RequestException as e:
+            return f"BROKEN (External): {url} in {file_path} (Error: {e})"
         except Exception as e:
             return f"BROKEN (External): {url} in {file_path} (Error: {e})"
     else:
