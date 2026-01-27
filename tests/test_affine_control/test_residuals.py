@@ -1,4 +1,5 @@
 import unittest
+from typing import Any
 
 import numpy as np
 
@@ -10,14 +11,14 @@ from src.affine_control.residuals import (
 
 
 class TestResiduals(unittest.TestCase):
-    def test_hessian_norm_quadratic(self):
+    def test_hessian_norm_quadratic(self) -> None:
         """
         Test Hessian norm on a quadratic function f(x) = x^2.
         f'(x) = 2x, f''(x) = 2.
         M should be 2.
         """
 
-        def f(x, u):
+        def f(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
             return np.array([x[0] ** 2])
 
         x = np.array([1.0])
@@ -27,7 +28,7 @@ class TestResiduals(unittest.TestCase):
         # Numerical error tolerance
         self.assertAlmostEqual(M, 2.0, places=3)
 
-    def test_residual_bound_accumulation(self):
+    def test_residual_bound_accumulation(self) -> None:
         """
         Test simple integration of residual bound.
         """
@@ -43,7 +44,7 @@ class TestResiduals(unittest.TestCase):
         r_bound = predict_residual_bound(M_traj, dx_traj, dt_traj)
         self.assertAlmostEqual(r_bound, 0.01, places=5)
 
-    def test_monitor_switching(self):
+    def test_monitor_switching(self) -> None:
         """
         Test mode switching logic with hysteresis.
         """

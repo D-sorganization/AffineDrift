@@ -1,4 +1,5 @@
 import unittest
+from typing import Any
 
 import numpy as np
 
@@ -6,12 +7,14 @@ from src.affine_control.ddp import adaptive_timestep_ddp
 
 
 class TestAdaptiveDDP(unittest.TestCase):
-    def test_adaptive_timestep_basic(self):
+    def test_adaptive_timestep_basic(self) -> None:
         """
         Test that adaptive timestep DDP runs without errors on a simple double integrator.
         """
 
-        def double_integrator(x, u):
+        def double_integrator(
+            x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]
+        ) -> np.ndarray[Any, Any]:
             # x = [pos, vel]
             # dx = [vel, u]
             return np.array([x[1], u[0]])

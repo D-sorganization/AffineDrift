@@ -1,7 +1,15 @@
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 
-def compute_hessian_bound(f, x, u, epsilon=1e-5):
+def compute_hessian_bound(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    epsilon: float = 1e-5,
+) -> float:
     """
     Approximates the Hessian bound M for dynamics f(x, u).
     This is a simplified numerical approximation.
@@ -16,13 +24,13 @@ def compute_hessian_bound(f, x, u, epsilon=1e-5):
     Returns:
         M: Spectral norm of the Hessian
     """
-    n = len(x)
+    # n = len(x)
     # Placeholder for actual Hessian computation
     # For now, return a conservative constant or implement finite difference Hessian
     return 1.0
 
 
-def estimate_perturbation_size(x, u):
+def estimate_perturbation_size(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> float:
     """
     Estimates expected perturbation size based on noise/uncertainty model.
     """
@@ -30,14 +38,16 @@ def estimate_perturbation_size(x, u):
 
 
 def adaptive_timestep_ddp(
-    f,
-    x0,
-    xf,
-    u_init,
-    eps_residual=0.01,
-    max_iters=100,
-    compute_hessian_bound_func=compute_hessian_bound,
-):
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    xf: np.ndarray[Any, Any],
+    u_init: np.ndarray[Any, Any],
+    eps_residual: float = 0.01,
+    max_iters: int = 100,
+    compute_hessian_bound_func: Callable[
+        [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
+    ] = compute_hessian_bound,
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """
     DDP with curvature-adaptive timestep selection.
 
@@ -66,7 +76,7 @@ def adaptive_timestep_ddp(
     # Initial Forward pass (Placeholder)
     x_traj = _simulate_trajectory(f, x0, u_traj, t)
 
-    cost_old = float("inf")
+    # cost_old = float('inf')
 
     for iteration in range(max_iters):
         # Step 2: Compute local Hessian bounds along trajectory
@@ -116,7 +126,12 @@ def adaptive_timestep_ddp(
     return x_traj, u_traj, t
 
 
-def _simulate_trajectory(f, x0, u_traj, t_grid):
+def _simulate_trajectory(
+    f: Callable[..., np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    u_traj: np.ndarray[Any, Any],
+    t_grid: np.ndarray[Any, Any],
+) -> np.ndarray[Any, Any]:
     """Exponential integrator or RK4 simulation."""
     x = [x0]
     curr_x = x0
@@ -129,10 +144,12 @@ def _simulate_trajectory(f, x0, u_traj, t_grid):
     return np.array(x)
 
 
-def _resample_controls(u_old, t_old, t_new):
+def _resample_controls(
+    u_old: np.ndarray[Any, Any], t_old: np.ndarray[Any, Any], t_new: np.ndarray[Any, Any]
+) -> np.ndarray[Any, Any]:
     """Zero-order hold interpolation."""
     # Handle multi-dimensional controls
-    u_dim = u_old.shape[1] if len(u_old.shape) > 1 else 1
+    # u_dim = u_old.shape[1] if len(u_old.shape) > 1 else 1
     u_resampled = []
 
     # Simple interpolation

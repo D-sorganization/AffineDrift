@@ -1,7 +1,15 @@
+from collections.abc import Callable
+from typing import Any
+
 import numpy as np
 
 
-def compute_hessian_norm(f, x, u, epsilon=1e-4):
+def compute_hessian_norm(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    epsilon: float = 1e-4,
+) -> float:
     """
     Computes numerical approximation of the Hessian norm ||H_f||.
     H_f is the tensor [d^2f / dx_i dx_j].
@@ -12,7 +20,7 @@ def compute_hessian_norm(f, x, u, epsilon=1e-4):
 
     # Very expensive numerical Hessian for prototype
     # In practice: Use JAX or analytical derivatives
-    hessians = []
+    # hessians = []
 
     # f(x) -> [f1, f2, ...]
     # For each fk, compute H_k
@@ -21,7 +29,7 @@ def compute_hessian_norm(f, x, u, epsilon=1e-4):
     # Let's do a central difference on the Jacobian
 
     # Jacobian J(x) = df/dx
-    def jacobian(x0):
+    def jacobian(x0: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
         J = np.zeros((dx, n))
         for i in range(n):
             x_plus = x0.copy()
@@ -54,12 +62,14 @@ def compute_hessian_norm(f, x, u, epsilon=1e-4):
         H_k = H[k, :, :]
         # Spectral norm
         norm_k = np.linalg.norm(H_k, ord=2)
-        M = max(M, norm_k)
+        M = max(M, float(norm_k))
 
     return M
 
 
-def predict_residual_bound(M_traj, delta_x_traj, dt_traj):
+def predict_residual_bound(
+    M_traj: np.ndarray[Any, Any], delta_x_traj: np.ndarray[Any, Any], dt_traj: np.ndarray[Any, Any]
+) -> float:
     """
     Computes the upper bound on residual norm:
     ||r(t)|| <= sum( M_i/2 * ||delta_x_i||^2 * dt_i )
@@ -81,8 +91,8 @@ def predict_residual_bound(M_traj, delta_x_traj, dt_traj):
         if i >= len(M_traj) or i >= len(delta_x_traj):
             break
 
-        rate = (M_traj[i] / 2.0) * (delta_x_traj[i] ** 2)
-        r_accum += rate * dt_traj[i]
+        rate = float((M_traj[i] / 2.0) * (delta_x_traj[i] ** 2))
+        r_accum += rate * float(dt_traj[i])
 
     return r_accum
 
@@ -92,7 +102,9 @@ class ResidualMonitor:
     Monitors residuals and triggers mode switching.
     """
 
-    def __init__(self, eps_warning=0.01, eps_critical=0.05, n_hysteresis=3):
+    def __init__(
+        self, eps_warning: float = 0.01, eps_critical: float = 0.05, n_hysteresis: int = 3
+    ) -> None:
         self.eps_warning = eps_warning
         self.eps_critical = eps_critical
         self.n = n_hysteresis
@@ -101,7 +113,9 @@ class ResidualMonitor:
         self.low_count = 0
         self.mode = "LQR"  # LQR, MPC_WARN, MPC_FULL
 
-    def update(self, x_meas, x_nom):
+    def update(
+        self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
+    ) -> tuple[str, float]:
         """
         Update with new measurement.
         Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
@@ -135,4 +149,4 @@ class ResidualMonitor:
             # print(f"Switching mode: {self.mode} -> {next_mode} (r={r_est:.4f})")
             self.mode = next_mode
 
-        return self.mode, r_est
+        return self.mode, float(r_est)
