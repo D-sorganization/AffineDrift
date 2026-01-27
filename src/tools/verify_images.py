@@ -61,6 +61,24 @@ def check_url(url: str, file_path: Path) -> str | None:
                     return f"BROKEN (External): {url} in {file_path} (Status: {response.status})"
                 return None
         except urllib.error.HTTPError as e:
+            # If HEAD request returns 405 Method Not Allowed, retry with GET
+            if e.code == 405:
+                try:
+                    req = urllib.request.Request(url, method="GET")
+                    req.add_header(
+                        "User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/91.0.4472.124 Safari/537.36",
+                    )
+                    with urllib.request.urlopen(req, timeout=5) as response:  # noqa: S310
+                        if response.status >= 400:
+                            return f"BROKEN (External): {url} in {file_path} (Status: {response.status})"
+                        return None
+                except urllib.error.HTTPError as get_e:
+                    return f"BROKEN (External): {url} in {file_path} (Status: {get_e.code})"
+                except Exception as get_e:
+                    return f"BROKEN (External): {url} in {file_path} (Error: {get_e})"
             return f"BROKEN (External): {url} in {file_path} (Status: {e.code})"
         except Exception as e:
             return f"BROKEN (External): {url} in {file_path} (Error: {e})"
