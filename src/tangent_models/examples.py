@@ -1,11 +1,12 @@
 import numpy as np
+from typing import Any, Tuple, Union, List
 
 
 class DynamicalSystem:
-    def dynamics(self, x, u):
+    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
         raise NotImplementedError
 
-    def linearize(self, x, u):
+    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """
         Returns A, B matrices where dx_dot = A*dx + B*du
         """
@@ -13,12 +14,12 @@ class DynamicalSystem:
 
 
 class SimplePendulum(DynamicalSystem):
-    def __init__(self, m=1.0, L=1.0, g=9.81):
+    def __init__(self, m: float = 1.0, L: float = 1.0, g: float = 9.81) -> None:
         self.m = m
         self.L = L
         self.g = g
 
-    def dynamics(self, x, u):
+    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, (list, tuple, np.ndarray)) else u
@@ -28,7 +29,7 @@ class SimplePendulum(DynamicalSystem):
 
         return np.array([dtheta, domega])
 
-    def linearize(self, x, u):
+    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         theta, _ = x
 
         A = np.array([[0, 1], [-(self.g / self.L) * np.cos(theta), 0]])
@@ -45,13 +46,14 @@ class SpacecraftRendezvous(DynamicalSystem):
     State x = [rx, ry, rz, vx, vy, vz] (Relative position and velocity in LVLH)
     """
 
-    def __init__(self, mu=3.986e14, r_t=6771000.0, m=100.0):
+    def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
         self.mu = mu
         self.r_t = r_t  # Orbit radius (m), e.g., ISS ~400km altitude
         self.n = np.sqrt(mu / r_t**3)  # Mean motion
         self.m = m  # Spacecraft mass
 
-    def dynamics(self, x, u):
+    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector for SpacecraftRendezvous"
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
@@ -79,7 +81,8 @@ class SpacecraftRendezvous(DynamicalSystem):
 
         return np.array([vx, vy, vz, ax, ay, az])
 
-    def linearize(self, x, u):
+    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector"
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
 
@@ -107,13 +110,13 @@ class SpacecraftRendezvous(DynamicalSystem):
         n = self.n
 
         # Helper for gravity gradient
-        def gravity_gradient(pos_vec):
+        def gravity_gradient(pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
             # pos_vec = [rt+rx, ry, rz]
             r_norm = np.linalg.norm(pos_vec)
             # -mu * r / |r|^3
             # Jacobian is -mu/|r|^3 * (I - 3 * r * r^T / |r|^2)
             mat = -(mu / r_norm**3) * (np.eye(3) - 3 * np.outer(pos_vec, pos_vec) / r_norm**2)
-            return mat
+            return np.array(mat)
 
         pos_chaser = np.array([rt + rx, ry, rz])
         grad_grav = gravity_gradient(pos_chaser)
@@ -152,13 +155,14 @@ class PlanarQuadrotor(DynamicalSystem):
     Input u = [u1, u2] (Thrusts)
     """
 
-    def __init__(self, m=1.0, L=0.25, moment_inertia=0.01, g=9.81):
+    def __init__(self, m: float = 1.0, L: float = 0.25, moment_inertia: float = 0.01, g: float = 9.81) -> None:
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
         self.g = g
 
-    def dynamics(self, x, u):
+    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
 
@@ -171,7 +175,8 @@ class PlanarQuadrotor(DynamicalSystem):
 
         return np.array([vx, vy, omega, ax, ay, alpha])
 
-    def linearize(self, x, u):
+    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
         T = u1 + u2
@@ -207,14 +212,15 @@ class RobotArm(DynamicalSystem):
     Input u = [tau1, tau2]
     """
 
-    def __init__(self, m1=1.0, m2=1.0, l1=1.0, l2=1.0, g=9.81):
+    def __init__(self, m1: float = 1.0, m2: float = 1.0, l1: float = 1.0, l2: float = 1.0, g: float = 9.81) -> None:
         self.m1 = m1
         self.m2 = m2
         self.l1 = l1
         self.l2 = l2
         self.g = g
 
-    def dynamics(self, x, u):
+    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector"
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
 
@@ -250,7 +256,8 @@ class RobotArm(DynamicalSystem):
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 
-    def linearize(self, x, u):
+    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        assert not isinstance(u, (float, int)), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
         n = 4
@@ -269,8 +276,9 @@ class RobotArm(DynamicalSystem):
             A[:, i] = (f_pert - f0) / epsilon
 
         # Compute B
+        u_arr = np.array(u, dtype=float)
         for i in range(m):
-            u_pert = u.copy()
+            u_pert = u_arr.copy()
             u_pert[i] += epsilon
             f_pert = self.dynamics(x, u_pert)
             B[:, i] = (f_pert - f0) / epsilon

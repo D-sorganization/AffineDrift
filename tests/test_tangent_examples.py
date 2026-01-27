@@ -14,7 +14,7 @@ from src.tangent_models.examples import (
 )
 
 
-def test_simple_pendulum():
+def test_simple_pendulum() -> None:
     sys = SimplePendulum()
     x = np.array([0.1, 0.0])
     u = np.array([0.0])
@@ -26,7 +26,7 @@ def test_simple_pendulum():
     assert B.shape == (2, 1)
 
 
-def test_spacecraft_rendezvous():
+def test_spacecraft_rendezvous() -> None:
     sys = SpacecraftRendezvous()
     x = np.zeros(6)
     u = np.zeros(3)
@@ -44,7 +44,7 @@ def test_spacecraft_rendezvous():
     # Let's just check shapes and runnability for now, deeper math verification is in the article text/logic.
 
 
-def test_planar_quadrotor():
+def test_planar_quadrotor() -> None:
     sys = PlanarQuadrotor()
     x = np.zeros(6)
     u = np.zeros(2)
@@ -56,7 +56,7 @@ def test_planar_quadrotor():
     assert B.shape == (6, 2)
 
 
-def test_robot_arm():
+def test_robot_arm() -> None:
     sys = RobotArm()
     x = np.array([0.1, 0.1, 0.0, 0.0])
     u = np.zeros(2)
