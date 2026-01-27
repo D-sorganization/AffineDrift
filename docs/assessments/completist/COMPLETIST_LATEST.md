@@ -1,35 +1,62 @@
-# Completist Audit Report - 2026-01-27
+# Completist Audit Report: 2026-01-27
 
-## 1. Executive Summary
+## Executive Summary
 
-This audit verified the state of incomplete implementations within the repository. While previous critical workflow issues (Jules CLI API migration TODOs) have been resolved via file deletion, significant "Coming Soon" and "Under Development" content remains in user-facing pages. Additionally, the audit data files (`.jules/completist_data/`) are stale and do not reflect the current codebase state, representing a technical debt in the audit process itself.
+The Completist Agent performed a comprehensive audit of the AffineDrift codebase on 2026-01-27. The audit found **critical incomplete implementations** in user-facing content, specifically explicit "Coming Soon" placeholders on navigation-accessible pages. While the core application logic appears stable and free of `NotImplementedError` in active paths, the website experience is degraded by these visible gaps. Additionally, extensive use of placeholder images persists in resource sections.
 
-## 2. Critical Incomplete (Blocking)
+## 1. Critical Incomplete (Blocking)
 
-The following items are visible to end-users and indicate missing functionality or content:
+The following items are considered **Critical** because they are visible to end-users on the deployed website and indicate broken or missing functionality.
 
-### User-Facing Placeholders
-*   **`tools.qmd` (Programs & Tools):**
-    *   "Additional Biomechanics Tools" section is marked "Under Development".
-    *   "Control Theory Simulation Suite" section is marked "Under Development".
-    *   "General Purpose Calculators" section is marked "Under Development".
-*   **`daydreams-doodles.qmd` (Daydreams & Doodles):**
-    *   "Experimental Tools & Visualizations" section lists future projects (Unit Converter, RRT Path Planner, Solar System Model, Interactive Games) as "planning and development phase".
-*   **Resource Pages (`resources-*.qmd`):**
-    *   `resources-books.qmd`: Multiple book entries use `static/images/book_placeholder.svg`.
-    *   `resources-software.qmd`: Uses `static/images/placeholder.svg`.
-    *   `resources-researchers.qmd`: Uses `static/images/placeholder.svg`.
+### 1.1 User-Facing "Coming Soon" Placeholders
+The following pages contain explicit "Coming Soon" sections visible to end users:
 
-## 3. Feature Gaps
+*   **Tools (`tools.qmd`)**:
+    *   **Unit Converter**: Marked "Coming Soon".
+    *   **RRT Path Planner**: Marked "Coming Soon".
+    *   **Solar System Model**: Marked "Coming Soon".
+    *   **Games**: Marked "Coming Soon".
+    *   **Control Theory Tools**: Placeholder text present.
+    *   **General Purpose Calculators**: Placeholder text present.
+*   **Contact (`contact.qmd`)**:
+    *   **Twitter/X**: Link marked "(Coming Soon)".
+    *   **LinkedIn**: Link marked "(Coming Soon)".
+*   **Daydreams & Doodles (`daydreams-doodles.qmd`)**:
+    *   Multiple project entries marked "Coming Soon".
 
-*   **Audit System:** The file-based audit data in `.jules/completist_data/` (`todo_markers.txt`, `incomplete_docs.txt`, etc.) is stale. It referenced deleted workflow files and outdated content in `contact.qmd`. This indicates the Completist data collection step needs to be re-run or fixed.
+**Impact:** Users navigating to these pages encounter dead ends, reducing trust in the platform.
 
-## 4. Content Gaps
+### 1.2 Broken or Missing Resources
+*   **Streamlit Integration**: `archive/handcrafted-site/wrist-universal-joint.html` contains an unreplaced placeholder for a Streamlit app URL (`<!-- TODO: Replace the placeholder Streamlit URL... -->`).
+*   **Startup Launcher Deployment**: The `startup-launcher.js` script is referenced in `_quarto.yml` headers but is **not** listed in the `resources` configuration. This confirms the previously reported issue that the script is likely excluded from build artifacts, leading to 404 errors on the live site.
 
-*   **`contact.qmd`:** The page explicitly notes "Additional social media channels will be added in the future," replacing specific "Coming Soon" links for Twitter/X and LinkedIn found in previous audits.
+## 2. Feature Gaps
 
-## 5. Technical Debt
+The following features are referenced in code or documentation but are not fully implemented:
 
-*   **Archive:** `archive/handcrafted-site/wrist-universal-joint.html` contains a placeholder for a Streamlit app (`<!-- TODO: Replace the placeholder Streamlit URL... -->`). As an archived file, this is low priority but remains an incomplete artifact.
-*   **False Positives:** `src/tools/code_quality_check.py` and `tools/matlab_utilities/scripts/matlab_quality_check.py` contain regex patterns that trigger "TODO/placeholder" warnings when scanned by grep.
-*   **Pass Statements:** Analyzed `scripts/assess_repo.py` and `src/tools/code_quality_check.py`. `pass` statements found are either in valid structural contexts (empty else/except with comments) or explicitly relaxed checks.
+*   **Interactive Tools**: The tools listed in `tools.qmd` (Unit Converter, RRT Planner, etc.) appear to be planned but unimplemented.
+*   **Missing Tests**: Coverage for these "Coming Soon" areas is naturally 0%.
+
+## 3. Content Gaps (Website Specific)
+
+*   **Placeholder Images**:
+    *   **`resources-books.qmd`**: Extensive use of `book_placeholder.svg` for book covers. Almost all entries rely on this placeholder or an `onerror` fallback to it.
+    *   **`resources-researchers.qmd`**: Widespread use of `onerror="this.src='static/images/placeholder.svg'"` for researcher profile images, suggesting many external image links may be unstable or missing.
+
+## 4. Technical Debt
+
+*   **HTML TODOs**: `archive/handcrafted-site/wrist-universal-joint.html` contains explicit TODO comments regarding deployment configuration.
+*   **False Positive Noise**: The codebase contains scanners (`src/tools/code_quality_check.py`) that trigger their own "TODO" detections. Future audits should refine regex patterns to exclude these.
+
+## 5. Audit Statistics
+
+*   **NotImplementedError in Core**: 0
+*   **User-Facing Placeholder Pages**: 3 (`tools`, `contact`, `daydreams`)
+*   **Actionable TODOs**: 1 (Streamlit URL)
+
+## Recommendations
+
+1.  **Immediate Remediation**: Remove "Coming Soon" links from `contact.qmd` and `tools.qmd` if the features are not imminent. It is better to not list a feature than to list it as broken.
+2.  **Fix Deployment Config**: Add `src/js/startup-launcher.js` (or the correct source path) to the `project.resources` list in `_quarto.yml` to ensure it is copied to the `docs/` output.
+3.  **Content Fix**: Sourcing actual images for `resources-books.qmd` and `resources-researchers.qmd` should be prioritized to improve visual quality.
+4.  **Cleanup**: Update `archive/handcrafted-site/wrist-universal-joint.html` to either point to a live app or remove the iframe placeholder if the app is not deployed.

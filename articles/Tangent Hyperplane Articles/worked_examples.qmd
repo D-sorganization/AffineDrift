@@ -1,0 +1,218 @@
+---
+title: "Worked Examples and Computational Implementation"
+subtitle: "Putting Tangent Hyperplanes into Practice"
+format:
+  html:
+    toc: true
+    code-fold: false
+jupyter: python3
+---
+
+## Introduction
+
+This article provides concrete, computational examples of the Tangent Hyperplane framework. We move from abstract theory to numerical implementation, demonstrating how exact local superposition manifests in complex physical systems.
+
+We utilize a Python implementation of four dynamical systems:
+
+1.  **Simple Pendulum** (Baseline)
+2.  **Spacecraft Rendezvous** (Orbital Mechanics)
+3.  **2-Link Robot Arm** (Multibody Dynamics)
+4.  **Planar Quadrotor** (Underactuated Robotics)
+
+The code for these models is available in `src.tangent_models`.
+
+## Computational Implementation
+
+We define a standard interface for our dynamical systems. Each system implements a `dynamics(x, u)` method representing $\dot{x} = f(x, u)$ and a `linearize(x, u)` method returning the Jacobian matrices $A$ and $B$.
+
+```{python}
+import sys
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Ensure src is in path
+# Quarto executes in the file's directory, so we need to add the project root
+project_root = os.path.abspath(os.path.join(os.getcwd(), "../../.."))
+if project_root not in sys.path:
+    sys.path.append(project_root)
+# Fallback if running from root
+if os.path.abspath('.') not in sys.path:
+    sys.path.append(os.path.abspath('.'))
+
+from src.tangent_models.examples import SimplePendulum, SpacecraftRendezvous, RobotArm, PlanarQuadrotor
+
+# Utility for simulation
+def simulate(system, x0, u_func, t_span, dt=0.01):
+    t_eval = np.arange(t_span[0], t_span[1], dt)
+    x = x0.copy()
+    xs = [x]
+    for t in t_eval[:-1]:
+        u = u_func(t, x)
+        # RK4 Integration
+        k1 = system.dynamics(x, u)
+        k2 = system.dynamics(x + 0.5 * dt * k1, u)
+        k3 = system.dynamics(x + 0.5 * dt * k2, u)
+        k4 = system.dynamics(x + dt * k3, u)
+        x = x + (dt / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
+        xs.append(x)
+    return t_eval, np.array(xs)
+```
+
+## Spacecraft Rendezvous
+
+The relative motion of two spacecraft is often approximated by the linear Hill-Clohessy-Wiltshire (HCW) equations. Here, we start with the full nonlinear relative equations of motion and show how the tangent space linearization naturally recovers the HCW structure at the origin, but provides exact local dynamics everywhere else.
+
+### Nonlinear Dynamics
+
+The equations of motion for a chaser spacecraft relative to a target in a circular orbit are:
+
+$$
+\ddot{x} - 2n\dot{y} - n^2x = -\frac{\mu(r_t+x)}{r_c^3} + \frac{\mu}{r_t^2} + \frac{F_x}{m}
+$$
+$$
+\ddot{y} + 2n\dot{x} - n^2y = -\frac{\mu y}{r_c^3} + \frac{F_y}{m}
+$$
+$$
+\ddot{z} = -\frac{\mu z}{r_c^3} + \frac{F_z}{m}
+$$
+
+### Tangent Space Linearization
+
+We compare the full nonlinear trajectory with the prediction from the tangent space linearization at the initial point (which corresponds to the HCW equations if linearized about the origin).
+
+```{python}
+#| label: fig-spacecraft
+#| fig-cap: "Spacecraft Relative Motion: Nonlinear vs Linear Prediction"
+
+sc = SpacecraftRendezvous()
+# Initial state: 100m radial offset, small outward velocity
+x0 = np.array([100.0, 0.0, 0.0, 0.1, 0.0, 0.0])
+u = np.zeros(3)
+
+# 1. Simulate Nonlinear System
+t, x_nl = simulate(sc, x0, lambda t, x: u, [0, 2000])
+
+# 2. Predict using Tangent Space at Origin (HCW Equations)
+# Linearizing about the target orbit (zero state)
+A_hcw, B_hcw = sc.linearize(np.zeros(6), np.zeros(3))
+
+class LinearSystem:
+    def __init__(self, A, B):
+        self.A = A
+        self.B = B
+    def dynamics(self, x, u):
+        return self.A @ x + self.B @ u
+
+lin_sys = LinearSystem(A_hcw, B_hcw)
+t, x_lin = simulate(lin_sys, x0, lambda t, x: u, [0, 2000])
+
+plt.figure(figsize=(10, 6))
+plt.plot(x_nl[:, 1], x_nl[:, 0], label='Nonlinear (True)')
+plt.plot(x_lin[:, 1], x_lin[:, 0], '--', label='Tangent Space (HCW)')
+plt.xlabel('Along-Track (y) [m]')
+plt.ylabel('Radial (x) [m]')
+plt.title('Spacecraft Relative Motion Trajectories')
+plt.legend()
+plt.grid(True)
+plt.axis('equal')
+plt.show()
+```
+
+The divergence between the solid and dashed lines represents the **drift**, or the accumulation of residuals from the tangent plane approximation over time.
+
+## Robot Arm
+
+Multibody systems like robot arms have highly nonlinear mass matrices and Coriolis forces.
+
+### 2-Link Planar Arm Dynamics
+
+The state is $x = [q_1, q_2, \dot{q}_1, \dot{q}_2]^T$. The inputs are joint torques $\tau_1, \tau_2$.
+
+```{python}
+#| label: fig-robot
+#| fig-cap: "Robot Arm Free Fall: Nonlinear vs Linear"
+
+arm = RobotArm()
+# Start horizontal, zero velocity
+x0 = np.array([0.0, 0.0, 0.0, 0.0])
+u = np.zeros(2)
+
+# Simulate
+t, x_arm_nl = simulate(arm, x0, lambda t, x: u, [0, 2.0])
+
+# Linearize about vertical equilibrium (stable)
+# x_eq = [0, 0, 0, 0] (hanging down)
+# Note: x0 is far from equilibrium!
+# Let's linearize about x0 (Instantaneous Tangent Space) and see how valid it is for a short time.
+A_inst, B_inst = arm.linearize(x0, u)
+lin_sys_arm = LinearSystem(A_inst, B_inst)
+t_lin, x_arm_lin = simulate(lin_sys_arm, np.zeros(4), lambda t, x: u, [0, 2.0])
+# Note: x_arm_lin is deviation from x0. So total state = x0 + x_arm_lin
+
+x_total_lin = x0 + x_arm_lin
+
+plt.figure(figsize=(10, 6))
+plt.plot(t, x_arm_nl[:, 0], label='Nonlinear q1')
+plt.plot(t, x_total_lin[:, 0], '--', label='Tangent Space q1')
+plt.xlabel('Time (s)')
+plt.ylabel('Angle q1 (rad)')
+plt.title('Robot Arm Free Fall from Horizontal')
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+Notice how the tangent space prediction (dashed) matches the true nonlinear dynamics (solid) perfectly at $t=0$ and diverges as time progresses. This illustrates that **linearization is exact in the infinitesimal**.
+
+## Quadrotor
+
+The planar quadrotor is an underactuated system where the translational motion is coupled to the rotational motion.
+
+```{python}
+#| label: fig-quad
+#| fig-cap: "Quadrotor Response"
+
+quad = PlanarQuadrotor()
+x0 = np.zeros(6)
+# Apply slightly different thrusts to induce rotation and translation
+u_control = np.array([0.55 * quad.m * quad.g, 0.45 * quad.m * quad.g])
+
+t, x_quad = simulate(quad, x0, lambda t, x: u_control, [0, 5.0])
+
+plt.figure(figsize=(10, 6))
+plt.plot(x_quad[:, 0], x_quad[:, 1])
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.title('Quadrotor Trajectory')
+plt.grid(True)
+plt.axis('equal')
+plt.show()
+```
+
+## Comparison with Other Methods
+
+### vs. Extended Kalman Filter (EKF)
+
+The **EKF** uses the tangent space linearization $(A, B)$ to propagate covariance.
+*   **Tangent Hyperplane View:** The EKF assumes the probability distribution evolves entirely within the moving tangent space.
+*   **Difference:** Our framework emphasizes that the *mean* trajectory itself generates the sequence of tangent spaces. EKF is an application of this framework to stochastic estimation.
+
+### vs. Trajectory Linearization
+
+**Trajectory Linearization Control (TLC)** explicitly designs a controller based on the linearization along a nominal trajectory $\bar{x}(t)$.
+*   **Tangent Hyperplane View:** TLC is the direct control-theoretic application of the "Moving Tangent Spaces" concept. The gain scheduling in TLC is exactly the process of updating the linear operator as the system moves through the tangent bundle.
+
+## Problem Sets
+
+### Problem 1: The Jacobian of Gravity
+Derive the analytical Jacobian of the gravitational acceleration vector $g(r) = -\frac{\mu r}{\|r\|^3}$ used in the Spacecraft Rendezvous example. Verify your result against the numerical linearization provided in the code.
+
+### Problem 2: Singularity Analysis
+For the Robot Arm, identify the states $x$ where the mass matrix $M(q)$ becomes singular or where the linearization loses controllability (if any).
+
+### Problem 3: Quadrotor Flatness
+Show that the planar quadrotor is differentially flat. Use the tangent space linearization to design a local LQR controller that stabilizes the quadrotor at a hover position.
+
+### Problem 4: Pendulum Swing-Up
+Implement an energy-based swing-up controller for the simple pendulum. Analyze the tangent space linearization at the unstable top equilibrium and explain why a linear controller can stabilize it *once near* the top, but cannot swing it up from the bottom.

@@ -1622,6 +1622,14 @@ function scrollToTop() {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     scrollToTop,
+    debounce,
+    generateUniqueId,
+    getScrollOffset,
+    runOnDomReady,
+    runWhenIdle,
+    MAX_ID_GENERATION_ATTEMPTS,
+    MATHJAX_RENDER_DELAY_MS,
+    CRITICS_CORNER_PADDING_OFFSET,
   };
 }
 
