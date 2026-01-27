@@ -1,12 +1,17 @@
+from typing import Any
+
 import numpy as np
-from typing import Any, Tuple, Union, List
 
 
 class DynamicalSystem:
-    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+    def dynamics(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> np.ndarray[Any, Any]:
         raise NotImplementedError
 
-    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    def linearize(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """
         Returns A, B matrices where dx_dot = A*dx + B*du
         """
@@ -19,7 +24,9 @@ class SimplePendulum(DynamicalSystem):
         self.L = L
         self.g = g
 
-    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+    def dynamics(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> np.ndarray[Any, Any]:
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, (list, tuple, np.ndarray)) else u
@@ -29,7 +36,9 @@ class SimplePendulum(DynamicalSystem):
 
         return np.array([dtheta, domega])
 
-    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    def linearize(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         theta, _ = x
 
         A = np.array([[0, 1], [-(self.g / self.L) * np.cos(theta), 0]])
@@ -52,8 +61,12 @@ class SpacecraftRendezvous(DynamicalSystem):
         self.n = np.sqrt(mu / r_t**3)  # Mean motion
         self.m = m  # Spacecraft mass
 
-    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
-        assert not isinstance(u, (float, int)), "Control input must be a vector for SpacecraftRendezvous"
+    def dynamics(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> np.ndarray[Any, Any]:
+        assert not isinstance(
+            u, (float, int)
+        ), "Control input must be a vector for SpacecraftRendezvous"
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
@@ -81,7 +94,9 @@ class SpacecraftRendezvous(DynamicalSystem):
 
         return np.array([vx, vy, vz, ax, ay, az])
 
-    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    def linearize(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         assert not isinstance(u, (float, int)), "Control input must be a vector"
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
@@ -155,13 +170,17 @@ class PlanarQuadrotor(DynamicalSystem):
     Input u = [u1, u2] (Thrusts)
     """
 
-    def __init__(self, m: float = 1.0, L: float = 0.25, moment_inertia: float = 0.01, g: float = 9.81) -> None:
+    def __init__(
+        self, m: float = 1.0, L: float = 0.25, moment_inertia: float = 0.01, g: float = 9.81
+    ) -> None:
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
         self.g = g
 
-    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+    def dynamics(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> np.ndarray[Any, Any]:
         assert not isinstance(u, (float, int)), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
@@ -175,7 +194,9 @@ class PlanarQuadrotor(DynamicalSystem):
 
         return np.array([vx, vy, omega, ax, ay, alpha])
 
-    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    def linearize(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         assert not isinstance(u, (float, int)), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
@@ -212,14 +233,18 @@ class RobotArm(DynamicalSystem):
     Input u = [tau1, tau2]
     """
 
-    def __init__(self, m1: float = 1.0, m2: float = 1.0, l1: float = 1.0, l2: float = 1.0, g: float = 9.81) -> None:
+    def __init__(
+        self, m1: float = 1.0, m2: float = 1.0, l1: float = 1.0, l2: float = 1.0, g: float = 9.81
+    ) -> None:
         self.m1 = m1
         self.m2 = m2
         self.l1 = l1
         self.l2 = l2
         self.g = g
 
-    def dynamics(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> np.ndarray[Any, Any]:
+    def dynamics(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> np.ndarray[Any, Any]:
         assert not isinstance(u, (float, int)), "Control input must be a vector"
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
@@ -256,7 +281,9 @@ class RobotArm(DynamicalSystem):
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 
-    def linearize(self, x: np.ndarray[Any, Any], u: Union[np.ndarray[Any, Any], float, List[float]]) -> Tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    def linearize(
+        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         assert not isinstance(u, (float, int)), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
