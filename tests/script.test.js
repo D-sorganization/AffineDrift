@@ -2,6 +2,17 @@
  * Tests for script.js utility functions
  */
 
+const {
+  debounce,
+  generateUniqueId,
+  getScrollOffset,
+  runOnDomReady,
+  runWhenIdle,
+  MAX_ID_GENERATION_ATTEMPTS,
+  MATHJAX_RENDER_DELAY_MS,
+  CRITICS_CORNER_PADDING_OFFSET,
+} = require('../script.js');
+
 describe('Utility Functions', () => {
   describe('debounce', () => {
     beforeEach(() => {
@@ -272,85 +283,4 @@ describe('Constants', () => {
     expect(MATHJAX_RENDER_DELAY_MS).toBe(100);
     expect(CRITICS_CORNER_PADDING_OFFSET).toBe(50);
   });
-
-  test('should have correct scroll offsets', () => {
-    expect(HEADER_OFFSET).toBe(140);
-    expect(TOC_SCROLL_OFFSET).toBe(140);
-  });
 });
-
-// Helper function definitions for testing
-// These would normally be imported from script.js
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    const context = this;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(context, args), wait);
-  };
-}
-
-function generateUniqueId(text, usedIds) {
-  let baseId = text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-  if (!baseId) baseId = "section";
-
-  let id = baseId;
-  let counter = 1;
-
-  const exists = (candidateId) => {
-    return (
-      usedIds.has(candidateId) || document.getElementById(candidateId) !== null
-    );
-  };
-
-  if (!exists(id)) {
-    return id;
-  }
-
-  while (exists(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
-    id = `${baseId}-${counter}`;
-    counter++;
-  }
-
-  if (usedIds.has(id)) {
-    id = `${baseId}-${Date.now()}`;
-  }
-
-  return id;
-}
-
-function getScrollOffset() {
-  if (typeof window !== "undefined") {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(
-      "--scroll-offset",
-    );
-    return value ? parseInt(value) : 140;
-  }
-  return 140;
-}
-
-function runOnDomReady(callback) {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", callback);
-  } else {
-    callback();
-  }
-}
-
-function runWhenIdle(callback) {
-  if (typeof requestIdleCallback !== "undefined") {
-    requestIdleCallback(callback);
-  } else {
-    setTimeout(callback, 0);
-  }
-}
-
-// Constants
-const MAX_ID_GENERATION_ATTEMPTS = 100;
-const MATHJAX_RENDER_DELAY_MS = 100;
-const CRITICS_CORNER_PADDING_OFFSET = 50;
-let HEADER_OFFSET = 140;
-let TOC_SCROLL_OFFSET = 140;
