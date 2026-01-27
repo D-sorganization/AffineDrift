@@ -127,7 +127,10 @@ def adaptive_timestep_ddp(
 
 
 def _simulate_trajectory(
-    f: Callable[..., np.ndarray[Any, Any]], x0: np.ndarray[Any, Any], u_traj: np.ndarray[Any, Any], t_grid: np.ndarray[Any, Any]
+    f: Callable[..., np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    u_traj: np.ndarray[Any, Any],
+    t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
     """Exponential integrator or RK4 simulation."""
     x = [x0]
@@ -141,7 +144,9 @@ def _simulate_trajectory(
     return np.array(x)
 
 
-def _resample_controls(u_old: np.ndarray[Any, Any], t_old: np.ndarray[Any, Any], t_new: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+def _resample_controls(
+    u_old: np.ndarray[Any, Any], t_old: np.ndarray[Any, Any], t_new: np.ndarray[Any, Any]
+) -> np.ndarray[Any, Any]:
     """Zero-order hold interpolation."""
     # Handle multi-dimensional controls
     # u_dim = u_old.shape[1] if len(u_old.shape) > 1 else 1

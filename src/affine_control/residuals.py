@@ -113,7 +113,9 @@ class ResidualMonitor:
         self.low_count = 0
         self.mode = "LQR"  # LQR, MPC_WARN, MPC_FULL
 
-    def update(self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]) -> tuple[str, float]:
+    def update(
+        self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
+    ) -> tuple[str, float]:
         """
         Update with new measurement.
         Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)

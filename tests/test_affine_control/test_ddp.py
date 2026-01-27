@@ -12,7 +12,9 @@ class TestAdaptiveDDP(unittest.TestCase):
         Test that adaptive timestep DDP runs without errors on a simple double integrator.
         """
 
-        def double_integrator(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+        def double_integrator(
+            x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]
+        ) -> np.ndarray[Any, Any]:
             # x = [pos, vel]
             # dx = [vel, u]
             return np.array([x[1], u[0]])
