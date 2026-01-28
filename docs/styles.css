@@ -208,6 +208,10 @@ a:hover {
   align-items: start;
 }
 
+.standard-page-layout--single {
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
 /* Ensure grid items align at top */
 .standard-page-layout > * {
   align-self: start;
@@ -661,7 +665,9 @@ nav .container {
 
 .accordion-header {
   width: 100%;
+  min-width: 100%;
   padding: 1.25rem;
+  padding-right: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1379,6 +1385,74 @@ h3:hover .anchor-link,
   fill: currentcolor;
 }
 
+/* Export to PDF Button */
+.export-to-pdf {
+  position: fixed;
+  bottom: 6rem;
+  right: 2rem;
+  background: var(--accent-blue);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  border: none;
+  z-index: 900;
+}
+
+.export-to-pdf.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.export-to-pdf:hover,
+.export-to-pdf:focus {
+  transform: translateY(-2px);
+  background: var(--primary-blue);
+}
+
+.export-to-pdf:focus {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.export-to-pdf svg {
+  width: 24px;
+  height: 24px;
+  fill: currentcolor;
+}
+
+.export-to-pdf .tooltip {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-dark);
+  color: white;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  pointer-events: none;
+}
+
+.export-to-pdf:hover .tooltip,
+.export-to-pdf:focus .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* External Link Indicator */
 .external-link::after {
   content: none;
@@ -1497,6 +1571,7 @@ h3:hover .anchor-link,
   .right-sidebar,
   .home-sidebar,
   .back-to-top,
+  .export-to-pdf,
   .skip-to-content,
   .copy-btn,
   .nav-toggle,
@@ -2141,10 +2216,11 @@ form.contact-form .form-group textarea {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 5rem;
+  gap: var(--sidebar-gap);
   max-width: 100%;
   margin: 0 auto;
   padding: 1rem 0;
+  width: 100%;
 }
 
 .home-sidebar {
@@ -2360,14 +2436,7 @@ form.contact-form .form-group textarea {
 #quarto-header .navbar-title,
 h1.title,
 .title {
-  color: #ffffff !important;
-}
-
-/* Fix: Accordion Header Width */
-.accordion-header {
-  width: 100%;
-  min-width: 100%;
-  padding-right: 1rem;
+  color: #fff !important;
 }
 
 .accordion-header span:first-child {
@@ -2376,23 +2445,18 @@ h1.title,
 }
 
 /* Fix: Bibliography Layout */
+
 /* Ensure the grid doesn't collapse the main content too aggressively */
-@media (min-width: 1200px) {
+@media (width >= 1200px) {
   .standard-page-layout {
     grid-template-columns: 250px 1fr 300px; /* Slightly reduced sidebars */
   }
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .standard-page-layout {
-     grid-template-columns: 220px 1fr 0; /* Hide right sidebar on medium screens if empty or push it down? */
-     /* Better: keep it 3 col but shrink sidebars */
-  }
-  
-  /* If right sidebar is details, we need it. */
-  .standard-page-layout {
-      grid-template-columns: 200px 1fr 250px;
-      gap: 1.5rem;
+    grid-template-columns: 200px 1fr 250px;
+    gap: 1.5rem;
   }
 }
 
@@ -2400,6 +2464,7 @@ h1.title,
 /* ---
    Critics' Comments Section
    Refined for 'AffineDrift' - Critics Agent
+   Verified for usage in drift-components-wrench-double-pendulum.qmd
    --- */
 .critics-comments {
   margin: 2rem 0;
@@ -2535,4 +2600,429 @@ h1.title,
   margin-top: 1rem;
   font-style: italic;
   opacity: 0.8;
+}
+
+/* ---
+   Home Page 3-Column Layout (Issues #868, #871)
+   --- */
+.home-layout-3col {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
+  gap: var(--sidebar-gap);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.home-toc {
+  width: var(--sidebar-width);
+}
+
+.home-toc .sidebar-sticky-content {
+  position: sticky;
+  top: calc(var(--header-offset) + 2rem);
+}
+
+.home-toc .toc-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.home-toc .toc-links li {
+  margin-bottom: 0.5rem;
+}
+
+.home-toc .toc-links a {
+  display: block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.home-toc .toc-links a:hover,
+.home-toc .toc-links a.active {
+  color: var(--primary-blue);
+  border-left-color: var(--primary-blue);
+  background-color: var(--light-blue);
+}
+
+/* ---
+   Collapsible Sidebar Sections (Issue #868)
+   --- */
+.collapsible-section {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-section-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-section-toggle h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.sidebar-section-toggle:hover {
+  background-color: rgb(0 0 0 / 0.03);
+}
+
+.sidebar-section-toggle:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.toggle-icon {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.sidebar-section-content.show {
+  max-height: 500px;
+  transition: max-height 0.3s ease-in;
+}
+
+/* ---
+   Featured Content Grid (Issue #871)
+   --- */
+.featured-section {
+  margin: 2rem 0;
+}
+
+.featured-section h2 {
+  margin-bottom: 1.5rem;
+  color: var(--primary-dark);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.featured-card {
+  display: block;
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.featured-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.featured-card-content h3 {
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+
+.featured-card-content p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ---
+   Quick Links Grid (Issue #871)
+   --- */
+.quick-links-section {
+  margin: 2rem 0;
+}
+
+.quick-links-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.quick-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.quick-link-card:hover {
+  background: var(--light-blue);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.quick-link-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.quick-link-text {
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ---
+   Welcome and Approach Sections (Issue #871)
+   --- */
+.welcome-section {
+  margin-bottom: 2rem;
+}
+
+.welcome-intro p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.math-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--bg-alt);
+  border-radius: 8px;
+}
+
+.math-section h2 {
+  margin-top: 0;
+}
+
+.approach-section {
+  margin: 2rem 0;
+}
+
+.approach-content p {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+/* ---
+   Mobile Responsive Design (Issue #870)
+   --- */
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+}
+
+.mobile-menu-toggle svg {
+  width: 24px;
+  height: 24px;
+  fill: currentcolor;
+}
+
+/* Mobile Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
+  z-index: 999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Home Page 3-Column Responsive */
+@media (width <= 1200px) {
+  .home-layout-3col {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .home-toc {
+    display: none;
+  }
+}
+
+@media (width <= 1024px) {
+  .home-layout-3col {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .home-sidebar {
+    width: 100%;
+    order: 2;
+  }
+
+  .home-content {
+    order: 1;
+  }
+
+  .home-toc {
+    display: none;
+  }
+
+  /* On tablet, show sidebar sections in grid */
+  .home-sidebar .sidebar-sticky-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .collapsible-section {
+    margin-bottom: 0;
+  }
+
+  /* Expand all sections on tablet */
+  .sidebar-section-content {
+    max-height: 500px;
+  }
+
+  .sidebar-section-toggle .toggle-icon {
+    display: none;
+  }
+}
+
+@media (width <= 768px) {
+  /* Mobile: Show hamburger menu */
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  /* Mobile Sidebar Slide-in */
+  .home-sidebar {
+    position: fixed;
+    left: -320px;
+    top: 0;
+    height: 100vh;
+    width: 300px;
+    z-index: 1000;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    border-radius: 0;
+    padding-top: 4rem;
+  }
+
+  .home-sidebar.open {
+    left: 0;
+  }
+
+  .home-sidebar .sidebar-sticky-content {
+    display: block;
+  }
+
+  .collapsible-section {
+    margin-bottom: 0.5rem;
+  }
+
+  .sidebar-section-toggle .toggle-icon {
+    display: inline;
+  }
+
+  .sidebar-section-content {
+    max-height: 0;
+  }
+
+  .sidebar-section-content.show {
+    max-height: 500px;
+  }
+
+  /* Featured grid adjustments */
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Welcome header adjustments */
+  .welcome-header h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-header .subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* ---
+   Placeholder Content Styling (Issue #869)
+   --- */
+.coming-soon-notice {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--bg-alt);
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.coming-soon-notice h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.coming-soon-notice p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.page-intro {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.page-intro .lead {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.7;
 }

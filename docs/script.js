@@ -157,7 +157,9 @@ runOnDomReady(function () {
     link.addEventListener("click", () => {
       if (navbarCollapse && navbarCollapse.classList.contains("show")) {
         const collapseInstance =
-          window.bootstrap?.Collapse?.getInstance?.(navbarCollapse);
+          window.bootstrap?.Collapse?.getInstance
+            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+            : null;
         if (collapseInstance) {
           collapseInstance.hide();
         } else {
@@ -776,6 +778,68 @@ runOnDomReady(function () {
   // Initial check
   updateScrollProgress();
 
+  // Export to PDF Button
+  const exportToPdfBtn = document.createElement("button");
+  exportToPdfBtn.className = "export-to-pdf";
+  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
+  exportToPdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="12" y1="18" x2="12" y2="12"></line>
+      <line x1="9" y1="15" x2="15" y2="15"></line>
+    </svg>
+    <span class="tooltip">Export to PDF</span>
+  `;
+  document.body.appendChild(exportToPdfBtn);
+
+  // Show/hide export button based on scroll (same as back-to-top)
+  function updateExportButtonVisibility() {
+    const scrollTop = window.scrollY;
+    const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
+    if (shouldBeVisible) {
+      exportToPdfBtn.classList.add("visible");
+    } else {
+      exportToPdfBtn.classList.remove("visible");
+    }
+  }
+
+  // Update visibility on scroll
+  window.addEventListener(
+    "scroll",
+    debounce(updateExportButtonVisibility, 100),
+    { passive: true },
+  );
+
+  // Initial visibility check
+  updateExportButtonVisibility();
+
+  // Export to PDF functionality
+  exportToPdfBtn.addEventListener("click", () => {
+    // Wait for MathJax to finish rendering if present
+    const mathjaxDelay =
+      typeof MathJax !== "undefined" ? MATHJAX_RENDER_DELAY_MS : 0;
+
+    // Add print-specific class to body for CSS targeting
+    document.body.classList.add("printing");
+
+    setTimeout(() => {
+      window.print();
+      // Remove print class after print dialog closes
+      window.addEventListener(
+        "afterprint",
+        () => {
+          document.body.classList.remove("printing");
+        },
+        { once: true },
+      );
+      // Fallback for browsers that don't support afterprint
+      setTimeout(() => {
+        document.body.classList.remove("printing");
+      }, 1000);
+    }, mathjaxDelay);
+  });
+
   // Initialize Article History Tracking and Display
 
   // Article History Logic
@@ -860,26 +924,28 @@ runOnDomReady(function () {
 
   // 🎨 Palette UX: Copy Email Functionality
   function initEmailCopy() {
-    // ⚡ Bolt Optimization: Use specific selector to limit scope
-    const mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
-    if (mailtoLinks.length === 0) return;
+    // ⚡ Bolt Optimization: Use document.links to avoid extra DOM query; still iterates over all links
+    const links = document.links;
+    if (links.length === 0) return;
 
     // Pre-define SVGs strings to avoid repetitive DOM creation
     const copyIcon = '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
     const checkIcon = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
-    mailtoLinks.forEach((link) => {
+    for (const link of links) {
+      if (link.protocol !== "mailto:") continue;
+
       // Skip if already processed
       if (
         link.nextElementSibling &&
         link.nextElementSibling.classList.contains("copy-email-btn")
       )
-        return;
+        continue;
 
       const href = link.getAttribute("href");
       // Simple extraction of email (handling potential ?subject=...)
       const email = href.replace(/^mailto:/, "").split("?")[0];
-      if (!email) return;
+      if (!email) continue;
 
       const button = document.createElement("button");
       button.className = "copy-email-btn";
@@ -910,7 +976,7 @@ runOnDomReady(function () {
       });
 
       link.insertAdjacentElement("afterend", button);
-    });
+    }
   }
   runWhenIdle(initEmailCopy);
 
@@ -1154,13 +1220,11 @@ runOnDomReady(function () {
 
   // 🎨 Palette UX: Lightbox for Article Images
   // Removed length check to allow dynamic injection and more robust initialization
-  const contentImages = document.querySelectorAll(
-    "#quarto-document-content img",
-  );
-
   // Always initialize lightbox container if content area exists
   const articleContainer = document.getElementById("quarto-document-content");
   if (articleContainer) {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll (O(N))
+    const contentImages = articleContainer.getElementsByTagName("img");
     let lastFocusedElement = null; // 🎨 Palette UX: Track focus for restoration
 
     const lightbox = document.createElement("div");
@@ -1231,15 +1295,15 @@ runOnDomReady(function () {
     document.body.appendChild(lightbox);
 
     // Initial pass for existing images
-    contentImages.forEach((img) => {
+    for (const img of contentImages) {
       // Skip if already inside a link or interactive element
-      if (img.closest("a") || img.closest("button")) return;
+      if (img.closest("a") || img.closest("button")) continue;
 
       img.classList.add("zoomable");
       img.setAttribute("tabindex", "0"); // Keyboard focusable
       img.setAttribute("role", "button");
       img.setAttribute("aria-label", "Zoom image");
-    });
+    }
 
     // ⚡ Bolt Optimization: Event Delegation for Lightbox
     // Instead of adding listeners to every image (O(N)), add one listener to the container (O(1))
@@ -1309,8 +1373,8 @@ runOnDomReady(function () {
   // --- Critics Corner Toggle ---
   initCriticsCorner();
 
-  // --- Critics Comments Toggle (New) ---
-  initCriticsComments();
+  // --- Critics Comments Toggle ---
+  initCriticsCommentsToggle();
 
   // --- Contact Form Feedback ---
   initContactFormFeedback();
@@ -1350,8 +1414,10 @@ runWhenIdle(initAutoGrowTextareas);
 
 // 🎨 Palette UX: Contact Form Feedback
 function initContactFormFeedback() {
-  const forms = document.querySelectorAll('form[action^="mailto:"]');
-  forms.forEach((form) => {
+  // ⚡ Bolt Optimization: Use document.forms to avoid extra DOM query; still iterates over all forms
+  for (const form of document.forms) {
+    if (!form.action || !form.action.startsWith("mailto:")) continue;
+
     form.addEventListener("submit", (e) => {
       // Do NOT prevent default - let the browser open the mail client
       // But update the UI to show something happened
@@ -1385,7 +1451,7 @@ function initContactFormFeedback() {
         button.disabled = false;
       }, 3000);
     });
-  });
+  }
 }
 
 // --- PDF Download Functionality ---
@@ -1518,7 +1584,7 @@ function initCriticsCorner() {
 }
 
 // --- Critics Comments Functionality ---
-function initCriticsComments() {
+function initCriticsCommentsToggle() {
   const criticsSections = document.querySelectorAll(".critics-comments");
 
   criticsSections.forEach((section, index) => {
@@ -1533,7 +1599,6 @@ function initCriticsComments() {
 
     header.setAttribute("aria-controls", content.id);
 
-    // Ensure initial state matches attribute
     const isExpanded = header.getAttribute("aria-expanded") === "true";
     content.setAttribute("aria-hidden", String(!isExpanded));
 
@@ -1557,5 +1622,119 @@ function scrollToTop() {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     scrollToTop,
+    debounce,
+    generateUniqueId,
+    getScrollOffset,
+    runOnDomReady,
+    runWhenIdle,
+    MAX_ID_GENERATION_ATTEMPTS,
+    MATHJAX_RENDER_DELAY_MS,
+    CRITICS_CORNER_PADDING_OFFSET,
   };
 }
+
+
+// Accessibility: Add ARIA labels to navigation elements
+function initAriaLabels() {
+  // Add ARIA labels to navigation elements
+  const navElements = document.querySelectorAll('nav');
+  navElements.forEach((nav) => {
+    if (!nav.hasAttribute('aria-label')) {
+      // Determine label based on class or heading
+      if (nav.classList.contains('toc-nav')) {
+        nav.setAttribute('aria-label', 'Table of contents navigation');
+      } else if (nav.classList.contains('history-nav')) {
+        nav.setAttribute('aria-label', 'Recent history navigation');
+      } else if (nav.classList.contains('resources-nav')) {
+        nav.setAttribute('aria-label', 'Resources navigation');
+      } else {
+        nav.setAttribute('aria-label', 'Navigation');
+      }
+    }
+  });
+
+  // Add ARIA labels to sidebar elements
+  const sidebars = document.querySelectorAll('aside');
+  sidebars.forEach((sidebar) => {
+    if (!sidebar.hasAttribute('aria-label')) {
+      if (sidebar.classList.contains('left-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Left sidebar navigation');
+      } else if (sidebar.classList.contains('right-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Right sidebar navigation');
+      } else if (sidebar.classList.contains('home-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Main navigation sidebar');
+      } else {
+        sidebar.setAttribute('aria-label', 'Sidebar');
+      }
+    }
+  });
+
+  // Add ARIA labels to main content areas
+  const mainElements = document.querySelectorAll('main');
+  mainElements.forEach((main) => {
+    if (!main.hasAttribute('aria-label') && !main.hasAttribute('role')) {
+      main.setAttribute('role', 'main');
+      main.setAttribute('aria-label', 'Main content');
+    }
+  });
+
+  // Add ARIA labels to search inputs
+  const searchInputs = document.querySelectorAll('input[type="search"]');
+  searchInputs.forEach((input) => {
+    if (!input.hasAttribute('aria-label') && !input.id) {
+      input.setAttribute('aria-label', 'Search');
+    }
+  });
+
+  // Add ARIA labels to social links
+  const socialLinks = document.querySelectorAll('.social-link');
+  socialLinks.forEach((link) => {
+    if (!link.hasAttribute('aria-label')) {
+      const text = link.textContent.trim();
+      link.setAttribute('aria-label', `Visit ${text}`);
+    }
+  });
+
+  // Add ARIA labels to resource cards
+  const resourceCards = document.querySelectorAll('.resource-card');
+  resourceCards.forEach((card) => {
+    if (!card.hasAttribute('aria-label')) {
+      const heading = card.querySelector('h3');
+      if (heading) {
+        card.setAttribute('aria-label', `Resource: ${heading.textContent.trim()}`);
+      }
+    }
+  });
+
+  // Add ARIA labels to article cards
+  const articleCards = document.querySelectorAll('.article-card');
+  articleCards.forEach((card) => {
+    if (!card.hasAttribute('aria-label')) {
+      const heading = card.querySelector('h3');
+      if (heading) {
+        card.setAttribute('aria-label', `Article: ${heading.textContent.trim()}`);
+      }
+    }
+  });
+
+  // Add ARIA live region for dynamic content
+  const historyLists = document.querySelectorAll('[id$="-history-list"]');
+  historyLists.forEach((list) => {
+    if (!list.hasAttribute('aria-live')) {
+      list.setAttribute('aria-live', 'polite');
+      list.setAttribute('aria-atomic', 'false');
+    }
+  });
+
+  // Add ARIA labels to form elements without labels
+  const formInputs = document.querySelectorAll('input:not([aria-label]):not([id])');
+  formInputs.forEach((input) => {
+    const placeholder = input.getAttribute('placeholder');
+    if (placeholder) {
+      input.setAttribute('aria-label', placeholder);
+    }
+  });
+}
+
+// Run ARIA labels initialization when DOM is ready
+runOnDomReady(initAriaLabels);
