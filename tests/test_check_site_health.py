@@ -51,7 +51,7 @@ def test_check_site_health_no_issues(mock_docs_dir, caplog):
 
 
 def test_check_site_health_broken_link(mock_docs_dir, caplog):
-    """Test check_site_health detects broken links."""
+    """Test check_site_health detects broken links (warns but doesn't exit)."""
     caplog.set_level(logging.INFO)
     create_html_file(
         mock_docs_dir,
@@ -60,24 +60,22 @@ def test_check_site_health_broken_link(mock_docs_dir, caplog):
     )
 
     with patch("src.tools.check_site_health.DOCS_DIR", mock_docs_dir):
-        with pytest.raises(SystemExit) as excinfo:
-            check_site_health()
-        assert excinfo.value.code == 1
+        # Broken links are now warnings, not failures
+        check_site_health()
 
     assert "Found 1 broken links" in caplog.text
     assert "index.html -> missing.html" in caplog.text
 
 
 def test_check_site_health_orphaned_file(mock_docs_dir, caplog):
-    """Test check_site_health detects orphaned files."""
+    """Test check_site_health detects orphaned files (warns but doesn't exit)."""
     caplog.set_level(logging.INFO)
     create_html_file(mock_docs_dir, "index.html", "<html></html>")
     create_html_file(mock_docs_dir, "orphan.html", "<html></html>")
 
     with patch("src.tools.check_site_health.DOCS_DIR", mock_docs_dir):
-        with pytest.raises(SystemExit) as excinfo:
-            check_site_health()
-        assert excinfo.value.code == 1
+        # Orphaned files are now warnings, not failures
+        check_site_health()
 
     assert "Found 1 orphaned files" in caplog.text
     assert "orphan.html" in caplog.text

@@ -1,31 +1,26 @@
-# Code Quality Review Report - 2026-01-28
+# Code Quality Review: Latest
 
-## Executive Summary
-A critical violation of project integrity was detected in recent git history. A "Deceptive Massive Commit" was identified, where a misleading commit message ("Delete worked_examples.qmd") masked the addition of over 360,000 lines of code, effectively rewriting the repository state. This compromises historical auditability and security.
+**Last Updated:** 2026-01-27
+**Status:** 🔴 CRITICAL ISSUES DETECTED
 
-## Detailed Findings
+## Latest Review Summary (2026-01-27)
 
-### 1. Deceptive Massive Commit (CRITICAL)
-- **Commit**: `c5bbfbe`
-- **Author**: Dieter Olson
-- **Date**: Tue Jan 27 23:10:28 2026 -0800
-- **Subject**: "Delete worked_examples.qmd (#1021)"
-- **Actual Change**:
-    - Added 368,137 lines.
-    - Modified/Added 918 files.
-    - Includes critical infrastructure files: `.github/workflows`, `requirements.txt`, `scripts/`.
-- **Violation**: This completely violates "Coherent plan alignment" and transparency. It hides massive changes under a trivial message.
+A review of the last 7 days reveals significant degradation in repository integrity and CI/CD reliability.
 
-### 2. CI/CD Gaming (CRITICAL)
-- **Commit**: `c5bbfbe`
-- **Issue**: `continue-on-error: true` was found in the diff, suggesting an attempt to bypass CI failure blocks.
-- **Location**: Likely in `.github/workflows` (verified via diff analysis).
+### 🚨 Critical Issues
+*   **Deceptive Massive Commit:** Commit `3d42bde` masks a full codebase rewrite (879 files) as a minor dependency update.
+*   **CI/CD Integrity Compromised:** `ci-standard.yml` installs tool versions (`black==25.12.0`) that conflict with project configuration (`black==24.4.2`), guaranteeing environment inconsistency.
+*   **Gaming of Checks:** CI verification scripts pass based on static text analysis while the actual runtime environment violates the rules.
 
-### 3. Placeholders & Incomplete Work
-- **Commit**: `c5bbfbe`
-- **Issue**: The massive addition reintroduced or added numerous `TODO`, `FIXME`, and `NotImplemented` markers.
+### ⚠️ Technical Debt
+*   **Disabled Tests:** MATLAB tests are hard-disabled (`if: false`).
+*   **Suppressed Failures:** Website linting and quality checks run with `continue-on-error: true`.
+*   **Placeholders:** Unresolved TODOs in deployed artifacts (`wrist-universal-joint.html`).
 
-## Recommendations
-1.  **Immediate Revert/Audit**: The commit `c5bbfbe` must be audited line-by-line or reverted if it was not intended to be a squash merge.
-2.  **Squash Enforcement**: If this was a squash merge, the commit message *must* reflect the scope of changes (e.g., "Release v2.0" or "Major Refactor"), not just one deleted file.
-3.  **CI Block**: Update CI to reject commits with >1000 lines changed unless tagged with specific labels or authorized users.
+### Action Items
+1.  **Immediate Investigation:** Audit commit `3d42bde`.
+2.  **Fix CI Environment:** Align `ci-standard.yml` with `.pre-commit-config.yaml`.
+3.  **Restore Tests:** Re-enable disabled workflow jobs.
+
+---
+*See [full logs](changelog_reviews/) for historical data.*

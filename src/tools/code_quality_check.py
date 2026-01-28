@@ -36,6 +36,7 @@ BANNED_PATTERNS = [
     (re.compile(r"\bTODO\b"), "TODO placeholder found"),
     (re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
     (re.compile(r"^\s*\.\.\.\s*$"), "Ellipsis placeholder"),
+    (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"),
     # (re.compile(r"<.*>"), "Angle bracket placeholder"), # Too aggressive for HTML generation
     (re.compile(r"your.*here", re.IGNORECASE), "Template placeholder"),
     (re.compile(r"insert.*here", re.IGNORECASE), "Template placeholder"),
@@ -120,8 +121,6 @@ def check_banned_patterns(
         "matlab_quality_check.py",
         "code_quality_check.py",
         "quality-check.py",
-        "analyze_completist_data.py",
-        "pragmatic_programmer_review.py",
     ):
         return issues
 
@@ -180,23 +179,14 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
         "quality-check.py",
     ):
         return issues
-
-    # Skip docstring check for tests
-    is_test_file = "tests" in filepath.parts
-
     try:
         tree = ast.parse(content)
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
-                # Skip private functions (start with _) except __init__
-                if node.name.startswith("_") and node.name != "__init__":
-                    continue
-
                 if not ast.get_docstring(node):
-                    if not is_test_file:
-                        issues.append(
-                            (node.lineno, f"Function '{node.name}' missing docstring", ""),
-                        )
+                    issues.append(
+                        (node.lineno, f"Function '{node.name}' missing docstring", ""),
+                    )
                 if not node.returns and node.name != "__init__":
                     pass
                     # Relaxed: We let MyPy handle missing return checks,
