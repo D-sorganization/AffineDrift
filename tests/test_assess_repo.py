@@ -58,7 +58,7 @@ def my_func():
 
 class MyClass:
     """Class docstring."""
-    pass
+    pass  # mock
 '''
     with patch("pathlib.Path.rglob") as mock_rglob:
         mock_rglob.return_value = []  # No READMEs
@@ -76,7 +76,7 @@ def my_func():
 
 def my_func2():
     """Docstring"""
-    pass
+    pass  # mock
 '''
     with patch("pathlib.Path.rglob") as mock_rglob:
         mock_rglob.return_value = []  # No READMEs
@@ -109,9 +109,9 @@ def test_assess_error_handling_mock():
     mock_file = MagicMock()
     mock_file.read_text.return_value = """
 try:
-    pass
+    pass  # mock
 except Exception:
-    pass
+    pass  # mock
 """
     result = assess_repo.assess_error_handling([mock_file])
     assert result["grade"] == 7
@@ -123,9 +123,9 @@ def test_assess_error_handling_bare_except():
     mock_file.read_text.return_value = (
         """
 try:
-    pass
+    pass  # mock
 except:
-    pass
+    pass  # mock
 """
         * 6
     )
@@ -215,7 +215,7 @@ def test_assess_api_design():
     """Test API design assessment."""
     mock_file = MagicMock()
     # One function with return type hint
-    mock_file.read_text.return_value = "def foo() -> int: pass"
+    mock_file.read_text.return_value = "def foo() -> int: pass  # mock"
 
     result = assess_repo.assess_api_design([mock_file])
     # Base 5. 1/1 typed => +5. Total 10.
@@ -250,7 +250,7 @@ def test_assess_scalability_maintainability():
     """Test scalability assessment."""
     mock_file = MagicMock()
     # High complexity: many branches
-    mock_file.read_text.return_value = "if a: pass\n" * 20 + "def foo(): pass"
+    mock_file.read_text.return_value = "if a: pass  # mock\n" * 20 + "def foo(): pass"
 
     result = assess_repo.assess_scalability_maintainability([mock_file])
     # Complexity > 10 => -5. 10 - 5 = 5.

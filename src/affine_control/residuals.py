@@ -30,6 +30,7 @@ def compute_hessian_norm(
 
     # Jacobian J(x) = df/dx
     def jacobian(x0: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+        """Compute numerical Jacobian of f at x0."""
         J = np.zeros((dx, n))
         for i in range(n):
             x_plus = x0.copy()
@@ -105,6 +106,7 @@ class ResidualMonitor:
     def __init__(
         self, eps_warning: float = 0.01, eps_critical: float = 0.05, n_hysteresis: int = 3
     ) -> None:
+        """Initialize the residual monitor."""
         self.eps_warning = eps_warning
         self.eps_critical = eps_critical
         self.n = n_hysteresis
@@ -135,7 +137,7 @@ class ResidualMonitor:
             self.high_count = 0
         else:
             # Hysteresis zone
-            pass
+            pass  # Explicit pass for logic placeholder
 
         # Transitions
         if self.mode == "LQR":
