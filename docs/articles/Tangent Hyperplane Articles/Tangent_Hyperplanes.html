@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dieter">
+
+<title>Tangent Hyperplanes – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../styles.css" as="style">
+<link rel="preload" href="../../script.js" as="script">
+<link rel="preload" href="../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#nonlinear-dynamics-and-smoothness" id="toc-nonlinear-dynamics-and-smoothness" class="nav-link" data-scroll-target="#nonlinear-dynamics-and-smoothness"><span class="header-section-number">2</span> Nonlinear Dynamics and Smoothness</a></li>
+  <li><a href="#derivatives-as-linear-maps" id="toc-derivatives-as-linear-maps" class="nav-link" data-scroll-target="#derivatives-as-linear-maps"><span class="header-section-number">3</span> Derivatives as Linear Maps</a></li>
+  <li><a href="#tangent-spaces-and-linearization" id="toc-tangent-spaces-and-linearization" class="nav-link" data-scroll-target="#tangent-spaces-and-linearization"><span class="header-section-number">4</span> Tangent Spaces and Linearization</a></li>
+  <li><a href="#example-the-simple-pendulum" id="toc-example-the-simple-pendulum" class="nav-link" data-scroll-target="#example-the-simple-pendulum"><span class="header-section-number">5</span> Example: The Simple Pendulum</a></li>
+  <li><a href="#exact-superposition-in-the-infinitesimal" id="toc-exact-superposition-in-the-infinitesimal" class="nav-link" data-scroll-target="#exact-superposition-in-the-infinitesimal"><span class="header-section-number">6</span> Exact Superposition in the Infinitesimal</a></li>
+  <li><a href="#time-evolution-and-moving-tangent-spaces" id="toc-time-evolution-and-moving-tangent-spaces" class="nav-link" data-scroll-target="#time-evolution-and-moving-tangent-spaces"><span class="header-section-number">7</span> Time Evolution and Moving Tangent Spaces</a></li>
+  <li><a href="#exactness-in-the-limit" id="toc-exactness-in-the-limit" class="nav-link" data-scroll-target="#exactness-in-the-limit"><span class="header-section-number">8</span> Exactness in the Limit</a></li>
+  <li><a href="#counterfactual-decomposition" id="toc-counterfactual-decomposition" class="nav-link" data-scroll-target="#counterfactual-decomposition"><span class="header-section-number">9</span> Counterfactual Decomposition</a></li>
+  <li><a href="#connection-to-linear-quadratic-regulation" id="toc-connection-to-linear-quadratic-regulation" class="nav-link" data-scroll-target="#connection-to-linear-quadratic-regulation"><span class="header-section-number">10</span> Connection to Linear Quadratic Regulation</a></li>
+  <li><a href="#scope-of-validity" id="toc-scope-of-validity" class="nav-link" data-scroll-target="#scope-of-validity"><span class="header-section-number">11</span> Scope of Validity</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">12</span> Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">13</span> References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tangent Hyperplanes</h1>
+<p class="subtitle lead">Exact Local Superposition in Nonlinear Dynamics</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dieter </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Abstract
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This article argues that this characterization, while globally accurate, obscures a fundamental mathematical fact: nonlinear systems admit exact linear superposition in the tangent space at every point. We develop this claim rigorously, showing that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics. The derivative of a vector field is, by definition, a linear map; the tangent space is, by construction, a linear vector space. We illustrate these ideas with the simple pendulum, connect them to practical techniques such as Linear Quadratic Regulation and Lyapunov stability analysis, and delineate the scope of validity—namely, systems with continuously differentiable dynamics. The geometric perspective presented here—trajectories as curves on manifolds with tangent spaces attached at each point—provides the conceptual foundation for modern nonlinear control theory.</p>
+</div>
+</div>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>Nonlinear dynamics are often described as systems in which superposition does not apply. Students of differential equations learn early that while linear systems permit the combination of solutions—if <span class="math inline">\(x_1(t)\)</span> and <span class="math inline">\(x_2(t)\)</span> are solutions, then so is <span class="math inline">\(\alpha x_1(t) + \beta x_2(t)\)</span>—nonlinear systems deny this convenience. The narrative typically stops there, leaving the impression that nonlinearity and superposition are fundamentally incompatible.</p>
+<p>This statement, while true in a global sense, obscures a more precise and mathematically exact fact:</p>
+<p><strong>Nonlinear systems admit exact linear superposition in the infinitesimal.</strong></p>
+<p>The purpose of this article is to develop that statement rigorously. The argument presented here is not heuristic, approximate, or model-dependent. It is a direct consequence of the definition of derivatives, limits, and smooth manifolds—the same mathematical foundations that underpin calculus itself. Linearization is not an approximation layered on top of nonlinear mechanics; rather, it <em>is</em> the exact local structure of the dynamics as the timestep tends to zero.</p>
+<p>This perspective has profound implications for how we understand nonlinear systems. It explains why linear control techniques such as LQR and pole placement succeed in practice, even when applied to inherently nonlinear plants. It clarifies why stability analysis via linearization (Lyapunov’s indirect method) yields rigorous conclusions about nonlinear behavior. And it provides the geometric foundation for modern nonlinear control theory, where trajectories are understood as curves on manifolds with tangent spaces attached at every point.</p>
+<p>The goal of this article is to formalize these ideas, prove them cleanly, and demonstrate why they underpin modern nonlinear analysis and control.</p>
+<hr>
+</section>
+<section id="nonlinear-dynamics-and-smoothness" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="nonlinear-dynamics-and-smoothness"><span class="header-section-number">2</span> Nonlinear Dynamics and Smoothness</h2>
+<p>Consider a nonlinear dynamical system described by the ordinary differential equation</p>
+<p><span class="math display">\[
+\dot{x} = f(x,u), \quad x \in \mathbb{R}^n, \; u \in \mathbb{R}^m
+\]</span></p>
+<p>where <span class="math inline">\(x\)</span> represents the state vector (positions, velocities, temperatures, concentrations, or any other quantities that characterize the system’s configuration) and <span class="math inline">\(u\)</span> represents the control input or external forcing. The function <span class="math inline">\(f\)</span> encodes the physics of the system—it tells us how the state evolves given the current state and input.</p>
+<p>The critical assumption we make is that <span class="math inline">\(f\)</span> is continuously differentiable, denoted <span class="math inline">\(C^1\)</span>, in both its arguments. This means that not only is <span class="math inline">\(f\)</span> continuous, but its partial derivatives with respect to <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> exist and are themselves continuous functions. This assumption is minimal in the sense that it represents the bare mathematical requirement for the derivative to be well-defined. It is also physically reasonable: virtually all systems derived from classical mechanics—pendulums, robotic arms, aircraft, chemical reactors—satisfy this smoothness condition. The laws of physics, expressed through Newton’s equations, Lagrangian mechanics, or thermodynamic principles, generically produce smooth vector fields.</p>
+<p>What does smoothness buy us? It guarantees that at every point in state-input space, the vector field <span class="math inline">\(f\)</span> has a well-defined derivative. This derivative, as we shall see, is a linear map—and it is through this linear map that superposition re-enters the picture.</p>
+<hr>
+</section>
+<section id="derivatives-as-linear-maps" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="derivatives-as-linear-maps"><span class="header-section-number">3</span> Derivatives as Linear Maps</h2>
+<p>The key insight comes from understanding what a derivative truly is. In single-variable calculus, the derivative of a function at a point is a number—the slope of the tangent line. In multivariable calculus, this generalizes: the derivative of a vector-valued function is not a number but a <em>linear map</em>. This is the Fréchet derivative, and it is the mathematically precise formulation of differentiation in higher dimensions.</p>
+<p>For our vector field <span class="math inline">\(f\)</span>, the Jacobian matrix <span class="math inline">\(A = \frac{\partial f}{\partial x}(x_0, u_0)\)</span> is defined as the unique linear map satisfying</p>
+<p><span class="math display">\[
+f(x_0 + \delta x, u_0) = f(x_0, u_0) + A \cdot \delta x + o(\|\delta x\|)
+\]</span></p>
+<p>The notation <span class="math inline">\(o(\|\delta x\|)\)</span> denotes terms that vanish faster than <span class="math inline">\(\|\delta x\|\)</span> as <span class="math inline">\(\|\delta x\| \to 0\)</span>. This is little-o notation from asymptotic analysis, and it captures precisely what we mean by “the error becomes negligible.” The equation states that near the point <span class="math inline">\((x_0, u_0)\)</span>, the nonlinear function <span class="math inline">\(f\)</span> is exactly equal to a linear function plus terms that become arbitrarily small relative to the perturbation size.</p>
+<p>An equivalent definition, perhaps more intuitive, uses directional derivatives. For any direction <span class="math inline">\(h \in \mathbb{R}^n\)</span>:</p>
+<p><span class="math display">\[
+A \cdot h = \lim_{t \to 0} \frac{f(x_0 + th, u_0) - f(x_0, u_0)}{t}
+\]</span></p>
+<p>This limit computes the rate of change of <span class="math inline">\(f\)</span> as we move from <span class="math inline">\(x_0\)</span> in the direction <span class="math inline">\(h\)</span>. The crucial point is that this rate of change depends linearly on the direction <span class="math inline">\(h\)</span>. If we double the direction vector, the rate of change doubles. If we add two direction vectors, the rates of change add. This is not an approximation or simplification—it is a mathematical theorem following from the definition of the derivative and the smoothness of <span class="math inline">\(f\)</span>.</p>
+<p>The same construction applies to the input derivative, yielding the matrix <span class="math inline">\(B = \frac{\partial f}{\partial u}(x_0, u_0)\)</span>. Together, these matrices capture how the vector field responds to infinitesimal changes in state and input.</p>
+<hr>
+</section>
+<section id="tangent-spaces-and-linearization" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="tangent-spaces-and-linearization"><span class="header-section-number">4</span> Tangent Spaces and Linearization</h2>
+<p>At a fixed operating point <span class="math inline">\((x_0, u_0)\)</span>, the derivatives computed in the previous section define two matrices:</p>
+<p><span class="math display">\[
+A = \left.\frac{\partial f}{\partial x}\right|_{(x_0,u_0)}, \quad B = \left.\frac{\partial f}{\partial u}\right|_{(x_0,u_0)}
+\]</span></p>
+<p>The matrix <span class="math inline">\(A\)</span> is the state Jacobian—an <span class="math inline">\(n \times n\)</span> matrix whose entries <span class="math inline">\(A_{ij} = \partial f_i / \partial x_j\)</span> describe how each component of the vector field depends on each state variable. The matrix <span class="math inline">\(B\)</span> is the input Jacobian—an <span class="math inline">\(n \times m\)</span> matrix describing how the vector field responds to changes in the control input. Together, the pair <span class="math inline">\((A, B)\)</span> defines what we call the <strong>tangent space linearization</strong> of the nonlinear vector field at that point.</p>
+<p>To understand this terminology, we must briefly invoke the language of differential geometry. A smooth manifold is a space that locally resembles Euclidean space—think of the surface of a sphere, which is curved globally but flat in small neighborhoods. At each point on a manifold, there exists a tangent space: the collection of all possible velocity vectors for curves passing through that point. For the surface of a sphere, the tangent space at any point is a flat plane touching the sphere at that point.</p>
+<p>For dynamical systems with state spaces embedded in <span class="math inline">\(\mathbb{R}^n\)</span>, the tangent space <span class="math inline">\(T_{x_0}\mathcal{M}\)</span> at a point <span class="math inline">\(x_0\)</span> is itself an <span class="math inline">\(n\)</span>-dimensional vector space. This tangent space is where linearization lives. When we perturb the state by a small amount <span class="math inline">\(\delta x\)</span> and the input by <span class="math inline">\(\delta u\)</span>, the resulting perturbation to the state derivative is governed by</p>
+<p><span class="math display">\[
+\delta \dot{x} = A \, \delta x + B \, \delta u
+\]</span></p>
+<p>This equation deserves careful attention. It states that in the tangent space, the dynamics are <em>exactly</em> linear. The perturbation <span class="math inline">\(\delta \dot{x}\)</span> depends linearly on <span class="math inline">\(\delta x\)</span> and <span class="math inline">\(\delta u\)</span>, with coefficients given by the Jacobian matrices. This is not an approximation of the nonlinear system—it <em>is</em> the differential structure of the system at that state. The linearization captures the infinitesimal behavior exactly, in the same sense that the derivative of a curve gives its exact instantaneous velocity.</p>
+<hr>
+</section>
+<section id="example-the-simple-pendulum" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="example-the-simple-pendulum"><span class="header-section-number">5</span> Example: The Simple Pendulum</h2>
+<p>To make these abstract ideas concrete, consider the simple pendulum—perhaps the most studied nonlinear system in physics. A mass hangs from a rigid rod of length <span class="math inline">\(L\)</span>, swinging under gravity. Let <span class="math inline">\(\theta\)</span> denote the angle from vertical and <span class="math inline">\(\omega = \dot{\theta}\)</span> the angular velocity. Newton’s second law yields</p>
+<p><span class="math display">\[
+\ddot{\theta} = -\frac{g}{L}\sin\theta
+\]</span></p>
+<p>where <span class="math inline">\(g\)</span> is gravitational acceleration. This is manifestly nonlinear: the restoring torque depends on <span class="math inline">\(\sin\theta\)</span>, not <span class="math inline">\(\theta\)</span> itself.</p>
+<p>To apply our framework, we rewrite this second-order equation as a first-order system in state-space form. Defining the state vector <span class="math inline">\(x = [\theta, \omega]^T\)</span>:</p>
+<p><span class="math display">\[
+\dot{x} = f(x) = \begin{bmatrix} \omega \\ -\frac{g}{L}\sin\theta \end{bmatrix}
+\]</span></p>
+<p>The function <span class="math inline">\(f\)</span> is smooth (infinitely differentiable), so our theory applies. The <span class="math inline">\(\sin\theta\)</span> term is what prevents global superposition—if <span class="math inline">\(x_1(t)\)</span> and <span class="math inline">\(x_2(t)\)</span> are solutions, their sum is generally not a solution because <span class="math inline">\(\sin(\theta_1 + \theta_2) \neq \sin\theta_1 + \sin\theta_2\)</span>.</p>
+<p>Now consider the equilibrium point <span class="math inline">\(x_0 = [0, 0]^T\)</span>, corresponding to the pendulum hanging straight down at rest. To compute the Jacobian, we take partial derivatives:</p>
+<p><span class="math display">\[
+A = \left.\frac{\partial f}{\partial x}\right|_{x_0} = \begin{bmatrix} \frac{\partial f_1}{\partial \theta} &amp; \frac{\partial f_1}{\partial \omega} \\ \frac{\partial f_2}{\partial \theta} &amp; \frac{\partial f_2}{\partial \omega} \end{bmatrix}_{x_0} = \begin{bmatrix} 0 &amp; 1 \\ -\frac{g}{L}\cos(0) &amp; 0 \end{bmatrix} = \begin{bmatrix} 0 &amp; 1 \\ -\frac{g}{L} &amp; 0 \end{bmatrix}
+\]</span></p>
+<p>The linearized dynamics in the tangent space are therefore</p>
+<p><span class="math display">\[
+\delta\dot{x} = A\,\delta x \quad \Rightarrow \quad \ddot{\theta} = -\frac{g}{L}\theta
+\]</span></p>
+<p>This is the familiar harmonic oscillator equation, predicting sinusoidal oscillations with frequency <span class="math inline">\(\sqrt{g/L}\)</span>. Every physics student knows this as the “small angle approximation”—but our analysis reveals it as something more fundamental.</p>
+<p>The eigenvalues of <span class="math inline">\(A\)</span> are <span class="math inline">\(\lambda = \pm i\sqrt{g/L}\)</span>, pure imaginary numbers indicating oscillatory behavior with no damping. These eigenvalues exactly characterize the local behavior of the nonlinear system near equilibrium. For small perturbations, the linear and nonlinear trajectories are indistinguishable to first order—they agree up to terms of order <span class="math inline">\(\|\delta x\|^2\)</span>. As <span class="math inline">\(\|\delta x\| \to 0\)</span>, this agreement becomes exact.</p>
+<p>The nonlinearity of the full pendulum—the amplitude-dependent period, the possibility of full rotations—emerges only as perturbations grow large enough that higher-order terms in the Taylor expansion of <span class="math inline">\(\sin\theta\)</span> become significant. Near equilibrium, the tangent space dynamics reign.</p>
+<hr>
+</section>
+<section id="exact-superposition-in-the-infinitesimal" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exact-superposition-in-the-infinitesimal"><span class="header-section-number">6</span> Exact Superposition in the Infinitesimal</h2>
+<p>We now arrive at the central claim of this article. Because the tangent space is a linear vector space, it inherits all the properties of linear algebra—including, crucially, the superposition principle.</p>
+<p>Recall that a linear map satisfies two fundamental properties. The first is <em>additivity</em>: the map applied to a sum equals the sum of the map applied to each term. For the input matrix <span class="math inline">\(B\)</span>, this means</p>
+<p><span class="math display">\[
+B(\delta u_1 + \delta u_2) = B\delta u_1 + B\delta u_2
+\]</span></p>
+<p>The second property is <em>homogeneity</em> (or scaling): the map applied to a scaled vector equals the scaled result of the map. Mathematically,</p>
+<p><span class="math display">\[
+B(\alpha \, \delta u) = \alpha \, B \delta u
+\]</span></p>
+<p>for any scalar <span class="math inline">\(\alpha\)</span>. Together, these two properties constitute what physicists and engineers call the <strong>superposition principle</strong>: the response to a combination of inputs equals the combination of responses to individual inputs.</p>
+<p>The profound implication is this: superposition holds exactly in the tangent space. If we apply two infinitesimal input perturbations <span class="math inline">\(\delta u_1\)</span> and <span class="math inline">\(\delta u_2\)</span> simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately. There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level.</p>
+<p>This is not an approximation we impose for convenience. It is a mathematical theorem, inherited directly from the properties of matrix multiplication and the definition of the derivative. The tangent space is linear by construction, and linear spaces obey superposition by definition. The nonlinearity of the original system has not disappeared; rather, it has been localized to the relationship between different tangent spaces, as we shall see in the next section.</p>
+<hr>
+</section>
+<section id="time-evolution-and-moving-tangent-spaces" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="time-evolution-and-moving-tangent-spaces"><span class="header-section-number">7</span> Time Evolution and Moving Tangent Spaces</h2>
+<p>If superposition holds exactly in the tangent space, why do we say that nonlinear systems violate superposition? The answer lies in time evolution, and understanding this point resolves much confusion about the relationship between linear and nonlinear dynamics.</p>
+<p>The key observation is that as the system evolves along a trajectory, the operating point changes—and with it, the tangent space. The Jacobian matrices are not constants; they are functions of the current state:</p>
+<p><span class="math display">\[
+A(t) = \frac{\partial f}{\partial x}(x(t),u(t)), \quad B(t) = \frac{\partial f}{\partial u}(x(t),u(t))
+\]</span></p>
+<p>At each instant, the tangent space provides an exact linear description of the local dynamics. But the tangent space itself moves as the system evolves. Imagine a hiker walking along a mountain ridge: at each point, the ground is locally flat (the tangent plane), but the tangent plane rotates and tilts as the hiker moves. The mountain is curved even though every tangent plane is flat.</p>
+<p>This is precisely the geometric picture for nonlinear dynamics. The state space is a manifold—possibly curved, possibly with complex topology—and at each point there is a tangent space where the dynamics are exactly linear. As a trajectory winds through state space, it passes through a continuous family of tangent spaces, each with its own linearization.</p>
+<p>Global superposition fails not because linearity breaks down at any particular instant, but because the linear structure itself evolves. Two solutions that we might wish to superpose live in different tangent spaces at each moment in time. Adding them together is geometrically meaningless—like trying to add vectors that live in different vector spaces.</p>
+<p>This perspective transforms how we think about nonlinearity. The “nonlinear effects” that distinguish, say, a large-amplitude pendulum swing from a small one are not violations of linearity per se. They are consequences of the trajectory passing through regions of state space where the tangent spaces differ significantly from each other and from the tangent space at equilibrium.</p>
+<hr>
+</section>
+<section id="exactness-in-the-limit" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="exactness-in-the-limit"><span class="header-section-number">8</span> Exactness in the Limit</h2>
+<p>We have claimed that linearization is “exact” in the tangent space, but what does exactness mean here? This section makes the claim precise using the language of limits and asymptotic analysis.</p>
+<p>Consider a finite timestep <span class="math inline">\(\Delta t\)</span>. The state at time <span class="math inline">\(t + \Delta t\)</span> can be expressed via Taylor expansion as</p>
+<p><span class="math display">\[
+x(t + \Delta t) = x(t) + f(x(t),u(t)) \, \Delta t + O(\Delta t^2)
+\]</span></p>
+<p>The first term, <span class="math inline">\(x(t)\)</span>, is the current state. The second term, <span class="math inline">\(f(x(t),u(t)) \, \Delta t\)</span>, represents the linear (first-order) contribution—this is what the tangent space dynamics predict. The third term, <span class="math inline">\(O(\Delta t^2)\)</span>, collects all higher-order contributions: quadratic, cubic, and so on.</p>
+<p>As <span class="math inline">\(\Delta t \to 0\)</span>, something important happens: the higher-order terms become negligible compared to the first-order term. Specifically, the ratio of the error to the timestep vanishes:</p>
+<p><span class="math display">\[
+\lim_{\Delta t \to 0} \frac{O(\Delta t^2)}{\Delta t} = 0
+\]</span></p>
+<p>This is what we mean when we say the linearization is exact in the limit. The first-order evolution—governed entirely by the tangent space dynamics—captures the behavior of the nonlinear system up to terms that become arbitrarily small relative to the timestep.</p>
+<p><strong>Linearization is exact in the limit <span class="math inline">\(\Delta t \to 0\)</span>.</strong></p>
+<p>This is not a weaker form of exactness than we find elsewhere in mathematics. It is the same sense in which derivatives, integrals, and differential equations themselves are exact. The derivative <span class="math inline">\(\dot{x} = f(x,u)\)</span> is defined as a limit; it tells us the instantaneous rate of change, not the change over any finite interval. Linearization inherits this same infinitesimal exactness. The tangent space is not an approximation to the nonlinear system—it is the infinitesimal structure of the system, captured exactly.</p>
+<hr>
+</section>
+<section id="counterfactual-decomposition" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="counterfactual-decomposition"><span class="header-section-number">9</span> Counterfactual Decomposition</h2>
+<p>The exactness of superposition in the tangent space has important practical implications, particularly for understanding how different inputs contribute to system behavior. Consider the following scenario: at a fixed time, we apply multiple input perturbations <span class="math inline">\(\delta u_1, \delta u_2, \ldots, \delta u_k\)</span> to a system. We might ask: how does each input contribute to the resulting state change?</p>
+<p>In the tangent space, the answer is unambiguous. Each input perturbation <span class="math inline">\(\delta u_i\)</span> produces a corresponding state perturbation <span class="math inline">\(\delta x_i = B \delta u_i\)</span>, and the total state perturbation is simply the sum:</p>
+<p><span class="math display">\[
+\delta x = \sum_i \delta x_i = B \sum_i \delta u_i
+\]</span></p>
+<p>This <em>counterfactual decomposition</em> allows us to attribute portions of the state change to individual inputs. We can meaningfully say that “this much of the change came from input 1, and that much came from input 2.” The contributions are additive and non-interacting.</p>
+<p>This equality holds strictly within the tangent space—that is, for infinitesimal perturbations at a single instant. When we integrate over finite time intervals, deviations from additivity appear. These deviations arise from the curvature of the manifold: as the state evolves, it passes through different tangent spaces, and the accumulated effect of the inputs depends on the path taken through state space.</p>
+<p>Importantly, these deviations are not errors or approximation artifacts. They are the genuine nonlinear interaction terms that distinguish nonlinear from linear systems. The cross-coupling between inputs, the path-dependence of the final state, the sensitivity to initial conditions—all emerge from the geometry of how tangent spaces vary across the manifold. The tangent space decomposition is exact at each instant; the complexity arises from how those instants accumulate.</p>
+<hr>
+</section>
+<section id="connection-to-linear-quadratic-regulation" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="connection-to-linear-quadratic-regulation"><span class="header-section-number">10</span> Connection to Linear Quadratic Regulation</h2>
+<p>The theoretical framework developed in this article is not merely of academic interest—it underlies some of the most successful techniques in control engineering. Linear Quadratic Regulation (LQR) provides a striking example.</p>
+<p>LQR solves the following problem: given a linear system <span class="math inline">\(\dot{x} = Ax + Bu\)</span> and a quadratic cost functional that penalizes state deviations and control effort, find the optimal feedback control law. The solution is elegant—a linear state feedback <span class="math inline">\(u = -Kx\)</span> where the gain matrix <span class="math inline">\(K\)</span> can be computed by solving an algebraic Riccati equation.</p>
+<p>But real systems are rarely linear. Why, then, does LQR work so well in practice? The answer lies in the exactness of tangent space linearization. When we apply LQR to a nonlinear system, we are not making a crude approximation. At each operating point, the linearization <span class="math inline">\((A, B)\)</span> captures the exact infinitesimal dynamics. The quadratic cost approximation is similarly justified: any smooth cost function is quadratic to leading order near a minimum.</p>
+<p>The resulting controller operates in a sequence of tangent spaces along the trajectory. At each instant, it computes the optimal action based on the local linear-quadratic structure—and this local structure is exact, not approximate. The success of LQR stems from exploiting the exactness of the tangent-space representation, not from any assumption that the true system is globally linear.</p>
+<p>This connection extends beyond control to stability analysis. Lyapunov’s indirect method—one of the most powerful tools for analyzing nonlinear stability—relies on the same principle. The method states that the stability of an equilibrium point of a nonlinear system can be determined by examining the eigenvalues of the linearization <span class="math inline">\(A\)</span>. If all eigenvalues have strictly negative real parts, the equilibrium is locally asymptotically stable: trajectories starting nearby will converge to the equilibrium. If any eigenvalue has a positive real part, the equilibrium is unstable.</p>
+<p>This is a remarkable result. We are drawing conclusions about a nonlinear system—which may exhibit chaos, limit cycles, or other complex behaviors—based solely on a linear analysis. The justification is precisely the exactness we have established: near the equilibrium, the tangent space dynamics dominate, and the linear analysis captures the essential character of nearby trajectories.</p>
+<hr>
+</section>
+<section id="scope-of-validity" class="level2" data-number="11">
+<h2 data-number="11" class="anchored" data-anchor-id="scope-of-validity"><span class="header-section-number">11</span> Scope of Validity</h2>
+<p>The framework developed in this article rests on a single mathematical assumption: that the vector field <span class="math inline">\(f(x,u)\)</span> is continuously differentiable. This assumption is satisfied by an enormous class of physical systems, but it is not universal. Understanding where the framework applies—and where it fails—is essential for practitioners.</p>
+<p>The framework applies directly to smooth mechanical systems governed by Newton’s laws or their Lagrangian and Hamiltonian reformulations. This includes rigid-body dynamics such as the rotation and translation of spacecraft, aircraft, and underwater vehicles. It encompasses robotic manipulators, where the dynamics arise from kinetic and potential energy through the Euler-Lagrange equations. It covers classical control systems in continuous time, from simple servo mechanisms to complex multi-input multi-output plants. In all these cases, the vector field is smooth, derivatives are well-defined, and the tangent space linearization provides exact local information.</p>
+<p>The framework fails—or requires significant modification—when the smoothness assumption breaks down. Several important classes of systems exhibit nonsmoothness.</p>
+<p>Discontinuous systems arise when the governing equations change abruptly based on the state. Switching systems, common in power electronics and variable-structure control, exhibit this behavior: the dynamics in one region of state space differ discretely from the dynamics in another. Relay controllers, which switch between fixed output values, create similar discontinuities. At the switching surface, the vector field is not differentiable, and the tangent space is not well-defined.</p>
+<p>Impact dynamics occur when rigid bodies collide. At the moment of impact, velocities change instantaneously—a mathematical discontinuity in the state trajectory. The bouncing of a ball, the walking of a legged robot, the closing of a mechanical latch all involve such events. Between impacts the dynamics may be perfectly smooth, but the impact events themselves lie outside the smooth framework.</p>
+<p>Coulomb friction exemplifies nonsmooth phenomena that arise from the physics of contact. The frictional force depends discontinuously on velocity: static friction differs from kinetic friction, and the transition between them creates a set-valued force law rather than a smooth function. Stick-slip dynamics, where surfaces alternate between sticking and sliding, exhibit similar nonsmoothness.</p>
+<p>Hybrid systems combine continuous dynamics with discrete state transitions. A thermostat-controlled heating system, a bouncing ball with discrete impact events, a manufacturing process with distinct operational modes—all are hybrid systems. The continuous portions may admit tangent space analysis, but the discrete transitions require different mathematical tools.</p>
+<p>State constraints impose hard boundaries on the allowable states. A robotic arm cannot pass through a wall; a tank level cannot go negative. When trajectories reach these boundaries, the dynamics change character in ways that smooth analysis cannot capture.</p>
+<p>For all these cases, generalizations of the tangent space framework exist—differential inclusions, Filippov solutions, complementarity systems, and hybrid automata theory—but they lie beyond the scope of this article. The key point is that the exactness results we have established require smoothness, and practitioners should verify this assumption before applying tangent space methods.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2" data-number="12">
+<h2 data-number="12" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">12</span> Conclusion</h2>
+<p>The central message of this article can be stated simply: nonlinearity does not invalidate superposition—it relocates it.</p>
+<p>We began with the observation that nonlinear systems are often described as systems where superposition fails. This characterization, while not incorrect, is incomplete. It obscures the deeper geometric truth that at every point in state space, for every smooth nonlinear system, there exists a tangent space where superposition holds exactly. The failure of global superposition arises not from any local breakdown of linearity, but from the way these tangent spaces vary across the manifold.</p>
+<p>This perspective offers both conceptual clarity and practical power. Conceptually, it reveals linearization not as an engineering expedient or a first-order approximation, but as the exact infinitesimal structure of nonlinear dynamics. The tangent space is not approximately linear—it is exactly linear, by construction. The derivative is not almost a linear map—it is a linear map, by definition.</p>
+<p>Practically, this perspective explains why linear techniques work so well for nonlinear systems. LQR succeeds because it exploits exact local structure. Lyapunov’s indirect method provides rigorous stability conclusions because the linearization captures the essential character of nearby dynamics. The entire edifice of modern nonlinear control—gain scheduling, feedback linearization, model predictive control—rests on the foundation we have described.</p>
+<p>The geometric picture is worth holding in mind: a trajectory winding through state space, passing through a continuous family of tangent spaces, each providing an exact linear snapshot of the local dynamics. The complexity of nonlinear behavior emerges from how these snapshots fit together—from the curvature and topology of the underlying manifold. But at each instant, in each tangent space, the dynamics are as linear and superposable as any textbook example.</p>
+<p>This is not an approximation theory. It is the geometric foundation of nonlinear mechanics.</p>
+<hr>
+</section>
+<section id="references" class="level2" data-number="13">
+<h2 data-number="13" class="anchored" data-anchor-id="references"><span class="header-section-number">13</span> References</h2>
+<ol type="1">
+<li><p>Khalil, H. K. (2002). <em>Nonlinear Systems</em> (3rd ed.). Prentice Hall. — The standard graduate text on nonlinear control, with rigorous treatment of linearization and Lyapunov stability.</p></li>
+<li><p>Abraham, R., &amp; Marsden, J. E. (1978). <em>Foundations of Mechanics</em> (2nd ed.). Benjamin/Cummings. — Comprehensive treatment of geometric mechanics and tangent bundle structures.</p></li>
+<li><p>Lee, J. M. (2012). <em>Introduction to Smooth Manifolds</em> (2nd ed.). Springer. — Rigorous development of tangent spaces and differential geometry.</p></li>
+<li><p>Sastry, S. (1999). <em>Nonlinear Systems: Analysis, Stability, and Control</em>. Springer. — Accessible treatment bridging differential geometry and control theory.</p></li>
+<li><p>Arnold, V. I. (1989). <em>Mathematical Methods of Classical Mechanics</em> (2nd ed.). Springer. — Elegant geometric perspective on classical dynamics and tangent structures.</p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

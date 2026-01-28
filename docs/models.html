@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Mathematical models and simulations for golf biomechanics and control theory">
+<meta name="description" content="Companion guide to the Golf Modeling Suite - a unified platform for golf swing analysis across multiple physics engines">
 
-<title>Models – AffineDrift</title>
+<title>Golf Modeling Suite – AffineDrift</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -114,9 +288,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="./css/startup-launcher.css" as="style">
 <link rel="preload" href="./styles.css" as="style">
 <link rel="preload" href="./script.js" as="script">
+<link rel="preload" href="./js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="./js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="./js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="./manifest.json">
@@ -162,39 +341,9 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
 
+<link rel="stylesheet" href="css/startup-launcher.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="css/search-metrics.css">
 </head>
@@ -238,6 +387,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -251,45 +404,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="./models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link active" href="./models.html" aria-current="page"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -380,12 +498,12 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Models</h1>
+<h1 class="title">Golf Modeling Suite</h1>
 </div>
 
 <div>
   <div class="description">
-    Mathematical models and simulations for golf biomechanics and control theory
+    Companion guide to the Golf Modeling Suite - a unified platform for golf swing analysis across multiple physics engines
   </div>
 </div>
 
@@ -402,24 +520,22 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="resources-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Models</h3>
+          <h3 class="sidebar-heading anchored">On This Page</h3>
           <ul class="sidebar-links">
             <li><a href="#overview">Overview</a></li>
-            <li><a href="#simulink">Matlab Simulink</a></li>
-            <li><a href="#mujoco">MuJoCo</a></li>
-            <li><a href="#drake">Drake</a></li>
-            <li><a href="#pinocchio">Pinocchio</a></li>
-            <li><a href="#pendulum">Pendulum</a></li>
-            <li><a href="#opensim">OpenSim</a></li>
-            <li><a href="#myosim">MyoSim</a></li>
-            <li><a href="#wrist-universal">Wrist Universal Joint</a></li>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#physics-engines">Physics Engines</a></li>
+            <li><a href="#project-structure">Project Structure</a></li>
+            <li><a href="#features">Key Features</a></li>
+            <li><a href="#theory">Theory Resources</a></li>
+            <li><a href="#interactive-tools">Interactive Tools</a></li>
           </ul>
         </nav>
       </div>
@@ -428,244 +544,343 @@ ul.task-list li input[type="checkbox"] {
       <!-- Main Content -->
       <main class="main-content-area">
         <div class="resource-grid">
-          <div id="overview" class="resource-card">
-            <h3>Models Overview</h3>
+
+          <!-- Overview Section -->
+          <div id="overview" class="resource-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+            <h2 style="color: white; margin-bottom: 1rem;" class="anchored">Golf Modeling Suite</h2>
+            <p style="font-size: 1.15rem; line-height: 1.8; margin-bottom: 1.5rem;">
+              A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite enables comprehensive analysis from simple educational pendulums to complex 290-muscle musculoskeletal models.
+            </p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener" class="resource-link" style="background: white; color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                View Repository on GitHub
+              </a>
+              <a href="#getting-started" class="resource-link" style="background: rgba(255,255,255,0.2); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid white;">
+                Quick Start Guide
+              </a>
+            </div>
+          </div>
+
+          <!-- About This Website -->
+          <div class="resource-card" style="background: var(--surface-light); border-left: 4px solid var(--accent-blue); padding: 1.5rem; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 0.75rem;" class="anchored">About This Companion Website</h3>
             <p class="resource-description">
-              This section contains mathematical models and simulations implemented across various platforms 
-              for analyzing golf biomechanics, control-affine systems, and multibody dynamics. Each model 
-              category provides tools and documentation for understanding the underlying physics and control 
-              principles. Click on any model to expand and view details.
+              This website serves as a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the actual implementation code, simulation models, and technical documentation, this website provides:
+            </p>
+            <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+              <li><strong>Advanced Theory</strong> - Mathematical foundations and control-affine system theory</li>
+              <li><strong>Research Context</strong> - Links to academic papers, books, and foundational resources</li>
+              <li><strong>Learning Pathways</strong> - Curated educational materials for each physics engine</li>
+              <li><strong>Interactive Tools</strong> - Web-based visualizations and calculators</li>
+            </ul>
+            <p class="resource-description">
+              For implementation details, installation instructions, and source code, please visit the <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub repository</a>.
             </p>
           </div>
 
-          <div id="simulink" class="category-section">
-            <h3 class="category-title">Matlab Simulink Models</h3>
+          <!-- Getting Started Section -->
+          <div id="getting-started" class="category-section">
+            <h3 class="category-title anchored">Getting Started</h3>
+          </div>
+
+          <div class="resource-card" style="margin-bottom: 1.5rem;">
+            <h4 class="anchored">Requirements</h4>
+            <ul style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">
+              <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
+              <li><strong>Git with LFS support</strong> for large model files</li>
+              <li><strong>MATLAB R2023a+</strong> (optional, for Simscape models)</li>
+              <li><strong>Conda</strong> recommended for managing binary dependencies</li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem;" class="anchored">Quick Installation</h4>
+            <pre style="background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0;"><code>git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
+cd Golf_Modeling_Suite
+conda env create -f environment.yml
+conda activate golf-modeling</code></pre>
+            <p class="resource-description">
+              For detailed installation instructions and troubleshooting, see the <a href="https://github.com/D-sorganization/Golf_Modeling_Suite#installation" target="_blank" rel="noopener">repository documentation</a>.
+            </p>
+          </div>
+
+          <!-- Physics Engines Section -->
+          <div id="physics-engines" class="category-section">
+            <h3 class="category-title anchored">Supported Physics Engines</h3>
           </div>
 
           <div class="accordion-item">
             <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Matlab Simulink Models</span>
+              <span>MuJoCo (Recommended)</span>
               <span class="accordion-icon">+</span>
             </button>
             <div class="accordion-content">
               <p class="resource-description">
-                Control-affine system models, drift-input decomposition simulations, and golf swing dynamics 
-                implemented in Matlab Simulink. These models implement the theoretical framework developed in 
-                the Drifter Manifesto series, providing numerical simulations and analysis tools. Includes 
-                comprehensive documentation of numerical routines, model structure, and supporting technical 
-                notes.
+                <strong>Multi-Joint dynamics with Contact</strong> - The recommended engine for most use cases. MuJoCo provides fast, accurate physics simulation ideal for biomechanical analysis with full musculoskeletal models and contact dynamics.
               </p>
-              <a href="models-simulink.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="mujoco" class="category-section">
-            <h3 class="category-title">MuJoCo Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MuJoCo Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Physics-based simulations using MuJoCo (Multi-Joint dynamics with Contact) for biomechanical 
-                analysis, including golf swing models, pendulum systems, and multibody dynamics simulations. 
-                MuJoCo provides fast and accurate physics simulation for model-based optimization and analysis.
-              </p>
-              <a href="models-mujoco.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="drake" class="category-section">
-            <h3 class="category-title">Drake Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Drake Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Robotics and control system models implemented in Drake, focusing on underactuated systems, 
-                manipulation, and control-affine dynamics. Drake is an open-source toolbox from MIT's Robot 
-                Locomotion Group that provides tools for modeling, simulation, and control of complex robotic 
-                systems.
-              </p>
-              <a href="models-drake.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="pinocchio" class="category-section">
-            <h3 class="category-title">Pinocchio Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Pinocchio Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Rigid body dynamics and kinematics models using Pinocchio, including forward/inverse dynamics, 
-                Jacobian computations, and constraint handling for multibody systems. Pinocchio provides efficient 
-                algorithms for robot dynamics and kinematics, based on Roy Featherstone's "Rigid Body Dynamics 
-                Algorithms."
-              </p>
-              <a href="models-pinocchio.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="pendulum" class="category-section">
-            <h3 class="category-title">Pendulum Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Pendulum Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Pendulum-based models and simulations that serve as simplified analogs for understanding golf 
-                swing dynamics, including single, double, and multi-link pendulum systems. These models provide 
-                insights into control-affine systems, drift-input decomposition, and the fundamental physics of 
-                underactuated multibody systems.
-              </p>
-              <a href="models-pendulum.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="opensim" class="category-section">
-            <h3 class="category-title">OpenSim Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>OpenSim Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Biomechanics simulation models using OpenSim, a freely available, open-source software platform 
-                for modeling, simulating, and analyzing the neuromusculoskeletal system. OpenSim enables building 
-                and analyzing musculoskeletal models, performing inverse kinematics and dynamics, and simulating 
-                movement.
-              </p>
-              <a href="models-opensim.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="myosim" class="category-section">
-            <h3 class="category-title">MyoSim Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MyoSim Models</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Muscle-driven movement simulation models using MyoSim, an open-source software library for 
-                simulating muscle-driven movement. MyoSim provides tools for biomechanical modeling and analysis, 
-                enabling researchers to build and simulate models of muscle-tendon systems and analyze muscle 
-                activation patterns.
-              </p>
-              <a href="models-myosim.html" class="resource-link">View Details →</a>
-            </div>
-          </div>
-
-          <div id="wrist-universal" class="category-section">
-            <h3 class="category-title">Wrist Universal Joint Models</h3>
-          </div>
-          <div class="accordion-item">
-            <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Wrist Universal Joint Model</span>
-              <span class="accordion-icon">+</span>
-            </button>
-            <div class="accordion-content">
-              <p class="resource-description">
-                Interactive application modeling the wrist as a universal joint with proper kinematics. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis, with real-time visualization and calculations.
-              </p>
-              <a href="tools/wrist_universal_joint/grip_angle_simulator.html" class="resource-link">View Interactive Tool →</a>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Full musculoskeletal models with realistic contact</li>
+                <li>Model-based optimization and trajectory planning</li>
+                <li>Real-time visualization and analysis</li>
+                <li>Integration with reinforcement learning frameworks</li>
+              </ul>
+              <h4 class="anchored">Learning Resources:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="https://mujoco.readthedocs.io/en/stable/" target="_blank" rel="noopener">MuJoCo Documentation</a></li>
+                <li><a href="https://mujoco.readthedocs.io/en/stable/programming.html" target="_blank" rel="noopener">Programming Guide</a></li>
+                <li><a href="https://github.com/google-deepmind/mujoco/discussions" target="_blank" rel="noopener">Community Discussions</a></li>
+              </ul>
             </div>
           </div>
 
           <div class="accordion-item">
             <button class="accordion-header" type="button" aria-expanded="false">
-              <span>Wrist Universal Joint Model (PyQt6)</span>
+              <span>Drake</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                <strong>MIT Robot Locomotion Group Toolkit</strong> - Specialized for trajectory optimization and model-based design. Drake excels at underactuated systems analysis, making it ideal for studying the control-affine nature of the golf swing.
+              </p>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Trajectory optimization and motion planning</li>
+                <li>Underactuated systems analysis</li>
+                <li>Control-affine dynamics modeling</li>
+                <li>Mathematical program solvers</li>
+              </ul>
+              <h4 class="anchored">Learning Resources:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="https://underactuated.mit.edu/" target="_blank" rel="noopener">Underactuated Robotics (MIT Course)</a></li>
+                <li><a href="https://manipulation.mit.edu/" target="_blank" rel="noopener">Robotic Manipulation (MIT Course)</a></li>
+                <li><a href="https://drake.mit.edu/pydrake/" target="_blank" rel="noopener">PyDrake API Documentation</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Pinocchio</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                <strong>High-Performance Rigid Body Dynamics</strong> - Based on Roy Featherstone's algorithms, Pinocchio provides efficient computation of forward/inverse dynamics, Jacobians, and constraint handling for multibody systems.
+              </p>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Efficient forward/inverse dynamics</li>
+                <li>Analytical Jacobian computation</li>
+                <li>Constraint handling for closed-loop mechanisms</li>
+                <li>Spatial algebra operations</li>
+              </ul>
+              <h4 class="anchored">Learning Resources:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="https://stack-of-tasks.github.io/pinocchio/" target="_blank" rel="noopener">Pinocchio Documentation</a></li>
+                <li><a href="https://royfeatherstone.org/" target="_blank" rel="noopener">Roy Featherstone's Website</a></li>
+                <li><a href="https://www.amazon.com/dp/1447113341" target="_blank" rel="noopener">Rigid Body Dynamics Algorithms (Book)</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>OpenSim</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                <strong>Stanford Biomechanics Platform</strong> - The gold standard for biomechanical validation and analysis. OpenSim provides detailed musculoskeletal models with muscle-tendon units, inverse kinematics/dynamics, and motion capture integration.
+              </p>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Biomechanical validation and analysis</li>
+                <li>Inverse kinematics and dynamics</li>
+                <li>Motion capture data integration</li>
+                <li>Muscle activation analysis</li>
+              </ul>
+              <h4 class="anchored">Learning Resources:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="https://simtk.org/projects/opensim" target="_blank" rel="noopener">OpenSim on SimTK</a></li>
+                <li><a href="https://simtk-confluence.stanford.edu:8443/display/OpenSim" target="_blank" rel="noopener">OpenSim Documentation</a></li>
+                <li><a href="https://simtk.org/forums/viewforum.php?f=91" target="_blank" rel="noopener">Community Forums</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MyoSuite</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                <strong>Realistic Muscle Dynamics</strong> - MyoSuite provides 290-muscle musculoskeletal models for detailed muscle-driven movement simulation. Ideal for studying muscle activation patterns and force generation in complex movements.
+              </p>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>290-muscle full-body models</li>
+                <li>Realistic muscle dynamics and activation</li>
+                <li>Integration with MuJoCo physics</li>
+                <li>Reinforcement learning ready</li>
+              </ul>
+              <h4 class="anchored">Learning Resources:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="https://sites.google.com/view/myosuite" target="_blank" rel="noopener">MyoSuite Project Page</a></li>
+                <li><a href="https://github.com/MyoHub/myosuite" target="_blank" rel="noopener">GitHub Repository</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>MATLAB Simscape Multibody</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                <strong>MathWorks Simulation Environment</strong> - MATLAB Simscape models implement the control-affine theoretical framework from the Drifter Manifesto series, providing drift-input decomposition and numerical analysis tools.
+              </p>
+              <h4 style="margin: 1rem 0 0.5rem;" class="anchored">Key Capabilities:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li>Control-affine system implementation</li>
+                <li>Drift-input decomposition analysis</li>
+                <li>Integration with MATLAB analysis tools</li>
+                <li>Simulink block diagrams</li>
+              </ul>
+              <h4 class="anchored">Related Theory:</h4>
+              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                <li><a href="articles/theory-part5.html">Theory Part 5 - Simulink Model Documentation</a></li>
+                <li><a href="https://www.mathworks.com/products/simscape-multibody.html" target="_blank" rel="noopener">Simscape Multibody</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Project Structure Section -->
+          <div id="project-structure" class="category-section">
+            <h3 class="category-title anchored">Project Structure</h3>
+          </div>
+
+          <div class="resource-card" style="margin-bottom: 1.5rem;">
+            <pre style="background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"><code>Golf_Modeling_Suite/
+├── docs/                    # Comprehensive guides and API documentation
+├── launchers/               # Unified launch applications
+├── engines/
+│   ├── physics_engines/     # MuJoCo, Drake, Pinocchio, OpenSim, MyoSuite
+│   ├── Simscape_Multibody/  # MATLAB/Simulink models
+│   └── pendulum_models/     # Educational pendulum implementations
+├── shared/                  # Common utilities and data formats
+└── tools/                   # Analysis and visualization tools</code></pre>
+          </div>
+
+          <!-- Key Features Section -->
+          <div id="features" class="category-section">
+            <h3 class="category-title anchored">Key Features</h3>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="resource-card" style="padding: 1.5rem;">
+              <h4 class="anchored">Advanced Biomechanics</h4>
+              <p class="resource-description">Inverse kinematics/dynamics, motion capture integration, and muscle dynamics analysis.</p>
+            </div>
+            <div class="resource-card" style="padding: 1.5rem;">
+              <h4 class="anchored">Real-Time Visualization</h4>
+              <p class="resource-description">3D rendering with multiple analysis plot types for immediate feedback during simulation.</p>
+            </div>
+            <div class="resource-card" style="padding: 1.5rem;">
+              <h4 class="anchored">Cross-Engine Validation</h4>
+              <p class="resource-description">Compare results across different simulators to validate models and build confidence.</p>
+            </div>
+            <div class="resource-card" style="padding: 1.5rem;">
+              <h4 class="anchored">Data Export</h4>
+              <p class="resource-description">CSV and JSON formats for external analysis and integration with other tools.</p>
+            </div>
+          </div>
+
+          <!-- Theory Resources Section -->
+          <div id="theory" class="category-section">
+            <h3 class="category-title anchored">Theory Resources on This Website</h3>
+          </div>
+
+          <div class="resource-card" style="margin-bottom: 1.5rem;">
+            <p class="resource-description">
+              This companion website provides theoretical background and advanced concepts to complement the practical implementations in the repository:
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+              <a href="drifter-manifesto.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+                <strong>Drifter Manifesto</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Control-affine theory applied to golf swing dynamics</p>
+              </a>
+              <a href="articles/theory-part1.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+                <strong>Theory Series</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Mathematical foundations and derivations</p>
+              </a>
+              <a href="articles/inverse-dynamics.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+                <strong>Inverse Dynamics</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Computing joint torques from motion data</p>
+              </a>
+              <a href="articles/drift-components-wrench-double-pendulum.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+                <strong>Drift &amp; Wrench Analysis</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Passive dynamics in multibody systems</p>
+              </a>
+            </div>
+          </div>
+
+          <!-- Interactive Tools Section -->
+          <div id="interactive-tools" class="category-section">
+            <h3 class="category-title anchored">Interactive Tools</h3>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint Simulator</span>
+              <span class="accordion-icon">+</span>
+            </button>
+            <div class="accordion-content">
+              <p class="resource-description">
+                Interactive web application modeling the wrist as a universal joint. Explore how grip angle and wrist deviation affect torque transmission to the club's shaft axis and high-inertia axis.
+              </p>
+              <a href="tools/wrist_universal_joint/grip_angle_simulator.html" class="resource-link">Launch Web Tool</a>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Wrist Universal Joint (PyQt6 Desktop)</span>
               <span class="accordion-icon">+</span>
             </button>
             <div class="accordion-content">
               <p class="resource-description">
                 Enhanced PyQt6 desktop application with advanced GUI features. Download and run locally for full interactive control over grip angle, wrist angle, club properties, and signal generation.
               </p>
-              <a href="content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application →</a>
+              <a href="content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py" class="resource-link">Download Application</a>
             </div>
           </div>
+
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Models History -->
+      <!-- Right Sidebar -->
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Models</h3>
-          <ul class="sidebar-links" id="models-history-list">
-            <li class="history-empty">No recent models yet</li>
-          </ul>
-        </nav>
-      </div>
+          <nav class="history-nav">
+            <h3 class="sidebar-heading anchored">Quick Links</h3>
+            <ul class="sidebar-links">
+              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite/issues" target="_blank" rel="noopener">Report Issues</a></li>
+              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite/discussions" target="_blank" rel="noopener">Discussions</a></li>
+            </ul>
+          </nav>
+          <nav class="history-nav" style="margin-top: 1.5rem;">
+            <h3 class="sidebar-heading anchored">License</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); padding: 0 0.5rem;">
+              MIT License - Open source with permissive terms for research and commercial use.
+            </p>
+          </nav>
+        </div>
       </aside>
     </div>
   </div>
 </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const modelsHistoryList = document.getElementById('models-history-list');
-  if (!modelsHistoryList) return;
-
-  const MODEL_PAGES = [
-    'models.html',
-    'models-simulink.html',
-    'models-mujoco.html',
-    'models-drake.html',
-    'models-pinocchio.html',
-    'models-pendulum.html',
-    'models-opensim.html',
-    'models-myosim.html'
-  ];
-
-  function updateModelsHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'models.html'
-    };
-
-    if (MODEL_PAGES.includes(currentPage.url)) {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      modelsHistoryList.innerHTML = '<li class="history-empty">No recent models yet</li>';
-      return;
-    }
-
-    modelsHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
-  }
-
-  updateModelsHistory();
-});
-</script>
-
-
-
 
 
 
@@ -1071,17 +1286,23 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

@@ -2544,19 +2544,102 @@ h1.title,
 /* Fix: Bibliography Layout */
 
 /* Ensure the grid doesn't collapse the main content too aggressively */
+/* Fix: Bibliography Layout and Standard Page Layout */
+
+.left-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color);
+  padding-right: 1rem;
+}
+
+.left-sidebar.blue-sidebar {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-right: none;
+}
+
+.left-sidebar.blue-sidebar .drift-intro-text p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+}
+
+.left-sidebar .sidebar-sticky-content {
+  position: sticky;
+  top: calc(var(--header-offset) + 2rem);
+  height: calc(100vh - var(--header-offset) - 4rem);
+  overflow-y: auto;
+}
+
+/* Ensure the grid doesn't collapse the main content too aggressively */
+/* Using high specificity to override Quarto's .page-columns defaults */
 @media (width >=1200px) {
+
+  div.standard-page-layout,
   .standard-page-layout {
-    grid-template-columns: 250px 1fr 300px;
-    /* Slightly reduced sidebars */
+    display: grid !important;
+    grid-template-columns: 280px minmax(0, 1fr) 250px !important;
+    /* Default: 3 columns */
+    gap: 2rem !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Override for pages with only Left Sidebar (Overview) */
+  div.standard-page-layout.standard-page-layout--single,
+  .standard-page-layout.standard-page-layout--single {
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+    /* 2 columns only */
+  }
+
+  /* Explicit Child Placement to defeat Quarto's auto-placement or grid-column rules */
+  .standard-page-layout>.left-sidebar {
+    grid-column: 1 !important;
+    display: block !important;
+  }
+
+  .standard-page-layout>.main-content-area {
+    grid-column: 2 !important;
+    width: 100% !important;
+    /* Prevent it from being 0 width */
+    max-width: none !important;
+  }
+
+  .standard-page-layout>.right-sidebar {
+    grid-column: 3 !important;
+    display: block !important;
+  }
+
+  /* For single layout, ensure main content is in col 2 */
+  .standard-page-layout--single>.main-content-area {
+    grid-column: 2 !important;
   }
 }
 
-@media (width <=1200px) {
+@media (width < 1200px) {
   .standard-page-layout {
-    grid-template-columns: 200px 1fr 250px;
-    gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  /* Hide right sidebar on smaller screens */
+  .standard-page-layout .right-sidebar {
+    display: none;
   }
 }
+
+/* Force Search Bar Right Alignment Globally */
+#quarto-header #quarto-search {
+  margin-left: auto !important;
+}
+
 
 
 /* ---
@@ -3128,46 +3211,3 @@ h1.title,
 }
 
 /* ---
-   Responsive Grid Adjustments
-   --- */
-@media (max-width: 1200px) {
-
-  .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
-  .standard-page-layout {
-    grid-template-columns: 250px 1fr;
-    /* Drop right sidebar or stack */
-  }
-
-  .right-sidebar {
-    display: none;
-    /* Hide right sidebar on tablets for now, or move to bottom */
-  }
-}
-
-@media (max-width: 900px) {
-
-  .page-columns.page-full .standard-page-layout,
-  .container .standard-page-layout,
-  .standard-page-layout {
-    grid-template-columns: 1fr;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .left-sidebar,
-  .right-sidebar {
-    width: 100%;
-    position: static;
-    /* Disable sticky on mobile */
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 2rem;
-  }
-
-  .sidebar-sticky-content {
-    position: static;
-    max-height: none;
-  }
-}

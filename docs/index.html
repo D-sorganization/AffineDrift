@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -114,9 +288,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="./css/startup-launcher.css" as="style">
 <link rel="preload" href="./styles.css" as="style">
 <link rel="preload" href="./script.js" as="script">
+<link rel="preload" href="./js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="./js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="./js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="./manifest.json">
@@ -162,39 +341,9 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
 
+<link rel="stylesheet" href="css/startup-launcher.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="css/search-metrics.css">
 </head>
@@ -221,7 +370,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -238,6 +387,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -251,45 +404,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="./models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -402,129 +520,248 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="container">
-  <div class="home-layout">
-    <!-- Combined Left Sidebar -->
-    <aside class="home-sidebar">
+<!-- Mobile Menu Toggle Button -->
+<button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" fill="currentColor">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+  </svg>
+</button>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="sidebar-overlay"></div>
+
+<div class="container page-columns page-full">
+  <div class="home-layout home-layout-3col page-columns page-full">
+    <!-- Left Sidebar with Collapsible Sections -->
+    <aside class="home-sidebar" id="home-sidebar">
       <div class="sidebar-sticky-content">
-        <div class="sidebar-section">
-          <h3>Articles & Theory</h3>
-          <ul class="resource-links">
-            <li><a href="drifter-manifesto.html">Drifter Manifesto</a></li>
-            <li><a href="articles.html">All Articles</a></li>
-            <li><a href="research-reviews.html">Research Reviews</a></li>
-            <li><a href="book-reviews.html">Book Reviews</a></li>
-            <li><a href="bibliography.html">Bibliography</a></li>
-            <li><a href="overview.html">Technical Overview</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3>Models & Simulations</h3>
-          <ul class="resource-links">
-            <li><a href="models.html">Models Home</a></li>
-            <li><a href="models-simulink.html">MATLAB Simulink</a></li>
-            <li><a href="models-mujoco.html">MuJoCo Models</a></li>
-            <li><a href="models-drake.html">Drake Models</a></li>
-            <li><a href="models-pinocchio.html">Pinocchio Models</a></li>
-            <li><a href="models-opensim.html">OpenSim Models</a></li>
-            <li><a href="models-myosim.html">MyoSim Models</a></li>
-          </ul>
+
+        <div class="sidebar-section collapsible-section">
+          <button class="sidebar-section-toggle" aria-expanded="true" data-target="articles-section">
+            <h3 class="anchored">Articles &amp; Theory</h3>
+            <span class="toggle-icon">▼</span>
+          </button>
+          <div id="articles-section" class="sidebar-section-content show">
+            <ul class="resource-links">
+              <li><a href="articles.html">Articles Home</a></li>
+              <li><a href="drifter-manifesto.html">Drifter Manifesto</a></li>
+              <li><a href="tangent-hyperplanes.html">Tangent Hyperplanes</a></li>
+              <li><a href="research-reviews.html">Research Reviews</a></li>
+              <li><a href="book-reviews.html">Book Reviews</a></li>
+              <li><a href="bibliography.html">Bibliography</a></li>
+              <li><a href="overview.html">Technical Overview</a></li>
+            </ul>
+          </div>
         </div>
 
-        <div class="sidebar-section">
-          <h3>Learning Resources</h3>
-          <ul class="resource-links">
-            <li><a href="resources-videos.html">Educational Videos</a></li>
-            <li><a href="resources-books.html">Books</a></li>
-            <li><a href="resources-papers.html">Research Papers</a></li>
-            <li><a href="resources-websites.html">Websites</a></li>
-            <li><a href="resources-datasets.html">Datasets</a></li>
-          </ul>
+        <div class="sidebar-section collapsible-section">
+          <button class="sidebar-section-toggle" aria-expanded="false" data-target="models-section">
+            <h3 class="anchored">Models</h3>
+            <span class="toggle-icon">▼</span>
+          </button>
+          <div id="models-section" class="sidebar-section-content">
+            <ul class="resource-links">
+              <li><a href="models.html">Golf Modeling Suite</a></li>
+              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
+            </ul>
+          </div>
         </div>
-        
-        <div class="sidebar-section">
-          <h3>Software & Tools</h3>
-          <ul class="resource-links">
-            <li><a href="resources-software.html">Software Tools</a></li>
-            <li><a href="tools.html">Interactive Tools</a></li>
-            <li><a href="resources-researchers.html">Researchers</a></li>
-            <li><a href="resources-notebooklm.html">NotebookLM</a></li>
-          </ul>
+
+        <div class="sidebar-section collapsible-section">
+          <button class="sidebar-section-toggle" aria-expanded="false" data-target="resources-section">
+            <h3 class="anchored">Resources</h3>
+            <span class="toggle-icon">▼</span>
+          </button>
+          <div id="resources-section" class="sidebar-section-content">
+            <ul class="resource-links">
+              <li><a href="resources-videos.html">Educational Videos</a></li>
+              <li><a href="resources-books.html">Books</a></li>
+              <li><a href="resources-papers.html">Research Papers</a></li>
+              <li><a href="resources-websites.html">Websites</a></li>
+              <li><a href="resources-datasets.html">Datasets</a></li>
+            </ul>
+          </div>
         </div>
-        
-        <div class="sidebar-section">
-          <h3>Repositories</h3>
-          <ul class="resource-links">
-            <li><a href="repositories.html">Code Repositories</a></li>
-            <li><a href="repositories-models.html">Model Collections</a></li>
-            <li><a href="repositories-2d-model.html">2D Models</a></li>
-            <li><a href="repositories-3d-model.html">3D Models</a></li>
-          </ul>
-        </div>
-        
-        <div class="sidebar-section">
-          <h3>Connect</h3>
-          <ul class="resource-links">
-            <li><a href="about.html">About Dieter</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="collaborate.html">Collaborate</a></li>
-          </ul>
+
+        <div class="sidebar-section collapsible-section">
+          <button class="sidebar-section-toggle" aria-expanded="false" data-target="connect-section">
+            <h3 class="anchored">Connect</h3>
+            <span class="toggle-icon">▼</span>
+          </button>
+          <div id="connect-section" class="sidebar-section-content">
+            <ul class="resource-links">
+              <li><a href="about.html">About Dieter</a></li>
+              <li><a href="contact.html">Contact</a></li>
+              <li><a href="collaborate.html">Collaborate</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content Area -->
     <main class="home-content">
-      
-      <div class="home-text">
-        <p>
-          This website at its heart is an attempt to build a website I would like to read. I am an avid golf researcher with an interest in robotics and the mechanics of linked systems. After scouring the web for resources I finally came to the realization that I could just build the website I was looking for with the articles and resources that I was trying to track down.
-        </p>
-        
-        <p>
-          Rather than trying to organize my notes offline across multiple devices and formats, why not collect them together in a unified place where others who are also interested can find value in them. To achieve this goal, I have leaned heavily on the assistance of AI models in developing and troubleshooting code and building the website.
-        </p>
-        
-        <p>
-          Rather than curate the website myself, I have outlined articles and topics I would like to build or resources that I would like to see and then fed them to AI and importantly - iterated to improve quality. While much of AI generated golf content can end up as correlational gibberish, there can be significant value when you know how to use it right.
-        </p>
-        <p>
-          Rather than asking it for answers, ask it to provide mathematical expressions that can be validated. Ask it to write code that can be reviewed. Ask it to track down sources and links for further information. Every time an article is posted, it is reviewed overnight by automated bots. Feedback is then delivered the following morning. It has been a fun process setting up guardrails to help AI give the most value.
-        </p>
+      <!-- Welcome Section -->
+      <section id="welcome" class="welcome-section">
+        <div class="welcome-header">
+          <h1>Welcome to AffineDrift</h1>
+          <p class="subtitle">AI-Assisted Golf Biomechanics Research</p>
+        </div>
 
+        <div class="welcome-intro">
+          <p>
+            This website at its heart is an attempt to build a website I would like to read. I am an avid golf researcher with an interest in robotics and the mechanics of linked systems. After scouring the web for resources I finally came to the realization that I could just build the website I was looking for with the articles and resources that I was trying to track down.
+          </p>
+          <p>
+            Rather than trying to organize my notes offline across multiple devices and formats, why not collect them together in a unified place where others who are also interested can find value in them.
+          </p>
+        </div>
+      </section>
+
+
+
+      <!-- Math Showcase -->
+      <section id="framework" class="math-section">
+        <h2 class="anchored">The Core Framework</h2>
+        <p>The golf swing can be modeled as a control-affine system:</p>
         <div class="math-showcase">
           $$\dot{x} = f(x) + g(x)u$$
         </div>
+        <p>
+          Where <em>f(x)</em> represents the drift dynamics (passive forces like gravity and centrifugal effects) and <em>g(x)u</em> represents the controlled torque inputs from the golfer.
+        </p>
+      </section>
 
-        <p>
-          The agents reviewing the site have different personas. There are editors attempting to improve the fluidity and prose. There is a curator coming up with new topics or avenues to explore. There is a librarian at work in the background curating a crosslinked bibliography of all of the sources that are available. There are mathematicians and mechanics scouring the equations and validating and debugging them.
-        </p>
-        
-        <p>
-          Importantly, there are also critics. My goal here is not to hide weakness, but identify it and explore it. The edge cases and shortcomings of a given paradigm often hold extreme value. There is an agent to defend and shore up any technical shortcomings identified by the critics.
-        </p>
-        
-        <p>
-          By no means is the website intended to be exhaustive or comprehensive. It is just a place to store resources for myself and construct a technical argument towards the understanding of the viewpoint of the golf swing that I have developed through my years of study. This argument and the site are not complete, nor will they ever be. They will evolve and adapt when new information is identified.
-        </p>
-        
-        <p>
-          If this information is of interest to you, feel free to use and share however you choose. I don't care too much about citations personally, but if the information comes from other authors whose work I have linked here, please give credit where credit is due.
-        </p>
-        
-        <p>
-          Researching the golf swing is an often fruitless endeavor where you will encounter more than your fair share of critics. An atta boy or tip of the cap to those providing research into the topics we are all mutually interested in is in order when you find something to help you on your way.
-        </p>
-      </div>
+      <!-- About the Approach Section -->
+      <section id="approach" class="approach-section">
+        <h2 class="anchored">AI-Assisted Research</h2>
+        <div class="approach-content">
+          <p>
+            Rather than curate the website myself, I have outlined articles and topics I would like to build or resources that I would like to see and then fed them to AI and importantly - iterated to improve quality. While much of AI generated golf content can end up as correlational gibberish, there can be significant value when you know how to use it right.
+          </p>
+          <p>
+            Rather than asking it for answers, ask it to provide mathematical expressions that can be validated. Ask it to write code that can be reviewed. Ask it to track down sources and links for further information.
+          </p>
+          <p>
+            The agents reviewing the site have different personas. There are editors attempting to improve the fluidity and prose. There is a curator coming up with new topics or avenues to explore. There is a librarian at work in the background curating a crosslinked bibliography. There are mathematicians and mechanics scouring the equations and validating them.
+          </p>
+          <p>
+            Importantly, there are also critics. My goal here is not to hide weakness, but identify it and explore it. The edge cases and shortcomings of a given paradigm often hold extreme value.
+          </p>
+        </div>
+      </section>
+
+      <!-- Quick Links Section -->
+      <section id="quickstart" class="quick-links-section">
+        <h2 class="anchored">Quick Start</h2>
+        <div class="quick-links-grid">
+          <a href="overview.html" class="quick-link-card">
+            <span class="quick-link-icon">📖</span>
+            <span class="quick-link-text">Technical Overview</span>
+          </a>
+          <a href="models.html" class="quick-link-card">
+            <span class="quick-link-icon">💻</span>
+            <span class="quick-link-text">Golf Modeling Suite</span>
+          </a>
+          <a href="bibliography.html" class="quick-link-card">
+            <span class="quick-link-icon">📚</span>
+            <span class="quick-link-text">Bibliography</span>
+          </a>
+          <a href="contact.html" class="quick-link-card">
+            <span class="quick-link-icon">✉</span>
+            <span class="quick-link-text">Contact</span>
+          </a>
+        </div>
+      </section>
     </main>
+
+    <!-- Right Sidebar - Table of Contents -->
+    <aside class="home-toc">
+      <div class="sidebar-sticky-content">
+        <h3 class="sidebar-heading anchored">On This Page</h3>
+        <ul class="toc-links">
+          <li><a href="#welcome">Welcome</a></li>
+
+          <li><a href="#framework">Core Framework</a></li>
+          <li><a href="#approach">AI-Assisted Research</a></li>
+          <li><a href="#quickstart">Quick Start</a></li>
+        </ul>
+      </div>
+    </aside>
   </div>
 </div>
 
-<!-- Styles moved to styles.css - Home Page Layout section -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Collapsible sidebar sections functionality
+  const toggleButtons = document.querySelectorAll('.sidebar-section-toggle');
 
+  toggleButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-target');
+      const target = document.getElementById(targetId);
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
 
+      // Toggle the state
+      this.setAttribute('aria-expanded', !isExpanded);
+      target.classList.toggle('show');
 
+      // Animate the toggle icon
+      const icon = this.querySelector('.toggle-icon');
+      if (icon) {
+        icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    });
+
+    // Initialize toggle icon rotation based on initial state
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    const icon = button.querySelector('.toggle-icon');
+    if (icon && isExpanded) {
+      icon.style.transform = 'rotate(180deg)';
+    }
+  });
+
+  // Mobile Menu Toggle Functionality
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const sidebar = document.getElementById('home-sidebar');
+  const overlay = document.querySelector('.sidebar-overlay');
+
+  if (mobileMenuToggle && sidebar && overlay) {
+    mobileMenuToggle.addEventListener('click', function() {
+      const isOpen = sidebar.classList.contains('open');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+      this.setAttribute('aria-expanded', !isOpen);
+
+      // Toggle hamburger icon to X
+      if (!isOpen) {
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
+      } else {
+        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
+      }
+    });
+
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      mobileMenuToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
+    });
+
+    // Close sidebar when clicking a link on mobile
+    sidebar.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('active');
+          mobileMenuToggle.setAttribute('aria-expanded', 'false');
+          mobileMenuToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
+        }
+      });
+    });
+  }
+});
+</script>
 
 
 
@@ -930,17 +1167,23 @@ ul.task-list li input[type="checkbox"] {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

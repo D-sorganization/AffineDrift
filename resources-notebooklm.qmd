@@ -9,7 +9,7 @@ page-layout: full
   <div class="container">
     <div class="standard-page-layout">
       <!-- Left Sidebar: Table of Contents -->
-      <aside class="left-sidebar">
+      <div class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
           <h3 class="sidebar-heading">Resources</h3>
@@ -26,7 +26,7 @@ page-layout: full
           </ul>
         </nav>
       </div>
-      </aside>
+      </div>
 
       <!-- Main Content -->
       <main class="main-content-area">
@@ -174,7 +174,55 @@ page-layout: full
           </div>
         </div>
       </main>
+
+      <!-- Right Sidebar: Recent History -->
+      <div class="right-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent NotebookLM</h3>
+          <ul class="sidebar-links" id="notebooklm-history-list">
+            <li class="history-empty">No recent notebooklm yet</li>
+          </ul>
+        </nav>
+      </div>
+      </div>
+
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const historyList = document.getElementById('notebooklm-history-list');
+  if (!historyList) return;
+
+  function updateHistory() {
+    let history = JSON.parse(localStorage.getItem('affinedrift_notebooklm_history') || '[]');
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.split('/').pop() || 'resources-notebooklm.html'
+    };
+
+    if (currentPage.url === 'resources-notebooklm.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_notebooklm_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      historyList.innerHTML = '<li class="history-empty">No recent notebooklm yet</li>';
+      return;
+    }
+
+    historyList.innerHTML = history.map(item => 
+      `<li><a href="${item.url}">${item.title}</a></li>`
+    ).join('');
+  }
+
+  updateHistory();
+});
+</script>
+
 ```
