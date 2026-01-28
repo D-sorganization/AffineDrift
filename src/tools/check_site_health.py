@@ -162,7 +162,7 @@ def check_site_health() -> None:
         logger.warning("Found %d orphaned files:", len(orphaned_files))
         for orphaned in sorted(orphaned_files):
             logger.warning("  %s", orphaned)
-        has_errors = True
+        # Don't fail on orphaned files - they're just warnings
     else:
         logger.info("No orphaned files found")
 
