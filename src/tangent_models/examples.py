@@ -39,7 +39,7 @@ class SimplePendulum(DynamicalSystem):
         """Compute pendulum dynamics."""
         # x = [theta, omega]
         theta, omega = x
-        u_val = u[0] if isinstance(u, (list, tuple, np.ndarray)) else u
+        u_val = u[0] if isinstance(u, list | tuple | np.ndarray) else u
 
         dtheta = omega
         domega = -(self.g / self.L) * np.sin(theta) + u_val / (self.m * self.L**2)
@@ -78,7 +78,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     ) -> np.ndarray[Any, Any]:
         """Compute spacecraft dynamics."""
         assert not isinstance(
-            u, (float, int)
+            u, float | int
         ), "Control input must be a vector for SpacecraftRendezvous"
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
@@ -111,7 +111,7 @@ class SpacecraftRendezvous(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize spacecraft dynamics."""
-        assert not isinstance(u, (float, int)), "Control input must be a vector"
+        assert not isinstance(u, float | int), "Control input must be a vector"
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
 
@@ -202,7 +202,7 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute quadrotor dynamics."""
-        assert not isinstance(u, (float, int)), "Control input must be a vector"
+        assert not isinstance(u, float | int), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
 
@@ -219,7 +219,7 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize quadrotor dynamics."""
-        assert not isinstance(u, (float, int)), "Control input must be a vector"
+        assert not isinstance(u, float | int), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
         T = u1 + u2
@@ -274,7 +274,7 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute robot arm dynamics."""
-        assert not isinstance(u, (float, int)), "Control input must be a vector"
+        assert not isinstance(u, float | int), "Control input must be a vector"
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
 
@@ -314,7 +314,7 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize robot arm dynamics."""
-        assert not isinstance(u, (float, int)), "Control input must be a vector"
+        assert not isinstance(u, float | int), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
         n = 4
