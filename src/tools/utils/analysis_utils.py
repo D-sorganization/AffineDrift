@@ -75,10 +75,10 @@ def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
                         "lineno": node.lineno,
                         "args": len(node.args.args),
                         "body_lines": (
-                            (node.end_lineno - node.lineno + 1)
+                            (getattr(node, "end_lineno", 0) - getattr(node, "lineno", 0) + 1)
                             if (
-                                getattr(node, "end_lineno", None) is not None
-                                and getattr(node, "lineno", None) is not None
+                                isinstance(getattr(node, "end_lineno", None), int)
+                                and isinstance(getattr(node, "lineno", None), int)
                             )
                             else 0
                         ),
