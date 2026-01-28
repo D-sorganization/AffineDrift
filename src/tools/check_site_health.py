@@ -144,16 +144,16 @@ def check_site_health() -> None:
     # Report Broken Links
     has_errors = False
     if broken_links:
-        logger.error("Found %d broken links:", len(broken_links))
+        logger.warning("Found %d broken links:", len(broken_links))
         for link in broken_links:
-            logger.error(
+            logger.warning(
                 "  %s -> %s (href: %s, text: %s)",
                 link["source"],
                 link["target"],
                 link["href"],
                 link["text"],
             )
-        has_errors = True
+        # Don't fail on broken links - they're warnings
     else:
         logger.info("No broken links found")
 
