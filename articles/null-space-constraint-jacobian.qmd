@@ -598,6 +598,65 @@ For golf swing analysis specifically, this framework explains how elite players 
   </div>
 </section>
 
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Biomechanical Reality:</span>
+          <h3>The "Soft Link" Objection</h3>
+        </div>
+        <p class="critic-argument">
+          The constraint Jacobian formulation assumes rigid links and perfect loop closure ($\Phi(q)=0$). In reality, the human grip is compliant, joints have play, and soft tissues deform. This means the "Null Space" is not a crisp sub-manifold but a "fuzzy" valley. Relying on strict orthogonality ($J \dot{q} = 0$) may lead to false conclusions about force waste, as some "constraint-violating" force is actually storing elastic energy in the soft tissues.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that biological constraints are compliant. However, the <em>stiffness</em> of the constraints (bone compression, grip friction) is orders of magnitude higher than the stiffness of the voluntary motion. The Null Space describes the "Path of Least Resistance." While not a hard geometric limit, deviating from it carries such a high energetic penalty that the rigid-body approximation remains the dominant predictor of coordination.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Control Theory:</span>
+          <h3>Is the Null Space Too Big?</h3>
+        </div>
+        <p class="critic-argument">
+          The article argues that the null space "guides" the swing. But in your 26-DOF model with 7 constraints, the null space has 19 dimensions! A 19-dimensional space is a vast ocean, not a "train track." Simply staying in the null space doesn't explain the highly specific coordination of a pro swing. You've explained why they <em>can</em> move, not why they move <em>that specific way</em>.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a correct observation. The Null Space defines the <em>Feasible Set</em>, not the <em>Optimal Trajectory</em>. It is a necessary but not sufficient condition for a good swing. This article defines the "canvas" on which the swing is painted; subsequent optimization theories (like DCR or jerk minimization) are required to explain the specific brushstrokes within that canvas.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Motor Learning:</span>
+          <h3>Do Golfers "Find" or "Force" the Path?</h3>
+        </div>
+        <p class="critic-argument">
+          The "In Layman's Terms" suggests golfers "find the groove" and let the tracks guide them. This implies a passive strategy. Critics argue that elite golf requires active, high-force stabilization <em>against</em> the constraints (e.g., pushing the hands apart to lock the structure). If you only moved in the null space, you'd be floppy. You need internal constraint forces (which this theory calls "wasted") to create structural rigidity.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This distinction is vital. The Null Space method projects <em>motion-producing</em> forces. It does not forbid <em>internal</em> forces (in the range of $J^T$). We clarify that elite golfers utilize internal forces for <em>stability</em> (stiffness), but rely on null-space forces for <em>speed</em>. The "groove" refers to the trajectory of the mass center, not the internal tension of the linkage.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by defining the boundaries of the model.
+      </div>
+    </div>
+  </div>
+</section>
+
 ## Appendix {.appendix}
 
 ### Proof: Orthogonality of Constraint Forces

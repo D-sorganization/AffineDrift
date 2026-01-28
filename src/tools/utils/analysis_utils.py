@@ -44,7 +44,7 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
                 metrics["classes"] += 1
                 if ast.get_docstring(node):
                     metrics["docstrings"] += 1
-            elif isinstance(node, (ast.If, ast.For, ast.While, ast.ExceptHandler)):
+            elif isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
                 metrics["branches"] += 1
     except (SyntaxError, ValueError):
         # Skip files with syntax errors or other parsing issues
@@ -68,7 +68,7 @@ def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
     try:
         tree = ast.parse(content)
         for node in ast.walk(tree):
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
                 functions.append(
                     {
                         "name": node.name,
