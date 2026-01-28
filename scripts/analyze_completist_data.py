@@ -359,7 +359,6 @@ def generate_report() -> None:
     all_items = criticals + todos
 
     def priority_score(item: Mapping[str, Any]) -> int:
-        """Calculate priority score for sorting."""
         imp, _, comp = calculate_metrics(item)
         return (imp * 10) - comp
 

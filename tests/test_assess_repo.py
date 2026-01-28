@@ -76,7 +76,7 @@ def my_func():
 
 def my_func2():
     """Docstring"""
-    return None  # noqa: placeholder for test fixture
+    pass
 '''
     with patch("pathlib.Path.rglob") as mock_rglob:
         mock_rglob.return_value = []  # No READMEs
