@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>residual-aware_control_layman – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../../styles.css" as="style">
+<link rel="preload" href="../../../script.js" as="script">
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#in-laymans-terms-residual-aware-control" id="toc-in-laymans-terms-residual-aware-control" class="nav-link active" data-scroll-target="#in-laymans-terms-residual-aware-control">In Layman’s Terms: Residual-Aware Control</a>
+  <ul class="collapse">
+  <li><a href="#the-big-idea-in-one-sentence" id="toc-the-big-idea-in-one-sentence" class="nav-link" data-scroll-target="#the-big-idea-in-one-sentence">The Big Idea in One Sentence</a></li>
+  <li><a href="#the-core-problem" id="toc-the-core-problem" class="nav-link" data-scroll-target="#the-core-problem">The Core Problem</a></li>
+  <li><a href="#the-key-insight-drift-reveals-curvature" id="toc-the-key-insight-drift-reveals-curvature" class="nav-link" data-scroll-target="#the-key-insight-drift-reveals-curvature">The Key Insight: Drift Reveals Curvature</a>
+  <ul class="collapse">
+  <li><a href="#the-amount-you-drift-tells-you-how-curvy-the-road-is." id="toc-the-amount-you-drift-tells-you-how-curvy-the-road-is." class="nav-link" data-scroll-target="#the-amount-you-drift-tells-you-how-curvy-the-road-is.">The amount you drift tells you how curvy the road is.</a></li>
+  <li><a href="#mathematical-connection" id="toc-mathematical-connection" class="nav-link" data-scroll-target="#mathematical-connection">Mathematical Connection</a></li>
+  </ul></li>
+  <li><a href="#why-does-this-matter" id="toc-why-does-this-matter" class="nav-link" data-scroll-target="#why-does-this-matter">Why Does This Matter?</a>
+  <ul class="collapse">
+  <li><a href="#adaptive-efficiency" id="toc-adaptive-efficiency" class="nav-link" data-scroll-target="#adaptive-efficiency">1. <strong>Adaptive Efficiency</strong></a></li>
+  <li><a href="#automatic-timestep-adjustment" id="toc-automatic-timestep-adjustment" class="nav-link" data-scroll-target="#automatic-timestep-adjustment">2. <strong>Automatic Timestep Adjustment</strong></a></li>
+  <li><a href="#early-warning-system" id="toc-early-warning-system" class="nav-link" data-scroll-target="#early-warning-system">3. <strong>Early Warning System</strong></a></li>
+  <li><a href="#quantitative-guarantees" id="toc-quantitative-guarantees" class="nav-link" data-scroll-target="#quantitative-guarantees">4. <strong>Quantitative Guarantees</strong></a></li>
+  </ul></li>
+  <li><a href="#real-world-examples" id="toc-real-world-examples" class="nav-link" data-scroll-target="#real-world-examples">Real-World Examples</a>
+  <ul class="collapse">
+  <li><a href="#example-1-quadrotor-doing-a-flip" id="toc-example-1-quadrotor-doing-a-flip" class="nav-link" data-scroll-target="#example-1-quadrotor-doing-a-flip">Example 1: Quadrotor Doing a Flip</a></li>
+  <li><a href="#example-2-robot-walking-detecting-falls-early" id="toc-example-2-robot-walking-detecting-falls-early" class="nav-link" data-scroll-target="#example-2-robot-walking-detecting-falls-early">Example 2: Robot Walking (Detecting Falls Early)</a></li>
+  <li><a href="#example-3-golf-swing-optimization" id="toc-example-3-golf-swing-optimization" class="nav-link" data-scroll-target="#example-3-golf-swing-optimization">Example 3: Golf Swing Optimization</a></li>
+  </ul></li>
+  <li><a href="#how-it-works-without-math" id="toc-how-it-works-without-math" class="nav-link" data-scroll-target="#how-it-works-without-math">How It Works (Without Math)</a>
+  <ul class="collapse">
+  <li><a href="#step-1-predict-drift" id="toc-step-1-predict-drift" class="nav-link" data-scroll-target="#step-1-predict-drift">Step 1: Predict Drift</a></li>
+  <li><a href="#step-2-set-thresholds" id="toc-step-2-set-thresholds" class="nav-link" data-scroll-target="#step-2-set-thresholds">Step 2: Set Thresholds</a></li>
+  <li><a href="#step-3-monitor-in-real-time" id="toc-step-3-monitor-in-real-time" class="nav-link" data-scroll-target="#step-3-monitor-in-real-time">Step 3: Monitor in Real-Time</a></li>
+  <li><a href="#step-4-adapt-automatically" id="toc-step-4-adapt-automatically" class="nav-link" data-scroll-target="#step-4-adapt-automatically">Step 4: Adapt Automatically</a></li>
+  </ul></li>
+  <li><a href="#common-objections-and-answers" id="toc-common-objections-and-answers" class="nav-link" data-scroll-target="#common-objections-and-answers">Common Objections (and Answers)</a>
+  <ul class="collapse">
+  <li><a href="#this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time" id="toc-this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time" class="nav-link" data-scroll-target="#this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time"><strong>“This sounds complicated. Why not just use a good controller all the time?”</strong></a></li>
+  <li><a href="#cant-we-just-predict-the-hard-parts-in-advance" id="toc-cant-we-just-predict-the-hard-parts-in-advance" class="nav-link" data-scroll-target="#cant-we-just-predict-the-hard-parts-in-advance"><strong>“Can’t we just predict the hard parts in advance?”</strong></a></li>
+  <li><a href="#what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller" id="toc-what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller" class="nav-link" data-scroll-target="#what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller"><strong>“What if residuals are always large? Doesn’t this just mean ‘always use the expensive controller’?”</strong></a></li>
+  <li><a href="#this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints" id="toc-this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints" class="nav-link" data-scroll-target="#this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints"><strong>“This seems like it only works for smooth systems. What about impacts, switches, constraints?”</strong></a></li>
+  </ul></li>
+  <li><a href="#whats-new-here" id="toc-whats-new-here" class="nav-link" data-scroll-target="#whats-new-here">What’s New Here?</a>
+  <ul class="collapse">
+  <li><a href="#old-idea-linearization-error-is-quadratic-in-perturbation-size" id="toc-old-idea-linearization-error-is-quadratic-in-perturbation-size" class="nav-link" data-scroll-target="#old-idea-linearization-error-is-quadratic-in-perturbation-size">Old Idea: “Linearization error is quadratic in perturbation size”</a></li>
+  <li><a href="#whats-new" id="toc-whats-new" class="nav-link" data-scroll-target="#whats-new">What’s New:</a></li>
+  </ul></li>
+  <li><a href="#who-should-care" id="toc-who-should-care" class="nav-link" data-scroll-target="#who-should-care">Who Should Care?</a>
+  <ul class="collapse">
+  <li><a href="#robotics-engineers" id="toc-robotics-engineers" class="nav-link" data-scroll-target="#robotics-engineers"><strong>Robotics Engineers</strong></a></li>
+  <li><a href="#aerospace-engineers" id="toc-aerospace-engineers" class="nav-link" data-scroll-target="#aerospace-engineers"><strong>Aerospace Engineers</strong></a></li>
+  <li><a href="#sports-scientists" id="toc-sports-scientists" class="nav-link" data-scroll-target="#sports-scientists"><strong>Sports Scientists</strong></a></li>
+  <li><a href="#algorithm-developers" id="toc-algorithm-developers" class="nav-link" data-scroll-target="#algorithm-developers"><strong>Algorithm Developers</strong></a></li>
+  <li><a href="#students" id="toc-students" class="nav-link" data-scroll-target="#students"><strong>Students</strong></a></li>
+  </ul></li>
+  <li><a href="#the-bottom-line" id="toc-the-bottom-line" class="nav-link" data-scroll-target="#the-bottom-line">The Bottom Line</a></li>
+  <li><a href="#analogies-to-remember" id="toc-analogies-to-remember" class="nav-link" data-scroll-target="#analogies-to-remember">Analogies to Remember</a>
+  <ul class="collapse">
+  <li><a href="#the-gps-navigator" id="toc-the-gps-navigator" class="nav-link" data-scroll-target="#the-gps-navigator"><strong>The GPS Navigator</strong></a></li>
+  <li><a href="#the-staircase" id="toc-the-staircase" class="nav-link" data-scroll-target="#the-staircase"><strong>The Staircase</strong></a></li>
+  <li><a href="#the-hiking-trail" id="toc-the-hiking-trail" class="nav-link" data-scroll-target="#the-hiking-trail"><strong>The Hiking Trail</strong></a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="in-laymans-terms-residual-aware-control" class="level1">
+<h1>In Layman’s Terms: Residual-Aware Control</h1>
+<p><strong>Target Audience:</strong> Non-technical readers, practitioners, students <strong>Source:</strong> Residual-Aware_Control.qmd <strong>Date:</strong> January 18, 2026</p>
+<hr>
+<section id="the-big-idea-in-one-sentence" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-in-one-sentence">The Big Idea in One Sentence</h2>
+<p><strong>“Instead of treating the ‘drift’ from our simplified plans as errors to minimize, we can use them as real-time sensors that tell us exactly when we need to adjust our strategy.”</strong></p>
+<hr>
+</section>
+<section id="the-core-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-core-problem">The Core Problem</h2>
+<p>Imagine you’re driving on a road trip using GPS. Your GPS gives you directions based on a simplified map: “Drive straight for 10 miles.” But reality is messier:</p>
+<ul>
+<li>The road has gentle curves</li>
+<li>There are hills you can’t see on the flat map</li>
+<li>Sometimes there’s a sharp hairpin turn</li>
+</ul>
+<p>If you blindly follow “drive straight,” you’ll drift off course. The worse the curves, the worse your drift.</p>
+<p><strong>Traditional approach:</strong> Use the simplified map anyway, accept some error, and hope it doesn’t get too bad.</p>
+<p><strong>This article’s approach:</strong> Monitor how much you’re drifting in real-time, and use that drift as a signal: - Small drift? Keep using the simple map (cheap, fast) - Big drift? Switch to detailed navigation (expensive, accurate) - Massive drift? You’re on a hairpin turn—zoom in and slow down!</p>
+<p>This is <strong>residual-aware control</strong>: treating “drift from the plan” not as failure, but as valuable information about the terrain you’re navigating.</p>
+<hr>
+</section>
+<section id="the-key-insight-drift-reveals-curvature" class="level2">
+<h2 class="anchored" data-anchor-id="the-key-insight-drift-reveals-curvature">The Key Insight: Drift Reveals Curvature</h2>
+<p>Here’s the central idea that makes everything work:</p>
+<section id="the-amount-you-drift-tells-you-how-curvy-the-road-is." class="level3">
+<h3 class="anchored" data-anchor-id="the-amount-you-drift-tells-you-how-curvy-the-road-is.">The amount you drift tells you how curvy the road is.</h3>
+<p><strong>Straight road (low curvature):</strong> - Your simplified map says “go straight” - Reality is actually straight - Drift = nearly zero - <strong>Strategy:</strong> Trust the simple map, drive fast and confidently</p>
+<p><strong>Gentle curve (moderate curvature):</strong> - Your map says “go straight” - Reality curves slightly - Drift = small but noticeable - <strong>Strategy:</strong> Check the map more often, be ready to adjust</p>
+<p><strong>Hairpin turn (high curvature):</strong> - Your map says “go straight” - Reality curves sharply - Drift = large and growing fast - <strong>Strategy:</strong> Stop trusting the simple map! Use detailed turn-by-turn navigation, slow down, zoom in</p>
+</section>
+<section id="mathematical-connection" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-connection">Mathematical Connection</h3>
+<p>In control systems, the “simplified map” is called <strong>linearization</strong>—treating your complex system as if it were simple and linear.</p>
+<ul>
+<li><strong>Linear system</strong> = straight road (double the gas → double the acceleration)</li>
+<li><strong>Nonlinear system</strong> = curvy road (double the gas might triple the acceleration, depending on conditions)</li>
+</ul>
+<p>The <strong>residual</strong> is the drift: the difference between where the simplified (linear) model says you should be and where the complex (nonlinear) reality actually puts you.</p>
+<p><strong>Key discovery:</strong> The residual isn’t random noise. It’s directly related to the <strong>curvature</strong> of the system: - Low curvature → small residuals - High curvature → large residuals</p>
+<p>By monitoring residuals, you have a <strong>curvature sensor</strong> that tells you when your simple model is breaking down.</p>
+<hr>
+</section>
+</section>
+<section id="why-does-this-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-does-this-matter">Why Does This Matter?</h2>
+<section id="adaptive-efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-efficiency">1. <strong>Adaptive Efficiency</strong></h3>
+<p>Simple controllers (like “LQR” in control theory) are cheap to compute but assume linearity. Complex controllers (like “MPC” in control theory) handle nonlinearity but are expensive.</p>
+<p><strong>Without residual awareness:</strong> - Use cheap controller everywhere → fail on sharp curves - Use expensive controller everywhere → waste 99% of computation on straight roads</p>
+<p><strong>With residual awareness:</strong> - Use cheap controller on straight sections (95% of the time) - Switch to expensive controller only on curves (5% of the time) - <strong>Result:</strong> 10× speedup with same accuracy</p>
+</section>
+<section id="automatic-timestep-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-timestep-adjustment">2. <strong>Automatic Timestep Adjustment</strong></h3>
+<p>When planning a complex motion (like a robot backflip or a golf swing), you need to break time into steps. But how small should the steps be?</p>
+<p><strong>Traditional approach:</strong> - Fixed timestep everywhere - Too large → inaccurate on curves - Too small → wasteful on straight sections</p>
+<p><strong>Residual-aware approach:</strong> - Monitor predicted residuals - Automatically shrink timestep on curves (zoom in on the hard parts) - Automatically expand timestep on straight sections (zoom out on the easy parts) - <strong>Result:</strong> 4× fewer computation steps for same accuracy</p>
+</section>
+<section id="early-warning-system" class="level3">
+<h3 class="anchored" data-anchor-id="early-warning-system">3. <strong>Early Warning System</strong></h3>
+<p>When a real system deviates from your model (unexpected wind, slippery floor, worn motor), residuals spike.</p>
+<p><strong>Traditional controller:</strong> Doesn’t notice until it’s too late <strong>Residual-aware controller:</strong> Detects the spike immediately - “This drift is too large for current conditions” - Automatically switches to more robust mode - Or triggers an alert for human intervention</p>
+<p><strong>Real result:</strong> Robot walking on uneven terrain—fall rate reduced from 15% to 5% by early detection.</p>
+</section>
+<section id="quantitative-guarantees" class="level3">
+<h3 class="anchored" data-anchor-id="quantitative-guarantees">4. <strong>Quantitative Guarantees</strong></h3>
+<p>The article provides mathematical bounds: If the system curvature is M and you step for time Δt with perturbation δx, then:</p>
+<p><strong>Drift ≤ (M/2) × δx² × Δt</strong></p>
+<p>This isn’t just “probably small”—it’s a <strong>guaranteed upper limit</strong>. You can now: - Predict maximum drift before it happens - Set acceptable drift thresholds for safety-critical systems - Certify that “drift will never exceed 5cm” for a surgical robot</p>
+<hr>
+</section>
+</section>
+<section id="real-world-examples" class="level2">
+<h2 class="anchored" data-anchor-id="real-world-examples">Real-World Examples</h2>
+<section id="example-1-quadrotor-doing-a-flip" class="level3">
+<h3 class="anchored" data-anchor-id="example-1-quadrotor-doing-a-flip">Example 1: Quadrotor Doing a Flip</h3>
+<p><strong>System:</strong> A drone (quadrotor) executing an aerial flip</p>
+<p><strong>Phases of motion:</strong></p>
+<p><strong>Cruising (flying straight):</strong> - Curvature: Low (gentle, predictable motion) - Predicted drift: 0.01 meters - <strong>Controller:</strong> Simple LQR at 50 Hz (20ms updates) - <strong>Computational cost:</strong> 2.5 milliseconds per second</p>
+<p><strong>Entering the flip:</strong> - Curvature: Moderate (starting to rotate fast) - Predicted drift: 0.15 meters - <strong>Controller:</strong> Switch to MPC at 100 Hz (10ms updates) - <strong>Computational cost:</strong> 5 milliseconds per second</p>
+<p><strong>Peak of flip (spinning 400 deg/sec):</strong> - Curvature: High (extreme rotation in 3D space) - Predicted drift: 0.45 meters - <strong>Controller:</strong> Full MPC with tiny timesteps - <strong>Computational cost:</strong> 10 milliseconds per second</p>
+<p><strong>Recovery:</strong> - Curvature drops → drift decreases - <strong>Controller:</strong> Automatically switches back to cheap LQR</p>
+<p><strong>Result:</strong> Successful flip with 40% less computation than using fine timesteps everywhere, while keeping drift under control at all times.</p>
+<p><strong>The key:</strong> The controller automatically sensed “this is a sharp curve” during the peak rotation and switched to careful navigation, then sensed “back to smooth sailing” and switched back to efficient mode.</p>
+</section>
+<section id="example-2-robot-walking-detecting-falls-early" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-robot-walking-detecting-falls-early">Example 2: Robot Walking (Detecting Falls Early)</h3>
+<p><strong>System:</strong> Two-legged robot walking across a room</p>
+<p><strong>Challenge:</strong> When the robot’s foot hits the ground (heel strike), there’s a sudden impact—a discontinuity that breaks the smooth assumptions.</p>
+<p><strong>Without residual monitoring:</strong> - Controller assumes smooth motion - Heel strike happens - Model is completely wrong for a brief moment - By the time error is noticed, robot is already falling</p>
+<p><strong>With residual monitoring:</strong> - Controller watches drift continuously - Heel strike causes drift to <strong>spike</strong> (predicted drift ≈ 0.01, actual drift jumps to 0.5+) - <strong>Immediate detection:</strong> “Something discrete just happened” - Switch to hybrid model that accounts for impacts - Robot adjusts and stays balanced</p>
+<p><strong>Experimental result:</strong> ATRIAS robot (60kg, 1.2m tall) - Fixed controller: 15% fall rate (3 out of 20 trials) - Residual-aware controller: 5% fall rate (1 out of 20 trials)</p>
+<p><strong>Analogy:</strong> It’s like a driver who notices “the steering wheel is shaking way more than it should” and immediately pulls over, versus a driver who ignores warning signs until they’re in a ditch.</p>
+</section>
+<section id="example-3-golf-swing-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="example-3-golf-swing-optimization">Example 3: Golf Swing Optimization</h3>
+<p><strong>System:</strong> Optimizing the motion of a golfer’s arms/body to maximize ball speed</p>
+<p><strong>Challenge:</strong> A golf swing has radically different curvature in different phases:</p>
+<p><strong>Backswing:</strong> Slow, smooth motion - Curvature: Low (M ≈ 2.5) - Adaptive timestep: 0.02 seconds - Computation nodes needed: 25</p>
+<p><strong>Transition (top of backswing):</strong> Changing direction - Curvature: Moderate (M ≈ 12) - Adaptive timestep: 0.005 seconds (4× smaller!) - Computation nodes needed: 40</p>
+<p><strong>Downswing:</strong> Explosive acceleration - Curvature: High (M ≈ 45) - Adaptive timestep: 0.002 seconds (10× smaller!) - Computation nodes needed: 150</p>
+<p><strong>Impact (club hits ball in 0.5 milliseconds):</strong> - Curvature: Extreme (M ≈ 200) - Adaptive timestep: 0.0002 seconds (100× smaller!) - Computation nodes needed: 25</p>
+<p><strong>Total with adaptive timesteps:</strong> 240 computation points <strong>Total with uniform fine timesteps:</strong> 1000 computation points (to get same accuracy) <strong>Savings:</strong> 76% reduction in computation</p>
+<p><strong>Performance:</strong> - Ball speed: 71.8 m/s (adaptive) vs 72.1 m/s (uniform fine) = 99.6% accuracy - Computation time: 4× faster</p>
+<p><strong>The key:</strong> The algorithm automatically “zoomed in” on the impact event (the sharpest curve) and “zoomed out” on the smooth backswing, without a human telling it where the hard parts were.</p>
+<hr>
+</section>
+</section>
+<section id="how-it-works-without-math" class="level2">
+<h2 class="anchored" data-anchor-id="how-it-works-without-math">How It Works (Without Math)</h2>
+<section id="step-1-predict-drift" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-predict-drift">Step 1: Predict Drift</h3>
+<p>Before you move, estimate how much drift you’ll have: 1. Measure the “curvature” of your system at your current state (how nonlinear is it right now?) 2. Estimate how far you’ll move (perturbation size) 3. Calculate predicted drift using the relationship: - <strong>Drift grows with curvature</strong> - <strong>Drift grows with the square of perturbation size</strong> (double the step → 4× the drift)</p>
+</section>
+<section id="step-2-set-thresholds" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-set-thresholds">Step 2: Set Thresholds</h3>
+<p>Decide what’s acceptable for your task: - Precision surgery robot: Maximum drift = 1mm - Delivery drone: Maximum drift = 10cm - Sports motion analysis: Maximum drift = 5cm</p>
+<p>Define three zones: - <strong>Green zone:</strong> Drift &lt; threshold/3 → “Safe, use simple controller” - <strong>Yellow zone:</strong> Drift between threshold/3 and threshold → “Warning, increase attention” - <strong>Red zone:</strong> Drift &gt; threshold → “Danger, switch to complex controller”</p>
+</section>
+<section id="step-3-monitor-in-real-time" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-monitor-in-real-time">Step 3: Monitor in Real-Time</h3>
+<p>Two ways to monitor:</p>
+<p><strong>A) Predicted monitoring (offline planning):</strong> - During trajectory design, calculate predicted drift at each step - Adjust timesteps/controller complexity accordingly - Build the plan with the right level of detail everywhere</p>
+<p><strong>B) Observed monitoring (online execution):</strong> - As the system runs, compare: - Where the simple model predicted you’d be - Where you actually are - The difference is the observed drift - If it’s bigger than predicted → something changed (disturbance, model error, damage)</p>
+</section>
+<section id="step-4-adapt-automatically" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-adapt-automatically">Step 4: Adapt Automatically</h3>
+<p>Based on drift levels, the controller automatically:</p>
+<p><strong>Low drift → Efficient mode:</strong> - Use cheap LQR controller - Large timesteps (fast updates) - Minimal computation</p>
+<p><strong>High drift → Careful mode:</strong> - Use expensive MPC controller - Small timesteps (slow, precise updates) - Maximum computation</p>
+<p><strong>Critical drift → Emergency mode:</strong> - Full nonlinear optimization - Backup safety controller ready - Alert human operator</p>
+<p>The system smoothly transitions between modes with <strong>hysteresis</strong> (different thresholds for going up vs.&nbsp;down) to prevent “chattering” (rapid switching back and forth).</p>
+<hr>
+</section>
+</section>
+<section id="common-objections-and-answers" class="level2">
+<h2 class="anchored" data-anchor-id="common-objections-and-answers">Common Objections (and Answers)</h2>
+<section id="this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time" class="level3">
+<h3 class="anchored" data-anchor-id="this-sounds-complicated.-why-not-just-use-a-good-controller-all-the-time"><strong>“This sounds complicated. Why not just use a good controller all the time?”</strong></h3>
+<p><strong>Answer:</strong> Good controllers are expensive.</p>
+<p>For a quadrotor: - Simple controller (LQR): 0.01 milliseconds per update - Complex controller (MPC): 5-10 milliseconds per update</p>
+<p>If you update at 100 Hz (every 10ms), the complex controller barely fits in real-time!</p>
+<p><strong>Residual-aware approach:</strong> Use simple controller 99% of the time, complex controller 1% of the time → Average cost = 0.01ms + 0.01×(5ms) = 0.06ms → <strong>10× faster</strong> than always-complex.</p>
+<p><strong>Analogy:</strong> It’s like driving with cruise control on the highway (cheap, efficient), but taking manual control in the city (expensive, precise). Switching based on conditions is smarter than always doing it the hard way.</p>
+</section>
+<section id="cant-we-just-predict-the-hard-parts-in-advance" class="level3">
+<h3 class="anchored" data-anchor-id="cant-we-just-predict-the-hard-parts-in-advance"><strong>“Can’t we just predict the hard parts in advance?”</strong></h3>
+<p><strong>Sometimes yes, sometimes no:</strong></p>
+<p><strong>Yes, if:</strong> Motion is repeatable (robot on assembly line, choreographed drone show) - Pre-compute curvature along trajectory - Build adaptive plan offline - Execute it</p>
+<p><strong>No, if:</strong> Environment is unpredictable (walking on rocky terrain, wind gusts, opponent in a game) - Can’t pre-plan for unknown disturbances - Need real-time residual monitoring to detect “actual drift is way bigger than expected” - Triggers adaptation even if plan said it would be smooth</p>
+<p><strong>Best of both worlds:</strong> Use predicted drift for planning, observed drift for real-time safety net.</p>
+</section>
+<section id="what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller" class="level3">
+<h3 class="anchored" data-anchor-id="what-if-residuals-are-always-large-doesnt-this-just-mean-always-use-the-expensive-controller"><strong>“What if residuals are always large? Doesn’t this just mean ‘always use the expensive controller’?”</strong></h3>
+<p><strong>Answer:</strong> If residuals are always large, it means: 1. Your system is highly nonlinear everywhere, OR 2. Your perturbations are too large</p>
+<p><strong>Solutions:</strong> - <strong>Reduce perturbation size:</strong> Take smaller steps (reduce timestep for planning, reduce deviation tolerance for tracking) - <strong>Improve linearization points:</strong> Relinearize more frequently (update the “tangent plane” before you drift too far) - <strong>Accept complexity:</strong> Yes, some systems need expensive methods most of the time</p>
+<p><strong>But:</strong> Even then, residual monitoring helps: - You <em>know</em> when you’re in high-curvature regions (no surprises) - You can guarantee drift bounds (safety-critical) - You can diagnose problems (“Why are residuals so high? Is my model wrong?”)</p>
+</section>
+<section id="this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints" class="level3">
+<h3 class="anchored" data-anchor-id="this-seems-like-it-only-works-for-smooth-systems.-what-about-impacts-switches-constraints"><strong>“This seems like it only works for smooth systems. What about impacts, switches, constraints?”</strong></h3>
+<p><strong>Answer:</strong> You’re right—the math assumes smooth (differentiable) dynamics.</p>
+<p><strong>For impacts (like robot walking):</strong> - Residuals <strong>spike</strong> at impact - Use residual spike as a <strong>detector</strong>: “Impact just happened” - Switch to hybrid system model for that moment - Resume smooth control after impact settles</p>
+<p><strong>For switches (like gear changes, valve opening):</strong> - Separate the system into modes (gear 1, gear 2, etc.) - Apply residual-aware control within each mode - Use separate logic for mode transitions</p>
+<p><strong>For constraints (like joint limits, obstacles):</strong> - Residual-aware control tells you <em>if linearization is accurate</em> - Constraint satisfaction is a separate problem (handled by MPC formulation) - The two work together: residuals tell you when to switch to constrained MPC</p>
+<p><strong>Bottom line:</strong> Residual awareness is a tool, not a complete solution. It combines with other techniques.</p>
+<hr>
+</section>
+</section>
+<section id="whats-new-here" class="level2">
+<h2 class="anchored" data-anchor-id="whats-new-here">What’s New Here?</h2>
+<section id="old-idea-linearization-error-is-quadratic-in-perturbation-size" class="level3">
+<h3 class="anchored" data-anchor-id="old-idea-linearization-error-is-quadratic-in-perturbation-size">Old Idea: “Linearization error is quadratic in perturbation size”</h3>
+<p>This has been known for centuries (Taylor series, calculus 101).</p>
+</section>
+<section id="whats-new" class="level3">
+<h3 class="anchored" data-anchor-id="whats-new">What’s New:</h3>
+<section id="quantitative-bounds" class="level4">
+<h4 class="anchored" data-anchor-id="quantitative-bounds">1. <strong>Quantitative Bounds</strong></h4>
+<p><strong>Old:</strong> “Error is O(δx²)” (order-of-magnitude) <strong>New:</strong> “Error ≤ (M/2) × δx² × Δt” (exact upper bound with specific constant M)</p>
+<p><strong>Impact:</strong> You can now compute guaranteed maximum drift, not just estimate it’s “probably small.”</p>
+</section>
+<section id="residuals-as-control-signals" class="level4">
+<h4 class="anchored" data-anchor-id="residuals-as-control-signals">2. <strong>Residuals as Control Signals</strong></h4>
+<p><strong>Old:</strong> Residuals are errors to minimize <strong>New:</strong> Residuals are sensors that reveal system curvature</p>
+<p><strong>Impact:</strong> Shift from “fight the error” to “use the error as information.”</p>
+</section>
+<section id="adaptive-algorithms" class="level4">
+<h4 class="anchored" data-anchor-id="adaptive-algorithms">3. <strong>Adaptive Algorithms</strong></h4>
+<p><strong>Old:</strong> Fixed timestep, fixed controller <strong>New:</strong> Timestep and controller complexity adapt based on real-time residuals</p>
+<p><strong>Impact:</strong> Automatic efficiency—system adjusts itself without human tuning.</p>
+</section>
+<section id="geometric-interpretation" class="level4">
+<h4 class="anchored" data-anchor-id="geometric-interpretation">4. <strong>Geometric Interpretation</strong></h4>
+<p><strong>Old:</strong> Residuals are “leftover terms in Taylor series” <strong>New:</strong> Residuals measure “drift from tangent space” and quantify manifold curvature</p>
+<p><strong>Impact:</strong> Deep understanding connects control theory to differential geometry.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="who-should-care" class="level2">
+<h2 class="anchored" data-anchor-id="who-should-care">Who Should Care?</h2>
+<section id="robotics-engineers" class="level3">
+<h3 class="anchored" data-anchor-id="robotics-engineers"><strong>Robotics Engineers</strong></h3>
+<ul>
+<li>Build adaptive controllers that are fast on easy motions, careful on hard motions</li>
+<li>Automatically detect contact/impact events from residual spikes</li>
+<li>Guarantee tracking accuracy with quantitative bounds</li>
+</ul>
+</section>
+<section id="aerospace-engineers" class="level3">
+<h3 class="anchored" data-anchor-id="aerospace-engineers"><strong>Aerospace Engineers</strong></h3>
+<ul>
+<li>Optimize spacecraft trajectories with adaptive discretization</li>
+<li>Switch between simple and complex guidance modes based on flight phase</li>
+<li>Certify mission safety with residual bounds</li>
+</ul>
+</section>
+<section id="sports-scientists" class="level3">
+<h3 class="anchored" data-anchor-id="sports-scientists"><strong>Sports Scientists</strong></h3>
+<ul>
+<li>Optimize athlete motions (golf, gymnastics, throwing)</li>
+<li>Automatically identify the “hard parts” of a complex motion</li>
+<li>Focus training on high-curvature phases</li>
+</ul>
+</section>
+<section id="algorithm-developers" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-developers"><strong>Algorithm Developers</strong></h3>
+<ul>
+<li>Implement DDP/iLQR with adaptive timesteps for faster convergence</li>
+<li>Build mode-switching MPC that’s efficient and robust</li>
+<li>Create general-purpose tools for residual monitoring</li>
+</ul>
+</section>
+<section id="students" class="level3">
+<h3 class="anchored" data-anchor-id="students"><strong>Students</strong></h3>
+<ul>
+<li>Understand why some phases of motion are harder to control than others</li>
+<li>See the connection between calculus (second derivatives, curvature) and real systems</li>
+<li>Learn a principled way to trade off computation vs.&nbsp;accuracy</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="the-bottom-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-bottom-line">The Bottom Line</h2>
+<p><strong>Complex systems have varying complexity.</strong> Some parts are nearly linear (easy). Some parts are highly nonlinear (hard).</p>
+<p>Instead of treating everything the same, <strong>residual-aware control</strong> uses drift as a real-time measurement of “how hard is this moment?” and adjusts strategy accordingly:</p>
+<ul>
+<li><strong>Low drift:</strong> Simple, fast controller</li>
+<li><strong>High drift:</strong> Complex, careful controller</li>
+<li><strong>Automatic switching:</strong> Based on quantitative thresholds</li>
+</ul>
+<p>The result: - <strong>Efficiency:</strong> 4-10× computational speedup vs.&nbsp;always-careful approaches - <strong>Robustness:</strong> Early detection of model errors and disturbances - <strong>Guarantees:</strong> Quantitative bounds on tracking accuracy</p>
+<p>This isn’t magic. It’s just <strong>listening to what the system is telling you</strong> through its natural drift, and responding intelligently.</p>
+<hr>
+</section>
+<section id="analogies-to-remember" class="level2">
+<h2 class="anchored" data-anchor-id="analogies-to-remember">Analogies to Remember</h2>
+<section id="the-gps-navigator" class="level3">
+<h3 class="anchored" data-anchor-id="the-gps-navigator"><strong>The GPS Navigator</strong></h3>
+<ul>
+<li>Straight highway → trust simple directions, drive fast</li>
+<li>Winding mountain road → check map constantly, drive carefully</li>
+<li>Hairpin turn → zoomed-in navigation, slow to a crawl</li>
+<li><strong>Drift from straight line tells you which mode you’re in</strong></li>
+</ul>
+</section>
+<section id="the-staircase" class="level3">
+<h3 class="anchored" data-anchor-id="the-staircase"><strong>The Staircase</strong></h3>
+<ul>
+<li>Each step is simple (linear: push → go up)</li>
+<li>A tall building is complex (nonlinear: path spirals)</li>
+<li>But climb enough simple steps → reach the top</li>
+<li><strong>Residual = how far you drifted from straight-line prediction when you account for the twist in the stairs</strong></li>
+</ul>
+</section>
+<section id="the-hiking-trail" class="level3">
+<h3 class="anchored" data-anchor-id="the-hiking-trail"><strong>The Hiking Trail</strong></h3>
+<ul>
+<li>Flat meadow → big strides, don’t check map every step</li>
+<li>Rocky slope → small steps, watch your footing</li>
+<li>Cliff edge → tiny steps, full attention</li>
+<li><strong>Your stumble rate (residual) tells you the terrain difficulty (curvature)</strong></li>
+</ul>
+<hr>
+<p><strong>For the full technical details:</strong> See <a href="../../../articles/Tangent Hyperplane Articles/Advanced/Residual-Aware_Control.html">Residual-Aware_Control.qmd</a></p>
+<p><strong>For the underlying framework:</strong> See <a href="../../../articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.html">Tangent_Hyperplanes_Unified_Thesis.qmd</a></p>
+<p><strong>For related concepts:</strong> See <a href="../../../articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html">Contraction_Tangent_Unification.qmd</a> (stability and control geometry)</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

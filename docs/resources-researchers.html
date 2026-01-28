@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -114,9 +288,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="./css/startup-launcher.css" as="style">
 <link rel="preload" href="./styles.css" as="style">
 <link rel="preload" href="./script.js" as="script">
+<link rel="preload" href="./js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="./js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="./js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="./manifest.json">
@@ -162,39 +341,9 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
 
+<link rel="stylesheet" href="css/startup-launcher.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="css/search-metrics.css">
 </head>
@@ -238,6 +387,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -251,45 +404,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="./models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -402,14 +520,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="resources-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
@@ -428,37 +546,26 @@ ul.task-list li input[type="checkbox"] {
       <!-- Main Content -->
       <main class="main-content-area">
         <div class="page-section">
-          <h2 class="section-heading">Researchers</h2>
+          <h2 class="section-heading anchored">Researchers</h2>
           <p class="page-subtitle">Profiles of researchers and experts in golf biomechanics, robotics, and control theory</p>
         </div>
         <div class="resource-grid">
       <div class="resource-card has-media">
         <div class="resource-media">
-          <img src="https://www.stfx.ca/sites/default/files/styles/person/public/images/Human-Kinetics-Sasho%20MacKenzie.png?h=c1788fc8&itok=ka_v5jaE" alt="Sasho MacKenzie" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+          <img src="https://www.stfx.ca/sites/default/files/styles/person/public/images/Human-Kinetics-Sasho%20MacKenzie.png?h=c1788fc8&amp;itok=ka_v5jaE" alt="Sasho MacKenzie" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-        <h3>Sasho MacKenzie</h3>
+        <h3 class="anchored">Sasho MacKenzie</h3>
         <p class="resource-description">
             Dr. Sasho MacKenzie is a biomechanics researcher and golf instructor known for his scientific approach to golf swing analysis. His research focuses on the physics and biomechanics of the golf swing, with particular emphasis on how forces, torques, and kinematics interact to produce clubhead speed and ball flight. He has developed the Stack Training System, a comprehensive approach to improving golf performance through biomechanical analysis and training. His work has contributed significantly to understanding how ground reaction forces, segment sequencing, and kinematic chain efficiency affect golf performance. Dr. MacKenzie also teaches a Forces and Motion course that provides deep insights into the physics underlying golf swing mechanics.
         </p>
-        <a href="https://vimeo.com/sashomackenzie/videos/page:1/sort:date"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://vimeo.com/sashomackenzie/videos/page:1/sort:date" class="resource-link" target="_blank" rel="noopener">
           Watch Videos →
         </a>
-          <a href="https://vimeo.com/sashomackenzie"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://vimeo.com/sashomackenzie" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Visit Website →
           </a>
-          <a href="https://scholar.google.com/scholar?q=author:%22Sasho+MacKenzie%22"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=author:%22Sasho+MacKenzie%22" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Google Scholar →
           </a>
         </div>
@@ -469,49 +576,26 @@ ul.task-list li input[type="checkbox"] {
           <img src="https://webspace.yale.edu/Yale-golf-history/images/grober-2.jpg" alt="Robert Groeber" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-          <h3>Robert Groeber</h3>
+          <h3 class="anchored">Robert Groeber</h3>
           <p class="resource-description">
             Dr. Robert D. Groeber is a Professor of Applied Physics and Physics at Yale University who has combined his expertise in physics with his passion for golf to develop innovative tools and models for understanding and improving the golf swing. He developed Sonic Golf, a real-time audio biofeedback device that helps golfers improve their swing tempo and rhythm. His research focuses on using accelerometer-based instrumentation to analyze golf swing mechanics, tempo, and timing.
           </p>
-          <a href="https://arxiv.org/abs/1001.0956"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
-            Accelerometer Instrumentation: Measurement & Signal Analysis →
+          <a href="https://arxiv.org/abs/1001.0956" class="resource-link" target="_blank" rel="noopener">
+            Accelerometer Instrumentation: Measurement &amp; Signal Analysis →
           </a>
-          <a href="https://arxiv.org/abs/physics/0611291"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://arxiv.org/abs/physics/0611291" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Biomechanical Understanding of Tempo →
           </a>
-          <a href="https://arxiv.org/abs/1001.0761"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://arxiv.org/abs/1001.0761" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Comparative Analysis of Golf Swings →
           </a>
-          <a href="https://arxiv.org/abs/1106.1698"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://arxiv.org/abs/1106.1698" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Geometry of Putting →
           </a>
-          <a href="https://scholar.google.com/scholar?q=author:%22Robert+D+Groeber%22+OR+author:%22Robert+Groeber%22"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=author:%22Robert+D+Groeber%22+OR+author:%22Robert+Groeber%22" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Google Scholar →
           </a>
-          <a href="https://physics.yale.edu/people/robert-d-groeber"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://physics.yale.edu/people/robert-d-groeber" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Yale Profile →
           </a>
         </div>
@@ -522,28 +606,17 @@ ul.task-list li input[type="checkbox"] {
           <img src="https://www.drkwongolf.info/images/drkwon.jpg" alt="Dr. Young-Hoo Kwon" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-          <h3>Dr. Young-Hoo Kwon</h3>
+          <h3 class="anchored">Dr. Young-Hoo Kwon</h3>
           <p class="resource-description">
-            Dr. Young-Hoo Kwon is a Professor of Kinesiology and Director of the Biomechanics & Motor Behavior Laboratory at Texas Woman's University (TWU). He is a leading researcher in golf biomechanics, offering comprehensive swing analysis and reprogramming services to golfers at all levels using advanced 3D motion capture technology. Dr. Kwon conducts certification programs for golf instructors, focusing on biomechanics and evidence-based practices to improve golf instruction. His work at TWU's Biomechanics & Motor Behavior Laboratory helps golfers master their swings through scientific analysis and reprogramming techniques.
+            Dr. Young-Hoo Kwon is a Professor of Kinesiology and Director of the Biomechanics &amp; Motor Behavior Laboratory at Texas Woman's University (TWU). He is a leading researcher in golf biomechanics, offering comprehensive swing analysis and reprogramming services to golfers at all levels using advanced 3D motion capture technology. Dr. Kwon conducts certification programs for golf instructors, focusing on biomechanics and evidence-based practices to improve golf instruction. His work at TWU's Biomechanics &amp; Motor Behavior Laboratory helps golfers master their swings through scientific analysis and reprogramming techniques.
           </p>
-          <a href="https://www.drkwongolf.info/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.drkwongolf.info/" class="resource-link" target="_blank" rel="noopener">
             Visit Website →
           </a>
-          <a href="https://www.youtube.com/playlist?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://www.youtube.com/playlist?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Watch YouTube Playlist →
           </a>
-          <a href="https://scholar.google.com/scholar?q=author:%22Young-Hoo+Kwon%22"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=author:%22Young-Hoo+Kwon%22" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Google Scholar →
           </a>
         </div>
@@ -554,28 +627,17 @@ ul.task-list li input[type="checkbox"] {
           <img src="http://wedgecraft.com/wp-content/uploads/2018/12/robjneal.png" alt="Rob Neal" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-          <h3>Dr. Rob Neal</h3>
+          <h3 class="anchored">Dr. Rob Neal</h3>
           <p class="resource-description">
             Dr. Rob Neal is a world-renowned biomechanist and co-founder of WedgeCraft, a wedge play data collective committed to developing a comprehensive model for learning the short game through coaching and science-based methods. He is also the owner of Golf BioDynamics, where he applies biomechanical principles to golf instruction and analysis. Dr. Neal's research focuses on golf biomechanics, with particular emphasis on short game mechanics and wedge play dynamics.
           </p>
-          <a href="https://wedgecraft.com/dr-robert-neal/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://wedgecraft.com/dr-robert-neal/" class="resource-link" target="_blank" rel="noopener">
             Visit WedgeCraft →
           </a>
-          <a href="https://www.golfbiodynamics.com/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://www.golfbiodynamics.com/" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Visit Golf BioDynamics →
           </a>
-          <a href="https://scholar.google.com/scholar?q=author:%22Rob+Neal%22+OR+author:%22Robert+Neal%22+golf"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=author:%22Rob+Neal%22+OR+author:%22Robert+Neal%22+golf" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Google Scholar →
           </a>
         </div>
@@ -586,21 +648,14 @@ ul.task-list li input[type="checkbox"] {
           <img src="https://me-future.lafayette.edu/wp-content/uploads/sites/511/2016/03/steve-160x160.png" alt="Steven Nesbit" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-          <h3>Dr. Steven Nesbit</h3>
+          <h3 class="anchored">Dr. Steven Nesbit</h3>
           <p class="resource-description">
             Dr. Steven M. Nesbit is a Professor of Mechanical Engineering and Head of the Department of Mechanical Engineering at Lafayette College. He has extensive research in golf biomechanics, including kinematic and kinetic studies of the golf swing. His work focuses on understanding the mechanics of the golf swing through detailed biomechanical analysis, collaborating with Jacobs 3D Golf on advanced swing analysis techniques. Dr. Nesbit's research contributes to understanding how forces, torques, and motion patterns interact in the golf swing.
           </p>
-          <a href="https://www.jacobs3dgolf.com/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://www.jacobs3dgolf.com/" class="resource-link" target="_blank" rel="noopener">
             Visit Jacobs 3D Golf →
           </a>
-          <a href="https://scholar.google.com/scholar?q=author:%22Steven+Nesbit%22+OR+author:%22Steven+M+Nesbit%22+golf"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=author:%22Steven+Nesbit%22+OR+author:%22Steven+M+Nesbit%22+golf" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Google Scholar →
           </a>
         </div>
@@ -611,21 +666,14 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="Carol Putnam" class="website-preview">
         </div>
         <div class="resource-content">
-          <h3>Carol Putnam</h3>
+          <h3 class="anchored">Carol Putnam</h3>
           <p class="resource-description">
             Carol Putnam is a researcher known for her groundbreaking work on interaction forces in the golf swing. Her research has been instrumental in understanding how interaction forces between body segments automatically create the proximal-to-distal sequencing pattern observed in skilled golf swings. Her work demonstrates how these forces facilitate the transfer of energy from the larger, proximal segments to the smaller, distal segments, creating the characteristic kinematic sequence that maximizes clubhead speed. This research provides crucial insights into the biomechanical mechanisms underlying efficient golf swing mechanics.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22Carol+Putnam%22+golf+interaction+forces"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22Carol+Putnam%22+golf+interaction+forces" class="resource-link" target="_blank" rel="noopener">
             Google Scholar →
           </a>
-          <a href="research-review-interaction-forces.html"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="research-review-interaction-forces.html" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Research Review: Interaction Forces →
           </a>
         </div>
@@ -633,31 +681,20 @@ ul.task-list li input[type="checkbox"] {
 
       <div class="resource-card has-media">
         <div class="resource-media">
-          <img src="https://engineering.stanford.edu/sites/default/files/styles/large_square/public/media/image/stanford-person-default-profile-image.png?h=55541bb6&itok=iT3JNdt_" alt="Felix Zajac" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
+          <img src="https://engineering.stanford.edu/sites/default/files/styles/large_square/public/media/image/stanford-person-default-profile-image.png?h=55541bb6&amp;itok=iT3JNdt_" alt="Felix Zajac" class="website-preview" onerror="this.src='static/images/placeholder.svg'">
         </div>
         <div class="resource-content">
-          <h3>Dr. Felix Zajac</h3>
+          <h3 class="anchored">Dr. Felix Zajac</h3>
           <p class="resource-description">
             Dr. Felix E. Zajac is a Professor Emeritus of Mechanical Engineering and Orthopaedic Surgery at Stanford University. He is a pioneering researcher in biomechanics, with particular expertise in muscle coordination, movement dynamics, and induced acceleration analysis. His seminal work on induced acceleration analysis has provided fundamental insights into how individual muscles and forces contribute to movement, revolutionizing our understanding of biomechanical systems. Dr. Zajac's research has been foundational for understanding motor control, muscle-tendon interactions, and the coordination of multi-joint movements in both normal and pathological conditions.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22Felix+Zajac%22+OR+author:%22Felix+E+Zajac%22"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22Felix+Zajac%22+OR+author:%22Felix+E+Zajac%22" class="resource-link" target="_blank" rel="noopener">
             Google Scholar →
           </a>
-          <a href="https://engineering.stanford.edu/people/felix-zajac"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://engineering.stanford.edu/people/felix-zajac" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Stanford Profile →
           </a>
-          <a href="research-review-induced-acceleration-analysis.html"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="research-review-induced-acceleration-analysis.html" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Research Review: Induced Acceleration Analysis →
           </a>
         </div>
@@ -668,28 +705,17 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="Phil Cheetham" class="website-preview">
         </div>
         <div class="resource-content">
-          <h3>Phil Cheetham</h3>
+          <h3 class="anchored">Phil Cheetham</h3>
           <p class="resource-description">
             Phil Cheetham is a researcher and biomechanist specializing in golf swing analysis and sports performance. He is currently a Senior Biomechanist at Sportsbox AI, where he applies advanced motion capture and analysis technologies to improve golf instruction and performance. His research includes important work on handle twist velocity in the golf swing, which provides insights into how rotational forces are generated and transferred through the golf club. His thesis on handle twist velocity has contributed significantly to understanding the dynamics of club rotation and its relationship to ball flight characteristics.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22Phil+Cheetham%22+golf"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22Phil+Cheetham%22+golf" class="resource-link" target="_blank" rel="noopener">
             Google Scholar →
           </a>
-          <a href="https://sportsbox.ai/"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://sportsbox.ai/" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Sportsbox AI →
           </a>
-          <a href="https://scholar.google.com/scholar?q=%22Phil+Cheetham%22+handle+twist+velocity+thesis"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://scholar.google.com/scholar?q=%22Phil+Cheetham%22+handle+twist+velocity+thesis" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Thesis: Handle Twist Velocity →
           </a>
         </div>
@@ -700,21 +726,14 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="Masahide Hirashima" class="website-preview">
         </div>
         <div class="resource-content">
-          <h3>Masahide Hirashima</h3>
+          <h3 class="anchored">Masahide Hirashima</h3>
           <p class="resource-description">
             Masahide Hirashima is a researcher known for his important contributions to understanding the biomechanics of baseball pitching. His work has provided valuable insights into the mechanics of throwing motions, including the coordination of body segments, the role of ground reaction forces, and the transfer of energy from the lower body through the trunk to the arm. His research on pitching mechanics has applications to understanding throwing motions more broadly, including similarities and differences with golf swing mechanics. His work contributes to our understanding of how skilled athletes coordinate complex multi-segment movements to achieve high velocities.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22Masahide+Hirashima%22+baseball+pitching" class="resource-link" target="_blank" rel="noopener">
             Google Scholar →
           </a>
-          <a href="research-review-baseball-pitching.html"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="research-review-baseball-pitching.html" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Research Review: Baseball Pitching →
           </a>
         </div>
@@ -725,28 +744,17 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="John McPhee" class="website-preview">
         </div>
         <div class="resource-content">
-          <h3>Dr. John McPhee</h3>
+          <h3 class="anchored">Dr. John McPhee</h3>
           <p class="resource-description">
             Dr. John McPhee is a Professor at the University of Waterloo and holds the Canada Research Chair in System Dynamics. He is internationally recognized for his contributions to multibody system dynamics, biomechatronics, and biomechanics. As the director of the University of Waterloo's Motion Research Group, he focuses on developing computer models to improve the design and control of mechanical, mechatronic, and biomechatronic systems. His research includes work on golf biomechanics and club optimization, exoskeletons, rehabilitation robots, sports engineering, and autonomous vehicles. Dr. McPhee is a Fellow of the American Society of Mechanical Engineers, the Canadian Academy of Engineering, and the Canadian Society of Mechanical Engineers. His work has been commercialized by Maplesoft and licensed to thousands of users worldwide.
           </p>
-          <a href="https://scholar.google.com/scholar?q=author:%22John+McPhee%22+multibody+dynamics"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://scholar.google.com/scholar?q=author:%22John+McPhee%22+multibody+dynamics" class="resource-link" target="_blank" rel="noopener">
             Google Scholar →
           </a>
-          <a href="https://uwaterloo.ca/biomedical-engineering-research/profile/mcphee"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://uwaterloo.ca/biomedical-engineering-research/profile/mcphee" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             University of Waterloo Profile →
           </a>
-          <a href="https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://uwaterloo.ca/motion-research-group/projects/golf-biomechanics-and-club-optimization" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Motion Research Group: Golf Biomechanics →
           </a>
         </div>
@@ -758,7 +766,7 @@ ul.task-list li input[type="checkbox"] {
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Researchers</h3>
+          <h3 class="sidebar-heading anchored">Recent Researchers</h3>
           <ul class="sidebar-links" id="researchers-history-list">
             <li class="history-empty">No recent researchers yet</li>
           </ul>
@@ -803,9 +811,6 @@ document.addEventListener('DOMContentLoaded', function() {
   updateResearchersHistory();
 });
 </script>
-
-
-
 
 
 
@@ -1211,17 +1216,23 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

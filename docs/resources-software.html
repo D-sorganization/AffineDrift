@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -114,9 +288,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="./css/startup-launcher.css" as="style">
 <link rel="preload" href="./styles.css" as="style">
 <link rel="preload" href="./script.js" as="script">
+<link rel="preload" href="./js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="./js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="./js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="./manifest.json">
@@ -162,39 +341,9 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
 
+<link rel="stylesheet" href="css/startup-launcher.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="css/search-metrics.css">
 </head>
@@ -238,6 +387,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -251,45 +404,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="./models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -402,14 +520,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section class="resources-section">
-  <div class="container">
-    <div class="standard-page-layout">
+<section class="resources-section page-columns page-full">
+  <div class="container page-columns page-full">
+    <div class="standard-page-layout page-columns page-full">
       <!-- Left Sidebar: Table of Contents -->
       <aside class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <ul class="sidebar-links">
             <li><a href="resources-videos.html">Videos</a></li>
             <li><a href="resources-software.html" class="active">Software</a></li>
@@ -428,7 +546,7 @@ ul.task-list li input[type="checkbox"] {
       <!-- Main Content -->
       <main class="main-content-area">
         <div id="software-section" class="page-section">
-          <h2 class="section-heading">Modeling Software</h2>
+          <h2 class="section-heading anchored">Modeling Software</h2>
         </div>
         <div class="resource-grid">
       <div class="resource-card has-media">
@@ -436,7 +554,7 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="OpenSim Logo" class="software-logo">
         </div>
         <div class="resource-content">
-        <h3>OpenSim</h3>
+        <h3 class="anchored">OpenSim</h3>
         <p class="resource-description">
           OpenSim is a freely available, open-source software platform for modeling, simulating, and analyzing 
           the neuromusculoskeletal system. Developed at Stanford University, OpenSim enables researchers to 
@@ -444,10 +562,7 @@ ul.task-list li input[type="checkbox"] {
           movement. It is widely used in biomechanics research, rehabilitation, and sports science applications, 
           including golf swing analysis.
         </p>
-        <a href="https://opensim.stanford.edu/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://opensim.stanford.edu/" class="resource-link" target="_blank" rel="noopener">
           Visit OpenSim →
         </a>
         </div>
@@ -460,14 +575,11 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-        <h3>MyoSim</h3>
+        <h3 class="anchored">MyoSim</h3>
         <p class="resource-description">
           Open-source software for simulating muscle-driven movement, providing tools for biomechanical modeling and analysis.
         </p>
-        <a href="https://github.com/MyoSim/MyoSim"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://github.com/MyoSim/MyoSim" class="resource-link" target="_blank" rel="noopener">
           View MyoSim →
         </a>
         </div>
@@ -480,17 +592,14 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-        <h3>OpenPose</h3>
+        <h3 class="anchored">OpenPose</h3>
         <p class="resource-description">
           OpenPose is a real-time multi-person pose estimation library developed by Carnegie Mellon University. 
           It can detect human body, hand, facial, and foot keypoints on single images or video streams. 
           OpenPose is valuable for biomechanics research, motion capture, and analyzing human movement patterns, 
           making it useful for golf swing analysis and sports biomechanics applications.
         </p>
-        <a href="https://github.com/CMU-Perceptual-Computing-Lab/openpose"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://github.com/CMU-Perceptual-Computing-Lab/openpose" class="resource-link" target="_blank" rel="noopener">
           View OpenPose →
         </a>
         </div>
@@ -501,7 +610,7 @@ ul.task-list li input[type="checkbox"] {
           <img src="https://drake.mit.edu/images/drake-logo.svg" alt="Drake Logo" class="software-logo" onerror="this.style.display='none'">
         </div>
         <div class="resource-content">
-        <h3>Drake</h3>
+        <h3 class="anchored">Drake</h3>
         <p class="resource-description">
           Drake is an open-source toolbox developed by the Robot Locomotion Group at MIT. It provides 
           a suite of tools for analyzing the dynamics of robots and building control systems. Drake 
@@ -509,10 +618,7 @@ ul.task-list li input[type="checkbox"] {
           with capabilities for modeling, simulation, trajectory optimization, and control design. 
           Highly relevant for implementing control-affine systems and analyzing underactuated systems.
         </p>
-        <a href="https://drake.mit.edu/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://drake.mit.edu/" class="resource-link" target="_blank" rel="noopener">
           Visit Drake →
         </a>
         </div>
@@ -523,24 +629,17 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
         </div>
         <div class="resource-content">
-        <h3>MuJoCo</h3>
+        <h3 class="anchored">MuJoCo</h3>
         <p class="resource-description">
           MuJoCo (Multi-Joint dynamics with Contact) is a physics engine for model-based optimization, 
           robotics, biomechanics, graphics and animation, and other areas where fast and accurate 
           simulation is needed. MuJoCo provides state-of-the-art contact dynamics, efficient 
           computation, and a comprehensive API for building and simulating complex multibody systems.
         </p>
-        <a href="https://mujoco.org"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://mujoco.org" class="resource-link" target="_blank" rel="noopener">
           Visit MuJoCo →
         </a>
-        <a href="https://mujoco.org/playground"
-           class="resource-link"
-           target="_blank"
-           rel="noopener"
-           style="margin-top: 0.5rem; display: inline-block;">
+        <a href="https://mujoco.org/playground" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
           MuJoCo Playground →
         </a>
         </div>
@@ -551,7 +650,7 @@ ul.task-list li input[type="checkbox"] {
           <img src="static/images/placeholder.svg" alt="Pinocchio Logo" class="software-logo">
         </div>
         <div class="resource-content">
-        <h3>Pinocchio</h3>
+        <h3 class="anchored">Pinocchio</h3>
         <p class="resource-description">
           Pinocchio is a fast and flexible implementation of rigid body dynamics algorithms and their 
           analytical derivatives. Developed by the Stack of Tasks team, Pinocchio provides efficient 
@@ -560,10 +659,7 @@ ul.task-list li input[type="checkbox"] {
           dynamics computations and is based on the algorithms described in Roy Featherstone's 
           "Rigid Body Dynamics Algorithms."
         </p>
-        <a href="https://stack-of-tasks.github.io/pinocchio/"
-           class="resource-link"
-           target="_blank"
-           rel="noopener">
+        <a href="https://stack-of-tasks.github.io/pinocchio/" class="resource-link" target="_blank" rel="noopener">
           Visit Pinocchio →
         </a>
         </div>
@@ -571,7 +667,7 @@ ul.task-list li input[type="checkbox"] {
     </div>
 
     <div id="machine-learning-section" class="page-section" style="margin-top: 3rem;">
-      <h2 class="section-heading">Machine Learning Software</h2>
+      <h2 class="section-heading anchored">Machine Learning Software</h2>
     </div>
     <div class="resource-grid">
       <div class="resource-card has-media">
@@ -581,21 +677,14 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-          <h3>GolfPose</h3>
+          <h3 class="anchored">GolfPose</h3>
           <p class="resource-description">
             GolfPose is a deep learning framework for golf swing pose estimation, presented at ICPR 2024. The system provides 2D and 3D pose estimation for golfers and golf clubs, with models for detection, 2D keypoint estimation, and 3D pose reconstruction. It includes pre-trained models for golfer detection, club detection, and pose estimation using architectures like HRNet, ViTPose, and DEKR. The framework supports both individual golfer/club pose estimation and combined golfer-with-club pose estimation, making it a valuable tool for golf biomechanics analysis and swing motion capture.
           </p>
-          <a href="https://github.com/MingHanLee/GolfPose"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://github.com/MingHanLee/GolfPose" class="resource-link" target="_blank" rel="noopener">
             View on GitHub →
           </a>
-          <a href="https://link.springer.com/chapter/10.1007/978-3-031-78305-0_25"
-             class="resource-link"
-             target="_blank"
-             rel="noopener"
-             style="margin-top: 0.5rem; display: inline-block;">
+          <a href="https://link.springer.com/chapter/10.1007/978-3-031-78305-0_25" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
             Read Paper →
           </a>
         </div>
@@ -608,14 +697,11 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-          <h3>SwingNet</h3>
+          <h3 class="anchored">SwingNet</h3>
           <p class="resource-description">
             SwingNet is a lightweight deep neural network with a hybrid deep convolutional and recurrent architecture designed for golf swing sequencing. Introduced alongside the GolfDB dataset, SwingNet detects eight key events in golf swings at an average rate of 76.1%, with six out of eight events detected at 91.8%. The model is computationally efficient, making it suitable for deployment on mobile devices for in-the-field analysis. SwingNet enables automated event detection in golf swings, facilitating consistent evaluation and analysis of swing mechanics.
           </p>
-          <a href="https://arxiv.org/abs/1903.06528"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://arxiv.org/abs/1903.06528" class="resource-link" target="_blank" rel="noopener">
             Read Paper →
           </a>
         </div>
@@ -628,14 +714,11 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-          <h3>Golf-Swing-Analysis</h3>
+          <h3 class="anchored">Golf-Swing-Analysis</h3>
           <p class="resource-description">
             GitHub repositories providing tools and scripts for analyzing golf swings using computer vision techniques. These projects offer implementations for processing golf swing videos, extracting key features, and performing biomechanical analysis. Useful for researchers and developers working on golf swing analysis, motion capture, and performance evaluation.
           </p>
-          <a href="https://github.com/search?q=golf-swing-analysis"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://github.com/search?q=golf-swing-analysis" class="resource-link" target="_blank" rel="noopener">
             Search on GitHub →
           </a>
         </div>
@@ -648,14 +731,11 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-          <h3>AI Golf Swing Discrepancy Detector</h3>
+          <h3 class="anchored">AI Golf Swing Discrepancy Detector</h3>
           <p class="resource-description">
             AI-based systems and tools designed to identify and highlight discrepancies in golf swings, aiding in technique refinement and performance improvement. These systems use machine learning and computer vision techniques to analyze swing mechanics, detect anomalies, and provide feedback on swing technique. These tools help golfers and instructors identify areas for improvement by comparing swings against optimal patterns and detecting deviations that may affect performance.
           </p>
-          <a href="https://github.com/search?q=AI+golf+swing+discrepancy+detector"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://github.com/search?q=AI+golf+swing+discrepancy+detector" class="resource-link" target="_blank" rel="noopener">
             Search on GitHub →
           </a>
         </div>
@@ -668,14 +748,11 @@ ul.task-list li input[type="checkbox"] {
           </a>
         </div>
         <div class="resource-content">
-          <h3>Golf Swing Analyzer</h3>
+          <h3 class="anchored">Golf Swing Analyzer</h3>
           <p class="resource-description">
             Pose estimation systems for golf swing improvement, including implementations such as "23206-final-pose-estimation-for-swing-improvement". These tools use computer vision and pose estimation techniques to analyze golf swings, providing detailed feedback on swing mechanics and technique. The systems enable golfers to identify areas for improvement through automated analysis of swing posture, joint angles, and movement patterns.
           </p>
-          <a href="https://github.com/search?q=23206-final-pose-estimation-for-swing-improvement"
-             class="resource-link"
-             target="_blank"
-             rel="noopener">
+          <a href="https://github.com/search?q=23206-final-pose-estimation-for-swing-improvement" class="resource-link" target="_blank" rel="noopener">
             Search on GitHub →
           </a>
         </div>
@@ -687,7 +764,7 @@ ul.task-list li input[type="checkbox"] {
       <aside class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Software</h3>
+          <h3 class="sidebar-heading anchored">Recent Software</h3>
           <ul class="sidebar-links" id="software-history-list">
             <li class="history-empty">No recent software yet</li>
           </ul>
@@ -732,9 +809,6 @@ document.addEventListener('DOMContentLoaded', function() {
   updateSoftwareHistory();
 });
 </script>
-
-
-
 
 
 
@@ -1140,17 +1214,23 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

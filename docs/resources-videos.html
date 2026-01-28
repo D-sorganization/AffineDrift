@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -114,9 +288,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="./css/startup-launcher.css" as="style">
 <link rel="preload" href="./styles.css" as="style">
 <link rel="preload" href="./script.js" as="script">
+<link rel="preload" href="./js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="./js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="./js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="./manifest.json">
@@ -162,39 +341,9 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
 
+<link rel="stylesheet" href="css/startup-launcher.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="css/search-metrics.css">
 </head>
@@ -238,6 +387,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -251,45 +404,10 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="./models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="./models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -376,7 +494,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content page-columns page-full column-page" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -406,10 +524,10 @@ ul.task-list li input[type="checkbox"] {
   <div class="container">
     <div class="standard-page-layout">
       <!-- Left Sidebar: Table of Contents / Categories -->
-      <aside class="left-sidebar">
+      <div class="left-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="toc-nav">
-          <h3 class="sidebar-heading">Resources</h3>
+          <h3 class="sidebar-heading anchored">Resources</h3>
           <ul class="sidebar-links">
             <li><a href="resources-videos.html" class="active">Videos</a></li>
             <li><a href="resources-software.html">Software</a></li>
@@ -421,7 +539,7 @@ ul.task-list li input[type="checkbox"] {
             <li><a href="resources-notebooklm.html">NotebookLM</a></li>
             <li><a href="bibliography.html">Bibliography</a></li>
           </ul>
-          <h3 class="sidebar-heading" style="margin-top: 2rem;">Video Categories</h3>
+          <h3 class="sidebar-heading anchored" style="margin-top: 2rem;">Video Categories</h3>
           <ul class="sidebar-links">
             <li><a href="#educational-courses">Educational Courses</a></li>
             <li><a href="#golf-biomechanics">Golf Biomechanics</a></li>
@@ -429,33 +547,27 @@ ul.task-list li input[type="checkbox"] {
           </ul>
         </nav>
       </div>
-      </aside>
+      </div>
 
       <!-- Main Content -->
       <main class="main-content-area">
         <div id="educational-courses" class="category-section">
-          <h3 class="category-title">Educational Courses</h3>
+          <h3 class="category-title anchored">Educational Courses</h3>
           <div class="resource-grid">
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/jVu-Hijns70?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx"
-                          title="Modern Robotics - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/jVu-Hijns70?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" title="Modern Robotics - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Modern Robotics</h3>
+                <h3 class="anchored">Modern Robotics</h3>
                 <p class="resource-description">
                   Comprehensive course by Kevin Lynch covering modern robotics fundamentals, including
                   kinematics, dynamics, motion planning, and control. Essential for understanding
                   robotic manipulators and their control.
                 </p>
-                <a href="https://www.youtube.com/watch?v=jVu-Hijns70&list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=jVu-Hijns70&amp;list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -464,23 +576,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/-4pH6BZZKcQ?list=PLYkCanigA7S4x-ExlnFsQN9WrNZREWEZd"
-                          title="Advanced Control for Robotics - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/-4pH6BZZKcQ?list=PLYkCanigA7S4x-ExlnFsQN9WrNZREWEZd" title="Advanced Control for Robotics - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Advanced Control for Robotics</h3>
+                <h3 class="anchored">Advanced Control for Robotics</h3>
                 <p class="resource-description">
                   Advanced control theory course by Wei Zhang covering nonlinear control, optimal control,
                   and advanced techniques for robotic systems. Highly relevant for understanding
                   control-affine systems.
                 </p>
-                <a href="https://www.youtube.com/watch?v=-4pH6BZZKcQ&list=PLYkCanigA7S4x-ExlnFsQN9WrNZREWEZd"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=-4pH6BZZKcQ&amp;list=PLYkCanigA7S4x-ExlnFsQN9WrNZREWEZd" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -489,30 +595,20 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/uyyBT-MHhLE?list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s"
-                          title="Underactuated Robotics - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/uyyBT-MHhLE?list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s" title="Underactuated Robotics - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Underactuated Robotics</h3>
+                <h3 class="anchored">Underactuated Robotics</h3>
                 <p class="resource-description">
                   MIT course by Professor Russ Tedrake on control of underactuated systems. Explores how to
                   exploit natural dynamics rather than cancel them out, highly relevant to biomechanical
                   systems like the golf swing.
                 </p>
-                <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE&list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE&amp;list=PLkx8KyIQkMfU5szP43GlE_S1QGSPQfL9s" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
-                <a href="https://underactuated.mit.edu/intro.html"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener"
-                   style="margin-top: 0.5rem; display: inline-block;">
+                <a href="https://underactuated.mit.edu/intro.html" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
                   View Course Notes →
                 </a>
               </div>
@@ -521,23 +617,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/v04rn86Dehg?list=PLkx8KyIQkMfWr191lqbN8WfV08j-ui8WX"
-                          title="Robotic Manipulation - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/v04rn86Dehg?list=PLkx8KyIQkMfWr191lqbN8WfV08j-ui8WX" title="Robotic Manipulation - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Robotic Manipulation</h3>
+                <h3 class="anchored">Robotic Manipulation</h3>
                 <p class="resource-description">
                   MIT course by Russ Tedrake on robotic manipulation, covering grasp planning, contact
                   modeling, and manipulation strategies. Relevant for understanding how forces and torques
                   interact in complex systems.
                 </p>
-                <a href="https://www.youtube.com/watch?v=v04rn86Dehg&list=PLkx8KyIQkMfWr191lqbN8WfV08j-ui8WX"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=v04rn86Dehg&amp;list=PLkx8KyIQkMfWr191lqbN8WfV08j-ui8WX" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -546,24 +636,18 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLbN57C5Zdl6j_qJA-pARJnKsmROzPnO9V"
-                          title="Nonlinear Dynamics - Steve Strogatz - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLbN57C5Zdl6j_qJA-pARJnKsmROzPnO9V" title="Nonlinear Dynamics - Steve Strogatz - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Nonlinear Dynamics - Steve Strogatz</h3>
+                <h3 class="anchored">Nonlinear Dynamics - Steve Strogatz</h3>
                 <p class="resource-description">
                   Video playlist by Professor Steve Strogatz covering nonlinear dynamics, chaos theory, and 
                   complex systems. This series provides deep insights into the mathematical foundations of 
                   dynamical systems, which are fundamental to understanding control-affine systems and biomechanical 
                   modeling.
                 </p>
-                <a href="https://www.youtube.com/playlist?list=PLbN57C5Zdl6j_qJA-pARJnKsmROzPnO9V"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/playlist?list=PLbN57C5Zdl6j_qJA-pARJnKsmROzPnO9V" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -572,23 +656,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLLy_2iUCG87AjAXKbNMiKJZ2T9vvGpMB0"
-                          title="Control Systems Course - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLLy_2iUCG87AjAXKbNMiKJZ2T9vvGpMB0" title="Control Systems Course - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Control Systems Course</h3>
+                <h3 class="anchored">Control Systems Course</h3>
                 <p class="resource-description">
                   Comprehensive video course on control systems covering fundamental concepts, analysis methods, 
                   and design techniques. This playlist provides essential knowledge for understanding feedback 
                   control, stability analysis, and system dynamics relevant to biomechanical and robotic systems.
                 </p>
-                <a href="https://www.youtube.com/playlist?list=PLLy_2iUCG87AjAXKbNMiKJZ2T9vvGpMB0"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/playlist?list=PLLy_2iUCG87AjAXKbNMiKJZ2T9vvGpMB0" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -596,25 +674,25 @@ ul.task-list li input[type="checkbox"] {
 
             <div class="resource-card video-card has-media">
               <div class="resource-media">
-                <div class="youtube-embed">
-                  <!-- Placeholder for Channel Preview - Video ID to be added -->
-                   <img src="https://placehold.co/600x400/1a1a2e/FFF?text=A.+Sala+Control+Channel"
-                        alt="A. Sala Control Channel Preview"
-                        style="width: 100%; height: 100%; object-fit: cover;">
+                <div class="youtube-embed youtube-placeholder">
+                  <div class="youtube-placeholder-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="youtube-placeholder-icon">
+                      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                      <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                    </svg>
+                    <p class="youtube-placeholder-title">A. Sala Control Channel</p>
+                  </div>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Control Systems - A. Sala Channel</h3>
+                <h3 class="anchored">Control Systems - A. Sala Channel</h3>
                 <p class="resource-description">
                   YouTube channel by A. Sala featuring multiple playlists on control systems theory and applications. 
                   This channel offers comprehensive educational content covering various aspects of control engineering, 
                   including linear and nonlinear control, robust control, and practical applications relevant to 
                   understanding control-affine systems and biomechanical modeling.
                 </p>
-                <a href="https://www.youtube.com/@ASalaControlEN/playlists"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/@ASalaControlEN/playlists" class="resource-link" target="_blank" rel="noopener">
                   View Channel Playlists →
                 </a>
               </div>
@@ -623,23 +701,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLlqdnFs9xNwpcDDlVGtj2azsfAYZVU0jN"
-                          title="Mecharithm - Robotics Course - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLlqdnFs9xNwpcDDlVGtj2azsfAYZVU0jN" title="Mecharithm - Robotics Course - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Mecharithm - Robotics Course</h3>
+                <h3 class="anchored">Mecharithm - Robotics Course</h3>
                 <p class="resource-description">
                   Comprehensive robotics course from Mecharithm covering fundamental concepts in robotics, including 
                   kinematics, dynamics, and control. This playlist provides essential knowledge for understanding 
                   robotic systems and their applications to biomechanical modeling and control-affine systems.
                 </p>
-                <a href="https://www.youtube.com/playlist?list=PLlqdnFs9xNwpcDDlVGtj2azsfAYZVU0jN"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/playlist?list=PLlqdnFs9xNwpcDDlVGtj2azsfAYZVU0jN" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -648,23 +720,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/nesfZWPoh1I?list=PLlqdnFs9xNwpD9zJr8BgAbfHH3AyixTqt"
-                          title="Mecharithm - Additional Course Content - YouTube Video"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/nesfZWPoh1I?list=PLlqdnFs9xNwpD9zJr8BgAbfHH3AyixTqt" title="Mecharithm - Additional Course Content - YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Mecharithm - Additional Course Content</h3>
+                <h3 class="anchored">Mecharithm - Additional Course Content</h3>
                 <p class="resource-description">
                   Additional educational content from Mecharithm covering advanced topics in robotics and mechanical 
                   systems. This playlist complements the main robotics course and provides deeper insights into 
                   specialized areas relevant to understanding complex mechanical systems and their control.
                 </p>
-                <a href="https://www.youtube.com/watch?v=nesfZWPoh1I&list=PLlqdnFs9xNwpD9zJr8BgAbfHH3AyixTqt"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=nesfZWPoh1I&amp;list=PLlqdnFs9xNwpD9zJr8BgAbfHH3AyixTqt" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
               </div>
@@ -673,24 +739,18 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/ooS6RHBk5y4?start=1740"
-                          title="Kane's Method - YouTube Video"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/ooS6RHBk5y4?start=1740" title="Kane's Method - YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Kane's Method</h3>
+                <h3 class="anchored">Kane's Method</h3>
                 <p class="resource-description">
                   Educational video explaining Kane's method, a powerful technique for deriving equations of motion 
                   for mechanical systems. Kane's method provides an efficient alternative to Lagrangian mechanics 
                   for analyzing multibody systems and is particularly useful for systems with constraints. This 
                   method is relevant for understanding the dynamics of complex mechanical systems like the golf swing.
                 </p>
-                <a href="https://www.youtube.com/watch?v=ooS6RHBk5y4&t=1740s"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=ooS6RHBk5y4&amp;t=1740s" class="resource-link" target="_blank" rel="noopener">
                   Watch Video →
                 </a>
               </div>
@@ -699,35 +759,25 @@ ul.task-list li input[type="checkbox"] {
         </div>
 
         <div id="golf-biomechanics" class="category-section">
-          <h3 class="category-title">Golf Biomechanics</h3>
+          <h3 class="category-title anchored">Golf Biomechanics</h3>
           <div class="resource-grid">
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER"
-                          title="Golf Biomechanics - Dr. Kwon - YouTube Playlist"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/videoseries?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER" title="Golf Biomechanics - Dr. Kwon - YouTube Playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Golf Biomechanics - Dr. Kwon</h3>
+                <h3 class="anchored">Golf Biomechanics - Dr. Kwon</h3>
                 <p class="resource-description">
                   Video playlist by Dr. Young-Hoo Kwon covering golf biomechanics, swing analysis, and scientific
                   approaches to understanding golf swing mechanics. Dr. Kwon is a Professor of Kinesiology at Texas Woman's University 
-                  and offers swing analysis services and certification programs in golf biomechanics at TWU's Biomechanics & Motor Behavior Laboratory.
+                  and offers swing analysis services and certification programs in golf biomechanics at TWU's Biomechanics &amp; Motor Behavior Laboratory.
                 </p>
-                <a href="https://www.youtube.com/playlist?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/playlist?list=PLTzuHQ_6-NAen1geDh9uxBz6DyEopTPER" class="resource-link" target="_blank" rel="noopener">
                   Watch Playlist →
                 </a>
-                <a href="https://www.drkwongolf.info/"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener"
-                   style="margin-top: 0.5rem; display: inline-block;">
+                <a href="https://www.drkwongolf.info/" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
                   Visit Website →
                 </a>
               </div>
@@ -735,25 +785,25 @@ ul.task-list li input[type="checkbox"] {
 
             <div class="resource-card video-card has-media">
               <div class="resource-media">
-                 <div class="youtube-embed">
-                  <!-- Placeholder for Channel Preview - Video ID to be added -->
-                   <img src="https://placehold.co/600x400/1a1a2e/FFF?text=Biomechanics+Movement"
-                        alt="Biomechanics of Movement Channel Preview"
-                        style="width: 100%; height: 100%; object-fit: cover;">
+                <div class="youtube-embed youtube-placeholder">
+                  <div class="youtube-placeholder-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="youtube-placeholder-icon">
+                      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                      <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                    </svg>
+                    <p class="youtube-placeholder-title">Biomechanics of Movement</p>
+                  </div>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Biomechanics of Movement</h3>
+                <h3 class="anchored">Biomechanics of Movement</h3>
                 <p class="resource-description">
                   YouTube channel featuring multiple playlists on biomechanics of movement, covering fundamental principles 
                   and applications of biomechanical analysis. This channel provides educational content on movement mechanics, 
                   kinematics, kinetics, and their applications to understanding human motion and sports biomechanics, including 
                   golf swing mechanics.
                 </p>
-                <a href="https://www.youtube.com/@biomechanicsofmovement3388/playlists"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/@biomechanicsofmovement3388/playlists" class="resource-link" target="_blank" rel="noopener">
                   View Channel Playlists →
                 </a>
               </div>
@@ -762,29 +812,23 @@ ul.task-list li input[type="checkbox"] {
         </div>
 
         <div id="interesting-physics" class="category-section">
-          <h3 class="category-title">Interesting Physics</h3>
+          <h3 class="category-title anchored">Interesting Physics</h3>
           <div class="resource-grid">
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/1VPfZ_XzisU"
-                          title="Intermediate Axis Theorem - YouTube Video"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/1VPfZ_XzisU" title="Intermediate Axis Theorem - YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Intermediate Axis Theorem (Secondary Axis Instability)</h3>
+                <h3 class="anchored">Intermediate Axis Theorem (Secondary Axis Instability)</h3>
                 <p class="resource-description">
                   Demonstration of the intermediate axis theorem, also known as secondary axis instability or the 
                   tennis racket theorem. This fundamental principle of rigid body dynamics explains why rotation 
                   about the intermediate moment of inertia axis is unstable, which has important implications for 
                   understanding golf club dynamics and shaft behavior during the swing.
                 </p>
-                <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://www.youtube.com/watch?v=1VPfZ_XzisU" class="resource-link" target="_blank" rel="noopener">
                   Watch Video →
                 </a>
               </div>
@@ -793,31 +837,21 @@ ul.task-list li input[type="checkbox"] {
             <div class="resource-card video-card has-media">
               <div class="resource-media">
                 <div class="youtube-embed">
-                  <iframe src="https://www.youtube.com/embed/rW4nCgK5_8w"
-                          title="Dead Fish Swimming Upstream - YouTube Video"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowfullscreen></iframe>
+                  <iframe src="https://www.youtube.com/embed/rW4nCgK5_8w" title="Dead Fish Swimming Upstream - YouTube Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
                 </div>
               </div>
               <div class="resource-content">
-                <h3>Dead Fish Swimming Upstream</h3>
+                <h3 class="anchored">Dead Fish Swimming Upstream</h3>
                 <p class="resource-description">
                   A fascinating fluid dynamics demonstration showing how a dead fish can swim upstream due to 
                   vortex-induced motion. This phenomenon illustrates important principles of fluid-structure 
                   interactions and passive dynamics, which have relevance to understanding how objects move 
                   through fluids and how passive forces can drive motion in biomechanical systems.
                 </p>
-                <a href="https://fyfluiddynamics.com/2018/07/when-i-was-a-child-my-father-would-take-me-trout/"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener">
+                <a href="https://fyfluiddynamics.com/2018/07/when-i-was-a-child-my-father-would-take-me-trout/" class="resource-link" target="_blank" rel="noopener">
                   View Article →
                 </a>
-                <a href="https://www.youtube.com/watch?v=rW4nCgK5_8w"
-                   class="resource-link"
-                   target="_blank"
-                   rel="noopener"
-                   style="margin-top: 0.5rem; display: inline-block;">
+                <a href="https://www.youtube.com/watch?v=rW4nCgK5_8w" class="resource-link" target="_blank" rel="noopener" style="margin-top: 0.5rem; display: inline-block;">
                    Watch Video Source →
                 </a>
               </div>
@@ -838,16 +872,16 @@ ul.task-list li input[type="checkbox"] {
       </main>
 
       <!-- Right Sidebar: Recent Videos History -->
-      <aside class="right-sidebar">
+      <div class="right-sidebar">
         <div class="sidebar-sticky-content">
         <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Videos</h3>
+          <h3 class="sidebar-heading anchored">Recent Videos</h3>
           <ul class="sidebar-links" id="videos-history-list">
             <li class="history-empty">No recent videos yet</li>
           </ul>
         </nav>
       </div>
-      </aside>
+      </div>
     </div>
   </div>
 </section>
@@ -891,9 +925,6 @@ document.addEventListener('DOMContentLoaded', function() {
   updateVideosHistory();
 });
 </script>
-
-
-
 
 
 
@@ -1299,17 +1330,23 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>contraction_tangent_layman – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../../styles.css" as="style">
+<link rel="preload" href="../../../script.js" as="script">
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#in-laymans-terms-contraction-theory-meets-tangent-spaces" id="toc-in-laymans-terms-contraction-theory-meets-tangent-spaces" class="nav-link active" data-scroll-target="#in-laymans-terms-contraction-theory-meets-tangent-spaces">In Layman’s Terms: Contraction Theory Meets Tangent Spaces</a>
+  <ul class="collapse">
+  <li><a href="#the-big-idea-in-one-sentence" id="toc-the-big-idea-in-one-sentence" class="nav-link" data-scroll-target="#the-big-idea-in-one-sentence">The Big Idea in One Sentence</a></li>
+  <li><a href="#the-core-problem" id="toc-the-core-problem" class="nav-link" data-scroll-target="#the-core-problem">The Core Problem</a></li>
+  <li><a href="#what-is-contraction-theory" id="toc-what-is-contraction-theory" class="nav-link" data-scroll-target="#what-is-contraction-theory">What is Contraction Theory?</a>
+  <ul class="collapse">
+  <li><a href="#the-rubber-band-analogy" id="toc-the-rubber-band-analogy" class="nav-link" data-scroll-target="#the-rubber-band-analogy">The Rubber Band Analogy</a></li>
+  <li><a href="#everyday-examples" id="toc-everyday-examples" class="nav-link" data-scroll-target="#everyday-examples">Everyday Examples</a></li>
+  <li><a href="#the-mathematical-definition-simplified" id="toc-the-mathematical-definition-simplified" class="nav-link" data-scroll-target="#the-mathematical-definition-simplified">The Mathematical Definition (Simplified)</a></li>
+  </ul></li>
+  <li><a href="#what-are-tangent-spaces" id="toc-what-are-tangent-spaces" class="nav-link" data-scroll-target="#what-are-tangent-spaces">What Are Tangent Spaces?</a>
+  <ul class="collapse">
+  <li><a href="#the-curved-road-analogy-revisited" id="toc-the-curved-road-analogy-revisited" class="nav-link" data-scroll-target="#the-curved-road-analogy-revisited">The Curved Road Analogy (Revisited)</a></li>
+  <li><a href="#the-optimal-control-connection" id="toc-the-optimal-control-connection" class="nav-link" data-scroll-target="#the-optimal-control-connection">The Optimal Control Connection</a></li>
+  </ul></li>
+  <li><a href="#the-duality-revealed" id="toc-the-duality-revealed" class="nav-link" data-scroll-target="#the-duality-revealed">The Duality Revealed</a>
+  <ul class="collapse">
+  <li><a href="#two-perspectives-one-reality" id="toc-two-perspectives-one-reality" class="nav-link" data-scroll-target="#two-perspectives-one-reality">Two Perspectives, One Reality</a></li>
+  <li><a href="#the-rubber-band-is-optimal" id="toc-the-rubber-band-is-optimal" class="nav-link" data-scroll-target="#the-rubber-band-is-optimal">The Rubber Band is Optimal</a></li>
+  </ul></li>
+  <li><a href="#why-this-matters-real-world-applications" id="toc-why-this-matters-real-world-applications" class="nav-link" data-scroll-target="#why-this-matters-real-world-applications">Why This Matters: Real-World Applications</a>
+  <ul class="collapse">
+  <li><a href="#robot-arms-that-self-stabilize" id="toc-robot-arms-that-self-stabilize" class="nav-link" data-scroll-target="#robot-arms-that-self-stabilize">1. Robot Arms That Self-Stabilize</a></li>
+  <li><a href="#golf-swings-with-safety-margins" id="toc-golf-swings-with-safety-margins" class="nav-link" data-scroll-target="#golf-swings-with-safety-margins">2. Golf Swings with Safety Margins</a></li>
+  <li><a href="#spacecraft-docking-with-guarantees" id="toc-spacecraft-docking-with-guarantees" class="nav-link" data-scroll-target="#spacecraft-docking-with-guarantees">3. Spacecraft Docking with Guarantees</a></li>
+  </ul></li>
+  <li><a href="#the-geometric-picture" id="toc-the-geometric-picture" class="nav-link" data-scroll-target="#the-geometric-picture">The Geometric Picture</a>
+  <ul class="collapse">
+  <li><a href="#curved-space-and-metrics" id="toc-curved-space-and-metrics" class="nav-link" data-scroll-target="#curved-space-and-metrics">Curved Space and Metrics</a></li>
+  <li><a href="#what-this-means-physically" id="toc-what-this-means-physically" class="nav-link" data-scroll-target="#what-this-means-physically">What This Means Physically</a></li>
+  </ul></li>
+  <li><a href="#the-math-simplified" id="toc-the-math-simplified" class="nav-link" data-scroll-target="#the-math-simplified">The Math (Simplified)</a>
+  <ul class="collapse">
+  <li><a href="#the-riccati-equation" id="toc-the-riccati-equation" class="nav-link" data-scroll-target="#the-riccati-equation">The Riccati Equation</a></li>
+  <li><a href="#the-contraction-condition" id="toc-the-contraction-condition" class="nav-link" data-scroll-target="#the-contraction-condition">The Contraction Condition</a></li>
+  <li><a href="#the-duality" id="toc-the-duality" class="nav-link" data-scroll-target="#the-duality">The Duality</a></li>
+  </ul></li>
+  <li><a href="#contraction-constrained-optimization" id="toc-contraction-constrained-optimization" class="nav-link" data-scroll-target="#contraction-constrained-optimization">Contraction-Constrained Optimization</a>
+  <ul class="collapse">
+  <li><a href="#the-idea-optimize-with-stability-guarantees" id="toc-the-idea-optimize-with-stability-guarantees" class="nav-link" data-scroll-target="#the-idea-optimize-with-stability-guarantees">The Idea: Optimize with Stability Guarantees</a></li>
+  <li><a href="#the-cartpole-example" id="toc-the-cartpole-example" class="nav-link" data-scroll-target="#the-cartpole-example">The Cartpole Example</a></li>
+  </ul></li>
+  <li><a href="#applications-to-biomechanics" id="toc-applications-to-biomechanics" class="nav-link" data-scroll-target="#applications-to-biomechanics">Applications to Biomechanics</a>
+  <ul class="collapse">
+  <li><a href="#muscle-synergies-explained" id="toc-muscle-synergies-explained" class="nav-link" data-scroll-target="#muscle-synergies-explained">Muscle Synergies Explained</a></li>
+  <li><a href="#what-this-means" id="toc-what-this-means" class="nav-link" data-scroll-target="#what-this-means">What This Means</a></li>
+  <li><a href="#impedance-control" id="toc-impedance-control" class="nav-link" data-scroll-target="#impedance-control">Impedance Control</a></li>
+  </ul></li>
+  <li><a href="#the-algorithms-how-to-actually-use-this" id="toc-the-algorithms-how-to-actually-use-this" class="nav-link" data-scroll-target="#the-algorithms-how-to-actually-use-this">The Algorithms: How to Actually Use This</a>
+  <ul class="collapse">
+  <li><a href="#contraction-ddp-algorithm" id="toc-contraction-ddp-algorithm" class="nav-link" data-scroll-target="#contraction-ddp-algorithm">Contraction-DDP Algorithm</a></li>
+  <li><a href="#practical-implementation-jax" id="toc-practical-implementation-jax" class="nav-link" data-scroll-target="#practical-implementation-jax">Practical Implementation (JAX)</a></li>
+  </ul></li>
+  <li><a href="#common-questions" id="toc-common-questions" class="nav-link" data-scroll-target="#common-questions">Common Questions</a>
+  <ul class="collapse">
+  <li><a href="#isnt-this-just-lqr" id="toc-isnt-this-just-lqr" class="nav-link" data-scroll-target="#isnt-this-just-lqr"><strong>“Isn’t this just LQR?”</strong></a></li>
+  <li><a href="#does-this-work-for-discontinuous-systems" id="toc-does-this-work-for-discontinuous-systems" class="nav-link" data-scroll-target="#does-this-work-for-discontinuous-systems"><strong>“Does this work for discontinuous systems?”</strong></a></li>
+  <li><a href="#whats-the-computational-bottleneck" id="toc-whats-the-computational-bottleneck" class="nav-link" data-scroll-target="#whats-the-computational-bottleneck"><strong>“What’s the computational bottleneck?”</strong></a></li>
+  </ul></li>
+  <li><a href="#why-two-fields-seemed-separate" id="toc-why-two-fields-seemed-separate" class="nav-link" data-scroll-target="#why-two-fields-seemed-separate">Why Two Fields Seemed Separate</a>
+  <ul class="collapse">
+  <li><a href="#historical-accident" id="toc-historical-accident" class="nav-link" data-scroll-target="#historical-accident">Historical Accident</a></li>
+  <li><a href="#the-conceptual-barrier" id="toc-the-conceptual-barrier" class="nav-link" data-scroll-target="#the-conceptual-barrier">The Conceptual Barrier</a></li>
+  </ul></li>
+  <li><a href="#the-broader-impact" id="toc-the-broader-impact" class="nav-link" data-scroll-target="#the-broader-impact">The Broader Impact</a>
+  <ul class="collapse">
+  <li><a href="#unified-design-tools" id="toc-unified-design-tools" class="nav-link" data-scroll-target="#unified-design-tools">1. Unified Design Tools</a></li>
+  <li><a href="#interpretability" id="toc-interpretability" class="nav-link" data-scroll-target="#interpretability">2. Interpretability</a></li>
+  <li><a href="#biomechanical-insights" id="toc-biomechanical-insights" class="nav-link" data-scroll-target="#biomechanical-insights">3. Biomechanical Insights</a></li>
+  </ul></li>
+  <li><a href="#the-key-equations-for-the-curious" id="toc-the-key-equations-for-the-curious" class="nav-link" data-scroll-target="#the-key-equations-for-the-curious">The Key Equations (For the Curious)</a>
+  <ul class="collapse">
+  <li><a href="#contraction-condition" id="toc-contraction-condition" class="nav-link" data-scroll-target="#contraction-condition">1. Contraction Condition</a></li>
+  <li><a href="#differential-riccati-equation" id="toc-differential-riccati-equation" class="nav-link" data-scroll-target="#differential-riccati-equation">2. Differential Riccati Equation</a></li>
+  <li><a href="#duality" id="toc-duality" class="nav-link" data-scroll-target="#duality">3. Duality</a></li>
+  <li><a href="#closed-loop-dynamics" id="toc-closed-loop-dynamics" class="nav-link" data-scroll-target="#closed-loop-dynamics">4. Closed-Loop Dynamics</a></li>
+  <li><a href="#contraction-rate" id="toc-contraction-rate" class="nav-link" data-scroll-target="#contraction-rate">5. Contraction Rate</a></li>
+  </ul></li>
+  <li><a href="#philosophical-takeaway" id="toc-philosophical-takeaway" class="nav-link" data-scroll-target="#philosophical-takeaway">Philosophical Takeaway</a>
+  <ul class="collapse">
+  <li><a href="#optimality-stability" id="toc-optimality-stability" class="nav-link" data-scroll-target="#optimality-stability">Optimality ≡ Stability</a></li>
+  </ul></li>
+  <li><a href="#who-should-care" id="toc-who-should-care" class="nav-link" data-scroll-target="#who-should-care">Who Should Care?</a>
+  <ul class="collapse">
+  <li><a href="#researchers" id="toc-researchers" class="nav-link" data-scroll-target="#researchers">Researchers</a></li>
+  <li><a href="#engineers" id="toc-engineers" class="nav-link" data-scroll-target="#engineers">Engineers</a></li>
+  <li><a href="#neuroscientists" id="toc-neuroscientists" class="nav-link" data-scroll-target="#neuroscientists">Neuroscientists</a></li>
+  <li><a href="#coachestrainers" id="toc-coachestrainers" class="nav-link" data-scroll-target="#coachestrainers">Coaches/Trainers</a></li>
+  </ul></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next">What’s Next?</a>
+  <ul class="collapse">
+  <li><a href="#open-problems" id="toc-open-problems" class="nav-link" data-scroll-target="#open-problems">Open Problems</a></li>
+  <li><a href="#practical-tools" id="toc-practical-tools" class="nav-link" data-scroll-target="#practical-tools">Practical Tools</a></li>
+  </ul></li>
+  <li><a href="#the-bottom-line" id="toc-the-bottom-line" class="nav-link" data-scroll-target="#the-bottom-line">The Bottom Line</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="in-laymans-terms-contraction-theory-meets-tangent-spaces" class="level1">
+<h1>In Layman’s Terms: Contraction Theory Meets Tangent Spaces</h1>
+<p><strong>Target Audience:</strong> Non-technical readers, practitioners, students <strong>Source:</strong> Contraction_Tangent_Unification.qmd <strong>Date:</strong> January 18, 2026</p>
+<hr>
+<section id="the-big-idea-in-one-sentence" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-in-one-sentence">The Big Idea in One Sentence</h2>
+<p><strong>“The best controllers aren’t just optimal—they’re self-correcting by design, like a rubber band that automatically pulls errors back to zero.”</strong></p>
+<hr>
+</section>
+<section id="the-core-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-core-problem">The Core Problem</h2>
+<p>Imagine you’re designing a robot arm to paint intricate patterns on pottery. You face two completely different challenges:</p>
+<ol type="1">
+<li><strong>Optimality:</strong> Plan the perfect motion to create beautiful brushstrokes</li>
+<li><strong>Stability:</strong> Ensure tiny vibrations or bumps don’t ruin the painting</li>
+</ol>
+<p>Traditionally, these were treated as separate problems requiring separate solutions. Control engineers would: - First optimize the trajectory (make it “perfect”) - Then add stabilizing feedback (make it “robust”)</p>
+<p><strong>The shocking discovery:</strong> These aren’t two problems at all. They’re the <strong>same problem</strong> viewed from different angles. And the solution to one <strong>automatically gives you</strong> the solution to the other.</p>
+<p>This article reveals that duality and explains why it changes everything.</p>
+<hr>
+</section>
+<section id="what-is-contraction-theory" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-contraction-theory">What is Contraction Theory?</h2>
+<p>Before we can talk about the unification, we need to understand what “contraction” means.</p>
+<section id="the-rubber-band-analogy" class="level3">
+<h3 class="anchored" data-anchor-id="the-rubber-band-analogy">The Rubber Band Analogy</h3>
+<p>Think of a rubber band stretched between your fingers. What happens when you release one end?</p>
+<p><strong>It snaps back.</strong> The rubber band wants to return to its natural, unstretched state. The farther you stretch it, the harder it pulls back.</p>
+<p><strong>Contraction theory says:</strong> <em>Some dynamical systems behave like rubber bands—errors naturally shrink over time.</em></p>
+</section>
+<section id="everyday-examples" class="level3">
+<h3 class="anchored" data-anchor-id="everyday-examples">Everyday Examples</h3>
+<p><strong>1. Your car’s cruise control:</strong> - If you go a bit too fast, the system reduces throttle - If you go a bit too slow, it increases throttle - Either way, you <strong>converge</strong> back to the target speed - The system is “contracting” toward the setpoint</p>
+<p><strong>2. A swinging pendulum with friction:</strong> - No matter where you release it, it eventually stops at the bottom - All trajectories <strong>converge</strong> to the same resting state - The friction makes the system contracting</p>
+<p><strong>3. A thermostat:</strong> - Room too hot? Turn on AC - Room too cold? Turn on heat - Temperature naturally drifts toward the setpoint</p>
+</section>
+<section id="the-mathematical-definition-simplified" class="level3">
+<h3 class="anchored" data-anchor-id="the-mathematical-definition-simplified">The Mathematical Definition (Simplified)</h3>
+<p>A system is <strong>contracting</strong> if: - Any two nearby states get <strong>closer together</strong> over time - This happens <strong>exponentially fast</strong>—like compound interest in reverse - The rate of convergence is predictable and guaranteed</p>
+<p><strong>Physical meaning:</strong> Errors don’t just eventually go away—they <strong>shrink at a guaranteed rate</strong>, like radioactive decay.</p>
+<hr>
+</section>
+</section>
+<section id="what-are-tangent-spaces" class="level2">
+<h2 class="anchored" data-anchor-id="what-are-tangent-spaces">What Are Tangent Spaces?</h2>
+<p>Now the second piece of the puzzle.</p>
+<section id="the-curved-road-analogy-revisited" class="level3">
+<h3 class="anchored" data-anchor-id="the-curved-road-analogy-revisited">The Curved Road Analogy (Revisited)</h3>
+<p>From the main thesis, you learned that nonlinear systems are “locally linear”—at any instant, dynamics follow simple, linear rules on a <strong>tangent plane</strong>.</p>
+<p><strong>This article’s new insight:</strong> That tangent plane isn’t just about approximation. It’s the <strong>natural geometry</strong> where both optimality and stability live.</p>
+</section>
+<section id="the-optimal-control-connection" class="level3">
+<h3 class="anchored" data-anchor-id="the-optimal-control-connection">The Optimal Control Connection</h3>
+<p>When you solve an optimal control problem (like planning a robot’s motion), you get two things:</p>
+<ol type="1">
+<li><strong>A trajectory:</strong> The path the robot should follow</li>
+<li><strong>Feedback gains:</strong> How hard to push if you drift off the path</li>
+</ol>
+<p><strong>The feedback gains define a metric</strong>—a way of measuring “distance” from the optimal path. And here’s the kicker:</p>
+<p><strong>That metric is ALSO a contraction metric!</strong></p>
+<p>In other words: - The optimal controller makes errors expensive (optimality) - The same controller makes errors shrink exponentially (stability)</p>
+<p><strong>These are the same statement in different languages.</strong></p>
+<hr>
+</section>
+</section>
+<section id="the-duality-revealed" class="level2">
+<h2 class="anchored" data-anchor-id="the-duality-revealed">The Duality Revealed</h2>
+<p>Here’s the heart of the unification:</p>
+<section id="two-perspectives-one-reality" class="level3">
+<h3 class="anchored" data-anchor-id="two-perspectives-one-reality">Two Perspectives, One Reality</h3>
+<p><strong>Optimality perspective:</strong> - “If I deviate from the plan, it costs me this much (measured by the Riccati matrix)” - Focus: Minimizing cost</p>
+<p><strong>Stability perspective:</strong> - “If I deviate from the plan, I’ll converge back this fast (measured by the contraction metric)” - Focus: Guaranteeing convergence</p>
+<p><strong>The revelation:</strong> The Riccati matrix (from optimal control) <strong>IS</strong> the contraction metric (from stability theory).</p>
+<p>They’re not similar. They’re <strong>the same object</strong>, viewed through different lenses.</p>
+</section>
+<section id="the-rubber-band-is-optimal" class="level3">
+<h3 class="anchored" data-anchor-id="the-rubber-band-is-optimal">The Rubber Band is Optimal</h3>
+<p>Going back to the rubber band:</p>
+<ul>
+<li><strong>Stability view:</strong> The rubber band pulls you back (contraction rate)</li>
+<li><strong>Optimality view:</strong> The rubber band’s tension measures how far off you are (cost-to-go)</li>
+</ul>
+<p><strong>Physical interpretation:</strong> The “springiness” of the optimal feedback is exactly what’s needed to make the system self-correcting.</p>
+<hr>
+</section>
+</section>
+<section id="why-this-matters-real-world-applications" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-matters-real-world-applications">Why This Matters: Real-World Applications</h2>
+<section id="robot-arms-that-self-stabilize" class="level3">
+<h3 class="anchored" data-anchor-id="robot-arms-that-self-stabilize">1. Robot Arms That Self-Stabilize</h3>
+<p><strong>The old way:</strong> 1. Plan optimal trajectory 2. Design separate stabilizing controller 3. Hope they don’t interfere with each other</p>
+<p><strong>The new way (contraction-aware control):</strong> 1. Plan trajectory <strong>with contraction constraints</strong> built in 2. Get stability guarantees <strong>for free</strong> from the optimization</p>
+<p><strong>Real result (from the article):</strong> A 7-DOF robot arm tracking a circular path: - <strong>76% reduction</strong> in tracking error - <strong>5× faster</strong> disturbance rejection - <strong>Guaranteed</strong> convergence rate (measured 4.87 Hz vs designed 5.0 Hz)</p>
+<p><strong>Why it works:</strong> The controller doesn’t just steer toward the goal—it actively shrinks errors at a certified rate.</p>
+</section>
+<section id="golf-swings-with-safety-margins" class="level3">
+<h3 class="anchored" data-anchor-id="golf-swings-with-safety-margins">2. Golf Swings with Safety Margins</h3>
+<p><strong>The problem:</strong> Professional golfers swing faster than amateurs but <strong>maintain control</strong> better. Why?</p>
+<p><strong>Contraction analysis reveals:</strong> - Pros maintain a high “stability margin” throughout the swing - Even during rapid motion (club head at 100+ mph), the dynamics remain contracting - Amateurs lose stability near impact—small perturbations cause big errors</p>
+<p><strong>Quantified:</strong> - <strong>Pros:</strong> Stability margin γ &gt; 0.5 throughout swing - <strong>Amateurs:</strong> Stability margin γ &lt; 0.2 near impact</p>
+<p><strong>Interpretation:</strong> Pros aren’t just executing a plan—they’re executing a plan that has <strong>built-in error correction</strong>. Their swings are “dynamically stable.”</p>
+<p><strong>Training implication:</strong> Don’t just practice accuracy. Practice swings that <strong>tolerate mistakes</strong>.</p>
+</section>
+<section id="spacecraft-docking-with-guarantees" class="level3">
+<h3 class="anchored" data-anchor-id="spacecraft-docking-with-guarantees">3. Spacecraft Docking with Guarantees</h3>
+<p><strong>Challenge:</strong> Docking with the ISS requires centimeter-level precision. Orbital mechanics are nonlinear. Fuel is limited.</p>
+<p><strong>Contraction-based approach:</strong> 1. Plan trajectory using DDP (differential dynamic programming) 2. Add contraction penalty to ensure exponential convergence 3. Result: Certified basin of attraction—you <strong>know</strong> the safe operating region</p>
+<p><strong>Benefit:</strong> If sensors glitch or thrusters malfunction, the controller’s contraction property <strong>guarantees</strong> you’ll recover (if you’re within the certified region).</p>
+<p><strong>Real spacecraft don’t gamble on “it usually works.”</strong> They need mathematical proof. Contraction theory provides that.</p>
+<hr>
+</section>
+</section>
+<section id="the-geometric-picture" class="level2">
+<h2 class="anchored" data-anchor-id="the-geometric-picture">The Geometric Picture</h2>
+<section id="curved-space-and-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="curved-space-and-metrics">Curved Space and Metrics</h3>
+<p>Here’s where it gets beautiful (and a bit abstract).</p>
+<p><strong>Traditional view:</strong> State space is flat. Distance is measured with a ruler (Euclidean metric).</p>
+<p><strong>Contraction view:</strong> State space is <strong>curved</strong>. Distance is measured with a <strong>Riemannian metric</strong>—like measuring distance on Earth’s surface using latitude/longitude.</p>
+<p><strong>The Riccati matrix defines that curvature.</strong></p>
+</section>
+<section id="what-this-means-physically" class="level3">
+<h3 class="anchored" data-anchor-id="what-this-means-physically">What This Means Physically</h3>
+<p>Imagine you’re walking on a trampoline: - Near the center (the goal), the trampoline curves steeply downward - The curvature creates a “bowl” that pulls you toward the center - The steeper the bowl, the faster you slide to the center</p>
+<p><strong>The optimal controller shapes the “bowl”</strong> (the metric) to make errors decay at the desired rate.</p>
+<p><strong>Analogy to gravity:</strong> Optimal control doesn’t push you toward the goal. It <strong>bends spacetime</strong> so that the goal is “downhill” from everywhere.</p>
+<hr>
+</section>
+</section>
+<section id="the-math-simplified" class="level2">
+<h2 class="anchored" data-anchor-id="the-math-simplified">The Math (Simplified)</h2>
+<p>You don’t need to understand the equations to appreciate the beauty, but here’s the executive summary:</p>
+<section id="the-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="the-riccati-equation">The Riccati Equation</h3>
+<p><strong>What it is:</strong> A differential equation that describes how the “cost-to-go” (value function) changes along a trajectory.</p>
+<p><strong>Standard form:</strong></p>
+<pre><code>-dS/dt = A^T S + S A - S B R^(-1) B^T S + Q</code></pre>
+<p><strong>What it says:</strong> The value function S(t) satisfies a nonlinear differential equation.</p>
+</section>
+<section id="the-contraction-condition" class="level3">
+<h3 class="anchored" data-anchor-id="the-contraction-condition">The Contraction Condition</h3>
+<p><strong>What it is:</strong> A requirement that ensures errors shrink exponentially.</p>
+<p><strong>Standard form:</strong></p>
+<pre><code>A^T M + M A &lt; -2λ M</code></pre>
+<p><strong>What it says:</strong> If the metric M satisfies this inequality, trajectories converge with rate λ.</p>
+</section>
+<section id="the-duality" class="level3">
+<h3 class="anchored" data-anchor-id="the-duality">The Duality</h3>
+<p><strong>The shocking fact:</strong> When you set M = S (metric equals value function), <strong>both equations are satisfied</strong>.</p>
+<p>In other words: - Solving the optimal control problem gives you S - That S is automatically a contraction metric - The contraction rate comes from the eigenvalues of the closed-loop system</p>
+<p><strong>No extra work. The optimality condition IS the stability condition.</strong></p>
+<hr>
+</section>
+</section>
+<section id="contraction-constrained-optimization" class="level2">
+<h2 class="anchored" data-anchor-id="contraction-constrained-optimization">Contraction-Constrained Optimization</h2>
+<p>Now that we know optimality = stability, we can design smarter algorithms.</p>
+<section id="the-idea-optimize-with-stability-guarantees" class="level3">
+<h3 class="anchored" data-anchor-id="the-idea-optimize-with-stability-guarantees">The Idea: Optimize with Stability Guarantees</h3>
+<p><strong>Standard trajectory optimization:</strong> - Minimize cost (fuel, time, error) - Hope the result is stable</p>
+<p><strong>Contraction-aware trajectory optimization:</strong> - Minimize cost <strong>subject to</strong> contraction constraints - Get certified stability as part of the solution</p>
+<p><strong>Mathematical form:</strong></p>
+<pre><code>Minimize: trajectory cost
+Subject to:
+  - Dynamics constraints
+  - Contraction rate ≥ λ (user-specified)
+  - Control limits</code></pre>
+<p><strong>Output:</strong> - Optimal trajectory - Feedback gains - <strong>Certified basin of attraction</strong>—the region where convergence is guaranteed</p>
+</section>
+<section id="the-cartpole-example" class="level3">
+<h3 class="anchored" data-anchor-id="the-cartpole-example">The Cartpole Example</h3>
+<p><strong>Problem:</strong> Swing up an inverted pendulum on a cart from hanging down to upright.</p>
+<p><strong>Comparison:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 21%">
+<col style="width: 24%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Classical DDP</th>
+<th>Contraction-DDP</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Success rate (σ=0.1)</td>
+<td>94%</td>
+<td>100%</td>
+<td>+6%</td>
+</tr>
+<tr class="even">
+<td>Success rate (σ=0.2)</td>
+<td>71%</td>
+<td>98%</td>
+<td>+38%</td>
+</tr>
+<tr class="odd">
+<td>Success rate (σ=0.3)</td>
+<td>42%</td>
+<td>89%</td>
+<td>+112%</td>
+</tr>
+<tr class="even">
+<td>Basin of attraction</td>
+<td>14.3 units³</td>
+<td>28.7 units³</td>
+<td><strong>2× larger</strong></td>
+</tr>
+<tr class="odd">
+<td>Convergence consistency</td>
+<td>High variance</td>
+<td>Low variance</td>
+<td>More reliable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>σ = initial state perturbation (noise in starting position/velocity)</strong></p>
+<p><strong>Takeaway:</strong> By explicitly enforcing contraction, you get: - Larger basin of attraction (more robust to disturbances) - More consistent convergence (predictable behavior) - Modest computational cost (+60% with warm-starting)</p>
+<hr>
+</section>
+</section>
+<section id="applications-to-biomechanics" class="level2">
+<h2 class="anchored" data-anchor-id="applications-to-biomechanics">Applications to Biomechanics</h2>
+<p>This is where theory meets biology.</p>
+<section id="muscle-synergies-explained" class="level3">
+<h3 class="anchored" data-anchor-id="muscle-synergies-explained">Muscle Synergies Explained</h3>
+<p><strong>The puzzle:</strong> Humans have 7+ shoulder/elbow/wrist muscles, but only 3 spatial degrees of freedom to control. That’s massive redundancy. Why?</p>
+<p><strong>Old hypothesis:</strong> “The brain simplifies by grouping muscles into synergies.”</p>
+<p><strong>New hypothesis (from contraction theory):</strong> “The brain chooses synergies that <strong>maximize contraction rate</strong>—ensuring movements are dynamically stable.”</p>
+</section>
+<section id="what-this-means" class="level3">
+<h3 class="anchored" data-anchor-id="what-this-means">What This Means</h3>
+<p><strong>Muscle synergies aren’t arbitrary.</strong> They’re the <strong>optimal subspace</strong> for contraction.</p>
+<p><strong>Analogy:</strong> Imagine you’re steering a ship with 50 ropes. You could pull them randomly, but it’s smarter to: - Group ropes by their effect (e.g., “left turn bundle”, “right turn bundle”) - Pull bundles, not individual ropes</p>
+<p><strong>Contraction theory predicts:</strong> The best groupings are those that make the ship <strong>self-correct</strong> when perturbed.</p>
+<p><strong>Experimental evidence:</strong> Studies show muscle synergies change with task demands (balancing vs reaching), consistent with adapting for stability.</p>
+</section>
+<section id="impedance-control" class="level3">
+<h3 class="anchored" data-anchor-id="impedance-control">Impedance Control</h3>
+<p><strong>What it is:</strong> The nervous system adjusts muscle stiffness (impedance) to control motion.</p>
+<p><strong>Contraction view:</strong> Impedance is a <strong>metric</strong>—it defines how errors are weighted.</p>
+<p><strong>Example:</strong> Holding a full coffee cup: - High stiffness in vertical direction (don’t spill!) - Low stiffness in horizontal direction (allow smooth motion)</p>
+<p><strong>The brain is shaping the contraction metric</strong> to prioritize stability where it matters.</p>
+<hr>
+</section>
+</section>
+<section id="the-algorithms-how-to-actually-use-this" class="level2">
+<h2 class="anchored" data-anchor-id="the-algorithms-how-to-actually-use-this">The Algorithms: How to Actually Use This</h2>
+<section id="contraction-ddp-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-ddp-algorithm">Contraction-DDP Algorithm</h3>
+<p><strong>Input:</strong> - Initial trajectory - Desired contraction rate λ - Penalty weight μ (how much to prioritize stability)</p>
+<p><strong>Repeat until convergence:</strong></p>
+<ol type="1">
+<li><strong>Forward pass:</strong> Simulate dynamics</li>
+<li><strong>Metric optimization:</strong> Solve for optimal contraction metric M (convex optimization)</li>
+<li><strong>Backward pass:</strong> Compute feedback gains using augmented cost (includes contraction penalty)</li>
+<li><strong>Line search:</strong> Update trajectory with step size α</li>
+</ol>
+<p><strong>Output:</strong> - Optimal trajectory - Time-varying feedback gains - Certified contraction rate</p>
+<p><strong>Computational cost:</strong> ~60% higher than classical DDP (due to metric optimization), but you get <strong>guarantees</strong> in return.</p>
+</section>
+<section id="practical-implementation-jax" class="level3">
+<h3 class="anchored" data-anchor-id="practical-implementation-jax">Practical Implementation (JAX)</h3>
+<p><strong>Why JAX?</strong> - Automatic differentiation (compute Jacobians exactly) - JIT compilation (fast execution) - Batching (vectorize over time steps)</p>
+<p><strong>Key steps:</strong> 1. Define dynamics function 2. Use <code>jacfwd</code> to compute linearization matrices A, B 3. Solve Riccati equation backward in time 4. Verify contraction condition</p>
+<p><strong>Example output (pendulum swing-up):</strong></p>
+<pre><code>Solving with classical DDP...
+Converged in 12 iterations
+
+Solving with contraction-DDP...
+Converged in 18 iterations
+Final contraction rate: 1.94 Hz (target: 2.0 Hz)</code></pre>
+<p><strong>Trade-off:</strong> More iterations, but certified stability.</p>
+<hr>
+</section>
+</section>
+<section id="common-questions" class="level2">
+<h2 class="anchored" data-anchor-id="common-questions">Common Questions</h2>
+<section id="isnt-this-just-lqr" class="level3">
+<h3 class="anchored" data-anchor-id="isnt-this-just-lqr"><strong>“Isn’t this just LQR?”</strong></h3>
+<p><strong>Almost, but with a twist.</strong></p>
+<p>LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For nonlinear systems, you need to: - Linearize at every point along the trajectory (time-varying LQR) - This is what DDP does</p>
+<p><strong>What’s new:</strong> Explicitly recognizing that the LQR solution <strong>is also a contraction metric</strong>. So by solving LQR, you’re not just getting optimality—you’re getting certified exponential stability.</p>
+<p><strong>Analogy:</strong> It’s like discovering that your car’s GPS (optimality) also has a built-in gyroscope (stability)—you were using it all along without realizing the dual function.</p>
+</section>
+<section id="does-this-work-for-discontinuous-systems" class="level3">
+<h3 class="anchored" data-anchor-id="does-this-work-for-discontinuous-systems"><strong>“Does this work for discontinuous systems?”</strong></h3>
+<p><strong>No.</strong> Contraction requires smooth dynamics (at least C^1—continuously differentiable).</p>
+<p>For systems with: - Impacts (e.g., walking, bouncing) - Switches (e.g., mode changes) - Friction (stick-slip)</p>
+<p>You need hybrid system techniques. <strong>But:</strong> You can use contraction within each mode, then analyze switching separately.</p>
+</section>
+<section id="whats-the-computational-bottleneck" class="level3">
+<h3 class="anchored" data-anchor-id="whats-the-computational-bottleneck"><strong>“What’s the computational bottleneck?”</strong></h3>
+<p><strong>Metric optimization.</strong> Finding the optimal contraction metric M requires solving a semidefinite program (SDP) at each time step.</p>
+<p><strong>Scaling:</strong> For n-dimensional systems, SDP costs O(n^4) using interior-point methods.</p>
+<p><strong>Mitigation:</strong> - Warm-starting (use previous solution as initial guess) - Sparsity (exploit block structure) - Approximation (use fixed metric M = I, lose optimality but retain stability)</p>
+<p><strong>Current practical limit:</strong> ~20-30 states with real-time requirements, ~100 states offline.</p>
+<hr>
+</section>
+</section>
+<section id="why-two-fields-seemed-separate" class="level2">
+<h2 class="anchored" data-anchor-id="why-two-fields-seemed-separate">Why Two Fields Seemed Separate</h2>
+<section id="historical-accident" class="level3">
+<h3 class="anchored" data-anchor-id="historical-accident">Historical Accident</h3>
+<p><strong>Optimal control</strong> (1960s): Focus on minimizing cost functionals, Pontryagin’s maximum principle, dynamic programming.</p>
+<p><strong>Stability theory</strong> (1890s-present): Focus on Lyapunov functions, convergence analysis, robustness.</p>
+<p><strong>Different communities, different journals, different notation.</strong></p>
+<p><strong>Example:</strong> The Riccati equation appears in both fields but was called: - “Value function propagation” in optimal control - “Lyapunov function candidate” in stability theory</p>
+<p><strong>Nobody explicitly stated:</strong> “These are the same equation.”</p>
+</section>
+<section id="the-conceptual-barrier" class="level3">
+<h3 class="anchored" data-anchor-id="the-conceptual-barrier">The Conceptual Barrier</h3>
+<p><strong>Optimal control asks:</strong> “What’s the best thing to do?”</p>
+<p><strong>Stability theory asks:</strong> “Will the system behave predictably?”</p>
+<p><strong>These seem like different questions.</strong> But they’re not. They’re: - <strong>Dual formulations</strong> of the same geometric structure - Related by Legendre transform (cost ↔︎ metric)</p>
+<p><strong>Analogy:</strong> It’s like discovering that “velocity” and “momentum” are the same thing in different units. Both are valid perspectives, but recognizing the duality unlocks new insights.</p>
+<hr>
+</section>
+</section>
+<section id="the-broader-impact" class="level2">
+<h2 class="anchored" data-anchor-id="the-broader-impact">The Broader Impact</h2>
+<section id="unified-design-tools" class="level3">
+<h3 class="anchored" data-anchor-id="unified-design-tools">1. Unified Design Tools</h3>
+<p><strong>Before:</strong> Design trajectory with one tool, analyze stability with another, iterate until both work.</p>
+<p><strong>After:</strong> Single optimization that delivers both simultaneously.</p>
+<p><strong>Example:</strong> Satellite trajectory planning: - Old: Optimize fuel, then check if stable, then re-optimize, repeat - New: Optimize fuel <strong>with contraction constraint</strong>, get stability certificate immediately</p>
+</section>
+<section id="interpretability" class="level3">
+<h3 class="anchored" data-anchor-id="interpretability">2. Interpretability</h3>
+<p><strong>Machine learning controllers</strong> (neural networks) work well but are black boxes. You can’t prove they’re safe.</p>
+<p><strong>Contraction-aware control:</strong> - Transparent: You know exactly why it’s stable (the metric tells you) - Certifiable: You can compute the basin of attraction - Trustworthy: Satisfies safety regulations</p>
+<p><strong>Use case:</strong> Autonomous vehicles need <strong>provable</strong> safety, not just “works 99.9% of the time.”</p>
+</section>
+<section id="biomechanical-insights" class="level3">
+<h3 class="anchored" data-anchor-id="biomechanical-insights">3. Biomechanical Insights</h3>
+<p><strong>Neuroscience puzzle:</strong> How does the brain control 600+ muscles without getting tangled?</p>
+<p><strong>Contraction hypothesis:</strong> The brain optimizes for <strong>robust, self-correcting motions</strong>, not just energetic efficiency.</p>
+<p><strong>Testable prediction:</strong> Brain-damaged patients should show: - Preserved optimality (can still reach targets) - Degraded contraction (unstable motions, more corrections)</p>
+<p><strong>Experimental data supports this.</strong></p>
+<hr>
+</section>
+</section>
+<section id="the-key-equations-for-the-curious" class="level2">
+<h2 class="anchored" data-anchor-id="the-key-equations-for-the-curious">The Key Equations (For the Curious)</h2>
+<p>If you want to dig deeper, here are the core equations:</p>
+<section id="contraction-condition" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-condition">1. Contraction Condition</h3>
+<pre><code>A^T M + M A + dM/dt ≤ -2λ M</code></pre>
+<p><strong>Says:</strong> Metric M makes errors decay with rate λ.</p>
+</section>
+<section id="differential-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="differential-riccati-equation">2. Differential Riccati Equation</h3>
+<pre><code>-dS/dt = Q + A^T S + S A - S B R^(-1) B^T S</code></pre>
+<p><strong>Says:</strong> Value function S propagates backward in time.</p>
+</section>
+<section id="duality" class="level3">
+<h3 class="anchored" data-anchor-id="duality">3. Duality</h3>
+<pre><code>M = S</code></pre>
+<p><strong>Says:</strong> The metric IS the value function.</p>
+</section>
+<section id="closed-loop-dynamics" class="level3">
+<h3 class="anchored" data-anchor-id="closed-loop-dynamics">4. Closed-Loop Dynamics</h3>
+<pre><code>dx/dt = (A - B K) x,   K = R^(-1) B^T S</code></pre>
+<p><strong>Says:</strong> Optimal feedback renders the system contracting.</p>
+</section>
+<section id="contraction-rate" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-rate">5. Contraction Rate</h3>
+<pre><code>λ = (1/2) λ_min(S B R^(-1) B^T S)</code></pre>
+<p><strong>Says:</strong> Contraction rate is determined by smallest eigenvalue of a specific matrix.</p>
+<p><strong>Don’t worry if these look intimidating.</strong> The point is: They’re all <strong>different views of the same structure</strong>.</p>
+<hr>
+</section>
+</section>
+<section id="philosophical-takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="philosophical-takeaway">Philosophical Takeaway</h2>
+<section id="optimality-stability" class="level3">
+<h3 class="anchored" data-anchor-id="optimality-stability">Optimality ≡ Stability</h3>
+<p>In a well-designed system: - The optimal way to act <strong>is</strong> the stable way - Stability constraints <strong>don’t reduce</strong> optimality—they <strong>define</strong> it - The “cost of error” and “rate of error decay” are two sides of the same coin</p>
+<p><strong>Analogy from economics:</strong> In an efficient market, the “price” (optimality) reflects the “risk” (stability). You can’t have one without the other.</p>
+<p><strong>Engineering lesson:</strong> Don’t treat performance and robustness as trade-offs. A truly optimal design is inherently robust.</p>
+<hr>
+</section>
+</section>
+<section id="who-should-care" class="level2">
+<h2 class="anchored" data-anchor-id="who-should-care">Who Should Care?</h2>
+<section id="researchers" class="level3">
+<h3 class="anchored" data-anchor-id="researchers">Researchers</h3>
+<ul>
+<li>Unified framework for analyzing nonlinear control</li>
+<li>New connections between geometry, optimization, and dynamics</li>
+</ul>
+</section>
+<section id="engineers" class="level3">
+<h3 class="anchored" data-anchor-id="engineers">Engineers</h3>
+<ul>
+<li>Design controllers with <strong>guaranteed</strong> stability</li>
+<li>Compute basins of attraction for safety certification</li>
+</ul>
+</section>
+<section id="neuroscientists" class="level3">
+<h3 class="anchored" data-anchor-id="neuroscientists">Neuroscientists</h3>
+<ul>
+<li>Explain motor control via contraction metrics</li>
+<li>Predict synergy structure from task requirements</li>
+</ul>
+</section>
+<section id="coachestrainers" class="level3">
+<h3 class="anchored" data-anchor-id="coachestrainers">Coaches/Trainers</h3>
+<ul>
+<li>Understand why some techniques are “dynamically stable”</li>
+<li>Design training regimes that prioritize robust skill acquisition</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next?</h2>
+<section id="open-problems" class="level3">
+<h3 class="anchored" data-anchor-id="open-problems">Open Problems</h3>
+<ol type="1">
+<li><strong>Stochastic systems:</strong> Extend to noisy dynamics (partially done, see stochastic Riccati equation)</li>
+<li><strong>Learning metrics:</strong> Use machine learning to discover optimal contraction metrics from data</li>
+<li><strong>Hybrid systems:</strong> Handle impacts and mode switches</li>
+<li><strong>High dimensions:</strong> Scale to 100+ states (requires faster SDP solvers)</li>
+</ol>
+</section>
+<section id="practical-tools" class="level3">
+<h3 class="anchored" data-anchor-id="practical-tools">Practical Tools</h3>
+<p>All code examples available at:</p>
+<pre><code>https://github.com/AffineDrift/contraction-tangent-unification</code></pre>
+<p>Includes: - JAX implementation of Contraction-DDP - CVXPY metric optimization - Benchmark problems (cartpole, pendulum, robot arm) - Visualization tools</p>
+<hr>
+</section>
+</section>
+<section id="the-bottom-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-bottom-line">The Bottom Line</h2>
+<p><strong>Two theories that seemed separate—optimal control and contraction theory—are actually the same theory in disguise.</strong></p>
+<p>The Riccati matrix (cost-to-go) <strong>is</strong> the contraction metric (stability measure). Solving for one gives you the other <strong>for free</strong>.</p>
+<p><strong>Practical impact:</strong> - Design controllers with certified stability - Larger basins of attraction (2× in examples) - Predictable convergence rates - Unified design methodology</p>
+<p><strong>Conceptual impact:</strong> - Optimality ≡ Stability (not a trade-off, an identity) - Dynamics live on curved spaces (Riemannian geometry matters) - The “right” metric makes everything simple</p>
+<p><strong>This isn’t just math.</strong> It’s a new way of seeing control problems—one where performance and robustness are <strong>two perspectives on the same underlying structure</strong>.</p>
+<p>Like the duck-rabbit illusion: Once you see both, you can’t unsee it. And that changes everything.</p>
+<hr>
+<p><strong>For the full technical details:</strong> See <a href="../../../articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html">Contraction_Tangent_Unification.qmd</a></p>
+<p><strong>For the main tangent space framework:</strong> See <a href="../LAYMANS_TERMS_SUMMARY.md">LAYMANS_TERMS_SUMMARY.md</a></p>
+<p><strong>For critical analysis:</strong> See <a href="../CRITICAL_REVIEW.md">CRITICAL_REVIEW.md</a></p>
+<hr>
+<p><em>Created by AffineDrift Framework, January 18, 2026</em> <em>Target word count: ~2,800 words (achieved: ~2,950)</em></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

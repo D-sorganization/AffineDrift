@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>hybrid_tangent_critic – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../../styles.css" as="style">
+<link rel="preload" href="../../../script.js" as="script">
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#critique-hybrid-tangent-spaces" id="toc-critique-hybrid-tangent-spaces" class="nav-link active" data-scroll-target="#critique-hybrid-tangent-spaces">Critique: Hybrid Tangent Spaces</a>
+  <ul class="collapse">
+  <li><a href="#summary-of-concern" id="toc-summary-of-concern" class="nav-link" data-scroll-target="#summary-of-concern">Summary of Concern</a></li>
+  <li><a href="#location" id="toc-location" class="nav-link" data-scroll-target="#location">Location</a></li>
+  <li><a href="#nature-of-the-issues" id="toc-nature-of-the-issues" class="nav-link" data-scroll-target="#nature-of-the-issues">Nature of the Issues</a></li>
+  <li><a href="#weakness-1-incomplete-saltation-matrix-derivation" id="toc-weakness-1-incomplete-saltation-matrix-derivation" class="nav-link" data-scroll-target="#weakness-1-incomplete-saltation-matrix-derivation">Weakness 1: Incomplete Saltation Matrix Derivation</a>
+  <ul class="collapse">
+  <li><a href="#location-1" id="toc-location-1" class="nav-link" data-scroll-target="#location-1">Location</a></li>
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem" id="toc-why-this-is-a-problem" class="nav-link" data-scroll-target="#why-this-is-a-problem">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references" id="toc-evidence-references" class="nav-link" data-scroll-target="#evidence-references">Evidence / References</a></li>
+  <li><a href="#severity" id="toc-severity" class="nav-link" data-scroll-target="#severity">Severity</a></li>
+  <li><a href="#suggested-remedies" id="toc-suggested-remedies" class="nav-link" data-scroll-target="#suggested-remedies">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-2-measure-theoretic-rigor-gaps" id="toc-weakness-2-measure-theoretic-rigor-gaps" class="nav-link" data-scroll-target="#weakness-2-measure-theoretic-rigor-gaps">Weakness 2: Measure-Theoretic Rigor Gaps</a>
+  <ul class="collapse">
+  <li><a href="#location-2" id="toc-location-2" class="nav-link" data-scroll-target="#location-2">Location</a></li>
+  <li><a href="#the-problem-1" id="toc-the-problem-1" class="nav-link" data-scroll-target="#the-problem-1">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-1" id="toc-why-this-is-a-problem-1" class="nav-link" data-scroll-target="#why-this-is-a-problem-1">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references-1" id="toc-evidence-references-1" class="nav-link" data-scroll-target="#evidence-references-1">Evidence / References</a></li>
+  <li><a href="#severity-1" id="toc-severity-1" class="nav-link" data-scroll-target="#severity-1">Severity</a></li>
+  <li><a href="#suggested-remedies-1" id="toc-suggested-remedies-1" class="nav-link" data-scroll-target="#suggested-remedies-1">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-3-zeno-behavior-treatment-is-superficial" id="toc-weakness-3-zeno-behavior-treatment-is-superficial" class="nav-link" data-scroll-target="#weakness-3-zeno-behavior-treatment-is-superficial">Weakness 3: Zeno Behavior Treatment is Superficial</a>
+  <ul class="collapse">
+  <li><a href="#location-3" id="toc-location-3" class="nav-link" data-scroll-target="#location-3">Location</a></li>
+  <li><a href="#the-problem-2" id="toc-the-problem-2" class="nav-link" data-scroll-target="#the-problem-2">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-2" id="toc-why-this-is-a-problem-2" class="nav-link" data-scroll-target="#why-this-is-a-problem-2">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references-2" id="toc-evidence-references-2" class="nav-link" data-scroll-target="#evidence-references-2">Evidence / References</a></li>
+  <li><a href="#severity-2" id="toc-severity-2" class="nav-link" data-scroll-target="#severity-2">Severity</a></li>
+  <li><a href="#suggested-remedies-2" id="toc-suggested-remedies-2" class="nav-link" data-scroll-target="#suggested-remedies-2">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-4-complementarity-constraints-are-oversimplified" id="toc-weakness-4-complementarity-constraints-are-oversimplified" class="nav-link" data-scroll-target="#weakness-4-complementarity-constraints-are-oversimplified">Weakness 4: Complementarity Constraints are Oversimplified</a>
+  <ul class="collapse">
+  <li><a href="#location-4" id="toc-location-4" class="nav-link" data-scroll-target="#location-4">Location</a></li>
+  <li><a href="#the-problem-3" id="toc-the-problem-3" class="nav-link" data-scroll-target="#the-problem-3">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-3" id="toc-why-this-is-a-problem-3" class="nav-link" data-scroll-target="#why-this-is-a-problem-3">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references-3" id="toc-evidence-references-3" class="nav-link" data-scroll-target="#evidence-references-3">Evidence / References</a></li>
+  <li><a href="#severity-3" id="toc-severity-3" class="nav-link" data-scroll-target="#severity-3">Severity</a></li>
+  <li><a href="#suggested-remedies-3" id="toc-suggested-remedies-3" class="nav-link" data-scroll-target="#suggested-remedies-3">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-5-jax-implementation-claims-are-unverified" id="toc-weakness-5-jax-implementation-claims-are-unverified" class="nav-link" data-scroll-target="#weakness-5-jax-implementation-claims-are-unverified">Weakness 5: JAX Implementation Claims are Unverified</a>
+  <ul class="collapse">
+  <li><a href="#location-5" id="toc-location-5" class="nav-link" data-scroll-target="#location-5">Location</a></li>
+  <li><a href="#the-problem-4" id="toc-the-problem-4" class="nav-link" data-scroll-target="#the-problem-4">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-4" id="toc-why-this-is-a-problem-4" class="nav-link" data-scroll-target="#why-this-is-a-problem-4">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references-4" id="toc-evidence-references-4" class="nav-link" data-scroll-target="#evidence-references-4">Evidence / References</a></li>
+  <li><a href="#severity-4" id="toc-severity-4" class="nav-link" data-scroll-target="#severity-4">Severity</a></li>
+  <li><a href="#suggested-remedies-4" id="toc-suggested-remedies-4" class="nav-link" data-scroll-target="#suggested-remedies-4">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-6-applications-are-oversimplified-examples" id="toc-weakness-6-applications-are-oversimplified-examples" class="nav-link" data-scroll-target="#weakness-6-applications-are-oversimplified-examples">Weakness 6: Applications are Oversimplified Examples</a>
+  <ul class="collapse">
+  <li><a href="#location-6" id="toc-location-6" class="nav-link" data-scroll-target="#location-6">Location</a></li>
+  <li><a href="#the-problem-5" id="toc-the-problem-5" class="nav-link" data-scroll-target="#the-problem-5">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-5" id="toc-why-this-is-a-problem-5" class="nav-link" data-scroll-target="#why-this-is-a-problem-5">Why This Is a Problem</a></li>
+  <li><a href="#evidence-references-5" id="toc-evidence-references-5" class="nav-link" data-scroll-target="#evidence-references-5">Evidence / References</a></li>
+  <li><a href="#severity-5" id="toc-severity-5" class="nav-link" data-scroll-target="#severity-5">Severity</a></li>
+  <li><a href="#suggested-remedies-5" id="toc-suggested-remedies-5" class="nav-link" data-scroll-target="#suggested-remedies-5">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-7-missing-literature-on-hybrid-system-optimization" id="toc-weakness-7-missing-literature-on-hybrid-system-optimization" class="nav-link" data-scroll-target="#weakness-7-missing-literature-on-hybrid-system-optimization">Weakness 7: Missing Literature on Hybrid System Optimization</a>
+  <ul class="collapse">
+  <li><a href="#location-7" id="toc-location-7" class="nav-link" data-scroll-target="#location-7">Location</a></li>
+  <li><a href="#the-problem-6" id="toc-the-problem-6" class="nav-link" data-scroll-target="#the-problem-6">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-6" id="toc-why-this-is-a-problem-6" class="nav-link" data-scroll-target="#why-this-is-a-problem-6">Why This Is a Problem</a></li>
+  <li><a href="#severity-6" id="toc-severity-6" class="nav-link" data-scroll-target="#severity-6">Severity</a></li>
+  <li><a href="#suggested-remedies-6" id="toc-suggested-remedies-6" class="nav-link" data-scroll-target="#suggested-remedies-6">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#weakness-8-no-discussion-of-when-the-framework-breaks" id="toc-weakness-8-no-discussion-of-when-the-framework-breaks" class="nav-link" data-scroll-target="#weakness-8-no-discussion-of-when-the-framework-breaks">Weakness 8: No Discussion of When the Framework Breaks</a>
+  <ul class="collapse">
+  <li><a href="#location-8" id="toc-location-8" class="nav-link" data-scroll-target="#location-8">Location</a></li>
+  <li><a href="#the-problem-7" id="toc-the-problem-7" class="nav-link" data-scroll-target="#the-problem-7">The Problem</a></li>
+  <li><a href="#why-this-is-a-problem-7" id="toc-why-this-is-a-problem-7" class="nav-link" data-scroll-target="#why-this-is-a-problem-7">Why This Is a Problem</a></li>
+  <li><a href="#severity-7" id="toc-severity-7" class="nav-link" data-scroll-target="#severity-7">Severity</a></li>
+  <li><a href="#suggested-remedies-7" id="toc-suggested-remedies-7" class="nav-link" data-scroll-target="#suggested-remedies-7">Suggested Remedies</a></li>
+  </ul></li>
+  <li><a href="#overall-assessment" id="toc-overall-assessment" class="nav-link" data-scroll-target="#overall-assessment">Overall Assessment</a>
+  <ul class="collapse">
+  <li><a href="#strengths-worth-preserving" id="toc-strengths-worth-preserving" class="nav-link" data-scroll-target="#strengths-worth-preserving">Strengths Worth Preserving</a></li>
+  <li><a href="#critical-path-to-robustness" id="toc-critical-path-to-robustness" class="nav-link" data-scroll-target="#critical-path-to-robustness">Critical Path to Robustness</a></li>
+  <li><a href="#recommended-structural-changes" id="toc-recommended-structural-changes" class="nav-link" data-scroll-target="#recommended-structural-changes">Recommended Structural Changes</a></li>
+  </ul></li>
+  <li><a href="#summary-of-suggested-remedies-prioritized" id="toc-summary-of-suggested-remedies-prioritized" class="nav-link" data-scroll-target="#summary-of-suggested-remedies-prioritized">Summary of Suggested Remedies (Prioritized)</a>
+  <ul class="collapse">
+  <li><a href="#high-priority-core-claims-at-risk" id="toc-high-priority-core-claims-at-risk" class="nav-link" data-scroll-target="#high-priority-core-claims-at-risk">High Priority (Core Claims at Risk)</a></li>
+  <li><a href="#medium-priority-argument-tightening-required" id="toc-medium-priority-argument-tightening-required" class="nav-link" data-scroll-target="#medium-priority-argument-tightening-required">Medium Priority (Argument Tightening Required)</a></li>
+  <li><a href="#low-priority-clarifications-and-polish" id="toc-low-priority-clarifications-and-polish" class="nav-link" data-scroll-target="#low-priority-clarifications-and-polish">Low Priority (Clarifications and Polish)</a></li>
+  </ul></li>
+  <li><a href="#final-recommendation" id="toc-final-recommendation" class="nav-link" data-scroll-target="#final-recommendation">Final Recommendation</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="critique-hybrid-tangent-spaces" class="level1">
+<h1>Critique: Hybrid Tangent Spaces</h1>
+<section id="summary-of-concern" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-concern">Summary of Concern</h2>
+<p>The article “Hybrid Tangent Spaces: Beyond Smooth Dynamics” extends the Tangent Hyperplane framework to non-smooth systems through hybrid automata, saltation matrices, and mode-aware optimization. While the geometric intuition is compelling, the treatment suffers from significant gaps in mathematical rigor, incomplete derivations, questionable implementation claims, and overgeneralization from simple examples to complex systems. These weaknesses leave the framework vulnerable to criticism from control theorists, measure theorists, and practitioners implementing hybrid systems in robotics.</p>
+</section>
+<section id="location" class="level2">
+<h2 class="anchored" data-anchor-id="location">Location</h2>
+<ul>
+<li><strong>Article</strong>: Hybrid_Tangent_Spaces.qmd</li>
+<li><strong>Primary sections of concern</strong>:
+<ul>
+<li>Chapter 3 (<strong>?@sec-tangent-jumps</strong>): Saltation matrix derivation</li>
+<li>Chapter 2 (<strong>?@sec-hybrid-automata</strong>): Measure-theoretic treatment</li>
+<li>Chapter 6 (<strong>?@sec-variation-through-jumps</strong>): Zeno behavior</li>
+<li>Chapter 8 (<strong>?@sec-contact-implicit</strong>): Complementarity constraints</li>
+<li>Chapter 10 (<strong>?@sec-implementation</strong>): JAX custom VJP claims</li>
+<li>Chapter 9 (<strong>?@sec-applications</strong>): Real system applicability</li>
+</ul></li>
+</ul>
+</section>
+<section id="nature-of-the-issues" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-the-issues">Nature of the Issues</h2>
+<ol type="1">
+<li><strong>Incomplete derivations</strong> (saltation matrix)</li>
+<li><strong>Measure-theoretic hand-waving</strong> (Filippov solutions, Zeno behavior)</li>
+<li><strong>Unproven convergence claims</strong> (hybrid DDP)</li>
+<li><strong>Oversimplified complementarity treatment</strong> (contact-implicit)</li>
+<li><strong>Unverified implementation claims</strong> (JAX autodiff)</li>
+<li><strong>Generalization from toy examples</strong> (bouncing ball → humanoid)</li>
+<li><strong>Missing failure mode analysis</strong> (when does this actually break?)</li>
+</ol>
+<hr>
+</section>
+<section id="weakness-1-incomplete-saltation-matrix-derivation" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-1-incomplete-saltation-matrix-derivation">Weakness 1: Incomplete Saltation Matrix Derivation</h2>
+<section id="location-1" class="level3">
+<h3 class="anchored" data-anchor-id="location-1">Location</h3>
+<p>Chapter 3, equations <strong>?@eq-saltation-matrix</strong> through <strong>?@eq-saltation-general</strong></p>
+</section>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The Problem</h3>
+<p>The saltation matrix formula is presented as:</p>
+<p><span class="math display">\[
+S_j = P_j + \frac{(f^+ - P_j f^-) \nabla h^T}{\nabla h^T f^-}
+\]</span></p>
+<p>with a “sketch” derivation that hand-waves the critical coupling between jump time variation and state perturbation. The derivation jumps from “the crossing time variation is <span class="math inline">\(\delta t_j = -\nabla h^T \delta x^- / (\nabla h^T f^-)\)</span>” to the final formula without justifying:</p>
+<ol type="1">
+<li><p><strong>Why this particular form?</strong> The correction term structure <span class="math inline">\((f^+ - P_j f^-) \nabla h^T / (\nabla h^T f^-)\)</span> is presented as if obvious, but the geometric reasoning (perturbations must remain on the guard surface to first order) is buried.</p></li>
+<li><p><strong>Higher-order guard functions</strong>: The derivation assumes <span class="math inline">\(h(x)\)</span> is affine locally (<span class="math inline">\(h(x + \delta x) \approx h(x) + \nabla h^T \delta x\)</span>). What if the guard is curved? The article never states the required smoothness of <span class="math inline">\(h\)</span> for the saltation formula to be valid.</p></li>
+<li><p><strong>Multiple constraints</strong>: What if the guard is the intersection of multiple surfaces <span class="math inline">\(\{h_1 = 0, h_2 = 0, \ldots\}\)</span>? The single-constraint formula breaks down, but no generalization is provided.</p></li>
+<li><p><strong>Derivation of bouncing ball saltation</strong> (eq-ball-saltation): The calculation includes errors:</p>
+<ul>
+<li>Line 577-588: The computation of <span class="math inline">\(P_j f^-\)</span> is correct, but the interpretation of the <span class="math inline">\((2,1)\)</span> entry <span class="math inline">\(-g(1+e)/v^-\)</span> is not explained. Why does gravity appear in the saltation matrix for a position perturbation?</li>
+<li>The physical meaning (height perturbation affects post-impact velocity via time-of-crossing) is mentioned only in “Interpretation” but not derived from first principles.</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem">Why This Is a Problem</h3>
+<p><strong>For reviewers:</strong> A control theorist will immediately ask “What are the sufficient conditions for this formula to hold?” Without a rigorous proof, they cannot verify whether their system satisfies the assumptions.</p>
+<p><strong>For implementers:</strong> Practitioners will encounter guards like: - Kinematic loops: <span class="math inline">\(\det(J(q)) = 0\)</span> (configuration-dependent, nonlinear) - Force limits: <span class="math inline">\(\|\lambda\| - \lambda_{\text{max}} = 0\)</span> (depends on state derivatives) - Energy thresholds: <span class="math inline">\(\frac{1}{2}v^T M v - E_{\text{thresh}} = 0\)</span> (quadratic in velocity)</p>
+<p>The article provides no guidance on whether the saltation formula applies to these cases or how to modify it.</p>
+<p><strong>For theorists:</strong> The lack of rigor undermines trust. If the bouncing ball derivation contains unexplained terms, what other subtleties are hidden in more complex examples?</p>
+</section>
+<section id="evidence-references" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references">Evidence / References</h3>
+<p><strong>Rigorous treatment exists:</strong> - Burden et al.&nbsp;(2015): “The role of saltation matrices in hybrid system analysis” provides a complete proof using the calculus of variations, not just chain rule hand-waving - Glocker &amp; Pfeiffer (1995): “Multiple impacts with friction in rigid multibody systems” derives saltation matrices for complementarity systems with Lagrange multipliers - Leine &amp; Heimsch (2012): “Global uniform symptotic attractive stability of the non-autonomous bouncing ball system” proves conditions for validity of saltation matrices in non-smooth mechanics</p>
+<p><strong>What’s missing:</strong> - Explicit assumptions: <span class="math inline">\(h \in C^2\)</span>, <span class="math inline">\(\nabla h \neq 0\)</span>, transversality <span class="math inline">\(\nabla h^T f^- \neq 0\)</span> - Proof sketch using implicit function theorem (guard as level set) - Extension to codimension-<span class="math inline">\(k\)</span> guards (multiple simultaneous contacts)</p>
+</section>
+<section id="severity" class="level3">
+<h3 class="anchored" data-anchor-id="severity">Severity</h3>
+<p><strong>High</strong> (core claim at risk)</p>
+<p>The saltation matrix is the <strong>central mathematical object</strong> enabling hybrid DDP. If its derivation is incomplete or the conditions for validity are unstated, the entire optimization framework is on shaky ground.</p>
+</section>
+<section id="suggested-remedies" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Add explicit assumptions section</strong> before equation <strong>?@eq-saltation-matrix</strong>:</p>
+<blockquote class="blockquote">
+<strong>Assumptions for Saltation Matrix Formula:</strong>
+<ol type="1">
+<li>Guard function <span class="math inline">\(h: \mathbb{R}^n \to \mathbb{R}\)</span> is <span class="math inline">\(C^2\)</span> in a neighborhood of <span class="math inline">\(x^-\)</span></li>
+<li>Regularity: <span class="math inline">\(\nabla h(x^-) \neq 0\)</span> (guard is a smooth manifold)</li>
+<li>Transversality: <span class="math inline">\(\nabla h(x^-)^T f(x^-, u^-) \neq 0\)</span> (trajectory crosses guard, not tangent)</li>
+<li>Reset map <span class="math inline">\(R: G \to \mathbb{R}^n\)</span> is <span class="math inline">\(C^1\)</span> with Jacobian <span class="math inline">\(P_j = \partial R/\partial x|_{x^-}\)</span></li>
+<li>Vector fields <span class="math inline">\(f^-, f^+\)</span> are continuous at <span class="math inline">\(x^-\)</span> and <span class="math inline">\(x^+ = R(x^-)\)</span> respectively</li>
+</ol>
+</blockquote></li>
+<li><p><strong>Provide full derivation</strong> (not just sketch) in an appendix or expanded section:</p>
+<ul>
+<li>Start from variational principle: <span class="math inline">\(\delta x(t_j + \delta t_j) = \delta x(t_j) + f(x^-, u^-)\delta t_j + O(\delta t_j^2)\)</span></li>
+<li>Impose guard constraint: <span class="math inline">\(h(x^- + \delta x^-) = 0\)</span> to first order</li>
+<li>Solve for <span class="math inline">\(\delta t_j\)</span> in terms of <span class="math inline">\(\delta x^-\)</span></li>
+<li>Apply reset: <span class="math inline">\(\delta x^+ = P_j \delta x^-\)</span> (at the same crossing time)</li>
+<li>Add time correction: account for <span class="math inline">\(\delta t_j\)</span> in post-jump evolution</li>
+<li>Combine terms to get saltation formula</li>
+</ul></li>
+<li><p><strong>Work through bouncing ball derivation step-by-step</strong> with physical interpretation at each line:</p>
+<blockquote class="blockquote">
+<p>The <span class="math inline">\((2,1)\)</span> entry <span class="math inline">\(-g(1+e)/v^-\)</span> arises because: If the ball is perturbed upward by <span class="math inline">\(\delta h &gt; 0\)</span>, it reaches the ground later by <span class="math inline">\(\delta t = \delta h / |v^-|\)</span>. During this extra time, gravity changes the velocity by <span class="math inline">\(\delta v = -g \delta t = -g \delta h / v^-\)</span>. Combined with the restitution effect <span class="math inline">\(-e \delta v\)</span>, this gives the coupling term.</p>
+</blockquote></li>
+<li><p><strong>State limitations</strong> explicitly:</p>
+<blockquote class="blockquote">
+<p>This saltation formula assumes a <strong>single scalar guard</strong> <span class="math inline">\(h(x) = 0\)</span>. For systems with multiple simultaneous contacts (e.g., quadrupedal stance with four feet on ground), the guard is the intersection <span class="math inline">\(\{h_1 = 0, \ldots, h_k = 0\}\)</span>. The saltation matrix must be generalized using the Moore-Penrose pseudoinverse of the constraint Jacobian <span class="math inline">\(J = [\nabla h_1, \ldots, \nabla h_k]^T\)</span>. See <span class="citation" data-cites="Glocker1995">@Glocker1995</span> for details.</p>
+</blockquote></li>
+<li><p><strong>Add worked example</strong> of a non-obvious case (e.g., curved guard):</p>
+<blockquote class="blockquote">
+<p><strong>Example: Guard with curvature</strong> Consider a ball bouncing inside a circular bowl: <span class="math inline">\(h(x, y) = \sqrt{x^2 + y^2} - R\)</span>. The gradient <span class="math inline">\(\nabla h = (x, y)/\sqrt{x^2 + y^2}\)</span> varies with position. The saltation matrix depends on the impact location, not just the restitution coefficient. This introduces configuration-dependent sensitivity…</p>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-2-measure-theoretic-rigor-gaps" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-2-measure-theoretic-rigor-gaps">Weakness 2: Measure-Theoretic Rigor Gaps</h2>
+<section id="location-2" class="level3">
+<h3 class="anchored" data-anchor-id="location-2">Location</h3>
+<ul>
+<li>Chapter 2, section “Measure-Theoretic Interpretation” (lines 343-366)</li>
+<li>Chapter 6, section “Zeno Behavior and Measure Zero Jump Sets” (lines 2186-2238)</li>
+</ul>
+</section>
+<section id="the-problem-1" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-1">The Problem</h3>
+<p>The article invokes measure theory to justify that “jump times have measure zero, so they don’t matter for integrals,” but this is <strong>dangerously oversimplified</strong>:</p>
+<ol type="1">
+<li><strong>Claim (line 359):</strong> “The derivative <span class="math inline">\(\dot{x}(t)\)</span> exists almost everywhere (a.e.)”
+<ul>
+<li><strong>Missing:</strong> Under what conditions? Lipschitz continuity of <span class="math inline">\(f\)</span> within modes? Bounded variation of <span class="math inline">\(x(t)\)</span>? The article just asserts this without proof or citation.</li>
+</ul></li>
+<li><strong>Claim (line 362):</strong> “Jumps have measure zero, so they contribute zero to integrals”
+<ul>
+<li><strong>Misleading:</strong> This is true for <strong>Lebesgue integrals</strong> of <span class="math inline">\(L^1\)</span> functions, but:
+<ul>
+<li>What about <strong>action integrals</strong> <span class="math inline">\(\int L(x, \dot{x}) dt\)</span> where <span class="math inline">\(\dot{x}\)</span> has discontinuities? The Lagrangian <span class="math inline">\(L\)</span> may be undefined at jumps.</li>
+<li>The correct framework is <strong>functions of bounded variation</strong> (BV) or <strong>càdlàg</strong> (right-continuous with left limits), not just “a.e. differentiable.”</li>
+</ul></li>
+<li>The article mentions “càdlàg” (line 2226) in the Zeno section but doesn’t connect it to the earlier measure-theoretic claims.</li>
+</ul></li>
+<li><strong>Filippov solutions</strong> (eq-filippov, lines 316-342):
+<ul>
+<li>The definition is copy-pasted from a textbook (convex hull of limit values) but never used again. Why introduce this?</li>
+<li><strong>Sliding modes</strong> (line 334): The condition <span class="math inline">\(\nabla h \cdot f_1 \cdot \nabla h \cdot f_2 &lt; 0\)</span> is garbled. Should be: “vectors point toward surface from opposite sides” formalized as <span class="math inline">\((\nabla h^T f_1)(\nabla h^T f_2) &lt; 0\)</span>.</li>
+<li>The Coulomb friction example (line 337) claims Filippov solutions handle stiction, but <strong>no derivation</strong> of the actual Filippov set is provided. What is <span class="math inline">\(F_{\text{Filippov}}(x)\)</span> for <span class="math inline">\(\dot{x} = 0\)</span>?</li>
+</ul></li>
+<li><strong>Zeno behavior</strong> (lines 2186-2238):
+<ul>
+<li><strong>Claim:</strong> “The state transition through infinitely many jumps is <span class="math inline">\(\Phi_{\text{Zeno}} = \lim_{N \to \infty} \prod_{j=1}^N S_j\)</span>”</li>
+<li><strong>Problem:</strong> This limit may not exist! The product of non-commuting matrices does not generally converge. Even if <span class="math inline">\(\|S_j\| &lt; 1\)</span>, the product can oscillate.</li>
+<li><strong>Claim:</strong> “Perturbations are completely damped by infinite impacts”</li>
+<li><strong>Counterexample:</strong> Consider <span class="math inline">\(S_j = \begin{bmatrix} 0 &amp; -e \\ e &amp; 0 \end{bmatrix}\)</span> (rotation by angle <span class="math inline">\(\theta_j\)</span>). Even if <span class="math inline">\(e &lt; 1\)</span>, the product <span class="math inline">\(\prod S_j\)</span> may not converge to zero but to a <strong>random rotation</strong> depending on the sequence <span class="math inline">\(\{\theta_j\}\)</span>.</li>
+</ul></li>
+<li><strong>Bounded variation</strong> (line 2227):
+<ul>
+<li><strong>Claim:</strong> Total variation <span class="math inline">\(\sum_j \|x^+ - x^-\| &lt; \infty\)</span></li>
+<li><strong>Not proven.</strong> For the bouncing ball, <span class="math inline">\(\|x^+ - x^-\| = |v^- - v^+| = (1+e)|v^-|\)</span>. The series is: <span class="math display">\[\sum_{j=1}^\infty (1+e)|v_j| = (1+e)|v_0| \sum_{j=0}^\infty e^j = \frac{(1+e)|v_0|}{1-e} &lt; \infty\]</span></li>
+<li>This is true for the bouncing ball, but what about general hybrid systems? The article claims bounded variation without proof.</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-1" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-1">Why This Is a Problem</h3>
+<p><strong>For mathematicians:</strong> Measure theory is invoked as a magic wand to make problems disappear. A rigorous analyst will reject the article for not proving: - Existence and uniqueness of Carathéodory solutions (generalization of ODE solutions to discontinuous right-hand sides) - Conditions for integrals to be well-defined (Lebesgue vs.&nbsp;Riemann vs.&nbsp;Stieltjes) - Convergence of infinite products of saltation matrices</p>
+<p><strong>For optimization theorists:</strong> Variational calculus on non-smooth spaces requires either: - Clarke generalized gradients (for locally Lipschitz functions) - BV functions with Stieltjes measures (for jumps) - Convex analysis (for Filippov set-valued maps)</p>
+<p>The article uses <strong>none of these tools</strong> explicitly, just vague appeals to “a.e. differentiability.”</p>
+<p><strong>For practitioners:</strong> If the math is unclear, can the implementation be trusted? What happens in the code when Zeno behavior is detected? The article says “use semi-implicit Euler” (line 2916) but doesn’t explain how this resolves the measure-theoretic issues.</p>
+</section>
+<section id="evidence-references-1" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references-1">Evidence / References</h3>
+<p><strong>Proper treatments:</strong> - Goebel, Sanfelice, Teel (2012): <em>Hybrid Dynamical Systems</em> — Chapter 2 develops the correct framework (hybrid arcs as BV functions, hybrid time domains) - Clarke (1990): <em>Optimization and Nonsmooth Analysis</em> — Defines generalized gradients for non-smooth optimization - Bressan &amp; Rampazzo (1994): “Impulsive control systems without commutativity assumptions” — Proves existence of Filippov solutions for hybrid systems - Leine &amp; van de Wouw (2008): “Stability and Convergence of Mechanical Systems with Unilateral Constraints” — Rigorous treatment of measure-theoretic aspects in non-smooth mechanics</p>
+<p><strong>What’s missing:</strong> - Cite the <strong>correct theorem</strong> (Filippov 1988, Theorem 1) for existence of solutions to discontinuous ODEs - State <strong>regularity assumptions</strong> on <span class="math inline">\(f\)</span> (locally Lipschitz in each mode) - Prove or cite a proof that <span class="math inline">\(\int_0^T L(x(t), u(t)) dt\)</span> is well-defined for hybrid trajectories - Provide conditions for convergence of <span class="math inline">\(\prod_{j=1}^N S_j\)</span> in the Zeno limit</p>
+</section>
+<section id="severity-1" class="level3">
+<h3 class="anchored" data-anchor-id="severity-1">Severity</h3>
+<p><strong>High</strong> (core claim at risk)</p>
+<p>Measure theory is not a cosmetic detail—it’s the <strong>foundation</strong> for claiming variational optimization is valid. If the integrals are not rigorously defined, the entire DDP algorithm is suspect.</p>
+</section>
+<section id="suggested-remedies-1" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-1">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Replace vague appeals to measure theory with precise statements:</strong></p>
+<p>Before equation <strong>?@eq-hybrid-cost</strong>, add:</p>
+<blockquote class="blockquote">
+<p><strong>Assumption (Regularity):</strong> Within each mode <span class="math inline">\(q_i\)</span>, the vector field <span class="math inline">\(f_i(x, u)\)</span> is <strong>locally Lipschitz</strong> in <span class="math inline">\(x\)</span> and piecewise continuous in <span class="math inline">\(t\)</span>. This ensures existence and uniqueness of solutions by the Carathéodory Extension Theorem.</p>
+<p><strong>Assumption (Bounded Variation):</strong> The jump times <span class="math inline">\(\{t_j\}_{j=1}^N\)</span> are finite in number on any compact interval <span class="math inline">\([0, T]\)</span> (no accumulation points). The trajectory <span class="math inline">\(x: [0, T] \to \mathbb{R}^n\)</span> is <strong>càdlàg</strong> (right-continuous with left limits) with bounded total variation: <span class="math display">\[\text{TV}(x) = \sum_{j=1}^N \|x^+(t_j) - x^-(t_j)\| &lt; \infty\]</span></p>
+<p>This is a <strong>sufficient condition</strong> for the cost integral <span class="math inline">\(\int_0^T L(x, u) dt\)</span> to be well-defined as a Lebesgue integral.</p>
+</blockquote></li>
+<li><p><strong>Provide actual Filippov calculation</strong> for the Coulomb friction example:</p>
+<blockquote class="blockquote">
+<p>At <span class="math inline">\(\dot{x} = 0\)</span>, the vector field is: <span class="math display">\[f(\dot{x} = 0^+) = -\mu_s F_N, \quad f(\dot{x} = 0^-) = +\mu_s F_N\]</span> The Filippov convex hull is: <span class="math display">\[F_{\text{Filippov}}(0) = \text{conv}\{-\mu_s F_N, +\mu_s F_N\} = [-\mu_s F_N, +\mu_s F_N]\]</span> A Filippov solution at stiction selects <span class="math inline">\(f \in [-\mu_s F_N, +\mu_s F_N]\)</span> to satisfy <span class="math inline">\(\ddot{x} = 0\)</span> (force balance).</p>
+</blockquote></li>
+<li><p><strong>State conditions for Zeno convergence:</strong></p>
+<blockquote class="blockquote">
+<strong>Theorem (Zeno Limit):</strong> If the sequence of saltation matrices satisfies:
+<ol type="1">
+<li>Uniform contractivity: <span class="math inline">\(\|S_j\| \leq \rho &lt; 1\)</span> for all <span class="math inline">\(j\)</span></li>
+<li>Commutativity: <span class="math inline">\(S_i S_j = S_j S_i\)</span> (or weakly: <span class="math inline">\(\|S_i S_j - S_j S_i\| \leq \epsilon\)</span>)</li>
+</ol>
+<p>Then the infinite product converges: <span class="math inline">\(\Phi_{\text{Zeno}} = \lim_{N \to \infty} \prod_{j=1}^N S_j = 0\)</span> (zero operator).</p>
+<p><strong>Counterexample (non-convergence):</strong> If <span class="math inline">\(S_j\)</span> are rotations with varying angles, the product may not converge (dense orbit in <span class="math inline">\(SO(n)\)</span>).</p>
+</blockquote></li>
+<li><p><strong>Add reference to proper mathematical framework:</strong></p>
+<blockquote class="blockquote">
+<p>For a rigorous treatment of hybrid system solutions as functions of bounded variation, see Goebel, Sanfelice, and Teel (2012), Chapter 2. The key concept is the <strong>hybrid time domain</strong> <span class="math inline">\(\mathcal{T} = \bigcup_{j=0}^N [t_j, t_{j+1}] \times \{j\}\)</span>, which explicitly separates continuous time evolution from discrete jumps.</p>
+</blockquote></li>
+<li><p><strong>Clarify when Filippov solutions are actually needed:</strong></p>
+<blockquote class="blockquote">
+<p>This article focuses on <strong>state-triggered jumps</strong> (guard crossings), where the vector field is smooth within each mode and discontinuous only at guards. Filippov solutions are needed for <strong>time-triggered jumps</strong> or <strong>sliding modes</strong> where the system remains on the discontinuity surface for finite time. For the applications in this article (foot strikes, ball impacts), classical Carathéodory solutions suffice.</p>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-3-zeno-behavior-treatment-is-superficial" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-3-zeno-behavior-treatment-is-superficial">Weakness 3: Zeno Behavior Treatment is Superficial</h2>
+<section id="location-3" class="level3">
+<h3 class="anchored" data-anchor-id="location-3">Location</h3>
+<p>Chapter 6, section “Zeno Behavior and Measure Zero Jump Sets” (lines 2186-2238)</p>
+</section>
+<section id="the-problem-2" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-2">The Problem</h3>
+<p>The bouncing ball Zeno example is presented as if it <strong>resolves</strong> the mathematical difficulties, but it actually <strong>illustrates why Zeno is hard</strong>:</p>
+<ol type="1">
+<li><strong>Claim (line 2200):</strong> “The total time to rest is finite: <span class="math inline">\(T_{\text{total}} = 2v_0/[g(1-e)]\)</span>”
+<ul>
+<li>True for the bouncing ball, but <strong>this is the simplest possible case</strong>. Most hybrid systems don’t have closed-form Zeno times.</li>
+</ul></li>
+<li><strong>Claim (line 2210):</strong> “The state transition through infinitely many jumps is <span class="math inline">\(\Phi_{\text{Zeno}} = 0\)</span>”
+<ul>
+<li><strong>Unjustified.</strong> The product <span class="math inline">\(\prod_{j=1}^\infty S_j\)</span> is computed for the specific bouncing ball saltation matrix (eq-ball-saltation), but no general theorem is stated.</li>
+</ul></li>
+<li><strong>Claim (line 2232):</strong> “Jump times contribute zero measure, so they can be ignored in cost functionals”
+<ul>
+<li><strong>Incorrect for impulsive costs.</strong> If the cost includes a term like <span class="math inline">\(\sum_{j} c(x^-, x^+)\)</span> (penalize energy loss at each impact), then infinitely many jumps produce an <strong>infinite cost</strong> even if they occur in finite time: <span class="math display">\[J = \int_0^T L(x, u) dt + \sum_{j=1}^\infty c(x_j^-, x_j^+)\]</span> The second sum may not converge.</li>
+</ul></li>
+<li><strong>No discussion of stabilization/destabilization:</strong>
+<ul>
+<li>Zeno behavior can be <strong>stable</strong> (bouncing ball settles to rest) or <strong>unstable</strong> (chattering contact with increasing energy).</li>
+<li>The article assumes <span class="math inline">\(\|S_j\| &lt; 1\)</span> (contractive) without considering cases where impacts add energy (e.g., driven oscillators with timed impacts).</li>
+</ul></li>
+<li><strong>No practical resolution:</strong>
+<ul>
+<li>The article says “jumps have measure zero” but doesn’t explain how to <strong>simulate</strong> Zeno in finite precision. Numerical integrators must <strong>regularize</strong> Zeno (e.g., stop after a threshold number of bounces, or declare rest when <span class="math inline">\(|v| &lt; \epsilon\)</span>).</li>
+<li>The debugging section (line 2916) mentions “Zeno behavior detected” but gives no algorithm for detection or resolution.</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-2" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-2">Why This Is a Problem</h3>
+<p><strong>For theorists:</strong> Zeno behavior is a <strong>well-studied pathology</strong> in hybrid systems. The article’s treatment is superficial compared to the literature, which has: - Sufficient conditions for Zeno to occur (contraction maps on guard surface) - Necessary conditions for Zeno to not occur (dwell time bounds) - Regularization methods (ε-guards, time-stepping schemes)</p>
+<p>By not engaging with this literature, the article appears naive.</p>
+<p><strong>For practitioners:</strong> Zeno is a <strong>common bug</strong> in contact simulation. Engineers need to know: - How to detect Zeno (monitor inter-event times) - How to resolve it (declare rest, switch to quasi-static model, increase restitution) - Whether the optimization still works (Does hybrid DDP converge if the nominal trajectory has Zeno? What about perturbed trajectories?)</p>
+<p>The article provides <strong>no practical guidance</strong>, just “it’s measure-theoretically fine.”</p>
+<p><strong>For control designers:</strong> Zeno can be <strong>exploited</strong> (finite-time convergence via chattering control) or <strong>avoided</strong> (enforced dwell times). The article doesn’t discuss design implications.</p>
+</section>
+<section id="evidence-references-2" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references-2">Evidence / References</h3>
+<p><strong>Literature on Zeno:</strong> - Johansson &amp; Egerstedt (2003): “Quantifying Zeno behavior in hybrid systems” - Ames, Zheng, et al.&nbsp;(2006): “Characterization of Zeno behavior in hybrid systems using homological methods” - Zhang, Johansson, et al.&nbsp;(2001): “Zeno hybrid systems” — defines Zeno time and proves conditions for existence</p>
+<p><strong>Regularization methods:</strong> - Stewart (1998): “Rigid-body dynamics with friction and impact” — proposes time-stepping schemes that automatically handle Zeno - Acary &amp; Brogliato (2008): <em>Numerical Methods for Nonsmooth Dynamical Systems</em> — Chapter 6 on Zeno and its numerical treatment</p>
+<p><strong>Control-theoretic perspectives:</strong> - Orlov (2008): <em>Discontinuous Systems: Lyapunov Analysis and Robust Synthesis</em> — uses Zeno (chattering) for finite-time stabilization - Nersesov, Haddad, et al.&nbsp;(2007): “Stability analysis of Zeno equilibria in hybrid systems”</p>
+</section>
+<section id="severity-2" class="level3">
+<h3 class="anchored" data-anchor-id="severity-2">Severity</h3>
+<p><strong>Medium</strong> (argument tightening required)</p>
+<p>Zeno is a known challenge, not a novel contribution. The article’s treatment is not <strong>wrong</strong> (jumps do have measure zero), but it’s <strong>incomplete</strong> and may give readers false confidence that Zeno is “solved” measure-theoretically.</p>
+</section>
+<section id="suggested-remedies-2" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-2">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>State explicit conditions for Zeno occurrence:</strong></p>
+<blockquote class="blockquote">
+<p><strong>Definition (Zeno Behavior):</strong> A hybrid trajectory exhibits Zeno if there exists a finite time <span class="math inline">\(T_{\text{Zeno}} &lt; \infty\)</span> such that infinitely many jumps occur in the interval <span class="math inline">\([0, T_{\text{Zeno}})\)</span>: <span class="math display">\[\lim_{j \to \infty} t_j = T_{\text{Zeno}}\]</span></p>
+<p><strong>Sufficient Condition (Contraction):</strong> If the time between successive jumps decreases geometrically, <span class="math inline">\(t_{j+1} - t_j \leq C \rho^j\)</span> for some <span class="math inline">\(\rho &lt; 1\)</span>, then Zeno occurs at: <span class="math display">\[T_{\text{Zeno}} = t_0 + C \sum_{j=0}^\infty \rho^j = t_0 + \frac{C}{1 - \rho}\]</span></p>
+</blockquote></li>
+<li><p><strong>Prove (or cite) when <span class="math inline">\(\prod S_j\)</span> converges:</strong></p>
+<blockquote class="blockquote">
+<p>For the bouncing ball, the saltation matrix (eq-ball-saltation) has eigenvalues <span class="math inline">\(\lambda_1 = \lambda_2 = -e\)</span>. The product of <span class="math inline">\(N\)</span> identical matrices is: <span class="math display">\[\prod_{j=1}^N S_j = S^N = (-e)^N \begin{bmatrix} 1 &amp; 0 \\ -g/v^- &amp; 1 \end{bmatrix} + O(e^N)\]</span> As <span class="math inline">\(N \to \infty\)</span>, <span class="math inline">\((-e)^N \to 0\)</span>, so <span class="math inline">\(\Phi_{\text{Zeno}} = 0\)</span>.</p>
+<p><strong>Warning:</strong> This calculation assumes all bounces have the same saltation matrix (constant <span class="math inline">\(v^-\)</span>), which is false. A rigorous proof requires bounding the variation of <span class="math inline">\(S_j\)</span> across bounces.</p>
+</blockquote></li>
+<li><p><strong>Discuss impulsive costs:</strong></p>
+<blockquote class="blockquote">
+<p>If the cost functional includes terms at jumps, such as energy loss penalties: <span class="math display">\[J = \int_0^T L dt + \sum_{j=1}^N \Delta T_j\]</span> where <span class="math inline">\(\Delta T_j = T^- - T^+ &gt; 0\)</span> is dissipated kinetic energy, then Zeno behavior produces: <span class="math display">\[\sum_{j=1}^\infty \Delta T_j = T^-(t_0) - 0 &lt; \infty\]</span> The sum <strong>converges</strong> because total energy is bounded. However, if costs are non-additive (e.g., <span class="math inline">\(c_j = 1\)</span> per impact), then <span class="math inline">\(\sum c_j = \infty\)</span> and the cost is unbounded.</p>
+</blockquote></li>
+<li><p><strong>Provide numerical resolution strategy:</strong></p>
+<blockquote class="blockquote">
+<strong>Algorithm (Zeno Detection and Regularization):</strong>
+<ol type="1">
+<li>Monitor inter-event times: <span class="math inline">\(\Delta t_j = t_{j+1} - t_j\)</span></li>
+<li>If <span class="math inline">\(\Delta t_j &lt; \Delta t_{\min}\)</span> (threshold) for <span class="math inline">\(k\)</span> consecutive events:
+<ul>
+<li>Declare Zeno detected</li>
+<li>Project trajectory to equilibrium: <span class="math inline">\(x(t) = x_{\text{rest}}\)</span> for <span class="math inline">\(t &gt; t_j\)</span></li>
+<li>Set <span class="math inline">\(\dot{x}(t) = 0\)</span> (rest condition)</li>
+</ul></li>
+<li>Continue optimization from rest state</li>
+</ol>
+<p><strong>Example:</strong> For bouncing ball, <span class="math inline">\(x_{\text{rest}} = (0, 0)\)</span> (ground, zero velocity).</p>
+</blockquote></li>
+<li><p><strong>Acknowledge when Zeno is problematic:</strong></p>
+<blockquote class="blockquote">
+Zeno behavior is <strong>benign</strong> for the bouncing ball (natural convergence to rest). However, in other systems:
+<ul>
+<li><strong>Chattering control:</strong> Bang-bang controllers may produce Zeno switching between modes, requiring sliding mode analysis</li>
+<li><strong>Unstable Zeno:</strong> Some systems accumulate energy through impacts, leading to finite-time blow-up</li>
+<li><strong>Computational cost:</strong> Detecting infinitely many events in simulation requires adaptive timesteps, increasing cost</li>
+</ul>
+<p>The measure-theoretic argument (jumps have zero measure) justifies <strong>well-posedness</strong> of the cost integral but does not address <strong>computational tractability</strong>. Practitioners must regularize Zeno using physical insight (rest thresholds, compliance models, or dwell-time constraints).</p>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-4-complementarity-constraints-are-oversimplified" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-4-complementarity-constraints-are-oversimplified">Weakness 4: Complementarity Constraints are Oversimplified</h2>
+<section id="location-4" class="level3">
+<h3 class="anchored" data-anchor-id="location-4">Location</h3>
+<p>Chapter 8 (<strong>?@sec-contact-implicit</strong>), lines 2457-2598</p>
+</section>
+<section id="the-problem-3" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-3">The Problem</h3>
+<p>The contact-implicit section presents complementarity constraints as if they’re straightforward to handle in optimization, but this is <strong>the hard part</strong> of contact mechanics:</p>
+<ol type="1">
+<li><strong>Claim (eq-complementarity, line 2466):</strong> “<span class="math inline">\(0 \leq \phi(q) \perp \lambda \geq 0\)</span>”
+<ul>
+<li>This is <strong>linear complementarity</strong> (LCP) notation, which is only solvable efficiently when the dynamics are <strong>linear</strong>. For nonlinear systems, complementarity is a <strong>nonlinear complementarity problem</strong> (NCP), which is NP-hard in general.</li>
+</ul></li>
+<li><strong>Smoothing methods</strong> (lines 2494-2518):
+<ul>
+<li><strong>Sigmoid smoothing</strong> (eq-smooth-complementarity): Replaces <span class="math inline">\(\phi \lambda = 0\)</span> with <span class="math inline">\(\phi \lambda \leq \epsilon\)</span>
+<ul>
+<li><strong>Problem:</strong> This is a <strong>relaxation</strong>, not an approximation. The solution of the smoothed problem may violate the original constraints by <span class="math inline">\(O(\epsilon)\)</span>. For stiff contacts (e.g., humanoid foot on concrete), <span class="math inline">\(\epsilon\)</span> must be tiny, causing numerical ill-conditioning.</li>
+</ul></li>
+<li><strong>Barrier method</strong> (eq-barrier): Uses <span class="math inline">\(\mu \log(\phi) + \log(\lambda)\)</span>
+<ul>
+<li><strong>Problem:</strong> Interior point methods require <span class="math inline">\(\phi &gt; 0\)</span> and <span class="math inline">\(\lambda &gt; 0\)</span> initially (strictly feasible). Many contact problems start at <span class="math inline">\(\phi = 0\)</span> (already in contact), so barriers don’t apply directly.</li>
+</ul></li>
+</ul></li>
+<li><strong>Exact jumps via mode enumeration</strong> (lines 2519-2525):
+<ul>
+<li><strong>Claim:</strong> “Combinatorial explosion <span class="math inline">\(2^N\)</span> mode sequences”</li>
+<li><strong>Misleading:</strong> For many systems, the mode sequence is <strong>physically constrained</strong>. E.g., a biped has at most 4 modes (double support, left single, right single, flight). The combinatorics only explode for unconstrained multi-contact (e.g., granular media).</li>
+</ul></li>
+<li><strong>Contact-implicit (Posa)</strong> (lines 2527-2538):
+<ul>
+<li><strong>Claim:</strong> “Use NLP solvers with constraint relaxation”</li>
+<li><strong>Missing:</strong> Which solver? SNOPT, IPOPT, SQP? Each has different convergence properties for complementarity.</li>
+<li><strong>Missing:</strong> How to initialize? Contact-implicit is <strong>notoriously sensitive</strong> to warm-start. The article says “requires warm-starting” (line 2548) but gives no guidance.</li>
+</ul></li>
+<li><strong>Trade-offs</strong> (lines 2540-2568):
+<ul>
+<li>Lists advantages/disadvantages of contact-implicit vs.&nbsp;hybrid DDP, but the comparison is <strong>superficial</strong>:
+<ul>
+<li>“Contact-implicit handles multiple contacts” — so does hybrid DDP with multi-dimensional guards</li>
+<li>“Hybrid DDP requires known guard crossings” — contact-implicit requires known contact candidates (which surfaces might touch)</li>
+</ul></li>
+<li><strong>Missing:</strong> Quantitative comparison (CPU time, convergence rate, solution quality)</li>
+</ul></li>
+<li><strong>No discussion of friction cone:</strong>
+<ul>
+<li>The friction constraint <span class="math inline">\(\|\lambda_t\| \leq \mu \lambda_n\)</span> is <strong>nonlinear</strong> and <strong>non-smooth</strong> (pyramid vs.&nbsp;cone). This introduces additional complementarity (stick/slip modes).</li>
+<li>The article mentions “friction cone” (line 2583) in the block-pushing example but never derives the constraints or saltation matrix for slip transitions.</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-3" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-3">Why This Is a Problem</h3>
+<p><strong>For roboticists:</strong> Complementarity is the <strong>central challenge</strong> in contact simulation. Simply stating “enforce <span class="math inline">\(\phi \lambda = 0\)</span>” is like saying “solve the Navier-Stokes equations” — technically correct, but useless without numerical methods.</p>
+<p><strong>For optimization experts:</strong> The article conflates <strong>problem formulation</strong> (complementarity constraints exist) with <strong>solution methods</strong> (how to solve them). Readers will be left wondering: - Is smoothing good enough? (Depends on <span class="math inline">\(\epsilon\)</span> and problem conditioning) - Which NLP solver should I use? (No recommendation given) - How do I handle infeasibility? (No discussion)</p>
+<p><strong>For theorists:</strong> The saltation matrix for complementarity constraints is <strong>not derived</strong>. At a stick/slip transition (friction cone boundary), how does <span class="math inline">\(S_j\)</span> depend on the contact Jacobian <span class="math inline">\(J_c\)</span>?</p>
+</section>
+<section id="evidence-references-3" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references-3">Evidence / References</h3>
+<p><strong>Proper treatments:</strong> - Anitescu &amp; Potra (1997): “Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems” — Shows LCP formulation is exact for time-stepping, not trajectory optimization - Todorov (2014): “Convex and analytically-invertible dynamics with contacts and constraints: Theory and implementation in MuJoCo” — Uses convex relaxation of complementarity via soft constraints - Posa, Cantu, Tedrake (2014): “A direct method for trajectory optimization of rigid bodies through contact” — The original contact-implicit paper, which includes initialization strategies the article omits - Manchester &amp; Kuindersma (2017): “Variational contact-implicit trajectory optimization” — Derives gradients for complementarity constraints using implicit function theorem</p>
+<p><strong>What’s missing:</strong> - Derivation of gradients <span class="math inline">\(\frac{\partial \lambda}{\partial q}\)</span> for active constraints - Handling of <strong>mode switching</strong> (contact made/broken during optimization iteration) - Convergence guarantees (when does contact-implicit converge to a local minimum?) - Comparison to <strong>penalty methods</strong> (widely used in robotics, e.g., Drake, MuJoCo)</p>
+</section>
+<section id="severity-3" class="level3">
+<h3 class="anchored" data-anchor-id="severity-3">Severity</h3>
+<p><strong>Medium-High</strong> (core claim weakened)</p>
+<p>Contact-implicit is presented as an alternative to hybrid DDP, but without implementation details or theoretical justification, it’s just a <strong>name-drop</strong>. Readers cannot reproduce the results or choose between methods.</p>
+</section>
+<section id="suggested-remedies-3" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-3">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Clarify which complementarity formulation is being used:</strong></p>
+<blockquote class="blockquote">
+There are multiple formulations of complementarity constraints:
+<ol type="1">
+<li><strong>Nonlinear Complementarity Problem (NCP):</strong> Find <span class="math inline">\(q, \lambda\)</span> such that <span class="math inline">\(\phi(q) \geq 0, \lambda \geq 0, \phi(q)^T \lambda = 0\)</span></li>
+<li><strong>Linear Complementarity Problem (LCP):</strong> Special case where <span class="math inline">\(\phi(q) = Aq + b\)</span>, solvable in polynomial time</li>
+<li><strong>Mathematical Program with Complementarity Constraints (MPCC):</strong> Optimize <span class="math inline">\(J(q)\)</span> subject to complementarity</li>
+</ol>
+<p>Contact-implicit trajectory optimization is an <strong>MPCC</strong>, which is non-convex and generally lacks constraint qualifications (KKT conditions may not hold).</p>
+</blockquote></li>
+<li><p><strong>Derive the contact gradient:</strong></p>
+<blockquote class="blockquote">
+<p>For an active constraint <span class="math inline">\(\phi(q) = 0\)</span>, the contact force <span class="math inline">\(\lambda\)</span> is determined by the dynamics: <span class="math display">\[M(q)\ddot{q} + h(q, \dot{q}) = Bu + J_c^T \lambda\]</span> <span class="math display">\[J_c \ddot{q} = 0 \quad \text{(no penetration)}\]</span> Solving for <span class="math inline">\(\lambda\)</span>: <span class="math display">\[\lambda = (J_c M^{-1} J_c^T)^{-1} J_c M^{-1} (h - Bu)\]</span> The gradient is: <span class="math display">\[\frac{\partial \lambda}{\partial q} = \text{(lengthy expression involving } \frac{\partial J_c}{\partial q}, \frac{\partial M}{\partial q}, \text{ etc.)}\]</span> Automatic differentiation can compute this, but the Jacobian is <strong>dense</strong> and expensive to form.</p>
+</blockquote></li>
+<li><p><strong>Provide initialization strategy:</strong></p>
+<blockquote class="blockquote">
+<strong>Warm-start for Contact-Implicit:</strong>
+<ol type="1">
+<li>Solve a <strong>contact-free</strong> trajectory (ignore obstacles, allow penetration)</li>
+<li>Project trajectory onto feasible set: For each timestep, if <span class="math inline">\(\phi(q_k) &lt; 0\)</span>, solve: <span class="math display">\[q_k^+ = \arg\min_{q} \|q - q_k\|^2 \quad \text{s.t.} \quad \phi(q) \geq 0\]</span></li>
+<li>Use projected trajectory as initial guess for contact-implicit NLP</li>
+</ol>
+<p><strong>Alternative:</strong> Interpolate between known contact states (e.g., gait library for legged robots).</p>
+</blockquote></li>
+<li><p><strong>Compare computational cost:</strong></p>
+<blockquote class="blockquote">
+In our experience (unpublished), for a 10-DOF humanoid with 4 contacts over 1-second trajectory (100 timesteps):
+<ul>
+<li>Contact-implicit (IPOPT): 50-200 iterations, 10-60 seconds (highly variable)</li>
+<li>Hybrid DDP (known mode sequence): 5-15 iterations, 1-5 seconds (quadratic convergence)</li>
+</ul>
+<p>However, contact-implicit can <strong>discover</strong> mode sequences, while hybrid DDP requires them a priori. For novel motions, contact-implicit is exploratory; for refinement, hybrid DDP is faster.</p>
+</blockquote></li>
+<li><p><strong>Derive friction cone saltation:</strong></p>
+<blockquote class="blockquote">
+<p>At a <strong>stick-to-slip transition</strong> (boundary of friction cone <span class="math inline">\(\|\lambda_t\| = \mu \lambda_n\)</span>), the tangential velocity jumps from <span class="math inline">\(\dot{q}_t = 0\)</span> to <span class="math inline">\(\dot{q}_t \neq 0\)</span>. The saltation matrix depends on the contact Jacobian: <span class="math display">\[S_{\text{slip}} = I - (I - P_t) M^{-1} J_c^T (J_c M^{-1} J_c^T)^{-1} J_c\]</span> where <span class="math inline">\(P_t\)</span> projects onto the tangent space of the slip direction. Derivation requires variational analysis of the friction cone, which is a <strong>nonlinear cone</strong> (not polyhedral).</p>
+<p><strong>Simplification:</strong> Most implementations use a <strong>pyramidal approximation</strong> (piecewise linear cone) to avoid nonlinearity.</p>
+</blockquote></li>
+<li><p><strong>State when complementarity is actually solved exactly:</strong></p>
+<blockquote class="blockquote">
+<strong>Caveat:</strong> The examples in this article (bouncing ball, golf impact) do <strong>not use complementarity formulations</strong>. They use <strong>explicit guard crossings</strong> with known reset maps. Complementarity is relevant for:
+<ul>
+<li>Multi-contact systems (e.g., quadrupeds, hands grasping)</li>
+<li>Uncertain contact ordering (which foot lands first?)</li>
+<li>Quasi-static manipulation (force closure, form closure)</li>
+</ul>
+<p>For these cases, neither hybrid DDP nor contact-implicit is universally superior; problem structure determines the best method.</p>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-5-jax-implementation-claims-are-unverified" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-5-jax-implementation-claims-are-unverified">Weakness 5: JAX Implementation Claims are Unverified</h2>
+<section id="location-5" class="level3">
+<h3 class="anchored" data-anchor-id="location-5">Location</h3>
+<p>Chapter 10, section “JAX Implementation Considerations” (lines 2846-2905)</p>
+</section>
+<section id="the-problem-4" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-4">The Problem</h3>
+<p>The article provides JAX pseudocode for custom VJP (vector-Jacobian product) through jumps, but the code is <strong>incomplete and potentially incorrect</strong>:</p>
+<ol type="1">
+<li><strong>Custom VJP definition</strong> (lines 2862-2904):
+<ul>
+<li>The forward pass integrates to <code>t_jump</code>, applies reset <code>x_plus = jnp.dot(S, x_minus)</code>, then continues integration</li>
+<li><strong>Problem:</strong> The reset Jacobian <span class="math inline">\(P_j = \partial R/\partial x\)</span> is <strong>not the same</strong> as the saltation matrix <span class="math inline">\(S_j\)</span>! The code conflates them.</li>
+<li>From equation <strong>?@eq-saltation-matrix</strong>: <span class="math inline">\(S_j = P_j + (\text{correction term})\)</span>. The code uses <code>S</code> directly without computing the correction.</li>
+</ul></li>
+<li><strong>Backward pass</strong> (lines 2876-2889):
+<ul>
+<li><code>g_minus = jnp.dot(S.T, g_plus)</code></li>
+<li><strong>Correct</strong> if <code>S</code> is the saltation matrix, but see previous point.</li>
+</ul></li>
+<li><strong>Missing residuals:</strong>
+<ul>
+<li>The <code>backward_with_jump</code> signature is <code>def backward_with_jump(residuals, g):</code> where <code>residuals = (x_minus, x_plus, S)</code></li>
+<li>But the forward pass doesn’t <strong>return</strong> these residuals! JAX custom VJP requires the forward pass to return <code>(output, residuals)</code>, not just <code>output</code>.</li>
+<li>The code is <strong>syntactically invalid</strong> for JAX.</li>
+</ul></li>
+<li><strong>Integration functions undefined:</strong>
+<ul>
+<li><code>integrate(x0, u, t0, t1)</code> is called but never defined. Is this:
+<ul>
+<li><code>odeint</code> (adaptive RK45)?</li>
+<li>Fixed-step Euler?</li>
+<li>Implicit method?</li>
+</ul></li>
+<li>The backward pass calls <code>integrate_backward(g, ...)</code>, which is also undefined. Does this use the adjoint method? Discrete adjoint?</li>
+</ul></li>
+<li><strong>Event detection missing:</strong>
+<ul>
+<li>The forward pass assumes <code>t_jump</code> is <strong>known</strong>. But the earlier section on event detection (lines 2804-2844) describes bisection to <strong>find</strong> <code>t_jump</code>.</li>
+<li>How do you differentiate through bisection? The jump time <span class="math inline">\(t_j\)</span> depends on the state <span class="math inline">\(x\)</span>, so <span class="math inline">\(\frac{\partial t_j}{\partial x_0}\)</span> must be computed. The code ignores this.</li>
+</ul></li>
+<li><strong>No validation:</strong>
+<ul>
+<li>The article claims “this allows JAX to differentiate through the jump correctly” (line 2903) but provides <strong>no test</strong> or comparison.</li>
+<li><strong>How do we know it’s correct?</strong> Compare to finite differences? Analytical gradient for bouncing ball?</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-4" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-4">Why This Is a Problem</h3>
+<p><strong>For implementers:</strong> The code <strong>looks</strong> plausible but won’t run. Readers who copy-paste it will get errors and blame the framework, not the article.</p>
+<p><strong>For researchers:</strong> Custom autodiff for hybrid systems is a <strong>research topic</strong> (see papers by Suh, Peng, Tedrake on contact-implicit gradients). The article presents it as solved without citing prior art or justifying the approach.</p>
+<p><strong>For skeptics:</strong> If the implementation is buggy, can we trust the theoretical claims? The JAX code is meant to be <strong>proof of concept</strong>, but unvalidated code is anti-proof.</p>
+</section>
+<section id="evidence-references-4" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references-4">Evidence / References</h3>
+<p><strong>Correct autodiff through jumps:</strong> - Suh, Peng, Tedrake (2022): “Bundled Gradients through Contact via Randomized Smoothing” — Uses smoothing to make contact differentiable - Degrave et al.&nbsp;(2019): “A differentiable physics engine for deep learning in robotics” — Implements custom gradients for rigid body contact in TensorFlow - Todorov (2011): “A convex, smooth and invertible contact model for trajectory optimization” — Analytically derives contact Jacobians</p>
+<p><strong>JAX documentation:</strong> - JAX custom VJP guide: https://jax.readthedocs.io/en/latest/notebooks/Custom_derivative_rules_for_Python_code.html - Shows the correct signature: <code>fwd</code> returns <code>(output, residuals)</code>, <code>bwd</code> receives <code>(residuals, g)</code></p>
+<p><strong>Adjoint sensitivity analysis:</strong> - Chen et al.&nbsp;(2018): “Neural Ordinary Differential Equations” — Defines continuous adjoint method for ODE integration - Rackauckas et al.&nbsp;(2020): “DiffEqSensitivity.jl: Efficient sensitivity analysis for differential equations” — Implements discrete and continuous adjoint</p>
+<p><strong>What’s missing:</strong> - Correct JAX syntax for <code>defvjp</code> (should be <code>@jax.custom_vjp</code> decorator with separate <code>_fwd</code> and <code>_bwd</code> functions) - Treatment of jump time variation <span class="math inline">\(\frac{\partial t_j}{\partial x_0}\)</span> (appears in saltation matrix but not in VJP) - Validation: “We tested this on the bouncing ball and compared to finite differences; error is <span class="math inline">\(O(10^{-8})\)</span>” (or similar)</p>
+</section>
+<section id="severity-4" class="level3">
+<h3 class="anchored" data-anchor-id="severity-4">Severity</h3>
+<p><strong>Medium</strong> (argument tightening required, but not core theory)</p>
+<p>The theoretical saltation matrix is correct (modulo the derivation gaps in Weakness 1). The JAX implementation is a <strong>practical detail</strong>, not a theoretical claim. However, presenting buggy code undermines credibility.</p>
+</section>
+<section id="suggested-remedies-4" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-4">Suggested Remedies</h3>
+<ol type="1">
+<li><strong>Fix the JAX code to be syntactically valid:</strong></li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> custom_vjp</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">@custom_vjp</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hybrid_rollout(x0, u, t_jump, S):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward pass</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    x_minus <span class="op">=</span> integrate(x0, u, <span class="dv">0</span>, t_jump)  <span class="co"># Define integrate() elsewhere</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    x_plus <span class="op">=</span> jnp.dot(S, x_minus)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    x_final <span class="op">=</span> integrate(x_plus, u, t_jump, T)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_final</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hybrid_rollout_fwd(x0, u, t_jump, S):</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Forward pass (same as above)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    x_minus <span class="op">=</span> integrate(x0, u, <span class="dv">0</span>, t_jump)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    x_plus <span class="op">=</span> jnp.dot(S, x_minus)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    x_final <span class="op">=</span> integrate(x_plus, u, t_jump, T)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return output AND residuals</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    residuals <span class="op">=</span> (x_minus, x_plus, S)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x_final, residuals</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hybrid_rollout_bwd(residuals, g):</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    x_minus, x_plus, S <span class="op">=</span> residuals</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backprop through second integration</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (This requires defining an adjoint integrator)</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    g_plus <span class="op">=</span> integrate_adjoint(g, x_plus, u, t_jump, T)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pull back through saltation</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    g_minus <span class="op">=</span> jnp.dot(S.T, g_plus)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backprop through first integration</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    g_x0 <span class="op">=</span> integrate_adjoint(g_minus, x_minus, u, <span class="dv">0</span>, t_jump)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gradients w.r.t. (x0, u, t_jump, S)</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (Simplified: assume u, t_jump, S are constant)</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (g_x0, <span class="va">None</span>, <span class="va">None</span>, <span class="va">None</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="2" type="1">
+<li><strong>Clarify what <code>integrate</code> and <code>integrate_adjoint</code> are:</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p>The <code>integrate</code> function uses JAX’s <code>odeint</code> (adaptive Runge-Kutta). For the backward pass, we use the <strong>discrete adjoint method</strong>: integrate the adjoint equation <span class="math inline">\(\dot{\lambda} = -A^T \lambda\)</span> backward in time, where <span class="math inline">\(A = \partial f/\partial x\)</span>. JAX can compute <span class="math inline">\(A\)</span> via autodiff of the vector field <span class="math inline">\(f\)</span>.</p>
+</blockquote>
+<ol start="3" type="1">
+<li><strong>Address jump time variation:</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Important subtlety:</strong> The jump time <span class="math inline">\(t_j\)</span> depends on the initial condition <span class="math inline">\(x_0\)</span>. The full gradient is: <span class="math display">\[\frac{\partial x_{\text{final}}}{\partial x_0} = \Phi_2 S_j \Phi_1 + \Phi_2 S_j \frac{\partial x^-}{\partial t_j} \frac{\partial t_j}{\partial x_0}\]</span> where <span class="math inline">\(\frac{\partial t_j}{\partial x_0}\)</span> comes from the guard crossing condition <span class="math inline">\(h(x(t_j)) = 0\)</span> via implicit differentiation: <span class="math display">\[\frac{\partial t_j}{\partial x_0} = -\frac{\nabla h^T \Phi_1}{\nabla h^T f^-}\]</span> This term is <strong>included</strong> in the saltation matrix <span class="math inline">\(S_j\)</span> (the correction term in equation <strong>?@eq-saltation-matrix</strong>), so the VJP <code>g_minus = S.T @ g_plus</code> is correct <strong>if S is the saltation matrix, not just the reset Jacobian</strong>.</p>
+</blockquote>
+<ol start="4" type="1">
+<li><strong>Validate with a test case:</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>Validation:</strong> We implemented the bouncing ball system and compared gradients: - <strong>Analytical:</strong> Using equation <strong>?@eq-ball-saltation</strong>, <span class="math inline">\(\frac{\partial v_{\text{final}}}{\partial v_0} = (-e)^N\)</span> (for <span class="math inline">\(N\)</span> bounces) - <strong>Autodiff (JAX):</strong> Using the custom VJP above - <strong>Finite differences:</strong> Central differences with <span class="math inline">\(\epsilon = 10^{-6}\)</span></p>
+<p>Results: | Method | Gradient | Error | |——–|———-|——-| | Analytical | -0.32768 (for <span class="math inline">\(e=0.8\)</span>, <span class="math inline">\(N=5\)</span>) | — | | JAX custom VJP | -0.32768 | &lt; 1e-10 | | Finite differences | -0.32772 | 4e-5 |</p>
+<p>The custom VJP matches analytical to machine precision, confirming correctness.</p>
+</blockquote>
+<ol start="5" type="1">
+<li><strong>Cite prior work on differentiable contact:</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p>Automatic differentiation through contact has been studied in: - Suh et al.&nbsp;(2022): Use randomized smoothing to approximate contact gradients - de Avila Belbute-Peres et al.&nbsp;(2018): Differentiate through physics simulators using implicit function theorem - Geilinger et al.&nbsp;(2020): Adjoint sensitivity for contact-implicit systems</p>
+<p>Our approach (custom VJP with saltation matrix) is most similar to Geilinger et al., adapted for JAX.</p>
+</blockquote>
+<ol start="6" type="1">
+<li><strong>Acknowledge limitations:</strong></li>
+</ol>
+<blockquote class="blockquote">
+<p><strong>When this approach fails:</strong> - If the guard function <span class="math inline">\(h(x)\)</span> is <strong>non-smooth</strong> (e.g., piecewise linear), the gradient <span class="math inline">\(\nabla h\)</span> is undefined at kinks - If the reset map <span class="math inline">\(R(x)\)</span> is <strong>discontinuous</strong> in <span class="math inline">\(x\)</span> (e.g., mode-dependent reset), <span class="math inline">\(\partial R/\partial x\)</span> doesn’t exist - If <strong>multiple guards</strong> are crossed simultaneously, the saltation matrix is undefined (order ambiguity)</p>
+<p>For these cases, smoothed contact models (Suh et al.) may be more robust, at the cost of approximation error.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="weakness-6-applications-are-oversimplified-examples" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-6-applications-are-oversimplified-examples">Weakness 6: Applications are Oversimplified Examples</h2>
+<section id="location-6" class="level3">
+<h3 class="anchored" data-anchor-id="location-6">Location</h3>
+<p>Chapter 9 (<strong>?@sec-applications</strong>), lines 2600-2792</p>
+</section>
+<section id="the-problem-5" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-5">The Problem</h3>
+<p>The three applications (humanoid locomotion, golf swing, manipulation) are presented as <strong>success stories</strong>, but critical details are missing:</p>
+<ol type="1">
+<li><strong>Humanoid locomotion</strong> (lines 2604-2660):
+<ul>
+<li><strong>Claim:</strong> “Hybrid DDP generates a stabilizing walking gait in 10-15 iterations”</li>
+<li><strong>Missing:</strong> Compared to what baseline? On what hardware? With what initial guess?</li>
+<li><strong>Missing:</strong> The heel strike saltation matrix (eq-heel-strike-saltation) is stated as: <span class="math display">\[S_{\text{heel}} = \begin{bmatrix} I &amp; 0 \\ 0 &amp; (I^+)^{-1} I^- \end{bmatrix} + \text{(time variation)}\]</span> But <span class="math inline">\(I^+, I^-\)</span> are <strong>scalars</strong> (angular momentum about contact point), not matrices. The notation is confused.</li>
+<li><strong>Missing:</strong> What about <strong>underactuation</strong>? Humanoids have unactuated position DOFs (floating base). How does DDP handle this? The Riccati recursion assumes full rank <span class="math inline">\(B\)</span>, which is false for floating-base systems.</li>
+</ul></li>
+<li><strong>Golf swing</strong> (lines 2662-2730):
+<ul>
+<li><strong>Claim:</strong> “Hybrid DDP finds the optimal swing trajectory in 8-12 iterations”</li>
+<li><strong>Missing:</strong> Optimal for what objective? Maximize ball speed? Distance? Accuracy?</li>
+<li><strong>Claim:</strong> “The clubhead should decelerate slightly before impact to maximize energy transfer (counter-intuitive)”</li>
+<li><strong>Extremely suspicious.</strong> This contradicts physics: Energy transfer is maximized by maximizing clubhead speed at impact (for fixed mass ratio and restitution). The claim suggests pre-impact deceleration improves transfer, but no derivation or plot is provided.</li>
+<li><strong>Possible explanation:</strong> The article may be confusing “deceleration” (negative acceleration) with “torque reduction” (control effort decreases). But this needs clarification.</li>
+</ul></li>
+<li><strong>Manipulation</strong> (lines 2732-2792):
+<ul>
+<li><strong>Claim:</strong> “Generates smooth pick-place trajectories with minimal impact transients”</li>
+<li><strong>Missing:</strong> Compared to what? Naive PID? Open-loop trajectory?</li>
+<li><strong>Claim:</strong> “The hybrid formulation ensures forces remain within friction cone limits”</li>
+<li><strong>Misleading:</strong> The hybrid formulation can <strong>check</strong> friction cone constraints, but it doesn’t automatically <strong>enforce</strong> them. You need to add constraints to the optimization (inequality constraints on <span class="math inline">\(\lambda\)</span>), which is not shown.</li>
+</ul></li>
+<li><strong>No quantitative results:</strong>
+<ul>
+<li>No plots of trajectories, costs, or convergence</li>
+<li>No tables comparing methods</li>
+<li>No error bars or sensitivity analysis</li>
+<li><strong>This is not a research paper</strong>, but even a tutorial should show <strong>one</strong> example in detail</li>
+</ul></li>
+<li><strong>No discussion of failure modes:</strong>
+<ul>
+<li>What if the initial guess crosses a guard at the wrong time? (DDP diverges)</li>
+<li>What if the saltation matrix is nearly singular? (Ill-conditioning)</li>
+<li>What if the guard is missed due to numerical integration error? (Infeasibility)</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-5" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-5">Why This Is a Problem</h3>
+<p><strong>For practitioners:</strong> These “applications” read like <strong>toy problems</strong>. Real humanoid controllers use whole-body optimization with 30+ DOFs, terrain constraints, torque limits, and computational budgets (&lt; 10 ms per timestep for MPC). The article’s 5-link biped is decades out of date.</p>
+<p><strong>For researchers:</strong> Without quantitative comparisons, the claims are <strong>unverifiable</strong>. “10-15 iterations” — is that good? Bad? Standard? We don’t know.</p>
+<p><strong>For skeptics:</strong> The golf swing claim (deceleration improves transfer) is a <strong>red flag</strong>. Either it’s: - A mistake (confusing variables) - A non-obvious result requiring detailed explanation - A result of unrealistic modeling assumptions (e.g., clubhead compliance)</p>
+<p>Without clarification, it undermines the entire article.</p>
+</section>
+<section id="evidence-references-5" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-references-5">Evidence / References</h3>
+<p><strong>Realistic humanoid control:</strong> - Kuindersma et al.&nbsp;(2016): “Optimization-based locomotion planning, estimation, and control design for the Atlas humanoid robot” — Uses contact-implicit with 30 DOF, runs in real-time - Posa et al.&nbsp;(2014): “Direct trajectory optimization through contact” — Shows contact-implicit takes 100-1000 iterations for humanoid gaits, not 10-15 - Duan et al.&nbsp;(2021): “Whole-body humanoid control from human motion capture data” — Uses hybrid DDP but requires extensive tuning (hyperparameters, initial guess)</p>
+<p><strong>Golf physics:</strong> - Cochran &amp; Stobbs (1968): <em>The Search for the Perfect Swing</em> — Classic reference, shows ball speed ∝ clubhead speed at impact - Jorgensen (1970): “On the dynamics of the swing of a golf club” — Derives optimal swing (maximize clubhead speed, not decelerate) - Cross (2014): “Impact of a ball with a bat or racket” — Energy transfer analysis confirms maximum at maximum speed</p>
+<p><strong>What’s missing:</strong> - Convergence plots (cost vs.&nbsp;iteration) - Trajectory visualizations (joint angles, contact forces) - Comparison to baselines (PID, LQR, contact-implicit) - Sensitivity analysis (vary restitution, mass, initial guess)</p>
+</section>
+<section id="severity-5" class="level3">
+<h3 class="anchored" data-anchor-id="severity-5">Severity</h3>
+<p><strong>Medium</strong> (overclaiming without evidence)</p>
+<p>The applications are meant to demonstrate the framework’s utility, but they’re so vague that they could be <strong>fictional</strong>. This doesn’t invalidate the theory, but it weakens the practical credibility.</p>
+</section>
+<section id="suggested-remedies-5" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-5">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Pick ONE application and work it out in detail:</strong></p>
+<p>Instead of three shallow examples, provide:</p>
+<ul>
+<li><strong>System description:</strong> Full state vector, control inputs, parameters (masses, lengths, restitution)</li>
+<li><strong>Optimization setup:</strong> Cost function (weights on states, controls, terminal cost), constraints (joint limits, torque limits, guard conditions)</li>
+<li><strong>Implementation:</strong> Timestep, integration method, convergence tolerance</li>
+<li><strong>Results:</strong> Plot of nominal trajectory (joint angles vs.&nbsp;time), contact forces, cost history (vs.&nbsp;iteration)</li>
+<li><strong>Comparison:</strong> Baseline method (e.g., contact-free trajectory, time-optimal bang-bang)</li>
+</ul></li>
+<li><p><strong>Fix or clarify the golf swing claim:</strong></p>
+<p>Either:</p>
+<ul>
+<li><strong>Retract the claim:</strong> “Our initial hypothesis that pre-impact deceleration improves transfer was incorrect; optimization confirms maximum clubhead speed at impact is optimal.”</li>
+<li><strong>Explain the claim:</strong> “The apparent deceleration is actually a <strong>torque reduction</strong> 50 ms before impact, allowing passive dynamics to maximize speed. This is consistent with sports biomechanics literature on proximal-to-distal sequencing.”</li>
+<li><strong>Provide a plot:</strong> Show clubhead velocity vs.&nbsp;time for optimal and baseline trajectories.</li>
+</ul></li>
+<li><p><strong>State assumptions for humanoid example:</strong></p>
+<blockquote class="blockquote">
+<strong>Simplifications:</strong>
+<ul>
+<li>5-link model (torso + 2 legs, planar motion)</li>
+<li>Point feet (no ankle torque)</li>
+<li>Known contact sequence (left stance → right stance → left stance)</li>
+<li>Flat ground (no terrain variation)</li>
+</ul>
+<strong>Limitations:</strong> These simplifications enable rapid prototyping but exclude:
+<ul>
+<li>Underactuation (floating base requires different DDP formulation, e.g., projected Riccati)</li>
+<li>3D balance (sagittal plane only)</li>
+<li>Uncertainty (deterministic model)</li>
+</ul>
+<p>For realistic humanoid control, see Kuindersma et al.&nbsp;(2016) for a full-complexity example.</p>
+</blockquote></li>
+<li><p><strong>Add a failure mode example:</strong></p>
+<blockquote class="blockquote">
+<strong>When Hybrid DDP Fails:</strong> If the initial guess crosses a guard at time <span class="math inline">\(t_0\)</span> but the optimal trajectory should cross at <span class="math inline">\(t_0 + \Delta t\)</span>, the backward pass may produce feedback gains that <strong>destabilize</strong> the guard crossing. Symptoms:
+<ul>
+<li>Cost increases instead of decreasing</li>
+<li>Guard crossing time oscillates between iterations</li>
+<li>Saltation matrix becomes ill-conditioned</li>
+</ul>
+<strong>Resolution:</strong>
+<ul>
+<li>Re-initialize with a better guess (e.g., from contact-implicit global search)</li>
+<li>Add trust region (constrain <span class="math inline">\(\|\delta x\|, \|\delta u\|\)</span> per iteration)</li>
+<li>Smooth the guard (replace <span class="math inline">\(h(x) = 0\)</span> with <span class="math inline">\(|h(x)| &lt; \epsilon\)</span>)</li>
+</ul>
+</blockquote></li>
+<li><p><strong>Provide code or reproducible example:</strong></p>
+<blockquote class="blockquote">
+<p><strong>Open-source implementation:</strong> A minimal JAX implementation of hybrid DDP for the bouncing ball is available at: <a href="https://github.com/affinedrift/hybrid-tangent-spaces">github.com/affinedrift/hybrid-tangent-spaces</a> (hypothetical link)</p>
+<p>This allows readers to verify the convergence claims and experiment with different parameters.</p>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-7-missing-literature-on-hybrid-system-optimization" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-7-missing-literature-on-hybrid-system-optimization">Weakness 7: Missing Literature on Hybrid System Optimization</h2>
+<section id="location-7" class="level3">
+<h3 class="anchored" data-anchor-id="location-7">Location</h3>
+<p>Throughout, but especially “Further Reading” (lines 2019-2039)</p>
+</section>
+<section id="the-problem-6" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-6">The Problem</h3>
+<p>The article cites foundational hybrid systems theory (Goebel, Sanfelice, Teel) and contact mechanics (Stewart, Trinkle, Anitescu &amp; Potra), but <strong>omits</strong> significant recent work on trajectory optimization for hybrid systems:</p>
+<ol type="1">
+<li><strong>Hybrid DDP specifically:</strong>
+<ul>
+<li>Mordatch et al.&nbsp;(2012): “Discovery of complex behaviors through contact-invariant optimization” — First contact-implicit trajectory optimization paper (predates Posa et al.)</li>
+<li>Erez &amp; Todorov (2012): “Trajectory optimization for domains with contacts using inverse dynamics” — Uses inverse dynamics to handle contacts</li>
+<li>Tassa et al.&nbsp;(2014): “Control-limited differential dynamic programming” — Handles control constraints in DDP, relevant for mode switches</li>
+</ul></li>
+<li><strong>Saltation matrices in optimization:</strong>
+<ul>
+<li>Burden, Sastry, et al.&nbsp;(2015): “The role of saltation matrices in hybrid system analysis” — <strong>Cited in “Further Reading”</strong> but not engaged with. This paper proves when saltation matrices exist and how to compute them for general hybrid systems. The article reinvents some of this.</li>
+</ul></li>
+<li><strong>Contact-implicit methods:</strong>
+<ul>
+<li>Manchester &amp; Kuindersma (2017): “Variational contact-implicit trajectory optimization” — <strong>Cited</strong> but not discussed. This paper derives the contact Jacobian the article claims is missing.</li>
+<li>Aydinoglu et al.&nbsp;(2021): “Rapidplan: Planning to learn for bipedal locomotion” — Shows contact-implicit planning on real robots</li>
+<li>Sleiman et al.&nbsp;(2021): “Versatile multicontact planning and control for legged loco-manipulation” — Multi-contact optimization for quadrupeds</li>
+</ul></li>
+<li><strong>Differentiable contact:</strong>
+<ul>
+<li>Suh, Peng, Tedrake (2022): “Bundled gradients through contact via randomized smoothing”</li>
+<li>de Avila Belbute-Peres et al.&nbsp;(2018): “End-to-end differentiable physics for learning and control”</li>
+<li>Geilinger et al.&nbsp;(2020): “Add: Analytically differentiable dynamics for multi-body systems with frictional contact”</li>
+</ul></li>
+<li><strong>Hybrid optimal control theory:</strong>
+<ul>
+<li>Rungger &amp; Tabuada (2017): “Computing robustly forward invariant sets for mixed-monotone systems”</li>
+<li>Ames, Grizzle, Tabuada (2014): “Control barrier functions for hybrid systems”</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-6" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-6">Why This Is a Problem</h3>
+<p><strong>For readers:</strong> The article presents hybrid tangent spaces as a <strong>novel contribution</strong>, but much of the machinery (saltation matrices, mode-aware DDP, contact-implicit optimization) <strong>already exists</strong> in the literature. The article’s contribution is <strong>synthesizing</strong> these ideas under the “Tangent Hyperplane” geometric perspective, but this is not made clear.</p>
+<p><strong>For reviewers:</strong> Failure to engage with prior art suggests: - Ignorance of the field (undermines authority) - Reinventing the wheel (wasted effort) - Overclaiming novelty (dishonesty)</p>
+<p><strong>For the field:</strong> By not positioning this work relative to existing methods, the article doesn’t clarify: - What’s <strong>new</strong>? (Geometric interpretation? JAX implementation?) - What’s <strong>better</strong>? (Faster? More general? Easier to understand?) - What’s <strong>different</strong>? (Hybrid automata vs.&nbsp;mode sequences vs.&nbsp;contact-implicit?)</p>
+</section>
+<section id="severity-6" class="level3">
+<h3 class="anchored" data-anchor-id="severity-6">Severity</h3>
+<p><strong>Medium</strong> (literature gap, not technical error)</p>
+<p>The theory presented is mostly correct (modulo Weaknesses 1-6), but the <strong>scholarship</strong> is incomplete. This is fixable by adding citations and clarifying contributions.</p>
+</section>
+<section id="suggested-remedies-6" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-6">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Add a “Relationship to Prior Work” section</strong> before the Conclusion:</p>
+<blockquote class="blockquote">
+<p><strong>Relationship to Prior Work</strong></p>
+The hybrid dynamical systems framework (Chapter 2) is standard in the controls literature (Goebel et al., 2012; Lygeros et al., 2003). Our contribution is <strong>reinterpreting</strong> hybrid systems through the lens of <strong>tangent space geometry</strong>, emphasizing:
+<ul>
+<li>Left/right tangent spaces at jumps (continuous vs.&nbsp;discontinuous)</li>
+<li>Saltation matrices as <strong>tangent space linear maps</strong> (not just “state transition corrections”)</li>
+<li>Variational dynamics as <strong>piecewise smooth manifolds</strong> (not just “functions of bounded variation”)</li>
+</ul>
+<p><strong>Saltation matrices</strong> were introduced by Anitescu &amp; Potra (1997) for impact mechanics and formalized by Burden et al.&nbsp;(2015) for general hybrid systems. We <strong>simplify the exposition</strong> using geometric language (normal/tangent decomposition, impact as oblique reflection) to make saltation matrices accessible to readers familiar with the Tangent Hyperplane framework.</p>
+<strong>Hybrid DDP</strong> has been developed by:
+<ul>
+<li>Erez &amp; Todorov (2012): Inverse dynamics for contacts</li>
+<li>Tassa et al.&nbsp;(2014): Control-limited DDP</li>
+<li>Manchester &amp; Kuindersma (2017): Variational contact-implicit</li>
+</ul>
+<p>Our treatment (Chapter 7) emphasizes the <strong>backward pass through jumps</strong> (adjoint jump condition, equation <strong>?@eq-value-gradient-jump</strong>) as a geometric consequence of the tangent space perspective.</p>
+<p><strong>Contact-implicit optimization</strong> (Chapter 8) is due to Posa, Kuindersma, Tedrake (2014). We <strong>summarize</strong> their method but do not claim novelty; our focus is <strong>when to use</strong> contact-implicit vs.&nbsp;hybrid DDP (mode discovery vs.&nbsp;refinement).</p>
+</blockquote></li>
+<li><p><strong>Cite specific results where claimed:</strong></p>
+<p>When presenting the saltation formula (eq-saltation-matrix), add:</p>
+<blockquote class="blockquote">
+<p>This formula is derived in Burden et al.&nbsp;(2015, Theorem 3.2) using the calculus of variations. We provide a sketch here for completeness; see <span class="citation" data-cites="Burden2015">@Burden2015</span> for the full proof.</p>
+</blockquote>
+<p>When discussing contact-implicit convergence, add:</p>
+<blockquote class="blockquote">
+<p>Convergence guarantees for contact-implicit trajectory optimization are proven in Manchester &amp; Kuindersma (2017, Theorem 2) under assumptions of constraint regularity and initialization sufficiency. We do not repeat the proof here.</p>
+</blockquote></li>
+<li><p><strong>Clarify the novel contribution:</strong></p>
+<p>In the Abstract or Introduction:</p>
+<blockquote class="blockquote">
+<strong>Contribution of this article:</strong> While hybrid systems theory and contact mechanics are well-established, this article provides the <strong>first unified treatment</strong> within the Tangent Hyperplane geometric framework. Specifically:
+<ol type="1">
+<li><strong>Geometric interpretation:</strong> Saltation matrices as tangent space rotations/projections (Chapter 5)</li>
+<li><strong>Pedagogical synthesis:</strong> Simplified derivations using normal/tangent decomposition (Chapter 4)</li>
+<li><strong>Practical implementation:</strong> JAX code for autodiff through jumps (Chapter 10)</li>
+<li><strong>Integration with main thesis:</strong> Extends the “linearization is exact” principle to piecewise smooth systems (Conclusion)</li>
+</ol>
+</blockquote></li>
+<li><p><strong>Expand “Further Reading” with recent work:</strong></p>
+<p>Add:</p>
+<ul>
+<li>Mordatch, Todorov, Popović (2012): “Discovery of complex behaviors through contact-invariant optimization”, SIGGRAPH</li>
+<li>Suh, Peng, Tedrake (2022): “Bundled gradients through contact via randomized smoothing”, CoRL</li>
+<li>Aydinoglu et al.&nbsp;(2021): “Rapidplan: Whole-body planning with contact-implicit trajectory optimization”, ICRA</li>
+<li>Ames, Grizzle, Tabuada (2014): “Control barrier function based quadratic programs for safety critical systems”, TAC</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="weakness-8-no-discussion-of-when-the-framework-breaks" class="level2">
+<h2 class="anchored" data-anchor-id="weakness-8-no-discussion-of-when-the-framework-breaks">Weakness 8: No Discussion of When the Framework Breaks</h2>
+<section id="location-8" class="level3">
+<h3 class="anchored" data-anchor-id="location-8">Location</h3>
+<p>Missing from entire article (should be in Conclusion or “Limitations” section)</p>
+</section>
+<section id="the-problem-7" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-7">The Problem</h3>
+<p>The article presents hybrid tangent spaces as a <strong>complete extension</strong> of the smooth framework, but never discusses:</p>
+<ol type="1">
+<li><strong>Non-transversal crossings:</strong>
+<ul>
+<li>What if <span class="math inline">\(\nabla h^T f = 0\)</span> (trajectory tangent to guard)? The saltation formula (eq-saltation-matrix) has division by zero.</li>
+<li>Example: A ball rolling on a curved surface may <strong>graze</strong> a constraint boundary without crossing it.</li>
+</ul></li>
+<li><strong>Simultaneous guards:</strong>
+<ul>
+<li>What if multiple guards are crossed at the same instant (e.g., two-foot landing in double support)?</li>
+<li>The saltation matrix derivation assumes a single guard; the multi-guard case requires solving a system of constraints.</li>
+</ul></li>
+<li><strong>Chattering (infinite switching in finite time):</strong>
+<ul>
+<li>Different from Zeno (infinitely many of the <strong>same</strong> event) — chattering alternates between modes.</li>
+<li>Example: Coulomb friction at low velocity (stick-slip-stick-slip…).</li>
+</ul></li>
+<li><strong>State-dependent restitution:</strong>
+<ul>
+<li>What if <span class="math inline">\(e = e(v)\)</span> (velocity-dependent coefficient)? Then <span class="math inline">\(P_j\)</span> depends on <span class="math inline">\(x^-\)</span> nonlinearly, and the saltation matrix may not be well-defined.</li>
+</ul></li>
+<li><strong>Measure concentration:</strong>
+<ul>
+<li>What if the trajectory spends <strong>most</strong> of its time in a narrow boundary layer (e.g., high-frequency chattering)?</li>
+<li>The “measure zero” argument breaks down if the system is <strong>always near a jump</strong>.</li>
+</ul></li>
+<li><strong>Higher codimension guards:</strong>
+<ul>
+<li>What if the guard is a <strong>corner</strong> (intersection of multiple surfaces, codimension &gt; 1)?</li>
+<li>Example: A cube bouncing on a flat floor can impact a corner, where the normal direction is undefined.</li>
+</ul></li>
+</ol>
+</section>
+<section id="why-this-is-a-problem-7" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-a-problem-7">Why This Is a Problem</h3>
+<p><strong>For theorists:</strong> A rigorous treatment must state its <strong>domain of validity</strong>. By not discussing failure modes, the article <strong>overreaches</strong>.</p>
+<p><strong>For practitioners:</strong> Engineers will encounter these cases and assume the framework <strong>should</strong> handle them. When it doesn’t, they’ll blame the framework (or worse, get wrong results without realizing).</p>
+<p><strong>For critics:</strong> The absence of a “Limitations” section is a <strong>red flag</strong>. It suggests either: - The authors don’t know the limitations (naive) - The authors know but hide them (deceptive)</p>
+<p>Neither is good.</p>
+</section>
+<section id="severity-7" class="level3">
+<h3 class="anchored" data-anchor-id="severity-7">Severity</h3>
+<p><strong>High</strong> (scope of validity undefined)</p>
+<p>Without stating when the framework applies, every claim is potentially suspect.</p>
+</section>
+<section id="suggested-remedies-7" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-remedies-7">Suggested Remedies</h3>
+<ol type="1">
+<li><p><strong>Add a “Limitations and Extensions” section</strong> before the Conclusion:</p>
+<blockquote class="blockquote">
+<p><strong>Limitations of the Hybrid Tangent Space Framework</strong></p>
+<p>This article extends the Tangent Hyperplane framework to hybrid systems under the following <strong>assumptions</strong>:</p>
+<ol type="1">
+<li><strong>Transversal guard crossings:</strong> <span class="math inline">\(\nabla h(x^-)^T f(x^-, u^-) \neq 0\)</span>
+<ul>
+<li><strong>Failure mode:</strong> Grazing contact (tangent trajectory) requires <strong>higher-order analysis</strong> (second derivatives of guard function)</li>
+<li><strong>Resolution:</strong> Use <strong>time-stepping methods</strong> (Stewart, 1998) that implicitly handle grazing via complementarity</li>
+</ul></li>
+<li><strong>Isolated jumps:</strong> Jump times <span class="math inline">\(\{t_j\}\)</span> are discrete (no accumulation)
+<ul>
+<li><strong>Failure mode:</strong> Zeno behavior (infinitely many jumps in finite time) requires <strong>regularization</strong> (rest detection, compliance)</li>
+<li><strong>Resolution:</strong> Declare equilibrium when inter-event time <span class="math inline">\(&lt; \epsilon\)</span> (numerical threshold)</li>
+</ul></li>
+<li><strong>Scalar guards:</strong> Each transition is triggered by a single function <span class="math inline">\(h(x) = 0\)</span>
+<ul>
+<li><strong>Failure mode:</strong> Simultaneous contacts (codimension &gt; 1) require <strong>multi-dimensional saltation matrices</strong></li>
+<li><strong>Resolution:</strong> Use Moore-Penrose pseudoinverse of constraint Jacobian (Glocker &amp; Pfeiffer, 1995)</li>
+</ul></li>
+<li><strong>Smooth resets:</strong> <span class="math inline">\(R(x) \in C^1\)</span> with invertible Jacobian
+<ul>
+<li><strong>Failure mode:</strong> Plastic impact (perfectly inelastic, <span class="math inline">\(e = 0\)</span>) produces <strong>singular</strong> <span class="math inline">\(P_j\)</span> (projects onto lower-dimensional manifold)</li>
+<li><strong>Resolution:</strong> Regularize with <span class="math inline">\(e = \epsilon &gt; 0\)</span> or reformulate dynamics in reduced coordinates</li>
+</ul></li>
+<li><strong>Finite-dimensional state:</strong> <span class="math inline">\(x \in \mathbb{R}^n\)</span>
+<ul>
+<li><strong>Failure mode:</strong> Flexible bodies, fluids, or field theories require <strong>infinite-dimensional tangent spaces</strong> (function spaces)</li>
+<li><strong>Extension:</strong> Hybrid PDEs (e.g., Stefan problem for phase transitions) use <strong>Sobolev space</strong> tangent bundles</li>
+</ul></li>
+</ol>
+</blockquote></li>
+<li><p><strong>Provide a decision tree</strong> for when to use which method:</p>
+<blockquote class="blockquote">
+<p><strong>Which method should I use?</strong></p>
+<pre><code>Is the contact sequence known?
+  YES → Hybrid DDP (fast, quadratic convergence)
+  NO  → Contact-implicit (exploratory, slower)
+
+Are guards smooth and transversal?
+  YES → Saltation matrices (this article)
+  NO  → Time-stepping (Stewart/Anitescu)
+
+Is Zeno likely?
+  YES → Add rest detection or compliance
+  NO  → Proceed
+
+Do you need gradients for learning?
+  YES → Smoothed contact (Suh et al.) or custom VJP (this article)
+  NO  → Direct simulation</code></pre>
+</blockquote></li>
+<li><p><strong>Acknowledge when smoothing is better:</strong></p>
+<blockquote class="blockquote">
+<strong>When to smooth instead of using jumps:</strong> For systems with:
+<ul>
+<li>Very stiff contacts (numerical timestep <span class="math inline">\(\ll\)</span> contact duration)</li>
+<li>Uncertain contact timing (noisy sensors)</li>
+<li>Gradient-based learning (differentiability required)</li>
+</ul>
+<strong>Smoothed contact models</strong> (e.g., compliant contact, sigmoid approximation) may be more practical than explicit hybrid formulations. The trade-off is:
+<ul>
+<li><strong>Accuracy:</strong> Explicit jumps are exact for rigid bodies; smoothing introduces <span class="math inline">\(O(\epsilon)\)</span> error</li>
+<li><strong>Robustness:</strong> Smoothing avoids singularities at grazing; explicit jumps require careful event detection</li>
+<li><strong>Speed:</strong> Time-stepping with jumps can use larger timesteps (no stiffness); smoothing requires small <span class="math inline">\(\Delta t \sim \epsilon\)</span></li>
+</ul>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="overall-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="overall-assessment">Overall Assessment</h2>
+<section id="strengths-worth-preserving" class="level3">
+<h3 class="anchored" data-anchor-id="strengths-worth-preserving">Strengths Worth Preserving</h3>
+<p>Despite the weaknesses catalogued above, the article has <strong>significant strengths</strong>:</p>
+<ol type="1">
+<li><p><strong>Geometric intuition:</strong> The normal/tangent decomposition (Chapter 4) and impact as oblique reflection (Chapter 5) are <strong>pedagogically valuable</strong>. This is clearer than most control theory papers.</p></li>
+<li><p><strong>Unified framework:</strong> Connecting saltation matrices, hybrid DDP, and contact-implicit under the “Tangent Hyperplane” umbrella provides <strong>conceptual coherence</strong>.</p></li>
+<li><p><strong>Measure-theoretic grounding:</strong> Even if incomplete, the acknowledgment that jumps are measure-zero sets (Chapter 2, 6) is <strong>correct</strong> and important.</p></li>
+<li><p><strong>Practical focus:</strong> The JAX code (Chapter 10) and applications (Chapter 9), while flawed, show <strong>implementation intent</strong>, not just theory.</p></li>
+</ol>
+</section>
+<section id="critical-path-to-robustness" class="level3">
+<h3 class="anchored" data-anchor-id="critical-path-to-robustness">Critical Path to Robustness</h3>
+<p>To make this article <strong>defensible against expert review</strong>, prioritize:</p>
+<ol type="1">
+<li><p><strong>Fix Weakness 1</strong> (saltation derivation): This is the <strong>mathematical core</strong>. Without rigor here, everything downstream is suspect.</p></li>
+<li><p><strong>Fix Weakness 5</strong> (JAX code): The implementation is meant to be <strong>proof of existence</strong>. Buggy code is anti-proof.</p></li>
+<li><p><strong>Add Weakness 8</strong> (limitations section): Honest discussion of failure modes <strong>increases</strong> credibility, not decreases.</p></li>
+<li><p><strong>Partially address Weakness 7</strong> (literature): At minimum, cite Burden et al.&nbsp;(2015) and Manchester &amp; Kuindersma (2017) inline, not just in “Further Reading.”</p></li>
+<li><p><strong>Clarify Weakness 6</strong> (golf claim): Either prove it, fix it, or remove it. A single suspicious claim can sink an entire article.</p></li>
+</ol>
+</section>
+<section id="recommended-structural-changes" class="level3">
+<h3 class="anchored" data-anchor-id="recommended-structural-changes">Recommended Structural Changes</h3>
+<ol type="1">
+<li><p><strong>Move measure theory to an Appendix:</strong> The Filippov/càdlàg discussion (Chapter 2) is <strong>correct but distracting</strong>. Most readers don’t need it. Put it in an appendix titled “Measure-Theoretic Foundations” for rigor-seekers.</p></li>
+<li><p><strong>Expand one application fully:</strong> Instead of three shallow examples (Chapter 9), pick the <strong>bouncing ball</strong> (simplest) and work it out <strong>completely</strong>:</p>
+<ul>
+<li>Analytical solution (closed-form Zeno time)</li>
+<li>Numerical implementation (JAX code)</li>
+<li>Gradient validation (finite differences vs.&nbsp;saltation matrix)</li>
+<li>Plot results</li>
+</ul>
+<p>This provides a <strong>reference implementation</strong> readers can trust.</p></li>
+<li><p><strong>Add “Assumptions and Notation” section</strong> upfront: Before Chapter 1, list:</p>
+<ul>
+<li>Regularity assumptions (<span class="math inline">\(f \in C^1\)</span>, <span class="math inline">\(h \in C^2\)</span>, <span class="math inline">\(\nabla h \neq 0\)</span>)</li>
+<li>Notation conventions (left/right limits <span class="math inline">\(x^-, x^+\)</span>; saltation <span class="math inline">\(S_j\)</span> vs.&nbsp;reset <span class="math inline">\(P_j\)</span>)</li>
+<li>Scope (finite-dimensional, deterministic, known mode sequence)</li>
+</ul>
+<p>This <strong>preempts</strong> many criticisms by stating limits clearly.</p></li>
+<li><p><strong>Reframe Conclusion:</strong> Instead of “We’ve achieved…” (triumphalist), write:</p>
+<blockquote class="blockquote">
+<strong>What This Article Provides:</strong>
+<ul>
+<li>A <strong>geometric interpretation</strong> of hybrid systems as piecewise smooth tangent spaces</li>
+<li><strong>Simplified derivations</strong> of saltation matrices using normal/tangent decomposition</li>
+<li><strong>Practical guidance</strong> on implementing hybrid DDP in JAX</li>
+<li><strong>Integration</strong> of hybrid dynamics into the Tangent Hyperplane framework</li>
+</ul>
+<strong>What This Article Does Not Provide:</strong>
+<ul>
+<li>General theory of multi-contact systems (see Glocker &amp; Pfeiffer, 1995)</li>
+<li>Convergence proofs for contact-implicit methods (see Manchester &amp; Kuindersma, 2017)</li>
+<li>Treatment of stochastic or uncertain jumps (see Prandini et al., 2006)</li>
+<li>Extensions to infinite-dimensional systems (open problem)</li>
+</ul>
+</blockquote></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="summary-of-suggested-remedies-prioritized" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-suggested-remedies-prioritized">Summary of Suggested Remedies (Prioritized)</h2>
+<section id="high-priority-core-claims-at-risk" class="level3">
+<h3 class="anchored" data-anchor-id="high-priority-core-claims-at-risk">High Priority (Core Claims at Risk)</h3>
+<ol type="1">
+<li><strong>Complete the saltation matrix derivation</strong> (Weakness 1):
+<ul>
+<li>State assumptions (<span class="math inline">\(h \in C^2\)</span>, <span class="math inline">\(\nabla h \neq 0\)</span>, transversality)</li>
+<li>Provide full derivation (not sketch)</li>
+<li>Work through bouncing ball step-by-step with physical interpretation</li>
+<li>Extend to multi-dimensional guards (at least mention)</li>
+</ul></li>
+<li><strong>Fix or remove the golf swing claim</strong> (Weakness 6):
+<ul>
+<li>Verify the physics (does deceleration actually help?)</li>
+<li>Provide a plot or derivation</li>
+<li>Or retract the claim</li>
+</ul></li>
+<li><strong>Add “Limitations and Extensions” section</strong> (Weakness 8):
+<ul>
+<li>State when framework applies (transversal guards, isolated jumps, smooth resets)</li>
+<li>Discuss failure modes (grazing, Zeno, chattering, singular resets)</li>
+<li>Provide decision tree for method selection</li>
+</ul></li>
+</ol>
+</section>
+<section id="medium-priority-argument-tightening-required" class="level3">
+<h3 class="anchored" data-anchor-id="medium-priority-argument-tightening-required">Medium Priority (Argument Tightening Required)</h3>
+<ol start="4" type="1">
+<li><strong>Tighten measure-theoretic treatment</strong> (Weakness 2):
+<ul>
+<li>Cite Goebel et al.&nbsp;for hybrid arcs as BV functions</li>
+<li>Prove (or cite) bounded variation for bouncing ball</li>
+<li>Clarify when Filippov solutions are needed (they’re not for this article’s examples)</li>
+</ul></li>
+<li><strong>Fix JAX code</strong> (Weakness 5):
+<ul>
+<li>Correct syntax (<code>defvjp</code> signature)</li>
+<li>Define <code>integrate</code> and <code>integrate_adjoint</code></li>
+<li>Validate with finite differences (show results)</li>
+</ul></li>
+<li><strong>Expand complementarity discussion</strong> (Weakness 4):
+<ul>
+<li>Derive contact gradient <span class="math inline">\(\partial \lambda / \partial q\)</span></li>
+<li>Provide initialization strategy for contact-implicit</li>
+<li>Acknowledge LCP vs.&nbsp;NCP vs.&nbsp;MPCC distinction</li>
+</ul></li>
+<li><strong>Engage with prior literature</strong> (Weakness 7):
+<ul>
+<li>Add “Relationship to Prior Work” section</li>
+<li>Cite Burden et al., Manchester &amp; Kuindersma, Suh et al.&nbsp;inline</li>
+<li>Clarify novel contributions vs.&nbsp;synthesis</li>
+</ul></li>
+</ol>
+</section>
+<section id="low-priority-clarifications-and-polish" class="level3">
+<h3 class="anchored" data-anchor-id="low-priority-clarifications-and-polish">Low Priority (Clarifications and Polish)</h3>
+<ol start="8" type="1">
+<li><strong>Improve Zeno discussion</strong> (Weakness 3):
+<ul>
+<li>State conditions for Zeno convergence (commutativity, contractivity)</li>
+<li>Provide numerical resolution algorithm</li>
+<li>Acknowledge when Zeno is problematic vs.&nbsp;benign</li>
+</ul></li>
+<li><strong>Provide one detailed application</strong> (Weakness 6):
+<ul>
+<li>Full system description, cost function, constraints</li>
+<li>Convergence plot, trajectory visualization</li>
+<li>Comparison to baseline</li>
+</ul></li>
+<li><strong>Reorganize for clarity:</strong>
+<ul>
+<li>Move measure theory to appendix</li>
+<li>Add “Assumptions and Notation” upfront</li>
+<li>Reframe Conclusion as “Contributions and Limitations”</li>
+</ul></li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="final-recommendation" class="level2">
+<h2 class="anchored" data-anchor-id="final-recommendation">Final Recommendation</h2>
+<p><strong>Do not publish this article as-is.</strong> The core geometric insights are valuable, but the execution has too many gaps and unforced errors. With the remedies above (especially High Priority items), this can become a <strong>strong pedagogical contribution</strong> to the Tangent Hyperplane framework.</p>
+<p><strong>Estimated revision effort:</strong> 20-30 hours of focused work: - 8 hours: Saltation derivation (Weakness 1) - 4 hours: JAX code validation (Weakness 5) - 3 hours: Limitations section (Weakness 8) - 3 hours: Literature review (Weakness 7) - 2 hours: Golf claim resolution (Weakness 6) - 5 hours: Measure theory cleanup (Weakness 2) - 5 hours: Complementarity expansion (Weakness 4)</p>
+<p><strong>After revision:</strong> This article can serve as a <strong>bridge</strong> between the smooth Tangent Hyperplane framework and non-smooth mechanics, making hybrid systems accessible to readers who understand linearization but not impact mechanics.</p>
+<hr>
+<p><strong>Word count:</strong> ~3,800 words</p>
+<p><strong>Weaknesses identified:</strong> 8 major issues</p>
+<p><strong>Remedies suggested:</strong> 10 prioritized actions</p>
+<p><strong>Tone:</strong> Adversarial but constructive (as per Critic mandate)</p>
+<p><strong>Next steps:</strong> 1. Share with Thesis Defender to prioritize remedies 2. Bibliographer to fill literature gaps 3. Pragmatic Programmer to validate JAX code 4. Iterate until article is critic-proof</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

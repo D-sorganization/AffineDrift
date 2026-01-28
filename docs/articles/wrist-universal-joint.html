@@ -44,7 +44,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,6 +72,180 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -116,9 +290,14 @@ ul.task-list li input[type="checkbox"] {
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="../css/startup-launcher.css" as="style">
 <link rel="preload" href="../styles.css" as="style">
 <link rel="preload" href="../script.js" as="script">
+<link rel="preload" href="../js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="../manifest.json">
@@ -164,37 +343,6 @@ ul.task-list li input[type="checkbox"] {
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -226,6 +374,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../css/startup-launcher.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../css/search-metrics.css">
 </head>
@@ -269,6 +418,10 @@ window.Quarto = {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -282,45 +435,10 @@ window.Quarto = {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="../models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -509,6 +627,104 @@ window.Quarto = {
 <section id="abstract" class="level2 abstract-section">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
 <p>The left wrist in the golf swing can be modeled as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, we demonstrate that universal joints generate constraint torques—passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These constraint torques serve as efficient pathways for force and torque transmission from proximal to distal segments but are inherently variable and uncontrollable. We hypothesize that the angle at which the club is gripped relative to the wrist joint axes fundamentally determines whether these constraint torques are transmitted into high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing face angle variability). This analysis provides a mechanical framework for understanding the widely-taught principle of gripping “in the fingers” versus “in the palm” and may explain why arm and club planes are typically not aligned during the downswing.</p>
+</section>
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2 class="anchored">In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Why does gripping in the fingers vs. the palm matter? It's not just about comfort—it changes the physics of how your wrist transmits power.
+      </p>
+
+      <div class="laymans-item">
+        <h3 class="anchored">The Wrist is a Universal Joint</h3>
+        <p>
+          Your wrist acts like the universal joint in a car's driveshaft. It can bend in two directions (up/down, left/right) but can't twist (rotate like a screwdriver). This inability to twist forces torque to "leak" through the joint in predictable ways.
+        </p>
+        <div class="analogy">
+          <strong>Analogy:</strong> Think of a U-joint connecting a truck's engine to its wheels. It transmits power even when bent. Your wrist does the same, transmitting arm rotation to the club without you actively twisting it.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3 class="anchored">The Grip Trade-Off</h3>
+        <p>
+          This leaked torque (called "constraint torque") is powerful but messy—you can't really control it.
+        </p>
+        <ul>
+            <li><strong>Finger Grip:</strong> Aims this messy torque at the <em>swing path</em> (helping speed).</li>
+            <li><strong>Palm Grip:</strong> Aims this messy torque at the <em>clubface rotation</em> (causing wild hooks/slices).</li>
+        </ul>
+        <div class="key-takeaway">
+          Gripping in the fingers acts like a mechanical filter, channeling the body's chaotic power into speed while keeping the clubface stable.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2 class="anchored">Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Anatomical Critique:</span>
+          <h3 class="anchored">The "Sloppy Joint" Reality</h3>
+        </div>
+        <p class="critic-argument">
+          Modeling the wrist as a perfect mechanical universal joint simplifies the complex reality of the carpus. The eight carpal bones and their ligamentous/capsular constraints allow for significant "slop" and coupled motions that do not exist in steel U-joints. Skeptics argue that soft tissue compliance absorbs or redirects much of the theoretical "constraint torque," rendering the rigid-body predictions overstated.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge the biological complexity. However, soft tissue compliance acts primarily as a damper, not an actuator. While it may soften the <em>magnitude</em> of constraint torques, it does not alter the <em>topology</em> of the transmission. The fundamental lack of a third actuated degree of freedom at the radiocarpal joint remains the dominant constraint.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Single Plane Advocacy:</span>
+          <h3 class="anchored">The Moe Norman Counterpoint</h3>
+        </div>
+        <p class="critic-argument">
+          The paper suggests that "Single Plane" swings (which geometrically align the shaft with the forearm, similar to a palm grip) are mechanically disadvantageous due to face-angle sensitivity. Yet, legends like Moe Norman and moderns like Bryson DeChambeau excel with exactly this alignment. They argue that "locking" the wrist reduces the number of moving parts, providing a consistency benefit that outweighs the constraint torque cost.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This highlights a valid trade-off. Single-plane golfers likely accept higher <em>sensitivity</em> to torque variance (High Beta-axis projection) in exchange for reduced <em>input variance</em> (simplified kinematics). Our model quantifies the mechanical cost they must overcome, explaining why such techniques often require unique equipment (e.g., jumbo grips, stiff shafts) to dampen the amplified sensitivity.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Motor Control View:</span>
+          <h3 class="anchored">Active Compensation vs. Passive Victim</h3>
+        </div>
+        <p class="critic-argument">
+          The analysis treats constraint torques as "uncontrollable disturbances." However, the forearm rotation axis <em>is</em> actuated proximally by the supinator/pronator muscles. A skilled golfer generates massive active torque about this axis. Critics argue that players don't just "suffer" constraint torques; they actively overpower them with proximal muscle activation.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> While the axis is actuated, the control loop matters. The reaction time to sense a constraint perturbation and reflexively counter it (&gt;100ms) is too slow for the downswing impact interval. Thus, while players do apply <em>feedforward</em> torque, they cannot use feedback to cancel the high-frequency variability of constraint torques. Geometry (grip angle) remains the primary filter for high-frequency noise.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by refining the boundaries of the model.
+      </div>
+    </div>
+  </div>
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
@@ -1408,17 +1624,23 @@ window.Quarto = {
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

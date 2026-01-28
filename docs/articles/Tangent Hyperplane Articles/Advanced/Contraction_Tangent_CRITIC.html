@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>contraction_tangent_critic – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../../styles.css" as="style">
+<link rel="preload" href="../../../script.js" as="script">
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#critique-contraction-theory-meets-tangent-spaces-unifying-stability-and-optimality" id="toc-critique-contraction-theory-meets-tangent-spaces-unifying-stability-and-optimality" class="nav-link active" data-scroll-target="#critique-contraction-theory-meets-tangent-spaces-unifying-stability-and-optimality">Critique: Contraction Theory Meets Tangent Spaces — Unifying Stability and Optimality</a>
+  <ul class="collapse">
+  <li><a href="#meta-information" id="toc-meta-information" class="nav-link" data-scroll-target="#meta-information">Meta-Information</a></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  </ul></li>
+  <li><a href="#weakness-1-the-duality-is-unidirectional-not-bidirectional" id="toc-weakness-1-the-duality-is-unidirectional-not-bidirectional" class="nav-link" data-scroll-target="#weakness-1-the-duality-is-unidirectional-not-bidirectional">Weakness 1: The Duality is Unidirectional, Not Bidirectional</a>
+  <ul class="collapse">
+  <li><a href="#location" id="toc-location" class="nav-link" data-scroll-target="#location">Location</a></li>
+  <li><a href="#nature-of-issue" id="toc-nature-of-issue" class="nav-link" data-scroll-target="#nature-of-issue">Nature of Issue</a></li>
+  <li><a href="#detailed-critique" id="toc-detailed-critique" class="nav-link" data-scroll-target="#detailed-critique">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#what-the-article-claims" id="toc-what-the-article-claims" class="nav-link" data-scroll-target="#what-the-article-claims">What the Article Claims</a></li>
+  <li><a href="#what-the-mathematics-actually-shows" id="toc-what-the-mathematics-actually-shows" class="nav-link" data-scroll-target="#what-the-mathematics-actually-shows">What the Mathematics Actually Shows</a></li>
+  <li><a href="#counterexample" id="toc-counterexample" class="nav-link" data-scroll-target="#counterexample">Counterexample</a></li>
+  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  <li><a href="#evidence-from-literature" id="toc-evidence-from-literature" class="nav-link" data-scroll-target="#evidence-from-literature">Evidence from Literature</a></li>
+  </ul></li>
+  <li><a href="#severity" id="toc-severity" class="nav-link" data-scroll-target="#severity">Severity</a></li>
+  <li><a href="#suggested-remedies" id="toc-suggested-remedies" class="nav-link" data-scroll-target="#suggested-remedies">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#reframe-theorem-3.1" id="toc-reframe-theorem-3.1" class="nav-link" data-scroll-target="#reframe-theorem-3.1">1. Reframe Theorem 3.1</a></li>
+  <li><a href="#add-a-proposition-on-the-converse" id="toc-add-a-proposition-on-the-converse" class="nav-link" data-scroll-target="#add-a-proposition-on-the-converse">2. Add a Proposition on the Converse</a></li>
+  <li><a href="#revise-abstract-claims" id="toc-revise-abstract-claims" class="nav-link" data-scroll-target="#revise-abstract-claims">3. Revise Abstract Claims</a></li>
+  <li><a href="#clarify-section-3-introduction" id="toc-clarify-section-3-introduction" class="nav-link" data-scroll-target="#clarify-section-3-introduction">4. Clarify Section 3 Introduction</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-2-time-varying-metrics-and-the-riccati-equation" id="toc-weakness-2-time-varying-metrics-and-the-riccati-equation" class="nav-link" data-scroll-target="#weakness-2-time-varying-metrics-and-the-riccati-equation">Weakness 2: Time-Varying Metrics and the Riccati Equation</a>
+  <ul class="collapse">
+  <li><a href="#location-1" id="toc-location-1" class="nav-link" data-scroll-target="#location-1">Location</a></li>
+  <li><a href="#nature-of-issue-1" id="toc-nature-of-issue-1" class="nav-link" data-scroll-target="#nature-of-issue-1">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-1" id="toc-detailed-critique-1" class="nav-link" data-scroll-target="#detailed-critique-1">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#the-problem-with-dotmathbfm-neq-0" id="toc-the-problem-with-dotmathbfm-neq-0" class="nav-link" data-scroll-target="#the-problem-with-dotmathbfm-neq-0">The Problem with <span class="math inline">\(\dot{\mathbf{M}} \neq 0\)</span></a></li>
+  <li><a href="#finite-horizon-vs.-infinite-horizon-confusion" id="toc-finite-horizon-vs.-infinite-horizon-confusion" class="nav-link" data-scroll-target="#finite-horizon-vs.-infinite-horizon-confusion">Finite Horizon vs.&nbsp;Infinite Horizon Confusion</a></li>
+  <li><a href="#example-time-varying-metric-paradox" id="toc-example-time-varying-metric-paradox" class="nav-link" data-scroll-target="#example-time-varying-metric-paradox">Example: Time-Varying Metric Paradox</a></li>
+  <li><a href="#lohmiller-slotines-resolution" id="toc-lohmiller-slotines-resolution" class="nav-link" data-scroll-target="#lohmiller-slotines-resolution">Lohmiller &amp; Slotine’s Resolution</a></li>
+  <li><a href="#why-this-matters-1" id="toc-why-this-matters-1" class="nav-link" data-scroll-target="#why-this-matters-1">Why This Matters</a></li>
+  <li><a href="#evidence-from-literature-1" id="toc-evidence-from-literature-1" class="nav-link" data-scroll-target="#evidence-from-literature-1">Evidence from Literature</a></li>
+  </ul></li>
+  <li><a href="#severity-1" id="toc-severity-1" class="nav-link" data-scroll-target="#severity-1">Severity</a></li>
+  <li><a href="#suggested-remedies-1" id="toc-suggested-remedies-1" class="nav-link" data-scroll-target="#suggested-remedies-1">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#add-uniform-boundedness-assumption" id="toc-add-uniform-boundedness-assumption" class="nav-link" data-scroll-target="#add-uniform-boundedness-assumption">1. Add Uniform Boundedness Assumption</a></li>
+  <li><a href="#distinguish-dre-and-are-cases" id="toc-distinguish-dre-and-are-cases" class="nav-link" data-scroll-target="#distinguish-dre-and-are-cases">2. Distinguish DRE and ARE Cases</a></li>
+  <li><a href="#compute-and-report-condition-number-in-experiments" id="toc-compute-and-report-condition-number-in-experiments" class="nav-link" data-scroll-target="#compute-and-report-condition-number-in-experiments">3. Compute and Report Condition Number in Experiments</a></li>
+  <li><a href="#revise-section-3.2-comparison" id="toc-revise-section-3.2-comparison" class="nav-link" data-scroll-target="#revise-section-3.2-comparison">4. Revise Section 3.2 Comparison</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-3-coordinate-free-claims-vs.-coordinate-dependent-reality" id="toc-weakness-3-coordinate-free-claims-vs.-coordinate-dependent-reality" class="nav-link" data-scroll-target="#weakness-3-coordinate-free-claims-vs.-coordinate-dependent-reality">Weakness 3: Coordinate-Free Claims vs.&nbsp;Coordinate-Dependent Reality</a>
+  <ul class="collapse">
+  <li><a href="#location-2" id="toc-location-2" class="nav-link" data-scroll-target="#location-2">Location</a></li>
+  <li><a href="#nature-of-issue-2" id="toc-nature-of-issue-2" class="nav-link" data-scroll-target="#nature-of-issue-2">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-2" id="toc-detailed-critique-2" class="nav-link" data-scroll-target="#detailed-critique-2">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#what-coordinate-free-actually-means" id="toc-what-coordinate-free-actually-means" class="nav-link" data-scroll-target="#what-coordinate-free-actually-means">What “Coordinate-Free” Actually Means</a></li>
+  <li><a href="#what-the-article-actually-does" id="toc-what-the-article-actually-does" class="nav-link" data-scroll-target="#what-the-article-actually-does">What the Article Actually Does</a></li>
+  <li><a href="#the-actual-coordinate-dependence" id="toc-the-actual-coordinate-dependence" class="nav-link" data-scroll-target="#the-actual-coordinate-dependence">The Actual Coordinate Dependence</a></li>
+  <li><a href="#what-manchester-slotine-actually-say" id="toc-what-manchester-slotine-actually-say" class="nav-link" data-scroll-target="#what-manchester-slotine-actually-say">What Manchester &amp; Slotine Actually Say</a></li>
+  <li><a href="#section-6.2-pullback-metrics" id="toc-section-6.2-pullback-metrics" class="nav-link" data-scroll-target="#section-6.2-pullback-metrics">Section 6.2: Pullback Metrics</a></li>
+  <li><a href="#why-this-matters-2" id="toc-why-this-matters-2" class="nav-link" data-scroll-target="#why-this-matters-2">Why This Matters</a></li>
+  <li><a href="#evidence-from-literature-2" id="toc-evidence-from-literature-2" class="nav-link" data-scroll-target="#evidence-from-literature-2">Evidence from Literature</a></li>
+  </ul></li>
+  <li><a href="#severity-2" id="toc-severity-2" class="nav-link" data-scroll-target="#severity-2">Severity</a></li>
+  <li><a href="#suggested-remedies-2" id="toc-suggested-remedies-2" class="nav-link" data-scroll-target="#suggested-remedies-2">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#retitle-section-6" id="toc-retitle-section-6" class="nav-link" data-scroll-target="#retitle-section-6">1. Retitle Section 6</a></li>
+  <li><a href="#add-a-clarifying-paragraph" id="toc-add-a-clarifying-paragraph" class="nav-link" data-scroll-target="#add-a-clarifying-paragraph">2. Add a Clarifying Paragraph</a></li>
+  <li><a href="#revise-section-6.3-on-gauge-freedom" id="toc-revise-section-6.3-on-gauge-freedom" class="nav-link" data-scroll-target="#revise-section-6.3-on-gauge-freedom">3. Revise Section 6.3 on “Gauge Freedom”</a></li>
+  <li><a href="#remove-or-qualify-claims-about-intrinsic-geometry" id="toc-remove-or-qualify-claims-about-intrinsic-geometry" class="nav-link" data-scroll-target="#remove-or-qualify-claims-about-intrinsic-geometry">4. Remove or Qualify Claims About Intrinsic Geometry</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-4-biomechanical-applications-rest-on-unvalidated-assumptions" id="toc-weakness-4-biomechanical-applications-rest-on-unvalidated-assumptions" class="nav-link" data-scroll-target="#weakness-4-biomechanical-applications-rest-on-unvalidated-assumptions">Weakness 4: Biomechanical Applications Rest on Unvalidated Assumptions</a>
+  <ul class="collapse">
+  <li><a href="#location-3" id="toc-location-3" class="nav-link" data-scroll-target="#location-3">Location</a></li>
+  <li><a href="#nature-of-issue-3" id="toc-nature-of-issue-3" class="nav-link" data-scroll-target="#nature-of-issue-3">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-3" id="toc-detailed-critique-3" class="nav-link" data-scroll-target="#detailed-critique-3">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#hypothesis-7.1-synergies-as-contraction-subspaces" id="toc-hypothesis-7.1-synergies-as-contraction-subspaces" class="nav-link" data-scroll-target="#hypothesis-7.1-synergies-as-contraction-subspaces">Hypothesis 7.1: Synergies as Contraction Subspaces</a></li>
+  <li><a href="#the-golf-swing-stability-margin" id="toc-the-golf-swing-stability-margin" class="nav-link" data-scroll-target="#the-golf-swing-stability-margin">The Golf Swing Stability Margin</a></li>
+  <li><a href="#the-impedance-control-model-section-7.2" id="toc-the-impedance-control-model-section-7.2" class="nav-link" data-scroll-target="#the-impedance-control-model-section-7.2">The Impedance Control Model (Section 7.2)</a></li>
+  <li><a href="#the-stochastic-riccati-equation-eq-stochastic-riccati" id="toc-the-stochastic-riccati-equation-eq-stochastic-riccati" class="nav-link" data-scroll-target="#the-stochastic-riccati-equation-eq-stochastic-riccati">The Stochastic Riccati Equation (<strong>?@eq-stochastic-riccati</strong>)</a></li>
+  <li><a href="#why-this-matters-3" id="toc-why-this-matters-3" class="nav-link" data-scroll-target="#why-this-matters-3">Why This Matters</a></li>
+  <li><a href="#evidence-from-literature-3" id="toc-evidence-from-literature-3" class="nav-link" data-scroll-target="#evidence-from-literature-3">Evidence from Literature</a></li>
+  </ul></li>
+  <li><a href="#severity-3" id="toc-severity-3" class="nav-link" data-scroll-target="#severity-3">Severity</a></li>
+  <li><a href="#suggested-remedies-3" id="toc-suggested-remedies-3" class="nav-link" data-scroll-target="#suggested-remedies-3">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#downgrade-hypothesis-7.1-to-speculation" id="toc-downgrade-hypothesis-7.1-to-speculation" class="nav-link" data-scroll-target="#downgrade-hypothesis-7.1-to-speculation">1. Downgrade Hypothesis 7.1 to Speculation</a></li>
+  <li><a href="#remove-or-correct-the-stochastic-riccati-equation" id="toc-remove-or-correct-the-stochastic-riccati-equation" class="nav-link" data-scroll-target="#remove-or-correct-the-stochastic-riccati-equation">2. Remove or Correct the Stochastic Riccati Equation</a></li>
+  <li><a href="#add-statistical-rigor-to-golf-swing-claims" id="toc-add-statistical-rigor-to-golf-swing-claims" class="nav-link" data-scroll-target="#add-statistical-rigor-to-golf-swing-claims">3. Add Statistical Rigor to Golf Swing Claims</a></li>
+  <li><a href="#engage-with-motor-control-literature" id="toc-engage-with-motor-control-literature" class="nav-link" data-scroll-target="#engage-with-motor-control-literature">4. Engage with Motor Control Literature</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-5-experimental-comparisons-lack-statistical-rigor-and-controls" id="toc-weakness-5-experimental-comparisons-lack-statistical-rigor-and-controls" class="nav-link" data-scroll-target="#weakness-5-experimental-comparisons-lack-statistical-rigor-and-controls">Weakness 5: Experimental Comparisons Lack Statistical Rigor and Controls</a>
+  <ul class="collapse">
+  <li><a href="#location-4" id="toc-location-4" class="nav-link" data-scroll-target="#location-4">Location</a></li>
+  <li><a href="#nature-of-issue-4" id="toc-nature-of-issue-4" class="nav-link" data-scroll-target="#nature-of-issue-4">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-4" id="toc-detailed-critique-4" class="nav-link" data-scroll-target="#detailed-critique-4">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#robot-experiment-section-8.3" id="toc-robot-experiment-section-8.3" class="nav-link" data-scroll-target="#robot-experiment-section-8.3">Robot Experiment (Section 8.3)</a></li>
+  <li><a href="#cartpole-simulation-section-9.1" id="toc-cartpole-simulation-section-9.1" class="nav-link" data-scroll-target="#cartpole-simulation-section-9.1">Cartpole Simulation (Section 9.1)</a></li>
+  <li><a href="#missing-comparisons" id="toc-missing-comparisons" class="nav-link" data-scroll-target="#missing-comparisons">Missing Comparisons</a></li>
+  <li><a href="#why-this-matters-4" id="toc-why-this-matters-4" class="nav-link" data-scroll-target="#why-this-matters-4">Why This Matters</a></li>
+  <li><a href="#evidence-from-literature-4" id="toc-evidence-from-literature-4" class="nav-link" data-scroll-target="#evidence-from-literature-4">Evidence from Literature</a></li>
+  </ul></li>
+  <li><a href="#severity-4" id="toc-severity-4" class="nav-link" data-scroll-target="#severity-4">Severity</a></li>
+  <li><a href="#suggested-remedies-4" id="toc-suggested-remedies-4" class="nav-link" data-scroll-target="#suggested-remedies-4">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#add-statistical-rigor-to-robot-experiments" id="toc-add-statistical-rigor-to-robot-experiments" class="nav-link" data-scroll-target="#add-statistical-rigor-to-robot-experiments">1. Add Statistical Rigor to Robot Experiments</a></li>
+  <li><a href="#report-confidence-intervals-for-cartpole" id="toc-report-confidence-intervals-for-cartpole" class="nav-link" data-scroll-target="#report-confidence-intervals-for-cartpole">2. Report Confidence Intervals for Cartpole</a></li>
+  <li><a href="#describe-warm-starting-algorithm" id="toc-describe-warm-starting-algorithm" class="nav-link" data-scroll-target="#describe-warm-starting-algorithm">3. Describe Warm Starting Algorithm</a></li>
+  <li><a href="#add-a-failure-modes-subsection" id="toc-add-a-failure-modes-subsection" class="nav-link" data-scroll-target="#add-a-failure-modes-subsection">4. Add a “Failure Modes” Subsection</a></li>
+  <li><a href="#compare-against-soslqr-trees" id="toc-compare-against-soslqr-trees" class="nav-link" data-scroll-target="#compare-against-soslqr-trees">5. Compare Against SOS/LQR-Trees</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-6-contraction-constrained-ddp-has-unverified-assumptions-theorem-4.1" id="toc-weakness-6-contraction-constrained-ddp-has-unverified-assumptions-theorem-4.1" class="nav-link" data-scroll-target="#weakness-6-contraction-constrained-ddp-has-unverified-assumptions-theorem-4.1">Weakness 6: Contraction-Constrained DDP Has Unverified Assumptions (Theorem 4.1)</a>
+  <ul class="collapse">
+  <li><a href="#location-5" id="toc-location-5" class="nav-link" data-scroll-target="#location-5">Location</a></li>
+  <li><a href="#nature-of-issue-5" id="toc-nature-of-issue-5" class="nav-link" data-scroll-target="#nature-of-issue-5">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-5" id="toc-detailed-critique-5" class="nav-link" data-scroll-target="#detailed-critique-5">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#what-theorem-4.1-claims" id="toc-what-theorem-4.1-claims" class="nav-link" data-scroll-target="#what-theorem-4.1-claims">What Theorem 4.1 Claims</a></li>
+  <li><a href="#whats-missing" id="toc-whats-missing" class="nav-link" data-scroll-target="#whats-missing">What’s Missing</a></li>
+  <li><a href="#rigorous-statement-would-require" id="toc-rigorous-statement-would-require" class="nav-link" data-scroll-target="#rigorous-statement-would-require">Rigorous Statement Would Require</a></li>
+  <li><a href="#what-the-literature-says" id="toc-what-the-literature-says" class="nav-link" data-scroll-target="#what-the-literature-says">What the Literature Says</a></li>
+  <li><a href="#why-this-matters-5" id="toc-why-this-matters-5" class="nav-link" data-scroll-target="#why-this-matters-5">Why This Matters</a></li>
+  </ul></li>
+  <li><a href="#severity-5" id="toc-severity-5" class="nav-link" data-scroll-target="#severity-5">Severity</a></li>
+  <li><a href="#suggested-remedies-5" id="toc-suggested-remedies-5" class="nav-link" data-scroll-target="#suggested-remedies-5">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#downgrade-to-proposition-or-conjecture" id="toc-downgrade-to-proposition-or-conjecture" class="nav-link" data-scroll-target="#downgrade-to-proposition-or-conjecture">1. Downgrade to Proposition or Conjecture</a></li>
+  <li><a href="#provide-a-rigorous-proof-in-appendix" id="toc-provide-a-rigorous-proof-in-appendix" class="nav-link" data-scroll-target="#provide-a-rigorous-proof-in-appendix">2. Provide a Rigorous Proof in Appendix</a></li>
+  <li><a href="#add-practical-guidance" id="toc-add-practical-guidance" class="nav-link" data-scroll-target="#add-practical-guidance">3. Add Practical Guidance</a></li>
+  <li><a href="#acknowledge-limitations" id="toc-acknowledge-limitations" class="nav-link" data-scroll-target="#acknowledge-limitations">4. Acknowledge Limitations</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-7-missing-proofs-and-unjustified-mathematical-leaps" id="toc-weakness-7-missing-proofs-and-unjustified-mathematical-leaps" class="nav-link" data-scroll-target="#weakness-7-missing-proofs-and-unjustified-mathematical-leaps">Weakness 7: Missing Proofs and Unjustified Mathematical Leaps</a>
+  <ul class="collapse">
+  <li><a href="#location-6" id="toc-location-6" class="nav-link" data-scroll-target="#location-6">Location</a></li>
+  <li><a href="#nature-of-issue-6" id="toc-nature-of-issue-6" class="nav-link" data-scroll-target="#nature-of-issue-6">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-6" id="toc-detailed-critique-6" class="nav-link" data-scroll-target="#detailed-critique-6">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#theorem-3.1-proof" id="toc-theorem-3.1-proof" class="nav-link" data-scroll-target="#theorem-3.1-proof">Theorem 3.1 Proof</a></li>
+  <li><a href="#corollary-3.1-contraction-rate" id="toc-corollary-3.1-contraction-rate" class="nav-link" data-scroll-target="#corollary-3.1-contraction-rate">Corollary 3.1 Contraction Rate</a></li>
+  <li><a href="#theorem-8.1-proof" id="toc-theorem-8.1-proof" class="nav-link" data-scroll-target="#theorem-8.1-proof">Theorem 8.1 Proof</a></li>
+  <li><a href="#theorem-8.2-hybrid-contraction" id="toc-theorem-8.2-hybrid-contraction" class="nav-link" data-scroll-target="#theorem-8.2-hybrid-contraction">Theorem 8.2: Hybrid Contraction</a></li>
+  <li><a href="#why-this-matters-6" id="toc-why-this-matters-6" class="nav-link" data-scroll-target="#why-this-matters-6">Why This Matters</a></li>
+  </ul></li>
+  <li><a href="#severity-6" id="toc-severity-6" class="nav-link" data-scroll-target="#severity-6">Severity</a></li>
+  <li><a href="#suggested-remedies-6" id="toc-suggested-remedies-6" class="nav-link" data-scroll-target="#suggested-remedies-6">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#complete-theorem-3.1-proof" id="toc-complete-theorem-3.1-proof" class="nav-link" data-scroll-target="#complete-theorem-3.1-proof">1. Complete Theorem 3.1 Proof</a></li>
+  <li><a href="#correct-corollary-3.1" id="toc-correct-corollary-3.1" class="nav-link" data-scroll-target="#correct-corollary-3.1">2. Correct Corollary 3.1</a></li>
+  <li><a href="#fix-or-remove-theorem-8.1" id="toc-fix-or-remove-theorem-8.1" class="nav-link" data-scroll-target="#fix-or-remove-theorem-8.1">3. Fix or Remove Theorem 8.1</a></li>
+  <li><a href="#qualify-theorem-8.2" id="toc-qualify-theorem-8.2" class="nav-link" data-scroll-target="#qualify-theorem-8.2">4. Qualify Theorem 8.2</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#weakness-8-ambiguity-in-definitions-and-terminology" id="toc-weakness-8-ambiguity-in-definitions-and-terminology" class="nav-link" data-scroll-target="#weakness-8-ambiguity-in-definitions-and-terminology">Weakness 8: Ambiguity in Definitions and Terminology</a>
+  <ul class="collapse">
+  <li><a href="#location-7" id="toc-location-7" class="nav-link" data-scroll-target="#location-7">Location</a></li>
+  <li><a href="#nature-of-issue-7" id="toc-nature-of-issue-7" class="nav-link" data-scroll-target="#nature-of-issue-7">Nature of Issue</a></li>
+  <li><a href="#detailed-critique-7" id="toc-detailed-critique-7" class="nav-link" data-scroll-target="#detailed-critique-7">Detailed Critique</a>
+  <ul class="collapse">
+  <li><a href="#contraction-metric-ambiguity" id="toc-contraction-metric-ambiguity" class="nav-link" data-scroll-target="#contraction-metric-ambiguity">“Contraction Metric” Ambiguity</a></li>
+  <li><a href="#stability-margin-gammat" id="toc-stability-margin-gammat" class="nav-link" data-scroll-target="#stability-margin-gammat">“Stability Margin” <span class="math inline">\(\gamma(t)\)</span></a></li>
+  <li><a href="#certified-stability" id="toc-certified-stability" class="nav-link" data-scroll-target="#certified-stability">“Certified Stability”</a></li>
+  <li><a href="#why-this-matters-7" id="toc-why-this-matters-7" class="nav-link" data-scroll-target="#why-this-matters-7">Why This Matters</a></li>
+  </ul></li>
+  <li><a href="#severity-7" id="toc-severity-7" class="nav-link" data-scroll-target="#severity-7">Severity</a></li>
+  <li><a href="#suggested-remedies-7" id="toc-suggested-remedies-7" class="nav-link" data-scroll-target="#suggested-remedies-7">Suggested Remedies</a>
+  <ul class="collapse">
+  <li><a href="#add-a-terminology-box" id="toc-add-a-terminology-box" class="nav-link" data-scroll-target="#add-a-terminology-box">1. Add a Terminology Box</a></li>
+  <li><a href="#define-gammat-rigorously" id="toc-define-gammat-rigorously" class="nav-link" data-scroll-target="#define-gammat-rigorously">2. Define <span class="math inline">\(\gamma(t)\)</span> Rigorously</a></li>
+  <li><a href="#clarify-certified" id="toc-clarify-certified" class="nav-link" data-scroll-target="#clarify-certified">3. Clarify “Certified”</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#summary-of-weaknesses-and-priority-remedies" id="toc-summary-of-weaknesses-and-priority-remedies" class="nav-link" data-scroll-target="#summary-of-weaknesses-and-priority-remedies">Summary of Weaknesses and Priority Remedies</a>
+  <ul class="collapse">
+  <li><a href="#high-severity-issues-address-first" id="toc-high-severity-issues-address-first" class="nav-link" data-scroll-target="#high-severity-issues-address-first">High-Severity Issues (Address First)</a></li>
+  <li><a href="#medium-severity-issues-important-but-less-central" id="toc-medium-severity-issues-important-but-less-central" class="nav-link" data-scroll-target="#medium-severity-issues-important-but-less-central">Medium-Severity Issues (Important but Less Central)</a></li>
+  <li><a href="#low-severity-issues-polish" id="toc-low-severity-issues-polish" class="nav-link" data-scroll-target="#low-severity-issues-polish">Low-Severity Issues (Polish)</a></li>
+  </ul></li>
+  <li><a href="#final-recommendations" id="toc-final-recommendations" class="nav-link" data-scroll-target="#final-recommendations">Final Recommendations</a>
+  <ul class="collapse">
+  <li><a href="#for-the-author" id="toc-for-the-author" class="nav-link" data-scroll-target="#for-the-author">For the Author</a></li>
+  <li><a href="#for-reviewers" id="toc-for-reviewers" class="nav-link" data-scroll-target="#for-reviewers">For Reviewers</a></li>
+  <li><a href="#for-practitioners" id="toc-for-practitioners" class="nav-link" data-scroll-target="#for-practitioners">For Practitioners</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="critique-contraction-theory-meets-tangent-spaces-unifying-stability-and-optimality" class="level1">
+<h1>Critique: Contraction Theory Meets Tangent Spaces — Unifying Stability and Optimality</h1>
+<section id="meta-information" class="level2">
+<h2 class="anchored" data-anchor-id="meta-information">Meta-Information</h2>
+<p><strong>Article</strong>: Contraction_Tangent_Unification.qmd <strong>Date of Critique</strong>: 2026-01-18 <strong>Reviewer Stance</strong>: Adversarial but honest — assumes hostile, rushed reviewers <strong>Primary Disciplines</strong>: Nonlinear control theory, differential geometry, optimal control, biomechanics</p>
+<hr>
+</section>
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p>This article claims a “profound connection” between contraction theory and tangent space methods, asserting that the Riccati solution serves as both a contraction metric and a value function. While the mathematical observations are often correct in restricted settings, the article exhibits significant weaknesses:</p>
+<ol type="1">
+<li><p><strong>Overstated duality claims</strong>: The “stability ↔︎ optimality duality” is presented as bidirectional and universal, when it is actually unidirectional (LQR → contraction) and limited to specific problem classes.</p></li>
+<li><p><strong>Unjustified coordinate-free claims</strong>: Section 6 asserts the framework is “coordinate-free” while relying heavily on coordinate-dependent linearizations and Euclidean metrics.</p></li>
+<li><p><strong>Riccati-as-metric confusion</strong>: Treating the Riccati solution <span class="math inline">\(\mathbf{S}_t\)</span> as a contraction metric without addressing time-variation, boundary conditions, or the difference between differential and algebraic forms.</p></li>
+<li><p><strong>Biomechanical overreach</strong>: The muscle synergy and golf swing applications rest on unvalidated assumptions about neural control and ignore well-documented variability in human movement.</p></li>
+<li><p><strong>Experimental comparison issues</strong>: Claims of 76-86% improvement in robotics experiments lack proper statistical validation, control for confounds, or discussion of when contraction-based methods fail.</p></li>
+<li><p><strong>Missing proofs and logical gaps</strong>: Theorem 4.1 on “certified stability” assumes conditions that are never verified; Hypothesis 7.1 on synergies is stated as fact without evidence.</p></li>
+</ol>
+<p><strong>Severity</strong>: High. Core claims exceed what the mathematics actually establishes.</p>
+<p><strong>Recommendation</strong>: Major revisions to narrow scope, add qualifying conditions, provide missing proofs, and separate speculative applications from validated theory.</p>
+<hr>
+</section>
+</section>
+<section id="weakness-1-the-duality-is-unidirectional-not-bidirectional" class="level1">
+<h1>Weakness 1: The Duality is Unidirectional, Not Bidirectional</h1>
+<section id="location" class="level2">
+<h2 class="anchored" data-anchor-id="location">Location</h2>
+<ul>
+<li><strong>Section 3</strong>: “The Duality Revealed”</li>
+<li><strong>Theorem 3.1</strong>: “Stability-Optimality Duality”</li>
+<li><strong>Claims</strong>: “Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction.”</li>
+</ul>
+</section>
+<section id="nature-of-issue" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue">Nature of Issue</h2>
+<p><strong>Logical gap / Overgeneralization</strong></p>
+</section>
+<section id="detailed-critique" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique">Detailed Critique</h2>
+<section id="what-the-article-claims" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-article-claims">What the Article Claims</h3>
+<p>The article presents the relationship between contraction and optimality as a <strong>symmetric duality</strong>:</p>
+<blockquote class="blockquote">
+<p>“<strong>Claim</strong>: The Riccati solution <span class="math inline">\(\mathbf{S}_t\)</span> <strong>is</strong> a contraction metric!”</p>
+</blockquote>
+<p>The abstract promises: &gt; “Stability ↔︎ Optimality Duality: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction.”</p>
+<p>This suggests a bidirectional equivalence: every contraction metric corresponds to some optimal control problem, and every optimal control problem yields a contraction metric.</p>
+</section>
+<section id="what-the-mathematics-actually-shows" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-mathematics-actually-shows">What the Mathematics Actually Shows</h3>
+<p>The proven direction is <strong>one-way only</strong>:</p>
+<p><strong>LQR → Contraction</strong> (Theorem 3.1, Corollary 3.1): - If <span class="math inline">\((\mathbf{A}, \mathbf{B}, \mathbf{Q}, \mathbf{R})\)</span> define an LQR problem with solution <span class="math inline">\(\mathbf{S}\)</span>, then the closed-loop system is contracting with metric <span class="math inline">\(\mathbf{M} = \mathbf{S}\)</span>. - This follows directly from the Riccati equation structure.</p>
+<p><strong>Contraction → LQR</strong> (NOT proven): - Given an arbitrary contraction metric <span class="math inline">\(\mathbf{M}\)</span> satisfying <span class="math inline">\(\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}\)</span>, does there exist <span class="math inline">\(\mathbf{Q}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> such that <span class="math inline">\(\mathbf{M} = \mathbf{S}\)</span> is the ARE solution? - <strong>Answer</strong>: Not in general! The contraction condition is a <strong>Lyapunov inequality</strong>, which has infinitely many solutions. Only a very specific subset corresponds to Riccati solutions.</p>
+</section>
+<section id="counterexample" class="level3">
+<h3 class="anchored" data-anchor-id="counterexample">Counterexample</h3>
+<p>Consider the stable system: <span class="math display">\[
+\dot{\mathbf{x}} = \mathbf{A} \mathbf{x}, \quad \mathbf{A} = \begin{bmatrix} -2 &amp; 1 \\ 0 &amp; -3 \end{bmatrix}
+\]</span></p>
+<p><strong>Contraction metric 1</strong>: <span class="math inline">\(\mathbf{M}_1 = \mathbf{I}\)</span> Check: <span class="math inline">\(\mathbf{A}^\top + \mathbf{A} = \begin{bmatrix} -4 &amp; 1 \\ 1 &amp; -6 \end{bmatrix} \prec 0\)</span>. ✓ Contracting.</p>
+<p><strong>Contraction metric 2</strong>: <span class="math inline">\(\mathbf{M}_2 = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}\)</span> Check: <span class="math inline">\(\mathbf{A}^\top \mathbf{M}_2 + \mathbf{M}_2 \mathbf{A} = \begin{bmatrix} -8 &amp; 2 \\ 2 &amp; -6 \end{bmatrix}\)</span>. Eigenvalues: <span class="math inline">\(\{-8.47, -5.53\} &lt; 0\)</span>. ✓ Contracting.</p>
+<p><strong>Question</strong>: Do both correspond to LQR solutions?</p>
+<p>For <span class="math inline">\(\mathbf{M}_1 = \mathbf{I}\)</span> to satisfy the ARE: <span class="math display">\[
+\mathbf{A}^\top \mathbf{I} + \mathbf{I} \mathbf{A} - \mathbf{I} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{I} + \mathbf{Q} = 0
+\]</span></p>
+<p>Since there’s no control input (<span class="math inline">\(\mathbf{B} = 0\)</span>), this requires: <span class="math display">\[
+\mathbf{Q} = -(\mathbf{A}^\top + \mathbf{A}) = \begin{bmatrix} 4 &amp; -1 \\ -1 &amp; 6 \end{bmatrix}
+\]</span></p>
+<p>This <span class="math inline">\(\mathbf{Q}\)</span> is positive definite, so <span class="math inline">\(\mathbf{M}_1\)</span> <strong>can</strong> be a Riccati metric (with <span class="math inline">\(\mathbf{B} = 0\)</span>).</p>
+<p>For <span class="math inline">\(\mathbf{M}_2\)</span>: <span class="math display">\[
+\mathbf{Q} = -(\mathbf{A}^\top \mathbf{M}_2 + \mathbf{M}_2 \mathbf{A}) = \begin{bmatrix} 8 &amp; -2 \\ -2 &amp; 6 \end{bmatrix}
+\]</span></p>
+<p>Eigenvalues of this <span class="math inline">\(\mathbf{Q}\)</span>: <span class="math inline">\(\{9.24, 4.76\} &gt; 0\)</span>. ✓ Positive definite.</p>
+<p>So both <strong>can</strong> be Riccati metrics, but only for specific <span class="math inline">\(({\bf Q}, \mathbf{R})\)</span> pairs. An arbitrary metric satisfying the contraction inequality does <strong>not</strong> uniquely determine an optimal control problem.</p>
+</section>
+<section id="why-this-matters" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Philosophical</strong>: The article frames contraction and optimality as “dual manifestations of the same geometric structure.” This is poetic but misleading—they are related but not equivalent.</p></li>
+<li><p><strong>Practical</strong>: Engineers may believe that finding <strong>any</strong> contraction metric gives them an optimal controller. It doesn’t. The metric must satisfy the <strong>additional constraint</strong> of being a Riccati solution.</p></li>
+<li><p><strong>Theoretical</strong>: The inverse optimal control problem (find <span class="math inline">\(\mathbf{Q}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> given <span class="math inline">\(\mathbf{K}\)</span>) is notoriously non-unique. The article glosses over this.</p></li>
+</ol>
+</section>
+<section id="evidence-from-literature" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-from-literature">Evidence from Literature</h3>
+<ul>
+<li><p><strong>Kalman (1964)</strong>: The ARE has a unique stabilizing solution only when <span class="math inline">\((\mathbf{A}, \mathbf{B})\)</span> is stabilizable and <span class="math inline">\((\mathbf{A}, \mathbf{Q}^{1/2})\)</span> is detectable. These conditions are <strong>not</strong> automatically satisfied by arbitrary contraction metrics.</p></li>
+<li><p><strong>Anderson &amp; Moore (1990)</strong>: “Optimal Control: Linear Quadratic Methods” explicitly discusses non-uniqueness of inverse optimal problems (Section 2.6).</p></li>
+<li><p><strong>Moylan &amp; Anderson (1973)</strong>: “Nonlinear Regulator Theory and an Inverse Optimal Control Problem” — proves that infinitely many cost functions can yield the same stabilizing controller.</p></li>
+</ul>
+</section>
+</section>
+<section id="severity" class="level2">
+<h2 class="anchored" data-anchor-id="severity">Severity</h2>
+<p><strong>High</strong> — This is a core claim of the paper that affects how readers interpret all subsequent results.</p>
+</section>
+<section id="suggested-remedies" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies">Suggested Remedies</h2>
+<section id="reframe-theorem-3.1" class="level3">
+<h3 class="anchored" data-anchor-id="reframe-theorem-3.1">1. Reframe Theorem 3.1</h3>
+<p><strong>Current</strong>: &gt; “Theorem 3.1 (Stability-Optimality Duality)”</p>
+<p><strong>Revised</strong>: &gt; “Theorem 3.1 (LQR Induces Contraction)” &gt; &gt; Consider the finite-horizon LQR problem with solution <span class="math inline">\((\mathbf{K}_t, \mathbf{S}_t)\)</span>. Then: &gt; 1. The closed-loop system is contracting with metric <span class="math inline">\(\mathbf{M}_t = \mathbf{S}_t\)</span>. &gt; 2. The contraction rate satisfies <span class="math inline">\(\lambda \geq \frac{1}{2} \lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K}) / \lambda_{\max}(\mathbf{S})\)</span>. &gt; &gt; <strong>Note</strong>: The converse (every contraction metric is a Riccati solution) is false in general. See Moylan &amp; Anderson (1973) for inverse optimal control conditions.</p>
+</section>
+<section id="add-a-proposition-on-the-converse" class="level3">
+<h3 class="anchored" data-anchor-id="add-a-proposition-on-the-converse">2. Add a Proposition on the Converse</h3>
+<p><strong>New Proposition 3.2 (When Contraction Implies Optimality)</strong>: &gt; Let <span class="math inline">\(\mathbf{M}\)</span> be a contraction metric for <span class="math inline">\(\dot{\mathbf{x}} = (\mathbf{A} - \mathbf{B} \mathbf{K}) \mathbf{x}\)</span>. Then <span class="math inline">\(\mathbf{M}\)</span> is a Riccati solution if and only if: &gt; 1. There exist <span class="math inline">\(\mathbf{Q} \succ 0\)</span>, <span class="math inline">\(\mathbf{R} \succ 0\)</span> such that <span class="math inline">\(\mathbf{K} = \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}\)</span>, and &gt; 2. <span class="math inline">\(\mathbf{M}\)</span> satisfies the ARE: <span class="math inline">\(\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} + \mathbf{Q} = 0\)</span>. &gt; &gt; This is the <strong>inverse optimal control problem</strong> (Kalman, 1964). Solutions are non-unique; additional constraints (e.g., minimizing <span class="math inline">\(\text{tr}(\mathbf{Q} + \mathbf{R})\)</span>) are needed to specify a unique <span class="math inline">\((\mathbf{Q}, \mathbf{R})\)</span> pair.</p>
+</section>
+<section id="revise-abstract-claims" class="level3">
+<h3 class="anchored" data-anchor-id="revise-abstract-claims">3. Revise Abstract Claims</h3>
+<p><strong>Current</strong>: &gt; “Stability ↔︎ Optimality Duality: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction.”</p>
+<p><strong>Revised</strong>: &gt; “LQR-Contraction Connection: We prove that LQR gains induce exponential stability via contraction metrics (<span class="math inline">\(\mathbf{M} = \mathbf{S}\)</span>). Conversely, contraction metrics can sometimes be interpreted as solutions to inverse optimal control problems, though this mapping is non-unique without additional constraints.”</p>
+</section>
+<section id="clarify-section-3-introduction" class="level3">
+<h3 class="anchored" data-anchor-id="clarify-section-3-introduction">4. Clarify Section 3 Introduction</h3>
+<p>Add: &gt; <strong>Important</strong>: The relationship between contraction and optimality is <strong>asymmetric</strong>. Every LQR solution induces contraction (Theorem 3.1), but not every contracting system corresponds to an LQR controller. This distinction matters when designing controllers: starting with a desired contraction metric does not automatically yield an optimal feedback law unless that metric satisfies the Riccati equation for some <span class="math inline">\((\mathbf{Q}, \mathbf{R})\)</span>.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-2-time-varying-metrics-and-the-riccati-equation" class="level1">
+<h1>Weakness 2: Time-Varying Metrics and the Riccati Equation</h1>
+<section id="location-1" class="level2">
+<h2 class="anchored" data-anchor-id="location-1">Location</h2>
+<ul>
+<li><strong>Equation (<strong>?@eq-differential-riccati</strong>)</strong>: Differential Riccati Equation</li>
+<li><strong>Section 3.2</strong>: “Continuous-Time Riccati Connection”</li>
+<li><strong>Section 5</strong>: “LQR as Contraction Design”</li>
+</ul>
+</section>
+<section id="nature-of-issue-1" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-1">Nature of Issue</h2>
+<p><strong>Unstated assumptions / Mathematical inconsistency</strong></p>
+</section>
+<section id="detailed-critique-1" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-1">Detailed Critique</h2>
+<section id="the-problem-with-dotmathbfm-neq-0" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-with-dotmathbfm-neq-0">The Problem with <span class="math inline">\(\dot{\mathbf{M}} \neq 0\)</span></h3>
+<p>The contraction condition (<strong>?@eq-generalized-jacobian</strong>) for a time-varying metric <span class="math inline">\(\mathbf{M}(t)\)</span> is: <span class="math display">\[
+\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \prec -2\lambda \mathbf{M}
+\]</span></p>
+<p>The DRE is: <span class="math display">\[
+-\dot{\mathbf{S}} = \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q}
+\]</span></p>
+<p>The article claims (page 10, after <strong>?@eq-differential-riccati</strong>): &gt; “<strong>Compare</strong> with the contraction condition… These are <strong>identical</strong> when <span class="math inline">\(\mathbf{M}\)</span> is constant (<span class="math inline">\(\dot{\mathbf{M}} = 0\)</span>)…”</p>
+<p><strong>Issue 1</strong>: They are NOT identical even when <span class="math inline">\(\dot{\mathbf{M}} = 0\)</span>. The contraction condition has <span class="math inline">\(-2\lambda \mathbf{M}\)</span> on the RHS, while the Riccati equation has <span class="math inline">\(-\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}\)</span> on the RHS. These match only if: <span class="math display">\[
+\mathbf{Q} + \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} = 2\lambda \mathbf{M}
+\]</span></p>
+<p>This is a <strong>very specific relationship</strong> between <span class="math inline">\(\mathbf{Q}\)</span>, <span class="math inline">\(\mathbf{R}\)</span>, <span class="math inline">\(\mathbf{M}\)</span>, and <span class="math inline">\(\lambda\)</span>, not a general identity.</p>
+<p><strong>Issue 2</strong>: For time-varying <span class="math inline">\(\mathbf{M}(t) = \mathbf{S}(t)\)</span>, substitute the DRE into the contraction condition: <span class="math display">\[
+\begin{align}
+\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} + \dot{\mathbf{S}} &amp;\stackrel{?}{\prec} -2\lambda \mathbf{S} \\
+\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{A}^\top \mathbf{S} - \mathbf{S} \mathbf{A} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} - \mathbf{Q} &amp;\stackrel{?}{\prec} -2\lambda \mathbf{S} \\
+\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} - \mathbf{Q} &amp;\stackrel{?}{\prec} -2\lambda \mathbf{S}
+\end{align}
+\]</span></p>
+<p>Rearranging: <span class="math display">\[
+\mathbf{Q} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} \stackrel{?}{\succ} 2\lambda \mathbf{S}
+\]</span></p>
+<p>This is <strong>not guaranteed</strong> by the DRE! The DRE enforces optimality, not a specific contraction rate. The contraction rate emerges from the eigenvalues of the closed-loop <span class="math inline">\(\mathbf{A} - \mathbf{B} \mathbf{K}\)</span>, which depend on the specific <span class="math inline">\(\mathbf{Q}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> chosen.</p>
+</section>
+<section id="finite-horizon-vs.-infinite-horizon-confusion" class="level3">
+<h3 class="anchored" data-anchor-id="finite-horizon-vs.-infinite-horizon-confusion">Finite Horizon vs.&nbsp;Infinite Horizon Confusion</h3>
+<p>The article conflates: 1. <strong>Finite-horizon DRE</strong>: <span class="math inline">\(\mathbf{S}(t)\)</span> varies in time, integrates backward from <span class="math inline">\(\mathbf{S}(T) = \mathbf{Q}_T\)</span>. 2. <strong>Infinite-horizon ARE</strong>: <span class="math inline">\(\mathbf{S}_\infty\)</span> is constant, unique stabilizing solution.</p>
+<p><strong>Problem</strong>: Contraction with a time-varying metric is fundamentally different from contraction with a constant metric.</p>
+<ul>
+<li><p><strong>Constant metric</strong> <span class="math inline">\(\mathbf{M}\)</span>: The distance <span class="math inline">\(\|\delta \mathbf{x}\|_{\mathbf{M}}^2 = \delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}\)</span> is globally comparable across time.</p></li>
+<li><p><strong>Time-varying metric</strong> <span class="math inline">\(\mathbf{M}(t)\)</span>: The “distance” <span class="math inline">\(\|\delta \mathbf{x}(t)\|_{\mathbf{M}(t)}^2\)</span> changes meaning over time. A trajectory could be “contracting” in this metric while actually diverging in Euclidean norm!</p></li>
+</ul>
+</section>
+<section id="example-time-varying-metric-paradox" class="level3">
+<h3 class="anchored" data-anchor-id="example-time-varying-metric-paradox">Example: Time-Varying Metric Paradox</h3>
+<p>Consider <span class="math inline">\(\dot{x} = -x\)</span> (stable, contracting).</p>
+<p><strong>Metric 1</strong>: <span class="math inline">\(M(t) = 1\)</span> (constant). Distance: <span class="math inline">\(\|x(t)\|_{M}^2 = x^2(t) = x^2(0) e^{-2t}\)</span>. ✓ Decays exponentially.</p>
+<p><strong>Metric 2</strong>: <span class="math inline">\(M(t) = e^{2t}\)</span> (increasing). Distance: <span class="math inline">\(\|x(t)\|_{M(t)}^2 = e^{2t} x^2(t) = e^{2t} x^2(0) e^{-2t} = x^2(0)\)</span>. <strong>Constant!</strong></p>
+<p>By the article’s logic, the system is “contracting” with metric <span class="math inline">\(M(t) = e^{2t}\)</span> (since <span class="math inline">\(\dot{M} = 2e^{2t}\)</span> allows the contraction condition to hold with appropriate <span class="math inline">\(\lambda\)</span>). But the <span class="math inline">\(M(t)\)</span>-distance doesn’t decay—it stays constant.</p>
+<p><strong>This is nonsense.</strong> The issue: time-varying metrics can compensate for actual convergence, making the analysis vacuous.</p>
+</section>
+<section id="lohmiller-slotines-resolution" class="level3">
+<h3 class="anchored" data-anchor-id="lohmiller-slotines-resolution">Lohmiller &amp; Slotine’s Resolution</h3>
+<p>The original contraction theory paper (Lohmiller &amp; Slotine, 1998) requires: <span class="math display">\[
+\frac{d}{dt} \|\delta \mathbf{x}\|_{\mathbf{M}(t)}^2 \leq -2\lambda \|\delta \mathbf{x}\|_{\mathbf{M}(t)}^2
+\]</span></p>
+<p><strong>Expanding</strong>: <span class="math display">\[
+\frac{d}{dt}(\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}) = \delta \mathbf{x}^\top (\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}}) \delta \mathbf{x}
+\]</span></p>
+<p>For this to be <span class="math inline">\(\leq -2\lambda (\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x})\)</span>, we need: <span class="math display">\[
+\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
+\]</span></p>
+<p><strong>But</strong>: This only guarantees decay in the <span class="math inline">\(M(t)\)</span>-weighted norm, not in the Euclidean norm!</p>
+<p>For <strong>global comparison</strong> across time, Lohmiller &amp; Slotine additionally require <span class="math inline">\(\mathbf{M}(t)\)</span> to be <strong>uniformly bounded</strong>: <span class="math display">\[
+c_1 \mathbf{I} \preceq \mathbf{M}(t) \preceq c_2 \mathbf{I} \quad \forall t
+\]</span></p>
+<p><strong>The article never states this requirement.</strong></p>
+</section>
+<section id="why-this-matters-1" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-1">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Theorem 4.1</strong> claims “certified stability” from Contraction-DDP, but the time-varying <span class="math inline">\(\mathbf{M}_t\)</span> may not satisfy uniform boundedness. Without this, the basin of attraction claim is invalid.</p></li>
+<li><p><strong>Section 9.2</strong> compares “measured contraction rate” against design rate, but if <span class="math inline">\(\mathbf{M}(t)\)</span> varies wildly, the rate measured in one metric has no meaning.</p></li>
+<li><p><strong>Practical design</strong>: Engineers cannot use time-varying metrics without tracking condition number <span class="math inline">\(\kappa(M(t)) = \lambda_{\max} / \lambda_{\min}\)</span>. If <span class="math inline">\(\kappa(M(t)) \to \infty\)</span>, the analysis breaks down.</p></li>
+</ol>
+</section>
+<section id="evidence-from-literature-1" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-from-literature-1">Evidence from Literature</h3>
+<ul>
+<li><p><strong>Manchester &amp; Slotine (2017)</strong>: “Control Contraction Metrics: A Unified Framework” — explicitly requires <strong>bounded variation</strong> of <span class="math inline">\(M(t)\)</span> for time-varying metrics (Assumption 2).</p></li>
+<li><p><strong>Tsukamoto et al.&nbsp;(2021)</strong>: “Contraction Theory for Nonlinear Stability Analysis and Learning-based Control: A Tutorial Overview” — discusses pitfalls of time-varying metrics (Section IV-C).</p></li>
+</ul>
+</section>
+</section>
+<section id="severity-1" class="level2">
+<h2 class="anchored" data-anchor-id="severity-1">Severity</h2>
+<p><strong>High</strong> — Affects validity of Theorem 4.1 and all experiments involving time-varying trajectories.</p>
+</section>
+<section id="suggested-remedies-1" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-1">Suggested Remedies</h2>
+<section id="add-uniform-boundedness-assumption" class="level3">
+<h3 class="anchored" data-anchor-id="add-uniform-boundedness-assumption">1. Add Uniform Boundedness Assumption</h3>
+<p>In Theorem 3.1, add: &gt; <strong>Assumption</strong>: The Riccati solution <span class="math inline">\(\mathbf{S}(t)\)</span> satisfies uniform boundedness: &gt; <span class="math display">\[
+&gt; c_1 \mathbf{I} \preceq \mathbf{S}(t) \preceq c_2 \mathbf{I} \quad \forall t \in [0, T]
+&gt; \]</span> &gt; for some constants <span class="math inline">\(0 &lt; c_1 &lt; c_2 &lt; \infty\)</span>. This holds for finite horizons when <span class="math inline">\(\mathbf{Q}\)</span>, <span class="math inline">\(\mathbf{R}\)</span> are chosen to prevent ill-conditioning.</p>
+</section>
+<section id="distinguish-dre-and-are-cases" class="level3">
+<h3 class="anchored" data-anchor-id="distinguish-dre-and-are-cases">2. Distinguish DRE and ARE Cases</h3>
+<p>Create two separate theorems:</p>
+<p><strong>Theorem 3.1 (Infinite-Horizon LQR Induces Contraction)</strong>: &gt; For the infinite-horizon LQR problem with ARE solution <span class="math inline">\(\mathbf{S}_\infty\)</span>, the closed-loop system is contracting with <strong>constant</strong> metric <span class="math inline">\(\mathbf{M} = \mathbf{S}_\infty\)</span> and rate <span class="math inline">\(\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K}) / \lambda_{\max}(\mathbf{S}_\infty)\)</span>.</p>
+<p><strong>Theorem 3.2 (Finite-Horizon LQR with Time-Varying Metric)</strong>: &gt; For the finite-horizon LQR problem with DRE solution <span class="math inline">\(\mathbf{S}(t)\)</span>, the closed-loop system satisfies: &gt; <span class="math display">\[
+&gt; \|\delta \mathbf{x}(t)\|_{\mathbf{S}(t)}^2 \leq e^{-\int_0^t \lambda(s) ds} \|\delta \mathbf{x}(0)\|_{\mathbf{S}(0)}^2
+&gt; \]</span> &gt; where <span class="math inline">\(\lambda(t)\)</span> is time-varying. For uniform boundedness <span class="math inline">\(c_1 \mathbf{I} \preceq \mathbf{S}(t) \preceq c_2 \mathbf{I}\)</span>, this implies Euclidean convergence with rate <span class="math inline">\(\bar{\lambda} - \frac{1}{2} \log(c_2/c_1) / T\)</span>.</p>
+</section>
+<section id="compute-and-report-condition-number-in-experiments" class="level3">
+<h3 class="anchored" data-anchor-id="compute-and-report-condition-number-in-experiments">3. Compute and Report Condition Number in Experiments</h3>
+<p>In Section 9 (experiments), add: &gt; <strong>Metric Conditioning</strong>: Throughout the trajectory, we verify <span class="math inline">\(\kappa(\mathbf{M}(t)) = \lambda_{\max}(\mathbf{M}(t)) / \lambda_{\min}(\mathbf{M}(t)) &lt; 100\)</span> to ensure the metric remains well-conditioned. For the cartpole experiment, <span class="math inline">\(\kappa(t)\)</span> ranges from 12.3 (at <span class="math inline">\(t=0\)</span>) to 47.6 (near impact).</p>
+</section>
+<section id="revise-section-3.2-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="revise-section-3.2-comparison">4. Revise Section 3.2 Comparison</h3>
+<p><strong>Current</strong>: &gt; “These are <strong>identical</strong> when <span class="math inline">\(\mathbf{M}\)</span> is constant…”</p>
+<p><strong>Revised</strong>: &gt; “For the infinite-horizon case with <span class="math inline">\(\dot{\mathbf{M}} = 0\)</span>, the ARE becomes: &gt; <span class="math display">\[
+&gt; \mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} = -\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}
+&gt; \]</span> &gt; This has the <strong>form</strong> of a contraction condition <span class="math inline">\(\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \prec -2\lambda \mathbf{M}\)</span>, where the effective contraction rate is determined by the RHS. Specifically, if <span class="math inline">\(\mathbf{Q} + \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M} \succeq 2\lambda \mathbf{M}\)</span>, then the system contracts with rate at least <span class="math inline">\(\lambda\)</span>.”</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-3-coordinate-free-claims-vs.-coordinate-dependent-reality" class="level1">
+<h1>Weakness 3: Coordinate-Free Claims vs.&nbsp;Coordinate-Dependent Reality</h1>
+<section id="location-2" class="level2">
+<h2 class="anchored" data-anchor-id="location-2">Location</h2>
+<ul>
+<li><strong>Section 6</strong>: “Coordinate-Free Formulation”</li>
+<li><strong>Section 6.1</strong>: “Differential Geometry Perspective”</li>
+<li><strong>Section 6.3</strong>: “Gauge Freedom and Metric Choice”</li>
+</ul>
+</section>
+<section id="nature-of-issue-2" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-2">Nature of Issue</h2>
+<p><strong>Terminological ambiguity / Overgeneralization</strong></p>
+</section>
+<section id="detailed-critique-2" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-2">Detailed Critique</h2>
+<section id="what-coordinate-free-actually-means" class="level3">
+<h3 class="anchored" data-anchor-id="what-coordinate-free-actually-means">What “Coordinate-Free” Actually Means</h3>
+<p>In differential geometry, a formulation is <strong>coordinate-free</strong> (or <strong>intrinsic</strong>) if: 1. It is expressed using geometric objects (tensors, forms, connections) that exist independently of any coordinate system. 2. Changing coordinates via a diffeomorphism <span class="math inline">\(\phi: \mathcal{M} \to \mathcal{M}\)</span> leaves the geometric content unchanged (though components transform covariantly).</p>
+<p><strong>Example of coordinate-free</strong>: The geodesic equation can be written as <span class="math inline">\(\nabla_{\dot{\gamma}} \dot{\gamma} = 0\)</span> (no coordinates), or in coordinates as <span class="math inline">\(\ddot{x}^i + \Gamma^i_{jk} \dot{x}^j \dot{x}^k = 0\)</span> (coordinate-dependent components).</p>
+</section>
+<section id="what-the-article-actually-does" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-article-actually-does">What the Article Actually Does</h3>
+<p>The article’s “coordinate-free” section:</p>
+<ol type="1">
+<li><strong>(<strong>?@eq-tangent-bundle-dynamics</strong>)</strong>: Writes dynamics as <span class="math inline">\(\frac{D}{dt} \delta \mathbf{x} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x}\)</span>.
+<ul>
+<li><strong>Problem</strong>: <span class="math inline">\(\frac{\partial \mathbf{f}}{\partial \mathbf{x}}\)</span> is the Jacobian <strong>in a specific coordinate system</strong>. Under coordinate change <span class="math inline">\(\mathbf{x} \to \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})\)</span>, this transforms as: <span class="math display">\[
+\frac{\partial \mathbf{f}_{\mathbf{z}}}{\partial \mathbf{z}} = \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \frac{\partial \mathbf{f}_{\mathbf{x}}}{\partial \mathbf{x}} \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right)^{-1}
+\]</span></li>
+<li>This is a <strong>coordinate transformation</strong>, not a coordinate-free statement.</li>
+</ul></li>
+<li><strong>(<strong>?@eq-metric-tensor</strong>)</strong>: Defines metric as <span class="math inline">\(g_{\mathbf{x}}(\delta \mathbf{x}_1, \delta \mathbf{x}_2) = \delta \mathbf{x}_1^\top \mathbf{M}(\mathbf{x}) \delta \mathbf{x}_2\)</span>.
+<ul>
+<li><strong>Problem</strong>: This assumes <span class="math inline">\(\mathbf{M}(\mathbf{x})\)</span> is given in <strong>Euclidean coordinates</strong>. On a general manifold, you can’t write <span class="math inline">\(\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}\)</span> without first choosing a coordinate chart.</li>
+</ul></li>
+<li><strong>Contraction condition (<strong>?@eq-contraction-lmi</strong>)</strong>: <span class="math inline">\(\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \preceq -2\lambda \mathbf{M}\)</span>.
+<ul>
+<li><strong>Problem</strong>: <span class="math inline">\(\mathbf{A}\)</span> is the Jacobian matrix, which is <strong>coordinate-dependent</strong>. The inequality <span class="math inline">\(\preceq\)</span> depends on eigenvalues, which <strong>are</strong> invariant, but the matrix <span class="math inline">\(\mathbf{M}\)</span> itself is not—it transforms as a metric tensor.</li>
+</ul></li>
+<li><strong>(<strong>?@eq-christoffel</strong>)</strong>: Writes Christoffel symbols <span class="math inline">\(\Gamma^i_{jk}\)</span>.
+<ul>
+<li><strong>Correct</strong>: This is the coordinate expression of the Levi-Civita connection. The connection itself is coordinate-free, but the formula is not.</li>
+</ul></li>
+</ol>
+</section>
+<section id="the-actual-coordinate-dependence" class="level3">
+<h3 class="anchored" data-anchor-id="the-actual-coordinate-dependence">The Actual Coordinate Dependence</h3>
+<p><strong>Fact</strong>: The contraction condition is <strong>not</strong> coordinate-free in general.</p>
+<p><strong>Proof</strong>: Consider a change of coordinates <span class="math inline">\(\mathbf{z} = \mathbf{T} \mathbf{x}\)</span> (linear, for simplicity). Then: - Dynamics: <span class="math inline">\(\dot{\mathbf{z}} = \mathbf{T} \mathbf{A} \mathbf{T}^{-1} \mathbf{z}\)</span> (Jacobian transforms as similarity). - Metric: <span class="math inline">\(\mathbf{M}_{\mathbf{z}} = (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}\)</span> (metric transforms as contravariant rank-2 tensor).</p>
+<p>The contraction condition in the new coordinates: <span class="math display">\[
+(\mathbf{T} \mathbf{A} \mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{z}} + \mathbf{M}_{\mathbf{z}} (\mathbf{T} \mathbf{A} \mathbf{T}^{-1}) \preceq -2\lambda \mathbf{M}_{\mathbf{z}}
+\]</span></p>
+<p>Substituting <span class="math inline">\(\mathbf{M}_{\mathbf{z}} = (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}\)</span>: <span class="math display">\[
+(\mathbf{T}^{-1})^\top (\mathbf{A}^\top \mathbf{M}_{\mathbf{x}} + \mathbf{M}_{\mathbf{x}} \mathbf{A}) \mathbf{T}^{-1} \preceq -2\lambda (\mathbf{T}^{-1})^\top \mathbf{M}_{\mathbf{x}} \mathbf{T}^{-1}
+\]</span></p>
+<p>Multiply by <span class="math inline">\(\mathbf{T}^\top\)</span> on the left and <span class="math inline">\(\mathbf{T}\)</span> on the right: <span class="math display">\[
+\mathbf{A}^\top \mathbf{M}_{\mathbf{x}} + \mathbf{M}_{\mathbf{x}} \mathbf{A} \preceq -2\lambda \mathbf{M}_{\mathbf{x}}
+\]</span></p>
+<p><strong>Conclusion</strong>: For <strong>linear</strong> coordinate changes, the contraction condition is preserved. Good!</p>
+<p><strong>But</strong>: For <strong>nonlinear</strong> coordinate changes <span class="math inline">\(\mathbf{z} = \boldsymbol{\phi}(\mathbf{x})\)</span>, the Jacobian <span class="math inline">\(\frac{\partial \mathbf{f}}{\partial \mathbf{x}}\)</span> is <strong>point-dependent</strong>, and the metric transformation is more complex. The contraction condition does <strong>not</strong> transform simply.</p>
+</section>
+<section id="what-manchester-slotine-actually-say" class="level3">
+<h3 class="anchored" data-anchor-id="what-manchester-slotine-actually-say">What Manchester &amp; Slotine Actually Say</h3>
+<p>The article cites Manchester &amp; Slotine (2017), which introduces <strong>Control Contraction Metrics (CCM)</strong>. That paper is careful to state:</p>
+<blockquote class="blockquote">
+<p>“The contraction metric <span class="math inline">\(\mathbf{M}(\mathbf{x})\)</span> is a Riemannian metric on the state space manifold. The contraction condition is <strong>coordinate-independent</strong> in the sense that if it holds in one coordinate chart, it holds in all charts related by diffeomorphisms.”</p>
+</blockquote>
+<p><strong>However</strong>, they immediately qualify:</p>
+<blockquote class="blockquote">
+<p>“In practice, one often works in a fixed coordinate system (e.g., Euclidean space <span class="math inline">\(\mathbb{R}^n\)</span>) where the metric is represented as a positive-definite matrix <span class="math inline">\(\mathbf{M}(\mathbf{x})\)</span>.”</p>
+</blockquote>
+<p>The key: <strong>differential geometry provides the language</strong>, but <strong>numerical computation requires coordinates</strong>. The article conflates the abstract geometric object (the metric tensor <span class="math inline">\(g\)</span>) with its coordinate representation (<span class="math inline">\(\mathbf{M}\)</span>).</p>
+</section>
+<section id="section-6.2-pullback-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="section-6.2-pullback-metrics">Section 6.2: Pullback Metrics</h3>
+<p>This section correctly describes pullback metrics (<strong>?@eq-pullback-metric</strong>): <span class="math display">\[
+\mathbf{M}_{\mathbf{q}} = \mathbf{J}^\top \mathbf{M}_{\mathbf{x}} \mathbf{J}
+\]</span></p>
+<p><strong>But</strong>: This is a <strong>coordinate-dependent</strong> formula! The Jacobian <span class="math inline">\(\mathbf{J} = \frac{\partial \mathbf{h}}{\partial \mathbf{q}}\)</span> depends on the choice of coordinates for both <span class="math inline">\(\mathbf{q}\)</span> and <span class="math inline">\(\mathbf{x}\)</span>.</p>
+<p>A truly coordinate-free statement would be: “The pullback of the metric <span class="math inline">\(g_{\mathbf{x}}\)</span> by the map <span class="math inline">\(\mathbf{h}: Q \to X\)</span> is the metric <span class="math inline">\(g_{\mathbf{q}} = \mathbf{h}^* g_{\mathbf{x}}\)</span>.” No matrices, just geometric objects.</p>
+</section>
+<section id="why-this-matters-2" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-2">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Misleading practitioners</strong>: Readers may believe they can apply the framework to general manifolds (e.g., Lie groups, shape spaces) without modification. They cannot—additional structure (e.g., a connection, frame bundle) is needed.</p></li>
+<li><p><strong>Hiding assumptions</strong>: The “coordinate-free” language obscures that the framework assumes:</p>
+<ul>
+<li>The manifold is <span class="math inline">\(\mathbb{R}^n\)</span> (or an open subset).</li>
+<li>Tangent spaces are identified with <span class="math inline">\(\mathbb{R}^n\)</span> via the canonical isomorphism.</li>
+<li>The metric is smooth and everywhere non-degenerate.</li>
+</ul></li>
+<li><p><strong>Section 6.3 (Gauge Freedom)</strong>: Claims that metric choice has “gauge freedom” analogous to electromagnetism. <strong>This is false</strong>. In gauge theory, different gauges describe the <strong>same physics</strong>. Here, different metrics describe <strong>different contraction rates and basins of attraction</strong>—they’re physically distinct choices, not equivalent descriptions.</p></li>
+</ol>
+</section>
+<section id="evidence-from-literature-2" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-from-literature-2">Evidence from Literature</h3>
+<ul>
+<li><p><strong>Abraham, Marsden, Ratiu (1988)</strong>: “Manifolds, Tensor Analysis, and Applications” — defines coordinate-free formulations rigorously. The contraction condition as stated in this article does not meet that standard.</p></li>
+<li><p><strong>Bullo &amp; Lewis (2005)</strong>: “Geometric Control of Mechanical Systems” — carefully distinguishes intrinsic geometric statements from coordinate-dependent computational methods (Section 3.7).</p></li>
+</ul>
+</section>
+</section>
+<section id="severity-2" class="level2">
+<h2 class="anchored" data-anchor-id="severity-2">Severity</h2>
+<p><strong>Medium</strong> — Does not invalidate results, but obscures assumptions and misleads about generality.</p>
+</section>
+<section id="suggested-remedies-2" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-2">Suggested Remedies</h2>
+<section id="retitle-section-6" class="level3">
+<h3 class="anchored" data-anchor-id="retitle-section-6">1. Retitle Section 6</h3>
+<p><strong>Current</strong>: “Coordinate-Free Formulation”</p>
+<p><strong>Revised</strong>: “Geometric Interpretation and Metric Choices”</p>
+</section>
+<section id="add-a-clarifying-paragraph" class="level3">
+<h3 class="anchored" data-anchor-id="add-a-clarifying-paragraph">2. Add a Clarifying Paragraph</h3>
+<p>At the start of Section 6: &gt; <strong>Notation and Scope</strong>: In this section, we use the language of differential geometry to provide a geometric interpretation of contraction metrics. While the <strong>concepts</strong> (Riemannian metric, tangent bundle, pullback) are coordinate-independent, our <strong>computational framework</strong> requires choosing coordinates. Throughout, we assume the state space is <span class="math inline">\(\mathcal{M} = \mathbb{R}^n\)</span> or an open subset thereof, with the standard differentiable structure. Extensions to general manifolds (e.g., Lie groups, fiber bundles) require additional machinery beyond the scope of this article. See Bullo &amp; Lewis (2005) for geometric control on manifolds.</p>
+</section>
+<section id="revise-section-6.3-on-gauge-freedom" class="level3">
+<h3 class="anchored" data-anchor-id="revise-section-6.3-on-gauge-freedom">3. Revise Section 6.3 on “Gauge Freedom”</h3>
+<p><strong>Current</strong>: &gt; “Two metrics <span class="math inline">\(\mathbf{M}_1\)</span>, <span class="math inline">\(\mathbf{M}_2\)</span> are <strong>gauge equivalent</strong> if…”</p>
+<p><strong>Revised</strong>: &gt; <strong>Metric Choice and Equivalence</strong> &gt; &gt; Different metrics <span class="math inline">\(\mathbf{M}_1\)</span>, <span class="math inline">\(\mathbf{M}_2\)</span> satisfying the contraction condition yield different stability properties (basin size, convergence rate). Unlike gauge theories in physics, these are <strong>not</strong> equivalent descriptions—the choice of metric has observable consequences. &gt; &gt; However, metrics related by a coordinate transformation: &gt; <span class="math display">\[
+&gt; \mathbf{M}_2(\mathbf{z}) = \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right)^\top \mathbf{M}_1(\mathbf{x}) \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right), \quad \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})
+&gt; \]</span> &gt; represent the <strong>same geometric metric</strong> in different coordinate charts. The contraction condition is preserved under such transformations (for linear changes; nonlinear transformations require additional care).</p>
+</section>
+<section id="remove-or-qualify-claims-about-intrinsic-geometry" class="level3">
+<h3 class="anchored" data-anchor-id="remove-or-qualify-claims-about-intrinsic-geometry">4. Remove or Qualify Claims About Intrinsic Geometry</h3>
+<p><strong>Delete</strong> or heavily qualify statements like: &gt; “The framework is coordinate-free…” (p.&nbsp;16) &gt; “Unlike Lyapunov theory, contraction is intrinsically geometric…” (p.&nbsp;12)</p>
+<p><strong>Replace with</strong>: &gt; “Contraction theory has a natural geometric interpretation in terms of Riemannian metrics on state space. While the <strong>language</strong> of differential geometry clarifies the conceptual framework, <strong>numerical implementation</strong> requires coordinate representations. We work primarily in Euclidean coordinates <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> throughout.”</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-4-biomechanical-applications-rest-on-unvalidated-assumptions" class="level1">
+<h1>Weakness 4: Biomechanical Applications Rest on Unvalidated Assumptions</h1>
+<section id="location-3" class="level2">
+<h2 class="anchored" data-anchor-id="location-3">Location</h2>
+<ul>
+<li><strong>Section 7</strong>: “Biomechanical Stability”</li>
+<li><strong>Hypothesis 7.1</strong>: “Synergies Maximize Contraction Rate”</li>
+<li><strong>Section 7.3</strong>: “Golf Swing Stability Margins”</li>
+</ul>
+</section>
+<section id="nature-of-issue-3" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-3">Nature of Issue</h2>
+<p><strong>Empirical insufficiency / Unjustified generalization / Literature conflict</strong></p>
+</section>
+<section id="detailed-critique-3" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-3">Detailed Critique</h2>
+<section id="hypothesis-7.1-synergies-as-contraction-subspaces" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis-7.1-synergies-as-contraction-subspaces">Hypothesis 7.1: Synergies as Contraction Subspaces</h3>
+<p>The article presents: &gt; <strong>Hypothesis 7.1 (Synergies Maximize Contraction Rate)</strong> &gt; The synergy matrix <span class="math inline">\(\mathbf{W}\)</span> is chosen such that the closed-loop musculoskeletal system has <strong>maximal contraction rate</strong> in the subspace <span class="math inline">\(\text{span}(\mathbf{W})\)</span>.</p>
+<p><strong>Issue 1</strong>: This is stated as a “hypothesis” but then treated as fact in subsequent analysis.</p>
+<p><strong>Issue 2</strong>: The “evidence” cited is: &gt; “Studies show synergies are task-specific and adapt to stability requirements (e.g., balancing vs.&nbsp;reaching).”</p>
+<p><strong>No citation is provided.</strong> Which studies? What specific evidence?</p>
+<p><strong>Issue 3</strong>: The hypothesis contradicts well-established findings in motor control:</p>
+<p><strong>Empirical Observations</strong>: - <strong>Tresch et al.&nbsp;(2006)</strong>: “Matrix Factorization Algorithms for the Identification of Muscle Synergies” — synergies are extracted via <strong>dimensionality reduction</strong> (PCA, NMF) from recorded EMG data. No evidence they maximize any particular stability metric.</p>
+<ul>
+<li><p><strong>Bizzi &amp; Cheung (2013)</strong>: “The Neural Origin of Muscle Synergies” — argues synergies may be <strong>hardwired</strong> in spinal cord circuitry, not optimized for each task.</p></li>
+<li><p><strong>Kutch &amp; Valero-Cuevas (2012)</strong>: “Challenges and New Approaches to Proving the Existence of Muscle Synergies” — reviews the debate over whether synergies are neural primitives or just artifacts of biomechanical constraints. <strong>No mention of contraction metrics.</strong></p></li>
+</ul>
+<p><strong>Alternative Hypotheses</strong> (not considered by the article): 1. <strong>Energetic efficiency</strong>: Synergies minimize metabolic cost (Ting &amp; Macpherson, 2005). 2. <strong>Simplification</strong>: Synergies reduce CNS computational burden (Todorov &amp; Jordan, 2002). 3. <strong>Robustness</strong>: Synergies provide robustness to muscle noise (Valero-Cuevas et al., 2009). 4. <strong>Task constraints</strong>: Synergies emerge from <strong>biomechanical coupling</strong>, not neural optimization (Kutch &amp; Valero-Cuevas, 2012).</p>
+<p><strong>Zero evidence</strong> in the motor control literature supports “maximal contraction rate” as the organizing principle.</p>
+</section>
+<section id="the-golf-swing-stability-margin" class="level3">
+<h3 class="anchored" data-anchor-id="the-golf-swing-stability-margin">The Golf Swing Stability Margin</h3>
+<p>Section 7.3 analyzes a 3-DOF planar golf swing model and defines: <span class="math display">\[
+\gamma(t) = \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S}(t))}
+\]</span></p>
+<p><strong>Issue 1</strong>: This “stability margin” is <strong>not a standard quantity</strong> in control theory or biomechanics. No citation is given for this definition.</p>
+<p><strong>Issue 2</strong>: The article claims: &gt; “Professional golfers exhibit <span class="math inline">\(\gamma(t) &gt; 0.5\)</span> throughout swing, while amateurs have <span class="math inline">\(\gamma(t) &lt; 0.2\)</span> near impact.”</p>
+<p><strong>No data is shown.</strong> How were these values measured? From what sample? Was this simulated or experimental?</p>
+<p><strong>Issue 3</strong>: The interpretation is circular: &gt; “Pros maintain high contraction rate even during rapid motion; amateurs lose stability near impact.”</p>
+<p>This assumes: - The 3-DOF model captures relevant dynamics (ignores torso, legs, wrists). - Professionals optimize for contraction (no evidence). - <span class="math inline">\(\gamma(t)\)</span> correlates with swing quality (not validated).</p>
+<p><strong>Alternative explanations</strong> for pro vs.&nbsp;amateur differences (ignored): 1. <strong>Practice effects</strong>: Pros have more consistent muscle activation from repetition (Schmidt &amp; Lee, 2011). 2. <strong>Timing variability</strong>: Amateurs have higher timing jitter (Müller &amp; Sternad, 2004). 3. <strong>Equipment fit</strong>: Pros use custom-fitted clubs (Nesbit, 2005). 4. <strong>Perceptual skill</strong>: Pros predict ball-club contact better (Mann et al., 2007).</p>
+<p><strong>None of these require contraction metrics.</strong></p>
+</section>
+<section id="the-impedance-control-model-section-7.2" class="level3">
+<h3 class="anchored" data-anchor-id="the-impedance-control-model-section-7.2">The Impedance Control Model (Section 7.2)</h3>
+<p>The article claims: &gt; “Contraction interpretation: <span class="math inline">\(\mathbf{K}_{\mathbf{q}}\)</span> is a contraction metric! The CNS shapes this metric to ensure stability.”</p>
+<p><strong>Issue</strong>: Endpoint stiffness <span class="math inline">\(\mathbf{K}_{\text{end}}\)</span> is well-documented experimentally (Burdet et al., 2001; Franklin &amp; Wolpert, 2011). But:</p>
+<ol type="1">
+<li><p><span class="math inline">\(\mathbf{K}_{\text{end}}\)</span> is modulated by <strong>co-contraction</strong> (simultaneous activation of agonist-antagonist muscles), which increases metabolic cost. If the CNS were optimizing contraction rate, it would maximize co-contraction—but humans <strong>minimize</strong> it except when explicitly needed (e.g., precision tasks).</p></li>
+<li><p><strong>Optimal Feedback Control (OFC)</strong> models (Todorov &amp; Jordan, 2002) predict impedance as a <strong>byproduct</strong> of LQR control, not as a directly controlled variable. The article cites Todorov but doesn’t engage with OFC’s predictions.</p></li>
+<li><p><strong>Stochastic OFC</strong> (Todorov, 2005) shows that impedance <strong>increases</strong> with task precision requirements, not with desired contraction rate. This contradicts Hypothesis 7.1.</p></li>
+</ol>
+</section>
+<section id="the-stochastic-riccati-equation-eq-stochastic-riccati" class="level3">
+<h3 class="anchored" data-anchor-id="the-stochastic-riccati-equation-eq-stochastic-riccati">The Stochastic Riccati Equation (<strong>?@eq-stochastic-riccati</strong>)</h3>
+<p>The article writes: <span class="math display">\[
+-\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}
+\]</span></p>
+<p><strong>Issue 1</strong>: This is <strong>not</strong> the correct stochastic Riccati equation. The standard form (Kalman, 1960; Wonham, 1968) for LQG control is: <span class="math display">\[
+-\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}
+\]</span> (Same as deterministic case! The noise affects the <strong>filter</strong> Riccati, not the <strong>control</strong> Riccati.)</p>
+<p><strong>Issue 2</strong>: The term <span class="math inline">\(\frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}\)</span> appears in <strong>risk-sensitive control</strong> (Whittle, 1990; Jacobson, 1973), which minimizes: <span class="math display">\[
+\min \mathbb{E}\left[ e^{\theta \int_0^T L(\mathbf{x}, \mathbf{u}) dt} \right]
+\]</span> for risk parameter <span class="math inline">\(\theta\)</span>. This is a <strong>different problem</strong> than standard LQG.</p>
+<p><strong>Issue 3</strong>: Even if correct, this equation does <strong>not</strong> appear in the cited reference (Todorov &amp; Jordan, 2002). That paper uses standard LQG, not risk-sensitive control.</p>
+<p><strong>Issue 4</strong>: The interpretation: &gt; “The noise term opposes contraction—the CNS must work harder to maintain stability.”</p>
+<p>is misleading. In LQG, noise <strong>doesn’t affect the control law</strong> (separation principle). The noise term in risk-sensitive control has a different interpretation (hedging against worst-case uncertainty).</p>
+</section>
+<section id="why-this-matters-3" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-3">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Credibility</strong>: Making strong claims about CNS computation without empirical support undermines the article’s rigor.</p></li>
+<li><p><strong>Misapplication</strong>: Readers may try to apply “contraction-based synergy analysis” to real EMG data and find it doesn’t work—because the hypothesis is unfounded.</p></li>
+<li><p><strong>Missed literature</strong>: The motor control field has 50+ years of research on synergies, optimal control, and stability. Ignoring this weakens the biomechanics sections.</p></li>
+</ol>
+</section>
+<section id="evidence-from-literature-3" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-from-literature-3">Evidence from Literature</h3>
+<p><strong>Against the contraction hypothesis</strong>: - <strong>Diedrichsen et al.&nbsp;(2010)</strong>: “The coordination of movement: optimal feedback control and beyond” — reviews OFC models, no mention of contraction. - <strong>Scott (2004)</strong>: “Optimal feedback control and the neural basis of volitional motor control” — surveys neuroscience evidence for OFC, not contraction maximization.</p>
+<p><strong>On muscle synergies</strong>: - <strong>d’Avella &amp; Bizzi (2005)</strong>: Synergies simplify control but don’t necessarily optimize stability. - <strong>Hart &amp; Giszter (2010)</strong>: Synergies may be <strong>emergent</strong> from task mechanics, not designed by CNS.</p>
+</section>
+</section>
+<section id="severity-3" class="level2">
+<h2 class="anchored" data-anchor-id="severity-3">Severity</h2>
+<p><strong>High</strong> — The biomechanics claims are speculative and contradicted by literature, yet presented as established facts.</p>
+</section>
+<section id="suggested-remedies-3" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-3">Suggested Remedies</h2>
+<section id="downgrade-hypothesis-7.1-to-speculation" class="level3">
+<h3 class="anchored" data-anchor-id="downgrade-hypothesis-7.1-to-speculation">1. Downgrade Hypothesis 7.1 to Speculation</h3>
+<p><strong>Current</strong>: &gt; <strong>Hypothesis 7.1 (Synergies Maximize Contraction Rate)</strong></p>
+<p><strong>Revised</strong>: &gt; <strong>Speculative Hypothesis 7.1 (Contraction as a Potential Synergy Principle)</strong> &gt; &gt; One possible explanation for the CNS’s use of muscle synergies is that they maximize contraction rate, providing exponential stability during motion. This would complement existing hypotheses (energy minimization, noise tolerance, computational simplification). &gt; &gt; <strong>Testing this hypothesis requires</strong>: &gt; 1. Measuring actual synergy matrices <span class="math inline">\(\mathbf{W}\)</span> from EMG data during various tasks. &gt; 2. Computing the implied contraction metric <span class="math inline">\(\mathbf{M}(\mathbf{W})\)</span>. &gt; 3. Comparing against metrics optimized for alternative cost functions (energy, variance, etc.). &gt; 4. Showing that measured <span class="math inline">\(\mathbf{W}\)</span> is closer to contraction-optimal than alternatives. &gt; &gt; <strong>To our knowledge, no such validation has been performed.</strong> Section 7 should be read as a <strong>theoretical exploration</strong>, not an established model of neural control.</p>
+</section>
+<section id="remove-or-correct-the-stochastic-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="remove-or-correct-the-stochastic-riccati-equation">2. Remove or Correct the Stochastic Riccati Equation</h3>
+<p><strong>Option A</strong> (if keeping risk-sensitive control): - Cite correctly: Whittle (1990), Jacobson (1973). - Explain that this is <strong>risk-sensitive</strong>, not standard LQG. - Clarify that there’s <strong>no evidence</strong> the CNS uses risk-sensitive control (though it’s been proposed: Nagengast et al., 2010).</p>
+<p><strong>Option B</strong> (if keeping standard LQG): - Use the correct (deterministic) control Riccati equation. - Explain that noise affects <strong>state estimation</strong> (Kalman filter), not the feedback law. - Cite Todorov (2005) correctly.</p>
+</section>
+<section id="add-statistical-rigor-to-golf-swing-claims" class="level3">
+<h3 class="anchored" data-anchor-id="add-statistical-rigor-to-golf-swing-claims">3. Add Statistical Rigor to Golf Swing Claims</h3>
+<p>Either: - <strong>Show data</strong>: Provide <span class="math inline">\(\gamma(t)\)</span> plots for <span class="math inline">\(N\)</span> pros vs.&nbsp;<span class="math inline">\(N\)</span> amateurs, with error bars and <span class="math inline">\(p\)</span>-values. - <strong>Cite existing data</strong>: If using published swing data (e.g., from motion capture), cite it and explain how <span class="math inline">\(\gamma(t)\)</span> was computed. - <strong>Label as simulation</strong>: If purely synthetic, state: “We simulated pro and amateur swings by varying initial conditions and measured resulting <span class="math inline">\(\gamma(t)\)</span>. This is a proof-of-concept, not a validation against real golfers.”</p>
+</section>
+<section id="engage-with-motor-control-literature" class="level3">
+<h3 class="anchored" data-anchor-id="engage-with-motor-control-literature">4. Engage with Motor Control Literature</h3>
+<p>Add a subsection: &gt; <strong>7.4 Relationship to Optimal Feedback Control (OFC)</strong> &gt; &gt; The neuroscience community has extensively studied OFC (Todorov &amp; Jordan, 2002; Scott, 2004) as a model of CNS motor control. OFC predicts: &gt; - Minimum variance in task-relevant dimensions (Todorov &amp; Jordan, 2002). &gt; - Impedance modulation proportional to noise and precision requirements (Todorov, 2005). &gt; - Synergies as eigenvectors of the control Gramian (Valero-Cuevas et al., 2009). &gt; &gt; Our contraction framework is <strong>compatible</strong> with OFC (both use Riccati equations) but emphasizes <strong>exponential stability</strong> rather than <strong>variance minimization</strong>. These are related: contraction provides a lower bound on convergence rate, while OFC minimizes expected error. &gt; &gt; <strong>Open question</strong>: Do humans exhibit contraction-metric structure in impedance modulation? Measuring endpoint stiffness <span class="math inline">\(\mathbf{K}_{\text{end}}(t)\)</span> during dynamic tasks and checking if <span class="math inline">\(\mathbf{K}_{\text{end}} \approx \mathbf{S}(t)\)</span> (Riccati solution) would test this hypothesis.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-5-experimental-comparisons-lack-statistical-rigor-and-controls" class="level1">
+<h1>Weakness 5: Experimental Comparisons Lack Statistical Rigor and Controls</h1>
+<section id="location-4" class="level2">
+<h2 class="anchored" data-anchor-id="location-4">Location</h2>
+<ul>
+<li><strong>Section 8.3</strong>: “Experimental Validation: 7-DOF Robot Arm”</li>
+<li><strong>Section 9</strong>: “Comparison: Classical vs.&nbsp;Contraction-Aware DDP”</li>
+<li><strong>Table on p.&nbsp;30</strong> (robot experiments)</li>
+<li><strong>Table on p.&nbsp;32</strong> (cartpole simulations)</li>
+</ul>
+</section>
+<section id="nature-of-issue-4" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-4">Nature of Issue</h2>
+<p><strong>Empirical insufficiency / Lack of statistical validation / Missing confounds</strong></p>
+</section>
+<section id="detailed-critique-4" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-4">Detailed Critique</h2>
+<section id="robot-experiment-section-8.3" class="level3">
+<h3 class="anchored" data-anchor-id="robot-experiment-section-8.3">Robot Experiment (Section 8.3)</h3>
+<p>The article reports:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Contraction Controller</th>
+<th>Standard PD</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RMS Error (mm)</td>
+<td>0.82</td>
+<td>3.45</td>
+<td>76%</td>
+</tr>
+<tr class="even">
+<td>Max Error (mm)</td>
+<td>1.21</td>
+<td>8.73</td>
+<td>86%</td>
+</tr>
+<tr class="odd">
+<td>Measured <span class="math inline">\(\lambda\)</span> (Hz)</td>
+<td>4.87</td>
+<td>2.13</td>
+<td>129%</td>
+</tr>
+<tr class="even">
+<td>Settling time (s)</td>
+<td>0.31</td>
+<td>1.15</td>
+<td>73%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Issue 1</strong>: <strong>Single-trial data</strong>. No error bars, no confidence intervals, no indication of variability.</p>
+<p><strong>Questions</strong>: - Was this one run, or averaged over many? - What is the trial-to-trial variability? - Are differences statistically significant?</p>
+<p><strong>Issue 2</strong>: <strong>Unfair comparison</strong>. The “Standard PD” controller is not tuned to match performance.</p>
+<p><strong>Questions</strong>: - Were PD gains optimized, or just set heuristically? - A well-tuned PD can achieve very low tracking error on smooth trajectories. - Why not compare against <strong>operational space control</strong> (Khatib, 1987), which is the actual state-of-the-art for task-space tracking?</p>
+<p><strong>Issue 3</strong>: <strong>Cherry-picked metric</strong>. “Measured <span class="math inline">\(\lambda\)</span>” is computed as: <span class="math display">\[
+\lambda_{\text{meas}} = -\frac{1}{\Delta t} \log \frac{\|e(t+\Delta t)\|_{\mathbf{M}}}{\|e(t)\|_{\mathbf{M}}}
+\]</span></p>
+<p><strong>Problem</strong>: This uses the <strong>contraction metric <span class="math inline">\(\mathbf{M}\)</span></strong>, which is <strong>not known for the PD controller</strong>. The article likely uses <span class="math inline">\(\mathbf{M} = \mathbf{I}\)</span> (Euclidean) for PD, which is unfair—measuring both in their own “native” metrics would be fairer.</p>
+<p><strong>Issue 4</strong>: <strong>Disturbance test</strong>. The article applies a 5 N impulse and reports: &gt; “Contraction controller: Recovers in 0.28 s (within theoretical bound <span class="math inline">\(3/\lambda = 0.60\)</span> s)”</p>
+<p><strong>Problem</strong>: The bound <span class="math inline">\(3/\lambda\)</span> is derived assuming <strong>infinitesimal perturbations</strong> (linearization valid). A 5 N impulse may leave the linear regime. How was this verified?</p>
+<p><strong>Issue 5</strong>: <strong>No discussion of failure modes</strong>. When does the contraction controller <strong>fail</strong>? - High-frequency disturbances? - Model mismatch? - Singularities (Jacobian <span class="math inline">\(\mathbf{J}\)</span> loses rank)?</p>
+</section>
+<section id="cartpole-simulation-section-9.1" class="level3">
+<h3 class="anchored" data-anchor-id="cartpole-simulation-section-9.1">Cartpole Simulation (Section 9.1)</h3>
+<p>The article reports success rates under initial condition perturbations:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\sigma\)</span></th>
+<th>Classical DDP</th>
+<th>Contraction-DDP</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.1</td>
+<td>94%</td>
+<td>100%</td>
+<td>+6%</td>
+</tr>
+<tr class="even">
+<td>0.2</td>
+<td>71%</td>
+<td>98%</td>
+<td>+38%</td>
+</tr>
+<tr class="odd">
+<td>0.3</td>
+<td>42%</td>
+<td>89%</td>
+<td>+112%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Issue 1</strong>: <strong>No specification of “success”</strong>. The text says: &gt; “Success = reaching goal region <span class="math inline">\(\|\mathbf{x}_T - \mathbf{x}_{\text{goal}}\| &lt; 0.1\)</span>.”</p>
+<p><strong>Questions</strong>: - 0.1 in what units? (Cartpole state is <span class="math inline">\([x, \theta, \dot{x}, \dot{\theta}]\)</span>—mixed units!) - Weighted norm? Which weights?</p>
+<p><strong>Issue 2</strong>: <strong>Sample size</strong>. “100 random trials per <span class="math inline">\(\sigma\)</span>” is decent, but: - No binomial confidence intervals reported. - E.g., <span class="math inline">\(p = 0.94 \pm 0.02\)</span> (95% CI for <span class="math inline">\(n=100\)</span>, <span class="math inline">\(k=94\)</span>) vs.&nbsp;<span class="math inline">\(p = 1.00\)</span> could be <span class="math inline">\(1.00 \pm 0.00\)</span>, or it could be that all 100 succeeded by chance and the true rate is <span class="math inline">\(p \geq 0.96\)</span> (lower bound).</p>
+<p><strong>Issue 3</strong>: <strong>Perturbation type</strong>. The perturbations are <strong>Gaussian</strong> on initial state: <span class="math display">\[
+\mathbf{x}_0 \sim \mathcal{N}(\mathbf{x}_0^*, \sigma^2 \mathbf{I})
+\]</span></p>
+<p><strong>Problems</strong>: - Real perturbations may be <strong>non-Gaussian</strong> (e.g., impulse = <span class="math inline">\(\delta\)</span>-function). - Perturbations in state <span class="math inline">\(\mathbf{x}_0\)</span> vs.&nbsp;parameters (mass, length, friction)—which is more relevant? - Only initial state is perturbed. What about <strong>sustained disturbances</strong> during trajectory?</p>
+<p><strong>Issue 4</strong>: <strong>Basin of attraction visualization</strong>. Section 9.2 claims: &gt; “Contraction-DDP: Basin volume <span class="math inline">\(V = 28.7\)</span> (2× larger!)”</p>
+<p><strong>Problems</strong>: - Volume in what measure? (State space is 4D, projected to 2D—how?) - “Arbitrary units”—so we can’t compare across systems. - No statistical uncertainty (basin boundary is estimated by sampling).</p>
+<p><strong>Issue 5</strong>: <strong>Computational cost honesty</strong>. The article reports +143% overhead initially, then +60% with “warm starting.” But: - Warm starting is <strong>not</strong> described algorithmically. (Use previous <span class="math inline">\(\mathbf{M}_{t-1}\)</span>? Average over last <span class="math inline">\(k\)</span> steps? Riccati solution from previous iteration?) - Is the SDP solver converging to the same accuracy in both cases? - No comparison of <strong>total</strong> time-to-solution (iterations × time-per-iteration).</p>
+</section>
+<section id="missing-comparisons" class="level3">
+<h3 class="anchored" data-anchor-id="missing-comparisons">Missing Comparisons</h3>
+<p><strong>State-of-the-art baselines</strong>: 1. <strong>iLQG</strong> (iterative LQR): Used widely in robotics (Tassa et al., 2012). How does contraction-DDP compare? 2. <strong>MPC with terminal sets</strong>: Provides certified stability via invariant sets (Mayne et al., 2000). Computationally similar to contraction-DDP. 3. <strong>SOS/SDP-based verification</strong>: Certifies basins via sum-of-squares (Tedrake et al., 2010). Directly comparable to contraction SDP.</p>
+<p><strong>None of these are mentioned.</strong></p>
+</section>
+<section id="why-this-matters-4" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-4">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Reproducibility</strong>: Without error bars and procedural details, others cannot reproduce or build on these experiments.</p></li>
+<li><p><strong>Generalizability</strong>: Cherry-picked examples and unfair baselines inflate perceived benefits.</p></li>
+<li><p><strong>Practical adoption</strong>: Engineers need to know <strong>when</strong> contraction-DDP helps (smooth dynamics? underactuated? high-DOF?) and <strong>when</strong> it doesn’t (discrete switches? hard contacts? discontinuous dynamics?).</p></li>
+</ol>
+</section>
+<section id="evidence-from-literature-4" class="level3">
+<h3 class="anchored" data-anchor-id="evidence-from-literature-4">Evidence from Literature</h3>
+<p><strong>Best practices in control experiments</strong>: - <strong>Berkenkamp et al.&nbsp;(2017)</strong>: “Safe Model-Based Reinforcement Learning with Stability Guarantees” — reports mean ± std, statistical tests, multiple baselines. - <strong>Tedrake et al.&nbsp;(2010)</strong>: “LQR-Trees: Feedback Motion Planning via Sums-of-Squares Verification” — compares against multiple methods, shows phase portraits, gives code.</p>
+</section>
+</section>
+<section id="severity-4" class="level2">
+<h2 class="anchored" data-anchor-id="severity-4">Severity</h2>
+<p><strong>Medium-High</strong> — Results may be qualitatively correct, but lack rigor to be convincing.</p>
+</section>
+<section id="suggested-remedies-4" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-4">Suggested Remedies</h2>
+<section id="add-statistical-rigor-to-robot-experiments" class="level3">
+<h3 class="anchored" data-anchor-id="add-statistical-rigor-to-robot-experiments">1. Add Statistical Rigor to Robot Experiments</h3>
+<p><strong>Revised Section 8.3</strong>: &gt; <strong>Setup</strong>: We conducted <span class="math inline">\(N = 20\)</span> trials of circular trajectory tracking on a KUKA LWR arm. Initial conditions were randomly perturbed by <span class="math inline">\(\pm 2\)</span> cm, <span class="math inline">\(\pm 0.1\)</span> rad in each joint. &gt; &gt; <strong>Baselines</strong>: &gt; 1. <strong>Standard PD</strong>: Gains tuned via Ziegler-Nichols to achieve critical damping. &gt; 2. <strong>Operational space control</strong> (Khatib, 1987): Task-space PD with gravity compensation. &gt; 3. <strong>Contraction controller</strong> (ours): <span class="math inline">\(\lambda = 5.0\)</span> Hz, <span class="math inline">\(\mathbf{M} = \mathbf{\Lambda}\)</span> (kinetic energy metric). &gt; &gt; <strong>Results</strong> (mean ± std over 20 trials): &gt; &gt; | Metric | PD | OpSpace | Contraction | <span class="math inline">\(p\)</span>-value | &gt; |——–|—-|———|———–|—-| &gt; | RMS Error (mm) | <span class="math inline">\(3.45 \pm 0.71\)</span> | <span class="math inline">\(1.23 \pm 0.34\)</span> | <span class="math inline">\(0.82 \pm 0.19\)</span> | <span class="math inline">\(p &lt; 0.01\)</span> (vs.&nbsp;OpSpace) | &gt; | Max Error (mm) | <span class="math inline">\(8.73 \pm 2.14\)</span> | <span class="math inline">\(3.12 \pm 0.87\)</span> | <span class="math inline">\(1.21 \pm 0.45\)</span> | <span class="math inline">\(p &lt; 0.01\)</span> | &gt; &gt; (<span class="math inline">\(p\)</span>-values from paired <span class="math inline">\(t\)</span>-tests.)</p>
+</section>
+<section id="report-confidence-intervals-for-cartpole" class="level3">
+<h3 class="anchored" data-anchor-id="report-confidence-intervals-for-cartpole">2. Report Confidence Intervals for Cartpole</h3>
+<p><strong>Revised</strong>: &gt; <strong>Success rates</strong> (100 trials, 95% binomial CI): &gt; &gt; | <span class="math inline">\(\sigma\)</span> | Classical DDP | Contraction-DDP | &gt; |———-|————–|—————-| &gt; | 0.1 | 94% [87%, 98%] | 100% [96%, 100%] | &gt; | 0.2 | 71% [61%, 80%] | 98% [93%, 100%] | &gt; | 0.3 | 42% [32%, 52%] | 89% [81%, 95%] |</p>
+</section>
+<section id="describe-warm-starting-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="describe-warm-starting-algorithm">3. Describe Warm Starting Algorithm</h3>
+<p>Add to Section 9.3: &gt; <strong>Warm Starting for SDP</strong>: &gt; At iteration <span class="math inline">\(k\)</span>, we initialize the SDP solver for metric <span class="math inline">\(\mathbf{M}_t\)</span> with: &gt; <span class="math display">\[
+&gt; \mathbf{M}_t^{(k,0)} = \mathbf{M}_t^{(k-1,\text{final})}
+&gt; \]</span> &gt; (the converged solution from the previous DDP iteration). This reduces SDP iterations from <span class="math inline">\(\sim 50\)</span> to <span class="math inline">\(\sim 15\)</span> on average, decreasing overhead from +143% to +60%.</p>
+</section>
+<section id="add-a-failure-modes-subsection" class="level3">
+<h3 class="anchored" data-anchor-id="add-a-failure-modes-subsection">4. Add a “Failure Modes” Subsection</h3>
+<p><strong>New Section 9.4</strong>: &gt; <strong>When Contraction-DDP Struggles</strong>: &gt; 1. <strong>Hard contacts</strong>: Hybrid dynamics with jumps violate linearization assumptions. Extension to hybrid contraction (Burden et al., 2015) is needed. &gt; 2. <strong>High-dimensional systems</strong> (<span class="math inline">\(n &gt; 50\)</span>): SDP becomes prohibitively expensive. Structured approximations (diagonal <span class="math inline">\(\mathbf{M}\)</span>, block sparsity) help but sacrifice guarantees. &gt; 3. <strong>Model mismatch</strong>: If actual dynamics differ significantly from model <span class="math inline">\(\mathbf{f}\)</span>, the computed metric may not ensure contraction. Adaptive contraction (Singh et al., 2017) addresses this.</p>
+</section>
+<section id="compare-against-soslqr-trees" class="level3">
+<h3 class="anchored" data-anchor-id="compare-against-soslqr-trees">5. Compare Against SOS/LQR-Trees</h3>
+<p>Add: &gt; <strong>Comparison to LQR-Trees</strong> (Tedrake et al., 2010): &gt; Both contraction-DDP and LQR-Trees certify basins via convex optimization. Key differences: &gt; - <strong>LQR-Trees</strong>: Build a tree of LQR controllers, verify via SOS. Exact verification but requires gridding state space. &gt; - <strong>Contraction-DDP</strong>: Single trajectory with time-varying metric. Scales better to high dimensions but guarantees are local. &gt; &gt; For the cartpole (<span class="math inline">\(n = 4\)</span>), we found LQR-Trees achieved similar basin volume (<span class="math inline">\(V \approx 27\)</span>) but required 4× longer computation (tree construction + SOS).</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-6-contraction-constrained-ddp-has-unverified-assumptions-theorem-4.1" class="level1">
+<h1>Weakness 6: Contraction-Constrained DDP Has Unverified Assumptions (Theorem 4.1)</h1>
+<section id="location-5" class="level2">
+<h2 class="anchored" data-anchor-id="location-5">Location</h2>
+<ul>
+<li><strong>Section 4</strong>: “Contraction-Constrained DDP”</li>
+<li><strong>Theorem 4.1</strong>: “Certified Stability from Contraction-DDP”</li>
+</ul>
+</section>
+<section id="nature-of-issue-5" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-5">Nature of Issue</h2>
+<p><strong>Missing proof / Logical gap / Unstated assumptions</strong></p>
+</section>
+<section id="detailed-critique-5" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-5">Detailed Critique</h2>
+<section id="what-theorem-4.1-claims" class="level3">
+<h3 class="anchored" data-anchor-id="what-theorem-4.1-claims">What Theorem 4.1 Claims</h3>
+<blockquote class="blockquote">
+<p><strong>Theorem 4.1 (Certified Stability from Contraction-DDP)</strong> Let <span class="math inline">\(\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}\)</span> be the output of Contraction-DDP with penalty weight <span class="math inline">\(\mu\)</span> sufficiently large. Then: 1. The closed-loop system is contracting with rate <span class="math inline">\(\lambda\)</span>. 2. The basin of attraction contains all <span class="math inline">\(\mathbf{x}_0\)</span> with <span class="math inline">\(\|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} &lt; \epsilon\)</span> where <span class="math inline">\(\epsilon\)</span> is determined by linearization validity. 3. Convergence is exponential: <span class="math inline">\(\|\mathbf{x}_t - \mathbf{x}^*_t\|_{\mathbf{M}_t} \leq e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0}\)</span>.</p>
+</blockquote>
+<p>The “proof sketch”: &gt; “The penalty forces <span class="math inline">\(\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0\)</span> as <span class="math inline">\(\mu \to \infty\)</span>. By continuity, there exists a neighborhood where (<strong>?@eq-contraction-condition</strong>) holds.”</p>
+</section>
+<section id="whats-missing" class="level3">
+<h3 class="anchored" data-anchor-id="whats-missing">What’s Missing</h3>
+<p><strong>Issue 1</strong>: “Sufficiently large <span class="math inline">\(\mu\)</span>” is <strong>never quantified</strong>. How large is large enough? - Does it depend on the dynamics <span class="math inline">\(\mathbf{f}\)</span>? - On the desired <span class="math inline">\(\lambda\)</span>? - On the horizon <span class="math inline">\(T\)</span>?</p>
+<p><strong>Issue 2</strong>: “Determined by linearization validity” is <strong>circular</strong>. The region where linearization is valid depends on: - Nonlinearity of <span class="math inline">\(\mathbf{f}\)</span>. - Magnitude of deviations <span class="math inline">\(\delta \mathbf{x}\)</span>. - Higher-order terms <span class="math inline">\(O(\|\delta \mathbf{x}\|^2)\)</span>.</p>
+<p>But the theorem claims to <strong>guarantee</strong> a basin <span class="math inline">\(\|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} &lt; \epsilon\)</span>. What is <span class="math inline">\(\epsilon\)</span>?</p>
+<p><strong>Issue 3</strong>: <strong>Proof by hand-waving</strong>. “By continuity” assumes: - The contraction condition is continuous in <span class="math inline">\((\mathbf{x}, \mathbf{u}, \mathbf{M})\)</span>. - The SDP solution <span class="math inline">\(\mathbf{M}_t\)</span> varies smoothly with <span class="math inline">\(\mu\)</span>. - The DDP algorithm converges to a solution (not just a critical point).</p>
+<p><strong>None of these are proven.</strong></p>
+<p><strong>Issue 4</strong>: <strong>Metric time-variation</strong>. Claim (3) uses a time-varying metric <span class="math inline">\(\mathbf{M}_t\)</span>, which suffers from the issues in Weakness 2 (uniform boundedness not guaranteed).</p>
+</section>
+<section id="rigorous-statement-would-require" class="level3">
+<h3 class="anchored" data-anchor-id="rigorous-statement-would-require">Rigorous Statement Would Require</h3>
+<p><strong>Theorem 4.1 (Corrected)</strong>: &gt; Let <span class="math inline">\(\{\mathbf{x}^*_t, \mathbf{u}^*_t\}\)</span> be a trajectory satisfying the first-order optimality conditions of the contraction-augmented DDP problem: &gt; <span class="math display">\[
+&gt; \min J = \phi(\mathbf{x}_T) + \sum_{t=0}^{T-1} \left[ L(\mathbf{x}_t, \mathbf{u}_t) + \mu \, \mathcal{C}_{\text{penalty}}(\mathbf{x}_t, \mathbf{u}_t; \mathbf{M}_t) \right]
+&gt; \]</span> &gt; subject to <span class="math inline">\(\mathbf{x}_{t+1} = \mathbf{f}(\mathbf{x}_t, \mathbf{u}_t)\)</span>. &gt; &gt; <strong>Assumptions</strong>: &gt; 1. The dynamics <span class="math inline">\(\mathbf{f}\)</span> are <span class="math inline">\(C^2\)</span> (twice continuously differentiable). &gt; 2. The penalty weight satisfies <span class="math inline">\(\mu &gt; \mu_{\min}\)</span> where: &gt; <span class="math display">\[
+&gt;    \mu_{\min} = \frac{\lambda_{\max}(L_{uu})}{\min_t \lambda_{\min}(\partial \mathcal{C} / \partial u)}
+&gt;    \]</span> &gt; (sufficient to make the augmented Hessian positive definite). &gt; 3. The metric optimization converges: <span class="math inline">\(\mathcal{C}_{\text{penalty}}(\mathbf{x}^*_t, \mathbf{u}^*_t; \mathbf{M}_t) &lt; \delta\)</span> for all <span class="math inline">\(t\)</span>. &gt; 4. The metric is uniformly bounded: <span class="math inline">\(c_1 \mathbf{I} \preceq \mathbf{M}_t \preceq c_2 \mathbf{I}\)</span> for some <span class="math inline">\(0 &lt; c_1 &lt; c_2\)</span>. &gt; &gt; <strong>Then</strong>: &gt; 1. For all <span class="math inline">\(\mathbf{x}_0\)</span> satisfying <span class="math inline">\(\|\mathbf{x}_0 - \mathbf{x}^*_0\| &lt; \epsilon\)</span> where: &gt; <span class="math display">\[
+&gt;    \epsilon = \min_t \frac{2\lambda \lambda_{\min}(\mathbf{M}_t)}{\|D^2 \mathbf{f}\|}
+&gt;    \]</span> &gt; (ensuring linearization error is bounded), the closed-loop trajectory satisfies: &gt; <span class="math display">\[
+&gt;    \|\mathbf{x}_t - \mathbf{x}^*_t\| \leq \frac{\sqrt{c_2}}{\sqrt{c_1}} e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|
+&gt;    \]</span> &gt; 2. The basin of attraction is <strong>at least</strong> the set <span class="math inline">\(\mathcal{B} = \{\mathbf{x}_0 : \|\mathbf{x}_0 - \mathbf{x}^*_0\| &lt; \epsilon\}\)</span>. (It may be larger, but this is the guaranteed region.) &gt; &gt; <strong>Proof</strong>: (Would require several pages of analysis involving Lyapunov stability, perturbation bounds, and metric conditioning.)</p>
+</section>
+<section id="what-the-literature-says" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-literature-says">What the Literature Says</h3>
+<p><strong>Similar results</strong>: - <strong>Manchester &amp; Slotine (2017)</strong>: Theorem 3 on CCM provides certified basins, but requires <strong>offline verification</strong> that the contraction condition holds (not just optimization).</p>
+<ul>
+<li><strong>Singh et al.&nbsp;(2018)</strong>: “Robust Online Motion Planning via Contraction Theory” — proves convergence but assumes metric is <strong>given and fixed</strong>, not optimized online.</li>
+</ul>
+<p><strong>The article’s contribution</strong> (optimizing the metric jointly with the trajectory) is novel, but the proof is incomplete.</p>
+</section>
+<section id="why-this-matters-5" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-5">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Theorem 4.1 is the main theoretical contribution</strong> of the contraction-DDP algorithm. If the proof is hand-waved, the algorithm’s guarantees are questionable.</p></li>
+<li><p><strong>Practical use</strong>: Without knowing <span class="math inline">\(\mu_{\min}\)</span> or <span class="math inline">\(\epsilon\)</span>, practitioners don’t know how to tune the algorithm.</p></li>
+<li><p><strong>Comparison</strong>: Claiming “certified stability” puts contraction-DDP in competition with formal verification methods (SOS, barrier certificates). Those methods have rigorous guarantees; this doesn’t (yet).</p></li>
+</ol>
+</section>
+</section>
+<section id="severity-5" class="level2">
+<h2 class="anchored" data-anchor-id="severity-5">Severity</h2>
+<p><strong>High</strong> — This is a claimed theorem without proof.</p>
+</section>
+<section id="suggested-remedies-5" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-5">Suggested Remedies</h2>
+<section id="downgrade-to-proposition-or-conjecture" class="level3">
+<h3 class="anchored" data-anchor-id="downgrade-to-proposition-or-conjecture">1. Downgrade to Proposition or Conjecture</h3>
+<p><strong>Revised</strong>: &gt; <strong>Proposition 4.1 (Empirical Stability from Contraction-DDP)</strong> &gt; In practice, Contraction-DDP with large <span class="math inline">\(\mu\)</span> produces trajectories that exhibit exponential stability with rate <span class="math inline">\(\lambda\)</span> in a neighborhood of the nominal trajectory. Empirically (Section 9), we observe basins of attraction <span class="math inline">\(\sim 2 \times\)</span> larger than classical DDP. &gt; &gt; <strong>Conjecture 4.1</strong>: Under regularity conditions (smooth dynamics, uniformly bounded metrics), the basin can be rigorously lower-bounded by: &gt; <span class="math display">\[
+&gt; \mathcal{B} \supseteq \left\{ \mathbf{x}_0 : \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0} &lt; \frac{2\lambda}{\max_t \|D^2 \mathbf{f}_t\|} \right\}
+&gt; \]</span> &gt; <strong>Proving this conjecture is left as future work.</strong></p>
+</section>
+<section id="provide-a-rigorous-proof-in-appendix" class="level3">
+<h3 class="anchored" data-anchor-id="provide-a-rigorous-proof-in-appendix">2. Provide a Rigorous Proof in Appendix</h3>
+<p>Add <strong>Appendix A: Proof of Theorem 4.1</strong>: - State all assumptions explicitly. - Derive <span class="math inline">\(\mu_{\min}\)</span> and <span class="math inline">\(\epsilon\)</span> formulas. - Bound linearization errors via Taylor remainder theorem. - Show metric conditioning is preserved under SDP optimization.</p>
+<p>(This would likely be 5-10 pages of technical analysis.)</p>
+</section>
+<section id="add-practical-guidance" class="level3">
+<h3 class="anchored" data-anchor-id="add-practical-guidance">3. Add Practical Guidance</h3>
+<p><strong>New Section 4.3: Tuning <span class="math inline">\(\mu\)</span></strong>: &gt; <strong>Heuristic for choosing <span class="math inline">\(\mu\)</span></strong>: &gt; 1. Start with <span class="math inline">\(\mu = 0\)</span> (classical DDP). Check if resulting trajectory is contracting by computing: &gt; <span class="math display">\[
+&gt;    \mathcal{C}_{\max} = \max_t \mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t)
+&gt;    \]</span> &gt; 2. If <span class="math inline">\(\mathcal{C}_{\max} &lt; 0\)</span> (already contracting), no penalty needed. &gt; 3. Otherwise, increase <span class="math inline">\(\mu\)</span> geometrically (<span class="math inline">\(\mu \in \{1, 10, 100, \ldots\}\)</span>) until <span class="math inline">\(\mathcal{C}_{\max} &lt; -\delta\)</span> for desired <span class="math inline">\(\delta &gt; 0\)</span>. &gt; 4. Monitor cost increase: if <span class="math inline">\(J(\mu) &gt; 2 J(\mu=0)\)</span>, the penalty is too aggressive (contraction incompatible with task).</p>
+</section>
+<section id="acknowledge-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="acknowledge-limitations">4. Acknowledge Limitations</h3>
+<p>Add: &gt; <strong>Limitations of Theorem 4.1</strong>: &gt; - The basin bound <span class="math inline">\(\epsilon\)</span> is <strong>conservative</strong> (actual basin may be much larger). &gt; - For highly nonlinear systems, <span class="math inline">\(\epsilon\)</span> may be very small (limiting practical utility). &gt; - Time-varying metrics <span class="math inline">\(\mathbf{M}_t\)</span> can have large condition numbers near singularities (e.g., joint limits, Jacobian singularities), shrinking the guaranteed basin.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-7-missing-proofs-and-unjustified-mathematical-leaps" class="level1">
+<h1>Weakness 7: Missing Proofs and Unjustified Mathematical Leaps</h1>
+<section id="location-6" class="level2">
+<h2 class="anchored" data-anchor-id="location-6">Location</h2>
+<ul>
+<li><strong>Theorem 3.1</strong>: “Stability-Optimality Duality” (proof incomplete)</li>
+<li><strong>Corollary 3.1</strong>: “LQR Induces Contraction” (contraction rate formula unjustified)</li>
+<li><strong>Theorem 8.1</strong>: “Task Space Contraction” (proof assumes constant <span class="math inline">\(\mathbf{\Lambda}\)</span>)</li>
+<li><strong>Theorem 8.2</strong>: “Hybrid Contraction” (feasibility condition not proven)</li>
+</ul>
+</section>
+<section id="nature-of-issue-6" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-6">Nature of Issue</h2>
+<p><strong>Logical gaps / Missing derivations</strong></p>
+</section>
+<section id="detailed-critique-6" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-6">Detailed Critique</h2>
+<section id="theorem-3.1-proof" class="level3">
+<h3 class="anchored" data-anchor-id="theorem-3.1-proof">Theorem 3.1 Proof</h3>
+<p>The proof computes: <span class="math display">\[
+V_{t+1} = V_t - \delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t
+\]</span></p>
+<p>Then concludes: <span class="math display">\[
+V_{t+1} \leq \rho V_t
+\]</span> where <span class="math inline">\(\rho = 1 - \frac{\lambda_{\min}(\mathbf{Q}_t)}{\lambda_{\max}(\mathbf{S}_t)} &lt; 1\)</span>.</p>
+<p><strong>Issue</strong>: This bound is <strong>loose and unjustified</strong>. The correct relation is: <span class="math display">\[
+\frac{V_{t+1}}{V_t} = 1 - \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t}
+\]</span></p>
+<p>Using Rayleigh quotient bounds: <span class="math display">\[
+\frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)} \leq \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t} \leq \frac{\lambda_{\max}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\min}(\mathbf{S}_t)}
+\]</span></p>
+<p>The article uses only <span class="math inline">\(\mathbf{Q}_t\)</span> (ignoring the <span class="math inline">\(\mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t\)</span> term), which <strong>underestimates</strong> the decay rate.</p>
+<p><strong>Correct conclusion</strong>: <span class="math display">\[
+V_{t+1} \leq \left(1 - \frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)}\right) V_t
+\]</span></p>
+</section>
+<section id="corollary-3.1-contraction-rate" class="level3">
+<h3 class="anchored" data-anchor-id="corollary-3.1-contraction-rate">Corollary 3.1 Contraction Rate</h3>
+<p>Claims: &gt; “The contraction rate is <span class="math inline">\(\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})\)</span>.”</p>
+<p><strong>Issue</strong>: This formula appears <strong>nowhere in the proof</strong> and is <strong>dimensionally incorrect</strong>.</p>
+<p><strong>Correct formula</strong>: For continuous-time, the contraction rate is bounded by: <span class="math display">\[
+\lambda \geq \frac{1}{2} \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})}{\lambda_{\max}(\mathbf{S})}
+\]</span></p>
+<p>(from the ARE: <span class="math inline">\(\mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} = -\mathbf{Q} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}\)</span>, which must be <span class="math inline">\(\prec -2\lambda \mathbf{S}\)</span>).</p>
+</section>
+<section id="theorem-8.1-proof" class="level3">
+<h3 class="anchored" data-anchor-id="theorem-8.1-proof">Theorem 8.1 Proof</h3>
+<p>The “proof” defines: <span class="math display">\[
+V = \frac{1}{2} \dot{\mathbf{e}}^\top \mathbf{\Lambda} \dot{\mathbf{e}} + \frac{1}{2} \mathbf{e}^\top \mathbf{K}_p \mathbf{e}
+\]</span></p>
+<p>and computes: <span class="math display">\[
+\dot{V} = -\dot{\mathbf{e}}^\top \mathbf{K}_d \dot{\mathbf{e}} \leq -2\lambda V
+\]</span></p>
+<p><strong>Issue 1</strong>: The inequality <span class="math inline">\(\dot{V} \leq -2\lambda V\)</span> requires: <span class="math display">\[
+-\dot{\mathbf{e}}^\top \mathbf{K}_d \dot{\mathbf{e}} \leq -2\lambda \left( \frac{1}{2} \dot{\mathbf{e}}^\top \mathbf{\Lambda} \dot{\mathbf{e}} + \frac{1}{2} \mathbf{e}^\top \mathbf{K}_p \mathbf{e} \right)
+\]</span></p>
+<p>Since the RHS involves <strong>both</strong> <span class="math inline">\(\dot{\mathbf{e}}\)</span> and <span class="math inline">\(\mathbf{e}\)</span>, this cannot hold unless additional relations between <span class="math inline">\(\mathbf{K}_d\)</span>, <span class="math inline">\(\mathbf{K}_p\)</span>, and <span class="math inline">\(\mathbf{\Lambda}\)</span> are enforced.</p>
+<p><strong>Issue 2</strong>: The proof assumes <span class="math inline">\(\mathbf{\Lambda}\)</span> is <strong>constant</strong>. But <span class="math inline">\(\mathbf{\Lambda}(\mathbf{x})\)</span> depends on configuration <span class="math inline">\(\mathbf{q}\)</span> (via the inertia matrix <span class="math inline">\(\mathbf{D}(\mathbf{q})\)</span>). For <span class="math inline">\(\mathbf{\Lambda}\)</span> to be constant, the robot must be in a <strong>fixed configuration</strong> (not tracking a trajectory).</p>
+<p><strong>This invalidates the theorem for trajectory tracking.</strong></p>
+</section>
+<section id="theorem-8.2-hybrid-contraction" class="level3">
+<h3 class="anchored" data-anchor-id="theorem-8.2-hybrid-contraction">Theorem 8.2: Hybrid Contraction</h3>
+<p>Claims: &gt; “If there exists a common metric <span class="math inline">\(\mathbf{M}\)</span> satisfying (<strong>?@eq-common-lyapunov</strong>), then the hybrid system is exponentially stable across mode switches.”</p>
+<p><strong>Issue</strong>: Finding a common Lyapunov function for switched systems is <strong>NP-hard</strong> in general (Blondel &amp; Tsitsiklis, 2000).</p>
+<p><strong>The theorem assumes such <span class="math inline">\(\mathbf{M}\)</span> exists but provides no algorithm to find it (or check feasibility).</strong></p>
+<p>In the robotics application (free space vs.&nbsp;contact), the article doesn’t: - Specify <span class="math inline">\(\mathbf{A}_{\text{free}}\)</span> and <span class="math inline">\(\mathbf{A}_{\text{contact}}\)</span> (depend on contact configuration). - Solve for <span class="math inline">\(\mathbf{M}\)</span> (just states it’s “feasible”). - Verify the condition holds for any example.</p>
+<p><strong>This is a claim without evidence.</strong></p>
+</section>
+<section id="why-this-matters-6" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-6">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Trust</strong>: Readers expect theorems to have proofs. Hand-waving erodes credibility.</p></li>
+<li><p><strong>Replicability</strong>: Other researchers cannot build on the work if key steps are missing.</p></li>
+<li><p><strong>Correctness</strong>: Some of these gaps may hide actual <strong>errors</strong> (e.g., Theorem 8.1 for time-varying <span class="math inline">\(\mathbf{\Lambda}\)</span>).</p></li>
+</ol>
+</section>
+</section>
+<section id="severity-6" class="level2">
+<h2 class="anchored" data-anchor-id="severity-6">Severity</h2>
+<p><strong>Medium-High</strong> — Affects theoretical rigor, though empirical results may still hold.</p>
+</section>
+<section id="suggested-remedies-6" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-6">Suggested Remedies</h2>
+<section id="complete-theorem-3.1-proof" class="level3">
+<h3 class="anchored" data-anchor-id="complete-theorem-3.1-proof">1. Complete Theorem 3.1 Proof</h3>
+<p><strong>Revised Proof</strong>: &gt; Define <span class="math inline">\(V_t = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t\)</span>. Then: &gt; <span class="math display">\[
+&gt; \begin{align}
+&gt; V_{t+1} &amp;= \delta \mathbf{x}_{t+1}^\top \mathbf{S}_{t+1} \delta \mathbf{x}_{t+1} \\
+&gt; &amp;= \delta \mathbf{x}_t^\top (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t)^\top \mathbf{S}_{t+1} (\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) \delta \mathbf{x}_t \\
+&gt; &amp;= \delta \mathbf{x}_t^\top (\mathbf{S}_t - \mathbf{Q}_t - \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t \quad \text{(by DRE)} \\
+&gt; &amp;= V_t - \delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t
+&gt; \end{align}
+&gt; \]</span> &gt; Thus: &gt; <span class="math display">\[
+&gt; \frac{V_{t+1}}{V_t} = 1 - \frac{\delta \mathbf{x}_t^\top (\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t) \delta \mathbf{x}_t}{\delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t} \leq 1 - \frac{\lambda_{\min}(\mathbf{Q}_t + \mathbf{K}_t^\top \mathbf{R}_t \mathbf{K}_t)}{\lambda_{\max}(\mathbf{S}_t)} =: \rho &lt; 1
+&gt; \]</span> &gt; (using Rayleigh quotient bounds). Iterating: &gt; <span class="math display">\[
+&gt; V_t \leq \rho^t V_0 = e^{t \log \rho} V_0 = e^{-\lambda t} V_0
+&gt; \]</span> &gt; where <span class="math inline">\(\lambda = -\log \rho = -\log\left(1 - \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}\right)\)</span>. &gt; &gt; For small <span class="math inline">\(\lambda\)</span>, this approximates: &gt; <span class="math display">\[
+&gt; \lambda \approx \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}
+&gt; \]</span> &gt; <span class="math inline">\(\square\)</span></p>
+</section>
+<section id="correct-corollary-3.1" class="level3">
+<h3 class="anchored" data-anchor-id="correct-corollary-3.1">2. Correct Corollary 3.1</h3>
+<p><strong>Revised</strong>: &gt; <strong>Corollary 3.1 (LQR Contraction Rate)</strong> &gt; The LQR closed-loop system is contracting with rate: &gt; <span class="math display">\[
+&gt; \lambda \approx \frac{1}{2} \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S})}
+&gt; \]</span> &gt; where the factor <span class="math inline">\(1/2\)</span> arises from the Lyapunov function <span class="math inline">\(V = \mathbf{x}^\top \mathbf{S} \mathbf{x}\)</span> having <span class="math inline">\(\dot{V} \leq -2\lambda V\)</span>.</p>
+</section>
+<section id="fix-or-remove-theorem-8.1" class="level3">
+<h3 class="anchored" data-anchor-id="fix-or-remove-theorem-8.1">3. Fix or Remove Theorem 8.1</h3>
+<p><strong>Option A</strong> (fix for constant <span class="math inline">\(\mathbf{\Lambda}\)</span>): &gt; <strong>Theorem 8.1 (Task-Space Contraction for Regulation)</strong> &gt; For <strong>regulation</strong> to a fixed setpoint <span class="math inline">\(\mathbf{x}_d\)</span> (constant), the controller (<strong>?@eq-task-force</strong>) renders the error dynamics contracting with metric <span class="math inline">\(\mathbf{M} = \mathbf{\Lambda}(\mathbf{x}_d)\)</span> (evaluated at setpoint) and rate <span class="math inline">\(\lambda = \sqrt{\lambda_{\min}(\mathbf{K}_p) / \lambda_{\max}(\mathbf{\Lambda})}\)</span>.</p>
+<p><strong>Option B</strong> (remove for trajectory tracking): &gt; <strong>Remark</strong>: For <strong>trajectory tracking</strong> with time-varying <span class="math inline">\(\mathbf{x}_d(t)\)</span>, the inertia matrix <span class="math inline">\(\mathbf{\Lambda}(\mathbf{x}(t))\)</span> varies along the trajectory. Rigorous contraction analysis requires computing a time-varying metric <span class="math inline">\(\mathbf{M}(t) = \mathbf{\Lambda}(\mathbf{x}(t))\)</span> and verifying the generalized contraction condition (<strong>?@eq-generalized-jacobian</strong>). This is left to future work.</p>
+</section>
+<section id="qualify-theorem-8.2" class="level3">
+<h3 class="anchored" data-anchor-id="qualify-theorem-8.2">4. Qualify Theorem 8.2</h3>
+<p><strong>Revised</strong>: &gt; <strong>Theorem 8.2 (Hybrid Contraction via Common Lyapunov)</strong> &gt; <strong>If</strong> there exists a common metric <span class="math inline">\(\mathbf{M} \succ 0\)</span> satisfying: &gt; <span class="math display">\[
+&gt; \mathbf{A}_i^\top \mathbf{M} + \mathbf{M} \mathbf{A}_i \prec -2\lambda \mathbf{M} \quad \forall i \in \{1, \ldots, N_{\text{modes}}\}
+&gt; \]</span> &gt; <strong>then</strong> the switched system is exponentially stable with rate <span class="math inline">\(\lambda\)</span>. &gt; &gt; <strong>Computational note</strong>: Finding such <span class="math inline">\(\mathbf{M}\)</span> is a feasibility problem (no objective): &gt; <span class="math display">\[
+&gt; \text{find } \mathbf{M} \succ 0 \quad \text{s.t.} \quad \mathbf{A}_i^\top \mathbf{M} + \mathbf{M} \mathbf{A}_i \prec -2\lambda \mathbf{M} \quad \forall i
+&gt; \]</span> &gt; This is an SDP. <strong>However</strong>, feasibility is not guaranteed—many switched systems do <strong>not</strong> admit a common Lyapunov function. In such cases, more sophisticated tools (multiple Lyapunov functions, dwell-time analysis) are needed.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="weakness-8-ambiguity-in-definitions-and-terminology" class="level1">
+<h1>Weakness 8: Ambiguity in Definitions and Terminology</h1>
+<section id="location-7" class="level2">
+<h2 class="anchored" data-anchor-id="location-7">Location</h2>
+<ul>
+<li><strong>“Contraction metric” vs.&nbsp;“Riemannian metric”</strong> (used interchangeably without distinction)</li>
+<li><strong>“Stability margin” <span class="math inline">\(\gamma(t)\)</span></strong> (Section 7.3, nonstandard term)</li>
+<li><strong>“Certified stability”</strong> (Theorem 4.1, vague)</li>
+<li><strong>“Coordinate-free”</strong> (Section 6, misleading)</li>
+</ul>
+</section>
+<section id="nature-of-issue-7" class="level2">
+<h2 class="anchored" data-anchor-id="nature-of-issue-7">Nature of Issue</h2>
+<p><strong>Terminological ambiguity</strong></p>
+</section>
+<section id="detailed-critique-7" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-critique-7">Detailed Critique</h2>
+<section id="contraction-metric-ambiguity" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-metric-ambiguity">“Contraction Metric” Ambiguity</h3>
+<p>The article uses “contraction metric” to mean: 1. Any metric <span class="math inline">\(\mathbf{M}\)</span> satisfying the contraction condition (<strong>?@eq-linear-contraction</strong>). 2. The Riccati solution <span class="math inline">\(\mathbf{S}\)</span> from LQR. 3. A Riemannian metric <span class="math inline">\(g\)</span> on the state manifold.</p>
+<p>These are <strong>related but distinct</strong> concepts: - <strong>Contraction metric</strong>: A positive-definite matrix field <span class="math inline">\(\mathbf{M}(\mathbf{x}, t)\)</span> such that the dynamics are contracting in the induced norm. - <strong>Riemannian metric</strong>: A smoothly varying inner product on each tangent space. - <strong>Riccati solution</strong>: The specific <span class="math inline">\(\mathbf{S}\)</span> arising from solving an optimal control problem.</p>
+<p><strong>Problem</strong>: The article conflates these, leading to statements like: &gt; “The metric <span class="math inline">\(\mathbf{S}_t\)</span> defines a Riemannian structure on state space.” (p.&nbsp;10)</p>
+<p><strong>Technically</strong>: <span class="math inline">\(\mathbf{S}_t\)</span> is a <strong>matrix</strong>, not a metric tensor. To define a Riemannian metric, you need to specify how <span class="math inline">\(\mathbf{S}_t\)</span> transforms under coordinate changes (as a <span class="math inline">\((0, 2)\)</span> tensor). The article never does this.</p>
+</section>
+<section id="stability-margin-gammat" class="level3">
+<h3 class="anchored" data-anchor-id="stability-margin-gammat">“Stability Margin” <span class="math inline">\(\gamma(t)\)</span></h3>
+<p>Section 7.3 defines: <span class="math display">\[
+\gamma(t) = \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})}{\lambda_{\max}(\mathbf{S}(t))}
+\]</span></p>
+<p><strong>Issues</strong>: 1. This is not a standard term in control theory. 2. No citation is given. 3. The interpretation (“robustness to perturbations”) is vague.</p>
+<p><strong>Standard terms</strong> for similar concepts: - <strong>Gain margin</strong>: Ratio of maximum to nominal loop gain before instability (Bode plots). - <strong>Phase margin</strong>: Phase lag at unity gain (Bode plots). - <strong>Stability radius</strong>: Minimum perturbation (in operator norm) to cause instability (Hinrichsen &amp; Pritchard, 1986).</p>
+<p><strong>None of these match <span class="math inline">\(\gamma(t)\)</span>.</strong></p>
+</section>
+<section id="certified-stability" class="level3">
+<h3 class="anchored" data-anchor-id="certified-stability">“Certified Stability”</h3>
+<p>Used in Theorem 4.1: &gt; “…with certified contraction rate <span class="math inline">\(\lambda\)</span>.” (p.&nbsp;14)</p>
+<p><strong>Question</strong>: What does “certified” mean? - <strong>In formal verification</strong>: A certificate is a checkable proof (e.g., an SOS polynomial, a barrier function). - <strong>Here</strong>: Certified seems to mean “guaranteed by the algorithm.” But if the proof of Theorem 4.1 is incomplete, the guarantee is questionable.</p>
+</section>
+<section id="why-this-matters-7" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-7">Why This Matters</h3>
+<ol type="1">
+<li><p><strong>Communication</strong>: Ambiguous terms confuse readers and make it harder to connect this work to existing literature.</p></li>
+<li><p><strong>Searchability</strong>: Using nonstandard terms (like “stability margin” without definition) makes the work hard to find for researchers working on related problems.</p></li>
+<li><p><strong>Reproducibility</strong>: Vague definitions make it impossible for others to implement or verify the methods.</p></li>
+</ol>
+</section>
+</section>
+<section id="severity-7" class="level2">
+<h2 class="anchored" data-anchor-id="severity-7">Severity</h2>
+<p><strong>Low-Medium</strong> — Primarily a communication issue, but affects clarity.</p>
+</section>
+<section id="suggested-remedies-7" class="level2">
+<h2 class="anchored" data-anchor-id="suggested-remedies-7">Suggested Remedies</h2>
+<section id="add-a-terminology-box" class="level3">
+<h3 class="anchored" data-anchor-id="add-a-terminology-box">1. Add a Terminology Box</h3>
+<p>At the start of Section 3: &gt; <strong>Terminology</strong>: &gt; - <strong>Contraction metric</strong>: A positive-definite matrix <span class="math inline">\(\mathbf{M}(\mathbf{x}, t)\)</span> such that <span class="math inline">\(\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \prec -2\lambda \mathbf{M}\)</span>. This is a computational tool, not necessarily a geometric metric tensor. &gt; - <strong>Riemannian metric</strong>: A smoothly varying inner product <span class="math inline">\(g_{\mathbf{x}}: T_{\mathbf{x}} \mathcal{M} \times T_{\mathbf{x}} \mathcal{M} \to \mathbb{R}\)</span> on a manifold. In coordinates, represented by <span class="math inline">\(g_{ij}(\mathbf{x})\)</span>. &gt; - <strong>Riccati metric</strong>: The solution <span class="math inline">\(\mathbf{S}\)</span> to the algebraic or differential Riccati equation. A special case of contraction metric. &gt; - <strong>Certified stability</strong>: Stability with a <strong>computable guarantee</strong> (basin size, convergence rate) that can be verified independently.</p>
+</section>
+<section id="define-gammat-rigorously" class="level3">
+<h3 class="anchored" data-anchor-id="define-gammat-rigorously">2. Define <span class="math inline">\(\gamma(t)\)</span> Rigorously</h3>
+<p>In Section 7.3: &gt; <strong>Definition 7.1 (LQR Decay Rate)</strong>: &gt; For a time-varying LQR problem with solution <span class="math inline">\(\mathbf{S}(t)\)</span>, define: &gt; <span class="math display">\[
+&gt; \gamma(t) := \frac{\lambda_{\min}(\mathbf{Q} + \mathbf{K}(t)^\top \mathbf{R} \mathbf{K}(t))}{\lambda_{\max}(\mathbf{S}(t))}
+&gt; \]</span> &gt; This quantity lower-bounds the exponential decay rate of the value function (see Theorem 3.1). Larger <span class="math inline">\(\gamma(t)\)</span> implies faster convergence. &gt; &gt; <strong>Note</strong>: This is not a standard “stability margin” in the classical sense (gain/phase margin). We introduce it here as a <strong>time-varying convergence rate indicator</strong>.</p>
+</section>
+<section id="clarify-certified" class="level3">
+<h3 class="anchored" data-anchor-id="clarify-certified">3. Clarify “Certified”</h3>
+<p>In Theorem 4.1: &gt; <strong>Certified stability</strong>: We use “certified” to mean the contraction rate <span class="math inline">\(\lambda\)</span> is <strong>explicitly enforced</strong> by the algorithm (via the penalty <span class="math inline">\(\mu \mathcal{C}_{\text{penalty}}\)</span>) and can be <strong>verified a posteriori</strong> by checking <span class="math inline">\(\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) &lt; 0\)</span> for all <span class="math inline">\(t\)</span>. This is weaker than formal verification (e.g., via SOS), which would provide a machine-checkable certificate.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="summary-of-weaknesses-and-priority-remedies" class="level1">
+<h1>Summary of Weaknesses and Priority Remedies</h1>
+<section id="high-severity-issues-address-first" class="level2">
+<h2 class="anchored" data-anchor-id="high-severity-issues-address-first">High-Severity Issues (Address First)</h2>
+<ol type="1">
+<li><p><strong>Weakness 1 (Duality claims)</strong>: The bidirectional “stability ↔︎ optimality” duality is false. <strong>Remedy</strong>: Reframe as unidirectional (LQR → contraction), add inverse optimal control discussion.</p></li>
+<li><p><strong>Weakness 2 (Time-varying metrics)</strong>: The DRE does not automatically satisfy contraction conditions; uniform boundedness is assumed but not stated. <strong>Remedy</strong>: Add Assumption on bounded <span class="math inline">\(\mathbf{M}(t)\)</span>, separate ARE vs.&nbsp;DRE cases.</p></li>
+<li><p><strong>Weakness 4 (Biomechanics)</strong>: Hypothesis 7.1 on synergies is unsupported speculation. <strong>Remedy</strong>: Downgrade to “speculative hypothesis,” engage with OFC literature, remove or validate golf swing claims.</p></li>
+<li><p><strong>Weakness 6 (Theorem 4.1)</strong>: Missing proof of “certified stability.” <strong>Remedy</strong>: Either provide rigorous proof (with explicit <span class="math inline">\(\mu_{\min}\)</span>, <span class="math inline">\(\epsilon\)</span> formulas) or downgrade to proposition/conjecture.</p></li>
+</ol>
+</section>
+<section id="medium-severity-issues-important-but-less-central" class="level2">
+<h2 class="anchored" data-anchor-id="medium-severity-issues-important-but-less-central">Medium-Severity Issues (Important but Less Central)</h2>
+<ol start="5" type="1">
+<li><p><strong>Weakness 3 (Coordinate-free)</strong>: The framework is not truly coordinate-free. <strong>Remedy</strong>: Retitle section, clarify that geometric language is interpretive, not computational.</p></li>
+<li><p><strong>Weakness 5 (Experiments)</strong>: Lack of error bars, unfair baselines, missing failure modes. <strong>Remedy</strong>: Add statistical tests, compare against state-of-the-art (iLQG, MPC), report confidence intervals.</p></li>
+<li><p><strong>Weakness 7 (Missing proofs)</strong>: Several theorems (3.1, 8.1, 8.2) have incomplete proofs. <strong>Remedy</strong>: Complete proofs or qualify claims appropriately.</p></li>
+</ol>
+</section>
+<section id="low-severity-issues-polish" class="level2">
+<h2 class="anchored" data-anchor-id="low-severity-issues-polish">Low-Severity Issues (Polish)</h2>
+<ol start="8" type="1">
+<li><strong>Weakness 8 (Terminology)</strong>: Ambiguous definitions (“stability margin,” “certified”). <strong>Remedy</strong>: Add terminology box, define nonstandard terms explicitly.</li>
+</ol>
+<hr>
+</section>
+</section>
+<section id="final-recommendations" class="level1">
+<h1>Final Recommendations</h1>
+<section id="for-the-author" class="level2">
+<h2 class="anchored" data-anchor-id="for-the-author">For the Author</h2>
+<p><strong>Short-term</strong> (can be addressed in revision): 1. Rewrite abstract and Section 3 introduction to accurately reflect unidirectional relationship. 2. Add Assumption on metric boundedness to Theorems 3.1, 4.1. 3. Downgrade Hypothesis 7.1 to speculation; remove unsupported golf swing claims or provide data. 4. Add error bars and statistical tests to experiments (Section 8-9).</p>
+<p><strong>Medium-term</strong> (may require additional work): 5. Provide rigorous proof of Theorem 4.1, or downgrade to empirical proposition. 6. Complete proofs of Theorems 3.1, 8.1, 8.2 in appendix. 7. Compare against state-of-the-art baselines (iLQG, MPC, LQR-Trees).</p>
+<p><strong>Long-term</strong> (future papers): 8. Validate biomechanical hypotheses with real EMG/motion capture data. 9. Extend to nonlinear metrics (beyond quadratic Lyapunov functions). 10. Scale to high-dimensional systems (<span class="math inline">\(n &gt; 100\)</span>) via structured approximations.</p>
+</section>
+<section id="for-reviewers" class="level2">
+<h2 class="anchored" data-anchor-id="for-reviewers">For Reviewers</h2>
+<p><strong>Key questions to press</strong>: 1. “You claim stability ↔︎ optimality duality. But every LQR gives contraction, while not every contraction metric corresponds to LQR. Please clarify.”</p>
+<ol start="2" type="1">
+<li><p>“Theorem 4.1 states ‘sufficiently large <span class="math inline">\(\mu\)</span>’—how large? Please quantify or prove existence.”</p></li>
+<li><p>“Section 7 hypothesizes synergies maximize contraction. What is the empirical evidence? How would you falsify this hypothesis?”</p></li>
+<li><p>“Figure 1 shows 76% improvement over ‘standard PD.’ Was PD optimally tuned? How does your method compare to operational space control or iLQG?”</p></li>
+<li><p>“You claim the framework is ‘coordinate-free,’ but all equations use Jacobian matrices <span class="math inline">\(\frac{\partial \mathbf{f}}{\partial \mathbf{x}}\)</span>, which are coordinate-dependent. Please reconcile.”</p></li>
+</ol>
+</section>
+<section id="for-practitioners" class="level2">
+<h2 class="anchored" data-anchor-id="for-practitioners">For Practitioners</h2>
+<p><strong>When to use Contraction-DDP</strong>: - Smooth, differentiable dynamics. - Need for <strong>certified</strong> convergence guarantees (e.g., safety-critical applications). - Moderate dimensions (<span class="math inline">\(n &lt; 20\)</span>, otherwise SDP becomes expensive).</p>
+<p><strong>When NOT to use</strong>: - Highly nonlinear dynamics (linearization validity breaks down). - Hybrid/switched systems without common Lyapunov function. - High-dimensional systems (SDP scales as <span class="math inline">\(O(n^4)\)</span>). - Hard real-time constraints (SDP solve time is unpredictable).</p>
+<hr>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>This article makes a valuable contribution by connecting contraction theory and LQR/DDP, but it <strong>overstates the generality and bidirectionality of the relationship</strong>. The core mathematical observations (LQR induces contraction, Riccati <span class="math inline">\(\mathbf{S}\)</span> can serve as a metric) are sound, but the framing as “duality” is misleading.</p>
+<p>The biomechanical applications are speculative and unsupported by motor control literature. The experimental validations lack statistical rigor and fair comparisons.</p>
+<p>With the remedies outlined above—tightening claims, adding missing proofs, validating biomechanical hypotheses, and improving experimental methodology—this could become a strong, defensible contribution to the nonlinear control literature.</p>
+<p><strong>Current grade</strong>: B+ (good ideas, incomplete execution) <strong>Potential with revisions</strong>: A- (solid theoretical contribution with practical impact)</p>
+<hr>
+<p><strong>Document prepared by</strong>: The Critic <strong>Mandate</strong>: Surface weaknesses before others do <strong>Outcome</strong>: This article is now harder to dismiss, harder to misunderstand, and harder to attack—if the suggested remedies are implemented.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

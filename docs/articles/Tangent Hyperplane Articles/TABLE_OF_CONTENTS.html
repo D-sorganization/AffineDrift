@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>table_of_contents – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+<!-- SEO: Open Graph / Twitter Cards -->
+<meta property="og:site_name" content="AffineDrift">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<!-- SEO: JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AffineDrift",
+  "url": "https://affinedrift.com",
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Dieter Olson"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AffineDrift",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+    }
+  }
+}
+</script>
+
+<!-- SEO: Additional meta tags -->
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="author" content="Dieter Olson">
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+<link rel="canonical" href="https://affinedrift.com">
+
+<!-- Performance: Preload critical resources -->
+<link rel="preload" href="../../css/startup-launcher.css" as="style">
+<link rel="preload" href="../../styles.css" as="style">
+<link rel="preload" href="../../script.js" as="script">
+<link rel="preload" href="../../js/startup-launcher.js" as="script">
+<link rel="modulepreload" href="../../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../../js/startup-launcher.js"></script>
+
+<!-- PWA and Mobile Optimization -->
+<link rel="manifest" href="../../manifest.json">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+<link rel="apple-touch-icon" href="../../logo/logo_transparent_1.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+
+<!-- Preconnect and Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../feed.xml">
+<style>
+  .rss-feed-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+  .rss-feed-link:hover {
+    color: #ffa500;
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  .rss-feed-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .quarto-navbar-tools {
+    display: flex;
+    align-items: center;
+  }
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tangent-hyperplane-framework-complete-learning-path" id="toc-tangent-hyperplane-framework-complete-learning-path" class="nav-link active" data-scroll-target="#tangent-hyperplane-framework-complete-learning-path">Tangent Hyperplane Framework: Complete Learning Path</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#learning-tracks" id="toc-learning-tracks" class="nav-link" data-scroll-target="#learning-tracks">Learning Tracks</a>
+  <ul class="collapse">
+  <li><a href="#track-1-conceptual-understanding-no-equations" id="toc-track-1-conceptual-understanding-no-equations" class="nav-link" data-scroll-target="#track-1-conceptual-understanding-no-equations">Track 1: <strong>Conceptual Understanding</strong> (No equations)</a></li>
+  <li><a href="#track-2-applied-practitioner-implement-algorithms" id="toc-track-2-applied-practitioner-implement-algorithms" class="nav-link" data-scroll-target="#track-2-applied-practitioner-implement-algorithms">Track 2: <strong>Applied Practitioner</strong> (Implement algorithms)</a></li>
+  <li><a href="#track-3-theoretical-mastery-full-rigor" id="toc-track-3-theoretical-mastery-full-rigor" class="nav-link" data-scroll-target="#track-3-theoretical-mastery-full-rigor">Track 3: <strong>Theoretical Mastery</strong> (Full rigor)</a></li>
+  </ul></li>
+  <li><a href="#part-i-foundations-required-for-all" id="toc-part-i-foundations-required-for-all" class="nav-link" data-scroll-target="#part-i-foundations-required-for-all">Part I: Foundations (Required for All)</a>
+  <ul class="collapse">
+  <li><a href="#tangent_hyperplanes_unified_thesis.qmd-core-document" id="toc-tangent_hyperplanes_unified_thesis.qmd-core-document" class="nav-link" data-scroll-target="#tangent_hyperplanes_unified_thesis.qmd-core-document">1. <strong>Tangent_Hyperplanes_Unified_Thesis.qmd</strong> 📘 CORE DOCUMENT</a></li>
+  <li><a href="#tangent_hyperplanes_golf_application.md-optional-supplement" id="toc-tangent_hyperplanes_golf_application.md-optional-supplement" class="nav-link" data-scroll-target="#tangent_hyperplanes_golf_application.md-optional-supplement">2. <strong>Tangent_Hyperplanes_Golf_Application.md</strong> 🏌️ OPTIONAL SUPPLEMENT</a></li>
+  </ul></li>
+  <li><a href="#part-ii-advanced-theory-for-deep-understanding" id="toc-part-ii-advanced-theory-for-deep-understanding" class="nav-link" data-scroll-target="#part-ii-advanced-theory-for-deep-understanding">Part II: Advanced Theory (For Deep Understanding)</a>
+  <ul class="collapse">
+  <li><a href="#residual-aware_control.qmd-new" id="toc-residual-aware_control.qmd-new" class="nav-link" data-scroll-target="#residual-aware_control.qmd-new">3. <strong>Residual-Aware_Control.qmd</strong> 📊 NEW</a></li>
+  <li><a href="#contraction_tangent_unification.qmd-new" id="toc-contraction_tangent_unification.qmd-new" class="nav-link" data-scroll-target="#contraction_tangent_unification.qmd-new">4. <strong>Contraction_Tangent_Unification.qmd</strong> 🔄 NEW</a></li>
+  <li><a href="#hybrid_tangent_spaces.qmd-new" id="toc-hybrid_tangent_spaces.qmd-new" class="nav-link" data-scroll-target="#hybrid_tangent_spaces.qmd-new">5. <strong>Hybrid_Tangent_Spaces.qmd</strong> 🔀 NEW</a></li>
+  </ul></li>
+  <li><a href="#recommended-reading-orders" id="toc-recommended-reading-orders" class="nav-link" data-scroll-target="#recommended-reading-orders">Recommended Reading Orders</a>
+  <ul class="collapse">
+  <li><a href="#order-1-breadth-first-survey-everything" id="toc-order-1-breadth-first-survey-everything" class="nav-link" data-scroll-target="#order-1-breadth-first-survey-everything">Order 1: <strong>Breadth-First (Survey Everything)</strong></a></li>
+  <li><a href="#order-2-depth-first-master-one-topic" id="toc-order-2-depth-first-master-one-topic" class="nav-link" data-scroll-target="#order-2-depth-first-master-one-topic">Order 2: <strong>Depth-First (Master One Topic)</strong></a></li>
+  <li><a href="#order-3-application-driven-solve-my-problem" id="toc-order-3-application-driven-solve-my-problem" class="nav-link" data-scroll-target="#order-3-application-driven-solve-my-problem">Order 3: <strong>Application-Driven (Solve My Problem)</strong></a></li>
+  </ul></li>
+  <li><a href="#concept-dependencies-what-builds-on-what" id="toc-concept-dependencies-what-builds-on-what" class="nav-link" data-scroll-target="#concept-dependencies-what-builds-on-what">Concept Dependencies (What Builds on What)</a></li>
+  <li><a href="#prerequisites-by-document" id="toc-prerequisites-by-document" class="nav-link" data-scroll-target="#prerequisites-by-document">Prerequisites by Document</a></li>
+  <li><a href="#key-equations-reference-quick-lookup" id="toc-key-equations-reference-quick-lookup" class="nav-link" data-scroll-target="#key-equations-reference-quick-lookup">Key Equations Reference (Quick Lookup)</a></li>
+  <li><a href="#glossary-of-key-terms" id="toc-glossary-of-key-terms" class="nav-link" data-scroll-target="#glossary-of-key-terms">Glossary of Key Terms</a></li>
+  <li><a href="#common-pitfalls-and-how-to-avoid-them" id="toc-common-pitfalls-and-how-to-avoid-them" class="nav-link" data-scroll-target="#common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</a>
+  <ul class="collapse">
+  <li><a href="#pitfall-1-linearization-is-approximate-so-results-are-approximate" id="toc-pitfall-1-linearization-is-approximate-so-results-are-approximate" class="nav-link" data-scroll-target="#pitfall-1-linearization-is-approximate-so-results-are-approximate">Pitfall 1: “Linearization is approximate, so results are approximate”</a></li>
+  <li><a href="#pitfall-2-this-only-works-for-small-perturbations" id="toc-pitfall-2-this-only-works-for-small-perturbations" class="nav-link" data-scroll-target="#pitfall-2-this-only-works-for-small-perturbations">Pitfall 2: “This only works for small perturbations”</a></li>
+  <li><a href="#pitfall-3-residuals-are-errors-i-need-to-minimize" id="toc-pitfall-3-residuals-are-errors-i-need-to-minimize" class="nav-link" data-scroll-target="#pitfall-3-residuals-are-errors-i-need-to-minimize">Pitfall 3: “Residuals are errors I need to minimize”</a></li>
+  <li><a href="#pitfall-4-contraction-is-for-stability-optimization-is-separate" id="toc-pitfall-4-contraction-is-for-stability-optimization-is-separate" class="nav-link" data-scroll-target="#pitfall-4-contraction-is-for-stability-optimization-is-separate">Pitfall 4: “Contraction is for stability, optimization is separate”</a></li>
+  <li><a href="#pitfall-5-framework-fails-for-impactsfriction-non-smooth" id="toc-pitfall-5-framework-fails-for-impactsfriction-non-smooth" class="nav-link" data-scroll-target="#pitfall-5-framework-fails-for-impactsfriction-non-smooth">Pitfall 5: “Framework fails for impacts/friction (non-smooth)”</a></li>
+  </ul></li>
+  <li><a href="#faq-choosing-what-to-read" id="toc-faq-choosing-what-to-read" class="nav-link" data-scroll-target="#faq-choosing-what-to-read">FAQ: Choosing What to Read</a></li>
+  <li><a href="#external-resources-recommended-pairing" id="toc-external-resources-recommended-pairing" class="nav-link" data-scroll-target="#external-resources-recommended-pairing">External Resources (Recommended Pairing)</a></li>
+  <li><a href="#notation-conventions" id="toc-notation-conventions" class="nav-link" data-scroll-target="#notation-conventions">Notation Conventions</a></li>
+  <li><a href="#contribution-and-future-directions" id="toc-contribution-and-future-directions" class="nav-link" data-scroll-target="#contribution-and-future-directions">Contribution and Future Directions</a></li>
+  <li><a href="#acknowledgments" id="toc-acknowledgments" class="nav-link" data-scroll-target="#acknowledgments">Acknowledgments</a></li>
+  <li><a href="#final-recommendation-where-to-start" id="toc-final-recommendation-where-to-start" class="nav-link" data-scroll-target="#final-recommendation-where-to-start">Final Recommendation: Where to Start</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="tangent-hyperplane-framework-complete-learning-path" class="level1">
+<h1>Tangent Hyperplane Framework: Complete Learning Path</h1>
+<p><strong>A Comprehensive Guide to Nonlinear Control Through Geometric Intuition</strong></p>
+<hr>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This collection presents a unified geometric framework for understanding nonlinear dynamical systems through the lens of <strong>exact infinitesimal superposition</strong>. The central thesis: <em>nonlinear systems are exactly linear at every instant—we just need to exploit that local linearity intelligently.</em></p>
+<p><strong>Target Audience:</strong> - Graduate students in control theory, robotics, biomechanics - Practitioners in aerospace, robotics, sports science - Researchers seeking geometric intuition for optimization algorithms - Anyone curious about why LQR, MPC, and DDP actually work</p>
+<p><strong>Prerequisites:</strong> - Linear algebra (matrices, eigenvalues, linear maps) - Multivariable calculus (partial derivatives, gradients) - Basic differential equations (first-order ODEs) - Introductory control (state-space representation helpful but not required)</p>
+<hr>
+</section>
+<section id="learning-tracks" class="level2">
+<h2 class="anchored" data-anchor-id="learning-tracks">Learning Tracks</h2>
+<p>We provide three learning paths depending on your goals:</p>
+<section id="track-1-conceptual-understanding-no-equations" class="level3">
+<h3 class="anchored" data-anchor-id="track-1-conceptual-understanding-no-equations">Track 1: <strong>Conceptual Understanding</strong> (No equations)</h3>
+<p><em>Goal: Understand “why” without “how”</em> - Start with Layman’s Terms summaries - Read motivational sections only - Skip mathematical derivations - <strong>Time:</strong> 2-3 hours</p>
+</section>
+<section id="track-2-applied-practitioner-implement-algorithms" class="level3">
+<h3 class="anchored" data-anchor-id="track-2-applied-practitioner-implement-algorithms">Track 2: <strong>Applied Practitioner</strong> (Implement algorithms)</h3>
+<p><em>Goal: Use methods in your work</em> - Read main articles, skip proofs - Focus on algorithm pseudocode - Study case studies closely - Implement examples in Python/MATLAB - <strong>Time:</strong> 2-3 weeks</p>
+</section>
+<section id="track-3-theoretical-mastery-full-rigor" class="level3">
+<h3 class="anchored" data-anchor-id="track-3-theoretical-mastery-full-rigor">Track 3: <strong>Theoretical Mastery</strong> (Full rigor)</h3>
+<p><em>Goal: Deep understanding, prepare for research</em> - Read everything including appendices - Work through all derivations - Study critical reviews - Solve problem sets (future addition) - <strong>Time:</strong> 1-2 months</p>
+<hr>
+</section>
+</section>
+<section id="part-i-foundations-required-for-all" class="level2">
+<h2 class="anchored" data-anchor-id="part-i-foundations-required-for-all">Part I: Foundations (Required for All)</h2>
+<section id="tangent_hyperplanes_unified_thesis.qmd-core-document" class="level3">
+<h3 class="anchored" data-anchor-id="tangent_hyperplanes_unified_thesis.qmd-core-document">1. <strong>Tangent_Hyperplanes_Unified_Thesis.qmd</strong> 📘 CORE DOCUMENT</h3>
+<p><strong>Prerequisite:</strong> None (self-contained) <strong>Difficulty:</strong> ⭐⭐⭐ Moderate <strong>Time:</strong> 4-6 hours</p>
+<p><strong>What You’ll Learn:</strong> - Part I: Why tangent spaces are exact, not approximate - Part II: How integration preserves superposition of variations - Part III: How DDP/iLQR/MPC exploit this structure</p>
+<p><strong>Key Concepts:</strong> - Fréchet derivative as exact infinitesimal structure - State transition operators - Residuals as manifold curvature - Hamiltonian formulation - Complete DDP/iLQR algorithms with case studies</p>
+<p><strong>Why Start Here:</strong> This is the comprehensive reference. Everything else builds on or extends this.</p>
+<p><strong>Supplementary Materials:</strong> - <code>LAYMANS_TERMS_SUMMARY.md</code> - Non-technical overview (read first if intimidated) - <code>TECHNICAL_ASSESSMENT.md</code> - Quality evaluation (for advisors/reviewers) - <code>CRITICAL_REVIEW.md</code> - Known weaknesses and defenses - <code>CRITICS_CORNER.md</code> - Responses to harsh criticisms</p>
+<hr>
+</section>
+<section id="tangent_hyperplanes_golf_application.md-optional-supplement" class="level3">
+<h3 class="anchored" data-anchor-id="tangent_hyperplanes_golf_application.md-optional-supplement">2. <strong>Tangent_Hyperplanes_Golf_Application.md</strong> 🏌️ OPTIONAL SUPPLEMENT</h3>
+<p><strong>Prerequisite:</strong> Unified Thesis (Part I only) <strong>Difficulty:</strong> ⭐⭐ Easy <strong>Time:</strong> 1 hour</p>
+<p><strong>What You’ll Learn:</strong> - Application to biomechanics (golf swing) - Why coaching decomposition makes mathematical sense - Connection to sports science</p>
+<p><strong>Why Read:</strong> If you’re interested in human movement, this makes the abstract concrete.</p>
+<hr>
+</section>
+</section>
+<section id="part-ii-advanced-theory-for-deep-understanding" class="level2">
+<h2 class="anchored" data-anchor-id="part-ii-advanced-theory-for-deep-understanding">Part II: Advanced Theory (For Deep Understanding)</h2>
+<p><em>After mastering Part I, these articles extend the framework in specific directions.</em></p>
+<section id="residual-aware_control.qmd-new" class="level3">
+<h3 class="anchored" data-anchor-id="residual-aware_control.qmd-new">3. <strong>Residual-Aware_Control.qmd</strong> 📊 NEW</h3>
+<p><strong>Prerequisite:</strong> Unified Thesis (Parts I-III) <strong>Difficulty:</strong> ⭐⭐⭐⭐ Advanced <strong>Time:</strong> 3-4 hours</p>
+<p><strong>What You’ll Learn:</strong> - Quantitative residual bounds with explicit constants - Real-time residual monitoring for control switching - Curvature-adaptive timesteps in DDP - Tube MPC with geometric residual bounds</p>
+<p><strong>Key Innovation:</strong> Treats residuals as <strong>actionable control signals</strong>, not just theoretical curiosities.</p>
+<p><strong>Applications:</strong> - Quadrotor: Hover (low curvature) vs.&nbsp;aerobatics (high curvature) - Humanoid gait: Foot strike = curvature spike - Spacecraft: Gimbal lock = curvature singularity</p>
+<p><strong>Why Read:</strong> Bridges theory to practice—gives you a tool (residual threshold) to decide “when do I need nonlinear methods?”</p>
+<p><strong>Supplementary:</strong> - <code>Residual-Aware_Control_LAYMAN.md</code> - Accessible explanation - <code>Residual-Aware_Control_CRITIC.md</code> - Technical objections answered</p>
+<hr>
+</section>
+<section id="contraction_tangent_unification.qmd-new" class="level3">
+<h3 class="anchored" data-anchor-id="contraction_tangent_unification.qmd-new">4. <strong>Contraction_Tangent_Unification.qmd</strong> 🔄 NEW</h3>
+<p><strong>Prerequisite:</strong> Unified Thesis + familiarity with Lyapunov stability <strong>Difficulty:</strong> ⭐⭐⭐⭐⭐ Expert <strong>Time:</strong> 4-5 hours</p>
+<p><strong>What You’ll Learn:</strong> - Contraction theory (Lohmiller &amp; Slotine) via tangent bundle - Duality: Stability (contraction) ↔︎ Optimality (DDP) - Contraction metrics as Riemannian geometry on tangent spaces - DDP with contraction constraints = optimality + guaranteed convergence</p>
+<p><strong>Key Innovation:</strong> Shows contraction analysis and trajectory optimization are <strong>dual perspectives</strong> on the same geometry.</p>
+<p><strong>Applications:</strong> - Proving DDP convergence for specific systems - Designing controllers with exponential stability guarantees - Understanding when LQR is globally optimal</p>
+<p><strong>Why Read:</strong> If you know contraction theory, this shows how it fits with optimization. If you know DDP, this shows how to add stability guarantees.</p>
+<p><strong>Supplementary:</strong> - <code>Contraction_Tangent_LAYMAN.md</code> - Why trajectories “forget” initial conditions - <code>Contraction_Tangent_CRITIC.md</code> - Comparison to standard contraction literature</p>
+<hr>
+</section>
+<section id="hybrid_tangent_spaces.qmd-new" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid_tangent_spaces.qmd-new">5. <strong>Hybrid_Tangent_Spaces.qmd</strong> 🔀 NEW</h3>
+<p><strong>Prerequisite:</strong> Unified Thesis + basic knowledge of hybrid systems <strong>Difficulty:</strong> ⭐⭐⭐⭐ Advanced <strong>Time:</strong> 3-4 hours</p>
+<p><strong>What You’ll Learn:</strong> - Extending tangent space framework to discontinuous systems - Each mode has smooth dynamics (tangent space applies) - Guard conditions = tangent space jumps - Impact maps as instantaneous rotations in tangent bundle - DDP for hybrid systems (mode-aware optimization)</p>
+<p><strong>Key Innovation:</strong> Addresses “C¹ smoothness is unrealistic” criticism—shows framework extends to impacts, friction, switches.</p>
+<p><strong>Applications:</strong> - Bipedal walking (foot strike = impact → discrete jump in tangent space) - Robotic grasping (contact = mode switch) - Chemical reactors (phase transitions = guard crossings)</p>
+<p><strong>Why Read:</strong> Most real systems are hybrid (contact, switches, saturation). This makes the framework applicable to actual robots and biomechanics.</p>
+<p><strong>Supplementary:</strong> - <code>Hybrid_Tangent_LAYMAN.md</code> - Hopping on one foot (intuitive hybrid example) - <code>Hybrid_Tangent_CRITIC.md</code> - Comparison to hybrid automata literature</p>
+<hr>
+</section>
+</section>
+<section id="recommended-reading-orders" class="level2">
+<h2 class="anchored" data-anchor-id="recommended-reading-orders">Recommended Reading Orders</h2>
+<section id="order-1-breadth-first-survey-everything" class="level3">
+<h3 class="anchored" data-anchor-id="order-1-breadth-first-survey-everything">Order 1: <strong>Breadth-First (Survey Everything)</strong></h3>
+<ol type="1">
+<li>LAYMANS_TERMS_SUMMARY.md (all summaries)</li>
+<li>Unified Thesis (skim, focus on examples)</li>
+<li>Residual-Aware Control (practical tool)</li>
+<li>Contraction (if stability-focused)</li>
+<li>Hybrid Systems (if working with contacts/impacts)</li>
+</ol>
+<p><strong>Outcome:</strong> Broad understanding, can choose specialization</p>
+<hr>
+</section>
+<section id="order-2-depth-first-master-one-topic" class="level3">
+<h3 class="anchored" data-anchor-id="order-2-depth-first-master-one-topic">Order 2: <strong>Depth-First (Master One Topic)</strong></h3>
+<ol type="1">
+<li>Unified Thesis (read every word, work examples)</li>
+<li>CRITICAL_REVIEW.md + CRITICS_CORNER.md (understand limitations)</li>
+<li>Choose one advanced article based on interest:
+<ul>
+<li><strong>Practitioner:</strong> Residual-Aware Control</li>
+<li><strong>Theorist:</strong> Contraction Unification</li>
+<li><strong>Roboticist:</strong> Hybrid Systems</li>
+</ul></li>
+<li>Implement case studies in that article</li>
+<li>Read critic’s corner for your chosen article</li>
+</ol>
+<p><strong>Outcome:</strong> Expert-level understanding of chosen subtopic</p>
+<hr>
+</section>
+<section id="order-3-application-driven-solve-my-problem" class="level3">
+<h3 class="anchored" data-anchor-id="order-3-application-driven-solve-my-problem">Order 3: <strong>Application-Driven (Solve My Problem)</strong></h3>
+<ol type="1">
+<li>Identify your problem domain:
+<ul>
+<li><strong>Smooth systems (spacecraft, drones in free flight):</strong> Unified Thesis Parts I-II, then Residual-Aware</li>
+<li><strong>High-speed motion (golf, baseball):</strong> Golf Application + Unified Thesis + Residual-Aware</li>
+<li><strong>Legged robots, manipulation:</strong> Unified Thesis + Hybrid Systems</li>
+<li><strong>Provable stability:</strong> Contraction Unification first, then Unified Thesis Part III</li>
+</ul></li>
+<li>Read only relevant sections</li>
+<li>Implement algorithms on your system</li>
+<li>Return to theory when implementation fails (use Critic’s Corner for debugging)</li>
+</ol>
+<p><strong>Outcome:</strong> Practical solution with theoretical backing</p>
+<hr>
+</section>
+</section>
+<section id="concept-dependencies-what-builds-on-what" class="level2">
+<h2 class="anchored" data-anchor-id="concept-dependencies-what-builds-on-what">Concept Dependencies (What Builds on What)</h2>
+<pre><code>Unified Thesis (Part I: Geometry)
+    ├─→ Golf Application [optional sidebar]
+    ├─→ Unified Thesis (Part II: Integration)
+    │       └─→ Unified Thesis (Part III: Optimization)
+    │               ├─→ Residual-Aware Control
+    │               │       └─→ [Implements quantitative bounds]
+    │               ├─→ Contraction Unification
+    │               │       └─→ [Adds stability to optimization]
+    │               └─→ Hybrid Systems
+    │                       └─→ [Extends beyond C¹ assumption]
+    │
+    └─→ Contraction Unification
+            └─→ [Can be read independently if familiar with Lyapunov theory]</code></pre>
+<p><strong>Notation:</strong> <code>A → B</code> means “A is prerequisite for B”</p>
+<hr>
+</section>
+<section id="prerequisites-by-document" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites-by-document">Prerequisites by Document</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 31%">
+<col style="width: 21%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Document</th>
+<th>Math Level</th>
+<th>Control Background</th>
+<th>Programming</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Layman Summaries</strong></td>
+<td>None</td>
+<td>None</td>
+<td>None</td>
+<td>30 min each</td>
+</tr>
+<tr class="even">
+<td><strong>Unified Thesis</strong></td>
+<td>Calculus, Linear Algebra</td>
+<td>Helpful</td>
+<td>Optional</td>
+<td>4-6 hrs</td>
+</tr>
+<tr class="odd">
+<td><strong>Golf Application</strong></td>
+<td>Basic calculus</td>
+<td>None</td>
+<td>None</td>
+<td>1 hr</td>
+</tr>
+<tr class="even">
+<td><strong>Residual-Aware</strong></td>
+<td>Multivariable calculus</td>
+<td>State-space</td>
+<td>Python recommended</td>
+<td>3-4 hrs</td>
+</tr>
+<tr class="odd">
+<td><strong>Contraction</strong></td>
+<td>Real analysis, ODEs</td>
+<td>Lyapunov theory</td>
+<td>MATLAB/Python</td>
+<td>4-5 hrs</td>
+</tr>
+<tr class="even">
+<td><strong>Hybrid Systems</strong></td>
+<td>ODEs, Measure theory (basic)</td>
+<td>Hybrid automata (intro)</td>
+<td>Python + simulation</td>
+<td>3-4 hrs</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="key-equations-reference-quick-lookup" class="level2">
+<h2 class="anchored" data-anchor-id="key-equations-reference-quick-lookup">Key Equations Reference (Quick Lookup)</h2>
+<p>For when you need to remember “what was that formula?”</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concept</th>
+<th>Equation</th>
+<th>Document</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Fréchet Derivative</strong></td>
+<td><span class="math inline">\(f(x_0 + \delta x) = f(x_0) + A\delta x + o(\|\delta x\|)\)</span></td>
+<td>Unified Thesis</td>
+<td>Part I, Ch. 1</td>
+</tr>
+<tr class="even">
+<td><strong>Variational Dynamics</strong></td>
+<td><span class="math inline">\(\delta\dot{x} = A(t)\delta x + B(t)\delta u\)</span></td>
+<td>Unified Thesis</td>
+<td>Part I, Ch. 2</td>
+</tr>
+<tr class="odd">
+<td><strong>State Transition</strong></td>
+<td><span class="math inline">\(\delta x(t_1) = \Phi(t_1,t_0)\delta x(t_0) + \int \Phi(t_1,\tau)B(\tau)\delta u(\tau)d\tau\)</span></td>
+<td>Unified Thesis</td>
+<td>Part II, Ch. 6</td>
+</tr>
+<tr class="even">
+<td><strong>Residual Scaling</strong></td>
+<td><span class="math inline">\(\|r\| = O(\epsilon^2)\)</span></td>
+<td>Unified Thesis</td>
+<td>Part I, Ch. 4</td>
+</tr>
+<tr class="odd">
+<td><strong>Quantitative Residual</strong></td>
+<td><span class="math inline">\(\|r(t_1)\| \leq \frac{1}{2}\|H\|_{\max}\int \|\delta x\|^2 dt\)</span></td>
+<td>Residual-Aware</td>
+<td>Part I, Theorem 1</td>
+</tr>
+<tr class="even">
+<td><strong>Hamiltonian</strong></td>
+<td><span class="math inline">\(H = L + \lambda^T f\)</span></td>
+<td>Unified Thesis</td>
+<td>Part III, Ch. 9</td>
+</tr>
+<tr class="odd">
+<td><strong>DDP Q-function</strong></td>
+<td><span class="math inline">\(Q_{uu} = L_{uu} + B^T P B\)</span></td>
+<td>Unified Thesis</td>
+<td>Part III, Ch. 11</td>
+</tr>
+<tr class="even">
+<td><strong>Contraction Metric</strong></td>
+<td><span class="math inline">\(\dot{V} \leq -\alpha V\)</span></td>
+<td>Contraction</td>
+<td>Part I, Def. 2</td>
+</tr>
+<tr class="odd">
+<td><strong>Impact Map</strong></td>
+<td><span class="math inline">\(\dot{x}^+ = \Delta(\dot{x}^-)\)</span></td>
+<td>Hybrid Systems</td>
+<td>Part II, Ch. 3</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="glossary-of-key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="glossary-of-key-terms">Glossary of Key Terms</h2>
+<p><strong>Fréchet Derivative:</strong> The unique best linear approximation to a nonlinear function at a point. Not “an” approximation, but “the” exact derivative.</p>
+<p><strong>Tangent Space (<span class="math inline">\(T_x\mathcal{M}\)</span>):</strong> The space of all velocity vectors at point <span class="math inline">\(x\)</span> on manifold <span class="math inline">\(\mathcal{M}\)</span>. Locally looks like <span class="math inline">\(\mathbb{R}^n\)</span>, where dynamics are exactly linear.</p>
+<p><strong>Residual (<span class="math inline">\(r\)</span>):</strong> The failure of superposition for finite perturbations. Quantifies how much tangent spaces vary. Scales as <span class="math inline">\(O(\epsilon^2)\)</span> (quadratic in perturbation size).</p>
+<p><strong>State Transition Operator (<span class="math inline">\(\Phi(t_1,t_0)\)</span>):</strong> Linear map transporting perturbations forward in time through varying tangent spaces. Fundamental solution of variational equation.</p>
+<p><strong>Costate (<span class="math inline">\(\lambda\)</span>):</strong> Adjoint variable in optimal control. Represents marginal cost sensitivity. Evolves backward in time.</p>
+<p><strong>Contraction:</strong> Property where all trajectories exponentially converge to each other. Jacobian is uniformly negative definite.</p>
+<p><strong>Hybrid System:</strong> Combines continuous dynamics (flows) with discrete events (jumps). Example: walking robot (swing phase = flow, foot strike = jump).</p>
+<p><strong>DDP (Differential Dynamic Programming):</strong> Trajectory optimization via iterated local quadratic approximations. Newton’s method in function space.</p>
+<hr>
+</section>
+<section id="common-pitfalls-and-how-to-avoid-them" class="level2">
+<h2 class="anchored" data-anchor-id="common-pitfalls-and-how-to-avoid-them">Common Pitfalls and How to Avoid Them</h2>
+<section id="pitfall-1-linearization-is-approximate-so-results-are-approximate" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-1-linearization-is-approximate-so-results-are-approximate">Pitfall 1: “Linearization is approximate, so results are approximate”</h3>
+<p><strong>Why it’s wrong:</strong> The tangent space (derivative) is <strong>exact</strong>. What’s approximate is using it far from the linearization point. DDP/iLQR re-linearize constantly, maintaining exactness.</p>
+<p><strong>Where to learn more:</strong> Unified Thesis Ch. 1, CRITICS_CORNER.md Criticism #2</p>
+<hr>
+</section>
+<section id="pitfall-2-this-only-works-for-small-perturbations" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-2-this-only-works-for-small-perturbations">Pitfall 2: “This only works for small perturbations”</h3>
+<p><strong>Why it’s misleading:</strong> A single linearization only works locally. But <strong>iterative methods</strong> (DDP, MPC) keep taking small steps with fresh linearizations. You can reach anywhere via many small steps.</p>
+<p><strong>Where to learn more:</strong> Unified Thesis Ch. 10-11, Residual-Aware Control Part II</p>
+<hr>
+</section>
+<section id="pitfall-3-residuals-are-errors-i-need-to-minimize" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-3-residuals-are-errors-i-need-to-minimize">Pitfall 3: “Residuals are errors I need to minimize”</h3>
+<p><strong>Why it’s misleading:</strong> Residuals are <strong>geometric features</strong> (curvature), not modeling errors. They’re inevitable for nonlinear systems. Goal is to <strong>understand and account for</strong> them, not eliminate them.</p>
+<p><strong>Where to learn more:</strong> Unified Thesis Ch. 4, Residual-Aware Control Part I</p>
+<hr>
+</section>
+<section id="pitfall-4-contraction-is-for-stability-optimization-is-separate" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-4-contraction-is-for-stability-optimization-is-separate">Pitfall 4: “Contraction is for stability, optimization is separate”</h3>
+<p><strong>Why it’s wrong:</strong> Contraction and optimization are <strong>dual perspectives</strong>. Contraction = “trajectories converge,” Optimization = “cost decreases.” Both use Jacobians, both exploit tangent geometry.</p>
+<p><strong>Where to learn more:</strong> Contraction Unification, entire article</p>
+<hr>
+</section>
+<section id="pitfall-5-framework-fails-for-impactsfriction-non-smooth" class="level3">
+<h3 class="anchored" data-anchor-id="pitfall-5-framework-fails-for-impactsfriction-non-smooth">Pitfall 5: “Framework fails for impacts/friction (non-smooth)”</h3>
+<p><strong>Why it’s misleading:</strong> Framework applies <strong>within each smooth segment</strong>. Impacts/switches handled separately (impact maps, guard conditions). Hybrid Systems article shows how.</p>
+<p><strong>Where to learn more:</strong> Hybrid Systems, Unified Thesis “Scope of Validity”</p>
+<hr>
+</section>
+</section>
+<section id="faq-choosing-what-to-read" class="level2">
+<h2 class="anchored" data-anchor-id="faq-choosing-what-to-read">FAQ: Choosing What to Read</h2>
+<p><strong>Q: I’m a mechanical engineering undergrad. Where do I start?</strong> A: LAYMANS_TERMS_SUMMARY.md → Unified Thesis Parts I-II (skip proofs) → Golf Application</p>
+<p><strong>Q: I use MPC but don’t understand why it works. Help?</strong> A: Unified Thesis Part III (Chapters 10-11) → Residual-Aware Control Part II</p>
+<p><strong>Q: I need to prove my controller is stable. What do I read?</strong> A: Unified Thesis Part I (Ch. 3: Lyapunov) → Contraction Unification</p>
+<p><strong>Q: I’m implementing a walking robot with foot impacts. Relevant article?</strong> A: Unified Thesis Parts I-II → Hybrid Systems (all parts)</p>
+<p><strong>Q: I want to write a paper using this framework. What’s novel?</strong> A: Read CRITICAL_REVIEW.md and CRITICS_CORNER.md carefully. Novel aspects: geometric framing, residual-as-feature, unification across methods.</p>
+<p><strong>Q: I’m an advisor evaluating a student’s thesis using this. Quality assessment?</strong> A: TECHNICAL_ASSESSMENT.md (overall B+/A-) + CRITICAL_REVIEW.md (lists weaknesses)</p>
+<p><strong>Q: How does this compare to my textbook (Khalil, Sastry, Slotine)?</strong> A: CRITICS_CORNER.md Criticism #7 has detailed comparison table</p>
+<hr>
+</section>
+<section id="external-resources-recommended-pairing" class="level2">
+<h2 class="anchored" data-anchor-id="external-resources-recommended-pairing">External Resources (Recommended Pairing)</h2>
+<p><strong>Books to Read Alongside:</strong></p>
+<ol type="1">
+<li><strong>H. K. Khalil, <em>Nonlinear Systems</em> (2002)</strong>
+<ul>
+<li>Chapter 4 (Lyapunov Stability) pairs with Unified Thesis Ch. 3</li>
+<li>Chapter 9 (Feedback Linearization) contrasts with our “embrace nonlinearity” approach</li>
+</ul></li>
+<li><strong>S. Sastry, <em>Nonlinear Systems: Analysis, Stability, and Control</em> (1999)</strong>
+<ul>
+<li>Chapter 2 (Mathematical Preliminaries) for differential geometry background</li>
+<li>Chapter 7 (Optimal Control) for Hamiltonian formalism</li>
+</ul></li>
+<li><strong>J. M. Lee, <em>Introduction to Smooth Manifolds</em> (2012)</strong>
+<ul>
+<li>Chapters 3-4 (Tangent Vectors, Tangent Bundle) for geometric foundations</li>
+<li>Advanced but clarifies “what is a tangent space really?”</li>
+</ul></li>
+<li><strong>V. I. Arnold, <em>Mathematical Methods of Classical Mechanics</em> (1989)</strong>
+<ul>
+<li>Chapter 8 (Hamiltonian Mechanics) for variational principles</li>
+<li>Beautiful geometric perspective, complements Part III</li>
+</ul></li>
+<li><strong>W. Lohmiller &amp; J.-J. Slotine, “On Contraction Analysis…” (1998)</strong>
+<ul>
+<li>Original contraction theory paper</li>
+<li>Read before Contraction Unification article</li>
+</ul></li>
+</ol>
+<p><strong>Online Resources:</strong></p>
+<ul>
+<li><strong>Underactuated Robotics</strong> (Russ Tedrake, MIT): Pairs with Hybrid Systems article</li>
+<li><strong>Steve Brunton YouTube</strong> (Control Bootcamp): Intuitive videos for state-space concepts</li>
+<li><strong>JAX Documentation</strong>: For autodiff implementations of examples</li>
+</ul>
+<hr>
+</section>
+<section id="notation-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="notation-conventions">Notation Conventions</h2>
+<p>We use consistent notation across all articles:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 27%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Dimensionality</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(x\)</span></td>
+<td>State vector</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(u\)</span></td>
+<td>Control input</td>
+<td><span class="math inline">\(\mathbb{R}^m\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(f(x,u)\)</span></td>
+<td>Vector field (dynamics)</td>
+<td><span class="math inline">\(\mathbb{R}^n \to \mathbb{R}^n\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(A = \frac{\partial f}{\partial x}\)</span></td>
+<td>State Jacobian</td>
+<td><span class="math inline">\(\mathbb{R}^{n \times n}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(B = \frac{\partial f}{\partial u}\)</span></td>
+<td>Input Jacobian</td>
+<td><span class="math inline">\(\mathbb{R}^{n \times m}\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\delta x\)</span>, <span class="math inline">\(\delta u\)</span></td>
+<td>Infinitesimal perturbations</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span>, <span class="math inline">\(\mathbb{R}^m\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\Phi(t_1, t_0)\)</span></td>
+<td>State transition operator</td>
+<td><span class="math inline">\(\mathbb{R}^{n \times n}\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\lambda\)</span></td>
+<td>Costate (adjoint)</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(H\)</span></td>
+<td>Hamiltonian</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(L\)</span></td>
+<td>Lagrangian (running cost)</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(r\)</span></td>
+<td>Residual (superposition failure)</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\epsilon\)</span></td>
+<td>Perturbation magnitude</td>
+<td><span class="math inline">\(\mathbb{R}_+\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(T_x\mathcal{M}\)</span></td>
+<td>Tangent space at <span class="math inline">\(x\)</span></td>
+<td>Vector space <span class="math inline">\(\cong \mathbb{R}^n\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Calculus notation:</strong> - <span class="math inline">\(o(\cdot)\)</span>: Little-o (vanishes faster than argument) - <span class="math inline">\(O(\cdot)\)</span>: Big-O (grows no faster than argument) - <span class="math inline">\(\|\cdot\|\)</span>: Euclidean norm (2-norm) - <span class="math inline">\(\frac{\partial}{\partial x}\)</span>: Partial derivative - <span class="math inline">\(\nabla_x\)</span>: Gradient with respect to <span class="math inline">\(x\)</span></p>
+<hr>
+</section>
+<section id="contribution-and-future-directions" class="level2">
+<h2 class="anchored" data-anchor-id="contribution-and-future-directions">Contribution and Future Directions</h2>
+<p>This framework is actively evolving. Planned additions:</p>
+<ol type="1">
+<li><strong>Interactive Visualizations:</strong> Moving tangent spaces in 3D (WebGL)</li>
+<li><strong>Problem Sets:</strong> Exercises with solutions for each article</li>
+<li><strong>Code Repository:</strong> Full implementations of all case studies (Python/JAX)</li>
+<li><strong>Video Lectures:</strong> Recorded walkthroughs of key concepts</li>
+<li><strong>Application Notes:</strong> Domain-specific guides (aerospace, biomechanics, chemical eng.)</li>
+</ol>
+<p><strong>How to contribute:</strong> - GitHub: <a href="https://github.com/D-sorganization/AffineDrift">D-sorganization/AffineDrift</a> - Issues: Report errors, request clarifications - Discussions: Ask questions, share applications</p>
+<hr>
+</section>
+<section id="acknowledgments" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments">Acknowledgments</h2>
+<p>This framework synthesizes ideas from: - Differential geometry (Fréchet, Lee, Arnold) - Nonlinear control (Kalman, Jacobson, Mayne, Sastry, Khalil) - Contraction theory (Lohmiller, Slotine) - Trajectory optimization (Bryson, Ho, Tassa) - Biomechanics (McMahon, Alexander)</p>
+<p>We stand on the shoulders of giants. The contribution is <strong>synthesis and geometric framing</strong>, not invention of new mathematics.</p>
+<hr>
+</section>
+<section id="final-recommendation-where-to-start" class="level2">
+<h2 class="anchored" data-anchor-id="final-recommendation-where-to-start">Final Recommendation: Where to Start</h2>
+<p><strong>If you have 30 minutes:</strong> Read any LAYMANS summary <strong>If you have 2 hours:</strong> Read Unified Thesis Part I only <strong>If you have 1 day:</strong> Read Unified Thesis completely <strong>If you have 1 week:</strong> Unified Thesis + one advanced article + implement a case study <strong>If you have 1 month:</strong> Everything + critical reviews + implement all case studies + extend to your domain</p>
+<p><strong>Most important:</strong> Don’t try to read everything linearly. Jump to what excites you. Use the table above to check prerequisites, then dive in.</p>
+<p><strong>The goal is not to memorize formulas—it’s to develop geometric intuition for how nonlinear systems behave.</strong></p>
+<p>Once you see trajectories winding through manifolds with tangent spaces providing exact local snapshots, you’ll never look at control theory the same way.</p>
+<p>Happy learning! 🚀</p>
+<hr>
+<p><strong>Document Version:</strong> 1.0 <strong>Last Updated:</strong> January 18, 2026 <strong>Maintainer:</strong> AffineDrift Team</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
+<script>
+  // Register Service Worker for PWA support
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .catch(function(error) {
+          console.warn('ServiceWorker registration failed:', error);
+        });
+    });
+  }
+</script>
+
+
+
+
+</body></html>

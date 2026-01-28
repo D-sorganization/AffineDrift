@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4469b6312e0929e2510e3245d8a34166.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3c1bfa5c6d58581d69219a2541aad593.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -105,6 +105,180 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
 <!-- SEO: Open Graph / Twitter Cards -->
 <meta property="og:site_name" content="AffineDrift">
 <meta property="og:type" content="website">
@@ -149,9 +323,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="canonical" href="https://affinedrift.com">
 
 <!-- Performance: Preload critical resources -->
+<link rel="preload" href="../css/startup-launcher.css" as="style">
 <link rel="preload" href="../styles.css" as="style">
 <link rel="preload" href="../script.js" as="script">
+<link rel="preload" href="../js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="../js/metrics.js">
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+<script src="../js/startup-launcher.js"></script>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="../manifest.json">
@@ -197,37 +376,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     align-items: center;
   }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navbarTools = document.querySelector('.quarto-navbar-tools');
-    if (navbarTools) {
-      // Add search button
-      if (!navbarTools.querySelector('.search-trigger')) {
-        const searchBtn = document.createElement('button');
-        searchBtn.className = 'search-trigger';
-        searchBtn.title = 'Search (Ctrl+K)';
-        searchBtn.setAttribute('aria-label', 'Open search');
-        searchBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span>Search</span> <kbd>⌘K</kbd>';
-        searchBtn.onclick = function() {
-          if (window.AffineDriftSearch) {
-            window.AffineDriftSearch.openModal();
-          }
-        };
-        navbarTools.insertBefore(searchBtn, navbarTools.firstChild);
-      }
-      // Add RSS link
-      if (!navbarTools.querySelector('.rss-feed-link')) {
-        const rssLink = document.createElement('a');
-        rssLink.href = '/feed.xml';
-        rssLink.className = 'rss-feed-link';
-        rssLink.title = 'RSS Feed';
-        rssLink.setAttribute('aria-label', 'RSS Feed');
-        rssLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg>';
-        navbarTools.appendChild(rssLink);
-      }
-    }
-  });
-</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -259,6 +407,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../css/startup-launcher.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../css/search-metrics.css">
 </head>
@@ -302,6 +451,10 @@ window.Quarto = {
  <span class="dropdown-text">Drifter Manifesto</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../articles.html">
  <span class="dropdown-text">Articles</span></a>
   </li>  
@@ -315,45 +468,10 @@ window.Quarto = {
   </li>  
     </ul>
   </li>
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-models" role="link" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Models</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-models">    
-        <li>
-    <a class="dropdown-item" href="../models.html">
- <span class="dropdown-text">Models Home</span></a>
+  <li class="nav-item">
+    <a class="nav-link" href="../models.html"> 
+<span class="menu-text">Models</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../models-simulink.html">
- <span class="dropdown-text">Matlab Simulink</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-mujoco.html">
- <span class="dropdown-text">MuJoCo</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-drake.html">
- <span class="dropdown-text">Drake</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-pinocchio.html">
- <span class="dropdown-text">Pinocchio</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-pendulum.html">
- <span class="dropdown-text">Pendulum</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-opensim.html">
- <span class="dropdown-text">OpenSim</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../models-myosim.html">
- <span class="dropdown-text">MyoSim</span></a>
-  </li>  
-    </ul>
-  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Resources</span>
@@ -536,6 +654,113 @@ window.Quarto = {
 \]</span></p>
 <p>We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of <strong>gross trajectory controllability</strong> during the downswing.</p>
 <p>We introduce a novel analogy to <strong>relativistic time cones</strong>, showing that a golf swing has an evolving <strong>control cone</strong>—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation of the <em>trajectory</em> physically impossible, though micro-adjustments to the <em>outcome</em> may remain. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.</p>
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2 class="anchored" data-anchor-id="abstract">In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Why does your swing feel "out of control" at impact? This article explains the mathematical reason: as you swing faster, physics overpowers your muscles.
+      </p>
+
+      <div class="laymans-item">
+        <h3 class="anchored">The Drift-Control Ratio (Muscle vs. Momentum)</h3>
+        <p>
+          We compare two forces: "Control" (your muscle power) and "Drift" (the club's momentum). At the start of the swing, your muscles are in charge. But as speed increases, momentum becomes 100 times stronger than your hands.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Walking a dog. When the dog is sitting, you control the leash. But if the dog sees a squirrel and bolts, the dog controls you. In the downswing, the club is the bolting dog.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3 class="anchored">The "Control Cone" (Tunnel Vision)</h3>
+        <p>
+          Because momentum is so strong, your ability to change the club's path shrinks as you speed up. You can't steer the clubhead in the last split-second; you are locked into the path you created earlier.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> A waterslide. At the top, you can choose which slide to take. Once you're sliding down, you can't change lanes—gravity has taken over.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3 class="anchored">The "Pancake" Effect (Twist but Don't Turn)</h3>
+        <p>
+          While you lose the ability to steer the heavy club path (Drift), you can still easily twist the lightweight shaft (Control). This creates a dangerous situation where you can rotate the face but cannot change where the club is going.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Skidding on ice in a car. You can't turn the car (the path is set), but you can frantically spin the steering wheel (the face angle). You might change which way you're facing, but you're still sliding into the ditch.
+        </div>
+      </div>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> You can't fight physics at 100 mph. Elite golfers don't try to steer the downswing; they focus on a perfect setup so the "drift" takes the club exactly where they want it to go.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2 class="anchored">Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Motor Control Theory:</span>
+          <h3 class="anchored">Is "Loss of Control" Actually "Gain of Precision"?</h3>
+        </div>
+        <p class="critic-argument">
+          Critics citing the **Signal-Dependent Noise** theory (Wolpert et al.) argue that high torque generation introduces proportional motor noise. Therefore, the high DCR observed in the late downswing (where active torque is minimal relative to drift) may be a functional adaptation to *minimize* noise, not a loss of agency. By "riding the drift," the golfer avoids the inaccuracy inherent in high-force corrections.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that reducing torque minimizes noise. However, DCR measures **trajectory controllability**—the ability to change the path if it is wrong. A low-noise trajectory is useless if it is heading for the water hazard. The high DCR implies that even if the golfer *wanted* to correct a path error, the signal-to-noise ratio required to overcome the drift momentum would be prohibitive. The system is precise, but ballistically committed.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Dimensionality Critique:</span>
+          <h3 class="anchored">The "Steering Wheel" Fallacy (Axial Decoupling)</h3>
+        </div>
+        <p class="critic-argument">
+          The DCR analysis focuses on the high inertia of the swing plane. Skeptics argue that accuracy depends primarily on the **Clubface Angle** (axial rotation), which has very low inertia ($I_{axial} \ll I_{plane}$). Since the golfer retains high authority over axial rotation throughout the downswing, the "loss of path control" is irrelevant to the outcome.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This isolates the "what" (face angle) from the "when" (impact). The clubface rotates at $\approx 1500^\circ/s$ near impact. To square the face, the golfer must match the rotation angle to the *exact millisecond* of arrival. Since Planar DCR dictates that the *arrival time* is determined by the ballistic path, path variance indirectly forces face variance. You can steer the face, but you cannot steer the clock.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Impedance Control:</span>
+          <h3 class="anchored">Stiffness vs. Torque</h3>
+        </div>
+        <p class="critic-argument">
+          The affine model $\dot{x} = f(x) + g(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> Stiffness is a critical stabilization mechanism, but it is energetically passive. It can reject small perturbations around a trajectory, but it cannot perform **net work** to redirect a massive ballistic object onto a new path. The ZTCF baseline explicitly accounts for this "Effective Plant" stiffness; the DCR blow-up persists even when maximizing physiological stiffness, confirming that the gross trajectory remains dominated by drift.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by defining the boundaries of the model.
+      </div>
+    </div>
+  </div>
+</section>
 </section>
 <section id="introduction" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> 1. Introduction</h1>
@@ -881,7 +1106,7 @@ H^T.
 </section>
 <section id="numerical-example-drift-vs-control-magnitude" class="level1" data-number="9">
 <h1 data-number="9"><span class="header-section-number">9</span> 8. Numerical Example: Drift vs Control Magnitude</h1>
-<div id="74c9c3f9" class="cell" data-execution_count="1">
+<div id="4edcd4d6" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1464,17 +1689,23 @@ H^T.
   });
   </script>
 </div> <!-- /content -->
-<script src="script.js"></script>
+<script>
+  (function() {
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+    const script = document.createElement('script');
+    script.src = `${normalizedBase}script.js`;
+    document.body.appendChild(script);
+  })();
+</script>
 <script>
   // Register Service Worker for PWA support
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
       navigator.serviceWorker.register('/service-worker.js')
-        .then(function(registration) {
-          console.log('ServiceWorker registered:', registration.scope);
-        })
         .catch(function(error) {
-          console.log('ServiceWorker registration failed:', error);
+          console.warn('ServiceWorker registration failed:', error);
         });
     });
   }

@@ -11,6 +11,7 @@ Example:
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 
@@ -102,7 +103,7 @@ def find_markdown_files(
 
 def find_files_by_extension(
     extensions: list[str],
-    paths: list[str | Path] | None = None,
+    paths: Sequence[str | Path] | None = None,
     root_dir: str | Path = ".",
     recursive: bool = False,
 ) -> list[Path]:
@@ -156,7 +157,7 @@ def find_files_by_extension(
 
 def process_file_content(
     filepath: Path,
-    transform_fn: callable,
+    transform_fn: Callable[[str], str],
     encoding: str = "utf-8",
 ) -> bool:
     """Read a file, apply a transformation, and write back if changed.
