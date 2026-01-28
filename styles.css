@@ -213,7 +213,7 @@ a:hover {
 }
 
 /* Ensure grid items align at top */
-.standard-page-layout > * {
+.standard-page-layout>* {
   align-self: start;
   margin-top: 0;
 }
@@ -239,7 +239,8 @@ a:hover {
 .right-sidebar {
   background: transparent;
   padding-top: 0;
-  align-self: start; /* Align to top of grid */
+  align-self: start;
+  /* Align to top of grid */
 }
 
 /* Sticky Content in Sidebars */
@@ -248,38 +249,41 @@ a:hover {
   top: calc(var(--header-offset) + 2rem);
   max-height: calc(100vh - var(--header-offset) - 4rem);
   overflow-y: auto;
-  padding-right: 0.5rem; /* Space for scrollbar */
+  padding-right: 0.5rem;
+  /* Space for scrollbar */
 }
 
 /* Main Content Area */
 .main-content-area {
-  min-width: 0; /* Crucial for Grid item shrinking */
+  min-width: 0;
+  /* Crucial for Grid item shrinking */
   width: 100%;
-  padding-top: 0; /* Ensure content starts at top */
+  padding-top: 0;
+  /* Ensure content starts at top */
 }
 
 /* Reset Quarto's default margins on main content */
 #quarto-content main,
-.main-content-area > article,
-.main-content-area > .article-body {
+.main-content-area>article,
+.main-content-area>.article-body {
   margin-top: 0;
   padding-top: 0;
 }
 
 /* Ensure first heading in content appears at top */
-.main-content-area > h1:first-child,
-.main-content-area > article > h1:first-child,
+.main-content-area>h1:first-child,
+.main-content-area>article>h1:first-child,
 .main-content-area h1.title {
   margin-top: 0;
   padding-top: 0;
 }
 
 /* Constrain prose width for readability, but allow containers to be wide */
-.main-content-area > p,
-.main-content-area > ul,
-.main-content-area > ol,
-.article-body > p,
-.article-body > ul {
+.main-content-area>p,
+.main-content-area>ul,
+.main-content-area>ol,
+.article-body>p,
+.article-body>ul {
   max-width: var(--prose-width);
 }
 
@@ -312,8 +316,13 @@ img[loading="lazy"].loaded {
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Respect reduced motion preferences */
@@ -398,11 +407,9 @@ figcaption {
 }
 
 header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-blue) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--primary-dark) 0%,
+      var(--primary-blue) 100%);
   color: var(--pure-white);
   border-bottom: 2px solid var(--accent-blue);
   padding: 0.8rem 0;
@@ -419,17 +426,17 @@ nav .container {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 100%; /* Force full width */
-  padding: 0 1rem; /* Minimal padding */
+  max-width: 100%;
+  /* Force full width */
+  padding: 0 1rem;
+  /* Minimal padding */
 }
 
 /* Quarto Navbar Full Width Fix */
 #quarto-header {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--primary-blue) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--primary-dark) 0%,
+      var(--primary-blue) 100%);
   border-bottom: 2px solid var(--accent-blue);
   box-shadow: 0 4px 12px var(--shadow-color);
 }
@@ -500,6 +507,17 @@ nav .container {
 /* Search box styling */
 #quarto-header #quarto-search {
   margin-left: auto;
+  min-width: 300px;
+  /* Force minimum width */
+  flex-basis: 400px;
+  /* Target around 400px width */
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header .aa-DetachedSearchButton {
+  width: 100%;
+  /* Fill the container */
+  min-width: 300px;
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
@@ -603,7 +621,8 @@ nav .container {
 
 .sidebar-links a {
   display: block;
-  padding: 0.625rem 1rem; /* Increased for better touch targets on mobile */
+  padding: 0.625rem 1rem;
+  /* Increased for better touch targets on mobile */
   color: var(--text-main);
   border-radius: 4px;
   font-size: 0.95rem;
@@ -706,7 +725,7 @@ nav .container {
     padding 0.3s ease;
 }
 
-.accordion-header[aria-expanded="true"] + .accordion-content {
+.accordion-header[aria-expanded="true"]+.accordion-content {
   padding-bottom: 1.5rem;
   max-height: 500px;
   transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
@@ -889,7 +908,7 @@ nav .container {
   transition: max-height 0.4s ease-out, padding 0.4s ease-out;
 }
 
-.critics-corner-header[aria-expanded="true"] + .critics-corner-content {
+.critics-corner-header[aria-expanded="true"]+.critics-corner-content {
   padding: 1.5rem;
   max-height: 2000px;
 }
@@ -1056,7 +1075,8 @@ nav .container {
   background: rgb(255, 255, 255, 0.1);
   border: 1px solid rgb(255, 255, 255, 0.2);
   color: #fff;
-  padding: 0.5rem 0.75rem; /* Increased for better touch targets (min 44px tap area) */
+  padding: 0.5rem 0.75rem;
+  /* Increased for better touch targets (min 44px tap area) */
   font-size: 0.8rem;
   border-radius: 4px;
   cursor: pointer;
@@ -1094,6 +1114,7 @@ nav .container {
 
 /* Tablet: Switch to 2 columns (Left Sidebar + Content) */
 @media (width < 992px) {
+
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -1146,7 +1167,8 @@ nav .container {
 
   /* Navigation Mobile */
   .nav-links {
-    display: none; /* Use JS toggle */
+    display: none;
+    /* Use JS toggle */
     position: absolute;
     top: 100%;
     left: 0;
@@ -1200,7 +1222,8 @@ nav .container {
 
 .lightbox-img {
   max-width: 90vw;
-  max-height: 85vh; /* Reduced slightly to make room for caption */
+  max-height: 85vh;
+  /* Reduced slightly to make room for caption */
   box-shadow: 0 5px 30px rgb(0, 0, 0, 0.5);
   border-radius: 4px;
   animation: zoom-in 0.3s cubic-bezier(0.2, 0, 0.2, 1);
@@ -1219,7 +1242,8 @@ nav .container {
   font-family: "Playfair Display", serif;
   font-size: 1.1rem;
   line-height: 1.4;
-  pointer-events: none; /* Let clicks pass through to background for closing */
+  pointer-events: none;
+  /* Let clicks pass through to background for closing */
   opacity: 0;
   transform: translateY(10px);
   transition:
@@ -1557,6 +1581,7 @@ h3:hover .anchor-link,
    consistent output regardless of page state or JavaScript modifications
    --- */
 @media print {
+
   /* Page setup for academic papers - A4 for international compatibility */
   @page {
     size: a4;
@@ -1754,7 +1779,8 @@ h3:hover .anchor-link,
     margin: 1rem 0;
   }
 
-  th, td {
+  th,
+  td {
     border: 1px solid #333;
     padding: 0.5rem;
     text-align: left;
@@ -1918,7 +1944,7 @@ h3:hover .anchor-link,
   transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
 }
 
-.laymans-terms-header[aria-expanded="true"] + .laymans-terms-content {
+.laymans-terms-header[aria-expanded="true"]+.laymans-terms-content {
   max-height: 3000px;
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
@@ -2058,12 +2084,14 @@ h3:hover .anchor-link,
 
 .contact-main {
   flex: 2;
-  min-width: 0; /* Prevent flex overflow */
+  min-width: 0;
+  /* Prevent flex overflow */
 }
 
 .contact-sidebar {
   flex: 1;
-  min-width: 280px; /* Fixed width for consistency */
+  min-width: 280px;
+  /* Fixed width for consistency */
   max-width: 350px;
   background: var(--bg-alt);
   padding: 1.5rem;
@@ -2073,7 +2101,8 @@ h3:hover .anchor-link,
 }
 
 .contact-form-container {
-  background: var(--pure-white); /* Ensure contrast */
+  background: var(--pure-white);
+  /* Ensure contrast */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: var(--shadow-sm);
@@ -2147,7 +2176,8 @@ form.contact-form .form-group textarea {
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
-  width: 100%; /* Full width button on mobile, auto on desktop? */
+  width: 100%;
+  /* Full width button on mobile, auto on desktop? */
 }
 
 @media (width > 768px) {
@@ -2199,7 +2229,8 @@ form.contact-form .form-group textarea {
   .contact-sidebar {
     width: 100%;
     max-width: none;
-    order: 2; /* Move sidebar below form on mobile */
+    order: 2;
+    /* Move sidebar below form on mobile */
   }
 
   .contact-main {
@@ -2216,6 +2247,7 @@ form.contact-form .form-group textarea {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  /* Ensure top alignment */
   gap: var(--sidebar-gap);
   max-width: 100%;
   margin: 0 auto;
@@ -2230,6 +2262,12 @@ form.contact-form .form-group textarea {
   border: 2px solid var(--legal-pad-yellow-border);
   border-radius: 4px;
   padding: 1.5rem;
+  top: 0;
+  /* Reset position */
+  margin-top: 0;
+  /* Align with top */
+  height: fit-content;
+  /* Only take needed height */
 }
 
 .home-sidebar h3 {
@@ -2323,24 +2361,81 @@ form.contact-form .form-group textarea {
   text-align: center;
 }
 
-/* Home Page Responsive */
-@media (width <= 1024px) {
+/* Search box styling - Reverted to default/small */
+#quarto-header #quarto-search {
+  margin-left: auto;
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header .aa-DetachedSearchButton {
+  /* Revert to default */
+}
+
+/* Home Layout Updates */
+.home-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start !important;
+  /* Ensure top alignment */
+  justify-content: flex-start !important;
+  /* Changed from space-between to keep gap consistent */
+  gap: 2rem !important;
+  /* Explicit 1/4 inch+ gap (approx 32px) */
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.home-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--legal-pad-yellow);
+  border: 2px solid var(--legal-pad-yellow-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  top: 0;
+  margin-top: 0;
+  height: fit-content;
+  margin-right: 0;
+  /* Let gap handle spacing */
+}
+
+.home-toc {
+  width: 250px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+  border-left: 1px solid var(--border-color);
+  padding-left: 1rem;
+  display: block;
+  margin-left: 0;
+  /* Let gap handle spacing */
+}
+
+/* Responsive Home Layout */
+@media (width <=1200px) {
+  .home-toc {
+    display: none !important;
+    /* Hide TOC on smaller screens */
+  }
+}
+
+@media (width <=1024px) {
   .home-layout {
-    flex-direction: column;
+    flex-direction: column !important;
     gap: 2rem;
   }
 
   .home-sidebar {
     width: 100%;
     order: 2;
+    /* Move below content on mobile if desired, or keep top */
     position: static;
-  }
-
-  .home-sidebar .sidebar-sticky-content {
-    position: static;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
+    border: none;
+    border-top: 2px solid var(--legal-pad-yellow-border);
   }
 
   .home-content {
@@ -2360,7 +2455,8 @@ form.contact-form .form-group textarea {
 
 .youtube-embed {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
+  /* 16:9 */
   height: 0;
   overflow: hidden;
   width: 100%;
@@ -2398,7 +2494,8 @@ form.contact-form .form-group textarea {
 }
 
 .resource-list .resource-media {
-  flex: 0 0 300px; /* Fixed width for video thumbnail */
+  flex: 0 0 300px;
+  /* Fixed width for video thumbnail */
   border-right: 1px solid var(--border-color);
 }
 
@@ -2447,13 +2544,14 @@ h1.title,
 /* Fix: Bibliography Layout */
 
 /* Ensure the grid doesn't collapse the main content too aggressively */
-@media (width >= 1200px) {
+@media (width >=1200px) {
   .standard-page-layout {
-    grid-template-columns: 250px 1fr 300px; /* Slightly reduced sidebars */
+    grid-template-columns: 250px 1fr 300px;
+    /* Slightly reduced sidebars */
   }
 }
 
-@media (width <= 1200px) {
+@media (width <=1200px) {
   .standard-page-layout {
     grid-template-columns: 200px 1fr 250px;
     gap: 1.5rem;
@@ -2519,8 +2617,9 @@ h1.title,
   transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
 }
 
-.critics-comments-header[aria-expanded="true"] + .critics-comments-content {
-  max-height: 5000px; /* Large enough to fit content */
+.critics-comments-header[aria-expanded="true"]+.critics-comments-content {
+  max-height: 5000px;
+  /* Large enough to fit content */
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
 
@@ -2878,7 +2977,7 @@ h1.title,
 }
 
 /* Home Page 3-Column Responsive */
-@media (width <= 1200px) {
+@media (width <=1200px) {
   .home-layout-3col {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     gap: 2rem;
@@ -2889,7 +2988,7 @@ h1.title,
   }
 }
 
-@media (width <= 1024px) {
+@media (width <=1024px) {
   .home-layout-3col {
     display: flex;
     flex-direction: column;
@@ -2930,7 +3029,8 @@ h1.title,
   }
 }
 
-@media (width <= 768px) {
+@media (width <=768px) {
+
   /* Mobile: Show hamburger menu */
   .mobile-menu-toggle {
     display: block;
@@ -3025,4 +3125,49 @@ h1.title,
   font-size: 1.1rem;
   color: var(--text-muted);
   line-height: 1.7;
+}
+
+/* ---
+   Responsive Grid Adjustments
+   --- */
+@media (max-width: 1200px) {
+
+  .page-columns.page-full .standard-page-layout,
+  .container .standard-page-layout,
+  .standard-page-layout {
+    grid-template-columns: 250px 1fr;
+    /* Drop right sidebar or stack */
+  }
+
+  .right-sidebar {
+    display: none;
+    /* Hide right sidebar on tablets for now, or move to bottom */
+  }
+}
+
+@media (max-width: 900px) {
+
+  .page-columns.page-full .standard-page-layout,
+  .container .standard-page-layout,
+  .standard-page-layout {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    width: 100%;
+    position: static;
+    /* Disable sticky on mobile */
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-sticky-content {
+    position: static;
+    max-height: none;
+  }
 }
