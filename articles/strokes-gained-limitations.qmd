@@ -545,6 +545,67 @@ Or, less formally: the “average player” that strokes gained is based on is a
   </div>
 </section>
 
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say about the limits of strokes gained:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Individual Baselines Are Statistically Impossible for Amateurs</h3>
+        </div>
+        <p class="critic-argument">
+          To build a robust individual value function <i>J<sub>i</sub>(d,c)</i> distinct from the population benchmark <i>J<sub>ref</sub></i>, a player needs thousands of tracked shots across all lies and distances. Pros have this via ShotLink; amateurs do not. Relying on a noisy, under-sampled individual model is scientifically worse than using a stable, high-N population baseline.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong>
+          True, full convergence is rare. However, <em>hierarchical</em> Bayesian models allow us to use whatever individual data exists, shrinking estimates toward the population mean where data is sparse. Even small samples can reveal massive deviations (e.g., a player who misses 50% of 3-footers vs the tour average of nearly 0%) that invalidate the standard baseline.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Directional Correctness is Sufficient for Training</h3>
+        </div>
+        <p class="critic-argument">
+          The article argues that &Delta;<i>J<sub>i</sub></i> &ne; &Delta;<i>J<sub>ref</sub></i>. But does the <em>sign</em> ever flip? If SG:Putting says you lose 2 strokes, you need to putt better. Knowing the exact derivative is an academic luxury; the population baseline correctly identifies the weakness, which is all 99% of golfers need.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong>
+          The sign rarely flips for <em>performance</em> (good is good), but it often flips for <em>Return on Investment (ROI)</em>. A player might be "bad" at both driving and putting relative to Tour, but their individual sensitivity (|&part;<i>J<sub>i</sub></i> / &part;<i>x</i>|) might make driving gains worthless (if they play conservative targets) while putting gains translate 1:1. Resource allocation requires accurate gradients.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Tailoring Strategy to Flaws Can Cement Them</h3>
+        </div>
+        <p class="critic-argument">
+          If we optimize a player's strategy based on their current (flawed) $J_i$—e.g., telling a bad lag putter to lay up to specific yardages to avoid long putts—we risk accommodating the flaw rather than fixing it. The "average pro" benchmark forces players to aspire to a higher standard of execution, driving long-term development.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong>
+          This is a valid coaching concern. We must distinguish between <em>strategic optimization</em> (playing the game you have today to score) and <em>developmental planning</em> (changing the game for tomorrow). Strokes gained often conflates the two; we advocate for explicitly separating them.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding of metric limitations.
+      </div>
+    </div>
+  </div>
+</section>
+
 ---
 
 ## References (informal)
