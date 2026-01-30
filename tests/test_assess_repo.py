@@ -44,7 +44,7 @@ def test_assess_code_structure_penalties():
     mock_file.relative_to.return_value.parts = ["a", "b", "c", "d", "e", "f"]
 
     result = assess_repo.assess_code_structure([mock_file])
-    # 10 - 2 (LOC) - 2 (Depth) = 6
+    # 10 - 2 (LOC) - 2 (Depth)=  6
     assert result["grade"] == 6
 
 
@@ -100,7 +100,7 @@ def test_assess_test_coverage_high():
         # > 20 files
         mock_rglob.return_value = [Path(f"test_{i}.py") for i in range(25)]
         result = assess_repo.assess_test_coverage(Path("/tmp"))
-        # 3 + 1 (>5) + 2 (>20) = 6. Limited to 10.
+        # 3 + 1 (>5) + 2 (>20)=  6. Limited to 10.
         assert result["grade"] == 6
 
 
@@ -128,8 +128,8 @@ except:
 """ * 6
     result = assess_repo.assess_error_handling([mock_file])
     # 6 bare excepts (>5) => -2
-    # try_count = 6 (<=20) => no bonus
-    # Base 7 - 2 = 5
+    # try_count=  6 (<=20) => no bonus
+    # Base 7 - 2=  5
     assert result["grade"] == 5
 
 
@@ -163,7 +163,7 @@ def test_assess_security():
         mock_glob.return_value = [mock_workflow]
 
         result = assess_repo.assess_security(Path("/tmp"))
-        # Base 7 + 2 = 9
+        # Base 7 + 2=  9
         assert result["grade"] == 9
 
 
@@ -250,7 +250,7 @@ def test_assess_scalability_maintainability():
     mock_file.read_text.return_value = "if a: pass\n" * 20 + "def foo(): pass"
 
     result = assess_repo.assess_scalability_maintainability([mock_file])
-    # Complexity > 10 => -5. 10 - 5 = 5.
+    # Complexity > 10 => -5. 10 - 5=  5.
     assert result["grade"] == 5
 
 
