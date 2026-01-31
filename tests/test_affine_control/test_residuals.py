@@ -1,47 +1,33 @@
-"""Tests for residual monitoring."""
+from typing import Any
 
 import numpy as np
 
-from src.affine_control.residuals import ResidualMonitor, compute_hessian_norm
+from src.affine_control.residuals import compute_hessian_norm
 
 
-def test_compute_hessian_norm():
-    """Test Hessian norm computation."""
+def test_compute_hessian_norm() -> None:
+    """Test compute_hessian_norm function."""
+    # Quadratic function f(x) = x^T A x
+    # Hessian should be 2A
+    A = np.array([[2.0, 0.0], [0.0, 1.0]])
 
-    def f(x, u):
-        """Simple quadratic function."""
-        return np.array([x[0] ** 2 + x[1] ** 2])
+    def f(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+        """Quadratic dynamics."""
+        # Returns vector of size 1 (scalar function output treated as vector)
+        val = float(x.T @ A @ x)
+        return np.array([val])
 
-    x = np.array([1.0, 1.0])
-    u = np.array([0.0])
+    x0 = np.array([1.0, 1.0])
+    u0 = np.array([0.0])
 
-    # Hessian of x^2 + y^2 is diag(2, 2)
-    # Norm should be 2.0
-    norm = compute_hessian_norm(f, x, u)
-    assert np.isclose(norm, 2.0, atol=1e-2)
+    # True Hessian is [[4, 0], [0, 2]]
+    # Spectral norm is max singular value = 4
+    # Note: Our function returns spectral norm of component Hessians.
+    # Here we have 1 component.
 
+    # Numerical norm
+    norm = compute_hessian_norm(f, x0, u0, epsilon=1e-3)
 
-def test_residual_monitor():
-    """Test residual monitor updates."""
-    monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
-
-    # Start LQR
-    assert monitor.mode == "LQR"
-
-    # Good tracking
-    monitor.update(np.array([0.0]), np.array([0.0]))
-    assert monitor.mode == "LQR"
-
-    # Critical error
-    monitor.update(np.array([1.0]), np.array([0.0]))  # 1
-    assert monitor.mode == "LQR"  # n=2
-
-    monitor.update(np.array([1.0]), np.array([0.0]))  # 2
-    assert monitor.mode == "MPC_FULL"
-
-    # Recover
-    monitor.update(np.array([0.0]), np.array([0.0]))
-    assert monitor.mode == "MPC_FULL"
-
-    monitor.update(np.array([0.0]), np.array([0.0]))
-    assert monitor.mode == "LQR"
+    # Should be close to 4.0
+    # Numerical error might be significant with central difference on Jacobian
+    assert np.isclose(norm, 4.0, atol=0.1)

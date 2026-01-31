@@ -1,30 +1,35 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
 
-# Define gravity constant to satisfy quality checks
+# Physical constants
 GRAVITY_M_S2 = 9.81
 
 
-class DynamicalSystem:
+class DynamicalSystem(ABC):
+    """Abstract base class for dynamical systems."""
+
+    @abstractmethod
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute the time derivative of the state x given input u."""
-        raise RuntimeError("Not implemented")
+        """Compute system dynamics dx/dt = f(x, u)."""
 
+    @abstractmethod
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """
-        Returns A, B matrices where dx_dot = A*dx + B*du
+        Returns A, B matrices where dx_dot = A*dx + B*du.
         """
-        raise RuntimeError("Not implemented")
 
 
 class SimplePendulum(DynamicalSystem):
+    """Simple Pendulum model."""
+
     def __init__(self, m: float = 1.0, L: float = 1.0, g: float = GRAVITY_M_S2) -> None:
-        """Initialize simple pendulum parameters."""
+        """Initialize parameters."""
         self.m = m
         self.L = L
         self.g = g
@@ -45,7 +50,7 @@ class SimplePendulum(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize pendulum dynamics."""
+        """Compute linearized dynamics about state x."""
         theta, _ = x
 
         A = np.array([[0, 1], [-(self.g / self.L) * np.cos(theta), 0]])
@@ -72,7 +77,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute spacecraft relative dynamics."""
+        """Compute relative motion dynamics."""
         assert not isinstance(
             u, float | int
         ), "Control input must be a vector for SpacecraftRendezvous"
@@ -106,7 +111,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize spacecraft dynamics."""
+        """Compute linearized dynamics."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
@@ -136,7 +141,7 @@ class SpacecraftRendezvous(DynamicalSystem):
 
         # Helper for gravity gradient
         def gravity_gradient(pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-            """Compute gravity gradient."""
+            """Compute gradient of gravity vector."""
             # pos_vec = [rt+rx, ry, rz]
             r_norm = np.linalg.norm(pos_vec)
             # -mu * r / |r|^3
@@ -214,7 +219,7 @@ class PlanarQuadrotor(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize quadrotor dynamics."""
+        """Compute linearized quadrotor dynamics."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
@@ -309,7 +314,7 @@ class RobotArm(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize robot arm dynamics."""
+        """Compute linearized robot arm dynamics (numerical)."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6

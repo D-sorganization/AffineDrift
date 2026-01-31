@@ -35,7 +35,7 @@ if str(_REPO_ROOT) not in sys.path:
 # Mock imports/utils if shared/python doesn't exist in all repos
 # We will define minimal utils here to ensure standalone execution
 def setup_script_logging(name):
-    """Setup logging configuration."""
+    """Setup basic logging for script."""
     import logging
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -111,7 +111,7 @@ def get_detailed_function_metrics(content: str):
 
 
 def check_dry_violations(files: list[Path]) -> list[dict]:
-    """Check for DRY violations using hash-based block matching."""
+    """Check for DRY violations."""
     issues = []
     chunk_size = 6
     code_blocks = defaultdict(list)
@@ -154,7 +154,7 @@ def check_dry_violations(files: list[Path]) -> list[dict]:
 
 
 def check_orthogonality(files: list[Path]) -> list[dict]:
-    """Check for orthogonality violations (e.g. large functions)."""
+    """Check for Orthogonality violations (God functions)."""
     issues = []
     for file_path in files:
         try:
@@ -178,7 +178,7 @@ def check_orthogonality(files: list[Path]) -> list[dict]:
 
 
 def check_reversibility(root_path: Path) -> list[dict]:
-    """Check for reversibility issues (e.g. hardcoded secrets)."""
+    """Check for Reversibility violations (hardcoded secrets)."""
     issues = []
     python_files = find_python_files(root_path)
     for file_path in python_files:
@@ -201,14 +201,15 @@ def check_reversibility(root_path: Path) -> list[dict]:
 
 
 def check_quality(files: list[Path]) -> list[dict]:
-    """Check for code quality issues (e.g. high TO-DO count)."""
+    """Check for Quality violations (TODOs)."""
     issues = []
     todos = []
+    # Obfuscate search string
+    todo_search = "TO" + "DO"
     for file_path in files:
         try:
             content = file_path.read_text(encoding="utf-8", errors="ignore")
-            # Obfuscate search string
-            if f"{'TO' + 'DO'}" in content:
+            if todo_search in content:
                 todos.append(str(file_path))
         except Exception:
             pass
@@ -218,17 +219,17 @@ def check_quality(files: list[Path]) -> list[dict]:
             {
                 "principle": "QUALITY",
                 "severity": "MINOR",
-                "title": f"High {'TO' + 'DO'} count ({len(todos)})",
+                "title": f"High {todo_search} count ({len(todos)})",
                 "description": "Accumulated technical debt",
                 "files": todos[:5],
-                "recommendation": f"Review {'TO' + 'DO'}s",
+                "recommendation": f"Review {todo_search}s",
             }
         )
     return issues
 
 
 def check_testing(root_path: Path) -> list[dict]:
-    """Check test coverage metrics."""
+    """Check for Testing coverage (file ratio heuristic)."""
     issues = []
     test_files = list(root_path.rglob("test_*.py"))
     src_files = find_python_files(root_path)
@@ -249,7 +250,7 @@ def check_testing(root_path: Path) -> list[dict]:
 
 
 def run_review(root_path: Path):
-    """Run the full review suite."""
+    """Run the pragmatic review process."""
     logger.info(f"Running Pragmatic Review on {root_path}")
     files = find_python_files(root_path)
 
