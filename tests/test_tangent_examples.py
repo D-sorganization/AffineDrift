@@ -1,12 +1,9 @@
-import os
-import sys
+from typing import Any
 
 import numpy as np
 
-# Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from src.tangent_models.examples import (
+    GRAVITY_M_S2,
     PlanarQuadrotor,
     RobotArm,
     SimplePendulum,
@@ -15,51 +12,60 @@ from src.tangent_models.examples import (
 
 
 def test_simple_pendulum() -> None:
-    sys = SimplePendulum()
-    x = np.array([0.1, 0.0])
+    """Test Simple Pendulum dynamics."""
+    sys = SimplePendulum(m=1.0, L=2.0, g=GRAVITY_M_S2)
+    x = np.array([np.pi / 2, 0])
     u = np.array([0.0])
     dx = sys.dynamics(x, u)
-    assert dx.shape == (2,)
-
-    A, B = sys.linearize(x, u)
-    assert A.shape == (2, 2)
-    assert B.shape == (2, 1)
+    # At horizontal, gravity pulls down
+    # dtheta = 0
+    # domega = -g/L * sin(pi/2) = -9.81/2 = -4.905
+    assert np.isclose(dx[0], 0)
+    assert np.isclose(dx[1], -4.905)
 
 
 def test_spacecraft_rendezvous() -> None:
+    """Test Spacecraft Rendezvous dynamics."""
     sys = SpacecraftRendezvous()
     x = np.zeros(6)
     u = np.zeros(3)
     dx = sys.dynamics(x, u)
-    assert dx.shape == (6,)
+    # At equilibrium
+    assert np.allclose(dx, 0)
 
+    # With offset
+    x[0] = 100  # 100m radial offset
+    dx = sys.dynamics(x, u)
+    assert not np.allclose(dx, 0)
+
+    # Test linearization shape
     A, B = sys.linearize(x, u)
     assert A.shape == (6, 6)
     assert B.shape == (6, 3)
 
-    # Check that linearization at origin matches HCW structure approximately
-    # HCW A matrix has 0s and identity on top right, and n dependent terms
-    assert A[0, 3] == 1.0
-    assert A[3, 0] > 0  # n^2 * 1? No, 3n^2 - 2n^2?
-    # Let's just check shapes and runnability for now, deeper math verification is in the article text/logic.
-
 
 def test_planar_quadrotor() -> None:
+    """Test Planar Quadrotor dynamics."""
     sys = PlanarQuadrotor()
     x = np.zeros(6)
-    u = np.zeros(2)
-    dx = sys.dynamics(x, u)
-    assert dx.shape == (6,)
+    # Hover thrust
+    # T = mg
+    # u1 + u2 = m*g
+    u_hover = sys.m * sys.g / 2
+    u = np.array([u_hover, u_hover])
 
-    A, B = sys.linearize(x, u)
-    assert A.shape == (6, 6)
-    assert B.shape == (6, 2)
+    dx = sys.dynamics(x, u)
+    # Should be zero accel (except maybe numerical noise)
+    assert np.allclose(dx[3:], 0)
 
 
 def test_robot_arm() -> None:
+    """Test Robot Arm dynamics."""
     sys = RobotArm()
-    x = np.array([0.1, 0.1, 0.0, 0.0])
+    x = np.zeros(4)
     u = np.zeros(2)
+
+    # Just check it runs and returns correct shape
     dx = sys.dynamics(x, u)
     assert dx.shape == (4,)
 

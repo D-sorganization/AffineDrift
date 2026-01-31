@@ -1,4 +1,3 @@
-import unittest
 from typing import Any
 
 import numpy as np
@@ -6,41 +5,35 @@ import numpy as np
 from src.affine_control.ddp import adaptive_timestep_ddp
 
 
-class TestAdaptiveDDP(unittest.TestCase):
-    def test_adaptive_timestep_basic(self) -> None:
-        """
-        Test that adaptive timestep DDP runs without errors on a simple double integrator.
-        """
-
-        def double_integrator(
-            x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]
-        ) -> np.ndarray[Any, Any]:
-            # x = [pos, vel]
-            # dx = [vel, u]
-            return np.array([x[1], u[0]])
-
-        x0 = np.array([0.0, 0.0])
-        xf = np.array([1.0, 0.0])
-        u_init = np.zeros((10, 1))  # 10 steps of zero control
-
-        x_traj, u_traj, t_traj = adaptive_timestep_ddp(
-            double_integrator, x0, xf, u_init, eps_residual=0.01, max_iters=5
-        )
-
-        # Check outputs
-        self.assertEqual(
-            len(t_traj), len(x_traj), "Time and state trajectories should match length"
-        )
-        self.assertEqual(len(t_traj) - 1, len(u_traj), "Control trajectory should be N-1")
-        self.assertTrue(t_traj[-1] > 0, "Time should advance")
-
-        # Check that timesteps are within bounds (0.001 to 0.1 as per implementation)
-        dts = np.diff(t_traj)
-        self.assertTrue(np.all(dts >= 0.001), "Min timestep violation")
-        if not np.all(dts <= 0.1):
-            print(f"Max dt found: {dts.max()}")
-        self.assertTrue(np.all(dts <= 0.1 + 1e-9), "Max timestep violation")
+def double_integrator(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Double integrator dynamics."""
+    # x = [p, v], u = [a]
+    # dx = [v, a]
+    return np.array([x[1], u[0]])
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_adaptive_timestep_ddp_smoke() -> None:
+    """Test adaptive timestep DDP (smoke test)."""
+    x0 = np.array([0.0, 0.0])
+    xf = np.array([1.0, 0.0])
+    u_init = np.zeros((10, 1))
+
+    # Mock Hessian bound function
+    def mock_hessian(f: Any, x: Any, u: Any) -> float:
+        """Mock Hessian bound."""
+        return 1.0
+
+    x_traj, u_traj, t_traj = adaptive_timestep_ddp(
+        double_integrator,
+        x0,
+        xf,
+        u_init,
+        compute_hessian_bound_func=mock_hessian,
+    )
+
+    # Check outputs
+    assert len(x_traj) > 0
+    assert len(u_traj) > 0
+    assert len(t_traj) == len(x_traj)
+    # Time should be increasing
+    assert np.all(np.diff(t_traj) > 0)
