@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 def main():
+    """Run the deploy assets script."""
     # Robust root detection
     root = Path(__file__).resolve().parent.parent
 
