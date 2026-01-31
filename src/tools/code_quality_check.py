@@ -196,9 +196,12 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
             if isinstance(node, ast.FunctionDef):
                 if not skip_docstring_checks and not ast.get_docstring(node):
                     # Skip abstract methods with ... body
-                    if len(node.body) == 1 and isinstance(node.body[0], ast.Expr) and \
-                       isinstance(node.body[0].value, ast.Constant) and \
-                       node.body[0].value.value == ...:
+                    if (
+                        len(node.body) == 1
+                        and isinstance(node.body[0], ast.Expr)
+                        and isinstance(node.body[0].value, ast.Constant)
+                        and node.body[0].value.value == ...
+                    ):
                         continue
 
                     issues.append(
