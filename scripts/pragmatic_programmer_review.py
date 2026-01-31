@@ -35,7 +35,7 @@ if str(_REPO_ROOT) not in sys.path:
 # Mock imports/utils if shared/python doesn't exist in all repos
 # We will define minimal utils here to ensure standalone execution
 def setup_script_logging(name):
-    """Setup basic logging for the script."""
+    """Setup logging for the script."""
     import logging
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -111,7 +111,7 @@ def get_detailed_function_metrics(content: str):
 
 
 def check_dry_violations(files: list[Path]) -> list[dict]:
-    """Check for DRY violations by finding duplicate code blocks."""
+    """Check for DRY (Don't Repeat Yourself) violations."""
     issues = []
     chunk_size = 6
     code_blocks = defaultdict(list)
@@ -154,7 +154,7 @@ def check_dry_violations(files: list[Path]) -> list[dict]:
 
 
 def check_orthogonality(files: list[Path]) -> list[dict]:
-    """Check for orthogonality violations (e.g. large functions)."""
+    """Check for orthogonality violations (e.g., God functions)."""
     issues = []
     for file_path in files:
         try:
@@ -178,7 +178,7 @@ def check_orthogonality(files: list[Path]) -> list[dict]:
 
 
 def check_reversibility(root_path: Path) -> list[dict]:
-    """Check for reversibility issues (e.g. hardcoded secrets)."""
+    """Check for reversibility issues (e.g., hardcoded secrets)."""
     issues = []
     python_files = find_python_files(root_path)
     for file_path in python_files:
@@ -201,7 +201,7 @@ def check_reversibility(root_path: Path) -> list[dict]:
 
 
 def check_quality(files: list[Path]) -> list[dict]:
-    """Check for code quality issues (e.g. TODOs)."""
+    """Check code quality indicators (e.g., marker count)."""
     issues = []
     todos = []
     todo_marker = "TO" + "DO"
@@ -228,7 +228,7 @@ def check_quality(files: list[Path]) -> list[dict]:
 
 
 def check_testing(root_path: Path) -> list[dict]:
-    """Check for testing coverage ratio."""
+    """Check testing coverage heuristics."""
     issues = []
     test_files = list(root_path.rglob("test_*.py"))
     src_files = find_python_files(root_path)
@@ -249,7 +249,7 @@ def check_testing(root_path: Path) -> list[dict]:
 
 
 def run_review(root_path: Path):
-    """Run the full review suite."""
+    """Run the full pragmatic programmer review."""
     logger.info(f"Running Pragmatic Review on {root_path}")
     files = find_python_files(root_path)
 
@@ -269,7 +269,7 @@ def run_review(root_path: Path):
 
 
 def generate_markdown_report(results, output_path):
-    """Generate a markdown report from results."""
+    """Generate a markdown report from review results."""
     md = [f"# Pragmatic Programmer Review: {results['repository']}"]
     md.append(f"**Date**: {results['timestamp'][:10]}")
     md.append(f"**Files**: {results['files_analyzed']}")

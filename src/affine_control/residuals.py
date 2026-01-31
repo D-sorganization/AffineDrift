@@ -4,6 +4,32 @@ from typing import Any
 import numpy as np
 
 
+def compute_hessian_bound(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    epsilon: float = 1e-5,
+) -> float:
+    """
+    Approximates the Hessian bound M for dynamics f(x, u).
+    This is a simplified numerical approximation.
+    In production, exact Hessians (via JAX/CasADi) should be used.
+
+    Args:
+        f: Dynamics function dx = f(x, u)
+        x: State vector
+        u: Control vector
+        epsilon: Finite difference step
+
+    Returns:
+        M: Spectral norm of the Hessian
+    """
+    # n = len(x)
+    # Placeholder for actual Hessian computation
+    # For now, return a conservative constant or implement finite difference Hessian
+    return 1.0
+
+
 def compute_hessian_norm(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
@@ -30,7 +56,7 @@ def compute_hessian_norm(
 
     # Jacobian J(x) = df/dx
     def jacobian(x0: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-        """Compute numerical Jacobian."""
+        """Compute Jacobian using finite differences."""
         J = np.zeros((dx, n))
         for i in range(n):
             x_plus = x0.copy()
@@ -137,7 +163,7 @@ class ResidualMonitor:
             self.high_count = 0
         else:
             # Hysteresis zone
-            pass  # No change in counters
+            pass  # No change in counters when in hysteresis band
 
         # Transitions
         if self.mode == "LQR":

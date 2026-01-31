@@ -103,13 +103,13 @@ def analyze_todos() -> tuple[list[Finding], list[Finding]]:
     fixme_markers = ["FIX" + "ME", "XXX", "HACK", "TEMP"]
 
     def _parser(line: str) -> Finding | None:
-        """Parse grep output for code markers."""
+        """Parse grep output for feature request/tech debt markers."""
         filepath, lineno, content = _parse_grep_line(line)
         if not filepath or not lineno or content is None:
             return None
 
         if re.search(r"\b" + todo_str + r"\b", content):
-            return {"file": filepath, "line": lineno, "text": content, "type": "TO" + "DO"}
+            return {"file": filepath, "line": lineno, "text": content, "type": todo_str}
 
         for m_marker in fixme_markers:
             if re.search(r"\b" + m_marker + r"\b", content):
@@ -123,7 +123,7 @@ def analyze_todos() -> tuple[list[Finding], list[Finding]]:
 
     all_markers = _scan_completist_file("MARKERS", _parser)
     for marker_item in all_markers:
-        if marker_item["type"] == "TO" + "DO":
+        if marker_item["type"] == todo_str:
             todos.append(marker_item)
         else:
             fixmes.append(marker_item)
@@ -135,7 +135,7 @@ def analyze_stubs() -> list[Finding]:
     """Analyze stub functions."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse stub finding."""
+        """Parse stub function output."""
         parts = line.strip().rsplit(" ", 1)
         if len(parts) < 2 or ":" not in parts[0]:
             return None
@@ -149,7 +149,7 @@ def analyze_docs() -> list[Finding]:
     """Analyze missing documentation."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse missing doc finding."""
+        """Parse missing documentation output."""
         parts = line.strip().rsplit(" ", 1)
         if len(parts) < 2 or ":" not in parts[0]:
             return None
@@ -164,7 +164,7 @@ def analyze_not_implemented() -> list[Finding]:
     ni_str = "NotImplemented" + "Error"
 
     def _parser(line: str) -> Finding | None:
-        """Parse Not Implemented finding."""
+        """Parse Not-Implemented-Error output."""
         f_path, l_no, c_txt = _parse_grep_line(line)
         if f_path and l_no and c_txt and ni_str in c_txt:
             return {"file": f_path, "line": l_no, "text": c_txt, "type": ni_str}
@@ -177,7 +177,7 @@ def analyze_abstract_methods() -> list[Finding]:
     """Analyze Abstract Methods."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse abstract method finding."""
+        """Parse abstract method output."""
         f_path, l_no, c_txt = _parse_grep_line(line)
         if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
             return {"file": f_path, "line": l_no, "text": c_txt, "type": "Abstract"}
@@ -364,7 +364,7 @@ def generate_report() -> None:
     all_items = criticals + todos
 
     def priority_score(item: Mapping[str, Any]) -> int:
-        """Calculate priority score for sorting."""
+        """Calculate implementation priority score."""
         imp, _, comp = calculate_metrics(item)
         return (imp * 10) - comp
 
