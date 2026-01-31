@@ -1,13 +1,13 @@
 """Tests for tangent models examples."""
 
-import pytest
+import numpy as np
+
 from src.tangent_models.examples import (
-    SimplePendulum,
-    SpacecraftRendezvous,
     PlanarQuadrotor,
     RobotArm,
+    SimplePendulum,
+    SpacecraftRendezvous,
 )
-import numpy as np
 
 
 def test_simple_pendulum():

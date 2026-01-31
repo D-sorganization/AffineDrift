@@ -1,7 +1,7 @@
 """Tests for DDP solver."""
 
 import numpy as np
-import pytest
+
 from src.affine_control.ddp import adaptive_timestep_ddp
 
 

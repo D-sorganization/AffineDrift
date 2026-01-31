@@ -1,7 +1,8 @@
 """Tests for residual monitoring."""
 
 import numpy as np
-from src.affine_control.residuals import compute_hessian_norm, ResidualMonitor
+
+from src.affine_control.residuals import ResidualMonitor, compute_hessian_norm
 
 
 def test_compute_hessian_norm():
