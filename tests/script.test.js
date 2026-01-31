@@ -11,6 +11,7 @@ const {
   MAX_ID_GENERATION_ATTEMPTS,
   MATHJAX_RENDER_DELAY_MS,
   CRITICS_CORNER_PADDING_OFFSET,
+  initAriaLabels
 } = require('../script.js');
 
 describe('Utility Functions', () => {
@@ -240,39 +241,28 @@ describe('DOM Manipulation', () => {
   describe('ARIA Labels', () => {
     test('should add ARIA labels to navigation', () => {
       document.body.innerHTML = `
-        <nav id="TOC"></nav>
-        <div class="sidebar"></div>
+        <nav class="toc-nav"></nav>
+        <aside class="left-sidebar"></aside>
       `;
 
-      const toc = document.getElementById('TOC');
-      const sidebar = document.querySelector('.sidebar');
+      initAriaLabels();
 
-      // Simulate ARIA label addition
-      if (toc && !toc.getAttribute('aria-label')) {
-        toc.setAttribute('aria-label', 'Table of Contents');
-      }
-      if (sidebar && !sidebar.getAttribute('aria-label')) {
-        sidebar.setAttribute('aria-label', 'Sidebar navigation');
-      }
+      const toc = document.querySelector('.toc-nav');
+      const sidebar = document.querySelector('.left-sidebar');
 
-      expect(toc.getAttribute('aria-label')).toBe('Table of Contents');
-      expect(sidebar.getAttribute('aria-label')).toBe('Sidebar navigation');
+      expect(toc.getAttribute('aria-label')).toBe('Table of contents navigation');
+      expect(sidebar.getAttribute('aria-label')).toBe('Left sidebar navigation');
     });
 
     test('should not override existing ARIA labels', () => {
       document.body.innerHTML = `
-        <nav id="TOC" aria-label="Custom Label"></nav>
+        <nav class="toc-nav" aria-label="Custom Label"></nav>
       `;
 
-      const toc = document.getElementById('TOC');
-      const existingLabel = toc.getAttribute('aria-label');
+      initAriaLabels();
 
-      // Simulate preservation logic
-      if (toc && !toc.getAttribute('aria-label')) {
-        toc.setAttribute('aria-label', 'Table of Contents');
-      }
-
-      expect(toc.getAttribute('aria-label')).toBe(existingLabel);
+      const toc = document.querySelector('.toc-nav');
+      expect(toc.getAttribute('aria-label')).toBe('Custom Label');
     });
   });
 });

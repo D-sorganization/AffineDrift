@@ -674,4 +674,23 @@
     }
   `;
   document.head.appendChild(style);
+
+  // Expose for testing
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      init,
+      loadBibliography,
+      renderBibliography,
+      filterBibliography,
+      sortEntries,
+      getTypeClass,
+      showDetails,
+      setupSortControls,
+      // Helper to set data for testing since it's local scope
+      setBibliographyData: (data) => {
+        bibliographyData = data;
+        filteredData = [...data];
+      }
+    };
+  }
 })();
