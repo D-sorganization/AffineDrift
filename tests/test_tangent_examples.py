@@ -15,7 +15,7 @@ from src.tangent_models.examples import (
 
 
 def test_simple_pendulum() -> None:
-    """Test simple pendulum dynamics and linearization shapes."""
+    """Test simple pendulum dynamics and linearization."""
     sys = SimplePendulum()
     x = np.array([0.1, 0.0])
     u = np.array([0.0])
@@ -28,7 +28,7 @@ def test_simple_pendulum() -> None:
 
 
 def test_spacecraft_rendezvous() -> None:
-    """Test spacecraft rendezvous dynamics and linearization shapes."""
+    """Test spacecraft rendezvous dynamics and linearization."""
     sys = SpacecraftRendezvous()
     x = np.zeros(6)
     u = np.zeros(3)
@@ -47,7 +47,7 @@ def test_spacecraft_rendezvous() -> None:
 
 
 def test_planar_quadrotor() -> None:
-    """Test planar quadrotor dynamics and linearization shapes."""
+    """Test planar quadrotor dynamics and linearization."""
     sys = PlanarQuadrotor()
     x = np.zeros(6)
     u = np.zeros(2)
@@ -60,7 +60,7 @@ def test_planar_quadrotor() -> None:
 
 
 def test_robot_arm() -> None:
-    """Test robot arm dynamics and linearization shapes."""
+    """Test robot arm dynamics and linearization."""
     sys = RobotArm()
     x = np.array([0.1, 0.1, 0.0, 0.0])
     u = np.zeros(2)

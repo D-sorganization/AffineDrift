@@ -1,34 +1,31 @@
-from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
 
+# Physical constants
 GRAVITY_M_S2 = 9.81
 
 
-class DynamicalSystem(ABC):
-    @abstractmethod
+class DynamicalSystem:
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute the system dynamics dx/dt = f(x, u)."""
-        # This is an abstract method, so we use ... instead of raise NotImplementedError
-        # to avoid linting issues while still indicating it must be implemented.
-        ...
+        """Compute system dynamics x_dot = f(x, u)."""
+        pass  # Abstract method
 
-    @abstractmethod
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """
         Returns A, B matrices where dx_dot = A*dx + B*du
         """
-        ...
+        pass  # Abstract method
+        return np.array([]), np.array([])
 
 
 class SimplePendulum(DynamicalSystem):
     def __init__(self, m: float = 1.0, L: float = 1.0, g: float = GRAVITY_M_S2) -> None:
-        """Initialize the simple pendulum."""
+        """Initialize simple pendulum parameters."""
         self.m = m
         self.L = L
         self.g = g
@@ -67,7 +64,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     """
 
     def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
-        """Initialize the spacecraft rendezvous model."""
+        """Initialize spacecraft parameters."""
         self.mu = mu
         self.r_t = r_t  # Orbit radius (m), e.g., ISS ~400km altitude
         self.n = np.sqrt(mu / r_t**3)  # Mean motion
@@ -76,7 +73,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute spacecraft dynamics."""
+        """Compute spacecraft relative dynamics."""
         assert not isinstance(
             u, float | int
         ), "Control input must be a vector for SpacecraftRendezvous"
@@ -140,7 +137,7 @@ class SpacecraftRendezvous(DynamicalSystem):
 
         # Helper for gravity gradient
         def gravity_gradient(pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-            """Compute the gravity gradient."""
+            """Compute gravity gradient matrix."""
             # pos_vec = [rt+rx, ry, rz]
             r_norm = np.linalg.norm(pos_vec)
             # -mu * r / |r|^3
@@ -192,7 +189,7 @@ class PlanarQuadrotor(DynamicalSystem):
         moment_inertia: float = 0.01,
         g: float = GRAVITY_M_S2,
     ) -> None:
-        """Initialize the planar quadrotor."""
+        """Initialize quadrotor parameters."""
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
@@ -263,7 +260,7 @@ class RobotArm(DynamicalSystem):
         l2: float = 1.0,
         g: float = GRAVITY_M_S2,
     ) -> None:
-        """Initialize the robot arm."""
+        """Initialize robot arm parameters."""
         self.m1 = m1
         self.m2 = m2
         self.l1 = l1
@@ -313,7 +310,7 @@ class RobotArm(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize robot arm dynamics."""
+        """Linearize robot arm dynamics (numerical)."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6

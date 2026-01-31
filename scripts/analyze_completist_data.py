@@ -99,17 +99,17 @@ def analyze_todos() -> tuple[list[Finding], list[Finding]]:
     fixmes: list[Finding] = []
 
     # Obfuscate strings to avoid finding this script itself in greedy scans
-    todo_str = f"{'TO' + 'DO'}"
-    fixme_markers = [f"{'FIX' + 'ME'}", "XXX", "HACK", "TEMP"]
+    todo_str = "TO" + "DO"
+    fixme_markers = ["FIX" + "ME", "XXX", "HACK", "TEMP"]
 
     def _parser(line: str) -> Finding | None:
-        """Parse TO-DO and FIX-ME markers."""
+        """Parse grep output for code markers."""
         filepath, lineno, content = _parse_grep_line(line)
         if not filepath or not lineno or content is None:
             return None
 
         if re.search(r"\b" + todo_str + r"\b", content):
-            return {"file": filepath, "line": lineno, "text": content, "type": f"{'TO' + 'DO'}"}
+            return {"file": filepath, "line": lineno, "text": content, "type": "TO" + "DO"}
 
         for m_marker in fixme_markers:
             if re.search(r"\b" + m_marker + r"\b", content):
@@ -123,7 +123,7 @@ def analyze_todos() -> tuple[list[Finding], list[Finding]]:
 
     all_markers = _scan_completist_file("MARKERS", _parser)
     for marker_item in all_markers:
-        if marker_item["type"] == f"{'TO' + 'DO'}":
+        if marker_item["type"] == "TO" + "DO":
             todos.append(marker_item)
         else:
             fixmes.append(marker_item)
@@ -135,7 +135,7 @@ def analyze_stubs() -> list[Finding]:
     """Analyze stub functions."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse stub functions."""
+        """Parse stub finding."""
         parts = line.strip().rsplit(" ", 1)
         if len(parts) < 2 or ":" not in parts[0]:
             return None
@@ -149,7 +149,7 @@ def analyze_docs() -> list[Finding]:
     """Analyze missing documentation."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse missing documentation."""
+        """Parse missing doc finding."""
         parts = line.strip().rsplit(" ", 1)
         if len(parts) < 2 or ":" not in parts[0]:
             return None
@@ -161,10 +161,10 @@ def analyze_docs() -> list[Finding]:
 
 def analyze_not_implemented() -> list[Finding]:
     """Analyze Not Implemented Error occurrences."""
-    ni_str = f"{'NotImplemented' + 'Error'}"
+    ni_str = "NotImplemented" + "Error"
 
     def _parser(line: str) -> Finding | None:
-        """Parse Not Implemented Error occurrences."""
+        """Parse Not Implemented finding."""
         f_path, l_no, c_txt = _parse_grep_line(line)
         if f_path and l_no and c_txt and ni_str in c_txt:
             return {"file": f_path, "line": l_no, "text": c_txt, "type": ni_str}
@@ -177,7 +177,7 @@ def analyze_abstract_methods() -> list[Finding]:
     """Analyze Abstract Methods."""
 
     def _parser(line: str) -> Finding | None:
-        """Parse Abstract Methods."""
+        """Parse abstract method finding."""
         f_path, l_no, c_txt = _parse_grep_line(line)
         if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
             return {"file": f_path, "line": l_no, "text": c_txt, "type": "Abstract"}
@@ -201,9 +201,9 @@ def calculate_metrics(item: Mapping[str, Any]) -> tuple[int, int, int]:
     # Complexity mapping
     comp_map = {
         "Stub": 4,
-        f"{'NotImplemented' + 'Error'}": 4,
-        f"{'FIX' + 'ME'}": 2,
-        f"{'TO' + 'DO'}": 3,
+        "NotImplemented" + "Error": 4,
+        "FIX" + "ME": 2,
+        "TO" + "DO": 3,
         "DocGap": 1,
         "Abstract": 5,
     }
@@ -273,8 +273,8 @@ def generate_mermaid_charts(
     chart.append("```mermaid")
     chart.append("pie title Completion Status")
     chart.append(f'    "Impl Gaps (Critical)" : {len(criticals)}')
-    chart.append(f'    "Feature Requests ({f"{"TO" + "DO"}"})" : {len(todos)}')
-    chart.append(f'    "Technical Debt ({f"{"FIX" + "ME"}"})" : {len(fixmes)}')
+    chart.append(f'    "Feature Requests ({"TO" + "DO"})" : {len(todos)}')
+    chart.append(f'    "Technical Debt ({"FIX" + "ME"})" : {len(fixmes)}')
     chart.append(f'    "Doc Gaps" : {len(docs)}')
     chart.append("```")
 
@@ -319,7 +319,7 @@ def generate_report() -> None:
         f"# Completist Report: {date_s}\n",
         "## Executive Summary",
         f"- **Critical Gaps**: {len(criticals)}",
-        f"- **Feature Gaps ({f"{"TO" + "DO"}"})**: {len(todos)}",
+        f"- **Feature Gaps ({"TO" + "DO"})**: {len(todos)}",
         f"- **Technical Debt**: {len(fixmes)}",
         f"- **Documentation Gaps**: {len(missing_docs)}\n",
     ]
@@ -364,7 +364,7 @@ def generate_report() -> None:
     all_items = criticals + todos
 
     def priority_score(item: Mapping[str, Any]) -> int:
-        """Calculate priority score based on impact and complexity."""
+        """Calculate priority score for sorting."""
         imp, _, comp = calculate_metrics(item)
         return (imp * 10) - comp
 

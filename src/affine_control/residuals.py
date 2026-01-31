@@ -106,7 +106,7 @@ class ResidualMonitor:
     def __init__(
         self, eps_warning: float = 0.01, eps_critical: float = 0.05, n_hysteresis: int = 3
     ) -> None:
-        """Initialize the residual monitor."""
+        """Initialize residual monitor."""
         self.eps_warning = eps_warning
         self.eps_critical = eps_critical
         self.n = n_hysteresis
@@ -136,8 +136,8 @@ class ResidualMonitor:
             self.low_count += 1
             self.high_count = 0
         else:
-            # Hysteresis zone: Maintain current mode unless thresholds are crossed
-            pass
+            # Hysteresis zone
+            pass  # No change in counters
 
         # Transitions
         if self.mode == "LQR":

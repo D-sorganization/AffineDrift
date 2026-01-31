@@ -290,4 +290,27 @@
     closeModal,
     loadIndex,
   };
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      search,
+      loadIndex,
+      openModal,
+      closeModal,
+      // Helper to set index for testing
+      setIndex: (index) => {
+        searchIndex = index;
+      },
+      // Helper to set Fuse instance for testing
+      setFuse: (fuseInstance) => {
+        fuse = fuseInstance;
+      },
+      // Helper to reset state for testing
+      resetState: () => {
+        searchIndex = null;
+        fuse = null;
+        isLoaded = false;
+      }
+    };
+  }
 })();
