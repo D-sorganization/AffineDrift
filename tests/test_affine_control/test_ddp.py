@@ -15,6 +15,7 @@ class TestAdaptiveDDP(unittest.TestCase):
         def double_integrator(
             x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]
         ) -> np.ndarray[Any, Any]:
+            """Compute double integrator dynamics."""
             # x = [pos, vel]
             # dx = [vel, u]
             return np.array([x[1], u[0]])

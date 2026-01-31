@@ -545,6 +545,64 @@ Or, less formally: the “average player” that strokes gained is based on is a
   </div>
 </section>
 
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>The "Good Enough" Heuristic</h3>
+        </div>
+        <p class="critic-argument">
+          While mathematically inexact for individuals, the population baseline is a sufficiently robust heuristic for the vast majority of golfers. If a player loses 2 strokes putting against the field, they are almost certainly a bad putter relative to their other skills, regardless of their specific <i>J<sub>i</sub></i> gradient. The signal-to-noise ratio is high enough to be useful without needing perfect individual calibration.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that strokes gained is excellent for broad diagnosis (finding weaknesses). The error becomes critical when prescribing specific <em>interventions</em> (treatment). Knowing you are a bad putter is accurate; assuming that a 3-foot improvement in proximity will yield the standard table's stroke value is where the causal logic fails.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Sample Size Reality</h3>
+        </div>
+        <p class="critic-argument">
+          Constructing a true individual value function <i>J<sub>i</sub></i> requires thousands of shots from varying lies and distances to achieve statistical significance. No amateur and few pros have this volume of data. The "flawed" population model <i>J<sub>ref</sub></i> is the only estimator robust enough to use in practice.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a valid practical constraint. However, the solution is not to trust <i>J<sub>ref</sub></i> blindly, but to use Bayesian methods that treat <i>J<sub>ref</sub></i> as a <em>prior</em> and update it with the player's sparse data (shrinkage). This acknowledges the uncertainty rather than presenting the population average as a hard truth.
+        </div>
+      </div>
+
+       <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Stratified Baselines Exist</h3>
+        </div>
+        <p class="critic-argument">
+          Modern commercial tools (like Golfmetrics) allow for handicap-specific baselines (e.g., comparing against an 8-handicap benchmark rather than a Tour Pro). This effectively approximates <i>J<sub>i</sub></i> by grouping players of similar skill levels, mitigating the "average player" mismatch.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> Stratified baselines are a significant improvement, but they still average over a group. An "8-handicap Scrambler" and an "8-handicap Ball Striker" achieve the same score with vastly different skill profiles and value function gradients. A baseline averaged from both will still misprice shots for either individual.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding.
+      </div>
+    </div>
+  </div>
+</section>
+
 ---
 
 ## References (informal)

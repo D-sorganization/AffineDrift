@@ -19,6 +19,7 @@ class TestResiduals(unittest.TestCase):
         """
 
         def f(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+            """Compute quadratic function."""
             return np.array([x[0] ** 2])
 
         x = np.array([1.0])

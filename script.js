@@ -1618,22 +1618,6 @@ function scrollToTop() {
   });
 }
 
-// Export for potential module use
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    scrollToTop,
-    debounce,
-    generateUniqueId,
-    getScrollOffset,
-    runOnDomReady,
-    runWhenIdle,
-    MAX_ID_GENERATION_ATTEMPTS,
-    MATHJAX_RENDER_DELAY_MS,
-    CRITICS_CORNER_PADDING_OFFSET,
-  };
-}
-
-
 // Accessibility: Add ARIA labels to navigation elements
 function initAriaLabels() {
   // Add ARIA labels to navigation elements
@@ -1738,3 +1722,19 @@ function initAriaLabels() {
 
 // Run ARIA labels initialization when DOM is ready
 runOnDomReady(initAriaLabels);
+
+// Export for potential module use
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    scrollToTop,
+    debounce,
+    generateUniqueId,
+    getScrollOffset,
+    runOnDomReady,
+    runWhenIdle,
+    MAX_ID_GENERATION_ATTEMPTS,
+    MATHJAX_RENDER_DELAY_MS,
+    CRITICS_CORNER_PADDING_OFFSET,
+    initAriaLabels,
+  };
+}
