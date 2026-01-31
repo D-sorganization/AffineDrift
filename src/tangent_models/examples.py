@@ -22,7 +22,9 @@ class DynamicalSystem:
 
 
 class SimplePendulum(DynamicalSystem):
-    def __init__(self, m: float = 1.0, L: float = 1.0, g: float = DynamicalSystem.GRAVITY_M_S2) -> None:
+    def __init__(
+        self, m: float = 1.0, L: float = 1.0, g: float = DynamicalSystem.GRAVITY_M_S2
+    ) -> None:
         """Initialize the simple pendulum parameters."""
         self.m = m
         self.L = L
