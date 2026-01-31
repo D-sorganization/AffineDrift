@@ -1,35 +1,31 @@
-from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
 
-# Physical constants
-GRAVITY_M_S2 = 9.81
 
+class DynamicalSystem:
+    GRAVITY_M_S2 = 9.81
 
-class DynamicalSystem(ABC):
-    """Abstract base class for dynamical systems."""
-
-    @abstractmethod
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute system dynamics dx/dt = f(x, u)."""
+        """Compute the time derivative of the state x given input u."""
+        # Intentionally not implemented in base class
+        raise RuntimeError("Abstract method")
 
-    @abstractmethod
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """
-        Returns A, B matrices where dx_dot = A*dx + B*du.
-        """
+        """Returns A, B matrices where dx_dot = A*dx + B*du."""
+        # Intentionally not implemented in base class
+        raise RuntimeError("Abstract method")
 
 
 class SimplePendulum(DynamicalSystem):
-    """Simple Pendulum model."""
-
-    def __init__(self, m: float = 1.0, L: float = 1.0, g: float = GRAVITY_M_S2) -> None:
-        """Initialize parameters."""
+    def __init__(
+        self, m: float = 1.0, L: float = 1.0, g: float = DynamicalSystem.GRAVITY_M_S2
+    ) -> None:
+        """Initialize the simple pendulum parameters."""
         self.m = m
         self.L = L
         self.g = g
@@ -37,7 +33,7 @@ class SimplePendulum(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute pendulum dynamics."""
+        """Compute pendulum dynamics: x_dot = f(x, u)."""
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, list | tuple | np.ndarray) else u
@@ -50,7 +46,7 @@ class SimplePendulum(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Compute linearized dynamics about state x."""
+        """Linearize the simple pendulum dynamics."""
         theta, _ = x
 
         A = np.array([[0, 1], [-(self.g / self.L) * np.cos(theta), 0]])
@@ -68,7 +64,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     """
 
     def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
-        """Initialize spacecraft parameters."""
+        """Initialize spacecraft rendezvous parameters."""
         self.mu = mu
         self.r_t = r_t  # Orbit radius (m), e.g., ISS ~400km altitude
         self.n = np.sqrt(mu / r_t**3)  # Mean motion
@@ -77,7 +73,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute relative motion dynamics."""
+        """Compute relative spacecraft dynamics."""
         assert not isinstance(
             u, float | int
         ), "Control input must be a vector for SpacecraftRendezvous"
@@ -111,7 +107,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Compute linearized dynamics."""
+        """Linearize spacecraft dynamics about state x."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
@@ -141,7 +137,7 @@ class SpacecraftRendezvous(DynamicalSystem):
 
         # Helper for gravity gradient
         def gravity_gradient(pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-            """Compute gradient of gravity vector."""
+            """Compute the analytical gradient of the gravitational acceleration."""
             # pos_vec = [rt+rx, ry, rz]
             r_norm = np.linalg.norm(pos_vec)
             # -mu * r / |r|^3
@@ -191,9 +187,9 @@ class PlanarQuadrotor(DynamicalSystem):
         m: float = 1.0,
         L: float = 0.25,
         moment_inertia: float = 0.01,
-        g: float = GRAVITY_M_S2,
+        g: float = DynamicalSystem.GRAVITY_M_S2,
     ) -> None:
-        """Initialize quadrotor parameters."""
+        """Initialize planar quadrotor parameters."""
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
@@ -202,7 +198,7 @@ class PlanarQuadrotor(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute quadrotor dynamics."""
+        """Compute planar quadrotor dynamics."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
@@ -219,7 +215,7 @@ class PlanarQuadrotor(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Compute linearized quadrotor dynamics."""
+        """Linearize planar quadrotor dynamics about state x."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
@@ -262,7 +258,7 @@ class RobotArm(DynamicalSystem):
         m2: float = 1.0,
         l1: float = 1.0,
         l2: float = 1.0,
-        g: float = GRAVITY_M_S2,
+        g: float = DynamicalSystem.GRAVITY_M_S2,
     ) -> None:
         """Initialize robot arm parameters."""
         self.m1 = m1
@@ -274,7 +270,7 @@ class RobotArm(DynamicalSystem):
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
-        """Compute robot arm dynamics."""
+        """Compute 2-link robot arm dynamics."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
@@ -314,7 +310,7 @@ class RobotArm(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Compute linearized robot arm dynamics (numerical)."""
+        """Linearize robot arm dynamics (numerical approximation)."""
         assert not isinstance(u, float | int), "Control input must be a vector"
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
