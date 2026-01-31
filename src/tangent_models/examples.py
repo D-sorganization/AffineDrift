@@ -1,14 +1,17 @@
+from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
 
 
-class DynamicalSystem:
+class DynamicalSystem(ABC):
+    @abstractmethod
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         raise NotImplementedError
 
+    @abstractmethod
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:

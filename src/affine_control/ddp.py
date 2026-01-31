@@ -51,6 +51,11 @@ def adaptive_timestep_ddp(
     """
     DDP with curvature-adaptive timestep selection.
 
+    NOTE: This is a non-functional MOCK implementation.
+    The backward pass and Riccati equation solving are not implemented.
+    This skeleton serves as a placeholder for the algorithm structure.
+    See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md
+
     Args:
         f: Dynamics function f(x, u, t)
         x0: Initial state
