@@ -1,41 +1,61 @@
-# Completist Audit Report - 2026-01-31
+# Completist Report: 2026-01-31
 
 ## Executive Summary
-This audit identified 4 critical incomplete items, 3 feature gaps, 1 content gap, and 3 technical debt items. New critical issues were found in the `residuals.py` module and visible placeholder sections on the website.
+- **Critical Gaps**: 3
+- **Feature Gaps (TODO)**: 4
+- **Technical Debt**: 4
+- **Documentation Gaps**: 0
 
-## Critical Incomplete (Blocking)
-1.  **DDP Mock Implementation**
-    *   **Location**: `src/affine_control/ddp.py`
-    *   **Issue**: `adaptive_timestep_ddp` function is a skeleton that breaks early and lacks a backward pass.
-    *   **Status**: Tracked in `ISSUE_Completist_Critical_DDPMock_2026-01-30.md`.
+## Visualization
+### Status Overview
+```mermaid
+pie title Completion Status
+    "Impl Gaps (Critical)" : 3
+    "Feature Requests (TODO)" : 4
+    "Technical Debt (FIXME)" : 4
+    "Doc Gaps" : 0
+```
 
-2.  **Hessian Bound Placeholder**
-    *   **Location**: `src/affine_control/residuals.py`
-    *   **Issue**: `compute_hessian_bound` returns hardcoded `1.0`.
-    *   **Action**: Creating new issue `ISSUE_Completist_Critical_HessianBound_2026-01-31.md`.
+### Top Impacted Modules
+```mermaid
+pie title Issues by Module
+    "src" : 9
+    "scripts" : 2
+```
 
-3.  **Visible Website Placeholders**
-    *   **Location**: `tools.qmd`, `daydreams-doodles.qmd`
-    *   **Issue**: Sections explicitly marked "Under Development" or "Future Projects" visible to users.
-    *   **Action**: Creating new issue `ISSUE_Completist_Critical_WebsitePlaceholders_2026-01-31.md`.
+## Critical Incomplete (Top 50)
+| File | Line | Type | Impact | Coverage | Complexity |
+|---|---|---|---|---|---|
+| `./src/tools/code_quality_check.py` | 39 | NotImplementedError | 3 | 2 | 4 |
+| `./src/tangent_models/examples.py` | 10 | NotImplementedError | 1 | 2 | 4 |
+| `./src/tangent_models/examples.py` | 18 | NotImplementedError | 1 | 2 | 4 |
 
-4.  **Archived Wrist App Placeholder**
-    *   **Location**: `archive/handcrafted-site/wrist-universal-joint.html`
-    *   **Issue**: Contains `streamlit-placeholder` div.
-    *   **Status**: Tracked in `ISSUE_Completist_Critical_WristAppPlaceholder_2026-01-29.md`.
-
-## Feature Gaps
-| Feature | Location | Gap |
-| :--- | :--- | :--- |
-| Robot Arm Linearization | `src/tangent_models/examples.py` | Uses numerical linearization instead of analytical (marked as TODO/FIXME in comments or implied by implementation choice). |
-| Image Verification | `tools/verify_images.py` | "TODO: Implement robust image verification". |
-| Dynamical System Base | `src/tangent_models/examples.py` | Base class raises `NotImplementedError` instead of using `abc` module. |
-
-## Content Gaps
-1.  **Conversion Guide**
-    *   `src/tools/CONVERSION_GUIDE.md`: Contains `[Figure: See PDF version]` placeholder.
+## Feature Gap Matrix
+| Module | Feature Gap | Type |
+|---|---|---|
+| `./scripts/pragmatic_programmer_review.py` | if "TODO" in content: | TODO |
+| `./scripts/pragmatic_programmer_review.py` | "title": f"High TODO count ({len(todos)})", | TODO |
+| `./src/tools/matlab_utilities/scripts/matlab_quality_check.py` | (r"\bTODO\b", "TODO placeholder found"), | TODO |
+| `./src/tools/code_quality_check.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | TODO |
 
 ## Technical Debt Register
-1.  **Archived Code**: `archive/handcrafted-site/wrist-universal-joint.html` should be deleted if not used.
-2.  **MATLAB Checks**: `tools/matlab_utilities/scripts/matlab_quality_check.py` has incomplete error handling logic.
-3.  **Numerical Instability**: `src/tangent_models/examples.py` mentions "unstable for large timesteps" in comments.
+| File | Line | Issue | Type |
+|---|---|---|---|
+| `./src/tools/matlab_utilities/scripts/matlab_quality_check.py` | 286 | (r"\bFIXME\b", "FIXME placeholder found"), | FIXME |
+| `./src/tools/matlab_utilities/scripts/matlab_quality_check.py` | 287 | (r"\bHACK\b", "HACK comment found"), | HACK |
+| `./src/tools/matlab_utilities/scripts/matlab_quality_check.py` | 288 | (r"\bXXX\b", "XXX comment found"), | XXX |
+| `./src/tools/code_quality_check.py` | 37 | (re.compile(r"\bFIXME\b"), "FIXME placeholder found"), | FIXME |
+
+## Recommended Implementation Order
+Prioritized by Impact (High) and Complexity (Low).
+| Priority | File | Issue | Metrics (I/C/C) |
+|---|---|---|---|
+| 1 | `./src/tools/matlab_utilities/scripts/matlab_quality_check.py` | (r"\bTODO\b", "TODO placeholder found"), | 3/2/3 |
+| 2 | `./src/tools/code_quality_check.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | 3/2/3 |
+| 3 | `./src/tools/code_quality_check.py` | (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"), | 3/2/4 |
+| 4 | `./scripts/pragmatic_programmer_review.py` | if "TODO" in content: | 1/2/3 |
+| 5 | `./scripts/pragmatic_programmer_review.py` | "title": f"High TODO count ({len(todos)})", | 1/2/3 |
+| 6 | `./src/tangent_models/examples.py` | raise NotImplementedError | 1/2/4 |
+| 7 | `./src/tangent_models/examples.py` | raise NotImplementedError | 1/2/4 |
+
+## Issues Created
