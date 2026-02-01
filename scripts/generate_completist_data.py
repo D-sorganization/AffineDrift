@@ -13,11 +13,22 @@ This script scans the codebase and generates the following data files in .jules/
 import ast
 import os
 import re
-import sys
 from pathlib import Path
 
 DATA_DIR = Path(".jules/completist_data")
-EXCLUDED_DIRS = {".git", ".venv", "venv", "env", "node_modules", ".jules", "__pycache__", "build", "dist", ".idea", ".vscode"}
+EXCLUDED_DIRS = {
+    ".git",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+    ".jules",
+    "__pycache__",
+    "build",
+    "dist",
+    ".idea",
+    ".vscode",
+}
 TEXT_EXTENSIONS = {".py", ".md", ".js", ".css", ".html", ".yml", ".yaml", ".json", ".txt", ".sh"}
 
 
@@ -60,7 +71,7 @@ def scan_markers(root: Path) -> list[str]:
                 continue
 
             try:
-                with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                with open(file_path, encoding="utf-8", errors="ignore") as f:
                     for i, line in enumerate(f, 1):
                         if regex.search(line):
                             # Format: file:line:content
@@ -75,10 +86,10 @@ def scan_not_implemented(files: list[Path]) -> list[str]:
     ni_error = "NotImplemented" + "Error"
     for file_path in files:
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 for i, line in enumerate(f, 1):
                     if ni_error in line:
-                         results.append(f"{file_path}:{i}:{line.strip()}")
+                        results.append(f"{file_path}:{i}:{line.strip()}")
         except Exception:
             pass
     return results
@@ -88,10 +99,10 @@ def scan_abstract_methods(files: list[Path]) -> list[str]:
     results = []
     for file_path in files:
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 for i, line in enumerate(f, 1):
                     if "@abstractmethod" in line:
-                         results.append(f"{file_path}:{i}:{line.strip()}")
+                        results.append(f"{file_path}:{i}:{line.strip()}")
         except Exception:
             pass
     return results
@@ -119,8 +130,12 @@ def scan_ast_features(files: list[Path]):
                         stmt = node.body[0]
                         if isinstance(stmt, ast.Pass):
                             is_stub = True
-                        elif isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant) and stmt.value.value is Ellipsis:
-                             is_stub = True
+                        elif (
+                            isinstance(stmt, ast.Expr)
+                            and isinstance(stmt.value, ast.Constant)
+                            and stmt.value.value is Ellipsis
+                        ):
+                            is_stub = True
 
                     if is_stub:
                         stubs.append(f"{file_path}:{node.lineno} {node.name}")
