@@ -444,16 +444,35 @@ def main():
     for cat_code, info in scores.items():
         comp_content += f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |\n"
 
-    comp_content += """
-## Top Recommendations
-1. **Testing**: Increase test coverage immediately (Current: Low).
-2. **Documentation**: Ensure all functions have docstrings.
-3. **Logging**: Migrate all `print` statements to `logging`.
-4. **Error Handling**: Reduce bare `except:` blocks.
-5. **Security**: Maintain automated security scans.
+    # Standard recommendations for each category
+    standard_recs = {
+        "A": "Refactor large files and deeply nested directories to improve code structure.",
+        "B": "Ensure all functions and classes have docstrings and READMEs are present.",
+        "C": "Increase test coverage by adding more test cases.",
+        "D": "Reduce bare `except:` blocks and ensure proper error handling.",
+        "E": "Optimize performance-critical sections (profiling recommended).",
+        "F": "Maintain automated security scans and address vulnerabilities.",
+        "G": "Pin dependencies in `requirements.txt` to ensure reproducible builds.",
+        "H": "Configure CI/CD workflows to run tests and linters automatically.",
+        "I": "Enforce code style using tools like `ruff` or `black`.",
+        "J": "Use type hints in function signatures to improve API design.",
+        "K": "Secure data handling practices (avoid hardcoded secrets, validate inputs).",
+        "L": "Use the `logging` module instead of `print` statements.",
+        "M": "Use configuration files and environment variables instead of hardcoding.",
+        "N": "Reduce code complexity to ensure scalability.",
+        "O": "Refactor complex code to improve maintainability.",
+    }
 
-## Issues Created
-"""
+    # Identify top recommendations based on lowest scores
+    sorted_scores = sorted(scores.items(), key=lambda x: x[1]["grade"])
+    bottom_5 = sorted_scores[:5]
+
+    comp_content += "\n## Top Recommendations\n"
+    for i, (cat_code, info) in enumerate(bottom_5, 1):
+        rec = standard_recs.get(cat_code, "Review findings.")
+        comp_content += f"{i}. **{CATEGORIES[cat_code]}** (Grade: {info['grade']:.1f}): {rec}\n"
+
+    comp_content += "\n## Issues Created\n"
     issues_dir = Path("docs/assessments/issues")
     issues_dir.mkdir(parents=True, exist_ok=True)
 

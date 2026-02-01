@@ -105,7 +105,7 @@ def calculate_complexity(metrics: dict[str, int]) -> float:
 
 
 def assess_error_handling_content(content: str) -> dict[str, int]:
-    """Analyze error handling patterns in file content.
+    """Analyze error handling patterns in file content using AST.
 
     Args:
         content: The source code content.
@@ -113,8 +113,20 @@ def assess_error_handling_content(content: str) -> dict[str, int]:
     Returns:
         Dictionary with 'try_count' and 'bare_except_count'.
     """
-    try_count = content.count("try:")
-    bare_except_count = len(re.findall(r"except\s*:", content))
+    try_count = 0
+    bare_except_count = 0
+    try:
+        tree = ast.parse(content)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Try):
+                try_count += 1
+                for handler in node.handlers:
+                    if handler.type is None:
+                        bare_except_count += 1
+    except (SyntaxError, ValueError):
+        # Fallback for parsing issues
+        pass
+
     return {
         "try_count": try_count,
         "bare_except_count": bare_except_count,
@@ -122,7 +134,7 @@ def assess_error_handling_content(content: str) -> dict[str, int]:
 
 
 def assess_logging_content(content: str) -> dict[str, int]:
-    """Analyze logging versus print usage in file content.
+    """Analyze logging versus print usage in file content using AST.
 
     Args:
         content: The source code content.
@@ -130,8 +142,24 @@ def assess_logging_content(content: str) -> dict[str, int]:
     Returns:
         Dictionary with 'logging_usage' and 'print_usage'.
     """
-    logging_usage = 1 if ("logging." in content or "logger." in content) else 0
-    print_usage = 1 if "print(" in content else 0
+    logging_usage = 0
+    print_usage = 0
+    try:
+        tree = ast.parse(content)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                # Check for print()
+                if isinstance(node.func, ast.Name) and node.func.id == "print":
+                    print_usage = 1
+                # Check for logging usage (logging.info, logger.error, etc.)
+                elif isinstance(node.func, ast.Attribute):
+                    if isinstance(node.func.value, ast.Name):
+                        if node.func.value.id in ("logging", "logger"):
+                            logging_usage = 1
+    except (SyntaxError, ValueError):
+        # Fallback for parsing issues
+        pass
+
     return {
         "logging_usage": logging_usage,
         "print_usage": print_usage,
