@@ -24,10 +24,7 @@ def compute_hessian_bound(
     Returns:
         M: Spectral norm of the Hessian
     """
-    # n = len(x)
-    # Placeholder for actual Hessian computation
-    # For now, return a conservative constant or implement finite difference Hessian
-    return 1.0
+    return compute_hessian_norm(f, x, u, epsilon)
 
 
 def compute_hessian_norm(

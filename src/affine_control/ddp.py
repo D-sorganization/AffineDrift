@@ -37,7 +37,7 @@ def estimate_perturbation_size(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any])
     return 0.1  # Placeholder
 
 
-def adaptive_timestep_ddp(
+def adaptive_timestep_ddp_mock(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
     xf: np.ndarray[Any, Any],

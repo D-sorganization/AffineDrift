@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
+import shutil
 import subprocess
 import sys
 from datetime import datetime
@@ -16,9 +17,13 @@ logger = setup_logging(__name__)
 
 def get_git_last_modified(filepath: str) -> str:
     """Get last modified date from git history."""
+    git_cmd = shutil.which("git")
+    if not git_cmd:
+        return datetime.now().strftime("%Y-%m-%d")
+
     try:
         result = subprocess.run(
-            ["git", "log", "-1", "--format=%cI", "--", filepath],  # noqa: S603, S607
+            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],  # noqa: S603
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,
