@@ -215,31 +215,6 @@
                                     </iframe>
                                 </div>
 
-                                <div class="tool-container">
-                                    <h3>☁️ Streamlit Version (Cloud-Hosted)</h3>
-                                    <div class="tool-description">
-                                        <p><strong>Features:</strong> Professional Streamlit interface hosted on Streamlit Cloud. 
-                                        Easy to update and share. Requires internet connection.</p>
-                                        <p><strong>Note:</strong> If the Streamlit app is not yet deployed, this iframe will show a placeholder. 
-                                        Deploy the app at <a href="https://streamlit.io/cloud" target="_blank">streamlit.io/cloud</a> 
-                                        and update the URL below.</p>
-                                    </div>
-                                    <div id="streamlit-placeholder" style="display: block; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
-                                        <p>Streamlit app not yet deployed. Deploy <code>tools/wrist-universal-joint/Grip_Angle_Torque_Transmission_Streamlit.py</code> to Streamlit Cloud to enable this version.</p>
-                                        <p><a href="tools/wrist-universal-joint/EMBEDDING_GUIDE.md" target="_blank">View deployment instructions</a></p>
-                                    </div>
-                                    <!-- TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment.
-                                         See deployment instructions in tools/wrist-universal-joint/EMBEDDING_GUIDE.md -->
-                                    <iframe 
-                                        src="https://your-app-name.streamlit.app/?embed=true" 
-                                        height="900" 
-                                        width="100%" 
-                                        frameborder="0"
-                                        scrolling="auto"
-                                        id="streamlit-simulator"
-                                        style="display: none;">
-                                    </iframe>
-                                </div>
                             </div>
                         </div>
 
@@ -293,28 +268,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        // Handle Streamlit iframe loading
-        const streamlitIframe = document.getElementById('streamlit-simulator');
-        const streamlitPlaceholder = document.getElementById('streamlit-placeholder');
-        if (streamlitIframe && streamlitPlaceholder) {
-            // Check if URL is still a placeholder
-            const isPlaceholder = streamlitIframe.src.includes('your-app-name.streamlit.app');
-            
-            if (!isPlaceholder) {
-                // URL has been updated to a real Streamlit app, try to load the iframe
-                streamlitIframe.style.display = 'block';
-                streamlitPlaceholder.style.display = 'none';
-                
-                streamlitIframe.onload = function() {
-                    // If iframe loads successfully, ensure it's visible and hide placeholder
-                    streamlitPlaceholder.style.display = 'none';
-                    streamlitIframe.style.display = 'block';
-                };
-            }
-            // If URL is still a placeholder, placeholder is already shown by default (display: block)
-        }
-    </script>
 </body>
 </html>
 
