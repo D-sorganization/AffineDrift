@@ -16,7 +16,19 @@ import re
 from pathlib import Path
 
 DATA_DIR = Path(".jules/completist_data")
-EXCLUDED_DIRS = {".git", ".venv", "venv", "env", "node_modules", ".jules", "__pycache__", "build", "dist", ".idea", ".vscode"}
+EXCLUDED_DIRS = {
+    ".git",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+    ".jules",
+    "__pycache__",
+    "build",
+    "dist",
+    ".idea",
+    ".vscode",
+}
 TEXT_EXTENSIONS = {".py", ".md", ".js", ".css", ".html", ".yml", ".yaml", ".json", ".txt", ".sh"}
 
 
@@ -77,7 +89,7 @@ def scan_not_implemented(files: list[Path]) -> list[str]:
             with open(file_path, encoding="utf-8", errors="ignore") as f:
                 for i, line in enumerate(f, 1):
                     if ni_error in line:
-                         results.append(f"{file_path}:{i}:{line.strip()}")
+                        results.append(f"{file_path}:{i}:{line.strip()}")
         except Exception:
             pass
     return results
@@ -90,7 +102,7 @@ def scan_abstract_methods(files: list[Path]) -> list[str]:
             with open(file_path, encoding="utf-8", errors="ignore") as f:
                 for i, line in enumerate(f, 1):
                     if "@abstractmethod" in line:
-                         results.append(f"{file_path}:{i}:{line.strip()}")
+                        results.append(f"{file_path}:{i}:{line.strip()}")
         except Exception:
             pass
     return results
@@ -118,8 +130,12 @@ def scan_ast_features(files: list[Path]):
                         stmt = node.body[0]
                         if isinstance(stmt, ast.Pass):
                             is_stub = True
-                        elif isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant) and stmt.value.value is Ellipsis:
-                             is_stub = True
+                        elif (
+                            isinstance(stmt, ast.Expr)
+                            and isinstance(stmt.value, ast.Constant)
+                            and stmt.value.value is Ellipsis
+                        ):
+                            is_stub = True
 
                     if is_stub:
                         stubs.append(f"{file_path}:{node.lineno} {node.name}")
