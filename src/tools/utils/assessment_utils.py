@@ -64,7 +64,7 @@ GROUP_MAPPING = {
     "K": "Code",
     "L": "Code",
     "C": "Testing",
-    "G": "Testing",
+    "G": "Ops",
     "B": "Docs",
     "F": "Security",
     "E": "Perf",

@@ -67,6 +67,7 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
     return {
         "grade": max(0, score),
         "details": f"Files: {len(files)}, Avg LOC: {avg_loc:.1f}, Max LOC: {max_loc}, Max Depth: {max_depth}",
+        "recommendation": "Refactor large files (>200 LOC) and flatten deeply nested directories (>5 depth)."
     }
 
 
@@ -92,6 +93,7 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
     return {
         "grade": min(10, max(0, score)),
         "details": f"Docstring Coverage: {coverage:.1f}% ({docstring_count}/{total_defs}), READMEs found: {len(readmes)}",
+        "recommendation": "Ensure all functions and classes have docstrings and maintain a README."
     }
 
 
@@ -111,6 +113,7 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
     return {
         "grade": min(10, score),
         "details": f"Test files found: {len(test_files)}. Historic coverage is low (~19%).",
+        "recommendation": "Increase test coverage by adding more test files and scenarios."
     }
 
 
@@ -141,6 +144,7 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
     return {
         "grade": max(0, min(10, score)),
         "details": f"Try blocks: {try_count}, Bare excepts: {bare_except_count}",
+        "recommendation": "Replace bare `except:` blocks with specific exceptions and ensure `try` blocks are used."
     }
 
 
@@ -171,6 +175,7 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
     return {
         "grade": min(10, score),
         "details": f"Files using logging: {logging_usage}, Files using print: {print_usage}",
+        "recommendation": "Replace `print` statements with standard `logging` calls."
     }
 
 
@@ -193,6 +198,7 @@ def assess_security(root: Path) -> dict[str, Any]:
     return {
         "grade": min(10, score),
         "details": f"Security audit tools present in workflows: {has_audit}",
+        "recommendation": "Enable security scanning tools like `bandit` or `pip-audit` in CI workflows."
     }
 
 
@@ -225,7 +231,11 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
         score += 2
         details.append("package.json found")
 
-    return {"grade": min(10, score), "details": "; ".join(details)}
+    return {
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Pin dependencies in `requirements.txt` and maintain `package.json`."
+    }
 
 
 def assess_cicd(root: Path) -> dict[str, Any]:
@@ -255,7 +265,11 @@ def assess_cicd(root: Path) -> dict[str, Any]:
     else:
         details.append("No .github/workflows directory")
 
-    return {"grade": min(10, score), "details": "; ".join(details)}
+    return {
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Configure CI workflows to run tests on every push."
+    }
 
 
 def assess_code_style(root: Path) -> dict[str, Any]:
@@ -281,7 +295,11 @@ def assess_code_style(root: Path) -> dict[str, Any]:
         score += 3
         details.append("Pre-commit config found")
 
-    return {"grade": min(10, score), "details": "; ".join(details)}
+    return {
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Add code style configuration files (e.g., `.flake8`, `ruff.toml`) and use pre-commit hooks."
+    }
 
 
 def assess_api_design(files: list[Path]) -> dict[str, Any]:
@@ -304,7 +322,11 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
     else:
         details = "No functions found to analyze"
 
-    return {"grade": min(10, score), "details": details}
+    return {
+        "grade": min(10, score),
+        "details": details,
+        "recommendation": "Use type hints in function signatures to improve API clarity."
+    }
 
 
 def assess_data_handling(files: list[Path]) -> dict[str, Any]:
@@ -320,7 +342,11 @@ def assess_data_handling(files: list[Path]) -> dict[str, Any]:
 
     score = 7
     details = f"Files with data I/O: {hits}"
-    return {"grade": score, "details": details}
+    return {
+        "grade": score,
+        "details": details,
+        "recommendation": "Ensure robust data validation for all I/O operations."
+    }
 
 
 def assess_configuration(root: Path) -> dict[str, Any]:
@@ -349,7 +375,11 @@ def assess_configuration(root: Path) -> dict[str, Any]:
         score += 3
         details.append(f"Env vars used in {environ_usage} files")
 
-    return {"grade": min(10, score), "details": "; ".join(details)}
+    return {
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Use environment variables and config files instead of hardcoded values."
+    }
 
 
 def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
@@ -373,7 +403,11 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
 
     details = f"Avg Complexity (branches/func): {avg_complexity:.1f}"
 
-    return {"grade": max(0, score), "details": details}
+    return {
+        "grade": max(0, score),
+        "details": details,
+        "recommendation": "Reduce cyclomatic complexity by breaking down complex functions."
+    }
 
 
 def main():
@@ -391,7 +425,8 @@ def main():
         "E": {
             "grade": 7.0,
             "details": "Performance analysis requires runtime profiling",
-        },  # Placeholder
+            "recommendation": "Implement runtime profiling to identify bottlenecks."
+        },
         "F": assess_security(root),
         "G": assess_dependencies(root),
         "H": assess_cicd(root),
@@ -412,7 +447,7 @@ def main():
             category_name=name,
             grade=info["grade"],
             details=info["details"],
-            recommendations=["See detailed findings"],
+            recommendations=[info["recommendation"]],
         )
 
     # Generate Comprehensive Report
@@ -444,14 +479,27 @@ def main():
     for cat_code, info in scores.items():
         comp_content += f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |\n"
 
+    # Dynamic Top 5 Recommendations
+    recommendations_list = []
+    for cat_code, info in scores.items():
+        recommendations_list.append({
+            "code": cat_code,
+            "name": CATEGORIES[cat_code],
+            "grade": info["grade"],
+            "text": info["recommendation"]
+        })
+
+    # Sort by grade ascending (lowest first)
+    recommendations_list.sort(key=lambda x: x["grade"])
+    top_5 = recommendations_list[:5]
+
     comp_content += """
 ## Top Recommendations
-1. **Testing**: Increase test coverage immediately (Current: Low).
-2. **Documentation**: Ensure all functions have docstrings.
-3. **Logging**: Migrate all `print` statements to `logging`.
-4. **Error Handling**: Reduce bare `except:` blocks.
-5. **Security**: Maintain automated security scans.
+"""
+    for item in top_5:
+        comp_content += f"{1 + top_5.index(item)}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}\n"
 
+    comp_content += """
 ## Issues Created
 """
     issues_dir = Path("docs/assessments/issues")
