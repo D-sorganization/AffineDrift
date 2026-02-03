@@ -24,7 +24,17 @@ logger = setup_logging(__name__)
 
 
 def extract_score_from_report(report_path: Path) -> float:
-    """Extract numerical score from assessment report."""
+    """Extract numerical score from assessment report.
+
+    Searches for score patterns like "Overall: 8.5" or "Score: 8.5/10" in the report.
+
+    Args:
+        report_path: Path to the assessment report file.
+
+    Returns:
+        The extracted score as a float, or 7.0 as a default if no score pattern is found
+        or if an error occurs while reading the file.
+    """
     try:
         with open(report_path) as f:
             content = f.read()

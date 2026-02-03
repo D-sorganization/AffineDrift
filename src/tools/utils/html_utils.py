@@ -21,6 +21,8 @@ import html
 import re
 from pathlib import Path
 
+from .constants import PATH_REPLACEMENT_PATTERNS
+
 
 def escape_html(text: str) -> str:
     """Escape HTML special characters in text.
@@ -154,24 +156,9 @@ def fix_relative_paths(template: str, depth: int = 1) -> str:
     """
     prefix = "../" * depth
 
-    # Fix ./ prefixes
-    template = template.replace('href="./', f'href="{prefix}')
-    template = template.replace('src="./', f'src="{prefix}')
-
-    # Fix site_libs
-    template = template.replace('src="site_libs/', f'src="{prefix}site_libs/')
-    template = template.replace('href="site_libs/', f'href="{prefix}site_libs/')
-
-    # Fix specific assets
-    template = template.replace('src="script.js"', f'src="{prefix}script.js"')
-    template = template.replace('href="styles.css"', f'href="{prefix}styles.css"')
-    template = template.replace('src="logo/', f'src="{prefix}logo/')
-
-    # Fix root page links
-    template = template.replace('href="index.html"', f'href="{prefix}index.html"')
-    template = template.replace('href="about.html"', f'href="{prefix}about.html"')
-    template = template.replace('href="feed.xml"', f'href="{prefix}feed.xml"')
-    template = template.replace('href="favicon.ico"', f'href="{prefix}favicon.ico"')
+    # Apply all path replacements from centralized patterns
+    for old_pattern, new_pattern in PATH_REPLACEMENT_PATTERNS:
+        template = template.replace(old_pattern, new_pattern.format(prefix=prefix))
 
     return template
 

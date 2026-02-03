@@ -31,18 +31,10 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from src.tools.utils import get_python_files, setup_logging_with_timestamp  # noqa: E402
+from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON  # noqa: E402
 
-# Mock imports/utils if shared/python doesn't exist in all repos
-# We will define minimal utils here to ensure standalone execution
-def setup_script_logging(name):
-    """Setup logging for the script."""
-    import logging
-
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-    return logging.getLogger(name)
-
-
-logger = setup_script_logging(__name__)
+logger = setup_logging_with_timestamp(__name__)
 
 # Constants for Principles
 PRINCIPLES = {
@@ -58,25 +50,11 @@ PRINCIPLES = {
 
 
 def find_python_files(root_path: Path) -> list[Path]:
-    """Find all Python files, excluding common non-source directories."""
-    excluded = {
-        ".git",
-        "node_modules",
-        ".venv",
-        "venv",
-        "env",
-        "build",
-        "dist",
-        "__pycache__",
-        ".tox",
-        ".eggs",
-        ".pytest_cache",
-    }
-    python_files = []
-    for f in root_path.rglob("*.py"):
-        if not any(ex in f.parts for ex in excluded):
-            python_files.append(f)
-    return python_files
+    """Find all Python files, excluding common non-source directories.
+
+    Uses centralized EXCLUDE_DIRS_PYTHON from constants module.
+    """
+    return get_python_files(root_dir=root_path, exclude_dirs=list(EXCLUDE_DIRS_PYTHON))
 
 
 def compute_file_hash(content: str) -> str:
