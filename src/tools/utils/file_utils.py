@@ -14,6 +14,8 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
+from .constants import EXCLUDE_DIRS_CONTENT, EXCLUDE_DIRS_PYTHON
+
 
 def find_qmd_files(
     root_dir: str | Path = ".",
@@ -34,7 +36,7 @@ def find_qmd_files(
         files = find_qmd_files(exclude_dirs=["_site", "docs"])
     """
     if exclude_dirs is None:
-        exclude_dirs = ["_site", ".quarto", "docs", "archive"]
+        exclude_dirs = list(EXCLUDE_DIRS_CONTENT)
 
     root = Path(root_dir)
     files = []
@@ -245,18 +247,7 @@ def get_python_files(
         List of Path objects for found .py files.
     """
     if exclude_dirs is None:
-        exclude_dirs = [
-            ".git",
-            "__pycache__",
-            ".venv",
-            "venv",
-            "node_modules",
-            ".tox",
-            "build",
-            "dist",
-            ".mypy_cache",
-            ".ruff_cache",
-        ]
+        exclude_dirs = list(EXCLUDE_DIRS_PYTHON)
 
     root = Path(root_dir)
     return [

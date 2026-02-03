@@ -7,6 +7,7 @@ This module provides common functionality used across multiple tools:
 - Logging configuration
 - Code analysis and metrics
 - Assessment and reporting
+- Centralized constants
 """
 
 from .analysis_utils import (
@@ -23,6 +24,14 @@ from .assessment_utils import (
     GROUP_WEIGHTS,
     PRAGMATIC_PRINCIPLES,
     classify_assessment_category,
+)
+from .constants import (
+    EXCLUDE_DIRS,
+    EXCLUDE_DIRS_CONTENT,
+    EXCLUDE_DIRS_PYTHON,
+    EXCLUDE_FILES,
+    HTML_FIX_PATTERNS,
+    PATH_REPLACEMENT_PATTERNS,
 )
 from .file_utils import (
     find_files_by_extension,
@@ -49,33 +58,47 @@ from .logging_utils import setup_logging, setup_logging_with_timestamp
 from .report_utils import generate_issue_document, generate_markdown_report
 
 __all__ = [
+    # Constants
+    "EXCLUDE_DIRS",
+    "EXCLUDE_DIRS_CONTENT",
+    "EXCLUDE_DIRS_PYTHON",
+    "EXCLUDE_FILES",
+    "HTML_FIX_PATTERNS",
+    "PATH_REPLACEMENT_PATTERNS",
+    # HTML utilities
     "create_html_page",
     "escape_html",
+    "replace_content_section",
+    "update_metadata",
+    "update_title_block",
+    # Frontmatter utilities
     "extract_frontmatter",
     "extract_title_description",
     "parse_frontmatter_dict",
+    # File utilities
     "find_files_by_extension",
     "find_html_files",
     "find_markdown_files",
     "find_qmd_files",
     "get_python_files",
     "process_file_content",
-    "replace_content_section",
+    # Logging utilities
     "setup_logging",
     "setup_logging_with_timestamp",
-    "update_metadata",
-    "update_title_block",
+    # Analysis utilities
     "get_python_metrics",
     "calculate_complexity",
     "get_detailed_function_metrics",
     "assess_error_handling_content",
     "assess_logging_content",
+    # Assessment utilities
     "ASSESSMENT_DEFINITIONS",
     "CATEGORIES",
     "GROUP_WEIGHTS",
     "GROUP_MAPPING",
     "PRAGMATIC_PRINCIPLES",
     "classify_assessment_category",
+    # Report utilities
     "generate_markdown_report",
     "generate_issue_document",
     "format_issue_body",
