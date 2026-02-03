@@ -73,6 +73,7 @@ def run_black_check(path: str = ".") -> dict[str, Any]:
     """
 
     def process_black_result(result: subprocess.CompletedProcess[str]) -> dict[str, Any]:
+        """Process black command output to extract formatting information."""
         return {
             "exit_code": result.returncode,
             "files_to_format": result.stdout.count("would reformat"),
