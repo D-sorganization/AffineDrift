@@ -3,38 +3,34 @@ from typing import Any
 
 import numpy as np
 
+from src.affine_control.residuals import compute_hessian_bound
 
-def compute_hessian_bound(
-    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+
+def estimate_perturbation_size(
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
-    epsilon: float = 1e-5,
+    base_noise: float = 0.01,
+    state_scale: float = 0.1,
 ) -> float:
     """
-    Approximates the Hessian bound M for dynamics f(x, u).
-    This is a simplified numerical approximation.
-    In production, exact Hessians (via JAX/CasADi) should be used.
+    Estimates expected perturbation size based on state magnitude and noise model.
+
+    The perturbation estimate combines a base noise floor with a state-dependent
+    term that scales with the magnitude of the state vector. This models the
+    common situation where larger states experience proportionally larger
+    disturbances (e.g., aerodynamic drag, sensor noise proportional to signal).
 
     Args:
-        f: Dynamics function dx = f(x, u)
         x: State vector
-        u: Control vector
-        epsilon: Finite difference step
+        u: Control vector (unused, reserved for control-dependent noise models)
+        base_noise: Minimum noise floor (default: 0.01)
+        state_scale: Fraction of state magnitude to add as perturbation (default: 0.1)
 
     Returns:
-        M: Spectral norm of the Hessian
+        Estimated perturbation magnitude ||delta_x||
     """
-    # n = len(x)
-    # Placeholder for actual Hessian computation
-    # For now, return a conservative constant or implement finite difference Hessian
-    return 1.0
-
-
-def estimate_perturbation_size(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> float:
-    """
-    Estimates expected perturbation size based on noise/uncertainty model.
-    """
-    return 0.1  # Placeholder
+    state_magnitude = float(np.linalg.norm(x))
+    return base_noise + state_scale * state_magnitude
 
 
 def adaptive_timestep_ddp_mock(
