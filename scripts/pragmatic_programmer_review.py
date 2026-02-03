@@ -31,8 +31,8 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from src.tools.utils import get_python_files, setup_logging_with_timestamp
-from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON
+from src.tools.utils import get_python_files, setup_logging_with_timestamp  # noqa: E402
+from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON  # noqa: E402
 
 logger = setup_logging_with_timestamp(__name__)
 
