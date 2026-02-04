@@ -167,8 +167,7 @@ jobs:
   matlab-tests:
     needs: quality-gate
     runs-on: ubuntu-latest
-    if: false
-    continue-on-error: true
+    continue-on-error: true  # Allow failures until MATLAB license available in CI
     steps:
       - uses: actions/checkout@v6
       - uses: matlab-actions/setup-matlab@v2
