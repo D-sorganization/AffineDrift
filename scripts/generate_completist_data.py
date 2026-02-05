@@ -141,6 +141,33 @@ def scan_for_todo_markers(files: list[Path], repo_root: Path) -> list[str]:
     return results
 
 
+def scan_for_placeholders(files: list[Path], repo_root: Path) -> list[str]:
+    """Scan files for placeholder content (e.g., 'Coming soon', 'Under construction')."""
+    results: list[str] = []
+    # Patterns for placeholders
+    placeholder_patterns = [
+        re.compile(r"\bplaceholder\b", re.IGNORECASE),
+        re.compile(r"\bcoming\s+soon\b", re.IGNORECASE),
+        re.compile(r"\bunder\s+construction\b", re.IGNORECASE),
+        re.compile(r"\blorem\s+ipsum\b", re.IGNORECASE),
+        re.compile(r"placehold\.co", re.IGNORECASE),
+    ]
+
+    for filepath in files:
+        try:
+            with open(filepath, encoding="utf-8", errors="replace") as f:
+                for line_num, line in enumerate(f, 1):
+                    for pattern in placeholder_patterns:
+                        if pattern.search(line):
+                            rel_path = filepath.relative_to(repo_root)
+                            results.append(f"{rel_path}:{line_num}:{line.strip()}")
+                            break  # Avoid duplicates per line
+        except OSError as e:
+            logger.warning("Could not read %s: %s", filepath, e)
+
+    return results
+
+
 def scan_for_not_implemented(files: list[Path], repo_root: Path) -> list[str]:
     """Scan files for Not" "ImplementedError occurrences."""
     results: list[str] = []
@@ -327,6 +354,9 @@ def main() -> int:
     abstract_methods = scan_for_abstract_methods(files, repo_root)
     write_output(output_dir / "abstract_methods.txt", abstract_methods)
 
+    placeholders = scan_for_placeholders(files, repo_root)
+    write_output(output_dir / "placeholder_content.txt", placeholders)
+
     # Summary
     logger.info("=== Generation Complete ===")
     logger.info("  Completion markers: %d", len(todo_markers))
@@ -334,6 +364,7 @@ def main() -> int:
     logger.info("  Stub functions: %d", len(stub_functions))
     logger.info("  Missing docstrings: %d", len(incomplete_docs))
     logger.info("  Abstract methods: %d", len(abstract_methods))
+    logger.info("  Placeholders: %d", len(placeholders))
 
     return 0
 
