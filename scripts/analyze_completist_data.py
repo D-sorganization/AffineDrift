@@ -29,6 +29,7 @@ FILES_MAP = {
     "STUBS": os.path.join(DATA_DIR, "stub_functions.txt"),
     "DOCS": os.path.join(DATA_DIR, "incomplete_docs.txt"),
     "ABSTRACT": os.path.join(DATA_DIR, "abstract_methods.txt"),
+    "PLACEHOLDERS": os.path.join(DATA_DIR, "placeholder_content.txt"),
 }
 
 EXCLUDED_PATHS = [
@@ -186,6 +187,19 @@ def analyze_abstract_methods() -> list[Finding]:
     return _scan_completist_file("ABSTRACT", _parser)
 
 
+def analyze_placeholders() -> list[Finding]:
+    """Analyze placeholder content."""
+
+    def _parser(line: str) -> Finding | None:
+        """Parse placeholder output."""
+        f_path, l_no, c_txt = _parse_grep_line(line)
+        if f_path and l_no and c_txt:
+            return {"file": f_path, "line": l_no, "text": c_txt, "type": "Placeholder"}
+        return None
+
+    return _scan_completist_file("PLACEHOLDERS", _parser)
+
+
 def calculate_metrics(item: Mapping[str, Any]) -> tuple[int, int, int]:
     """Calculate heuristics for Impact, Coverage, and Complexity (1-5 range)."""
     filepath = cast(str, item["file"])
@@ -196,6 +210,11 @@ def calculate_metrics(item: Mapping[str, Any]) -> tuple[int, int, int]:
         if any(x in filepath for x in ["shared/python", "engines/", "api/"])
         else (3 if "tools/" in filepath else 1)
     )
+    if itype == "Placeholder" and any(
+        filepath.endswith(ext) for ext in [".qmd", ".html", ".js", ".css"]
+    ):
+        impact = 5
+
     coverage = 5 if "tests/" in filepath else (3 if "shared/python" in filepath else 2)
 
     # Complexity mapping
@@ -206,6 +225,7 @@ def calculate_metrics(item: Mapping[str, Any]) -> tuple[int, int, int]:
         "TO" + "DO": 3,
         "DocGap": 1,
         "Abstract": 5,
+        "Placeholder": 4,
     }
     complexity = comp_map.get(itype, 3)
 
@@ -262,7 +282,11 @@ Implement missing logic or document the rationale for the gap.
 
 
 def generate_mermaid_charts(
-    criticals: list[Finding], todos: list[Finding], fixmes: list[Finding], docs: list[Finding]
+    criticals: list[Finding],
+    todos: list[Finding],
+    fixmes: list[Finding],
+    docs: list[Finding],
+    placeholders: list[Finding],
 ) -> str:
     """Generate Mermaid charts for the report."""
     chart = []
@@ -276,12 +300,13 @@ def generate_mermaid_charts(
     chart.append(f'    "Feature Requests ({"TO" + "DO"})" : {len(todos)}')
     chart.append(f'    "Technical Debt ({"FIX" + "ME"})" : {len(fixmes)}')
     chart.append(f'    "Doc Gaps" : {len(docs)}')
+    chart.append(f'    "Content Gaps (Placeholders)" : {len(placeholders)}')
     chart.append("```")
 
     # Breakdown by Top Modules (Bar Chart equivalent using pie or just text for now as mermaid bar is verbose)
     # Let's do a simple count by top-level dir
     counts = {}
-    for item in criticals + todos + fixmes:
+    for item in criticals + todos + fixmes + placeholders:
         path_parts = item["file"].split("/")
         root = path_parts[0] if path_parts else "unknown"
         if root in [".", "src"]:
@@ -308,9 +333,18 @@ def generate_report() -> None:
     todos, fixmes = analyze_todos()
     missing_docs = analyze_docs()
     _ = analyze_abstract_methods()
+    placeholders = analyze_placeholders()
 
     # Identify and prioritize critical candidates
-    criticals = [s for s in (stubs + ni_errors) if "test" not in s["file"].lower()]
+    # Include placeholders in criticals if they are in public facing files
+    critical_placeholders = [
+        p
+        for p in placeholders
+        if any(p["file"].endswith(ext) for ext in [".qmd", ".html", ".js", ".css"])
+    ]
+    criticals = [
+        s for s in (stubs + ni_errors + critical_placeholders) if "test" not in s["file"].lower()
+    ]
     criticals.sort(key=lambda x: calculate_metrics(x)[0], reverse=True)
 
     # Report Generation
@@ -320,12 +354,13 @@ def generate_report() -> None:
         "## Executive Summary",
         f"- **Critical Gaps**: {len(criticals)}",
         f"- **Feature Gaps ({"TO" + "DO"})**: {len(todos)}",
+        f"- **Content Gaps (Placeholders)**: {len(placeholders)}",
         f"- **Technical Debt**: {len(fixmes)}",
         f"- **Documentation Gaps**: {len(missing_docs)}\n",
     ]
 
     # Insert Mermaid Visualization
-    report.append(generate_mermaid_charts(criticals, todos, fixmes, missing_docs))
+    report.append(generate_mermaid_charts(criticals, todos, fixmes, missing_docs, placeholders))
 
     # Critical Table
     report.append("\n## Critical Incomplete (Top 50)")
@@ -337,6 +372,14 @@ def generate_report() -> None:
         report.append(
             f"| `{item['file']}` | {item['line']} | {item['type']} | {imp} | {cov} | {comp} |"
         )
+
+    # Content Gaps (Website Specific)
+    report.append("\n## Content Gaps (Website Specific)")
+    report.append("| File | Line | Content |")
+    report.append("|---|---|---|")
+    for item in placeholders[:50]:
+        text = item.get("text", "").replace("|", "\\|")
+        report.append(f"| `{item['file']}` | {item['line']} | {text[:100]} |")
 
     # Feature Gap Matrix
     report.append("\n## Feature Gap Matrix")
