@@ -164,16 +164,24 @@ jobs:
           npm run lint:css
           npm run lint:html || echo "::warning::HTML validation has issues - fix separately"
 
-  matlab-tests:
-    needs: quality-gate
-    runs-on: ubuntu-latest
-    continue-on-error: true  # Allow failures until MATLAB license available in CI
-    steps:
-      - uses: actions/checkout@v6
-      - uses: matlab-actions/setup-matlab@v2
-      - uses: matlab-actions/run-command@v2
-        with:
-          command: |
-            addpath('matlab');
-            run_all
+  # =============================================================================
+  # MATLAB TESTS - COMMENTED OUT BY DEFAULT
+  # =============================================================================
+  # This job requires a MATLAB license which is NOT available in GitHub CI.
+  # DO NOT uncomment unless you have configured MATLAB licensing for your CI.
+  # To enable: remove the comment markers below and configure matlab-actions.
+  # Users with local MATLAB can run: matlab/run_all.m for equivalent tests.
+  # =============================================================================
+  # matlab-tests:
+  #   needs: quality-gate
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - uses: matlab-actions/setup-matlab@v2
+  #     - uses: matlab-actions/run-command@v2
+  #       with:
+  #         command: |
+  #           addpath('matlab');
+  #           run_all
 # Cost optimization enforced
+
