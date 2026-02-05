@@ -3,6 +3,10 @@
 # =============================================================================
 # Supports: Python, JavaScript/TypeScript, React, HTML, CSS, C++
 #
+# CROSS-PLATFORM: Works on Windows, Linux, and macOS
+# - Uses `language: python` instead of `language: system` for local hooks
+# - Avoids shell-specific commands that fail on Windows
+#
 # Fast checks on every commit (<15 seconds)
 # Slower checks (mypy, tests) on pre-push only
 #
@@ -211,13 +215,16 @@ repos:
         types: [python]
 
   # Pytest - Python unit tests (pre-push only)
+  # NOTE: Using language: python (not system) for cross-platform compatibility (Windows/Linux)
   - repo: local
     hooks:
       - id: pytest-unit
         name: "pytest (Python tests)"
         stages: [pre-push]
-        entry: python -m pytest tests/unit -x -q --tb=short -m "not slow and not integration"
-        language: system
+        entry: pytest
+        args: ["tests/unit", "-x", "-q", "--tb=short", "-m", "not slow and not integration"]
+        language: python
+        additional_dependencies: [pytest, pytest-cov]
         pass_filenames: false
         types: [python]
 
@@ -234,14 +241,16 @@ repos:
         exclude: ^(tests/|archive/|legacy/|experimental/|\.github/)
 
   # Radon - Cyclomatic complexity check (pre-push)
-  # Note: Using local hook since rubik/radon doesn't provide pre-commit hooks
+  # NOTE: Using language: python (not system) for cross-platform compatibility (Windows/Linux)
   - repo: local
     hooks:
       - id: radon
         name: "radon (complexity check)"
         stages: [pre-push]
-        entry: python -m radon cc --min C --show-complexity --total-average
-        language: system
+        entry: radon
+        args: ["cc", "--min", "C", "--show-complexity", "--total-average"]
+        language: python
+        additional_dependencies: [radon]
         types: [python]
         files: ^src/
         exclude: ^(tests/|archive/|legacy/|experimental/)
