@@ -147,7 +147,9 @@ format:
           <link rel="preload" href="/css/startup-launcher.css" as="style">
           <link rel="preload" href="/styles.css" as="style">
           <link rel="preload" href="/script.js" as="script">
+          <link rel="modulepreload" href="/js/main.js">
           <link rel="preload" href="/js/startup-launcher.js" as="script">
+          <link rel="modulepreload" href="/js/utils.js">
           <link rel="modulepreload" href="/js/metrics.js">
 
           <!-- Startup Launcher: Load immediately for splash screen -->
@@ -206,9 +208,19 @@ format:
               const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
               const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
               const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-              const script = document.createElement('script');
-              script.src = `${normalizedBase}script.js`;
-              document.body.appendChild(script);
+              
+              // Try to load modular ES6 version first, fallback to legacy bundle
+              const moduleScript = document.createElement('script');
+              moduleScript.type = 'module';
+              moduleScript.src = `${normalizedBase}js/main.js`;
+              
+              // Fallback for browsers without ES module support
+              const noModuleScript = document.createElement('script');
+              noModuleScript.setAttribute('nomodule', '');
+              noModuleScript.src = `${normalizedBase}script.js`;
+              
+              document.body.appendChild(moduleScript);
+              document.body.appendChild(noModuleScript);
             })();
           </script>
           <script>
