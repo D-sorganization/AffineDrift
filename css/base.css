@@ -1,0 +1,141 @@
+/* ---
+   AffineDrift - Base Styles
+   Variables, Reset, Typography
+   --- */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Global Focus Visibility */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+:root {
+  /* Modern Scientific Palette */
+  --primary-dark: #1a1a2e;
+  --primary-blue: #0f4c75;
+  --accent-blue: #3282b8;
+  --light-blue: #e3f2fd;
+  --pure-white: #fff;
+  --white-transparent: rgb(255, 255, 255, 0.9);
+  --legal-pad-yellow: #fef9e7;
+
+  /* Neutral scale */
+  --bg-body: #fff;
+  --bg-alt: #f8f9fa;
+  --bg-sidebar: #fcfcfc;
+  --text-main: #212529;
+  --text-muted: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -2px rgb(0 0 0 / 0.05);
+  --shadow-color: rgb(0, 0, 0, 0.1);
+
+  /* Gradients */
+  --gradient-start: #0f4c75;
+  --gradient-end: #3282b8;
+
+  /* Layout dimensions */
+  --sidebar-width: 280px;
+  --sidebar-gap: 3rem;
+  --content-max-width: 1440px;
+  --header-height: 80px;
+  --header-offset: 80px;
+  --scroll-offset: 100px;
+
+  /* Typography limits */
+  --prose-width: 75ch;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    "Noto Sans",
+    "Liberation Sans",
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  font-size: 17px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Style the title block in the main content area
+   Note: Using high specificity to override Quarto defaults without !important */
+main#quarto-document-content #title-block-header,
+body main #title-block-header,
+#title-block-header {
+  display: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#title-block-header .title {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 2rem;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  color: var(--primary-blue);
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}

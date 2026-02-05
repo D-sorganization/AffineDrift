@@ -1,0 +1,346 @@
+/* ---
+   AffineDrift - Print Styles
+   PDF download button and print optimization
+   --- */
+
+/* PDF Download Button */
+.pdf-download-btn {
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    z-index: 900;
+}
+
+.pdf-download-btn:hover {
+    background: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.pdf-download-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentcolor;
+}
+
+/* ---
+   Print Optimization - Academic Paper Style
+   Note: !important is intentionally used in print styles to ensure
+   consistent output regardless of page state or JavaScript modifications
+   --- */
+@media print {
+    /* Page setup for academic papers - A4 for international compatibility */
+    @page {
+        size: a4;
+        margin: 1in;
+    }
+
+    /* Hide Navigation & UI elements */
+    header,
+    footer,
+    #quarto-header,
+    .left-sidebar,
+    .right-sidebar,
+    .home-sidebar,
+    .back-to-top,
+    .export-to-pdf,
+    .skip-to-content,
+    .copy-btn,
+    .nav-toggle,
+    .lightbox-overlay,
+    .pdf-download-btn,
+    .critics-corner-toggle,
+    #quarto-search,
+    .quarto-navbar-tools,
+    .navbar-toggler,
+    .resource-media,
+    .toc-nav,
+    .history-nav {
+        display: none !important;
+    }
+
+    /* Reset Layout for Paper */
+    body {
+        font-family: Georgia, "Times New Roman", Times, serif !important;
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+        background: white !important;
+        color: black !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #quarto-content,
+    .page-columns,
+    .standard-page-layout,
+    .main-content-area,
+    .container,
+    main.content {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Show print-only title block */
+    .print-title-block {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #000;
+    }
+
+    .print-title-block h1 {
+        font-size: 18pt !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-title-block .print-author {
+        font-size: 12pt;
+        margin-bottom: 0.25rem;
+    }
+
+    .print-title-block .print-date {
+        font-size: 10pt;
+        color: #666;
+    }
+
+    /* Typography for print */
+    h1 {
+        font-size: 18pt !important;
+        color: black !important;
+        break-after: avoid;
+        margin-top: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    h2 {
+        font-size: 14pt !important;
+        color: black !important;
+        break-after: avoid;
+        margin-top: 1.25rem !important;
+        margin-bottom: 0.5rem !important;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0.25rem;
+    }
+
+    h3 {
+        font-size: 12pt !important;
+        font-weight: bold !important;
+        color: black !important;
+        break-after: avoid;
+        margin-top: 1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    h4 {
+        font-size: 12pt !important;
+        font-style: italic !important;
+        color: black !important;
+        break-after: avoid;
+    }
+
+    p {
+        text-align: justify;
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Links - show URL for print */
+    a {
+        color: black !important;
+        text-decoration: underline;
+    }
+
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+        word-break: break-all;
+    }
+
+    a[href^="#"]::after,
+    a.resource-link::after,
+    .sidebar-links a::after {
+        content: none;
+    }
+
+    /* Math equations - preserve MathJax rendering */
+    .math.display,
+    mjx-container,
+    .MathJax {
+        break-inside: avoid !important;
+        margin: 1rem 0 !important;
+        text-align: center !important;
+    }
+
+    /* Equation boxes for print */
+    .equation {
+        background: #f5f5f5 !important;
+        border-left: 3px solid #333 !important;
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+        break-inside: avoid;
+    }
+
+    /* Code blocks */
+    pre,
+    .code-block {
+        background: #f5f5f5 !important;
+        border: 1px solid #ddd !important;
+        padding: 0.75rem !important;
+        font-size: 9pt !important;
+        break-inside: avoid;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+    }
+
+    /* Images */
+    img {
+        max-width: 100% !important;
+        break-inside: avoid;
+    }
+
+    figure {
+        break-inside: avoid;
+        margin: 1rem 0;
+        text-align: center;
+    }
+
+    figcaption {
+        font-size: 10pt;
+        font-style: italic;
+        color: #333;
+    }
+
+    /* Tables */
+    table {
+        break-inside: avoid;
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    th,
+    td {
+        border: 1px solid #333;
+        padding: 0.5rem;
+        text-align: left;
+    }
+
+    th {
+        background: #f0f0f0 !important;
+        font-weight: bold;
+    }
+
+    /* Blockquotes */
+    blockquote {
+        border-left: 3px solid #333;
+        margin: 1rem 0;
+        padding-left: 1rem;
+        font-style: italic;
+        break-inside: avoid;
+    }
+
+    /* Abstract section */
+    .abstract-section {
+        background: #f9f9f9 !important;
+        border: 1px solid #ccc !important;
+        padding: 1rem !important;
+        margin: 1rem 0 !important;
+        break-inside: avoid;
+    }
+
+    /* Key points and limitations */
+    .keypoint-box,
+    .limitation-box {
+        border: 1px solid #666 !important;
+        background: #f9f9f9 !important;
+        padding: 0.75rem !important;
+        margin: 1rem 0 !important;
+        break-inside: avoid;
+    }
+
+    /* References section */
+    .references-section,
+    #references {
+        break-before: page;
+        margin-top: 2rem;
+    }
+
+    .references-section h2,
+    #references h2 {
+        font-size: 14pt !important;
+        border-bottom: 2px solid #000;
+    }
+
+    .csl-entry,
+    .reference-item {
+        margin-bottom: 0.75rem;
+        padding-left: 2rem;
+        text-indent: -2rem;
+        font-size: 10pt;
+        break-inside: avoid;
+    }
+
+    /* Critics Corner - format for print */
+    .critics-corner {
+        break-before: page;
+        border-top: 2px solid #333;
+        padding-top: 1rem;
+        margin-top: 2rem;
+    }
+
+    .critics-corner h2 {
+        font-size: 14pt !important;
+    }
+
+    .critics-corner-content {
+        display: block !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Resource cards - simplified for print */
+    .resource-grid {
+        display: block !important;
+    }
+
+    .resource-card {
+        border: 1px solid #ccc !important;
+        margin-bottom: 1rem !important;
+        padding: 0.75rem !important;
+        break-inside: avoid;
+    }
+
+    /* Footer for print */
+    .print-footer {
+        display: block !important;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        border-top: 1px solid #ccc;
+        padding-top: 0.5rem;
+    }
+}

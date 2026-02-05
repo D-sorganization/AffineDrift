@@ -1,0 +1,78 @@
+/* ---
+   AffineDrift - Math & Code Styles
+   Mathematical expressions and code blocks
+   --- */
+
+.math.display {
+    overflow-x: auto;
+    max-width: 100%;
+    padding: 1rem 0;
+}
+
+/* Responsive Tables */
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper:focus-visible {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.code-block {
+    background: var(--primary-dark);
+    color: #e0e0e0;
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+        monospace;
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+}
+
+.code-wrapper {
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgb(255, 255, 255, 0.1);
+    border: 1px solid rgb(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+
+    /* Increased for better touch targets (min 44px tap area) */
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.code-wrapper:hover .copy-btn,
+.copy-btn:focus {
+    opacity: 1;
+}
+
+.copy-btn:focus {
+    outline: 2px solid var(--accent-blue);
+    outline-offset: 2px;
+}
+
+.copy-btn.copied {
+    opacity: 1;
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
