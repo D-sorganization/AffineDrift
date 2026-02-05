@@ -1,0 +1,175 @@
+# Pragmatic Programmer Review: app
+**Date**: 2026-02-05
+**Files**: 82
+
+## Findings
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 5 locations
+  - Files: /app/scripts/check-equations.py, /app/scripts/validate_accessibility.py, /app/src/tools/code_quality_check.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check-equations.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 6 locations
+  - Files: /app/scripts/baseline_assessments.py, /app/scripts/check-equations.py, /app/scripts/scan_quarto_syntax.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/generate_search_index.py, /app/scripts/generate_sitemap.py, /app/scripts/run_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/generate_search_index.py, /app/scripts/generate_sitemap.py, /app/scripts/run_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_sitemap.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/baseline_assessments.py, /app/scripts/scan_quarto_syntax.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/baseline_assessments.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: /app/scripts/baseline_assessments.py, /app/scripts/generate_assessment_summary.py, /app/scripts/generate_bibliography_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/assess_repo.py, /app/scripts/create_issues_from_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/assess_repo.py, /app/scripts/create_issues_from_assessment.py, /app/scripts/generate_assessment_summary.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/create_issues_from_assessment.py, /app/scripts/generate_assessment_summary.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/scan_quarto_syntax.py, /app/src/tools/check_site_health.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 21 locations
+  - Files: /app/content/Double Pendulum Articles/double_pendulum.py, /app/content/Wrist as Universal Joint/Archive/Grip_Angle_Torque_Transmission.py, /app/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/scan_quarto_syntax.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/scan_quarto_syntax.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/assess_repo.py, /app/scripts/run_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/assess_repo.py, /app/scripts/run_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/assess_repo.py, /app/scripts/run_assessment.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/generate_assessment_summary.py, /app/scripts/generate_bibliography_data.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 6 locations
+  - Files: /app/scripts/generate_assessment_summary.py, /app/scripts/generate_bibliography_data.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 5 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
+- **ORTHOGONALITY** [MAJOR]: God function: update_diagram
+  - Length 99 > 50 lines
+  - Files: /app/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py
+- **ORTHOGONALITY** [MAJOR]: God function: initUI
+  - Length 321 > 50 lines
+  - Files: /app/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py
+- **ORTHOGONALITY** [MAJOR]: God function: initUI
+  - Length 135 > 50 lines
+  - Files: /app/content/Wrist as Universal Joint/Archive/Grip_Angle_Torque_Transmission.py
+- **ORTHOGONALITY** [MAJOR]: God function: update_diagram
+  - Length 99 > 50 lines
+  - Files: /app/docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py
+- **ORTHOGONALITY** [MAJOR]: God function: initUI
+  - Length 321 > 50 lines
+  - Files: /app/docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py
+- **ORTHOGONALITY** [MAJOR]: God function: draw_diagram
+  - Length 99 > 50 lines
+  - Files: /app/src/tools/wrist_universal_joint/Grip_Angle_Torque_Transmission_Streamlit.py
+- **TESTING** [MAJOR]: Low Test Coverage
+  - Test/Src ratio 0.17 < 0.2
