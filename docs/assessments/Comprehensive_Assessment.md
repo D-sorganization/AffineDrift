@@ -15,7 +15,7 @@
 | Dependencies | 7.0 | - |
 | CI/CD | 8.0 | - |
 | Code Style | 8.0 | - |
-| API Design | 8.6 | - |
+| API Design | 8.7 | - |
 | Data Handling | 7.0 | - |
 | Logging | 8.0 | - |
 | Configuration | 8.0 | - |

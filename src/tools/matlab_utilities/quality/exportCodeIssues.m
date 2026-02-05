@@ -85,7 +85,7 @@ fileList = {};
 if isfolder(opts.targetPath)
     fileList = listFiles(opts.targetPath, includeExt, excludeDirs, excludeFiles, opts.Recursive);
 else
-    assert(exist(opts.targetPath,'file')---2, 'exportCodeIssues:NotFound', ...
+    assert(exist(opts.targetPath,'file') == 2, 'exportCodeIssues:NotFound', ...
         'File not found: %s', opts.targetPath);
     [~,~,ext] = fileparts(opts.targetPath);
     if ~any(strcmpi(ext, includeExt))

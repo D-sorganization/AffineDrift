@@ -107,15 +107,15 @@ function results = run_quality_checks(target_path, varargin)
 
     % Determine pass/fail
     if opts.StrictMode
-        results.passed = (results.total_issues = 0);
+        results.passed = (results.total_issues == 0);
     else
         % In non-strict mode, only fail on critical issues
         % (For now, we pass as long as analysis completed)
-        results.passed = (results.total_issues >--- 0);
+        results.passed = (results.total_issues >= 0);
     end
 
     % Generate summary
-    if results.total_issues = 0
+    if results.total_issues == 0
         results.summary = sprintf('✅ PASSED - No issues found (%d files checked)', ...
             results.total_files);
     elseif results.passed
@@ -132,7 +132,7 @@ function results = run_quality_checks(target_path, varargin)
         fprintf('%s\n', results.summary);
         fprintf('---\n\n');
 
-        if results.total_issues > 0 && results.total_issues <--- 20
+        if results.total_issues > 0 && results.total_issues < 20
             fprintf('Issues found:\n');
             for i = 1:height(results.issues_table)
                 fprintf('  %d. %s (line %d): %s\n', ...
