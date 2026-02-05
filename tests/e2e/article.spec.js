@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Article Pages', () => {
   test('should load article with math equations', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Check page loads
     await expect(page).toHaveTitle(/AffineDrift/);
@@ -13,7 +13,7 @@ test.describe('Article Pages', () => {
   });
 
   test('should render MathJax equations', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Wait for MathJax to process
     await page.waitForTimeout(2000);
@@ -27,7 +27,7 @@ test.describe('Article Pages', () => {
   });
 
   test('should have working internal links', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Find internal article links
     const internalLinks = page.locator('a[href^="#"], a[href*="articles"]');
@@ -35,8 +35,8 @@ test.describe('Article Pages', () => {
 
     expect(count).toBeGreaterThanOrEqual(0);
 
-    // If there are anchor links, test one
-    const anchorLink = page.locator('a[href^="#"]').first();
+    // If there are anchor links (excluding skip-link), test one
+    const anchorLink = page.locator('a[href^="#"]:not([class*="skip"])').first();
     if (await anchorLink.count() > 0) {
       const href = await anchorLink.getAttribute('href');
       await anchorLink.click();
@@ -48,7 +48,7 @@ test.describe('Article Pages', () => {
   });
 
   test('should display table of contents on article pages', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Look for TOC
     const toc = page.locator('#TOC, .toc, nav[aria-label*="Table of Contents"]');
@@ -64,7 +64,7 @@ test.describe('Article Pages', () => {
   });
 
   test('should have proper article metadata', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Check for author/date metadata
     const metaElements = page.locator('.author, .date, .quarto-title-meta, time');
@@ -75,7 +75,7 @@ test.describe('Article Pages', () => {
   });
 
   test('should handle code blocks correctly', async ({ page }) => {
-    await page.goto('/articles/affine-system-overview.html');
+    await page.goto('/articles/inverse-dynamics.html');
 
     // Look for code blocks
     const codeBlocks = page.locator('pre code, .sourceCode');
