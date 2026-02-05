@@ -49,9 +49,9 @@ Shaft deformation contributes only to drift and not to the input mapping. Shaft-
 
 The affine formulation supports: - torque estimation through forward-dynamics matching,
 
--   counterfactual mechanical tests,
+- counterfactual mechanical tests,
 
--   player-specific simulations based on geometry and inertial parameters.
+- player-specific simulations based on geometry and inertial parameters.
 
 ## Data Interpretation
 
@@ -64,3 +64,53 @@ ML models can be trained on drift-free input data, improving sample efficiency a
 ## Summary
 
 The control-affine decomposition provides actionable guidance for simulation, measurement interpretation, torque reconstruction, shaft mechanics, and ML-based modeling. The separation of drift and input forces yields a rigorous framework for analyzing and understanding the golf swing.
+
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        This appendix outlines how we can use the "Drift vs. Input" math to build practical tools for training and analysis.
+      </p>
+
+      <div class="laymans-item">
+        <h3>The "What If" Game (Counterfactuals)</h3>
+        <p>
+          Because we can separate the player's effort from the physics, we can simulate scenarios like "What if the player stopped pulling?" or "What if the club was stiffer?" This lets us test ideas without needing a real golfer to change their swing.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> A flight simulator. You can program the wind to stop (counterfactual) to see how the plane flies on its own, without putting a real pilot in danger.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Separating Muscle from Momentum</h3>
+        <p>
+          We can mathematically subtract the forces caused by the club's weight and speed to reveal exactly how much force the golfer is adding with their muscles.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Cruise control vs. the gas pedal. If your car is maintaining speed downhill, the engine might be doing nothing. This math tells us when the "engine" (muscles) is actually working versus when the car is just coasting.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Cleaning Data for AI</h3>
+        <p>
+          By removing the complicated "background noise" of physics (drift) from the data, we can give computers a cleaner signal to learn from. This helps AI understand golfer technique faster and more accurately.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like:</strong> Noise-canceling headphones. It's much easier to hear the music (the player's intent) when you filter out the roar of the airplane engine (the passive physics).
+        </div>
+      </div>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> This math isn't just theory—it gives us the tools to build "X-Ray glasses" for the golf swing, letting us see the player's true effort hidden inside the motion.
+      </div>
+    </div>
+
+  </div>
+</section>
