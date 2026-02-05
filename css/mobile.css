@@ -1,0 +1,193 @@
+/* ---
+   AffineDrift - Mobile Responsive Design (Issue #870)
+   Mobile menu, sidebar overlay, and responsive adjustments
+   --- */
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+}
+
+.mobile-menu-toggle svg {
+    width: 24px;
+    height: 24px;
+    fill: currentcolor;
+}
+
+/* Mobile Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 50%);
+    z-index: 999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Home Page 3-Column Responsive */
+@media (width <=1200px) {
+    .home-layout-3col {
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+        gap: 2rem;
+    }
+
+    .home-toc {
+        display: none;
+    }
+}
+
+@media (width <=1024px) {
+    .home-layout-3col {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .home-sidebar {
+        width: 100%;
+        order: 2;
+    }
+
+    .home-content {
+        order: 1;
+    }
+
+    .home-toc {
+        display: none;
+    }
+
+    /* On tablet, show sidebar sections in grid */
+    .home-sidebar .sidebar-sticky-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .collapsible-section {
+        margin-bottom: 0;
+    }
+
+    /* Expand all sections on tablet */
+    .sidebar-section-content {
+        max-height: 500px;
+    }
+
+    .sidebar-section-toggle .toggle-icon {
+        display: none;
+    }
+}
+
+@media (width <=768px) {
+
+    /* Mobile: Show hamburger menu */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Mobile Sidebar Slide-in */
+    .home-sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        height: 100vh;
+        width: 300px;
+        z-index: 1000;
+        overflow-y: auto;
+        transition: left 0.3s ease;
+        border-radius: 0;
+        padding-top: 4rem;
+    }
+
+    .home-sidebar.open {
+        left: 0;
+    }
+
+    .home-sidebar .sidebar-sticky-content {
+        display: block;
+    }
+
+    .collapsible-section {
+        margin-bottom: 0.5rem;
+    }
+
+    .sidebar-section-toggle .toggle-icon {
+        display: inline;
+    }
+
+    .sidebar-section-content {
+        max-height: 0;
+    }
+
+    .sidebar-section-content.show {
+        max-height: 500px;
+    }
+
+    /* Featured grid adjustments */
+    .featured-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-links-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Welcome header adjustments */
+    .welcome-header h1 {
+        font-size: 2rem;
+    }
+
+    .welcome-header .subtitle {
+        font-size: 1rem;
+    }
+}
+
+/* ---
+   Placeholder Content Styling (Issue #869)
+   --- */
+.coming-soon-notice {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--bg-alt);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.coming-soon-notice h2 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+.coming-soon-notice p {
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.page-intro {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.page-intro .lead {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}

@@ -1,0 +1,273 @@
+/* ---
+   AffineDrift - Navigation Styles
+   Header, navbar, sidebar navigation
+   --- */
+
+/* Skip to Content Link */
+.skip-to-content {
+    position: fixed;
+    top: -9999px;
+    left: 0.5rem;
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    padding: 0.5rem 1rem;
+    z-index: 2000;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 0 0 4px 4px;
+    transition: top 0.2s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.skip-to-content:focus {
+    top: 0;
+    outline: 3px solid var(--accent-blue);
+}
+
+header {
+    background: linear-gradient(135deg,
+            var(--primary-dark) 0%,
+            var(--primary-blue) 100%);
+    color: var(--pure-white);
+    border-bottom: 2px solid var(--accent-blue);
+    padding: 0.8rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    display: flex;
+    align-items: center;
+}
+
+nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    /* Force full width */
+    padding: 0 1rem;
+    /* Minimal padding */
+}
+
+/* Quarto Navbar Full Width Fix */
+#quarto-header {
+    background: linear-gradient(135deg,
+            var(--primary-dark) 0%,
+            var(--primary-blue) 100%);
+    border-bottom: 2px solid var(--accent-blue);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+#quarto-header .navbar {
+    background: transparent !important;
+    padding: 0.5rem 0;
+    max-width: 100%;
+    width: 100%;
+}
+
+#quarto-header .navbar-container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 1.5rem;
+}
+
+/* Navbar brand and title styling */
+#quarto-header .navbar-brand-container {
+    margin: 0;
+}
+
+#quarto-header .navbar-brand {
+    color: var(--pure-white);
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+#quarto-header .navbar-title {
+    color: var(--pure-white);
+}
+
+/* Navigation links styling */
+#quarto-header .navbar-nav .nav-link {
+    color: rgb(255 255 255 / 0.9);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease;
+}
+
+#quarto-header .navbar-nav .nav-link:hover {
+    color: var(--pure-white);
+}
+
+/* Dropdown menus in navbar */
+#quarto-header .dropdown-menu {
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+#quarto-header .dropdown-item {
+    color: var(--text-main);
+    padding: 0.6rem 1.25rem;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+#quarto-header .dropdown-item:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+/* Search box styling */
+#quarto-header #quarto-search {
+    margin-left: auto !important;
+    min-width: 300px;
+    /* Force minimum width */
+    flex-basis: 400px;
+    /* Target around 400px width */
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header .aa-DetachedSearchButton {
+    width: 100%;
+    /* Fill the container */
+    min-width: 300px;
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton"] {
+    background: rgb(255 255 255 / 0.1);
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 6px;
+    color: var(--pure-white);
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton"]:hover {
+    background: rgb(255 255 255 / 0.15);
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--pure-white);
+    font-weight: 700;
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 48px;
+    width: auto;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+}
+
+.nav-links a {
+    color: var(--white-transparent);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--pure-white);
+}
+
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--legal-pad-yellow);
+    transition: width 0.2s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--pure-white);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* ---
+   Sidebar Navigation Styles
+   --- */
+.sidebar-heading {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-links li {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-links a {
+    display: block;
+    padding: 0.625rem 1rem;
+    /* Increased for better touch targets on mobile */
+    color: var(--text-main);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+}
+
+.sidebar-links a:hover {
+    background-color: var(--bg-alt);
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.sidebar-links a.active {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    border-left-color: var(--primary-blue);
+    font-weight: 500;
+}
+
+/* TOC Specifics */
+.toc-nav .sidebar-links a {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.toc-nav .sidebar-links a:hover,
+.toc-nav .sidebar-links a.active {
+    color: var(--primary-blue);
+}

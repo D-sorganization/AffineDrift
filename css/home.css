@@ -1,0 +1,243 @@
+/* ---
+   AffineDrift - Home Page Layout
+   Home page specific styles
+   --- */
+
+.home-sidebar h3 {
+    color: var(--primary-blue);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-light);
+    margin-top: 2rem;
+}
+
+.home-sidebar .sidebar-section:first-child h3 {
+    margin-top: 0;
+}
+
+.home-sidebar .resource-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.home-sidebar .resource-links li {
+    margin-bottom: 0.4rem;
+}
+
+.home-sidebar .resource-links a {
+    display: block;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.home-sidebar .resource-links a:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    padding-left: 0.9rem;
+}
+
+.home-content {
+    flex: 1;
+    min-width: 0;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.welcome-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--legal-pad-yellow-accent);
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.welcome-header h1 {
+    color: var(--primary-blue);
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    font-weight: 700;
+    font-family: "Playfair Display", serif;
+    line-height: 1.1;
+}
+
+.welcome-header .subtitle {
+    color: var(--text-light);
+    font-size: 1.3rem;
+    font-style: italic;
+    font-family: "Playfair Display", serif;
+}
+
+.home-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    font-size: 1.15rem;
+    font-family: "Playfair Display", serif;
+}
+
+.math-showcase {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--bg-alt);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Home Layout Updates */
+.home-layout {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: flex-start !important;
+    /* Ensure top alignment */
+    justify-content: flex-start !important;
+    /* Changed from space-between to keep gap consistent */
+    gap: 2rem !important;
+    /* Explicit 1/4 inch+ gap (approx 32px) */
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem 0;
+    width: 100%;
+}
+
+.home-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--legal-pad-yellow);
+    border: 2px solid var(--legal-pad-yellow-border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    top: 0;
+    margin-top: 0;
+    height: fit-content;
+    margin-right: 0;
+    /* Let gap handle spacing */
+}
+
+.home-toc {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    border-left: 1px solid var(--border-color);
+    padding-left: 1rem;
+    display: block;
+    margin-left: 0;
+    /* Let gap handle spacing */
+}
+
+/* Responsive Home Layout */
+@media (width <=1200px) {
+    .home-toc {
+        display: none !important;
+        /* Hide TOC on smaller screens */
+    }
+}
+
+@media (width <=1024px) {
+    .home-layout {
+        flex-direction: column !important;
+        gap: 2rem;
+    }
+
+    .home-sidebar {
+        width: 100%;
+        order: 2;
+        /* Move below content on mobile if desired, or keep top */
+        position: static;
+        border: none;
+        border-top: 2px solid var(--legal-pad-yellow-border);
+    }
+
+    .home-content {
+        order: 1;
+    }
+}
+
+/* Resource Cards & Grids (Additional) */
+.resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.youtube-embed {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.youtube-embed iframe,
+.youtube-embed img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+}
+
+.resource-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-description ul {
+    margin-top: 0.5rem;
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* List View Overrides (Horizontal) */
+.resource-list .resource-card {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.resource-list .resource-media {
+    flex: 0 0 300px;
+    /* Fixed width for video thumbnail */
+    border-right: 1px solid var(--border-color);
+}
+
+/* Responsive for List View */
+@media (width < 768px) {
+    .resource-list .resource-card {
+        flex-direction: column;
+    }
+
+    .resource-list .resource-media {
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+}
+
+/* Contact Form Feedback */
+.btn-primary.success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+    cursor: not-allowed;
+    opacity: 0.8;
+}

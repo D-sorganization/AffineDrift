@@ -1,0 +1,93 @@
+/* ---
+   AffineDrift - Responsive Styles
+   Media queries and breakpoints
+   --- */
+
+/* Large Tablet / Small Laptop: Collapse Right Sidebar first if needed, or shrink sidebars */
+@media (width < 1200px) {
+    :root {
+        --sidebar-width: 240px;
+        --sidebar-gap: 2rem;
+    }
+}
+
+/* Tablet: Switch to 2 columns (Left Sidebar + Content) */
+@media (width < 992px) {
+
+    .page-columns.page-full .standard-page-layout,
+    .container .standard-page-layout,
+    .standard-page-layout {
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: 2rem;
+    }
+
+    /* Hide Right Sidebar on tablet */
+    .standard-page-layout .right-sidebar {
+        display: none;
+    }
+}
+
+/* Mobile: Single Column */
+@media (width < 768px) {
+    :root {
+        --header-height: 60px;
+    }
+
+    /* Mobile typography scaling for better readability on small screens */
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    .page-columns.page-full .standard-page-layout,
+    .container .standard-page-layout,
+    .standard-page-layout {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .standard-page-layout .left-sidebar,
+    .standard-page-layout .main-content-area {
+        width: 100%;
+    }
+
+    /* Navigation Mobile */
+    .nav-links {
+        display: none;
+        /* Use JS toggle */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: var(--bg-body);
+        padding: 1rem;
+        box-shadow: var(--shadow-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+}
