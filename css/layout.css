@@ -1,0 +1,242 @@
+/* ---
+   AffineDrift - Layout Structure
+   Grid system, containers, sidebars
+   --- */
+
+/* Central Container */
+.container {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+    width: 100%;
+}
+
+/* Override Quarto's page-columns only on full-layout pages */
+#quarto-content.page-layout-full.page-columns {
+    display: block;
+}
+
+/* Ensure full-width pages use full width */
+#quarto-content.page-layout-full,
+#quarto-content.page-layout-full main.content {
+    max-width: 100%;
+    width: 100%;
+}
+
+/* Hide Quarto's default title block to prevent vertical space issues */
+#title-block-header {
+    display: none !important;
+}
+
+/* Article pages: keep margins tighter and sidebars visible */
+#quarto-content.page-layout-article {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+    column-gap: var(--sidebar-gap);
+}
+
+#quarto-content.page-layout-article main.content {
+    max-width: 100%;
+}
+
+/* Reset Quarto's margin-sidebar and sidebar columns on full-layout pages only */
+#quarto-content.page-layout-full #quarto-margin-sidebar,
+#quarto-content.page-layout-full #quarto-sidebar {
+    display: none;
+}
+
+/* Override page-columns grid behavior on full-layout pages */
+#quarto-content.page-layout-full .page-columns.page-full,
+#quarto-content.page-layout-full .page-columns.column-page {
+    display: block;
+    max-width: 100%;
+}
+
+/* 3-Column Grid System
+   Using specific selectors to override Quarto defaults */
+.page-columns.page-full .standard-page-layout,
+.container .standard-page-layout,
+.standard-page-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
+    gap: var(--sidebar-gap);
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    padding-top: 1rem;
+    align-items: start;
+}
+
+.standard-page-layout--single {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
+/* Ensure grid items align at top */
+.standard-page-layout>* {
+    align-self: start;
+    margin-top: 0;
+}
+
+/* Grid Placement - using high specificity selectors */
+.page-columns .standard-page-layout .left-sidebar,
+.standard-page-layout .left-sidebar {
+    grid-column: 1;
+}
+
+.page-columns .standard-page-layout .main-content-area,
+.standard-page-layout .main-content-area {
+    grid-column: 2;
+}
+
+.page-columns .standard-page-layout .right-sidebar,
+.standard-page-layout .right-sidebar {
+    grid-column: 3;
+}
+
+/* Sidebars */
+.left-sidebar,
+.right-sidebar {
+    background: transparent;
+    padding-top: 0;
+    align-self: start;
+    /* Align to top of grid */
+}
+
+/* Sticky Content in Sidebars */
+.sidebar-sticky-content {
+    position: sticky;
+    top: calc(var(--header-offset) + 2rem);
+    max-height: calc(100vh - var(--header-offset) - 4rem);
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    /* Space for scrollbar */
+}
+
+/* Main Content Area */
+.main-content-area {
+    min-width: 0;
+    /* Crucial for Grid item shrinking */
+    width: 100%;
+    padding-top: 0;
+    /* Ensure content starts at top */
+}
+
+/* Reset Quarto's default margins on main content */
+#quarto-content main,
+.main-content-area>article,
+.main-content-area>.article-body {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* Ensure first heading in content appears at top */
+.main-content-area>h1:first-child,
+.main-content-area>article>h1:first-child,
+.main-content-area h1.title {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* Constrain prose width for readability, but allow containers to be wide */
+.main-content-area>p,
+.main-content-area>ul,
+.main-content-area>ol,
+.article-body>p,
+.article-body>ul {
+    max-width: var(--prose-width);
+}
+
+/* Allow figures/tables/math to go wider if needed */
+.main-content-area figure,
+.main-content-area .math.display,
+.main-content-area .code-block {
+    max-width: 100%;
+}
+
+/* ---
+   Responsive Images
+   --- */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Lazy loading placeholder */
+img[loading="lazy"] {
+    background: linear-gradient(90deg, var(--bg-body) 25%, var(--bg-card, var(--bg-body)) 50%, var(--bg-body) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+img[loading="lazy"].loaded {
+    animation: none;
+    background: none;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    img[loading="lazy"] {
+        animation: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Figure styling for responsive images */
+figure {
+    margin: 1.5rem 0;
+}
+
+figure img {
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+figcaption {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.75rem;
+    font-style: italic;
+}
+
+/* Object-fit for consistent image sizing */
+.img-cover {
+    object-fit: cover;
+}
+
+.img-contain {
+    object-fit: contain;
+}
+
+/* Aspect ratio containers for responsive images */
+.aspect-16-9 {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+    aspect-ratio: 4 / 3;
+}
+
+.aspect-1-1 {
+    aspect-ratio: 1 / 1;
+}
