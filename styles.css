@@ -605,6 +605,20 @@ nav .container {
   cursor: pointer;
 }
 
+.navbar-brand,
+.navbar-toggler,
+.nav-toggle,
+.mobile-menu-toggle,
+#quarto-header [class*="aa-DetachedSearchButton"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.rss-feed-link {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
 /* ---
    Sidebar Navigation Styles
    --- */
@@ -629,10 +643,10 @@ nav .container {
 }
 
 .sidebar-links a {
-  display: block;
-  padding: 0.625rem 1rem;
-
-  /* Increased for better touch targets on mobile */
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
   color: var(--text-main);
   border-radius: 4px;
   font-size: 0.95rem;
@@ -750,9 +764,13 @@ nav .container {
 
 .resource-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 2rem;
   margin-top: 1.5rem;
+}
+
+.resource-grid > * {
+  min-width: 0;
 }
 
 .resource-card {
@@ -813,9 +831,18 @@ nav .container {
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.25rem;
   margin-top: auto;
+  padding: 0.5rem 0;
   transition: color 0.2s ease;
+}
+
+.resource-category-card .resource-link,
+#bib-list .resource-link {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .resource-link:hover {
@@ -844,6 +871,125 @@ nav .container {
 
   .resource-card.has-media {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Legacy-equivalent fallback with context notation */
+@media (width <= 767.98px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Resources page layout */
+.resources-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  gap: var(--sidebar-gap);
+  align-items: start;
+}
+
+.resources-sidebar {
+  position: relative;
+}
+
+.resources-layout > .resources-sidebar {
+  grid-column: 1 !important;
+}
+
+.resources-nav {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.resources-nav-heading {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.resources-nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resources-nav-links li {
+  margin-bottom: 0.25rem;
+}
+
+.resources-nav-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 0.875rem;
+  border-radius: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.resources-nav-links a:hover,
+.resources-nav-links a.active {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.resources-main {
+  min-width: 0;
+}
+
+.resources-layout > .resources-main {
+  grid-column: 2 !important;
+}
+
+.resource-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+}
+
+.resource-category-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-body);
+}
+
+.resource-category-card .resource-link {
+  margin-top: auto;
+}
+
+@media (width < 992px) {
+  .resources-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-sidebar {
+    order: 2;
+  }
+
+  .resources-layout > .resources-sidebar,
+  .resources-layout > .resources-main {
+    grid-column: 1 !important;
+  }
+}
+
+@media (width <= 991.98px) {
+  .resources-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-layout > .resources-sidebar,
+  .resources-layout > .resources-main {
+    grid-column: 1 !important;
   }
 }
 
@@ -2289,11 +2435,13 @@ form.contact-form .form-group textarea {
 }
 
 .home-sidebar .resource-links a {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--text-dark);
   text-decoration: none;
   font-size: 0.9rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.7rem 0.75rem;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
@@ -2835,6 +2983,7 @@ h1.title,
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 44px;
   padding: 0.5rem 0;
   background: transparent;
   border: none;

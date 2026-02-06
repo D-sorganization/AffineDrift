@@ -240,6 +240,7 @@ a:hover {
   background: transparent;
   padding-top: 0;
   align-self: start;
+
   /* Align to top of grid */
 }
 
@@ -250,15 +251,18 @@ a:hover {
   max-height: calc(100vh - var(--header-offset) - 4rem);
   overflow-y: auto;
   padding-right: 0.5rem;
+
   /* Space for scrollbar */
 }
 
 /* Main Content Area */
 .main-content-area {
   min-width: 0;
+
   /* Crucial for Grid item shrinking */
   width: 100%;
   padding-top: 0;
+
   /* Ensure content starts at top */
 }
 
@@ -427,8 +431,10 @@ nav .container {
   align-items: center;
   width: 100%;
   max-width: 100%;
+
   /* Force full width */
   padding: 0 1rem;
+
   /* Minimal padding */
 }
 
@@ -506,16 +512,19 @@ nav .container {
 
 /* Search box styling */
 #quarto-header #quarto-search {
-  margin-left: auto;
+  margin-left: auto !important;
   min-width: 300px;
+
   /* Force minimum width */
   flex-basis: 400px;
+
   /* Target around 400px width */
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
 #quarto-header .aa-DetachedSearchButton {
   width: 100%;
+
   /* Fill the container */
   min-width: 300px;
 }
@@ -596,6 +605,20 @@ nav .container {
   cursor: pointer;
 }
 
+.navbar-brand,
+.navbar-toggler,
+.nav-toggle,
+.mobile-menu-toggle,
+#quarto-header [class*="aa-DetachedSearchButton"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.rss-feed-link {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
 /* ---
    Sidebar Navigation Styles
    --- */
@@ -620,9 +643,10 @@ nav .container {
 }
 
 .sidebar-links a {
-  display: block;
-  padding: 0.625rem 1rem;
-  /* Increased for better touch targets on mobile */
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
   color: var(--text-main);
   border-radius: 4px;
   font-size: 0.95rem;
@@ -740,9 +764,13 @@ nav .container {
 
 .resource-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
   gap: 2rem;
   margin-top: 1.5rem;
+}
+
+.resource-grid > * {
+  min-width: 0;
 }
 
 .resource-card {
@@ -803,9 +831,18 @@ nav .container {
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.25rem;
   margin-top: auto;
+  padding: 0.5rem 0;
   transition: color 0.2s ease;
+}
+
+.resource-category-card .resource-link,
+#bib-list .resource-link {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
 }
 
 .resource-link:hover {
@@ -834,6 +871,125 @@ nav .container {
 
   .resource-card.has-media {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Legacy-equivalent fallback with context notation */
+@media (width <= 767.98px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Resources page layout */
+.resources-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  gap: var(--sidebar-gap);
+  align-items: start;
+}
+
+.resources-sidebar {
+  position: relative;
+}
+
+.resources-layout > .resources-sidebar {
+  grid-column: 1 !important;
+}
+
+.resources-nav {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.resources-nav-heading {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.resources-nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resources-nav-links li {
+  margin-bottom: 0.25rem;
+}
+
+.resources-nav-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 0.875rem;
+  border-radius: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.resources-nav-links a:hover,
+.resources-nav-links a.active {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.resources-main {
+  min-width: 0;
+}
+
+.resources-layout > .resources-main {
+  grid-column: 2 !important;
+}
+
+.resource-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+}
+
+.resource-category-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-body);
+}
+
+.resource-category-card .resource-link {
+  margin-top: auto;
+}
+
+@media (width < 992px) {
+  .resources-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-sidebar {
+    order: 2;
+  }
+
+  .resources-layout > .resources-sidebar,
+  .resources-layout > .resources-main {
+    grid-column: 1 !important;
+  }
+}
+
+@media (width <= 991.98px) {
+  .resources-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-layout > .resources-sidebar,
+  .resources-layout > .resources-main {
+    grid-column: 1 !important;
   }
 }
 
@@ -1076,6 +1232,7 @@ nav .container {
   border: 1px solid rgb(255, 255, 255, 0.2);
   color: #fff;
   padding: 0.5rem 0.75rem;
+
   /* Increased for better touch targets (min 44px tap area) */
   font-size: 0.8rem;
   border-radius: 4px;
@@ -1114,7 +1271,6 @@ nav .container {
 
 /* Tablet: Switch to 2 columns (Left Sidebar + Content) */
 @media (width < 992px) {
-
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -1168,6 +1324,7 @@ nav .container {
   /* Navigation Mobile */
   .nav-links {
     display: none;
+
     /* Use JS toggle */
     position: absolute;
     top: 100%;
@@ -1223,6 +1380,7 @@ nav .container {
 .lightbox-img {
   max-width: 90vw;
   max-height: 85vh;
+
   /* Reduced slightly to make room for caption */
   box-shadow: 0 5px 30px rgb(0, 0, 0, 0.5);
   border-radius: 4px;
@@ -1243,6 +1401,7 @@ nav .container {
   font-size: 1.1rem;
   line-height: 1.4;
   pointer-events: none;
+
   /* Let clicks pass through to background for closing */
   opacity: 0;
   transform: translateY(10px);
@@ -1581,7 +1740,6 @@ h3:hover .anchor-link,
    consistent output regardless of page state or JavaScript modifications
    --- */
 @media print {
-
   /* Page setup for academic papers - A4 for international compatibility */
   @page {
     size: a4;
@@ -2085,12 +2243,14 @@ h3:hover .anchor-link,
 .contact-main {
   flex: 2;
   min-width: 0;
+
   /* Prevent flex overflow */
 }
 
 .contact-sidebar {
   flex: 1;
   min-width: 280px;
+
   /* Fixed width for consistency */
   max-width: 350px;
   background: var(--bg-alt);
@@ -2102,6 +2262,7 @@ h3:hover .anchor-link,
 
 .contact-form-container {
   background: var(--pure-white);
+
   /* Ensure contrast */
   padding: 2rem;
   border-radius: 8px;
@@ -2177,6 +2338,7 @@ form.contact-form .form-group textarea {
   transition: all 0.2s ease;
   font-family: inherit;
   width: 100%;
+
   /* Full width button on mobile, auto on desktop? */
 }
 
@@ -2230,6 +2392,7 @@ form.contact-form .form-group textarea {
     width: 100%;
     max-width: none;
     order: 2;
+
     /* Move sidebar below form on mobile */
   }
 
@@ -2242,33 +2405,8 @@ form.contact-form .form-group textarea {
 /* ---
    Home Page Layout
    Styles moved from inline <style> in index.qmd
+   (consolidated with Home Layout Updates section below)
    --- */
-.home-layout {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  /* Ensure top alignment */
-  gap: var(--sidebar-gap);
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 1rem 0;
-  width: 100%;
-}
-
-.home-sidebar {
-  width: var(--sidebar-width);
-  flex-shrink: 0;
-  background: var(--legal-pad-yellow);
-  border: 2px solid var(--legal-pad-yellow-border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  top: 0;
-  /* Reset position */
-  margin-top: 0;
-  /* Align with top */
-  height: fit-content;
-  /* Only take needed height */
-}
 
 .home-sidebar h3 {
   color: var(--primary-blue);
@@ -2297,11 +2435,13 @@ form.contact-form .form-group textarea {
 }
 
 .home-sidebar .resource-links a {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--text-dark);
   text-decoration: none;
   font-size: 0.9rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.7rem 0.75rem;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
@@ -2361,26 +2501,20 @@ form.contact-form .form-group textarea {
   text-align: center;
 }
 
-/* Search box styling - Reverted to default/small */
-#quarto-header #quarto-search {
-  margin-left: auto;
-}
-
-/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
-#quarto-header .aa-DetachedSearchButton {
-  /* Revert to default */
-}
+/* Search box styling - Reverted to default/small (consolidated above) */
 
 /* Home Layout Updates */
 .home-layout {
   display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
+  flex-flow: row nowrap !important;
   align-items: flex-start !important;
+
   /* Ensure top alignment */
   justify-content: flex-start !important;
+
   /* Changed from space-between to keep gap consistent */
   gap: 2rem !important;
+
   /* Explicit 1/4 inch+ gap (approx 32px) */
   max-width: 100%;
   margin: 0 auto;
@@ -2399,11 +2533,12 @@ form.contact-form .form-group textarea {
   margin-top: 0;
   height: fit-content;
   margin-right: 0;
+
   /* Let gap handle spacing */
 }
 
 .home-toc {
-  width: 250px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
   position: sticky;
   top: 2rem;
@@ -2412,6 +2547,7 @@ form.contact-form .form-group textarea {
   padding-left: 1rem;
   display: block;
   margin-left: 0;
+
   /* Let gap handle spacing */
 }
 
@@ -2419,6 +2555,7 @@ form.contact-form .form-group textarea {
 @media (width <=1200px) {
   .home-toc {
     display: none !important;
+
     /* Hide TOC on smaller screens */
   }
 }
@@ -2432,6 +2569,7 @@ form.contact-form .form-group textarea {
   .home-sidebar {
     width: 100%;
     order: 2;
+
     /* Move below content on mobile if desired, or keep top */
     position: static;
     border: none;
@@ -2456,6 +2594,7 @@ form.contact-form .form-group textarea {
 .youtube-embed {
   position: relative;
   padding-bottom: 56.25%;
+
   /* 16:9 */
   height: 0;
   overflow: hidden;
@@ -2495,6 +2634,7 @@ form.contact-form .form-group textarea {
 
 .resource-list .resource-media {
   flex: 0 0 300px;
+
   /* Fixed width for video thumbnail */
   border-right: 1px solid var(--border-color);
 }
@@ -2544,6 +2684,7 @@ h1.title,
 /* Fix: Bibliography Layout */
 
 /* Ensure the grid doesn't collapse the main content too aggressively */
+
 /* Fix: Bibliography Layout and Standard Page Layout */
 
 .left-sidebar {
@@ -2564,7 +2705,7 @@ h1.title,
 .left-sidebar.blue-sidebar .drift-intro-text p {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgb(255, 255, 255, 0.9);
   margin-bottom: 1rem;
 }
 
@@ -2576,13 +2717,14 @@ h1.title,
 }
 
 /* Ensure the grid doesn't collapse the main content too aggressively */
+
 /* Using high specificity to override Quarto's .page-columns defaults */
 @media (width >=1200px) {
-
   div.standard-page-layout,
   .standard-page-layout {
     display: grid !important;
     grid-template-columns: 280px minmax(0, 1fr) 250px !important;
+
     /* Default: 3 columns */
     gap: 2rem !important;
     align-items: start !important;
@@ -2595,6 +2737,7 @@ h1.title,
   div.standard-page-layout.standard-page-layout--single,
   .standard-page-layout.standard-page-layout--single {
     grid-template-columns: 280px minmax(0, 1fr) !important;
+
     /* 2 columns only */
   }
 
@@ -2607,6 +2750,7 @@ h1.title,
   .standard-page-layout>.main-content-area {
     grid-column: 2 !important;
     width: 100% !important;
+
     /* Prevent it from being 0 width */
     max-width: none !important;
   }
@@ -2635,10 +2779,7 @@ h1.title,
   }
 }
 
-/* Force Search Bar Right Alignment Globally */
-#quarto-header #quarto-search {
-  margin-left: auto !important;
-}
+/* Force Search Bar Right Alignment Globally (consolidated above) */
 
 
 
@@ -2702,6 +2843,7 @@ h1.title,
 
 .critics-comments-header[aria-expanded="true"]+.critics-comments-content {
   max-height: 5000px;
+
   /* Large enough to fit content */
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
@@ -2797,10 +2939,6 @@ h1.title,
   width: 100%;
 }
 
-.home-toc {
-  width: var(--sidebar-width);
-}
-
 .home-toc .sidebar-sticky-content {
   position: sticky;
   top: calc(var(--header-offset) + 2rem);
@@ -2845,6 +2983,7 @@ h1.title,
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 44px;
   padding: 0.5rem 0;
   background: transparent;
   border: none;
@@ -3113,7 +3252,6 @@ h1.title,
 }
 
 @media (width <=768px) {
-
   /* Mobile: Show hamburger menu */
   .mobile-menu-toggle {
     display: block;
@@ -3209,5 +3347,3 @@ h1.title,
   color: var(--text-muted);
   line-height: 1.7;
 }
-
-/* ---

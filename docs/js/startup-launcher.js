@@ -121,7 +121,7 @@
               <path class="ad-splash-path" d="M30 90 Q60 30 90 90" fill="none" stroke-width="3"/>
             </svg>
           </div>
-          <h1 class="ad-splash-title">AffineDrift</h1>
+          <p class="ad-splash-title" role="heading" aria-level="2">AffineDrift</p>
           <p class="ad-splash-tagline">Control Theory Meets Biomechanics</p>
         </div>
 
