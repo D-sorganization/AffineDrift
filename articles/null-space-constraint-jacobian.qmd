@@ -598,6 +598,65 @@ For golf swing analysis specifically, this framework explains how elite players 
   </div>
 </section>
 
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Biomechanical Reality:</span>
+          <h3>The "Soft Constraint" Problem</h3>
+        </div>
+        <p class="critic-argument">
+          The mathematical model assumes the closed loop formed by the hands on the grip is a rigid constraint ($\Phi(q) = 0$). In reality, the hands are compliant: skin deforms, grip pressure varies, and the hands can slide slightly. Skeptics argue that treating this as a hard constraint creates a misleadingly sharp "Null Space." In truth, the system operates in a "fuzzy" constraint cloud where small deviations are possible, potentially altering the available degrees of freedom.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a valid physical observation. However, the <em>stiffness</em> of the constraint (bone and high-friction grip) is orders of magnitude higher than the voluntary torque capability of the wrists in orthogonal directions. While the constraint is technically "soft" (compliant), it functions as a "hard" guide for the primary motion. We model the ideal structure to identify the <em>dominant</em> kinematic pathways, acknowledging that compliance adds a layer of "stiffness orthogonal to the null space."
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Motor Control:</span>
+          <h3>Do Brains Calculate Null Spaces?</h3>
+        </div>
+        <p class="critic-argument">
+          The article presents the Null Space Projector ($P$) as a computational tool. Critics from the ecological psychology camp argue that the human brain does not perform singular value decomposition (SVD) or matrix projection in real-time. Suggesting that the brain "projects torque onto the null space" imputes a computational strategy to a biological system that likely learns these synergies through trial-and-error reinforcement learning or dynamic primitives, not linear algebra.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that the brain does not explicitly compute matrix inverses. The Null Space is a <em>descriptive</em> mathematical tool for us as analysts, not a <em>prescriptive</em> algorithm for the brain. It describes the physical manifold that the brain discovers. The "path of least resistance" that a golfer learns <em>is</em> the Null Space; our mathematics simply provides a precise language to quantify what the athlete feels intuitively.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Model Fidelity:</span>
+          <h3>Is 26 DOF Enough?</h3>
+        </div>
+        <p class="critic-argument">
+          The simplified 26-DOF model aggregates complex joints like the spine and shoulder girdle into simple hinges or ball joints. Critics argue that critical "slop" or "play" in the shoulder complex (scapular gliding) and spinal warping provides essential degrees of freedom that a rigid-body chain misses. By ignoring these micro-motions, the model may overstate the constraint dimensionality reduction, missing the subtle adjustments elite golfers use to square the face.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> All biomechanical models are approximations. While adding more DOFs (e.g., $n=100$) would increase the dimension of the null space, the <em>fundamental topology</em> of the loop closure remains. The principle of drift-control separation via projection holds regardless of $n$. We choose 26 DOF as the "minimum viable complexity" to demonstrate the phenomenon without drowning in parameter identification errors.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by defining the boundaries of the model.
+      </div>
+    </div>
+  </div>
+</section>
+
 ## Appendix {.appendix}
 
 ### Proof: Orthogonality of Constraint Forces
