@@ -1,34 +1,5 @@
-./scripts/analyze_completist_data.py:183:        if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
-./scripts/analyze_completist_data.py-184-            return {"file": f_path, "line": l_no, "text": c_txt, "type": "Abstract"}
-./scripts/analyze_completist_data.py-185-        return None
-./scripts/analyze_completist_data.py-186-
-./scripts/analyze_completist_data.py-187-    return _scan_completist_file("ABSTRACT", _parser)
-./scripts/analyze_completist_data.py-188-
---
-./scripts/generate_completist_data.py:274:    """Scan Python files for @abstractmethod decorators."""
-./scripts/generate_completist_data.py-275-    results: list[str] = []
-./scripts/generate_completist_data.py-276-
-./scripts/generate_completist_data.py-277-    for filepath in files:
-./scripts/generate_completist_data.py-278-        if filepath.suffix != ".py":
-./scripts/generate_completist_data.py-279-            continue
---
-./scripts/generate_completist_data.py:283:                    if "@abstractmethod" in line:
-./scripts/generate_completist_data.py-284-                        rel_path = filepath.relative_to(repo_root)
-./scripts/generate_completist_data.py-285-                        results.append(f"{rel_path}:{line_num}:{line.strip()}")
-./scripts/generate_completist_data.py-286-        except OSError as e:
-./scripts/generate_completist_data.py-287-            logger.warning("Could not read %s: %s", filepath, e)
-./scripts/generate_completist_data.py-288-
---
-./src/tangent_models/examples.py:10:    @abstractmethod
-./src/tangent_models/examples.py-11-    def dynamics(
-./src/tangent_models/examples.py-12-        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
-./src/tangent_models/examples.py-13-    ) -> np.ndarray[Any, Any]:
-./src/tangent_models/examples.py-14-        """Compute system dynamics."""
-./src/tangent_models/examples.py-15-        pass  # Abstract method
---
-./src/tangent_models/examples.py:17:    @abstractmethod
-./src/tangent_models/examples.py-18-    def linearize(
-./src/tangent_models/examples.py-19-        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
-./src/tangent_models/examples.py-20-    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-./src/tangent_models/examples.py-21-        """
-./src/tangent_models/examples.py-22-        Returns A, B matrices where dx_dot = A*dx + B*du
+scripts/analyze_completist_data.py:183:if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
+scripts/generate_completist_data.py:274:"""Scan Python files for @abstractmethod decorators."""
+scripts/generate_completist_data.py:283:if "@abstractmethod" in line:
+src/tangent_models/examples.py:10:@abstractmethod
+src/tangent_models/examples.py:17:@abstractmethod
