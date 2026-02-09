@@ -1,7 +1,9 @@
 from src.tools.utils import shell_utils
 
+
 def test_imports():
     assert shell_utils
+
 
 def test_run_tool_echo():
     # Simple test using echo to verify structure
