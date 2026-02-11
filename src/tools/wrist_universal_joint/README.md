@@ -4,8 +4,16 @@ Interactive tool for analyzing how grip angle affects torque transmission and an
 
 ## Files
 
+### Python Modules (Streamlit App)
+
+- **`streamlit_app.py`** - Streamlit UI entry point (layout, sidebar, callbacks)
+- **`torque_calculator.py`** - Core torque transmission physics calculations
+- **`visualization.py`** - Matplotlib plotting and diagram functions
+- **`constants.py`** - Physical constants and configuration
+
+### Other
+
 - **`grip_angle_simulator.html`** - JavaScript/HTML5 standalone version (runs on GitHub Pages)
-- **`Grip_Angle_Torque_Transmission_Streamlit.py`** - Streamlit version (deploy to Streamlit Cloud)
 - **`requirements.txt`** - Python dependencies for Streamlit
 - **`EMBEDDING_GUIDE.md`** - Complete instructions for embedding both versions
 - **`EMBED_INSTRUCTIONS.md`** - Quick reference for embedding
