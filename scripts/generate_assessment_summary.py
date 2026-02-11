@@ -15,8 +15,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.utils import setup_logging
 

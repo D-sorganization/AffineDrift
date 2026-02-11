@@ -6,12 +6,9 @@ Generates assessments for 15 categories (A-O) and a comprehensive report.
 
 import re
 import statistics
-import sys
 from pathlib import Path
 from typing import Any
 
-# Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.utils import (
     get_python_files,

@@ -4,7 +4,6 @@ import sys
 import numpy as np
 
 # Add project root to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.tangent_models.examples import (
     PlanarQuadrotor,

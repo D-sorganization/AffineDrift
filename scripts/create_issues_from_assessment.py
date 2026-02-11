@@ -13,8 +13,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.utils import setup_logging
 from src.tools.utils.assessment_utils import classify_assessment_category

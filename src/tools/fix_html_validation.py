@@ -25,7 +25,6 @@ import sys
 from pathlib import Path
 
 # Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[2]))
 
 from src.tools.utils import find_html_files, process_file_content, setup_logging
 

@@ -9,8 +9,6 @@ from pathlib import Path
 
 from latex_to_html import LaTeXToHTMLConverter
 
-# Add project root to sys.path for imports
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from src.tools.utils import setup_logging
 

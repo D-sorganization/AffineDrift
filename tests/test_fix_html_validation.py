@@ -1,10 +1,8 @@
 """Tests for the fix_html_validation tool."""
 
-import sys
 from pathlib import Path
 
 # Add project root to path to ensure src module can be imported
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.fix_html_validation import (
     add_button_type,
