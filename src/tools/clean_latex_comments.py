@@ -28,7 +28,7 @@ def clean_latex_comments(file_path: Path) -> bool:
 
         file_path.write_text(cleaned_content, encoding="utf-8")
         return True
-    except Exception:
+    except (FileNotFoundError, PermissionError, OSError):
         return False
 
 

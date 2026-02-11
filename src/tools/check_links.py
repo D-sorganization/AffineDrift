@@ -95,7 +95,7 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
         try:
             links = find_links(file_path)
-        except Exception as e:
+        except (ConnectionError, TimeoutError, OSError) as e:
             logger.exception(f"Error reading {file_path}: {e}")
             continue
 

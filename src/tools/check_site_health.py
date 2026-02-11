@@ -136,7 +136,7 @@ def check_site_health() -> None:
                 elif target_rel_path in orphaned_files:
                     orphaned_files.remove(target_rel_path)
 
-        except Exception as e:
+        except (ConnectionError, TimeoutError, OSError) as e:
             logger.error("Error processing %s: %s", file_path, e)
 
     # Report Broken Links

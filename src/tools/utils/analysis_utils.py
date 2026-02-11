@@ -49,7 +49,7 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
     except (SyntaxError, ValueError):
         # Skip files with syntax errors or other parsing issues
         pass
-    except Exception:
+    except (FileNotFoundError, OSError, KeyError):
         # Fallback for other issues
         pass
     return metrics

@@ -98,12 +98,12 @@ class MATLABQualityChecker:
                 # First, try to run the MATLAB script directly if possible
                 result = self._run_matlab_script(matlab_script)
                 return result
-            except Exception as e:
+            except (FileNotFoundError, PermissionError, OSError) as e:
                 logger.warning(f"Could not run MATLAB script directly: {e}")
                 # Fall back to static analysis
                 return self._static_matlab_analysis()
 
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             logger.error(f"Error running MATLAB quality checks: {e}")
             return {"error": str(e)}
 
@@ -162,7 +162,7 @@ class MATLABQualityChecker:
             logger.info("All MATLAB commands failed, falling back to static analysis")
             return self._static_matlab_analysis()
 
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError, UnicodeDecodeError) as e:
             logger.error(f"Error running MATLAB script: {e}")
             return {"error": str(e)}
 
@@ -448,7 +448,7 @@ class MATLABQualityChecker:
                         f"manage paths externally",
                     )
 
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             issues.append(f"{file_path.name}: Could not analyze file - {e!s}")
 
         return issues

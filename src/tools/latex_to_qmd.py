@@ -29,7 +29,7 @@ class LaTeXToQuartoConverter:
         try:
             with open(filepath, encoding="utf-8") as f:
                 return f.read()
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             logger.error(f"Error reading file {filepath}: {e}")
             raise
 
@@ -316,13 +316,13 @@ class LaTeXToQuartoConverter:
         # Read LaTeX content
         try:
             latex_content = self.read_latex_file(input_file)
-        except Exception:
+        except (re.error, ValueError):
             return None  # Error logged in read_latex_file
 
         # Convert to Quarto
         try:
             qmd_content = self.convert_to_qmd(latex_content)
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             logger.error(f"Error during conversion: {e}")
             raise
 
@@ -333,7 +333,7 @@ class LaTeXToQuartoConverter:
             with open(output_path, "w", encoding="utf-8") as f:
                 f.write(qmd_content)
             logger.info(f"Successfully converted {input_file}")
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             logger.error(f"Error writing to {output_path}: {e}")
             raise
 
@@ -356,7 +356,7 @@ def main() -> None:
     converter = LaTeXToQuartoConverter()
     try:
         converter.convert_file(input_file, output_file)
-    except Exception:
+    except (FileNotFoundError, PermissionError, OSError):
         sys.exit(1)
 
 
