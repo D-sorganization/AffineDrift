@@ -61,7 +61,7 @@ def check_url(url: str, file_path: Path) -> str | None:
             return None
         except requests.exceptions.RequestException as e:
             return f"BROKEN (External): {url} in {file_path} (Error: {e})"
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError) as e:
             return f"BROKEN (External): {url} in {file_path} (Error: {e})"
     else:
         # Local file

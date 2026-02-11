@@ -66,7 +66,7 @@ def convert_all(dry_run: bool = False) -> bool:
                 converter.convert_file(source, target)
                 logger.info("Converted: %s -> %s", source, target)
                 success_count += 1
-            except Exception as e:
+            except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
                 logger.error("Failed to convert %s: %s", source, e)
                 error_count += 1
 

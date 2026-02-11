@@ -143,7 +143,7 @@ def main() -> None:
             qmd_path = tex_path.with_suffix(".qmd")
             qmd_path.write_text(md_text, encoding="utf-8")
             logger.info("Converted: %s -> %s", tex_path, qmd_path)
-        except Exception as e:
+        except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
             logger.error("Failed to convert %s: %s", tex_path, e)
 
 
