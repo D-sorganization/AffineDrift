@@ -21,18 +21,12 @@ import ast
 import hashlib
 import json
 import re
-import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-# Add project root to path for imports
-_REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
-
-from src.tools.utils import get_python_files, setup_logging_with_timestamp  # noqa: E402
-from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON  # noqa: E402
+from src.tools.utils import get_python_files, setup_logging_with_timestamp
+from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON
 
 logger = setup_logging_with_timestamp(__name__)
 

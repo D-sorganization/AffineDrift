@@ -9,6 +9,20 @@ packages = []
 [tool.setuptools.package-data]
 "*" = []
 
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
 [tool.black]
 line-length = 100
 target-version = ['py312']

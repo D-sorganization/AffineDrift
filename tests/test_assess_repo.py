@@ -4,16 +4,10 @@ These tests verify the assess_repo module's ability to analyze code structure,
 find Python files, and generate assessment reports.
 """
 
-import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-# Add scripts directory to path
-scripts_dir = str(Path(__file__).parents[1] / "scripts")
-if scripts_dir not in sys.path:
-    sys.path.append(scripts_dir)
-
-import assess_repo  # noqa: E402
+from scripts import assess_repo
 
 
 def test_get_python_files():
@@ -254,10 +248,10 @@ def test_assess_scalability_maintainability():
     assert result["grade"] == 5
 
 
-@patch("assess_repo.generate_markdown_report")
-@patch("assess_repo.generate_issue_document")
+@patch("scripts.assess_repo.generate_markdown_report")
+@patch("scripts.assess_repo.generate_issue_document")
 @patch("pathlib.Path.write_text")
-@patch("assess_repo.get_python_files")
+@patch("scripts.assess_repo.get_python_files")
 def test_main(mock_get_files, mock_write, mock_issue, mock_report):
     """Test main execution."""
     mock_get_files.return_value = []

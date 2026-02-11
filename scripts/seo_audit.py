@@ -5,12 +5,9 @@ Also suggests improvements based on content analysis.
 
 import json
 import re
-import sys
 from pathlib import Path
 from typing import Any, cast
 
-# Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.utils import parse_frontmatter_dict, setup_logging
 

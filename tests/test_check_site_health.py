@@ -1,14 +1,12 @@
 """Tests for the site health check tool."""
 
 import logging
-import sys
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 # Add project root to path
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.check_site_health import check_site_health
 

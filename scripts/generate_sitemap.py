@@ -3,12 +3,9 @@
 
 import shutil
 import subprocess
-import sys
 from datetime import datetime
 from pathlib import Path
 
-# Add project root to path for imports
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.tools.utils import parse_frontmatter_dict, setup_logging
 
