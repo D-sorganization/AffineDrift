@@ -47,6 +47,10 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         mirrors=("src/js/startup-launcher.js", "docs/js/startup-launcher.js"),
     ),
     SyncMap(
+        source="js/notes-workspace.js",
+        mirrors=("src/js/notes-workspace.js", "docs/js/notes-workspace.js"),
+    ),
+    SyncMap(
         source="styles.css",
         mirrors=("docs/styles.css",),
     ),
