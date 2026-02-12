@@ -21,6 +21,8 @@ npm ci
 ruff check src tests scripts
 npm test -- --runInBand
 python3 scripts/sync_frontend_assets.py --check
+python3 scripts/check_quarto_render_coverage.py
+python3 scripts/check_styles_budget.py
 python3 src/tools/check_site_health.py --fail-on broken
 ```
 
@@ -28,4 +30,6 @@ python3 src/tools/check_site_health.py --fail-on broken
 
 - `docs/` contains tracked build outputs for GitHub Pages.
 - Canonical frontend asset sync is enforced by `scripts/sync_frontend_assets.py`.
+- Quarto recursive render coverage is enforced by `scripts/check_quarto_render_coverage.py`.
+- CSS growth and `!important` usage are constrained by `scripts/check_styles_budget.py`.
 - If Quarto-generated outputs are updated, rerun health checks before commit.
