@@ -13,7 +13,6 @@ import re
 import sys
 from pathlib import Path
 
-
 from src.tools.utils import find_html_files, find_qmd_files, setup_logging
 
 logger = setup_logging(__name__)

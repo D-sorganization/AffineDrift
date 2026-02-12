@@ -9,7 +9,6 @@ import statistics
 from pathlib import Path
 from typing import Any
 
-
 from src.tools.utils import (
     get_python_files,
     setup_logging,

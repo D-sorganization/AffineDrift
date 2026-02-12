@@ -16,7 +16,6 @@ import sys
 from pathlib import Path
 from urllib.parse import unquote
 
-
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__, format_string="%(message)s")

@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-
 from src.tools.utils import setup_logging
 from src.tools.utils.assessment_utils import classify_assessment_category
 from src.tools.utils.issue_utils import format_issue_body, get_repo_short_name

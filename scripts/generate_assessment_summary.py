@@ -15,7 +15,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
