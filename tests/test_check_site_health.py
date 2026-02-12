@@ -227,7 +227,7 @@ def test_check_site_health_ignores_quarto_alternate_format_links(mock_docs_dir, 
         mock_docs_dir,
         "index.html",
         (
-            '<html><body>'
+            "<html><body>"
             '<div class="quarto-alternate-formats">'
             '<a href="missing.pdf">PDF</a>'
             "</div>"
