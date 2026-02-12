@@ -8,7 +8,6 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-
 from src.tools.utils import parse_frontmatter_dict
 
 # Directories to index

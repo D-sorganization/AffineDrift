@@ -21,7 +21,6 @@ import re
 import sys
 from pathlib import Path
 
-
 from src.tools.utils import find_files_by_extension, setup_logging
 
 logger = setup_logging(__name__)

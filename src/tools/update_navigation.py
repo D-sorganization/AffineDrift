@@ -8,7 +8,6 @@ from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
-
 from src.tools.utils import setup_logging
 
 if TYPE_CHECKING:
