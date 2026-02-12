@@ -3,6 +3,13 @@ from typing import Any
 
 import numpy as np
 
+from src.core.contracts import (
+    ContractChecker,
+    check_finite_array,
+    check_positive,
+    require,
+)
+
 
 def compute_hessian_bound(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
@@ -24,6 +31,9 @@ def compute_hessian_bound(
     Returns:
         M: Spectral norm of the Hessian
     """
+    check_finite_array(x, "x")
+    check_finite_array(u, "u")
+    check_positive(epsilon, "epsilon")
     return compute_hessian_norm(f, x, u, epsilon)
 
 
@@ -121,7 +131,7 @@ def predict_residual_bound(
     return r_accum
 
 
-class ResidualMonitor:
+class ResidualMonitor(ContractChecker):
     """
     Monitors residuals and triggers mode switching.
     """
@@ -130,6 +140,14 @@ class ResidualMonitor:
         self, eps_warning: float = 0.01, eps_critical: float = 0.05, n_hysteresis: int = 3
     ) -> None:
         """Initialize residual monitor."""
+        check_positive(eps_warning, "eps_warning")
+        check_positive(eps_critical, "eps_critical")
+        require(
+            eps_critical > eps_warning,
+            "eps_critical must exceed eps_warning",
+            eps_critical,
+        )
+        require(n_hysteresis >= 1, "n_hysteresis must be >= 1", n_hysteresis)
         self.eps_warning = eps_warning
         self.eps_critical = eps_critical
         self.n = n_hysteresis
@@ -137,6 +155,22 @@ class ResidualMonitor:
         self.high_count = 0
         self.low_count = 0
         self.mode = "LQR"  # LQR, MPC_WARN, MPC_FULL
+
+    def _get_invariants(self) -> list[tuple[Callable[[], bool], str]]:
+        """Return class invariants for the monitor."""
+        return [
+            (lambda: self.eps_warning > 0, "eps_warning must be positive"),
+            (
+                lambda: self.eps_critical > self.eps_warning,
+                "eps_critical must exceed eps_warning",
+            ),
+            (lambda: self.high_count >= 0, "high_count must be non-negative"),
+            (lambda: self.low_count >= 0, "low_count must be non-negative"),
+            (
+                lambda: self.mode in ("LQR", "MPC_WARN", "MPC_FULL"),
+                "mode must be a valid state",
+            ),
+        ]
 
     def update(
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
