@@ -37,8 +37,9 @@ AffineDrift/
 ├── tests/              # Python tests
 ├── .github/
 │   └── workflows/      # CI/CD pipelines
-│       ├── quarto-publish.yml  # GitHub Pages deployment
-│       └── Jules-Control-Tower.yml  # Automated maintenance
+│       ├── ci-standard.yml      # Core quality gates and tests
+│       ├── deploy-website.yml   # GitHub Pages deployment
+│       └── quarto-syntax-check.yml # Quarto syntax validation
 └── *.qmd               # Content pages (Quarto markdown)
 ```
 
@@ -82,6 +83,18 @@ See [WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md) for detailed
 - **GitHub Pages**: Static site hosting
 - **GitHub Actions**: Automated deployment
 
+## 🐍 Python Runtime
+
+- Tooling and type checks target **Python 3.12**
+- CI runs quality checks and tests on Python 3.12
+- Recommended local setup:
+
+  ```bash
+  python3.12 -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  ```
+
 ## 🔄 CI/CD Pipeline
 
 This repository includes an automated CI/CD pipeline that:
@@ -89,7 +102,7 @@ This repository includes an automated CI/CD pipeline that:
 - Validates HTML and CSS on every commit
 - Automatically deploys to GitHub Pages on push to main branch
 - Runs accessibility and performance checks
-- See `.github/workflows/deploy.yml` for details
+- See `.github/workflows/deploy-website.yml` and `.github/workflows/ci-standard.yml` for details
 
 ## 🤝 Contributing
 
