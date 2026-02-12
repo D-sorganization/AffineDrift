@@ -8,7 +8,6 @@ import re
 from pathlib import Path
 from typing import Any, cast
 
-
 from src.tools.utils import parse_frontmatter_dict, setup_logging
 
 logger = setup_logging(__name__)

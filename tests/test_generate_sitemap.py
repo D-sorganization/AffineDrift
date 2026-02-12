@@ -1,7 +1,5 @@
 """Tests for the sitemap generator script."""
 
-from pathlib import Path
-
 # Add project root to path
 
 # Import after path setup

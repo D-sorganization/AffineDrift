@@ -1,7 +1,5 @@
 """Tests for report utilities."""
 
-from pathlib import Path
-
 # Add project root to path
 
 from src.tools.utils import report_utils
