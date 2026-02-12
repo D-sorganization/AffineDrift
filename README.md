@@ -73,6 +73,7 @@ See [WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md) for detailed
 
 - **[DEVELOPMENT_GUIDE.md](docs/development/DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
 - **[WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
+- **[DOCS_ARTIFACT_POLICY.md](docs/development/DOCS_ARTIFACT_POLICY.md)**: Source-of-truth and generated `docs/` artifact rules
 
 ## 🛠️ Technologies
 

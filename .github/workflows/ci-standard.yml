@@ -70,6 +70,10 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Verify frontend asset sync
         run: python3 scripts/sync_frontend_assets.py --check
+      - name: Verify Quarto Render Coverage
+        run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify CSS Budget
+        run: python3 scripts/check_styles_budget.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then

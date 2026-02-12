@@ -5,10 +5,13 @@
 1. Update source `.qmd`, `styles.css`, or canonical assets under `css/` and `js/`.
 2. Keep mirrored frontend assets synchronized:
    - `python3 scripts/sync_frontend_assets.py`
-3. Render locally (when Quarto is available):
+3. Validate config and CSS guardrails:
+   - `python3 scripts/check_quarto_render_coverage.py`
+   - `python3 scripts/check_styles_budget.py`
+4. Render locally (when Quarto is available):
    - `quarto preview`
    - `quarto render`
-4. Validate generated output:
+5. Validate generated output:
    - `python3 src/tools/check_site_health.py --fail-on broken`
 
 ## Frontend Asset Policy
@@ -19,6 +22,10 @@
   - `styles.css`
 - Mirrored targets in `src/` and/or `docs/` are managed by sync script.
 - Known intentional divergence is documented in `scripts/sync_frontend_assets.py`.
+
+## Artifact Policy
+
+- See `docs/development/DOCS_ARTIFACT_POLICY.md` for source-of-truth and commit rules.
 
 ## Deployment
 
