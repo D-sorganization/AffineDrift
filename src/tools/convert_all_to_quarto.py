@@ -5,10 +5,8 @@ Converts all LaTeX article files to Quarto .qmd format.
 
 import os
 import sys
-from pathlib import Path
 
 from latex_to_qmd import LaTeXToQuartoConverter
-
 
 from src.tools.utils import setup_logging
 

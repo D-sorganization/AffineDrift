@@ -25,7 +25,6 @@ import sys
 from pathlib import Path
 
 # Add project root to path for imports
-
 from src.tools.utils import find_html_files, process_file_content, setup_logging
 
 logger = setup_logging(__name__)

@@ -14,7 +14,6 @@ Checks:
 import sys
 from pathlib import Path
 
-
 from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
 
 logger = setup_logging_with_timestamp(__name__)

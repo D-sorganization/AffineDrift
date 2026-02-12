@@ -6,7 +6,6 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-
 from src.tools.utils import parse_frontmatter_dict, setup_logging
 
 logger = setup_logging(__name__)
