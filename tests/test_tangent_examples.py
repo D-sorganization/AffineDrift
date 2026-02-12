@@ -1,10 +1,6 @@
-import os
-import sys
-
 import numpy as np
 
 # Add project root to path
-
 from src.tangent_models.examples import (
     PlanarQuadrotor,
     RobotArm,

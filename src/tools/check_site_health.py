@@ -21,7 +21,6 @@ from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
-
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)

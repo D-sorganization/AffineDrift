@@ -11,7 +11,6 @@ import sys
 from datetime import date
 from pathlib import Path
 
-
 from src.tools.utils import setup_logging_with_timestamp
 
 logger = setup_logging_with_timestamp(__name__)

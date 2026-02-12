@@ -17,9 +17,9 @@ import numpy as np
 import streamlit as st
 
 from .constants import (
+    DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
     DEFAULT_CLUBHEAD_WEIGHT,
-    DEFAULT_CLUB_LENGTH,
     DEFAULT_SHAFT_WEIGHT,
 )
 from .torque_calculator import (
@@ -111,13 +111,21 @@ def _render_sidebar() -> dict[str, Any]:
         # Angle controls
         st.subheader("Grip Angle θ_grip")
         params["grip_angle"] = st.slider(
-            "Grip Angle (degrees)", 0, 90, 30, 1,
+            "Grip Angle (degrees)",
+            0,
+            90,
+            30,
+            1,
             help="0° = parallel to fingers, 90° = perpendicular to fingers",
         )
 
         st.subheader("Wrist Deviation Angle φ")
         params["wrist_angle"] = st.slider(
-            "Wrist Deviation (degrees)", -60, 60, 0, 1,
+            "Wrist Deviation (degrees)",
+            -60,
+            60,
+            0,
+            1,
             help="+ values = radial deviation, - values = ulnar deviation",
         )
 
@@ -126,16 +134,32 @@ def _render_sidebar() -> dict[str, Any]:
         # Club Properties
         st.subheader("Club Properties")
         params["clubhead_weight"] = st.number_input(
-            "Clubhead (g)", 50.0, 500.0, DEFAULT_CLUBHEAD_WEIGHT, 1.0,
+            "Clubhead (g)",
+            50.0,
+            500.0,
+            DEFAULT_CLUBHEAD_WEIGHT,
+            1.0,
         )
         params["shaft_weight"] = st.number_input(
-            "Shaft (g)", 30.0, 200.0, DEFAULT_SHAFT_WEIGHT, 1.0,
+            "Shaft (g)",
+            30.0,
+            200.0,
+            DEFAULT_SHAFT_WEIGHT,
+            1.0,
         )
         params["club_length"] = st.number_input(
-            "Length (m)", 0.5, 1.5, DEFAULT_CLUB_LENGTH, 0.01,
+            "Length (m)",
+            0.5,
+            1.5,
+            DEFAULT_CLUB_LENGTH,
+            0.01,
         )
         params["cg_distance"] = st.number_input(
-            "CG Dist (m)", 0.3, 1.2, DEFAULT_CLUBHEAD_CG_DISTANCE, 0.01,
+            "CG Dist (m)",
+            0.3,
+            1.2,
+            DEFAULT_CLUBHEAD_CG_DISTANCE,
+            0.01,
         )
 
         i_alpha, i_gamma = calculate_moments_of_inertia(
@@ -162,8 +186,13 @@ def _render_sidebar() -> dict[str, Any]:
         params["noise_type"] = st.selectbox(
             "Signal Type",
             [
-                "Golf-like Random", "Step", "Pulse", "Burst",
-                "Sinusoidal", "Random", "Polynomial",
+                "Golf-like Random",
+                "Step",
+                "Pulse",
+                "Burst",
+                "Sinusoidal",
+                "Random",
+                "Polynomial",
             ],
         )
 
@@ -251,7 +280,9 @@ def _render_main_content(params: dict[str, Any]) -> None:
     # Generate signal
     t = np.linspace(0, 1, 500)
     input_torque, error = generate_sample_torque(
-        params["noise_type"], t, st.session_state.polynomial_expression,
+        params["noise_type"],
+        t,
+        st.session_state.polynomial_expression,
     )
     if error is not None:
         st.session_state.polynomial_error = error
@@ -273,23 +304,38 @@ def _render_main_content(params: dict[str, Any]) -> None:
 
         if plot_type == "Torque":
             plot_fig = plot_torque(
-                t, input_torque, params["grip_angle"], params["wrist_angle"],
-                params["I_alpha"], params["I_gamma"],
-                params["show_input"], params["show_transmitted"],
-                params["show_alpha"], params["show_gamma"],
+                t,
+                input_torque,
+                params["grip_angle"],
+                params["wrist_angle"],
+                params["I_alpha"],
+                params["I_gamma"],
+                params["show_input"],
+                params["show_transmitted"],
+                params["show_alpha"],
+                params["show_gamma"],
             )
         elif plot_type == "Angular Acceleration":
             plot_fig = plot_acceleration(
-                t, input_torque, params["grip_angle"], params["wrist_angle"],
-                params["I_alpha"], params["I_gamma"],
-                params["show_alpha"], params["show_gamma"],
+                t,
+                input_torque,
+                params["grip_angle"],
+                params["wrist_angle"],
+                params["I_alpha"],
+                params["I_gamma"],
+                params["show_alpha"],
+                params["show_gamma"],
             )
         else:  # Transmission Ratio
             plot_fig = plot_transmission_sweep(
-                params["grip_angle"], params["wrist_angle"],
-                params["I_alpha"], params["I_gamma"],
-                params["show_transmission"], params["show_velocity"],
-                params["show_accel_alpha"], params["show_accel_gamma"],
+                params["grip_angle"],
+                params["wrist_angle"],
+                params["I_alpha"],
+                params["I_gamma"],
+                params["show_transmission"],
+                params["show_velocity"],
+                params["show_accel_alpha"],
+                params["show_accel_gamma"],
             )
 
         st.pyplot(plot_fig)
@@ -316,11 +362,13 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
         theta_grip_rad = np.radians(grip_angle)
         phi_wrist_rad = np.radians(wrist_angle)
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad, theta_grip_rad,
+            phi_wrist_rad,
+            theta_grip_rad,
         )
         torque_transmitted = np.mean(input_torque) * tau_ratio
         torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-            torque_transmitted, theta_grip_rad,
+            torque_transmitted,
+            theta_grip_rad,
         )
 
         pct_alpha = np.abs(np.sin(theta_grip_rad)) * 100

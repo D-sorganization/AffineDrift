@@ -7,7 +7,6 @@ from pathlib import Path
 
 import requests
 
-
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
