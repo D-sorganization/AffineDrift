@@ -266,20 +266,41 @@ def _draw_grip_angle_arc(
     ax.plot(arc_x, arc_y, "g-", linewidth=2.5, zorder=8)
 
     ax.arrow(
-        arc_center_x, arc_center_y, arc_radius, 0,
-        head_width=0.012, head_length=0.018, fc="k", ec="k", linewidth=2, zorder=8,
+        arc_center_x,
+        arc_center_y,
+        arc_radius,
+        0,
+        head_width=0.012,
+        head_length=0.018,
+        fc="k",
+        ec="k",
+        linewidth=2,
+        zorder=8,
     )
     ax.arrow(
-        arc_center_x, arc_center_y,
-        arc_radius * np.cos(theta_grip_rad), arc_radius * np.sin(theta_grip_rad),
-        head_width=0.012, head_length=0.018, fc="r", ec="r", linewidth=2, zorder=8,
+        arc_center_x,
+        arc_center_y,
+        arc_radius * np.cos(theta_grip_rad),
+        arc_radius * np.sin(theta_grip_rad),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
     )
 
     label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad / 2) * 0.7
     label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad / 2) * 0.7
     ax.text(
-        label_x, label_y + 0.02, r"$\theta_{grip}$",
-        color="g", fontsize=13, ha="center", fontweight="bold", zorder=9,
+        label_x,
+        label_y + 0.02,
+        r"$\theta_{grip}$",
+        color="g",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
     )
 
 
@@ -306,22 +327,42 @@ def _draw_wrist_angle_arc(
     ax.plot(w_arc_x, w_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
 
     ax.arrow(
-        center_x, center_y,
-        radius * np.cos(hand_axis_angle), radius * np.sin(hand_axis_angle),
-        head_width=0.012, head_length=0.018, fc="r", ec="r", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius * np.cos(hand_axis_angle),
+        radius * np.sin(hand_axis_angle),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
     )
     ax.arrow(
-        center_x, center_y,
-        radius * np.cos(forearm_axis_angle), radius * np.sin(forearm_axis_angle),
-        head_width=0.012, head_length=0.018, fc="b", ec="b", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius * np.cos(forearm_axis_angle),
+        radius * np.sin(forearm_axis_angle),
+        head_width=0.012,
+        head_length=0.018,
+        fc="b",
+        ec="b",
+        linewidth=2,
+        zorder=8,
     )
 
     phi_mid = (hand_axis_angle + forearm_axis_angle) / 2
     phi_label_x = center_x + radius * np.cos(phi_mid) * 0.7
     phi_label_y = center_y + radius * np.sin(phi_mid) * 0.7
     ax.text(
-        phi_label_x, phi_label_y + 0.02, r"$\phi$",
-        color="b", fontsize=13, ha="center", fontweight="bold", zorder=9,
+        phi_label_x,
+        phi_label_y + 0.02,
+        r"$\phi$",
+        color="b",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
     )
 
 
@@ -347,37 +388,53 @@ def plot_torque(
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
     _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad, theta_grip_rad,
+        phi_wrist_rad,
+        theta_grip_rad,
     )
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-        torque_transmitted, theta_grip_rad,
+        torque_transmitted,
+        theta_grip_rad,
     )
 
     if show_input:
         ax.plot(
-            t, input_torque, label="Input Torque (forearm)",
-            color="gray", alpha=0.7, linewidth=1.5,
+            t,
+            input_torque,
+            label="Input Torque (forearm)",
+            color="gray",
+            alpha=0.7,
+            linewidth=1.5,
         )
     if show_transmitted:
         ax.plot(
-            t, torque_transmitted, label=f"Transmitted (ratio={tau_ratio:.3f})",
-            color="purple", linewidth=2,
+            t,
+            torque_transmitted,
+            label=f"Transmitted (ratio={tau_ratio:.3f})",
+            color="purple",
+            linewidth=2,
         )
     if show_alpha:
         ax.plot(
-            t, torque_alpha, label="τ_α (higher MOI axis)",
-            color="red", linewidth=2,
+            t,
+            torque_alpha,
+            label="τ_α (higher MOI axis)",
+            color="red",
+            linewidth=2,
         )
     if show_gamma:
         ax.plot(
-            t, torque_gamma, label="τ_γ (lowest MOI axis)",
-            color="blue", linewidth=2,
+            t,
+            torque_gamma,
+            label="τ_γ (lowest MOI axis)",
+            color="blue",
+            linewidth=2,
         )
 
     ax.set_title(
         f"Torque vs Time (Grip: {grip_angle_deg:.0f}°, Wrist: {wrist_angle_deg:.0f}°)",
-        fontsize=12, fontweight="bold",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.set_xlabel("Time (s)", fontsize=10)
     ax.set_ylabel("Torque (N·m)", fontsize=10)
@@ -408,30 +465,41 @@ def plot_acceleration(
     phi_wrist_rad = np.radians(wrist_angle_deg)
 
     _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad, theta_grip_rad,
+        phi_wrist_rad,
+        theta_grip_rad,
     )
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-        torque_transmitted, theta_grip_rad,
+        torque_transmitted,
+        theta_grip_rad,
     )
     accel_alpha = torque_alpha / i_alpha if i_alpha > EPSILON else np.zeros_like(torque_alpha)
     accel_gamma = torque_gamma / i_gamma if i_gamma > EPSILON else np.zeros_like(torque_gamma)
 
     if show_alpha:
         ax.plot(
-            t, accel_alpha, label=f"α_α (I_α={i_alpha:.4f})",
-            color="red", linewidth=2, linestyle="--",
+            t,
+            accel_alpha,
+            label=f"α_α (I_α={i_alpha:.4f})",
+            color="red",
+            linewidth=2,
+            linestyle="--",
         )
     if show_gamma:
         ax.plot(
-            t, accel_gamma, label=f"α_γ (I_γ={i_gamma:.4f})",
-            color="blue", linewidth=2, linestyle="--",
+            t,
+            accel_gamma,
+            label=f"α_γ (I_γ={i_gamma:.4f})",
+            color="blue",
+            linewidth=2,
+            linestyle="--",
         )
 
     ax.set_title(
         f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}°, "
         f"Wrist: {wrist_angle_deg:.0f}°)",
-        fontsize=12, fontweight="bold",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.set_xlabel("Time (s)", fontsize=10)
     ax.set_ylabel("Angular Acceleration (rad/s²)", fontsize=10)
@@ -487,42 +555,64 @@ def plot_transmission_sweep(
 
     if show_transmission:
         ax.plot(
-            phi_sweep, tau_ratios, label="Torque Transmission Ratio (τ_out/τ_in)",
-            color="purple", linewidth=2.5,
+            phi_sweep,
+            tau_ratios,
+            label="Torque Transmission Ratio (τ_out/τ_in)",
+            color="purple",
+            linewidth=2.5,
         )
     if show_velocity:
         ax.plot(
-            phi_sweep, omega_ratios, label="Velocity Ratio (ω_out/ω_in)",
-            color="orange", linewidth=2, linestyle="--",
+            phi_sweep,
+            omega_ratios,
+            label="Velocity Ratio (ω_out/ω_in)",
+            color="orange",
+            linewidth=2,
+            linestyle="--",
         )
     if show_accel_alpha:
         ax.plot(
-            phi_sweep, accel_alpha_ratios, label="Accel_α ratio (rad/s²)/(N·m)",
-            color="red", linewidth=1.5, alpha=0.7,
+            phi_sweep,
+            accel_alpha_ratios,
+            label="Accel_α ratio (rad/s²)/(N·m)",
+            color="red",
+            linewidth=1.5,
+            alpha=0.7,
         )
     if show_accel_gamma:
         ax.plot(
-            phi_sweep, accel_gamma_ratios, label="Accel_γ ratio (rad/s²)/(N·m)",
-            color="blue", linewidth=1.5, alpha=0.7,
+            phi_sweep,
+            accel_gamma_ratios,
+            label="Accel_γ ratio (rad/s²)/(N·m)",
+            color="blue",
+            linewidth=1.5,
+            alpha=0.7,
         )
 
     # Mark current wrist angle
     current_idx = np.argmin(np.abs(phi_sweep - wrist_angle_deg))
     ax.axvline(
-        wrist_angle_deg, color="green", linestyle=":", linewidth=2,
+        wrist_angle_deg,
+        color="green",
+        linestyle=":",
+        linewidth=2,
         label=f"Current wrist angle ({wrist_angle_deg:.0f}°)",
     )
     if show_transmission:
         ax.plot(
-            wrist_angle_deg, tau_ratios[current_idx], "go",
-            markersize=10, markerfacecolor="lime",
+            wrist_angle_deg,
+            tau_ratios[current_idx],
+            "go",
+            markersize=10,
+            markerfacecolor="lime",
         )
 
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
     ax.set_title(
         f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}°)",
-        fontsize=12, fontweight="bold",
+        fontsize=12,
+        fontweight="bold",
     )
     ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
     ax.set_ylabel("Transmission Ratio", fontsize=10)

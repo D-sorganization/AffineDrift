@@ -1,7 +1,5 @@
 """Tests for the fix_html_validation tool."""
 
-from pathlib import Path
-
 # Add project root to path to ensure src module can be imported
 
 from src.tools.fix_html_validation import (

@@ -11,7 +11,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-
 from src.tools.utils import (
     get_python_files,
     setup_logging,
