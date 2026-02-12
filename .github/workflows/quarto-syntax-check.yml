@@ -20,7 +20,9 @@ jobs:
           python-version: "3.12"
 
       - name: Run Quarto Syntax Scanner
-        run: python3 scripts/scan_quarto_syntax.py
+        run: |
+          export PYTHONPATH=$PYTHONPATH:.
+          python3 scripts/scan_quarto_syntax.py
 
       # Assessment E: Security scanning for dependency vulnerabilities
       - name: Audit Python Dependencies
