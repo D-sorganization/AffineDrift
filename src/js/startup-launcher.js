@@ -121,7 +121,7 @@
               <path class="ad-splash-path" d="M30 90 Q60 30 90 90" fill="none" stroke-width="3"/>
             </svg>
           </div>
-          <h1 class="ad-splash-title">AffineDrift</h1>
+          <p class="ad-splash-title" role="heading" aria-level="2">AffineDrift</p>
           <p class="ad-splash-tagline">Control Theory Meets Biomechanics</p>
         </div>
 
@@ -427,7 +427,7 @@
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
     Object.entries(summary).forEach(function ([key, value]) {
-      console.log(`%c${key}: %c${value}`, 'color: #666;', 'color: #0f4c75; font-weight: bold;');
+      console.info(`%c${key}: %c${value}`, 'color: #666;', 'color: #0f4c75; font-weight: bold;');
     });
     console.groupEnd();
 
@@ -440,7 +440,7 @@
    */
   function log(...args) {
     if (CONFIG.DEBUG_MODE) {
-      console.log('[AffineDrift Startup]', ...args);
+      console.info('[AffineDrift Startup]', ...args);
     }
   }
 

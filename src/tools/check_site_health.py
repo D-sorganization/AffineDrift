@@ -14,6 +14,7 @@ The script will:
 - Optionally generate a sitemap
 """
 
+import argparse
 import sys
 from pathlib import Path
 from typing import Any, cast
@@ -28,7 +29,31 @@ logger = setup_logging(__name__)
 DOCS_DIR = Path("docs")
 
 
-def check_site_health() -> None:
+def parse_fail_on(raw: str) -> set[str]:
+    """Parse --fail-on input into a normalized set."""
+    normalized = {item.strip().lower() for item in raw.split(",") if item.strip()}
+    aliases = {"all": {"broken", "orphaned"}}
+    resolved: set[str] = set()
+    for item in normalized:
+        if item in aliases:
+            resolved.update(aliases[item])
+        else:
+            resolved.add(item)
+    return resolved
+
+
+def is_inside_quarto_alternate_formats(tag: Any) -> bool:
+    """Return True when the tag sits inside Quarto's alternate-format nav."""
+    current = tag
+    while current is not None:
+        classes = current.get("class", []) if hasattr(current, "get") else []
+        if isinstance(classes, list) and "quarto-alternate-formats" in classes:
+            return True
+        current = getattr(current, "parent", None)
+    return False
+
+
+def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: bool) -> int:
     """Scans the docs directory for HTML files and verifies internal links.
     Generates a site map and reports broken links and orphaned files.
     """
@@ -81,6 +106,9 @@ def check_site_health() -> None:
 
             # Find all links
             for a in soup.find_all("a", href=True):
+                if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(a):
+                    continue
+
                 href_value = cast("Any", a).get("href")
                 href = str(href_value) if href_value is not None else ""
 
@@ -150,7 +178,8 @@ def check_site_health() -> None:
                 link["href"],
                 link["text"],
             )
-        # Don't fail on broken links - they're warnings
+        if "broken" in fail_on:
+            has_errors = True
     else:
         logger.info("No broken links found")
 
@@ -159,13 +188,43 @@ def check_site_health() -> None:
         logger.warning("Found %d orphaned files:", len(orphaned_files))
         for orphaned in sorted(orphaned_files):
             logger.warning("  %s", orphaned)
-        # Don't fail on orphaned files - they're just warnings
+        if "orphaned" in fail_on:
+            has_errors = True
     else:
         logger.info("No orphaned files found")
 
+    logger.info(
+        "Site health summary: broken_links=%d orphaned_files=%d fail_on=%s",
+        len(broken_links),
+        len(orphaned_files),
+        ",".join(sorted(fail_on)) or "none",
+    )
+
     if has_errors:
-        sys.exit(1)
+        return 1
+    return 0
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Check generated docs site health")
+    parser.add_argument(
+        "--fail-on",
+        default="",
+        help="Comma-separated: broken,orphaned,all. Empty means warning-only.",
+    )
+    parser.add_argument(
+        "--include-quarto-alternate-formats",
+        action="store_true",
+        help="Include links inside Quarto 'Other Formats' blocks in link checks.",
+    )
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
-    check_site_health()
+    args = parse_args()
+    fail_on = parse_fail_on(args.fail_on)
+    exit_code = check_site_health(
+        fail_on=fail_on,
+        ignore_quarto_alternate_formats=not args.include_quarto_alternate_formats,
+    )
+    sys.exit(exit_code)

@@ -4,19 +4,19 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.github/**'
+      - "docs/**"
+      - "**.md"
+      - "LICENSE"
+      - ".gitignore"
+      - ".github/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - 'LICENSE'
-      - '.gitignore'
-      - '.github/**'
+      - "docs/**"
+      - "**.md"
+      - "LICENSE"
+      - ".gitignore"
+      - ".github/**"
   workflow_dispatch:
 
 concurrency:
@@ -68,20 +68,19 @@ jobs:
 
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
+      - name: Verify frontend asset sync
+        run: python3 scripts/sync_frontend_assets.py --check
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
             find tools -name "requirements.txt" -exec pip install -r {} \;
           fi
       - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
-
       - name: Verify Code Quality
         run: python src/tools/code_quality_check.py
 
-      - name: Verify Site Health
-        continue-on-error: true
-        run: |
-          python src/tools/check_site_health.py || echo "::warning::Site health check found issues - please review broken links"
+      - name: Verify Site Health (Broken Links Blocking)
+        run: python src/tools/check_site_health.py --fail-on broken
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
       # Non-blocking: Script not present in all repos
@@ -176,7 +175,7 @@ jobs:
   website-lint:
     needs: quality-gate
     runs-on: ubuntu-latest
-    continue-on-error: true  # Non-blocking: HTML validation errors need separate fix
+    continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -206,5 +205,5 @@ jobs:
   #         command: |
   #           addpath('matlab');
   #           run_all
-# Cost optimization enforced
 
+# Cost optimization enforced
