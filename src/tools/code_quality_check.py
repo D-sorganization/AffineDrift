@@ -6,6 +6,8 @@ import re
 import sys
 from pathlib import Path
 
+from src.core.contracts import require
+
 
 # ANSI colors for terminal output
 class Colors:
@@ -230,6 +232,7 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
 
 def check_file(filepath: Path) -> list[tuple[int, str, str]]:
     """Check a Python file for quality issues."""
+    require(filepath is not None, "filepath must not be None")
     try:
         content = filepath.read_text(encoding="utf-8")
         lines = content.splitlines()

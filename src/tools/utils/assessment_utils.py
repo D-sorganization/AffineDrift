@@ -6,6 +6,8 @@ and mappings used by various assessment and reporting scripts.
 
 from __future__ import annotations
 
+from src.core.contracts import require
+
 # Assessment definitions (Standardized A-O)
 ASSESSMENT_DEFINITIONS = {
     "A": {"name": "Architecture", "description": "Code structure and organization"},
@@ -130,6 +132,7 @@ def classify_assessment_category(source_name: str, description: str = "") -> str
     Returns:
         A standardized category name.
     """
+    require(len(source_name) > 0, "source_name must not be empty")
     text = (source_name + " " + description).lower()
 
     if "architecture" in text or "implementation" in text or "Assessment_A" in source_name:

@@ -24,12 +24,14 @@ from urllib.parse import urldefrag
 from bs4 import BeautifulSoup
 
 try:
+    from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
+    from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
 
@@ -213,6 +215,7 @@ def check_site_health(
     Generates a site map and reports broken links and orphaned files.
     """
     active_docs_dir = docs_dir if docs_dir is not None else DOCS_DIR
+    require(active_docs_dir.exists(), "docs directory must exist")
     html_files = _collect_html_files(docs_dir=active_docs_dir)
     all_files = _collect_all_files(docs_dir=active_docs_dir)
     _log_site_map(html_files)

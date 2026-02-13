@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from src.core.contracts import require
+
 
 def load_config(repo_root: Path, config_name: str) -> dict:
     """Load a JSON config from the ``config/`` directory.
@@ -27,6 +29,8 @@ def load_config(repo_root: Path, config_name: str) -> dict:
     Returns:
         Parsed JSON as a dictionary.
     """
+    require(repo_root is not None, "repo_root must not be None")
+    require(len(config_name) > 0, "config_name must not be empty")
     config_path = repo_root / "config" / config_name
     return json.loads(config_path.read_text(encoding="utf-8"))
 
@@ -70,6 +74,8 @@ def collect_matching_files(
     Returns:
         Sorted list of matching ``Path`` objects.
     """
+    require(repo_root.is_dir(), "repo_root must be an existing directory")
+    require(len(include_roots) > 0, "include_roots must not be empty")
     matched: list[Path] = []
     for path in repo_root.rglob("*"):
         if not path.is_file():

@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 
 # Add project root to path for imports
+from src.core.contracts import require
 from src.tools.utils import find_html_files, process_file_content, setup_logging
 from src.tools.utils.cli_contracts import ensure_existing_dir
 
@@ -148,6 +149,7 @@ def apply_all_fixes(content: str) -> str:
     Returns:
         Fixed HTML content.
     """
+    require(len(content) > 0, "HTML content must not be empty")
     # Apply fixes in order
     content = fix_crossorigin_attribute(content)
     content = remove_redundant_role_link(content)

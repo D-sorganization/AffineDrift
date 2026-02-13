@@ -3,6 +3,8 @@ from typing import Any
 
 import numpy as np
 
+from src.core.contracts import check_finite_array, check_positive, require
+
 GRAVITY_M_S2 = 9.81
 
 
@@ -27,6 +29,9 @@ class DynamicalSystem(ABC):
 class SimplePendulum(DynamicalSystem):
     def __init__(self, m: float = 1.0, L: float = 1.0, g: float = GRAVITY_M_S2) -> None:
         """Initialize simple pendulum."""
+        check_positive(m, "mass")
+        check_positive(L, "length")
+        check_positive(g, "gravitational acceleration")
         self.m = m
         self.L = L
         self.g = g
@@ -35,6 +40,8 @@ class SimplePendulum(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute simple pendulum dynamics."""
+        check_finite_array(x, "state vector")
+        require(len(x) == 2, "state vector must have 2 elements (theta, omega)")
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, list | tuple | np.ndarray) else u
@@ -66,6 +73,9 @@ class SpacecraftRendezvous(DynamicalSystem):
 
     def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
         """Initialize spacecraft rendezvous system."""
+        check_positive(mu, "gravitational parameter")
+        check_positive(r_t, "orbit radius")
+        check_positive(m, "spacecraft mass")
         self.mu = mu
         self.r_t = r_t  # Orbit radius (m), e.g., ISS ~400km altitude
         self.n = np.sqrt(mu / r_t**3)  # Mean motion
@@ -191,6 +201,9 @@ class PlanarQuadrotor(DynamicalSystem):
         g: float = GRAVITY_M_S2,
     ) -> None:
         """Initialize planar quadrotor."""
+        check_positive(m, "mass")
+        check_positive(L, "arm length")
+        check_positive(moment_inertia, "moment of inertia")
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
@@ -264,6 +277,10 @@ class RobotArm(DynamicalSystem):
         g: float = GRAVITY_M_S2,
     ) -> None:
         """Initialize robot arm."""
+        check_positive(m1, "mass 1")
+        check_positive(m2, "mass 2")
+        check_positive(l1, "link length 1")
+        check_positive(l2, "link length 2")
         self.m1 = m1
         self.m2 = m2
         self.l1 = l1

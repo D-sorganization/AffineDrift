@@ -12,6 +12,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from src.core.contracts import ensure, require
+
 
 def get_python_metrics(filepath: Path) -> dict[str, int]:
     """Extract metrics from a Python file using AST analysis.
@@ -23,6 +25,7 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
         Dictionary containing metrics: functions, classes, docstrings,
         typed_returns, and branches.
     """
+    require(filepath is not None, "filepath must not be None")
     metrics = {
         "functions": 0,
         "classes": 0,
@@ -99,9 +102,12 @@ def calculate_complexity(metrics: dict[str, int]) -> float:
     Returns:
         Average number of branches per function.
     """
+    require(metrics is not None, "metrics dict must not be None")
     funcs = metrics.get("functions", 0)
     branches = metrics.get("branches", 0)
-    return branches / funcs if funcs > 0 else 0.0
+    result = branches / funcs if funcs > 0 else 0.0
+    ensure(result >= 0, "complexity must be non-negative")
+    return result
 
 
 def assess_error_handling_content(content: str) -> dict[str, int]:
