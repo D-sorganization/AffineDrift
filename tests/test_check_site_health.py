@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 
 # Add project root to path
-from src.tools.check_site_health import check_site_health, parse_fail_on
+from src.tools.check_site_health import BrokenLinkRecord, check_site_health, main, parse_fail_on
 
 
 @pytest.fixture
@@ -261,3 +261,36 @@ def test_parse_fail_on_invalid_value_raises():
     """Test parse_fail_on rejects unsupported values."""
     with pytest.raises(ValueError, match="Unsupported"):
         parse_fail_on("broken,invalid")
+
+
+def test_main_returns_2_for_missing_docs_dir(monkeypatch) -> None:
+    """CLI should fail-fast when --docs-dir does not exist."""
+    monkeypatch.setattr(
+        "sys.argv",
+        ["check_site_health.py", "--docs-dir", "missing-directory"],
+    )
+    assert main() == 2
+
+
+def test_main_accepts_docs_dir_and_returns_success(tmp_path, monkeypatch) -> None:
+    """CLI should accept a valid docs dir and run health checks."""
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    create_html_file(docs_dir, "index.html", "<html></html>")
+    monkeypatch.setattr(
+        "sys.argv",
+        ["check_site_health.py", "--docs-dir", str(docs_dir)],
+    )
+    assert main() == 0
+
+
+def test_broken_link_record_is_typed_model() -> None:
+    """Broken link findings should expose typed attributes."""
+    finding = BrokenLinkRecord(
+        source="index.html",
+        target="missing.html",
+        href="missing.html",
+        text="Missing",
+    )
+    assert finding.source == "index.html"
+    assert finding.target == "missing.html"

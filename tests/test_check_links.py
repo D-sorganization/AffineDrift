@@ -6,6 +6,7 @@ from src.tools.check_links import (
     _is_broken_link,
     _normalize_internal_url,
     _should_scan_file,
+    find_links,
 )
 
 
@@ -64,3 +65,42 @@ def test_is_broken_link_detects_missing_internal_target(tmp_path: Path) -> None:
     source.write_text("", encoding="utf-8")
 
     assert _is_broken_link(root_path=root, file_path=source, link="missing.html")
+
+
+def test_find_links_extracts_precise_line_numbers(tmp_path: Path) -> None:
+    """Mixed link syntax should map to exact source lines."""
+    file_path = tmp_path / "page.qmd"
+    file_path.write_text(
+        "\n".join(
+            [
+                "[Guide](guide.html)",
+                "![Diagram](assets/plot.png)",
+                '<a href="about.html">About</a>',
+                '<img src="assets/photo.png" alt="Photo">',
+            ],
+        ),
+        encoding="utf-8",
+    )
+
+    assert find_links(file_path) == [
+        ("guide.html", 1),
+        ("assets/plot.png", 2),
+        ("about.html", 3),
+        ("assets/photo.png", 4),
+    ]
+
+
+def test_find_links_keeps_duplicate_links_on_different_lines(tmp_path: Path) -> None:
+    """Same URL on multiple lines should preserve per-line diagnostics."""
+    file_path = tmp_path / "dup.qmd"
+    file_path.write_text(
+        "\n".join(
+            [
+                "[One](shared.html)",
+                "[Two](shared.html)",
+            ],
+        ),
+        encoding="utf-8",
+    )
+
+    assert find_links(file_path) == [("shared.html", 1), ("shared.html", 2)]
