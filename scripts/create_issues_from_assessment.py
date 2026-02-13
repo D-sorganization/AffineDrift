@@ -15,6 +15,7 @@ from typing import Any
 
 from src.tools.utils import setup_logging
 from src.tools.utils.assessment_utils import classify_assessment_category
+from src.tools.utils.cli_contracts import ensure_existing_file
 from src.tools.utils.issue_utils import format_issue_body, get_repo_short_name
 
 logger = setup_logging(__name__)
@@ -177,8 +178,14 @@ def main():
 
     severities = [s.strip().upper() for s in args.severity.split(",")]
 
+    try:
+        input_path = ensure_existing_file(str(args.input), value_name="--input")
+    except ValueError as exc:
+        logger.error(str(exc))
+        sys.exit(2)
+
     exit_code = process_assessment_findings(
-        args.input,
+        input_path,
         severities,
         args.check_existing,
         args.dry_run,
