@@ -1,6 +1,6 @@
 /**
  * AffineDrift - Interactive Bibliography
- * Loads and displays searchable bibliography from YAML data
+ * Loads and displays searchable bibliography from JSON data.
  */
 
 (function () {
@@ -9,6 +9,13 @@
   let bibliographyData = [];
   let filteredData = [];
   let currentSort = "year-desc"; // Default sort: newest first
+  const TYPE_CLASS_MAP = {
+    paper: "type-paper",
+    book: "type-book",
+    article: "type-article",
+    thesis: "type-thesis",
+    conference: "type-conference",
+  };
 
   // Initialize when DOM is ready
   if (document.readyState === "loading") {
@@ -23,12 +30,38 @@
     setupSortControls();
   }
 
-  /**
-   * Load bibliography data from YAML file
-   */
-  /**
-   * Load bibliography data from JSON file
-   */
+  function toLowerSafe(value) {
+    return String(value || "").toLowerCase();
+  }
+
+  function getEntryById(id) {
+    return bibliographyData.find((entry) => entry.id === id);
+  }
+
+  function renderLoadError(error) {
+    const listContainer = document.getElementById("bib-list");
+    if (!listContainer) return;
+
+    listContainer.innerHTML = `
+      <div class="bib-empty-state">
+        <p>Error loading bibliography data.</p>
+        <p class="bib-empty-state-details">${error.message}</p>
+      </div>
+    `;
+  }
+
+  function matchesQuery(entry, query) {
+    const searchableFields = [
+      entry.title,
+      entry.description,
+      entry.venue,
+      entry.year,
+      ...(entry.authors || []),
+      ...(entry.concepts || []),
+    ];
+    return searchableFields.some((field) => toLowerSafe(field).includes(query));
+  }
+
   async function loadBibliography() {
     try {
       // Updated to fetch JSON relative to the site root or current location
@@ -45,15 +78,7 @@
       await processResponse(response);
     } catch (error) {
       console.error("Error loading bibliography:", error);
-      const listContainer = document.getElementById("bib-list");
-      if (listContainer) {
-        listContainer.innerHTML = `
-          <div class="bib-empty-state">
-            <p>Error loading bibliography data.</p>
-            <p class="bib-empty-state-details">${error.message}</p>
-          </div>
-        `;
-      }
+      renderLoadError(error);
     }
   }
 
@@ -134,7 +159,7 @@
     document.querySelectorAll(".bib-entry").forEach((el) => {
       el.addEventListener("click", () => {
         const id = el.dataset.id;
-        const entry = bibliographyData.find((e) => e.id === id);
+        const entry = getEntryById(id);
         if (entry) {
           showDetails(entry);
           // Track entry click in metrics
@@ -150,14 +175,7 @@
    * Get CSS class for entry type
    */
   function getTypeClass(type) {
-    const typeMap = {
-      paper: "type-paper",
-      book: "type-book",
-      article: "type-article",
-      thesis: "type-thesis",
-      conference: "type-conference",
-    };
-    return typeMap[type?.toLowerCase()] || "type-other";
+    return TYPE_CLASS_MAP[type?.toLowerCase()] || "type-other";
   }
 
   /**
@@ -262,7 +280,7 @@
             <ul class="detail-related-list">
               ${entry.related_ids
                 .map((id) => {
-                  const related = bibliographyData.find((e) => e.id === id);
+                  const related = getEntryById(id);
                   return related
                     ? `<li><a href="#" data-related-id="${id}">${
                         related.title || id
@@ -285,7 +303,7 @@
       link.addEventListener("click", (e) => {
         e.preventDefault();
         const relatedId = link.dataset.relatedId;
-        const relatedEntry = bibliographyData.find((e) => e.id === relatedId);
+        const relatedEntry = getEntryById(relatedId);
         if (relatedEntry) {
           showDetails(relatedEntry);
 
@@ -314,7 +332,7 @@
     searchInput.addEventListener("input", (e) => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
-        const query = e.target.value.toLowerCase().trim();
+        const query = toLowerSafe(e.target.value).trim();
         filterBibliography(query);
         // Track search in metrics
         if (query.length >= 2 && window.AffineDriftMetrics) {
@@ -424,39 +442,7 @@
       filteredData = [...bibliographyData];
     } else {
       filteredData = bibliographyData.filter((entry) => {
-        // Search in title
-        if (entry.title && entry.title.toLowerCase().includes(query))
-          return true;
-
-        // Search in authors
-        if (
-          entry.authors &&
-          entry.authors.some((a) => a.toLowerCase().includes(query))
-        )
-          return true;
-
-        // Search in concepts
-        if (
-          entry.concepts &&
-          entry.concepts.some((c) => c.toLowerCase().includes(query))
-        )
-          return true;
-
-        // Search in description
-        if (
-          entry.description &&
-          entry.description.toLowerCase().includes(query)
-        )
-          return true;
-
-        // Search in venue
-        if (entry.venue && entry.venue.toLowerCase().includes(query))
-          return true;
-
-        // Search in year
-        if (entry.year && entry.year.toString().includes(query)) return true;
-
-        return false;
+        return matchesQuery(entry, query);
       });
     }
 
