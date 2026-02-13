@@ -52,7 +52,10 @@ import os
 from collections.abc import Callable
 from typing import Any, TypeVar, cast
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError:  # pragma: no cover - numpy optional for non-numeric usage
+    np = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
