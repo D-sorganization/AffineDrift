@@ -19,10 +19,6 @@ from typing import Any
 
 from src.core.contracts import require
 
-from src.core.contracts import require
-
-from src.core.contracts import require
-
 
 def load_config(repo_root: Path, config_name: str) -> dict[str, Any]:
     """Load a JSON config from the ``config/`` directory.
