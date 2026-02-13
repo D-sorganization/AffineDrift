@@ -1,0 +1,339 @@
+"""Per-line MATLAB quality checks.
+
+This module contains the line-level static analysis checks extracted from
+MATLABQualityChecker. Each check appends issues to the caller's list.
+
+Functions:
+- update_function_scope: Track function/block nesting depth
+- append_function_contract_issues: Docstring and arguments block checks
+- append_banned_pattern_issues: Banned placeholder comment detection
+- append_anti_pattern_issues: eval, assignin, global, etc.
+- append_magic_number_issues: Unexplained numeric literals
+- append_function_scope_issues: clear/clc/close-all inside functions
+- analyze_matlab_file: Orchestrate all checks on a single .m file
+"""
+
+from __future__ import annotations
+
+import math
+import re
+from pathlib import Path
+
+
+def update_function_scope(
+    line_stripped: str,
+    *,
+    is_comment: bool,
+    in_function: bool,
+    nesting_level: int,
+) -> tuple[bool, int]:
+    """Track whether analysis is inside a function and current nesting depth."""
+    if is_comment:
+        return in_function, nesting_level
+
+    if re.match(
+        (
+            r"\b(function|if|for|while|switch|try|parfor|classdef|arguments|"
+            r"properties|methods|events)\b"
+        ),
+        line_stripped,
+    ):
+        if line_stripped.startswith("function"):
+            in_function = True
+        nesting_level += 1
+
+    if re.match(r"\bend\b", line_stripped):
+        nesting_level -= 1
+        if nesting_level <= 0:
+            return False, 0
+
+    return in_function, nesting_level
+
+
+def append_function_contract_issues(
+    *,
+    lines: list[str],
+    line_number: int,
+    line_stripped: str,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Check function-level contracts: docstring and arguments block."""
+    if not line_stripped.startswith("function"):
+        return
+
+    line_index = line_number - 1
+    has_docstring = False
+    for next_line in lines[line_index + 1 : min(line_index + 5, len(lines))]:
+        candidate = next_line.strip()
+        if candidate and not candidate.startswith("%"):
+            break
+        if candidate.startswith("%") and len(candidate) > 3:
+            has_docstring = True
+            break
+    if not has_docstring:
+        issues.append(f"{file_name} (line {line_number}): Missing function docstring")
+
+    has_arguments = False
+    for next_line in lines[line_index + 1 : min(line_index + 15, len(lines))]:
+        candidate = next_line.strip()
+        if candidate.startswith("%"):
+            continue
+        if re.search(r"\barguments\b", candidate):
+            has_arguments = True
+            break
+    if not has_arguments:
+        issues.append(
+            f"{file_name} (line {line_number}): Missing arguments validation block",
+        )
+
+
+def append_banned_pattern_issues(
+    *,
+    line_stripped: str,
+    line_number: int,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Flag placeholders and temporary markers."""
+    marker_a = "TOD" + "O"
+    marker_b = "FIX" + "ME"
+    marker_c = "HAC" + "K"
+    marker_d = "XX" + "X"
+    banned_patterns = [
+        (rf"\b{marker_a}\b", "Backlog marker placeholder found"),
+        (rf"\b{marker_b}\b", "Immediate repair marker found"),
+        (rf"\b{marker_c}\b", "Temporary workaround marker found"),
+        (rf"\b{marker_d}\b", "Placeholder marker found"),
+        (r"<[A-Z_][A-Z0-9_]*>", "Angle bracket placeholder found"),
+        (r"\{\{.*?\}\}", "Template placeholder found"),
+    ]
+    for pattern, message in banned_patterns:
+        if re.search(pattern, line_stripped):
+            issues.append(f"{file_name} (line {line_number}): {message}")
+
+
+def append_anti_pattern_issues(
+    *,
+    line_stripped: str,
+    line_number: int,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Detect risky MATLAB anti-patterns."""
+    anti_patterns = [
+        (
+            r"\beval\s*\(",
+            "Avoid using eval() - potential security risk and performance issue",
+        ),
+        (r"\bassignin\s*\(", "Avoid using assignin() - violates encapsulation"),
+        (r"\bevalin\s*\(", "Avoid using evalin() - violates encapsulation"),
+        (
+            r"\bglobal\s+\w+",
+            "Global variable usage - consider passing as argument",
+        ),
+        (
+            r"\bexist\s*\(",
+            "Consider using validation or try/catch instead of exist()",
+        ),
+    ]
+    for pattern, message in anti_patterns:
+        if re.search(pattern, line_stripped):
+            issues.append(f"{file_name} (line {line_number}): {message}")
+
+    if (
+        re.search(r"^\s*load\s+\w+", line_stripped)
+        or re.search(r"^\s*load\s*\([^)]+\)", line_stripped)
+    ) and "=" not in line_stripped:
+        issues.append(
+            f"{file_name} (line {line_number}): load without output variable - "
+            "use 'data = load(...)' instead",
+        )
+
+
+def append_magic_number_issues(
+    *,
+    line_original: str,
+    line_stripped: str,
+    line_number: int,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Flag unexplained literals."""
+    magic_number_pattern = r"(?<![.\w])(?:\d+\.\d+|\d+)(?![.\w])"
+    acceptable_numbers = {
+        "0",
+        "0.0",
+        "1",
+        "1.0",
+        "2",
+        "2.0",
+        "3",
+        "3.0",
+        "4",
+        "4.0",
+        "5",
+        "5.0",
+        "10",
+        "10.0",
+        "100",
+        "100.0",
+        "1000",
+        "1000.0",
+        "0.5",
+        "0.1",
+        "0.01",
+        "0.001",
+        "0.0001",
+    }
+    pi_value = math.pi
+    half_pi = pi_value / 2.0
+    quarter_pi = pi_value / 4.0
+    standard_gravity = 9.80665
+    gravity_desc = "gravitational acceleration [m/s^2] - approximate standard gravity"
+    known_constants = {
+        f"{pi_value:.5f}": "pi constant [dimensionless] - mathematical constant",
+        f"{pi_value:.4f}": "pi constant [dimensionless] - mathematical constant",
+        f"{pi_value:.2f}": "pi constant [dimensionless] - mathematical constant",
+        f"{half_pi:.4f}": "pi/2 constant [dimensionless] - mathematical constant",
+        f"{half_pi:.2f}": "pi/2 constant [dimensionless] - mathematical constant",
+        f"{quarter_pi:.4f}": "pi/4 constant [dimensionless] - mathematical constant",
+        f"{quarter_pi:.3f}": "pi/4 constant [dimensionless] - mathematical constant",
+        f"{standard_gravity:.2f}": gravity_desc,
+        f"{standard_gravity:.1f}": gravity_desc,
+        f"{standard_gravity:.3f}": gravity_desc,
+    }
+    for number in re.findall(magic_number_pattern, line_stripped):
+        if number in known_constants:
+            issues.append(
+                f"{file_name} (line {line_number}): Magic number {number} "
+                f"({known_constants[number]}) - define as named constant",
+            )
+            continue
+        if number in acceptable_numbers:
+            continue
+        comment_index = line_original.find("%")
+        number_index = line_original.find(number)
+        if comment_index == -1 or (number_index != -1 and number_index < comment_index):
+            issues.append(
+                f"{file_name} (line {line_number}): Magic number {number} "
+                "should be defined as constant with units and source",
+            )
+
+
+def append_function_scope_issues(
+    *,
+    in_function: bool,
+    line_stripped: str,
+    line_number: int,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Flag commands that alter global MATLAB session state from within functions."""
+    if not in_function:
+        return
+
+    if re.search(r"\bclear\s+(all|global)\b", line_stripped, re.IGNORECASE):
+        issues.append(
+            f"{file_name} (line {line_number}): Avoid 'clear all' or 'clear global' "
+            "in functions - clears all variables, functions, and MEX links",
+        )
+    elif re.search(r"\bclear\b(?!\s+\w+)", line_stripped):
+        issues.append(
+            f"{file_name} (line {line_number}): Avoid 'clear' in functions - "
+            "can clear function variables",
+        )
+
+    if re.search(r"\bclc\b", line_stripped):
+        issues.append(
+            f"{file_name} (line {line_number}): Avoid 'clc' in functions - "
+            "affects user's workspace",
+        )
+    if re.search(r"\bclose\s+all\b", line_stripped):
+        issues.append(
+            f"{file_name} (line {line_number}): Avoid 'close all' in functions - "
+            "closes user's figures",
+        )
+    if re.search(r"\baddpath\s*\(", line_stripped):
+        issues.append(
+            f"{file_name} (line {line_number}): Avoid addpath in functions - "
+            "manage paths externally",
+        )
+
+
+def analyze_matlab_file(file_path: Path) -> list[str]:
+    """Analyze a single MATLAB file for quality issues.
+
+    Args:
+        file_path: Path to the MATLAB file
+
+    Returns:
+        List of quality issues found
+    """
+    issues: list[str] = []
+
+    try:
+        with file_path.open(encoding="utf-8", errors="ignore") as f:
+            content = f.read()
+            lines = content.split("\n")
+
+        in_function = False
+        nesting_level = 0
+
+        for line_number, line in enumerate(lines, 1):
+            line_stripped = line.strip()
+            line_original = line
+
+            if not line_stripped:
+                continue
+
+            is_comment = line_stripped.startswith("%")
+
+            in_function, nesting_level = update_function_scope(
+                line_stripped,
+                is_comment=is_comment,
+                in_function=in_function,
+                nesting_level=nesting_level,
+            )
+
+            append_function_contract_issues(
+                lines=lines,
+                line_number=line_number,
+                line_stripped=line_stripped,
+                file_name=file_path.name,
+                issues=issues,
+            )
+            append_banned_pattern_issues(
+                line_stripped=line_stripped,
+                line_number=line_number,
+                file_name=file_path.name,
+                issues=issues,
+            )
+            if is_comment:
+                continue
+
+            append_anti_pattern_issues(
+                line_stripped=line_stripped,
+                line_number=line_number,
+                file_name=file_path.name,
+                issues=issues,
+            )
+            append_magic_number_issues(
+                line_original=line_original,
+                line_stripped=line_stripped,
+                line_number=line_number,
+                file_name=file_path.name,
+                issues=issues,
+            )
+            append_function_scope_issues(
+                in_function=in_function,
+                line_stripped=line_stripped,
+                line_number=line_number,
+                file_name=file_path.name,
+                issues=issues,
+            )
+
+    except (FileNotFoundError, PermissionError, OSError) as e:
+        issues.append(f"{file_path.name}: Could not analyze file - {e!s}")
+
+    return issues

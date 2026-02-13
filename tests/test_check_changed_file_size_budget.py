@@ -38,6 +38,7 @@ def test_changed_files_falls_back_to_git_show_on_diff_failure(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """When merge-base diff fails, fallback should parse HEAD file list."""
+    monkeypatch.delenv("GITHUB_BASE_REF", raising=False)
     calls: list[list[str]] = []
 
     def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
@@ -49,16 +50,18 @@ def test_changed_files_falls_back_to_git_show_on_diff_failure(
     monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
     changed = check_changed_file_size_budget._changed_files(tmp_path, "HEAD~1")
     assert changed == ["scripts/check_changed_file_size_budget.py"]
-    assert calls[0][0:2] == ["git", "diff"]
-    assert calls[1][0:2] == ["git", "diff"]
-    assert calls[2][0:2] == ["git", "diff"]
-    assert calls[3][0:2] == ["git", "show"]
+    diff_show_calls = [call for call in calls if call[0:2] in (["git", "diff"], ["git", "show"])]
+    assert diff_show_calls[0][0:2] == ["git", "diff"]
+    assert diff_show_calls[1][0:2] == ["git", "diff"]
+    assert diff_show_calls[2][0:2] == ["git", "diff"]
+    assert diff_show_calls[3][0:2] == ["git", "show"]
 
 
 def test_changed_files_uses_first_non_empty_result(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """The first successful non-empty candidate command should be returned."""
+    monkeypatch.delenv("GITHUB_BASE_REF", raising=False)
     calls: list[list[str]] = []
 
     def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
@@ -73,8 +76,9 @@ def test_changed_files_uses_first_non_empty_result(
     monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
     changed = check_changed_file_size_budget._changed_files(tmp_path, "abc123")
     assert changed == ["scripts/run_assessment.py"]
-    assert calls[0][-1] == "abc123...HEAD"
-    assert calls[1][-1] == "HEAD^1...HEAD"
+    diff_calls = [call for call in calls if call[0:2] == ["git", "diff"]]
+    assert diff_calls[0][-1] == "abc123...HEAD"
+    assert diff_calls[1][-1] == "HEAD^1...HEAD"
 
 
 def test_changed_files_returns_empty_on_ci_when_all_commands_fail(
