@@ -6,7 +6,7 @@ MATLABQualityChecker. Each check appends issues to the caller's list.
 Functions:
 - update_function_scope: Track function/block nesting depth
 - append_function_contract_issues: Docstring and arguments block checks
-- append_banned_pattern_issues: TODO/FIXME/HACK placeholders
+- append_banned_pattern_issues: Banned placeholder comment detection
 - append_anti_pattern_issues: eval, assignin, global, etc.
 - append_magic_number_issues: Unexplained numeric literals
 - append_function_scope_issues: clear/clc/close-all inside functions
