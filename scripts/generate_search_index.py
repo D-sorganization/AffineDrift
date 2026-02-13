@@ -8,13 +8,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from src.tools.utils import parse_frontmatter_dict
-
-# Directories to index
-CONTENT_DIRS = [
-    ".",  # Root .qmd files
-    "articles",  # Article files
-]
+from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
 
 # Files to exclude
 EXCLUDE_FILES = {
@@ -90,11 +84,9 @@ def extract_concepts(content: str, frontmatter: dict[str, str]) -> list[str]:
 def process_file(filepath: Path) -> dict[str, object] | None:
     """Process a single Quarto markdown file."""
     try:
-        content = filepath.read_text(encoding="utf-8")
+        content, frontmatter = read_qmd_with_frontmatter(filepath)
     except Exception:
         return None
-
-    frontmatter = parse_frontmatter_dict(content)
 
     # Skip if no title
     title = frontmatter.get("title", "")
@@ -149,23 +141,17 @@ def main() -> None:
     processed = 0
     skipped = 0
 
-    for content_dir in CONTENT_DIRS:
-        dir_path = Path(content_dir)
-        if not dir_path.exists():
+    for filepath in collect_qmd_files():
+        if filepath.name in EXCLUDE_FILES:
             continue
 
-        pattern = "*.qmd"
-        for filepath in dir_path.glob(pattern):
-            if filepath.name in EXCLUDE_FILES:
-                continue
+        entry = process_file(filepath)
 
-            entry = process_file(filepath)
-
-            if entry:
-                index.append(entry)
-                processed += 1
-            else:
-                skipped += 1
+        if entry:
+            index.append(entry)
+            processed += 1
+        else:
+            skipped += 1
 
     # Sort by type, then title
     index.sort(key=lambda x: (x["type"], x["title"]))

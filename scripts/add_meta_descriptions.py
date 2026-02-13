@@ -6,6 +6,8 @@ Uses intelligent extraction from content to generate relevant descriptions.
 import re
 from pathlib import Path
 
+from src.tools.utils.content_utils import read_qmd_with_frontmatter
+
 # Manual overrides for better descriptions
 DESCRIPTION_OVERRIDES = {
     "articles/theory-part1.qmd": "Foundational derivation showing the golf swing as a control-affine mechanical system, introducing the drift/input decomposition framework for biomechanical analysis.",
@@ -115,8 +117,8 @@ def main() -> None:
             files_skipped += 1
             continue
 
-        content = filepath.read_text(encoding="utf-8")
-        if "description:" in content.split("---")[1] if content.startswith("---") else False:
+        content, frontmatter = read_qmd_with_frontmatter(filepath)
+        if not content.startswith("---") or "description" in frontmatter:
             files_skipped += 1
             continue
 

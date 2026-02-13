@@ -26,6 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 from src.tools.utils import get_python_files, setup_logging_with_timestamp
+from src.tools.utils.cli_contracts import ensure_writable_output_file
 from src.tools.utils.constants import EXCLUDE_DIRS_PYTHON
 
 logger = setup_logging_with_timestamp(__name__)
@@ -266,15 +267,31 @@ def generate_markdown_report(results, output_path):
         json.dump(results, f, indent=2)
 
 
-if __name__ == "__main__":
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for pragmatic programmer review."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--output", type=Path, default=Path("docs/assessments/pragmatic_programmer/review.md")
     )
     parser.add_argument("--json-output", type=Path)
-    args = parser.parse_args()
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run pragmatic programmer review from CLI args."""
+    args = parse_args(argv)
+    try:
+        output_path = ensure_writable_output_file(str(args.output), value_name="--output")
+    except ValueError as exc:
+        print(exc)
+        return 2
 
     repo_root = Path.cwd()
     results = run_review(repo_root)
-    generate_markdown_report(results, args.output)
-    print(f"Report generated at {args.output}")
+    generate_markdown_report(results, output_path)
+    print(f"Report generated at {output_path}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

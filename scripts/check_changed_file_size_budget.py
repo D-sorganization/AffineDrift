@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Fail CI on net-new over-budget changed files."""
+
+from __future__ import annotations
+
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+try:
+    from scripts.check_module_size_budget import line_count
+    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
+except ModuleNotFoundError:
+    repo_root = Path(__file__).resolve().parent.parent
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from scripts.check_module_size_budget import line_count
+    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
+
+
+def _merge_base(repo_root: Path) -> str:
+    """Resolve a stable merge base for changed-file comparisons."""
+    candidates = ["origin/main", "main", "HEAD~1"]
+    for candidate in candidates:
+        try:
+            result = subprocess.run(
+                ["git", "merge-base", "HEAD", candidate],
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            sha = result.stdout.strip()
+            if sha:
+                return sha
+        except subprocess.CalledProcessError:
+            continue
+    return "HEAD~1"
+
+
+def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
+    """Return repo-relative changed file paths."""
+    ci_base_ref = os.getenv("GITHUB_BASE_REF", "").strip()
+    if ci_base_ref:
+        subprocess.run(
+            ["git", "fetch", "--depth=1", "origin", ci_base_ref],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    commands: list[list[str]] = []
+    if ci_base_ref:
+        commands.append(
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", f"origin/{ci_base_ref}...HEAD"]
+        )
+    commands.extend(
+        [
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base_ref}...HEAD"],
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^1...HEAD"],
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^2...HEAD"],
+            ["git", "show", "--name-only", "--pretty=", "--diff-filter=ACMR", "HEAD"],
+        ]
+    )
+    for cmd in commands:
+        try:
+            result = subprocess.run(
+                cmd,
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+            if files:
+                return files
+        except subprocess.CalledProcessError:
+            continue
+    if os.getenv("GITHUB_ACTIONS") == "true":
+        return []
+    return []
+
+
+def main() -> int:
+    """Check changed files against the module size budget configuration."""
+    repo_root = Path(__file__).resolve().parent.parent
+    config = load_config(repo_root, "module_size_budget.json")
+    max_by_ext = {k.lower(): int(v) for k, v in config["max_lines_by_extension"].items()}
+    explicit_limits = {k: int(v) for k, v in config["explicit_limits"].items()}
+    include_roots = config["include_roots"]
+    exclude_substrings = config["exclude_substrings"]
+
+    base_ref = _merge_base(repo_root)
+    changed = _changed_files(repo_root, base_ref)
+
+    violations: list[str] = []
+    checked = 0
+
+    for rel in changed:
+        if not is_included(rel, include_roots, exclude_substrings):
+            continue
+        if any(excl in rel for excl in exclude_substrings):
+            continue
+        path = repo_root / rel
+        if not path.exists() or not path.is_file():
+            continue
+
+        if rel in explicit_limits:
+            max_lines = explicit_limits[rel]
+        else:
+            max_lines = max_by_ext.get(path.suffix.lower())
+            if max_lines is None:
+                continue
+
+        checked += 1
+        lines = line_count(path)
+        if lines > max_lines:
+            violations.append(f"{rel}: {lines} > {max_lines}")
+
+    return report_results(
+        "Changed-file module size budget check",
+        files_scanned=checked,
+        details=[f"base_ref={base_ref}", f"changed_candidates={len(changed)}"],
+        errors=violations,
+    )
+
+
+if __name__ == "__main__":
+    sys.exit(main())
