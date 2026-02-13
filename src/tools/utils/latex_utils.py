@@ -162,6 +162,7 @@ def _enumerate_to_markdown(match: re.Match[str]) -> str:
     counter = [0]
 
     def number_item(m: re.Match[str]) -> str:
+        """Increment counter and return numbered list prefix."""
         counter[0] += 1
         return f"{counter[0]}. "
 
