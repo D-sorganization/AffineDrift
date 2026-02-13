@@ -8,6 +8,7 @@ This directory contains current quality assessments and implementation plans.
 - `docs/assessments/QUALITATIVE_CODE_QUALITY_REASSESSMENT_2026-02-13.md`
 - `docs/assessments/QUALITATIVE_CODE_QUALITY_REASSESSMENT_WAVE2_2026-02-13.md`
 - `docs/assessments/QUALITATIVE_CODE_QUALITY_REASSESSMENT_WAVE3_2026-02-13.md`
+- `docs/assessments/QUALITATIVE_CODE_QUALITY_REASSESSMENT_WAVE4_2026-02-13.md`
 - `docs/assessments/UI_UX_MODERNIZATION_PLAN_2026-02-12.md`
 
 ## Quality Governance
