@@ -35,6 +35,8 @@ except ModuleNotFoundError:
 logger = setup_logging(__name__)
 
 DOCS_DIR = Path("docs")
+ENTRY_POINT_NAMES = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
+ENTRY_POINT_PATHS = {"articles/ux-verification-test.html"}
 
 
 def parse_fail_on(raw: str) -> set[str]:
@@ -58,120 +60,101 @@ def is_inside_quarto_alternate_formats(tag: Any) -> bool:
     return False
 
 
-def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: bool) -> int:
-    """Scans the docs directory for HTML files and verifies internal links.
-    Generates a site map and reports broken links and orphaned files.
-    """
-    html_files = []
-    # Walk the directory
-    for full_path in DOCS_DIR.rglob("*.html"):
-        rel_path = full_path.relative_to(DOCS_DIR)
-        html_files.append(rel_path)
+def _collect_html_files() -> list[Path]:
+    """Return all HTML files relative to docs directory."""
+    return [full_path.relative_to(DOCS_DIR) for full_path in DOCS_DIR.rglob("*.html")]
 
-    # Store all known files
-    all_files = set()
-    for full_path in DOCS_DIR.rglob("*"):
-        if full_path.is_file():
-            all_files.add(full_path.relative_to(DOCS_DIR))
 
-    # 1. Generate Site Map (List of pages)
+def _collect_all_files() -> set[Path]:
+    """Return all files relative to docs directory."""
+    return {
+        full_path.relative_to(DOCS_DIR) for full_path in DOCS_DIR.rglob("*") if full_path.is_file()
+    }
+
+
+def _log_site_map(html_files: list[Path]) -> None:
+    """Log a lightweight sitemap summary."""
     top_level_pages = sorted([f for f in html_files if len(f.parts) == 1])
     logger.info("Found %d top-level pages", len(top_level_pages))
 
     subdirs = sorted({f.parent for f in html_files if len(f.parts) > 1})
-    for d in subdirs:
-        pages: list[str] = sorted([f.name for f in html_files if f.parent == d])
-        logger.debug("Directory %s contains %d pages", d, len(pages))
+    for subdir in subdirs:
+        pages: list[str] = sorted([f.name for f in html_files if f.parent == subdir])
+        logger.debug("Directory %s contains %d pages", subdir, len(pages))
 
-    # 2. Check Links
-    broken_links = []
-    orphaned_files = set(html_files)
 
-    # Files that are always entry points (not orphaned)
-    # These include the main index, error pages, and standalone pages
-    # that may be accessed directly via URL (e.g., easter eggs, standalone tools)
-    entry_point_names = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
-    entry_point_paths = {"articles/ux-verification-test.html"}
-    # Orphan check logic handles Path objects by comparing string representation or Path parts
+def _initial_orphaned_files(html_files: list[Path]) -> set[Path]:
+    """Build the initial orphan candidate set."""
     orphaned_files = {
-        f
-        for f in orphaned_files
-        if f.name not in entry_point_names and str(f) not in entry_point_paths
+        file_path
+        for file_path in html_files
+        if file_path.name not in ENTRY_POINT_NAMES and str(file_path) not in ENTRY_POINT_PATHS
     }
+    return {file_path for file_path in orphaned_files if "archive" not in file_path.parts}
 
-    # Exclude archive directories from orphan check
-    # Check if "archive" is any part of the path
-    orphaned_files = {f for f in orphaned_files if "archive" not in f.parts}
 
-    for file_path in html_files:
-        full_path = DOCS_DIR / file_path
-        try:
-            with full_path.open(encoding="utf-8") as f:
-                soup = BeautifulSoup(f, "html.parser")
+def _resolve_internal_target(*, source_file: Path, href: str) -> Path | None:
+    """Resolve internal href to a docs-relative path when possible."""
+    target_url, _anchor = urldefrag(href)
+    if not target_url:
+        return None
 
-            # Find all links
-            for a in soup.find_all("a", href=True):
-                if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(a):
-                    continue
+    current_dir = source_file.parent
+    try:
+        resolved_target = (DOCS_DIR / current_dir / target_url).resolve()
+        if not resolved_target.is_relative_to(DOCS_DIR.resolve()):
+            return None
+        return resolved_target.relative_to(DOCS_DIR.resolve())
+    except (ValueError, FileNotFoundError):
+        return None
 
-                href_value = cast("Any", a).get("href")
-                href = str(href_value) if href_value is not None else ""
 
-                if not href:
-                    continue
+def _find_broken_links_for_file(
+    *,
+    file_path: Path,
+    all_files: set[Path],
+    ignore_quarto_alternate_formats: bool,
+) -> tuple[list[dict[str, str]], set[Path]]:
+    """Parse a single HTML file and collect broken-link records."""
+    full_path = DOCS_DIR / file_path
+    broken_links: list[dict[str, str]] = []
+    referenced_targets: set[Path] = set()
+    with full_path.open(encoding="utf-8") as file_handle:
+        soup = BeautifulSoup(file_handle, "html.parser")
 
-                if href.startswith(("http:", "https:", "mailto:", "tel:", "ftp:", "#")):
-                    continue
+    for anchor in soup.find_all("a", href=True):
+        if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(anchor):
+            continue
 
-                # Strip anchor
-                target_url, _anchor = urldefrag(href)
+        href_value = cast("Any", anchor).get("href")
+        href = str(href_value) if href_value is not None else ""
+        if not href:
+            continue
+        if href.startswith(("http:", "https:", "mailto:", "tel:", "ftp:", "#")):
+            continue
 
-                if not target_url:
-                    continue
+        target_rel_path = _resolve_internal_target(source_file=file_path, href=href)
+        if target_rel_path is None:
+            continue
 
-                # Calculate target path
-                # file_path is relative to DOCS_DIR
-                # current_dir is relative to DOCS_DIR
-                current_dir = file_path.parent
-                # target_rel_path is relative to DOCS_DIR
-                # We need to resolve ".." and "." manually or using resolve()
-                # but resolve needs abs paths.
-                # Easier way: (DOCS_DIR / current_dir / target_url).resolve()
-                # .relative_to(DOCS_DIR.resolve())
-                try:
-                    resolved_target = (DOCS_DIR / current_dir / target_url).resolve()
-                    # Check if it is inside DOCS_DIR
-                    if not resolved_target.is_relative_to(DOCS_DIR.resolve()):
-                        # Link points outside docs, maybe valid? But we only check inside docs.
-                        continue
-                    target_rel_path = resolved_target.relative_to(DOCS_DIR.resolve())
-                except (ValueError, FileNotFoundError):
-                    # If resolve fails (e.g. file doesn't exist), we construct it logically
-                    # but we can't fully trust it if it doesn't exist.
-                    # Actually, if it doesn't exist, resolve() might still work
-                    # on Path if strictly=False (default since 3.10)
-                    # But if we want to check existence, we can just check exist().
-                    # Let's try logical path construction first to match `all_files` keys.
-                    # However, logical resolution of ".." without file system is tricky.
-                    # Let's rely on resolve() which should work if we are careful.
-                    continue
+        if target_rel_path not in all_files:
+            broken_links.append(
+                {
+                    "source": str(file_path),
+                    "target": str(target_rel_path),
+                    "href": href,
+                    "text": anchor.get_text(strip=True)[:50],
+                },
+            )
+        else:
+            referenced_targets.add(target_rel_path)
+    return broken_links, referenced_targets
 
-                if target_rel_path not in all_files:
-                    broken_links.append(
-                        {
-                            "source": str(file_path),
-                            "target": str(target_rel_path),
-                            "href": href,
-                            "text": a.get_text(strip=True)[:50],
-                        },
-                    )
-                elif target_rel_path in orphaned_files:
-                    orphaned_files.remove(target_rel_path)
 
-        except (ConnectionError, TimeoutError, OSError) as e:
-            logger.error("Error processing %s: %s", file_path, e)
-
-    # Report Broken Links
+def _report_findings(
+    *, broken_links: list[dict[str, str]], orphaned_files: set[Path], fail_on: set[str]
+) -> int:
+    """Emit logs and decide exit code based on selected fail criteria."""
     has_errors = False
     if broken_links:
         logger.warning("Found %d broken links:", len(broken_links))
@@ -188,7 +171,6 @@ def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: boo
     else:
         logger.info("No broken links found")
 
-    # Report Orphaned Files
     if orphaned_files:
         logger.warning("Found %d orphaned files:", len(orphaned_files))
         for orphaned in sorted(orphaned_files):
@@ -204,10 +186,38 @@ def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: boo
         len(orphaned_files),
         ",".join(sorted(fail_on)) or "none",
     )
+    return 1 if has_errors else 0
 
-    if has_errors:
-        return 1
-    return 0
+
+def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: bool) -> int:
+    """Scans the docs directory for HTML files and verifies internal links.
+    Generates a site map and reports broken links and orphaned files.
+    """
+    html_files = _collect_html_files()
+    all_files = _collect_all_files()
+    _log_site_map(html_files)
+    broken_links: list[dict[str, str]] = []
+    orphaned_files = _initial_orphaned_files(html_files)
+
+    for file_path in html_files:
+        try:
+            file_broken_links, referenced_targets = _find_broken_links_for_file(
+                file_path=file_path,
+                all_files=all_files,
+                ignore_quarto_alternate_formats=ignore_quarto_alternate_formats,
+            )
+            broken_links.extend(file_broken_links)
+            for target_path in referenced_targets:
+                if target_path in orphaned_files:
+                    orphaned_files.remove(target_path)
+        except (ConnectionError, TimeoutError, OSError) as exc:
+            logger.error("Error processing %s: %s", file_path, exc)
+
+    return _report_findings(
+        broken_links=broken_links,
+        orphaned_files=orphaned_files,
+        fail_on=fail_on,
+    )
 
 
 def parse_args() -> argparse.Namespace:

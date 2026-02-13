@@ -19,6 +19,17 @@ from urllib.parse import unquote
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__, format_string="%(message)s")
+SCANNED_EXTENSIONS = {".qmd", ".html", ".md"}
+SKIP_FILES = {
+    "WEBSITE_ENHANCEMENT_RECOMMENDATIONS.md",
+    "WEBSITE_MANAGEMENT.md",
+    "CONTENT_SHARING_GUIDE.md",
+    "QUICK_WINS_IMPLEMENTATION.md",
+    "HOUSE_STYLE.md",
+    "CONVERSION_GUIDE.md",
+    "EMBEDDING_GUIDE.md",
+    "CONTRIBUTING.md",
+}
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
@@ -58,6 +69,80 @@ def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str
     return unique
 
 
+def _should_scan_file(file_path: Path) -> bool:
+    """Return whether a file should be scanned for internal links."""
+    return not (
+        file_path.suffix not in SCANNED_EXTENSIONS
+        or "node_modules" in str(file_path)
+        or "_site" in str(file_path)
+        or ".git" in str(file_path)
+        or "archive" in str(file_path)
+        or "docs" in str(file_path)
+        or "content" in str(file_path)
+        or "_templates" in str(file_path)
+        or ".jules" in str(file_path)
+        or file_path.name in SKIP_FILES
+    )
+
+
+def _normalize_internal_url(link: str) -> str | None:
+    """Normalize link and return internal URL or None for skipped links."""
+    url = link.split("#")[0]
+    if not url:
+        return None
+    if url.startswith(("http", "mailto:")):
+        return None
+    if "${" in url or url == "...":
+        return None
+    if len(url) == 1:
+        return None
+    return unquote(url)
+
+
+def _resolve_target_path(*, root_path: Path, file_path: Path, url: str) -> Path:
+    """Resolve a link URL against a source file and root path."""
+    if url.startswith("/"):
+        return root_path / url.lstrip("/")
+    return file_path.parent / url
+
+
+def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
+    """Check for target existence in root, src, and docs prefixes."""
+    exists_check = target_path.exists()
+    if not target_path.is_relative_to(root_path):
+        return exists_check
+    relative = target_path.relative_to(root_path)
+    return (
+        exists_check
+        or (root_path / "src" / relative).exists()
+        or (root_path / "docs" / relative).exists()
+    )
+
+
+def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
+    """Check whether an HTML link can map to source or generated files."""
+    p_qmd = target_path.with_suffix(".qmd")
+    p_md = target_path.with_suffix(".md")
+    if _path_exists_in_search_roots(root_path=root_path, target_path=p_qmd):
+        return True
+    if _path_exists_in_search_roots(root_path=root_path, target_path=p_md):
+        return True
+    if _path_exists_in_search_roots(root_path=root_path, target_path=target_path):
+        return True
+    return target_path.is_dir() and (target_path / "index.qmd").exists()
+
+
+def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
+    """Return True if a link is internal and unresolved."""
+    url = _normalize_internal_url(link)
+    if url is None:
+        return False
+    target_path = _resolve_target_path(root_path=root_path, file_path=file_path, url=url)
+    if target_path.suffix == ".html":
+        return not _is_html_link_resolvable(root_path=root_path, target_path=target_path)
+    return not _path_exists_in_search_roots(root_path=root_path, target_path=target_path)
+
+
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     """Check for broken internal links in the project."""
     root_path = Path(root_dir)
@@ -65,31 +150,8 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
 
     logger.info(f"Scanning {root_path}...")
 
-    # Skip documentation and guide files that contain example links
-    skip_files = {
-        "WEBSITE_ENHANCEMENT_RECOMMENDATIONS.md",
-        "WEBSITE_MANAGEMENT.md",
-        "CONTENT_SHARING_GUIDE.md",
-        "QUICK_WINS_IMPLEMENTATION.md",
-        "HOUSE_STYLE.md",
-        "CONVERSION_GUIDE.md",
-        "EMBEDDING_GUIDE.md",
-        "CONTRIBUTING.md",  # Contains example syntax like ![Description](image.png)
-    }
-
     for file_path in root_path.rglob("*"):
-        if (
-            file_path.suffix not in [".qmd", ".html", ".md"]
-            or "node_modules" in str(file_path)
-            or "_site" in str(file_path)
-            or ".git" in str(file_path)
-            or "archive" in str(file_path)
-            or "docs" in str(file_path)
-            or "content" in str(file_path)
-            or "_templates" in str(file_path)
-            or ".jules" in str(file_path)
-            or file_path.name in skip_files
-        ):
+        if not _should_scan_file(file_path):
             continue
 
         try:
@@ -99,87 +161,8 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             continue
 
         for link, line_num in links:
-            # Clean link (remove fragments)
-            url = link.split("#")[0]
-            if not url:
-                continue  # Just a fragment
-
-            if url.startswith(("http", "mailto:")):
-                continue  # Skip external
-
-            # Skip JavaScript template literals (e.g., ${item.url})
-            if "${" in url or url == "...":
-                continue
-
-            # Skip single-character links (often mathematical notation like [f,g](x))
-            if len(url) == 1:
-                continue
-
-            # Internal link
-            # URL-decode the path to handle %20 and other encoded characters
-            url = unquote(url)
-
-            # Check if absolute (relative to domain root) or relative
-            if url.startswith("/"):
-                # Assumes root_path is the site root
-                target_path = root_path / url.lstrip("/")
-            else:
-                target_path = file_path.parent / url
-
-            # Handle .html -> .qmd mapping
-            # If linking to foo.html, it might come from foo.qmd
-            if target_path.suffix == ".html":
-                # Check for .html, .qmd, .md
-                p_qmd = target_path.with_suffix(".qmd")
-                p_md = target_path.with_suffix(".md")
-                p_html = target_path  # The html itself might exist if it's a static asset
-
-                # For qmd files, also check src/ and docs/ prefixed paths
-                # (qmd links to tools/... exist in src/tools/ or docs/tools/)
-                src_html = (
-                    root_path / "src" / target_path.relative_to(root_path)
-                    if target_path.is_relative_to(root_path)
-                    else None
-                )
-                docs_html = (
-                    root_path / "docs" / target_path.relative_to(root_path)
-                    if target_path.is_relative_to(root_path)
-                    else None
-                )
-
-                # If target is generated from qmd, the source qmd should exist
-                # But we are checking source files, so we look for source qmd
-                exists_check = p_qmd.exists() or p_md.exists() or p_html.exists()
-                if src_html:
-                    exists_check = exists_check or src_html.exists()
-                if docs_html:
-                    exists_check = exists_check or docs_html.exists()
-
-                if not exists_check:
-                    # Also check if it wraps to index.html (e.g. directory/)
-                    if not (target_path.is_dir() and (target_path / "index.qmd").exists()):
-                        broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
-            elif not target_path.exists():
-                # For non-HTML files, also check src/ and docs/ prefixed paths
-                src_path = (
-                    root_path / "src" / target_path.relative_to(root_path)
-                    if target_path.is_relative_to(root_path)
-                    else None
-                )
-                docs_path = (
-                    root_path / "docs" / target_path.relative_to(root_path)
-                    if target_path.is_relative_to(root_path)
-                    else None
-                )
-
-                exists_check = False
-                if src_path:
-                    exists_check = exists_check or src_path.exists()
-                if docs_path:
-                    exists_check = exists_check or docs_path.exists()
-
-                if not exists_check:
-                    broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+            if _is_broken_link(root_path=root_path, file_path=file_path, link=link):
+                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
 
