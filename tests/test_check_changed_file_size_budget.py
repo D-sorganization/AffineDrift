@@ -32,3 +32,22 @@ def test_changed_files_parses_git_diff_output(
     monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
     changed = check_changed_file_size_budget._changed_files(tmp_path, "abc123")
     assert changed == ["src/tools/a.py", "scripts/x.py"]
+
+
+def test_changed_files_falls_back_to_git_show_on_diff_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """When merge-base diff fails, fallback should parse HEAD file list."""
+    calls: list[list[str]] = []
+
+    def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
+        calls.append(args)
+        if args[0:2] == ["git", "diff"]:
+            raise subprocess.CalledProcessError(128, args)
+        return SimpleNamespace(stdout="scripts/check_changed_file_size_budget.py\n")
+
+    monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
+    changed = check_changed_file_size_budget._changed_files(tmp_path, "HEAD~1")
+    assert changed == ["scripts/check_changed_file_size_budget.py"]
+    assert calls[0][0:2] == ["git", "diff"]
+    assert calls[1][0:2] == ["git", "show"]
