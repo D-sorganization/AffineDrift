@@ -21,7 +21,9 @@ def test_check_rules_passes_when_required_tokens_present(tmp_path: Path) -> None
         }
         """,
     )
-    _write(tmp_path / "scripts/a.py", "from x import ensure_existing_file\nensure_existing_file('a')\n")
+    _write(
+        tmp_path / "scripts/a.py", "from x import ensure_existing_file\nensure_existing_file('a')\n"
+    )
 
     assert check_rules(tmp_path) == []
 
