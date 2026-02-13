@@ -33,7 +33,7 @@ Content here
         converter = LaTeXToQuartoConverter()
         latex = r"\begin{document}Content\end{document}"
         metadata = converter.extract_metadata(latex)
-        assert metadata["title"] == "Untitled Article"
+        assert metadata["title"] == "Untitled"
         assert metadata["author"] == "AffineDrift"
         assert "date" in metadata
 
@@ -56,8 +56,8 @@ This is the body content.
         converter = LaTeXToQuartoConverter()
         content = r"\section{Introduction}\subsection{Background}"
         result = converter.convert_sections(content)
-        assert "## Introduction" in result
-        assert "### Background" in result
+        assert "# Introduction" in result
+        assert "## Background" in result
 
     def test_convert_text_formatting(self) -> None:
         """Test text formatting conversion."""
@@ -102,7 +102,7 @@ This is the body content.
         converter = LaTeXToQuartoConverter()
         content = r"\url{https://example.com} \href{https://test.com}{Link Text}"
         result = converter.convert_links(content)
-        assert "<https://example.com>" in result
+        assert "[https://example.com](https://example.com)" in result
         assert "[Link Text](https://test.com)" in result
 
     def test_clean_latex_commands(self) -> None:

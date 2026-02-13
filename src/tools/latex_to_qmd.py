@@ -12,6 +12,16 @@ from datetime import date
 from pathlib import Path
 
 from src.tools.utils import setup_logging_with_timestamp
+from src.tools.utils.latex_utils import (
+    clean_common_latex,
+    convert_lists_to_markdown,
+    convert_quotes,
+    convert_sections_to_markdown,
+    convert_text_formatting_to_markdown,
+    convert_urls_to_markdown,
+    extract_body,
+    extract_metadata,
+)
 
 logger = setup_logging_with_timestamp(__name__)
 
@@ -34,102 +44,32 @@ class LaTeXToQuartoConverter:
 
     def extract_metadata(self, latex_content: str) -> dict[str, str]:
         """Extract title, author, and other metadata from LaTeX."""
-        metadata = {}
-
-        # Extract title
-        title_match = re.search(r"\\title\{([^}]+)\}", latex_content, re.DOTALL)
-        if title_match:
-            title = title_match.group(1)
-            # Clean LaTeX commands
-            title = re.sub(r"\\textbf\{([^}]+)\}", r"\1", title)
-            title = re.sub(r"\\\\\[[^\]]+\]", " ", title)
-            title = re.sub(r"\\\\", " ", title)
-            metadata["title"] = title.strip()
-        else:
-            metadata["title"] = "Untitled Article"
-
-        # Extract author if present
-        author_match = re.search(r"\\author\{([^}]+)\}", latex_content, re.DOTALL)
-        if author_match:
-            metadata["author"] = author_match.group(1).strip()
-        else:
-            metadata["author"] = "AffineDrift"
-
-        # Add date
-        metadata["date"] = date.today().strftime("%Y-%m-%d")
-
-        return metadata
+        meta = extract_metadata(latex_content)
+        return {
+            "title": meta.title,
+            "author": meta.author or "AffineDrift",
+            "date": date.today().strftime("%Y-%m-%d"),
+        }
 
     def extract_body(self, latex_content: str) -> str:
         r"""Extract content between \begin{document} and \end{document}."""
-        doc_match = re.search(r"\\begin\{document\}(.+)\\end\{document\}", latex_content, re.DOTALL)
-        content = doc_match.group(1) if doc_match else latex_content
-
-        # Remove \maketitle
-        return re.sub(r"\\maketitle", "", content)
+        return extract_body(latex_content)
 
     def convert_sections(self, content: str) -> str:
         """Convert LaTeX sections to Markdown headers."""
-        # Sections
-        content = re.sub(r"\\section\{([^}]+)\}", r"## \1", content)
-        content = re.sub(r"\\subsection\{([^}]+)\}", r"### \1", content)
-        content = re.sub(r"\\subsubsection\{([^}]+)\}", r"#### \1", content)
+        content = convert_sections_to_markdown(content)
+        # Quarto-specific: paragraph/subparagraph headings
         content = re.sub(r"\\paragraph\{([^}]+)\}", r"##### \1", content)
         return re.sub(r"\\subparagraph\{([^}]+)\}", r"###### \1", content)
 
     def convert_text_formatting(self, content: str) -> str:
         """Convert LaTeX text formatting to Markdown."""
-        # Bold
-        content = re.sub(r"\\textbf\{([^}]+)\}", r"**\1**", content)
-        # Italic
-        content = re.sub(r"\\textit\{([^}]+)\}", r"*\1*", content)
-        content = re.sub(r"\\emph\{([^}]+)\}", r"*\1*", content)
-        # Code
-        content = re.sub(r"\\texttt\{([^}]+)\}", r"`\1`", content)
-        # Quotes
-        content = re.sub(r"``", r'"', content)
-        return re.sub(r"''", r'"', content)
+        content = convert_text_formatting_to_markdown(content)
+        return convert_quotes(content)
 
     def convert_lists(self, content: str) -> str:
         """Convert LaTeX lists to Markdown lists."""
-
-        # Itemize (unordered)
-        def replace_itemize(match: re.Match[str]) -> str:
-            """Replace itemize environment with Markdown unordered list."""
-            items = match.group(1)
-            # Replace \item with -
-            items = re.sub(r"\\item\s+", "\n- ", items)
-            items = re.sub(r"\\item\s*$", "\n- ", items, flags=re.MULTILINE)
-            return items.strip()
-
-        content = re.sub(
-            r"\\begin\{itemize\}(.*?)\\end\{itemize\}",
-            replace_itemize,
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Enumerate (ordered)
-        def replace_enumerate(match: re.Match[str]) -> str:
-            """Replace enumerate environment with Markdown ordered list."""
-            items = match.group(1)
-            # Replace \item with numbered list
-            item_count = [0]  # Use list to make it mutable in nested function
-
-            def number_item(m: re.Match[str]) -> str:
-                """Number items in enumerate list."""
-                item_count[0] += 1
-                return f"\n{item_count[0]}. "
-
-            items = re.sub(r"\\item\s+", number_item, items)
-            return items.strip()
-
-        return re.sub(
-            r"\\begin\{enumerate\}(.*?)\\end\{enumerate\}",
-            replace_enumerate,
-            content,
-            flags=re.DOTALL,
-        )
+        return convert_lists_to_markdown(content)
 
     def convert_environments(self, content: str) -> str:
         """Convert special LaTeX environments."""
@@ -218,31 +158,18 @@ class LaTeXToQuartoConverter:
 
     def convert_links(self, content: str) -> str:
         """Convert LaTeX URLs and hyperlinks to Markdown."""
-        # \url{...}
-        content = re.sub(r"\\url\{([^}]+)\}", r"<\1>", content)
-        # \href{url}{text}
-        return re.sub(r"\\href\{([^}]+)\}\{([^}]+)\}", r"[\2](\1)", content)
+        return convert_urls_to_markdown(content)
 
     def clean_latex_commands(self, content: str) -> str:
         """Remove or clean remaining LaTeX commands."""
-        # Remove comments
-        content = re.sub(r"%.*$", "", content, flags=re.MULTILINE)
+        # Apply shared cleanup (comments, labels, spacing, structure)
+        content = clean_common_latex(content)
 
-        # Remove vspace, hspace
-        content = re.sub(r"\\[vh]space\*?\{[^}]+\}", "", content)
-
-        # Remove font size commands
-        content = re.sub(
-            r"\\(small|large|Large|huge|Huge|tiny|footnotesize|scriptsize|normalsize)",
-            "",
-            content,
-        )
-
-        # Custom commands - convert to bold
+        # Quarto-specific: custom commands → bold
         content = re.sub(r"\\bvec\{([^}]+)\}", r"**\1**", content)
         content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
 
-        # Remove table environments (not converting tables in this version)
+        # Remove table environments
         content = re.sub(r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL)
         content = re.sub(
             r"\\begin\{tabular\}.*?\\end\{tabular\}",
