@@ -199,7 +199,9 @@ a:hover {
 .container .standard-page-layout,
 .standard-page-layout {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
+      --sidebar-width
+    );
   gap: var(--sidebar-gap);
   max-width: 100%;
   margin: 0 auto;
@@ -213,7 +215,7 @@ a:hover {
 }
 
 /* Ensure grid items align at top */
-.standard-page-layout>* {
+.standard-page-layout > * {
   align-self: start;
   margin-top: 0;
 }
@@ -268,26 +270,26 @@ a:hover {
 
 /* Reset Quarto's default margins on main content */
 #quarto-content main,
-.main-content-area>article,
-.main-content-area>.article-body {
+.main-content-area > article,
+.main-content-area > .article-body {
   margin-top: 0;
   padding-top: 0;
 }
 
 /* Ensure first heading in content appears at top */
-.main-content-area>h1:first-child,
-.main-content-area>article>h1:first-child,
+.main-content-area > h1:first-child,
+.main-content-area > article > h1:first-child,
 .main-content-area h1.title {
   margin-top: 0;
   padding-top: 0;
 }
 
 /* Constrain prose width for readability, but allow containers to be wide */
-.main-content-area>p,
-.main-content-area>ul,
-.main-content-area>ol,
-.article-body>p,
-.article-body>ul {
+.main-content-area > p,
+.main-content-area > ul,
+.main-content-area > ol,
+.article-body > p,
+.article-body > ul {
   max-width: var(--prose-width);
 }
 
@@ -309,7 +311,12 @@ img {
 
 /* Lazy loading placeholder */
 img[loading="lazy"] {
-  background: linear-gradient(90deg, var(--bg-body) 25%, var(--bg-card, var(--bg-body)) 50%, var(--bg-body) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-body) 25%,
+    var(--bg-card, var(--bg-body)) 50%,
+    var(--bg-body) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -411,9 +418,11 @@ figcaption {
 }
 
 header {
-  background: linear-gradient(135deg,
-      var(--primary-dark) 0%,
-      var(--primary-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--primary-blue) 100%
+  );
   color: var(--pure-white);
   border-bottom: 2px solid var(--accent-blue);
   padding: 0.8rem 0;
@@ -440,9 +449,11 @@ nav .container {
 
 /* Quarto Navbar Full Width Fix */
 #quarto-header {
-  background: linear-gradient(135deg,
-      var(--primary-dark) 0%,
-      var(--primary-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--primary-blue) 100%
+  );
   border-bottom: 2px solid var(--accent-blue);
   box-shadow: 0 4px 12px var(--shadow-color);
 }
@@ -749,7 +760,7 @@ nav .container {
     padding 0.3s ease;
 }
 
-.accordion-header[aria-expanded="true"]+.accordion-content {
+.accordion-header[aria-expanded="true"] + .accordion-content {
   padding-bottom: 1.5rem;
   max-height: 500px;
   transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
@@ -1061,10 +1072,12 @@ nav .container {
   padding: 0 1.5rem;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+  transition:
+    max-height 0.4s ease-out,
+    padding 0.4s ease-out;
 }
 
-.critics-corner-header[aria-expanded="true"]+.critics-corner-content {
+.critics-corner-header[aria-expanded="true"] + .critics-corner-content {
   padding: 1.5rem;
   max-height: 2000px;
 }
@@ -1626,7 +1639,9 @@ h3:hover .anchor-link,
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
   pointer-events: none;
 }
 
@@ -1648,7 +1663,9 @@ h3:hover .anchor-link,
   justify-content: center;
   margin-left: 0.25rem;
   opacity: 0.6;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   vertical-align: middle;
   line-height: 1;
 }
@@ -1795,7 +1812,7 @@ h3:hover .anchor-link,
   transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
 }
 
-.laymans-terms-header[aria-expanded="true"]+.laymans-terms-content {
+.laymans-terms-header[aria-expanded="true"] + .laymans-terms-content {
   max-height: 3000px;
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
@@ -1999,7 +2016,9 @@ form.contact-form .form-group textarea {
   border-radius: 4px;
   font-family: "Noto Sans", sans-serif;
   font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   background-color: var(--bg-alt);
 }
 
@@ -2435,12 +2454,12 @@ h1.title,
   }
 
   /* Explicit Child Placement to defeat Quarto's auto-placement or grid-column rules */
-  .standard-page-layout>.left-sidebar {
+  .standard-page-layout > .left-sidebar {
     grid-column: 1 !important;
     display: block !important;
   }
 
-  .standard-page-layout>.main-content-area {
+  .standard-page-layout > .main-content-area {
     grid-column: 2 !important;
     width: 100% !important;
 
@@ -2448,13 +2467,13 @@ h1.title,
     max-width: none !important;
   }
 
-  .standard-page-layout>.right-sidebar {
+  .standard-page-layout > .right-sidebar {
     grid-column: 3 !important;
     display: block !important;
   }
 
   /* For single layout, ensure main content is in col 2 */
-  .standard-page-layout--single>.main-content-area {
+  .standard-page-layout--single > .main-content-area {
     grid-column: 2 !important;
   }
 }
@@ -2473,8 +2492,6 @@ h1.title,
 }
 
 /* Force Search Bar Right Alignment Globally (consolidated above) */
-
-
 
 /* ---
    Critics' Comments Section
@@ -2534,7 +2551,7 @@ h1.title,
   transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
 }
 
-.critics-comments-header[aria-expanded="true"]+.critics-comments-content {
+.critics-comments-header[aria-expanded="true"] + .critics-comments-content {
   max-height: 5000px;
 
   /* Large enough to fit content */
@@ -2624,7 +2641,9 @@ h1.title,
    --- */
 .home-layout-3col {
   display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
+      --sidebar-width
+    );
   gap: var(--sidebar-gap);
   max-width: 100%;
   margin: 0 auto;
@@ -2875,6 +2894,18 @@ h1.title,
   fill: currentcolor;
 }
 
+.mobile-menu-toggle .icon-close {
+  display: none;
+}
+
+.mobile-menu-toggle.is-open .icon-menu {
+  display: none;
+}
+
+.mobile-menu-toggle.is-open .icon-close {
+  display: inline-flex;
+}
+
 /* Mobile Sidebar Overlay */
 .sidebar-overlay {
   position: fixed;
@@ -2948,6 +2979,10 @@ h1.title,
   /* Mobile: Show hamburger menu */
   .mobile-menu-toggle {
     display: block;
+  }
+
+  body.home-menu-open {
+    overflow: hidden;
   }
 
   /* Mobile Sidebar Slide-in */

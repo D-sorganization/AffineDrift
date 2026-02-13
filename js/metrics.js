@@ -57,7 +57,7 @@
         JSON.stringify({
           start: new Date().toISOString(),
           pageViews: 0,
-        })
+        }),
       );
     }
   }
@@ -194,7 +194,7 @@
                   <span class="item-name">${escapeHtml(term)}</span>
                   <span class="item-count">${count}</span>
                 </div>
-              `
+              `,
                 )
                 .join("")}
             </div>
@@ -213,10 +213,12 @@
                 .map(
                   (entry) => `
                 <div class="metrics-item">
-                  <span class="item-name" title="${escapeHtml(entry.title)}">${truncate(entry.title, 40)}</span>
+                  <span class="item-name" title="${escapeHtml(
+                    entry.title,
+                  )}">${truncate(entry.title, 40)}</span>
                   <span class="item-count">${entry.count}</span>
                 </div>
-              `
+              `,
                 )
                 .join("")}
             </div>
@@ -234,8 +236,11 @@
               ${stats.topConcepts
                 .map(
                   ([concept, count]) => `
-                <span class="concept-tag" style="font-size: ${Math.min(1 + count * 0.1, 1.5)}rem">${escapeHtml(concept)}</span>
-              `
+                <span class="concept-tag" style="font-size: ${Math.min(
+                  1 + count * 0.1,
+                  1.5,
+                )}rem">${escapeHtml(concept)}</span>
+              `,
                 )
                 .join("")}
             </div>
@@ -245,12 +250,18 @@
         }
 
         <div class="metrics-footer">
-          <small>Data stored locally in your browser. <button onclick="AffineDriftMetrics.clearData()" class="clear-btn">Clear data</button></small>
+          <small>Data stored locally in your browser. <button type="button" class="clear-btn" data-action="clear-metrics">Clear data</button></small>
         </div>
       </div>
     `;
 
     container.innerHTML = html;
+    const clearButton = container.querySelector(
+      '[data-action="clear-metrics"]',
+    );
+    if (clearButton) {
+      clearButton.addEventListener("click", clearData);
+    }
   }
 
   // Helper functions
@@ -307,7 +318,7 @@
       getStatistics,
       clearData,
       escapeHtml,
-      truncate
+      truncate,
     };
   }
 })();

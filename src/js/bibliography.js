@@ -38,12 +38,11 @@
         // Fallback for local testing or if base path differs
         const fallbackResponse = await fetch("data/bibliography.json");
         if (!fallbackResponse.ok) {
-           throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         return await processResponse(fallbackResponse);
       }
       await processResponse(response);
-
     } catch (error) {
       console.error("Error loading bibliography:", error);
       const listContainer = document.getElementById("bib-list");
@@ -59,24 +58,23 @@
   }
 
   async function processResponse(response) {
-      const jsonData = await response.json();
-      
-      // No parsing needed for JSON
-      bibliographyData = jsonData;
-      filteredData = [...bibliographyData];
+    const jsonData = await response.json();
 
-      // Apply initial sort and render
-      sortAndRender();
+    // No parsing needed for JSON
+    bibliographyData = jsonData;
+    filteredData = [...bibliographyData];
 
-      // Update entry count
-      const countEl = document.getElementById("bib-count");
-      if (countEl) {
-        countEl.textContent = `${bibliographyData.length} entries`;
-      }
+    // Apply initial sort and render
+    sortAndRender();
+
+    // Update entry count
+    const countEl = document.getElementById("bib-count");
+    if (countEl) {
+      countEl.textContent = `${bibliographyData.length} entries`;
+    }
   }
 
   // Legacy parseYAML function removed as we now use JSON
-
 
   /**
    * Render bibliography entries
@@ -266,7 +264,7 @@
                 .map((id) => {
                   const related = bibliographyData.find((e) => e.id === id);
                   return related
-                    ? `<li><a href="#" onclick="event.preventDefault()" data-related-id="${id}">${
+                    ? `<li><a href="#" data-related-id="${id}">${
                         related.title || id
                       }</a></li>`
                     : `<li>${id}</li>`;
@@ -392,8 +390,10 @@
 
       case "author":
         return sorted.sort((a, b) => {
-          const authorA = (a.authors && a.authors[0]) ? a.authors[0].toLowerCase() : "zzz";
-          const authorB = (b.authors && b.authors[0]) ? b.authors[0].toLowerCase() : "zzz";
+          const authorA =
+            a.authors && a.authors[0] ? a.authors[0].toLowerCase() : "zzz";
+          const authorB =
+            b.authors && b.authors[0] ? b.authors[0].toLowerCase() : "zzz";
           return authorA.localeCompare(authorB);
         });
 
@@ -690,7 +690,7 @@
       setBibliographyData: (data) => {
         bibliographyData = data;
         filteredData = [...data];
-      }
+      },
     };
   }
 })();

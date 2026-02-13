@@ -1,0 +1,33 @@
+{
+  "exclude_substrings": [
+    ".git/",
+    "node_modules/",
+    "docs/",
+    "archive/",
+    "__pycache__/",
+    ".pytest_cache/"
+  ],
+  "include_roots": [
+    "_includes",
+    "src/js",
+    "js",
+    "index.qmd",
+    "offline.html",
+    "styles.css"
+  ],
+  "file_extensions": [".html", ".qmd", ".js", ".css"],
+  "checks": {
+    "inline_event_handlers": {
+      "pattern": "\\bon[a-z]+\\s*=",
+      "max_count": 1
+    },
+    "inline_script_tags": {
+      "pattern": "<script\\b(?![^>]*\\bsrc\\s*=)",
+      "max_count": 7
+    },
+    "inline_style_attributes": {
+      "pattern": "\\sstyle\\s*=\\s*[\"']",
+      "max_count": 33
+    }
+  }
+}
