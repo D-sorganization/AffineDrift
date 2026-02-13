@@ -28,7 +28,7 @@ def test_generate_completist_data_succeeds_for_valid_paths(tmp_path: Path) -> No
     """CLI should write output data files when both boundaries are valid."""
     repo_root = tmp_path / "repo"
     repo_root.mkdir()
-    (repo_root / "sample.py").write_text("# TODO: sample\n", encoding="utf-8")
+    (repo_root / "sample.py").write_text("# sample marker\n", encoding="utf-8")
     output_dir = repo_root / "output"
     output_dir.mkdir()
 
