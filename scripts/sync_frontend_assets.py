@@ -43,6 +43,10 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         mirrors=("src/css/bibliography.css", "docs/css/bibliography.css"),
     ),
     SyncMap(
+        source="css/critics-corner.css",
+        mirrors=("src/css/critics-corner.css", "docs/css/critics-corner.css"),
+    ),
+    SyncMap(
         source="css/resources.css",
         mirrors=("src/css/resources.css", "docs/css/resources.css"),
     ),
