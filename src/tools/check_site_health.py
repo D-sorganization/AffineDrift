@@ -22,7 +22,13 @@ from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
-from src.tools.utils import setup_logging
+try:
+    from src.tools.utils import setup_logging
+except ModuleNotFoundError:
+    repo_root = Path(__file__).resolve().parents[2]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
 
