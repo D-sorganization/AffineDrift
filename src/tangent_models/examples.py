@@ -3,14 +3,9 @@ from typing import Any
 
 import numpy as np
 
-from src.core.constants import (
-    DEFAULT_SPACECRAFT_MASS_KG,
-    EARTH_MU,
-    FINITE_DIFF_STEP_LINEARIZE,
-    GRAVITY_M_S2,
-    ISS_ORBIT_RADIUS_M,
-)
 from src.core.contracts import check_finite_array, check_positive, require
+
+GRAVITY_M_S2 = 9.81
 
 
 class DynamicalSystem(ABC):
@@ -36,7 +31,7 @@ class SimplePendulum(DynamicalSystem):
         """Initialize simple pendulum."""
         check_positive(m, "mass")
         check_positive(L, "length")
-        check_positive(g, "gravity")
+        check_positive(g, "gravitational acceleration")
         self.m = m
         self.L = L
         self.g = g
@@ -45,8 +40,8 @@ class SimplePendulum(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute simple pendulum dynamics."""
-        require(x.size == 2, "state vector must have 2 elements", x)
-        check_finite_array(x, "state")
+        check_finite_array(x, "state vector")
+        require(len(x) == 2, "state vector must have 2 elements (theta, omega)")
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, list | tuple | np.ndarray) else u
@@ -76,12 +71,7 @@ class SpacecraftRendezvous(DynamicalSystem):
     State x = [rx, ry, rz, vx, vy, vz] (Relative position and velocity in LVLH)
     """
 
-    def __init__(
-        self,
-        mu: float = EARTH_MU,
-        r_t: float = ISS_ORBIT_RADIUS_M,
-        m: float = DEFAULT_SPACECRAFT_MASS_KG,
-    ) -> None:
+    def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
         """Initialize spacecraft rendezvous system."""
         check_positive(mu, "gravitational parameter")
         check_positive(r_t, "orbit radius")
@@ -97,8 +87,6 @@ class SpacecraftRendezvous(DynamicalSystem):
         """Compute spacecraft rendezvous dynamics."""
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector for SpacecraftRendezvous")
-        require(x.size == 6, "state vector must have 6 elements", x)
-        check_finite_array(x, "state")
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
@@ -216,7 +204,6 @@ class PlanarQuadrotor(DynamicalSystem):
         check_positive(m, "mass")
         check_positive(L, "arm length")
         check_positive(moment_inertia, "moment of inertia")
-        check_positive(g, "gravity")
         self.m = m
         self.L = L  # Arm length
         self.moment_inertia = moment_inertia
@@ -290,11 +277,10 @@ class RobotArm(DynamicalSystem):
         g: float = GRAVITY_M_S2,
     ) -> None:
         """Initialize robot arm."""
-        check_positive(m1, "mass m1")
-        check_positive(m2, "mass m2")
-        check_positive(l1, "link length l1")
-        check_positive(l2, "link length l2")
-        check_positive(g, "gravity")
+        check_positive(m1, "mass 1")
+        check_positive(m2, "mass 2")
+        check_positive(l1, "link length 1")
+        check_positive(l2, "link length 2")
         self.m1 = m1
         self.m2 = m2
         self.l1 = l1
@@ -349,7 +335,7 @@ class RobotArm(DynamicalSystem):
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
         # Using numerical linearization for the 2-link arm due to complexity
-        epsilon = FINITE_DIFF_STEP_LINEARIZE
+        epsilon = 1e-6
         n = 4
         m = 2
 

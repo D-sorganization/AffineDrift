@@ -24,7 +24,6 @@ from urllib.parse import urldefrag
 from bs4 import BeautifulSoup
 
 try:
-    from src.core.constants import LINK_TEXT_TRUNCATE_LENGTH
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
@@ -32,7 +31,6 @@ except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
-    from src.core.constants import LINK_TEXT_TRUNCATE_LENGTH
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
@@ -161,7 +159,7 @@ def _find_broken_links_for_file(
                     source=str(file_path),
                     target=str(target_rel_path),
                     href=href,
-                    text=anchor.get_text(strip=True)[:LINK_TEXT_TRUNCATE_LENGTH],
+                    text=anchor.get_text(strip=True)[:50],
                 ),
             )
         else:
