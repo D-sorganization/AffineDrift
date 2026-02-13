@@ -52,7 +52,10 @@ import os
 from collections.abc import Callable
 from typing import Any, TypeVar, cast
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError:  # pragma: no cover - numpy optional for non-numeric usage
+    np = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
 
@@ -289,7 +292,7 @@ class ContractChecker:
         return True
 
 
-def invariant_checked[F: Callable[..., Any]](func: F) -> F:
+def invariant_checked(func: F) -> F:  # noqa: UP047
     """Decorator to check class invariants after method execution."""
     if DBC_LEVEL == ContractLevel.OFF:
         return func
@@ -306,7 +309,7 @@ def invariant_checked[F: Callable[..., Any]](func: F) -> F:
 # ─── Numeric/Array Contract Helpers ────────────────────────────
 
 
-def check_finite_array(arr: np.ndarray, name: str = "array") -> None:
+def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:
     """Assert that a numpy array contains only finite values."""
     require(
         bool(np.all(np.isfinite(arr))),
@@ -336,7 +339,7 @@ def check_range(
 
 
 def check_shape(
-    arr: np.ndarray,
+    arr: np.ndarray[Any, Any],
     expected_shape: tuple[int, ...],
     name: str = "array",
 ) -> None:

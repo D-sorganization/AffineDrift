@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 from urllib.parse import unquote
 
+from src.core.contracts import require
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__, format_string="%(message)s")
@@ -38,6 +39,7 @@ HTML_SRC_PATTERN = re.compile(r'src=["\'](.*?)["\']')
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
     """Extract links and exact source line numbers from a file."""
+    require(file_path is not None, "file_path must not be None")
     with open(file_path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
@@ -141,6 +143,7 @@ def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
 
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     """Check for broken internal links in the project."""
+    require(len(root_dir) > 0, "root_dir must not be empty")
     root_path = Path(root_dir)
     broken_links: list[tuple[str, int, str]] = []
 

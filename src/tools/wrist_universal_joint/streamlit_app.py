@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
+from src.core.contracts import require
+
 from .constants import (
     DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
@@ -278,6 +280,7 @@ def _render_main_content(params: dict[str, Any]) -> None:
     Args:
         params: Dictionary of user-selected parameters from sidebar.
     """
+    require(params is not None, "params dict must not be None")
     # Generate signal
     t = np.linspace(0, 1, DEFAULT_SIGNAL_LENGTH)
     input_torque, error = generate_sample_torque(

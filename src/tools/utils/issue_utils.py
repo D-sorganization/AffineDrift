@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from src.core.contracts import require
+
 
 def get_repo_short_name(repo_path: Path | None = None) -> str:
     """Get a standardized short name for the repository.
@@ -55,6 +57,9 @@ def format_issue_body(
     Returns:
         Formatted Markdown string for the issue body.
     """
+    require(len(severity) > 0, "severity must not be empty")
+    require(len(category) > 0, "category must not be empty")
+    require(len(description) > 0, "description must not be empty")
     return f"""## Issue Description
 
 **Severity**: {severity}

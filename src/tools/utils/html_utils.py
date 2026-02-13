@@ -21,6 +21,8 @@ import html
 import re
 from pathlib import Path
 
+from src.core.contracts import require
+
 from .constants import PATH_REPLACEMENT_PATTERNS
 
 
@@ -203,6 +205,8 @@ def create_html_page(
             path_depth=1,
         )
     """
+    require(len(title) > 0, "page title must not be empty")
+    require(output_file is not None, "output_file must not be None")
     if not template_content:
         return False
 

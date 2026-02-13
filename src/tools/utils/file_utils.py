@@ -14,6 +14,8 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
+from src.core.contracts import require
+
 from .constants import EXCLUDE_DIRS_CONTENT, EXCLUDE_DIRS_PYTHON
 
 
@@ -124,6 +126,7 @@ def find_files_by_extension(
         tex_files = find_files_by_extension([".tex"], paths=["articles", "papers"])
         py_files = find_files_by_extension([".py"], recursive=True)
     """
+    require(len(extensions) > 0, "extensions list must not be empty")
     # Normalize extensions
     extensions = [ext if ext.startswith(".") else f".{ext}" for ext in extensions]
 
@@ -181,6 +184,7 @@ def process_file_content(
 
         modified = process_file_content(Path("file.txt"), fix_whitespace)
     """
+    require(filepath is not None, "filepath must not be None")
     try:
         content = filepath.read_text(encoding=encoding)
     except UnicodeDecodeError:
