@@ -3,21 +3,24 @@
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
+
+from src.tools.utils.budget_check_utils import load_config, report_results
 
 IMPORT_RE = re.compile(r"""@import\s+(?:url\()?["']([^"']+)["']\)?\s*;""")
 
 
 def extract_imports(path: Path) -> list[str]:
+    """Extract CSS @import specifiers from a stylesheet."""
     text = path.read_text(encoding="utf-8")
     return [match.group(1) for match in IMPORT_RE.finditer(text)]
 
 
 def check_rules(repo_root: Path) -> list[str]:
-    config = json.loads((repo_root / "config" / "css_architecture_rules.json").read_text())
+    """Validate CSS architecture rules from config."""
+    config = load_config(repo_root, "css_architecture_rules.json")
     root_stylesheet = repo_root / config["root_stylesheet"]
     required_imports = set(config["required_root_imports"])
     allowed_prefixes = tuple(config["allowed_root_import_prefixes"])
@@ -59,16 +62,15 @@ def check_rules(repo_root: Path) -> list[str]:
 
 
 def main() -> int:
+    """Run the CSS architecture check."""
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
-    if not violations:
-        print("CSS architecture check passed")
-        return 0
-
-    print("CSS architecture violations:")
-    for violation in violations:
-        print(f"- {violation}")
-    return 1
+    return report_results(
+        "CSS architecture check",
+        files_scanned=0,
+        details=["passed" if not violations else f"{len(violations)} violations"],
+        errors=violations,
+    )
 
 
 if __name__ == "__main__":

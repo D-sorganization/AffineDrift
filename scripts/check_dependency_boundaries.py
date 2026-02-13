@@ -4,12 +4,14 @@
 from __future__ import annotations
 
 import ast
-import json
 import sys
 from pathlib import Path
 
+from src.tools.utils.budget_check_utils import load_config, report_results
+
 
 def _extract_import_prefixes(path: Path) -> tuple[list[tuple[int, str]], bool]:
+    """Extract import module names from a Python file via AST."""
     text = path.read_text(encoding="utf-8")
     try:
         tree = ast.parse(text)
@@ -29,12 +31,13 @@ def _extract_import_prefixes(path: Path) -> tuple[list[tuple[int, str]], bool]:
 
 
 def _matches_prefix(module_name: str, prefix: str) -> bool:
+    """Check if a module name matches or is under a given prefix."""
     return module_name == prefix or module_name.startswith(f"{prefix}.")
 
 
 def check_rules(repo_root: Path) -> list[str]:
-    config_path = repo_root / "config" / "dependency_boundaries.json"
-    config = json.loads(config_path.read_text(encoding="utf-8"))
+    """Check all dependency boundary rules from config."""
+    config = load_config(repo_root, "dependency_boundaries.json")
 
     root = repo_root / config["python_root"]
     rules = config["rules"]
@@ -62,7 +65,8 @@ def check_rules(repo_root: Path) -> list[str]:
                 for forbidden in rule["forbidden_prefixes"]:
                     if _matches_prefix(imported, forbidden):
                         violations.append(
-                            f"{rel}:{line_no} {source_prefix} must not import {forbidden} (found: {imported})"
+                            f"{rel}:{line_no} {source_prefix} must not import "
+                            f"{forbidden} (found: {imported})"
                         )
 
     if skipped_files:
@@ -72,17 +76,15 @@ def check_rules(repo_root: Path) -> list[str]:
 
 
 def main() -> int:
+    """Run the dependency boundary check."""
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
-
-    if not violations:
-        print("Dependency boundary check passed")
-        return 0
-
-    print("Dependency boundary violations:")
-    for violation in violations:
-        print(f"- {violation}")
-    return 1
+    return report_results(
+        "Dependency boundary check",
+        files_scanned=0,
+        details=["passed" if not violations else f"{len(violations)} violations"],
+        errors=violations,
+    )
 
 
 if __name__ == "__main__":

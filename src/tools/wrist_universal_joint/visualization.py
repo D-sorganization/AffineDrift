@@ -28,114 +28,80 @@ if TYPE_CHECKING:
 
 # ⚡ Bolt Optimization: Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
-def draw_diagram(
-    grip_angle_deg: float,
-    wrist_angle_deg: float,
-) -> Figure:
-    """Draw the forearm-hand-club diagram."""
-    fig, ax = plt.subplots(figsize=(12, 4))
-
-    theta_grip_rad = np.radians(grip_angle_deg)
-    phi_wrist_rad = np.radians(wrist_angle_deg)
-
-    # Coordinate system: club is always horizontal, clubhead on left pointing up
-    wrist_x = 0.4
-    wrist_y = 0.5
-
-    # Club shaft: always horizontal, extends left from hand midpoint (wrist)
-    shaft_length = 1.05  # 3x longer
-    hand_length = 0.2
-    hand_dir_x = np.cos(theta_grip_rad)
-    hand_dir_y = np.sin(theta_grip_rad)
-    shaft_attach_x = wrist_x
-    shaft_attach_y = wrist_y
-    shaft_end_x = shaft_attach_x - shaft_length
-    shaft_end_y = shaft_attach_y
-
-    # Draw club shaft (horizontal)
+def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:
+    """Draw the horizontal club shaft and return the shaft end X-coordinate."""
+    shaft_end_x = wrist_x - shaft_length
     ax.plot(
-        [shaft_end_x, shaft_attach_x],
-        [shaft_end_y, shaft_attach_y],
+        [shaft_end_x, wrist_x],
+        [wrist_y, wrist_y],
         "k-",
         linewidth=8,
         solid_capstyle="round",
         label="Club Shaft",
         zorder=3,
     )
+    return shaft_end_x
 
-    # Clubhead: on left end, pointing up, trapezoid shape, tilted 30 degrees
-    clubhead_width_base = 0.08
-    clubhead_width_bottom = clubhead_width_base / 3
-    clubhead_width_top = clubhead_width_base * 4 / 3
-    clubhead_height = 0.24
-    clubhead_angle_deg = 30
-    clubhead_angle_rad = np.radians(clubhead_angle_deg)
 
-    clubhead_base_x = shaft_end_x
-    clubhead_base_y = shaft_end_y
+def _draw_clubhead(ax: Any, base_x: float, base_y: float) -> None:
+    """Draw the tilted trapezoid clubhead at the shaft end."""
+    width_bottom = 0.08 / 3
+    width_top = 0.08 * 4 / 3
+    height = 0.24
+    angle_rad = np.radians(30)
 
     corners = np.array(
         [
-            [-clubhead_width_bottom / 2, 0],
-            [clubhead_width_bottom / 2, 0],
-            [clubhead_width_top / 2, clubhead_height],
-            [-clubhead_width_top / 2, clubhead_height],
-        ],
+            [-width_bottom / 2, 0],
+            [width_bottom / 2, 0],
+            [width_top / 2, height],
+            [-width_top / 2, height],
+        ]
     )
 
-    cos_a = np.cos(clubhead_angle_rad)
-    sin_a = np.sin(clubhead_angle_rad)
-    rotation_matrix = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
-    rotated_corners = corners @ rotation_matrix.T
+    cos_a, sin_a = np.cos(angle_rad), np.sin(angle_rad)
+    rotation = np.array([[cos_a, -sin_a], [sin_a, cos_a]])
+    rotated = corners @ rotation.T
+    rotated[:, 0] += base_x
+    rotated[:, 1] += base_y
 
-    rotated_corners[:, 0] += clubhead_base_x
-    rotated_corners[:, 1] += clubhead_base_y
-
-    clubhead = Polygon(
-        rotated_corners,
-        facecolor="silver",
-        alpha=0.9,
-        edgecolor="gray",
-        linewidth=2,
-        zorder=4,
-    )
-    ax.add_patch(clubhead)
-
-    # Hand: attached at midpoint to wrist, rotated by grip angle
-    hand_width = 0.12
-    hand_center_x = wrist_x
-    hand_center_y = wrist_y
-
-    hand = Ellipse(
-        (hand_center_x, hand_center_y),
-        hand_length,
-        hand_width,
-        angle=np.degrees(theta_grip_rad),
-        facecolor="tan",
-        alpha=0.8,
-        edgecolor="saddlebrown",
-        linewidth=2,
-        zorder=6,
-    )
-    ax.add_patch(hand)
-
-    # Draw 4 fingers on hand
-    _draw_fingers(ax, hand_center_x, hand_center_y, hand_dir_x, hand_dir_y)
-
-    # Forearm: attached to hand at long axis endpoints
-    _draw_forearm(
-        ax,
-        wrist_x,
-        wrist_y,
-        hand_length,
-        hand_dir_x,
-        hand_dir_y,
-        theta_grip_rad,
-        phi_wrist_rad,
+    ax.add_patch(
+        Polygon(
+            rotated,
+            facecolor="silver",
+            alpha=0.9,
+            edgecolor="gray",
+            linewidth=2,
+            zorder=4,
+        )
     )
 
-    # Draw wrist joint
+
+def _draw_hand(
+    ax: Any,
+    wrist_x: float,
+    wrist_y: float,
+    hand_length: float,
+    theta_grip_rad: float,
+) -> None:
+    """Draw the hand ellipse at the wrist position."""
+    ax.add_patch(
+        Ellipse(
+            (wrist_x, wrist_y),
+            hand_length,
+            0.12,
+            angle=np.degrees(theta_grip_rad),
+            facecolor="tan",
+            alpha=0.8,
+            edgecolor="saddlebrown",
+            linewidth=2,
+            zorder=6,
+        )
+    )
+
+
+def _draw_wrist_joint(ax: Any, wrist_x: float, wrist_y: float) -> None:
+    """Draw the wrist joint marker and label."""
     ax.plot(wrist_x, wrist_y, "ko", markersize=12, zorder=10)
     ax.text(
         wrist_x,
@@ -147,19 +113,53 @@ def draw_diagram(
         zorder=11,
     )
 
-    # Draw grip angle arc (θ_grip)
-    _draw_grip_angle_arc(ax, wrist_x, wrist_y, theta_grip_rad)
 
-    # Draw wrist angle arc (φ)
-    hand_endpoint_forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
-    hand_endpoint_forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
-    _draw_wrist_angle_arc(
+@st.cache_resource(max_entries=20)
+def draw_diagram(
+    grip_angle_deg: float,
+    wrist_angle_deg: float,
+) -> Figure:
+    """Draw the forearm-hand-club diagram.
+
+    This coordinator delegates rendering to focused helper functions.
+    """
+    fig, ax = plt.subplots(figsize=(12, 4))
+
+    theta_grip_rad = np.radians(grip_angle_deg)
+    phi_wrist_rad = np.radians(wrist_angle_deg)
+    wrist_x, wrist_y = 0.4, 0.5
+    hand_length = 0.2
+    hand_dir_x = np.cos(theta_grip_rad)
+    hand_dir_y = np.sin(theta_grip_rad)
+
+    # Club components
+    shaft_end_x = _draw_club_shaft(ax, wrist_x, wrist_y, shaft_length=1.05)
+    _draw_clubhead(ax, shaft_end_x, wrist_y)
+
+    # Hand and fingers
+    _draw_hand(ax, wrist_x, wrist_y, hand_length, theta_grip_rad)
+    _draw_fingers(ax, wrist_x, wrist_y, hand_dir_x, hand_dir_y)
+
+    # Forearm
+    _draw_forearm(
         ax,
-        hand_endpoint_forearm_x,
-        hand_endpoint_forearm_y,
+        wrist_x,
+        wrist_y,
+        hand_length,
+        hand_dir_x,
+        hand_dir_y,
         theta_grip_rad,
         phi_wrist_rad,
     )
+
+    # Wrist joint marker
+    _draw_wrist_joint(ax, wrist_x, wrist_y)
+
+    # Angle arcs
+    _draw_grip_angle_arc(ax, wrist_x, wrist_y, theta_grip_rad)
+    forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
+    forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
+    _draw_wrist_angle_arc(ax, forearm_x, forearm_y, theta_grip_rad, phi_wrist_rad)
 
     ax.set_xlim(-1.5, 0.8)
     ax.set_ylim(-0.2, 1.2)
