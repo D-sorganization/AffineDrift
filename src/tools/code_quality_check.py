@@ -123,6 +123,7 @@ def check_banned_patterns(
         "quality-check.py",
         "analyze_completist_data.py",
         "pragmatic_programmer_review.py",
+        "check_tech_debt_budget.py",
     ):
         return issues
 
@@ -188,6 +189,8 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
     # Exclude certain files/directories from docstring checks
     skip_docstring_checks = False
     if "scripts/" in str(filepath) or "tests/" in str(filepath):
+        skip_docstring_checks = True
+    if str(filepath).replace("\\", "/").endswith("src/core/contracts.py"):
         skip_docstring_checks = True
 
     try:

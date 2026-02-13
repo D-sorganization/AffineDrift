@@ -206,6 +206,7 @@ def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: boo
 
 
 def parse_args() -> argparse.Namespace:
+    """Parse CLI arguments for site-health checks."""
     parser = argparse.ArgumentParser(description="Check generated docs site health")
     parser.add_argument(
         "--fail-on",
