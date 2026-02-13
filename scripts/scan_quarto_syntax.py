@@ -12,12 +12,46 @@ Checks:
 """
 
 import enum
+import logging
 import sys
 from collections.abc import Callable  # noqa: F401  (used in type annotation below)
 from pathlib import Path
 from typing import Any
 
-from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
+try:
+    from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
+except Exception:  # pragma: no cover - lightweight CI fallback
+    # Fallback for minimal CI environments where optional runtime deps (e.g. numpy)
+    # are unavailable during syntax-only scans.
+    def setup_logging_with_timestamp(name: str) -> logging.Logger:
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+        )
+        return logging.getLogger(name)
+
+    def find_markdown_files() -> list[Path]:
+        root = Path(".")
+        suffixes = {".md", ".qmd"}
+        found: list[Path] = []
+
+        for path in root.iterdir():
+            if path.is_file() and path.suffix in suffixes and not path.name.startswith("README"):
+                found.append(path)
+
+        for search_dir in ("articles", "critiques"):
+            directory = root / search_dir
+            if not directory.exists():
+                continue
+            for path in directory.rglob("*"):
+                if not path.is_file() or path.suffix not in suffixes:
+                    continue
+                if "archive" in path.parts:
+                    continue
+                found.append(path)
+
+        return sorted(found)
+
 
 logger = setup_logging_with_timestamp(__name__)
 
