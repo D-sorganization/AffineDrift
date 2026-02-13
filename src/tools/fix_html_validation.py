@@ -26,6 +26,7 @@ from pathlib import Path
 
 # Add project root to path for imports
 from src.tools.utils import find_html_files, process_file_content, setup_logging
+from src.tools.utils.cli_contracts import ensure_existing_dir
 
 logger = setup_logging(__name__)
 
@@ -176,11 +177,16 @@ def main() -> int:
         help="Show what would be fixed without making changes",
     )
     args = parser.parse_args()
+    try:
+        docs_dir = ensure_existing_dir(str(args.docs_dir), value_name="--docs-dir")
+    except ValueError as exc:
+        logger.error(str(exc))
+        return 2
 
-    html_files = find_html_files(root_dir=".", docs_only=True)
+    html_files = find_html_files(root_dir=docs_dir, docs_only=False)
 
     if not html_files:
-        logger.warning("No HTML files found in %s", args.docs_dir)
+        logger.warning("No HTML files found in %s", docs_dir)
         return 0
 
     fixed_count = 0

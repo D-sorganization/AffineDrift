@@ -52,3 +52,11 @@ def ensure_existing_file(raw_path: str, *, value_name: str = "path") -> Path:
     if not path.exists() or not path.is_file():
         raise ValueError(f"{value_name} must be an existing file: {raw_path}")
     return path
+
+
+def ensure_existing_dir(raw_path: str, *, value_name: str = "path") -> Path:
+    """Validate that a CLI path argument points to an existing directory."""
+    path = Path(raw_path)
+    if not path.exists() or not path.is_dir():
+        raise ValueError(f"{value_name} must be an existing directory: {raw_path}")
+    return path
