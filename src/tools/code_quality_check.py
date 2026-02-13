@@ -122,6 +122,7 @@ def check_banned_patterns(
         "code_quality_check.py",
         "quality-check.py",
         "analyze_completist_data.py",
+        "generate_completist_data.py",
         "pragmatic_programmer_review.py",
         "check_tech_debt_budget.py",
     ):
