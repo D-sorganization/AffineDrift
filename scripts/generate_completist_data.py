@@ -24,6 +24,8 @@ from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Final
 
+from src.tools.utils.cli_contracts import ensure_existing_dir, ensure_writable_output_file
+
 # Configuration
 DATA_DIR: Final[str] = ".jules/completist_data"
 
@@ -330,8 +332,8 @@ SCAN_REGISTRY: list[tuple[str, ScanFunc]] = [
 ]
 
 
-def main() -> int:
-    """Main entry point for completist data generation."""
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for completist data generation."""
     parser = argparse.ArgumentParser(
         description="Generate completist data files by scanning the repository."
     )
@@ -353,16 +355,27 @@ def main() -> int:
         action="store_true",
         help="Enable verbose logging",
     )
+    return parser.parse_args(argv)
 
-    args = parser.parse_args()
 
+def main(argv: list[str] | None = None) -> int:
+    """Main entry point for completist data generation."""
+    args = parse_args(argv)
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(levelname)s: %(message)s",
     )
 
-    repo_root = args.repo_root.resolve()
-    output_dir = args.output_dir or (repo_root / DATA_DIR)
+    try:
+        repo_root = ensure_existing_dir(str(args.repo_root), value_name="--repo-root").resolve()
+        output_dir = (
+            ensure_writable_output_file(str(args.output_dir), value_name="--output-dir").resolve()
+            if args.output_dir
+            else (repo_root / DATA_DIR)
+        )
+    except ValueError as exc:
+        logger.error("%s", exc)
+        return 2
 
     logger.info("Scanning repository: %s", repo_root)
     logger.info("Output directory: %s", output_dir)

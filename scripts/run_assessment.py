@@ -16,6 +16,7 @@ from src.tools.utils import (
     setup_logging,
 )
 from src.tools.utils.assessment_utils import ASSESSMENT_DEFINITIONS as ASSESSMENTS
+from src.tools.utils.cli_contracts import ensure_writable_output_file
 from src.tools.utils.shell_utils import run_black_check, run_ruff_check
 
 logger = setup_logging(__name__)
@@ -168,7 +169,7 @@ This assessment was generated automatically. For detailed analysis:
     return 0
 
 
-def main():
+def main(argv: list[str] | None = None) -> int:
     """Parse command-line arguments and run the specified assessment."""
     parser = argparse.ArgumentParser(description="Run repository assessment")
     parser.add_argument(
@@ -184,11 +185,15 @@ def main():
         help="Output file path for assessment report",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    try:
+        output_path = ensure_writable_output_file(str(args.output), value_name="--output")
+    except ValueError as exc:
+        logger.error("%s", exc)
+        return 2
 
-    exit_code = run_assessment(args.assessment, args.output)
-    sys.exit(exit_code)
+    return run_assessment(args.assessment, output_path)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

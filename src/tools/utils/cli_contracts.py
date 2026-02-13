@@ -60,3 +60,12 @@ def ensure_existing_dir(raw_path: str, *, value_name: str = "path") -> Path:
     if not path.exists() or not path.is_dir():
         raise ValueError(f"{value_name} must be an existing directory: {raw_path}")
     return path
+
+
+def ensure_writable_output_file(raw_path: str, *, value_name: str = "path") -> Path:
+    """Validate that a CLI output file path is writable via its parent directory."""
+    path = Path(raw_path)
+    parent = path.parent if path.parent != Path("") else Path(".")
+    if not parent.exists() or not parent.is_dir():
+        raise ValueError(f"{value_name} parent directory must exist: {parent}")
+    return path

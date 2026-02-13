@@ -88,8 +88,12 @@ jobs:
         run: python3 scripts/check_contract_coverage.py
       - name: Verify Module Size Budget
         run: python3 scripts/check_module_size_budget.py
+      - name: Verify Changed-File Module Size Budget
+        run: python3 scripts/check_changed_file_size_budget.py
       - name: Verify Technical Debt Budget
         run: python3 scripts/check_tech_debt_budget.py
+      - name: Verify DRY Shared-Helper Adoption
+        run: python3 scripts/check_dry_adoption.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -142,19 +146,8 @@ jobs:
         env:
           PYTHONPATH: src
         run: pytest tests/ --cov=src/tools --cov-report=xml
-      - name: Critical Tooling Coverage Gate
-        run: |
-          pytest \
-            tests/test_check_site_health.py \
-            tests/test_generate_sitemap.py \
-            tests/test_update_navigation.py \
-            tests/test_latex_to_qmd.py \
-            --cov=src.tools.check_site_health \
-            --cov=src.tools.update_navigation \
-            --cov=src.tools.latex_to_qmd \
-            --cov=scripts.generate_sitemap \
-            --cov-report=term \
-            --cov-fail-under=60
+      - name: Critical Module Coverage Gate
+        run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

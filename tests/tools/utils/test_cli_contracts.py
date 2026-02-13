@@ -7,6 +7,7 @@ import pytest
 from src.tools.utils.cli_contracts import (
     ensure_existing_dir,
     ensure_existing_file,
+    ensure_writable_output_file,
     parse_csv_enum,
 )
 
@@ -62,3 +63,15 @@ def test_ensure_existing_dir_raises_for_missing_dir(tmp_path: Path) -> None:
     missing = tmp_path / "missing_dir"
     with pytest.raises(ValueError, match="must be an existing directory"):
         ensure_existing_dir(str(missing), value_name="--docs-dir")
+
+
+def test_ensure_writable_output_file_accepts_existing_parent(tmp_path: Path) -> None:
+    output = tmp_path / "report.json"
+    validated = ensure_writable_output_file(str(output), value_name="--output")
+    assert validated == output
+
+
+def test_ensure_writable_output_file_rejects_missing_parent(tmp_path: Path) -> None:
+    output = tmp_path / "missing" / "report.json"
+    with pytest.raises(ValueError, match="parent directory must exist"):
+        ensure_writable_output_file(str(output), value_name="--output")
