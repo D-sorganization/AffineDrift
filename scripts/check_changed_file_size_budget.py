@@ -40,25 +40,27 @@ def _merge_base(repo_root: Path) -> str:
 
 def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
     """Return repo-relative changed file paths."""
-    try:
-        result = subprocess.run(
-            ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base_ref}...HEAD"],
-            cwd=repo_root,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except subprocess.CalledProcessError:
-        # In shallow CI merge checkouts, merge-base refs may be unavailable.
-        # Fall back to changed files in current HEAD commit.
-        result = subprocess.run(
-            ["git", "show", "--name-only", "--pretty=", "--diff-filter=ACMR", "HEAD"],
-            cwd=repo_root,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    commands: list[list[str]] = [
+        ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base_ref}...HEAD"],
+        ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^1...HEAD"],
+        ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^2...HEAD"],
+        ["git", "show", "--name-only", "--pretty=", "--diff-filter=ACMR", "HEAD"],
+    ]
+    for cmd in commands:
+        try:
+            result = subprocess.run(
+                cmd,
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+            if files:
+                return files
+        except subprocess.CalledProcessError:
+            continue
+    return []
 
 
 def main() -> int:

@@ -50,4 +50,28 @@ def test_changed_files_falls_back_to_git_show_on_diff_failure(
     changed = check_changed_file_size_budget._changed_files(tmp_path, "HEAD~1")
     assert changed == ["scripts/check_changed_file_size_budget.py"]
     assert calls[0][0:2] == ["git", "diff"]
-    assert calls[1][0:2] == ["git", "show"]
+    assert calls[1][0:2] == ["git", "diff"]
+    assert calls[2][0:2] == ["git", "diff"]
+    assert calls[3][0:2] == ["git", "show"]
+
+
+def test_changed_files_uses_first_non_empty_result(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """The first successful non-empty candidate command should be returned."""
+    calls: list[list[str]] = []
+
+    def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
+        calls.append(args)
+        rev_range = args[-1]
+        if rev_range == "abc123...HEAD":
+            return SimpleNamespace(stdout="")
+        if rev_range == "HEAD^1...HEAD":
+            return SimpleNamespace(stdout="scripts/run_assessment.py\n")
+        raise subprocess.CalledProcessError(128, args)
+
+    monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
+    changed = check_changed_file_size_budget._changed_files(tmp_path, "abc123")
+    assert changed == ["scripts/run_assessment.py"]
+    assert calls[0][-1] == "abc123...HEAD"
+    assert calls[1][-1] == "HEAD^1...HEAD"
