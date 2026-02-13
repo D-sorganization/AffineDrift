@@ -24,11 +24,13 @@ from bs4 import BeautifulSoup
 
 try:
     from src.tools.utils import setup_logging
+    from src.tools.utils.cli_contracts import parse_csv_enum
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
     from src.tools.utils import setup_logging
+    from src.tools.utils.cli_contracts import parse_csv_enum
 
 logger = setup_logging(__name__)
 
@@ -37,15 +39,12 @@ DOCS_DIR = Path("docs")
 
 def parse_fail_on(raw: str) -> set[str]:
     """Parse --fail-on input into a normalized set."""
-    normalized = {item.strip().lower() for item in raw.split(",") if item.strip()}
-    aliases = {"all": {"broken", "orphaned"}}
-    resolved: set[str] = set()
-    for item in normalized:
-        if item in aliases:
-            resolved.update(aliases[item])
-        else:
-            resolved.add(item)
-    return resolved
+    return parse_csv_enum(
+        raw,
+        allowed={"broken", "orphaned"},
+        aliases={"all": {"broken", "orphaned"}},
+        value_name="--fail-on value",
+    )
 
 
 def is_inside_quarto_alternate_formats(tag: Any) -> bool:
@@ -229,7 +228,11 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
-    fail_on = parse_fail_on(args.fail_on)
+    try:
+        fail_on = parse_fail_on(args.fail_on)
+    except ValueError as exc:
+        logger.error("%s", exc)
+        sys.exit(2)
     exit_code = check_site_health(
         fail_on=fail_on,
         ignore_quarto_alternate_formats=not args.include_quarto_alternate_formats,

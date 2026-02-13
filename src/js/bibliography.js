@@ -675,6 +675,28 @@
   `;
   document.head.appendChild(style);
 
+  // Internal submodule surfaces for data/render/interaction responsibilities.
+  const bibliographyDataModule = {
+    loadBibliography,
+    processResponse,
+    setBibliographyData: (data) => {
+      bibliographyData = data;
+      filteredData = [...data];
+    },
+  };
+  const bibliographyRenderModule = {
+    getTypeClass,
+    renderBibliography,
+    showDetails,
+  };
+  const bibliographyInteractionModule = {
+    setupSearch,
+    setupSortControls,
+    sortEntries,
+    sortAndRender,
+    filterBibliography,
+  };
+
   // Expose for testing
   if (typeof module !== "undefined" && module.exports) {
     module.exports = {
@@ -687,10 +709,10 @@
       showDetails,
       setupSortControls,
       // Helper to set data for testing since it's local scope
-      setBibliographyData: (data) => {
-        bibliographyData = data;
-        filteredData = [...data];
-      },
+      setBibliographyData: bibliographyDataModule.setBibliographyData,
+      bibliographyDataModule,
+      bibliographyRenderModule,
+      bibliographyInteractionModule,
     };
   }
 })();

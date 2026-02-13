@@ -255,3 +255,9 @@ def test_parse_fail_on_specific_values():
     """Test parse_fail_on parses comma-separated values."""
     parsed = parse_fail_on("broken, orphaned")
     assert parsed == {"broken", "orphaned"}
+
+
+def test_parse_fail_on_invalid_value_raises():
+    """Test parse_fail_on rejects unsupported values."""
+    with pytest.raises(ValueError, match="Unsupported"):
+        parse_fail_on("broken,invalid")

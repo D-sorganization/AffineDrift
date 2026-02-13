@@ -18,7 +18,10 @@ const {
   showDetails,
   setupSortControls,
   loadBibliography,
-  setBibliographyData
+  setBibliographyData,
+  bibliographyDataModule,
+  bibliographyRenderModule,
+  bibliographyInteractionModule,
 } = require('../src/js/bibliography.js');
 
 describe('Bibliography Module', () => {
@@ -243,6 +246,14 @@ describe('Bibliography Module', () => {
       expect(container.innerHTML).toContain('Test Journal');
       expect(container.innerHTML).toContain('This is a test description.');
       expect(container.innerHTML).toContain('Google Scholar');
+    });
+  });
+
+  describe('submodule surfaces', () => {
+    test('should expose data, render, and interaction submodule APIs', () => {
+      expect(typeof bibliographyDataModule.loadBibliography).toBe('function');
+      expect(typeof bibliographyRenderModule.renderBibliography).toBe('function');
+      expect(typeof bibliographyInteractionModule.filterBibliography).toBe('function');
     });
   });
 });
