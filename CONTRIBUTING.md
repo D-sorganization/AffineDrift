@@ -230,6 +230,19 @@ const scrollToElement = (elementId, offset = 140) => {
 
 ## Pull Request Process
 
+### Architecture Decision Records (ADR)
+
+For architecture-impacting changes, add or update an ADR in `docs/adr/`.
+
+- Use `docs/adr/ADR_TEMPLATE.md`
+- Include context, decision, alternatives, and consequences
+- Link the ADR in the pull request description
+
+Examples of changes requiring ADRs:
+- New boundary/layering rules
+- Major testing strategy changes
+- Canonical source-of-truth changes for generated/synced assets
+
 ### Before Submitting
 
 1. **Run all quality checks locally**:
