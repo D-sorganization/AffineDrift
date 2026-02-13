@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from src.tools.utils import setup_logging
+from src.tools.utils.cli_contracts import ensure_existing_file
 
 logger = setup_logging(__name__)
 
@@ -271,14 +272,22 @@ def main():
         else:
             input_reports.append(pattern)
 
-    # Filter to existing files
-    input_reports = [p for p in input_reports if p.exists() and p.is_file()]
+    # Validate paths with shared CLI contracts
+    validated_reports: list[Path] = []
+    for report_path in input_reports:
+        try:
+            validated_reports.append(
+                ensure_existing_file(str(report_path), value_name="--input report")
+            )
+        except ValueError as exc:
+            logger.error(str(exc))
+            return 2
 
-    if not input_reports:
+    if not validated_reports:
         logger.error("No valid input reports found")
         return 1
 
-    exit_code = generate_summary(input_reports, args.output, args.json_output)
+    exit_code = generate_summary(validated_reports, args.output, args.json_output)
     return exit_code
 
 

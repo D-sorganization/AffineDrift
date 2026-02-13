@@ -1,8 +1,10 @@
 """Tests for CLI contract helpers."""
 
+from pathlib import Path
+
 import pytest
 
-from src.tools.utils.cli_contracts import parse_csv_enum
+from src.tools.utils.cli_contracts import ensure_existing_file, parse_csv_enum
 
 
 def test_parse_csv_enum_parses_and_normalizes() -> None:
@@ -31,3 +33,17 @@ def test_parse_csv_enum_rejects_unknown_values() -> None:
             aliases={"all": {"broken", "orphaned"}},
             value_name="--fail-on value",
         )
+
+
+def test_ensure_existing_file_returns_path_for_existing_file(tmp_path: Path) -> None:
+    report = tmp_path / "summary.json"
+    report.write_text("{}", encoding="utf-8")
+
+    validated = ensure_existing_file(str(report), value_name="--input")
+    assert validated == report
+
+
+def test_ensure_existing_file_raises_for_missing_file(tmp_path: Path) -> None:
+    missing = tmp_path / "missing.json"
+    with pytest.raises(ValueError, match="must be an existing file"):
+        ensure_existing_file(str(missing), value_name="--input")

@@ -5,6 +5,7 @@ This directory contains current quality assessments and implementation plans.
 ## Canonical Current Documents
 - `docs/assessments/QUALITATIVE_CODE_QUALITY_TEMPLATE_2026-02-13.md`
 - `docs/assessments/QUALITATIVE_CODE_QUALITY_ASSESSMENT_2026-02-13.md`
+- `docs/assessments/QUALITATIVE_CODE_QUALITY_REASSESSMENT_2026-02-13.md`
 - `docs/assessments/UI_UX_MODERNIZATION_PLAN_2026-02-12.md`
 
 ## Quality Governance

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 
 def parse_csv_enum(
     raw: str,
@@ -42,3 +44,11 @@ def parse_csv_enum(
         )
 
     return resolved
+
+
+def ensure_existing_file(raw_path: str, *, value_name: str = "path") -> Path:
+    """Validate that a CLI path argument points to an existing file."""
+    path = Path(raw_path)
+    if not path.exists() or not path.is_file():
+        raise ValueError(f"{value_name} must be an existing file: {raw_path}")
+    return path
