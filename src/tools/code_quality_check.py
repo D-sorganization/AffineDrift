@@ -121,6 +121,7 @@ def check_banned_patterns(
     if filepath.name in (
         "quality_check_script.py",
         "matlab_quality_check.py",
+        "line_checks.py",
         "code_quality_check.py",
         "quality-check.py",
         "analyze_completist_data.py",
@@ -162,6 +163,7 @@ def check_magic_numbers(lines: list[str], filepath: Path) -> list[tuple[int, str
     if filepath.name in (
         "quality_check_script.py",
         "matlab_quality_check.py",
+        "line_checks.py",
         "code_quality_check.py",
         "quality-check.py",
     ):
