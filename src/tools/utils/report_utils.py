@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from src.core.contracts import check_range, require
+
 
 def generate_markdown_report(
     category_id: str,
@@ -30,6 +32,9 @@ def generate_markdown_report(
     Returns:
         Path to the generated report file.
     """
+    require(len(category_id) > 0, "category_id must not be empty")
+    require(len(category_name) > 0, "category_name must not be empty")
+    check_range(grade, 0, 10, "grade")
     if recommendations is None:
         recommendations = ["See detailed findings"]
 
@@ -75,6 +80,9 @@ def generate_issue_document(
     Returns:
         Path to the generated issue file.
     """
+    require(len(category_id) > 0, "category_id must not be empty")
+    require(len(category_name) > 0, "category_name must not be empty")
+    check_range(grade, 0, 10, "grade")
     safe_name = category_name.replace(" ", "_").replace("/", "_")
     filename = f"ISSUE_Assessment_{category_id}_{safe_name}.md"
     output_path = Path(output_dir) / filename

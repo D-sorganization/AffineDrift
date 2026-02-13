@@ -7,6 +7,7 @@ from pathlib import Path
 
 import requests
 
+from src.core.contracts import require
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
@@ -22,6 +23,7 @@ def extract_image_urls(content: str) -> list[str]:
         A list of image URLs found in the content.
 
     """
+    require(content is not None, "content must not be None")
     # Match HTML img tags
     html_matches = re.findall(r'<img\s+[^>]*src=["\']([^"\']+)["\']', content)
 
@@ -42,6 +44,7 @@ def check_url(url: str, file_path: Path) -> str | None:
         None if the URL is valid, otherwise a string describing the error.
 
     """
+    require(len(url) > 0, "url must not be empty")
     if url.startswith("http"):
         try:
             headers = {

@@ -289,7 +289,7 @@ class ContractChecker:
         return True
 
 
-def invariant_checked[F: Callable[..., Any]](func: F) -> F:
+def invariant_checked(func: F) -> F:  # noqa: UP047
     """Decorator to check class invariants after method execution."""
     if DBC_LEVEL == ContractLevel.OFF:
         return func

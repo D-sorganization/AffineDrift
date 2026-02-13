@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import re
 
+from src.core.contracts import require
+
 
 def extract_frontmatter(content: str) -> tuple[str | None, str]:
     """Extract YAML frontmatter from content.
@@ -102,6 +104,7 @@ def parse_frontmatter_dict(content: str) -> dict[str, str]:
         >>> parse_frontmatter_dict(content)
         {'title': 'My Article', 'description': 'A great article'}
     """
+    require(content is not None, "content must not be None")
     frontmatter: dict[str, str] = {}
 
     if not content.startswith("---"):

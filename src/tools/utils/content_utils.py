@@ -10,6 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from src.core.contracts import require
 from src.tools.utils import parse_frontmatter_dict
 
 # Standard content directories to scan for QMD pages
@@ -51,6 +52,8 @@ def read_qmd_with_frontmatter(
         Tuple of (full content string, parsed frontmatter dict).
         Returns empty dict on parse failure.
     """
+    require(filepath is not None, "filepath must not be None")
+    require(filepath.exists(), "filepath must exist")
     content = filepath.read_text(encoding="utf-8")
     try:
         frontmatter = parse_frontmatter_dict(content)

@@ -10,6 +10,8 @@ import subprocess
 from collections.abc import Callable
 from typing import Any
 
+from src.core.contracts import require
+
 
 def run_tool(
     command: list[str],
@@ -30,6 +32,8 @@ def run_tool(
     Returns:
         Dictionary with tool execution results.
     """
+    require(len(command) > 0, "command must not be empty")
+    require(len(tool_name) > 0, "tool_name must not be empty")
     try:
         result = subprocess.run(
             command,

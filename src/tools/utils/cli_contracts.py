@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from src.core.contracts import require
+
 
 def parse_csv_enum(
     raw: str,
@@ -26,6 +28,7 @@ def parse_csv_enum(
     Raises:
         ValueError: If unknown tokens are present.
     """
+    require(len(allowed) > 0, "allowed set must not be empty")
     alias_map = aliases or {}
     tokens = {item.strip().lower() for item in raw.split(",") if item.strip()}
     resolved: set[str] = set()

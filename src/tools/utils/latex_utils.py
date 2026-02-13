@@ -17,6 +17,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from src.core.contracts import require
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
@@ -97,6 +98,7 @@ def extract_metadata(latex_content: str, fallback_title: str = "Untitled") -> La
     Returns:
         Populated LaTeXMetadata instance.
     """
+    require(len(latex_content) > 0, "latex_content must not be empty")
     return LaTeXMetadata(
         title=extract_title(latex_content, fallback_title),
         author=extract_author(latex_content),
@@ -262,6 +264,7 @@ def clean_common_latex(content: str) -> str:
     Removes comments, labels, spacing commands, and structural commands.
     This is the single-call entry point for shared cleanup.
     """
+    require(len(content) > 0, "content must not be empty for cleanup")
     content = remove_comments(content)
     content = remove_document_structure(content)
     content = remove_labels(content)

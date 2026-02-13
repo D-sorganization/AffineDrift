@@ -14,6 +14,8 @@ from typing import Any
 import numpy as np
 from simpleeval import EvalWithCompoundTypes
 
+from src.core.contracts import check_positive, ensure, require
+
 from .constants import MAX_DELTA_DEGREES, rng
 
 
@@ -39,6 +41,10 @@ def calculate_moments_of_inertia(
             - I_gamma: Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
 
     """
+    check_positive(clubhead_weight_g, "clubhead weight")
+    check_positive(shaft_weight_g, "shaft weight")
+    check_positive(club_length_m, "club length")
+    check_positive(cg_distance_m, "CG distance")
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
 
@@ -54,6 +60,8 @@ def calculate_moments_of_inertia(
     # I_gamma (lowest MOI axis) - typically 0.5x for golf clubs
     i_gamma = 0.5 * i_alpha
 
+    ensure(i_alpha > 0, "I_alpha must be positive")
+    ensure(i_gamma > 0, "I_gamma must be positive")
     return i_alpha, i_gamma
 
 
@@ -137,6 +145,7 @@ def generate_sample_torque(
             - error: Error message string, or None if successful.
 
     """
+    require(len(t) > 0, "time array must not be empty")
     error: str | None = None
 
     if noise_type == "Golf-like Random":
