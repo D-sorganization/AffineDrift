@@ -71,7 +71,7 @@ DEFAULT_N_HYSTERESIS: int = 3
 
 # ── PHYSICS ─────────────────────────────────────────────────────────────────
 
-GRAVITY_M_S2: float = 9.81
+GRAVITY_M_S2 = 9.81
 """Standard gravitational acceleration on Earth's surface (m/s^2)."""
 
 EARTH_MU: float = 3.986e14
