@@ -129,15 +129,30 @@
             <h4 class="result-title">${escapeHtml(result.title)}</h4>
             <span class="result-relevance">${relevance}%</span>
           </div>
-          ${result.description ? `<p class="result-description">${escapeHtml(truncate(result.description, 150))}</p>` : ""}
-          ${result.excerpt ? `<p class="result-excerpt">${escapeHtml(truncate(result.excerpt, 100))}</p>` : ""}
+          ${
+            result.description
+              ? `<p class="result-description">${escapeHtml(
+                  truncate(result.description, 150),
+                )}</p>`
+              : ""
+          }
+          ${
+            result.excerpt
+              ? `<p class="result-excerpt">${escapeHtml(
+                  truncate(result.excerpt, 100),
+                )}</p>`
+              : ""
+          }
           ${
             result.concepts && result.concepts.length > 0
               ? `
             <div class="result-concepts">
               ${result.concepts
                 .slice(0, 5)
-                .map((c) => `<span class="concept-tag-small">${escapeHtml(c)}</span>`)
+                .map(
+                  (c) =>
+                    `<span class="concept-tag-small">${escapeHtml(c)}</span>`,
+                )
                 .join("")}
             </div>
           `
@@ -149,7 +164,9 @@
       .join("");
 
     container.innerHTML = `
-      <div class="search-results-count">${results.length} result${results.length !== 1 ? "s" : ""} found</div>
+      <div class="search-results-count">${results.length} result${
+        results.length !== 1 ? "s" : ""
+      } found</div>
       <div class="search-results-list">${html}</div>
     `;
   }
@@ -164,11 +181,11 @@
     modal.id = "global-search-modal";
     modal.className = "search-modal";
     modal.innerHTML = `
-      <div class="search-modal-backdrop" onclick="AffineDriftSearch.closeModal()"></div>
+      <div class="search-modal-backdrop"></div>
       <div class="search-modal-content">
         <div class="search-modal-header">
           <input type="text" id="global-search-input" placeholder="Search articles, models, resources..." autocomplete="off">
-          <button class="search-close-btn" onclick="AffineDriftSearch.closeModal()">×</button>
+          <button type="button" class="search-close-btn" aria-label="Close search">×</button>
         </div>
         <div class="search-filters">
           <button class="filter-btn active" data-type="">All</button>
@@ -188,8 +205,17 @@
 
     // Setup event listeners
     const input = document.getElementById("global-search-input");
+    const backdrop = modal.querySelector(".search-modal-backdrop");
+    const closeBtn = modal.querySelector(".search-close-btn");
     let debounceTimer;
     let currentFilter = "";
+
+    if (backdrop) {
+      backdrop.addEventListener("click", closeModal);
+    }
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeModal);
+    }
 
     input.addEventListener("input", (e) => {
       clearTimeout(debounceTimer);
@@ -310,7 +336,7 @@
         searchIndex = null;
         fuse = null;
         isLoaded = false;
-      }
+      },
     };
   }
 })();

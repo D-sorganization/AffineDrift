@@ -8,9 +8,16 @@ page-layout: full
 ```{=html}
 <!-- Mobile Menu Toggle Button -->
 <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-  </svg>
+  <span class="icon-menu" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+    </svg>
+  </span>
+  <span class="icon-close" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+  </span>
 </button>
 
 <!-- Mobile Sidebar Overlay -->
@@ -177,75 +184,5 @@ page-layout: full
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Collapsible sidebar sections functionality
-  const toggleButtons = document.querySelectorAll('.sidebar-section-toggle');
-
-  toggleButtons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      const targetId = this.getAttribute('data-target');
-      const target = document.getElementById(targetId);
-      const isExpanded = this.getAttribute('aria-expanded') === 'true';
-
-      // Toggle the state
-      this.setAttribute('aria-expanded', !isExpanded);
-      target.classList.toggle('show');
-
-      // Animate the toggle icon
-      const icon = this.querySelector('.toggle-icon');
-      if (icon) {
-        icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
-      }
-    });
-
-    // Initialize toggle icon rotation based on initial state
-    const isExpanded = button.getAttribute('aria-expanded') === 'true';
-    const icon = button.querySelector('.toggle-icon');
-    if (icon && isExpanded) {
-      icon.style.transform = 'rotate(180deg)';
-    }
-  });
-
-  // Mobile Menu Toggle Functionality
-  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-  const sidebar = document.getElementById('home-sidebar');
-  const overlay = document.querySelector('.sidebar-overlay');
-
-  if (mobileMenuToggle && sidebar && overlay) {
-    mobileMenuToggle.addEventListener('click', function() {
-      const isOpen = sidebar.classList.contains('open');
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-      this.setAttribute('aria-expanded', !isOpen);
-
-      // Toggle hamburger icon to X
-      if (!isOpen) {
-        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
-      } else {
-        this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
-      }
-    });
-
-    overlay.addEventListener('click', function() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('active');
-      mobileMenuToggle.setAttribute('aria-expanded', 'false');
-      mobileMenuToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
-    });
-
-    // Close sidebar when clicking a link on mobile
-    sidebar.querySelectorAll('a').forEach(function(link) {
-      link.addEventListener('click', function() {
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove('open');
-          overlay.classList.remove('active');
-          mobileMenuToggle.setAttribute('aria-expanded', 'false');
-          mobileMenuToggle.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
-        }
-      });
-    });
-  }
-});
-</script>
+<script src="js/home.js"></script>
 ```

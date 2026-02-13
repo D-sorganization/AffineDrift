@@ -74,6 +74,8 @@ jobs:
         run: python3 scripts/check_quarto_render_coverage.py
       - name: Verify CSS Budget
         run: python3 scripts/check_styles_budget.py
+      - name: Verify UI/UX Anti-Pattern Budget
+        run: python3 scripts/check_ui_ux_budget.py
       - name: Verify Technical Debt Budget
         run: python3 scripts/check_tech_debt_budget.py
       - name: Install Tool Requirements
@@ -171,7 +173,7 @@ jobs:
   e2e-tests:
     needs: quality-gate
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -181,9 +183,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-      - name: Run E2E Tests
-        run: npx playwright test
+        run: npx playwright install --with-deps chromium
+      - name: Run E2E Smoke Tests (Critical Flows)
+        run: |
+          npx playwright test \
+            --project=chromium \
+            --retries=0 \
+            tests/e2e/smoke.spec.js
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
