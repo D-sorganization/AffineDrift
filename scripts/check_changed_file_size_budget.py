@@ -10,13 +10,13 @@ from pathlib import Path
 
 try:
     from scripts.check_module_size_budget import line_count
-    from src.tools.utils.budget_check_utils import load_config, report_results
+    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parent.parent
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
     from scripts.check_module_size_budget import line_count
-    from src.tools.utils.budget_check_utils import load_config, report_results
+    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
 
 
 def _merge_base(repo_root: Path) -> str:
@@ -89,6 +89,7 @@ def main() -> int:
     config = load_config(repo_root, "module_size_budget.json")
     max_by_ext = {k.lower(): int(v) for k, v in config["max_lines_by_extension"].items()}
     explicit_limits = {k: int(v) for k, v in config["explicit_limits"].items()}
+    include_roots = config["include_roots"]
     exclude_substrings = config["exclude_substrings"]
 
     base_ref = _merge_base(repo_root)
@@ -98,6 +99,8 @@ def main() -> int:
     checked = 0
 
     for rel in changed:
+        if not is_included(rel, include_roots, exclude_substrings):
+            continue
         if any(excl in rel for excl in exclude_substrings):
             continue
         path = repo_root / rel
