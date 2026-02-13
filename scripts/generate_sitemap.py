@@ -6,7 +6,8 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from src.tools.utils import parse_frontmatter_dict, setup_logging
+from src.tools.utils import setup_logging
+from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
 
 logger = setup_logging(__name__)
 
@@ -70,44 +71,29 @@ def get_changefreq(filepath: str) -> str:
 def main() -> None:
     """Generate sitemap.xml."""
     base_url = "https://affinedrift.com"
-
-    # Collect all pages
     pages: list[dict[str, str]] = []
-    content_dirs = [".", "articles"]
 
-    for content_dir in content_dirs:
-        dir_path = Path(content_dir)
-        if not dir_path.exists():
+    for filepath in collect_qmd_files():
+        relative_path = str(filepath)
+        url_path = relative_path.replace(".qmd", ".html")
+        if url_path == "index.html":
+            url_path = ""
+
+        _content, frontmatter = read_qmd_with_frontmatter(filepath)
+
+        # Skip pages without titles (likely not standalone pages)
+        if not frontmatter.get("title") and filepath.name != "index.qmd":
             continue
 
-        for filepath in dir_path.glob("*.qmd"):
-            if filepath.name.startswith("_"):
-                continue
-
-            relative_path = str(filepath)
-            url_path = relative_path.replace(".qmd", ".html")
-            if url_path == "index.html":
-                url_path = ""
-
-            try:
-                content = filepath.read_text(encoding="utf-8")
-                frontmatter = parse_frontmatter_dict(content)
-            except Exception:
-                frontmatter = {}
-
-            # Skip pages without titles (likely not standalone pages)
-            if not frontmatter.get("title") and filepath.name != "index.qmd":
-                continue
-
-            pages.append(
-                {
-                    "loc": f"{base_url}/{url_path}",
-                    "lastmod": get_git_last_modified(relative_path),
-                    "changefreq": get_changefreq(relative_path),
-                    "priority": get_priority(relative_path),
-                    "title": frontmatter.get("title", ""),
-                },
-            )
+        pages.append(
+            {
+                "loc": f"{base_url}/{url_path}",
+                "lastmod": get_git_last_modified(relative_path),
+                "changefreq": get_changefreq(relative_path),
+                "priority": get_priority(relative_path),
+                "title": frontmatter.get("title", ""),
+            },
+        )
 
     # Sort by priority
     pages.sort(key=lambda x: float(x["priority"]), reverse=True)

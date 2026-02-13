@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from src.tools.utils import parse_frontmatter_dict, setup_logging
+from src.tools.utils.content_utils import collect_qmd_files
 
 logger = setup_logging(__name__)
 
@@ -138,27 +139,18 @@ def audit_file(filepath: Path) -> dict[str, Any]:
 
 def main() -> None:
     """Run SEO audit on all content files."""
-    content_dirs = [".", "articles"]
     results: dict[str, Any] = {}
     total_issues = 0
     files_with_issues = 0
 
-    for content_dir in content_dirs:
-        dir_path = Path(content_dir)
-        if not dir_path.exists():
-            continue
+    for filepath in collect_qmd_files():
+        result = audit_file(filepath)
+        results[str(filepath)] = result
 
-        for filepath in dir_path.glob("*.qmd"):
-            if filepath.name.startswith("_"):
-                continue
-
-            result = audit_file(filepath)
-            results[str(filepath)] = result
-
-            issues = result.get("issues", [])
-            if issues:
-                files_with_issues += 1
-                total_issues += len(cast("list[str]", issues))
+        issues = result.get("issues", [])
+        if issues:
+            files_with_issues += 1
+            total_issues += len(cast("list[str]", issues))
 
     # Summary
     logger.info(

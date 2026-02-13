@@ -2,7 +2,8 @@
 
 from pathlib import Path
 
-from scripts.check_module_size_budget import is_included, line_count
+from scripts.check_module_size_budget import line_count
+from src.tools.utils.budget_check_utils import is_included
 
 
 def test_line_count_counts_non_newline_terminated_files(tmp_path: Path) -> None:

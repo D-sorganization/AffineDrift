@@ -222,6 +222,17 @@ def get_line_indent(line: str) -> str:
     return line[: len(line) - len(line.lstrip())]
 
 
+def _get_error_line(
+    lines: list[str],
+    error: MypyError,
+) -> tuple[int, str] | None:
+    """Return (index, line) for the error, or None if out of bounds."""
+    idx = error.line - 1
+    if idx >= len(lines):
+        return None
+    return (idx, lines[idx])
+
+
 def fix_callable_as_type(lines: list[str], error: MypyError) -> Fix | None:
     """Fix 'callable is not valid as a type' by replacing with Callable.
 
@@ -232,15 +243,14 @@ def fix_callable_as_type(lines: list[str], error: MypyError) -> Fix | None:
     if '"callable" is not valid as a type' not in error.message.lower():
         return None
 
-    idx = error.line - 1
-    if idx >= len(lines):
+    result = _get_error_line(lines, error)
+    if result is None:
         return None
+    idx, line = result
 
-    line = lines[idx]
     # Replace 'callable' with 'Callable[..., Any]' in type annotations
     if ": callable" in line.lower():
         original = line
-        # Handle parameter annotations like "param: callable"
         line = re.sub(
             r":\s*callable\b",
             ": Callable[..., Any]",
@@ -249,7 +259,6 @@ def fix_callable_as_type(lines: list[str], error: MypyError) -> Fix | None:
         )
         lines[idx] = line
 
-        # Ensure Callable and Any are imported
         _ensure_import(lines, "from collections.abc import Callable")
         _ensure_import(lines, "from typing import Any")
 
@@ -271,7 +280,6 @@ def fix_union_attr(lines: list[str], error: MypyError) -> Fix | None:
     if error.code != "union-attr":
         return None
 
-    # Extract the type from: Item "X" of "X | Y" has no attribute "Z"
     match = re.search(
         r'Item "(\w+)" of "([^"]+)" has no attribute "(\w+)"',
         error.message,
@@ -280,22 +288,17 @@ def fix_union_attr(lines: list[str], error: MypyError) -> Fix | None:
         return None
 
     bad_type, union_type, attr = match.groups()
-
-    # Find the other type(s) in the union that DO have the attribute
     types_in_union = [t.strip() for t in union_type.split("|")]
     good_types = [t for t in types_in_union if t != bad_type and t != "None"]
-
     if not good_types:
-        return None  # Can't determine the right type
-
-    idx = error.line - 1
-    if idx >= len(lines):
         return None
 
-    line = lines[idx]
+    result = _get_error_line(lines, error)
+    if result is None:
+        return None
+    idx, line = result
     indent = get_line_indent(line)
 
-    # Find the variable name being accessed (look for var.attr pattern)
     var_match = re.search(rf"(\w+)\.{re.escape(attr)}", line)
     if not var_match:
         return None
@@ -303,13 +306,10 @@ def fix_union_attr(lines: list[str], error: MypyError) -> Fix | None:
     var_name = var_match.group(1)
     target_type = good_types[0]
 
-    # Check if there's already an isinstance check nearby (within 3 lines above)
     for check_idx in range(max(0, idx - 3), idx):
         if f"isinstance({var_name}" in lines[check_idx]:
-            # Already has narrowing, just suppress
             return None
 
-    # Insert isinstance assertion before the line
     assert_line = f"{indent}assert isinstance({var_name}, {target_type})\n"
     lines.insert(idx, assert_line)
 
@@ -330,7 +330,6 @@ def fix_name_not_defined(lines: list[str], error: MypyError) -> Fix | None:
     if error.code != "name-defined":
         return None
 
-    # Extract name: Name "X" is not defined
     match = re.search(r'Name "(\w+)" is not defined', error.message)
     if not match:
         return None
@@ -348,40 +347,12 @@ def fix_name_not_defined(lines: list[str], error: MypyError) -> Fix | None:
     return None
 
 
-def fix_import_errors(lines: list[str], error: MypyError) -> Fix | None:
-    """Fix import-untyped and import-not-found with targeted suppression.
+# Error codes eligible for targeted suppression (import-related)
+_IMPORT_SUPPRESSIBLE = frozenset({"import-untyped", "import-not-found"})
 
-    These are SUPPRESSIONS but acceptable for third-party packages.
-    """
-    if error.code not in ("import-untyped", "import-not-found"):
-        return None
-
-    idx = error.line - 1
-    if idx >= len(lines):
-        return None
-
-    line = lines[idx]
-    if has_type_ignore(line, error.code):
-        return None  # Already suppressed
-
-    lines[idx] = add_type_ignore(line, error.code)
-    return Fix(
-        file=error.file,
-        line=error.line,
-        description=f"Suppress {error.code} for third-party import",
-        strategy="suppression",
-        original_code=line.strip(),
-    )
-
-
-def fix_generic_suppression(lines: list[str], error: MypyError) -> Fix | None:
-    """Last resort: add targeted # type: ignore[code] suppression.
-
-    Only used when no real fix is available. Uses specific error codes
-    rather than blanket ignores.
-    """
-    # Only suppress specific, well-understood error codes
-    suppressible_codes = {
+# Error codes eligible for last-resort suppression
+_GENERIC_SUPPRESSIBLE = frozenset(
+    {
         "assignment",
         "arg-type",
         "return-value",
@@ -396,25 +367,54 @@ def fix_generic_suppression(lines: list[str], error: MypyError) -> Fix | None:
         "redundant-cast",
         "var-annotated",
     }
+)
 
-    if error.code not in suppressible_codes:
-        return None  # Don't suppress unknown codes
 
-    idx = error.line - 1
-    if idx >= len(lines):
+def _apply_suppression(
+    lines: list[str],
+    error: MypyError,
+    description: str,
+) -> Fix | None:
+    """Add a targeted type: ignore suppression to the error line.
+
+    Shared by import-error and generic-suppression strategies.
+    """
+    result = _get_error_line(lines, error)
+    if result is None:
         return None
-
-    line = lines[idx]
+    idx, line = result
     if has_type_ignore(line, error.code):
-        return None  # Already suppressed
+        return None
 
     lines[idx] = add_type_ignore(line, error.code)
     return Fix(
         file=error.file,
         line=error.line,
-        description=f"Suppress mypy [{error.code}]: {error.message[:80]}",
+        description=description,
         strategy="suppression",
         original_code=line.strip(),
+    )
+
+
+def fix_import_errors(lines: list[str], error: MypyError) -> Fix | None:
+    """Suppress import-untyped and import-not-found for third-party packages."""
+    if error.code not in _IMPORT_SUPPRESSIBLE:
+        return None
+    return _apply_suppression(
+        lines,
+        error,
+        f"Suppress {error.code} for third-party import",
+    )
+
+
+def fix_generic_suppression(lines: list[str], error: MypyError) -> Fix | None:
+    """Last resort: add targeted type: ignore[code] for known error codes."""
+    if error.code not in _GENERIC_SUPPRESSIBLE:
+        return None
+    return _apply_suppression(
+        lines,
+        error,
+        f"Suppress mypy [{error.code}]: {error.message[:80]}",
     )
 
 

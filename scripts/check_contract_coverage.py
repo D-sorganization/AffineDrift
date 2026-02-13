@@ -3,13 +3,15 @@
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
+from src.tools.utils.budget_check_utils import load_config, report_results
+
 
 def check_rules(repo_root: Path) -> list[str]:
-    config = json.loads((repo_root / "config" / "contract_coverage_rules.json").read_text())
+    """Validate that required contract tokens exist in specified files."""
+    config = load_config(repo_root, "contract_coverage_rules.json")
     violations: list[str] = []
 
     for rule in config["rules"]:
@@ -28,17 +30,15 @@ def check_rules(repo_root: Path) -> list[str]:
 
 
 def main() -> int:
+    """Run the contract coverage check."""
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
-
-    if not violations:
-        print("Contract coverage check passed")
-        return 0
-
-    print("Contract coverage violations:")
-    for violation in violations:
-        print(f"- {violation}")
-    return 1
+    return report_results(
+        "Contract coverage check",
+        files_scanned=0,
+        details=["passed" if not violations else f"{len(violations)} violations"],
+        errors=violations,
+    )
 
 
 if __name__ == "__main__":

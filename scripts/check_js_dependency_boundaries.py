@@ -3,16 +3,18 @@
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
+
+from src.tools.utils.budget_check_utils import load_config, report_results
 
 IMPORT_RE = re.compile(r"""import\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']""")
 DYNAMIC_IMPORT_RE = re.compile(r"""import\(\s*["']([^"']+)["']\s*\)""")
 
 
 def _extract_imports(path: Path) -> list[tuple[int, str]]:
+    """Extract JS import specifiers and their line numbers from a file."""
     imports: list[tuple[int, str]] = []
     for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         for match in IMPORT_RE.finditer(line):
@@ -33,6 +35,7 @@ def _resolve_import_target(repo_root: Path, source_rel: str, specifier: str) -> 
 
 
 def _to_repo_relative(repo_root: Path, candidate: str) -> str | None:
+    """Convert an absolute or relative path to repo-relative POSIX form."""
     candidate_path = Path(candidate)
     if candidate_path.is_absolute():
         try:
@@ -43,8 +46,8 @@ def _to_repo_relative(repo_root: Path, candidate: str) -> str | None:
 
 
 def check_rules(repo_root: Path) -> list[str]:
-    config_path = repo_root / "config" / "js_dependency_boundaries.json"
-    config = json.loads(config_path.read_text(encoding="utf-8"))
+    """Check all JS dependency boundary rules from config."""
+    config = load_config(repo_root, "js_dependency_boundaries.json")
     rules = config["rules"]
     excludes = config["exclude_substrings"]
 
@@ -74,25 +77,23 @@ def check_rules(repo_root: Path) -> list[str]:
                 for forbidden_prefix in rule["forbidden_prefixes"]:
                     if imported_rel.startswith(forbidden_prefix):
                         violations.append(
-                            f"{rel}:{line_no} {source_prefix} must not import {forbidden_prefix} "
-                            f"(found: {specifier})"
+                            f"{rel}:{line_no} {source_prefix} must not import "
+                            f"{forbidden_prefix} (found: {specifier})"
                         )
 
     return violations
 
 
 def main() -> int:
+    """Run the JavaScript dependency boundary check."""
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
-
-    if not violations:
-        print("JavaScript dependency boundary check passed")
-        return 0
-
-    print("JavaScript dependency boundary violations:")
-    for violation in violations:
-        print(f"- {violation}")
-    return 1
+    return report_results(
+        "JavaScript dependency boundary check",
+        files_scanned=0,
+        details=["passed" if not violations else f"{len(violations)} violations"],
+        errors=violations,
+    )
 
 
 if __name__ == "__main__":

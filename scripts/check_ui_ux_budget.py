@@ -3,29 +3,31 @@
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
 
-
-def is_included(path: Path, include_roots: list[str], exclude_substrings: list[str]) -> bool:
-    path_str = str(path).replace("\\", "/")
-    if any(excl in path_str for excl in exclude_substrings):
-        return False
-    return any(path_str == root or path_str.startswith(f"{root}/") for root in include_roots)
+from src.tools.utils.budget_check_utils import (
+    collect_matching_files,
+    load_config,
+    read_text_safe,
+    report_results,
+)
 
 
 def main() -> int:
+    """Check UI/UX anti-pattern counts against budget limits."""
     repo_root = Path(__file__).resolve().parent.parent
-    config_path = repo_root / "config" / "ui_ux_budget.json"
-    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config = load_config(repo_root, "ui_ux_budget.json")
 
-    include_roots = config["include_roots"]
-    exclude_substrings = config["exclude_substrings"]
-    allowed_exts = set(config["file_extensions"])
+    files = collect_matching_files(
+        repo_root,
+        config["include_roots"],
+        config["exclude_substrings"],
+        set(config["file_extensions"]),
+    )
+
     check_configs = config["checks"]
-
     compiled = {
         name: {
             "regex": re.compile(check["pattern"], re.IGNORECASE | re.MULTILINE),
@@ -34,41 +36,22 @@ def main() -> int:
         for name, check in check_configs.items()
     }
     counts = {name: 0 for name in compiled}
-    files_scanned = 0
 
-    for path in repo_root.rglob("*"):
-        if not path.is_file():
+    for path in files:
+        text = read_text_safe(path)
+        if text is None:
             continue
-        rel = path.relative_to(repo_root)
-        if not is_included(rel, include_roots, exclude_substrings):
-            continue
-        if path.suffix and path.suffix.lower() not in allowed_exts:
-            continue
-
-        files_scanned += 1
-        try:
-            text = path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            continue
-
         for name, check in compiled.items():
             counts[name] += len(check["regex"].findall(text))
 
-    print("UI/UX anti-pattern budget check")
-    print(f"- files scanned: {files_scanned}")
-    for name, check in compiled.items():
-        print(f"- {name}: {counts[name]} (max {check['max_count']})")
+    details = [f"{name}: {counts[name]} (max {c['max_count']})" for name, c in compiled.items()]
 
     errors: list[str] = []
     for name, check in compiled.items():
         if counts[name] > check["max_count"]:
             errors.append(f"{name} budget exceeded: {counts[name]} > {check['max_count']}")
 
-    if errors:
-        for err in errors:
-            print(f"ERROR: {err}")
-        return 1
-    return 0
+    return report_results("UI/UX anti-pattern budget check", len(files), details, errors)
 
 
 if __name__ == "__main__":

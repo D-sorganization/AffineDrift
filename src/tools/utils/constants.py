@@ -25,6 +25,9 @@ EXCLUDE_DIRS_PYTHON: frozenset[str] = frozenset(
         "dist",
         ".mypy_cache",
         ".ruff_cache",
+        "content",
+        "legacy",
+        "Archive",
     }
 )
 
