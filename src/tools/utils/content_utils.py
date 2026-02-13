@@ -57,6 +57,6 @@ def read_qmd_with_frontmatter(
     content = filepath.read_text(encoding="utf-8")
     try:
         frontmatter = parse_frontmatter_dict(content)
-    except Exception:
+    except (ValueError, KeyError):
         frontmatter = {}
     return content, frontmatter

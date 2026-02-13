@@ -5,7 +5,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-import requests  # type: ignore[import-untyped]
+import requests
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
