@@ -30,32 +30,28 @@ SKIP_FILES = {
     "EMBEDDING_GUIDE.md",
     "CONTRIBUTING.md",
 }
+MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]*]\(([^)]+)\)")
+MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*]\(([^)]+)\)")
+HTML_HREF_PATTERN = re.compile(r'href=["\'](.*?)["\']')
+HTML_SRC_PATTERN = re.compile(r'src=["\'](.*?)["\']')
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
-    """Extract all links from a file."""
+    """Extract links and exact source line numbers from a file."""
     with open(file_path, encoding="utf-8") as f:
-        content = f.read()
+        lines = f.read().splitlines()
 
-    # Markdown links: [text](url)
-    md_links = re.findall(r"\[.*?\]\((.*?)\)", content)
-
-    # HTML links: href="url"
-    html_links = re.findall(r'href=["\'](.*?)["\']', content)
-
-    # Image links: src="url" (check for images too)
-    img_links = re.findall(r'src=["\'](.*?)["\']', content)
-
-    # Markdown images: ![text](url)
-    md_imgs = re.findall(r"!\[.*?\]\((.*?)\)", content)
-
-    all_links = md_links + html_links + img_links + md_imgs
-    return [
-        (link.strip(), i + 1)
-        for i, line in enumerate(content.splitlines())
-        for link in all_links
-        if link in line
-    ]  # Approximation of line number
+    links: list[tuple[str, int]] = []
+    for line_number, line in enumerate(lines, start=1):
+        for pattern in (
+            MARKDOWN_LINK_PATTERN,
+            MARKDOWN_IMAGE_PATTERN,
+            HTML_HREF_PATTERN,
+            HTML_SRC_PATTERN,
+        ):
+            for match in pattern.findall(line):
+                links.append((match.strip(), line_number))
+    return links
 
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:

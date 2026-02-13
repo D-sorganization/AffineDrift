@@ -16,6 +16,7 @@ The script will:
 
 import argparse
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
@@ -24,19 +25,29 @@ from bs4 import BeautifulSoup
 
 try:
     from src.tools.utils import setup_logging
-    from src.tools.utils.cli_contracts import parse_csv_enum
+    from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
         sys.path.insert(0, str(repo_root))
     from src.tools.utils import setup_logging
-    from src.tools.utils.cli_contracts import parse_csv_enum
+    from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
 
 logger = setup_logging(__name__)
 
 DOCS_DIR = Path("docs")
 ENTRY_POINT_NAMES = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
 ENTRY_POINT_PATHS = {"articles/ux-verification-test.html"}
+
+
+@dataclass(frozen=True)
+class BrokenLinkRecord:
+    """Structured broken-link finding."""
+
+    source: str
+    target: str
+    href: str
+    text: str
 
 
 def parse_fail_on(raw: str) -> set[str]:
@@ -60,15 +71,15 @@ def is_inside_quarto_alternate_formats(tag: Any) -> bool:
     return False
 
 
-def _collect_html_files() -> list[Path]:
+def _collect_html_files(*, docs_dir: Path) -> list[Path]:
     """Return all HTML files relative to docs directory."""
-    return [full_path.relative_to(DOCS_DIR) for full_path in DOCS_DIR.rglob("*.html")]
+    return [full_path.relative_to(docs_dir) for full_path in docs_dir.rglob("*.html")]
 
 
-def _collect_all_files() -> set[Path]:
+def _collect_all_files(*, docs_dir: Path) -> set[Path]:
     """Return all files relative to docs directory."""
     return {
-        full_path.relative_to(DOCS_DIR) for full_path in DOCS_DIR.rglob("*") if full_path.is_file()
+        full_path.relative_to(docs_dir) for full_path in docs_dir.rglob("*") if full_path.is_file()
     }
 
 
@@ -93,7 +104,7 @@ def _initial_orphaned_files(html_files: list[Path]) -> set[Path]:
     return {file_path for file_path in orphaned_files if "archive" not in file_path.parts}
 
 
-def _resolve_internal_target(*, source_file: Path, href: str) -> Path | None:
+def _resolve_internal_target(*, source_file: Path, href: str, docs_dir: Path) -> Path | None:
     """Resolve internal href to a docs-relative path when possible."""
     target_url, _anchor = urldefrag(href)
     if not target_url:
@@ -101,23 +112,24 @@ def _resolve_internal_target(*, source_file: Path, href: str) -> Path | None:
 
     current_dir = source_file.parent
     try:
-        resolved_target = (DOCS_DIR / current_dir / target_url).resolve()
-        if not resolved_target.is_relative_to(DOCS_DIR.resolve()):
+        resolved_target = (docs_dir / current_dir / target_url).resolve()
+        if not resolved_target.is_relative_to(docs_dir.resolve()):
             return None
-        return resolved_target.relative_to(DOCS_DIR.resolve())
+        return resolved_target.relative_to(docs_dir.resolve())
     except (ValueError, FileNotFoundError):
         return None
 
 
 def _find_broken_links_for_file(
     *,
+    docs_dir: Path,
     file_path: Path,
     all_files: set[Path],
     ignore_quarto_alternate_formats: bool,
-) -> tuple[list[dict[str, str]], set[Path]]:
+) -> tuple[list[BrokenLinkRecord], set[Path]]:
     """Parse a single HTML file and collect broken-link records."""
-    full_path = DOCS_DIR / file_path
-    broken_links: list[dict[str, str]] = []
+    full_path = docs_dir / file_path
+    broken_links: list[BrokenLinkRecord] = []
     referenced_targets: set[Path] = set()
     with full_path.open(encoding="utf-8") as file_handle:
         soup = BeautifulSoup(file_handle, "html.parser")
@@ -133,18 +145,20 @@ def _find_broken_links_for_file(
         if href.startswith(("http:", "https:", "mailto:", "tel:", "ftp:", "#")):
             continue
 
-        target_rel_path = _resolve_internal_target(source_file=file_path, href=href)
+        target_rel_path = _resolve_internal_target(
+            source_file=file_path, href=href, docs_dir=docs_dir
+        )
         if target_rel_path is None:
             continue
 
         if target_rel_path not in all_files:
             broken_links.append(
-                {
-                    "source": str(file_path),
-                    "target": str(target_rel_path),
-                    "href": href,
-                    "text": anchor.get_text(strip=True)[:50],
-                },
+                BrokenLinkRecord(
+                    source=str(file_path),
+                    target=str(target_rel_path),
+                    href=href,
+                    text=anchor.get_text(strip=True)[:50],
+                ),
             )
         else:
             referenced_targets.add(target_rel_path)
@@ -152,7 +166,7 @@ def _find_broken_links_for_file(
 
 
 def _report_findings(
-    *, broken_links: list[dict[str, str]], orphaned_files: set[Path], fail_on: set[str]
+    *, broken_links: list[BrokenLinkRecord], orphaned_files: set[Path], fail_on: set[str]
 ) -> int:
     """Emit logs and decide exit code based on selected fail criteria."""
     has_errors = False
@@ -161,10 +175,10 @@ def _report_findings(
         for link in broken_links:
             logger.warning(
                 "  %s -> %s (href: %s, text: %s)",
-                link["source"],
-                link["target"],
-                link["href"],
-                link["text"],
+                link.source,
+                link.target,
+                link.href,
+                link.text,
             )
         if "broken" in fail_on:
             has_errors = True
@@ -189,19 +203,26 @@ def _report_findings(
     return 1 if has_errors else 0
 
 
-def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: bool) -> int:
+def check_site_health(
+    *,
+    fail_on: set[str],
+    ignore_quarto_alternate_formats: bool,
+    docs_dir: Path | None = None,
+) -> int:
     """Scans the docs directory for HTML files and verifies internal links.
     Generates a site map and reports broken links and orphaned files.
     """
-    html_files = _collect_html_files()
-    all_files = _collect_all_files()
+    active_docs_dir = docs_dir if docs_dir is not None else DOCS_DIR
+    html_files = _collect_html_files(docs_dir=active_docs_dir)
+    all_files = _collect_all_files(docs_dir=active_docs_dir)
     _log_site_map(html_files)
-    broken_links: list[dict[str, str]] = []
+    broken_links: list[BrokenLinkRecord] = []
     orphaned_files = _initial_orphaned_files(html_files)
 
     for file_path in html_files:
         try:
             file_broken_links, referenced_targets = _find_broken_links_for_file(
+                docs_dir=active_docs_dir,
                 file_path=file_path,
                 all_files=all_files,
                 ignore_quarto_alternate_formats=ignore_quarto_alternate_formats,
@@ -220,7 +241,7 @@ def check_site_health(*, fail_on: set[str], ignore_quarto_alternate_formats: boo
     )
 
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse CLI arguments for site-health checks."""
     parser = argparse.ArgumentParser(description="Check generated docs site health")
     parser.add_argument(
@@ -233,18 +254,29 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Include links inside Quarto 'Other Formats' blocks in link checks.",
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--docs-dir",
+        default="docs",
+        help="Directory containing rendered HTML files to validate.",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run site-health checks from CLI args."""
+    args = parse_args(argv)
+    try:
+        fail_on = parse_fail_on(args.fail_on)
+        docs_dir = ensure_existing_dir(args.docs_dir, value_name="--docs-dir")
+    except ValueError as exc:
+        logger.error("%s", exc)
+        return 2
+    return check_site_health(
+        fail_on=fail_on,
+        ignore_quarto_alternate_formats=not args.include_quarto_alternate_formats,
+        docs_dir=docs_dir,
+    )
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    try:
-        fail_on = parse_fail_on(args.fail_on)
-    except ValueError as exc:
-        logger.error("%s", exc)
-        sys.exit(2)
-    exit_code = check_site_health(
-        fail_on=fail_on,
-        ignore_quarto_alternate_formats=not args.include_quarto_alternate_formats,
-    )
-    sys.exit(exit_code)
+    sys.exit(main())
