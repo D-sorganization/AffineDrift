@@ -11,215 +11,218 @@ Checks:
 5. Empty math blocks
 """
 
+import enum
 import sys
+from collections.abc import Callable  # noqa: F401  (used in type annotation below)
 from pathlib import Path
+from typing import Any
 
 from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
 
 logger = setup_logging_with_timestamp(__name__)
 
 
-def check_file(filepath: Path) -> list[tuple[int, str, str]]:
+class _State(enum.IntEnum):
+    """Parser states for the Quarto syntax scanner."""
+
+    TEXT = 0
+    CODE_BLOCK = 1
+    INLINE_CODE = 2
+    DISPLAY_MATH = 3
+    INLINE_MATH = 4
+
+
+class QuartoSyntaxScanner:
+    """State-machine scanner for Quarto / Markdown syntax issues.
+
+    Each parser state is handled by a dedicated method, keeping individual
+    functions short and testable.
     """
-    Scans a file for errors using a state machine.
-    Returns list of (line_number, error_message, suggestion).
+
+    def __init__(self, content: str) -> None:
+        self.content = content
+        self.length = len(content)
+        self.errors: list[tuple[int, str, str]] = []
+        self.state = _State.TEXT
+        self.i = 0
+        self.line_num = 1
+        self.start_line = 0
+        self.math_content_start = 0
+
+    # ── public API ─────────────────────────────────────────────
+
+    def scan(self) -> list[tuple[int, str, str]]:
+        """Run the scanner and return a list of ``(line, message, suggestion)``."""
+        while self.i < self.length:
+            char = self.content[self.i]
+            if char == "\n":
+                self.line_num += 1
+
+            handler = _STATE_HANDLERS[self.state]
+            handler(self, char)
+
+        # End-of-file checks
+        if self.state == _State.DISPLAY_MATH:
+            self.errors.append((self.start_line, "Unclosed display math", "Add closing $$"))
+
+        return self.errors
+
+    # ── state handlers ─────────────────────────────────────────
+
+    def _handle_text(self, char: str) -> None:
+        c = self.content
+        i = self.i
+
+        # Code block ```
+        if char == "`" and i + 2 < self.length and c[i + 1] == "`" and c[i + 2] == "`":
+            self.state = _State.CODE_BLOCK
+            self.i += 3
+            return
+
+        # Inline code `
+        if char == "`":
+            self.state = _State.INLINE_CODE
+            self.i += 1
+            return
+
+        # Display math $$
+        if char == "$" and i + 1 < self.length and c[i + 1] == "$":
+            self.state = _State.DISPLAY_MATH
+            self.start_line = self.line_num
+            self.math_content_start = i + 2
+            self.i += 2
+            return
+
+        # Inline math $
+        if char == "$":
+            if i > 0 and c[i - 1] == "\\":
+                self.i += 1
+                return
+            self.state = _State.INLINE_MATH
+            self.start_line = self.line_num
+            self.math_content_start = i + 1
+            self.i += 1
+            return
+
+        # Deprecated delimiters \( and \[
+        if char == "\\" and i + 1 < self.length:
+            nxt = c[i + 1]
+            if nxt == "(":
+                self.errors.append((self.line_num, "Found \\(", "Use $ ... $ for inline math"))
+            elif nxt == "[":
+                self.errors.append((self.line_num, "Found \\[", "Use $$ ... $$ for display math"))
+            self.i += 2
+            return
+
+        self.i += 1
+
+    def _handle_code_block(self, char: str) -> None:
+        c = self.content
+        i = self.i
+        if char == "`" and i + 2 < self.length and c[i + 1] == "`" and c[i + 2] == "`":
+            self.state = _State.TEXT
+            self.i += 3
+        else:
+            self.i += 1
+
+    def _handle_inline_code(self, char: str) -> None:
+        if char == "`":
+            self.state = _State.TEXT
+        self.i += 1
+
+    def _handle_display_math(self, char: str) -> None:
+        c = self.content
+        i = self.i
+        if char == "$" and i + 1 < self.length and c[i + 1] == "$":
+            math_text = c[self.math_content_start : i]
+            if "\\_" in math_text:
+                self.errors.append(
+                    (self.start_line, "Escaped underscore in display math", "Use _ instead of \\_")
+                )
+            self.state = _State.TEXT
+            self.i += 2
+        else:
+            self.i += 1
+
+    def _handle_inline_math(self, char: str) -> None:
+        c = self.content
+        i = self.i
+
+        # Escaped dollar inside inline math
+        if char == "\\" and i + 1 < self.length and c[i + 1] == "$":
+            self.i += 2
+            return
+
+        if char == "$":
+            self._validate_inline_math_content(c[self.math_content_start : i])
+            self.state = _State.TEXT
+            self.i += 1
+        elif char == "\n":
+            # Double newline → assume not math (e.g. currency "$10 to $20")
+            if i + 1 < self.length and c[i + 1] == "\n":
+                self.state = _State.TEXT
+            self.i += 1
+        else:
+            self.i += 1
+
+    # ── validation helpers ─────────────────────────────────────
+
+    def _validate_inline_math_content(self, math_text: str) -> None:
+        """Check a captured inline math block for common issues."""
+        if not math_text:
+            self.errors.append((self.start_line, "Empty inline math", "Remove empty $...$"))
+            return
+
+        if math_text[0].isspace():
+            self.errors.append(
+                (
+                    self.start_line,
+                    f"Leading space in inline math: '${math_text[:5]}...'",
+                    "Remove space after $",
+                )
+            )
+
+        if math_text[-1].isspace() and len(math_text) > 1 and math_text[-2] != "\\":
+            self.errors.append(
+                (
+                    self.start_line,
+                    f"Trailing space in inline math: '...{math_text[-5:]}$'",
+                    "Remove space before $",
+                )
+            )
+
+        if "\\_" in math_text:
+            self.errors.append(
+                (
+                    self.start_line,
+                    f"Escaped underscore in inline math: '${math_text[:10]}...'",
+                    "Use _ instead of \\_",
+                )
+            )
+
+
+# Map each state to its handler method for O(1) dispatch
+_STATE_HANDLERS: dict[_State, Any] = {
+    _State.TEXT: QuartoSyntaxScanner._handle_text,
+    _State.CODE_BLOCK: QuartoSyntaxScanner._handle_code_block,
+    _State.INLINE_CODE: QuartoSyntaxScanner._handle_inline_code,
+    _State.DISPLAY_MATH: QuartoSyntaxScanner._handle_display_math,
+    _State.INLINE_MATH: QuartoSyntaxScanner._handle_inline_math,
+}
+
+
+def check_file(filepath: Path) -> list[tuple[int, str, str]]:
+    """Scan a file for Quarto syntax errors.
+
+    Returns list of ``(line_number, error_message, suggestion)``.
     """
     try:
         content = filepath.read_text(encoding="utf-8")
-    except Exception as e:
-        logger.error(f"Failed to read {filepath}: {e}")
+    except Exception:
+        logger.exception("Failed to read %s", filepath)
         return []
 
-    errors = []
-
-    # States
-    STATE_TEXT = 0
-    STATE_CODE_BLOCK = 1  # ``` ... ```
-    STATE_INLINE_CODE = 2  # ` ... `
-    STATE_DISPLAY_MATH = 3  # $$ ... $$
-    STATE_INLINE_MATH = 4  # $ ... $
-
-    state = STATE_TEXT
-
-    i = 0
-    length = len(content)
-    line_num = 1
-
-    start_line = 0  # To track where a block started
-    math_content_start = 0
-
-    while i < length:
-        char = content[i]
-
-        # Track line numbers
-        if char == "\n":
-            line_num += 1
-            # Do not continue; let states handle newline if needed
-
-        # ---------------------------------------------------------
-        # State: TEXT
-        # ---------------------------------------------------------
-        if state == STATE_TEXT:
-            # Check for Code Block ```
-            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
-                state = STATE_CODE_BLOCK
-                i += 3
-                continue
-
-            # Check for Inline Code `
-            if char == "`":
-                state = STATE_INLINE_CODE
-                i += 1
-                continue
-
-            # Check for Display Math $$
-            if char == "$" and i + 1 < length and content[i + 1] == "$":
-                state = STATE_DISPLAY_MATH
-                start_line = line_num
-                math_content_start = i + 2
-                i += 2
-                continue
-
-            # Check for Inline Math $
-            # Must not be followed by space, tab, or newline (unless it's currency? heuristic needed)
-            # Quarto/Pandoc requires $x$ not $ x $.
-            # Actually, standard Pandoc allows $ 10 $ to be just text, but $x$ is math.
-            # However, we want to enforce strictness.
-            if char == "$":
-                # Check if it is escaped \$
-                if i > 0 and content[i - 1] == "\\":
-                    i += 1
-                    continue
-
-                state = STATE_INLINE_MATH
-                start_line = line_num
-                math_content_start = i + 1
-                i += 1
-                continue
-
-            # Check for deprecated delimiters \( and \[
-            if char == "\\" and i + 1 < length:
-                next_char = content[i + 1]
-                if next_char == "(":
-                    errors.append((line_num, "Found \\(", "Use $ ... $ for inline math"))
-                elif next_char == "[":
-                    # Check if it is part of a link/attribute syntax like \[...\] in rare cases?
-                    # But generally \[ ... \] is display math in LaTeX.
-                    # We accept it might be used for other things, but warn.
-                    # Heuristic: check if it looks like `\[ ... \]`
-                    errors.append((line_num, "Found \\[", "Use $$ ... $$ for display math"))
-                i += 2
-                continue
-
-            i += 1
-
-        # ---------------------------------------------------------
-        # State: CODE BLOCK
-        # ---------------------------------------------------------
-        elif state == STATE_CODE_BLOCK:
-            if char == "`" and i + 2 < length and content[i + 1] == "`" and content[i + 2] == "`":
-                state = STATE_TEXT
-                i += 3
-            else:
-                i += 1
-
-        # ---------------------------------------------------------
-        # State: INLINE CODE
-        # ---------------------------------------------------------
-        elif state == STATE_INLINE_CODE:
-            if char == "`":
-                state = STATE_TEXT
-                i += 1
-            else:
-                i += 1
-
-        # ---------------------------------------------------------
-        # State: DISPLAY MATH
-        # ---------------------------------------------------------
-        elif state == STATE_DISPLAY_MATH:
-            if char == "$" and i + 1 < length and content[i + 1] == "$":
-                # End of display math
-                math_text = content[math_content_start:i]
-
-                # Check for escaped underscores
-                if "\\_" in math_text:
-                    errors.append(
-                        (start_line, "Escaped underscore in display math", "Use _ instead of \\_")
-                    )
-
-                state = STATE_TEXT
-                i += 2
-            else:
-                i += 1
-
-        # ---------------------------------------------------------
-        # State: INLINE MATH
-        # ---------------------------------------------------------
-        elif state == STATE_INLINE_MATH:
-            # Check for escaped dollar inside inline math
-            if char == "\\" and i + 1 < length and content[i + 1] == "$":
-                i += 2
-                continue
-
-            if char == "$":
-                # End of inline math
-                math_text = content[math_content_start:i]
-
-                # Validation logic
-                if not math_text:
-                    errors.append((start_line, "Empty inline math", "Remove empty $...$"))
-                else:
-                    # Check for leading/trailing spaces
-                    if math_text[0].isspace():
-                        errors.append(
-                            (
-                                start_line,
-                                f"Leading space in inline math: '${math_text[:5]}...'",
-                                "Remove space after $",
-                            )
-                        )
-                    if math_text[-1].isspace() and len(math_text) > 1 and math_text[-2] != "\\":
-                        # ensure the space isn't escaped like "\ " (though rare in math mode endings)
-                        errors.append(
-                            (
-                                start_line,
-                                f"Trailing space in inline math: '...{math_text[-5:]}$'",
-                                "Remove space before $",
-                            )
-                        )
-
-                    # Check for escaped underscores
-                    if "\\_" in math_text:
-                        errors.append(
-                            (
-                                start_line,
-                                f"Escaped underscore in inline math: '${math_text[:10]}...'",
-                                "Use _ instead of \\_",
-                            )
-                        )
-
-                state = STATE_TEXT
-                i += 1
-            elif char == "\n":
-                # Inline math usually shouldn't span multiple paragraphs (double newline)
-                # But single newline is okay.
-                # If we hit a double newline, we assume the $ was just a dollar sign.
-                if i + 1 < length and content[i + 1] == "\n":
-                    # Reset state, assume it was currency or mistake
-                    # We could warn "Unclosed inline math" but that causes false positives for text like "Prices range from $10 to $20."
-                    # So we just silently reset.
-                    state = STATE_TEXT
-                    i += 1
-                else:
-                    i += 1
-            else:
-                i += 1
-
-    # End of file checks
-    if state == STATE_DISPLAY_MATH:
-        errors.append((start_line, "Unclosed display math", "Add closing $$"))
-
-    return errors
+    return QuartoSyntaxScanner(content).scan()
 
 
 def main() -> None:
@@ -227,18 +230,18 @@ def main() -> None:
     files = find_markdown_files()
     total_issues = 0
 
-    logger.info(f"Scanning {len(files)} files...")
+    logger.info("Scanning %d files...", len(files))
 
     for f in files:
         issues = check_file(f)
         if issues:
-            logger.warning(f"File: {f}")
+            logger.warning("File: %s", f)
             for line, msg, fix in issues:
-                logger.warning(f"  Line {line}: {msg} -> {fix}")
+                logger.warning("  Line %d: %s -> %s", line, msg, fix)
             total_issues += len(issues)
 
     if total_issues > 0:
-        logger.error(f"Found {total_issues} issues.")
+        logger.error("Found %d issues.", total_issues)
         sys.exit(1)
     else:
         logger.info("No issues found!")

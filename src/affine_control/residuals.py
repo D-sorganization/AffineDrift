@@ -7,6 +7,8 @@ from src.core.contracts import (
     ContractChecker,
     check_finite_array,
     check_positive,
+    ensure,
+    invariant_checked,
     require,
 )
 
@@ -116,18 +118,21 @@ def predict_residual_bound(
     Returns:
         r_bound: Predicted residual bound at final time
     """
-    r_accum = 0.0
-    # Integral roughly sum( M/2 * dx^2 * dt )
+    check_finite_array(M_traj, "M_traj")
+    check_finite_array(delta_x_traj, "delta_x_traj")
+    check_finite_array(dt_traj, "dt_traj")
+    require(len(dt_traj) > 0, "dt_traj must not be empty")
 
-    # Assume trapezoidal or simple left-rect
+    r_accum = 0.0
+
     for i in range(len(dt_traj)):
-        # If trajectories match standard lengths
         if i >= len(M_traj) or i >= len(delta_x_traj):
             break
 
         rate = float((M_traj[i] / 2.0) * (delta_x_traj[i] ** 2))
         r_accum += rate * float(dt_traj[i])
 
+    ensure(r_accum >= 0, "residual bound must be non-negative", r_accum)
     return r_accum
 
 
@@ -172,6 +177,7 @@ class ResidualMonitor(ContractChecker):
             ),
         ]
 
+    @invariant_checked
     def update(
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
     ) -> tuple[str, float]:
@@ -180,8 +186,10 @@ class ResidualMonitor(ContractChecker):
         Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
         In reality: r = x_meas - (x_nom + Phi * delta_x0)
         """
-        # Simplified: Use tracking error as proxy for drift if delta_x0 is small
-        # Or better: passed in estimated residual
+        check_finite_array(x_meas, "x_meas")
+        check_finite_array(x_nom, "x_nom")
+        require(x_meas.shape == x_nom.shape, "x_meas and x_nom must have same shape")
+
         r_est = np.linalg.norm(x_meas - x_nom)
 
         next_mode = self.mode

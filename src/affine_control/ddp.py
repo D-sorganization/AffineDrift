@@ -4,6 +4,13 @@ from typing import Any
 import numpy as np
 
 from src.affine_control.residuals import compute_hessian_bound
+from src.core.contracts import (
+    check_finite_array,
+    check_non_negative,
+    check_positive,
+    ensure,
+    require,
+)
 
 
 def estimate_perturbation_size(
@@ -29,8 +36,15 @@ def estimate_perturbation_size(
     Returns:
         Estimated perturbation magnitude ||delta_x||
     """
+    check_finite_array(x, "x")
+    check_non_negative(base_noise, "base_noise")
+    check_non_negative(state_scale, "state_scale")
+
     state_magnitude = float(np.linalg.norm(x))
-    return base_noise + state_scale * state_magnitude
+    result = base_noise + state_scale * state_magnitude
+
+    ensure(result >= 0, "perturbation size must be non-negative", result)
+    return result
 
 
 def adaptive_timestep_ddp_mock(
@@ -66,6 +80,14 @@ def adaptive_timestep_ddp_mock(
         u_traj: Optimized control trajectory
         t_traj: Adaptive time grid
     """
+
+    # --- Preconditions ---
+    check_finite_array(x0, "x0")
+    check_finite_array(xf, "xf")
+    require(x0.shape == xf.shape, "x0 and xf must have same shape")
+    check_positive(eps_residual, "eps_residual")
+    require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+    require(len(u_init) > 0, "u_init must not be empty")
 
     # Step 1: Initialize with uniform timestep
     u_traj = np.array(u_init)
@@ -134,6 +156,11 @@ def _simulate_trajectory(
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
     """Exponential integrator or RK4 simulation."""
+    require(
+        len(u_traj) == len(t_grid) - 1,
+        "u_traj length must equal t_grid length - 1",
+    )
+    check_finite_array(x0, "x0")
     x = [x0]
     curr_x = x0
     for i in range(len(u_traj)):
@@ -149,8 +176,9 @@ def _resample_controls(
     u_old: np.ndarray[Any, Any], t_old: np.ndarray[Any, Any], t_new: np.ndarray[Any, Any]
 ) -> np.ndarray[Any, Any]:
     """Zero-order hold interpolation."""
-    # Handle multi-dimensional controls
-    # u_dim = u_old.shape[1] if len(u_old.shape) > 1 else 1
+    require(len(u_old) > 0, "u_old must not be empty")
+    require(len(t_old) > 0, "t_old must not be empty")
+    require(len(t_new) > 0, "t_new must not be empty")
     u_resampled = []
 
     # Simple interpolation
