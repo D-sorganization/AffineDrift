@@ -978,6 +978,284 @@ nav .container {
   margin-top: auto;
 }
 
+/* ---
+   Bibliography
+   --- */
+.bib-entry {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bib-entry:hover {
+  border-color: var(--accent-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.bib-entry.highlighted {
+  border-color: var(--primary-blue);
+  background: var(--light-blue);
+}
+
+.bib-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+  flex: 1;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.type-paper {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.type-book {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.type-article {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.type-thesis {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.type-conference {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.type-other {
+  background: var(--bg-alt);
+  color: var(--text-muted);
+}
+
+.bib-meta {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-authors {
+  font-style: italic;
+}
+
+.bib-year {
+  margin-left: 0.5rem;
+}
+
+.bib-venue {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.concept-tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--text-main);
+}
+
+.bib-detail-content {
+  padding-top: 1rem;
+}
+
+.detail-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.detail-section {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section strong {
+  display: block;
+  color: var(--primary-blue);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.detail-section p {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.detail-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.detail-section li {
+  margin-bottom: 0.5rem;
+}
+
+.detail-section a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.detail-section a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+.bib-empty-state {
+  color: var(--text-muted);
+  padding: 2rem;
+  text-align: center;
+}
+
+.bib-empty-state-details {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.bib-inline-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.bib-inline-concepts-list {
+  margin-bottom: 0.75rem;
+}
+
+.bib-inline-links {
+  margin-top: 1rem;
+}
+
+.detail-text-capitalize {
+  text-transform: capitalize;
+}
+
+.detail-concepts {
+  margin-top: 0.5rem;
+}
+
+.detail-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.detail-related-list {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+#bib-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.bib-sort-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.sort-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-right: 0.25rem;
+}
+
+.sort-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-body);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-alt);
+}
+
+.sort-btn.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #fff;
+}
+
+#bib-count {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+@media (width <= 600px) {
+  #bib-sort-controls {
+    justify-content: center;
+  }
+
+  #bib-count {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+
 @media (width < 992px) {
   .resources-layout {
     grid-template-columns: 1fr;

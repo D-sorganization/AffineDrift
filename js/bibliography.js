@@ -64,8 +64,10 @@
 
     for (const term of queryTerms) {
       if (entry.title.toLowerCase().includes(term)) score += 5;
-      if ((entry.authors || []).join(" ").toLowerCase().includes(term)) score += 3;
-      if ((entry.concepts || []).join(" ").toLowerCase().includes(term)) score += 2;
+      if ((entry.authors || []).join(" ").toLowerCase().includes(term))
+        score += 3;
+      if ((entry.concepts || []).join(" ").toLowerCase().includes(term))
+        score += 2;
       if (haystack.includes(term)) score += 1;
     }
 
@@ -79,12 +81,18 @@
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const scored = entries.map((entry) => ({ entry, score: scoreEntry(entry, queryTerms) }));
+    const scored = entries.map((entry) => ({
+      entry,
+      score: scoreEntry(entry, queryTerms),
+    }));
 
     scored.sort((a, b) => {
-      if (state.sort === "newest") return (b.entry.year || 0) - (a.entry.year || 0);
-      if (state.sort === "oldest") return (a.entry.year || 0) - (b.entry.year || 0);
-      if (state.sort === "title") return a.entry.title.localeCompare(b.entry.title);
+      if (state.sort === "newest")
+        return (b.entry.year || 0) - (a.entry.year || 0);
+      if (state.sort === "oldest")
+        return (a.entry.year || 0) - (b.entry.year || 0);
+      if (state.sort === "title")
+        return a.entry.title.localeCompare(b.entry.title);
       if (b.score !== a.score) return b.score - a.score;
       return (b.entry.year || 0) - (a.entry.year || 0);
     });
@@ -102,7 +110,9 @@
       .filter(Boolean)
       .map(
         (url) =>
-          `<li><a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url)}</a></li>`
+          `<li><a href="${escapeHtml(
+            url,
+          )}" target="_blank" rel="noopener">${escapeHtml(url)}</a></li>`,
       )
       .join("");
 
@@ -110,12 +120,22 @@
       <h3 class="sidebar-heading">Details</h3>
       <h4>${escapeHtml(entry.title)}</h4>
       <p><strong>Authors:</strong> ${escapeHtml(authors || "Unknown")}</p>
-      <p><strong>Year:</strong> ${escapeHtml(String(entry.year || "Unknown"))}</p>
+      <p><strong>Year:</strong> ${escapeHtml(
+        String(entry.year || "Unknown"),
+      )}</p>
       <p><strong>Type:</strong> ${escapeHtml(entry.type || "reference")}</p>
       <p><strong>Venue:</strong> ${escapeHtml(entry.venue || "N/A")}</p>
       <p>${escapeHtml(entry.description || "No description available.")}</p>
-      ${concepts ? `<div><strong>Concepts:</strong><div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem;">${concepts}</div></div>` : ""}
-      ${links ? `<div style="margin-top: 1rem;"><strong>Links:</strong><ul>${links}</ul></div>` : ""}
+      ${
+        concepts
+          ? `<div><strong>Concepts:</strong><div class="bib-inline-concepts">${concepts}</div></div>`
+          : ""
+      }
+      ${
+        links
+          ? `<div class="bib-inline-links"><strong>Links:</strong><ul>${links}</ul></div>`
+          : ""
+      }
     `;
   };
 
@@ -133,7 +153,9 @@
     });
 
     state.filtered = sortEntries(filtered);
-    countEl.textContent = `${state.filtered.length} reference${state.filtered.length === 1 ? "" : "s"}`;
+    countEl.textContent = `${state.filtered.length} reference${
+      state.filtered.length === 1 ? "" : "s"
+    }`;
 
     if (state.filtered.length === 0) {
       listEl.innerHTML = `<p>No matches found. Try a broader query.</p>`;
@@ -149,12 +171,26 @@
           .join(" ");
 
         return `
-          <article class="resource-card" data-entry-id="${escapeHtml(entry.id)}">
+          <article class="resource-card" data-entry-id="${escapeHtml(
+            entry.id,
+          )}">
             <h3>${escapeHtml(entry.title)}</h3>
-            <p class="resource-description"><strong>${escapeHtml(String(entry.year || ""))}</strong> · ${escapeHtml(authors || "Unknown authors")}</p>
-            <p class="resource-description">${escapeHtml(entry.description || "")}</p>
-            ${concepts ? `<div style="display:flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem;">${concepts}</div>` : ""}
-            <button class="resource-link" type="button" data-details-id="${escapeHtml(entry.id)}" aria-label="View details for ${escapeHtml(entry.title)}">View details</button>
+            <p class="resource-description"><strong>${escapeHtml(
+              String(entry.year || ""),
+            )}</strong> · ${escapeHtml(authors || "Unknown authors")}</p>
+            <p class="resource-description">${escapeHtml(
+              entry.description || "",
+            )}</p>
+            ${
+              concepts
+                ? `<div class="bib-inline-concepts bib-inline-concepts-list">${concepts}</div>`
+                : ""
+            }
+            <button class="resource-link" type="button" data-details-id="${escapeHtml(
+              entry.id,
+            )}" aria-label="View details for ${escapeHtml(
+              entry.title,
+            )}">View details</button>
           </article>
         `;
       })
@@ -165,7 +201,9 @@
     const buttons = Object.entries(SORTS)
       .map(
         ([key, label]) =>
-          `<button type="button" class="resource-link" data-sort="${key}" aria-pressed="${state.sort === key ? "true" : "false"}">${label}</button>`
+          `<button type="button" class="resource-link" data-sort="${key}" aria-pressed="${
+            state.sort === key ? "true" : "false"
+          }">${label}</button>`,
       )
       .join("");
 
@@ -174,21 +212,20 @@
 
     const controls = document.createElement("div");
     controls.className = "bib-sort-actions";
-    controls.style.display = "flex";
-    controls.style.gap = "0.5rem";
-    controls.style.flexWrap = "wrap";
-    controls.style.marginBottom = "1rem";
     controls.innerHTML = buttons;
     sortControlsEl.prepend(controls);
   };
 
   const loadEntries = async () => {
-    const response = await fetch("data/bibliography.json", { cache: "no-cache" });
+    const response = await fetch("data/bibliography.json", {
+      cache: "no-cache",
+    });
     if (!response.ok) {
       throw new Error(`Failed to load bibliography data (${response.status})`);
     }
     const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Invalid bibliography data format");
+    if (!Array.isArray(data))
+      throw new Error("Invalid bibliography data format");
     return data;
   };
 
@@ -201,7 +238,9 @@
     } catch (error) {
       listEl.innerHTML = `<p>Unable to load bibliography data.</p>`;
       countEl.textContent = "0 references";
-      detailsEl.innerHTML = `<h3 class="sidebar-heading">Details</h3><p>${escapeHtml(error.message)}</p>`;
+      detailsEl.innerHTML = `<h3 class="sidebar-heading">Details</h3><p>${escapeHtml(
+        error.message,
+      )}</p>`;
       return;
     }
 
@@ -213,7 +252,7 @@
           window.AffineDriftMetrics.trackSearch(state.query);
         }
         renderList();
-      }, 180)
+      }, 180),
     );
 
     sortControlsEl.addEventListener("click", (event) => {
@@ -227,7 +266,9 @@
     listEl.addEventListener("click", (event) => {
       const button = event.target.closest("button[data-details-id]");
       if (!button) return;
-      const entry = state.entries.find((item) => item.id === button.dataset.detailsId);
+      const entry = state.entries.find(
+        (item) => item.id === button.dataset.detailsId,
+      );
       if (!entry) return;
       renderDetails(entry);
       if (window.AffineDriftMetrics) {

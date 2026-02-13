@@ -114,8 +114,8 @@
       <p><strong>Type:</strong> ${escapeHtml(entry.type || "reference")}</p>
       <p><strong>Venue:</strong> ${escapeHtml(entry.venue || "N/A")}</p>
       <p>${escapeHtml(entry.description || "No description available.")}</p>
-      ${concepts ? `<div><strong>Concepts:</strong><div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem;">${concepts}</div></div>` : ""}
-      ${links ? `<div style="margin-top: 1rem;"><strong>Links:</strong><ul>${links}</ul></div>` : ""}
+      ${concepts ? `<div><strong>Concepts:</strong><div class="bib-inline-concepts">${concepts}</div></div>` : ""}
+      ${links ? `<div class="bib-inline-links"><strong>Links:</strong><ul>${links}</ul></div>` : ""}
     `;
   };
 
@@ -153,7 +153,7 @@
             <h3>${escapeHtml(entry.title)}</h3>
             <p class="resource-description"><strong>${escapeHtml(String(entry.year || ""))}</strong> · ${escapeHtml(authors || "Unknown authors")}</p>
             <p class="resource-description">${escapeHtml(entry.description || "")}</p>
-            ${concepts ? `<div style="display:flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem;">${concepts}</div>` : ""}
+            ${concepts ? `<div class="bib-inline-concepts bib-inline-concepts-list">${concepts}</div>` : ""}
             <button class="resource-link" type="button" data-details-id="${escapeHtml(entry.id)}" aria-label="View details for ${escapeHtml(entry.title)}">View details</button>
           </article>
         `;
@@ -174,10 +174,6 @@
 
     const controls = document.createElement("div");
     controls.className = "bib-sort-actions";
-    controls.style.display = "flex";
-    controls.style.gap = "0.5rem";
-    controls.style.flexWrap = "wrap";
-    controls.style.marginBottom = "1rem";
     controls.innerHTML = buttons;
     sortControlsEl.prepend(controls);
   };
