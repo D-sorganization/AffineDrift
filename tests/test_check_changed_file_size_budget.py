@@ -38,6 +38,7 @@ def test_changed_files_falls_back_to_git_show_on_diff_failure(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """When merge-base diff fails, fallback should parse HEAD file list."""
+    monkeypatch.delenv("GITHUB_BASE_REF", raising=False)
     calls: list[list[str]] = []
 
     def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
@@ -60,6 +61,7 @@ def test_changed_files_uses_first_non_empty_result(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """The first successful non-empty candidate command should be returned."""
+    monkeypatch.delenv("GITHUB_BASE_REF", raising=False)
     calls: list[list[str]] = []
 
     def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
