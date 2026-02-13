@@ -75,3 +75,19 @@ def test_changed_files_uses_first_non_empty_result(
     assert changed == ["scripts/run_assessment.py"]
     assert calls[0][-1] == "abc123...HEAD"
     assert calls[1][-1] == "HEAD^1...HEAD"
+
+
+def test_changed_files_returns_empty_on_ci_when_all_commands_fail(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """CI fallback should fail-open instead of raising false-positive failures."""
+
+    def fake_run(args, **_kwargs):  # type: ignore[no-untyped-def]
+        if args[0:2] == ["git", "fetch"]:
+            return SimpleNamespace(stdout="")
+        raise subprocess.CalledProcessError(128, args)
+
+    monkeypatch.setattr(check_changed_file_size_budget.subprocess, "run", fake_run)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    monkeypatch.setenv("GITHUB_BASE_REF", "main")
+    assert check_changed_file_size_budget._changed_files(tmp_path, "HEAD~1") == []

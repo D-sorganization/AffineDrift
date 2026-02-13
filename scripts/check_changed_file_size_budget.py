@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -40,12 +41,29 @@ def _merge_base(repo_root: Path) -> str:
 
 def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
     """Return repo-relative changed file paths."""
-    commands: list[list[str]] = [
-        ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base_ref}...HEAD"],
-        ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^1...HEAD"],
-        ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^2...HEAD"],
-        ["git", "show", "--name-only", "--pretty=", "--diff-filter=ACMR", "HEAD"],
-    ]
+    ci_base_ref = os.getenv("GITHUB_BASE_REF", "").strip()
+    if ci_base_ref:
+        subprocess.run(
+            ["git", "fetch", "--depth=1", "origin", ci_base_ref],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    commands: list[list[str]] = []
+    if ci_base_ref:
+        commands.append(
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", f"origin/{ci_base_ref}...HEAD"]
+        )
+    commands.extend(
+        [
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base_ref}...HEAD"],
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^1...HEAD"],
+            ["git", "diff", "--name-only", "--diff-filter=ACMR", "HEAD^2...HEAD"],
+            ["git", "show", "--name-only", "--pretty=", "--diff-filter=ACMR", "HEAD"],
+        ]
+    )
     for cmd in commands:
         try:
             result = subprocess.run(
@@ -60,6 +78,8 @@ def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
                 return files
         except subprocess.CalledProcessError:
             continue
+    if os.getenv("GITHUB_ACTIONS") == "true":
+        return []
     return []
 
 
