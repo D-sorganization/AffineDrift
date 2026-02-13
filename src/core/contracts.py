@@ -306,7 +306,7 @@ def invariant_checked(func: F) -> F:  # noqa: UP047
 # ─── Numeric/Array Contract Helpers ────────────────────────────
 
 
-def check_finite_array(arr: np.ndarray, name: str = "array") -> None:
+def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:
     """Assert that a numpy array contains only finite values."""
     require(
         bool(np.all(np.isfinite(arr))),
@@ -336,7 +336,7 @@ def check_range(
 
 
 def check_shape(
-    arr: np.ndarray,
+    arr: np.ndarray[Any, Any],
     expected_shape: tuple[int, ...],
     name: str = "array",
 ) -> None:

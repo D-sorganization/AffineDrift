@@ -15,11 +15,12 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from src.core.contracts import require
 
 
-def load_config(repo_root: Path, config_name: str) -> dict:
+def load_config(repo_root: Path, config_name: str) -> dict[str, Any]:
     """Load a JSON config from the ``config/`` directory.
 
     Args:
@@ -32,7 +33,8 @@ def load_config(repo_root: Path, config_name: str) -> dict:
     require(repo_root is not None, "repo_root must not be None")
     require(len(config_name) > 0, "config_name must not be empty")
     config_path = repo_root / "config" / config_name
-    return json.loads(config_path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(config_path.read_text(encoding="utf-8"))
+    return result
 
 
 def is_included(
@@ -121,13 +123,13 @@ def report_results(
     Returns:
         ``0`` if no errors, ``1`` otherwise.
     """
-    print(check_name)
-    print(f"- files scanned: {files_scanned}")
+    print(check_name)  # noqa: T201 — CI script output
+    print(f"- files scanned: {files_scanned}")  # noqa: T201
     for detail in details:
-        print(f"- {detail}")
+        print(f"- {detail}")  # noqa: T201
 
     if errors:
         for err in errors:
-            print(f"ERROR: {err}")
+            print(f"ERROR: {err}")  # noqa: T201
         return 1
     return 0

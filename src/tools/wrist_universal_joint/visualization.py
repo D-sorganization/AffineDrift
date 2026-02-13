@@ -114,7 +114,7 @@ def _draw_wrist_joint(ax: Any, wrist_x: float, wrist_y: float) -> None:
     )
 
 
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def draw_diagram(
     grip_angle_deg: float,
     wrist_angle_deg: float,
@@ -368,7 +368,7 @@ def _draw_wrist_angle_arc(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -447,7 +447,7 @@ def plot_torque(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -512,7 +512,7 @@ def plot_acceleration(
 
 # ⚡ Bolt Optimization: Cache figure generation
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,

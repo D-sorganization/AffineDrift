@@ -147,6 +147,7 @@ def generate_sample_torque(
     """
     require(len(t) > 0, "time array must not be empty")
     error: str | None = None
+    torque: np.ndarray[Any, Any]
 
     if noise_type == "Golf-like Random":
         torque = rng.normal(0, 1, len(t))
