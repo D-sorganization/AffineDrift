@@ -353,7 +353,7 @@ def generate_report() -> None:
         f"# Completist Report: {date_s}\n",
         "## Executive Summary",
         f"- **Critical Gaps**: {len(criticals)}",
-        f"- **Feature Gaps ({"TO" + "DO"})**: {len(todos)}",
+        f"- **Feature Gaps ({'TO' + 'DO'})**: {len(todos)}",
         f"- **Content Gaps (Placeholders)**: {len(placeholders)}",
         f"- **Technical Debt**: {len(fixmes)}",
         f"- **Documentation Gaps**: {len(missing_docs)}\n",
