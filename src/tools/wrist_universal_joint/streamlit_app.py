@@ -21,6 +21,7 @@ from .constants import (
     DEFAULT_CLUBHEAD_CG_DISTANCE,
     DEFAULT_CLUBHEAD_WEIGHT,
     DEFAULT_SHAFT_WEIGHT,
+    DEFAULT_SIGNAL_LENGTH,
 )
 from .torque_calculator import (
     calculate_moments_of_inertia,
@@ -278,7 +279,7 @@ def _render_main_content(params: dict[str, Any]) -> None:
         params: Dictionary of user-selected parameters from sidebar.
     """
     # Generate signal
-    t = np.linspace(0, 1, 500)
+    t = np.linspace(0, 1, DEFAULT_SIGNAL_LENGTH)
     input_torque, error = generate_sample_torque(
         params["noise_type"],
         t,

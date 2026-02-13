@@ -4,6 +4,16 @@ from typing import Any
 import numpy as np
 
 from src.affine_control.residuals import compute_hessian_bound
+from src.core.constants import (
+    DEFAULT_BASE_NOISE,
+    DEFAULT_DT_INIT,
+    DEFAULT_EPS_RESIDUAL,
+    DEFAULT_MAX_ITERS,
+    DEFAULT_STATE_SCALE,
+    DT_CLIP_MAX,
+    DT_CLIP_MIN,
+    EPSILON,
+)
 from src.core.contracts import (
     check_finite_array,
     check_non_negative,
@@ -16,8 +26,8 @@ from src.core.contracts import (
 def estimate_perturbation_size(
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
-    base_noise: float = 0.01,
-    state_scale: float = 0.1,
+    base_noise: float = DEFAULT_BASE_NOISE,
+    state_scale: float = DEFAULT_STATE_SCALE,
 ) -> float:
     """
     Estimates expected perturbation size based on state magnitude and noise model.
@@ -52,8 +62,8 @@ def adaptive_timestep_ddp_mock(
     x0: np.ndarray[Any, Any],
     xf: np.ndarray[Any, Any],
     u_init: np.ndarray[Any, Any],
-    eps_residual: float = 0.01,
-    max_iters: int = 100,
+    eps_residual: float = DEFAULT_EPS_RESIDUAL,
+    max_iters: int = DEFAULT_MAX_ITERS,
     compute_hessian_bound_func: Callable[
         [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
     ] = compute_hessian_bound,
@@ -92,7 +102,7 @@ def adaptive_timestep_ddp_mock(
     # Step 1: Initialize with uniform timestep
     u_traj = np.array(u_init)
     N = len(u_traj)
-    dt_init = 0.01  # Initial guess
+    dt_init = DEFAULT_DT_INIT  # Initial guess
     # Time grid needs N+1 points for N intervals
     t = np.linspace(0, N * dt_init, N + 1)
 
@@ -113,15 +123,15 @@ def adaptive_timestep_ddp_mock(
         )
 
         # Avoid division by zero
-        delta_x_max = np.maximum(delta_x_max, 1e-6)
-        M_traj = np.maximum(M_traj, 1e-6)
+        delta_x_max = np.maximum(delta_x_max, EPSILON)
+        M_traj = np.maximum(M_traj, EPSILON)
 
         # Step 4: Compute adaptive timesteps
         # dt = sqrt( 2 * eps / (M * delta_x^2) )
         dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
 
         # Clip to reasonable bounds
-        dt_adaptive = np.clip(dt_adaptive, 0.001, 0.1)
+        dt_adaptive = np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)
 
         # Step 5: Create new time grid
         # In a real implementation, we would need to resample u_traj to this new grid

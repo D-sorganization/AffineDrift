@@ -3,6 +3,13 @@ from typing import Any
 
 import numpy as np
 
+from src.core.constants import (
+    DEFAULT_EPS_CRITICAL,
+    DEFAULT_EPS_WARNING,
+    DEFAULT_N_HYSTERESIS,
+    FINITE_DIFF_STEP_HESSIAN_BOUND,
+    FINITE_DIFF_STEP_HESSIAN_NORM,
+)
 from src.core.contracts import (
     ContractChecker,
     check_finite_array,
@@ -17,7 +24,7 @@ def compute_hessian_bound(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
-    epsilon: float = 1e-5,
+    epsilon: float = FINITE_DIFF_STEP_HESSIAN_BOUND,
 ) -> float:
     """
     Approximates the Hessian bound M for dynamics f(x, u).
@@ -43,7 +50,7 @@ def compute_hessian_norm(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
-    epsilon: float = 1e-4,
+    epsilon: float = FINITE_DIFF_STEP_HESSIAN_NORM,
 ) -> float:
     """
     Computes numerical approximation of the Hessian norm ||H_f||.
@@ -142,7 +149,10 @@ class ResidualMonitor(ContractChecker):
     """
 
     def __init__(
-        self, eps_warning: float = 0.01, eps_critical: float = 0.05, n_hysteresis: int = 3
+        self,
+        eps_warning: float = DEFAULT_EPS_WARNING,
+        eps_critical: float = DEFAULT_EPS_CRITICAL,
+        n_hysteresis: int = DEFAULT_N_HYSTERESIS,
     ) -> None:
         """Initialize residual monitor."""
         check_positive(eps_warning, "eps_warning")
