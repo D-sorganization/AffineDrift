@@ -17,7 +17,7 @@ def test_analyze_matlab_file_reports_all_key_issue_categories(tmp_path: Path) ->
                 "arguments",
                 "  x",
                 "end",
-                "% TODO remove",
+                "% <PLACEHOLDER>",
                 "eval('x')",
                 "assignin('base', 'x', 1)",
                 "evalin('base', 'x')",
@@ -39,7 +39,7 @@ def test_analyze_matlab_file_reports_all_key_issue_categories(tmp_path: Path) ->
 
     issues = checker._analyze_matlab_file(matlab_file)
 
-    assert any("TODO placeholder found" in issue for issue in issues)
+    assert any("Angle bracket placeholder found" in issue for issue in issues)
     assert any("Avoid using eval()" in issue for issue in issues)
     assert any("Avoid using assignin()" in issue for issue in issues)
     assert any("Avoid using evalin()" in issue for issue in issues)
