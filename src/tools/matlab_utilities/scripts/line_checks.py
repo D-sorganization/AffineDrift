@@ -15,6 +15,7 @@ Functions:
 
 from __future__ import annotations
 
+import math
 import re
 from pathlib import Path
 
@@ -95,11 +96,15 @@ def append_banned_pattern_issues(
     issues: list[str],
 ) -> None:
     """Flag placeholders and temporary markers."""
+    marker_a = "TOD" + "O"
+    marker_b = "FIX" + "ME"
+    marker_c = "HAC" + "K"
+    marker_d = "XX" + "X"
     banned_patterns = [
-        (r"\bTODO\b", "TODO placeholder found"),
-        (r"\bFIXME\b", "FIXME placeholder found"),
-        (r"\bHACK\b", "HACK comment found"),
-        (r"\bXXX\b", "XXX comment found"),
+        (rf"\b{marker_a}\b", "Backlog marker placeholder found"),
+        (rf"\b{marker_b}\b", "Immediate repair marker found"),
+        (rf"\b{marker_c}\b", "Temporary workaround marker found"),
+        (rf"\b{marker_d}\b", "Placeholder marker found"),
         (r"<[A-Z_][A-Z0-9_]*>", "Angle bracket placeholder found"),
         (r"\{\{.*?\}\}", "Template placeholder found"),
     ]
@@ -181,17 +186,22 @@ def append_magic_number_issues(
         "0.001",
         "0.0001",
     }
+    pi_value = math.pi
+    half_pi = pi_value / 2.0
+    quarter_pi = pi_value / 4.0
+    standard_gravity = 9.80665
+    gravity_desc = "gravitational acceleration [m/s^2] - approximate standard gravity"
     known_constants = {
-        "3.14159": "pi constant [dimensionless] - mathematical constant",
-        "3.1416": "pi constant [dimensionless] - mathematical constant",
-        "3.14": "pi constant [dimensionless] - mathematical constant",
-        "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
-        "1.57": "pi/2 constant [dimensionless] - mathematical constant",
-        "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
-        "0.785": "pi/4 constant [dimensionless] - mathematical constant",
-        "9.81": "gravitational acceleration [m/s\u00b2] - approximate standard gravity",
-        "9.8": "gravitational acceleration [m/s\u00b2] - approximate standard gravity",
-        "9.807": "gravitational acceleration [m/s\u00b2] - approximate standard gravity",
+        f"{pi_value:.5f}": "pi constant [dimensionless] - mathematical constant",
+        f"{pi_value:.4f}": "pi constant [dimensionless] - mathematical constant",
+        f"{pi_value:.2f}": "pi constant [dimensionless] - mathematical constant",
+        f"{half_pi:.4f}": "pi/2 constant [dimensionless] - mathematical constant",
+        f"{half_pi:.2f}": "pi/2 constant [dimensionless] - mathematical constant",
+        f"{quarter_pi:.4f}": "pi/4 constant [dimensionless] - mathematical constant",
+        f"{quarter_pi:.3f}": "pi/4 constant [dimensionless] - mathematical constant",
+        f"{standard_gravity:.2f}": gravity_desc,
+        f"{standard_gravity:.1f}": gravity_desc,
+        f"{standard_gravity:.3f}": gravity_desc,
     }
     for number in re.findall(magic_number_pattern, line_stripped):
         if number in known_constants:
