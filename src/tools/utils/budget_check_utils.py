@@ -5,7 +5,7 @@ and ``check_*_boundaries.py`` scripts:
 
 - ``is_included``: reusable path-inclusion filter (include roots + excludes).
 - ``collect_matching_files``: walk a repo tree, applying include/exclude/ext rules.
-- ``report_results``: print results and return exit code.
+- ``report_results``: log results and return exit code.
 
 All budget scripts had near-identical file-walking, inclusion, and reporting
 boilerplate.  Pulling them here eliminates ~40 duplicate code-block detections.
@@ -14,10 +14,13 @@ boilerplate.  Pulling them here eliminates ~40 duplicate code-block detections.
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 
 def load_config(repo_root: Path, config_name: str) -> dict[str, Any]:
@@ -112,24 +115,24 @@ def report_results(
     details: list[str],
     errors: list[str],
 ) -> int:
-    """Print a standardized budget-check report and return an exit code.
+    """Log a standardized budget-check report and return an exit code.
 
     Args:
         check_name: Human-readable name (e.g. "Technical debt marker budget check").
         files_scanned: Number of files scanned.
-        details: Lines to print under the header (counts, etc.).
+        details: Lines to log under the header (counts, etc.).
         errors: Error messages.  Non-empty → exit 1.
 
     Returns:
         ``0`` if no errors, ``1`` otherwise.
     """
-    print(check_name)  # noqa: T201 — CI script output
-    print(f"- files scanned: {files_scanned}")  # noqa: T201
+    logger.info(check_name)
+    logger.info("- files scanned: %d", files_scanned)
     for detail in details:
-        print(f"- {detail}")  # noqa: T201
+        logger.info("- %s", detail)
 
     if errors:
         for err in errors:
-            print(f"ERROR: {err}")  # noqa: T201
+            logger.error("ERROR: %s", err)
         return 1
     return 0
