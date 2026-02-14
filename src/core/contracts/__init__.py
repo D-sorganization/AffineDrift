@@ -23,8 +23,6 @@ from src.core.contracts.definitions import (
     InvariantError,
     PostconditionError,
     PreconditionError,
-    _handle_violation,
-    _resolve_contract_level,
     ensure,
     get_contract_level,
     invariant,
