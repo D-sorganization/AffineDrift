@@ -120,12 +120,14 @@ class TestReadTextSafe:
 class TestReportResults:
     """Tests for report_results."""
 
-    def test_returns_zero_on_no_errors(self, capsys: pytest.CaptureFixture[str]) -> None:
-        code = report_results("Test check", 5, ["detail1"], [])
+    def test_returns_zero_on_no_errors(self, caplog: pytest.LogCaptureFixture) -> None:
+        with caplog.at_level("INFO"):
+            code = report_results("Test check", 5, ["detail1"], [])
         assert code == 0
-        assert "Test check" in capsys.readouterr().out
+        assert "Test check" in caplog.text
 
-    def test_returns_one_on_errors(self, capsys: pytest.CaptureFixture[str]) -> None:
-        code = report_results("Test check", 5, [], ["boom"])
+    def test_returns_one_on_errors(self, caplog: pytest.LogCaptureFixture) -> None:
+        with caplog.at_level("INFO"):
+            code = report_results("Test check", 5, [], ["boom"])
         assert code == 1
-        assert "ERROR: boom" in capsys.readouterr().out
+        assert "ERROR: boom" in caplog.text
