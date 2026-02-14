@@ -1,44 +1,7 @@
-"""Design by Contract (DbC) enforcement for the AffineDrift platform.
+"""Contract type definitions and exception hierarchy.
 
-This module provides lightweight helpers and decorators for enforcing
-pre-conditions, post-conditions, and invariants at runtime.
-
-Enforcement Levels (controlled via ``DBC_LEVEL`` environment variable):
-  - ``enforce`` (default): Raise ``ContractViolationError`` on failure.
-  - ``warn``: Log violations at WARNING level but do not raise.
-  - ``off``: Skip all contract checks (maximum performance).
-
-Usage (function-call style):
-
-    from src.core.contracts import require, ensure, check_finite_array
-
-    def compute_trajectory(x0: np.ndarray, u: np.ndarray) -> np.ndarray:
-        require(x0.size > 0, "initial state must not be empty")
-        check_finite_array(x0, "x0")
-        result = _integrate(x0, u)
-        ensure(check_finite_array(result, "result"))
-        return result
-
-Usage (decorator style):
-
-    from src.core.contracts import precondition, postcondition
-
-    @precondition(lambda x, u: x.size > 0, "state must not be empty")
-    @postcondition(lambda r: np.all(np.isfinite(r)), "result must be finite")
-    def step(x: np.ndarray, u: np.ndarray) -> np.ndarray:
-        ...
-
-Usage (class invariants):
-
-    from src.core.contracts import ContractChecker
-
-    class ResidualMonitor(ContractChecker):
-        def _get_invariants(self):
-            return [
-                (lambda: self.eps_warning > 0, "eps_warning must be positive"),
-                (lambda: self.eps_critical > self.eps_warning,
-                 "eps_critical must exceed eps_warning"),
-            ]
+This module defines the enforcement levels, exception classes, and core
+primitives for Design by Contract (DbC) enforcement.
 
 Reference: Bertrand Meyer, "Object-Oriented Software Construction" (1997).
 """
@@ -304,48 +267,3 @@ def invariant_checked(func: F) -> F:  # noqa: UP047
         return result
 
     return cast(F, wrapper)
-
-
-# ─── Numeric/Array Contract Helpers ────────────────────────────
-
-
-def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:
-    """Assert that a numpy array contains only finite values."""
-    require(
-        bool(np.all(np.isfinite(arr))),
-        f"{name} must contain only finite values (no NaN or Inf)",
-        arr,
-    )
-
-
-def check_positive(value: float, name: str = "value") -> None:
-    """Assert that a numeric value is strictly positive."""
-    require(value > 0, f"{name} must be positive", value)
-
-
-def check_non_negative(value: float, name: str = "value") -> None:
-    """Assert that a numeric value is non-negative."""
-    require(value >= 0, f"{name} must be non-negative", value)
-
-
-def check_range(
-    value: float,
-    low: float,
-    high: float,
-    name: str = "value",
-) -> None:
-    """Assert that a numeric value falls within [low, high]."""
-    require(low <= value <= high, f"{name} must be in [{low}, {high}]", value)
-
-
-def check_shape(
-    arr: np.ndarray[Any, Any],
-    expected_shape: tuple[int, ...],
-    name: str = "array",
-) -> None:
-    """Assert that a numpy array has the expected shape."""
-    require(
-        arr.shape == expected_shape,
-        f"{name} must have shape {expected_shape}",
-        arr,
-    )
