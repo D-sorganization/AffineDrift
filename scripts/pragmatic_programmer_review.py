@@ -44,6 +44,15 @@ PRINCIPLES = {
 }
 
 
+def read_text_or_none(file_path: Path) -> str | None:
+    """Read text content from file path, returning None for unreadable files."""
+    try:
+        return file_path.read_text(encoding="utf-8", errors="ignore")
+    except OSError as exc:
+        logger.warning("Skipping unreadable file %s: %s", file_path, exc)
+        return None
+
+
 def find_python_files(root_path: Path) -> list[Path]:
     """Find all Python files, excluding common non-source directories.
 
@@ -91,9 +100,8 @@ def check_dry_violations(files: list[Path]) -> list[dict]:
     # magic_numbers = defaultdict(list)
 
     for file_path in files:
-        try:
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
-        except Exception:
+        content = read_text_or_none(file_path)
+        if content is None:
             continue
 
         lines = content.split("\n")
@@ -130,23 +138,23 @@ def check_orthogonality(files: list[Path]) -> list[dict]:
     """Check for orthogonality violations (e.g., God functions)."""
     issues = []
     for file_path in files:
-        try:
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
-            funcs = get_detailed_function_metrics(content)
-            for func in funcs:
-                if func["body_lines"] > 50:
-                    issues.append(
-                        {
-                            "principle": "ORTHOGONALITY",
-                            "severity": "MAJOR",
-                            "title": f"God function: {func['name']}",
-                            "description": f"Length {func['body_lines']} > 50 lines",
-                            "files": [str(file_path)],
-                            "recommendation": "Split function",
-                        }
-                    )
-        except Exception:
-            pass
+        content = read_text_or_none(file_path)
+        if content is None:
+            continue
+
+        funcs = get_detailed_function_metrics(content)
+        for func in funcs:
+            if func["body_lines"] > 50:
+                issues.append(
+                    {
+                        "principle": "ORTHOGONALITY",
+                        "severity": "MAJOR",
+                        "title": f"God function: {func['name']}",
+                        "description": f"Length {func['body_lines']} > 50 lines",
+                        "files": [str(file_path)],
+                        "recommendation": "Split function",
+                    }
+                )
     return issues
 
 
@@ -155,21 +163,21 @@ def check_reversibility(root_path: Path) -> list[dict]:
     issues = []
     python_files = find_python_files(root_path)
     for file_path in python_files:
-        try:
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
-            if re.search(r'api_key\s*=\s*["\'][^"\']+["\']', content):
-                issues.append(
-                    {
-                        "principle": "REVERSIBILITY",
-                        "severity": "MAJOR",
-                        "title": "Hardcoded API Key",
-                        "description": "Secrets in code",
-                        "files": [str(file_path)],
-                        "recommendation": "Use env vars",
-                    }
-                )
-        except Exception:
-            pass
+        content = read_text_or_none(file_path)
+        if content is None:
+            continue
+
+        if re.search(r'api_key\s*=\s*["\'][^"\']+["\']', content):
+            issues.append(
+                {
+                    "principle": "REVERSIBILITY",
+                    "severity": "MAJOR",
+                    "title": "Hardcoded API Key",
+                    "description": "Secrets in code",
+                    "files": [str(file_path)],
+                    "recommendation": "Use env vars",
+                }
+            )
     return issues
 
 
@@ -179,12 +187,11 @@ def check_quality(files: list[Path]) -> list[dict]:
     todos = []
     todo_marker = "TO" + "DO"
     for file_path in files:
-        try:
-            content = file_path.read_text(encoding="utf-8", errors="ignore")
-            if todo_marker in content:
-                todos.append(str(file_path))
-        except Exception:
-            pass
+        content = read_text_or_none(file_path)
+        if content is None:
+            continue
+        if todo_marker in content:
+            todos.append(str(file_path))
 
     if len(todos) > 10:
         issues.append(
@@ -258,13 +265,11 @@ def generate_markdown_report(results, output_path):
             md.append(f"  - Files: {', '.join(issue['files'][:3])}")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        f.write("\n".join(md))
+    output_path.write_text("\n".join(md), encoding="utf-8")
 
     # Save JSON too
     json_path = output_path.with_suffix(".json")
-    with open(json_path, "w") as f:
-        json.dump(results, f, indent=2)
+    json_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -283,13 +288,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         output_path = ensure_writable_output_file(str(args.output), value_name="--output")
     except ValueError as exc:
-        print(exc)
+        logger.error(str(exc))
         return 2
 
     repo_root = Path.cwd()
     results = run_review(repo_root)
     generate_markdown_report(results, output_path)
-    print(f"Report generated at {output_path}")
+    logger.info("Report generated at %s", output_path)
     return 0
 
 
