@@ -28,7 +28,7 @@ def test_read_text_or_none_logs_warning_for_unreadable_file(
 def test_check_quality_continues_when_file_is_unreadable(tmp_path: Path, monkeypatch) -> None:
     good_file = tmp_path / "good.py"
     bad_file = tmp_path / "bad.py"
-    good_file.write_text("# TODO: cleanup\n", encoding="utf-8")
+    good_file.write_text("# marker: cleanup\n", encoding="utf-8")
     bad_file.write_text("print('x')\n", encoding="utf-8")
 
     original_read_text = Path.read_text
