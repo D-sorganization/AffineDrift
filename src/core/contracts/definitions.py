@@ -73,6 +73,7 @@ class ContractViolationError(AssertionError, ValueError):
         message: str,
         value: Any = None,
     ) -> None:
+        """Initialise a contract violation with type, message, and optional value."""
         self.condition_type = condition_type
         self.message = message
         self.value = value
@@ -89,6 +90,7 @@ class PreconditionError(ContractViolationError):
     """Raised when a pre-condition is violated."""
 
     def __init__(self, message: str, value: Any = None) -> None:
+        """Initialise with pre-condition context."""
         super().__init__("pre-condition", message, value)
 
 
@@ -96,6 +98,7 @@ class PostconditionError(ContractViolationError):
     """Raised when a post-condition is violated."""
 
     def __init__(self, message: str, value: Any = None) -> None:
+        """Initialise with post-condition context."""
         super().__init__("post-condition", message, value)
 
 
@@ -103,6 +106,7 @@ class InvariantError(ContractViolationError):
     """Raised when a class or loop invariant is violated."""
 
     def __init__(self, message: str, value: Any = None) -> None:
+        """Initialise with invariant context."""
         super().__init__("invariant", message, value)
 
 
@@ -158,11 +162,13 @@ def precondition(
     """Decorator to enforce a precondition on a function or method."""
 
     def decorator(func: F) -> F:
+        """Wrap *func* with precondition enforcement."""
         if DBC_LEVEL == ContractLevel.OFF:
             return func
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Check precondition before forwarding the call."""
             try:
                 result = condition(*args, **kwargs)
             except (TypeError, ValueError) as exc:
@@ -189,11 +195,13 @@ def postcondition(
     """Decorator to enforce a postcondition on a function's return value."""
 
     def decorator(func: F) -> F:
+        """Wrap *func* with postcondition enforcement."""
         if DBC_LEVEL == ContractLevel.OFF:
             return func
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Execute the function and verify postcondition on result."""
             result = func(*args, **kwargs)
 
             try:
@@ -262,6 +270,7 @@ def invariant_checked(func: F) -> F:  # noqa: UP047
 
     @functools.wraps(func)
     def wrapper(self: ContractChecker, *args: Any, **kwargs: Any) -> Any:
+        """Call the method and then verify class invariants."""
         result = func(self, *args, **kwargs)
         self.verify_invariants()
         return result
