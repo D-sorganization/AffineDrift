@@ -27,6 +27,7 @@ try:
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
+    from src.tools.utils.link_utils import is_external_url, is_fragment_only
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
@@ -34,6 +35,7 @@ except ModuleNotFoundError:
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
+    from src.tools.utils.link_utils import is_external_url, is_fragment_only
 
 logger = setup_logging(__name__)
 
@@ -144,7 +146,7 @@ def _find_broken_links_for_file(
         href = str(href_value) if href_value is not None else ""
         if not href:
             continue
-        if href.startswith(("http:", "https:", "mailto:", "tel:", "ftp:", "#")):
+        if is_external_url(href) or is_fragment_only(href):
             continue
 
         target_rel_path = _resolve_internal_target(

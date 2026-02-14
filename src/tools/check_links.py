@@ -11,13 +11,17 @@ Example:
     python check_links.py docs/articles/my-article.html
 """
 
-import re
 import sys
 from pathlib import Path
-from urllib.parse import unquote
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
+from src.tools.utils.link_utils import (
+    ALL_LINK_PATTERNS,
+    normalize_internal_url,
+    path_exists_in_search_roots,
+    resolve_relative_path,
+)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 SCANNED_EXTENSIONS = {".qmd", ".html", ".md"}
@@ -31,10 +35,6 @@ SKIP_FILES = {
     "EMBEDDING_GUIDE.md",
     "CONTRIBUTING.md",
 }
-MARKDOWN_LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]*]\(([^)]+)\)")
-MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*]\(([^)]+)\)")
-HTML_HREF_PATTERN = re.compile(r'href=["\'](.*?)["\']')
-HTML_SRC_PATTERN = re.compile(r'src=["\'](.*?)["\']')
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:
@@ -45,12 +45,7 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
 
     links: list[tuple[str, int]] = []
     for line_number, line in enumerate(lines, start=1):
-        for pattern in (
-            MARKDOWN_LINK_PATTERN,
-            MARKDOWN_IMAGE_PATTERN,
-            HTML_HREF_PATTERN,
-            HTML_SRC_PATTERN,
-        ):
+        for pattern in ALL_LINK_PATTERNS:
             for match in pattern.findall(line):
                 links.append((match.strip(), line_number))
     return links
@@ -85,36 +80,17 @@ def _should_scan_file(file_path: Path) -> bool:
 
 def _normalize_internal_url(link: str) -> str | None:
     """Normalize link and return internal URL or None for skipped links."""
-    url = link.split("#")[0]
-    if not url:
-        return None
-    if url.startswith(("http", "mailto:")):
-        return None
-    if "${" in url or url == "...":
-        return None
-    if len(url) == 1:
-        return None
-    return unquote(url)
+    return normalize_internal_url(link)
 
 
 def _resolve_target_path(*, root_path: Path, file_path: Path, url: str) -> Path:
     """Resolve a link URL against a source file and root path."""
-    if url.startswith("/"):
-        return root_path / url.lstrip("/")
-    return file_path.parent / url
+    return resolve_relative_path(root=root_path, source_file=file_path, url=url)
 
 
 def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
     """Check for target existence in root, src, and docs prefixes."""
-    exists_check = target_path.exists()
-    if not target_path.is_relative_to(root_path):
-        return exists_check
-    relative = target_path.relative_to(root_path)
-    return (
-        exists_check
-        or (root_path / "src" / relative).exists()
-        or (root_path / "docs" / relative).exists()
-    )
+    return path_exists_in_search_roots(root=root_path, target=target_path)
 
 
 def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
