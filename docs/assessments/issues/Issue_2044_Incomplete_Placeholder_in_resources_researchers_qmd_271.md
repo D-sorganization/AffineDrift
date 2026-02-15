@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in styles.css:3318"
+title: "Incomplete Placeholder in resources-researchers.qmd:271"
 labels: ['incomplete-implementation', 'critical', 'high-impact']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `styles.css` at line 3318.
+Found critical incomplete implementation in `resources-researchers.qmd` at line 271.
 
 ## Context
-**Type**: Placeholder | **Location**: `styles.css:3318`
+**Type**: Placeholder | **Location**: `resources-researchers.qmd:271`
 
 ```python
-Placeholder Content Styling (Issue #869)
+<img src="static/images/placeholder.svg" alt="Phil Cheetham" class="website-preview">
 ```
 
 ## Audit Metrics
