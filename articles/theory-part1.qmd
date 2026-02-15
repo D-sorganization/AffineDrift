@@ -60,6 +60,65 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
     </div>
   </div>
 </section>
+
+<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Biomechanical Critique:</span>
+          <h3>Muscles vs. Net Torque Abstraction</h3>
+        </div>
+        <p class="critic-argument">
+          Biomechanists argue that modeling the golfer's input as a generalized torque vector $u$ is an oversimplification. Real muscles have complex force-length and force-velocity properties, meaning the available torque depends on the state $(q, \dot{q})$. By treating $u$ as an independent input, the affine model ignores the intrinsic impedance of the musculoskeletal system, potentially misattributing passive muscle stiffness (a "drift" effect) to active control.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge this biological reality. However, the affine decomposition $\dot{x} = f(x) + g(x)u$ remains valid if interpreted correctly: $u$ represents the <em>net non-conservative forcing</em> applied by the neuromotor system, after accounting for passive tissue properties. The "drift" term $f(x)$ captures the dynamics of the "Effective Plant"—the skeletal system plus the baseline impedance of the muscles. The ZTCF (Zero Torque Counterfactual) therefore asks "what if the net driving force vanished?", not "what if the muscles disappeared?".
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Energy Dynamics:</span>
+          <h3>The "Free Lunch" Fallacy</h3>
+        </div>
+        <p class="critic-argument">
+          Critics suggest that emphasizing the "Drift" component implies that the resulting motion is "free" energy. However, the golfer must expend significant effort early in the swing to <em>create</em> the kinematic state where drift becomes dominant. By separating "Drift" from "Input" at the moment of release, the analysis might undervalue the active work done to set up the passive dynamics.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a crucial distinction. The decomposition does not claim drift is "free" in a metabolic sense; it claims it is "passive" in a <em>causal</em> sense at the moment of analysis. The golfer's skill lies precisely in <em>actively</em> positioning the system (the setup) so that the <em>passive</em> drift field naturally generates the desired high-speed release. The framework highlights this "effort-to-ease" transition, rather than obscuring it.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Methodological Concern:</span>
+          <h3>Necessity of Affine Control Theory</h3>
+        </div>
+        <p class="critic-argument">
+          Why introduce the complexity of affine control theory and Lie brackets? Standard inverse dynamics already calculates the net moments required for a motion. Critics argue that decomposing these moments into $f(x)$ and $g(x)u$ adds mathematical overhead without changing the fundamental physics of $F=ma$.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. The affine structure is the only mathematical framework that rigorously separates the system's "Inertial Memory" (Drift) from the player's "Current Agency" (Input). Without this separation, we cannot formulate the counterfactuals (e.g., "What if I stopped pushing?") that are essential for understanding control strategy.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding by defining the boundaries of the theoretical model.
+      </div>
+    </div>
+  </div>
+</section>
 ```
 
 ## Introduction
