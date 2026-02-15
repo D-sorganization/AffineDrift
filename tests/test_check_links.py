@@ -1,7 +1,6 @@
 """Tests for internal link checker helpers and behavior."""
 
 from pathlib import Path
-
 from unittest.mock import patch
 
 from src.tools.check_links import (
