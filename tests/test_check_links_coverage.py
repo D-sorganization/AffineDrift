@@ -1,12 +1,9 @@
-
 """Additional tests for check_links to improve coverage."""
 
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-import pytest
-
-from src.tools.check_links import check_links, _is_broken_link
+from src.tools.check_links import _is_broken_link, check_links
 
 
 def test_check_links_finds_broken_links(tmp_path: Path) -> None:
@@ -67,6 +64,7 @@ def test_check_links_handles_read_errors(tmp_path: Path) -> None:
 
             assert broken == []
             mock_logger.exception.assert_called()
+
 
 def test_is_broken_link_returns_false_for_none_url(tmp_path: Path) -> None:
     """_is_broken_link should return False if _normalize_internal_url returns None."""
