@@ -1,13 +1,16 @@
 AGENTS.md:200:- ❌ **DO NOT** leave `TODO`/`FIXME` markers for more than one sprint.
 AGENTS.md:415:- **Read:** Codebase for TODO, FIXME, NotImplementedError, pass statements
-JULES_ARCHITECTURE.md:175:if grep -r "TODO\|FIXME" --include="*.py" src/; then
-UNIFIED_CI_APPROACH.md:276:- **Common Issues**: TODO comments, console.log statements
-UNIFIED_CI_APPROACH.md:292:3. **No placeholders**: No TODO, FIXME, or NotImplementedError
-UNIFIED_CI_APPROACH.md:332:- **Placeholders**: TODO, FIXME, NotImplementedError
-UNIFIED_CI_APPROACH.md:364:3. **Placeholders**: Remove TODO/FIXME comments
+config/tech_debt_budget.json:24:"TODO": 20,
+config/tech_debt_budget.json:25:"FIXME": 13,
+config/tech_debt_budget.json:26:"HACK": 8,
+config/tech_debt_budget.json:27:"XXX": 10
+scripts/check_tech_debt_budget.py:17:MARKERS = ("TODO", "FIXME", "HACK", "XXX")
+scripts/check_tech_debt_budget.py:18:MARKER_RE = re.compile(r"\b(TODO|FIXME|HACK|XXX)\b", re.IGNORECASE)
 scripts/analyze_completist_data.py:104:fixme_markers = ["FIX" + "ME", "XXX", "HACK", "TEMP"]
 scripts/__init__.py:1:# AffineDrift scripts package - enables `from scripts.xxx import ...` in tests.
-scripts/generate_completist_data.py:128:markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"]
+scripts/generate_completist_data.py:202:"""Scan files for completion markers (TODO, FIXME, etc)."""
+scripts/generate_completist_data.py:203:markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"]
+tests/notes-workspace.test.js:37:store.saveActive("Temp note");
 articles/Tangent Hyperplane Articles/LAYMANS_TERMS_SUMMARY.qmd:132:**Takeaway:** Linearization isn't a hack—it's the exact local structure of smooth systems.
 articles/Tangent Hyperplane Articles/LAYMANS_TERMS_SUMMARY.md:132:**Takeaway:** Linearization isn't a hack—it's the exact local structure of smooth systems.
 .claude/skills/issues-10-sequential/SKILL.md:96:| 1 | #XXX - Title | #YYY | Merged |
@@ -63,9 +66,5 @@ articles/Tangent Hyperplane Articles/LAYMANS_TERMS_SUMMARY.md:132:**Takeaway:** 
 .agent/skills/update-issues/SKILL.md:132:| #XXX | Title | High | assessment.md |
 .agent/skills/update-issues/SKILL.md:137:| #XXX | Title | Fixed in commit abc123 |
 .agent/skills/update-issues/SKILL.md:142:| Description | #XXX |
-src/tools/code_quality_check.py:36:(re.compile(r"\bTODO\b"), "TODO placeholder found"),
-src/tools/code_quality_check.py:37:(re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
-src/tools/matlab_utilities/scripts/matlab_quality_check.py:285:(r"\bTODO\b", "TODO placeholder found"),
-src/tools/matlab_utilities/scripts/matlab_quality_check.py:286:(r"\bFIXME\b", "FIXME placeholder found"),
-src/tools/matlab_utilities/scripts/matlab_quality_check.py:287:(r"\bHACK\b", "HACK comment found"),
-src/tools/matlab_utilities/scripts/matlab_quality_check.py:288:(r"\bXXX\b", "XXX comment found"),
+src/tools/code_quality/pattern_checker.py:15:(re.compile(r"\bTODO\b"), "TODO placeholder found"),
+src/tools/code_quality/pattern_checker.py:16:(re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
