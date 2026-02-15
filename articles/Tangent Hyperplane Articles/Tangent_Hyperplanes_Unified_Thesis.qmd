@@ -1,5 +1,5 @@
 ---
-title: "Exact Superposition in Nonlinear Dynamics"
+title: "Exact Instantaneous Superposition in Nonlinear Dynamics"
 subtitle: "A Unified Geometric Framework for Tangent Space Linearization and Integral Accumulation"
 author: "Dieter Olson"
 date: "January 2026"
@@ -26,7 +26,7 @@ bibliography: references.bib
 ::: {.callout-note appearance="minimal"}
 ## Thesis Abstract
 
-Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a fundamental mathematical fact: **nonlinear systems admit exact linear superposition in the tangent space at every point, and this exact local superposition integrates to yield exact variation accumulation over finite time intervals**.
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a fundamental mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space, and this exact local superposition integrates to yield exact variation accumulation over finite time intervals**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
 
 We develop this claim rigorously across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics—the derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II demonstrates that integration preserves this exact superposition, yielding a state transition operator that accumulates variations linearly. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
 
@@ -50,7 +50,19 @@ This statement, while true in a global sense, obscures a more precise and mathem
 ::: {.callout-important}
 ## Central Claim
 
-**Nonlinear systems admit exact linear superposition in the infinitesimal, and this infinitesimal superposition integrates to exact variation accumulation.**
+**At each fixed state and fixed contact/constraint mode, nonlinear systems admit exact linear superposition in the instantaneous tangent-space mapping, and this infinitesimal superposition integrates to exact variation accumulation.**
+:::
+
+::: {.callout-warning}
+## Scope: No Trajectory Superposition
+
+We will never claim that *motion trajectories* superpose in nonlinear systems. Trajectory-level additivity is not implied—nonlinear flows generally do not superpose, as established in standard treatments (e.g., Slotine & Li, *Applied Nonlinear Control*, §3.1). Superposition here refers to **instantaneous** tangent-space objects (velocity and acceleration) and, in mechanics, to the **linearity of accelerations with respect to applied generalized forces** at a frozen state and fixed contact mode. The tangent space **moves with the state**, so finite-time trajectories are not additive.
+:::
+
+::: {.callout-note}
+## Terminology: "Tangent Hyperplane" as Affine Subspace
+
+The term "tangent hyperplane" is used colloquially throughout this series to evoke the geometric intuition of a flat structure touching a curved space. More precisely, the relevant geometric object is an **affine subspace** of the tangent space. When the input distribution $\text{span}\{g_i(x)\}$ has codimension greater than 1, the reachable set within the tangent space is an affine subspace, not strictly a hyperplane (which implies codimension 1). We retain the term for accessibility while noting this distinction for mathematical precision.
 :::
 
 The purpose of this thesis is to develop that statement rigorously. The argument presented here is not heuristic, approximate, or model-dependent. It is a direct consequence of the definition of derivatives, limits, smooth manifolds, and integration—the same mathematical foundations that underpin calculus itself.
@@ -254,7 +266,7 @@ $$
 \delta \dot{x} = A \, \delta x + B \, \delta u
 $$ {#eq-tangent-dynamics}
 
-This equation deserves careful attention. It states that **in the tangent space, the dynamics are exactly linear**. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices.
+This equation deserves careful attention. It states that **in the tangent space at a fixed state, the dynamics are exactly linear**. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. Note that the **first-order differential** (linearization) is exact at the point; finite steps accumulate higher-order terms.
 
 ::: {.callout-important}
 ## Not an Approximation
@@ -377,18 +389,32 @@ A linear map satisfies two fundamental properties:
 2. **Homogeneity**: $B(\alpha \, \delta u) = \alpha \, B \delta u$ for scalar $\alpha$
 
 ::: {.callout-important}
-## Exact Superposition Theorem
+## Exact Superposition Theorem (Fixed State & Fixed Mode)
 
-Superposition holds **exactly** in the tangent space. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately:
+Superposition holds **exactly** for the **instantaneous** mapping to the tangent space at a fixed state $(x, \text{mode})$. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately:
 
 $$
 \delta \dot{x}(\delta u_1 + \delta u_2) = \delta \dot{x}(\delta u_1) + \delta \dot{x}(\delta u_2)
 $$
 
-There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level.
+There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level. The tangent space **moves with the state**, so trajectories are not additive.
 :::
 
 This is not an approximation we impose for convenience. It is a **mathematical theorem**, inherited directly from the properties of matrix multiplication and the definition of the derivative.
+
+::: {.callout-important}
+## Instantaneous Force–Acceleration Superposition (Fixed State & Fixed Mode)
+
+For a mechanical system with equations $M(q)\ddot{q} + h(q, \dot{q}) = \tau + J^\top f$, at a fixed state $(q, \dot{q})$ and fixed contact/constraint mode $m$, the acceleration is:
+
+$$
+\ddot{q} = \Phi(q, \dot{q}, m)\,\tau + \Psi(q, \dot{q}, m)
+$$
+
+which is affine/linear in applied torques $\tau$ and generalized forces $f$. Therefore, instantaneous acceleration contributions from separate force/torque components **add exactly**.
+
+**However**, mode switching (contact/friction transitions), actuator saturation, and inequality constraints (unilateral contacts) make the mapping only **piecewise** linear and can break global superposition. The claim is valid for fixed $(q, \dot{q}, m)$—not universally across mode boundaries.
+:::
 
 ### Counterfactual Decomposition
 
@@ -411,7 +437,7 @@ This **counterfactual decomposition** allows us to attribute portions of the rat
 ::: {.callout-note}
 ## Validity Domain
 
-This equality holds strictly within the tangent space—for infinitesimal perturbations at a single instant. When we integrate over finite time intervals, deviations from additivity appear. These deviations arise from manifold curvature: as the state evolves, it passes through different tangent spaces. The nonlinear coupling emerges from how these tangent spaces vary, not from any breakdown of local linearity.
+Superposition holds for the **instantaneous** mapping to the tangent space at fixed $(x, \text{mode})$; the tangent space **moves with the state**, so trajectories are not additive. When we integrate over finite time intervals, deviations from additivity appear. These deviations arise from manifold curvature: as the state evolves, it passes through different tangent spaces. The nonlinear coupling emerges from how these tangent spaces vary, not from any breakdown of local linearity.
 :::
 
 \newpage
@@ -420,7 +446,7 @@ This equality holds strictly within the tangent space—for infinitesimal pertur
 
 ## Why Global Superposition Fails
 
-If superposition holds exactly in each tangent space, why do we say nonlinear systems violate superposition? The answer lies in **time evolution**.
+If instantaneous superposition holds exactly in each tangent space, why do we say nonlinear systems violate superposition? The answer lies in **time evolution**: the tangent space moves with the state.
 
 The key observation: as the system evolves along a trajectory, the operating point changes—and with it, the tangent space. The Jacobian matrices are not constants; they are functions of the current state:
 
@@ -640,7 +666,7 @@ The tangent space framework provides the conceptual foundation for understanding
 
 ### Additivity Failures
 
-We have established that in the tangent space, superposition holds exactly:
+We have established that in the tangent space at a fixed state, instantaneous superposition holds exactly:
 
 $$
 \delta \dot{x}(\delta u_1 + \delta u_2) = \delta \dot{x}(\delta u_1) + \delta \dot{x}(\delta u_2)
@@ -2840,9 +2866,9 @@ Part III (control synthesis) needs substantial development:
 
 ## Final Reflection
 
-This thesis has argued that **nonlinear systems are exactly linear in the infinitesimal**. This is not mere wordplay—it is a precise mathematical statement with profound implications for control theory, numerical analysis, and geometric mechanics.
+This thesis has argued that **nonlinear systems are exactly linear in the instantaneous tangent-space mapping**. This is not mere wordplay—it is a precise mathematical statement with profound implications for control theory, numerical analysis, and geometric mechanics.
 
-The tangent space is not an approximation we impose for convenience. It is the **exact local structure** of smooth dynamics, inherited from the definition of derivatives and limits. Superposition does not disappear in nonlinear systems—it **relocates** from global state space to local tangent spaces, where it holds exactly.
+The tangent space is not an approximation we impose for convenience. It is the **exact local structure** of smooth dynamics, inherited from the definition of derivatives and limits. Superposition does not disappear in nonlinear systems—it **relocates** from global state space to local tangent spaces, where it holds exactly at each fixed state. The tangent space moves with the state, so trajectories are not additive—but the instantaneous structure is exact.
 
 This perspective transforms how we think about nonlinearity:
 - Not as a failure of linear methods
