@@ -282,7 +282,7 @@ class TestContractLevelControls:
 
     def test_env_var_controls_level(self) -> None:
         with patch.dict(os.environ, {"DBC_LEVEL": "warn"}):
-            from src.core.contracts import _resolve_contract_level
+            from src.core.contracts.definitions import _resolve_contract_level
 
             level = _resolve_contract_level()
             assert level == ContractLevel.WARN

@@ -1,38 +1,38 @@
 # Completist Report: 2026-02-15
 
 ## Executive Summary
-- **Critical Gaps**: 69
-- **Feature Gaps (TODO)**: 4
-- **Content Gaps (Placeholders)**: 91
-- **Technical Debt**: 2
-- **Documentation Gaps**: 1
+- **Critical Gaps**: 68
+- **Feature Gaps (TODO)**: 15
+- **Content Gaps (Placeholders)**: 96
+- **Technical Debt**: 50
+- **Documentation Gaps**: 379
 
 ## Visualization
 ### Status Overview
 ```mermaid
 pie title Completion Status
-    "Impl Gaps (Critical)" : 69
-    "Feature Requests (TODO)" : 4
-    "Technical Debt (FIXME)" : 2
-    "Doc Gaps" : 1
-    "Content Gaps (Placeholders)" : 91
+    "Impl Gaps (Critical)" : 68
+    "Feature Requests (TODO)" : 15
+    "Technical Debt (FIXME)" : 50
+    "Doc Gaps" : 379
+    "Content Gaps (Placeholders)" : 96
 ```
 
 ### Top Impacted Modules
 ```mermaid
 pie title Issues by Module
-    "tools" : 24
+    ".agent" : 33
+    "tools" : 30
+    ".claude" : 28
     "resources-researchers.qmd" : 20
     "resources-software.qmd" : 20
-    "resources-videos.qmd" : 16
-    "scripts" : 15
 ```
 
 ## Critical Incomplete (Top 50)
 | File | Line | Type | Impact | Coverage | Complexity |
 |---|---|---|---|---|---|
-| `styles.css` | 310 | Placeholder | 5 | 2 | 4 |
-| `styles.css` | 3318 | Placeholder | 5 | 2 | 4 |
+| `styles.css` | 316 | Placeholder | 5 | 2 | 4 |
+| `styles.css` | 2624 | Placeholder | 5 | 2 | 4 |
 | `resources-papers.qmd` | 65 | Placeholder | 5 | 2 | 4 |
 | `resources-researchers.qmd` | 40 | Placeholder | 5 | 2 | 4 |
 | `resources-researchers.qmd` | 72 | Placeholder | 5 | 2 | 4 |
@@ -72,21 +72,21 @@ pie title Issues by Module
 | `js/accessibility.js` | 157 | Placeholder | 5 | 2 | 4 |
 | `js/accessibility.js` | 158 | Placeholder | 5 | 2 | 4 |
 | `js/accessibility.js` | 159 | Placeholder | 5 | 2 | 4 |
+| `js/notes-workspace.js` | 136 | Placeholder | 5 | 2 | 4 |
 | `css/layout.css` | 170 | Placeholder | 5 | 2 | 4 |
 | `css/mobile.css` | 161 | Placeholder | 5 | 2 | 4 |
 | `css/startup-launcher.css` | 384 | Placeholder | 5 | 2 | 4 |
 | `css/search-metrics.css` | 432 | Placeholder | 5 | 2 | 4 |
 | `src/js/seo-enhancements.js` | 100 | Placeholder | 5 | 2 | 4 |
-| `src/js/global-search.js` | 170 | Placeholder | 5 | 2 | 4 |
+| `src/js/global-search.js` | 187 | Placeholder | 5 | 2 | 4 |
+| `src/js/notes-workspace.js` | 136 | Placeholder | 5 | 2 | 4 |
 | `src/css/startup-launcher.css` | 384 | Placeholder | 5 | 2 | 4 |
-| `src/css/search-metrics.css` | 432 | Placeholder | 5 | 2 | 4 |
-| `src/tools/wrist_universal_joint/grip_angle_simulator.html` | 443 | Placeholder | 5 | 2 | 4 |
 
 ## Content Gaps (Website Specific)
 | File | Line | Content |
 |---|---|---|
-| `styles.css` | 310 | /* Lazy loading placeholder */ |
-| `styles.css` | 3318 | Placeholder Content Styling (Issue #869) |
+| `styles.css` | 316 | /* Lazy loading placeholder */ |
+| `styles.css` | 2624 | Placeholder Content Styling (Issue #869) |
 | `resources-papers.qmd` | 65 | Note: Detailed review of Carol Putnam's work on interaction forces and proximal-to-distal sequencing |
 | `resources-researchers.qmd` | 40 | <img src="https://www.stfx.ca/sites/default/files/styles/person/public/images/Human-Kinetics-Sasho%2 |
 | `resources-researchers.qmd` | 72 | <img src="https://webspace.yale.edu/Yale-golf-history/images/grober-2.jpg" alt="Robert Groeber" clas |
@@ -129,26 +129,85 @@ pie title Issues by Module
 | `resources-software.qmd` | 270 | <img src="https://mini.s-shot.ru/1024x768/PNG/350/Z100/?https://github.com" alt="Golf Swing Analyzer |
 | `bibliography.qmd` | 38 | <input type="text" id="bib-search" placeholder="Search references by title, author, or concept..." s |
 | `articles/inverse-dynamics-bibliography.md` | 104 | # Note: Placeholder for a review if specific one exists, otherwise rely on Tutelman |
-| `scripts/generate_completist_data.py` | 145 | """Scan files for placeholder content (e.g., 'Coming soon', 'Under construction').""" |
-| `scripts/generate_completist_data.py` | 194 | """Scan Python files for stub/placeholder functions.""" |
-| `scripts/generate_completist_data.py` | 196 | # Patterns for stubs: pass-only functions, ellipsis, placeholder returns |
-| `scripts/generate_completist_data.py` | 200 | re.compile(r"return\s+None\s*#.*stub\|placeholder", re.IGNORECASE), |
+| `scripts/generate_completist_data.py` | 209 | """Scan files for placeholder content.""" |
+| `scripts/generate_completist_data.py` | 252 | """Scan Python files for stub/placeholder functions.""" |
+| `scripts/generate_completist_data.py` | 257 | re.compile(r"return\s+None\s*#.*stub\|placeholder", re.IGNORECASE), |
 | `tests/test_assess_repo.py` | 73 | return None  # noqa: placeholder for test fixture |
-| `js/accessibility.js` | 157 | const placeholder = input.getAttribute("placeholder"); |
+| `tests/test_check_links.py` | 14 | """External or placeholder links should be ignored.""" |
+| `tests/test_matlab_quality_check_refactor.py` | 20 | "% <PLACEHOLDER>", |
 
 ## Feature Gap Matrix
 | Module | Feature Gap | Type |
 |---|---|---|
-| `./src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | TODO |
-| `./scripts/generate_completist_data.py` | """Scan files for completion markers (TODO, FIXME, etc).""" | TODO |
-| `./scripts/check_tech_debt_budget.py` | MARKERS = ("TODO", "FIXME", "HACK", "XXX") | TODO |
-| `./scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TODO\|FIXME\|HACK\|XXX)\b", re.IGNORECASE) | TODO |
+| `AGENTS.md` | - ❌ **DO NOT** leave `TODO`/`FIXME` markers for more than one sprint. | TODO |
+| `AGENTS.md` | - **Read:** Codebase for TODO, FIXME, NotImplementedError, pass statements | TODO |
+| `config/tech_debt_budget.json` | "TODO": 20, | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKERS = ("TODO", "FIXME", "HACK", "XXX") | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TODO\|FIXME\|HACK\|XXX)\b", re.IGNORECASE) | TODO |
+| `scripts/generate_completist_data.py` | """Scan files for completion markers (TODO, FIXME, etc).""" | TODO |
+| `.claude/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.claude/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
+| `.claude/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
+| `.agent/workflows/lint.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.agent/workflows/lint.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
+| `.agent/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.agent/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
+| `.agent/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
+| `src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | TODO |
 
 ## Technical Debt Register
 | File | Line | Issue | Type |
 |---|---|---|---|
-| `./src/tools/code_quality/pattern_checker.py` | 16 | (re.compile(r"\bFIXME\b"), "FIXME placeholder found"), | FIXME |
-| `./scripts/generate_completist_data.py` | 203 | markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"] | XXX |
+| `config/tech_debt_budget.json` | 25 | "FIXME": 13, | FIXME |
+| `config/tech_debt_budget.json` | 26 | "HACK": 8, | HACK |
+| `config/tech_debt_budget.json` | 27 | "XXX": 10 | XXX |
+| `scripts/generate_completist_data.py` | 203 | markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"] | XXX |
+| `.claude/skills/issues-10-sequential/SKILL.md` | 96 | \| 1 \| #XXX - Title \| #YYY \| Merged \| | XXX |
+| `.claude/skills/issues-10-sequential/SKILL.md` | 97 | \| 2 \| #XXX - Title \| #YYY \| Merged \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 63 | - #XXX: <brief description> | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 64 | - #XXX: <brief description> | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 65 | - #XXX: <brief description> | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 66 | - #XXX: <brief description> | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 67 | - #XXX: <brief description> | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 69 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 84 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 85 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 86 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 87 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 88 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 95 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX" | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 140 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 141 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 142 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 143 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.claude/skills/issues-5-combined/SKILL.md` | 144 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.claude/skills/update-issues/SKILL.md` | 132 | \| #XXX \| Title \| High \| assessment.md \| | XXX |
+| `.claude/skills/update-issues/SKILL.md` | 137 | \| #XXX \| Title \| Fixed in commit abc123 \| | XXX |
+| `.claude/skills/update-issues/SKILL.md` | 142 | \| Description \| #XXX \| | XXX |
+| `.agent/workflows/issues-5-combined.md` | 44 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX | XXX |
+| `.agent/skills/issues-10-sequential/SKILL.md` | 96 | \| 1 \| #XXX - Title \| #YYY \| Merged \| | XXX |
+| `.agent/skills/issues-10-sequential/SKILL.md` | 97 | \| 2 \| #XXX - Title \| #YYY \| Merged \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 63 | - #XXX: <brief description> | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 64 | - #XXX: <brief description> | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 65 | - #XXX: <brief description> | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 66 | - #XXX: <brief description> | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 67 | - #XXX: <brief description> | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 69 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 84 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 85 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 86 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 87 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 88 | \| #XXX \| Title \| Brief fix description \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 95 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX" | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 140 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 141 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 142 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 143 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.agent/skills/issues-5-combined/SKILL.md` | 144 | \| #XXX \| Title \| Fixed \| | XXX |
+| `.agent/skills/update-issues/SKILL.md` | 132 | \| #XXX \| Title \| High \| assessment.md \| | XXX |
+| `.agent/skills/update-issues/SKILL.md` | 137 | \| #XXX \| Title \| Fixed in commit abc123 \| | XXX |
+| `.agent/skills/update-issues/SKILL.md` | 142 | \| Description \| #XXX \| | XXX |
+| `src/tools/code_quality/pattern_checker.py` | 16 | (re.compile(r"\bFIXME\b"), "FIXME placeholder found"), | FIXME |
 
 ## Recommended Implementation Order
 Prioritized by Impact (High) and Complexity (Low).
@@ -176,8 +235,8 @@ Prioritized by Impact (High) and Complexity (Low).
 | 20 | `resources-videos.qmd` | <p class="youtube-placeholder-title">A. Sala Control Channel</p> | 5/2/4 |
 
 ## Issues Created
-- Created `docs/assessments/issues/Issue_2027_Incomplete_Placeholder_in_styles_css_310.md`
-- Created `docs/assessments/issues/Issue_2038_Incomplete_Placeholder_in_styles_css_3318.md`
+- Created `docs/assessments/issues/Issue_2039_Incomplete_Placeholder_in_styles_css_316.md`
+- Created `docs/assessments/issues/Issue_2040_Incomplete_Placeholder_in_styles_css_2624.md`
 - Created `docs/assessments/issues/Issue_2029_Incomplete_Placeholder_in_resources_papers_qmd_65.md`
 - Created `docs/assessments/issues/Issue_2030_Incomplete_Placeholder_in_resources_researchers_qmd_40.md`
 - Created `docs/assessments/issues/Issue_2031_Incomplete_Placeholder_in_resources_researchers_qmd_72.md`
