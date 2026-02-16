@@ -1,9 +1,9 @@
 # Assessment: Code Structure
 
-## Grade: 6.0/10
+## Grade: 8.0/10
 
 ## Details
-Files: 97, Avg LOC: 202.6, Max LOC: 1710, Max Depth: 5
+Files: 141, Avg LOC: 139.3, Max LOC: 671, Max Depth: 5
 
 ## Recommendations
 - Refactor large files (>200 LOC) and flatten deeply nested directories (>5 depth).

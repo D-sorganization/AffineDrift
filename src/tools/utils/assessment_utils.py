@@ -130,38 +130,32 @@ def classify_assessment_category(source_name: str, description: str = "") -> str
         description: Optional detailed description for keyword matching.
 
     Returns:
-        A standardized category name.
+        A standardized category name matching CATEGORIES values.
     """
     require(len(source_name) > 0, "source_name must not be empty")
     text = (source_name + " " + description).lower()
 
-    if "architecture" in text or "implementation" in text or "Assessment_A" in source_name:
-        return "Architecture"
-    if "quality" in text or "hygiene" in text or "Assessment_B" in source_name:
-        return "Code Quality"
-    if "documentation" in text or "Assessment_C" in source_name:
-        return "Documentation"
-    if "user" in text or "ux" in text or "Assessment_D" in source_name:
-        return "User Experience"
-    if "performance" in text or "Assessment_E" in source_name:
-        return "Performance"
-    if "installation" in text or "deployment" in text or "Assessment_F" in source_name:
-        return "Installation"
-    if "test" in text or "Assessment_G" in source_name:
-        return "Testing"
-    if "error" in text or "Assessment_H" in source_name:
-        return "Error Handling"
-    if "security" in text or "Assessment_I" in source_name:
-        return "Security"
-    if "extensibility" in text or "Assessment_J" in source_name:
-        return "Extensibility"
-    if "reproducibility" in text or "Assessment_K" in source_name:
-        return "Reproducibility"
-    if "maintainability" in text or "Assessment_L" in source_name:
-        return "Maintainability"
-    if "visualization" in text or "Assessment_N" in source_name:
-        return "Visualization"
-    if "ci" in text or "cd" in text or "Assessment_O" in source_name:
-        return "CI/CD"
+    # Mappings aligned with CATEGORIES (A-O)
+    mappings = {
+        "Code Structure": ["code structure", "architecture", "structure", "Assessment_A"],
+        "Documentation": ["documentation", "readme", "docstring", "Assessment_B"],
+        "Test Coverage": ["test coverage", "testing", "coverage", "Assessment_C"],
+        "Error Handling": ["error handling", "exception", "try/except", "Assessment_D"],
+        "Performance": ["performance", "profiling", "optimization", "Assessment_E"],
+        "Security": ["security", "vulnerability", "audit", "Assessment_F"],
+        "Dependencies": ["dependencies", "requirements", "package", "Assessment_G"],
+        "CI/CD": ["ci/cd", "ci", "cd", "workflow", "pipeline", "Assessment_H"],
+        "Code Style": ["code style", "linting", "formatting", "Assessment_I"],
+        "API Design": ["api design", "api", "interface", "Assessment_J"],
+        "Data Handling": ["data handling", "validation", "serialization", "Assessment_K"],
+        "Logging": ["logging", "log", "Assessment_L"],
+        "Configuration": ["configuration", "config", "env var", "Assessment_M"],
+        "Scalability": ["scalability", "complexity", "Assessment_N"],
+        "Maintainability": ["maintainability", "Assessment_O"],
+    }
+
+    for category, keywords in mappings.items():
+        if any(k in text for k in keywords) or any(k in source_name for k in keywords):
+            return category
 
     return "General"

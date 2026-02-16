@@ -1,9 +1,9 @@
 # Assessment: API Design
 
-## Grade: 8.6/10
+## Grade: 9.2/10
 
 ## Details
-Type hint coverage: 72.4% (446/616)
+Type hint coverage: 85.0% (774/911)
 
 ## Recommendations
 - Use type hints in function signatures to improve API clarity.
