@@ -16,7 +16,6 @@ from src.tools.utils import (
 from src.tools.utils.analysis_utils import (
     assess_error_handling_content,
     assess_logging_content,
-    calculate_complexity,
     get_python_metrics,
 )
 from src.tools.utils.assessment_utils import (
@@ -141,6 +140,39 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
         "grade": max(0, min(10, score)),
         "details": f"Try blocks: {try_count}, Bare excepts: {bare_except_count}",
         "recommendation": "Replace bare `except:` blocks with specific exceptions and ensure `try` blocks are used.",
+    }
+
+
+def assess_performance(files: list[Path]) -> dict[str, Any]:
+    """
+    Evaluates performance practices by checking for profiling tools usage (imports).
+    """
+    score = 7.0
+    details = []
+    profiling_tools = ["cProfile", "profile", "timeit", "pstats", "line_profiler", "memory_profiler"]
+    found_tools = []
+
+    for f in files:
+        try:
+            content = f.read_text(encoding="utf-8", errors="ignore")
+            for tool in profiling_tools:
+                # Check for import usage to avoid false positives (like finding this script itself)
+                if re.search(rf"\b(import|from)\s+{tool}\b", content):
+                    found_tools.append(tool)
+        except Exception:
+            pass
+
+    found_tools = list(set(found_tools))
+    if found_tools:
+        score += 1
+        details.append(f"Profiling tools found: {', '.join(found_tools)}")
+    else:
+        details.append("No explicit profiling tools found in code")
+
+    return {
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Implement runtime profiling to identify bottlenecks.",
     }
 
 
@@ -327,21 +359,43 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
 
 def assess_data_handling(files: list[Path]) -> dict[str, Any]:
     """
-    Scans for common data I/O patterns to assess data handling practices.
+    Scans for common data I/O patterns and validation libraries to assess data handling practices.
     """
     io_patterns = ["open(", "json.load", "csv.reader", "pd.read", "sqlite3"]
-    hits = 0
+    validation_libs = ["pydantic", "jsonschema", "marshmallow", "cerberus"]
+
+    io_hits = 0
+    validation_hits = 0
+
     for f in files:
-        content = f.read_text(encoding="utf-8", errors="ignore")
-        if any(p in content for p in io_patterns):
-            hits += 1
+        try:
+            content = f.read_text(encoding="utf-8", errors="ignore")
+            if any(p in content for p in io_patterns):
+                io_hits += 1
+            # Check for import usage to avoid false positives and double counting
+            found_validation = False
+            for lib in validation_libs:
+                 if re.search(rf"\b(import|from)\s+{lib}\b", content):
+                     found_validation = True
+                     break
+            if found_validation:
+                validation_hits += 1
+        except Exception:
+            pass
 
     score = 7
-    details = f"Files with data I/O: {hits}"
+    details = [f"Files with data I/O: {io_hits}"]
+
+    if validation_hits > 0:
+        score += 1
+        details.append(f"Validation libraries found in {validation_hits} files")
+    else:
+        details.append("No explicit validation libraries found")
+
     return {
-        "grade": score,
-        "details": details,
-        "recommendation": "Ensure robust data validation for all I/O operations.",
+        "grade": min(10, score),
+        "details": "; ".join(details),
+        "recommendation": "Ensure robust data validation for all I/O operations using libraries like Pydantic.",
     }
 
 
@@ -381,15 +435,17 @@ def assess_configuration(root: Path) -> dict[str, Any]:
 def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     """
     Estimates scalability and maintainability based on code complexity metrics.
+    Calculates average complexity per function across files, ignoring empty/script files without functions.
     """
-    total_metrics = {"functions": 0, "branches": 0}
-
+    complexities = []
     for f in files:
         metrics = get_python_metrics(f)
-        total_metrics["functions"] += metrics["functions"]
-        total_metrics["branches"] += metrics["branches"]
+        if metrics["functions"] > 0:
+            # Complexity = branches / functions.
+            c = metrics["branches"] / metrics["functions"]
+            complexities.append(c)
 
-    avg_complexity = calculate_complexity(total_metrics)
+    avg_complexity = statistics.mean(complexities) if complexities else 0
 
     score = 10
     if avg_complexity > 10:
@@ -418,11 +474,7 @@ def main():
         "B": assess_documentation(py_files),
         "C": assess_test_coverage(root),
         "D": assess_error_handling(py_files),
-        "E": {
-            "grade": 7.0,
-            "details": "Performance analysis requires runtime profiling",
-            "recommendation": "Implement runtime profiling to identify bottlenecks.",
-        },
+        "E": assess_performance(py_files),
         "F": assess_security(root),
         "G": assess_dependencies(root),
         "H": assess_cicd(root),

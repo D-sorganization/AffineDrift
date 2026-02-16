@@ -3,7 +3,7 @@
 ## Grade: 7.0/10
 
 ## Details
-Performance analysis requires runtime profiling
+No explicit profiling tools found in code
 
 ## Recommendations
 - Implement runtime profiling to identify bottlenecks.
