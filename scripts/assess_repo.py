@@ -149,7 +149,14 @@ def assess_performance(files: list[Path]) -> dict[str, Any]:
     """
     score = 7.0
     details = []
-    profiling_tools = ["cProfile", "profile", "timeit", "pstats", "line_profiler", "memory_profiler"]
+    profiling_tools = [
+        "cProfile",
+        "profile",
+        "timeit",
+        "pstats",
+        "line_profiler",
+        "memory_profiler",
+    ]
     found_tools = []
 
     for f in files:
@@ -375,9 +382,9 @@ def assess_data_handling(files: list[Path]) -> dict[str, Any]:
             # Check for import usage to avoid false positives and double counting
             found_validation = False
             for lib in validation_libs:
-                 if re.search(rf"\b(import|from)\s+{lib}\b", content):
-                     found_validation = True
-                     break
+                if re.search(rf"\b(import|from)\s+{lib}\b", content):
+                    found_validation = True
+                    break
             if found_validation:
                 validation_hits += 1
         except Exception:
