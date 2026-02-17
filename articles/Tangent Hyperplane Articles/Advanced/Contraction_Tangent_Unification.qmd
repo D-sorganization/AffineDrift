@@ -239,6 +239,15 @@ where $\mathbf{F}$ are constraint forces. The tangent space $T_{\mathbf{x}} \mat
 
 This suggests a deep connection between variational mechanics and contraction theory.
 
+::: {.callout-tip}
+## Instantaneous Force-Acceleration Superposition
+While nonlinear systems do not exhibit superposition at the trajectory level, they **always** exhibit exact linear superposition at the **instantaneous tangent-space level**. For any fixed state $\mathbf{x}$, the mapping from generalized forces $\boldsymbol{\tau}$ to generalized accelerations $\ddot{\mathbf{q}}$ is an affine (and often strictly linear) mapping:
+
+$$ \ddot{\mathbf{q}} = \mathbf{M}(\mathbf{q})^{-1} (\boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q})) $$
+
+This instantaneous linearity is the "Tangent Hyperplane" that allows us to decompose complex motor behaviors into superposed components *at each instant*, which then integrate to form the full nonlinear motion. This principle is foundational to the **AffineDrift** framework and bridges the gap between local linearization and global nonlinear stability [@slotine1991applied].
+:::
+
 ---
 
 # The Duality Revealed
