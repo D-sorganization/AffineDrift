@@ -10,6 +10,7 @@ Run with: streamlit run streamlit_app.py
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -55,49 +56,21 @@ if "polynomial_error" not in st.session_state:
 
 def _inject_custom_css() -> None:
     """Inject custom CSS styles into the Streamlit page."""
-    st.markdown(
-        """
-    <style>
-        .main {
-            padding: 2rem 1rem;
-        }
-        .stButton>button {
-            background: linear-gradient(135deg, #3282b8 0%, #0f4c75 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem 2rem;
-            font-weight: 600;
-        }
-        h1 {
-            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
-    """,
-        unsafe_allow_html=True,
-    )
+    template_dir = Path(__file__).parent / "templates"
+    css_path = template_dir / "style.css"
+    if css_path.exists():
+        css = css_path.read_text()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
 def _render_header() -> None:
     """Render the main app header and description."""
     st.title("🏌️ Enhanced Wrist Universal Joint Model")
-    st.markdown(
-        """
-    <div style='background: #f0f4f8; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; \
-    border-left: 4px solid #3282b8;'>
-        <p style='margin: 0; font-size: 1.1em;'>
-        This interactive tool models the wrist as a universal joint (Hooke/Cardan)
-        with proper kinematics,
-        showing how grip angle and wrist deviation angle affect torque transmission
-        and angular acceleration.
-        </p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    template_dir = Path(__file__).parent / "templates"
+    header_path = template_dir / "header.html"
+    if header_path.exists():
+        header_html = header_path.read_text()
+        st.markdown(header_html, unsafe_allow_html=True)
 
 
 def _render_sidebar() -> dict[str, Any]:
