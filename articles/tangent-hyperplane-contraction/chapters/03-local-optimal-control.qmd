@@ -1,0 +1,26 @@
+---
+title: "Chapter 3 - Local Optimal Control: LQR and DDP"
+bibliography: ../references.bib
+---
+
+## Introduction and Qualitative Purpose
+
+This chapter develops finite-horizon local quadratic control and the Riccati recursion used in trajectory optimization.
+
+## In Laymans Terms
+
+Solve the best local correction repeatedly, and you get an effective nonlinear control strategy.
+
+## Geometric Intuition
+
+Riccati matrices define local quadratic curvature of cost over perturbations.
+
+## Canonical Recursion
+
+$$
+S_k = Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
+$$
+
+## Link to DDP
+
+DDP extends this local recursion with repeated model updates and forward rollout, but the local stabilizing core is unchanged [@jacobson1970ddp; @todorov2002optimal].
