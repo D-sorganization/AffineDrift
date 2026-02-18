@@ -5,13 +5,18 @@ Copies critical assets (startup-launcher.js/css) to the docs/ directory.
 This ensures the frontend works correctly even if Quarto build steps miss these files.
 """
 
+import logging
 import shutil
 import sys
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
+
 
 def main():
     """Run the deploy assets script."""
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+
     # Robust root detection
     root = Path(__file__).resolve().parent.parent
 
@@ -23,10 +28,10 @@ def main():
 
     # Ensure source files exist
     if not src_js.exists():
-        print(f"Error: Source file {src_js} not found.")
+        logger.error("Error: Source file %s not found.", src_js)
         sys.exit(1)
     if not src_css.exists():
-        print(f"Error: Source file {src_css} not found.")
+        logger.error("Error: Source file %s not found.", src_css)
         sys.exit(1)
 
     # Create destination directories
@@ -38,14 +43,14 @@ def main():
 
     try:
         shutil.copy2(src_js, dest_js)
-        print(f"Copied {src_js} -> {dest_js}")
+        logger.info("Copied %s -> %s", src_js, dest_js)
 
         shutil.copy2(src_css, dest_css)
-        print(f"Copied {src_css} -> {dest_css}")
+        logger.info("Copied %s -> %s", src_css, dest_css)
 
-        print("Asset deployment complete.")
+        logger.info("Asset deployment complete.")
     except Exception as e:
-        print(f"Error deploying assets: {e}")
+        logger.error("Error deploying assets: %s", e)
         sys.exit(1)
 
 

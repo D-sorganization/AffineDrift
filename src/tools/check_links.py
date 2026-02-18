@@ -17,10 +17,15 @@ from pathlib import Path
 from src.core.contracts import require
 from src.tools.utils import setup_logging
 from src.tools.utils.link_utils import (
-    ALL_LINK_PATTERNS,
+    extract_links_from_lines,
+    find_broken_links_in_file,
+    is_broken_internal_link,
+    is_html_link_resolvable,
     normalize_internal_url,
     path_exists_in_search_roots,
     resolve_relative_path,
+    should_skip_path,
+    unique_items,
 )
 
 logger = setup_logging(__name__, format_string="%(message)s")
@@ -43,38 +48,29 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
     with open(file_path, encoding="utf-8") as f:
         lines = f.read().splitlines()
 
-    links: list[tuple[str, int]] = []
-    for line_number, line in enumerate(lines, start=1):
-        for pattern in ALL_LINK_PATTERNS:
-            for match in pattern.findall(line):
-                links.append((match.strip(), line_number))
-    return links
+    return extract_links_from_lines(lines)
 
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
     """Remove duplicate broken links."""
-    seen = set()
-    unique = []
-    for link in links:
-        if link not in seen:
-            unique.append(link)
-            seen.add(link)
-    return unique
+    return unique_items(links)
 
 
 def _should_scan_file(file_path: Path) -> bool:
     """Return whether a file should be scanned for internal links."""
+    if file_path.suffix not in SCANNED_EXTENSIONS:
+        return False
+    if should_skip_path(file_path):
+        return False
+    if file_path.name in SKIP_FILES:
+        return False
+    # Additional directory exclusions specific to source-file scanning
+    path_str = str(file_path)
     return not (
-        file_path.suffix not in SCANNED_EXTENSIONS
-        or "node_modules" in str(file_path)
-        or "_site" in str(file_path)
-        or ".git" in str(file_path)
-        or "archive" in str(file_path)
-        or "docs" in str(file_path)
-        or "content" in str(file_path)
-        or "_templates" in str(file_path)
-        or ".jules" in str(file_path)
-        or file_path.name in SKIP_FILES
+        "archive" in path_str
+        or "docs" in path_str
+        or "content" in path_str
+        or "_templates" in path_str
     )
 
 
@@ -95,26 +91,12 @@ def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
 
 def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
     """Check whether an HTML link can map to source or generated files."""
-    p_qmd = target_path.with_suffix(".qmd")
-    p_md = target_path.with_suffix(".md")
-    if _path_exists_in_search_roots(root_path=root_path, target_path=p_qmd):
-        return True
-    if _path_exists_in_search_roots(root_path=root_path, target_path=p_md):
-        return True
-    if _path_exists_in_search_roots(root_path=root_path, target_path=target_path):
-        return True
-    return target_path.is_dir() and (target_path / "index.qmd").exists()
+    return is_html_link_resolvable(root=root_path, target=target_path)
 
 
 def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
     """Return True if a link is internal and unresolved."""
-    url = _normalize_internal_url(link)
-    if url is None:
-        return False
-    target_path = _resolve_target_path(root_path=root_path, file_path=file_path, url=url)
-    if target_path.suffix == ".html":
-        return not _is_html_link_resolvable(root_path=root_path, target_path=target_path)
-    return not _path_exists_in_search_roots(root_path=root_path, target_path=target_path)
+    return is_broken_internal_link(root=root_path, source_file=file_path, link=link)
 
 
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
@@ -130,14 +112,13 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             continue
 
         try:
-            links = find_links(file_path)
+            records = find_broken_links_in_file(root=root_path, file_path=file_path)
         except (ConnectionError, TimeoutError, OSError) as e:
             logger.exception(f"Error reading {file_path}: {e}")
             continue
 
-        for link, line_num in links:
-            if _is_broken_link(root_path=root_path, file_path=file_path, link=link):
-                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+        for record in records:
+            broken_links.append((record.source, record.line, record.href))
 
     return unique_broken(broken_links)
 

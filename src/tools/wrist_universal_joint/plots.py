@@ -14,6 +14,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
+from .computation import (
+    compute_angular_accelerations,
+    compute_transmission_pipeline,
+    format_plot_axes,
+)
 from .constants import EPSILON
 from .torque_calculator import (
     distribute_torque_by_grip_angle,
@@ -42,18 +47,11 @@ def plot_torque(
     """Plot torque vs time."""
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    theta_grip_rad = np.radians(grip_angle_deg)
-    phi_wrist_rad = np.radians(wrist_angle_deg)
-
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad,
-        theta_grip_rad,
-    )
-    torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-        torque_transmitted,
-        theta_grip_rad,
-    )
+    pipeline = compute_transmission_pipeline(grip_angle_deg, wrist_angle_deg, input_torque)
+    tau_ratio = pipeline["tau_ratio"]
+    torque_transmitted = pipeline["torque_transmitted"]
+    torque_alpha = pipeline["torque_alpha"]
+    torque_gamma = pipeline["torque_gamma"]
 
     if show_input:
         ax.plot(
@@ -89,15 +87,12 @@ def plot_torque(
             linewidth=2,
         )
 
-    ax.set_title(
+    format_plot_axes(
+        ax,
         f"Torque vs Time (Grip: {grip_angle_deg:.0f}\u00b0, Wrist: {wrist_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
+        "Time (s)",
+        "Torque (N\u00b7m)",
     )
-    ax.set_xlabel("Time (s)", fontsize=10)
-    ax.set_ylabel("Torque (N\u00b7m)", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
 
     plt.tight_layout()
     return fig
@@ -119,20 +114,15 @@ def plot_acceleration(
     """Plot angular acceleration vs time."""
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    theta_grip_rad = np.radians(grip_angle_deg)
-    phi_wrist_rad = np.radians(wrist_angle_deg)
-
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad,
-        theta_grip_rad,
+    pipeline = compute_transmission_pipeline(grip_angle_deg, wrist_angle_deg, input_torque)
+    torque_alpha = pipeline["torque_alpha"]
+    torque_gamma = pipeline["torque_gamma"]
+    accel_alpha, accel_gamma = compute_angular_accelerations(
+        torque_alpha,
+        torque_gamma,
+        i_alpha,
+        i_gamma,
     )
-    torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-        torque_transmitted,
-        theta_grip_rad,
-    )
-    accel_alpha = torque_alpha / i_alpha if i_alpha > EPSILON else np.zeros_like(torque_alpha)
-    accel_gamma = torque_gamma / i_gamma if i_gamma > EPSILON else np.zeros_like(torque_gamma)
 
     if show_alpha:
         ax.plot(
@@ -153,16 +143,13 @@ def plot_acceleration(
             linestyle="--",
         )
 
-    ax.set_title(
+    format_plot_axes(
+        ax,
         f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
         f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
+        "Time (s)",
+        "Angular Acceleration (rad/s\u00b2)",
     )
-    ax.set_xlabel("Time (s)", fontsize=10)
-    ax.set_ylabel("Angular Acceleration (rad/s\u00b2)", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
 
     plt.tight_layout()
     return fig
@@ -267,15 +254,12 @@ def plot_transmission_sweep(
 
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
-    ax.set_title(
+    format_plot_axes(
+        ax,
         f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
+        "Wrist Deviation Angle (degrees)",
+        "Transmission Ratio",
     )
-    ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
-    ax.set_ylabel("Transmission Ratio", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
 
     plt.tight_layout()
     return fig

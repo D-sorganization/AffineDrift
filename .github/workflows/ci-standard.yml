@@ -84,6 +84,10 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
       - name: Verify DRY Shared-Helper Adoption
         run: python3 scripts/check_dry_adoption.py
+      - name: Verify Stub Enforcement
+        run: python3 scripts/check_stub_enforcement.py
+      - name: Verify Assessment References
+        run: python3 scripts/check_stale_assessment_refs.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then

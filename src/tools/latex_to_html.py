@@ -16,6 +16,9 @@ from pathlib import Path
 from src.tools.utils import setup_logging
 from src.tools.utils.latex_utils import (
     clean_common_latex,
+    convert_abstract,
+    convert_custom_boxes,
+    convert_custom_commands,
     convert_lists_to_html,
     convert_quotes,
     convert_references,
@@ -57,13 +60,8 @@ class LaTeXToHTMLConverter:
         """Convert LaTeX content to HTML."""
         html = latex_content
 
-        # Convert abstract environment (HTML-specific styling)
-        html = re.sub(
-            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
-            r'<div class="abstract-section">\n<h2>Abstract</h2>\n<p>\1</p>\n</div>',
-            html,
-            flags=re.DOTALL,
-        )
+        # Convert abstract environment (via shared latex_utils)
+        html = convert_abstract(html, fmt="html")
 
         # --- Shared conversions (from latex_utils) ---
         html = convert_sections_to_html(html)
@@ -126,19 +124,8 @@ class LaTeXToHTMLConverter:
         # Shared cleanup: comments, labels, spacing, document structure
         content = clean_common_latex(content)
 
-        # Handle special colored boxes — convert to styled divs
-        content = re.sub(
-            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
-            r'<div class="keypoint-box"><strong>Key Point:</strong>\1</div>',
-            content,
-            flags=re.DOTALL,
-        )
-        content = re.sub(
-            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
-            r'<div class="limitation-box"><strong>Fundamental Limitation:</strong>\1</div>',
-            content,
-            flags=re.DOTALL,
-        )
+        # Handle special colored boxes — convert to styled divs (via shared latex_utils)
+        content = convert_custom_boxes(content, fmt="html")
 
         # Remove figure, table, theorem, definition environments
         content = re.sub(
@@ -152,9 +139,8 @@ class LaTeXToHTMLConverter:
         content = re.sub(r"\\includegraphics(\[[^\]]*\])?\{[^}]+\}", "[Figure]", content)
         content = re.sub(r"\\caption\{[^}]+\}", "", content)
 
-        # Convert custom commands to styled text
-        content = re.sub(r"\\bvec\{([^}]+)\}", r"<strong>\1</strong>", content)
-        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"<strong>\1</strong>", content)
+        # Convert custom commands to styled text (via shared latex_utils)
+        content = convert_custom_commands(content, fmt="html")
 
         # Remove tikz and pgfplots entirely
         return re.sub(

@@ -3,8 +3,11 @@
 
 from __future__ import annotations
 
+import logging
 import subprocess
 import sys
+
+logger = logging.getLogger(__name__)
 
 CRITICAL_COVERAGE_TARGETS: list[tuple[str, list[str], int]] = [
     ("src.tools.check_site_health", ["tests/test_check_site_health.py"], 85),
@@ -27,20 +30,21 @@ def _run_coverage(module: str, tests: list[str], threshold: int) -> int:
         "--cov-report=term",
         f"--cov-fail-under={threshold}",
     ]
-    print(f"[coverage] module={module} threshold={threshold} tests={','.join(tests)}")
+    logger.info("[coverage] module=%s threshold=%d tests=%s", module, threshold, ",".join(tests))
     result = subprocess.run(cmd, check=False)
     return result.returncode
 
 
 def main() -> int:
     """Run module-level coverage checks and fail if any threshold is missed."""
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     failures = 0
     for module, tests, threshold in CRITICAL_COVERAGE_TARGETS:
         failures += 1 if _run_coverage(module, tests, threshold) != 0 else 0
     if failures:
-        print(f"ERROR: {failures} critical module coverage checks failed.")
+        logger.error("ERROR: %d critical module coverage checks failed.", failures)
         return 1
-    print("All critical module coverage checks passed.")
+    logger.info("All critical module coverage checks passed.")
     return 0
 
 

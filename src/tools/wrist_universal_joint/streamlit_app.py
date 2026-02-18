@@ -19,6 +19,7 @@ import streamlit as st
 
 from src.core.contracts import require
 
+from .computation import compute_transmission_pipeline
 from .constants import (
     DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
@@ -28,9 +29,7 @@ from .constants import (
 )
 from .torque_calculator import (
     calculate_moments_of_inertia,
-    distribute_torque_by_grip_angle,
     generate_sample_torque,
-    universal_joint_transmission_ratio,
 )
 from .visualization import (
     draw_diagram,
@@ -336,17 +335,16 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
         i_alpha = params["I_alpha"]
         i_gamma = params["I_gamma"]
 
-        theta_grip_rad = np.radians(grip_angle)
-        phi_wrist_rad = np.radians(wrist_angle)
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad,
-            theta_grip_rad,
+        pipeline = compute_transmission_pipeline(
+            grip_angle,
+            wrist_angle,
+            np.mean(input_torque),
         )
-        torque_transmitted = np.mean(input_torque) * tau_ratio
-        torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-            torque_transmitted,
-            theta_grip_rad,
-        )
+        theta_grip_rad = pipeline["theta_grip_rad"]
+        omega_ratio = pipeline["omega_ratio"]
+        tau_ratio = pipeline["tau_ratio"]
+        torque_alpha = pipeline["torque_alpha"]
+        torque_gamma = pipeline["torque_gamma"]
 
         pct_alpha = np.abs(np.sin(theta_grip_rad)) * 100
         pct_gamma = np.abs(np.cos(theta_grip_rad)) * 100

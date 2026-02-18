@@ -14,9 +14,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import logging
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -116,6 +119,8 @@ def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
 
 
 def main() -> int:
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+
     parser = argparse.ArgumentParser(description="Sync canonical frontend assets")
     parser.add_argument(
         "--check",
@@ -126,25 +131,25 @@ def main() -> int:
 
     repo_root = Path(__file__).resolve().parent.parent
 
-    print("Canonical sync maps:")
+    logger.info("Canonical sync maps:")
     for m in SYNC_MAPS:
-        print(f"- {m.source} -> {', '.join(m.mirrors)}")
+        logger.info("- %s -> %s", m.source, ", ".join(m.mirrors))
 
-    print("Intentional divergence (not synced):")
+    logger.info("Intentional divergence (not synced):")
     for item in INTENTIONAL_DIVERGENCE:
-        print(f"- {item}")
+        logger.info("- %s", item)
 
     findings: list[str] = []
     for mapping in SYNC_MAPS:
         findings.extend(sync_one(repo_root, mapping, check_only=args.check))
 
     if not findings:
-        print("No drift detected.")
+        logger.info("No drift detected.")
         return 0
 
-    print("Findings:")
+    logger.warning("Findings:")
     for f in findings:
-        print(f"- {f}")
+        logger.warning("- %s", f)
 
     if args.check:
         return 1

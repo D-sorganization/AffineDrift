@@ -1,0 +1,18 @@
+{
+  "description": "Stub enforcement policy: prevent untracked placeholder/stub code in production.",
+  "include_roots": ["src/", "scripts/"],
+  "exclude_substrings": [
+    "__pycache__",
+    ".pyc",
+    "archive/",
+    "legacy/",
+    "experimental/",
+    "node_modules/"
+  ],
+  "file_extensions": [".py"],
+  "max_untracked_stubs": 0,
+  "allowed_pass_contexts": ["except", "abstract", "Protocol", "ABC"],
+  "tracked_stubs": {
+    "src/affine_control/ddp.py": "ISSUE_Completist_Critical_DDPMock_2026-01-30.md"
+  }
+}

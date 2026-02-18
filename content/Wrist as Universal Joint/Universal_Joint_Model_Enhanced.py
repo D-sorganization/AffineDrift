@@ -195,32 +195,70 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         event.ignore()  # Let the event propagate to parent for scrolling
 
     def update_diagram(self) -> None:
-        """Update the diagram with current angles"""
+        """Update the diagram with current angles."""
         self.ax.clear()
 
         theta_grip_rad = np.radians(self.grip_angle_deg)
         phi_wrist_rad = np.radians(self.wrist_angle_deg)
 
-        # Coordinate system: club is always horizontal, clubhead on left pointing up
         # Wrist joint position
         wrist_x = 0.4
         wrist_y = 0.5
 
-        # Club shaft: always horizontal, extends left from hand midpoint (wrist)
-        shaft_length = 1.05  # 3x longer (was 0.35)
+        # Hand direction from grip angle
         hand_length = 0.2
         hand_dir_x = np.cos(theta_grip_rad)
         hand_dir_y = np.sin(theta_grip_rad)
-        # Club attaches to hand at hand's midpoint (wrist)
-        shaft_attach_x = wrist_x
-        shaft_attach_y = wrist_y
-        shaft_end_x = shaft_attach_x - shaft_length  # Left side
-        shaft_end_y = shaft_attach_y  # Horizontal
 
-        # Draw club shaft (horizontal)
+        # Club shaft extends left from wrist (horizontal)
+        shaft_length = 1.05
+        shaft_end_x = wrist_x - shaft_length
+        shaft_end_y = wrist_y
+
+        # Draw all components
+        self._draw_club_shaft(wrist_x, wrist_y, shaft_end_x, shaft_end_y)
+        self._draw_clubhead(shaft_end_x, shaft_end_y)
+        self._draw_hand(wrist_x, wrist_y, theta_grip_rad, hand_length)
+        self._draw_fingers(wrist_x, wrist_y, hand_dir_x, hand_dir_y)
+        hand_endpoint_x, hand_endpoint_y = self._draw_forearm(
+            wrist_x,
+            wrist_y,
+            hand_length,
+            hand_dir_x,
+            hand_dir_y,
+            theta_grip_rad,
+            phi_wrist_rad,
+        )
+        self._draw_wrist_joint(wrist_x, wrist_y)
+        self._draw_grip_angle_arc(wrist_x, wrist_y, theta_grip_rad)
+        self._draw_wrist_angle_arc(
+            hand_endpoint_x,
+            hand_endpoint_y,
+            theta_grip_rad,
+            phi_wrist_rad,
+        )
+
+        # Set axis properties
+        self.ax.set_xlim(-1.5, 0.8)
+        self.ax.set_ylim(-0.2, 1.2)
+        self.ax.set_aspect("equal")
+        self.ax.axis("off")
+        self.ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
+
+        self.figure.tight_layout()
+        self.draw()
+
+    def _draw_club_shaft(
+        self,
+        wrist_x: float,
+        wrist_y: float,
+        shaft_end_x: float,
+        shaft_end_y: float,
+    ) -> None:
+        """Draw the horizontal club shaft from clubhead end to wrist."""
         self.ax.plot(
-            [shaft_end_x, shaft_attach_x],
-            [shaft_end_y, shaft_attach_y],
+            [shaft_end_x, wrist_x],
+            [shaft_end_y, wrist_y],
             "k-",
             linewidth=8,
             solid_capstyle="round",
@@ -228,25 +266,21 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             zorder=3,
         )
 
-        # Clubhead: on left end, pointing up, trapezoid shape, tilted 30 degrees (top to left)
-        clubhead_width_base = 0.08  # Base width (2/3 of original 0.12)
-        clubhead_width_bottom = clubhead_width_base / 3  # Bottom is 1/3 as wide
-        clubhead_width_top = clubhead_width_base * 4 / 3  # Top is 4/3 as wide
-        clubhead_height = 0.24  # 2x original 0.12
-        clubhead_angle_deg = 30  # Tilt top to left by 30 degrees (counterclockwise)
-        clubhead_angle_rad = np.radians(clubhead_angle_deg)
-
-        # Clubhead base at shaft end, pointing up initially
-        clubhead_base_x = shaft_end_x
-        clubhead_base_y = shaft_end_y
+    def _draw_clubhead(self, shaft_end_x: float, shaft_end_y: float) -> None:
+        """Draw the clubhead trapezoid at the end of the shaft."""
+        clubhead_width_base = 0.08
+        clubhead_width_bottom = clubhead_width_base / 3
+        clubhead_width_top = clubhead_width_base * 4 / 3
+        clubhead_height = 0.24
+        clubhead_angle_rad = np.radians(30)
 
         # Define trapezoid corners (before rotation) - bottom narrower, top wider
         corners = np.array(
             [
-                [-clubhead_width_bottom / 2, 0],  # Bottom left
-                [clubhead_width_bottom / 2, 0],  # Bottom right
-                [clubhead_width_top / 2, clubhead_height],  # Top right
-                [-clubhead_width_top / 2, clubhead_height],  # Top left
+                [-clubhead_width_bottom / 2, 0],
+                [clubhead_width_bottom / 2, 0],
+                [clubhead_width_top / 2, clubhead_height],
+                [-clubhead_width_top / 2, clubhead_height],
             ]
         )
 
@@ -257,10 +291,9 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         rotated_corners = corners @ rotation_matrix.T
 
         # Translate to clubhead position
-        rotated_corners[:, 0] += clubhead_base_x
-        rotated_corners[:, 1] += clubhead_base_y
+        rotated_corners[:, 0] += shaft_end_x
+        rotated_corners[:, 1] += shaft_end_y
 
-        # Create polygon for rotated clubhead
         clubhead = Polygon(
             rotated_corners,
             facecolor="silver",
@@ -271,16 +304,17 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         )
         self.ax.add_patch(clubhead)
 
-        # Hand: attached at midpoint to wrist, rotated by grip angle relative to club
-        # Hand's long axis makes angle theta_grip with horizontal club shaft
+    def _draw_hand(
+        self,
+        wrist_x: float,
+        wrist_y: float,
+        theta_grip_rad: float,
+        hand_length: float,
+    ) -> None:
+        """Draw the hand ellipse centered at the wrist."""
         hand_width = 0.12
-        # Hand center is at wrist (midpoint attachment)
-        hand_center_x = wrist_x
-        hand_center_y = wrist_y
-
-        # Hand ellipse (same color as forearm - tan)
         hand = Ellipse(
-            (hand_center_x, hand_center_y),
+            (wrist_x, wrist_y),
             hand_length,
             hand_width,
             angle=np.degrees(theta_grip_rad),
@@ -292,10 +326,17 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         )
         self.ax.add_patch(hand)
 
-        # Draw 4 fingers on hand
+    def _draw_fingers(
+        self,
+        hand_center_x: float,
+        hand_center_y: float,
+        hand_dir_x: float,
+        hand_dir_y: float,
+    ) -> None:
+        """Draw four fingers on the hand."""
         finger_length = 0.12
         finger_width = 0.015
-        finger_dir_x = -hand_dir_x  # Fingers point opposite to hand long axis
+        finger_dir_x = -hand_dir_x
         finger_dir_y = -hand_dir_y
 
         perp_to_hand_x = -hand_dir_y
@@ -324,12 +365,22 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             )
             self.ax.add_patch(finger)
 
-        # Forearm: attached to hand at long axis endpoints
-        # When wrist angle = 0, forearm aligns with hand's long axis
-        # Hand's long axis angle = theta_grip_rad (relative to horizontal)
-        # Forearm angle = hand angle + wrist angle (when wrist deviates, forearm rotates relative to hand)  # noqa: E501
-        # Flip 180 degrees so forearm extends opposite to hand direction
-        forearm_angle_rad = theta_grip_rad + phi_wrist_rad + np.pi  # Add 180 degrees
+    def _draw_forearm(
+        self,
+        wrist_x: float,
+        wrist_y: float,
+        hand_length: float,
+        hand_dir_x: float,
+        hand_dir_y: float,
+        theta_grip_rad: float,
+        phi_wrist_rad: float,
+    ) -> tuple[float, float]:
+        """Draw the forearm ellipse attached to the hand endpoint.
+
+        Returns the forearm attachment point (hand endpoint) coordinates.
+        """
+        # Forearm angle = hand angle + wrist angle + 180 degrees (extends opposite)
+        forearm_angle_rad = theta_grip_rad + phi_wrist_rad + np.pi  # noqa: E501
         forearm_length = 0.35
         forearm_width = 0.1
 
@@ -337,14 +388,12 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         hand_endpoint_forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
         hand_endpoint_forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
 
-        # Forearm attaches at its long axis endpoint to hand's endpoint
         # Forearm center is offset from attachment point
         forearm_dir_x = np.cos(forearm_angle_rad)
         forearm_dir_y = np.sin(forearm_angle_rad)
         forearm_center_x = hand_endpoint_forearm_x - (forearm_length / 2) * forearm_dir_x
         forearm_center_y = hand_endpoint_forearm_y - (forearm_length / 2) * forearm_dir_y
 
-        # Forearm as ellipse (same color as hand - tan)
         forearm = Ellipse(
             (forearm_center_x, forearm_center_y),
             forearm_length,
@@ -358,7 +407,10 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         )
         self.ax.add_patch(forearm)
 
-        # Draw wrist joint (circle)
+        return hand_endpoint_forearm_x, hand_endpoint_forearm_y
+
+    def _draw_wrist_joint(self, wrist_x: float, wrist_y: float) -> None:
+        """Draw the wrist joint marker and label."""
         self.ax.plot(wrist_x, wrist_y, "ko", markersize=12, zorder=10)
         self.ax.text(
             wrist_x,
@@ -370,7 +422,8 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             zorder=11,
         )
 
-        # Draw grip angle arc (θ_grip): from club axis (horizontal) to hand axis
+    def _draw_grip_angle_arc(self, wrist_x: float, wrist_y: float, theta_grip_rad: float) -> None:
+        """Draw the grip angle arc from club axis to hand axis."""
         arc_center_x = wrist_x - 0.05
         arc_center_y = wrist_y
         arc_radius = 0.12
@@ -437,18 +490,21 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             fontweight="bold",
         )
 
-        # Draw wrist angle arc (φ): from hand axis to forearm axis (similar to grip angle)
-        # The wrist angle φ is the actual angle between hand and forearm
-        # When φ = 0, forearm aligns with hand. When φ changes, forearm rotates relative to hand.
-        wrist_arc_center_x = hand_endpoint_forearm_x - 0.05
-        wrist_arc_center_y = hand_endpoint_forearm_y
+    def _draw_wrist_angle_arc(
+        self,
+        center_x: float,
+        center_y: float,
+        theta_grip_rad: float,
+        phi_wrist_rad: float,
+    ) -> None:
+        """Draw the wrist angle arc from hand axis to forearm axis."""
+        wrist_arc_center_x = center_x - 0.05
+        wrist_arc_center_y = center_y
         wrist_arc_radius = 0.12
 
-        # Draw arc showing the actual wrist angle φ
-        # The arc should show just phi_wrist_rad, not including the π offset
         # Hand axis direction (away from club)
         hand_axis_angle_for_arc = theta_grip_rad
-        # Forearm axis direction relative to hand (without π offset for arc visualization)
+        # Forearm axis direction relative to hand (without pi offset for arc visualization)
         forearm_axis_angle_for_arc = theta_grip_rad + phi_wrist_rad
         wrist_arc_start = hand_axis_angle_for_arc
         wrist_arc_end = forearm_axis_angle_for_arc
@@ -516,18 +572,6 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
             fontweight="bold",
         )
 
-        # Set axis properties (adjusted for longer shaft and to show full forearm)
-        # Expand window significantly to accommodate forearm extension in all directions
-        # Forearm can extend up to 0.35 length, and with angles it can go far left
-        self.ax.set_xlim(-1.5, 0.8)
-        self.ax.set_ylim(-0.2, 1.2)
-        self.ax.set_aspect("equal")
-        self.ax.axis("off")
-        self.ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
-
-        self.figure.tight_layout()
-        self.draw()
-
     def update_angles(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
         """Update angles and redraw"""
         self.grip_angle_deg = grip_angle_deg
@@ -583,93 +627,116 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
 
         self.update_plot()
 
+    # Dispatcher mapping signal type names to generator methods.
+    # "Polynomial" is handled separately due to its error-handling logic.
+    _SIGNAL_GENERATORS: dict[str, str] = {
+        "Golf-like Random": "_generate_golf_like",
+        "Step": "_generate_step",
+        "Pulse": "_generate_pulse",
+        "Burst": "_generate_burst",
+        "Sinusoidal": "_generate_sinusoidal",
+        "Random": "_generate_random",
+    }
+
     def generate_sample_torque(self) -> np.ndarray:
-        """Generate a torque signal based on noise type"""
-        t = self.t
+        """Generate a torque signal based on the current noise type."""
+        generator_name = self._SIGNAL_GENERATORS.get(self.noise_type)
+        if generator_name is not None:
+            generator = getattr(self, generator_name)
+            return generator(self.t)
+        if self.noise_type == "Polynomial":
+            return self._generate_polynomial(self.t)
+        # Default fallback to golf-like
+        return self._generate_golf_like(self.t)
 
-        if self.noise_type == "Golf-like Random":
-            torque = np.random.normal(0, 1, len(t))
-            torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-        elif self.noise_type == "Step":
-            torque = np.zeros_like(t)
-            torque[250:] = 3.0  # Step at midpoint
-        elif self.noise_type == "Pulse":
-            torque = np.zeros_like(t)
-            pulse_start = 200
-            pulse_end = 300
-            torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
-        elif self.noise_type == "Burst":
-            torque = np.zeros_like(t)
-            burst_center = 250
-            burst_width = 50
-            burst_indices = np.arange(
-                max(0, burst_center - burst_width),
-                min(len(t), burst_center + burst_width),
-            )
-            torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
-        elif self.noise_type == "Sinusoidal":
-            torque = 2.0 * np.sin(8 * np.pi * t)
-        elif self.noise_type == "Random":
-            torque = np.random.normal(0, 1.5, len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-        elif self.noise_type == "Polynomial":
-            # Evaluate polynomial expression using safer method
-            # Note: We don't expose 'np' module to prevent sandbox escape via object introspection
-            try:
-                # Use simpleeval for safe expression evaluation (no code execution)
-                from simpleeval import simple_eval
-
-                # Create a safe evaluation environment with only specific allowed functions
-                safe_dict = {
-                    "t": t,
-                    "sin": np.sin,
-                    "cos": np.cos,
-                    "exp": np.exp,
-                    "sqrt": np.sqrt,
-                    "log": np.log,
-                    "pi": np.pi,
-                    "e": np.e,
-                }
-                # Evaluate using simpleeval (secure, no arbitrary code execution)
-                result = simple_eval(self.polynomial_expression, names=safe_dict)
-                # Ensure it's a numpy array (check outside eval for safety)
-                if isinstance(result, np.ndarray):
-                    torque = result
-                else:
-                    # Convert scalar to array
-                    torque = np.full_like(t, float(result))
-                # Store success (clear any previous error)
-                self.polynomial_error = None
-            except SyntaxError:
-                # Syntax error in expression
-                error_msg = "Invalid polynomial syntax. Please check your expression."
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except NameError:
-                # Invalid variable or function used
-                error_msg = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."  # noqa: E501
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except (TypeError, ValueError) as e:
-                # Type or value error
-                error_msg = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."  # noqa: E501
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except Exception:
-                # Other unexpected errors
-                error_msg = (
-                    "Unexpected error evaluating polynomial expression. Please check your formula."
-                )
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-        else:
-            # Default to golf-like
-            torque = np.random.normal(0, 1, len(t))
-            torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-
+    def _generate_golf_like(self, t: np.ndarray) -> np.ndarray:
+        """Generate a golf-like random torque signal."""
+        torque = np.random.normal(0, 1, len(t))
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
         return torque
+
+    def _generate_step(self, t: np.ndarray) -> np.ndarray:
+        """Generate a step torque signal at the midpoint."""
+        torque = np.zeros_like(t)
+        torque[250:] = 3.0
+        return torque
+
+    def _generate_pulse(self, t: np.ndarray) -> np.ndarray:
+        """Generate a random pulse torque signal."""
+        torque = np.zeros_like(t)
+        pulse_start = 200
+        pulse_end = 300
+        torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
+        return torque
+
+    def _generate_burst(self, t: np.ndarray) -> np.ndarray:
+        """Generate a burst torque signal centered in the time series."""
+        torque = np.zeros_like(t)
+        burst_center = 250
+        burst_width = 50
+        burst_indices = np.arange(
+            max(0, burst_center - burst_width),
+            min(len(t), burst_center + burst_width),
+        )
+        torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
+        return torque
+
+    def _generate_sinusoidal(self, t: np.ndarray) -> np.ndarray:
+        """Generate a sinusoidal torque signal."""
+        return 2.0 * np.sin(8 * np.pi * t)
+
+    def _generate_random(self, t: np.ndarray) -> np.ndarray:
+        """Generate a smoothed random torque signal."""
+        torque = np.random.normal(0, 1.5, len(t))
+        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        return torque
+
+    def _generate_polynomial(self, t: np.ndarray) -> np.ndarray:
+        """Evaluate the polynomial expression safely, with error handling."""
+        # Note: We don't expose 'np' module to prevent sandbox escape via object introspection
+        try:
+            # Use simpleeval for safe expression evaluation (no code execution)
+            from simpleeval import simple_eval
+
+            # Create a safe evaluation environment with only specific allowed functions
+            safe_dict = {
+                "t": t,
+                "sin": np.sin,
+                "cos": np.cos,
+                "exp": np.exp,
+                "sqrt": np.sqrt,
+                "log": np.log,
+                "pi": np.pi,
+                "e": np.e,
+            }
+            # Evaluate using simpleeval (secure, no arbitrary code execution)
+            result = simple_eval(self.polynomial_expression, names=safe_dict)
+            # Ensure it's a numpy array (check outside eval for safety)
+            if isinstance(result, np.ndarray):
+                torque = result
+            else:
+                # Convert scalar to array
+                torque = np.full_like(t, float(result))
+            # Store success (clear any previous error)
+            self.polynomial_error = None
+            return torque
+        except SyntaxError:
+            error_msg = "Invalid polynomial syntax. Please check your expression."
+            self.polynomial_error = error_msg
+        except NameError:
+            error_msg = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."  # noqa: E501
+            self.polynomial_error = error_msg
+        except (TypeError, ValueError) as e:
+            error_msg = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."  # noqa: E501
+            self.polynomial_error = error_msg
+        except Exception:
+            error_msg = (
+                "Unexpected error evaluating polynomial expression. Please check your formula."
+            )
+            self.polynomial_error = error_msg
+        # Fallback polynomial on any error
+        return t**2 - t
 
     def set_noise_type(self, noise_type: str) -> None:
         """Set noise type and regenerate"""
@@ -985,28 +1052,92 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         self.initUI()
 
     def initUI(self) -> None:
-        """Initialize UI components."""
-        # Create scroll area
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-
-        # Install event filter to handle mouse wheel globally
-        self.scroll.installEventFilter(self)
-        self.installEventFilter(self)
+        """Initialize UI components via focused setup helpers."""
+        self._setup_scroll_area()
 
         # Main widget for scroll area
         main_widget = QWidget()
         main_layout = QVBoxLayout(main_widget)
         main_layout.setSpacing(15)
 
-        # ---
-        # Top: Documentation button
-        # ---
+        self._setup_documentation_button(main_layout)
+        self._setup_diagram_section(main_layout)
+
+        # Control panel: angle sliders (left) + club properties (right)
+        control_group = QGroupBox("Parameters")
+        control_layout = QHBoxLayout()
+
+        left_column = QVBoxLayout()
+        left_column.setSpacing(0)
+        left_column.setContentsMargins(0, 0, 0, 0)
+        left_column.addLayout(
+            self._create_angle_slider(
+                label="Grip Angle \u03b8<sub>grip</sub>:",
+                min_val=0,
+                max_val=90,
+                default=30,
+                tick_interval=15,
+                tick_values=[0, 15, 30, 45, 60, 75, 90],
+                info_text="0\u00b0 = parallel to fingers, 90\u00b0 = perpendicular to fingers",
+                slider_attr="grip_slider",
+                textbox_attr="grip_textbox",
+                update_textbox_method=self.update_grip_from_textbox,
+            )
+        )
+        left_column.addLayout(
+            self._create_angle_slider(
+                label="Wrist Deviation Angle \u03c6:",
+                min_val=-60,
+                max_val=60,
+                default=0,
+                tick_interval=15,
+                tick_values=[-60, -45, -30, -15, 0, 15, 30, 45, 60],
+                info_text="+ values = radial deviation, - values = ulnar deviation",
+                slider_attr="wrist_slider",
+                textbox_attr="wrist_textbox",
+                update_textbox_method=self.update_wrist_from_textbox,
+            )
+        )
+        left_column.addStretch()
+        control_layout.addLayout(left_column)
+        control_layout.addLayout(self._setup_club_properties_panel())
+        control_group.setLayout(control_layout)
+        main_layout.addWidget(control_group)
+
+        self._setup_signal_generator(main_layout)
+        self._setup_plot_controls(main_layout)
+        self._setup_plot_canvas(main_layout)
+        self._setup_info_panel(main_layout)
+
+        # Finalize scroll area
+        self.scroll.setWidget(main_widget)
+        self.setCentralWidget(self.scroll)
+
+        # Connect sliders to update (with signal blocking to prevent loops)
+        self.grip_slider.valueChanged.connect(self.update_grip_label)
+        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
+
+        # Initial update
+        self.update_inertia()
+
+    # ------------------------------------------------------------------
+    # initUI helper methods
+    # ------------------------------------------------------------------
+
+    def _setup_scroll_area(self) -> None:
+        """Create the main scroll area and install event filters."""
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.scroll.installEventFilter(self)
+        self.installEventFilter(self)
+
+    def _setup_documentation_button(self, main_layout: QVBoxLayout) -> None:
+        """Add the centered documentation button to the top bar."""
         top_bar = QHBoxLayout()
         top_bar.addStretch()
-        doc_btn = QPushButton("📘 Model Documentation & Mathematics")
+        doc_btn = QPushButton("\U0001f4d8 Model Documentation & Mathematics")
         doc_btn.setToolTip("View detailed mathematical documentation and physics")
         doc_btn.clicked.connect(self.show_documentation)
         doc_btn.setStyleSheet("font-weight: bold; padding: 8px;")
@@ -1014,9 +1145,8 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         top_bar.addStretch()
         main_layout.addLayout(top_bar)
 
-        # ---
-        # Diagram Canvas (above plots)
-        # ---
+    def _setup_diagram_section(self, main_layout: QVBoxLayout) -> None:
+        """Add the forearm-hand-club diagram group box."""
         diagram_group = QGroupBox("Forearm-Hand-Club Diagram")
         diagram_layout = QVBoxLayout()
         self.diagram_canvas = DiagramCanvas(grip_angle_deg=30, wrist_angle_deg=0)
@@ -1024,236 +1154,188 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         diagram_group.setLayout(diagram_layout)
         main_layout.addWidget(diagram_group)
 
-        # ---
-        # Control Panel
-        # ---
-        control_group = QGroupBox("Parameters")
-        control_layout = QHBoxLayout()  # Horizontal layout for two columns
+    def _create_angle_slider(
+        self,
+        label: str,
+        min_val: int,
+        max_val: int,
+        default: int,
+        tick_interval: int,
+        tick_values: list[int],
+        info_text: str,
+        slider_attr: str,
+        textbox_attr: str,
+        update_textbox_method: object,
+    ) -> QVBoxLayout:
+        """Create a labeled slider with tick marks and textbox input.
 
-        # Grip angle
-        grip_layout = QVBoxLayout()
-        grip_layout.setSpacing(5)  # Consistent spacing
-        grip_layout.setContentsMargins(0, 0, 0, 0)  # No margins for consistent alignment
-        grip_label = QLabel("Grip Angle θ<sub>grip</sub>:")
-        grip_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
-        grip_layout.addWidget(grip_label)
+        Sets ``self.<slider_attr>`` and ``self.<textbox_attr>`` on the instance.
+        Returns the assembled vertical layout.
+        """
+        layout = QVBoxLayout()
+        layout.setSpacing(5)
+        layout.setContentsMargins(0, 0, 0, 0)
 
-        # Container for slider row and tick labels - ensures alignment
+        heading = QLabel(label)
+        heading.setStyleSheet("font-size: 14pt; font-weight: bold;")
+        layout.addWidget(heading)
+
+        # Container for slider row and tick labels
         slider_container = QWidget()
         slider_container_layout = QVBoxLayout(slider_container)
         slider_container_layout.setContentsMargins(0, 0, 0, 0)
         slider_container_layout.setSpacing(0)
 
-        # Slider and text box row
-        grip_control_layout = QHBoxLayout()
-        grip_control_layout.setContentsMargins(0, 0, 0, 0)
-        grip_control_layout.setSpacing(5)  # Small gap between slider and text box
-        self.grip_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
-        self.grip_slider.setMinimum(0)
-        self.grip_slider.setMaximum(90)
-        self.grip_slider.setValue(30)
-        self.grip_slider.setTickInterval(15)
-        self.grip_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.grip_slider.setFixedWidth(300)  # Fixed width to match tick labels
-        self.grip_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        grip_control_layout.addWidget(self.grip_slider)
-        self.grip_textbox = WheelIgnoringLineEdit()
-        self.grip_textbox.setText("30")
-        self.grip_textbox.setFixedWidth(80)
-        self.grip_textbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.grip_textbox.setPlaceholderText("0-90")
-        self.grip_textbox.editingFinished.connect(self.update_grip_from_textbox)
-        grip_control_layout.addWidget(self.grip_textbox)
-        degree_label1 = QLabel("°")
-        degree_label1.setFixedWidth(15)
-        grip_control_layout.addWidget(degree_label1)
-        grip_control_layout.addStretch()  # Push everything to the left
-        slider_container_layout.addLayout(grip_control_layout)
+        # Slider + textbox row
+        control_row = QHBoxLayout()
+        control_row.setContentsMargins(0, 0, 0, 0)
+        control_row.setSpacing(5)
 
-        # Add tick mark labels below slider - aligned with slider
+        slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
+        slider.setMinimum(min_val)
+        slider.setMaximum(max_val)
+        slider.setValue(default)
+        slider.setTickInterval(tick_interval)
+        slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        slider.setFixedWidth(300)
+        slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        control_row.addWidget(slider)
+        setattr(self, slider_attr, slider)
+
+        textbox = WheelIgnoringLineEdit()
+        textbox.setText(str(default))
+        textbox.setFixedWidth(80)
+        textbox.setAlignment(Qt.AlignmentFlag.AlignRight)
+        placeholder = f"{min_val}-{max_val}" if min_val >= 0 else f"{min_val} to {max_val}"
+        textbox.setPlaceholderText(placeholder)
+        textbox.editingFinished.connect(update_textbox_method)
+        control_row.addWidget(textbox)
+        setattr(self, textbox_attr, textbox)
+
+        degree_label = QLabel("\u00b0")
+        degree_label.setFixedWidth(15)
+        control_row.addWidget(degree_label)
+        control_row.addStretch()
+        slider_container_layout.addLayout(control_row)
+
+        # Tick mark labels below slider
         tick_container = QWidget()
-        tick_container.setFixedWidth(300)  # Match slider width exactly
+        tick_container.setFixedWidth(300)
         tick_label_layout = QHBoxLayout(tick_container)
         tick_label_layout.setContentsMargins(0, 0, 0, 0)
         tick_label_layout.setSpacing(0)
-        # 7 ticks at 0, 15, 30, 45, 60, 75, 90 - evenly spaced
-        tick_values = [0, 15, 30, 45, 60, 75, 90]
         for i, val in enumerate(tick_values):
-            label = QLabel(f"{val}°")
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setStyleSheet("font-size: 10pt; font-weight: bold;")
-            tick_label_layout.addWidget(label)
+            tick_lbl = QLabel(f"{val}\u00b0")
+            tick_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            tick_lbl.setStyleSheet("font-size: 10pt; font-weight: bold;")
+            tick_label_layout.addWidget(tick_lbl)
             if i < len(tick_values) - 1:
                 tick_label_layout.addStretch()
         slider_container_layout.addWidget(tick_container)
-        grip_layout.addWidget(slider_container)
+        layout.addWidget(slider_container)
 
-        grip_info = QLabel("0° = parallel to fingers, 90° = perpendicular to fingers")
-        grip_info.setStyleSheet("font-size: 12pt; font-weight: bold;")
-        grip_layout.addWidget(grip_info)
-        self.grip_slider.valueChanged.connect(self.update_grip_label)
+        info_label = QLabel(info_text)
+        info_label.setStyleSheet("font-size: 12pt; font-weight: bold;")
+        layout.addWidget(info_label)
 
-        # Wrist deviation angle - radial/ulnar deviation
-        wrist_layout = QVBoxLayout()
-        wrist_layout.setSpacing(5)  # Match grip_layout exactly
-        wrist_layout.setContentsMargins(0, 0, 0, 0)  # Match grip_layout exactly
-        wrist_label = QLabel("Wrist Deviation Angle φ:")
-        wrist_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
-        wrist_layout.addWidget(wrist_label)
+        return layout
 
-        # Container for slider row and tick labels - ensures alignment (match grip structure exactly)  # noqa: E501
-        wrist_slider_container = QWidget()
-        wrist_slider_container_layout = QVBoxLayout(wrist_slider_container)
-        wrist_slider_container_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
-        wrist_slider_container_layout.setSpacing(0)  # Match grip
+    def _create_labeled_input(
+        self,
+        label_text: str,
+        default_text: str,
+        placeholder: str,
+        width: int,
+        on_finish: object,
+    ) -> tuple[QHBoxLayout, WheelIgnoringLineEdit]:
+        """Create a label + textbox + unit row for club properties.
 
-        # Slider and text box row
-        wrist_control_layout = QHBoxLayout()
-        wrist_control_layout.setContentsMargins(0, 0, 0, 0)
-        wrist_control_layout.setSpacing(5)  # Small gap between slider and text box
-        self.wrist_slider = WheelIgnoringSlider(Qt.Orientation.Horizontal)
-        self.wrist_slider.setMinimum(-60)
-        self.wrist_slider.setMaximum(60)
-        self.wrist_slider.setValue(0)
-        self.wrist_slider.setTickInterval(15)
-        self.wrist_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.wrist_slider.setFixedWidth(300)  # Match grip
-        self.wrist_slider.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        wrist_control_layout.addWidget(self.wrist_slider)
-        self.wrist_textbox = WheelIgnoringLineEdit()
-        self.wrist_textbox.setText("0")
-        self.wrist_textbox.setFixedWidth(80)  # Match grip text box width
-        self.wrist_textbox.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.wrist_textbox.setPlaceholderText("-60 to 60")
-        self.wrist_textbox.editingFinished.connect(self.update_wrist_from_textbox)
-        wrist_control_layout.addWidget(self.wrist_textbox)
-        degree_label2 = QLabel("°")
-        degree_label2.setFixedWidth(15)  # Match grip degree label width
-        wrist_control_layout.addWidget(degree_label2)
-        wrist_control_layout.addStretch()  # Push everything to the left
-        wrist_slider_container_layout.addLayout(wrist_control_layout)
+        Returns the row layout and the created line-edit widget.
+        """
+        label_area_width = 100
 
-        # Add tick mark labels below slider - aligned with slider (match grip structure exactly)
-        wrist_tick_container = QWidget()
-        wrist_tick_container.setFixedWidth(300)  # Match grip
-        wrist_tick_label_layout = QHBoxLayout(wrist_tick_container)
-        wrist_tick_label_layout.setContentsMargins(0, 0, 0, 0)  # Match grip
-        wrist_tick_label_layout.setSpacing(0)  # Match grip
-        # 9 ticks at -60, -45, -30, -15, 0, 15, 30, 45, 60 - evenly spaced
-        wrist_tick_values = [-60, -45, -30, -15, 0, 15, 30, 45, 60]
-        for i, val in enumerate(wrist_tick_values):
-            label = QLabel(f"{val}°")
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setStyleSheet("font-size: 10pt; font-weight: bold;")  # Match grip
-            wrist_tick_label_layout.addWidget(label)
-            if i < len(wrist_tick_values) - 1:
-                wrist_tick_label_layout.addStretch()
-        wrist_slider_container_layout.addWidget(wrist_tick_container)
-        wrist_layout.addWidget(wrist_slider_container)
+        row = QHBoxLayout()
+        lbl = QLabel(label_text)
+        lbl.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        lbl.setFixedWidth(label_area_width)
+        lbl.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        row.addWidget(lbl)
 
-        wrist_info = QLabel("+ values = radial deviation, - values = ulnar deviation")
-        wrist_info.setStyleSheet("font-size: 12pt; font-weight: bold;")  # Match grip
-        wrist_layout.addWidget(wrist_info)
-        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
+        line_edit = WheelIgnoringLineEdit()
+        line_edit.setText(default_text)
+        line_edit.setFixedWidth(width)
+        line_edit.setAlignment(Qt.AlignmentFlag.AlignRight)
+        line_edit.setPlaceholderText(placeholder)
+        line_edit.editingFinished.connect(on_finish)
+        row.addWidget(line_edit)
 
-        # Left column: Angle controls
-        left_column = QVBoxLayout()
-        left_column.setSpacing(0)  # No extra spacing between sections
-        left_column.setContentsMargins(0, 0, 0, 0)  # No margins
-        left_column.addLayout(grip_layout)
-        left_column.addLayout(wrist_layout)
-        left_column.addStretch()
-        control_layout.addLayout(left_column)
+        return row, line_edit
 
-        # Right column: Club Properties
+    def _setup_club_properties_panel(self) -> QVBoxLayout:
+        """Build the right-column club properties panel.
+
+        Creates the clubhead, shaft, length, and CG distance inputs
+        and the inertia display label.
+        """
         club_layout = QVBoxLayout()
 
         club_props_label = QLabel("Club Properties:")
         club_props_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
         club_layout.addWidget(club_props_label)
 
-        # Club properties in vertical layout - text boxes just right of labels, right edges aligned
-        # Use fixed minimum width for label area so all text boxes align on the right
-        label_area_width = 100  # Fixed width for label + spacer area
+        # Clubhead weight
+        clubhead_row, self.clubhead_weight = self._create_labeled_input(
+            "Clubhead:",
+            str(int(DEFAULT_CLUBHEAD_WEIGHT)),
+            "50-500",
+            80,
+            self.update_clubhead_from_textbox,
+        )
+        clubhead_row.addWidget(QLabel(" g"))
+        club_layout.addLayout(clubhead_row)
 
-        clubhead_layout = QHBoxLayout()
-        clubhead_label = QLabel("Clubhead:")
-        clubhead_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
-        clubhead_label.setFixedWidth(label_area_width)  # Fixed width for alignment
-        clubhead_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        clubhead_layout.addWidget(clubhead_label)
-        self.clubhead_weight = WheelIgnoringLineEdit()
-        self.clubhead_weight.setText(str(int(DEFAULT_CLUBHEAD_WEIGHT)))
-        self.clubhead_weight.setFixedWidth(80)
-        self.clubhead_weight.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.clubhead_weight.setPlaceholderText("50-500")
-        self.clubhead_weight.editingFinished.connect(self.update_clubhead_from_textbox)
-        clubhead_layout.addWidget(self.clubhead_weight)
-        clubhead_layout.addWidget(QLabel(" g"))
-        club_layout.addLayout(clubhead_layout)
+        # Shaft weight
+        shaft_row, self.shaft_weight = self._create_labeled_input(
+            "Shaft:",
+            str(int(DEFAULT_SHAFT_WEIGHT)),
+            "30-200",
+            80,
+            self.update_shaft_from_textbox,
+        )
+        shaft_row.addWidget(QLabel(" g"))
+        club_layout.addLayout(shaft_row)
 
-        shaft_layout = QHBoxLayout()
-        shaft_label = QLabel("Shaft:")
-        shaft_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
-        shaft_label.setFixedWidth(label_area_width)  # Same fixed width
-        shaft_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        shaft_layout.addWidget(shaft_label)
-        self.shaft_weight = WheelIgnoringLineEdit()
-        self.shaft_weight.setText(str(int(DEFAULT_SHAFT_WEIGHT)))
-        self.shaft_weight.setFixedWidth(80)  # Match clubhead width
-        self.shaft_weight.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.shaft_weight.setPlaceholderText("30-200")
-        self.shaft_weight.editingFinished.connect(self.update_shaft_from_textbox)
-        shaft_layout.addWidget(self.shaft_weight)
-        shaft_layout.addWidget(QLabel(" g"))
-        club_layout.addLayout(shaft_layout)
+        # Club length
+        length_row, self.club_length = self._create_labeled_input(
+            "Length:",
+            f"{DEFAULT_CLUB_LENGTH:.2f}",
+            "0.5-1.5",
+            80,
+            self.update_length_from_textbox,
+        )
+        length_row.addWidget(QLabel(" m"))
+        club_layout.addLayout(length_row)
 
-        length_layout = QHBoxLayout()
-        length_label = QLabel("Length:")
-        length_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
-        length_label.setFixedWidth(label_area_width)  # Same fixed width
-        length_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        length_layout.addWidget(length_label)
-        self.club_length = WheelIgnoringLineEdit()
-        self.club_length.setText(f"{DEFAULT_CLUB_LENGTH:.2f}")
-        self.club_length.setFixedWidth(80)  # Match other text boxes
-        self.club_length.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.club_length.setPlaceholderText("0.5-1.5")
-        self.club_length.editingFinished.connect(self.update_length_from_textbox)
-        length_layout.addWidget(self.club_length)
-        length_layout.addWidget(QLabel(" m"))
-        club_layout.addLayout(length_layout)
-
-        cg_layout = QHBoxLayout()
-        cg_label = QLabel("CG Dist:")
-        cg_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
-        cg_label.setFixedWidth(label_area_width)  # Same fixed width
-        cg_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        cg_layout.addWidget(cg_label)
-        self.cg_distance = WheelIgnoringLineEdit()
-        self.cg_distance.setText(f"{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}")
-        self.cg_distance.setFixedWidth(80)  # Match other text boxes
-        self.cg_distance.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.cg_distance.setPlaceholderText("0.3-1.2")
-        self.cg_distance.editingFinished.connect(self.update_cg_from_textbox)
-        cg_layout.addWidget(self.cg_distance)
-        cg_layout.addWidget(QLabel(" m"))
-        club_layout.addLayout(cg_layout)
+        # CG distance
+        cg_row, self.cg_distance = self._create_labeled_input(
+            "CG Dist:",
+            f"{DEFAULT_CLUBHEAD_CG_DISTANCE:.2f}",
+            "0.3-1.2",
+            80,
+            self.update_cg_from_textbox,
+        )
+        cg_row.addWidget(QLabel(" m"))
+        club_layout.addLayout(cg_row)
 
         self.inertia_label = QLabel()
         self.inertia_label.setStyleSheet("font-size: 12pt; font-weight: bold;")
         club_layout.addWidget(self.inertia_label)
         club_layout.addStretch()
 
-        control_layout.addLayout(club_layout)
+        return club_layout
 
-        control_group.setLayout(control_layout)
-        main_layout.addWidget(control_group)
-
-        # Connect club property changes (text boxes trigger on editingFinished)
-        # No need to connect - editingFinished already calls update methods
-
-        # Signal Generator Section
+    def _setup_signal_generator(self, main_layout: QVBoxLayout) -> None:
+        """Build the input signal generator group box."""
         signal_group = QGroupBox("Input Signal Generator")
         signal_layout = QVBoxLayout()
 
@@ -1296,7 +1378,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         # Regenerate noise button
         regen_layout = QHBoxLayout()
         regen_layout.addStretch()
-        regen_btn = QPushButton("🎲 Regenerate Signal")
+        regen_btn = QPushButton("\U0001f3b2 Regenerate Signal")
         regen_btn.clicked.connect(self.regenerate_noise)
         regen_layout.addWidget(regen_btn)
         regen_layout.addStretch()
@@ -1305,12 +1387,11 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         signal_group.setLayout(signal_layout)
         main_layout.addWidget(signal_group)
 
-        # ---
-        # Plot Controls
-        # ---
+    def _setup_plot_controls(self, main_layout: QVBoxLayout) -> None:
+        """Build the plot controls group box with type selector and checkboxes."""
         plot_control_group = QGroupBox("Plot Controls")
         plot_control_layout = QHBoxLayout()
-        plot_control_layout.setSpacing(15)  # Add spacing between widgets
+        plot_control_layout.setSpacing(15)
 
         # Plot type dropdown
         plot_type_label = QLabel("Plot Type:")
@@ -1323,118 +1404,49 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         self.plot_type_combo.currentTextChanged.connect(self.update_plot_type)
         plot_control_layout.addWidget(self.plot_type_combo)
 
-        plot_control_layout.addSpacing(20)  # Extra space after combo box
+        plot_control_layout.addSpacing(20)
         plot_control_layout.addStretch()
 
         # Signal visibility checkboxes
         show_label = QLabel("Show:")
         show_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
         plot_control_layout.addWidget(show_label)
-        plot_control_layout.addSpacing(10)  # Space after label
+        plot_control_layout.addSpacing(10)
 
-        self.show_input_check = QCheckBox("Input Torque")
-        self.show_input_check.setChecked(True)
-        self.show_input_check.stateChanged.connect(
-            lambda: self.update_signal_visibility("input_torque", self.show_input_check.isChecked())
-        )
-        plot_control_layout.addWidget(self.show_input_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
+        # Checkbox definitions: (attr_name, display_label, signal_key, default_checked)
+        checkbox_defs = [
+            ("show_input_check", "Input Torque", "input_torque", True),
+            ("show_transmitted_check", "Transmitted Torque", "transmitted_torque", True),
+            ("show_alpha_torque_check", "\u03c4_\u03b1", "torque_alpha", True),
+            ("show_gamma_torque_check", "\u03c4_\u03b3", "torque_gamma", True),
+            ("show_alpha_accel_check", "\u03b1_\u03b1", "accel_alpha", True),
+            ("show_gamma_accel_check", "\u03b1_\u03b3", "accel_gamma", True),
+            ("show_transmission_check", "Transmission Ratio", "transmission_ratio", True),
+            ("show_velocity_check", "Velocity Ratio", "velocity_ratio", False),
+            ("show_accel_alpha_ratio_check", "Accel_\u03b1 Ratio", "accel_alpha_ratio", False),
+            ("show_accel_gamma_ratio_check", "Accel_\u03b3 Ratio", "accel_gamma_ratio", False),
+        ]
 
-        self.show_transmitted_check = QCheckBox("Transmitted Torque")
-        self.show_transmitted_check.setChecked(True)
-        self.show_transmitted_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "transmitted_torque", self.show_transmitted_check.isChecked()
+        for attr_name, display_label, signal_key, default_checked in checkbox_defs:
+            cb = QCheckBox(display_label)
+            cb.setChecked(default_checked)
+            # Capture signal_key and cb in closure via default args
+            cb.stateChanged.connect(
+                lambda _state, key=signal_key, checkbox=cb: self.update_signal_visibility(
+                    key, checkbox.isChecked()
+                )
             )
-        )
-        plot_control_layout.addWidget(self.show_transmitted_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_alpha_torque_check = QCheckBox("τ_α")
-        self.show_alpha_torque_check.setChecked(True)
-        self.show_alpha_torque_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "torque_alpha", self.show_alpha_torque_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_alpha_torque_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_gamma_torque_check = QCheckBox("τ_γ")
-        self.show_gamma_torque_check.setChecked(True)
-        self.show_gamma_torque_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "torque_gamma", self.show_gamma_torque_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_gamma_torque_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_alpha_accel_check = QCheckBox("α_α")
-        self.show_alpha_accel_check.setChecked(True)
-        self.show_alpha_accel_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "accel_alpha", self.show_alpha_accel_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_alpha_accel_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_gamma_accel_check = QCheckBox("α_γ")
-        self.show_gamma_accel_check.setChecked(True)
-        self.show_gamma_accel_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "accel_gamma", self.show_gamma_accel_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_gamma_accel_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_transmission_check = QCheckBox("Transmission Ratio")
-        self.show_transmission_check.setChecked(True)
-        self.show_transmission_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "transmission_ratio", self.show_transmission_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_transmission_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_velocity_check = QCheckBox("Velocity Ratio")
-        self.show_velocity_check.setChecked(False)
-        self.show_velocity_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "velocity_ratio", self.show_velocity_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_velocity_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_accel_alpha_ratio_check = QCheckBox("Accel_α Ratio")
-        self.show_accel_alpha_ratio_check.setChecked(False)
-        self.show_accel_alpha_ratio_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "accel_alpha_ratio", self.show_accel_alpha_ratio_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_accel_alpha_ratio_check)
-        plot_control_layout.addSpacing(10)  # Space between checkboxes
-
-        self.show_accel_gamma_ratio_check = QCheckBox("Accel_γ Ratio")
-        self.show_accel_gamma_ratio_check.setChecked(False)
-        self.show_accel_gamma_ratio_check.stateChanged.connect(
-            lambda: self.update_signal_visibility(
-                "accel_gamma_ratio", self.show_accel_gamma_ratio_check.isChecked()
-            )
-        )
-        plot_control_layout.addWidget(self.show_accel_gamma_ratio_check)
+            setattr(self, attr_name, cb)
+            plot_control_layout.addWidget(cb)
+            # Add spacing after each checkbox except the last
+            if attr_name != "show_accel_gamma_ratio_check":
+                plot_control_layout.addSpacing(10)
 
         plot_control_group.setLayout(plot_control_layout)
         main_layout.addWidget(plot_control_group)
 
-        # ---
-        # Plot Canvas
-        # ---
+    def _setup_plot_canvas(self, main_layout: QVBoxLayout) -> None:
+        """Add the plot canvas group box."""
         plot_group = QGroupBox("Plot")
         plot_layout = QVBoxLayout()
         I_alpha, I_gamma = self.get_inertia_values()
@@ -1445,9 +1457,8 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         plot_group.setLayout(plot_layout)
         main_layout.addWidget(plot_group)
 
-        # ---
-        # Info panel
-        # ---
+    def _setup_info_panel(self, main_layout: QVBoxLayout) -> None:
+        """Add the model information panel."""
         info_group = QGroupBox("Model Information")
         info_layout = QVBoxLayout()
         self.info_label = QLabel()
@@ -1457,17 +1468,6 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         info_layout.addWidget(self.info_label)
         info_group.setLayout(info_layout)
         main_layout.addWidget(info_group)
-
-        # Set main widget to scroll area
-        self.scroll.setWidget(main_widget)
-        self.setCentralWidget(self.scroll)
-
-        # Connect sliders and spinboxes to update (with signal blocking to prevent loops)
-        self.grip_slider.valueChanged.connect(self.update_grip_label)
-        self.wrist_slider.valueChanged.connect(self.update_wrist_label)
-
-        # Initial update
-        self.update_inertia()
 
     def get_inertia_values(self) -> tuple[float, float]:
         """Get current inertia values from club properties"""

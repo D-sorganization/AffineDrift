@@ -76,6 +76,13 @@ def adaptive_timestep_ddp_mock(
     This skeleton serves as a placeholder for the algorithm structure.
     See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md
 
+    Preconditions:
+        - f must be a callable dynamics function f(x, u) -> dx
+        - x0 and xf must be finite arrays with the same shape
+        - u_init must be a non-empty sequence of finite control vectors
+        - eps_residual must be strictly positive
+        - max_iters must be >= 1
+
     Args:
         f: Dynamics function f(x, u, t)
         x0: Initial state
@@ -92,12 +99,15 @@ def adaptive_timestep_ddp_mock(
     """
 
     # --- Preconditions ---
+    require(callable(f), "f must be callable")
     check_finite_array(x0, "x0")
     check_finite_array(xf, "xf")
+    require(x0.ndim == 1, "x0 must be a 1-D array", x0.ndim)
     require(x0.shape == xf.shape, "x0 and xf must have same shape")
+    require(len(u_init) > 0, "u_init must not be empty")
+    check_finite_array(np.asarray(u_init), "u_init")
     check_positive(eps_residual, "eps_residual")
     require(max_iters >= 1, "max_iters must be >= 1", max_iters)
-    require(len(u_init) > 0, "u_init must not be empty")
 
     # Step 1: Initialize with uniform timestep
     u_traj = np.array(u_init)
@@ -166,11 +176,13 @@ def _simulate_trajectory(
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
     """Exponential integrator or RK4 simulation."""
+    require(callable(f), "f must be callable")
+    check_finite_array(x0, "x0")
+    check_finite_array(t_grid, "t_grid")
     require(
         len(u_traj) == len(t_grid) - 1,
         "u_traj length must equal t_grid length - 1",
     )
-    check_finite_array(x0, "x0")
     x = [x0]
     curr_x = x0
     for i in range(len(u_traj)):
@@ -179,7 +191,13 @@ def _simulate_trajectory(
         dx = f(curr_x, u_traj[i])
         curr_x = curr_x + dx * dt
         x.append(curr_x)
-    return np.array(x)
+    result = np.array(x)
+    ensure(
+        result.shape[0] == len(t_grid),
+        "trajectory length must equal t_grid length",
+        result.shape,
+    )
+    return result
 
 
 def _resample_controls(
@@ -189,6 +207,8 @@ def _resample_controls(
     require(len(u_old) > 0, "u_old must not be empty")
     require(len(t_old) > 0, "t_old must not be empty")
     require(len(t_new) > 0, "t_new must not be empty")
+    check_finite_array(t_old, "t_old")
+    check_finite_array(t_new, "t_new")
     u_resampled = []
 
     # Simple interpolation
@@ -199,4 +219,10 @@ def _resample_controls(
         idx = min(idx, len(u_old) - 1)
         u_resampled.append(u_old[idx])
 
-    return np.array(u_resampled)
+    result = np.array(u_resampled)
+    ensure(
+        len(result) == len(t_new),
+        "resampled controls must match new time grid length",
+        len(result),
+    )
+    return result

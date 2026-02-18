@@ -16,7 +16,6 @@ The script will:
 
 import argparse
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
@@ -27,7 +26,7 @@ try:
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
-    from src.tools.utils.link_utils import is_external_url, is_fragment_only
+    from src.tools.utils.link_utils import BrokenLinkRecord, is_external_url, is_fragment_only
 except ModuleNotFoundError:
     repo_root = Path(__file__).resolve().parents[2]
     if str(repo_root) not in sys.path:
@@ -35,23 +34,13 @@ except ModuleNotFoundError:
     from src.core.contracts import require
     from src.tools.utils import setup_logging
     from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
-    from src.tools.utils.link_utils import is_external_url, is_fragment_only
+    from src.tools.utils.link_utils import BrokenLinkRecord, is_external_url, is_fragment_only
 
 logger = setup_logging(__name__)
 
 DOCS_DIR = Path("docs")
 ENTRY_POINT_NAMES = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
 ENTRY_POINT_PATHS = {"articles/ux-verification-test.html"}
-
-
-@dataclass(frozen=True)
-class BrokenLinkRecord:
-    """Structured broken-link finding."""
-
-    source: str
-    target: str
-    href: str
-    text: str
 
 
 def parse_fail_on(raw: str) -> set[str]:

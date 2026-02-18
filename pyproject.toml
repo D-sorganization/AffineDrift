@@ -12,6 +12,11 @@ packages = []
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+markers = [
+    "integration: Integration tests spanning multiple modules",
+    "property_test: Property-based tests using Hypothesis",
+    "slow: Tests that take a long time to run",
+]
 
 [tool.mypy]
 python_version = "3.12"

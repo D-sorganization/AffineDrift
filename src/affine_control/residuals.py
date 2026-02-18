@@ -57,6 +57,11 @@ def compute_hessian_norm(
     H_f is the tensor [d^2f / dx_i dx_j].
     The norm used is the maximum spectral norm of the component Hessians.
     """
+    check_finite_array(x, "x")
+    check_finite_array(u, "u")
+    check_positive(epsilon, "epsilon")
+    require(x.ndim == 1, "x must be a 1-D array", x.ndim)
+    require(u.ndim == 1, "u must be a 1-D array", u.ndim)
     n = len(x)
     dx = len(f(x, u))
 
@@ -107,6 +112,7 @@ def compute_hessian_norm(
         norm_k = np.linalg.norm(H_k, ord=2)
         M = max(M, float(norm_k))
 
+    ensure(M >= 0, "Hessian norm must be non-negative", M)
     return M
 
 
@@ -129,6 +135,16 @@ def predict_residual_bound(
     check_finite_array(delta_x_traj, "delta_x_traj")
     check_finite_array(dt_traj, "dt_traj")
     require(len(dt_traj) > 0, "dt_traj must not be empty")
+    require(
+        bool(np.all(M_traj >= 0)),
+        "M_traj values must be non-negative (Hessian bounds)",
+        M_traj,
+    )
+    require(
+        bool(np.all(dt_traj >= 0)),
+        "dt_traj values must be non-negative (timesteps)",
+        dt_traj,
+    )
 
     r_accum = 0.0
 
@@ -223,7 +239,7 @@ class ResidualMonitor(ContractChecker):
                 next_mode = "LQR"
 
         if next_mode != self.mode:
-            # print(f"Switching mode: {self.mode} -> {next_mode} (r={r_est:.4f})")
             self.mode = next_mode
 
+        ensure(r_est >= 0, "residual estimate must be non-negative", r_est)
         return self.mode, float(r_est)

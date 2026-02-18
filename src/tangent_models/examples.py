@@ -3,9 +3,12 @@ from typing import Any
 
 import numpy as np
 
-from src.core.contracts import check_finite_array, check_positive, require
+from src.core.contracts import check_finite_array, check_positive, ensure, require
 
 GRAVITY_M_S2 = 9.81
+
+_STATE_VEC = "state vector"
+_CTRL_VEC = "control vector"
 
 
 class DynamicalSystem(ABC):
@@ -40,8 +43,8 @@ class SimplePendulum(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute simple pendulum dynamics."""
-        check_finite_array(x, "state vector")
-        require(len(x) == 2, "state vector must have 2 elements (theta, omega)")
+        check_finite_array(x, _STATE_VEC)
+        require(len(x) == 2, f"{_STATE_VEC} must have 2 elements (theta, omega)")
         # x = [theta, omega]
         theta, omega = x
         u_val = u[0] if isinstance(u, list | tuple | np.ndarray) else u
@@ -55,12 +58,16 @@ class SimplePendulum(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize simple pendulum dynamics."""
+        check_finite_array(x, _STATE_VEC)
+        require(len(x) == 2, f"{_STATE_VEC} must have 2 elements (theta, omega)")
         theta, _ = x
 
         A = np.array([[0, 1], [-(self.g / self.L) * np.cos(theta), 0]])
 
         B = np.array([[0], [1 / (self.m * self.L**2)]])
 
+        ensure(A.shape == (2, 2), "A must be 2x2 for pendulum", A.shape)
+        ensure(B.shape == (2, 1), "B must be 2x1 for pendulum", B.shape)
         return A, B
 
 
@@ -85,8 +92,12 @@ class SpacecraftRendezvous(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute spacecraft rendezvous dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 6, f"{_STATE_VEC} must have 6 elements (rx,ry,rz,vx,vy,vz)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector for SpacecraftRendezvous")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 3, f"{_CTRL_VEC} must have 3 elements (ux,uy,uz)")
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
@@ -118,8 +129,12 @@ class SpacecraftRendezvous(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize spacecraft rendezvous dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 6, f"{_STATE_VEC} must have 6 elements (rx,ry,rz,vx,vy,vz)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 3, f"{_CTRL_VEC} must have 3 elements (ux,uy,uz)")
         # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
         # But we want linearization about ANY point x for the Tangent Hyperplane theory.
 
@@ -183,6 +198,8 @@ class SpacecraftRendezvous(DynamicalSystem):
         B = np.zeros((6, 3))
         B[3:6, 0:3] = np.eye(3) / self.m
 
+        ensure(A.shape == (6, 6), "A must be 6x6 for spacecraft", A.shape)
+        ensure(B.shape == (6, 3), "B must be 6x3 for spacecraft", B.shape)
         return A, B
 
 
@@ -213,8 +230,12 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute planar quadrotor dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 6, f"{_STATE_VEC} must have 6 elements (x,y,theta,vx,vy,omega)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 2, f"{_CTRL_VEC} must have 2 elements (u1,u2)")
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
 
@@ -231,8 +252,12 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize planar quadrotor dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 6, f"{_STATE_VEC} must have 6 elements (x,y,theta,vx,vy,omega)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 2, f"{_CTRL_VEC} must have 2 elements (u1,u2)")
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
         T = u1 + u2
@@ -258,6 +283,8 @@ class PlanarQuadrotor(DynamicalSystem):
         B[5, 0] = -self.L / self.moment_inertia
         B[5, 1] = self.L / self.moment_inertia
 
+        ensure(A.shape == (6, 6), "A must be 6x6 for quadrotor", A.shape)
+        ensure(B.shape == (6, 2), "B must be 6x2 for quadrotor", B.shape)
         return A, B
 
 
@@ -291,8 +318,12 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute robot arm dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 4, f"{_STATE_VEC} must have 4 elements (q1,q2,dq1,dq2)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 2, f"{_CTRL_VEC} must have 2 elements (tau1,tau2)")
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
 
@@ -332,8 +363,12 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize robot arm dynamics."""
+        check_finite_array(np.asarray(x), _STATE_VEC)
+        require(len(x) == 4, f"{_STATE_VEC} must have 4 elements (q1,q2,dq1,dq2)")
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
+        check_finite_array(np.asarray(u), _CTRL_VEC)
+        require(len(u) == 2, f"{_CTRL_VEC} must have 2 elements (tau1,tau2)")
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
         n = 4
@@ -359,4 +394,6 @@ class RobotArm(DynamicalSystem):
             f_pert = self.dynamics(x, u_pert)
             B[:, i] = (f_pert - f0) / epsilon
 
+        ensure(A.shape == (4, 4), "A must be 4x4 for robot arm", A.shape)
+        ensure(B.shape == (4, 2), "B must be 4x2 for robot arm", B.shape)
         return A, B

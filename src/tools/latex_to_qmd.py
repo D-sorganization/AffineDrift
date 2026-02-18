@@ -14,6 +14,9 @@ from pathlib import Path
 from src.tools.utils import setup_logging_with_timestamp
 from src.tools.utils.latex_utils import (
     clean_common_latex,
+    convert_abstract,
+    convert_custom_boxes,
+    convert_custom_commands,
     convert_lists_to_markdown,
     convert_quotes,
     convert_sections_to_markdown,
@@ -73,29 +76,9 @@ class LaTeXToQuartoConverter:
 
     def convert_environments(self, content: str) -> str:
         """Convert special LaTeX environments."""
-        # Abstract
-        content = re.sub(
-            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
-            r"::: {.abstract-section}\n## Abstract\n\n\1\n\n:::",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Key points
-        content = re.sub(
-            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
-            r"::: {.keypoint-box}\n**Key Point:** \1\n:::",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Limitations
-        content = re.sub(
-            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
-            r"::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::",
-            content,
-            flags=re.DOTALL,
-        )
+        # Abstract, keypoint, limitation — via shared latex_utils
+        content = convert_abstract(content, fmt="markdown")
+        content = convert_custom_boxes(content, fmt="markdown")
 
         # Quotes
         return re.sub(r"\\begin\{quote\}(.*?)\\end\{quote\}", r"> \1", content, flags=re.DOTALL)
@@ -165,9 +148,8 @@ class LaTeXToQuartoConverter:
         # Apply shared cleanup (comments, labels, spacing, structure)
         content = clean_common_latex(content)
 
-        # Quarto-specific: custom commands → bold
-        content = re.sub(r"\\bvec\{([^}]+)\}", r"**\1**", content)
-        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
+        # Custom commands → bold (via shared latex_utils)
+        content = convert_custom_commands(content, fmt="markdown")
 
         # Remove table environments
         content = re.sub(r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL)

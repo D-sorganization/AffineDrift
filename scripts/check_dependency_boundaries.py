@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import ast
+import logging
 import sys
 from pathlib import Path
 
 from src.tools.utils.budget_check_utils import load_config, report_results
+
+logger = logging.getLogger(__name__)
 
 
 def _extract_import_prefixes(path: Path) -> tuple[list[tuple[int, str]], bool]:
@@ -70,13 +73,14 @@ def check_rules(repo_root: Path) -> list[str]:
                         )
 
     if skipped_files:
-        print(f"Dependency boundary check: skipped unparsable files={skipped_files}")
+        logger.info("Dependency boundary check: skipped unparsable files=%d", skipped_files)
 
     return violations
 
 
 def main() -> int:
     """Run the dependency boundary check."""
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     repo_root = Path(__file__).resolve().parent.parent
     violations = check_rules(repo_root)
     return report_results(

@@ -23,6 +23,23 @@ from src.tools.utils import setup_logging
 logger = setup_logging(__name__)
 
 
+# ─── Shared Constants ───────────────────────────────────────────
+# Regex patterns defined once (DRY); used by extraction helpers AND
+# format-agnostic converters at the bottom of this module.
+
+_VALID_FORMATS = ("html", "markdown")
+
+_RE_ABSTRACT = r"\\begin\{abstract\}(.*?)\\end\{abstract\}"
+_RE_KEYPOINT = r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}"
+_RE_LIMITATION = r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}"
+_RE_BVEC = r"\\bvec\{([^}]+)\}"
+_RE_NAMED_COMMANDS = r"\\(Feq|Ceq|Rdrift|Rinput)"
+
+# Format-specific replacement templates
+_HTML_STRONG = r"<strong>\1</strong>"
+_MD_BOLD = r"**\1**"
+
+
 # ─── Data Structures ────────────────────────────────────────────
 
 
@@ -71,11 +88,7 @@ def extract_author(latex_content: str) -> str:
 
 def extract_abstract(latex_content: str) -> str:
     r"""Extract \begin{abstract}...\end{abstract} from LaTeX content."""
-    m = re.search(
-        r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
-        latex_content,
-        re.DOTALL,
-    )
+    m = re.search(_RE_ABSTRACT, latex_content, re.DOTALL)
     return m.group(1).strip() if m else ""
 
 
@@ -131,7 +144,7 @@ def convert_sections_to_html(content: str) -> str:
 
 def convert_text_formatting_to_markdown(content: str) -> str:
     r"""Convert \textbf, \textit, \emph, \texttt to markdown equivalents."""
-    content = re.sub(r"\\textbf\{([^}]+)\}", r"**\1**", content)
+    content = re.sub(r"\\textbf\{([^}]+)\}", _MD_BOLD, content)
     content = re.sub(r"\\textit\{([^}]+)\}", r"*\1*", content)
     content = re.sub(r"\\emph\{([^}]+)\}", r"*\1*", content)
     content = re.sub(r"\\texttt\{([^}]+)\}", r"`\1`", content)
@@ -140,7 +153,7 @@ def convert_text_formatting_to_markdown(content: str) -> str:
 
 def convert_text_formatting_to_html(content: str) -> str:
     r"""Convert \textbf, \textit, \emph, \texttt to HTML elements."""
-    content = re.sub(r"\\textbf\{([^}]+)\}", r"<strong>\1</strong>", content)
+    content = re.sub(r"\\textbf\{([^}]+)\}", _HTML_STRONG, content)
     content = re.sub(r"\\textit\{([^}]+)\}", r"<em>\1</em>", content)
     content = re.sub(r"\\emph\{([^}]+)\}", r"<em>\1</em>", content)
     content = re.sub(r"\\texttt\{([^}]+)\}", r"<code>\1</code>", content)
@@ -308,4 +321,102 @@ def convert_quotes(content: str) -> str:
     """Convert LaTeX-style quotes (`` and '') to standard quotes."""
     content = re.sub(r"``", '"', content)
     content = re.sub(r"''", '"', content)
+    return content
+
+
+# ─── Format-Agnostic Custom Environment / Command Conversion ────
+
+
+def _validate_format(fmt: str) -> None:
+    """Validate the output format parameter."""
+    if fmt not in _VALID_FORMATS:
+        raise ValueError(f"format must be one of {_VALID_FORMATS!r}, got {fmt!r}")
+
+
+def convert_abstract(content: str, fmt: str = "html") -> str:
+    r"""Convert \begin{abstract}...\end{abstract} to the target format.
+
+    Args:
+        content: LaTeX source text.
+        fmt: ``"html"`` or ``"markdown"``.
+
+    Returns:
+        Content with abstract environment replaced.
+    """
+    _validate_format(fmt)
+    if fmt == "html":
+        return re.sub(
+            _RE_ABSTRACT,
+            r'<div class="abstract-section">\n<h2>Abstract</h2>\n<p>\1</p>\n</div>',
+            content,
+            flags=re.DOTALL,
+        )
+    # markdown (Quarto fenced-div syntax)
+    return re.sub(
+        _RE_ABSTRACT,
+        r"::: {.abstract-section}\n## Abstract\n\n\1\n\n:::",
+        content,
+        flags=re.DOTALL,
+    )
+
+
+def convert_custom_boxes(content: str, fmt: str = "html") -> str:
+    r"""Convert keypoint and limitation environments to the target format.
+
+    Args:
+        content: LaTeX source text.
+        fmt: ``"html"`` or ``"markdown"``.
+
+    Returns:
+        Content with custom box environments replaced.
+    """
+    _validate_format(fmt)
+    if fmt == "html":
+        content = re.sub(
+            _RE_KEYPOINT,
+            r'<div class="keypoint-box"><strong>Key Point:</strong>\1</div>',
+            content,
+            flags=re.DOTALL,
+        )
+        content = re.sub(
+            _RE_LIMITATION,
+            r'<div class="limitation-box"><strong>Fundamental Limitation:</strong>\1</div>',
+            content,
+            flags=re.DOTALL,
+        )
+    else:
+        content = re.sub(
+            _RE_KEYPOINT,
+            r"::: {.keypoint-box}\n**Key Point:** \1\n:::",
+            content,
+            flags=re.DOTALL,
+        )
+        content = re.sub(
+            _RE_LIMITATION,
+            r"::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::",
+            content,
+            flags=re.DOTALL,
+        )
+    return content
+
+
+def convert_custom_commands(content: str, fmt: str = "html") -> str:
+    r"""Convert custom AffineDrift commands (\bvec, \Feq, etc.) to the target format.
+
+    Handles: ``\bvec{...}``, ``\Feq``, ``\Ceq``, ``\Rdrift``, ``\Rinput``.
+
+    Args:
+        content: LaTeX source text.
+        fmt: ``"html"`` or ``"markdown"``.
+
+    Returns:
+        Content with custom commands replaced by bold/strong equivalents.
+    """
+    _validate_format(fmt)
+    if fmt == "html":
+        content = re.sub(_RE_BVEC, _HTML_STRONG, content)
+        content = re.sub(_RE_NAMED_COMMANDS, _HTML_STRONG, content)
+    else:
+        content = re.sub(_RE_BVEC, _MD_BOLD, content)
+        content = re.sub(_RE_NAMED_COMMANDS, _MD_BOLD, content)
     return content
