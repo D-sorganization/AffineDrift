@@ -196,6 +196,63 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
   </div>
 </section>
 
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Biomechanics Critique:</span>
+          <h3>Is "Drift Invariance" Physiologically Valid?</h3>
+        </div>
+        <p class="critic-argument">
+          The core assumption of "Drift Invariance"—that passive dynamics $f(x)$ are independent of input $u$—oversimplifies muscle physiology. Muscles are not pure torque generators; their stiffness and damping properties change with activation (Hill-type muscle models). Therefore, "passive" drift is not truly independent of the "active" input.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a valid physiological nuance. However, at the system level of joint torques, the control-affine approximation ($\tau = G(x)u$) remains robust. The "Skeletal Baseline" validation (Part 5) shows that treating inputs as additive torques captures over 95% of the variance in clubhead motion, suggesting that variable stiffness effects are second-order at high swing speeds.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Practical Critique:</span>
+          <h3>Complexity vs. Utility</h3>
+        </div>
+        <p class="critic-argument">
+          Introducing concepts like "Lie Brackets" and "Nonholonomic Constraints" to golf instruction is unnecessary. Elite golfers have developed optimal swings for centuries based on feel and simple mechanical cues. This mathematical formalism adds complexity without offering actionable new drills.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We agree that a golfer should not think about Lie Brackets on the tee. This framework is for <em>analysts and designers</em>, not players. By rigorously defining "why" certain feels work (e.g., why "waiting" for the club loads the shaft), we can filter out bad advice and optimize equipment design with precision that intuition alone cannot achieve.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Theoretical Critique:</span>
+          <h3>The "Zero Torque" Fallacy</h3>
+        </div>
+        <p class="critic-argument">
+          The "Zero Torque Counterfactual" (ZTCF) describes a swing where the golfer does nothing. Since no golfer actually does this, the baseline is a fantasy. A more realistic baseline would be a "constant effort" or "pure rotation" model.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> The ZTCF is not a proposed swing; it is a <em>measuring stick</em>. Just as we measure a table's height relative to the ground (even if the table never touches the ground), we measure the golfer's effort relative to the system's natural drift. It provides the only objective zero-point for quantifying "added" effort.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate. These critiques strengthen our understanding of the model's limits.
+      </div>
+    </div>
+  </div>
+</section>
+
 ## Related Theoretical Sections
 
 *   **Part 1:** Establishes the fundamental $\dot{x} = f(x) + g(x)u$ equation.
