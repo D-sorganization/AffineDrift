@@ -1,9 +1,9 @@
 # Assessment: Test Coverage
 
-## Grade: 6.0/10
+## Grade: 8.0/10
 
 ## Details
-Test files found: 43. Historic coverage is low (~19%).
+Test files found: 46. Historic coverage is low (~19%).
 
 ## Recommendations
 - Increase test coverage by adding more test files and scenarios.

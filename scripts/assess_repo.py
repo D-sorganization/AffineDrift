@@ -105,6 +105,11 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
     if len(test_files) > 20:
         score += 2
 
+    # Check for pytest-cov in requirements.txt
+    req_txt = root / "requirements.txt"
+    if req_txt.exists() and "pytest-cov" in req_txt.read_text(encoding="utf-8", errors="ignore"):
+        score += 2
+
     return {
         "grade": min(10, score),
         "details": f"Test files found: {len(test_files)}. Historic coverage is low (~19%).",
