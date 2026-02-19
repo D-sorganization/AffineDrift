@@ -47,7 +47,7 @@ def extract_yaml_from_markdown(file_path: Path) -> list[dict[str, Any]]:
                 continue
 
         return extracted_items
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         logger.error("Error extracting YAML from %s: %s", file_path, e)
         return []
 
@@ -87,7 +87,7 @@ def main() -> None:
                     for item in base_data:
                         if "id" in item:
                             all_refs[item["id"]] = normalize_item(item)
-        except Exception as e:
+        except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
             logger.error("Error loading base bibliography: %s", e)
 
     # 2. Load from articles/*-bibliography.md
@@ -130,7 +130,7 @@ def main() -> None:
                 paths_data = yaml.safe_load(f)
             with open(paths_output, "w") as f:
                 json.dump(paths_data, f, indent=2)
-        except Exception as e:
+        except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
             logger.error("Error processing reading paths: %s", e)
 
 

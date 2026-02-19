@@ -29,7 +29,7 @@ def get_git_last_modified(filepath: str) -> str:
         if result.returncode == 0 and result.stdout.strip():
             # Convert to W3C datetime format
             return result.stdout.strip()[:10]
-    except Exception as e:
+    except (subprocess.SubprocessError, OSError) as e:
         logger.warning("Failed to get git modified date for %s: %s", filepath, e)
     return datetime.now().strftime("%Y-%m-%d")
 

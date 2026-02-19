@@ -49,7 +49,7 @@ def main() -> int:
         logger.info("Copied %s -> %s", src_css, dest_css)
 
         logger.info("Asset deployment complete.")
-    except Exception:
+    except OSError:
         logger.exception("Error deploying assets")
         return 1
 

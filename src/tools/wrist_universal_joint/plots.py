@@ -180,6 +180,50 @@ def plot_acceleration(
     return fig
 
 
+def _compute_transmission_sweep(
+    phi_sweep_deg: np.ndarray[Any, Any],
+    theta_grip_rad: float,
+    i_alpha: float,
+    i_gamma: float,
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Compute transmission ratios across a wrist angle sweep.
+
+    Args:
+        phi_sweep_deg: Array of wrist deviation angles in degrees.
+        theta_grip_rad: Grip angle in radians.
+        i_alpha: Moment of inertia about the alpha axis.
+        i_gamma: Moment of inertia about the gamma axis.
+
+    Returns:
+        Tuple of (tau_ratios, omega_ratios, accel_alpha_ratios, accel_gamma_ratios).
+    """
+    phi_sweep_rad = np.radians(phi_sweep_deg)
+    omega_ratios_list: list[float] = []
+    tau_ratios_list: list[float] = []
+    accel_alpha_ratios_list: list[float] = []
+    accel_gamma_ratios_list: list[float] = []
+
+    for phi_rad in phi_sweep_rad:
+        omega_r, tau_r = universal_joint_transmission_ratio(phi_rad, theta_grip_rad)
+        omega_ratios_list.append(omega_r)
+        tau_ratios_list.append(tau_r)
+
+        torque_trans = 1.0 * tau_r
+        t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
+        t_alpha_val = float(t_alpha) if isinstance(t_alpha, float | int) else t_alpha.item()
+        t_gamma_val = float(t_gamma) if isinstance(t_gamma, float | int) else t_gamma.item()
+
+        accel_alpha_ratios_list.append(t_alpha_val / i_alpha if i_alpha > EPSILON else 0.0)
+        accel_gamma_ratios_list.append(t_gamma_val / i_gamma if i_gamma > EPSILON else 0.0)
+
+    return (
+        np.array(tau_ratios_list),
+        np.array(omega_ratios_list),
+        np.array(accel_alpha_ratios_list),
+        np.array(accel_gamma_ratios_list),
+    )
+
+
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
 @st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
@@ -203,30 +247,10 @@ def plot_transmission_sweep(
 
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_sweep = np.linspace(-60, 60, 200)
-    phi_sweep_rad = np.radians(phi_sweep)
 
-    omega_ratios_list: list[float] = []
-    tau_ratios_list: list[float] = []
-    accel_alpha_ratios_list: list[float] = []
-    accel_gamma_ratios_list: list[float] = []
-
-    for phi_rad in phi_sweep_rad:
-        omega_r, tau_r = universal_joint_transmission_ratio(phi_rad, theta_grip_rad)
-        omega_ratios_list.append(omega_r)
-        tau_ratios_list.append(tau_r)
-
-        torque_trans = 1.0 * tau_r
-        t_alpha, t_gamma = distribute_torque_by_grip_angle(torque_trans, theta_grip_rad)
-        t_alpha_val = float(t_alpha) if isinstance(t_alpha, float | int) else t_alpha.item()
-        t_gamma_val = float(t_gamma) if isinstance(t_gamma, float | int) else t_gamma.item()
-
-        accel_alpha_ratios_list.append(t_alpha_val / i_alpha if i_alpha > EPSILON else 0.0)
-        accel_gamma_ratios_list.append(t_gamma_val / i_gamma if i_gamma > EPSILON else 0.0)
-
-    tau_ratios = np.array(tau_ratios_list)
-    omega_ratios = np.array(omega_ratios_list)
-    accel_alpha_ratios = np.array(accel_alpha_ratios_list)
-    accel_gamma_ratios = np.array(accel_gamma_ratios_list)
+    tau_ratios, omega_ratios, accel_alpha_ratios, accel_gamma_ratios = _compute_transmission_sweep(
+        phi_sweep, theta_grip_rad, i_alpha, i_gamma
+    )
 
     if show_transmission:
         ax.plot(

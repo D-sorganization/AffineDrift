@@ -49,44 +49,75 @@ def compute_hessian_bound(
     return compute_hessian_norm(f, x, u, epsilon)
 
 
+def _finite_diff_jacobian(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    epsilon: float,
+) -> np.ndarray[Any, Any]:
+    """Compute the Jacobian df/dx using central finite differences.
+
+    Args:
+        f: Dynamics function f(x, u).
+        x0: State vector at which to evaluate.
+        u: Control vector (held constant).
+        epsilon: Finite difference step size.
+
+    Returns:
+        Jacobian matrix of shape (output_dim, state_dim).
+    """
+    n = len(x0)
+    dx = len(f(x0, u))
+    J = np.zeros((dx, n))
+    for i in range(n):
+        x_plus = x0.copy()
+        x_plus[i] += epsilon
+        x_minus = x0.copy()
+        x_minus[i] -= epsilon
+        J[:, i] = (f(x_plus, u) - f(x_minus, u)) / (2 * epsilon)
+    return J
+
+
+def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
+    """Compute the maximum spectral norm across component Hessian slices.
+
+    Args:
+        H: Hessian tensor of shape (output_dim, state_dim, state_dim).
+
+    Returns:
+        Maximum spectral norm across all output components.
+    """
+    M = 0.0
+    for k in range(H.shape[0]):
+        norm_k = np.linalg.norm(H[k, :, :], ord=2)
+        M = max(M, float(norm_k))
+    return M
+
+
 def compute_hessian_norm(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
     epsilon: float = FINITE_DIFF_STEP_HESSIAN_NORM,
 ) -> float:
-    """
-    Computes numerical approximation of the Hessian norm ||H_f||.
+    """Compute numerical approximation of the Hessian norm ||H_f||.
+
     H_f is the tensor [d^2f / dx_i dx_j].
     The norm used is the maximum spectral norm of the component Hessians.
+
+    Args:
+        f: Dynamics function dx = f(x, u).
+        x: State vector.
+        u: Control vector.
+        epsilon: Finite difference step size.
+
+    Returns:
+        Maximum spectral norm of the component Hessians.
     """
     n = len(x)
     dx = len(f(x, u))
 
-    # Very expensive numerical Hessian for prototype
-    # In practice: Use JAX or analytical derivatives
-    # hessians = []
-
-    # f(x) -> [f1, f2, ...]
-    # For each fk, compute H_k
-
-    # Simplified: Just compute trace or Frobenius of Jacobian variation?
-    # Let's do a central difference on the Jacobian
-
-    # Jacobian J(x) = df/dx
-    def jacobian(x0: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-        """Compute Jacobian using finite differences."""
-        J = np.zeros((dx, n))
-        for i in range(n):
-            x_plus = x0.copy()
-            x_plus[i] += epsilon
-            x_minus = x0.copy()
-            x_minus[i] -= epsilon
-            J[:, i] = (f(x_plus, u) - f(x_minus, u)) / (2 * epsilon)
-        return J
-
-    # Hessian is derivative of Jacobian
-    # Tensor H[k, i, j] = dJ_ki / dx_j
+    # Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences on the Jacobian
     H = np.zeros((dx, n, n))
     base_x = x.copy()
 
@@ -96,21 +127,11 @@ def compute_hessian_norm(
         x_minus = base_x.copy()
         x_minus[j] -= epsilon
 
-        J_plus = jacobian(x_plus)
-        J_minus = jacobian(x_minus)
-
-        # dJ / dx_j
+        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
+        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
         H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
 
-    # Local bound M = max_k ||H_k||_2
-    M = 0.0
-    for k in range(dx):
-        H_k = H[k, :, :]
-        # Spectral norm
-        norm_k = np.linalg.norm(H_k, ord=2)
-        M = max(M, float(norm_k))
-
-    return M
+    return _max_spectral_norm(H)
 
 
 def predict_residual_bound(

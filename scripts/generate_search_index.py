@@ -85,7 +85,7 @@ def process_file(filepath: Path) -> dict[str, object] | None:
     """Process a single Quarto markdown file."""
     try:
         content, frontmatter = read_qmd_with_frontmatter(filepath)
-    except Exception:
+    except (OSError, UnicodeDecodeError, ValueError):
         return None
 
     # Skip if no title
