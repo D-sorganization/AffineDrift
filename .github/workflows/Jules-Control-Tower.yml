@@ -221,16 +221,10 @@ jobs:
     uses: ./.github/workflows/Jules-Archivist.yml
     secrets: inherit
 
-  call-sentinel:
+  call-quality-gate:
     needs: triage
-    if: needs.triage.outputs.target == 'sentinel'
-    uses: ./.github/workflows/Jules-Sentinel.yml
-    secrets: inherit
-
-  call-code-quality-reviewer:
-    needs: triage
-    if: needs.triage.outputs.target == 'code-quality-reviewer'
-    uses: ./.github/workflows/Jules-Code-Quality-Reviewer.yml
+    if: needs.triage.outputs.target == 'sentinel' || needs.triage.outputs.target == 'code-quality-reviewer'
+    uses: ./.github/workflows/Jules-Quality-Gate.yml
     secrets: inherit
 
   call-assessment-generator:
@@ -239,10 +233,10 @@ jobs:
     uses: ./.github/workflows/Jules-Assessment-Generator.yml
     secrets: inherit
 
-  call-issue-resolver:
+  call-issue-handler:
     needs: triage
     if: needs.triage.outputs.target == 'issue-resolver'
-    uses: ./.github/workflows/Jules-Issue-Resolver.yml
+    uses: ./.github/workflows/Jules-Issue-Handler.yml
     secrets: inherit
 
   call-completist:

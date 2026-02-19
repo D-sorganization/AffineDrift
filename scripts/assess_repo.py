@@ -469,14 +469,17 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     }
 
 
-def main():
-    """
-    Main function to execute the full repository assessment and generate reports.
-    """
-    root = Path.cwd()
-    py_files = get_python_files(root)
+def _run_all_assessments(root: Path, py_files: list[Path]) -> dict[str, dict[str, Any]]:
+    """Run all A-O assessments and return scores.
 
-    scores = {
+    Args:
+        root: Repository root path.
+        py_files: List of Python files to analyze.
+
+    Returns:
+        Dictionary mapping category codes to their assessment results.
+    """
+    return {
         "A": assess_code_structure(py_files),
         "B": assess_documentation(py_files),
         "C": assess_test_coverage(root),
@@ -491,74 +494,81 @@ def main():
         "L": assess_logging(py_files),
         "M": assess_configuration(root),
         "N": assess_scalability_maintainability(py_files),
-        "O": assess_scalability_maintainability(py_files),  # Reuse complexity for maintainability
+        "O": assess_scalability_maintainability(py_files),
     }
 
-    # Generate Individual Reports
-    for cat_code, info in scores.items():
-        name = CATEGORIES[cat_code]
-        generate_markdown_report(
-            category_id=cat_code,
-            category_name=name,
-            grade=info["grade"],
-            details=info["details"],
-            recommendations=[info["recommendation"]],
-        )
 
-    # Generate Comprehensive Report
-    weighted_sum = 0
-    total_weight = 0
-    group_scores = {g: [] for g in GROUP_WEIGHTS}
+def _calculate_final_grade(scores: dict[str, dict[str, Any]]) -> float:
+    """Calculate weighted final grade from category scores.
 
+    Args:
+        scores: Dictionary mapping category codes to assessment results.
+
+    Returns:
+        Weighted average grade.
+    """
+    group_scores: dict[str, list[float]] = {g: [] for g in GROUP_WEIGHTS}
     for cat_code, info in scores.items():
         group = GROUP_MAPPING.get(cat_code, "Code")
         group_scores[group].append(info["grade"])
 
+    weighted_sum = 0.0
+    total_weight = 0.0
     for group, weight in GROUP_WEIGHTS.items():
         if group_scores[group]:
             avg_score = sum(group_scores[group]) / len(group_scores[group])
             weighted_sum += avg_score * weight
             total_weight += weight
 
-    final_grade = weighted_sum / total_weight if total_weight > 0 else 0
+    return weighted_sum / total_weight if total_weight > 0 else 0
 
-    comp_content = f"""# Comprehensive Repository Assessment
 
-## Overall Grade: {final_grade:.2f}/10
+def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: float) -> str:
+    """Build the comprehensive assessment markdown report.
 
-## Category Breakdown
+    Args:
+        scores: Category assessment results.
+        final_grade: Weighted average grade.
 
-| Category | Grade | Weight |
-|----------|-------|--------|
-"""
+    Returns:
+        Complete markdown report string.
+    """
+    lines = [
+        "# Comprehensive Repository Assessment",
+        "",
+        f"## Overall Grade: {final_grade:.2f}/10",
+        "",
+        "## Category Breakdown",
+        "",
+        "| Category | Grade | Weight |",
+        "|----------|-------|--------|",
+    ]
     for cat_code, info in scores.items():
-        comp_content += f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |\n"
+        lines.append(f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |")
 
-    # Dynamic Top 5 Recommendations
-    recommendations_list = []
-    for cat_code, info in scores.items():
-        recommendations_list.append(
+    # Top 5 recommendations (lowest scores first)
+    recommendations_list = sorted(
+        [
             {
-                "code": cat_code,
                 "name": CATEGORIES[cat_code],
                 "grade": info["grade"],
                 "text": info["recommendation"],
             }
-        )
+            for cat_code, info in scores.items()
+        ],
+        key=lambda x: x["grade"],
+    )[:5]
 
-    # Sort by grade ascending (lowest first)
-    recommendations_list.sort(key=lambda x: x["grade"])
-    top_5 = recommendations_list[:5]
+    lines.append("")
+    lines.append("## Top Recommendations")
+    lines.append("")
+    for i, item in enumerate(recommendations_list, 1):
+        lines.append(f"{i}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}")
 
-    comp_content += """
-## Top Recommendations
-"""
-    for item in top_5:
-        comp_content += f"{1 + top_5.index(item)}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}\n"
-
-    comp_content += """
-## Issues Created
-"""
+    # Issue creation for low scores
+    lines.append("")
+    lines.append("## Issues Created")
+    lines.append("")
     issues_dir = Path("docs/assessments/issues")
     issues_dir.mkdir(parents=True, exist_ok=True)
 
@@ -570,7 +580,31 @@ def main():
                 grade=info["grade"],
                 details=info["details"],
             )
-            comp_content += f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})\n"
+            lines.append(f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})")
+
+    return "\n".join(lines) + "\n"
+
+
+def main():
+    """Execute the full repository assessment and generate reports."""
+    root = Path.cwd()
+    py_files = get_python_files(root)
+
+    scores = _run_all_assessments(root, py_files)
+
+    # Generate individual reports
+    for cat_code, info in scores.items():
+        generate_markdown_report(
+            category_id=cat_code,
+            category_name=CATEGORIES[cat_code],
+            grade=info["grade"],
+            details=info["details"],
+            recommendations=[info["recommendation"]],
+        )
+
+    # Generate comprehensive report
+    final_grade = _calculate_final_grade(scores)
+    comp_content = _build_comprehensive_report(scores, final_grade)
 
     Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
     logger.info("Assessment complete.")

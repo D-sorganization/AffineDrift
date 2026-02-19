@@ -3,6 +3,8 @@
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from src.tools.check_links import (
     _is_broken_link,
     _normalize_internal_url,
@@ -12,14 +14,20 @@ from src.tools.check_links import (
 )
 
 
-def test_normalize_internal_url_filters_non_internal_links() -> None:
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://example.com",
+        "mailto:test@example.com",
+        "#section",
+        "${item.url}",
+        "...",
+        "x",
+    ],
+)
+def test_normalize_internal_url_filters_non_internal_links(url: str) -> None:
     """External or placeholder links should be ignored."""
-    assert _normalize_internal_url("https://example.com") is None
-    assert _normalize_internal_url("mailto:test@example.com") is None
-    assert _normalize_internal_url("#section") is None
-    assert _normalize_internal_url("${item.url}") is None
-    assert _normalize_internal_url("...") is None
-    assert _normalize_internal_url("x") is None
+    assert _normalize_internal_url(url) is None
 
 
 def test_normalize_internal_url_decodes_paths() -> None:
@@ -27,11 +35,17 @@ def test_normalize_internal_url_decodes_paths() -> None:
     assert _normalize_internal_url("docs/My%20File.html") == "docs/My File.html"
 
 
-def test_should_scan_file_excludes_known_skip_targets() -> None:
-    """Known guidance docs should be excluded from checks."""
-    assert not _should_scan_file(Path("CONTRIBUTING.md"))
-    assert not _should_scan_file(Path("archive/page.qmd"))
-    assert _should_scan_file(Path("pages/page.qmd"))
+@pytest.mark.parametrize(
+    ("path", "expected"),
+    [
+        ("CONTRIBUTING.md", False),
+        ("archive/page.qmd", False),
+        ("pages/page.qmd", True),
+    ],
+)
+def test_should_scan_file(path: str, expected: bool) -> None:
+    """Known guidance docs and archive should be excluded from checks."""
+    assert _should_scan_file(Path(path)) == expected
 
 
 def test_is_broken_link_allows_html_to_qmd_mapping(tmp_path: Path) -> None:
