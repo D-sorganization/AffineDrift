@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -18,6 +19,8 @@ from src.core.contracts import (
     invariant_checked,
     require,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def compute_hessian_bound(
@@ -223,7 +226,7 @@ class ResidualMonitor(ContractChecker):
                 next_mode = "LQR"
 
         if next_mode != self.mode:
-            # print(f"Switching mode: {self.mode} -> {next_mode} (r={r_est:.4f})")
+            logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
             self.mode = next_mode
 
         return self.mode, float(r_est)

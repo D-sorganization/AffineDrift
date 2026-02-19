@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 
+from src.core.contracts import check_positive, check_range
+
 from .constants import EPSILON
 from .torque_calculator import (
     distribute_torque_by_grip_angle,
@@ -40,6 +42,11 @@ def plot_torque(
     show_gamma: bool,
 ) -> Figure:
     """Plot torque vs time."""
+    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
+    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
+    check_positive(i_alpha, "i_alpha")
+    check_positive(i_gamma, "i_gamma")
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
     theta_grip_rad = np.radians(grip_angle_deg)
@@ -117,6 +124,11 @@ def plot_acceleration(
     show_gamma: bool,
 ) -> Figure:
     """Plot angular acceleration vs time."""
+    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
+    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
+    check_positive(i_alpha, "i_alpha")
+    check_positive(i_gamma, "i_gamma")
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
     theta_grip_rad = np.radians(grip_angle_deg)
@@ -182,6 +194,11 @@ def plot_transmission_sweep(
     show_accel_gamma: bool,
 ) -> Figure:
     """Plot transmission ratio vs wrist angle sweep."""
+    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
+    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
+    check_positive(i_alpha, "i_alpha")
+    check_positive(i_gamma, "i_gamma")
+
     fig, ax = plt.subplots(figsize=(10, 6))
 
     theta_grip_rad = np.radians(grip_angle_deg)

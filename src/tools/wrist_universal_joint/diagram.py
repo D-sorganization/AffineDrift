@@ -17,6 +17,8 @@ import numpy as np
 import streamlit as st
 from matplotlib.patches import Ellipse, Polygon
 
+from src.core.contracts import check_range
+
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
@@ -312,7 +314,16 @@ def draw_diagram(
     """Draw the forearm-hand-club diagram.
 
     This coordinator delegates rendering to focused helper functions.
+
+    Args:
+        grip_angle_deg: Grip angle in degrees [0, 90].
+        wrist_angle_deg: Wrist deviation angle in degrees [-60, 60].
+
+    Returns:
+        Matplotlib Figure with the rendered diagram.
     """
+    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
+    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
     fig, ax = plt.subplots(figsize=(12, 4))
 
     theta_grip_rad = np.radians(grip_angle_deg)
