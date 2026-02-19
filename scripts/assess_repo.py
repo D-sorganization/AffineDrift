@@ -469,9 +469,7 @@ def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
     }
 
 
-def _run_all_assessments(
-    root: Path, py_files: list[Path]
-) -> dict[str, dict[str, Any]]:
+def _run_all_assessments(root: Path, py_files: list[Path]) -> dict[str, dict[str, Any]]:
     """Run all A-O assessments and return scores.
 
     Args:
@@ -525,9 +523,7 @@ def _calculate_final_grade(scores: dict[str, dict[str, Any]]) -> float:
     return weighted_sum / total_weight if total_weight > 0 else 0
 
 
-def _build_comprehensive_report(
-    scores: dict[str, dict[str, Any]], final_grade: float
-) -> str:
+def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: float) -> str:
     """Build the comprehensive assessment markdown report.
 
     Args:
@@ -567,9 +563,7 @@ def _build_comprehensive_report(
     lines.append("## Top Recommendations")
     lines.append("")
     for i, item in enumerate(recommendations_list, 1):
-        lines.append(
-            f"{i}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}"
-        )
+        lines.append(f"{i}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}")
 
     # Issue creation for low scores
     lines.append("")
@@ -586,9 +580,7 @@ def _build_comprehensive_report(
                 grade=info["grade"],
                 details=info["details"],
             )
-            lines.append(
-                f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})"
-            )
+            lines.append(f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})")
 
     return "\n".join(lines) + "\n"
 
@@ -614,9 +606,7 @@ def main():
     final_grade = _calculate_final_grade(scores)
     comp_content = _build_comprehensive_report(scores, final_grade)
 
-    Path("docs/assessments/Comprehensive_Assessment.md").write_text(
-        comp_content, encoding="utf-8"
-    )
+    Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
     logger.info("Assessment complete.")
 
 

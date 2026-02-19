@@ -16,7 +16,9 @@ class TestFrontmatterExtraction:
 
     def test_extract_title_and_description(self):
         """Test extracting title and description from frontmatter."""
-        content = '---\ntitle: "Test Page"\ndescription: "A test description"\n---\n\nContent here.\n'
+        content = (
+            '---\ntitle: "Test Page"\ndescription: "A test description"\n---\n\nContent here.\n'
+        )
         frontmatter = parse_frontmatter_dict(content)
 
         assert frontmatter["title"] == "Test Page"

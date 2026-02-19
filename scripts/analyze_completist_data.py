@@ -381,9 +381,7 @@ def _build_findings_table(
     return lines
 
 
-def _build_priority_section(
-    criticals: list[Finding], todos: list[Finding]
-) -> list[str]:
+def _build_priority_section(criticals: list[Finding], todos: list[Finding]) -> list[str]:
     """Build the recommended implementation order section.
 
     Args:
@@ -467,49 +465,57 @@ def generate_report() -> None:
 
     # Critical table
     report.append("\n## Critical Incomplete (Top 50)")
-    report.extend(_build_findings_table(
-        criticals,
-        ["File", "Line", "Type", "Impact", "Coverage", "Complexity"],
-        lambda item: (
-            f"| `{item['file']}` | {item['line']} | {item['type']} "
-            f"| {calculate_metrics(item)[0]} | {calculate_metrics(item)[1]} "
-            f"| {calculate_metrics(item)[2]} |"
-        ),
-    ))
+    report.extend(
+        _build_findings_table(
+            criticals,
+            ["File", "Line", "Type", "Impact", "Coverage", "Complexity"],
+            lambda item: (
+                f"| `{item['file']}` | {item['line']} | {item['type']} "
+                f"| {calculate_metrics(item)[0]} | {calculate_metrics(item)[1]} "
+                f"| {calculate_metrics(item)[2]} |"
+            ),
+        )
+    )
 
     # Content gaps
     report.append("\n## Content Gaps (Website Specific)")
-    report.extend(_build_findings_table(
-        placeholders,
-        ["File", "Line", "Content"],
-        lambda item: (
-            f"| `{item['file']}` | {item['line']} "
-            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} |"
-        ),
-    ))
+    report.extend(
+        _build_findings_table(
+            placeholders,
+            ["File", "Line", "Content"],
+            lambda item: (
+                f"| `{item['file']}` | {item['line']} "
+                f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} |"
+            ),
+        )
+    )
 
     # Feature gap matrix
     report.append("\n## Feature Gap Matrix")
-    report.extend(_build_findings_table(
-        todos,
-        ["Module", "Feature Gap", "Type"],
-        lambda item: (
-            f"| `{item['file']}` "
-            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
-        ),
-    ))
+    report.extend(
+        _build_findings_table(
+            todos,
+            ["Module", "Feature Gap", "Type"],
+            lambda item: (
+                f"| `{item['file']}` "
+                f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
+            ),
+        )
+    )
 
     # Technical debt register
     report.append("\n## Technical Debt Register")
-    report.extend(_build_findings_table(
-        fixmes,
-        ["File", "Line", "Issue", "Type"],
-        lambda item: (
-            f"| `{item['file']}` | {item['line']} "
-            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
-        ),
-        limit=len(fixmes),
-    ))
+    report.extend(
+        _build_findings_table(
+            fixmes,
+            ["File", "Line", "Issue", "Type"],
+            lambda item: (
+                f"| `{item['file']}` | {item['line']} "
+                f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
+            ),
+            limit=len(fixmes),
+        )
+    )
 
     report.extend(_build_priority_section(criticals, todos))
     report.extend(_create_high_impact_issues(criticals))
