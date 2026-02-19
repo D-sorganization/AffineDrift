@@ -1,12 +1,9 @@
-name: Jules PR Lifecycle (Supersede & Cleanup)
+name: Jules Supersede Check
 
-# Consolidated from Jules-Cleaner.yml and Jules-Supersede-Check.yml
-# Both workflows handled closing superseded PRs - just with different triggers.
-# This single workflow handles both triggers in separate jobs.
+# When main branch is updated (manually or via merge), check if any open Jules PRs
+# are now superseded by the changes and close them automatically.
 
 on:
-  pull_request:
-    types: [closed]
   push:
     branches:
       - main
@@ -18,87 +15,25 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: jules-pr-lifecycle-${{ github.event_name }}-${{ github.repository }}
+  group: jules-supersede-check-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
-  # ── Job 1: Close PRs listed in a merged consolidation PR ──────────────
-  # (Previously: Jules-Cleaner.yml)
-  close-consolidated:
-    if: >-
-      github.event_name == 'pull_request' &&
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'jules:consolidation')
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    steps:
-      - name: Supersede and Close PRs
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_BODY: ${{ github.event.pull_request.body }}
-          CONSOLIDATED_PR_NUM: ${{ github.event.pull_request.number }}
-        run: |
-          echo "Analyzing Consolidated PR #$CONSOLIDATED_PR_NUM..."
-
-          # Extract all numbers prefixed with # from the body
-          prs=$(echo "$PR_BODY" | grep -o '#[0-9]\+' | tr -d '#')
-
-          for pr_num in $prs; do
-            # Skip self-reference if present
-            if [ "$pr_num" == "$CONSOLIDATED_PR_NUM" ]; then
-              continue
-            fi
-
-            echo "Processing original PR #$pr_num..."
-
-            # Check if PR is still open
-            state=$(gh pr view "$pr_num" --json state -q .state)
-
-            if [ "$state" == "OPEN" ]; then
-              echo "  Closing PR #$pr_num as superseded..."
-
-              # Add comment
-              gh pr comment "$pr_num" --body "Superseded by Consolidated PR #$CONSOLIDATED_PR_NUM. This branch will be deleted."
-
-              # Close PR
-              gh pr close "$pr_num" --comment "Auto-closing: consolidated into #$CONSOLIDATED_PR_NUM"
-
-              # Delete branch
-              gh pr close "$pr_num" --delete-branch || echo "  Could not delete branch for #$pr_num (maybe already deleted)"
-            else
-              echo "  PR #$pr_num is already $state. skipping."
-            fi
-          done
-
-  # ── Job 2: Auto-close Jules PRs superseded by pushes to main ─────────
-  # (Previously: Jules-Supersede-Check.yml)
   check-superseded:
     name: Check for Superseded Jules PRs
-    if: >-
-      github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     # Skip if the push was from a Jules workflow (avoid closing our own PRs)
+    if: |
+      !contains(github.event.head_commit.message, 'Co-Authored-By: Jules') &&
+      !startsWith(github.event.head_commit.message, '[Jules/')
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 50
-
-      - name: Guard Against Self-Closure
-        id: guard
-        run: |
-          COMMIT_MSG="${{ github.event.head_commit.message || '' }}"
-          if echo "$COMMIT_MSG" | grep -qE 'Co-Authored-By: Jules|\[Jules/'; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-          fi
+          fetch-depth: 50  # Get recent history for comparison
 
       - name: Find Related Jules PRs
         id: find
-        if: steps.guard.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -110,7 +45,6 @@ jobs:
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changed files detected, skipping"
             echo "superseded_prs=[]" >> $GITHUB_OUTPUT
-            echo "superseded_count=0" >> $GITHUB_OUTPUT
             exit 0
           fi
 
@@ -167,7 +101,7 @@ jobs:
           echo "superseded_count=$(echo "$SUPERSEDED_PRS" | jq 'length')" >> $GITHUB_OUTPUT
 
       - name: Close Superseded PRs
-        if: steps.guard.outputs.skip != 'true' && steps.find.outputs.superseded_count != '0'
+        if: steps.find.outputs.superseded_count != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -175,6 +109,8 @@ jobs:
 
           COMMIT_SHA="${{ github.sha }}"
           COMMIT_MSG="${{ github.event.head_commit.message }}"
+
+          # Truncate commit message for display
           COMMIT_MSG_SHORT=$(echo "$COMMIT_MSG" | head -n1 | cut -c1-60)
 
           echo '${{ steps.find.outputs.superseded_prs }}' | jq -c '.[]' | while read -r pr_json; do
@@ -186,12 +122,12 @@ jobs:
 
             gh pr close "$PR_NUM" --comment "Auto-closed: This PR has been superseded by changes merged to main.
 
-          **Superseding commit**: $COMMIT_SHA
-          **Commit message**: $COMMIT_MSG_SHORT
+**Superseding commit**: $COMMIT_SHA
+**Commit message**: $COMMIT_MSG_SHORT
 
-          The changes in this PR overlap significantly with what was just merged. If this PR still contains valuable changes not covered by the merge, you can reopen it.
+The changes in this PR overlap significantly with what was just merged. If this PR still contains valuable changes not covered by the merge, you can reopen it.
 
-          To prevent auto-closure, add the \`jules-keep\` label."
+To prevent auto-closure, add the \`jules-keep\` label."
 
             # Delete the branch
             gh api -X DELETE "repos/${{ github.repository }}/git/refs/heads/$PR_BRANCH" 2>/dev/null || true
@@ -200,9 +136,8 @@ jobs:
           done
 
       - name: Summary
-        if: always()
         run: |
-          echo "## Jules PR Lifecycle" >> $GITHUB_STEP_SUMMARY
+          echo "## Jules Supersede Check" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger**: Push to main" >> $GITHUB_STEP_SUMMARY
           echo "**Superseded PRs found**: ${{ steps.find.outputs.superseded_count || 0 }}" >> $GITHUB_STEP_SUMMARY
