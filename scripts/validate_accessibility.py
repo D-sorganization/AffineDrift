@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 
 from src.tools.utils import setup_logging
+from src.tools.utils.content_utils import collect_qmd_files
 
 logger = setup_logging(__name__)
 
@@ -190,12 +191,11 @@ def validate_accessibility() -> tuple[int, dict[str, list[str]]]:
     repo_root = Path(__file__).parent.parent
 
     # Check QMD files for alt text and heading hierarchy
+    # Uses collect_qmd_files() (DRY) instead of a hand-rolled glob with
+    # inline exclusions, matching seo_audit.py and generate_sitemap.py.
     logger.info("Checking QMD files for alt text and heading hierarchy...")
-    qmd_files = list(repo_root.glob("**/*.qmd"))
+    qmd_files = collect_qmd_files()
     for qmd_file in qmd_files:
-        if ".quarto" in str(qmd_file) or "node_modules" in str(qmd_file):
-            continue
-
         issues = check_alt_text_in_qmd(qmd_file)
         issues.extend(check_heading_hierarchy(qmd_file))
 
