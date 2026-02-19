@@ -53,7 +53,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'Jules-Quality-Gate.yml',
+              workflow_id: 'Jules-Code-Quality-Reviewer.yml',
               ref: 'main'
             });
             console.log('Dispatched Code Quality Reviewer');
@@ -121,7 +121,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'Jules-Quality-Gate.yml',
+              workflow_id: 'Jules-Sentinel.yml',
               ref: 'main'
             });
             console.log('Dispatched Sentinel');
@@ -138,7 +138,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'Jules-Issue-Handler.yml',
+              workflow_id: 'Jules-Issue-Resolver.yml',
               ref: 'main'
             });
             console.log('Dispatched Issue Resolver');
