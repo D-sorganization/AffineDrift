@@ -23,19 +23,10 @@ from urllib.parse import urldefrag
 
 from bs4 import BeautifulSoup
 
-try:
-    from src.core.contracts import require
-    from src.tools.utils import setup_logging
-    from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
-    from src.tools.utils.link_utils import is_external_url, is_fragment_only
-except ModuleNotFoundError:
-    repo_root = Path(__file__).resolve().parents[2]
-    if str(repo_root) not in sys.path:
-        sys.path.insert(0, str(repo_root))
-    from src.core.contracts import require
-    from src.tools.utils import setup_logging
-    from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
-    from src.tools.utils.link_utils import is_external_url, is_fragment_only
+from src.core.contracts import require
+from src.tools.utils import setup_logging
+from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
+from src.tools.utils.link_utils import is_external_url, is_fragment_only
 
 logger = setup_logging(__name__)
 

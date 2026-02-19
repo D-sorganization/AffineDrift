@@ -1,11 +1,14 @@
 name: Jules Assessment Generator (Worker)
 
+# Consolidated: now includes comprehensive assessment features previously in
+# Jules-Comprehensive-Assessment.yml (Pragmatic Review + Completist Audit).
+
 on:
   workflow_call:
   workflow_dispatch:
   # Schedule disabled - orchestrated by Jules-Control-Tower.yml
   # schedule:
-  #   - cron: "0 8 * * 0,4"  # Daily at midnight UTC (overnight window)
+  #   - cron: "0 8 * * 0,4"
 
 permissions:
   contents: write
@@ -31,7 +34,47 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt || true
+          pip install tabulate || true
           sudo apt-get install -y jq
+
+      - name: Run Pragmatic Programmer Review (Local)
+        id: pragmatic
+        run: |
+          if [ -f "scripts/pragmatic_programmer_review.py" ]; then
+            echo "Running Pragmatic Programmer Review..."
+            mkdir -p docs/assessments/pragmatic_programmer
+            python scripts/pragmatic_programmer_review.py \
+              --output docs/assessments/pragmatic_programmer/review_$(date +%Y-%m-%d).md \
+              --json-output docs/assessments/pragmatic_programmer/review.json || echo "Script failed but continuing"
+          else
+            echo "Script not found, skipping."
+          fi
+
+      - name: Run Completist Data Collection
+        run: |
+          echo "Collecting incomplete implementation patterns..."
+          mkdir -p .jules/completist_data
+
+          # Find TODO/FIXME markers
+          grep -rn "TODO\|FIXME\|XXX\|HACK\|TEMP" --include="*.py" --include="*.ts" --include="*.js" . \
+            --exclude-dir=".git" --exclude-dir="venv" --exclude-dir="node_modules" \
+            > .jules/completist_data/todo_markers.txt 2>/dev/null || true
+
+          # Find NotImplementedError
+          grep -rn "NotImplementedError\|raise NotImplemented\|pass  #" --include="*.py" . \
+            --exclude-dir=".git" --exclude-dir="venv" \
+            > .jules/completist_data/not_implemented.txt 2>/dev/null || true
+
+          # Find incomplete docstrings
+          grep -rn '""".*TODO\|""".*WIP\|# TODO:' --include="*.py" . \
+            --exclude-dir=".git" --exclude-dir="venv" \
+            > .jules/completist_data/incomplete_docs.txt 2>/dev/null || true
+
+      - name: Generate Completist Report
+        run: |
+          if [ -f "scripts/analyze_completist_data.py" ]; then
+            python scripts/analyze_completist_data.py || echo "Analysis script failed"
+          fi
 
       - name: Archive Existing Assessments
         run: |
