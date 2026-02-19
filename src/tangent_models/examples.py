@@ -9,6 +9,12 @@ GRAVITY_M_S2 = 9.81
 
 
 class DynamicalSystem(ABC):
+    """Abstract base class for continuous-time dynamical systems.
+
+    Subclasses must implement ``dynamics`` (the state derivative) and
+    ``linearize`` (the tangent linear model A, B matrices).
+    """
+
     @abstractmethod
     def dynamics(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
@@ -27,6 +33,12 @@ class DynamicalSystem(ABC):
 
 
 class SimplePendulum(DynamicalSystem):
+    """Simple pendulum dynamical system with torque input.
+
+    State is [theta, omega] (angle from vertical, angular velocity).
+    Control input is a scalar torque applied at the pivot.
+    """
+
     def __init__(self, m: float = 1.0, L: float = 1.0, g: float = GRAVITY_M_S2) -> None:
         """Initialize simple pendulum."""
         check_positive(m, "mass")
@@ -64,11 +76,29 @@ class SimplePendulum(DynamicalSystem):
         return A, B
 
 
-class SpacecraftRendezvous(DynamicalSystem):
+def _gravity_gradient(mu: float, pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Compute the gravity gradient tensor at a given position.
+
+    The gravity gradient is the Jacobian of the gravitational acceleration
+    -mu * r / |r|^3 with respect to the position vector.
+
+    Args:
+        mu: Gravitational parameter.
+        pos_vec: Position vector (e.g. [rt+rx, ry, rz]).
+
+    Returns:
+        3x3 gravity gradient matrix.
     """
-    Nonlinear relative motion dynamics (Clohessy-Wiltshire precursor).
+    r_norm = np.linalg.norm(pos_vec)
+    mat = -(mu / r_norm**3) * (np.eye(3) - 3 * np.outer(pos_vec, pos_vec) / r_norm**2)
+    return np.array(mat)
+
+
+class SpacecraftRendezvous(DynamicalSystem):
+    """Nonlinear relative motion dynamics (Clohessy-Wiltshire precursor).
+
     Target is in circular orbit with radius r_t and mean motion n.
-    State x = [rx, ry, rz, vx, vy, vz] (Relative position and velocity in LVLH)
+    State x = [rx, ry, rz, vx, vy, vz] (Relative position and velocity in LVLH).
     """
 
     def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
@@ -90,93 +120,48 @@ class SpacecraftRendezvous(DynamicalSystem):
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
-        # Distance from center of Earth to chaser
         rc = np.sqrt((self.r_t + rx) ** 2 + ry**2 + rz**2)
 
-        # Acceleration terms
-        # x-direction (radial)
         ax = (
             2 * self.n * vy
             + self.n**2 * (self.r_t + rx)
             - (self.mu * (self.r_t + rx)) / rc**3
             + ux / self.m
         )
-
-        # y-direction (along-track)
         ay = -2 * self.n * vx + self.n**2 * ry - (self.mu * ry) / rc**3 + uy / self.m
-
-        # z-direction (cross-track)
         az = -(self.mu * rz) / rc**3 + uz / self.m
-
-        # Note: The standard HCW derivation assumes n is constant and circular orbit.
-        # The terms n^2 * (r_t + rx) and n^2 * ry come from transport acceleration
-        # in rotating frame.
 
         return np.array([vx, vy, vz, ax, ay, az])
 
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize spacecraft rendezvous dynamics."""
+        """Linearize spacecraft rendezvous dynamics about a given state.
+
+        Computes the analytical Jacobian of the nonlinear relative motion
+        dynamics, yielding A and B matrices for the tangent linear model.
+        """
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
-        # Linearization about equilibrium [0,0,0,0,0,0] yields HCW equations
-        # But we want linearization about ANY point x for the Tangent Hyperplane theory.
 
         rx, ry, rz, _, _, _ = x
-
-        # Partial derivatives of gravitational terms are complex.
-        # For simplicity in this worked example, we can use numerical linearization
-        # or implement the analytical Jacobian of the gravity vector.
-
-        # Let's do analytical for precision.
-        # Gx = -mu * (rt + rx) * rc^-3
-        # dGx/drx = -mu * [ rc^-3 + (rt+rx) * (-3) * rc^-4 * (rt+rx)/rc ]
-        #         = -mu/rc^3 * [ 1 - 3(rt+rx)^2/rc^2 ]
-
-        # For the purpose of the article, calculating this exactly reinforces the "Exact" nature.
+        n = self.n
 
         A = np.zeros((6, 6))
         A[0:3, 3:6] = np.eye(3)
 
-        # df_v / dr
-        # We need d(ax)/drx, d(ax)/dry, etc.
+        # Gravity gradient contribution to position Jacobian
+        pos_chaser = np.array([self.r_t + rx, ry, rz])
+        grad_grav = _gravity_gradient(self.mu, pos_chaser)
 
-        mu = self.mu
-        rt = self.r_t
-        n = self.n
-
-        # Helper for gravity gradient
-        def gravity_gradient(pos_vec: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-            """Compute gravity gradient."""
-            # pos_vec = [rt+rx, ry, rz]
-            r_norm = np.linalg.norm(pos_vec)
-            # -mu * r / |r|^3
-            # Jacobian is -mu/|r|^3 * (I - 3 * r * r^T / |r|^2)
-            mat = -(mu / r_norm**3) * (np.eye(3) - 3 * np.outer(pos_vec, pos_vec) / r_norm**2)
-            return np.array(mat)
-
-        pos_chaser = np.array([rt + rx, ry, rz])
-        grad_grav = gravity_gradient(pos_chaser)
-
-        # Centrifugal/Coriolis matrix parts
-        # Dynamics: v_dot = F_grav + F_centrifugal + F_coriolis + F_control
-        # F_centrifugal = [n^2(rt+rx), n^2 ry, 0]
-        # F_coriolis = [2n vy, -2n vx, 0]
-
-        # d(F_centrifugal)/dr
+        # Centrifugal contribution: d(F_centrifugal)/dr
         dFcent_dr = np.zeros((3, 3))
         dFcent_dr[0, 0] = n**2
         dFcent_dr[1, 1] = n**2
 
-        # d(F_grav)/dr is grad_grav
-
-        # d(v_dot)/dr = dFcent_dr + grad_grav
         A[3:6, 0:3] = dFcent_dr + grad_grav
 
-        # d(v_dot)/dv (Coriolis)
-        # ax has +2n vy -> dax/dvy = 2n
-        # ay has -2n vx -> day/dvx = -2n
+        # Coriolis contribution to velocity Jacobian
         A[3, 4] = 2 * n
         A[4, 3] = -2 * n
 

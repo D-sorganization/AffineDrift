@@ -73,6 +73,105 @@ def _render_header() -> None:
         st.markdown(header_html, unsafe_allow_html=True)
 
 
+def _render_angle_controls() -> dict[str, float]:
+    """Render grip and wrist angle sliders.
+
+    Returns:
+        Dictionary with 'grip_angle' and 'wrist_angle' values.
+    """
+    st.subheader("Grip Angle \u03b8_grip")
+    grip_angle = st.slider(
+        "Grip Angle (degrees)",
+        0,
+        90,
+        30,
+        1,
+        help="0\u00b0 = parallel to fingers, 90\u00b0 = perpendicular to fingers",
+    )
+
+    st.subheader("Wrist Deviation Angle \u03c6")
+    wrist_angle = st.slider(
+        "Wrist Deviation (degrees)",
+        -60,
+        60,
+        0,
+        1,
+        help="+ values = radial deviation, - values = ulnar deviation",
+    )
+
+    return {"grip_angle": grip_angle, "wrist_angle": wrist_angle}
+
+
+def _render_club_properties() -> dict[str, float]:
+    """Render club property inputs and compute moments of inertia.
+
+    Returns:
+        Dictionary with club parameters and computed moments of inertia.
+    """
+    st.subheader("Club Properties")
+    clubhead_weight = st.number_input("Clubhead (g)", 50.0, 500.0, DEFAULT_CLUBHEAD_WEIGHT, 1.0)
+    shaft_weight = st.number_input("Shaft (g)", 30.0, 200.0, DEFAULT_SHAFT_WEIGHT, 1.0)
+    club_length = st.number_input("Length (m)", 0.5, 1.5, DEFAULT_CLUB_LENGTH, 0.01)
+    cg_distance = st.number_input("CG Dist (m)", 0.3, 1.2, DEFAULT_CLUBHEAD_CG_DISTANCE, 0.01)
+
+    i_alpha, i_gamma = calculate_moments_of_inertia(
+        clubhead_weight, shaft_weight, club_length, cg_distance
+    )
+
+    st.markdown(
+        f"""
+    **Moments of Inertia:**
+    - I_\u03b1 = {i_alpha:.4f} kg\u00b7m\u00b2
+    - I_\u03b3 = {i_gamma:.4f} kg\u00b7m\u00b2
+    """,
+    )
+
+    return {
+        "clubhead_weight": clubhead_weight,
+        "shaft_weight": shaft_weight,
+        "club_length": club_length,
+        "cg_distance": cg_distance,
+        "I_alpha": i_alpha,
+        "I_gamma": i_gamma,
+    }
+
+
+def _render_signal_generator() -> dict[str, Any]:
+    """Render signal type selection and polynomial input.
+
+    Returns:
+        Dictionary with 'noise_type' key.
+    """
+    st.subheader("Input Signal Generator")
+    noise_type = st.selectbox(
+        "Signal Type",
+        [
+            "Golf-like Random",
+            "Step",
+            "Pulse",
+            "Burst",
+            "Sinusoidal",
+            "Random",
+            "Polynomial",
+        ],
+    )
+
+    if noise_type == "Polynomial":
+        polynomial_expr = st.text_input(
+            "Polynomial Expression",
+            value=st.session_state.polynomial_expression,
+            help="Use 't' as variable. Example: t**2 - t",
+        )
+        st.session_state.polynomial_expression = polynomial_expr
+        if st.session_state.polynomial_error:
+            st.error(st.session_state.polynomial_error)
+
+    if st.button("\U0001f3b2 Regenerate Signal"):
+        st.rerun()
+
+    return {"noise_type": noise_type}
+
+
 def _render_sidebar() -> dict[str, Any]:
     """Render sidebar controls and return the selected parameters.
 
@@ -84,110 +183,15 @@ def _render_sidebar() -> dict[str, Any]:
     with st.sidebar:
         st.header("Parameters")
 
-        # Angle controls
-        st.subheader("Grip Angle θ_grip")
-        params["grip_angle"] = st.slider(
-            "Grip Angle (degrees)",
-            0,
-            90,
-            30,
-            1,
-            help="0° = parallel to fingers, 90° = perpendicular to fingers",
-        )
-
-        st.subheader("Wrist Deviation Angle φ")
-        params["wrist_angle"] = st.slider(
-            "Wrist Deviation (degrees)",
-            -60,
-            60,
-            0,
-            1,
-            help="+ values = radial deviation, - values = ulnar deviation",
-        )
-
+        params.update(_render_angle_controls())
         st.markdown("---")
 
-        # Club Properties
-        st.subheader("Club Properties")
-        params["clubhead_weight"] = st.number_input(
-            "Clubhead (g)",
-            50.0,
-            500.0,
-            DEFAULT_CLUBHEAD_WEIGHT,
-            1.0,
-        )
-        params["shaft_weight"] = st.number_input(
-            "Shaft (g)",
-            30.0,
-            200.0,
-            DEFAULT_SHAFT_WEIGHT,
-            1.0,
-        )
-        params["club_length"] = st.number_input(
-            "Length (m)",
-            0.5,
-            1.5,
-            DEFAULT_CLUB_LENGTH,
-            0.01,
-        )
-        params["cg_distance"] = st.number_input(
-            "CG Dist (m)",
-            0.3,
-            1.2,
-            DEFAULT_CLUBHEAD_CG_DISTANCE,
-            0.01,
-        )
-
-        i_alpha, i_gamma = calculate_moments_of_inertia(
-            params["clubhead_weight"],
-            params["shaft_weight"],
-            params["club_length"],
-            params["cg_distance"],
-        )
-        params["I_alpha"] = i_alpha
-        params["I_gamma"] = i_gamma
-
-        st.markdown(
-            f"""
-        **Moments of Inertia:**
-        - I_α = {i_alpha:.4f} kg·m²
-        - I_γ = {i_gamma:.4f} kg·m²
-        """,
-        )
-
+        params.update(_render_club_properties())
         st.markdown("---")
 
-        # Signal Generator
-        st.subheader("Input Signal Generator")
-        params["noise_type"] = st.selectbox(
-            "Signal Type",
-            [
-                "Golf-like Random",
-                "Step",
-                "Pulse",
-                "Burst",
-                "Sinusoidal",
-                "Random",
-                "Polynomial",
-            ],
-        )
-
-        if params["noise_type"] == "Polynomial":
-            polynomial_expr = st.text_input(
-                "Polynomial Expression",
-                value=st.session_state.polynomial_expression,
-                help="Use 't' as variable. Example: t**2 - t",
-            )
-            st.session_state.polynomial_expression = polynomial_expr
-            if st.session_state.polynomial_error:
-                st.error(st.session_state.polynomial_error)
-
-        if st.button("🎲 Regenerate Signal"):
-            st.rerun()
-
+        params.update(_render_signal_generator())
         st.markdown("---")
 
-        # Plot type selection
         st.subheader("Plot Type")
         params["plot_type"] = st.selectbox(
             "Select Plot",
@@ -196,7 +200,6 @@ def _render_sidebar() -> dict[str, Any]:
 
         st.markdown("---")
 
-        # Signal visibility (depends on plot type)
         st.subheader("Show Signals")
         params.update(_render_signal_checkboxes(params["plot_type"]))
 
@@ -247,6 +250,60 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
     }
 
 
+def _create_plot_figure(
+    params: dict[str, Any],
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
+) -> plt.Figure:
+    """Create the appropriate plot figure based on selected plot type.
+
+    Args:
+        params: User-selected parameters including plot_type and visibility flags.
+        t: Time array for time-series plots.
+        input_torque: Generated input torque signal.
+
+    Returns:
+        Matplotlib Figure for the selected plot type.
+    """
+    plot_type = params["plot_type"]
+
+    if plot_type == "Torque":
+        return plot_torque(
+            t,
+            input_torque,
+            params["grip_angle"],
+            params["wrist_angle"],
+            params["I_alpha"],
+            params["I_gamma"],
+            params["show_input"],
+            params["show_transmitted"],
+            params["show_alpha"],
+            params["show_gamma"],
+        )
+    if plot_type == "Angular Acceleration":
+        return plot_acceleration(
+            t,
+            input_torque,
+            params["grip_angle"],
+            params["wrist_angle"],
+            params["I_alpha"],
+            params["I_gamma"],
+            params["show_alpha"],
+            params["show_gamma"],
+        )
+    # Transmission Ratio
+    return plot_transmission_sweep(
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_transmission"],
+        params["show_velocity"],
+        params["show_accel_alpha"],
+        params["show_accel_gamma"],
+    )
+
+
 def _render_main_content(params: dict[str, Any]) -> None:
     """Render the main content area with diagram and plots.
 
@@ -254,7 +311,6 @@ def _render_main_content(params: dict[str, Any]) -> None:
         params: Dictionary of user-selected parameters from sidebar.
     """
     require(params is not None, "params dict must not be None")
-    # Generate signal
     t = np.linspace(0, 1, DEFAULT_SIGNAL_LENGTH)
     input_torque, error = generate_sample_torque(
         params["noise_type"],
@@ -266,7 +322,6 @@ def _render_main_content(params: dict[str, Any]) -> None:
     elif params["noise_type"] == "Polynomial":
         st.session_state.polynomial_error = None
 
-    # Main content area
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -276,49 +331,11 @@ def _render_main_content(params: dict[str, Any]) -> None:
         plt.close(diagram_fig)
 
     with col2:
-        plot_type = params["plot_type"]
-        st.subheader(f"{plot_type} Plot")
-
-        if plot_type == "Torque":
-            plot_fig = plot_torque(
-                t,
-                input_torque,
-                params["grip_angle"],
-                params["wrist_angle"],
-                params["I_alpha"],
-                params["I_gamma"],
-                params["show_input"],
-                params["show_transmitted"],
-                params["show_alpha"],
-                params["show_gamma"],
-            )
-        elif plot_type == "Angular Acceleration":
-            plot_fig = plot_acceleration(
-                t,
-                input_torque,
-                params["grip_angle"],
-                params["wrist_angle"],
-                params["I_alpha"],
-                params["I_gamma"],
-                params["show_alpha"],
-                params["show_gamma"],
-            )
-        else:  # Transmission Ratio
-            plot_fig = plot_transmission_sweep(
-                params["grip_angle"],
-                params["wrist_angle"],
-                params["I_alpha"],
-                params["I_gamma"],
-                params["show_transmission"],
-                params["show_velocity"],
-                params["show_accel_alpha"],
-                params["show_accel_gamma"],
-            )
-
+        st.subheader(f"{params['plot_type']} Plot")
+        plot_fig = _create_plot_figure(params, t, input_torque)
         st.pyplot(plot_fig)
         plt.close(plot_fig)
 
-    # Info panel
     _render_info_panel(params, input_torque)
 
 

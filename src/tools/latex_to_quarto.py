@@ -51,6 +51,28 @@ def prompt_for_files() -> list[Path]:
         sys.exit(1)
 
 
+def _build_yaml_frontmatter(title: str, toc: bool, abstract: str | None) -> str:
+    """Build YAML frontmatter block for a Quarto document.
+
+    Args:
+        title: Document title.
+        toc: Whether to include table of contents.
+        abstract: Optional abstract text.
+
+    Returns:
+        Complete YAML frontmatter string ending with two newlines.
+    """
+    yaml = f'---\ntitle: "{title}"\nformat:\n  html:'
+    if toc:
+        yaml += "\n    toc: true"
+    yaml += "\n"
+    if abstract:
+        indented_abstract = abstract.replace("\n", "\n  ")
+        yaml += f"abstract: |\n  {indented_abstract}\n"
+    yaml += "---\n\n"
+    return yaml
+
+
 def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, int]:
     r"""Convert a LaTeX article to Quarto markdown (.qmd).
 
@@ -92,16 +114,9 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, in
     body = body.strip()
 
     # Build Quarto markdown with YAML front matter
-    yaml = f'---\ntitle: "{title}"\nformat:\n  html:'
-    if toc:
-        yaml += "\n    toc: true"
-    yaml += "\n"
-    if abstract:
-        indented_abstract = abstract.replace("\n", "\n  ")
-        yaml += f"abstract: |\n  {indented_abstract}\n"
-    yaml += "---\n\n"
+    yaml_header = _build_yaml_frontmatter(title, toc, abstract)
 
-    md = f"{yaml}{body}\n"
+    md = f"{yaml_header}{body}\n"
     md_word_count = len(md.split())
     return md, original_word_count, md_word_count
 

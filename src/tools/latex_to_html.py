@@ -170,7 +170,7 @@ class LaTeXToHTMLConverter:
             try:
                 with open(self.template_file, encoding="utf-8") as f:
                     return f.read()
-            except Exception as e:
+            except (OSError, UnicodeDecodeError) as e:
                 logger.error(f"Failed to read template file: {e}")
 
         # Fallback template if file is missing

@@ -20,7 +20,7 @@ from typing import Any
 
 try:
     from src.tools.utils import find_markdown_files, setup_logging_with_timestamp
-except Exception:  # pragma: no cover - lightweight CI fallback
+except (ImportError, ModuleNotFoundError):  # pragma: no cover - lightweight CI fallback
     # Fallback for minimal CI environments where optional runtime deps (e.g. numpy)
     # are unavailable during syntax-only scans.
     def setup_logging_with_timestamp(name: str) -> logging.Logger:
@@ -252,7 +252,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
     """
     try:
         content = filepath.read_text(encoding="utf-8")
-    except Exception:
+    except (OSError, UnicodeDecodeError):
         logger.exception("Failed to read %s", filepath)
         return []
 

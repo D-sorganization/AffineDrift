@@ -103,7 +103,7 @@ def check_mathjax_config(filepath: str) -> list[str]:
         if "MathJax" in content and "tex:" not in content:
             issues.append("MathJax found but tex configuration may be missing")
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         issues.append(f"Error reading file: {e}")
 
     return issues
@@ -126,7 +126,7 @@ def check_quarto_math_config(quarto_yml: Path) -> list[str]:
         if "html-math-method" in content and "mathjax" not in content.lower():
             issues.append("html-math-method found but not set to mathjax")
 
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         issues.append(f"Error reading _quarto.yml: {e}")
 
     return issues
@@ -161,7 +161,7 @@ def main() -> int:
                     logger.warning("%s:%d [%s] %s", qmd_file, line_num, issue_type, message)
                 issues_found = True
 
-        except Exception as e:
+        except (OSError, UnicodeDecodeError) as e:
             logger.error("Error processing %s: %s", qmd_file, e)
             issues_found = True
 

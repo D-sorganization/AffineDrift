@@ -95,7 +95,7 @@ def audit_file(filepath: Path) -> dict[str, Any]:
     """Audit a single file for SEO issues."""
     try:
         content = filepath.read_text(encoding="utf-8")
-    except Exception as e:
+    except (OSError, UnicodeDecodeError) as e:
         return {"error": str(e)}
 
     frontmatter = parse_frontmatter_dict(content)

@@ -146,7 +146,7 @@ def main() -> None:
         logger.error("  stdout: %s", e.stdout)
         logger.error("  stderr: %s", e.stderr)
         sys.exit(1)
-    except Exception:
+    except (OSError, FileNotFoundError):
         logger.exception("Unexpected error")
         sys.exit(1)
 

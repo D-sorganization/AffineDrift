@@ -112,44 +112,16 @@ def adaptive_timestep_ddp_mock(
     # cost_old = float('inf')
 
     for iteration in range(max_iters):
-        # Step 2: Compute local Hessian bounds along trajectory
-        M_traj = np.array(
-            [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
+        dt_adaptive = _compute_adaptive_timesteps(
+            f, x_traj, u_traj, eps_residual, compute_hessian_bound_func
         )
 
-        # Step 3: Estimate perturbation sizes
-        delta_x_max = np.array(
-            [estimate_perturbation_size(x_traj[i], u_traj[i]) for i in range(len(u_traj))]
-        )
-
-        # Avoid division by zero
-        delta_x_max = np.maximum(delta_x_max, EPSILON)
-        M_traj = np.maximum(M_traj, EPSILON)
-
-        # Step 4: Compute adaptive timesteps
-        # dt = sqrt( 2 * eps / (M * delta_x^2) )
-        dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
-
-        # Clip to reasonable bounds
-        dt_adaptive = np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)
-
-        # Step 5: Create new time grid
-        # In a real implementation, we would need to resample u_traj to this new grid
+        # Create new time grid and resample controls
         t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
+        u_traj = _resample_controls(u_traj, t, t_new[:-1])
 
-        # Resample controls to new time grid
-        u_new_grid = _resample_controls(u_traj, t, t_new[:-1])  # Approximate
-
-        # Step 6: Standard DDP backward/forward pass on new grid
-        # For this skeleton, we just update U lightly to simulate optimization
-        # In real implementation: Solve Riccati equations
-        u_traj = u_new_grid  # Placeholder for DDP update
-
-        # Simulate on new grid
-        x_new = _simulate_trajectory(f, x0, u_traj, t_new)
-
-        # Check convergence (placeholder)
-        x_traj = x_new
+        # Simulate on new grid (placeholder for full DDP backward/forward pass)
+        x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
         t = t_new
 
         # Break early for prototype
@@ -157,6 +129,41 @@ def adaptive_timestep_ddp_mock(
             break
 
     return x_traj, u_traj, t
+
+
+def _compute_adaptive_timesteps(
+    f: Callable[..., np.ndarray[Any, Any]],
+    x_traj: np.ndarray[Any, Any],
+    u_traj: np.ndarray[Any, Any],
+    eps_residual: float,
+    compute_hessian_bound_func: Callable[..., float],
+) -> np.ndarray[Any, Any]:
+    """Compute curvature-adaptive timesteps from Hessian bounds and perturbation sizes.
+
+    Args:
+        f: Dynamics function f(x, u).
+        x_traj: Current state trajectory.
+        u_traj: Current control trajectory.
+        eps_residual: Maximum acceptable residual.
+        compute_hessian_bound_func: Function returning local Hessian bound.
+
+    Returns:
+        Array of adaptive timestep sizes, clipped to [DT_CLIP_MIN, DT_CLIP_MAX].
+    """
+    M_traj = np.array(
+        [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
+    )
+    delta_x_max = np.array(
+        [estimate_perturbation_size(x_traj[i], u_traj[i]) for i in range(len(u_traj))]
+    )
+
+    # Avoid division by zero
+    delta_x_max = np.maximum(delta_x_max, EPSILON)
+    M_traj = np.maximum(M_traj, EPSILON)
+
+    # dt = sqrt( 2 * eps / (M * delta_x^2) )
+    dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
+    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)
 
 
 def _simulate_trajectory(
