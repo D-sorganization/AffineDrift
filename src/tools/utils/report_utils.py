@@ -6,9 +6,25 @@ and GitHub-style issue documents from assessment findings.
 
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.core.contracts import check_range, require
+
+# ---------------------------------------------------------------------------
+# Data containers
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class AssessmentFinding:
+    """Structured assessment finding for report generation."""
+
+    category_id: str
+    category_name: str
+    grade: float
+    details: str
+    recommendations: list[str] = field(default_factory=list)
 
 
 def generate_markdown_report(
@@ -107,3 +123,29 @@ labels: jules:assessment, needs-attention
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     return output_path
+
+
+def generate_report_from_finding(
+    finding: AssessmentFinding,
+    output_dir: str | Path = "docs/assessments",
+) -> Path:
+    """Generate a markdown report from a structured ``AssessmentFinding``.
+
+    This is the typed alternative to ``generate_markdown_report``,
+    accepting a dataclass instance instead of positional arguments.
+
+    Args:
+        finding: Structured assessment finding.
+        output_dir: Directory to save the report.
+
+    Returns:
+        Path to the generated report file.
+    """
+    return generate_markdown_report(
+        category_id=finding.category_id,
+        category_name=finding.category_name,
+        grade=finding.grade,
+        details=finding.details,
+        recommendations=finding.recommendations or None,
+        output_dir=output_dir,
+    )
