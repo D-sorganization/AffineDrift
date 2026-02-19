@@ -161,7 +161,7 @@ This assessment was generated automatically. For detailed analysis:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Write report
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(report_content)
 
     logger.info(f"✓ Assessment {assessment_id} report saved to {output_path}")

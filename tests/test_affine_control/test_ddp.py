@@ -1,9 +1,12 @@
+import logging
 import unittest
 from typing import Any
 
 import numpy as np
 
 from src.affine_control.ddp import adaptive_timestep_ddp_mock
+
+logger = logging.getLogger(__name__)
 
 
 class TestAdaptiveDDP(unittest.TestCase):
@@ -39,7 +42,7 @@ class TestAdaptiveDDP(unittest.TestCase):
         dts = np.diff(t_traj)
         self.assertTrue(np.all(dts >= 0.001), "Min timestep violation")
         if not np.all(dts <= 0.1):
-            print(f"Max dt found: {dts.max()}")
+            logger.warning("Max dt found: %s", dts.max())
         self.assertTrue(np.all(dts <= 0.1 + 1e-9), "Max timestep violation")
 
 
