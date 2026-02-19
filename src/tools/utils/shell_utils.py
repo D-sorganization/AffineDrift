@@ -8,9 +8,28 @@ from __future__ import annotations
 
 import subprocess
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any
 
 from src.core.contracts import require
+
+# ---------------------------------------------------------------------------
+# Data containers
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class ToolResult:
+    """Structured result from an external tool invocation."""
+
+    exit_code: int
+    output: str
+    errors: str
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
 
 
 def run_tool(
@@ -42,10 +61,15 @@ def run_tool(
         )
         if result_processor:
             return result_processor(result)
+        tool_result = ToolResult(
+            exit_code=result.returncode,
+            output=result.stdout,
+            errors=result.stderr,
+        )
         return {
-            "exit_code": result.returncode,
-            "output": result.stdout,
-            "errors": result.stderr,
+            "exit_code": tool_result.exit_code,
+            "output": tool_result.output,
+            "errors": tool_result.errors,
         }
     except FileNotFoundError:
         return {"exit_code": -1, "output": "", "errors": f"{tool_name} not installed"}

@@ -11,9 +11,17 @@ This module provides common functionality used across multiple tools:
 """
 
 from .analysis_utils import (
+    ErrorHandlingMetrics,
+    FunctionDetail,
+    LoggingMetrics,
+    PythonFileMetrics,
     assess_error_handling_content,
     assess_logging_content,
     calculate_complexity,
+    collect_error_handling_metrics,
+    collect_function_details,
+    collect_logging_metrics,
+    collect_python_file_metrics,
     get_detailed_function_metrics,
     get_python_metrics,
 )
@@ -55,7 +63,13 @@ from .html_utils import (
 )
 from .issue_utils import format_issue_body, get_repo_short_name
 from .logging_utils import setup_logging, setup_logging_with_timestamp
-from .report_utils import generate_issue_document, generate_markdown_report
+from .report_utils import (
+    AssessmentFinding,
+    generate_issue_document,
+    generate_markdown_report,
+    generate_report_from_finding,
+)
+from .shell_utils import ToolResult
 
 __all__ = [
     # Constants
@@ -87,10 +101,18 @@ __all__ = [
     "setup_logging_with_timestamp",
     # Analysis utilities
     "get_python_metrics",
+    "collect_python_file_metrics",
+    "PythonFileMetrics",
     "calculate_complexity",
     "get_detailed_function_metrics",
+    "collect_function_details",
+    "FunctionDetail",
     "assess_error_handling_content",
+    "collect_error_handling_metrics",
+    "ErrorHandlingMetrics",
     "assess_logging_content",
+    "collect_logging_metrics",
+    "LoggingMetrics",
     # Assessment utilities
     "ASSESSMENT_DEFINITIONS",
     "CATEGORIES",
@@ -99,8 +121,12 @@ __all__ = [
     "PRAGMATIC_PRINCIPLES",
     "classify_assessment_category",
     # Report utilities
+    "AssessmentFinding",
     "generate_markdown_report",
     "generate_issue_document",
+    "generate_report_from_finding",
     "format_issue_body",
     "get_repo_short_name",
+    # Shell utilities
+    "ToolResult",
 ]
