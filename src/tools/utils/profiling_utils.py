@@ -12,6 +12,7 @@ def profile_execution_time(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        """Wrapper function to measure execution time."""
         start_time = timeit.default_timer()
         result = func(*args, **kwargs)
         end_time = timeit.default_timer()

@@ -9,3 +9,5 @@ except ImportError:
 
 class BaseValidator(BaseModel):
     """Base class for data validation using Pydantic."""
+
+    pass
