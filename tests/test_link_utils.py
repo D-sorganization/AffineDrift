@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.tools.utils.link_utils import (
     ALL_LINK_PATTERNS,
     HTML_HREF_PATTERN,
@@ -22,92 +24,86 @@ from src.tools.utils.link_utils import (
 class TestIsExternalUrl:
     """Tests for is_external_url()."""
 
-    def test_http_is_external(self) -> None:
-        assert is_external_url("http://example.com") is True
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "http://example.com",
+            "https://example.com",
+            "mailto:user@example.com",
+            "tel:+1234567890",
+            "ftp://files.example.com",
+        ],
+    )
+    def test_external_urls(self, url: str) -> None:
+        assert is_external_url(url) is True
 
-    def test_https_is_external(self) -> None:
-        assert is_external_url("https://example.com") is True
-
-    def test_mailto_is_external(self) -> None:
-        assert is_external_url("mailto:user@example.com") is True
-
-    def test_tel_is_external(self) -> None:
-        assert is_external_url("tel:+1234567890") is True
-
-    def test_ftp_is_external(self) -> None:
-        assert is_external_url("ftp://files.example.com") is True
-
-    def test_relative_is_not_external(self) -> None:
-        assert is_external_url("page.html") is False
-
-    def test_absolute_is_not_external(self) -> None:
-        assert is_external_url("/articles/page.html") is False
-
-    def test_fragment_is_not_external(self) -> None:
-        assert is_external_url("#section") is False
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "page.html",
+            "/articles/page.html",
+            "#section",
+        ],
+    )
+    def test_non_external_urls(self, url: str) -> None:
+        assert is_external_url(url) is False
 
 
 class TestIsFragmentOnly:
     """Tests for is_fragment_only()."""
 
-    def test_fragment(self) -> None:
-        assert is_fragment_only("#section") is True
+    @pytest.mark.parametrize("url", ["#section", "#"])
+    def test_fragment_only(self, url: str) -> None:
+        assert is_fragment_only(url) is True
 
-    def test_empty_fragment(self) -> None:
-        assert is_fragment_only("#") is True
-
-    def test_page_with_fragment(self) -> None:
-        assert is_fragment_only("page.html#section") is False
-
-    def test_relative_path(self) -> None:
-        assert is_fragment_only("page.html") is False
+    @pytest.mark.parametrize("url", ["page.html#section", "page.html"])
+    def test_not_fragment_only(self, url: str) -> None:
+        assert is_fragment_only(url) is False
 
 
 class TestStripFragment:
     """Tests for strip_fragment()."""
 
-    def test_removes_fragment(self) -> None:
-        assert strip_fragment("page.html#section-1") == "page.html"
-
-    def test_fragment_only_returns_empty(self) -> None:
-        assert strip_fragment("#anchor") == ""
-
-    def test_no_fragment(self) -> None:
-        assert strip_fragment("page.html") == "page.html"
-
-    def test_empty_string(self) -> None:
-        assert strip_fragment("") == ""
+    @pytest.mark.parametrize(
+        ("url", "expected"),
+        [
+            ("page.html#section-1", "page.html"),
+            ("#anchor", ""),
+            ("page.html", "page.html"),
+            ("", ""),
+        ],
+    )
+    def test_strip_fragment(self, url: str, expected: str) -> None:
+        assert strip_fragment(url) == expected
 
 
 class TestNormalizeInternalUrl:
     """Tests for normalize_internal_url()."""
 
-    def test_normal_url(self) -> None:
-        assert normalize_internal_url("articles/page.html") == "articles/page.html"
+    @pytest.mark.parametrize(
+        ("url", "expected"),
+        [
+            ("articles/page.html", "articles/page.html"),
+            ("page.html#section", "page.html"),
+            ("my%20page.html", "my page.html"),
+        ],
+    )
+    def test_normalizes_valid_urls(self, url: str, expected: str) -> None:
+        assert normalize_internal_url(url) == expected
 
-    def test_strips_fragment(self) -> None:
-        assert normalize_internal_url("page.html#section") == "page.html"
-
-    def test_skips_external_http(self) -> None:
-        assert normalize_internal_url("https://example.com") is None
-
-    def test_skips_external_mailto(self) -> None:
-        assert normalize_internal_url("mailto:user@example.com") is None
-
-    def test_skips_fragment_only(self) -> None:
-        assert normalize_internal_url("#section") is None
-
-    def test_skips_template_variable(self) -> None:
-        assert normalize_internal_url("${BASE_URL}/page") is None
-
-    def test_skips_ellipsis(self) -> None:
-        assert normalize_internal_url("...") is None
-
-    def test_skips_single_char(self) -> None:
-        assert normalize_internal_url("/") is None
-
-    def test_decodes_percent_encoding(self) -> None:
-        assert normalize_internal_url("my%20page.html") == "my page.html"
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://example.com",
+            "mailto:user@example.com",
+            "#section",
+            "${BASE_URL}/page",
+            "...",
+            "/",
+        ],
+    )
+    def test_skips_non_internal_urls(self, url: str) -> None:
+        assert normalize_internal_url(url) is None
 
 
 class TestResolveRelativePath:

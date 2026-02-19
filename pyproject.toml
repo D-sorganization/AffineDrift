@@ -15,6 +15,27 @@ testpaths = ["tests"]
 markers = [
     "integration: marks tests requiring cross-module or I/O integration",
 ]
+addopts = "--tb=short"
+
+[tool.coverage.run]
+source = ["src", "scripts"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/archive/*",
+    "*/experimental/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+precision = 1
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "pass",
+]
 
 [tool.mypy]
 python_version = "3.12"

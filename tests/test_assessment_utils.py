@@ -1,3 +1,5 @@
+import pytest
+
 from src.tools.utils import assessment_utils
 from src.tools.utils.assessment_utils import classify_assessment_category
 
@@ -14,66 +16,53 @@ def test_group_weights():
     assert abs(sum(assessment_utils.GROUP_WEIGHTS.values()) - 1.0) < 1e-6
 
 
-def test_classify_assessment_category():
-    # A: Code Structure
-    assert classify_assessment_category("Assessment_A") == "Code Structure"
-    assert classify_assessment_category("Report", "code structure") == "Code Structure"
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("Assessment_A", "Code Structure"),
+        ("Assessment_B", "Documentation"),
+        ("Assessment_C", "Test Coverage"),
+        ("Assessment_D", "Error Handling"),
+        ("Assessment_E", "Performance"),
+        ("Assessment_F", "Security"),
+        ("Assessment_G", "Dependencies"),
+        ("Assessment_H", "CI/CD"),
+        ("Assessment_I", "Code Style"),
+        ("Assessment_J", "API Design"),
+        ("Assessment_K", "Data Handling"),
+        ("Assessment_L", "Logging"),
+        ("Assessment_M", "Configuration"),
+        ("Assessment_N", "Scalability"),
+        ("Assessment_O", "Maintainability"),
+    ],
+)
+def test_classify_by_source_prefix(source: str, expected: str):
+    assert classify_assessment_category(source) == expected
 
-    # B: Documentation
-    assert classify_assessment_category("Assessment_B") == "Documentation"
-    assert classify_assessment_category("Report", "missing documentation") == "Documentation"
 
-    # C: Test Coverage
-    assert classify_assessment_category("Assessment_C") == "Test Coverage"
-    assert classify_assessment_category("Report", "test coverage") == "Test Coverage"
+@pytest.mark.parametrize(
+    ("description", "expected"),
+    [
+        ("code structure", "Code Structure"),
+        ("missing documentation", "Documentation"),
+        ("test coverage", "Test Coverage"),
+        ("error handling", "Error Handling"),
+        ("performance bottleneck", "Performance"),
+        ("security vulnerability", "Security"),
+        ("dependencies", "Dependencies"),
+        ("ci pipeline", "CI/CD"),
+        ("code style", "Code Style"),
+        ("api design", "API Design"),
+        ("data handling", "Data Handling"),
+        ("logging", "Logging"),
+        ("configuration", "Configuration"),
+        ("scalability", "Scalability"),
+        ("maintainability", "Maintainability"),
+    ],
+)
+def test_classify_by_description(description: str, expected: str):
+    assert classify_assessment_category("Report", description) == expected
 
-    # D: Error Handling
-    assert classify_assessment_category("Assessment_D") == "Error Handling"
-    assert classify_assessment_category("Report", "error handling") == "Error Handling"
 
-    # E: Performance
-    assert classify_assessment_category("Assessment_E") == "Performance"
-    assert classify_assessment_category("Report", "performance bottleneck") == "Performance"
-
-    # F: Security
-    assert classify_assessment_category("Assessment_F") == "Security"
-    assert classify_assessment_category("Report", "security vulnerability") == "Security"
-
-    # G: Dependencies
-    assert classify_assessment_category("Assessment_G") == "Dependencies"
-    assert classify_assessment_category("Report", "dependencies") == "Dependencies"
-
-    # H: CI/CD
-    assert classify_assessment_category("Assessment_H") == "CI/CD"
-    assert classify_assessment_category("Report", "ci pipeline") == "CI/CD"
-
-    # I: Code Style
-    assert classify_assessment_category("Assessment_I") == "Code Style"
-    assert classify_assessment_category("Report", "code style") == "Code Style"
-
-    # J: API Design
-    assert classify_assessment_category("Assessment_J") == "API Design"
-    assert classify_assessment_category("Report", "api design") == "API Design"
-
-    # K: Data Handling
-    assert classify_assessment_category("Assessment_K") == "Data Handling"
-    assert classify_assessment_category("Report", "data handling") == "Data Handling"
-
-    # L: Logging
-    assert classify_assessment_category("Assessment_L") == "Logging"
-    assert classify_assessment_category("Report", "logging") == "Logging"
-
-    # M: Configuration
-    assert classify_assessment_category("Assessment_M") == "Configuration"
-    assert classify_assessment_category("Report", "configuration") == "Configuration"
-
-    # N: Scalability
-    assert classify_assessment_category("Assessment_N") == "Scalability"
-    assert classify_assessment_category("Report", "scalability") == "Scalability"
-
-    # O: Maintainability
-    assert classify_assessment_category("Assessment_O") == "Maintainability"
-    assert classify_assessment_category("Report", "maintainability") == "Maintainability"
-
-    # General
+def test_classify_unknown_returns_general():
     assert classify_assessment_category("Unknown Report") == "General"

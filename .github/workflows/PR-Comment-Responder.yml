@@ -2,7 +2,7 @@ name: PR Comment Collector
 
 # Collects PR comments into a queue for batch processing
 # Does NOT act immediately - prevents workflow cascades
-# Comments are processed by Jules-Comment-Processor on a schedule
+# Comments are processed by Jules-Issue-Handler on a schedule
 
 on:
   issue_comment:
@@ -213,7 +213,7 @@ jobs:
           PR: #${{ steps.pr_state.outputs.pr_number }}
           Comment ID: ${{ github.event.comment.id }}
 
-          This comment will be processed by Jules-Comment-Processor on the next scheduled run."
+          This comment will be processed by Jules-Issue-Handler on the next scheduled run."
 
             git push
             echo "::notice::Comment queued for batch processing"

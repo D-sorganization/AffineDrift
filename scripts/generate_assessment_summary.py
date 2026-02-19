@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from src.tools.utils import setup_logging
+from src.tools.utils.assessment_utils import ASSESSMENT_DEFINITIONS
 from src.tools.utils.cli_contracts import ensure_existing_file
 
 logger = setup_logging(__name__)
@@ -90,150 +91,215 @@ def extract_issues_from_report(report_path: Path) -> list[dict[str, Any]]:
     return issues
 
 
-def generate_summary(
+# Per-category weights for weighted scoring (names derived from ASSESSMENT_DEFINITIONS)
+_CATEGORY_WEIGHTS: dict[str, float] = {
+    "A": 2.0, "B": 2.0, "C": 1.5, "D": 1.5, "E": 1.5,
+    "F": 1.0, "G": 2.0, "H": 1.0, "I": 2.0, "J": 1.0,
+    "K": 1.0, "L": 1.5, "M": 1.0, "N": 1.0, "O": 2.0,
+}
+
+# Derive category info from the single source of truth, adding weights
+SUMMARY_CATEGORIES: dict[str, dict[str, Any]] = {
+    k: {"name": v["name"], "weight": _CATEGORY_WEIGHTS.get(k, 1.0)}
+    for k, v in ASSESSMENT_DEFINITIONS.items()
+}
+
+
+def _collect_scores_and_issues(
     input_reports: list[Path],
-    output_md: Path,
-    output_json: Path,
-) -> int:
-    """
-    Generate comprehensive summary from assessment reports.
+) -> tuple[dict[str, float], list[dict[str, Any]]]:
+    """Extract scores and issues from assessment reports.
 
     Args:
-        input_reports: List of assessment report files
-        output_md: Path to save markdown summary
-        output_json: Path to save JSON metrics
+        input_reports: List of assessment report file paths.
 
     Returns:
-        Exit code (0 = success, 1 = failure)
+        Tuple of (scores dict keyed by assessment ID, list of all issues).
     """
-    logger.info(f"Generating assessment summary from {len(input_reports)} reports...")
-
-    # Category mapping
-    categories = {
-        "A": {"name": "Architecture & Implementation", "weight": 2.0},
-        "B": {"name": "Hygiene, Security & Quality", "weight": 2.0},
-        "C": {"name": "Documentation & Integration", "weight": 1.5},
-        "D": {"name": "User Experience", "weight": 1.5},
-        "E": {"name": "Performance & Scalability", "weight": 1.5},
-        "F": {"name": "Installation & Deployment", "weight": 1.0},
-        "G": {"name": "Testing & Validation", "weight": 2.0},
-        "H": {"name": "Error Handling", "weight": 1.0},
-        "I": {"name": "Security & Input Validation", "weight": 2.0},
-        "J": {"name": "Extensibility & Plugins", "weight": 1.0},
-        "K": {"name": "Reproducibility & Provenance", "weight": 1.0},
-        "L": {"name": "Long-Term Maintainability", "weight": 1.5},
-        "M": {"name": "Educational Resources", "weight": 1.0},
-        "N": {"name": "Visualization & Export", "weight": 1.0},
-        "O": {"name": "CI/CD & DevOps", "weight": 2.0},
-    }
-
-    # Collect scores and issues
-    scores = {}
-    all_issues = []
+    scores: dict[str, float] = {}
+    all_issues: list[dict[str, Any]] = []
 
     for report in input_reports:
-        # Extract assessment ID from filename (e.g., Assessment_A_Results_2026-01-17.md)
         match = re.search(r"Assessment_([A-O])_Results", report.name)
         if match:
             assessment_id = match.group(1)
             scores[assessment_id] = extract_score_from_report(report)
             all_issues.extend(extract_issues_from_report(report))
 
-    # Calculate weighted average
+    return scores, all_issues
+
+
+def _calculate_weighted_score(scores: dict[str, float]) -> float:
+    """Calculate weighted average score across assessed categories.
+
+    Args:
+        scores: Dictionary mapping assessment IDs to their scores.
+
+    Returns:
+        Weighted average score, or 7.0 if no weights are available.
+    """
     total_weighted_score = 0.0
     total_weight = 0.0
 
     for assessment_id, score in scores.items():
-        if assessment_id in categories:
-            weight = categories[assessment_id]["weight"]
+        if assessment_id in SUMMARY_CATEGORIES:
+            weight = SUMMARY_CATEGORIES[assessment_id]["weight"]
             total_weighted_score += score * weight
             total_weight += weight
 
-    overall_score = total_weighted_score / total_weight if total_weight > 0 else 7.0
+    return total_weighted_score / total_weight if total_weight > 0 else 7.0
 
-    # Count critical issues
-    critical_issues = [i for i in all_issues if i["severity"] in ("BLOCKER", "CRITICAL")]
 
-    # Generate markdown summary
-    md_content = f"""# Comprehensive Assessment Summary
+def _build_markdown_summary(
+    scores: dict[str, float],
+    overall_score: float,
+    critical_issues: list[dict[str, Any]],
+) -> str:
+    """Build the markdown content for the assessment summary.
 
-**Date**: {datetime.now().strftime("%Y-%m-%d")}
-**Generated**: Automated via Jules Assessment Auto-Fix workflow
-**Overall Score**: {overall_score:.1f}/10
+    Args:
+        scores: Dictionary mapping assessment IDs to scores.
+        overall_score: Calculated weighted average score.
+        critical_issues: List of BLOCKER/CRITICAL issues.
 
-## Executive Summary
-
-Repository assessment completed across all {len(scores)} categories.
-
-### Overall Health: {overall_score:.1f}/10
-
-### Category Scores
-
-| Category | Name | Score | Weight |
-|----------|------|-------|--------|
-"""
+    Returns:
+        Complete markdown string for the summary report.
+    """
+    md_lines = [
+        "# Comprehensive Assessment Summary",
+        "",
+        f"**Date**: {datetime.now().strftime('%Y-%m-%d')}",
+        "**Generated**: Automated via Jules Assessment Auto-Fix workflow",
+        f"**Overall Score**: {overall_score:.1f}/10",
+        "",
+        "## Executive Summary",
+        "",
+        f"Repository assessment completed across all {len(scores)} categories.",
+        "",
+        f"### Overall Health: {overall_score:.1f}/10",
+        "",
+        "### Category Scores",
+        "",
+        "| Category | Name | Score | Weight |",
+        "|----------|------|-------|--------|",
+    ]
 
     for assessment_id in sorted(scores.keys()):
-        if assessment_id in categories:
-            cat_info = categories[assessment_id]
+        if assessment_id in SUMMARY_CATEGORIES:
+            cat_info = SUMMARY_CATEGORIES[assessment_id]
             score = scores[assessment_id]
-            md_content += f"| **{assessment_id}** | {cat_info['name']} | {score:.1f} | {cat_info['weight']}x |\n"
+            md_lines.append(
+                f"| **{assessment_id}** | {cat_info['name']} "
+                f"| {score:.1f} | {cat_info['weight']}x |"
+            )
 
-    md_content += f"""
-## Critical Issues
-
-Found {len(critical_issues)} critical issues requiring immediate attention:
-
-"""
+    md_lines.append("")
+    md_lines.append("## Critical Issues")
+    md_lines.append("")
+    md_lines.append(
+        f"Found {len(critical_issues)} critical issues requiring immediate attention:"
+    )
+    md_lines.append("")
 
     for i, issue in enumerate(critical_issues[:10], 1):
-        md_content += (
-            f"{i}. **[{issue['severity']}]** {issue['description']} (Source: {issue['source']})\n"
+        md_lines.append(
+            f"{i}. **[{issue['severity']}]** {issue['description']} "
+            f"(Source: {issue['source']})"
         )
 
-    md_content += """
-## Recommendations
+    md_lines.extend([
+        "",
+        "## Recommendations",
+        "",
+        "1. Address all BLOCKER issues immediately",
+        "2. Create action plan for CRITICAL issues",
+        "3. Schedule remediation for MAJOR issues",
+        "4. Monitor trends in assessment scores",
+        "",
+        "## Next Assessment",
+        "",
+        "Recommended: 30 days from today",
+        "",
+        "---",
+        "",
+        "*Generated by Jules Assessment Auto-Fix*",
+    ])
 
-1. Address all BLOCKER issues immediately
-2. Create action plan for CRITICAL issues
-3. Schedule remediation for MAJOR issues
-4. Monitor trends in assessment scores
+    return "\n".join(md_lines) + "\n"
 
-## Next Assessment
 
-Recommended: 30 days from today
+def _build_json_metrics(
+    scores: dict[str, float],
+    overall_score: float,
+    all_issues: list[dict[str, Any]],
+    critical_issues: list[dict[str, Any]],
+    reports_analyzed: int,
+) -> dict[str, Any]:
+    """Build structured JSON metrics from assessment data.
 
----
+    Args:
+        scores: Dictionary mapping assessment IDs to scores.
+        overall_score: Calculated weighted average score.
+        all_issues: Complete list of all issues found.
+        critical_issues: Filtered list of BLOCKER/CRITICAL issues.
+        reports_analyzed: Number of input reports processed.
 
-*Generated by Jules Assessment Auto-Fix*
-"""
-
-    # Save markdown
-    output_md.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_md, "w") as f:
-        f.write(md_content)
-
-    logger.info(f"✓ Markdown summary saved to {output_md}")
-
-    # Generate JSON metrics
-    json_data = {
+    Returns:
+        Dictionary suitable for JSON serialization.
+    """
+    return {
         "timestamp": datetime.now().isoformat(),
         "overall_score": round(overall_score, 2),
         "category_scores": {
-            k: {"score": v, "name": categories[k]["name"], "weight": categories[k]["weight"]}
+            k: {
+                "score": v,
+                "name": SUMMARY_CATEGORIES[k]["name"],
+                "weight": SUMMARY_CATEGORIES[k]["weight"],
+            }
             for k, v in scores.items()
-            if k in categories
+            if k in SUMMARY_CATEGORIES
         },
         "critical_issues": critical_issues,
         "total_issues": len(all_issues),
-        "reports_analyzed": len(input_reports),
+        "reports_analyzed": reports_analyzed,
     }
 
-    # Save JSON
+
+def generate_summary(
+    input_reports: list[Path],
+    output_md: Path,
+    output_json: Path,
+) -> int:
+    """Generate comprehensive summary from assessment reports.
+
+    Args:
+        input_reports: List of assessment report files.
+        output_md: Path to save markdown summary.
+        output_json: Path to save JSON metrics.
+
+    Returns:
+        Exit code (0 = success, 1 = failure).
+    """
+    logger.info(f"Generating assessment summary from {len(input_reports)} reports...")
+
+    scores, all_issues = _collect_scores_and_issues(input_reports)
+    overall_score = _calculate_weighted_score(scores)
+    critical_issues = [i for i in all_issues if i["severity"] in ("BLOCKER", "CRITICAL")]
+
+    # Write markdown
+    md_content = _build_markdown_summary(scores, overall_score, critical_issues)
+    output_md.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_md, "w") as f:
+        f.write(md_content)
+    logger.info(f"Markdown summary saved to {output_md}")
+
+    # Write JSON
+    json_data = _build_json_metrics(
+        scores, overall_score, all_issues, critical_issues, len(input_reports)
+    )
     with open(output_json, "w") as f:
         json.dump(json_data, f, indent=2)
-
-    logger.info(f"✓ JSON metrics saved to {output_json}")
+    logger.info(f"JSON metrics saved to {output_json}")
 
     return 0
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Tests for SEO audit script."""
 
+import pytest
+
 from scripts.seo_audit import (
     check_heading_hierarchy,
     check_images,
@@ -14,35 +16,23 @@ class TestFrontmatterExtraction:
 
     def test_extract_title_and_description(self):
         """Test extracting title and description from frontmatter."""
-        content = """---
-title: "Test Page"
-description: "A test description"
----
-
-Content here.
-"""
+        content = '---\ntitle: "Test Page"\ndescription: "A test description"\n---\n\nContent here.\n'
         frontmatter = parse_frontmatter_dict(content)
 
         assert frontmatter["title"] == "Test Page"
         assert frontmatter["description"] == "A test description"
 
-    def test_no_frontmatter(self):
-        """Test content without frontmatter."""
-        content = "Just regular content without frontmatter."
-
+    @pytest.mark.parametrize(
+        "content",
+        [
+            "Just regular content without frontmatter.",
+            "---\n---\n\nContent here.\n",
+        ],
+        ids=["no-frontmatter", "empty-frontmatter"],
+    )
+    def test_no_or_empty_frontmatter(self, content: str):
+        """Test that content without or with empty frontmatter returns nothing."""
         frontmatter = parse_frontmatter_dict(content)
-
-        assert len(frontmatter) == 0
-
-    def test_empty_frontmatter(self):
-        """Test empty frontmatter block."""
-        content = """---
----
-
-Content here.
-"""
-        frontmatter = parse_frontmatter_dict(content)
-
         assert len(frontmatter) == 0
 
 

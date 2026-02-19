@@ -15,30 +15,15 @@ Output:
 from pathlib import Path
 
 from src.tools.utils import setup_logging
+from src.tools.utils.assessment_utils import ASSESSMENT_DEFINITIONS
 
 logger = setup_logging(__name__, format_string="%(message)s")
 
 repo_name = "AffineDrift"
 date = "2026-01-22"
 
-# Assessment categories mapping
-categories = {
-    "A": "Architecture & Implementation",
-    "B": "Hygiene, Security & Quality",
-    "C": "Documentation & Integration",
-    "D": "User Experience",
-    "E": "Performance & Scalability",
-    "F": "Installation & Deployment",
-    "G": "Testing & Validation",
-    "H": "Error Handling",
-    "I": "Security & Input Validation",
-    "J": "Extensibility & Plugins",
-    "K": "Reproducibility & Provenance",
-    "L": "Long-Term Maintainability",
-    "M": "Educational Resources",
-    "N": "Visualization & Export",
-    "O": "CI/CD & DevOps",
-}
+# Derive category names from the single source of truth
+categories = {k: v["name"] for k, v in ASSESSMENT_DEFINITIONS.items()}
 
 # Create output directory
 output_dir = Path("docs/assessments")

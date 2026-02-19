@@ -326,6 +326,121 @@ def generate_mermaid_charts(
     return "\n".join(chart)
 
 
+def _identify_criticals(
+    stubs: list[Finding],
+    ni_errors: list[Finding],
+    placeholders: list[Finding],
+) -> list[Finding]:
+    """Identify and prioritize critical incomplete items.
+
+    Includes placeholders in public-facing files (.qmd, .html, .js, .css)
+    and excludes test files.
+
+    Args:
+        stubs: Stub function findings.
+        ni_errors: NotImplementedError findings.
+        placeholders: Placeholder content findings.
+
+    Returns:
+        Sorted list of critical findings (highest impact first).
+    """
+    public_extensions = (".qmd", ".html", ".js", ".css")
+    critical_placeholders = [
+        p for p in placeholders if any(p["file"].endswith(ext) for ext in public_extensions)
+    ]
+    criticals = [
+        s for s in (stubs + ni_errors + critical_placeholders) if "test" not in s["file"].lower()
+    ]
+    criticals.sort(key=lambda x: calculate_metrics(x)[0], reverse=True)
+    return criticals
+
+
+def _build_findings_table(
+    items: list[Finding],
+    columns: list[str],
+    row_formatter: Callable[[Finding], str],
+    limit: int = 50,
+) -> list[str]:
+    """Build a markdown table from a list of findings.
+
+    Args:
+        items: List of findings to tabulate.
+        columns: Column header names.
+        row_formatter: Function that formats one finding into a table row string.
+        limit: Maximum rows to include.
+
+    Returns:
+        List of markdown table lines (header + separator + rows).
+    """
+    lines = [
+        "| " + " | ".join(columns) + " |",
+        "|" + "|".join("---" for _ in columns) + "|",
+    ]
+    for item in items[:limit]:
+        lines.append(row_formatter(item))
+    return lines
+
+
+def _build_priority_section(
+    criticals: list[Finding], todos: list[Finding]
+) -> list[str]:
+    """Build the recommended implementation order section.
+
+    Args:
+        criticals: Critical findings.
+        todos: TODO marker findings.
+
+    Returns:
+        Markdown lines for the priority section.
+    """
+    lines = [
+        "\n## Recommended Implementation Order",
+        "Prioritized by Impact (High) and Complexity (Low).",
+    ]
+
+    all_items = list(criticals) + list(todos)
+
+    def priority_score(item: Mapping[str, Any]) -> int:
+        imp, _, comp = calculate_metrics(item)
+        return (imp * 10) - comp
+
+    all_items.sort(key=priority_score, reverse=True)
+
+    lines.append("| Priority | File | Issue | Metrics (I/C/C) |")
+    lines.append("|---|---|---|---|")
+    for i, item in enumerate(all_items[:20], 1):
+        imp, cov, comp = calculate_metrics(item)
+        desc = item.get("name", item.get("text", ""))[:80].replace("|", "\\|")
+        lines.append(f"| {i} | `{item['file']}` | {desc} | {imp}/{cov}/{comp} |")
+    return lines
+
+
+def _create_high_impact_issues(criticals: list[Finding]) -> list[str]:
+    """Create issue files for high-impact critical items.
+
+    Args:
+        criticals: Critical findings sorted by impact.
+
+    Returns:
+        Markdown lines listing created issue files.
+    """
+    lines = ["\n## Issues Created"]
+    max_id = 0
+    issues_files = glob.glob(os.path.join(ISSUES_DIR, "Issue_*.md")) + glob.glob(
+        os.path.join(ISSUES_DIR, "ISSUE_*.md")
+    )
+    for issue_p in issues_files:
+        match_id = re.search(r"(\d+)", os.path.basename(issue_p))
+        if match_id:
+            max_id = max(max_id, int(match_id.group(1)))
+
+    next_id = max_id + 1
+    for item in [c for c in criticals if calculate_metrics(c)[0] >= 4][:10]:
+        lines.append(f"- Created `{create_issue_file(item, next_id)}`")
+        next_id += 1
+    return lines
+
+
 def generate_report() -> None:
     """Generate the structured completist status report."""
     stubs = analyze_stubs()
@@ -335,19 +450,8 @@ def generate_report() -> None:
     _ = analyze_abstract_methods()
     placeholders = analyze_placeholders()
 
-    # Identify and prioritize critical candidates
-    # Include placeholders in criticals if they are in public facing files
-    critical_placeholders = [
-        p
-        for p in placeholders
-        if any(p["file"].endswith(ext) for ext in [".qmd", ".html", ".js", ".css"])
-    ]
-    criticals = [
-        s for s in (stubs + ni_errors + critical_placeholders) if "test" not in s["file"].lower()
-    ]
-    criticals.sort(key=lambda x: calculate_metrics(x)[0], reverse=True)
+    criticals = _identify_criticals(stubs, ni_errors, placeholders)
 
-    # Report Generation
     date_s = datetime.now().strftime("%Y-%m-%d")
     report = [
         f"# Completist Report: {date_s}\n",
@@ -359,80 +463,56 @@ def generate_report() -> None:
         f"- **Documentation Gaps**: {len(missing_docs)}\n",
     ]
 
-    # Insert Mermaid Visualization
     report.append(generate_mermaid_charts(criticals, todos, fixmes, missing_docs, placeholders))
 
-    # Critical Table
+    # Critical table
     report.append("\n## Critical Incomplete (Top 50)")
-    report.append("| File | Line | Type | Impact | Coverage | Complexity |")
-    report.append("|---|---|---|---|---|---|")
+    report.extend(_build_findings_table(
+        criticals,
+        ["File", "Line", "Type", "Impact", "Coverage", "Complexity"],
+        lambda item: (
+            f"| `{item['file']}` | {item['line']} | {item['type']} "
+            f"| {calculate_metrics(item)[0]} | {calculate_metrics(item)[1]} "
+            f"| {calculate_metrics(item)[2]} |"
+        ),
+    ))
 
-    for item in criticals[:50]:
-        imp, cov, comp = calculate_metrics(item)
-        report.append(
-            f"| `{item['file']}` | {item['line']} | {item['type']} | {imp} | {cov} | {comp} |"
-        )
-
-    # Content Gaps (Website Specific)
+    # Content gaps
     report.append("\n## Content Gaps (Website Specific)")
-    report.append("| File | Line | Content |")
-    report.append("|---|---|---|")
-    for item in placeholders[:50]:
-        text = item.get("text", "").replace("|", "\\|")
-        report.append(f"| `{item['file']}` | {item['line']} | {text[:100]} |")
+    report.extend(_build_findings_table(
+        placeholders,
+        ["File", "Line", "Content"],
+        lambda item: (
+            f"| `{item['file']}` | {item['line']} "
+            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} |"
+        ),
+    ))
 
-    # Feature Gap Matrix
+    # Feature gap matrix
     report.append("\n## Feature Gap Matrix")
-    report.append("| Module | Feature Gap | Type |")
-    report.append("|---|---|---|")
-    for item in todos[:50]:
-        text = item.get("text", "").replace("|", "\\|")
-        report.append(f"| `{item['file']}` | {text[:100]} | {item['type']} |")
+    report.extend(_build_findings_table(
+        todos,
+        ["Module", "Feature Gap", "Type"],
+        lambda item: (
+            f"| `{item['file']}` "
+            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
+        ),
+    ))
 
-    # Technical Debt Register
+    # Technical debt register
     report.append("\n## Technical Debt Register")
-    report.append("| File | Line | Issue | Type |")
-    report.append("|---|---|---|---|")
-    for item in fixmes:
-        text = item.get("text", "").replace("|", "\\|")
-        report.append(f"| `{item['file']}` | {item['line']} | {text[:100]} | {item['type']} |")
+    report.extend(_build_findings_table(
+        fixmes,
+        ["File", "Line", "Issue", "Type"],
+        lambda item: (
+            f"| `{item['file']}` | {item['line']} "
+            f"| {item.get('text', '').replace('|', chr(92) + '|')[:100]} | {item['type']} |"
+        ),
+        limit=len(fixmes),
+    ))
 
-    # Recommended Implementation Order
-    report.append("\n## Recommended Implementation Order")
-    report.append("Prioritized by Impact (High) and Complexity (Low).")
-    report.append("| Priority | File | Issue | Metrics (I/C/C) |")
-    report.append("|---|---|---|---|")
-
-    # Combined list for prioritization
-    all_items = criticals + todos
-
-    def priority_score(item: Mapping[str, Any]) -> int:
-        """Calculate implementation priority score."""
-        imp, _, comp = calculate_metrics(item)
-        return (imp * 10) - comp
-
-    all_items.sort(key=priority_score, reverse=True)
-
-    for i, item in enumerate(all_items[:20], 1):
-        imp, cov, comp = calculate_metrics(item)
-        desc = item.get("name", item.get("text", ""))[:80].replace("|", "\\|")
-        report.append(f"| {i} | `{item['file']}` | {desc} | {imp}/{cov}/{comp} |")
-
-    # Issue creation for High Impact items
-    report.append("\n## Issues Created")
-    max_id = 0
-    issues_glob = glob.glob(os.path.join(ISSUES_DIR, "Issue_*.md")) + glob.glob(
-        os.path.join(ISSUES_DIR, "ISSUE_*.md")
-    )
-    for issue_p in issues_glob:
-        match_id = re.search(r"(\d+)", os.path.basename(issue_p))
-        if match_id:
-            max_id = max(max_id, int(match_id.group(1)))
-
-    next_id = max_id + 1
-    for item in [c for c in criticals if calculate_metrics(c)[0] >= 4][:10]:
-        report.append(f"- Created `{create_issue_file(item, next_id)}`")
-        next_id += 1
+    report.extend(_build_priority_section(criticals, todos))
+    report.extend(_create_high_impact_issues(criticals))
 
     os.makedirs(REPORT_DIR, exist_ok=True)
     report_path = os.path.join(REPORT_DIR, f"Completist_Report_{date_s}.md")
