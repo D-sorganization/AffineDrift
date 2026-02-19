@@ -20,6 +20,7 @@ from src.affine_control.residuals import (
 )
 from src.core.contracts import ContractViolationError
 from src.tangent_models.examples import (
+    GRAVITY_M_S2,
     PlanarQuadrotor,
     SimplePendulum,
 )
@@ -40,7 +41,7 @@ class TestLinearizationConsistency:
 
     def test_pendulum_linearization_at_equilibrium(self) -> None:
         """At the hanging equilibrium, linearization should match expected structure."""
-        sys = SimplePendulum(m=1.0, L=1.0, g=9.81)
+        sys = SimplePendulum(m=1.0, L=1.0, g=GRAVITY_M_S2)
         x_eq = np.array([0.0, 0.0])  # Hanging down
         u_eq = np.array([0.0])
 
@@ -49,16 +50,16 @@ class TestLinearizationConsistency:
         # A[0, 1] = 1 (dtheta_dot/domega = 1)
         assert A[0, 1] == pytest.approx(1.0, abs=1e-10)
         # A[1, 0] = -g/L * cos(0) = -g/L
-        assert A[1, 0] == pytest.approx(-9.81, rel=1e-6)
+        assert A[1, 0] == pytest.approx(-GRAVITY_M_S2, rel=1e-6)
         # B[1, 0] = 1/(m*L^2) = 1.0
         assert B[1, 0] == pytest.approx(1.0, rel=1e-6)
 
     def test_quadrotor_hover_linearization(self) -> None:
         """At hover, quadrotor should have standard linearized structure."""
-        sys = PlanarQuadrotor(m=1.0, L=0.25, moment_inertia=0.01, g=9.81)
+        sys = PlanarQuadrotor(m=1.0, L=0.25, moment_inertia=0.01, g=GRAVITY_M_S2)
         x_hover = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         # Hover thrust: each motor produces mg/2
-        u_hover = np.array([9.81 / 2, 9.81 / 2])
+        u_hover = np.array([GRAVITY_M_S2 / 2, GRAVITY_M_S2 / 2])
 
         A, B = sys.linearize(x_hover, u_hover)
 
@@ -165,6 +166,7 @@ class TestHessianResidualBound:
         def linear_dynamics(
             x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]
         ) -> np.ndarray[Any, Any]:
+            """Compute linear dynamics dx = Ax + Bu."""
             A = np.array([[0.0, 1.0], [-1.0, -0.1]])
             B = np.array([[0.0], [1.0]])
             return A @ x + B @ u
