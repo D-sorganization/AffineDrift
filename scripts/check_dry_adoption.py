@@ -6,13 +6,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-try:
-    from src.tools.utils.budget_check_utils import report_results
-except ModuleNotFoundError:
-    repo_root = Path(__file__).resolve().parent.parent
-    if str(repo_root) not in sys.path:
-        sys.path.insert(0, str(repo_root))
-    from src.tools.utils.budget_check_utils import report_results
+from src.tools.utils.budget_check_utils import report_results
 
 
 def _requires_token(path: Path, token: str) -> str | None:

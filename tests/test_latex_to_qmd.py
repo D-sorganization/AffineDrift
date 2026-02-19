@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import pytest
+
+from src.tools.latex_to_html import LaTeXToHTMLConverter
 from src.tools.latex_to_qmd import LaTeXToQuartoConverter
+from src.tools.utils.latex_utils import ConversionPipeline
 
 
 class TestLaTeXToQuartoConverter:
@@ -123,3 +127,32 @@ This is the body content.
         assert 'author: "Author"' in frontmatter
         assert 'date: "2024-01-01"' in frontmatter
         assert "---" in frontmatter
+
+
+# ─── ConversionPipeline Protocol Conformance (Issue #1250) ────
+
+
+class TestConversionPipelineProtocol:
+    """Verify that all LaTeX converters conform to the ConversionPipeline protocol."""
+
+    def test_quarto_converter_is_conversion_pipeline(self) -> None:
+        """LaTeXToQuartoConverter satisfies ConversionPipeline at runtime."""
+        converter = LaTeXToQuartoConverter()
+        assert isinstance(converter, ConversionPipeline)
+
+    def test_html_converter_is_conversion_pipeline(self) -> None:
+        """LaTeXToHTMLConverter satisfies ConversionPipeline at runtime."""
+        converter = LaTeXToHTMLConverter()
+        assert isinstance(converter, ConversionPipeline)
+
+    @pytest.mark.integration
+    def test_converters_share_read_interface(self) -> None:
+        """Both converters expose the same pipeline methods."""
+        html_conv = LaTeXToHTMLConverter()
+        qmd_conv = LaTeXToQuartoConverter()
+
+        # Both should expose read_latex_file and convert_file per the protocol.
+        assert hasattr(html_conv, "read_latex_file")
+        assert hasattr(qmd_conv, "read_latex_file")
+        assert hasattr(html_conv, "convert_file")
+        assert hasattr(qmd_conv, "convert_file")

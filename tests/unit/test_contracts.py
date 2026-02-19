@@ -35,14 +35,7 @@ from src.core.contracts import (
     set_contract_level,
 )
 
-
-@pytest.fixture(autouse=True)
-def _enforce_contracts() -> None:
-    """Ensure contracts are in ENFORCE mode for all tests."""
-    original = get_contract_level()
-    set_contract_level(ContractLevel.ENFORCE)
-    yield  # type: ignore[misc]
-    set_contract_level(original)
+# _enforce_contracts fixture is inherited from tests/conftest.py (issue #1251)
 
 
 # ─── Exception Hierarchy ───────────────────────────────────────
@@ -291,6 +284,7 @@ class TestContractLevelControls:
 # ─── Integration: ResidualMonitor ─────────────────────────────
 
 
+@pytest.mark.integration
 class TestResidualMonitorContracts:
     """Tests that ResidualMonitor enforces contracts."""
 

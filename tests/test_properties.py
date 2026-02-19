@@ -11,7 +11,6 @@ of the Design by Contract (DbC) system:
 
 from __future__ import annotations
 
-from collections.abc import Generator
 from typing import Any
 
 import numpy as np
@@ -41,16 +40,7 @@ from src.core.contracts import (
     set_contract_level,
 )
 
-# ─── Helpers ──────────────────────────────────────────────────
-
-
-@pytest.fixture(autouse=True)
-def _enforce_contracts() -> Generator[None, None, None]:
-    """Ensure all tests run with contracts enforced, then restore."""
-    original = get_contract_level()
-    set_contract_level(ContractLevel.ENFORCE)
-    yield
-    set_contract_level(original)
+# _enforce_contracts fixture is inherited from tests/conftest.py (issue #1251)
 
 
 # ─── Strategies ───────────────────────────────────────────────

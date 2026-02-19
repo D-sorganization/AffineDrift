@@ -16,11 +16,58 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Protocol, runtime_checkable
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
 
 logger = setup_logging(__name__)
+
+
+# ─── Protocols ─────────────────────────────────────────────────
+
+
+@runtime_checkable
+class ConversionPipeline(Protocol):
+    """Protocol for LaTeX document converters.
+
+    All LaTeX converters (HTML, QMD, Quarto) share a common pipeline:
+    1. Read LaTeX source
+    2. Convert content to the target format
+    3. Write the output file
+
+    Implementors must provide ``read_latex_file`` and ``convert_file``.
+    This enables polymorphic batch conversion and testing.
+
+    Example::
+
+        def batch_convert(converters: list[ConversionPipeline], files: list[Path]) -> None:
+            for converter in converters:
+                for f in files:
+                    converter.convert_file(f)
+    """
+
+    def read_latex_file(self, filepath: str | Path) -> str:
+        """Read LaTeX source from *filepath* and return its content."""
+        ...
+
+    def convert_file(
+        self,
+        input_file: str | Path,
+        output_file: str | Path | None = None,
+    ) -> str | Path | None:
+        """Convert *input_file* to the target format.
+
+        Args:
+            input_file: Path to the LaTeX source file.
+            output_file: Optional explicit output path. If ``None``, the
+                converter chooses a default based on the input filename.
+
+        Returns:
+            Path or string of the written output file, or ``None`` on failure.
+        """
+        ...
 
 
 # ─── Data Structures ────────────────────────────────────────────

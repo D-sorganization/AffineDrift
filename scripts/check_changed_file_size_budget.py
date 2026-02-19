@@ -8,15 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-try:
-    from scripts.check_module_size_budget import line_count
-    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
-except ModuleNotFoundError:
-    repo_root = Path(__file__).resolve().parent.parent
-    if str(repo_root) not in sys.path:
-        sys.path.insert(0, str(repo_root))
-    from scripts.check_module_size_budget import line_count
-    from src.tools.utils.budget_check_utils import is_included, load_config, report_results
+from scripts.check_module_size_budget import line_count
+from src.tools.utils.budget_check_utils import is_included, load_config, report_results
 
 
 def _merge_base(repo_root: Path) -> str:
