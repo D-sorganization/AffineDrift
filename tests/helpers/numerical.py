@@ -20,15 +20,15 @@ for violated preconditions or ``AssertionError`` for violated postconditions
 from __future__ import annotations
 
 import math
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
 import numpy.typing as npt
 
-
 # ---------------------------------------------------------------------------
 # Closeness
 # ---------------------------------------------------------------------------
+
 
 def assert_close(
     actual: float,
@@ -65,6 +65,7 @@ def assert_close(
 # Conservation
 # ---------------------------------------------------------------------------
 
+
 def assert_conserved(
     before: float,
     after: float,
@@ -96,6 +97,7 @@ def assert_conserved(
 # Monotonicity
 # ---------------------------------------------------------------------------
 
+
 def assert_monotonic(
     values: Sequence[float],
     increasing: bool = True,
@@ -121,9 +123,7 @@ def assert_monotonic(
         Human-readable label for error messages.
     """
     if len(values) < 2:
-        raise ValueError(
-            f"Need at least 2 values to check monotonicity, got {len(values)}"
-        )
+        raise ValueError(f"Need at least 2 values to check monotonicity, got {len(values)}")
 
     direction = "increasing" if increasing else "decreasing"
     strictness = "strictly " if strict else ""
@@ -137,14 +137,14 @@ def assert_monotonic(
 
         if not ok:
             raise AssertionError(
-                f"{label} is not {strictness}{direction} "
-                f"at index {i}: {a} -> {b}"
+                f"{label} is not {strictness}{direction} " f"at index {i}: {a} -> {b}"
             )
 
 
 # ---------------------------------------------------------------------------
 # Finiteness
 # ---------------------------------------------------------------------------
+
 
 def is_finite(value: float) -> bool:
     """Return ``True`` if *value* is neither NaN nor Inf.
@@ -165,14 +165,13 @@ def assert_all_finite(values: Sequence[float], label: str = "values") -> None:
 
     for i, v in enumerate(values):
         if not is_finite(v):
-            raise AssertionError(
-                f"{label}[{i}] is not finite: {v}"
-            )
+            raise AssertionError(f"{label}[{i}] is not finite: {v}")
 
 
 # ---------------------------------------------------------------------------
 # Positive-definiteness
 # ---------------------------------------------------------------------------
+
 
 def assert_positive_definite(
     matrix: npt.ArrayLike,
@@ -192,9 +191,7 @@ def assert_positive_definite(
     if mat.ndim != 2:
         raise ValueError(f"{label} must be 2-D, got {mat.ndim}-D")
     if mat.shape[0] != mat.shape[1]:
-        raise ValueError(
-            f"{label} must be square, got shape {mat.shape}"
-        )
+        raise ValueError(f"{label} must be square, got shape {mat.shape}")
 
     # Symmetry
     if not np.allclose(mat, mat.T):
@@ -205,14 +202,14 @@ def assert_positive_definite(
     min_eig = float(eigenvalues.min())
     if min_eig <= 0:
         raise AssertionError(
-            f"{label} is not positive definite "
-            f"(smallest eigenvalue = {min_eig:.3e})"
+            f"{label} is not positive definite " f"(smallest eigenvalue = {min_eig:.3e})"
         )
 
 
 # ---------------------------------------------------------------------------
 # Lyapunov stability
 # ---------------------------------------------------------------------------
+
 
 def assert_lyapunov_stable(
     V_values: Sequence[float],
@@ -233,8 +230,7 @@ def assert_lyapunov_stable(
     """
     if len(V_values) < 2:
         raise ValueError(
-            f"Need at least 2 values to check Lyapunov stability, "
-            f"got {len(V_values)}"
+            f"Need at least 2 values to check Lyapunov stability, " f"got {len(V_values)}"
         )
     if rtol < 0:
         raise ValueError(f"rtol must be >= 0, got {rtol}")

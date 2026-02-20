@@ -21,10 +21,10 @@ from tests.helpers.numerical import (
     is_finite,
 )
 
-
 # ======================================================================
 # assert_close
 # ======================================================================
+
 
 class TestAssertClose:
     """Tests for assert_close."""
@@ -63,6 +63,7 @@ class TestAssertClose:
 # assert_conserved
 # ======================================================================
 
+
 class TestAssertConserved:
     """Tests for assert_conserved."""
 
@@ -84,6 +85,7 @@ class TestAssertConserved:
 # ======================================================================
 # assert_monotonic
 # ======================================================================
+
 
 class TestAssertMonotonic:
     """Tests for assert_monotonic."""
@@ -121,6 +123,7 @@ class TestAssertMonotonic:
 # is_finite
 # ======================================================================
 
+
 class TestIsFinite:
     """Tests for is_finite."""
 
@@ -150,6 +153,7 @@ class TestIsFinite:
 # assert_all_finite
 # ======================================================================
 
+
 class TestAssertAllFinite:
     """Tests for assert_all_finite."""
 
@@ -168,6 +172,7 @@ class TestAssertAllFinite:
 # ======================================================================
 # assert_positive_definite
 # ======================================================================
+
 
 class TestAssertPositiveDefinite:
     """Tests for assert_positive_definite."""
@@ -209,6 +214,7 @@ class TestAssertPositiveDefinite:
 # ======================================================================
 # assert_lyapunov_stable
 # ======================================================================
+
 
 class TestAssertLyapunovStable:
     """Tests for assert_lyapunov_stable."""

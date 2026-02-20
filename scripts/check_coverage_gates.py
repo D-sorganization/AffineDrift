@@ -52,9 +52,7 @@ class CoverageGate:
 
     def __post_init__(self) -> None:
         if not 0 <= self.threshold <= 100:
-            raise ValueError(
-                f"threshold must be 0-100, got {self.threshold}"
-            )
+            raise ValueError(f"threshold must be 0-100, got {self.threshold}")
 
 
 # -----------------------------------------------------------------------
