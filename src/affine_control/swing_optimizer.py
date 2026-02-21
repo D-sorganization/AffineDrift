@@ -490,8 +490,7 @@ class SwingOptimizer:
         )
 
         logger.info(
-            "Optimization complete: velocity=%.2f m/s, cost=%.4f, "
-            "converged=%s, iterations=%d",
+            "Optimization complete: velocity=%.2f m/s, cost=%.4f, " "converged=%s, iterations=%d",
             result.final_velocity,
             result.cost,
             result.converged,

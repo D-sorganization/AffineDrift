@@ -300,9 +300,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
     def test_terminal_cost_scales_with_terminal_weight(self) -> None:
         """Terminal cost should scale with terminal_weight."""
-        config_low = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=1.0
-        )
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0)
         config_high = SwingOptimizationConfig(
             n_joints=2, target_velocity=10.0, terminal_weight=100.0
         )
@@ -341,8 +339,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
         # Manual calculation
         running = sum(
-            self.optimizer.compute_cost(traj[t], ctrls[t]) * self.config.dt
-            for t in range(5)
+            self.optimizer.compute_cost(traj[t], ctrls[t]) * self.config.dt for t in range(5)
         )
         terminal = self.optimizer.compute_terminal_cost(traj[-1])
         expected = running + terminal
