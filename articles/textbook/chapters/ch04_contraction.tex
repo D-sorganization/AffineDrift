@@ -936,6 +936,106 @@ impact phase.
 \end{designbox}
 
 
+\section{Stochastic Contraction}
+
+Real systems are subject to process noise, sensor noise, and unmodeled disturbances. This
+section extends contraction theory to stochastic settings, providing convergence guarantees
+in the presence of randomness.
+
+\subsection{Systems with Brownian Perturbations}
+
+Consider the stochastic differential equation (SDE):
+\begin{equation}
+\dd\x = f(\x, t)\,\dd t + \sigma(\x, t)\,\dd\vec{W},
+\label{eq:ch4:sde}
+\end{equation}
+where $\vec{W}(t)$ is a standard Wiener process and $\sigma(\x, t) \in \R^{n \times p}$ is
+the diffusion matrix. The deterministic contraction condition
+$\sym(\mat{M}\tfrac{\partial f}{\partial \x}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}$
+must be augmented to account for the noise.
+
+\subsection{The Stochastic Contraction Condition}
+
+\begin{theorem}[Stochastic Contraction --- adapted from Pham, Tabuada, and Slotine]
+\label{thm:ch4:stochastic-contraction}
+Consider two solutions $\x_1(t), \x_2(t)$ of~\eqref{eq:ch4:sde} with different initial
+conditions but the same noise realization. If the deterministic contraction condition
+holds with rate $\lambda$, then the expected squared distance satisfies:
+\begin{equation}
+\E\!\left[\|\x_1(t) - \x_2(t)\|_{\mat{M}}^2\right]
+\leq e^{-2\lambda(t-t_0)} \E\!\left[\|\x_1(t_0) - \x_2(t_0)\|_{\mat{M}}^2\right]
++ \frac{C_\sigma}{\lambda},
+\label{eq:ch4:stochastic-bound}
+\end{equation}
+where $C_\sigma$ depends on the diffusion coefficient $\sigma$ and the metric $\mat{M}$.
+\end{theorem}
+
+The bound~\eqref{eq:ch4:stochastic-bound} shows that contraction dominates at large
+separations (exponential decay), while noise dominates at small separations (the
+$C_\sigma / \lambda$ floor). The steady-state expected separation is
+$\sqrt{C_\sigma / \lambda}$: faster contraction (larger $\lambda$) produces tighter
+concentration of trajectories.
+
+\subsection{Connection to Uncertainty Propagation}
+
+The stochastic contraction bound has a direct interpretation for state estimation
+(Chapter~\ref{ch:duality}). If an observer is contracting with rate $\lambda$, and the
+process noise has intensity $C_\sigma$, then the estimation error is bounded in
+expectation by $\sqrt{C_\sigma / \lambda}$. This provides a performance guarantee for
+nonlinear observers that the EKF cannot offer.
+
+\begin{designbox}
+For practical controller design, the stochastic contraction bound suggests a design
+trade-off: increasing the contraction rate $\lambda$ (e.g., by increasing feedback gains)
+reduces the noise floor $\sqrt{C_\sigma / \lambda}$ but requires more control effort.
+The optimal trade-off depends on the noise intensity and the available actuator authority.
+\end{designbox}
+
+
+\section{Contraction Tubes and Funnel Control}
+
+The exponential convergence guarantee of contraction theory naturally defines a
+\emph{tube} around the nominal trajectory: the set of all states that are guaranteed
+to converge to the nominal at rate $\lambda$.
+
+\subsection{The Contraction Tube}
+
+Given a contracting system with rate $\lambda$ and metric $\mat{M}$, define the tube
+of radius $r$ around a nominal trajectory $\bar\x(t)$:
+\begin{equation}
+\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar\x(t)\|_{\mat{M}(t)} \leq r \right\}.
+\label{eq:ch4:tube}
+\end{equation}
+
+If $\x(t_0) \in \mathcal{T}_{r_0}(t_0)$, then $\x(t) \in \mathcal{T}_{r(t)}(t)$ with
+$r(t) = r_0 e^{-\lambda(t - t_0)}$ for the unperturbed system, and
+$r(t) = r_0 e^{-\lambda(t - t_0)} + d/\lambda$ for bounded disturbances with
+$\|w(t)\|_{\mat{M}} \leq d$.
+
+\subsection{Funnel Control}
+
+Funnel control prescribes a time-varying performance boundary $\varphi(t) > 0$
+(the ``funnel'') and designs a gain that guarantees the tracking error satisfies
+$\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
+
+\begin{itemize}
+\item The funnel boundary $\varphi(t)$ defines the desired tube radius.
+\item A contracting controller with rate $\lambda \geq -\dot\varphi / \varphi$
+      guarantees that trajectories remain within the funnel.
+\item The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
+      control achieves this by increasing gain as the error approaches the boundary.
+\end{itemize}
+
+\begin{intuitionbox}
+Contraction tubes formalize the intuition that ``nearby trajectories stay nearby.''
+For trajectory tracking in robotics or biomechanics, the tube radius at impact time
+tells you the worst-case deviation from the planned motion. The condition number
+$\kappa(\mat{M})$ determines the shape of the tube: isotropic metrics give circular
+tubes; anisotropic metrics give ellipsoidal tubes that are tight in sensitive directions
+and loose in insensitive ones.
+\end{intuitionbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}

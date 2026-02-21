@@ -905,6 +905,99 @@ Near a local optimum where the second-order sufficient conditions hold:
 \item Both re-linearize at each iteration, ensuring the tangent-space model remains fresh.
 \end{itemize}
 
+\section{Model Predictive Control: Online Trajectory Optimization}
+
+DDP and iLQR as presented above are \emph{offline} algorithms: they compute an optimal
+trajectory and feedback policy before execution. In practice, disturbances, model mismatch,
+and changing objectives require \emph{online} re-optimization. Model Predictive Control
+(MPC) provides this capability by embedding the DDP/iLQR computation within a real-time
+feedback loop.
+
+\subsection{The Receding-Horizon Principle}
+
+At each control cycle (time $t_k$), the MPC controller:
+\begin{enumerate}
+\item Measures the current state $\x_k$.
+\item Solves a finite-horizon optimal control problem of length $N$:
+\begin{equation}
+\min_{\uvec_k, \ldots, \uvec_{k+N-1}} \sum_{j=0}^{N-1} \ell(\x_{k+j}, \uvec_{k+j})
++ V_f(\x_{k+N}),
+\label{eq:ch5:mpc-problem}
+\end{equation}
+subject to the dynamics $\x_{k+j+1} = f(\x_{k+j}, \uvec_{k+j})$.
+\item Applies only the first control $\uvec_k^*$ to the system.
+\item Shifts the horizon forward and repeats at $t_{k+1}$.
+\end{enumerate}
+
+The key insight is that MPC is precisely DDP/iLQR executed at each time step, with the
+previous solution shifted forward as the initial guess (warm-starting).
+
+\subsection{Warm-Starting and Computational Efficiency}
+
+When the system evolves smoothly, the optimal trajectory at time $t_{k+1}$ is close to
+the shifted trajectory from time $t_k$. Concretely, if $\{\bar\x_j, \bar\uvec_j\}_{j=k}^{k+N}$
+was optimal at $t_k$, the warm-start for $t_{k+1}$ is:
+\begin{equation}
+\bar\x_j^{(0)} = \bar\x_{j+1}^{\text{prev}}, \quad
+\bar\uvec_j^{(0)} = \bar\uvec_{j+1}^{\text{prev}}, \quad j = k+1, \ldots, k+N-1,
+\label{eq:ch5:warm-start}
+\end{equation}
+with the final element filled by a reasonable extrapolation.
+
+This warm-starting exploits the continuity of the value function and typically reduces the
+number of DDP iterations from many (cold start) to one or two (warm start).
+
+\subsection{Terminal Cost and Stability}
+
+The terminal cost $V_f(\x_{k+N})$ in~\eqref{eq:ch5:mpc-problem} plays a critical role
+in guaranteeing stability. The standard approach is to choose $V_f$ as the \emph{infinite-horizon
+LQR cost} at the target:
+\begin{equation}
+V_f(\x) = \x^T \mat{S}_\infty \x,
+\label{eq:ch5:terminal-cost}
+\end{equation}
+where $\mat{S}_\infty$ is the solution of the algebraic Riccati equation at the target
+linearization. Under this choice:
+
+\begin{theorem}[MPC Stability]
+\label{thm:ch5:mpc-stability}
+If $V_f$ is a local Control Lyapunov Function (CLF) for the system at the target
+equilibrium, and the terminal constraint $\x_{k+N} \in \mathcal{X}_f$ (a sublevel set of
+$V_f$) is imposed, then the MPC law is asymptotically stabilizing.
+\end{theorem}
+
+The connection to contraction theory (Chapter~\ref{ch:contraction}) is direct: the LQR
+terminal cost provides a contraction metric (Chapter~\ref{ch:duality}) that guarantees
+exponential convergence within the terminal set. MPC stability is therefore a consequence
+of the stability--optimality duality.
+
+\subsection{The Real-Time Iteration (RTI) Scheme}
+
+When computational resources are limited (e.g., embedded systems), the RTI approach
+executes exactly \emph{one} Newton step (one backward Riccati pass + one forward rollout)
+per control cycle, rather than iterating DDP to convergence. The RTI scheme:
+
+\begin{enumerate}
+\item Linearizes the dynamics and quadraticizes the cost around the current shifted trajectory.
+\item Performs one backward Riccati sweep to compute $\mat{K}_k$ and $\vec{k}_k$.
+\item Applies $\uvec_k = \bar\uvec_k + \vec{k}_k + \mat{K}_k(\x_k - \bar\x_k)$.
+\item Shifts the trajectory and prepares for the next cycle.
+\end{enumerate}
+
+This is computationally equivalent to applying a single-iteration DDP at each time step.
+The convergence analysis shows that if the system changes slowly relative to the control
+rate, the RTI scheme tracks the optimal solution with bounded error.
+
+\begin{designbox}
+MPC unifies the offline trajectory optimization of this chapter with the online feedback
+requirements of real systems. The computational loop---linearize, solve Riccati, apply
+control, re-linearize---is exactly the tangent-space methodology of this book, executed
+in real time. Modern implementations on embedded hardware achieve cycle times of 1--10~ms
+for systems with $n \leq 50$ states and $N \leq 100$ horizon steps, making MPC practical
+for robotics, automotive, and aerospace applications.
+\end{designbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
