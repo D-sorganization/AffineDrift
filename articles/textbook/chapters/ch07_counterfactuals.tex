@@ -1031,6 +1031,86 @@ physical interpretations, and the regimes in which they apply.}
 \label{tab:ch7:summary}
 \end{table}
 
+\section{Example: Counterfactual Analysis of a Multisegment Swing}
+
+The golf swing provides a compelling example of the counterfactual framework because it
+exhibits all three drift--control regimes within a single motion lasting roughly one
+second. We sketch how the ZTCF, ZVCF, and drift--control ratio apply to a simplified
+kinematic chain (e.g., shoulder, elbow, wrist), noting that concrete numerical
+predictions require a calibrated biomechanical model with experimentally validated
+segment parameters.
+
+\subsection{Qualitative ZTCF Structure}
+
+At each instant during the swing, the ZTCF (Definition~\ref{def:ch7:ZTCF}) answers:
+\emph{what would happen if the golfer released all muscular effort?} The qualitative
+behavior follows directly from the equations of this chapter:
+
+\begin{enumerate}
+\item \textbf{Early motion (low velocity):} The drift field $f(\x)$ is dominated by
+      $a_{\text{grav}} = -M(\q)^{-1}\vec{g}(\q)$, which is small when the segments
+      are near their resting configuration. The ZTCF trajectory barely moves, so
+      $\|\x(t) - \x^{(0)}(t)\|$ (the gap between actual and passive motion) is large.
+      All motion is attributable to active control: $\rho \ll 1$.
+
+\item \textbf{Transition (direction reversal):} Near the top of the backswing, the
+      system passes through a low-velocity state. The ZTCF from this point
+      is dominated by gravitational acceleration pulling the arms back down---closely
+      resembling the actual trajectory. The gap $\|\x - \x^{(0)}\|$ is small.
+
+\item \textbf{Fast phase (high velocity):} As velocities grow, the Coriolis term
+      $a_{\text{cor}} = -M(\q)^{-1}C(\q,\dot\q)\dot\q$ dominates the drift because
+      it scales as $\dot\q^2$. The ZTCF closely tracks the actual trajectory:
+      removing control barely changes the motion because the available muscle torque
+      $\|G(\x)\uvec_{\max}\|$ is small compared to $\|f(\x)\|$. The drift--control
+      ratio satisfies $\rho \gg 1$.
+\end{enumerate}
+
+This qualitative pattern---large ZTCF divergence early, small divergence late---follows
+from the velocity scaling of the drift--control ratio (Eq.~\ref{eq:ch7:DCR-scaling})
+and holds for any multisegment mechanical system with bounded actuator torques.
+
+\subsection{Structural Argument: Why Active Torque is Negligible at Impact}
+
+The argument is structural and does not depend on specific parameter values.
+For a mechanical system with state $\x = (\q, \dot\q)$ and input torque $\tau$,
+the control contribution to acceleration is:
+\begin{equation}
+a_{\text{control}} = M(\q)^{-1} B(\q)\,\tau,
+\end{equation}
+which is bounded by
+\begin{equation}
+\|a_{\text{control}}\| \leq \|M(\q)^{-1} B(\q)\| \cdot \|\tau_{\max}\|.
+\end{equation}
+
+Meanwhile, the centrifugal acceleration from the drift scales as:
+\begin{equation}
+\|a_{\text{cor}}\| \sim \|M(\q)^{-1} C(\q,\dot\q)\dot\q\| \sim O(\|\dot\q\|^2).
+\end{equation}
+
+Since $\|\tau_{\max}\|$ is bounded (physiological or actuator limits) while
+$\|\dot\q\|$ grows during acceleration phases, there necessarily exists a velocity
+threshold $\dot{q}^*$ beyond which $\|a_{\text{cor}}\| \gg \|a_{\text{control}}\|$,
+i.e., $\rho(\x) \gg 1$. For fast athletic motions such as throwing, striking, or
+swinging, this threshold is typically reached well before the moment of peak velocity.
+
+\begin{intuitionbox}
+The ZTCF analysis captures a principle recognized in biomechanics: in fast
+ballistic movements, active muscular contribution is concentrated early, while the
+late phase is governed by passive inertial dynamics. The counterfactual framework
+gives this observation a precise mathematical formulation via the drift--control ratio
+$\rho(\x)$ and the ZTCF divergence $\|\x(t) - \x^{(0)}(t)\|$.
+\end{intuitionbox}
+
+\begin{warningbox}
+Any numerical predictions of ZTCF divergence, phase timings, or drift--control
+ratios depend on the specific segment masses, lengths, inertias, and torque
+capacities of the system under study. These must be obtained from experimental
+measurements (e.g., motion capture combined with inverse dynamics). The structural
+argument above holds generically, but the quantitative details are model-dependent.
+\end{warningbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
@@ -1087,3 +1167,46 @@ This chapter has established that the drift--input decomposition is not merely a
 causal framework for understanding, predicting, and attributing motion. The counterfactual machinery---ZTCF,
 ZVCF, and their energy interpretations---transforms abstract dynamics into actionable engineering insight:
 what would happen without control, and therefore what the controller must actually accomplish.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{ZTCF of a simple system.}
+      For $\ddot{x} + x^3 = u$ (Duffing oscillator), compute the ZTCF starting from
+      $(x_0, \dot{x}_0) = (1, 0)$. Plot the actual trajectory under $u = -2x$ and the
+      ZTCF side by side. Compute $\rho(t)$.
+
+\item \textbf{ZVCF computation.}
+      For the same system, compute the ZVCF at $t = 0$. Compare the ZVCF acceleration
+      with the full acceleration. In what regime does gravity dominate?
+
+\item \textbf{Drift-control ratio scaling.}
+      For the double pendulum of the worked example, show analytically that $\rho \propto
+      \|\dot\q\|^2 / \|\uvec\|$ when Coriolis forces dominate. What happens when $\|\dot\q\|
+      \to 0$?
+
+\item \textbf{Energy decomposition.}
+      For a 2-DOF system with known mass matrix, decompose the total kinetic energy change
+      $\Delta T = \int \dot\q^T \tau\,dt$ into drift and control contributions. Verify the
+      identity $\Delta T = W_{\text{drift}} + W_{\text{control}}$.
+
+\item \textbf{Data-driven drift estimation.}
+      Generate simulated data from a known pendulum system under random inputs. Estimate
+      the drift acceleration using the SINDy-type procedure from Section~\ref{sec:ch7:data-driven}.
+      Compare with the analytical drift.
+
+\item \textbf{Contraction of the drift.}
+      Compute the drift Jacobian for the undamped double pendulum at several configurations.
+      Where is the drift contracting? Where is it expanding? Relate to the physical
+      behavior of the system.
+
+\item \textbf{Sensitivity counterfactual.}
+      For the pendulum, compute $\frac{\partial \x(t_f)}{\partial \uvec(t_0)}$ using the
+      sensitivity STM. Which initial torque direction has the largest effect on the
+      terminal state?
+
+\item \textbf{Attribution in a 3-link chain.}
+      For a 3-DOF chain (torso--arm--forearm), compute the off-diagonal mass matrix terms
+      $M_{ij}$ and the inertial torques $\tau_{\text{inertial}, j}$ during a prescribed
+      deceleration of the torso. Which link receives the most inertial energy?
+\end{enumerate}

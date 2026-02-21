@@ -838,6 +838,204 @@ same rate---a scenario that contraction explicitly rules out.
 \end{remark}
 
 
+\section{Contraction in Biomechanical Systems}
+
+The theory of contraction metrics finds a natural and powerful application in the
+biomechanics of human movement. This section previews how the formal machinery developed
+above connects to the analysis and design of coordinated multisegment motions, with
+particular attention to the golf swing.
+
+\subsection{Why Biological Motor Systems are Naturally Contracting}
+
+The human neuromuscular system implements contraction through several mechanisms that
+operate at different time scales:
+
+\begin{enumerate}
+\item \textbf{Muscle impedance (passive contraction):} Skeletal muscles exhibit intrinsic
+      viscoelastic properties. Even without neural activation, a stretched muscle generates
+      a restoring force proportional to its displacement and a damping force proportional
+      to its velocity. In the language of this chapter, the Jacobian of the passive
+      dynamics has negative eigenvalues at equilibrium---the muscle constitutes a natural
+      contraction metric in joint space.
+
+\item \textbf{Stretch reflex (active contraction):} The spinal stretch reflex provides
+      fast ($\sim$40 ms) feedback that resists perturbations. This is a feedback controller
+      that increases the contraction rate beyond the passive baseline. In our framework,
+      the reflex effectively modifies $\mat{A}_{\text{cl}} = \mat{A} - G\mat{K}_{\text{reflex}}$,
+      where $\mat{K}_{\text{reflex}}$ is the reflex gain.
+
+\item \textbf{Co-contraction (metric shaping):} When a person stiffens a joint by
+      simultaneously activating agonist and antagonist muscles, they are effectively
+      increasing the eigenvalues of the contraction metric in the directions of that joint.
+      This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
+      co-contraction shapes the metric to provide stronger contraction where needed.
+\end{enumerate}
+
+\begin{intuitionbox}
+A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
+but energetically expensive controller. An expert golfer selectively stiffens only the
+joints that need contraction at each phase, creating a time-varying metric
+$\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. The transition from
+novice to expert is, in part, the learning of the optimal contraction metric.
+\end{intuitionbox}
+
+\subsection{Partial Contraction in Sequential Motion}
+
+The golf swing is a prime example of a hierarchically structured system where partial
+contraction (Theorem~\ref{thm:ch4:partial}) applies. The kinematic chain
+$\text{torso} \to \text{shoulder} \to \text{elbow} \to \text{wrist} \to \text{club}$
+exhibits a natural partitioning:
+
+\begin{itemize}
+\item The proximal segments (torso, shoulder) are heavily muscled and contract rapidly.
+      Their contraction rate $\lambda_{\text{proximal}}$ is high.
+\item The distal segments (wrist, club) have less muscular authority. Their contraction
+      rate $\lambda_{\text{distal}}$ is lower, and the club shaft (being passive) does
+      not contract at all without feedback.
+\item Partial contraction theory guarantees that if the proximal subsystem contracts,
+      and the distal subsystem contracts when driven by a fixed proximal trajectory,
+      then the overall chain contracts at rate
+      $\lambda = \min(\lambda_{\text{proximal}}, \lambda_{\text{distal}})$.
+\end{itemize}
+
+This hierarchical structure explains why elite golfers focus on consistency of the
+proximal chain (stable torso rotation, repeatable shoulder turn): if the proximal
+subsystem is highly contracting, the distal response is automatically regularized.
+
+\subsection{Contraction and the Drift--Dominated Phase}
+
+During the late downswing, the system enters a drift-dominated regime
+(Chapter~\ref{ch:counterfactuals}). The muscular torques become negligible compared
+to centrifugal and Coriolis forces. In this regime, the contraction properties of the
+\emph{drift field} determine whether the motion is stable:
+
+\begin{enumerate}
+\item If the drift Jacobian has eigenvalues with negative real parts (natural damping),
+      the uncontrolled trajectory is contracting. This is the ``natural stability''
+      of the late downswing.
+\item If the drift Jacobian has eigenvalues with positive real parts (instability),
+      perturbations grow exponentially. At impact, even small deviations from the
+      intended trajectory can produce large clubface errors.
+\item The contraction rate of the drift determines the ``forgiveness'' of the swing:
+      a highly contracting drift absorbs perturbations, while a weakly contracting or
+      expanding drift amplifies them.
+\end{enumerate}
+
+\begin{designbox}
+The practical design principle for swing optimization is: use the controllable early
+phases (backswing, transition) to steer the system into a region of state space where
+the drift field is naturally contracting. This is the control-theoretic formalization
+of the coaching advice ``set up the swing so the physics does the work.''
+
+The contraction metric provides a quantitative tool: at each configuration, one can
+compute whether the drift is contracting (and at what rate) via the symmetric part
+of the drift Jacobian. Configurations where $\sym(\frac{\partial f}{\partial \x})$
+has uniformly negative eigenvalues are ``safe zones'' where the swing is inherently
+stable. The optimal trajectory passes through these zones during the critical
+impact phase.
+\end{designbox}
+
+
+\section{Stochastic Contraction}
+
+Real systems are subject to process noise, sensor noise, and unmodeled disturbances. This
+section extends contraction theory to stochastic settings, providing convergence guarantees
+in the presence of randomness.
+
+\subsection{Systems with Brownian Perturbations}
+
+Consider the stochastic differential equation (SDE):
+\begin{equation}
+\dd\x = f(\x, t)\,\dd t + \sigma(\x, t)\,\dd\vec{W},
+\label{eq:ch4:sde}
+\end{equation}
+where $\vec{W}(t)$ is a standard Wiener process and $\sigma(\x, t) \in \R^{n \times p}$ is
+the diffusion matrix. The deterministic contraction condition
+$\sym(\mat{M}\tfrac{\partial f}{\partial \x}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}$
+must be augmented to account for the noise.
+
+\subsection{The Stochastic Contraction Condition}
+
+\begin{theorem}[Stochastic Contraction --- adapted from Pham, Tabuada, and Slotine]
+\label{thm:ch4:stochastic-contraction}
+Consider two solutions $\x_1(t), \x_2(t)$ of~\eqref{eq:ch4:sde} with different initial
+conditions but the same noise realization. If the deterministic contraction condition
+holds with rate $\lambda$, then the expected squared distance satisfies:
+\begin{equation}
+\E\!\left[\|\x_1(t) - \x_2(t)\|_{\mat{M}}^2\right]
+\leq e^{-2\lambda(t-t_0)} \E\!\left[\|\x_1(t_0) - \x_2(t_0)\|_{\mat{M}}^2\right]
++ \frac{C_\sigma}{\lambda},
+\label{eq:ch4:stochastic-bound}
+\end{equation}
+where $C_\sigma$ depends on the diffusion coefficient $\sigma$ and the metric $\mat{M}$.
+\end{theorem}
+
+The bound~\eqref{eq:ch4:stochastic-bound} shows that contraction dominates at large
+separations (exponential decay), while noise dominates at small separations (the
+$C_\sigma / \lambda$ floor). The steady-state expected separation is
+$\sqrt{C_\sigma / \lambda}$: faster contraction (larger $\lambda$) produces tighter
+concentration of trajectories.
+
+\subsection{Connection to Uncertainty Propagation}
+
+The stochastic contraction bound has a direct interpretation for state estimation
+(Chapter~\ref{ch:duality}). If an observer is contracting with rate $\lambda$, and the
+process noise has intensity $C_\sigma$, then the estimation error is bounded in
+expectation by $\sqrt{C_\sigma / \lambda}$. This provides a performance guarantee for
+nonlinear observers that the EKF cannot offer.
+
+\begin{designbox}
+For practical controller design, the stochastic contraction bound suggests a design
+trade-off: increasing the contraction rate $\lambda$ (e.g., by increasing feedback gains)
+reduces the noise floor $\sqrt{C_\sigma / \lambda}$ but requires more control effort.
+The optimal trade-off depends on the noise intensity and the available actuator authority.
+\end{designbox}
+
+
+\section{Contraction Tubes and Funnel Control}
+
+The exponential convergence guarantee of contraction theory naturally defines a
+\emph{tube} around the nominal trajectory: the set of all states that are guaranteed
+to converge to the nominal at rate $\lambda$.
+
+\subsection{The Contraction Tube}
+
+Given a contracting system with rate $\lambda$ and metric $\mat{M}$, define the tube
+of radius $r$ around a nominal trajectory $\bar\x(t)$:
+\begin{equation}
+\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar\x(t)\|_{\mat{M}(t)} \leq r \right\}.
+\label{eq:ch4:tube}
+\end{equation}
+
+If $\x(t_0) \in \mathcal{T}_{r_0}(t_0)$, then $\x(t) \in \mathcal{T}_{r(t)}(t)$ with
+$r(t) = r_0 e^{-\lambda(t - t_0)}$ for the unperturbed system, and
+$r(t) = r_0 e^{-\lambda(t - t_0)} + d/\lambda$ for bounded disturbances with
+$\|w(t)\|_{\mat{M}} \leq d$.
+
+\subsection{Funnel Control}
+
+Funnel control prescribes a time-varying performance boundary $\varphi(t) > 0$
+(the ``funnel'') and designs a gain that guarantees the tracking error satisfies
+$\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
+
+\begin{itemize}
+\item The funnel boundary $\varphi(t)$ defines the desired tube radius.
+\item A contracting controller with rate $\lambda \geq -\dot\varphi / \varphi$
+      guarantees that trajectories remain within the funnel.
+\item The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
+      control achieves this by increasing gain as the error approaches the boundary.
+\end{itemize}
+
+\begin{intuitionbox}
+Contraction tubes formalize the intuition that ``nearby trajectories stay nearby.''
+For trajectory tracking in robotics or biomechanics, the tube radius at impact time
+tells you the worst-case deviation from the planned motion. The condition number
+$\kappa(\mat{M})$ determines the shape of the tube: isotropic metrics give circular
+tubes; anisotropic metrics give ellipsoidal tubes that are tight in sensitive directions
+and loose in insensitive ones.
+\end{intuitionbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
@@ -895,3 +1093,50 @@ same rate---a scenario that contraction explicitly rules out.
 In the next chapter, we turn to \textbf{input-output analysis} and transfer functions,
 exploring how tangent-space methods interface with frequency-domain techniques for
 feedback design.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Contraction of a linear system.}
+      For $\dot\x = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
+      find the contraction rate using the identity metric $\mat{M} = \mat{I}$. Then find a
+      diagonal metric $\mat{M} = \text{diag}(m_1, m_2)$ that maximizes the contraction rate.
+
+\item \textbf{LMI feasibility.}
+      For the system $\dot\x = f(\x) + g(\x)u$ with
+      $f = (-x_1 + x_2^2,\; -2x_2)^T$ and $g = (0, 1)^T$, formulate the LMI condition
+      for finding a constant contraction metric $\mat{M}$ and rate $\lambda > 0$
+      (with $u = -kx_2$). Solve it for $k = 1$.
+
+\item \textbf{Partial contraction.}
+      For a cascade system $\dot{x}_1 = -x_1 + x_2^2$, $\dot{x}_2 = -2x_2 + u$,
+      verify partial contraction: show that the $x_2$-subsystem contracts independently,
+      and the $x_1$-subsystem contracts when $x_2(t)$ is treated as a known input.
+      What is the overall contraction rate?
+
+\item \textbf{CCM computation.}
+      For the single-input system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1^3 + u$,
+      search for a CCM by parameterizing $\mat{W}(\x) = \mat{M}(\x)^{-1}$ as a polynomial
+      in $\x$ and solving the pointwise LMI condition.
+
+\item \textbf{Discrete-time contraction.}
+      Show that the discrete system $\x_{k+1} = \mat{A}\x_k$ is contracting if and only if
+      $\|\mat{A}\|_{\mat{M}} < 1$ for some positive definite $\mat{M}$. What is the
+      contraction rate in terms of $\|\mat{A}\|_{\mat{M}}$?
+
+\item \textbf{Stochastic contraction bound.}
+      For the scalar SDE $\dd x = -\lambda x \,\dd t + \sigma \,\dd W$ with $\lambda > 0$,
+      compute the steady-state variance $\E[x^2]$ exactly. Verify that it equals
+      $\sigma^2 / (2\lambda)$, consistent with the bound in Theorem~\ref{thm:ch4:stochastic-contraction}.
+
+\item \textbf{Tube computation.}
+      For the system in Exercise 1 with bounded disturbance $\|w\| \leq d = 0.1$,
+      compute the contraction tube radius $r(t)$ for $r_0 = 1$. At what time $t^*$
+      does the tube radius reach twice the steady-state radius?
+
+\item \textbf{Biological contraction.}
+      Consider a simplified muscle model: $\dot{x} = -kx - b\dot{x} + F(t)$ where
+      $k > 0$ (stiffness) and $b > 0$ (damping). Show this is contracting and compute
+      the contraction rate as a function of $k$ and $b$. Relate to the co-contraction
+      mechanism described in the biomechanics section.
+\end{enumerate}

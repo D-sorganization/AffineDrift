@@ -294,9 +294,133 @@ $C(\q,\dot\q)$ & Coriolis/centrifugal matrix \\
 $\vec{g}(\q)$ & Generalized gravity vector \\
 $J(\q)$ & Jacobian (task or constraint) \\
 $\preceq, \succeq$ & Matrix inequality (Loewner order) \\
+$[f, g]$ & Lie bracket of vector fields $f$ and $g$ \\
+$L_f h$ & Lie derivative of $h$ along $f$ \\
+$\mat{P}(t)$ & Estimation error covariance matrix \\
+$\mat{L}(t)$ & Observer (Kalman) gain \\
+$\mathcal{W}_o$ & Observability Gramian \\
+$H(\x)$ & Hamiltonian (total energy) \\
+$J(\x), R(\x)$ & Port-Hamiltonian interconnection and dissipation matrices \\
+$\rho(t)$ & Drift--control ratio \\
+$\varphi(t)$ & Funnel boundary \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+
+%% ---------- Appendices ----------
+\appendix
+
+\chapter{Differential Geometry Primer}
+\label{app:diffgeo}
+
+This appendix collects the key definitions from differential geometry used throughout the
+text. The presentation is deliberately concrete; for full generality, see
+do~Carmo~\cite{doCarmo1992} or Abraham and Marsden~\cite{AbrahamMarsden1978}.
+
+\section{Smooth Manifolds}
+
+A \emph{smooth manifold} $\mathcal{M}$ of dimension $n$ is a topological space that locally
+looks like $\R^n$. Formally, it is equipped with an atlas of charts $\{(U_\alpha, \phi_\alpha)\}$
+where each $U_\alpha \subset \mathcal{M}$ is open and $\phi_\alpha: U_\alpha \to \R^n$ is a
+homeomorphism, with smooth transition maps $\phi_\beta \circ \phi_\alpha^{-1}$ on overlaps.
+
+\textbf{Examples used in this book:}
+\begin{itemize}
+\item $\R^n$ (state space of most control systems)
+\item $S^1$ (circle; configuration space of a revolute joint)
+\item $\mathbb{T}^n = (S^1)^n$ (torus; configuration space of an $n$-joint robot)
+\item SO(3) (rotation group; attitude of a rigid body)
+\item SE(3) (rigid-body pose: rotation + translation)
+\end{itemize}
+
+\section{Tangent Spaces and Tangent Bundles}
+
+The \emph{tangent space} $T_p\mathcal{M}$ at a point $p \in \mathcal{M}$ is the vector space
+of all tangent vectors at $p$. It can be defined as the set of equivalence classes of curves
+through $p$, or as the set of derivations on smooth functions at $p$. In either case,
+$T_p\mathcal{M} \cong \R^n$.
+
+The \emph{tangent bundle} $T\mathcal{M} = \bigcup_{p \in \mathcal{M}} T_p\mathcal{M}$ is itself
+a smooth manifold of dimension $2n$. A point in $T\mathcal{M}$ is a pair $(p, v)$ with
+$p \in \mathcal{M}$ and $v \in T_p\mathcal{M}$. For mechanical systems, $T\mathcal{M}$ is the
+\emph{state space} $(\q, \dot\q)$.
+
+\section{Vector Fields and Flows}
+
+A \emph{vector field} $f$ on $\mathcal{M}$ assigns a tangent vector $f(p) \in T_p\mathcal{M}$
+to each point $p$. In coordinates, $f = (f_1(\x), \ldots, f_n(\x))^T$. The ODE
+$\dot\x = f(\x)$ defines the \emph{flow} $\varphi_t: \mathcal{M} \to \mathcal{M}$, which maps
+initial conditions to their time-$t$ images.
+
+\section{Riemannian Metrics}
+
+A \emph{Riemannian metric} on $\mathcal{M}$ is a smoothly varying inner product
+$\langle \cdot, \cdot \rangle_p$ on each tangent space $T_p\mathcal{M}$. In coordinates,
+it is represented by a positive-definite matrix $\mat{G}(p)$:
+\[
+\langle v, w \rangle_p = v^T \mat{G}(p) w.
+\]
+For mechanical systems, the mass matrix $M(\q)$ is a Riemannian metric on configuration space.
+The contraction metric $\mat{M}(\x)$ of Chapter~\ref{ch:contraction} is a Riemannian metric on
+state space.
+
+
+\chapter{Linear Algebra for Control}
+\label{app:linalg}
+
+\section{Matrix Inequalities and the Loewner Order}
+
+For symmetric matrices $\mat{A}, \mat{B} \in \R^{n \times n}$, we write:
+\begin{itemize}
+\item $\mat{A} \succ 0$ ($\mat{A}$ is \emph{positive definite}): $v^T\mat{A}v > 0$ for all $v \neq 0$.
+\item $\mat{A} \succeq 0$ ($\mat{A}$ is \emph{positive semidefinite}): $v^T\mat{A}v \geq 0$ for all $v$.
+\item $\mat{A} \succeq \mat{B}$: $\mat{A} - \mat{B} \succeq 0$.
+\end{itemize}
+
+\textbf{Key property:} The set of positive semidefinite matrices forms a \emph{convex cone}.
+This is why LMI-based searches for contraction metrics (Chapter~\ref{ch:contraction}) are
+convex optimization problems.
+
+\section{Schur Complement}
+
+For a block matrix $\mat{M} = \begin{bmatrix} \mat{A} & \mat{B} \\ \mat{B}^T & \mat{C} \end{bmatrix}$
+with $\mat{C} \succ 0$:
+\begin{equation}
+\mat{M} \succ 0 \quad \Leftrightarrow \quad \mat{A} - \mat{B}\mat{C}^{-1}\mat{B}^T \succ 0.
+\end{equation}
+The matrix $\mat{A} - \mat{B}\mat{C}^{-1}\mat{B}^T$ is the \emph{Schur complement} of $\mat{C}$
+in $\mat{M}$. This identity is used extensively in Riccati equation derivations
+(Chapters~\ref{ch:optimal-control} and~\ref{ch:duality}) and in the mass matrix decomposition
+for flexible systems (Chapter~\ref{ch:applications}).
+
+\section{Singular Value Decomposition}
+
+Every matrix $\mat{A} \in \R^{m \times n}$ has an SVD: $\mat{A} = \mat{U}\mat{\Sigma}\mat{V}^T$,
+where $\mat{U}$ and $\mat{V}$ are orthogonal and $\mat{\Sigma}$ is diagonal with non-negative
+entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$. The SVD is used in this book for:
+\begin{itemize}
+\item Analyzing the STM $\Phi(t_1, t_0)$: singular values quantify amplification of
+      perturbations (Chapter~\ref{ch:variational}).
+\item Impact sensitivity analysis: singular values of $J_{\text{impact}} \cdot C \cdot \Phi$
+      reveal the most sensitive perturbation directions (Chapter~\ref{ch:applications}).
+\item Condition number $\kappa(\mat{A}) = \sigma_1/\sigma_n$: measures sensitivity to
+      perturbations.
+\end{itemize}
+
+\section{Matrix Exponential}
+
+For $\mat{A} \in \R^{n \times n}$, the matrix exponential is:
+\[
+e^{\mat{A}t} = \sum_{k=0}^\infty \frac{(\mat{A}t)^k}{k!}.
+\]
+It satisfies $\frac{\dd}{\dd t} e^{\mat{A}t} = \mat{A} e^{\mat{A}t}$ and is the state
+transition matrix for LTI systems: $\Phi(t, t_0) = e^{\mat{A}(t-t_0)}$.
+
+\textbf{Caution:} For time-varying $\mat{A}(t)$, $\Phi(t, t_0) \neq e^{\int_{t_0}^t \mat{A}(s)\,\dd s}$
+in general. Equality holds only when $[\mat{A}(t_1), \mat{A}(t_2)] = 0$ for all $t_1, t_2$
+(Theorem~\ref{thm:ch2:magnus-condition}).
+
 
 %% ---------- Bibliography ----------
 \begin{thebibliography}{99}
@@ -403,6 +527,36 @@ Birkh\"auser.
 Abraham, R. and Marsden, J.~E. (1978).
 \textit{Foundations of Mechanics} (2nd ed.).
 Benjamin/Cummings.
+
+\bibitem{Kalman1960}
+Kalman, R.~E. (1960).
+A new approach to linear filtering and prediction problems.
+\textit{J.\ Basic Engineering}, 82(1):35--45.
+
+\bibitem{RawlingsMayne2009}
+Rawlings, J.~B. and Mayne, D.~Q. (2009).
+\textit{Model Predictive Control: Theory and Design}.
+Nob Hill Publishing.
+
+\bibitem{vanderSchaft2000}
+van~der~Schaft, A.~J. (2000).
+\textit{L$_2$-Gain and Passivity Techniques in Nonlinear Control} (2nd ed.).
+Springer.
+
+\bibitem{HairerLubichWanner2006}
+Hairer, E., Lubich, C., and Wanner, G. (2006).
+\textit{Geometric Numerical Integration} (2nd ed.).
+Springer.
+
+\bibitem{AndreuPraly2009}
+Andrieu, V., Praly, L., and Astolfi, A. (2009).
+High gain observers with updated gain and homogeneous correction terms.
+\textit{Automatica}, 45(2):422--428.
+
+\bibitem{PhamTabuadaSlotine2009}
+Pham, Q.-C., Tabuada, P., and Slotine, J.-J.~E. (2009).
+A contraction theory approach to stochastic incremental stability.
+\textit{IEEE Trans.\ Automatic Control}, 54(4):816--820.
 
 \end{thebibliography}
 

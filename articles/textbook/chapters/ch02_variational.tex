@@ -1095,6 +1095,90 @@ once they are in a neighborhood of the optimum.
 \end{remark}
 
 
+\section{Structure-Preserving Numerical Integration}
+
+The numerical methods discussed in Section~\ref{sec:ch2:numerical-stm} (Runge--Kutta
+methods, Padé approximants) are general-purpose. For specific classes of systems---particularly
+Hamiltonian mechanical systems and systems evolving on Lie groups---specialized integrators
+that preserve geometric structure can dramatically improve accuracy and long-term behavior.
+
+\subsection{Why Structure Preservation Matters}
+
+Consider a Hamiltonian system with $H(\q, \vec{p}) = T(\vec{p}) + V(\q)$. The continuous
+dynamics preserve the Hamiltonian ($\dot{H} = 0$), the symplectic form, and phase-space
+volume (Liouville's theorem, Section~\ref{sec:ch2:liouville}). A generic Runge--Kutta
+integrator preserves \emph{none} of these. Over long simulations, this manifests as:
+\begin{itemize}
+\item \textbf{Energy drift}: the numerically computed energy $H(\q_k, \vec{p}_k)$ drifts
+      monotonically upward or downward, even though the true energy is constant.
+\item \textbf{Phase-space expansion}: trajectories spiral outward in phase space,
+      destroying the qualitative behavior of the system.
+\item \textbf{Broken symmetries}: conservation laws (angular momentum, for instance)
+      are violated, leading to unphysical trajectories.
+\end{itemize}
+
+For short simulations (a single golf downswing at 0.5 s), these effects are typically
+negligible. For repeated simulations, parameter sweeps, or optimization loops that
+iterate many times, accumulation of drift can corrupt the results.
+
+\subsection{Symplectic Integrators}
+
+A symplectic integrator is a numerical scheme that preserves the symplectic 2-form
+$\dd\q \wedge \dd\vec{p}$. The simplest example is the \emph{symplectic Euler} method:
+\begin{align}
+\vec{p}_{k+1} &= \vec{p}_k - h \frac{\partial V}{\partial \q}(\q_k), \label{eq:ch2:symplectic-euler-p} \\
+\q_{k+1} &= \q_k + h \frac{\partial T}{\partial \vec{p}}(\vec{p}_{k+1}). \label{eq:ch2:symplectic-euler-q}
+\end{align}
+
+The key property: the map $(\q_k, \vec{p}_k) \mapsto (\q_{k+1}, \vec{p}_{k+1})$ has
+Jacobian with determinant exactly 1 (for all step sizes $h$), preserving phase-space
+volume exactly. Symplectic integrators do not conserve energy exactly, but the energy
+error remains bounded for all time (it oscillates rather than drifting).
+
+Higher-order symplectic methods (Störmer--Verlet, Yoshida compositions) achieve $O(h^p)$
+accuracy while maintaining the symplectic property.
+
+\subsection{Lie Group Integrators}
+
+When the state space includes rotation groups (SO(3) for rigid-body attitude, SE(3) for
+pose), standard integrators that parameterize rotations via Euler angles or quaternions
+face singularities or constraint drift. Lie group integrators work directly on the group:
+
+\begin{enumerate}
+\item Compute the velocity in the Lie algebra $\mathfrak{g}$ (tangent space at the identity).
+\item Integrate in $\mathfrak{g}$ using standard methods.
+\item Map back to the group via the exponential map: $R_{k+1} = R_k \cdot \exp(\omega_k \, h)$.
+\end{enumerate}
+
+This guarantees that $R_{k+1} \in \text{SO}(3)$ exactly (no normalization or re-projection
+needed). The Crouch-Grossman and Munthe-Kaas methods provide systematic frameworks for
+constructing Lie group integrators of arbitrary order.
+
+\subsection{Variational Integrators}
+
+Variational integrators derive the discrete equations of motion from a discrete
+variational principle (discrete Hamilton's principle) rather than discretizing the
+continuous equations. The resulting integrator automatically preserves the symplectic
+structure and momentum maps.
+
+For the discrete Lagrangian $L_d(\q_k, \q_{k+1}) \approx \int_{t_k}^{t_{k+1}} L(\q, \dot\q) \, \dd t$,
+the discrete Euler-Lagrange equations yield:
+\begin{equation}
+D_2 L_d(\q_{k-1}, \q_k) + D_1 L_d(\q_k, \q_{k+1}) = 0,
+\label{eq:ch2:discrete-euler-lagrange}
+\end{equation}
+which implicitly defines $\q_{k+1}$ given $\q_{k-1}$ and $\q_k$.
+
+\begin{designbox}
+For trajectory optimization and DDP (Chapter~\ref{ch:optimal-control}), variational
+integrators have a specific advantage: the STM $\Phi$ computed from the variational
+integrator inherits the symplectic structure. This means the sensitivities used in the
+Riccati recursion are geometrically consistent, improving convergence of the optimization.
+For systems on Lie groups (robotics, spacecraft), the combination of Lie group integration
+with variational principles provides a fully structure-preserving computational framework.
+\end{designbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
@@ -1160,3 +1244,47 @@ trajectory while respecting the local geometry. This perspective connects classi
 differential geometry and is essential for understanding advanced topics like Riemannian optimization,
 geometric tracking control, and neural network training dynamics.
 \end{designbox}
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{STM of a linear system.}
+      For the LTI system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -\omega^2 & -2\zeta\omega \end{bmatrix}$
+      (damped harmonic oscillator), compute $\Phi(t, 0) = e^{\mat{A}t}$ analytically using eigenvalue
+      decomposition. Verify the semigroup property $\Phi(t_2, 0) = \Phi(t_2, t_1)\Phi(t_1, 0)$.
+
+\item \textbf{Peano-Baker truncation error.}
+      For the system in Exercise 1, compute the first three terms of the Peano-Baker
+      series~\eqref{eq:ch2:peano-baker}. Estimate the truncation error at $t = 1$ and compare
+      with the exact exponential.
+
+\item \textbf{Liouville's formula.}
+      Verify Liouville's formula (Theorem~\ref{thm:ch2:liouville}) for the 2D system
+      $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 - 0.1 x_2$ by computing both $\det\Phi(t, 0)$
+      directly and $\exp(\int_0^t \trace\mat{A}(s)\,\dd s)$.
+
+\item \textbf{Sensitivity of a nonlinear system.}
+      For the Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$,
+      compute the variational equation along the trajectory starting from $(x_0, \dot{x}_0) = (2, 0)$.
+      Integrate the STM numerically for one period. What do the singular values of $\Phi$ reveal?
+
+\item \textbf{Input sensitivity.}
+      For the control-affine system $\dot\x = \mat{A}\x + \mat{B}\uvec$ with $\mat{A}$, $\mat{B}$
+      from the pendulum example in Section~\ref{sec:ch2:pendulum-example}, use the variation of
+      constants formula to compute the response to a unit pulse input $\uvec(t) = \delta(t - t_0)$.
+
+\item \textbf{Symplectic integrator comparison.}
+      Implement both RK4 and the symplectic Euler method for the undamped pendulum
+      $\ddot\theta + \sin\theta = 0$. Integrate for 1000 periods. Plot the energy $H(\theta, \dot\theta)$
+      as a function of time for both methods. Explain the qualitative difference.
+
+\item \textbf{Discrete-time STM.}
+      For the discrete system $\x_{k+1} = \mat{A}_k \x_k$ with $\mat{A}_k$ periodic
+      ($\mat{A}_{k+N} = \mat{A}_k$), express the one-period STM as a product. What is the
+      relationship between the eigenvalues of this product and the stability of the system?
+
+\item \textbf{Magnus expansion.}
+      For a time-varying $\mat{A}(t) = \mat{A}_0 + \varepsilon \mat{A}_1 \sin(\omega t)$,
+      compute the first-order Magnus expansion and compare with the Peano-Baker series
+      at $t = 2\pi/\omega$. Under what conditions does the Magnus expansion converge faster?
+\end{enumerate}

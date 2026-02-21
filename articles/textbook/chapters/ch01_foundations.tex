@@ -467,27 +467,43 @@ r(\delta x) = \sin(\delta x) - \delta x.
 
 \begin{table}[h]
 \centering
-\caption{Residual scaling for $f(x) = \sin(x)$ at $\bar{x} = 0$ with linear approximation $\hat{f} = x$.}
+\caption{Residual scaling for $f(x) = \sin(x)$ at $\bar{x} = 0$ with linear approximation $\hat{f} = x$.
+Because $f''(0) = -\sin(0) = 0$, the residual is $O(\delta x^3)$, not $O(\delta x^2)$.}
 \label{tab:ch1:sin-residual}
-\begin{tabular}{@{}rcccc@{}}
+\begin{tabular}{@{}rccccc@{}}
 \toprule
-$\delta x$ & $\sin(\delta x)$ & Linear: $\delta x$ & Residual & $r(\delta x) / (\delta x)^2$ \\
+$\delta x$ & $\sin(\delta x)$ & Linear: $\delta x$ & Residual $r$ & $r / (\delta x)^2$ & $r / (\delta x)^3$ \\
 \midrule
-$0.1$ & $0.099833$ & $0.1$ & $-0.000167$ & $-16.7$ \\
-$0.05$ & $0.049979$ & $0.05$ & $-0.000021$ & $-8.4$ \\
-$0.01$ & $0.0099998$ & $0.01$ & $-0.00000017$ & $-1.67$ \\
-$0.001$ & $0.0009999998$ & $0.001$ & $-1.7 \times 10^{-10}$ & $-0.167$ \\
+$0.1$   & $0.0998334$ & $0.1$   & $-1.666 \times 10^{-4}$ & $-0.01666$  & $-0.1666$ \\
+$0.01$  & $0.0099998$ & $0.01$  & $-1.667 \times 10^{-7}$ & $-0.001667$ & $-0.1667$ \\
+$0.001$ & $0.001000$  & $0.001$ & $-1.667 \times 10^{-10}$ & $-0.000167$ & $-0.1667$ \\
+$0.0001$& $0.000100$  & $0.0001$& $-1.667 \times 10^{-13}$ & $-0.0000167$& $-0.1667$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The ratio $r(\delta x) / (\delta x)^2$ approaches a constant as $\delta x \to 0$. (Specifically,
-$\lim_{\delta x \to 0} r(\delta x) / (\delta x)^2 = -f''(0)/2 = -\sin(0)/2 = 0$; the
-theoretical constant is $-1/6$ from the Taylor series $\sin(\delta x) = \delta x - (\delta x)^3/6 + \cdots$,
-so the residual is $-(\delta x)^3 / 6 + \cdots$, giving $r / (\delta x)^2 \to 0$ as shown.)
+\begin{warningbox}
+This example is deliberately instructive. The function $\sin(x)$ has $f''(0) = -\sin(0) = 0$,
+so the second-order residual bound $\norm{r(\dx)} \leq \tfrac{1}{2}C_H\norm{\dx}^2$
+(Eq.~\eqref{eq:ch1:residual-bound}) still holds---it is simply a loose bound in this case.
+The \emph{actual} residual is $r(\delta x) = -(\delta x)^3/6 + O(\delta x^5)$ from the
+Taylor series $\sin(\delta x) = \delta x - (\delta x)^3/6 + \cdots$.
 
-This table demonstrates the Fréchet property in action: the residual shrinks like $O(\norm{\dx}^2)$,
-confirming that the linear term captures the exact first-order behavior.
+The column $r/(\delta x)^3 \to -1/6 \approx -0.1667$ confirms cubic scaling. The column
+$r/(\delta x)^2 \to 0$ shows that the $O(\delta x^2)$ bound is satisfied but not tight.
+This illustrates a general principle: \emph{the Fréchet property guarantees
+$o(\norm{\dx})$ residuals; the actual rate depends on the local curvature tensor}.
+When curvature vanishes (flat directions), the residual shrinks even faster than the bound suggests.
+\end{warningbox}
+
+For a function with nonzero second derivative---such as $f(x) = \cos(x)$ at $\bar{x} = 0$, where
+$f''(0) = -1$---the residual \emph{is} quadratic: $r(\delta x) = -(\delta x)^2/2 + O(\delta x^4)$,
+and the ratio $r/(\delta x)^2 \to -1/2$ exactly. The general bound
+\eqref{eq:ch1:residual-bound} is tight whenever $f''(\bar{x}) \neq 0$.
+
+The practical lesson: the residual quantifies curvature. Zero residual at second order means
+the manifold is locally ``flatter than expected''---which happens precisely at inflection
+points and other geometrically special configurations.
 
 \subsection{Two Perspectives on Linearization}
 
@@ -880,3 +896,111 @@ terminal costs handled via their residual geometry.
 The journey from foundations (this chapter) to applications (later chapters) is one of increasing
 structure and pragmatism: we leverage the exactness of the tangent space to build algorithms
 that are both conceptually clear and computationally efficient.
+
+
+\section{Preview: Why These Ideas Matter for the Golf Swing}
+
+Before proceeding to the formal theory, it is worth previewing how the foundations of this
+chapter connect to the book's primary application domain: the biomechanics of the golf swing.
+This preview is deliberately non-technical; the full mathematical treatment appears in
+Chapter~\ref{ch:applications}.
+
+\begin{laymansbox}
+A golfer's swing is a chain of rotating body segments---torso, arms, wrists, club---that
+accelerates a clubhead to high speed and launches a ball. The physics is ferociously
+nonlinear: centrifugal forces grow as the square of rotational speed, the club shaft
+bends and rebounds elastically, and the mass distribution changes as the golfer's posture
+evolves. Yet at each instant, the tangent-space picture gives us an exact local model of
+how small changes propagate.
+\end{laymansbox}
+
+\subsection{The Golfer's Tangent Space}
+
+At any instant during the downswing, the golfer's state is a point on a high-dimensional
+manifold: joint angles, angular velocities, shaft bending amplitudes, and their rates.
+The tangent space at this point is the space of all infinitesimal variations---a slightly
+different wrist angle, a marginally faster shoulder rotation, a small change in shaft flex.
+
+By Axiom~1, the Jacobian at this point is the \emph{exact} description of how these small
+variations evolve over the next instant. By Axiom~2, these variations add as vectors.
+A small wrist perturbation and a small shoulder perturbation evolve independently at
+first order, even though the full nonlinear swing couples them through centrifugal and
+Coriolis forces.
+
+\subsection{Curvature as a Diagnostic}
+
+The residual---the gap between tangent-space prediction and actual evolution---measures
+the ``curvature'' of the swing manifold. During the early backswing, velocities are low
+and the dynamics are nearly linear (small residual). During the late downswing, when
+the clubhead is moving at high speed, centrifugal forces dominate and the residual becomes
+large. This is not a failure of the theory; it is a geometric signal that the system
+is passing through a high-curvature region.
+
+Practically, this means:
+\begin{itemize}
+\item Controllers (biological or engineered) that linearize once and hold the gain
+      constant work well in the backswing but deteriorate in the downswing.
+\item Iterative methods (DDP, iLQR) that re-linearize at each time step
+      naturally adapt to the changing curvature.
+\item The transition from ``control-dominated'' to ``drift-dominated'' dynamics
+      (Chapter~\ref{ch:counterfactuals}) is precisely the transition from small
+      to large residuals.
+\end{itemize}
+
+\subsection{Transport and the Kinematic Chain}
+
+Axiom~4 (transport) is especially vivid in the golf swing. As the club sweeps through
+a large arc, the tangent space rotates and stretches. The state transition
+matrix $\Phi(t_1, t_0)$ maps perturbations at one phase of the swing to perturbations at
+another. A small error in wrist lag at the top of the backswing may amplify into a large
+clubface angle error at impact---or it may be ``washed out'' by the dynamics. The
+eigenvalues of $\Phi$ tell us which scenario applies.
+
+This is the deep connection between the abstract mathematics of this chapter and the
+practical question every golfer cares about: \emph{which aspects of technique are
+forgiving, and which are critical}? Tangent-space analysis provides a principled,
+quantitative answer.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Fréchet derivative computation.}
+      Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
+      Verify that the residual $\|f(\bar\x + \dx) - f(\bar\x) - Df(\bar\x)\dx\| = O(\|\dx\|^2)$
+      by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
+
+\item \textbf{Residual scaling table.}
+      Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
+      $f(x) = e^x$ at $\bar{x} = 0$. Compute $r/(\delta x)^2$ for $\delta x = 0.1, 0.01, 0.001, 0.0001$.
+      What value does the ratio converge to? Relate this to the Taylor series of $e^x$.
+
+\item \textbf{Tangent space of SO(3).}
+      The rotation group SO(3) consists of $3 \times 3$ orthogonal matrices with determinant 1.
+      Using the constraint $R^T R = I$, show that the tangent space at $R = I$ consists of
+      skew-symmetric matrices. What is the dimension of this tangent space?
+
+\item \textbf{Tangent space of a torus.}
+      The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
+      Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
+      the tangent space is ``flat'' even though the torus is curved.
+
+\item \textbf{When linearization is not an approximation.}
+      Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
+      at $\bar{x} = 0$. In what sense is this linearization ``exact''? In what sense is it ``approximate''?
+      Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
+
+\item \textbf{Curvature and residual.}
+      For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order
+      residual behavior. Construct a scaling table to verify. Compare with the $\sin(x)$ example
+      in the text.
+
+\item \textbf{Connection (Axiom 3).}
+      For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
+      the Jacobian $A(\bar\x)$ at three different equilibria: $\bar\x = (0,0)$, $(\pi, 0)$,
+      and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
+
+\item \textbf{Programming exercise.}
+      Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar\x$, computes the
+      Fréchet derivative numerically using finite differences. Test it on the pendulum
+      system from Exercise 7. Compare with the analytical Jacobian.
+\end{enumerate}

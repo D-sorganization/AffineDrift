@@ -1021,6 +1021,135 @@ The duality requires several conditions:
 \end{enumerate}
 \end{warningbox}
 
+\section{The Estimation--Control Duality}
+
+The duality developed so far connects stability to optimality on the \emph{control} side.
+But the Riccati equation has a mirror image: the \emph{estimation} Riccati, which
+determines how uncertainty propagates through the system and how observations reduce it.
+This section develops the estimation side of the duality.
+
+\subsection{The Dual Riccati Equation}
+
+Consider the system with process noise and output measurement:
+\begin{align}
+\dot\x &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
+\vec{y} &= \mat{C}(t)\x + v, \label{eq:ch6:measurement}
+\end{align}
+where $w \sim \mathcal{N}(0, \mat{W})$ and $v \sim \mathcal{N}(0, \mat{V})$ are process
+and measurement noise. The \emph{estimation Riccati equation} governs the covariance
+$\mat{P}(t)$ of the optimal (Kalman) state estimate:
+\begin{equation}
+\dot{\mat{P}} = \mat{A}\mat{P} + \mat{P}\mat{A}^T + \mat{G}_w \mat{W} \mat{G}_w^T
+- \mat{P}\mat{C}^T \mat{V}^{-1} \mat{C}\mat{P}.
+\label{eq:ch6:estimation-riccati}
+\end{equation}
+
+Compare with the control Riccati:
+\begin{equation}
+-\dot{\mat{S}} = \mat{A}^T\mat{S} + \mat{S}\mat{A} + \mat{Q}
+- \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^T\mat{S}.
+\label{eq:ch6:control-riccati-recall}
+\end{equation}
+
+The duality is exact: the estimation Riccati for $(\mat{A}, \mat{C}, \mat{W}, \mat{V})$
+is the control Riccati for $(\mat{A}^T, \mat{C}^T, \mat{G}_w \mat{W} \mat{G}_w^T, \mat{V})$.
+The estimation gain $\mat{L} = \mat{P}\mat{C}^T\mat{V}^{-1}$ is the dual of the control
+gain $\mat{K} = \mat{R}^{-1}\mat{B}^T\mat{S}$.
+
+\subsection{The Extended Kalman Filter as Tangent-Space Estimation}
+
+For nonlinear systems $\dot\x = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
+propagates the state estimate and covariance using the tangent-space (linearized) dynamics:
+\begin{align}
+\dot{\hat\x} &= f(\hat\x) + G(\hat\x)\uvec
++ \mat{L}(t)\bigl(\vec{y} - h(\hat\x)\bigr), \label{eq:ch6:ekf-state} \\
+\dot{\mat{P}} &= \mat{A}(t)\mat{P} + \mat{P}\mat{A}(t)^T + \mat{G}_w \mat{W} \mat{G}_w^T
+- \mat{P}\mat{C}(t)^T \mat{V}^{-1} \mat{C}(t)\mat{P}, \label{eq:ch6:ekf-cov}
+\end{align}
+where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat\x(t)}$ and
+$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat\x(t)}$.
+
+\begin{intuitionbox}
+The EKF is the estimation analogue of DDP: both linearize the system along a trajectory
+(the estimated trajectory for EKF, the nominal trajectory for DDP) and solve a Riccati
+equation in the tangent space. The key difference is the direction of information flow:
+DDP propagates \emph{cost} backward (from the terminal condition); the EKF propagates
+\emph{uncertainty} forward (from the initial condition).
+\end{intuitionbox}
+
+\subsection{Contraction-Based Observer Design}
+
+The EKF has no convergence guarantees for nonlinear systems---the estimate may diverge
+if the linearization is poor. Contraction theory provides a rigorous alternative.
+
+An observer $\dot{\hat\x} = f(\hat\x) + G(\hat\x)\uvec + L(\hat\x)(\vec{y} - h(\hat\x))$
+is a \emph{contracting observer} if the observer error dynamics
+$\dot{e} = \dot\x - \dot{\hat\x}$ are contracting in some metric $\mat{M}(\x)$:
+\begin{equation}
+\sym\left(\mat{M} \left[\frac{\partial f}{\partial \x} - L(\x)\frac{\partial h}{\partial \x}\right]\right)
++ \dot{\mat{M}} \preceq -2\lambda \mat{M}.
+\label{eq:ch6:contracting-observer}
+\end{equation}
+
+This is precisely the contraction condition of Chapter~\ref{ch:contraction}, applied to
+the observer error dynamics. The observer gain $L(\x)$ plays the same role as the
+feedback gain $\mat{K}$ in control contraction metrics: it shapes the closed-loop
+dynamics to achieve contraction.
+
+\begin{theorem}[Observer-Controller Duality]
+\label{thm:ch6:observer-duality}
+The observer design problem --- find $L(\x)$ such that~\eqref{eq:ch6:contracting-observer}
+holds --- is the \emph{dual} of the controller design problem via the substitutions
+$\mat{A} \leftrightarrow \mat{A}^T$, $\mat{B} \leftrightarrow \mat{C}^T$,
+$\mat{K} \leftrightarrow L^T$. A contraction metric for the observer is a contraction
+metric for the dual controller, and vice versa.
+\end{theorem}
+
+\subsection{The Observability Gramian}
+
+The observability Gramian $\mathcal{W}_o(t_0, t_1)$ quantifies how much information the
+output $\vec{y}$ reveals about the initial state $\x(t_0)$:
+\begin{equation}
+\mathcal{W}_o(t_0, t_1) = \int_{t_0}^{t_1} \Phi(s, t_0)^T \mat{C}(s)^T \mat{C}(s) \Phi(s, t_0) \, \dd s,
+\label{eq:ch6:obs-gramian}
+\end{equation}
+where $\Phi$ is the state transition matrix from Chapter~\ref{ch:variational}.
+
+The system is \emph{observable} on $[t_0, t_1]$ if $\mathcal{W}_o \succ 0$. The
+eigenvectors of $\mathcal{W}_o$ reveal the most and least observable state directions;
+the condition number $\kappa(\mathcal{W}_o)$ measures the anisotropy of observability.
+
+\begin{warningbox}
+For the golf swing application (Chapter~\ref{ch:applications}), the observability
+Gramian reveals which state variables can be reliably estimated from sensor measurements.
+Joint angles near the shoulder are typically well-observed (multiple muscle attachments
+create redundant signals); wrist angular velocity and shaft bending are poorly observed
+(few sensors, high velocity). The condition number of $\mathcal{W}_o$ quantifies this
+anisotropy.
+\end{warningbox}
+
+\subsection{The Separation Principle}
+
+When both observer and controller are available, the celebrated \emph{separation principle}
+allows independent design:
+
+\begin{theorem}[Separation Principle]
+\label{thm:ch6:separation}
+For linear time-invariant systems, the optimal controller using estimated states
+$\uvec = -\mat{K}\hat\x$ achieves the same closed-loop eigenvalues as the full-state
+feedback $\uvec = -\mat{K}\x$, with additional eigenvalues from the observer error
+dynamics. The controller gain $\mat{K}$ and observer gain $\mat{L}$ can be designed
+independently.
+\end{theorem}
+
+For nonlinear systems, the separation principle does not hold in general. However,
+when both the controller and observer are designed via contraction metrics, the
+overall system (controller + observer) contracts at a rate determined by the
+\emph{minimum} of the controller and observer contraction rates:
+$\lambda_{\text{overall}} \geq \min(\lambda_{\text{control}}, \lambda_{\text{observer}})$.
+This is a practical nonlinear extension of the separation principle.
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
@@ -1060,3 +1189,46 @@ The duality requires several conditions:
 This chapter has shown that optimality and stability are not independent concerns but two facets of a single geometric
 object. The Riccati matrix, solved once, provides both the controller and the robustness certificate. This is the power
 of duality: one computation, two major objectives accomplished.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Value decrease identity.}
+      For the discrete pendulum in the worked example, verify the value decrease identity
+      numerically: compute $V_{k+1} - V_k$ and $-\dx_k^T(\mat{Q} + \mat{K}^T\mat{R}\mat{K})\dx_k$
+      and confirm equality.
+
+\item \textbf{Robustness margins.}
+      For the continuous-time system $\dot{x} = ax + bu$ with LQR weights $Q = 1$, $R = 1$,
+      compute the gain margin and phase margin as functions of $a$ and $b$. Verify the
+      theoretical bounds $[1/2, \infty)$ and $\geq 60°$.
+
+\item \textbf{Dual Riccati.}
+      For the system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -1 & -0.1 \end{bmatrix}$,
+      $\mat{C} = [1, 0]$, $W = 0.1$, $V = 1$, solve the estimation ARE for $\mat{P}$.
+      Compare with the control ARE for $(\mat{A}^T, \mat{C}^T, W, V)$.
+
+\item \textbf{Condition number and convergence.}
+      For the 2D system in the worked example, vary $\mat{Q}$ from $0.1\mat{I}$ to $100\mat{I}$
+      while keeping $\mat{R} = \mat{I}$. Plot $\kappa(\mat{S})$ and the contraction rate
+      $\lambda$ as functions of $\|\mat{Q}\|$. Explain the observed relationship.
+
+\item \textbf{EKF implementation.}
+      Implement the EKF for the nonlinear pendulum $\ddot\theta + \sin\theta = u + w$
+      with measurement $y = \theta + v$. Compare the estimated trajectory with the true
+      trajectory for different noise levels.
+
+\item \textbf{Observability Gramian.}
+      For the linearized pendulum at the upright equilibrium, compute the observability
+      Gramian $\mathcal{W}_o(0, T)$ for $T = 1, 5, 10$. How does its condition number
+      change? What does this imply about the observability of the system?
+
+\item \textbf{H$\infty$ vs LQR.}
+      Solve both the LQR and H$\infty$ Riccati equations for the double integrator with
+      disturbance input. Compare the resulting contraction rates and gain magnitudes.
+
+\item \textbf{Separation principle verification.}
+      For the discrete pendulum, implement the separated controller (LQR gain) and
+      observer (Kalman gain). Verify that the closed-loop eigenvalues are the union
+      of the controller and observer eigenvalues.
+\end{enumerate}
