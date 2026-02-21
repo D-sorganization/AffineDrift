@@ -1,0 +1,409 @@
+%% ==========================================================================
+%%  SUPERPOSITION, CONTRACTION, AND THE GEOMETRY OF MOTION
+%%  A Textbook on Tangent-Space Methods for Nonlinear Dynamics and Control
+%%  Author: Dieter Olson
+%% ==========================================================================
+\documentclass[11pt,letterpaper,openany]{book}
+
+%% ---------- Page geometry ----------
+\usepackage[margin=1in,headheight=14pt]{geometry}
+
+%% ---------- Fonts and encoding ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% ---------- Mathematics ----------
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+
+%% ---------- Graphics and figures ----------
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.markings,positioning}
+
+%% ---------- Tables ----------
+\usepackage{booktabs}
+\usepackage{array}
+
+%% ---------- Lists ----------
+\usepackage{enumitem}
+
+%% ---------- Algorithms (lightweight replacement) ----------
+\usepackage{float}
+\newfloat{algorithm}{htbp}{loa}
+\floatname{algorithm}{Algorithm}
+\newenvironment{algorithmic}[1][]{\begin{enumerate}[label=\arabic*:,leftmargin=2em]}{\end{enumerate}}
+\newcommand{\STATE}{\item}
+\newcommand{\State}{\item}
+\newcommand{\REQUIRE}{\item[\textbf{Require:}]}
+\newcommand{\Require}{\item[\textbf{Require:}]}
+\newcommand{\ENSURE}{\item[\textbf{Ensure:}]}
+\newcommand{\Ensure}{\item[\textbf{Ensure:}]}
+\newcommand{\FOR}[1]{\item \textbf{for} #1 \textbf{do}}
+\newcommand{\For}[1]{\item \textbf{for} #1 \textbf{do}}
+\newcommand{\ENDFOR}{\item \textbf{end for}}
+\newcommand{\EndFor}{\item \textbf{end for}}
+\newcommand{\IF}[1]{\item \textbf{if} #1 \textbf{then}}
+\newcommand{\If}[1]{\item \textbf{if} #1 \textbf{then}}
+\newcommand{\ELSE}{\item \textbf{else}}
+\newcommand{\Else}{\item \textbf{else}}
+\newcommand{\ENDIF}{\item \textbf{end if}}
+\newcommand{\EndIf}{\item \textbf{end if}}
+\newcommand{\WHILE}[1]{\item \textbf{while} #1 \textbf{do}}
+\newcommand{\While}[1]{\item \textbf{while} #1 \textbf{do}}
+\newcommand{\ENDWHILE}{\item \textbf{end while}}
+\newcommand{\EndWhile}{\item \textbf{end while}}
+\newcommand{\RETURN}[1]{\item \textbf{return} #1}
+\newcommand{\Return}[1]{\item \textbf{return} #1}
+
+%% ---------- Headers and footers ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\itshape\leftmark}
+\fancyhead[RO]{\small\itshape\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%% ---------- Hyperlinks ----------
+\usepackage[hidelinks,bookmarksnumbered]{hyperref}
+\hypersetup{
+  pdftitle={Superposition, Contraction, and the Geometry of Motion},
+  pdfauthor={Dieter Olson},
+  pdfsubject={Tangent-space methods for nonlinear dynamics and control},
+  pdfkeywords={contraction theory, tangent hyperplanes, superposition,
+               affine systems, LQR, DDP, Riccati, biomechanics, robotics}
+}
+
+%% ---------- Colored boxes for remarks, intuition, etc. ----------
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{intuitionbox}[1][]{%
+  colback=blue!5!white,
+  colframe=blue!60!black,
+  fonttitle=\bfseries,
+  title={Geometric Intuition},
+  #1
+}
+
+\newtcolorbox{laymansbox}[1][]{%
+  colback=green!5!white,
+  colframe=green!50!black,
+  fonttitle=\bfseries,
+  title={In Plain Language},
+  #1
+}
+
+\newtcolorbox{warningbox}[1][]{%
+  colback=red!5!white,
+  colframe=red!60!black,
+  fonttitle=\bfseries,
+  title={Common Misconception},
+  #1
+}
+
+\newtcolorbox{designbox}[1][]{%
+  colback=orange!5!white,
+  colframe=orange!60!black,
+  fonttitle=\bfseries,
+  title={Design Implication},
+  #1
+}
+
+\newtcolorbox{axiombox}[1][]{%
+  colback=violet!5!white,
+  colframe=violet!60!black,
+  fonttitle=\bfseries,
+  title={#1},
+}
+
+%% ---------- Theorem environments ----------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%% ---------- Custom commands ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\newcommand{\T}{\mathsf{T}}   % transpose
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\SE}{\mathrm{SE}}
+\newcommand{\ad}{\mathrm{ad}}
+
+%% Bold vectors and matrices
+\renewcommand{\vec}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\x}{\vec{x}}
+\newcommand{\q}{\vec{q}}
+\newcommand{\uvec}{\vec{u}}
+\newcommand{\y}{\vec{y}}
+\newcommand{\dx}{\delta\vec{x}}
+\newcommand{\du}{\delta\vec{u}}
+\newcommand{\dq}{\delta\vec{q}}
+\newcommand{\xx}{\mathbf{x}\mathbf{x}}
+\newcommand{\uu}{\mathbf{u}\mathbf{u}}
+\newcommand{\xu}{\mathbf{x}\mathbf{u}}
+
+%% Operators
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\sym}{sym}
+\DeclareMathOperator{\skewpart}{skew}
+\newcommand{\dt}{\dd t}
+
+%% ---------- Chapter style ----------
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+%% ==========================================================================
+\begin{document}
+
+%% ---------- Title page ----------
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+
+{\Huge\bfseries Superposition, Contraction,\\[6pt]
+and the Geometry of Motion\par}
+
+\vspace{1.5cm}
+
+{\Large\itshape Tangent-Space Methods for Nonlinear\\[4pt]
+Dynamics and Control\par}
+
+\vspace{3cm}
+
+{\Large Dieter Olson\par}
+
+\vspace{2cm}
+
+{\large\itshape
+A unified treatment of how exact local linearity,\\[4pt]
+contraction metrics, and optimal control\\[4pt]
+share a common geometric foundation.\par}
+
+\vfill
+
+{\large Draft Edition --- \today\par}
+\end{titlepage}
+
+%% ---------- Front matter ----------
+\frontmatter
+
+%% Epigraph / Dedication
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\begin{minipage}{0.7\textwidth}
+\centering
+\itshape
+``Every nonlinear system is locally linear---not approximately, but exactly.
+The art of control is navigating between these exact local pictures.''
+
+\vspace{0.5cm}
+--- The Tangent Hyperplane Manifesto
+\end{minipage}
+\end{center}
+\vspace*{\fill}
+\newpage
+
+%% Preface
+\chapter{Preface}
+
+This book grew from a simple observation that proved surprisingly difficult to articulate cleanly: \emph{superposition is exact in tangent spaces}. Not approximately true. Not ``good enough for small perturbations.'' Exact---by the definition of what a tangent space is.
+
+That observation is not new mathematics. Calculus established it centuries ago. What is new is the insistence that control theory, dynamics, and engineering practice should fully internalize what calculus already proved. When we linearize a nonlinear system, we are not making an approximation. We are computing the exact infinitesimal structure of the dynamics at a point. The approximation enters only when we step away from that point---and even then, the error is not sloppiness but geometry: the curvature of the manifold.
+
+This book develops that perspective systematically. We show that contraction theory, trajectory optimization (LQR, DDP, MPC), and the decomposition of motion into drift and control all rest on the same geometric foundation: \emph{tangent-space dynamics with a metric}.
+
+The treatment is aimed at graduate students and practicing engineers who have encountered linearization, Lyapunov stability, and optimal control as separate topics and want to see them unified. We assume familiarity with linear algebra, multivariable calculus, and ordinary differential equations. Differential geometry is introduced as needed, always paired with physical intuition.
+
+Every chapter follows a consistent structure: a qualitative framing of why the material matters, a plain-language explanation, a geometric intuition box, and then the formal development. This is deliberate. The mathematics must be rigorous, but the reader should always know \emph{why} a calculation is being done before seeing \emph{how}.
+
+A word on notation: we are deliberately explicit. Every matrix dimension, every smoothness assumption, every domain restriction is stated. This is not pedantry---it is the scaffolding that prevents the subtle errors that plague ``hand-wavy'' treatments of linearization and superposition.
+
+\vspace{1cm}
+\hfill\textit{Dieter Olson}\\
+\hfill\textit{February 2026}
+
+%% Table of contents
+\tableofcontents
+
+%% ---------- Main matter ----------
+\mainmatter
+
+%% Include chapters
+\include{chapters/ch01_foundations}
+\include{chapters/ch02_variational}
+\include{chapters/ch03_superposition}
+\include{chapters/ch04_contraction}
+\include{chapters/ch05_optimal_control}
+\include{chapters/ch06_duality}
+\include{chapters/ch07_counterfactuals}
+\include{chapters/ch08_applications}
+
+%% ---------- Back matter ----------
+\backmatter
+
+\chapter{Notation Reference}
+
+\begin{center}
+\begin{tabular}{lp{10cm}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$\x = (\q, \dot\q)$ & State vector (generalized coordinates and velocities) \\
+$\uvec \in \R^m$ & Control input vector \\
+$f(\x)$ & Drift vector field (passive dynamics) \\
+$G(\x)$ or $g_i(\x)$ & Input (control) vector fields \\
+$\mat{A}(t)$ & State Jacobian $\partial f/\partial x$ along nominal trajectory \\
+$\mat{B}(t)$ & Input Jacobian $\partial(Gu)/\partial u$ along nominal trajectory \\
+$\mat{M}(\x,t) \succ 0$ & Contraction metric (positive definite) \\
+$\mat{S}_t$ & Riccati (cost-to-go curvature) matrix \\
+$\mat{K}_t$ & Feedback gain matrix \\
+$\mat{Q}_t \succeq 0$ & State cost weight \\
+$\mat{R}_t \succ 0$ & Input cost weight \\
+$\Phi(t_1, t_0)$ & State transition matrix \\
+$T_{\bar\x}\mathcal{M}$ & Tangent space at $\bar\x$ on manifold $\mathcal{M}$ \\
+$\dx, \du$ & Infinitesimal perturbations in state and input \\
+$\lambda > 0$ & Contraction rate \\
+$H(\q)$ or $M(\q)$ & Mass/inertia matrix of mechanical system \\
+$C(\q,\dot\q)$ & Coriolis/centrifugal matrix \\
+$\vec{g}(\q)$ & Generalized gravity vector \\
+$J(\q)$ & Jacobian (task or constraint) \\
+$\preceq, \succeq$ & Matrix inequality (Loewner order) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ---------- Bibliography ----------
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\bibitem{LohmillerSlotine1998}
+Lohmiller, W. and Slotine, J.-J.~E. (1998).
+On contraction analysis for non-linear systems.
+\textit{Automatica}, 34(6):683--696.
+
+\bibitem{ManchesterSlotine2017}
+Manchester, I.~R. and Slotine, J.-J.~E. (2017).
+Control contraction metrics: Convex and intrinsic criteria for nonlinear feedback design.
+\textit{IEEE Trans.\ Automatic Control}, 62(6):3046--3053.
+
+\bibitem{BulloContraction}
+Bullo, F. (2024).
+\textit{Contraction Theory for Dynamical Systems}.
+Kindle Direct Publishing.
+
+\bibitem{Khalil2002}
+Khalil, H.~K. (2002).
+\textit{Nonlinear Systems} (3rd ed.).
+Prentice Hall.
+
+\bibitem{SlotineLi1991}
+Slotine, J.-J.~E. and Li, W. (1991).
+\textit{Applied Nonlinear Control}.
+Prentice Hall.
+
+\bibitem{Sastry1999}
+Sastry, S. (1999).
+\textit{Nonlinear Systems: Analysis, Stability, and Control}.
+Springer.
+
+\bibitem{Isidori1995}
+Isidori, A. (1995).
+\textit{Nonlinear Control Systems} (3rd ed.).
+Springer.
+
+\bibitem{Murray1994}
+Murray, R.~M., Li, Z., and Sastry, S.~S. (1994).
+\textit{A Mathematical Introduction to Robotic Manipulation}.
+CRC Press.
+
+\bibitem{Featherstone2008}
+Featherstone, R. (2008).
+\textit{Rigid Body Dynamics Algorithms}.
+Springer.
+
+\bibitem{Spong2006}
+Spong, M.~W., Hutchinson, S., and Vidyasagar, M. (2006).
+\textit{Robot Modeling and Control}.
+Wiley.
+
+\bibitem{BulloLewis2004}
+Bullo, F. and Lewis, A.~D. (2004).
+\textit{Geometric Control of Mechanical Systems}.
+Springer.
+
+\bibitem{Khatib1987}
+Khatib, O. (1987).
+A unified approach for motion and force control of robot manipulators:
+The operational space formulation.
+\textit{IEEE J.\ Robotics and Automation}, 3(1):43--53.
+
+\bibitem{Boyd1994}
+Boyd, S., El~Ghaoui, L., Feron, E., and Balakrishnan, V. (1994).
+\textit{Linear Matrix Inequalities in System and Control Theory}.
+SIAM.
+
+\bibitem{Mayne1966}
+Mayne, D.~Q. (1966).
+A second-order gradient method for determining optimal trajectories
+of non-linear discrete-time systems.
+\textit{Int.\ J.\ Control}, 3(1):85--95.
+
+\bibitem{TodorovJordan2002}
+Todorov, E. and Jordan, M.~I. (2002).
+Optimal feedback control as a theory of motor coordination.
+\textit{Nature Neuroscience}, 5(11):1226--1235.
+
+\bibitem{Tedrake2009}
+Tedrake, R. (2009).
+LQR-Trees: Feedback motion planning on sparse randomized trees.
+\textit{Robotics: Science and Systems}.
+
+\bibitem{JouffroySlotine2004}
+Jouffroy, J. and Slotine, J.-J.~E. (2004).
+Methodological remarks on contraction theory.
+In \textit{Proc.\ 43rd IEEE Conf.\ Decision and Control}, pp.\ 2537--2543.
+
+\bibitem{Greenwood2003}
+Greenwood, D.~T. (2003).
+\textit{Advanced Dynamics}.
+Cambridge University Press.
+
+\bibitem{doCarmo1992}
+do~Carmo, M.~P. (1992).
+\textit{Riemannian Geometry}.
+Birkh\"auser.
+
+\bibitem{AbrahamMarsden1978}
+Abraham, R. and Marsden, J.~E. (1978).
+\textit{Foundations of Mechanics} (2nd ed.).
+Benjamin/Cummings.
+
+\end{thebibliography}
+
+\end{document}
