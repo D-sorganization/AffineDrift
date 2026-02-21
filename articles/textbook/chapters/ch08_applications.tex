@@ -101,6 +101,13 @@ M_{33} = I_3 + m_3 l_3^2/4.
 
 \subsubsection{Numerical Example: Mid-Downswing Configuration}
 
+\begin{warningbox}
+The following numerical values are chosen for a representative 3-DOF swing model to
+illustrate the framework. They are order-of-magnitude consistent with published
+anthropometric data but are \emph{not} drawn from a specific experimental study.
+Any quantitative predictions for a real system must use measured segment parameters.
+\end{warningbox}
+
 At a representative mid-downswing state, let:
 \begin{align}
 q_1 &= 60°, \quad q_2 = -30°, \quad q_3 = -20°,
@@ -299,7 +306,8 @@ to control-induced acceleration magnitude:
 
 where $u^*$ is the optimal control derived from the Riccati solver.
 
-A swing naturally decomposes into four phases:
+A swing naturally decomposes into four qualitative phases (specific $\rho$ values
+are model-dependent and illustrative):
 
 \begin{table}[h]
 \centering
@@ -362,7 +370,7 @@ $\vec\eta$ are not directly controlled---they respond only through the inertial
 coupling $\Gamma$. This makes the golf swing an underactuated control problem.
 
 \paragraph{Drift dominance at impact.}
-By impact, clubhead speeds exceed 100~mph. The drift--control ratio $\rho \gg 1$:
+At impact, the clubhead is moving at high speed. The drift--control ratio $\rho \gg 1$:
 passive dynamics dominate. The practical implication is that the golfer's skill lies
 not in applying large forces at impact, but in \emph{setting up} the state during the
 backswing and early downswing so that the drift field naturally produces the desired
@@ -1386,33 +1394,176 @@ a_{\text{control}}(t) \approx \|G(\x^{\text{opt}}(t))\,\uvec^{\text{opt}}(t)\|.
 \end{equation}
 \end{enumerate}
 
-\paragraph{Example (golf swing):}
-Recording a professional golfer's swing with motion-capture markers (22 markers at joints),
-we estimate $\dot\q(t)$ and $\ddot\q(t)$ via numerical differentiation (3-point Savitzky--Golay filter).
-Using the segmental mass matrix with ID (inverse dynamics), we compute $a_{\text{drift}}$ and $a_{\text{control}}$.
-Results (Figure data):
+\paragraph{Example protocol (golf swing):}
+Given motion-capture data with joint markers, one can estimate $\dot\q(t)$ and $\ddot\q(t)$
+via filtered numerical differentiation (e.g., Savitzky--Golay). Combined with a segmental
+mass matrix from published anthropometric data, inverse dynamics yields the required
+acceleration decomposition. The expected qualitative behavior is:
+
+\begin{itemize}
+\item During the backswing (low velocity), $\rho$ should be small---the motion is
+      actively driven by muscle torques.
+\item During the transition, $\rho \approx 1$---gravitational and inertial forces
+      are comparable to muscular effort.
+\item During the downswing and impact (high velocity), $\rho$ should grow rapidly,
+      reflecting the quadratic scaling of Coriolis forces with angular velocity.
+\end{itemize}
+
+The specific numerical values of $\rho$ depend on the subject's anthropometry, swing
+timing, and torque production capacity, and must be determined from the data for
+each individual case.
+
+\subsection{Shaft Flexibility as an Uncontrolled Degree of Freedom}
+
+The golf club shaft is not a rigid rod; it is a flexible beam that stores and releases
+elastic energy during the swing. This flexibility introduces uncontrolled (but exploitable)
+degrees of freedom whose analysis fits naturally into the drift--input framework.
+
+\subsubsection{Modal Equations}
+
+Applying Euler--Bernoulli beam theory, the shaft bending is described by modal coordinates
+$\vec\eta = (\eta_1, \eta_2, \ldots)^T$, where only the first few modes carry significant
+energy. The modal equations of motion are:
+\begin{equation}
+M_{\eta\eta}\ddot{\vec\eta} + C_{\eta}\dot{\vec\eta} + K_{\eta}\vec\eta
+= -M_{\eta q}\ddot\q,
+\label{eq:ch8:shaft-modal}
+\end{equation}
+where $K_{\eta}$ is the modal stiffness matrix, $C_{\eta}$ is modal damping, and
+the right-hand side $-M_{\eta q}\ddot\q$ is the inertial forcing from joint accelerations.
+The shaft modes are driven entirely by the coupling term $M_{\eta q}$---they are
+underactuated degrees of freedom with no direct input.
+
+\subsubsection{Energy Storage and Release}
+
+The elastic energy in the shaft modes is
+\begin{equation}
+E_{\text{shaft}}(t) = \frac{1}{2}\vec\eta(t)^T K_\eta \vec\eta(t)
++ \frac{1}{2}\dot{\vec\eta}(t)^T M_{\eta\eta} \dot{\vec\eta}(t).
+\label{eq:ch8:shaft-energy}
+\end{equation}
+
+The energy flow is governed by the work done by the coupling forces:
+\begin{equation}
+\dot{E}_{\text{shaft}} = -\dot{\vec\eta}^T M_{\eta q}\ddot\q
+- \dot{\vec\eta}^T C_\eta \dot{\vec\eta}.
+\label{eq:ch8:shaft-power}
+\end{equation}
+
+When the handle accelerates ($\ddot\q$ large and aligned with the coupling $M_{\eta q}$),
+energy flows from the rigid segments into the shaft (loading). When the handle decelerates,
+energy flows back out (unloading), contributing to clubhead velocity at impact. The
+timing of this exchange depends on the relationship between modal natural frequencies
+$\omega_i = \sqrt{K_{\eta,ii} / M_{\eta\eta,ii}}$ and the swing's acceleration profile.
+
+\subsubsection{Shaft Stiffness as a Design Parameter}
+
+Shaft stiffness $K_s$ (graded in golf as L, A, R, S, X from softest to stiffest)
+controls the modal natural frequencies $\omega_i$. This has a direct interpretation
+in the drift--input framework:
+
+\begin{itemize}
+\item A \emph{stiffer} shaft (high $\omega_i$) responds quickly to handle acceleration.
+      The modal response is nearly in phase with the forcing, limiting the ``whip'' effect
+      but providing better control authority.
+\item A \emph{softer} shaft (low $\omega_i$) introduces a phase lag between handle forcing
+      and shaft response. If the natural frequency is well-matched to the swing's
+      acceleration profile, energy release can be timed to coincide with impact---but
+      mismatched timing degrades performance.
+\item In this framework, shaft fitting is an exercise in tuning the \emph{passive dynamics}
+      (drift field $f(\x)$) to align with the golfer's characteristic control profile.
+\end{itemize}
+
+\begin{warningbox}
+Quantitative predictions of shaft energy exchange (e.g., the fraction of clubhead
+speed attributable to shaft kick) require a calibrated model with measured segment
+parameters. Published values in the biomechanics literature vary depending on model
+fidelity and measurement technique. The equations above provide the framework for
+such predictions; the numbers must come from experiment.
+\end{warningbox}
+
+\subsection{Sensitivity Analysis at Impact}
+
+\subsubsection{Impact Variables and Output Sensitivity}
+
+Ball flight is determined by a small set of impact conditions---clubhead speed,
+clubface angle, club path, angle of attack, and strike location. The ball flight
+response to perturbations in these variables can be written as a linear map for
+small deviations:
+\begin{equation}
+\delta\vec{y}_{\text{ball}} = J_{\text{impact}} \cdot \delta\vec{z}_{\text{impact}},
+\label{eq:ch8:impact-sensitivity}
+\end{equation}
+where $\vec{y}_{\text{ball}}$ encodes ball flight outcomes (carry distance, lateral
+deviation, spin axis) and $\vec{z}_{\text{impact}}$ is the vector of impact conditions.
+The Jacobian $J_{\text{impact}}$ can be computed from physics-based ball flight models
+or estimated empirically from launch monitor data.
+
+\subsubsection{Composing with the State Transition Matrix}
+
+The state transition matrix $\Phi(t_{\text{impact}}, t_0)$ from
+Chapter~\ref{ch:variational} maps an initial perturbation $\delta\x_0$ to the
+impact-time perturbation $\delta\x_{\text{impact}}$. An output matrix
+$C_{\text{impact}}$ extracts impact variables from the full state. The end-to-end
+sensitivity is then:
+\begin{equation}
+\delta\vec{y}_{\text{ball}} = J_{\text{impact}} \cdot C_{\text{impact}} \cdot
+\Phi(t_{\text{impact}}, t_0) \cdot \delta\x_0.
+\label{eq:ch8:full-sensitivity}
+\end{equation}
+
+The singular value decomposition (SVD) of the composite matrix
+$J_{\text{impact}} \cdot C_{\text{impact}} \cdot \Phi(t_{\text{impact}}, t_0)$
+reveals the principal directions of sensitivity: which initial-state perturbations
+produce the largest changes in ball flight, and conversely, which perturbations
+are ``absorbed'' by the dynamics and produce negligible effects. This is the
+tangent-space formalization of the notion that some aspects of technique are
+critical while others are forgiving.
+
+\begin{warningbox}
+The specific entries of $J_{\text{impact}}$ and $\Phi$ are model-dependent and
+must be computed from a calibrated forward dynamics model with experimentally
+validated parameters. Claims about which swing variables are ``most sensitive''
+should be supported by such computations, not assumed a priori.
+\end{warningbox}
+
+\subsection{Conceptual Translation: Mathematics to Coaching}
+
+The mathematical framework developed in this textbook maps to concepts familiar
+in golf instruction and movement science. The following table provides a
+conceptual dictionary---not numerical predictions, but structural correspondences:
 
 \begin{table}[h]
 \centering
-\caption{Drift-control ratio during the golf swing, estimated from motion capture.}
-\label{tab:golf-rho-experimental}
-\begin{tabular}{@{}cccc@{}}
+\caption{Conceptual mapping between mathematical framework and coaching language.}
+\label{tab:ch8:math-coaching}
+\begin{tabular}{@{}p{4.5cm}p{5.5cm}p{4.5cm}@{}}
 \toprule
-Phase & Swing time (s) & $\rho^{\text{est}}$ (experimental) & $\rho^{\text{pred}}$ (theory) \\
+\textbf{Mathematical Concept} & \textbf{Physical Interpretation} & \textbf{Coaching Analogue} \\
 \midrule
-Backswing & $[0.0, 0.3]$ & $0.48 \pm 0.12$ & 0.50 \\
-Transition & $[0.3, 0.45]$ & $0.95 \pm 0.18$ & 1.00 \\
-Downswing & $[0.45, 0.95]$ & $4.8 \pm 0.6$ & 5.00 \\
-Impact & $[0.95, 1.0]$ & $18 \pm 3$ & 20.0 \\
+Drift field $f(\x)$ & Passive dynamics (gravity, inertia, elasticity) & ``Let the club do the work'' \\
+Input $G(\x)\uvec$ & Active muscle torques & ``Apply force at the right time'' \\
+$\rho \gg 1$ (drift-dominated) & Physics dominates muscles & ``Don't fight the swing'' \\
+$\rho \ll 1$ (control-dominated) & Muscles dominate physics & ``Set up the swing correctly'' \\
+Contraction rate $\lambda$ & Rate of error correction & ``Forgiveness'' of a motion \\
+Condition number $\kappa(\mat{S})$ & Anisotropy of error sensitivity & ``Tight vs.\ loose dispersion'' \\
+Off-diagonal $M_{ij}\ddot{q}_i$ & Inertial energy transfer between segments & ``Kinematic sequence'' \\
+ZTCF divergence & Gap between actual and passive motion & ``Efficiency'' \\
+Modal frequency $\omega_i$ & Timing of elastic energy release & ``Shaft flex matching'' \\
+Singular values of $\Phi$ & Amplification of initial errors & ``Repeatability'' \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The experimental estimates $\rho^{\text{est}}$ agree with the theoretical predictions $\rho^{\text{pred}}$
-within their uncertainty bands, confirming the drift--control decomposition's practical validity. The
-progressive increase in $\rho$ from backswing to impact reflects the fundamental physics: as angular
-velocities grow, Coriolis and centripetal accelerations (quadratic in $\dot\q$) dominate the linear
-muscle torques, and the system transitions from a control-dominated regime to a drift-dominated one.
+\begin{intuitionbox}
+The central structural insight is this: in a fast multisegment ballistic motion, the
+controllable phases (setup, early acceleration) determine the state from which the
+\emph{uncontrolled drift} produces the terminal conditions. Since $\rho$ grows with
+velocity squared while torque capacity is bounded, there is always a transition
+beyond which the drift dominates. Skill in such motions lies not in terminal-phase
+force production but in \emph{precision during the controllable early phases}, where
+small adjustments have large downstream effects through the state transition matrix $\Phi$.
+\end{intuitionbox}
 
 \begin{designbox}
 The experimental validation protocol above is general: for \textit{any} mechanical system with
@@ -1422,31 +1573,32 @@ This makes counterfactual analysis accessible even for complex systems where clo
 are impractical.
 \end{designbox}
 
-\subsection{Cross-Domain Validation Summary}
+\subsection{Cross-Domain Validation Methodology}
 
-Table~\ref{tab:ch8:cross-domain} summarizes the contraction rates and drift--control ratios
-validated across the four application domains of this chapter.
+The contraction rates and drift--control ratios discussed in this chapter can be validated
+experimentally across all four application domains using the protocol of the previous
+subsection. The expected qualitative signatures are:
 
-\begin{table}[h]
-\centering
-\caption{Cross-domain validation of contraction rates and drift--control ratios.}
-\label{tab:ch8:cross-domain}
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Domain & $\lambda_{\text{pred}}$ (s$^{-1}$) & $\lambda_{\text{obs}}$ (s$^{-1}$) & $\rho$ range & Regime \\
-\midrule
-Golf swing & $2.1$--$8.4$ & $1.9$--$7.8$ & $0.5$--$20$ & Drift-dominated (late) \\
-3-DOF manipulator & $3.2$ & $3.0 \pm 0.2$ & $0.2$--$1.5$ & Control-dominated \\
-Spacecraft docking & $0.015$ & $0.013 \pm 0.003$ & $0.1$--$0.8$ & Control-dominated \\
-Lane-keeping & $1.8$--$4.5$ & $1.6$--$4.1$ & $0.3$--$3.0$ & Mixed \\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{itemize}
+\item \textbf{Biomechanics (golf swing):} $\rho$ transitions from small (backswing) to large
+      (downswing/impact) within a single motion, with contraction rates that vary along the
+      trajectory as the system moves through different curvature regions.
+\item \textbf{Robotics (manipulator):} $\rho$ remains moderate throughout typical pick-and-place
+      tasks, and the contraction rate is approximately constant if the controller maintains
+      consistent closed-loop eigenvalues.
+\item \textbf{Aerospace (spacecraft):} $\rho$ is small (control-dominated) during powered
+      approach phases; contraction rates are low due to the inherently slow orbital dynamics.
+\item \textbf{Automotive (lane-keeping):} $\rho$ increases with vehicle speed, reflecting
+      the growing role of tire-road dynamics relative to steering authority.
+\end{itemize}
 
-Across all four domains, the predicted contraction rates match the observed exponential decay
-within 15\%, and the drift--control ratio correctly identifies the dominant regime. The consistency
-of these results---spanning biomechanics, robotics, aerospace, and automotive---validates the
-universality of the tangent-space framework developed throughout this book.
+\begin{warningbox}
+Quantitative validation requires domain-specific instrumentation and calibrated system
+models. The contraction rates $\lambda$ and drift--control ratios $\rho$ are predictions
+of the theory that should be tested against experimental data---not assumed to match.
+Reported numerical values should always cite the specific model parameters and measurement
+conditions used.
+\end{warningbox}
 
 \section{Chapter Summary}
 

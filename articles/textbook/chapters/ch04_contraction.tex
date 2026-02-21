@@ -838,6 +838,104 @@ same rate---a scenario that contraction explicitly rules out.
 \end{remark}
 
 
+\section{Contraction in Biomechanical Systems}
+
+The theory of contraction metrics finds a natural and powerful application in the
+biomechanics of human movement. This section previews how the formal machinery developed
+above connects to the analysis and design of coordinated multisegment motions, with
+particular attention to the golf swing.
+
+\subsection{Why Biological Motor Systems are Naturally Contracting}
+
+The human neuromuscular system implements contraction through several mechanisms that
+operate at different time scales:
+
+\begin{enumerate}
+\item \textbf{Muscle impedance (passive contraction):} Skeletal muscles exhibit intrinsic
+      viscoelastic properties. Even without neural activation, a stretched muscle generates
+      a restoring force proportional to its displacement and a damping force proportional
+      to its velocity. In the language of this chapter, the Jacobian of the passive
+      dynamics has negative eigenvalues at equilibrium---the muscle constitutes a natural
+      contraction metric in joint space.
+
+\item \textbf{Stretch reflex (active contraction):} The spinal stretch reflex provides
+      fast ($\sim$40 ms) feedback that resists perturbations. This is a feedback controller
+      that increases the contraction rate beyond the passive baseline. In our framework,
+      the reflex effectively modifies $\mat{A}_{\text{cl}} = \mat{A} - G\mat{K}_{\text{reflex}}$,
+      where $\mat{K}_{\text{reflex}}$ is the reflex gain.
+
+\item \textbf{Co-contraction (metric shaping):} When a person stiffens a joint by
+      simultaneously activating agonist and antagonist muscles, they are effectively
+      increasing the eigenvalues of the contraction metric in the directions of that joint.
+      This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
+      co-contraction shapes the metric to provide stronger contraction where needed.
+\end{enumerate}
+
+\begin{intuitionbox}
+A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
+but energetically expensive controller. An expert golfer selectively stiffens only the
+joints that need contraction at each phase, creating a time-varying metric
+$\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. The transition from
+novice to expert is, in part, the learning of the optimal contraction metric.
+\end{intuitionbox}
+
+\subsection{Partial Contraction in Sequential Motion}
+
+The golf swing is a prime example of a hierarchically structured system where partial
+contraction (Theorem~\ref{thm:ch4:partial}) applies. The kinematic chain
+$\text{torso} \to \text{shoulder} \to \text{elbow} \to \text{wrist} \to \text{club}$
+exhibits a natural partitioning:
+
+\begin{itemize}
+\item The proximal segments (torso, shoulder) are heavily muscled and contract rapidly.
+      Their contraction rate $\lambda_{\text{proximal}}$ is high.
+\item The distal segments (wrist, club) have less muscular authority. Their contraction
+      rate $\lambda_{\text{distal}}$ is lower, and the club shaft (being passive) does
+      not contract at all without feedback.
+\item Partial contraction theory guarantees that if the proximal subsystem contracts,
+      and the distal subsystem contracts when driven by a fixed proximal trajectory,
+      then the overall chain contracts at rate
+      $\lambda = \min(\lambda_{\text{proximal}}, \lambda_{\text{distal}})$.
+\end{itemize}
+
+This hierarchical structure explains why elite golfers focus on consistency of the
+proximal chain (stable torso rotation, repeatable shoulder turn): if the proximal
+subsystem is highly contracting, the distal response is automatically regularized.
+
+\subsection{Contraction and the Drift--Dominated Phase}
+
+During the late downswing, the system enters a drift-dominated regime
+(Chapter~\ref{ch:counterfactuals}). The muscular torques become negligible compared
+to centrifugal and Coriolis forces. In this regime, the contraction properties of the
+\emph{drift field} determine whether the motion is stable:
+
+\begin{enumerate}
+\item If the drift Jacobian has eigenvalues with negative real parts (natural damping),
+      the uncontrolled trajectory is contracting. This is the ``natural stability''
+      of the late downswing.
+\item If the drift Jacobian has eigenvalues with positive real parts (instability),
+      perturbations grow exponentially. At impact, even small deviations from the
+      intended trajectory can produce large clubface errors.
+\item The contraction rate of the drift determines the ``forgiveness'' of the swing:
+      a highly contracting drift absorbs perturbations, while a weakly contracting or
+      expanding drift amplifies them.
+\end{enumerate}
+
+\begin{designbox}
+The practical design principle for swing optimization is: use the controllable early
+phases (backswing, transition) to steer the system into a region of state space where
+the drift field is naturally contracting. This is the control-theoretic formalization
+of the coaching advice ``set up the swing so the physics does the work.''
+
+The contraction metric provides a quantitative tool: at each configuration, one can
+compute whether the drift is contracting (and at what rate) via the symmetric part
+of the drift Jacobian. Configurations where $\sym(\frac{\partial f}{\partial \x})$
+has uniformly negative eigenvalues are ``safe zones'' where the swing is inherently
+stable. The optimal trajectory passes through these zones during the critical
+impact phase.
+\end{designbox}
+
+
 \section{Chapter Summary}
 
 \begin{enumerate}
