@@ -38,13 +38,13 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 
 from src.affine_control.ddp import adaptive_timestep_ddp_mock
-from src.core.constants import EPSILON, GRAVITY_M_S2
+from src.core.constants import EPSILON
 from src.core.contracts import (
     check_finite_array,
     check_non_negative,
@@ -490,8 +490,7 @@ class SwingOptimizer:
         )
 
         logger.info(
-            "Optimization complete: velocity=%.2f m/s, cost=%.4f, "
-            "converged=%s, iterations=%d",
+            "Optimization complete: velocity=%.2f m/s, cost=%.4f, " "converged=%s, iterations=%d",
             result.final_velocity,
             result.cost,
             result.converged,
