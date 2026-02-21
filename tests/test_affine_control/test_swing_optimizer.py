@@ -29,7 +29,6 @@ from src.affine_control.swing_optimizer import (
 )
 from src.core.contracts import ContractViolationError
 
-
 # ── Helper dynamics functions ───────────────────────────────────────────────
 
 
