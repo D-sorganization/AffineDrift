@@ -1167,3 +1167,46 @@ This chapter has established that the drift--input decomposition is not merely a
 causal framework for understanding, predicting, and attributing motion. The counterfactual machinery---ZTCF,
 ZVCF, and their energy interpretations---transforms abstract dynamics into actionable engineering insight:
 what would happen without control, and therefore what the controller must actually accomplish.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{ZTCF of a simple system.}
+      For $\ddot{x} + x^3 = u$ (Duffing oscillator), compute the ZTCF starting from
+      $(x_0, \dot{x}_0) = (1, 0)$. Plot the actual trajectory under $u = -2x$ and the
+      ZTCF side by side. Compute $\rho(t)$.
+
+\item \textbf{ZVCF computation.}
+      For the same system, compute the ZVCF at $t = 0$. Compare the ZVCF acceleration
+      with the full acceleration. In what regime does gravity dominate?
+
+\item \textbf{Drift-control ratio scaling.}
+      For the double pendulum of the worked example, show analytically that $\rho \propto
+      \|\dot\q\|^2 / \|\uvec\|$ when Coriolis forces dominate. What happens when $\|\dot\q\|
+      \to 0$?
+
+\item \textbf{Energy decomposition.}
+      For a 2-DOF system with known mass matrix, decompose the total kinetic energy change
+      $\Delta T = \int \dot\q^T \tau\,dt$ into drift and control contributions. Verify the
+      identity $\Delta T = W_{\text{drift}} + W_{\text{control}}$.
+
+\item \textbf{Data-driven drift estimation.}
+      Generate simulated data from a known pendulum system under random inputs. Estimate
+      the drift acceleration using the SINDy-type procedure from Section~\ref{sec:ch7:data-driven}.
+      Compare with the analytical drift.
+
+\item \textbf{Contraction of the drift.}
+      Compute the drift Jacobian for the undamped double pendulum at several configurations.
+      Where is the drift contracting? Where is it expanding? Relate to the physical
+      behavior of the system.
+
+\item \textbf{Sensitivity counterfactual.}
+      For the pendulum, compute $\frac{\partial \x(t_f)}{\partial \uvec(t_0)}$ using the
+      sensitivity STM. Which initial torque direction has the largest effect on the
+      terminal state?
+
+\item \textbf{Attribution in a 3-link chain.}
+      For a 3-DOF chain (torso--arm--forearm), compute the off-diagonal mass matrix terms
+      $M_{ij}$ and the inertial torques $\tau_{\text{inertial}, j}$ during a prescribed
+      deceleration of the torso. Which link receives the most inertial energy?
+\end{enumerate}

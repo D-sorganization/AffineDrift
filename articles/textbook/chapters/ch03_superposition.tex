@@ -1436,3 +1436,42 @@ and robustness margins.
       local linearization, hybrid models, identification, and robust control techniques.
 \end{enumerate}
 
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Mass matrix positive definiteness.}
+      For the 2-DOF planar arm in the text, show that $\det(M(\q)) > 0$ for all $\q$
+      by direct computation. Identify the configuration where $\kappa(M)$ is maximized.
+
+\item \textbf{Lie bracket of the pendulum.}
+      For the pendulum system $\dot\x = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
+      and $g = (0, 1)^T$, compute $[f, g]$ and $[g, [f, g]]$. Verify that
+      $\text{span}\{g, [f, g]\}$ has dimension 2 at all $\x$, confirming accessibility.
+
+\item \textbf{Superposition failure.}
+      For the system $\dot{x} = x^2 + u$, compute the trajectories $x^{(1)}(t)$ under
+      $u_1 = 1$ and $x^{(2)}(t)$ under $u_2 = 2$, both starting from $x_0 = 0$.
+      Verify that $x^{(1)} + x^{(2)}$ does not solve the system under $u_1 + u_2 = 3$.
+
+\item \textbf{Feedback linearization of a simple system.}
+      For $\dot{x}_1 = x_2$, $\dot{x}_2 = x_1^2 + u$ with output $y = x_1$, compute the
+      relative degree, the linearizing feedback, and the zero dynamics. Is the system minimum phase?
+
+\item \textbf{Passivity of the 2-DOF arm.}
+      For the 2-DOF arm in the text, verify that the system with input $\uvec = \tau$ and
+      output $\vec{y} = \dot\q$ is passive with storage function $E = T + V$.
+
+\item \textbf{Coriolis matrix properties.}
+      Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
+      (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
+
+\item \textbf{Underactuated bracket rank.}
+      For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
+      only), compute $[f, g_1]$ and $[f, g_2]$ in the first-order form. Under what
+      conditions on $M(\q)$ does the accessibility rank condition hold?
+
+\item \textbf{Port-Hamiltonian formulation.}
+      Rewrite the damped pendulum $\ddot\theta + c\dot\theta + \sin\theta = u$ in
+      port-Hamiltonian form~\eqref{eq:ch3:port-hamiltonian}. Identify $J$, $R$, $G$,
+      and $H$ explicitly.
+\end{enumerate}

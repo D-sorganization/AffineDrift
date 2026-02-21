@@ -960,3 +960,47 @@ This is the deep connection between the abstract mathematics of this chapter and
 practical question every golfer cares about: \emph{which aspects of technique are
 forgiving, and which are critical}? Tangent-space analysis provides a principled,
 quantitative answer.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Fréchet derivative computation.}
+      Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
+      Verify that the residual $\|f(\bar\x + \dx) - f(\bar\x) - Df(\bar\x)\dx\| = O(\|\dx\|^2)$
+      by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
+
+\item \textbf{Residual scaling table.}
+      Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
+      $f(x) = e^x$ at $\bar{x} = 0$. Compute $r/(\delta x)^2$ for $\delta x = 0.1, 0.01, 0.001, 0.0001$.
+      What value does the ratio converge to? Relate this to the Taylor series of $e^x$.
+
+\item \textbf{Tangent space of SO(3).}
+      The rotation group SO(3) consists of $3 \times 3$ orthogonal matrices with determinant 1.
+      Using the constraint $R^T R = I$, show that the tangent space at $R = I$ consists of
+      skew-symmetric matrices. What is the dimension of this tangent space?
+
+\item \textbf{Tangent space of a torus.}
+      The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
+      Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
+      the tangent space is ``flat'' even though the torus is curved.
+
+\item \textbf{When linearization is not an approximation.}
+      Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
+      at $\bar{x} = 0$. In what sense is this linearization ``exact''? In what sense is it ``approximate''?
+      Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
+
+\item \textbf{Curvature and residual.}
+      For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order
+      residual behavior. Construct a scaling table to verify. Compare with the $\sin(x)$ example
+      in the text.
+
+\item \textbf{Connection (Axiom 3).}
+      For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
+      the Jacobian $A(\bar\x)$ at three different equilibria: $\bar\x = (0,0)$, $(\pi, 0)$,
+      and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
+
+\item \textbf{Programming exercise.}
+      Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar\x$, computes the
+      Fréchet derivative numerically using finite differences. Test it on the pendulum
+      system from Exercise 7. Compare with the analytical Jacobian.
+\end{enumerate}

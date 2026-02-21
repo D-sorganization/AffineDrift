@@ -1189,3 +1189,46 @@ This is a practical nonlinear extension of the separation principle.
 This chapter has shown that optimality and stability are not independent concerns but two facets of a single geometric
 object. The Riccati matrix, solved once, provides both the controller and the robustness certificate. This is the power
 of duality: one computation, two major objectives accomplished.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Value decrease identity.}
+      For the discrete pendulum in the worked example, verify the value decrease identity
+      numerically: compute $V_{k+1} - V_k$ and $-\dx_k^T(\mat{Q} + \mat{K}^T\mat{R}\mat{K})\dx_k$
+      and confirm equality.
+
+\item \textbf{Robustness margins.}
+      For the continuous-time system $\dot{x} = ax + bu$ with LQR weights $Q = 1$, $R = 1$,
+      compute the gain margin and phase margin as functions of $a$ and $b$. Verify the
+      theoretical bounds $[1/2, \infty)$ and $\geq 60°$.
+
+\item \textbf{Dual Riccati.}
+      For the system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -1 & -0.1 \end{bmatrix}$,
+      $\mat{C} = [1, 0]$, $W = 0.1$, $V = 1$, solve the estimation ARE for $\mat{P}$.
+      Compare with the control ARE for $(\mat{A}^T, \mat{C}^T, W, V)$.
+
+\item \textbf{Condition number and convergence.}
+      For the 2D system in the worked example, vary $\mat{Q}$ from $0.1\mat{I}$ to $100\mat{I}$
+      while keeping $\mat{R} = \mat{I}$. Plot $\kappa(\mat{S})$ and the contraction rate
+      $\lambda$ as functions of $\|\mat{Q}\|$. Explain the observed relationship.
+
+\item \textbf{EKF implementation.}
+      Implement the EKF for the nonlinear pendulum $\ddot\theta + \sin\theta = u + w$
+      with measurement $y = \theta + v$. Compare the estimated trajectory with the true
+      trajectory for different noise levels.
+
+\item \textbf{Observability Gramian.}
+      For the linearized pendulum at the upright equilibrium, compute the observability
+      Gramian $\mathcal{W}_o(0, T)$ for $T = 1, 5, 10$. How does its condition number
+      change? What does this imply about the observability of the system?
+
+\item \textbf{H$\infty$ vs LQR.}
+      Solve both the LQR and H$\infty$ Riccati equations for the double integrator with
+      disturbance input. Compare the resulting contraction rates and gain magnitudes.
+
+\item \textbf{Separation principle verification.}
+      For the discrete pendulum, implement the separated controller (LQR gain) and
+      observer (Kalman gain). Verify that the closed-loop eigenvalues are the union
+      of the controller and observer eigenvalues.
+\end{enumerate}

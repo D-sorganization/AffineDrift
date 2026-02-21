@@ -1045,3 +1045,47 @@ convex subproblem (the LQR problem). By re-centering the tangent space at each i
 global approximation. This principle underlies not only DDP but also many modern algorithms in robotics and machine
 learning (e.g., SAC, MPPI, trajectory optimization in MPC).
 \end{axiombox}
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{LQR for a double integrator.}
+      Solve the discrete-time LQR problem for $\x_{k+1} = \begin{bmatrix} 1 & h \\ 0 & 1 \end{bmatrix}
+      \x_k + \begin{bmatrix} 0 \\ h \end{bmatrix} u_k$ with $\mat{Q} = \mat{I}_2$, $R = 1$,
+      $h = 0.01$, and horizon $N = 100$. Plot the trajectory and gain $\mat{K}_k$.
+
+\item \textbf{Q-function structure.}
+      For the inverted pendulum from the worked example, compute $Q_{k,\xx}$, $Q_{k,\uu}$,
+      and $Q_{k,\xu}$ at the first step. Verify that $Q_{k,\uu} \succ 0$ and interpret the
+      eigenvalues of $Q_{k,\xx}$.
+
+\item \textbf{iLQR vs full DDP.}
+      Implement both iLQR and full DDP for the cart-pole system. Run each for 50 iterations
+      starting from the same initial guess. Compare convergence rates and final costs.
+      When do they differ significantly?
+
+\item \textbf{Regularization effects.}
+      For the inverted pendulum, run DDP with regularization parameters
+      $\mu \in \{0, 0.01, 0.1, 1, 10\}$. Plot convergence (cost vs. iteration) for each.
+      Explain the trade-off between step size and convergence rate.
+
+\item \textbf{MPC horizon sensitivity.}
+      Implement MPC for the inverted pendulum with horizons $N \in \{10, 20, 50, 100\}$.
+      Use the infinite-horizon LQR cost as terminal cost. Compare tracking performance
+      under a disturbance at $t = 1$ s. How short can $N$ be before performance degrades?
+
+\item \textbf{Cost weight selection.}
+      For the pendulum swing-up, experiment with different $\mat{Q}/\mat{R}$ ratios.
+      Plot the resulting trajectories and control efforts. Explain why very large $\mat{Q}$
+      can cause DDP to diverge (relate to the condition number of $Q_{k,\uu}$).
+
+\item \textbf{Warm-starting effectiveness.}
+      Implement MPC with and without warm-starting. Count the number of DDP iterations
+      needed per time step in each case. Plot the computational savings as a function
+      of the control rate.
+
+\item \textbf{Continuous-time HJB.}
+      For the scalar system $\dot{x} = -x + u$ with cost $\int_0^\infty (x^2 + u^2)\,dt$,
+      solve the continuous-time ARE analytically. Verify that $V(x) = Sx^2$ satisfies the
+      HJB equation $0 = x^2 + Sx^2/S - Sx\cdot x + Sx(-x + u^*)$.
+\end{enumerate}

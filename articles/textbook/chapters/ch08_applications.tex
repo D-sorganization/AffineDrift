@@ -1643,3 +1643,46 @@ merely theoretical elegance. It is a practical engineering toolkit that unifies 
 biomechanics, robotics, aerospace, and automotive systems. The common thread is always the same: linearize
 exactly in the tangent space, verify contraction, exploit the drift, and let duality guarantee both
 performance and robustness from a single computation.
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{Mass matrix construction.}
+      For a 2-DOF planar golf model (shoulder + wrist), derive the mass matrix entries
+      symbolically using the segment parameters from the text. Verify positive definiteness
+      at three configurations.
+
+\item \textbf{Drift-control ratio computation.}
+      Implement the 5-step experimental protocol from Section~\ref{sec:ch8:experimental}
+      for simulated data from a double pendulum under LQR control. Plot $\rho(t)$ and identify
+      the transition from control-dominated to drift-dominated regimes.
+
+\item \textbf{Shaft modal analysis.}
+      For the shaft modal equations~\eqref{eq:ch8:shaft-modal}, compute the natural frequencies
+      for three different shaft stiffnesses. Plot the energy exchange $\dot{E}_{\text{shaft}}(t)$
+      during a prescribed handle acceleration profile.
+
+\item \textbf{Sensitivity composition.}
+      For a 2-DOF robot manipulator tracking a straight-line task-space trajectory, compute
+      the composite sensitivity $J_{\text{task}} \cdot \Phi(t_f, t_0)$. Which initial-state
+      perturbation produces the largest task-space error?
+
+\item \textbf{Contraction-certified tracking.}
+      Implement the contraction-certified operational-space controller for a 3-DOF robot.
+      Verify contraction by computing $\sym(\mat{M}\mat{A}_{\text{cl}}) + \dot{\mat{M}}$
+      along the trajectory.
+
+\item \textbf{Spacecraft proximity.}
+      Implement the CWH-based MPC controller for spacecraft proximity operations.
+      Compare performance with and without the contraction terminal cost.
+
+\item \textbf{Lane-keeping comparison.}
+      Implement the bicycle-model lane-keeping controller at two speeds. Verify that
+      the contraction rate decreases with speed, consistent with the drift-control
+      ratio analysis.
+
+\item \textbf{Cross-domain comparison.}
+      For two of the four application domains, compute the drift-control ratio $\rho(t)$
+      and contraction rate $\lambda$ using the prescribed methods. Compare the
+      qualitative signatures with the predictions in the text.
+\end{enumerate}

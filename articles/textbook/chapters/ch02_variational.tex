@@ -1244,3 +1244,47 @@ trajectory while respecting the local geometry. This perspective connects classi
 differential geometry and is essential for understanding advanced topics like Riemannian optimization,
 geometric tracking control, and neural network training dynamics.
 \end{designbox}
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item \textbf{STM of a linear system.}
+      For the LTI system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -\omega^2 & -2\zeta\omega \end{bmatrix}$
+      (damped harmonic oscillator), compute $\Phi(t, 0) = e^{\mat{A}t}$ analytically using eigenvalue
+      decomposition. Verify the semigroup property $\Phi(t_2, 0) = \Phi(t_2, t_1)\Phi(t_1, 0)$.
+
+\item \textbf{Peano-Baker truncation error.}
+      For the system in Exercise 1, compute the first three terms of the Peano-Baker
+      series~\eqref{eq:ch2:peano-baker}. Estimate the truncation error at $t = 1$ and compare
+      with the exact exponential.
+
+\item \textbf{Liouville's formula.}
+      Verify Liouville's formula (Theorem~\ref{thm:ch2:liouville}) for the 2D system
+      $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 - 0.1 x_2$ by computing both $\det\Phi(t, 0)$
+      directly and $\exp(\int_0^t \trace\mat{A}(s)\,\dd s)$.
+
+\item \textbf{Sensitivity of a nonlinear system.}
+      For the Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$,
+      compute the variational equation along the trajectory starting from $(x_0, \dot{x}_0) = (2, 0)$.
+      Integrate the STM numerically for one period. What do the singular values of $\Phi$ reveal?
+
+\item \textbf{Input sensitivity.}
+      For the control-affine system $\dot\x = \mat{A}\x + \mat{B}\uvec$ with $\mat{A}$, $\mat{B}$
+      from the pendulum example in Section~\ref{sec:ch2:pendulum-example}, use the variation of
+      constants formula to compute the response to a unit pulse input $\uvec(t) = \delta(t - t_0)$.
+
+\item \textbf{Symplectic integrator comparison.}
+      Implement both RK4 and the symplectic Euler method for the undamped pendulum
+      $\ddot\theta + \sin\theta = 0$. Integrate for 1000 periods. Plot the energy $H(\theta, \dot\theta)$
+      as a function of time for both methods. Explain the qualitative difference.
+
+\item \textbf{Discrete-time STM.}
+      For the discrete system $\x_{k+1} = \mat{A}_k \x_k$ with $\mat{A}_k$ periodic
+      ($\mat{A}_{k+N} = \mat{A}_k$), express the one-period STM as a product. What is the
+      relationship between the eigenvalues of this product and the stability of the system?
+
+\item \textbf{Magnus expansion.}
+      For a time-varying $\mat{A}(t) = \mat{A}_0 + \varepsilon \mat{A}_1 \sin(\omega t)$,
+      compute the first-order Magnus expansion and compare with the Peano-Baker series
+      at $t = 2\pi/\omega$. Under what conditions does the Magnus expansion converge faster?
+\end{enumerate}
