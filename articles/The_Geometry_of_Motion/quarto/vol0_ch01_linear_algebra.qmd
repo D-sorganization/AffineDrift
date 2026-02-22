@@ -1,0 +1,70 @@
+% ==========================================================================
+%  Chapter 1: A Primer on Linear Algebra
+% ==========================================================================
+
+# A Primer on Linear Algebra
+
+\label{ch:linear_algebra}
+
+\epigraph{%
+  You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
+}{}
+
+
+## Vectors and Matrices
+
+
+Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
+
+A **vector** $\bm{v}$ is an array of numbers that can represent a position in space, a velocity, or a set of sensor readings. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$).
+\begin{equation}
+   \bm{v} = \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} \in \Reals^3
+\end{equation}
+
+A **matrix** $M$ is a 2D grid of numbers. If a vector represents a point, a matrix acts as a set of instructions on how to transform that point—stretching it, rotating it, or moving it into an entirely different dimensional space.
+\begin{equation}
+   M = \begin{bmatrix} a_1 & b_1 & c_1 \\ a_2 & b_2 & c_2 \\ a_3 & b_3 & c_3 \end{bmatrix} \in \Reals^{3 \times 3}
+\end{equation}
+
+When we multiply a matrix by a vector ($M\bm{v}$), the matrix literally reshapes the vector. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its bones.
+
+
+## The Dot Product and Cross Product
+
+
+Two fundamental operations exist for combining vectors in 3-dimensional space:
+
+
+### The Dot Product
+
+The dot product (or inner product) is a scalar (a single number). It measures how much two vectors "align" with each other. It is calculated by multiplying matching components and summing them.
+\begin{equation}
+   \bm{a} \cdot \bm{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\bm{a}}\norm{\bm{b}}\cos(\theta)
+\end{equation}
+If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces mathematically onto specific mechanical joints.
+
+
+### The Cross Product
+
+The cross product is a vector. It takes two vectors and generates a brand new vector that is perfectly perpendicular to both of them.
+\begin{equation}
+   \bm{a} \times \bm{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
+\end{equation}
+
+In physics, the cross product is the mathematical engine of rotation. If you apply a force $\bm{F}$ at a distance $\bm{r}$ from a hinge, the resulting torque $\bm{\tau}$ twisting the hinge is exactly the cross product: $\bm{\tau} = \bm{r} \times \bm{F}$. 
+Crucially, the magnitude of a cross product scales with the sine of the angle ($|\bm{a} \times \bm{b}| = \norm{\bm{a}}\norm{\bm{b}}\sin \theta$).
+
+
+## Eigenvalues and Eigenvectors: The Shape of the System
+
+
+When you multiply a vector by a matrix, the vector usually changes direction. However, for almost every matrix, there are a few special vectors that do *not* change direction when the matrix hits them. They only stretch or shrink. 
+
+These magical vectors are called **Eigenvectors** ($\bm{v}$), and the amount they stretch is called the **Eigenvalue** ($\lambda$).
+\begin{equation}
+   M\bm{v} = \lambda\bm{v}
+\end{equation}
+
+Why do we care? 
+If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin. 
+If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate if the system will explode out of control ($\lambda > 0$) or safely stabilize back to resting ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.

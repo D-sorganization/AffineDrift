@@ -1,0 +1,187 @@
+\documentclass[11pt,letterpaper,openany]{book}
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning, 3d}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ──────────────────────────────────────────────
+% Code Formatting (Listings)
+% ──────────────────────────────────────────────
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% ──────────────────────────────────────────────
+% Colors
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+
+% ──────────────────────────────────────────────
+% Theorem environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Mathematical Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{laymansbox}{Intuition}{
+  colback=trajgreen!5, colframe=trajgreen!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{intuition}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+
+% ──────────────────────────────────────────────
+% Chapter formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Volume 0: The Mathematical Primer}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\manifold}{\mathcal{M}}
+\newcommand{\configspace}{\mathcal{Q}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\tube}{\mathcal{T}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\newcommand{\se}{\mathfrak{se}(3)}
+\newcommand{\so}{\mathfrak{so}(3)}
+\newcommand{\SE}{\mathrm{SE}(3)}
+\newcommand{\SO}{\mathrm{SO}(3)}
+\newcommand{\screw}{\mathcal{S}}
+\newcommand{\twist}{\mathcal{V}}
+\newcommand{\wrench}{\mathcal{F}}
+
+% ──────────────────────────────────────────────
+% Title Page
+% ──────────────────────────────────────────────
+\title{%
+  {\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm]
+  {\Large Volume 0: The Mathematical Primer\\
+  A Foundational Guide to Kinematics, Configuration, and State Space}\\[0.6cm]
+  {\color{chapblue}\rule{\textwidth}{2pt}}
+}
+\author{{\Large D.\ Kraft}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\cleardoublepage
+
+\frontmatter
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+Before we can begin to analyze the geometry of moving physical bodies or command them to navigate the world via control theory, we must establish a common language. The physics of movement happens in the real world, but our understanding of it happens entirely within mathematical spaces.
+
+This primer, **Volume 0** of *The Geometry of Motion*, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
+
+The philosophy of this primer maintains our overarching theme: mathematics should be driven by the physical reality of motion, not abstract algebra for its own sake.
+
+\tableofcontents
+\cleardoublepage
+
+\mainmatter
+
+\include{chapters/ch01_linear_algebra}
+\include{chapters/ch02_state_space}
+\include{chapters/ch03_configuration}
+\include{chapters/ch04_rotations_se3}
+\include{chapters/ch05_screw_axes}
+\include{chapters/ch06_exponential_coordinates}
+\include{chapters/ch07_recursive_algorithms}
+\include{chapters/ch08_spatial_algebra}
+\include{chapters/ch09_product_of_exponentials}
+\include{chapters/ch10_articulated_body_algorithm}
+\include{chapters/ch11_lagrangian_mechanics}
+\include{chapters/ch12_machine_learning}
+
+\backmatter
+\bibliographystyle{plain}
+\bibliography{../geometry_of_motion}
+
+\end{document}

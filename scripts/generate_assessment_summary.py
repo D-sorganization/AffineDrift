@@ -213,7 +213,7 @@ def _build_markdown_summary(
 
     for i, issue in enumerate(critical_issues[:10], 1):
         md_lines.append(
-            f"{i}. **[{issue['severity']}]** {issue['description']} " f"(Source: {issue['source']})"
+            f"{i}. **[{issue['severity']}]** {issue['description']} (Source: {issue['source']})"
         )
 
     md_lines.extend(
