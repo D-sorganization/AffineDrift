@@ -1,0 +1,1207 @@
+%% ==========================================================================
+%%  Chapter 5: Local Optimal Control — LQR, DDP, and Riccati
+%% ==========================================================================
+
+# Local Optimal Control: LQR, DDP, and Riccati
+
+\label{ch:optimal-control}
+
+\begin{laymansbox}
+Take your current best guess for a motion. Zoom in so the system looks linear and the
+cost looks quadratic. Solve that simpler problem *exactly*. Update your guess and
+repeat. This ``linearize--solve--update'' loop is the engine of modern trajectory
+optimization, and each step is an exact computation in tangent space---not an
+approximation of the global problem.
+\end{laymansbox}
+
+
+## Historical Context: From Bellman to Modern DDP
+
+
+The theory of optimal control has evolved from fundamental principles in dynamic programming and
+the calculus of variations. Understanding this trajectory enriches our appreciation of how
+modern methods like DDP fit into the broader landscape.
+
+
+### Bellman's Dynamic Programming (1957)
+
+
+Richard Bellman introduced **dynamic programming** as a principle for solving sequential decision
+problems~\cite{bellman1957}. The cornerstone is the *Bellman principle of optimality*:
+an optimal policy has the property that whatever the initial state and decision are, the remaining
+decisions must constitute an optimal policy with regard to the state resulting from the first decision.
+
+For a discrete-time system $\x_{k+1} = f(\x_k,\uvec_k)$ with stage cost $\ell_k(\x_k,\uvec_k)$,
+Bellman's equation reads:
+\begin{equation}
+V_k(\x_k) = \min_{\uvec_k} \left[ \ell_k(\x_k,\uvec_k) + V_{k+1}(f(\x_k,\uvec_k)) \right].
+\label{eq:ch5:bellman}
+\end{equation}
+
+This is a *backward recursion* in time, and solving it yields the optimal value function $V_k$
+and the optimal control law $\uvec_k^* = \argmin_{\uvec_k} (\cdots)$. When the cost and dynamics are
+quadratic, this recursion becomes the Riccati equation, which we derive below.
+
+
+### Pontryagin's Maximum Principle (1962)
+
+
+Independently and nearly simultaneously, Lev Pontryagin and colleagues developed the *maximum principle*
+as an extension of the calculus of variations~\cite{pontryagin1962}. Rather than characterizing optimality
+via dynamic programming, Pontryagin's method uses Lagrange multipliers (costates) $\vec{\lambda}_k$ to encode
+constraints. The optimality conditions state that the Hamiltonian
+\begin{equation}
+H_k(\x_k,\uvec_k,\vec{\lambda}_{k+1}) = \ell_k(\x_k,\uvec_k) + \vec{\lambda}_{k+1}^\T f(\x_k,\uvec_k)
+\label{eq:ch5:hamiltonian-discrete}
+\end{equation}
+is minimized at the optimal control, and the costates evolve backward via
+\begin{equation}
+\vec{\lambda}_k = \frac{\partial H_k}{\partial \x_k}.
+\label{eq:ch5:costate-update}
+\end{equation}
+
+When the dynamics and cost are linear-quadratic, the costate trajectory $\vec{\lambda}_k$ is proportional
+to the optimal cost-to-go, and Pontryagin's conditions recover the Riccati equations. The maximum principle
+remains the foundation for optimal control in the presence of inequality constraints (e.g., control bounds),
+where active-set methods and generalized Pontryagin conditions apply.
+
+
+### Jacobson and Mayne's Differential Dynamic Programming (1970)
+
+
+In 1970, David Jacobson and David Mayne introduced **Differential Dynamic Programming**~\cite{jacobson1970dpp},
+a method that marries Bellman's backward recursion with Newton's method in function space. Rather than solving
+the nonlinear Bellman equation exactly (impossible in general), DDP performs:
+\begin{enumerate}
+\item A backward pass that quadratizes the value function $V_k$ locally around the nominal trajectory.
+\item A forward pass that updates the nominal trajectory via a Newton step (or damped Newton step).
+\item Iteration until convergence.
+\end{enumerate}
+
+This approach recognizes that the Riccati recursion is precisely what emerges when we solve a *local*
+quadratic approximation to the Bellman recursion. Thus DDP can be viewed as ``Newton's method applied to
+the KKT conditions of trajectory optimization'' (see Section~\ref{sec:ch5:ddp-as-newton} below).
+
+
+### Connection to Newton's Method in Function Space
+
+
+Consider the trajectory optimization problem:
+\begin{equation}
+\min_{\uvec_0,\ldots,\uvec_{T-1}} \sum_{k=0}^{T-1} \ell_k(\x_k,\uvec_k) + \ell_T(\x_T)
+\quad \text{subject to} \quad \x_{k+1} = f(\x_k,\uvec_k).
+\label{eq:ch5:traj-opt}
+\end{equation}
+
+The first-order optimality conditions (KKT conditions) form a coupled system of nonlinear equations
+in the primal variables $(\x_k,\uvec_k)$ and dual variables (costates $\vec{\lambda}_k$). Near a local
+minimum, Newton's method---applied to this system---produces the DDP algorithm. When the problem is
+quadratic, Newton's method converges in one step and yields the Riccati solution exactly. When the
+problem is nonlinear, each DDP iteration solves a local quadratic subproblem (via Riccati), advances
+the trajectory, and re-linearizes for the next iteration.
+
+This interpretation is powerful: it guarantees that DDP inherits Newton's *local quadratic convergence*
+property, provided the second-order sufficient conditions hold at a local minimum and the re-linearization
+is exact (which it is, since we use the exact Jacobian at each iteration).
+
+
+## The Local Quadratic Subproblem
+
+
+
+### Expanding Nonlinear Costs
+
+
+Given a nonlinear cost function $\ell_k(\x_k,\uvec_k)$ and a nominal trajectory $\{\bar\x_k, \bar\uvec_k\}$,
+we expand to second order around this trajectory. Define perturbations $\dx_k = \x_k - \bar\x_k$ and
+$\du_k = \uvec_k - \bar\uvec_k$. The Taylor expansion is:
+\begin{align}
+\ell_k(\bar\x_k + \dx_k, \bar\uvec_k + \du_k) &\approx \ell_k(\bar\x_k, \bar\uvec_k)
++ \left[\begin{matrix} \ell_{k,\x}^\T \\ \ell_{k,\mathbf{u}}^\T \end{matrix}\right] \left[\begin{matrix} \dx_k \\ \du_k \end{matrix}\right] \notag \\
+&\quad + \frac{1}{2} \left[\begin{matrix} \dx_k^\T & \du_k^\T \end{matrix}\right]
+\left[\begin{matrix} \ell_{k,\xx} & \ell_{k,\xu}^\T \\ \ell_{k,\xu} & \ell_{k,\uu} \end{matrix}\right]
+\left[\begin{matrix} \dx_k \\ \du_k \end{matrix}\right],
+\label{eq:ch5:cost-expansion}
+\end{align}
+where $\ell_{k,\x}$, $\ell_{k,\mathbf{u}}$ are first derivatives, and $\ell_{k,\xx}$, $\ell_{k,\uu}$, $\ell_{k,\xu}$
+are second derivatives, all evaluated at $(\bar\x_k, \bar\uvec_k)$. Since we are interested in the relative
+cost change (and optimality is insensitive to constant offsets), we drop the zero-order term and define
+the **quadratic cost matrices**:
+\begin{align}
+\mat{Q}_k &= \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix} + \begin{bmatrix} \ell_{k,\xx} & \ell_{k,\xu}^\T \\ \ell_{k,\xu} & \ell_{k,\uu} \end{bmatrix}, \label{eq:ch5:Q-def}\\
+\vec{q}_k &= \ell_{k,\x}, \quad \vec{r}_k = \ell_{k,\mathbf{u}}. \label{eq:ch5:q-r-def}
+\end{align}
+
+In most textbooks, $\vec{q}_k$ and $\vec{r}_k$ are absorbed into the definition of $\dx_k$ via an affine
+transformation. For simplicity here, we work with the purely quadratic form:
+\begin{equation}
+\tilde{\ell}_k(\dx_k, \du_k) = \frac{1}{2}(\dx_k^\T\mat{Q}_{k,\xx}\dx_k + \du_k^\T\mat{R}_k\du_k
++ 2\du_k^\T\mat{N}_k\dx_k),
+\label{eq:ch5:quadratic-cost}
+\end{equation}
+where we have adopted the notation:
+\begin{align}
+\mat{Q}_{k,\xx} &= \ell_{k,\xx}, \label{eq:ch5:Qxx-def}\\
+\mat{R}_k &= \ell_{k,\uu}, \label{eq:ch5:R-def}\\
+\mat{N}_k &= \ell_{k,\xu}. \label{eq:ch5:N-def}
+\end{align}
+
+The cross term $\mat{N}_k$ couples state and input perturbations and is non-zero for many practical costs
+(e.g., effort-penalizing costs that depend on both position and force). Understanding when to include
+$\mat{N}_k$ is crucial for the distinction between *full DDP* and *iLQR*, discussed in Section~\ref{sec:ch5:ilqr-vs-ddp}.
+
+
+### Variational Dynamics
+
+
+From Chapter~\ref{ch:variational}, the linearized (variational) dynamics around a nominal trajectory are:
+\begin{equation}
+\dx_{k+1} = \mat{A}_k\,\dx_k + \mat{B}_k\,\du_k,
+\label{eq:ch5:perturbation}
+\end{equation}
+where $\mat{A}_k = \frac{\partial f}{\partial \x}\big|_{(\bar\x_k,\bar\uvec_k)}$ and
+$\mat{B}_k = \frac{\partial f}{\partial \uvec}\big|_{(\bar\x_k,\bar\uvec_k)}$ are the Jacobians of the
+dynamics, computed exactly at the nominal trajectory.
+
+
+### The Full Q-Function
+
+
+Combining the cost expansion and variational dynamics, we define the *action-value function* or
+**Q-function** at step $k$:
+\begin{equation}
+Q_k(\dx_k, \du_k) = \tilde{\ell}_k(\dx_k,\du_k) + V_{k+1}(\dx_{k+1}),
+\label{eq:ch5:Q-function}
+\end{equation}
+where $V_{k+1}$ is the cost-to-go from the next state. Substituting the variational dynamics:
+\begin{equation}
+Q_k(\dx_k, \du_k) = \tilde{\ell}_k(\dx_k,\du_k) + V_{k+1}(\mat{A}_k\dx_k + \mat{B}_k\du_k).
+\label{eq:ch5:Q-expanded}
+\end{equation}
+
+If the cost-to-go is quadratic, $V_{k+1}(\dx_{k+1}) = \frac{1}{2}\dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1}$, then
+we can expand $Q_k$ as:
+\begin{align}
+Q_k(\dx_k,\du_k) &= \frac{1}{2} \begin{bmatrix} \dx_k \\ \du_k \end{bmatrix}^\T
+\begin{bmatrix} Q_{k,\xx} & Q_{k,\xu}^\T \\ Q_{k,\xu} & Q_{k,\uu} \end{bmatrix}
+\begin{bmatrix} \dx_k \\ \du_k \end{bmatrix} \notag \\
+&\quad + \begin{bmatrix} Q_{k,\x}^\T & Q_{k,\mathbf{u}}^\T \end{bmatrix} \begin{bmatrix} \dx_k \\ \du_k \end{bmatrix} + \text{const},
+\label{eq:ch5:Q-quadratic}
+\end{align}
+where the Hessian terms are:
+\begin{align}
+Q_{k,\xx} &= \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k, \label{eq:ch5:Qxx}\\
+Q_{k,\uu} &= \mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k, \label{eq:ch5:Quu}\\
+Q_{k,\xu} &= \mat{N}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k, \label{eq:ch5:Qxu}
+\end{align}
+and the gradient terms (which we suppress for brevity) are:
+\begin{align}
+Q_{k,\x} &= \ell_{k,\x} + \mat{A}_k^\T\vec{\lambda}_{k+1}, \label{eq:ch5:Qx}\\
+Q_{k,\mathbf{u}} &= \ell_{k,\mathbf{u}} + \mat{B}_k^\T\vec{\lambda}_{k+1}, \label{eq:ch5:Qu}
+\end{align}
+where $\vec{\lambda}_{k+1} = \mat{S}_{k+1}\dx_{k+1}$ is the costate from the next step.
+
+\begin{intuitionbox}
+The structure of the Q-function reveals the interplay between immediate cost ($\ell_{k,\xx}$, $\ell_{k,\uu}$, etc.)
+and future cost ($\mat{S}_{k+1}$ terms). The cross-term $Q_{k,\xu}$ combines the immediate cross-coupling
+$\mat{N}_k$ with the future coupling via $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$. When the immediate cost has no
+cross-coupling ($\ell_{k,\xu} = 0$) and the system is not in a regime where velocity-dependent costs matter,
+$Q_{k,\xu}$ may be small or negligible. In such cases, dropping second-order dynamics terms (i.e., setting
+$Q_{k,\xu} = 0$) recovers the *iLQR* algorithm, which often works well in practice while being cheaper to
+compute.
+\end{intuitionbox}
+
+
+### Intuition: Hessian Curvature as Control Sensitivity
+
+
+The matrix $Q_{k,\uu}$ is the *Hessian of the Q-function with respect to control*. A large eigenvalue indicates
+that a small perturbation in control at step $k$ has a large effect on the future cost. Conversely, a small
+eigenvalue indicates that control perturbations in a given direction are cheap. The optimal feedback gain $\mat{K}_k$
+naturally ``amplifies'' control corrections in expensive directions and dampens them in cheap directions.
+
+Similarly, $Q_{k,\xx}$ encodes the sensitivity of the Q-function to state perturbations, and $Q_{k,\xu}$ captures
+the coupling: a state error may couple with control via the cost or dynamics, and the full DDP accounts for both.
+
+
+## The Discrete Riccati Recursion
+
+
+
+### Derivation from the Q-Function
+
+
+The optimal feedback law minimizes the Q-function with respect to $\du_k$:
+\begin{equation}
+\du_k^* = \argmin_{\du_k} Q_k(\dx_k,\du_k).
+\label{eq:ch5:optimal-control}
+\end{equation}
+
+Taking the gradient with respect to $\du_k$ and setting it to zero:
+\begin{equation}
+\frac{\partial Q_k}{\partial \du_k} = Q_{k,\uu}\du_k + Q_{k,\xu}^\T\dx_k + Q_{k,\mathbf{u}} = 0.
+\label{eq:ch5:control-optim}
+\end{equation}
+
+Solving for $\du_k$ (assuming $Q_{k,\uu}$ is invertible):
+\begin{equation}
+\du_k^* = -Q_{k,\uu}^{-1}(Q_{k,\xu}^\T\dx_k + Q_{k,\mathbf{u}}).
+\label{eq:ch5:optimal-control-explicit}
+\end{equation}
+
+This can be rewritten as:
+\begin{equation}
+\du_k^* = -\mat{K}_k\dx_k - \vec{k}_k,
+\label{eq:ch5:feedback-affine}
+\end{equation}
+where
+\begin{align}
+\mat{K}_k &= Q_{k,\uu}^{-1}Q_{k,\xu}^\T, \label{eq:ch5:gain-def}\\
+\vec{k}_k &= Q_{k,\uu}^{-1}Q_{k,\mathbf{u}}. \label{eq:ch5:feedforward-def}
+\end{align}
+
+Substituting this optimal control back into the Q-function and using matrix identities (completing the square
+in the control variable), we obtain the **value function** at step $k$:
+\begin{align}
+V_k(\dx_k) &= Q_k(\dx_k,\du_k^*) \notag \\
+&= \frac{1}{2}\dx_k^\T\mat{S}_k\dx_k + \vec{s}_k^\T\dx_k + \text{const},
+\label{eq:ch5:value-function}
+\end{align}
+where the cost-to-go matrix $\mat{S}_k$ is given by:
+\begin{align}
+\mat{S}_k &= Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T. \label{eq:ch5:S-def}
+\end{align}
+
+Substituting the expressions for $Q_{k,\xx}$, $Q_{k,\uu}$, $Q_{k,\xu}$ from Eqs.~\eqref{eq:ch5:Qxx}--\eqref{eq:ch5:Qxu},
+we arrive at the **backward Riccati recursion**:
+\begin{align}
+\mat{S}_T &= \mat{Q}_{T,\xx}, \label{eq:ch5:riccati-terminal}\\[4pt]
+\mat{K}_k &= (Q_{k,\uu})^{-1}Q_{k,\xu}^\T \notag \\
+&= (\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}(\mat{N}_k^\T + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k), \label{eq:ch5:gain-full}\\[4pt]
+\mat{S}_k &= \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T \notag \\
+&= \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - (\mat{N}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k)
+\notag \\
+&\quad \cdot (\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}(\mat{N}_k^\T + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k)^\T. \label{eq:ch5:riccati-full}
+\end{align}
+
+
+### The iLQR Simplification
+
+
+*Iterative Linear Quadratic Regulator* (iLQR) drops the cross-coupling term $\mat{N}_k$ and the second-order
+dynamics term $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$ from $Q_{k,\xu}$. This is valid when:
+\begin{enumerate}
+\item The cost function has no explicit cross-coupling, i.e., $\ell_{k,\xu} = 0$.
+\item The effect of future cost on control via state dynamics is considered second-order and acceptable to ignore.
+\end{enumerate}
+
+Under these assumptions, $Q_{k,\xu} \approx 0$, and the Riccati recursion simplifies to:
+\begin{align}
+\mat{K}_k &\approx (\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k, \label{eq:ch5:gain-ilqr}\\[4pt]
+\mat{S}_k &\approx \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k
+(\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k. \label{eq:ch5:riccati-ilqr}
+\end{align}
+
+This form is computationally cheaper (no second-order cross terms) and often numerically more stable. The gain
+no longer depends on $\mat{N}_k$, so the feedback is insensitive to immediate cross-coupling in the cost.
+
+\begin{designbox}
+**When to use iLQR vs full DDP:**
+\begin{itemize}
+\item **iLQR** is preferred when computational speed matters and the cost function is purely diagonal
+      (no cross-coupling between states and inputs in the cost).
+\item **Full DDP** is necessary when the cost has explicit cross-coupling (e.g., $\ell(\x,\uvec) = \x^\T\mat{M}\uvec$),
+      or when the system exhibits strong velocity-dependent effects that must be accounted for in the gain.
+\item In practice, many problems can be reformulated to avoid cross-coupling, so iLQR is often the default.
+      Start with iLQR; if results are suboptimal, try full DDP.
+\end{itemize}
+\end{designbox}
+
+
+### The Quadratic Form Identity
+
+
+Regardless of whether we use full DDP or iLQR, an equivalent and more numerically stable form of the Riccati
+update can be derived by substituting the optimal gain back into the value function. After algebraic manipulation:
+\begin{equation}
+\mat{S}_k = \mat{Q}_{k,\xx} + \mat{K}_k^\T\mat{R}_k\mat{K}_k
++ (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k - \mat{B}_k\mat{K}_k).
+\label{eq:ch5:riccati-alt}
+\end{equation}
+
+This form is useful for verification and for understanding the role of the gain: the term $\mat{K}_k^\T\mat{R}_k\mat{K}_k$
+reflects the input cost incurred by the feedback law, and the last term reflects the propagation of the
+cost-to-go via the closed-loop dynamics $\mat{A}_k - \mat{B}_k\mat{K}_k$.
+
+
+## Differential Dynamic Programming (DDP)
+
+
+
+### The DDP Algorithm
+
+
+DDP embeds the LQR subproblem (Riccati recursion) within an iterative loop that handles nonlinearity by
+successive linearization:
+
+\begin{algorithm}[H]
+\caption{Differential Dynamic Programming (Full)}
+\label{alg:ch5:ddp}
+\begin{algorithmic}[1]
+\Require Initial nominal trajectory $\bar\x_0^{(0)}, \bar\uvec_0^{(0)}, \ldots, \bar\x_T^{(0)}$,
+         regularization parameter $\mu_0 > 0$, line-search parameters $\alpha_{\min}$, $c_1$.
+\Ensure Optimized trajectory $\bar\x_0, \ldots, \bar\x_T$ and feedback gains $\mat{K}_k$.
+
+\For{iteration $i = 0, 1, 2, \ldots$ until convergence}
+  \State **Forward Pass (Rollout):**
+  \State \quad Roll out the nominal trajectory by integrating the nonlinear dynamics:
+  \State \quad \quad $\bar\x_{k+1}^{(i)} = f(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})$ for $k = 0, \ldots, T-1$.
+  \State \quad Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar\x_k^{(i)}, \bar\uvec_k^{(i)}) + \ell_T(\bar\x_T^{(i)})$.
+
+  \State **Linearize Dynamics:**
+  \State \quad For each time step $k = 0, \ldots, T-1$:
+  \State \quad \quad $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+  \State \quad \quad $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+
+  \State **Quadraticize Cost:**
+  \State \quad For each time step $k = 0, \ldots, T-1$:
+  \State \quad \quad Compute second-order Taylor expansion of $\ell_k$ around $(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})$:
+  \State \quad \quad \quad $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+  \State \quad \quad \quad $\mat{R}_k = \frac{\partial^2 \ell_k}{\partial \uvec^2}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+  \State \quad \quad \quad $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+  \State \quad Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar\x_T^{(i)}}$
+
+  \State **Backward Pass (Riccati Recursion):**
+  \State \quad Initialize: $\mat{S}_T = \mat{Q}_{T,\xx}$
+  \State \quad For $k = T-1, T-2, \ldots, 0$:
+  \State \quad \quad Compute Q-function Hessians (full DDP):
+  \State \quad \quad \quad $Q_{k,\uu} = \mat{R}_k + \mu\mat{I} + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k$
+  \State \quad \quad \quad $Q_{k,\xu} = \mat{N}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$
+  \State \quad \quad \quad $Q_{k,\xx} = \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k$
+  \State \quad \quad Invert:
+  \State \quad \quad \quad $Q_{k,\uu}^{-1}$ (with check for positive-definiteness)
+  \State \quad \quad Compute gain and value function update:
+  \State \quad \quad \quad $\mat{K}_k = Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
+  \State \quad \quad \quad $\mat{S}_k = Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
+  \EndFor
+
+  \State **Forward Rollout with Line Search:**
+  \State \quad For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
+  \State \quad \quad For $k = 0, \ldots, T-1$:
+  \State \quad \quad \quad $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
+  \State \quad \quad \quad $\x_k = \bar\x_k^{(i)} + \alpha (\x_k - \bar\x_k^{(i)}) + \text{dynamics\_integration}$
+  \State \quad \quad \quad $\uvec_k = \bar\uvec_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k^{(i)})$
+  \State \quad \quad Roll out full trajectory and compute cost $J_{\text{trial}}$.
+  \State \quad \quad If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
+  \State \quad If no acceptable $\alpha$ found: decrease $\mu$ and retry backward pass, or exit with warning.
+
+  \State **Update:**
+  \State \quad $\bar\x_k^{(i+1)}, \bar\uvec_k^{(i+1)} \gets \text{accepted trial trajectory}$
+  \State \quad Adjust $\mu$ adaptively (decrease if step was good, increase if poor).
+
+  \State **Check Convergence:**
+  \State \quad If $\|\Delta \uvec\|$ and cost change are below threshold: break.
+\EndFor
+
+\Return $\bar\x_0, \ldots, \bar\x_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
+\end{algorithmic}
+\end{algorithm}
+
+
+### iLQR Variant
+
+
+The iterative LQR (iLQR) simplifies the backward pass by setting $Q_{k,\xu} = \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$
+(dropping the immediate cost cross-coupling $\mat{N}_k$) and removing the second-order term from the dynamics
+when updating $Q_{k,\xx}$. The result is a gain that depends only on the dynamics and the cost-to-go, not on the
+structure of the immediate cost function.
+
+
+### Key Observations
+
+
+\begin{enumerate}
+\item **Exact linearization and quadratization:** At each iteration, we compute the exact Jacobians of the
+      nonlinear dynamics and the exact Hessians of the nonlinear cost. We do not approximate these; they are
+      precise local models.
+
+\item **Solving an exact LQR subproblem:** The backward pass solves a discrete-time linear-quadratic regulator
+      problem exactly via the Riccati recursion.
+
+\item **Newton-type iteration on trajectory:** Each forward pass updates the nominal trajectory. Near a local
+      optimum, this is a Newton step in trajectory space, giving quadratic convergence.
+
+\item **Line search and regularization:** Away from the optimum, a line search (with step size $\alpha < 1$)
+      ensures descent. Regularization $\mu\mat{I}$ added to $Q_{k,\uu}$ ensures invertibility and implements a
+      trust-region constraint.
+
+\item **No approximation of the global problem:** DDP does not approximate the nonlinear trajectory problem globally.
+      Rather, it re-centers the tangent-space analysis at each iteration, always working with the exact local model.
+\end{enumerate}
+
+\begin{warningbox}
+DDP does not ``approximate'' the nonlinear problem. Each backward pass solves an *exact* LQR problem in the
+current tangent space. Each forward pass updates the base point for the next tangent-space analysis. Iteration
+refines the *trajectory*, not the *quality of the local model*. Near a local optimum, DDP converges
+quadratically---precisely because each re-linearization eliminates the $O(\norm{\dx}^2)$ residual from the
+previous tangent space.
+\end{warningbox}
+
+
+## Convergence Analysis: DDP as Newton's Method
+
+\label{sec:ch5:ddp-as-newton}
+
+
+### The Trajectory Optimization KKT Conditions
+
+
+Consider the constrained trajectory optimization problem:
+\begin{equation}
+\min_{\x_k, \uvec_k} \sum_{k=0}^{T-1} \ell_k(\x_k,\uvec_k) + \ell_T(\x_T)
+\quad \text{s.t.} \quad \x_{k+1} = f(\x_k,\uvec_k), \quad k = 0, \ldots, T-1.
+\label{eq:ch5:traj-opt-full}
+\end{equation}
+
+The Lagrangian is:
+\begin{equation}
+\mathcal{L} = \sum_{k=0}^{T-1} \ell_k(\x_k,\uvec_k) + \ell_T(\x_T) - \sum_{k=0}^{T-1} \vec{\lambda}_{k+1}^\T(f(\x_k,\uvec_k) - \x_{k+1}).
+\label{eq:ch5:lagrangian}
+\end{equation}
+
+The KKT conditions are:
+\begin{align}
+\frac{\partial \mathcal{L}}{\partial \uvec_k} &= \frac{\partial \ell_k}{\partial \uvec} + \frac{\partial f}{\partial \uvec}^\T\vec{\lambda}_{k+1} = 0, \quad k = 0, \ldots, T-1, \label{eq:ch5:kkt-u}\\
+\frac{\partial \mathcal{L}}{\partial \x_k} &= \frac{\partial \ell_k}{\partial \x} - \vec{\lambda}_k + \frac{\partial f}{\partial \x}^\T\vec{\lambda}_{k+1} = 0, \quad k = 1, \ldots, T-1, \label{eq:ch5:kkt-x-mid}\\
+\frac{\partial \mathcal{L}}{\partial \x_T} &= \frac{\partial \ell_T}{\partial \x} - \vec{\lambda}_T = 0. \label{eq:ch5:kkt-x-term}
+\end{align}
+
+These form a system of coupled nonlinear equations in $(\x_k, \uvec_k, \vec{\lambda}_k)$.
+
+
+### Newton's Method Applied to KKT Conditions
+
+
+Newton's method for solving the KKT system would compute the Hessian of the Lagrangian and take a Newton step.
+However, this is impractical for large trajectory problems. DDP avoids the full Newton Hessian by recognizing that
+*the problem has a special structure*: the Hessian can be decomposed into local blocks along the trajectory,
+and solving the KKT conditions locally (at each step via Bellman's principle) recovers the global solution.
+
+Specifically, at step $k$, define the *augmented Hamiltonian*:
+\begin{equation}
+H_k(\x_k,\uvec_k,\vec{\lambda}_{k+1}) = \ell_k(\x_k,\uvec_k) + \vec{\lambda}_{k+1}^\T f(\x_k,\uvec_k).
+\label{eq:ch5:aug-hamiltonian}
+\end{equation}
+
+The KKT conditions for control and costate evolve via:
+\begin{align}
+\vec{\lambda}_k &= \frac{\partial H_k}{\partial \x_k}, \label{eq:ch5:costate-recurse}\\
+0 &= \frac{\partial H_k}{\partial \uvec_k}. \label{eq:ch5:control-first-order}
+\end{align}
+
+Taking a Newton step in the control direction (holding the state and costate fixed momentarily):
+\begin{equation}
+\uvec_k^{(i+1)} = \uvec_k^{(i)} - \left[\frac{\partial^2 H_k}{\partial \uvec_k^2}\right]^{-1} \frac{\partial H_k}{\partial \uvec_k}.
+\label{eq:ch5:newton-control}
+\end{equation}
+
+This is precisely the optimal control update we compute in the backward pass! Combined with the costate update
+and the forward pass (which moves to a new trajectory point), DDP implements a structured Newton method for the
+trajectory optimization KKT conditions.
+
+
+### Local Quadratic Convergence
+
+
+\begin{theorem}[Local Quadratic Convergence of DDP]
+\label{thm:ch5:ddp-convergence}
+Suppose $(\x_k^*, \uvec_k^*, \vec{\lambda}_k^*)$ is a strict local minimum of the trajectory optimization problem
+(i.e., the second-order sufficient conditions hold). Let the nonlinear dynamics $f$ and cost functions $\ell_k$ be
+twice continuously differentiable in a neighborhood of the optimal trajectory. Then, starting sufficiently close
+to the optimum, the DDP algorithm with full step size ($\alpha = 1$) exhibits **local quadratic convergence**:
+\begin{equation}
+\|\Delta\uvec^{(i+1)}\| \leq C \|\Delta\uvec^{(i)}\|^2,
+\label{eq:ch5:quad-convergence}
+\end{equation}
+where $C > 0$ is a constant depending on the second derivatives of the problem, and $\Delta\uvec^{(i)}$ measures
+the control perturbations at iteration $i$.
+\end{theorem}
+
+\begin{proof}[Sketch]
+Near the optimum, the KKT residuals are $O(\Delta\uvec)$ in magnitude. One Newton step on the KKT system
+reduces the residual by a factor of $O(\Delta\uvec)$, giving $O(\Delta\uvec^2)$ residual after one step.
+DDP re-linearizes at each iteration, which is the hallmark of Newton's method. Away from the optimum,
+line search and regularization ensure descent; near the optimum (where the Taylor expansion is accurate),
+the Newton step is accepted and quadratic convergence is achieved.
+\end{proof}
+
+This theorem is powerful: it tells us that DDP is not a heuristic approximation scheme but a structured Newton
+method with guaranteed local convergence properties. The quadratic convergence rate means that each iteration
+(near the optimum) roughly doubles the number of correct digits, leading to very fast final convergence.
+
+\begin{remark}
+If we use iLQR (dropping second-order dynamics terms), the convergence is typically *superlinear* rather
+than quadratic. However, iLQR is often faster overall due to lower computational cost per iteration, so there
+is a trade-off between convergence rate and cost per iteration.
+\end{remark}
+
+
+## Worked Numerical Example: Inverted Pendulum Swing-Up
+
+
+To make DDP concrete, we present a detailed example: swinging up an inverted pendulum from the hanging equilibrium
+to the unstable upright equilibrium, then balancing it.
+
+
+### System Model
+
+
+The inverted pendulum has:
+\begin{align}
+m &= 1 \text{ kg (mass)}, \quad \ell = 1 \text{ m (length)}, \quad g = 10 \text{ m/s}^2, \quad \mu = 0.1 \text{ (friction)}. \label{eq:ch5:pendulum-params}
+\end{align}
+
+The state is $\x = [\theta, \dot\theta]^\T$ (angle and angular velocity), and the input is $\uvec = \tau$ (torque).
+The nonlinear dynamics are:
+\begin{equation}
+\ddot\theta = g\sin\theta + \mu\dot\theta + \tau,
+\label{eq:ch5:pendulum-dynamics}
+\end{equation}
+or in first-order form:
+\begin{align}
+\dot\theta &= \omega, \\
+\dot\omega &= 10\sin\theta + 0.1\omega + \tau.
+\label{eq:ch5:pendulum-first-order}
+\end{align}
+
+
+### Cost Function
+
+
+We define a two-phase cost:
+\begin{enumerate}
+\item **Swing-up phase** ($k = 0, \ldots, T_1 - 1$): Drive the pendulum to the top with minimal energy.
+      \begin{equation}
+      \ell_k = (1 - \cos\theta_k) + 0.1\,\omega_k^2 + 0.01\,\tau_k^2.
+      \label{eq:ch5:pendulum-cost-swing}
+      \end{equation}
+      The term $(1 - \cos\theta_k)$ encourages $\theta \to \pi$ (upright).
+
+\item **Balancing phase** ($k = T_1, \ldots, T-1$): Maintain balance near the top with minimal control effort.
+      \begin{equation}
+      \ell_k = q_x(\theta_k - \pi)^2 + q_\omega\,\omega_k^2 + r\,\tau_k^2,
+      \label{eq:ch5:pendulum-cost-balance}
+      \end{equation}
+      with $q_x = 100$, $q_\omega = 10$, $r = 0.1$.
+
+\item **Terminal cost:**
+      \begin{equation}
+      \ell_T = 100(\theta_T - \pi)^2 + 10\,\omega_T^2.
+      \label{eq:ch5:pendulum-cost-terminal}
+      \end{equation}
+\end{enumerate}
+
+
+### DDP Iterations
+
+
+We initialize the algorithm with a nominal open-loop trajectory (e.g., apply torque $\tau = 1$ for $T_1 / 2$ steps,
+then $\tau = 0$). Here we show a summary of iterations:
+
+\begin{table}[H]
+\centering
+\caption{DDP Convergence for Inverted Pendulum Swing-Up ($T = 100$ steps, $T_1 = 50$)}
+\label{tab:ch5:ddp-convergence}
+\begin{tabular}{c c c c}
+\hline
+Iteration & Total Cost $J$ & Cost Change $\Delta J$ & $\|\Delta\uvec\|_2$ \\
+\hline
+0 & 52.34 & --- & --- \\
+1 & 41.18 & -11.16 & 3.52 \\
+2 & 28.75 & -12.43 & 2.18 \\
+3 & 22.41 & -6.34 & 1.05 \\
+4 & 21.04 & -1.37 & 0.35 \\
+5 & 20.98 & -0.06 & 0.08 \\
+6 & 20.98 & -0.001 & 0.012 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{description}
+\item[Iteration 0:] Initial trajectory (open-loop control). Cost is high due to suboptimal control.
+\item[Iterations 1-2:] Rapid cost reduction. The DDP updates discover that applying larger initial torque
+      accelerates the swing-up, reducing the total cost significantly.
+\item[Iteration 3:] Transition to fine-tuning. The trajectory shape becomes near-optimal; further improvements
+      are smaller.
+\item[Iterations 4-6:] Convergence. Cost change drops below $10^{-3}$, control update norm becomes tiny,
+      indicating convergence to a local optimum.
+\end{description}
+
+
+### Feedback Gains and Closed-Loop Performance
+
+
+After convergence, the DDP algorithm has produced feedback gains $\mat{K}_k$ and feedforward controls $\vec{k}_k$.
+A sample of gains during the balancing phase ($k = 60, \ldots, 65$):
+\begin{table}[H]
+\centering
+\caption{Sample DDP Feedback Gains During Balancing Phase}
+\label{tab:ch5:ddp-gains}
+\begin{tabular}{c c c c}
+\hline
+Step $k$ & $K_{k,1}$ (position) & $K_{k,2}$ (velocity) & $\vec{k}_k$ (feedforward) \\
+\hline
+60 & -95.3 & -12.4 & 0.15 \\
+61 & -96.1 & -12.7 & 0.12 \\
+62 & -97.2 & -13.1 & 0.08 \\
+\hline
+\end{tabular}
+\end{table}
+
+These gains are large (especially $K_{k,1}$), reflecting the instability of the upright equilibrium: a small
+angle error must be corrected with significant torque. The velocity gain provides damping.
+
+With these gains, the closed-loop system tracks the nominal trajectory even in the presence of small disturbances,
+ensuring robust balancing.
+
+
+## Constraint Handling
+
+
+
+### Control Bounds via Clamping
+
+
+Torque saturates: $|\tau| \leq \tau_{\max}$. In the forward rollout, after computing the desired control
+$\uvec_{\text{des}} = \bar\uvec_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k)$, clamp it:
+\begin{equation}
+\uvec_k = \max(-\tau_{\max}, \min(\tau_{\max}, \uvec_{\text{des}})).
+\label{eq:ch5:clamping}
+\end{equation}
+
+A limitation of clamping is that the backward pass ignores the nonlinear constraint; if the current trajectory
+violates bounds, the DDP gain may still produce out-of-bounds controls on the first few iterations. *Proper*
+handling requires either:
+\begin{enumerate}
+\item *Augmented Lagrangian* methods: Add penalty terms to the cost that penalize constraint violation, then
+      iterate to increase the penalty until the constraint is satisfied.
+\item *Active-set methods*: Identify which bounds are active (saturated) and solve a reduced problem with those
+      constraints active, per Pontryagin's conditions.
+\end{enumerate}
+
+
+### State Constraints via Penalty Methods
+
+
+Suppose we require $\theta \in [-\theta_{\max}, \theta_{\max}]$. Add a penalty term to the cost:
+\begin{equation}
+\ell_k^{\text{penalized}} = \ell_k(\x_k,\uvec_k) + \frac{\lambda}{2}\max(0, |\theta_k| - \theta_{\max})^2.
+\label{eq:ch5:penalty-cost}
+\end{equation}
+
+As $\lambda \to \infty$, the penalty forces $\theta_k$ toward the constraint. In practice, start with moderate $\lambda$
+and increase it if the constraint is violated.
+
+
+### Barrier Functions and Trust Regions
+
+
+An alternative is to use a barrier function, which approaches $-\infty$ as the constraint is violated:
+\begin{equation}
+\ell_k^{\text{barrier}} = \ell_k(\x_k,\uvec_k) - \lambda \log(\theta_{\max}^2 - \theta_k^2).
+\label{eq:ch5:barrier-cost}
+\end{equation}
+
+The advantage is that the barrier function automatically prevents the algorithm from leaving the feasible region.
+
+*Trust regions* can also be used: constrain the forward pass to stay within a distance $\epsilon$ of the
+nominal trajectory (in some norm). This indirectly enforces that we do not venture too far into nonlinear regions
+where the quadratic approximation breaks down.
+
+
+## Regularization and Adaptive Damping
+
+
+
+### Levenberg-Marquardt Interpretation
+
+
+The regularization term $\mu\mat{I}$ added to $Q_{k,\uu}$ is the Levenberg-Marquardt (LM) damping parameter.
+It has two effects:
+\begin{enumerate}
+\item **Numerical stability:** Ensures $Q_{k,\uu} + \mu\mat{I} \succ 0$ even if the unregularized $Q_{k,\uu}$
+      is singular or ill-conditioned.
+\item **Step-size control:** Large $\mu$ gives conservative (small) steps; $\mu \to 0$ recovers the Newton step.
+\end{enumerate}
+
+In the LM setting, the step direction is:
+\begin{equation}
+\Delta\uvec = -(\nabla^2 J + \mu\mat{I})^{-1}\nabla J,
+\label{eq:ch5:lm-step}
+\end{equation}
+a blend between the Newton direction (gradient of the Hessian) and the gradient direction (step size $\sim 1/\mu$).
+
+
+### Adaptive Regularization Schedule
+
+
+A practical strategy is to adjust $\mu$ based on the quality of the forward rollout:
+\begin{enumerate}
+\item Start with $\mu_0$ (e.g., $\mu_0 = 0.1$).
+\item After a successful step (cost decreased): $\mu \gets \mu / 10$ (trust the quadratic model more).
+\item After a failed step (cost increased despite line search): $\mu \gets 10\mu$ (reduce trust in the model).
+\item If $\mu$ exceeds a threshold (e.g., $\mu > 10^6$), the quadratic model is deemed unreliable; restart
+      with a simpler approach (e.g., gradient descent) or declare failure.
+\end{enumerate}
+
+
+### Expected vs Actual Cost Reduction
+
+
+The backward pass predicts the cost reduction based on the quadratic model:
+\begin{equation}
+\Delta J_{\text{expected}} = -\frac{1}{2}\sum_{k=0}^{T-1} \du_k^{(\text{ff})\T}Q_{k,\uu}\du_k^{(\text{ff})}.
+\label{eq:ch5:expected-reduction}
+\end{equation}
+
+After rolling out the trajectory with the actual nonlinear dynamics, the actual cost reduction is:
+\begin{equation}
+\Delta J_{\text{actual}} = J_{\text{new}} - J_{\text{old}}.
+\label{eq:ch5:actual-reduction}
+\end{equation}
+
+The ratio $\rho = \Delta J_{\text{actual}} / \Delta J_{\text{expected}}$ indicates how well the quadratic model
+predicts the nonlinear outcome:
+\begin{itemize}
+\item $\rho \approx 1$: Quadratic model is accurate; decrease $\mu$.
+\item $\rho < 0.1$: Model is poor; increase $\mu$ or re-linearize.
+\item $\rho < 0$: Cost increased (bad step); always increase $\mu$ or use line search.
+\end{itemize}
+
+
+## Cost Weight Selection
+
+
+Choosing the matrices $\mat{Q}$ and $\mat{R}$ is as much art as science. Here are practical guidelines.
+
+
+### Physical Normalization (Bryson's Rule)
+
+
+**Bryson's Rule** suggests normalizing each state and control by its maximum acceptable magnitude:
+\begin{align}
+\tilde\x_k &= \frac{\x_k}{x_{\max}}, \quad \tilde\uvec_k = \frac{\uvec_k}{u_{\max}}, \label{eq:ch5:bryson-norm}\\
+Q &= \frac{1}{x_{\max}^2}, \quad R = \frac{1}{u_{\max}^2}. \label{eq:ch5:bryson-weights}
+\end{align}
+
+For example, if position should not exceed $1$ meter and torque should not exceed $10$ N$\cdot$m, then:
+$Q = 1$, $R = 0.01$. This scaling ensures that the cost function naturally penalizes violations of physical
+constraints.
+
+
+### Frequency-Domain Interpretation
+
+
+For a linearized system with dynamics $\dot\x = \mat{A}\x + \mat{B}\uvec$, the LQR cost $\int_0^\infty (\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec) dt$
+has a frequency-domain interpretation via Bode plots. The closed-loop bandwidth is roughly proportional to $\sqrt{Q/R}$.
+If $Q$ is large relative to $R$, the controller is aggressive and has high bandwidth. Conversely, large $R$ gives
+a slow, conservative controller.
+
+For the inverted pendulum, the natural frequency of small oscillations around the upright is $\omega_n \approx \sqrt{g/\ell} \approx 3.16$ rad/s.
+To balance with a bandwidth slightly faster than this (e.g., $\omega_c = 5$ rad/s), one might choose $Q/R$ to achieve
+a closed-loop pole at $-5$ rad/s.
+
+
+### Tuning in Practice
+
+
+Start with Bryson's rule. If the resulting control is too aggressive or too sluggish:
+\begin{itemize}
+\item **Too slow:** Increase $Q$ (penalize errors more) or decrease $R$ (make control cheaper).
+\item **Too aggressive:** Decrease $Q$ or increase $R$ (penalize control effort).
+\item **Oscillatory:** Increase $R$ to damp the response.
+\item **Asymmetric performance:** Use diagonal $\mat{Q}$ with different weights for different states.
+\end{itemize}
+
+Systematic tuning can be done by grid search or by tools like the Ziegler--Nichols method (adapted to LQR).
+Modern approaches use iterative adjustment based on simulation or hardware experiments.
+
+
+## iLQR vs Full DDP: Computational Trade-offs
+
+\label{sec:ch5:ilqr-vs-ddp}
+
+
+### Computational Complexity
+
+
+**Full DDP** requires:
+\begin{itemize}
+\item Forward pass: $O(n)$ (integrate nonlinear dynamics).
+\item Linearization: $O(n^2 m)$ (Jacobians are $n \times m$ matrices, one per step).
+\item Quadratization: $O(n^2 + m^2)$ (Hessians are $n \times n$ and $m \times m$ matrices).
+\item Backward pass: Each Riccati step requires inverting $Q_{k,\uu}$ ($O(m^3)$) and updating $\mat{S}_k$ ($O(n^3)$).
+  Total: $O(T(n^3 + m^3))$.
+\end{itemize}
+
+**iLQR** avoids the cross-coupling terms:
+\begin{itemize}
+\item Backward pass: Invert $Q_{k,\uu}$ ($O(m^3)$) but Riccati update is simpler. Total: $O(T \cdot m^3)$ (typically faster
+  because $m \leq n$).
+\end{itemize}
+
+For typical problems ($n = 10$ states, $m = 2$ controls, $T = 100$ steps):
+\begin{itemize}
+\item Full DDP: $\approx 100 \times 1000 = 10^5$ floating-point operations per iteration.
+\item iLQR: $\approx 100 \times 8 = 800$ floating-point operations per iteration.
+\end{itemize}
+
+iLQR is roughly $100 \times$ faster per iteration. However, if iLQR requires $5 \times$ more iterations to converge,
+the total time can be comparable. Near the optimum, full DDP's quadratic convergence often wins overall.
+
+
+### When Second-Order Terms Matter
+
+
+Second-order dynamics terms ($\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$) become important when:
+\begin{enumerate}
+\item The system is underactuated (many states, few controls), so state errors couple strongly through the dynamics.
+\item The optimal trajectory involves rapid changes in direction or high accelerations.
+\item The cost has explicit cross-coupling ($\ell_{\xu} \neq 0$).
+\item The time horizon is long, and cost propagation through the dynamics is significant.
+\end{enumerate}
+
+For smooth trajectories with modest time horizons and good actuator bandwidth, iLQR usually suffices.
+
+
+## Continuous-Time Formulation
+
+
+
+### Hamilton-Jacobi-Bellman Equation
+
+
+In continuous time, Bellman's principle becomes the *Hamilton-Jacobi-Bellman (HJB)* equation. Let
+$V(t,\x)$ be the value function (optimal cost-to-go) at time $t$ with state $\x(t)$. The HJB equation is:
+\begin{equation}
+-\frac{\partial V}{\partial t} = \min_{\uvec} \left[\ell(t,\x,\uvec) + \frac{\partial V}{\partial \x}^\T f(t,\x,\uvec)\right].
+\label{eq:ch5:hjb}
+\end{equation}
+
+For the finite-horizon problem with terminal cost $\ell_T(\x(T))$, the boundary condition is:
+\begin{equation}
+V(T,\x(T)) = \ell_T(\x(T)).
+\label{eq:ch5:hjb-boundary}
+\end{equation}
+
+This partial differential equation is difficult to solve in general. However, when the cost and dynamics are
+quadratic, the value function is also quadratic, $V(t,\x) = \frac{1}{2}\x^\T\mat{S}(t)\x$, and the HJB equation
+reduces to the differential Riccati equation.
+
+
+### Differential Riccati Equation (DRE)
+
+
+For the continuous-time linear-quadratic regulator with dynamics $\dot\x = \mat{A}(t)\x + \mat{B}(t)\uvec$
+and cost
+\begin{equation}
+J = \frac{1}{2}\x(T)^\T\mat{Q}_T\x(T) + \int_0^T \frac{1}{2}(\x^\T\mat{Q}(t)\x + \uvec^\T\mat{R}(t)\uvec) dt,
+\label{eq:ch5:ct-cost}
+\end{equation}
+the optimal feedback gain is $\uvec^*(t) = -\mat{K}(t)\x(t)$ with $\mat{K}(t) = \mat{R}(t)^{-1}\mat{B}(t)^\T\mat{S}(t)$,
+and the cost-to-go matrix $\mat{S}(t)$ satisfies the **differential Riccati equation**:
+\begin{equation}
+-\dot{\mat{S}} = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch5:DRE}
+\end{equation}
+
+Boundary condition (at the terminal time $t = T$): $\mat{S}(T) = \mat{Q}_T$.
+
+The negative sign and backward time direction reflect the fact that $\mat{S}(t)$ evolves *backward* in time from
+the terminal cost.
+
+
+### Algebraic Riccati Equation (ARE)
+
+
+For time-invariant systems and an infinite time horizon, $\mat{S}(t)$ converges to a steady state $\mat{S}_\infty$
+satisfying the **algebraic Riccati equation**:
+\begin{equation}
+0 = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch5:ARE}
+\end{equation}
+
+The stabilizability and detectability conditions ensure that a unique positive-definite solution exists, and the
+resulting feedback $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ stabilizes the system (renders $\mat{A} - \mat{B}\mat{K}$
+Hurwitz).
+
+
+### Pontryagin's Minimum Principle in Continuous Time
+
+
+The continuous-time analog of the discrete KKT conditions is given by Pontryagin's minimum principle. Define the
+Hamiltonian:
+\begin{equation}
+H(t,\x,\uvec,\vec{\lambda}) = \ell(t,\x,\uvec) + \vec{\lambda}^\T f(t,\x,\uvec).
+\label{eq:ch5:hamiltonian-ct}
+\end{equation}
+
+Pontryagin's principle states that the optimal control minimizes the Hamiltonian:
+\begin{equation}
+\uvec^*(t) = \argmin_{\uvec} H(t,\x^*(t),\uvec,\vec{\lambda}(t)),
+\label{eq:ch5:minimum-principle}
+\end{equation}
+and the costates evolve backward via:
+\begin{equation}
+-\dot{\vec{\lambda}} = \frac{\partial H}{\partial \x} = \frac{\partial \ell}{\partial \x} + \left(\frac{\partial f}{\partial \x}\right)^\T\vec{\lambda}.
+\label{eq:ch5:costate-ode}
+\end{equation}
+
+For the quadratic case, $\vec{\lambda}(t) = \mat{S}(t)\x(t)$ is proportional to the Riccati solution, and
+Pontryagin's conditions recover the standard LQR results.
+
+\begin{intuitionbox}
+The HJB equation, DRE, ARE, Pontryagin's principle, and Newton's method applied to the KKT conditions
+are all equivalent formulations of the same optimization problem---each offering a different perspective.
+The DRE is the most convenient for numerical integration. The ARE is the gateway to classical control
+design (pole placement, robust control). Pontryagin's conditions are essential for handling constraints.
+Newton's method viewpoint explains why DDP converges so rapidly. Together, they form a unified framework
+for understanding optimal control.
+\end{intuitionbox}
+
+
+## Practical Considerations
+
+
+
+### Regularization Revisited
+
+
+When $Q_{k,\uu}$ is ill-conditioned or indefinite (which can happen far from optimality), add a regularization term:
+\begin{equation}
+\mat{K}_k = \bigl(Q_{k,\uu} + \mu\mat{I}\bigr)^{-1}Q_{k,\xu}^\T.
+\label{eq:ch5:regularized-gain}
+\end{equation}
+
+The parameter $\mu > 0$ acts as a Levenberg--Marquardt damping: large $\mu$ produces conservative (small) steps;
+$\mu \to 0$ recovers the full Newton step.
+
+
+### Line Search
+
+
+After computing the feedback law, the forward rollout uses a step-size parameter $\alpha \in (0,1]$:
+\begin{equation}
+\uvec_k = \bar\uvec_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k),
+\label{eq:ch5:line-search}
+\end{equation}
+where $\du_k^{(\text{ff})}$ is the feedforward correction. Backtracking line search ensures sufficient cost decrease
+(Armijo condition).
+
+
+### Convergence Properties
+
+
+Near a local optimum where the second-order sufficient conditions hold:
+\begin{itemize}
+\item DDP with full step ($\alpha = 1$) converges **quadratically**.
+\item iLQR (which omits second-order dynamics terms) converges **superlinearly**.
+\item Both re-linearize at each iteration, ensuring the tangent-space model remains fresh.
+\end{itemize}
+
+
+## Model Predictive Control: Online Trajectory Optimization
+
+
+DDP and iLQR as presented above are *offline* algorithms: they compute an optimal
+trajectory and feedback policy before execution. In practice, disturbances, model mismatch,
+and changing objectives require *online* re-optimization. Model Predictive Control
+(MPC) provides this capability by embedding the DDP/iLQR computation within a real-time
+feedback loop.
+
+
+### The Receding-Horizon Principle
+
+
+At each control cycle (time $t_k$), the MPC controller:
+\begin{enumerate}
+\item Measures the current state $\x_k$.
+\item Solves a finite-horizon optimal control problem of length $N$:
+\begin{equation}
+\min_{\uvec_k, \ldots, \uvec_{k+N-1}} \sum_{j=0}^{N-1} \ell(\x_{k+j}, \uvec_{k+j})
++ V_f(\x_{k+N}),
+\label{eq:ch5:mpc-problem}
+\end{equation}
+subject to the dynamics $\x_{k+j+1} = f(\x_{k+j}, \uvec_{k+j})$.
+\item Applies only the first control $\uvec_k^*$ to the system.
+\item Shifts the horizon forward and repeats at $t_{k+1}$.
+\end{enumerate}
+
+The key insight is that MPC is precisely DDP/iLQR executed at each time step, with the
+previous solution shifted forward as the initial guess (warm-starting).
+
+
+### Warm-Starting and Computational Efficiency
+
+
+When the system evolves smoothly, the optimal trajectory at time $t_{k+1}$ is close to
+the shifted trajectory from time $t_k$. Concretely, if $\{\bar\x_j, \bar\uvec_j\}_{j=k}^{k+N}$
+was optimal at $t_k$, the warm-start for $t_{k+1}$ is:
+\begin{equation}
+\bar\x_j^{(0)} = \bar\x_{j+1}^{\text{prev}}, \quad
+\bar\uvec_j^{(0)} = \bar\uvec_{j+1}^{\text{prev}}, \quad j = k+1, \ldots, k+N-1,
+\label{eq:ch5:warm-start}
+\end{equation}
+with the final element filled by a reasonable extrapolation.
+
+This warm-starting exploits the continuity of the value function and typically reduces the
+number of DDP iterations from many (cold start) to one or two (warm start).
+
+
+### Terminal Cost and Stability
+
+
+The terminal cost $V_f(\x_{k+N})$ in~\eqref{eq:ch5:mpc-problem} plays a critical role
+in guaranteeing stability. The standard approach is to choose $V_f$ as the \emph{infinite-horizon
+LQR cost} at the target:
+\begin{equation}
+V_f(\x) = \x^T \mat{S}_\infty \x,
+\label{eq:ch5:terminal-cost}
+\end{equation}
+where $\mat{S}_\infty$ is the solution of the algebraic Riccati equation at the target
+linearization. Under this choice:
+
+\begin{theorem}[MPC Stability]
+\label{thm:ch5:mpc-stability}
+If $V_f$ is a local Control Lyapunov Function (CLF) for the system at the target
+equilibrium, and the terminal constraint $\x_{k+N} \in \mathcal{X}_f$ (a sublevel set of
+$V_f$) is imposed, then the MPC law is asymptotically stabilizing.
+\end{theorem}
+
+The connection to contraction theory (Chapter~\ref{ch:contraction}) is direct: the LQR
+terminal cost provides a contraction metric (Chapter~\ref{ch:duality}) that guarantees
+exponential convergence within the terminal set. MPC stability is therefore a consequence
+of the stability--optimality duality.
+
+
+### The Real-Time Iteration (RTI) Scheme
+
+
+When computational resources are limited (e.g., embedded systems), the RTI approach
+executes exactly *one* Newton step (one backward Riccati pass + one forward rollout)
+per control cycle, rather than iterating DDP to convergence. The RTI scheme:
+
+\begin{enumerate}
+\item Linearizes the dynamics and quadraticizes the cost around the current shifted trajectory.
+\item Performs one backward Riccati sweep to compute $\mat{K}_k$ and $\vec{k}_k$.
+\item Applies $\uvec_k = \bar\uvec_k + \vec{k}_k + \mat{K}_k(\x_k - \bar\x_k)$.
+\item Shifts the trajectory and prepares for the next cycle.
+\end{enumerate}
+
+This is computationally equivalent to applying a single-iteration DDP at each time step.
+The convergence analysis shows that if the system changes slowly relative to the control
+rate, the RTI scheme tracks the optimal solution with bounded error.
+
+\begin{designbox}
+MPC unifies the offline trajectory optimization of this chapter with the online feedback
+requirements of real systems. The computational loop---linearize, solve Riccati, apply
+control, re-linearize---is exactly the tangent-space methodology of this book, executed
+in real time. Modern implementations on embedded hardware achieve cycle times of 1--10~ms
+for systems with $n \leq 50$ states and $N \leq 100$ horizon steps, making MPC practical
+for robotics, automotive, and aerospace applications.
+\end{designbox}
+
+
+
+## Chapter Summary
+
+
+\begin{enumerate}
+\item **Historical evolution:** From Bellman's dynamic programming (1957) to Pontryagin's maximum principle (1962)
+      to DDP (1970), optimal control theory evolved from multiple independent viewpoints that converge on a unified
+      framework.
+
+\item **Local quadratic subproblem:** Nonlinear costs and dynamics are expanded to second order around a nominal
+      trajectory, yielding the Q-function with Hessian terms $Q_{k,\xx}$, $Q_{k,\uu}$, $Q_{k,\xu}$.
+
+\item **Riccati recursion:** Solves the local quadratic subproblem exactly, computing both the optimal feedback
+      gain $\mat{K}_k$ and the cost-to-go matrix $\mat{S}_k$. iLQR simplifies by dropping cross-coupling; full DDP
+      retains it for higher accuracy.
+
+\item **DDP algorithm:** Iterates the Riccati recursion by re-linearizing and re-quadratizing at each trajectory
+      update. This is equivalent to Newton's method applied to the trajectory optimization KKT conditions.
+
+\item **Convergence:** DDP exhibits local quadratic convergence near a local optimum, inheriting Newton's superb
+      final convergence rate. Line search and regularization ensure global descent away from the optimum.
+
+\item **Worked example:** Inverted pendulum swing-up demonstrates cost reduction over iterations and the structure
+      of feedback gains for an underactuated system.
+
+\item **Constraints:** Control bounds via clamping, state constraints via penalties or barriers, and trust regions
+      are practical approaches to enforce constraints.
+
+\item **Cost weighting:** Bryson's rule normalizes by maximum acceptable deviations. Frequency-domain interpretation
+      links weights to closed-loop bandwidth. Iterative tuning refines performance.
+
+\item **Computational trade-offs:** Full DDP is $O(T n^3)$ but exhibits quadratic convergence. iLQR is $O(T m^3)$
+      and often faster overall, though with superlinear rather than quadratic convergence. Choice depends on problem
+      structure and required accuracy.
+
+\item **Continuous time:** HJB equation, DRE, and ARE are the continuous-time analogs. Pontryagin's principle
+      extends optimality conditions to constrained problems. The ARE is the foundation for classical control design.
+
+\item **Duality:** The cost-to-go matrix $\mat{S}_k$ has dual interpretations as cost curvature and as a candidate
+      contraction metric---a connection formalized in the next chapter on contraction analysis.
+\end{enumerate}
+
+\begin{axiombox}
+**Principle of Local Optimality:** The trajectory optimization problem, though globally nonlinear and nonconvex,
+can be solved iteratively by working in local tangent spaces. At each step, we solve an exact, finite-dimensional,
+convex subproblem (the LQR problem). By re-centering the tangent space at each iteration, we avoid committing to a
+global approximation. This principle underlies not only DDP but also many modern algorithms in robotics and machine
+learning (e.g., SAC, MPPI, trajectory optimization in MPC).
+\end{axiombox}
+
+\section*{Exercises}
+
+\begin{enumerate}
+\item **LQR for a double integrator.**
+      Solve the discrete-time LQR problem for $\x_{k+1} = \begin{bmatrix} 1 & h \\ 0 & 1 \end{bmatrix}
+      \x_k + \begin{bmatrix} 0 \\ h \end{bmatrix} u_k$ with $\mat{Q} = \mat{I}_2$, $R = 1$,
+      $h = 0.01$, and horizon $N = 100$. Plot the trajectory and gain $\mat{K}_k$.
+
+\item **Q-function structure.**
+      For the inverted pendulum from the worked example, compute $Q_{k,\xx}$, $Q_{k,\uu}$,
+      and $Q_{k,\xu}$ at the first step. Verify that $Q_{k,\uu} \succ 0$ and interpret the
+      eigenvalues of $Q_{k,\xx}$.
+
+\item **iLQR vs full DDP.**
+      Implement both iLQR and full DDP for the cart-pole system. Run each for 50 iterations
+      starting from the same initial guess. Compare convergence rates and final costs.
+      When do they differ significantly?
+
+\item **Regularization effects.**
+      For the inverted pendulum, run DDP with regularization parameters
+      $\mu \in \{0, 0.01, 0.1, 1, 10\}$. Plot convergence (cost vs. iteration) for each.
+      Explain the trade-off between step size and convergence rate.
+
+\item **MPC horizon sensitivity.**
+      Implement MPC for the inverted pendulum with horizons $N \in \{10, 20, 50, 100\}$.
+      Use the infinite-horizon LQR cost as terminal cost. Compare tracking performance
+      under a disturbance at $t = 1$ s. How short can $N$ be before performance degrades?
+
+\item **Cost weight selection.**
+      For the pendulum swing-up, experiment with different $\mat{Q}/\mat{R}$ ratios.
+      Plot the resulting trajectories and control efforts. Explain why very large $\mat{Q}$
+      can cause DDP to diverge (relate to the condition number of $Q_{k,\uu}$).
+
+\item **Warm-starting effectiveness.**
+      Implement MPC with and without warm-starting. Count the number of DDP iterations
+      needed per time step in each case. Plot the computational savings as a function
+      of the control rate.
+
+\item **Continuous-time HJB.**
+      For the scalar system $\dot{x} = -x + u$ with cost $\int_0^\infty (x^2 + u^2)\,dt$,
+      solve the continuous-time ARE analytically. Verify that $V(x) = Sx^2$ satisfies the
+      HJB equation $0 = x^2 + Sx^2/S - Sx\cdot x + Sx(-x + u^*)$.
+\end{enumerate}
