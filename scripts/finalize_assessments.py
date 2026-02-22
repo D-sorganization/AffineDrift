@@ -40,10 +40,13 @@ def finalize():
             if lines:
                 preview = "\n".join(lines[:15])
                 content += f"\n### Preview\n{preview}\n..."
-            content += "\n\n[Full Pragmatic Programmer Review](Assessment_Pragmatic_Programmer.md)\n"
+            content += (
+                "\n\n[Full Pragmatic Programmer Review](Assessment_Pragmatic_Programmer.md)\n"
+            )
 
     comp_path.write_text(content, encoding="utf-8")
     print("Updated Comprehensive Assessment.")
+
 
 if __name__ == "__main__":
     finalize()
