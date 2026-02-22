@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in resources-videos.qmd:203"
+title: "Incomplete Placeholder in resources-software.qmd:126"
 labels: ['incomplete-implementation', 'critical', 'high-impact']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `resources-videos.qmd` at line 203.
+Found critical incomplete implementation in `resources-software.qmd` at line 126.
 
 ## Context
-**Type**: Placeholder | **Location**: `resources-videos.qmd:203`
+**Type**: Placeholder | **Location**: `resources-software.qmd:126`
 
 ```python
-<div class="youtube-placeholder-content">
+<img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
 ```
 
 ## Audit Metrics
