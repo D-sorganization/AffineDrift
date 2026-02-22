@@ -1,7 +1,7 @@
 % ==========================================================================
-%  Chapter 2: Configuration Space and Degrees of Freedom
+%  Chapter 2: Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}
 % ==========================================================================
-\chapter{Configuration Space and Degrees of Freedom}
+\chapter{Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}}
 \label{ch:configuration}
 
 \epigraph{%
@@ -10,7 +10,7 @@
 
 \section{Degrees of Freedom (DOF)}
 
-In Chapter 1, we learned that the State Space consists of both the position coordinates ($q$) and the velocity coordinates ($\dot{q}$). But how many position coordinates $q$ does our system actually have? And why?
+In Chapter 1, we learned that the State Space\index{State Space} consists of both the position coordinates ($q$) and the velocity coordinates ($\dot{q}$). But how many position coordinates $q$ does our system actually have? And why?
 
 Consider a single speck of dust floating completely unconstrained in a room. To perfectly define where it is, you need $x, y, z$. If it is a rigid block of steel floating in the room, knowing $x, y, z$ only fixes its center of mass. It could be spun around, pitched entirely backward, or rolled on its side. It therefore has three additional \textbf{angles} (roll, pitch, yaw) defining its rotation. 
 
@@ -28,7 +28,7 @@ The collection of all valid configurations a system can possibly achieve—accou
 
 Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold} (which we explore deeply in Volume I). The number of dimensions of this space is exactly equal to the Degrees of Freedom. 
 
-\begin{laymansbox}{Configuration Space vs. State Space}{config_state}
+\begin{laymansbox}{Configuration Space vs. State Space\index{State Space}}{config_state}
   A system with $n$ Degrees of Freedom has a Configuration Space $\configspace$ of dimension $n$, defined completely by the vector $\bm{q} = [q_1, q_2, ..., q_n]^T$. 
 
   The corresponding \textbf{State Space} $\statespace$ (from Chapter 1) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
@@ -44,11 +44,11 @@ Instead, we use \textbf{Generalized Coordinates}. Since an elbow is a pin joint 
 
 Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors. 
 
-\subsection{Forward Kinematics}
+\subsection{Forward Kinematics\index{Kinematics}}
 
-The mathematical function that translates our abstract Generalized Coordinates $\bm{q}$ (the angles in our configuration space) back into the physical 3D Euclidean space of the real world is called \textbf{Forward Kinematics}.
+The mathematical function that translates our abstract Generalized Coordinates $\bm{q}$ (the angles in our configuration space) back into the physical 3D Euclidean space of the real world is called \textbf{Forward Kinematics\index{Kinematics}}.
 
-If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics is the nonlinear function $\bm{f}_{kin}$:
+If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics\index{Forward Kinematics} is the nonlinear function $\bm{f}_{kin}$:
 
 \begin{equation}
    \bm{p}_{end} = \bm{f}_{kin}(\bm{q})
@@ -69,4 +69,4 @@ When controlling physical motion, you are fundamentally commanding a point to tr
 
 However, mapping $\configspace$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\configspace$ is NOT a simple flat plane. It curves recursively onto itself like a circle or a sphere. 
 
-To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.
+To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock\index{Gimbal Lock}"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.

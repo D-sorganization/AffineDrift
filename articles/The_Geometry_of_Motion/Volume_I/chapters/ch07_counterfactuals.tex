@@ -106,7 +106,7 @@ This means that if the drift is smooth (which it is for mechanical systems with 
 mass matrices and smooth potential energy functions), then the ZTCF is smooth. This
 justifies our use of ZTCF trajectories in subsequent numerical and analytical work.
 
-\subsection{The Flow Map and Properties}
+\subsection{The Flow\index{Flow (Dynamical System)} Map and Properties}
 
 For systems where $f$ is defined on all of $\R^n$ or an open domain $\mathcal{X}$, we define
 the \textbf{flow map} (or \textbf{solution map}):
@@ -119,7 +119,7 @@ starting from $\x_0$ at $t=t_0$ (assuming $t_0=0$ for notational simplicity).
 
 The flow map has the following properties:
 
-\begin{proposition}[Properties of the Flow Map]
+\begin{proposition}[Properties of the Flow\index{Flow (Dynamical System)} Map]
 \label{prop:ch7:flow-properties}
 Suppose $f\in C^1(\R^n)$ and the solutions of $\dot\x = f(\x)$ exist for all time. Then:
 \begin{enumerate}
@@ -139,9 +139,9 @@ Suppose $f\in C^1(\R^n)$ and the solutions of $\dot\x = f(\x)$ exist for all tim
 \end{proposition}
 
 The variational equation~\eqref{eq:ch7:variational} is crucial: it shows how perturbations
-to the initial state propagate along the ZTCF trajectory. The Jacobian matrix
+to the initial state propagate along the ZTCF trajectory. The Jacobian\index{Jacobian} matrix
 $\frac{\partial \phi_t^f}{\partial \x_0}$ grows or shrinks depending on the eigenvalues of
-the drift Jacobian $\frac{\partial f}{\partial\x}$ along the trajectory. We will return to
+the drift Jacobian\index{Jacobian} $\frac{\partial f}{\partial\x}$ along the trajectory. We will return to
 this when analyzing contraction.
 
 \subsection{Mathematical Justification}
@@ -502,7 +502,7 @@ identification}. The literature provides well-developed techniques such as:
 For control-affine systems specifically, the key is to ensure that the input variation is
 rich enough to separately identify the drift and the input gain.
 
-\section{Contraction Analysis of the Drift}
+\section{Contraction\index{Contraction Analysis} Analysis of the Drift}
 
 A natural question is: does the drift itself have any stability or contraction properties?
 If the ZTCF is a contracting system, then the controller's job is simplified---the passive
@@ -521,7 +521,7 @@ an $n \times n$ matrix whose eigenvalues and singular values determine how pertu
 propagate along the ZTCF.
 \end{definition}
 
-\begin{theorem}[Drift Contraction via Eigenvalues]
+\begin{theorem}[Drift Contraction\index{Contraction Analysis} via Eigenvalues]
 \label{thm:ch7:drift-contraction}
 Suppose the drift Jacobian $J_f(\x)$ is symmetric and negative definite (all eigenvalues
 have negative real part) along a trajectory $\x(t)$. Then the ZTCF trajectory is locally
@@ -667,7 +667,7 @@ is the principle behind energy-efficient movement in biomechanics and efficient 
 planning in robotics.
 \end{designbox}
 
-\section{Worked Example: Underactuated Double Pendulum}
+\section{Worked Example: Underactuated\index{Underactuated System} Double Pendulum}
 \label{sec:ch7:double-pendulum-full}
 
 We now provide a complete worked example with explicit numerical computation. Consider a
@@ -909,7 +909,7 @@ Qualitatively:
 
 \section{Connection to Contraction and Optimal Control (Detailed Proofs)}
 
-\subsection{Contraction of Drift via Lyapunov Methods}
+\subsection{Contraction of Drift via Lyapunov\index{Lyapunov Stability} Methods}
 
 We now provide a formal proof of the condition under which the drift itself is contracting.
 
@@ -927,7 +927,7 @@ distance between the solutions satisfies
 for some $\alpha > 0$.
 \end{theorem}
 
-\noindent\textbf{Proof:} Consider the Lyapunov function $V(\delta\x) = \frac{1}{2}\norm{\delta\x}^2$,
+\noindent\textbf{Proof:} Consider the Lyapunov\index{Lyapunov Stability} function $V(\delta\x) = \frac{1}{2}\norm{\delta\x}^2$,
 where $\delta\x = \x_1 - \x_2$ is the perturbation. Along the ZTCF, the time derivative is:
 \begin{equation}
 \dot{V} = \delta\x^\T \frac{\partial f}{\partial\x}\bigg|_{\x_2(t)} \delta\x + O(\norm{\delta\x}^2).

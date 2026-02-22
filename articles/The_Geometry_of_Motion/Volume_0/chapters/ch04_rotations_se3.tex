@@ -18,11 +18,11 @@ To know where the Body Frame $B$ is relative to the absolute stationary universe
 
 Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is profoundly mathematically problematic.
 
-\section{Euler Angles and Gimbal Lock}
+\section{Euler Angles\index{Euler Angles} and Gimbal Lock\index{Gimbal Lock}}
 
 The most intuitive way to describe the orientation of an aircraft, drone, or robotic arm is to split rotation into three successive angles around axes, usually denoted as Roll, Pitch, and Yaw ($X, Y, Z$). 
 
-This is known as an \textbf{Euler Angle} representation: $\bm{\theta} = [\theta_1, \theta_2, \theta_3]^T$. While highly intuitive for a human pilot, Euler Angles harbor a fatal mathematical flaw known as \textbf{Gimbal Lock}.
+This is known as an \textbf{Euler Angle} representation: $\bm{\theta} = [\theta_1, \theta_2, \theta_3]^T$. While highly intuitive for a human pilot, Euler Angles\index{Euler Angles} harbor a fatal mathematical flaw known as \textbf{Gimbal Lock\index{Gimbal Lock}}.
 
 \begin{laymansbox}{Gimbal Lock}{gimballock}
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth). 
@@ -47,10 +47,10 @@ Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitu
 1. $R^T R = I$ (The transpose equals the inverse)
 2. $\det(R) = 1$ (The determinant is 1 to preserve right-handed orientation—no reflecting through a mirror)
 
-\begin{principle}{The SO(3) Manifold}{so3}
+\begin{principle}{The SO(3) Manifold\index{Manifold}}{so3}
   The continuous, infinite geometric space of all possible valid $3 \times 3$ rotation matrices satisfying $R^T R = I$ and $\det(R) = 1$ is a mathematical \textbf{manifold} called the \textbf{Special Orthogonal Group in 3 Dimensions}, denoted as $\SO$. 
 
-  If a Configuration Space $\configspace$ is simply a rigid body rotating around a point, we say $\configspace = \SO$.
+  If a Configuration Space\index{Configuration Space} $\configspace$ is simply a rigid body rotating around a point, we say $\configspace = \SO$.
 \end{principle}
 
 \section{Unit Quaternions $\so$}

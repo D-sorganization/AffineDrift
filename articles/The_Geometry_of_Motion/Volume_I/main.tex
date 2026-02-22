@@ -66,8 +66,19 @@
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
 
+%% ---------- Colors ----------
+\usepackage{xcolor}
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+
 %% ---------- Hyperlinks ----------
 \usepackage[hidelinks,bookmarksnumbered]{hyperref}
+\usepackage{imakeidx}
+\makeindex[intoc, title=Index]
 \hypersetup{
   pdftitle={Superposition, Contraction, and the Geometry of Motion},
   pdfauthor={Dieter Olson},
@@ -179,6 +190,8 @@
 \titlespacing*{\chapter}{0pt}{-20pt}{30pt}
 
 %% ==========================================================================
+\hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
+
 \begin{document}
 
 %% ---------- Title page ----------
@@ -267,6 +280,10 @@ A word on notation: we are deliberately explicit. Every matrix dimension, every 
 
 %% ---------- Back matter ----------
 \backmatter
+\include{chapters/glossary}
+\include{chapters/further_reading}
+\printindex
+
 
 \chapter{Notation Reference}
 

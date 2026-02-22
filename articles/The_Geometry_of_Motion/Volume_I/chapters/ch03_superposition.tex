@@ -8,7 +8,7 @@
 At any single instant, the forces acting on a mechanical system---gravity, inertia,
 motor torques, contact forces---add together simply, like items on a receipt. The total
 acceleration is the sum of individual contributions. This chapter proves that statement
-rigorously in three parallel formalisms (Newton--Euler, Lagrangian, screw theory) and
+rigorously in three parallel formalisms (Newton--Euler, Lagrangian\index{Lagrangian Mechanics}, screw theory) and
 carefully delineates what does \emph{not} superpose: trajectories over time.
 \end{laymansbox}
 
@@ -52,7 +52,7 @@ M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{
 \end{equation}
 where $M(\q)\succ 0$ is the mass matrix, $C(\q,\dot\q)\dot\q$ collects Coriolis and
 centrifugal terms, $\vec{g}(\q)$ is the gravity vector, $B(\q)$ maps control inputs to
-generalized forces, $J(\q)$ is the constraint/contact Jacobian, and
+generalized forces, $J(\q)$ is the constraint/contact Jacobian\index{Jacobian}, and
 $\vec{f}^{\,\text{ext}}$ represents external contact wrenches.
 
 \subsection{Derivation of the Mass Matrix}
@@ -69,7 +69,7 @@ where $m_i$ is the mass of link $i$, $\vec{v}_i$ is its linear velocity, $\vec\o
 angular velocity, and $\mat{I}_i$ is its inertia tensor (generally configuration-dependent).
 
 Each velocity $\vec{v}_i$ and $\vec\omega_i$ can be expressed as a linear function of
-$\dot\q$ via the Jacobian:
+$\dot\q$ via the Jacobian\index{Jacobian}:
 \begin{align}
 \vec{v}_i(\q,\dot\q) &= \mat{J}_{v,i}(\q)\,\dot\q, \\
 \vec\omega_i(\q,\dot\q) &= \mat{J}_{\omega,i}(\q)\,\dot\q.
@@ -112,7 +112,7 @@ This positive definiteness is the foundation for many important properties:
 \subsection{Connection to Christoffel Symbols}
 
 The Coriolis and centrifugal terms $C(\q,\dot\q)\dot\q$ arise from taking the material
-derivative of the kinetic energy. Using the Lagrangian framework, the generalized forces
+derivative of the kinetic energy. Using the Lagrangian\index{Lagrangian Mechanics} framework, the generalized forces
 associated with the kinetic energy are
 \begin{equation}
 Q_k^{(\text{kinetic})} = \frac{\dd}{\dd t}\frac{\partial T}{\partial \dot q_k}
@@ -476,7 +476,7 @@ P_{\text{total}} = \uvec^\T \dot\q = \sum_{i=1}^p (\uvec^{(i)})^\T \dot\q = \sum
 This is a \emph{linear superposition of power}: the total power delivered is exactly the sum of
 powers from each input channel. This holds instantaneously at any moment in time.
 
-\subsection{Energy Flow and Acceleration Contributions}
+\subsection{Energy Flow\index{Flow (Dynamical System)} and Acceleration Contributions}
 
 By the work--energy theorem, the power $P_i$ delivered by input channel $i$ is related to the
 rate of change of kinetic energy attributed to that channel. Consider the kinetic energy:
@@ -1224,7 +1224,7 @@ nonempty interior in $\R^n$.
 
 The proof uses the orbit theorem from geometric control theory \cite{Isidori1995, Sastry1999}.
 
-\subsection{Connection to Underactuated Systems}
+\subsection{Connection to Underactuated\index{Underactuated System} Systems}
 
 For underactuated mechanical systems (where $m < n$, i.e., fewer actuators than
 degrees of freedom), the direct control authority $\text{span}\{g_1, \ldots, g_m\}$
@@ -1284,7 +1284,7 @@ Feedback linearization is only safe to use for minimum-phase systems; for
 non-minimum-phase systems, the internal dynamics diverge even as the output tracks
 perfectly.
 
-\subsection{Contrast with Contraction-Based Control}
+\subsection{Contrast with Contraction\index{Contraction Analysis}-Based Control}
 
 \begin{table}[h]
 \centering
@@ -1292,7 +1292,7 @@ perfectly.
 \label{tab:ch3:fl-vs-contraction}
 \begin{tabular}{@{}p{5cm}p{5cm}@{}}
 \toprule
-\textbf{Feedback Linearization} & \textbf{Contraction-Based Control} \\
+\textbf{Feedback Linearization} & \textbf{Contraction\index{Contraction Analysis}-Based Control} \\
 \midrule
 Cancels nonlinearity via feedback & Exploits nonlinearity via metric \\
 Makes closed loop exactly linear & Certifies convergence despite nonlinearity \\
@@ -1465,7 +1465,7 @@ and robustness margins.
       Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
       (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
 
-\item \textbf{Underactuated bracket rank.}
+\item \textbf{Underactuated\index{Underactuated System} bracket rank.}
       For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
       only), compute $[f, g_1]$ and $[f, g_2]$ in the first-order form. Under what
       conditions on $M(\q)$ does the accessibility rank condition hold?

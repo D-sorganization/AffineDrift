@@ -90,7 +90,7 @@ the trajectory, and re-linearizes for the next iteration.
 
 This interpretation is powerful: it guarantees that DDP inherits Newton's \emph{local quadratic convergence}
 property, provided the second-order sufficient conditions hold at a local minimum and the re-linearization
-is exact (which it is, since we use the exact Jacobian at each iteration).
+is exact (which it is, since we use the exact Jacobian\index{Jacobian} at each iteration).
 
 \section{The Local Quadratic Subproblem}
 
@@ -421,7 +421,7 @@ Consider the constrained trajectory optimization problem:
 \label{eq:ch5:traj-opt-full}
 \end{equation}
 
-The Lagrangian is:
+The Lagrangian\index{Lagrangian Mechanics} is:
 \begin{equation}
 \mathcal{L} = \sum_{k=0}^{T-1} \ell_k(\x_k,\uvec_k) + \ell_T(\x_T) - \sum_{k=0}^{T-1} \vec{\lambda}_{k+1}^\T(f(\x_k,\uvec_k) - \x_{k+1}).
 \label{eq:ch5:lagrangian}
@@ -438,7 +438,7 @@ These form a system of coupled nonlinear equations in $(\x_k, \uvec_k, \vec{\lam
 
 \subsection{Newton's Method Applied to KKT Conditions}
 
-Newton's method for solving the KKT system would compute the Hessian of the Lagrangian and take a Newton step.
+Newton's method for solving the KKT system would compute the Hessian of the Lagrangian\index{Lagrangian Mechanics} and take a Newton step.
 However, this is impractical for large trajectory problems. DDP avoids the full Newton Hessian by recognizing that
 \emph{the problem has a special structure}: the Hessian can be decomposed into local blocks along the trajectory,
 and solving the KKT conditions locally (at each step via Bellman's principle) recovers the global solution.
@@ -961,7 +961,7 @@ linearization. Under this choice:
 
 \begin{theorem}[MPC Stability]
 \label{thm:ch5:mpc-stability}
-If $V_f$ is a local Control Lyapunov Function (CLF) for the system at the target
+If $V_f$ is a local Control Lyapunov\index{Lyapunov Stability} Function (CLF) for the system at the target
 equilibrium, and the terminal constraint $\x_{k+N} \in \mathcal{X}_f$ (a sublevel set of
 $V_f$) is imposed, then the MPC law is asymptotically stabilizing.
 \end{theorem}
