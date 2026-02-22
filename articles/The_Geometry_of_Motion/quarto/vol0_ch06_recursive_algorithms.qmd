@@ -28,11 +28,15 @@ Suppose we want to find the position and velocity of the golf clubhead at the ve
 
 Instead of deriving a massive equation relating the base of the feet directly to the clubhead, we use the Homogeneous Transforms ($T \in \SE$) and Twists ($\twist \in \se$) from our previous chapters, and we propagate them sequentially outwards.
 
-\begin{laymansbox}{The Breadcrumb Strategy}{recursive_intuition}
+
+::: {.callout-note}
+
   To find the speed of the clubhead relative to the ground, we don't jump straight from the ground to the club. 
   
   We ask: How fast is the pelvis moving relative to the feet? Then, we add the speed of the torso relative to the pelvis. Then we add the speed of the shoulder relative to the torso... chain by chain, link by link.
-\end{laymansbox}
+
+:::
+
 
 Mathematically, if $i$ is the current link, and $i-1$ is its parent:
 \begin{equation}

@@ -32,14 +32,20 @@ def convert_tex_to_qmd(input_file, output_file):
             line.startswith(r"\begin{principle}")
             or line.startswith(r"\begin{definition}")
             or line.startswith(r"\begin{keyidea}")
+            or line.startswith(r"\begin{laymansbox}")
         ):
             out_lines.append("\n::: {.callout-note}\n")
         elif (
             line.startswith(r"\end{principle}")
             or line.startswith(r"\end{definition}")
             or line.startswith(r"\end{keyidea}")
+            or line.startswith(r"\end{laymansbox}")
         ):
             out_lines.append("\n:::\n")
+        elif line.startswith(r"\begin{lstlisting}"):
+            out_lines.append("\n```python\n")
+        elif line.startswith(r"\end{lstlisting}"):
+            out_lines.append("\n```\n")
         else:
             out_lines.append(line)
 

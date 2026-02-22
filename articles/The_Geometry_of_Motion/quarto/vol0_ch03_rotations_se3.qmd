@@ -30,11 +30,15 @@ The most intuitive way to describe the orientation of an aircraft, drone, or rob
 
 This is known as an **Euler Angle** representation: $\bm{\theta} = [\theta_1, \theta_2, \theta_3]^T$. While highly intuitive for a human pilot, Euler Angles harbor a fatal mathematical flaw known as **Gimbal Lock**.
 
-\begin{laymansbox}{Gimbal Lock}{gimballock}
+
+::: {.callout-note}
+
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth). 
   
   Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this "Singularity", your matrices become non-invertible and your computer instantly crashes mapping a physical impossibility.
-\end{laymansbox}
+
+:::
+
 
 Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles. We cannot afford mathematical singularities.
 
