@@ -1707,6 +1707,66 @@ Includes:
 
 ---
 
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Global Claims, Local Roots?</h3>
+        </div>
+        <p class="critic-argument">
+          The unification relies heavily on tangent space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). Critics argue that while this explains local stability, extending it to global "contraction" often requires solving the metric across the entire state space, which is intractable for high-dimensional systems. Is this just "local stability with better marketing"?
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a common misconception. Contraction theory is inherently global because it relies on path integration of the metric. The tangent space is merely the geometric "stage" where this integration happens. If the differential condition holds everywhere, global stability is mathematically guaranteed, not just locally approximated.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Practical Concern:</span>
+          <h3>The "Curse of Dimensionality" in SDPs</h3>
+        </div>
+        <p class="critic-argument">
+          The proposed "Contraction-DDP" algorithm requires solving a Semidefinite Program (SDP) at each time step to find the optimal metric $\mathbf{M}_t$. SDP solvers scale poorly ($O(n^4)$ or worse). For a humanoid robot with 30+ DOFs, this approach seems computationally impossible for real-time control (1 kHz).
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> A valid concern for naive implementations. However, the metric $\mathbf{M}(t)$ evolves much slower than the control signal $\mathbf{u}(t)$. We can update the metric at 10-50 Hz while running the controller at 1 kHz. Furthermore, "warm-starting" the SDP solver with the previous solution drastically reduces computation time, as shown in our experimental results.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Robustness:</span>
+          <h3>The "Perfect Model" Fallacy</h3>
+        </div>
+        <p class="critic-argument">
+          The theory assumes exact knowledge of the dynamics $\mathbf{f}(\mathbf{x}, \mathbf{u})$. In reality, models have friction, backlash, and unmodeled flexibility. A controller that is "optimal" for a perfect model is often fragile in the real world. Does this unification sacrifice robustness for theoretical elegance?
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> Paradoxically, contraction metrics <em>quantify</em> robustness. The condition number of the metric $\mathbf{M}$ directly predicts how much disturbance the system can reject. Unlike standard LQR, which has fixed margins, we can explicitly add "robustness" (condition number minimization) to the cost function, trading some optimality for guaranteed stability margins.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding.
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
 # References {.unnumbered}
 
 1. Lohmiller, W., & Slotine, J. J. E. (1998). On contraction analysis for non-linear systems. *Automatica*, 34(6), 683-696.
