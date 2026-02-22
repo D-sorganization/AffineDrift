@@ -10,17 +10,17 @@
 
 \section{Abandoning Denavit-Hartenberg}
 
-In classical robotics, the standard method for calculating Forward Kinematics (where the hand of the robot is given the angles of its motors) was the Denavit-Hartenberg (D-H) parameter convention. The D-H method requires attaching a strict, localized Cartesian coordinate frame $(x,y,z)$ to every single link of the robot arm using rigid, unintuitive rules about perpendicular perpendicularity. 
+In classical robotics, the standard method for calculating Forward Kinematics\index{Kinematics} (where the hand of the robot is given the angles of its motors) was the Denavit-Hartenberg (D-H) parameter convention. The D-H method requires attaching a strict, localized Cartesian coordinate frame $(x,y,z)$ to every single link of the robot arm using rigid, unintuitive rules about perpendicular perpendicularity. 
 
 Modern robotics, notably popularized by Richard Murray, Zexiang Li, Shankar Sastry, Kevin Lynch, and Frank Park, entirely abandons the D-H convention. Instead, modern kinematics relies entirely on the \textbf{Product of Exponentials (PoE)} formula.
 
 \begin{laymansbox}{The Intuition of PoE}{poe_intuition}
   Instead of burying the robot under dozens of overlapping, local coordinate frames, the Product of Exponentials views the robot from a single, absolute global frame (the Space Frame). 
   
-  Every joint on the robot—whether it corresponds to a revolute hinge or a prismatic slider—is simply a Screw Axis twisting in space. If we know the geometric line of the Screw Axis in the Space Frame when the robot is standing still, we can compute its final position by just mathematically "twisting" the robot along each axis, one by one.
+  Every joint on the robot—whether it corresponds to a revolute hinge or a prismatic slider—is simply a Screw Axis\index{Screw Axis} twisting in space. If we know the geometric line of the Screw Axis\index{Screw Axis} in the Space Frame when the robot is standing still, we can compute its final position by just mathematically "twisting" the robot along each axis, one by one.
 \end{laymansbox}
 
-\section{The Forward Kinematics Equation}
+\section{The Forward Kinematics\index{Kinematics} Equation}
 
 If a robotic arm has $n$ joints, the Product of Exponentials formula computes the final Homogeneous Transformation Matrix ($T(\theta) \in \SE$) of the end-effector relative to the base as:
 
@@ -54,9 +54,9 @@ Joint 1 spins at the origin $(0,0,0)$. Joint 2 spins at the elbow, located at $(
    \screw_2 &= (0, 0, 1, 0, -L_1, 0)^T
 \end{align}
 
-Here is the python code verifying the Forward Kinematics output:
+Here is the python code verifying the Forward Kinematics\index{Forward Kinematics} output:
 
-\begin{lstlisting}[language=Python, caption=Product of Exponentials Forward Kinematics]
+\begin{lstlisting}[language=Python, caption=Product of Exponentials Forward Kinematics\index{Forward Kinematics}]
 import numpy as np
 import scipy.linalg
 

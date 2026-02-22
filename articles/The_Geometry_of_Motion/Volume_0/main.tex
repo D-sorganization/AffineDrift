@@ -14,6 +14,8 @@
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems, breakable, skins}
 \usepackage{hyperref}
+\usepackage{imakeidx}
+\makeindex[intoc, title=Index]
 \usepackage{enumitem}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
@@ -146,6 +148,10 @@
 \author{{\Large D.\ Kraft}}
 \date{}
 
+
+
+\hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
+
 \begin{document}
 
 \maketitle
@@ -181,6 +187,10 @@ The philosophy of this primer maintains our overarching theme: mathematics shoul
 \include{chapters/ch12_machine_learning}
 
 \backmatter
+\include{chapters/glossary}
+\include{chapters/further_reading}
+\printindex
+
 \bibliographystyle{plain}
 \bibliography{../geometry_of_motion}
 
