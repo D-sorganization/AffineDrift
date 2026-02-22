@@ -1,0 +1,43 @@
+name: Compile LaTeX Textbooks
+
+on:
+  push:
+    branches:
+      - main
+      - geometry-of-motion-series
+    paths:
+      - 'articles/The_Geometry_of_Motion/**'
+  pull_request:
+    paths:
+      - 'articles/The_Geometry_of_Motion/**'
+
+jobs:
+  build_textbooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile Volume I
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_I
+
+      - name: Compile Volume II
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_II
+
+      - name: Upload Volume I Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Geometry_of_Motion_Volume_1
+          path: articles/The_Geometry_of_Motion/Volume_I/main.pdf
+
+      - name: Upload Volume II Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Geometry_of_Motion_Volume_2
+          path: articles/The_Geometry_of_Motion/Volume_II/main.pdf
