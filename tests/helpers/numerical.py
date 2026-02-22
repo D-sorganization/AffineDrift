@@ -136,9 +136,7 @@ def assert_monotonic(
             ok = (a > b) if strict else (a >= b)
 
         if not ok:
-            raise AssertionError(
-                f"{label} is not {strictness}{direction} " f"at index {i}: {a} -> {b}"
-            )
+            raise AssertionError(f"{label} is not {strictness}{direction} at index {i}: {a} -> {b}")
 
 
 # ---------------------------------------------------------------------------
@@ -202,7 +200,7 @@ def assert_positive_definite(
     min_eig = float(eigenvalues.min())
     if min_eig <= 0:
         raise AssertionError(
-            f"{label} is not positive definite " f"(smallest eigenvalue = {min_eig:.3e})"
+            f"{label} is not positive definite (smallest eigenvalue = {min_eig:.3e})"
         )
 
 
@@ -229,9 +227,7 @@ def assert_lyapunov_stable(
         - rtol >= 0
     """
     if len(V_values) < 2:
-        raise ValueError(
-            f"Need at least 2 values to check Lyapunov stability, " f"got {len(V_values)}"
-        )
+        raise ValueError(f"Need at least 2 values to check Lyapunov stability, got {len(V_values)}")
     if rtol < 0:
         raise ValueError(f"rtol must be >= 0, got {rtol}")
 
@@ -248,6 +244,6 @@ def assert_lyapunov_stable(
         if v_next > v_now * (1 + rtol) + rtol:
             raise AssertionError(
                 f"{label} increased at step {i}: "
-                f"V[{i}]={v_now:.6e} -> V[{i+1}]={v_next:.6e} "
+                f"V[{i}]={v_now:.6e} -> V[{i + 1}]={v_next:.6e} "
                 f"(increase={v_next - v_now:.3e})"
             )

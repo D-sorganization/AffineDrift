@@ -53,7 +53,9 @@ _state_vector = arrays(
 # ── compute_hessian_norm properties ──────────────────────────────────────────
 
 
-def _make_quadratic(n: int) -> tuple[
+def _make_quadratic(
+    n: int,
+) -> tuple[
     Any,
     np.ndarray[Any, Any],
     np.ndarray[Any, Any],

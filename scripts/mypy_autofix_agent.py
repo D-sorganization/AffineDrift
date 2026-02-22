@@ -588,8 +588,7 @@ def _apply_fixes_to_file(
                 )
         else:
             report.skipped_reasons.append(
-                f"No fix available: {error.file}:{error.line} "
-                f"[{error.code}] {error.message[:60]}"
+                f"No fix available: {error.file}:{error.line} [{error.code}] {error.message[:60]}"
             )
 
     return file_changed, total_fixes
