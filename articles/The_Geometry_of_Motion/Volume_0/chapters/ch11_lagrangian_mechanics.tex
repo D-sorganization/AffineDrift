@@ -23,10 +23,10 @@ Joseph-Louis Lagrange bypassed forces entirely. His formulation relies on a prof
 Nature minimizes effort. If a ball rolls down a hill, it fundamentally seeks the path that minimizes the difference between its active, moving energy (Kinetic) and its stored, resting energy (Potential) over time.
 
 \begin{laymansbox}{Kinetic vs. Potential Energy}{energy_intuition}
-  **Kinetic Energy ($T$)** is the energy of motion. If you are moving fast, $T$ is high. 
+  \textbf{Kinetic Energy} ($T$) is the energy of motion. If you are moving fast, $T$ is high. 
   $$ T = \frac{1}{2}mv^2 \quad (\text{or for rotational: } \frac{1}{2}\omega^T I \omega) $$
   
-  **Potential Energy ($V$)** is stored energy. If you are high up on a cliff, gravity's potential $V$ to pull you down is high. 
+  \textbf{Potential Energy} ($V$) is stored energy. If you are high up on a cliff, gravity's potential $V$ to pull you down is high. 
   $$ V = mgh $$
 \end{laymansbox}
 
@@ -56,16 +56,18 @@ When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2
    M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \frac{\partial V}{\partial \bm{q}} = \bm{\tau}
 \end{equation}
 
-\subsection{1. The Mass Matrix ($M(\bm{q})$)}
-The strict mass/inertia of the configuration. This is exactly what the Articulated Body Algorithm avoids inverting.
+\subsection{1. The Mass Matrix}
+The strict mass/inertia of the configuration $M(\bm{q})$. This is exactly what the Articulated Body Algorithm avoids inverting.
 
-\subsection{2. The Coriolis and Centripetal Matrix ($C(\bm{q}, \dot{\bm{q}})$)}
-This matrix $C$ naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating.
-*   **Centripetal Forces:** Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
-*   **Coriolis Forces:** Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
+\subsection{2. The Coriolis and Centripetal Matrix}
+This matrix $C(\bm{q}, \dot{\bm{q}})$ naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating.
+\begin{itemize}
+    \item \textbf{Centripetal Forces:} Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
+    \item \textbf{Coriolis Forces:} Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
+\end{itemize}
 
-\subsection{3. The Gravity Vector ($\frac{\partial V}{\partial \bm{q}}$)}
-The spatial derivative of the Potential Energy naturally yields the exact vector of gravitational torques dragging down on every single joint. It is often written cleanly as $G(\bm{q})$.
+\subsection{3. The Gravity Vector}
+The spatial derivative of the Potential Energy naturally yields the exact vector of gravitational torques $\frac{\partial V}{\partial \bm{q}}$ dragging down on every single joint. It is often written cleanly as $G(\bm{q})$.
 
 \section{Why Both Formulations Exist}
 
