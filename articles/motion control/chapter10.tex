@@ -1,0 +1,173 @@
+\documentclass[12pt, openany]{book}
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% ──────────────────────────────────────────────
+% Colors
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+
+% ──────────────────────────────────────────────
+% Theorem environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{keyidea}{Key Idea}{
+  colback=accentred!5, colframe=accentred!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{idea}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\newtcbtheorem[number within=chapter]{remark}{Remark}{
+  colback=purplehaze!5, colframe=purplehaze!60,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{rem}
+
+\newtcbtheorem[number within=chapter]{warning}{Warning}{
+  colback=accentred!5, colframe=accentred!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{warn}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+% ──────────────────────────────────────────────
+% Chapter formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Control Is Motion}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\manifold}{\mathcal{M}}
+\newcommand{\configspace}{\mathcal{Q}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\controlspace}{\mathcal{U}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+
+% ──────────────────────────────────────────────
+\begin{document}
+
+\setcounter{chapter}{9}
+
+\chapter{Learning to Move}
+
+\epigraph{%
+  The first swing establishes the manifold. The ten-thousandth swing perfects the funnel.
+}{}
+
+\vspace{0.5cm}
+
+% ══════════════════════════════════════════════
+\section{Iterative Learning Control (ILC)}
+% ══════════════════════════════════════════════
+
+Trajectory optimization (Chapter 6) computes a reference motion strictly from a mathematical model. However, dynamic models of humans—and even robots—are invariably flawed. Frictional forces are unmodeled, inertias are estimated, and actuators possess hidden dynamics. If you execute a computed reference $\traj^*(t)$ open-loop, the physical system will likely fail to strike the moving target due to these discrepancies.
+
+\textbf{Iterative Learning Control (ILC)} resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, \emph{the unmodeled dynamics are highly deterministic across repeated trials}. 
+
+If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the \emph{second} attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters. 
+
+\begin{definition}{ILC Update Law}{ilc_law}
+  Let $j$ denote the trial index. The feedforward command for trial $j+1$ is updated based on the command and the \emph{transverse error} $\bm{\xi}$ from trial $j$:
+  \begin{equation}
+    \control_j(t) = \control_{\text{ff}, j}(t) + \bm{K}_\perp(t) \bm{\xi}_j(t)
+  \end{equation}
+  \begin{equation}
+    \control_{\text{ff}, j+1}(t) = \control_{\text{ff}, j}(t) + \bm{L}(t) \bm{\xi}_j(t)
+  \end{equation}
+  where $\bm{L}(t)$ is a learning filter. This updates the nominal trajectory to iteratively cancel out deterministic disturbances.
+\end{definition}
+
+% ══════════════════════════════════════════════
+\section{Policy Search and Reinforcement Learning}
+% ══════════════════════════════════════════════
+
+While ILC updates the feedforward commands to zero-out deterministic tracking errors, \textbf{Policy Search} algorithms optimize the \emph{shape of the funnel} itself.
+
+Instead of computing the transverse LQR gains $\bm{K}_\perp(t)$ from an analytical Riccati equation (Chapter 4), we parameterize the controller as a policy $\pi_{\bm{\theta}}(\state)$ and search the parameter space $\bm{\theta}$ to minimize the variance at the moving goal under realistic noise.
+
+Reinforcement Learning (RL), specifically policy gradient methods, allows the agent to sample thousands of golf swings in simulation, continuously updating its policy parameters to maximize the expected reward (clubhead speed and squareness at impact). A heavily trained RL agent organically converges on the very principles we mathematically derived in earlier chapters:
+\begin{enumerate}
+    \item It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
+    \item It exploits the underactuated double-pendulum whipping motion to gain speed.
+    \item It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
+\end{enumerate}
+
+% ══════════════════════════════════════════════
+\section{Trajectory Libraries}
+% ══════════════════════════════════════════════
+
+A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F}$ are highly specific to a single objective. What if the golfer wishes to fade the ball, hit a draw, or execute a punch shot out of the rough?
+
+Instead of re-running a massive NLP optimization for every scenario, biological systems and advanced controllers maintain \textbf{Trajectory Libraries}. A library consists of several distinct, pre-computed optimal trajectories and their corresponding local funnels.
+
+When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization. 
+
+\end{document}
