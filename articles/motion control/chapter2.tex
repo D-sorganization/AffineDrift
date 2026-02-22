@@ -1,0 +1,1016 @@
+\documentclass[12pt, openany]{book}
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning,
+  3d, perspective}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% ──────────────────────────────────────────────
+% Colors
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+
+% ──────────────────────────────────────────────
+% Theorem environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{keyidea}{Key Idea}{
+  colback=accentred!5, colframe=accentred!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{idea}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\newtcbtheorem[number within=chapter]{remark}{Remark}{
+  colback=purplehaze!5, colframe=purplehaze!60,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{rem}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+% ──────────────────────────────────────────────
+% Chapter formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Control Is Motion}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\manifold}{\mathcal{M}}
+\newcommand{\configspace}{\mathcal{Q}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\controlspace}{\mathcal{U}}
+\newcommand{\tube}{\mathcal{T}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\ds}{\,\dd s}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\newcommand{\tangent}{\bm{e}_1}
+\newcommand{\normal}{\bm{e}_2}
+\newcommand{\binormal}{\bm{e}_3}
+\newcommand{\frenet}{\bm{e}}
+
+
+% ──────────────────────────────────────────────
+\begin{document}
+
+% Set chapter counter to 1 so this is Chapter 2
+\setcounter{chapter}{1}
+
+\chapter{Curves in State Space}
+
+\epigraph{%
+  The shortest distance between two points is a straight line,
+  but no interesting motion has ever been straight.
+}{}
+
+\vspace{0.5cm}
+
+% ══════════════════════════════════════════════
+\section{Why Geometry Comes First}
+% ══════════════════════════════════════════════
+
+In Chapter~1 we argued that control is fundamentally about \emph{motion}---the
+faithful execution of a trajectory through state space. Before we can stabilize
+a trajectory, optimize a trajectory, or confine the system to a tube around a
+trajectory, we need to understand what a trajectory \emph{is} as a mathematical
+object.
+
+This chapter develops the differential geometry of curves in $\Reals^n$, adapted
+to the needs of control theory. The central insight is that a trajectory has
+intrinsic geometric properties---curvature, torsion, and a natural moving
+frame---that exist independently of how fast the system moves along the curve.
+These intrinsic properties determine how difficult the trajectory is to track,
+how much control authority is needed to stay on course, and where the system
+is most vulnerable to disturbances.
+
+The reader may wonder: \emph{why not simply work in coordinates?} The answer is
+that coordinate-based descriptions mix up properties of the \emph{curve} with
+properties of the \emph{parameterization}. A golf swing executed slowly and the
+same swing executed quickly trace the same curve in configuration space, but
+their coordinate descriptions $\bm{q}(t)$ are entirely different functions. The
+geometric tools we develop here allow us to separate what is intrinsic to the
+motion from what is merely a choice of clock.
+
+\begin{keyidea}{Intrinsic vs.\ Extrinsic}{intrinsic}
+  A trajectory has two kinds of properties:
+  \begin{itemize}[leftmargin=1cm]
+    \item \textbf{Intrinsic}: properties of the curve itself---its shape,
+      curvature, how it bends and twists through state space. These are
+      independent of parameterization.
+    \item \textbf{Extrinsic}: properties that depend on how the curve is
+      traversed---speed, acceleration, timing. These depend on the
+      parameterization.
+  \end{itemize}
+  Good control design separates these cleanly. The \emph{trajectory planner}
+  designs the intrinsic shape. The \emph{timing law} specifies the extrinsic
+  speed profile. The \emph{tracking controller} maintains both.
+\end{keyidea}
+
+% ══════════════════════════════════════════════
+\section{Parameterized Curves}
+% ══════════════════════════════════════════════
+
+\begin{definition}{Parameterized Curve}{param_curve}
+  A \textbf{parameterized curve} in $\Reals^n$ is a smooth map
+  \begin{equation}
+    \traj: I \to \Reals^n, \qquad \lambda \mapsto \traj(\lambda),
+  \end{equation}
+  where $I \subseteq \Reals$ is an interval. The parameter $\lambda$ may be time $t$,
+  arc length $s$, a phase variable $\sigma$, or any other monotone scalar.
+  The curve is \textbf{regular} if $\traj'(\lambda) \neq \bm{0}$ for all
+  $\lambda \in I$, i.e., it never ``stops'' (though the system traversing it may
+  slow down).
+\end{definition}
+
+The critical point is that many different parameterizations describe the same
+geometric curve. If $\traj(\lambda)$ is a parameterized curve and
+$\lambda = \phi(\mu)$ is a smooth, monotonically increasing reparameterization,
+then $\tilde{\traj}(\mu) = \traj(\phi(\mu))$ traces the same set of points in
+$\Reals^n$, but at different ``speeds.''
+
+\begin{example}{The Circle: Three Parameterizations}{circle_param}
+  Consider the unit circle in $\Reals^2$. Three natural parameterizations:
+  \begin{align}
+    \traj_1(t) &= (\cos t,\; \sin t), \quad t \in [0, 2\pi]
+    && \text{(constant angular speed)}, \\
+    \traj_2(t) &= (\cos t^2,\; \sin t^2), \quad t \in [0, \sqrt{2\pi}]
+    && \text{(accelerating)}, \\
+    \traj_3(s) &= (\cos s,\; \sin s), \quad s \in [0, 2\pi]
+    && \text{(arc-length, same as $\traj_1$ here)}.
+  \end{align}
+  All three trace the same circle. The \emph{curve} is the same; the
+  \emph{parameterizations} differ. Quantities like curvature are properties of
+  the curve, not the parameterization.
+\end{example}
+
+\subsection{Velocity, Speed, and the Tangent Vector}
+
+Given a parameterized curve $\traj(\lambda)$, the \textbf{velocity vector} is
+\begin{equation}
+  \bm{v}(\lambda) = \frac{\dd\traj}{\dd\lambda} = \traj'(\lambda).
+\end{equation}
+The \textbf{speed} is its magnitude:
+\begin{equation}
+  v(\lambda) = \norm{\traj'(\lambda)}.
+\end{equation}
+The \textbf{unit tangent vector} is the velocity normalized to unit length:
+\begin{equation}\label{eq:unit_tangent}
+  \tangent(\lambda) = \frac{\traj'(\lambda)}{\norm{\traj'(\lambda)}}
+  = \frac{\traj'(\lambda)}{v(\lambda)}.
+\end{equation}
+The tangent vector $\tangent$ tells us the \emph{direction} of the curve at each
+point---a purely geometric quantity. The speed $v$ tells us how \emph{fast} we
+traverse it---a parameterization-dependent quantity. This separation is the first
+instance of the intrinsic/extrinsic decomposition.
+
+% ══════════════════════════════════════════════
+\section{Arc Length: The Natural Parameter}
+% ══════════════════════════════════════════════
+
+Among all possible parameterizations, one is geometrically privileged: the
+\textbf{arc-length parameterization}, in which the parameter measures distance
+traveled along the curve.
+
+\begin{definition}{Arc Length}{arc_length}
+  The \textbf{arc length} of a curve $\traj(\lambda)$ from $\lambda = a$ to
+  $\lambda = b$ is
+  \begin{equation}\label{eq:arc_length}
+    L = \int_a^b \norm{\traj'(\lambda)} \, \dd\lambda
+    = \int_a^b v(\lambda) \, \dd\lambda.
+  \end{equation}
+  The \textbf{arc-length function} $s(\lambda)$ measures the distance from the
+  starting point:
+  \begin{equation}
+    s(\lambda) = \int_a^{\lambda} \norm{\traj'(\mu)} \, \dd\mu,
+    \qquad \text{so that } \frac{\dd s}{\dd\lambda} = v(\lambda).
+  \end{equation}
+\end{definition}
+
+When a curve is parameterized by arc length, the speed is identically 1:
+$\norm{\traj'(s)} = 1$ for all $s$. This means the tangent vector and the velocity
+vector coincide: $\tangent(s) = \traj'(s)$. All geometric information is in the
+direction of the derivative; none is hidden in its magnitude.
+
+\begin{principle}{Arc Length as the Canonical Clock}{arc_clock}
+  Arc-length parameterization strips away all timing information and reveals
+  the pure geometry of the curve. In control terms, it answers the question:
+  \emph{what does the motion look like if we forget how fast it goes?}
+
+  For a golf swing, the arc-length parameterized trajectory $\traj(s)$
+  describes the spatial \emph{path} of the body through configuration space.
+  The timing law $s(t)$---how the golfer moves along this path in real
+  time---is a separate design choice. A slow practice swing and a full-speed
+  competition swing follow the same $\traj(s)$ with different $s(t)$.
+\end{principle}
+
+\begin{remark}{Arc Length in High Dimensions}{high_dim_arc}
+  In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
+  above. When the state space carries a non-Euclidean metric (as it will when
+  we work on configuration manifolds in Chapter~3), the formula
+  \eqref{eq:arc_length} generalizes to
+  \begin{equation}
+    L = \int_a^b \sqrt{\traj'(\lambda)^\top \bm{G}(\traj(\lambda))\,
+    \traj'(\lambda)} \, \dd\lambda,
+  \end{equation}
+  where $\bm{G}(\state)$ is the Riemannian metric tensor (for mechanical systems,
+  this is the mass-inertia matrix). This means ``distance in configuration
+  space'' naturally accounts for how massive different parts of the body are.
+  A degree of freedom connected to a heavy segment contributes more to arc
+  length than one connected to a light segment---exactly as physical intuition
+  suggests.
+\end{remark}
+
+% ══════════════════════════════════════════════
+\section{Curvature: How Curves Bend}
+% ══════════════════════════════════════════════
+
+The most important intrinsic property of a curve is its \textbf{curvature}---a
+measure of how rapidly the tangent direction changes as we move along the curve.
+
+\begin{definition}{Curvature}{curvature}
+  Let $\traj(s)$ be a curve parameterized by arc length in $\Reals^n$. The
+  \textbf{curvature} at each point is
+  \begin{equation}\label{eq:curvature_def}
+    \kappa(s) = \norm{\traj''(s)} = \norm{\frac{\dd\tangent}{\dd s}}.
+  \end{equation}
+  Since $\norm{\tangent} = 1$, the derivative $\tangent'(s)$ is orthogonal to
+  $\tangent(s)$, and $\kappa$ measures the rate of turning per unit distance.
+  The curvature is always non-negative and is zero if and only if the curve is
+  locally a straight line.
+\end{definition}
+
+The reciprocal $R(s) = 1/\kappa(s)$ is the \textbf{radius of curvature}---the
+radius of the circle that best approximates the curve at that point. High curvature
+means a tight bend; low curvature means a gentle sweep.
+
+\subsection{Curvature in Arbitrary Parameterization}
+
+In practice, we rarely work in arc-length parameterization. Given a curve
+$\traj(t)$ parameterized by time (or any other parameter), the curvature can
+be computed directly:
+
+\begin{theorem}[Curvature Formula]\label{thm:curvature_formula}
+  For a regular curve $\traj(t)$ in $\Reals^n$, the curvature is
+  \begin{equation}\label{eq:curvature_general}
+    \kappa(t) = \frac{\norm{\traj'(t) \times_n \traj''(t)}}{\norm{\traj'(t)}^3},
+  \end{equation}
+  where for $n = 2$, $\norm{\traj' \times_2 \traj''} = |x'y'' - y'x''|$,
+  and for $n = 3$, $\times_3$ is the usual cross product. For general $n$,
+  this generalizes via
+  \begin{equation}\label{eq:curvature_general_n}
+    \kappa(t) = \frac{\sqrt{\norm{\traj'}^2 \norm{\traj''}^2
+    - (\traj' \cdot \traj'')^2}}{\norm{\traj'}^3}.
+  \end{equation}
+\end{theorem}
+
+\begin{proof}
+  Write $\traj(t) = \traj(s(t))$ where $s$ is arc length. Then
+  $\traj' = \dot{s}\, \tangent$ and
+  $\traj'' = \ddot{s}\, \tangent + \dot{s}^2\, \kappa\, \normal$,
+  where $\normal$ is the unit normal (defined below). Since
+  $\tangent \perp \normal$, we have
+  $\norm{\traj'}^2\norm{\traj''}^2 - (\traj'\cdot\traj'')^2
+  = \dot{s}^2(\ddot{s}^2 + \dot{s}^4\kappa^2) - \dot{s}^2\ddot{s}^2
+  = \dot{s}^6\kappa^2$.
+  Dividing by $\norm{\traj'}^6 = \dot{s}^6$ and taking the square root yields
+  the result.
+\end{proof}
+
+\begin{example}{Curvature of an Elliptical Trajectory}{ellipse_curv}
+  Consider the ellipse $\traj(t) = (a\cos t,\; b\sin t)$ with $a > b > 0$. Then
+  \begin{align}
+    \traj'(t) &= (-a\sin t,\; b\cos t), \\
+    \traj''(t) &= (-a\cos t,\; -b\sin t).
+  \end{align}
+  Applying the 2D curvature formula:
+  \begin{equation}
+    \kappa(t) = \frac{|(-a\sin t)(-b\sin t) - (b\cos t)(-a\cos t)|}
+    {(a^2\sin^2 t + b^2\cos^2 t)^{3/2}}
+    = \frac{ab}{(a^2\sin^2 t + b^2\cos^2 t)^{3/2}}.
+  \end{equation}
+  The curvature is \emph{highest at the ends of the minor axis}
+  ($t = 0, \pi$, where $\kappa = a/b^2$) and \emph{lowest at the ends of the
+  major axis} ($t = \pi/2, 3\pi/2$, where $\kappa = b/a^2$). The tighter the
+  bend, the higher the curvature---and, as we will see, the more control
+  authority is needed to track it.
+\end{example}
+
+\subsection{Why Curvature Matters for Control}
+
+Curvature is not merely a geometric curiosity. It has direct implications for
+tracking difficulty.
+
+\begin{principle}{The Curvature--Authority Principle}{curv_authority}
+  Consider a system tracking a reference trajectory $\traj^*(s)$ at speed $v$.
+  The centripetal acceleration required to follow the curve is
+  \begin{equation}\label{eq:centripetal}
+    a_\perp = \kappa\, v^2.
+  \end{equation}
+  This means:
+  \begin{enumerate}[label=(\roman*)]
+    \item High curvature demands high lateral control authority.
+    \item The required authority grows as the \emph{square} of the speed.
+    \item A trajectory that is easy to track slowly may be impossible to track
+          at high speed.
+  \end{enumerate}
+  For the golf swing, this explains why the transition from backswing to
+  downswing is so critical: the clubhead path has high curvature precisely
+  where the speed is increasing rapidly.
+\end{principle}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Low curvature region
+  \begin{scope}[shift={(-4,0)}]
+    \node[font=\bfseries\small, chapblue] at (0, 2.2) {Low curvature};
+    \draw[very thick, trajgreen, decoration={markings,
+        mark=at position 0.5 with {\arrow{Stealth[length=3mm]}}
+      }, postaction={decorate}]
+      (-2, 0) .. controls (-0.5, 0.3) and (0.5, 0.3) .. (2, 0);
+    \draw[<->, thin, gray] (-0.2, 0.2) -- (-0.2, 1.5)
+      node[midway, left, font=\scriptsize] {$R$ large};
+    % Osculating circle (large)
+    \draw[thin, dashed, gray] (0, 3.5) circle (3.3);
+    \node[font=\scriptsize, below] at (0, -0.5) {Gentle bend};
+    \node[font=\scriptsize, below] at (0, -1.0) {Low $a_\perp$ needed};
+  \end{scope}
+
+  % High curvature region
+  \begin{scope}[shift={(4,0)}]
+    \node[font=\bfseries\small, accentred] at (0, 2.2) {High curvature};
+    \draw[very thick, accentred!80, decoration={markings,
+        mark=at position 0.5 with {\arrow{Stealth[length=3mm]}}
+      }, postaction={decorate}]
+      (-2, -0.8) .. controls (-0.3, 1.8) and (0.3, 1.8) .. (2, -0.8);
+    % Osculating circle (small)
+    \draw[thin, dashed, gray] (0, 0.9) circle (0.9);
+    \draw[<->, thin, gray] (0, 0.9) -- (0.85, 0.75)
+      node[midway, above, font=\scriptsize] {$R$ small};
+    \node[font=\scriptsize, below] at (0, -1.3) {Tight bend};
+    \node[font=\scriptsize, below] at (0, -1.8) {High $a_\perp$ needed};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════
+\section{The Frenet--Serret Frame}
+% ══════════════════════════════════════════════
+
+The tangent vector $\tangent$ is only the first element of a natural coordinate
+frame that moves with the curve. This \textbf{Frenet--Serret frame} (or simply
+\textbf{moving frame}) provides a complete local coordinate system at every point
+of the trajectory.
+
+\subsection{Construction in $\Reals^n$}
+
+\begin{definition}{Frenet--Serret Frame}{frenet}
+  Let $\traj(s)$ be a curve parameterized by arc length in $\Reals^n$ with
+  $\traj^{(k)}(s)$ denoting the $k$-th derivative with respect to $s$. Assume the
+  first $p \leq n$ derivatives $\{\traj'(s), \traj''(s), \ldots, \traj^{(p)}(s)\}$
+  are linearly independent at each point. The \textbf{Frenet--Serret frame}
+  $\{\frenet_1(s), \frenet_2(s), \ldots, \frenet_p(s)\}$ is defined by
+  applying the Gram--Schmidt process to these derivatives:
+  \begin{align}
+    \frenet_1 &= \traj' = \tangent, \label{eq:frenet_e1} \\[4pt]
+    \tilde{\frenet}_k &= \traj^{(k)} - \sum_{j=1}^{k-1}
+      \inner{\traj^{(k)}}{\frenet_j}\, \frenet_j, \qquad
+    \frenet_k = \frac{\tilde{\frenet}_k}{\norm{\tilde{\frenet}_k}},
+    \quad k = 2, \ldots, p. \label{eq:frenet_ek}
+  \end{align}
+  The frame vectors $\frenet_1, \ldots, \frenet_p$ form an orthonormal set at
+  each point. If $p < n$, the frame can be extended to a full orthonormal basis
+  by appending $n - p$ vectors, but these additional vectors have no intrinsic
+  geometric meaning for the curve.
+\end{definition}
+
+For the familiar case $n = 3$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{} c l l @{}}
+  \toprule
+  \textbf{Vector} & \textbf{Name} & \textbf{Interpretation} \\
+  \midrule
+  $\frenet_1 = \tangent$ & Unit tangent & Direction of motion \\
+  $\frenet_2 = \normal$ & Principal normal & Direction the curve is bending toward \\
+  $\frenet_3 = \binormal$ & Binormal & $\tangent \times \normal$;
+    normal to the osculating plane \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The Frenet--Serret Equations}
+
+The power of the moving frame lies in how it evolves along the curve. The
+derivatives of the frame vectors with respect to arc length are expressed
+entirely in terms of the frame itself and a set of scalar functions called
+\textbf{generalized curvatures}.
+
+\begin{theorem}[Frenet--Serret Equations]\label{thm:frenet_serret}
+  The Frenet--Serret frame satisfies
+  \begin{equation}\label{eq:frenet_serret}
+    \frac{\dd}{\ds}
+    \begin{pmatrix} \frenet_1 \\ \frenet_2 \\ \frenet_3 \\ \vdots \\ \frenet_p \end{pmatrix}
+    =
+    \begin{pmatrix}
+      0 & \kappa_1 & 0 & \cdots & 0 \\
+      -\kappa_1 & 0 & \kappa_2 & \cdots & 0 \\
+      0 & -\kappa_2 & 0 & \cdots & 0 \\
+      \vdots & & \ddots & \ddots & \kappa_{p-1} \\
+      0 & \cdots & 0 & -\kappa_{p-1} & 0
+    \end{pmatrix}
+    \begin{pmatrix} \frenet_1 \\ \frenet_2 \\ \frenet_3 \\ \vdots \\ \frenet_p \end{pmatrix},
+  \end{equation}
+  where $\kappa_1(s) = \kappa(s) > 0$ is the curvature,
+  $\kappa_2(s)$ is the \textbf{torsion} (often denoted $\tau$),
+  and $\kappa_3, \ldots, \kappa_{p-1}$ are the
+  \textbf{higher-order curvatures}. The matrix is skew-symmetric, which
+  guarantees that the frame remains orthonormal as it evolves.
+\end{theorem}
+
+The skew-symmetry of this matrix is not a coincidence---it is the hallmark of
+a \emph{rotation}. As the frame moves along the curve, it rotates without
+stretching. The curvatures $\kappa_1, \ldots, \kappa_{p-1}$ are the
+``angular velocities'' of this rotation projected onto the various planes of
+the frame.
+
+\begin{example}{Frenet--Serret for a 3D Helix}{helix}
+  The helix $\traj(t) = (a\cos t,\; a\sin t,\; bt)$ with speed
+  $v = \sqrt{a^2 + b^2}$ has arc-length parameter $s = vt$. The Frenet--Serret
+  quantities are:
+  \begin{align}
+    \tangent &= \frac{1}{v}(-a\sin t,\; a\cos t,\; b), \\
+    \normal &= (-\cos t,\; -\sin t,\; 0), \\
+    \binormal &= \frac{1}{v}(b\sin t,\; -b\cos t,\; a), \\
+    \kappa &= \frac{a}{a^2 + b^2}, \qquad
+    \tau = \frac{b}{a^2 + b^2}.
+  \end{align}
+  Both curvature and torsion are \emph{constant}, which makes the helix a
+  natural reference trajectory for testing tracking controllers---analogous to
+  the role of step inputs in classical control. The helix is to trajectory
+  control what the step function is to setpoint control.
+\end{example}
+
+\subsection{The Moving Frame in State Space}
+
+For control applications, the state space typically has dimension $n = 2N$ where
+$N$ is the number of generalized coordinates (positions and velocities). A golf
+swing model with 4~DOF has $n = 8$. The Frenet--Serret frame in $\Reals^8$
+has up to 7 generalized curvatures, $\kappa_1$ through $\kappa_7$.
+
+Not all of these are physically meaningful for every system. In practice, the
+effective dimensionality of the curve---the number of linearly independent
+derivatives---is determined by the system dynamics:
+
+\begin{principle}{Dynamic Rank of a Trajectory}{dynamic_rank}
+  For a controlled mechanical system with $N$ DOF and $m$ independent actuators,
+  a generic trajectory has at most $p = 2m$ linearly independent arc-length
+  derivatives. The Frenet--Serret frame therefore has at most $2m$ intrinsically
+  meaningful vectors, and the curve has at most $2m - 1$ independent curvatures.
+
+  For a fully actuated system ($m = N$), the trajectory can bend freely in all
+  $2N$ state-space directions. For an underactuated system ($m < N$), the
+  trajectory is geometrically constrained: it lives on a submanifold, and the
+  curvatures in the ``forbidden'' directions are determined by the passive
+  dynamics.
+\end{principle}
+
+% ══════════════════════════════════════════════
+\section{Curvature and Torsion in the Language of Control}
+% ══════════════════════════════════════════════
+
+We now connect the geometric quantities to the dynamics and control of
+nonlinear systems.
+
+\subsection{Curvature as a Demand on the Controller}
+
+Consider the system $\dot{\state} = \bm{f}(\state, \control)$ tracking a
+reference trajectory $\traj^*(s)$ at instantaneous speed $v(t) = \dot{s}(t)$.
+Using the chain rule:
+\begin{equation}
+  \dot{\state} = v\, \tangent, \qquad
+  \ddot{\state} = \dot{v}\, \tangent + v^2\, \kappa\, \normal.
+\end{equation}
+The acceleration decomposes into:
+\begin{itemize}[leftmargin=1.5cm]
+  \item A \textbf{tangential component} $\dot{v}\, \tangent$ that changes the
+    speed along the curve.
+  \item A \textbf{normal component} $v^2\kappa\, \normal$ that ``steers'' the
+    system around the bend.
+\end{itemize}
+
+\begin{definition}{Control Demand Decomposition}{control_demand}
+  Along a reference trajectory $\traj^*(s)$ traversed at speed $v$, the
+  instantaneous control demand decomposes as
+  \begin{equation}\label{eq:control_demand}
+    \control_{\text{demand}} = \underbrace{\control_\parallel}_{\text{tangential}}
+    + \underbrace{\control_\perp}_{\text{normal}},
+  \end{equation}
+  where:
+  \begin{align}
+    \control_\parallel &\propto \dot{v}
+      && \text{(accelerate/decelerate along path)}, \\
+    \control_\perp &\propto v^2\, \kappa
+      && \text{(centripetal force to follow curvature)}.
+  \end{align}
+  The normal demand $\control_\perp$ grows quadratically with speed and linearly
+  with curvature. This is the \textbf{curvature cost} of the trajectory.
+\end{definition}
+
+\begin{example}{Curvature Cost in the Golf Downswing}{golf_curv_cost}
+  In the transition from backswing to downswing, a professional golfer reverses
+  the direction of the club in roughly 0.15 seconds. Let us estimate the
+  curvature cost.
+
+  At the top of the backswing, the clubhead speed is approximately zero. At
+  impact (0.3\,s later), it reaches $\sim\!50$\,m/s. The path through
+  configuration space has a tight reversal---a region of high curvature
+  $\kappa$.
+
+  Using $a_\perp = \kappa v^2$, and noting that mid-downswing
+  $v \approx 25$\,m/s with the reversal curvature $\kappa \approx 2$\,rad/m
+  (estimated from motion capture data), the centripetal acceleration demand is
+  \begin{equation}
+    a_\perp \approx 2 \times 25^2 = 1250\;\text{m/s}^2 \approx 127\;g.
+  \end{equation}
+  This enormous demand is met not by muscular torque alone, but by the
+  \emph{passive coupling} in the kinematic chain---the very underactuation
+  that the setpoint framework treats as a constraint. The geometry of the
+  trajectory creates the forces needed to execute it.
+\end{example}
+
+\subsection{Torsion as Out-of-Plane Complexity}
+
+If curvature measures how a trajectory bends \emph{within} its osculating
+plane, \textbf{torsion} measures how the osculating plane itself rotates along
+the curve. A planar curve has zero torsion everywhere. A helix has constant
+nonzero torsion. A golf swing---which involves simultaneous rotation in the
+transverse, sagittal, and frontal planes---has torsion that varies dramatically
+through the motion.
+
+\begin{definition}{Torsion}{torsion}
+  For a curve in $\Reals^n$ with $n \geq 3$, the \textbf{torsion}
+  $\tau(s) = \kappa_2(s)$ is the second generalized curvature in the
+  Frenet--Serret equations:
+  \begin{equation}
+    \frac{\dd\normal}{\ds} = -\kappa\, \tangent + \tau\, \binormal.
+  \end{equation}
+  Torsion measures the rate at which the osculating plane rotates about the
+  tangent direction, per unit arc length.
+\end{definition}
+
+In high-dimensional state spaces ($n \gg 3$), the higher curvatures
+$\kappa_3, \ldots, \kappa_{p-1}$ measure increasingly subtle geometric
+twisting. For control design, the first two curvatures ($\kappa$ and $\tau$)
+capture the dominant geometric effects, with higher curvatures becoming
+relevant primarily in highly articulated systems.
+
+\begin{remark}{The Curvature Signature}{curv_signature}
+  The ordered set of generalized curvatures $(\kappa_1(s), \kappa_2(s),
+  \ldots, \kappa_{p-1}(s))$ as functions of arc length constitutes the
+  \textbf{curvature signature} of the trajectory. By the fundamental theorem
+  of curves, this signature (up to rigid motions) \emph{uniquely determines}
+  the trajectory. Two motions with identical curvature signatures are
+  geometrically congruent---they are the same shape, possibly translated
+  and rotated.
+
+  This has a striking implication for motor control: if a golfer can reproduce
+  the curvature signature of their swing, the spatial path is automatically
+  reproduced, regardless of timing.
+\end{remark}
+
+% ══════════════════════════════════════════════
+\section{Reparameterization and Timing Laws}
+% ══════════════════════════════════════════════
+
+We now formalize the separation between the \emph{shape} of a trajectory and
+the \emph{timing} of its execution.
+
+\begin{definition}{Timing Law}{timing_law}
+  Given a reference trajectory $\traj^*(s)$ parameterized by arc length, a
+  \textbf{timing law} is a smooth, monotonically increasing function
+  $s: [0, T] \to [0, L]$ with $s(0) = 0$ and $s(T) = L$. The
+  time-parameterized trajectory is
+  \begin{equation}
+    \state^*(t) = \traj^*(s(t)).
+  \end{equation}
+  The timing law is equivalently specified by the speed profile $v(t) = \dot{s}(t)$
+  or the phase velocity $v(s) = \dd s / \dd t$ expressed as a function of arc
+  length.
+\end{definition}
+
+Different timing laws produce different motions through the same geometric
+path:
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % s(t) plots
+  \begin{scope}[shift={(-4.5, 0)}]
+    \draw[-{Stealth[length=2.5mm]}, thick] (0, 0) -- (3.5, 0)
+      node[right, font=\small] {$t$};
+    \draw[-{Stealth[length=2.5mm]}, thick] (0, 0) -- (0, 3)
+      node[above, font=\small] {$s(t)$};
+    % Constant speed
+    \draw[very thick, chapblue] (0, 0) -- (3, 2.5);
+    \node[chapblue, font=\scriptsize, right] at (2.5, 2.7) {constant speed};
+    % Accelerating
+    \draw[very thick, accentred] (0, 0) .. controls (2.5, 0.3) .. (3, 2.5);
+    \node[accentred, font=\scriptsize, right] at (2.5, 1.2) {accelerating};
+    % Decelerating
+    \draw[very thick, trajgreen] (0, 0) .. controls (0.5, 2.2) .. (3, 2.5);
+    \node[trajgreen, font=\scriptsize, left] at (0.7, 2.3) {decelerating};
+    \node[font=\small\bfseries] at (1.5, -0.7) {Three timing laws};
+  \end{scope}
+
+  % Same path
+  \begin{scope}[shift={(4, 0)}]
+    \draw[-{Stealth[length=2.5mm]}, thick, gray] (-1.5, 0) -- (2, 0)
+      node[right, font=\small] {$x_1$};
+    \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -0.5) -- (0, 3)
+      node[above, font=\small] {$x_2$};
+    \draw[very thick, black!50, decoration={markings,
+        mark=at position 0.5 with {\arrow{Stealth[length=3mm]}}
+      }, postaction={decorate}]
+      (-1, 0) .. controls (0, 2.5) and (1, 2.5) .. (1.5, 0.5);
+    \node[font=\small\bfseries] at (0.3, -0.8) {Same spatial path};
+    % Speed markers
+    \foreach \p/\c in {0.2/chapblue, 0.4/chapblue, 0.6/chapblue, 0.8/chapblue} {
+      \filldraw[\c, opacity=0.5]
+        ({-1 + 2.5*\p + 0.1*sin(360*\p)}, {2.5*sin(180*\p) - 0.2*\p})
+        circle (2pt);
+    }
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\subsection{The Path--Timing Decomposition of Control}
+
+The reparameterization framework leads to a clean decomposition of the
+control problem:
+
+\begin{principle}{Path--Timing Separation}{path_timing}
+  The trajectory control problem decomposes into two subproblems:
+  \begin{enumerate}[label=\textbf{(\Alph*)}]
+    \item \textbf{Path design}: Choose the geometric curve $\traj^*(s)$ in state
+      space that achieves the task (e.g., delivers the clubhead to the ball with
+      the correct velocity vector).
+    \item \textbf{Timing design}: Choose the timing law $s(t)$ that balances
+      speed against tracking difficulty, control effort, and robustness.
+  \end{enumerate}
+  These two problems have different objective functions and constraints:
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{} l l l @{}}
+    \toprule
+    & \textbf{Path design} & \textbf{Timing design} \\
+    \midrule
+    Objective & Task performance & Trackability \& effort \\
+    Key quantity & Curvature $\kappa(s)$ & Speed profile $v(s)$ \\
+    Constraint & Dynamic feasibility & Actuator limits \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  The interaction between the two is captured by the curvature cost
+  $\kappa(s)\, v(s)^2$, which the timing law must keep within the controller's
+  authority at every point.
+\end{principle}
+
+\begin{example}{Timing the Downswing}{timing_downswing}
+  Suppose the downswing path has a curvature profile $\kappa(s)$ with a peak
+  of $\kappa_{\max}$ at the transition point. The maximum centripetal
+  acceleration the controller can provide is $a_{\max}$. Then the speed at
+  the transition is bounded by
+  \begin{equation}
+    v_{\text{transition}} \leq \sqrt{\frac{a_{\max}}{\kappa_{\max}}}.
+  \end{equation}
+  This is a \emph{geometric speed limit}: no matter how powerful the actuators,
+  the system cannot traverse a tight bend faster than its control authority
+  allows. The timing law must respect this limit, typically by slowing down
+  through high-curvature regions and accelerating through straight sections.
+
+  This is precisely what golfers do instinctively. The ``pause at the top''---the
+  brief deceleration between backswing and downswing---is not aesthetic
+  affectation. It is the timing law respecting the curvature speed limit at
+  the point of maximum path curvature.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{The Osculating Objects}
+% ══════════════════════════════════════════════
+
+The Frenet--Serret frame defines a sequence of ``best-fit'' geometric objects at
+each point of the curve. These osculating objects provide increasingly refined
+local approximations that are useful for controller design.
+
+\begin{definition}{Osculating Objects}{osculating}
+  At a point $\traj^*(s_0)$ on a curve in $\Reals^n$:
+  \begin{enumerate}[label=(\roman*)]
+    \item The \textbf{osculating line} is the tangent line: the best linear
+      approximation.
+    \item The \textbf{osculating circle} lies in the $(\tangent, \normal)$ plane,
+      has radius $R = 1/\kappa$, and center at $\traj^*(s_0) + R\,\normal$.
+      It is the best second-order (circular) approximation.
+    \item The \textbf{osculating plane} is the plane spanned by $\tangent$ and
+      $\normal$. Torsion measures how fast the curve leaves this plane.
+    \item The \textbf{osculating sphere} is the best third-order approximation
+      and accounts for both curvature and torsion.
+  \end{enumerate}
+\end{definition}
+
+For trajectory control, the osculating circle is the most immediately useful.
+It tells us: \emph{if the system were constrained to follow a circle at this
+point, what circle would it be?} The radius of that circle is the radius of
+curvature $R = 1/\kappa$, and the center indicates the direction toward which
+the trajectory bends.
+
+% ══════════════════════════════════════════════
+\section{The Geometry of Trajectory Deviations}
+% ══════════════════════════════════════════════
+
+We now use the Frenet--Serret frame to analyze what happens when the system
+deviates from the reference trajectory. This provides the geometric foundation
+for the transverse linearization of Chapter~4.
+
+\subsection{Frenet--Serret Coordinates}
+
+Given a reference trajectory $\traj^*(s)$ and the associated Frenet--Serret
+frame $\{\frenet_1(s), \ldots, \frenet_p(s)\}$, any state $\state$ near the
+trajectory can be decomposed as:
+\begin{equation}\label{eq:frenet_coords}
+  \state = \traj^*(s^*) + \sum_{k=2}^{n} \xi_k\, \frenet_k(s^*),
+\end{equation}
+where $s^* = s^*(\state)$ is the projection phase (the arc-length parameter of
+the nearest point on the reference), and $\xi_2, \ldots, \xi_n$ are the
+\textbf{transverse coordinates} measuring deviation in each normal direction.
+
+\begin{definition}{Frenet--Serret Coordinates}{frenet_coords}
+  The \textbf{Frenet--Serret coordinate representation} of a state $\state$ relative
+  to a reference trajectory $\traj^*$ is the tuple
+  \begin{equation}
+    (s^*,\; \xi_2,\; \xi_3,\; \ldots,\; \xi_n),
+  \end{equation}
+  where $s^*$ is the tangential (along-trajectory) coordinate and
+  $\bm{\xi} = (\xi_2, \ldots, \xi_n)$ are the transverse (cross-trajectory)
+  coordinates. The transverse distance from Chapter~1 is
+  \begin{equation}
+    d_\perp = \norm{\bm{\xi}} = \sqrt{\xi_2^2 + \cdots + \xi_n^2}.
+  \end{equation}
+\end{definition}
+
+These coordinates have a powerful property: the reference trajectory itself
+corresponds to $\bm{\xi} = \bm{0}$, and the trajectory-tracking problem
+becomes the problem of \emph{regulating $\bm{\xi}$ to zero while $s^*$
+advances}. This converts the tracking problem into a regulation problem, but in
+the moving frame rather than a fixed frame.
+
+\subsection{Curvature-Induced Coupling}
+
+There is a subtlety: the Frenet--Serret coordinates are not inertial. Because
+the frame rotates as it moves along the curve (governed by the Frenet--Serret
+equations \eqref{eq:frenet_serret}), fictitious forces appear in the transverse
+dynamics. The dominant effect is a \textbf{curvature-induced coupling}:
+
+\begin{proposition}\label{prop:curv_coupling}
+  In Frenet--Serret coordinates, the linearized transverse dynamics about the
+  reference trajectory have the form
+  \begin{equation}\label{eq:transverse_lin}
+    \dot{\bm{\xi}} = \bigl[\bm{A}(s) - v^2 \bm{K}(s)\bigr]\, \bm{\xi}
+    + \bm{B}(s)\, \control_{\text{fb}},
+  \end{equation}
+  where $\bm{A}(s)$ comes from linearizing the original dynamics, and
+  $\bm{K}(s)$ is a matrix that depends on the generalized curvatures
+  $\kappa_1(s), \ldots, \kappa_{p-1}(s)$. The term $v^2\bm{K}(s)$ represents
+  the geometric coupling between the curve's shape and the transverse stability.
+\end{proposition}
+
+This result has a profound implication: \emph{the stability of trajectory
+tracking depends on the geometry of the trajectory.} A trajectory with low
+curvature is inherently easier to stabilize than one with high curvature,
+even if the underlying system dynamics are identical. The curvature modifies
+the effective dynamics transverse to the path.
+
+% ══════════════════════════════════════════════
+\section{Fundamental Theorem and Uniqueness}
+% ══════════════════════════════════════════════
+
+We close this chapter with a theorem that is central to the trajectory-first
+philosophy.
+
+\begin{theorem}[Fundamental Theorem of Curves]\label{thm:fundamental}
+  Let $\kappa_1(s), \ldots, \kappa_{p-1}(s)$ be smooth functions on
+  $[0, L]$ with $\kappa_k(s) > 0$ for $k = 1, \ldots, p-2$. Then there
+  exists a curve $\traj: [0, L] \to \Reals^n$, parameterized by arc length,
+  whose generalized curvatures are exactly $\kappa_1, \ldots, \kappa_{p-1}$.
+  Moreover, this curve is unique up to rigid motions (translations and
+  rotations) of $\Reals^n$.
+\end{theorem}
+
+This theorem says: \textbf{the curvature signature is the trajectory.} Two
+trajectories with the same curvature functions are identical in shape. This has
+a practical corollary for control:
+
+\begin{corollary}
+  To specify a reference trajectory, it suffices to specify the generalized
+  curvatures as functions of arc length, together with an initial position
+  and orientation. This representation is:
+  \begin{enumerate}[label=(\roman*)]
+    \item \emph{Compact}: $p - 1$ scalar functions instead of $n$ coordinate
+      functions.
+    \item \emph{Intrinsic}: independent of coordinate choice.
+    \item \emph{Timing-independent}: the trajectory shape is fully determined
+      without specifying when each point is reached.
+  \end{enumerate}
+\end{corollary}
+
+\begin{example}{Curvature Signature of a Golf Swing}{golf_signature}
+  A simplified 2-DOF model of the golf swing (arm + club) has a 4-dimensional
+  state space ($\theta_{\text{arm}}, \theta_{\text{club}}, \dot{\theta}_{\text{arm}},
+  \dot{\theta}_{\text{club}}$). The trajectory through this space has up to 3
+  generalized curvatures: $\kappa_1(s)$, $\kappa_2(s)$, and $\kappa_3(s)$.
+
+  The curvature signature reveals the structure of the swing:
+  \begin{itemize}[leftmargin=1cm]
+    \item $\kappa_1(s)$ peaks at the transition (the ``pause at the top'').
+    \item $\kappa_2(s)$ peaks during the release, where the swing plane rotates.
+    \item $\kappa_3(s)$ is small for a well-executed swing (the motion is
+      approximately confined to a 3D subspace of $\Reals^4$).
+  \end{itemize}
+
+  A coach's instruction to ``flatten your swing plane'' is, in geometric terms,
+  a request to reduce $\kappa_2(s)$ during a specific phase of the motion---a
+  precise modification to the curvature signature.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+This chapter has established the geometric language we will use throughout the
+book:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{9cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Control significance} \\
+  \midrule
+  Arc length $s$ & The natural ``distance along the path''---separates shape
+    from timing \\
+  Curvature $\kappa(s)$ & Determines the centripetal control demand
+    $a_\perp = \kappa v^2$ \\
+  Torsion $\tau(s)$ & Measures out-of-plane complexity; relates to
+    multi-joint coordination \\
+  Frenet--Serret frame & Provides the natural moving coordinate system for
+    decomposing deviations into tangential and transverse components \\
+  Curvature signature & Uniquely specifies the trajectory shape, independent
+    of timing and coordinates \\
+  Path--timing separation & Decomposes control into geometric path design and
+    temporal speed planning \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+
+The key takeaway is that a trajectory is not just ``a function of time.'' It is a
+geometric object with intrinsic structure, and this structure directly determines
+the difficulty and requirements of controlling it. In Chapter~3, we will see that
+the state spaces of mechanical systems are not flat $\Reals^n$---they are curved
+manifolds with their own geometry. The interplay between the geometry of the
+\emph{curve} and the geometry of the \emph{space} will produce the richest and
+most practically important results of this book.
+
+% ══════════════════════════════════════════════
+\section{Exercises}
+% ══════════════════════════════════════════════
+
+\begin{enumerate}[label=\textbf{2.\arabic*.}, leftmargin=1.5cm]
+
+\item \textbf{(Computation.)} Compute the curvature and torsion of the curve
+  $\traj(t) = (t, t^2, t^3)$ at $t = 0$ and $t = 1$. At which point is the
+  curve ``harder to track'' at constant speed?
+
+\item \textbf{(Arc length.)} The logarithmic spiral $\traj(t) = e^{at}(\cos t,\;
+  \sin t)$ with $a > 0$ is a model for certain biological growth patterns.
+  \begin{enumerate}[label=(\alph*)]
+    \item Find the arc-length function $s(t)$.
+    \item Show that the curvature is $\kappa = 1/(e^{at}\sqrt{1 + a^2})$ and
+      interpret what this means about tracking difficulty as the spiral grows.
+    \item What timing law $s(t)$ would maintain constant centripetal acceleration?
+  \end{enumerate}
+
+\item \textbf{(Frenet--Serret.)} For the curve $\traj(s) = (\cos(s/\sqrt{2}),\;
+  \sin(s/\sqrt{2}),\; s/\sqrt{2})$ (a helix parameterized by arc length):
+  \begin{enumerate}[label=(\alph*)]
+    \item Verify that $\norm{\traj'(s)} = 1$.
+    \item Compute the Frenet--Serret frame $\{\tangent, \normal, \binormal\}$.
+    \item Compute $\kappa$ and $\tau$ and verify the Frenet--Serret equations.
+  \end{enumerate}
+
+\item \textbf{(Path--timing separation.)} A robot end-effector must trace the
+  path $\bm{p}(s) = (s,\; \sin(\pi s),\; 0)$ for $s \in [0, 2]$
+  (one full sine wave).
+  \begin{enumerate}[label=(\alph*)]
+    \item Compute $\kappa(s)$ and identify the points of maximum curvature.
+    \item If the maximum centripetal acceleration is $a_{\max} = 10\;\text{m/s}^2$,
+      find the speed limit $v_{\max}(s)$ along the path.
+    \item Design a timing law $s(t)$ that traverses the path in minimum time
+      while respecting the speed limit. Sketch $v(s)$ and $s(t)$.
+  \end{enumerate}
+
+\item \textbf{(Conceptual.)} Consider two trajectories in $\Reals^4$ with
+  identical curvature signatures $(\kappa_1(s), \kappa_2(s), \kappa_3(s))$
+  but different initial conditions.
+  \begin{enumerate}[label=(\alph*)]
+    \item By the fundamental theorem, how are these trajectories related?
+    \item If you designed a tracking controller for one, would it work for the
+      other? Under what conditions?
+    \item Relate this to the idea that a well-learned golf swing can be started
+      from slightly different address positions.
+  \end{enumerate}
+
+\item \textbf{(Numerical project.)} Using motion capture data (or simulated data
+  from a double pendulum), compute the curvature signature of a swing-like motion:
+  \begin{enumerate}[label=(\alph*)]
+    \item Numerically estimate $s(t)$ by integrating $\norm{\dot{\state}(t)}$.
+    \item Compute $\kappa_1(s)$ using Eq.~\eqref{eq:curvature_general_n}.
+    \item Identify the phases of the motion (backswing, transition, downswing,
+      impact) from features of the curvature profile.
+    \item Plot the curvature cost $\kappa(s)\, v(s)^2$ and identify the most
+      demanding phase of the motion.
+  \end{enumerate}
+
+\end{enumerate}
+
+\vspace{1cm}
+\begin{center}
+  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
+  {\small\itshape
+  The shape of a river is written in its curvature.\\
+  The story of a motion is written the same way.\\[0.3cm]
+  Learn to read the curvature, and you read the motion.}
+\end{center}
+
+\end{document}

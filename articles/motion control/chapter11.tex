@@ -1,0 +1,158 @@
+\documentclass[12pt, openany]{book}
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+% ──────────────────────────────────────────────
+% Colors
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+
+% ──────────────────────────────────────────────
+% Theorem environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{keyidea}{Key Idea}{
+  colback=accentred!5, colframe=accentred!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{idea}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\newtcbtheorem[number within=chapter]{remark}{Remark}{
+  colback=purplehaze!5, colframe=purplehaze!60,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{rem}
+
+\newtcbtheorem[number within=chapter]{warning}{Warning}{
+  colback=accentred!5, colframe=accentred!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{warn}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+% ──────────────────────────────────────────────
+% Chapter formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Control Is Motion}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\manifold}{\mathcal{M}}
+\newcommand{\configspace}{\mathcal{Q}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\controlspace}{\mathcal{U}}
+\newcommand{\tube}{\mathcal{T}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+
+% ──────────────────────────────────────────────
+\begin{document}
+
+\setcounter{chapter}{10}
+
+\chapter{Case Study: The Complete Golf Swing}
+
+\epigraph{%
+  The physics are invariant. What separates the professional is their mastery over the geometry of the resultant funnel.
+}{}
+
+\vspace{0.5cm}
+
+% ══════════════════════════════════════════════
+\section{Unifying the "Control is Motion" Framework}
+% ══════════════════════════════════════════════
+
+Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing in order to formally synthesize the mathematical structure of athletic perfection.
+
+The objective is clear: maximize negative clubhead velocity at the precise spatial intersection with the golf ball, while maintaining face angle orthogonality. The exact time interval $t_f$ in which this occurs is irrelevant; only the geometric state at impact matters. Furthermore, the commanded motion must not exceed the structural limits of biological torque, and the trajectory must be highly robust to physiological signal-dependent noise (SDN).
+
+\subsection{Phase 1: Defining the Geometry and Optimization}
+
+The system is heavily underactuated. The wrists are treated as passive pin joints, delegating the final propulsive phase entirely to inertial coupling. 
+
+We formulate a \textbf{Stochastic Moving Target Optimal Control Problem} (Chapter 6). We deploy Direct Collocation to optimize the trajectory $\traj^*(s)$ parameterized over a spatial phase variable $s$ representing the shoulder angle (Chapter 8). The integral cost function strictly penalizes signal variance (Chapter 9) by incorporating local covariance propagation. 
+
+The collocation solver successfully navigates the $\Bmat^\perp$ annihilator constraint (Chapter 5) and produces an optimal, smooth backswing. It discovers that a massive torque inversion (braking the torso) right before impact causes the zero dynamics of the passive wrist to wildly accelerate, perfectly squaring the face precisely as the clubhead spatial coordinate intersects the ball's location.
+
+\subsection{Phase 2: Funnel Synthesis and Robustness}
+
+With $\traj^*(s)$ computed, we lock down the trajectory using \textbf{Transverse Linearization} (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
+
+Finally, we compute the verified bounds of this stability region using \textbf{Sums-of-Squares Programming} (Chapter 7). The SDP calculates a rigorous boundary function $V(\state, t) = 1$ that proves the system is confined to an invariant funnel. 
+
+\begin{keyidea}{The Architecture of the Perfect Swing}{perfect_swing}
+  The final computed funnel reveals the mathematical secret of the professional golfer. During the backswing, the funnel is immensely wide; the motion is forgiving, and vast transverse deviations are easily tolerated without violating the invariant boundary.
+  
+  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so profoundly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
+\end{keyidea}
+
+Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
+
+\end{document}
