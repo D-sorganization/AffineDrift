@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in resources-videos.qmd:202"
+title: "Incomplete Placeholder in resources-software.qmd:39"
 labels: ['incomplete-implementation', 'critical', 'high-impact']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `resources-videos.qmd` at line 202.
+Found critical incomplete implementation in `resources-software.qmd` at line 39.
 
 ## Context
-**Type**: Placeholder | **Location**: `resources-videos.qmd:202`
+**Type**: Placeholder | **Location**: `resources-software.qmd:39`
 
 ```python
-<div class="youtube-embed youtube-placeholder">
+<img src="static/images/placeholder.svg" alt="OpenSim Logo" class="software-logo">
 ```
 
 ## Audit Metrics
