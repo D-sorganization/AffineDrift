@@ -1,0 +1,56 @@
+\chapter{Controller Design and Testing}
+\label{ch:controller-design}
+
+\epigraph{A controller is only as good as its worst-case performance.}{}
+
+\section{PD Control with Gravity Compensation}
+
+\begin{lstlisting}[language=Python, caption={PD controller with gravity compensation.}]
+import numpy as np
+
+class PDGravityCompController:
+    """PD controller with gravity compensation.
+
+    From Volume I, Chapter 3: the simplest nonlinear controller
+    that guarantees asymptotic stability.
+    """
+
+    def __init__(self, Kp: np.ndarray, Kd: np.ndarray,
+                 gravity_func=None):
+        self.Kp = Kp
+        self.Kd = Kd
+        self.gravity_func = gravity_func
+
+    def compute(self, q: np.ndarray, qd: np.ndarray,
+                q_des: np.ndarray, qd_des: np.ndarray) -> np.ndarray:
+        """Compute control torques.
+
+        Parameters
+        ----------
+        q, qd : current state
+        q_des, qd_des : desired state
+
+        Returns
+        -------
+        tau : np.ndarray, control torques
+        """
+        tau = self.Kp @ (q_des - q) + self.Kd @ (qd_des - qd)
+        if self.gravity_func is not None:
+            tau += self.gravity_func(q)
+        return tau
+\end{lstlisting}
+
+\section{Trajectory Tracking with Contraction}
+
+Implementing the contraction-based controller from Volume~I, Chapter~4.
+
+\section{Funnel Control}
+
+Implementing trajectory tubes (Volume~II, Chapter~3) for robust tracking.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Implement PD control for the 2-DOF arm and track a circular trajectory.
+  \item Add gravity compensation and compare tracking error.
+  \item Implement a contraction-based controller and verify convergence.
+\end{enumerate}

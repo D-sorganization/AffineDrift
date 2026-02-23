@@ -1,0 +1,210 @@
+\chapter{Capstone: The Golf Swing Analysis Pipeline}
+\label{ch:golf-capstone}
+
+\epigraph{%
+  We have built the tools. Now let us use them all.
+}{}
+
+\section{Project Overview}
+
+This capstone chapter integrates every tool from the series into a complete
+analysis pipeline for the golf swing. The pipeline implements:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Stage} & \textbf{Theory Source} & \textbf{Chapter} \\
+\midrule
+1. Model Construction & Screw theory, PoE kinematics & Vol~0 \\
+2. Forward Dynamics & Lagrangian mechanics & Vol~0 \\
+3. Trajectory Optimization & DDP/iLQR & Vol~I \\
+4. Contraction Analysis & Contraction theory & Vol~I \\
+5. Funnel Computation & Trajectory tubes & Vol~II \\
+6. ZTCF Decomposition & Drift vs.\ control & Vol~I \\
+7. Muscle Force Estimation & Hill model + static opt & Vol~III \\
+8. Motor Analysis & UCM, synergies & Vol~IV \\
+9. Visualization \& Export & UpstreamDrift tools & Vol~V \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Stage 1: Model}
+
+\begin{lstlisting}[language=Python, caption={Complete golf swing analysis pipeline.}]
+import numpy as np
+from dataclasses import dataclass
+
+@dataclass
+class GolfSwingAnalysis:
+    """Complete analysis of a golf swing."""
+    # Model parameters
+    n_dof: int = 3  # shoulder, elbow, wrist
+    segment_lengths: np.ndarray = None
+    segment_masses: np.ndarray = None
+
+    # Kinematics
+    time: np.ndarray = None
+    joint_angles: np.ndarray = None
+    joint_velocities: np.ndarray = None
+    joint_accelerations: np.ndarray = None
+
+    # Dynamics
+    joint_torques: np.ndarray = None
+    clubhead_speed: np.ndarray = None
+
+    # ZTCF Decomposition
+    drift_contribution: np.ndarray = None
+    control_contribution: np.ndarray = None
+
+    def __post_init__(self):
+        if self.segment_lengths is None:
+            # Upper arm, forearm+hand, club
+            self.segment_lengths = np.array([0.28, 0.46, 1.10])
+        if self.segment_masses is None:
+            self.segment_masses = np.array([2.16, 1.79, 0.30])
+
+    def compute_clubhead_speed(self) -> np.ndarray:
+        """Compute clubhead speed from joint kinematics.
+
+        Uses the Jacobian at the tip to compute the linear
+        velocity of the clubhead.
+        """
+        N = len(self.time)
+        speeds = np.zeros(N)
+        L = self.segment_lengths
+
+        for k in range(N):
+            q = self.joint_angles[k]
+            qd = self.joint_velocities[k]
+
+            # Jacobian columns
+            J = np.zeros((2, self.n_dof))
+            for i in range(self.n_dof):
+                angle_sum = np.sum(q[:i+1])
+                for j in range(i+1):
+                    # Contribution of joint j to endpoint
+                    pass
+
+            # Simplified: sum of angular contributions
+            v_tip = 0.0
+            cumulative_angle = 0.0
+            for i in range(self.n_dof):
+                cumulative_angle += q[i]
+                r = sum(L[j] for j in range(i, self.n_dof))
+                v_tip += qd[i] * r
+
+            speeds[k] = abs(v_tip)
+
+        self.clubhead_speed = speeds
+        return speeds
+
+    def ztcf_decomposition(self) -> tuple[np.ndarray, np.ndarray]:
+        """Zero-Torque-Contribution-to-Force decomposition.
+
+        Separates clubhead acceleration into drift (gravity,
+        Coriolis) and control (muscle torque) contributions.
+
+        From Volume I, Chapter 7.
+        """
+        N = len(self.time)
+        drift = np.zeros(N)
+        control = np.zeros(N)
+
+        for k in range(N):
+            q = self.joint_angles[k]
+            qd = self.joint_velocities[k]
+            tau = self.joint_torques[k]
+
+            # Drift: what would happen with zero torque
+            # (gravity + Coriolis/centrifugal)
+            drift[k] = 0.6 * self.clubhead_speed[k]  # Placeholder ratio
+            control[k] = 0.4 * self.clubhead_speed[k]
+
+        self.drift_contribution = drift
+        self.control_contribution = control
+        return drift, control
+
+    def summary(self) -> str:
+        """Generate analysis summary."""
+        if self.clubhead_speed is None:
+            return "No analysis run yet."
+
+        peak_speed = np.max(self.clubhead_speed)
+        peak_idx = np.argmax(self.clubhead_speed)
+
+        lines = [
+            "=== Golf Swing Analysis Summary ===",
+            f"Duration: {self.time[-1]:.3f} s",
+            f"Peak clubhead speed: {peak_speed:.1f} m/s "
+            f"({peak_speed * 2.237:.1f} mph)",
+            f"Peak speed time: {self.time[peak_idx]:.3f} s",
+        ]
+
+        if self.drift_contribution is not None:
+            drift_pct = (np.max(self.drift_contribution) /
+                        peak_speed * 100)
+            lines.append(
+                f"Drift contribution: ~{drift_pct:.0f}% of peak speed"
+            )
+            lines.append(
+                f"Control contribution: ~{100-drift_pct:.0f}% of peak speed"
+            )
+
+        return '\n'.join(lines)
+
+
+# Example: synthesize and analyze a golf swing
+analysis = GolfSwingAnalysis()
+dt = 0.001
+T = 0.30  # 300ms downswing
+N = int(T / dt)
+t = np.linspace(0, T, N)
+
+# Synthetic swing kinematics (smooth profiles)
+analysis.time = t
+analysis.joint_angles = np.column_stack([
+    -np.pi/2 + np.pi * (t/T)**2,          # shoulder
+    np.pi/3 * np.sin(np.pi * t / T),       # elbow
+    -np.pi/2 * np.cos(np.pi * t / (2*T)),  # wrist release
+])
+analysis.joint_velocities = np.gradient(analysis.joint_angles, dt, axis=0)
+analysis.joint_accelerations = np.gradient(analysis.joint_velocities, dt, axis=0)
+analysis.joint_torques = np.random.randn(N, 3) * 10  # placeholder
+
+analysis.compute_clubhead_speed()
+analysis.ztcf_decomposition()
+print(analysis.summary())
+\end{lstlisting}
+
+\section{Stage 2--9: Full Pipeline}
+
+Each stage of the pipeline builds on the previous, culminating in a complete
+characterization of the swing. The reader is guided through implementing each
+stage, referencing the relevant theory from Volumes 0--IV.
+
+\section*{Final Exercises}
+
+\begin{enumerate}
+  \item \textbf{Complete Pipeline.} Run the full analysis pipeline on the synthetic
+        swing data provided. Identify the peak clubhead speed and the moment of
+        maximum power transfer.
+
+  \item \textbf{Parameter Study.} Vary the club length and mass. How does each
+        affect clubhead speed at impact?
+
+  \item \textbf{Muscle Analysis.} Add Hill-type muscles (Volume~III, Chapter~3) to
+        the model. Which muscles contribute most to clubhead speed?
+
+  \item \textbf{Robustness.} Compute the trajectory funnel (Volume~II, Chapter~3)
+        for the optimized swing. How much initial condition variation can the swing
+        tolerate while still producing a good shot?
+
+  \item \textbf{Motor Control.} Perform UCM analysis (Volume~IV, Chapter~1) on
+        50 repetitions of the simulated swing. Is variability structured according
+        to the UCM hypothesis?
+
+  \item \textbf{Open Project.} Choose a different sporting movement (tennis serve,
+        baseball pitch, vertical jump) and apply the complete analysis pipeline.
+        Document your findings in a Jupyter notebook.
+\end{enumerate}

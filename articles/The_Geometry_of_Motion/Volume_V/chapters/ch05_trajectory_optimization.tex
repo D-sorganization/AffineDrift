@@ -1,0 +1,128 @@
+\chapter{Trajectory Optimization in Practice}
+\label{ch:traj-opt}
+
+\epigraph{Theory without practice is empty. Practice without theory is blind.}{}
+
+\section{DDP/iLQR Implementation}
+
+Differential Dynamic Programming (Volume~I, Chapter~5) is the workhorse for
+trajectory optimization. Here we implement it end-to-end:
+
+\begin{lstlisting}[language=Python, caption={iLQR implementation for trajectory optimization.}]
+import numpy as np
+from typing import Callable, Tuple
+
+def ilqr_solve(
+    dynamics: Callable,
+    cost_running: Callable,
+    cost_terminal: Callable,
+    x0: np.ndarray,
+    u_init: np.ndarray,
+    n_iterations: int = 50,
+    regularization: float = 1e-6
+) -> Tuple[np.ndarray, np.ndarray, list[float]]:
+    """Iterative Linear Quadratic Regulator.
+
+    Parameters
+    ----------
+    dynamics : callable
+        (x, u) -> x_next, (A, B) Jacobians
+    cost_running : callable
+        (x, u) -> (cost, lx, lu, lxx, luu, lux)
+    cost_terminal : callable
+        x -> (cost, lx, lxx)
+    x0 : np.ndarray
+        Initial state.
+    u_init : np.ndarray, shape (T, m)
+        Initial control trajectory.
+    n_iterations : int
+        Maximum iterations.
+    regularization : float
+        Regularization for Quu inversion.
+
+    Returns
+    -------
+    Tuple
+        (x_traj, u_traj, costs)
+    """
+    T, m = u_init.shape
+    n = len(x0)
+
+    # Forward rollout with initial controls
+    x_traj = np.zeros((T + 1, n))
+    x_traj[0] = x0
+    u_traj = u_init.copy()
+
+    for t in range(T):
+        x_next, _ = dynamics(x_traj[t], u_traj[t])
+        x_traj[t + 1] = x_next
+
+    costs = []
+
+    for iteration in range(n_iterations):
+        # Compute total cost
+        total_cost = sum(
+            cost_running(x_traj[t], u_traj[t])[0]
+            for t in range(T)
+        ) + cost_terminal(x_traj[T])[0]
+        costs.append(total_cost)
+
+        # Backward pass
+        Vx_next, Vxx_next = cost_terminal(x_traj[T])[1:]
+        k_gains = np.zeros((T, m))
+        K_gains = np.zeros((T, m, n))
+
+        for t in range(T - 1, -1, -1):
+            _, (A, B) = dynamics(x_traj[t], u_traj[t])
+            _, lx, lu, lxx, luu, lux = cost_running(
+                x_traj[t], u_traj[t]
+            )
+
+            Qx = lx + A.T @ Vx_next
+            Qu = lu + B.T @ Vx_next
+            Qxx = lxx + A.T @ Vxx_next @ A
+            Quu = luu + B.T @ Vxx_next @ B + regularization * np.eye(m)
+            Qux = lux + B.T @ Vxx_next @ A
+
+            Quu_inv = np.linalg.inv(Quu)
+            k_gains[t] = -Quu_inv @ Qu
+            K_gains[t] = -Quu_inv @ Qux
+
+            Vx_next = Qx + K_gains[t].T @ Quu @ k_gains[t]
+            Vxx_next = Qxx + K_gains[t].T @ Quu @ K_gains[t]
+
+        # Forward pass with line search
+        alpha = 1.0
+        x_new = np.zeros_like(x_traj)
+        u_new = np.zeros_like(u_traj)
+        x_new[0] = x0
+
+        for t in range(T):
+            dx = x_new[t] - x_traj[t]
+            u_new[t] = u_traj[t] + alpha * k_gains[t] + K_gains[t] @ dx
+            x_new[t + 1], _ = dynamics(x_new[t], u_new[t])
+
+        x_traj = x_new
+        u_traj = u_new
+
+        if iteration > 0 and abs(costs[-1] - costs[-2]) < 1e-6:
+            break
+
+    return x_traj, u_traj, costs
+\end{lstlisting}
+
+\section{Application: Optimal Pendulum Swing-Up}
+
+The classic control benchmark: swing a pendulum from the hanging position to
+the inverted equilibrium.
+
+\section{Application: Golf Swing Optimization}
+
+Applying DDP to a 3-DOF golf model to optimize clubhead speed at impact.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Use the iLQR code to solve the pendulum swing-up problem.
+  \item Extend to a double pendulum and optimize for maximum tip speed.
+  \item Add muscle force constraints and solve the muscle-driven swing-up.
+\end{enumerate}

@@ -1,0 +1,86 @@
+\chapter{Physics Engine Comparison}
+\label{ch:engine-comparison}
+
+\epigraph{All models are wrong. Some are useful. The useful ones depend on the question.}{}
+
+\section{Benchmark: Simple Pendulum}
+
+We simulate the same pendulum in all engines and compare:
+
+\begin{lstlisting}[language=Python, caption={Cross-engine benchmark framework.}]
+import numpy as np
+from dataclasses import dataclass
+from typing import Protocol
+
+@dataclass
+class BenchmarkResult:
+    """Results from a physics engine benchmark."""
+    engine_name: str
+    positions: np.ndarray    # (n_steps, n_dof)
+    velocities: np.ndarray   # (n_steps, n_dof)
+    times: np.ndarray        # (n_steps,)
+    wall_time_seconds: float
+    energy_drift: float      # relative energy change
+
+class PhysicsEngine(Protocol):
+    def simulate(self, q0: np.ndarray, qd0: np.ndarray,
+                 t_end: float, dt: float) -> BenchmarkResult: ...
+
+def compare_engines(
+    engines: dict[str, PhysicsEngine],
+    q0: np.ndarray,
+    t_end: float = 5.0,
+    dt: float = 0.001
+) -> dict[str, BenchmarkResult]:
+    """Run the same simulation across multiple engines.
+
+    Parameters
+    ----------
+    engines : dict
+        Mapping of engine name to engine instance.
+    q0 : np.ndarray
+        Initial configuration.
+    t_end : float
+        Simulation duration.
+    dt : float
+        Time step.
+
+    Returns
+    -------
+    dict
+        Mapping of engine name to BenchmarkResult.
+    """
+    results = {}
+    qd0 = np.zeros_like(q0)
+
+    for name, engine in engines.items():
+        result = engine.simulate(q0, qd0, t_end, dt)
+        results[name] = result
+        print(f"{name:15s}: wall_time={result.wall_time_seconds:.3f}s, "
+              f"energy_drift={result.energy_drift:.2e}")
+
+    return results
+\end{lstlisting}
+
+\section{Contact Model Comparison}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Engine} & \textbf{Contact Model} & \textbf{Strengths} & \textbf{Limitations} \\
+\midrule
+MuJoCo & Soft contact (spring-damper) & Fast, stable & Non-physical penetration \\
+Drake & Rigid + hydroelastic & Physics-based & Slower \\
+Pinocchio & No built-in contacts & Pure dynamics & Needs external contact \\
+OpenSim & Hunt-Crossley & Biomechanical & Limited geometries \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Run the benchmark for a double pendulum across all available engines.
+  \item Compare energy conservation across engines with different time steps.
+  \item Implement a bouncing ball benchmark to compare contact models.
+\end{enumerate}
