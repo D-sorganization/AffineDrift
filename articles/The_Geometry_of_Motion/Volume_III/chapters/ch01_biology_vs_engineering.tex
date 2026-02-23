@@ -451,6 +451,12 @@ applicable---with modifications. The key insight is:
   (drift + control) is preserved.
 \end{principle}
 
+\begin{laymansbox}{Mathematical Reminder: The Expanded Manifold}{expanded_manifold_reminder}
+Recall from Volumes 0 and I that the "State Vector" $\mathbf{x}$ is a point moving through a geometric space called the State Space Manifold. 
+
+In robotics, this manifold just tracked joint angles and velocities ($2n$ dimensions). In biomechanics, we are mathematically expanding the dimensional size of the manifold by adding $2p$ brand new dimensions to track muscle activation and fiber length. The system is still just a single dot moving through a manifold governed by $\dot{\state} = f(\state) + G(\state) \bm{u}$, but the geometry is now vastly higher-dimensional. All of the differential geometry tools (Tangent Spaces, Logarithms) still mechanically apply, but at a computational cost!
+\end{laymansbox}
+
 This means:
 \begin{itemize}
   \item The tangent-space analysis of Volume~I applies to the expanded state space

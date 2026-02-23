@@ -43,6 +43,35 @@ Like state space, configuration space is an abstract, multi-dimensional geometri
   (Where $T\mathcal{Q}$ represents the Tangent Bundle of the configuration manifold).
 \end{laymansbox}
 
+\section{Differential Geometry Primer: Manifolds and Tangent Spaces}
+
+If the Configuration Space $\mathcal{Q}$ is not a flat plane, what is it? Mathematically, it is a \textbf{Differentiable Manifold}. Differential geometry provides the rigorous tools required to do calculus on these curved surfaces.
+
+\begin{definition}{Differentiable Manifold}{manifold}
+A \emph{manifold} is a topological space that locally resembles flat Euclidean space $\Reals^n$ near every point. If you zoom in closely enough on any point of a manifold, the neighborhood looks completely flat, allowing you to establish a local coordinate grid (a \emph{chart}). A collection of these overlapping charts that covers the entire manifold is called an \emph{atlas}.
+\end{definition}
+
+This is analogous to the Earth: globally it is a sphere (a 2-dimensional manifold, $S^2$), but locally, a street map of your neighborhood looks perfectly flat. 
+
+\subsection{The Tangent Space $T_q\mathcal{Q}$}
+
+While the manifold $\mathcal{Q}$ represents all valid positions (configurations), motion requires us to talk about velocities. Because the manifold is curved, a velocity vector cannot "live" on the surface itself---it would point off the surface tangentially!
+
+Instead, velocity lives in the \textbf{Tangent Space} attached to that specific point.
+
+\begin{definition}{Tangent Space $T_q \mathcal{Q}$}{tangent_space}
+At any specific configuration $q \in \mathcal{Q}$, the \emph{Tangent Space} $T_q\mathcal{Q}$ is the perfectly flat, $n$-dimensional Euclidean vector space containing all possible velocity vectors passing through $q$. 
+\end{definition}
+
+Crucially, the tangent space is \emph{local}. The tangent plane touching a sphere at the North Pole is a completely different vector space from the tangent plane touching it at the Equator. You cannot directly add a velocity vector from the North Pole to a velocity vector from the Equator. This fundamental geometric fact breaks standard linear control theory when applied to highly articulated robots or spacecraft. 
+
+\subsection{The Tangent Bundle $T\mathcal{Q}$}
+If you take the manifold $\mathcal{Q}$ and attach every single local tangent space $T_q\mathcal{Q}$ to every single point $q$, the resulting composite object is called the \textbf{Tangent Bundle}, denoted $T\mathcal{Q}$. This bundle is exactly what defines the \textbf{State Space} $\mathcal{X}$. It contains every position and every possible velocity at that position.
+
+\begin{laymansbox}{Mathematical Reminder: Tangent Bundle vs. State Space}{tangent_bundle_reminder}
+Whenever you see the "State Vector" $\mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T$, recall its geometric meaning. The upper half ($\mathbf{q}$) is a point on the curved manifold $\mathcal{Q}$. The lower half ($\dot{\mathbf{q}}$) is a vector living in the flat tangent space $T_q\mathcal{Q}$ attached specifically to that point $\mathbf{q}$. Together, they coordinate the Tangent Bundle.
+\end{laymansbox}
+
 \section{Generalized Coordinates}
 
 When we model a complex physical system (such as the 15-DOF human golfer in Volume III), we do not track the 3D $(x,y,z)$ position of the golfer's wrist, elbow, and shoulder separately, and then painstakingly write huge algebraic constraint equations ensuring their bones don't stretch or compress during simulation.

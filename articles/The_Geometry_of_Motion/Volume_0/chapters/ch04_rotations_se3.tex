@@ -65,6 +65,27 @@ Notice a paradox: a $3 \times 3$ matrix has 9 numbers, but a 3D object only has 
   If a Configuration Space $\mathcal{Q}$ is simply a rigid body freely rotating around a fixed point, we say $\mathcal{Q} = SO(3)$.
 \end{principle}
 
+\section{Differential Geometry Primer: Lie Groups and Lie Algebras}
+
+We have established that $SO(3)$ is a manifold. However, it is not just any manifold. Because you can combine two rotations to get a third rotation (via matrix multiplication), and every rotation can be smoothly inverted, $SO(3)$ possesses both algebraic structure (it is a mathematical \emph{group}) and geometric structure (it is a \emph{smooth manifold}). 
+
+\begin{definition}{Lie Group}{lie_group}
+A \emph{Lie Group} is a smooth manifold that is also a mathematical group, where the group operations (multiplication and inversion) are smooth functions. As a result, we can perform calculus on them. $SO(3)$ is the preeminent example of a Lie Group in mechanics.
+\end{definition}
+
+If $SO(3)$ is a curved manifold of positions (rotations), what is its velocity space? By our earlier definition in Chapter 3, the velocities must live in the Tangent Space. 
+
+If we examine the tangent space at the identity rotation (the "zero" rotation, matrix $\mathbf{I}$), we discover an incredibly special mathematical object called the \textbf{Lie Algebra}, denoted by lowercase $\mathfrak{so}(3)$. 
+
+\begin{definition}{Lie Algebra $\mathfrak{so}(3)$}{lie_algebra}
+The \emph{Lie Algebra} $\mathfrak{so}(3)$ is the tangent space to the Lie Group $SO(3)$ at the identity element. Physically, it represents the space of all possible angular velocities (spin rates) when the object is currently unrotated. Mathematically, it consists of all $3 \times 3$ \emph{skew-symmetric} matrices.
+\end{definition}
+
+\begin{laymansbox}{Mathematical Reminder: Group vs. Algebra}{group_vs_algebra_reminder}
+Whenever you hear \textbf{Lie Group} (like $SO(3)$ or $SE(3)$), think of the curved, global manifold of \emph{Positions/Configurations}. 
+Whenever you hear \textbf{Lie Algebra} (like $\mathfrak{so}(3)$ or $\mathfrak{se}(3)$), think of the perfectly flat, linear tangent space of \emph{Velocities}. We can do standard linear control math in the Lie Algebra, but we map the results back onto the curved Lie Group using the \emph{Exponential Map} (covered next) to actually rotate the physical robot.
+\end{laymansbox}
+
 \section{Unit Quaternions ($\mathcal{H}$)}
 
 While $SO(3)$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for a physics engine updating a 15-DOF human model at 1,000 Hertz. 
