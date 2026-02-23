@@ -1,0 +1,108 @@
+\chapter{Building a Multi-Body Model}
+\label{ch:building-models}
+
+\epigraph{The model is the hypothesis made physical.}{}
+
+\section{Model Formats}
+
+\subsection{URDF (Universal Robot Description Format)}
+XML-based format used by ROS, Drake, and Pinocchio. Defines links, joints, and visual/collision geometry.
+
+\subsection{MJCF (MuJoCo XML)}
+MuJoCo's native format. Extends URDF with actuators, tendons, muscles, and contact parameters.
+
+\section{Building a 7-Segment Golf Model}
+
+\begin{lstlisting}[language=Python, caption={Programmatic multi-body model construction.}]
+import numpy as np
+from dataclasses import dataclass, field
+
+@dataclass
+class Link:
+    name: str
+    mass: float
+    length: float
+    com_position: float
+    inertia: np.ndarray = field(default_factory=lambda: np.eye(3))
+
+@dataclass
+class Joint:
+    name: str
+    parent: str
+    child: str
+    joint_type: str  # revolute, ball, fixed
+    axis: list[float] = field(default_factory=lambda: [0, 0, 1])
+    limits: tuple[float, float] = (-np.pi, np.pi)
+
+@dataclass
+class MultiBodyModel:
+    name: str
+    links: list[Link] = field(default_factory=list)
+    joints: list[Joint] = field(default_factory=list)
+
+    @property
+    def n_dof(self) -> int:
+        dof_map = {"revolute": 1, "ball": 3, "fixed": 0}
+        return sum(dof_map.get(j.joint_type, 1) for j in self.joints)
+
+    def to_urdf(self) -> str:
+        """Export model as URDF XML string."""
+        lines = [f'<robot name="{self.name}">']
+        for link in self.links:
+            lines.append(f'  <link name="{link.name}">')
+            lines.append(f'    <inertial>')
+            lines.append(f'      <mass value="{link.mass}"/>')
+            lines.append(f'    </inertial>')
+            lines.append(f'  </link>')
+        for joint in self.joints:
+            lines.append(f'  <joint name="{joint.name}" '
+                         f'type="{joint.joint_type}">')
+            lines.append(f'    <parent link="{joint.parent}"/>')
+            lines.append(f'    <child link="{joint.child}"/>')
+            lines.append(f'  </joint>')
+        lines.append('</robot>')
+        return '\n'.join(lines)
+
+
+def build_golf_swing_model() -> MultiBodyModel:
+    """Build a 7-segment golf swing model.
+
+    Segments: pelvis, trunk, upper_arm, forearm, hand, club_shaft, club_head
+    """
+    model = MultiBodyModel(name="golf_swing_7seg")
+
+    # Segment properties (de Leva 1996, 80kg male)
+    model.links = [
+        Link("pelvis", mass=11.2, length=0.15, com_position=0.075),
+        Link("trunk", mass=25.5, length=0.48, com_position=0.22),
+        Link("upper_arm", mass=2.16, length=0.28, com_position=0.16),
+        Link("forearm", mass=1.30, length=0.27, com_position=0.12),
+        Link("hand", mass=0.49, length=0.19, com_position=0.07),
+        Link("club_shaft", mass=0.10, length=1.05, com_position=0.50),
+        Link("club_head", mass=0.20, length=0.10, com_position=0.05),
+    ]
+
+    model.joints = [
+        Joint("pelvis_rotation", "world", "pelvis", "revolute", [0, 1, 0]),
+        Joint("trunk_flexion", "pelvis", "trunk", "revolute", [0, 0, 1]),
+        Joint("shoulder", "trunk", "upper_arm", "ball"),
+        Joint("elbow", "upper_arm", "forearm", "revolute", [0, 0, 1]),
+        Joint("wrist", "forearm", "hand", "revolute", [0, 0, 1]),
+        Joint("grip", "hand", "club_shaft", "fixed"),
+    ]
+
+    return model
+
+
+model = build_golf_swing_model()
+print(f"Golf swing model: {len(model.links)} segments, "
+      f"{model.n_dof} DOF")
+print(f"\nURDF preview:\n{model.to_urdf()[:500]}...")
+\end{lstlisting}
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Build a 3-segment arm model and export as URDF.
+  \item Add muscle attachment points to the golf model.
+  \item Load the URDF into MuJoCo and verify the model visually.
+\end{enumerate}

@@ -1,0 +1,146 @@
+\chapter{Passive Distributed Control}
+\label{ch:passive-control}
+
+\epigraph{%
+  The most efficient movement is one where the body's own mechanics
+  do most of the work, and the nervous system merely guides.
+}{--- Adapted from Frans Bosch}
+
+\section{The Frans Bosch Framework}
+
+Frans Bosch's work on strength training and coordination \cite{Bosch2015}
+provides a practitioner-oriented framework for understanding how elite athletes
+organize movement. His key insights, translated into the language of this series:
+
+\begin{insight}{Self-Organization in Complex Movement}{bosch-self-org}
+  Bosch argues that complex movements are not centrally programmed but
+  \textbf{self-organize} through the interaction of:
+  \begin{enumerate}
+    \item \textbf{Task constraints}: the goal shapes the solution space
+    \item \textbf{Organismic constraints}: the body's anatomy and current state
+    \item \textbf{Environmental constraints}: gravity, ground, implements
+  \end{enumerate}
+  The role of the nervous system is not to specify every muscle activation but to
+  set the \emph{initial conditions} and \emph{constraints} that allow self-organization
+  to produce the desired movement.
+
+  In the language of Volume~I: the CNS designs the \emph{drift field} $f(\state)$
+  of the system (through postural configuration and muscle tone) and lets the
+  natural dynamics do the work.
+\end{insight}
+
+\section{Passive Dynamic Walking}
+
+The most striking example of passive dynamics is passive dynamic walking,
+demonstrated by McGeer (1990) \cite{McGeer1990}: a simple mechanical biped
+can walk down a gentle slope with \emph{no actuators and no control}:
+
+\begin{lstlisting}[language=Python, caption={Passive dynamic walker simulation.}]
+import numpy as np
+from scipy.integrate import solve_ivp
+
+def passive_walker_dynamics(
+    t: float,
+    state: np.ndarray,
+    M: float = 10.0,
+    m: float = 5.0,
+    l: float = 1.0,
+    g: float = 9.81,
+    slope: float = 0.05
+) -> np.ndarray:
+    """Dynamics of a 2-DOF passive walker (compass gait).
+
+    Parameters
+    ----------
+    t : float
+        Time.
+    state : np.ndarray
+        [theta_stance, theta_swing, d_theta_stance, d_theta_swing]
+    M : float
+        Hip mass (kg).
+    m : float
+        Leg mass at foot (kg).
+    g : float
+        Gravitational acceleration (m/s^2).
+    slope : float
+        Ground slope (radians).
+
+    Returns
+    -------
+    np.ndarray
+        State derivatives.
+    """
+    th_st, th_sw, dth_st, dth_sw = state
+
+    # Mass matrix
+    M11 = (M + m) * l**2
+    M12 = -m * l**2 * np.cos(th_st - th_sw)
+    M21 = M12
+    M22 = m * l**2
+
+    # Gravity and Coriolis
+    C1 = -m * l**2 * dth_sw**2 * np.sin(th_st - th_sw) \
+         - (M + m) * g * l * np.sin(th_st - slope)
+    C2 = m * l**2 * dth_st**2 * np.sin(th_st - th_sw) \
+         + m * g * l * np.sin(th_sw - slope)
+
+    # Solve M * ddq = C (NO control input!)
+    det = M11 * M22 - M12 * M21
+    ddth_st = (M22 * C1 - M12 * C2) / det
+    ddth_sw = (M11 * C2 - M21 * C1) / det
+
+    return np.array([dth_st, dth_sw, ddth_st, ddth_sw])
+
+
+# Simulate one step of passive walking
+state0 = np.array([0.2, -0.4, -0.5, 1.0])
+sol = solve_ivp(passive_walker_dynamics, [0, 1.5], state0,
+                max_step=0.001, events=None)
+print(f"Passive walker: simulated {sol.t[-1]:.2f}s "
+      f"with {len(sol.t)} timesteps")
+print(f"Final stance angle: {sol.y[0, -1]:.3f} rad")
+print("(No actuators, no controller --- just gravity and mechanics)")
+\end{lstlisting}
+
+\section{Passive Dynamics in the Golf Swing}
+
+The golf swing exemplifies passive dynamics exploitation:
+\begin{enumerate}
+  \item \textbf{Backswing}: energy stored in elastic tissues (muscles, tendons, fascia)
+  \item \textbf{Transition}: elastic recoil initiates the downswing passively
+  \item \textbf{Wrist release}: centrifugal force passively uncocks the wrists
+        (the double pendulum effect from Volume~II, Chapter~5)
+  \item \textbf{Follow-through}: passive deceleration through tissue compliance
+\end{enumerate}
+
+In the ZTCF framework of Volume~I, Chapter~7: the drift contribution $f(\state)$
+accounts for $\sim$60\% of the clubhead speed. The control contribution
+$G(\state)\control$ provides the remaining $\sim$40\%.
+
+\section{Bernstein's Stage 3: Exploiting DOF}
+
+The connection to Bernstein's learning framework (Chapter~1) is direct:
+\begin{itemize}
+  \item The expert athlete has reached Stage 3 --- exploiting degrees of freedom
+  \item They have learned to configure the body so that passive dynamics
+        \emph{automatically} produce the desired motion
+  \item The control problem is simplified: instead of commanding every muscle,
+        set up the initial conditions and let physics do the work
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Passive Walking.} Using the provided code, find the set of
+        initial conditions that produce a stable limit cycle (periodic gait).
+
+  \item \textbf{Energy Analysis.} For the passive walker, plot kinetic and
+        potential energy over one stride. Where does the energy come from?
+
+  \item \textbf{Wrist Release.} Model the wrist release as a passive double
+        pendulum. For what initial angular velocity of the arm does the club
+        reach maximum speed at the bottom?
+
+  \item \textbf{(Programming.)} Add a small actuator to the passive walker
+        and design a minimal controller that stabilizes the gait on level ground.
+\end{enumerate}

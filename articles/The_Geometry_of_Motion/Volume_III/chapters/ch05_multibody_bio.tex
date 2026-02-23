@@ -1,0 +1,167 @@
+\chapter{Multi-Body Dynamics of Biological Chains}
+\label{ch:multibody-bio}
+
+\epigraph{%
+  The human body is the most complex open kinematic chain in nature.
+  Analyzing it with the tools of rigid-body dynamics is both
+  necessary and insufficient.
+}{}
+
+\section{Open-Chain vs.\ Closed-Chain Biomechanics}
+
+Most human movement involves open kinematic chains (the limbs) connected to a floating
+base (the pelvis/trunk). However, many functional activities create temporary closed
+chains: the stance phase of gait (foot on ground), pushing against a wall, or the golf
+swing when both hands grip the club.
+
+\subsection{Equations of Motion for Biological Chains}
+
+The equations of motion for an $n$-DOF musculoskeletal system take the standard
+Lagrangian form:
+\begin{equation}
+  M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
+  = R(\bm{q}) \bm{F}_{\text{muscle}} + J_c^T(\bm{q}) \bm{F}_{\text{contact}},
+  \label{eq:ch5:eom-bio}
+\end{equation}
+where:
+\begin{itemize}
+  \item $M(\bm{q}) \in \Reals^{n \times n}$ is the mass matrix (from segment inertial properties)
+  \item $C(\bm{q}, \dot{\bm{q}}) \in \Reals^{n \times n}$ is the Coriolis/centrifugal matrix
+  \item $g(\bm{q}) \in \Reals^n$ is the gravity vector
+  \item $R(\bm{q}) \in \Reals^{n \times p}$ is the muscle moment arm matrix ($p$ muscles, $n$ DOF)
+  \item $\bm{F}_{\text{muscle}} \in \Reals^p$ are the muscle forces (from Hill models, Chapter~3)
+  \item $J_c(\bm{q})$ is the contact Jacobian
+  \item $\bm{F}_{\text{contact}}$ are external contact forces
+\end{itemize}
+
+The key difference from Volume~I's $\bm{\tau} = B\bm{u}$ is that joint torques are
+no longer direct control inputs. Instead:
+\begin{equation}
+  \bm{\tau}_{\text{net}} = R(\bm{q}) \bm{F}_{\text{muscle}}
+  = \sum_{i=1}^{p} \bm{r}_i(\bm{q}) \cdot F_{\text{muscle},i},
+  \label{eq:ch5:net-torque}
+\end{equation}
+where $\bm{r}_i(\bm{q}) \in \Reals^n$ is the $i$-th column of $R$, giving the moment
+arm vector of muscle $i$ across all joints.
+
+\subsection{Bi-articular Muscles}
+
+Unlike engineering actuators that span a single joint, many muscles cross two
+or more joints. These \textbf{bi-articular} (or multi-articular) muscles create
+mechanical coupling between joints that has no analog in standard robotics.
+
+\begin{principle}{The Coordination Function of Bi-articular Muscles}{biarticular}
+  Bi-articular muscles serve two distinct functions:
+  \begin{enumerate}
+    \item \textbf{Energy transfer}: they transport mechanical energy from one joint to
+          another without metabolic cost. When the proximal joint extends (muscle
+          shortening at proximal end) and the distal joint flexes (muscle lengthening
+          at distal end), energy is transferred proximally to distally.
+    \item \textbf{Coordination constraint}: they link joint motions, reducing the
+          effective degrees of freedom and simplifying the control problem.
+  \end{enumerate}
+  This is a form of \emph{mechanical intelligence}---the morphology of the
+  musculoskeletal system performs part of the control task. The gastrocnemius,
+  for example, crosses both the knee and ankle, coupling knee extension to ankle
+  plantarflexion during the push-off phase of gait.
+\end{principle}
+
+\begin{lstlisting}[language=Python, caption={Computing joint torques from muscle forces through moment arms.}]
+import numpy as np
+
+def compute_joint_torques(
+    moment_arms: np.ndarray,
+    muscle_forces: np.ndarray
+) -> np.ndarray:
+    """Compute net joint torques from muscle forces and moment arms.
+
+    Parameters
+    ----------
+    moment_arms : np.ndarray, shape (n_joints, n_muscles)
+        Moment arm matrix R(q). Each column gives the moment arm
+        of one muscle across all joints. Sign convention: positive
+        moment arm produces positive joint torque (typically flexion).
+    muscle_forces : np.ndarray, shape (n_muscles,)
+        Force produced by each muscle (always positive).
+
+    Returns
+    -------
+    np.ndarray, shape (n_joints,)
+        Net joint torques.
+    """
+    return moment_arms @ muscle_forces
+
+
+# Example: 2-DOF elbow system with 4 muscles
+# Joints: shoulder flexion, elbow flexion
+# Muscles: anterior deltoid, biceps (biarticular),
+#          triceps (biarticular), brachialis
+R = np.array([
+    # shoulder, elbow
+    [0.05,  0.03,  -0.025,  0.0],   # shoulder moment arms (m)
+    [0.0,   0.04,  -0.020,  0.03],  # elbow moment arms (m)
+]).T  # Shape: (4 muscles, 2 joints) -> transpose to (2, 4)
+R = R.T  # Now (2 joints, 4 muscles)
+
+# Note: biceps has moment arms at BOTH joints (bi-articular)
+muscle_forces = np.array([200.0, 150.0, 100.0, 120.0])  # Newtons
+
+tau = compute_joint_torques(R, muscle_forces)
+print(f"Shoulder torque: {tau[0]:.1f} N*m")
+print(f"Elbow torque:    {tau[1]:.1f} N*m")
+\end{lstlisting}
+
+\subsection{Co-Contraction and Joint Stiffness}
+
+When antagonist muscles co-contract (both agonist and antagonist are active
+simultaneously), the net joint torque may be zero but the joint \textbf{stiffness}
+increases. This is because each active muscle acts as a spring:
+\begin{equation}
+  K_{\text{joint}} = \sum_{i=1}^{p} r_i^2(\bm{q}) \cdot \frac{\partial F_{\text{muscle},i}}{\partial \ell_i^M},
+  \label{eq:ch5:joint-stiffness}
+\end{equation}
+where $\partial F / \partial \ell^M$ is the short-range stiffness of the muscle, which
+depends on activation level.
+
+Co-contraction is metabolically expensive but biomechanically important: it allows the
+nervous system to modulate joint \emph{impedance} independently of joint
+\emph{torque}. This is a form of \textbf{variable impedance control} that has no direct
+analog in rigid robots with torque-controlled joints.
+
+\section{The Mass Matrix of the Human Body}
+
+Computing the mass matrix $M(\bm{q})$ for a full musculoskeletal model follows the
+same recursive algorithms as Volume~0, Chapter~10 (the Composite Rigid Body Algorithm),
+using the segment inertial properties from Chapter~2. The key computational steps are:
+
+\begin{enumerate}
+  \item Define the kinematic tree (segment connectivity and joint types)
+  \item Compute forward kinematics using the product of exponentials
+  \item Apply the CRBA to compute $M(\bm{q})$
+\end{enumerate}
+
+For a 20-DOF model (pelvis + 2 legs + trunk + 2 arms), $M(\bm{q})$ is a
+$20 \times 20$ symmetric positive-definite matrix.
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Bi-articular Energy Transfer.}
+        For the gastrocnemius (crossing knee and ankle), show mathematically how
+        knee extension can produce ankle torque through the bi-articular coupling.
+
+  \item \textbf{Co-Contraction Analysis.}
+        Compute the joint stiffness when biceps and triceps co-contract at 50\%
+        activation with the elbow at $90^\circ$.
+
+  \item \textbf{Mass Matrix Properties.}
+        For a 2-segment arm model, compute $M(\bm{q})$ at three configurations and
+        verify positive-definiteness. Plot the condition number as a function of elbow angle.
+
+  \item \textbf{(Programming.)} Implement the CRBA for a 3-segment leg model using
+        the de~Leva segment properties. Compare with Pinocchio output.
+
+  \item \textbf{(Programming.)} Simulate a 2-DOF arm with 4 muscles (as in the code
+        listing) performing a reaching movement. Use prescribed muscle activations
+        and compute the resulting trajectory via forward dynamics.
+\end{enumerate}

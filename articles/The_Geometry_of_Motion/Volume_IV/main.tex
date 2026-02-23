@@ -10,7 +10,7 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning, 3d}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning}
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems, breakable, skins}
 \usepackage{hyperref}
@@ -25,7 +25,7 @@
 \usepackage{listings}
 
 % ──────────────────────────────────────────────
-% Code Formatting (Listings)
+% Code Formatting
 % ──────────────────────────────────────────────
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -33,21 +33,21 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
+    backgroundcolor=\color{backcolour},
     commentstyle=\color{codegreen},
     keywordstyle=\color{magenta},
     numberstyle=\tiny\color{codegray},
     stringstyle=\color{codepurple},
     basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
     showstringspaces=false,
-    showtabs=false,                  
+    showtabs=false,
     tabsize=2
 }
 \lstset{style=mystyle}
@@ -60,22 +60,22 @@
 \definecolor{softgray}{RGB}{245, 245, 245}
 \definecolor{trajgreen}{RGB}{30, 130, 60}
 \definecolor{darkgold}{RGB}{160, 120, 20}
-\definecolor{purplehaze}{RGB}{100, 40, 140}
+\definecolor{neuralblue}{RGB}{40, 80, 160}
 
 % ──────────────────────────────────────────────
 % Theorem environments
 % ──────────────────────────────────────────────
-\newtcbtheorem[number within=chapter]{principle}{Mathematical Principle}{
-  colback=chapblue!5, colframe=chapblue!80,
+\newtcbtheorem[number within=chapter]{neurobox}{Neural Architecture}{
+  colback=neuralblue!5, colframe=neuralblue!80,
   fonttitle=\bfseries, separator sign={.~},
   breakable
-}{princ}
+}{neuro}
 
-\newtcbtheorem[number within=chapter]{laymansbox}{Intuition}{
-  colback=trajgreen!5, colframe=trajgreen!80,
+\newtcbtheorem[number within=chapter]{insight}{Key Insight}{
+  colback=darkgold!5, colframe=darkgold!80,
   fonttitle=\bfseries, separator sign={.~},
   breakable
-}{intuition}
+}{insight}
 
 \newtcbtheorem[number within=chapter]{example}{Example}{
   colback=softgray, colframe=black!40,
@@ -84,7 +84,7 @@
 }{ex}
 
 \newtcbtheorem[number within=chapter]{definition}{Definition}{
-  colback=darkgold!5, colframe=darkgold!80,
+  colback=chapblue!5, colframe=chapblue!75,
   fonttitle=\bfseries, separator sign={.~},
   breakable
 }{def}
@@ -92,7 +92,17 @@
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}[chapter]
 \newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
 % ──────────────────────────────────────────────
 % Chapter formatting
@@ -108,49 +118,25 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[LE,RO]{\thepage}
-\fancyhead[RE]{\textit{Volume 0: The Mathematical Primer}}
+\fancyhead[RE]{\textit{Volume IV: Human Motor Control}}
 \fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
 \renewcommand{\headrulewidth}{0.4pt}
 \setlength{\headheight}{14.5pt}
-
-% ──────────────────────────────────────────────
-% Custom commands
-% ──────────────────────────────────────────────
-\newcommand{\state}{\bm{x}}
-\newcommand{\control}{\bm{u}}
-\newcommand{\traj}{\bm{\gamma}}
-\newcommand{\manifold}{\mathcal{M}}
-\newcommand{\configspace}{\mathcal{Q}}
-\newcommand{\statespace}{\mathcal{X}}
-\newcommand{\tube}{\mathcal{T}}
-\newcommand{\Reals}{\mathbb{R}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dt}{\,\dd t}
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
-\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
-\newcommand{\se}{\mathfrak{se}(3)}
-\newcommand{\so}{\mathfrak{so}(3)}
-\newcommand{\SE}{\mathrm{SE}(3)}
-\newcommand{\SO}{\mathrm{SO}(3)}
-\newcommand{\screw}{\mathcal{S}}
-\newcommand{\twist}{\mathcal{V}}
-\newcommand{\wrench}{\mathcal{F}}
 
 % ──────────────────────────────────────────────
 % Title Page
 % ──────────────────────────────────────────────
 \title{%
   {\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm]
-  {\Large Volume 0: The Mathematical Primer\\
-  A Foundational Guide to Kinematics, Configuration, and State Space}\\[0.6cm]
+  {\Large Volume IV: Human Motor Control\\
+  The Neural Architecture of Movement}\\[0.6cm]
   {\color{chapblue}\rule{\textwidth}{2pt}}
 }
 \date{}
 
-
-
 \hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
 
+\newtcbtheorem[number within=chapter]{laymansbox}{In Laymans Terms}{colback=blue!5,colframe=blue!75,fonttitle=fseries,breakable}{layman}
 \begin{document}
 
 \maketitle
@@ -161,11 +147,28 @@
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 
-Before we can begin to analyze the geometry of moving physical bodies or command them to navigate the world via control theory, we must establish a common language. The physics of movement happens in the real world, but our understanding of it happens entirely within mathematical spaces.
+Volumes~0--III developed the mathematical and physical foundations for understanding
+motion: differential geometry, nonlinear control, trajectory optimization, and
+biomechanics. This volume asks a fundamentally different question: \emph{how does the
+brain actually control the body?}
 
-This primer, **Volume 0** of *The Geometry of Motion*, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
+The human motor system is the most impressive control system in nature. A golfer
+controls 200+ degrees of freedom to produce a 1.5-second motion with centimeter
+precision at the clubhead, despite processing delays of 100--200~ms, noisy sensors,
+and actuators whose force capacity depends on their own state. No engineered system
+comes close to this combination of dimensionality, precision, and robustness.
 
-The philosophy of this primer maintains our overarching theme: mathematics should be driven by the physical reality of motion, not abstract algebra for its own sake.
+The central thesis of this volume is that the brain solves the seemingly impossible
+problem of high-dimensional motor control not through deep computation but through
+\textbf{massive parallelism with shallow depth}. The motor cortex has approximately
+6 layers. At 1--5~ms per synaptic transmission, a motor command can pass through at
+most 20--40 layers of processing in the 100--200~ms available for real-time control.
+The brain compensates for this limited depth with enormous width: billions of neurons
+processing in parallel, each performing simple local computations.
+
+This architectural constraint---shallow but wide---is not a limitation. It is the
+\emph{key design principle} that makes biological motor control work. Understanding
+why is the purpose of this book.
 
 \tableofcontents
 \include{../nomenclature}
@@ -173,22 +176,19 @@ The philosophy of this primer maintains our overarching theme: mathematics shoul
 
 \mainmatter
 
-\include{chapters/ch01_linear_algebra}
-\include{chapters/ch02_state_space}
-\include{chapters/ch03_configuration}
-\include{chapters/ch04_rotations_se3}
-\include{chapters/ch05_screw_axes}
-\include{chapters/ch06_exponential_coordinates}
-\include{chapters/ch07_recursive_algorithms}
-\include{chapters/ch08_spatial_algebra}
-\include{chapters/ch09_product_of_exponentials}
-\include{chapters/ch10_articulated_body_algorithm}
-\include{chapters/ch11_lagrangian_mechanics}
-\include{chapters/ch12_machine_learning}
+\include{chapters/ch01_dof_problem}
+\include{chapters/ch02_curse_of_dimensionality}
+\include{chapters/ch03_neural_architecture}
+\include{chapters/ch04_shallow_wide}
+\include{chapters/ch05_ideomotor}
+\include{chapters/ch06_internal_models}
+\include{chapters/ch07_passive_control}
+\include{chapters/ch08_cpg}
+\include{chapters/ch09_motor_learning}
+\include{chapters/ch10_computational_models}
+\include{chapters/ch11_neural_to_robot}
 
 \backmatter
-\include{chapters/glossary}
-\include{chapters/further_reading}
 \printindex
 
 \bibliographystyle{plain}

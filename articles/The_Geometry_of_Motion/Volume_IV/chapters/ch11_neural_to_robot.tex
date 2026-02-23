@@ -1,0 +1,173 @@
+\chapter{From Neural Architecture to Robot Control}
+\label{ch:neural-to-robot}
+
+\epigraph{%
+  If we truly understood how humans move,
+  we could build robots that move like humans.
+  We cannot. This tells us something.
+}{}
+
+\section{Lessons from Biology for Robot Design}
+
+The four volumes of theory converge on practical design principles for robotic
+control systems:
+
+\begin{insight}{Bio-Inspired Control Design Principles}{bio-robot-design}
+  \begin{enumerate}
+    \item \textbf{Exploit passive dynamics} (Vol~II, Vol~IV Ch~7): design the mechanical
+          system so that natural dynamics do useful work. Use compliance, not rigidity.
+    \item \textbf{Use shallow-wide controllers} (Vol~IV Ch~4): for real-time control,
+          prefer 2--3 layer networks with thousands of neurons over deep networks with
+          hundreds of layers.
+    \item \textbf{Employ synergy-based dimensionality reduction} (Vol~IV Ch~4): define
+          4--8 actuation synergies and control in synergy space, not muscle space.
+    \item \textbf{Implement forward models} (Vol~IV Ch~6): use the Smith predictor
+          architecture to compensate for sensor/actuator delays.
+    \item \textbf{Design for contraction} (Vol~I Ch~4): ensure the closed-loop
+          system is contracting, guaranteeing stability and robustness.
+    \item \textbf{Optimize trajectories, not setpoints} (Vol~II): design
+          trajectory-centric controllers with funnel guarantees.
+    \item \textbf{Accept variability} (Vol~IV Ch~1): allow task-irrelevant
+          variability. Don't over-constrain the controller.
+  \end{enumerate}
+\end{insight}
+
+\section{Cerebellar-Inspired Adaptive Control}
+
+The cerebellum's architecture suggests a specific adaptive controller:
+\begin{itemize}
+  \item \textbf{Granule cells} $\to$ basis function expansion (like kernel methods)
+  \item \textbf{Purkinje cells} $\to$ linear combination of basis functions
+  \item \textbf{Climbing fiber error} $\to$ supervised learning signal
+\end{itemize}
+
+This maps directly to:
+\begin{equation}
+  \control_{\text{adaptive}}(\state) = \hat{W}^T \bm{\phi}(\state),
+  \quad \dot{\hat{W}} = -\Gamma \bm{\phi}(\state) \bm{e}^T,
+  \label{eq:ch11:cerebellar-control}
+\end{equation}
+where $\bm{\phi}(\state)$ are radial basis functions (granule cell expansion),
+$\hat{W}$ are adaptive weights (parallel fiber--Purkinje cell synapses), and
+$\bm{e}$ is the tracking error (climbing fiber signal).
+
+\section{CPG-Based Locomotion Controllers}
+
+Following Chapter~8, CPG-based locomotion controllers use coupled oscillators to
+generate walking/running patterns. The CPG provides the \emph{timing} and the
+musculoskeletal model provides the \emph{mechanics}:
+
+\begin{lstlisting}[language=Python, caption={Bio-inspired locomotion controller architecture.}]
+import numpy as np
+
+class BioInspiredLocomotionController:
+    """Hierarchical control architecture inspired by
+    biological motor control."""
+
+    def __init__(
+        self,
+        n_joints: int,
+        n_synergies: int = 4,
+        cpg_freq: float = 1.0
+    ):
+        self.n_joints = n_joints
+        self.n_synergies = n_synergies
+        self.cpg_freq = cpg_freq
+
+        # Synergy matrix (learned from motion data)
+        self.W = np.random.randn(n_joints, n_synergies) * 0.1
+
+        # CPG phases for each synergy
+        self.phases = np.linspace(
+            0, 2 * np.pi * (1 - 1/n_synergies), n_synergies
+        )
+
+        # Feedback gains (shallow: single layer)
+        self.K_fb = np.zeros((n_synergies, 2 * n_joints))
+
+    def cpg_output(self, t: float) -> np.ndarray:
+        """Generate rhythmic synergy activations from CPG."""
+        activations = np.array([
+            max(0.0, np.sin(2 * np.pi * self.cpg_freq * t + phi))
+            for phi in self.phases
+        ])
+        return activations
+
+    def feedforward(self, t: float) -> np.ndarray:
+        """Feedforward joint torques from CPG + synergies."""
+        c = self.cpg_output(t)
+        return self.W @ c
+
+    def feedback(self, state_error: np.ndarray) -> np.ndarray:
+        """Feedback correction (shallow: one layer)."""
+        c_fb = self.K_fb @ state_error
+        return self.W @ c_fb
+
+    def control(self, t: float,
+                state_error: np.ndarray) -> np.ndarray:
+        """Total control: feedforward (CPG) + feedback."""
+        return self.feedforward(t) + self.feedback(state_error)
+
+
+# Example: 6-joint biped with 4 synergies
+controller = BioInspiredLocomotionController(
+    n_joints=6, n_synergies=4, cpg_freq=1.2
+)
+
+# Generate one cycle of control signals
+t = np.linspace(0, 1.0/1.2, 200)
+torques = np.array([controller.feedforward(ti) for ti in t])
+
+print(f"Bio-inspired controller: {controller.n_joints} joints, "
+      f"{controller.n_synergies} synergies")
+print(f"Control dimensionality reduced from {controller.n_joints} "
+      f"to {controller.n_synergies}")
+print(f"Peak torque magnitude: {np.max(np.abs(torques)):.3f}")
+\end{lstlisting}
+
+\section{Whole-Body Control Architectures}
+
+For humanoid robots, the bio-inspired architecture suggests:
+
+\begin{enumerate}
+  \item \textbf{Level 0 (Spinal)}: joint-level impedance control with reflex-like
+        feedback ($\sim$1~ms loop)
+  \item \textbf{Level 1 (CPG)}: rhythmic pattern generation for locomotion
+        ($\sim$10~ms loop)
+  \item \textbf{Level 2 (Cerebellar)}: adaptive feedforward based on forward model
+        predictions ($\sim$50~ms loop)
+  \item \textbf{Level 3 (Cortical)}: trajectory planning and task-level control
+        ($\sim$100~ms loop)
+\end{enumerate}
+
+Each level is \textbf{shallow} (1--2 layers) but \textbf{wide} (many parallel channels),
+operating at progressively longer timescales.
+
+\section{The Connection to UpstreamDrift}
+
+Volume~V provides the practical tools to implement and test these controllers using
+the UpstreamDrift simulation platform. The connection points:
+\begin{itemize}
+  \item \textbf{MuJoCo}: test CPG-based locomotion controllers on musculoskeletal models
+  \item \textbf{Drake}: implement trajectory optimization for trajectory-centric control
+  \item \textbf{Pinocchio}: compute forward/inverse dynamics efficiently in real-time
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Controller Architecture.}
+        Using the bio-inspired controller code, vary the number of synergies and
+        measure the resulting control signal dimensionality and smoothness.
+
+  \item \textbf{Cerebellar Adaptive Control.}
+        Implement the cerebellar-inspired adaptive controller for a 2-DOF arm and
+        show that it learns an inverse model over 50 trials.
+
+  \item \textbf{Hierarchical Design.}
+        Design a 3-level hierarchical controller for a simulated biped, with
+        impedance control at Level 0, CPG at Level 1, and trajectory correction at Level 2.
+
+  \item \textbf{(Programming.)} Implement the full bio-inspired controller for a
+        MuJoCo walking model and benchmark against a standard PD controller.
+\end{enumerate}

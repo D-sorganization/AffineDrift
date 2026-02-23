@@ -1,0 +1,205 @@
+\chapter{Joint Kinematics and Soft Tissue}
+\label{ch:joint-kinematics}
+
+\epigraph{%
+  The knee is not a hinge. The shoulder is not a ball-and-socket.
+  These are useful fictions that biology tolerates but does not enforce.
+}{}
+
+\section{Beyond Ideal Joints}
+
+Engineering joints are designed to constrain motion to specific degrees of freedom:
+a revolute joint permits one rotation, a prismatic joint permits one translation.
+Biological joints achieve constraint through a fundamentally different mechanism:
+the interaction of articular surfaces, ligaments, joint capsule, and muscle forces.
+This section develops the kinematics of biological joints using the screw theory
+framework of Volume~0, extended to handle the additional complexity.
+
+\subsection{The Instantaneous Screw Axis}
+
+Every rigid-body motion can be decomposed into a rotation about and translation along
+a \textbf{screw axis} (Chasles' theorem, Volume~0, Chapter~5). For an engineering
+revolute joint, this screw axis is fixed in both bodies. For a biological joint,
+the instantaneous screw axis (ISA) \emph{moves} as the joint configuration changes.
+
+\begin{definition}{Instantaneous Screw Axis of a Biological Joint}{isa-bio}
+  Given the relative twist $\twist_{ij} = (\bm{\omega}, \bm{v}) \in \Reals^6$ between
+  adjacent segments $i$ and $j$, the instantaneous screw axis has:
+  \begin{itemize}
+    \item Direction: $\hat{\bm{s}} = \bm{\omega} / \norm{\bm{\omega}}$
+    \item Pitch: $h = \bm{\omega} \cdot \bm{v} / \norm{\bm{\omega}}^2$
+    \item Location: $\bm{q} = \bm{\omega} \times \bm{v} / \norm{\bm{\omega}}^2$
+  \end{itemize}
+  For a pure rotation ($h = 0$), the ISA passes through $\bm{q}$ in direction $\hat{\bm{s}}$.
+  Tracking how $\bm{q}$ and $\hat{\bm{s}}$ change with joint angle reveals the coupled
+  kinematics of the biological joint.
+\end{definition}
+
+\subsection{The Knee: Rolling, Sliding, and Coupled Rotation}
+
+The tibiofemoral joint exemplifies the complexity of biological kinematics. During
+flexion from $0^\circ$ to $90^\circ$:
+\begin{enumerate}
+  \item The femoral condyles \textbf{roll} on the tibial plateaus (like a wheel on a road)
+  \item They simultaneously \textbf{slide} posteriorly (the contact point moves backward)
+  \item The tibia undergoes coupled \textbf{internal rotation} of approximately $15^\circ$
+        (the ``screw-home'' mechanism)
+  \item The contact area shifts, changing the effective moment arm
+\end{enumerate}
+
+This coupled motion means the knee ISA migrates superiorly and posteriorly during
+flexion. The four-bar linkage model \cite{OConnor1989} provides a simplified but
+insightful mechanical analog:
+
+\begin{lstlisting}[language=Python, caption={Instantaneous screw axis computation for a biological joint.}]
+import numpy as np
+from typing import Tuple
+
+def compute_isa(
+    omega: np.ndarray,
+    v: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray, float]:
+    """Compute the instantaneous screw axis from a twist.
+
+    Parameters
+    ----------
+    omega : np.ndarray, shape (3,)
+        Angular velocity vector.
+    v : np.ndarray, shape (3,)
+        Linear velocity of the body-fixed frame origin.
+
+    Returns
+    -------
+    Tuple[np.ndarray, np.ndarray, float]
+        (point_on_axis, axis_direction, pitch)
+    """
+    omega_norm = np.linalg.norm(omega)
+    if omega_norm < 1e-10:
+        # Pure translation
+        direction = v / np.linalg.norm(v)
+        return np.zeros(3), direction, np.inf
+
+    direction = omega / omega_norm
+    pitch = np.dot(omega, v) / omega_norm**2
+    point = np.cross(omega, v) / omega_norm**2
+
+    return point, direction, pitch
+
+
+def knee_isa_trajectory(
+    flexion_angles: np.ndarray,
+    roll_slide_ratio: float = 0.6
+) -> np.ndarray:
+    """Estimate knee ISA position during flexion.
+
+    Simple model: ISA migrates posteriorly and superiorly
+    with flexion, governed by the roll-to-slide ratio.
+
+    Parameters
+    ----------
+    flexion_angles : np.ndarray
+        Array of flexion angles in degrees.
+    roll_slide_ratio : float
+        Ratio of rolling to total contact displacement.
+        Pure rolling = 1.0, pure sliding = 0.0.
+
+    Returns
+    -------
+    np.ndarray, shape (N, 3)
+        ISA positions in the tibial reference frame.
+    """
+    R_condyle = 0.030  # approximate femoral condyle radius (m)
+    isa_positions = np.zeros((len(flexion_angles), 3))
+
+    for i, theta in enumerate(np.radians(flexion_angles)):
+        # Posterior migration due to rolling
+        posterior = R_condyle * theta * roll_slide_ratio
+        # Superior migration (ISA moves up with flexion)
+        superior = R_condyle * (1.0 - np.cos(theta * 0.5))
+
+        isa_positions[i] = [-posterior, superior, 0.0]
+
+    return isa_positions
+\end{lstlisting}
+
+\subsection{The Shoulder: The Most Complex Joint}
+
+The glenohumeral joint has the largest range of motion of any joint in the body,
+achieved at the expense of stability. The ``ball-and-socket'' description is a
+gross simplification: the humeral head translates $2$--$4$~mm during abduction,
+and the instantaneous center of rotation shifts continuously.
+
+The shoulder complex involves four joints:
+\begin{enumerate}
+  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation
+  \item \textbf{Acromioclavicular} (AC): 3 DOF rotation, small range
+  \item \textbf{Sternoclavicular} (SC): 3 DOF rotation, small range
+  \item \textbf{Scapulothoracic} (ST): not a true synovial joint; the scapula glides on
+        the thorax, constrained as a \emph{surface contact} rather than a pin joint
+\end{enumerate}
+
+The scapulothoracic ``joint'' is particularly interesting from a mathematical
+perspective: it is a \emph{holonomic constraint} that the scapula must remain on
+the thoracic surface, effectively acting as a 2-DOF constraint (the scapula can
+translate on the surface but cannot lift off).
+
+\section{Ligament Models}
+
+Ligaments constrain joint motion by resisting excessive displacement. They are
+modeled as nonlinear springs with:
+\begin{equation}
+  F_{\text{lig}}(\varepsilon) = \begin{cases}
+    0 & \varepsilon \leq 0 \text{ (slack)}, \\
+    k_1 \varepsilon^2 / (4\varepsilon_1) & 0 < \varepsilon \leq 2\varepsilon_1 \text{ (toe region)}, \\
+    k_2(\varepsilon - \varepsilon_1) & \varepsilon > 2\varepsilon_1 \text{ (linear region)},
+  \end{cases}
+  \label{eq:ch4:ligament-force}
+\end{equation}
+where $\varepsilon = (\ell - \ell_0) / \ell_0$ is the strain, $\ell_0$ is the
+reference length, $\varepsilon_1 \approx 0.03$ is the transition strain, and
+$k_1, k_2$ are stiffness parameters \cite{Blankevoort1991}.
+
+\section{Spinal Mechanics}
+
+The spine presents a unique modeling challenge: 24 vertebrae connected by intervertebral
+discs, each joint having 6 coupled degrees of freedom. The functional spinal unit (FSU)
+consisting of two adjacent vertebrae and their connecting disc is the basic mechanical
+unit.
+
+The intervertebral disc consists of:
+\begin{itemize}
+  \item \textbf{Nucleus pulposus}: a gel-like center that distributes compressive loads
+  \item \textbf{Annulus fibrosus}: concentric rings of collagen fibers that resist
+        torsion and bending
+\end{itemize}
+
+A common simplified model treats each FSU as a 6-DOF spring:
+\begin{equation}
+  \bm{F}_{\text{disc}} = K_{\text{disc}} \cdot \bm{\delta},
+  \label{eq:ch4:disc-stiffness}
+\end{equation}
+where $K_{\text{disc}} \in \Reals^{6 \times 6}$ is the stiffness matrix and
+$\bm{\delta} \in \Reals^6$ is the generalized displacement (3 translations + 3 rotations).
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{ISA Computation.}
+        For a knee flexing at $60^\circ/\text{s}$ with $2$~mm/s of posterior translation,
+        compute the ISA direction, pitch, and location.
+
+  \item \textbf{Screw-Home Mechanism.}
+        Plot the coupled internal rotation of the tibia as a function of knee flexion
+        using the model: $\gamma = 15^\circ \cdot (1 - \cos(\theta / 2))$ for
+        $\theta \in [0, 90^\circ]$.
+
+  \item \textbf{Shoulder Kinematics.}
+        Using screw axis theory, express the configuration of the hand (end-effector)
+        as a product of exponentials through the SC, AC, GH, and elbow joints.
+
+  \item \textbf{(Programming.)} Implement the ligament force model and plot the
+        force-strain curve. Identify the toe region and the linear region.
+
+  \item \textbf{(Programming.)} Create a 3D visualization of the knee ISA trajectory
+        during flexion from $0^\circ$ to $120^\circ$.
+\end{enumerate}

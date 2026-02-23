@@ -66,13 +66,13 @@ f(\bar\x+\dx) = f(\bar\x) + \frac{\partial f}{\partial \x}\bigg|_{\bar\x}\,\dx
 The first derivative is the Jacobian $J_f(\bar\x) := \partial f/\partial\x|_{\bar\x}$, which
 is an $n\times n$ matrix. The second derivative term represents the Hessian applied to the
 perturbation: for each state component $i$, we have
-\[
+$$
 \left[\frac{\partial^2 f_i}{\partial\x^2}(\dx,\dx)\right]_i = \sum_{j,k}\frac{\partial^2 f_i}{\partial x_j\partial x_k}\dx_j\,\dx_k.
-\]
+$$
 The integral bound on the second derivative is $O(\|\dx\|^2)$. Let us denote
-\[
+$$
 R_f(\dx) := \frac{1}{2}\int_0^1(1-\tau)\frac{\partial^2 f}{\partial\x^2}\bigg|_{\bar\x+\tau\dx}(\dx,\dx)\,\dd\tau.
-\]
+$$
 Then
 \begin{equation}
 f(\bar\x+\dx) = f(\bar\x) + J_f(\bar\x))\dx + R_f(\dx), \quad \|R_f(\dx)\| = O(\|\dx\|^2).
@@ -252,9 +252,9 @@ The state transition matrix is invertible for all $t, t_0$, and
 
 \begin{proof}
 From the semigroup property,
-\[
+$$
 \Phi(t,t_0)\,\Phi(t_0,t) = \Phi(t,t) = \mat{I}_n.
-\]
+$$
 Thus $\Phi(t_0,t)$ is indeed the right inverse. Similarly, from $\Phi(t_0,t)\,\Phi(t,t_0) = \Phi(t_0,t_0) = \mat{I}_n$,
 it is also the left inverse. Hence $\Phi(t,t_0)^{-1} = \Phi(t_0,t)$.
 \end{proof}
@@ -295,10 +295,10 @@ Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \de
 The state transition matrix $\Phi(t,t_0)$ accumulates *exact* infinitesimal linear
 contributions along the trajectory. Each infinitesimal step $\dd(\dx)=\mat{A}(t)\dx\,\dd t$
 is exact in its tangent space. The integral
-\[
+$$
 \dx(t_1) = \Phi(t_1,t_0)\dx(t_0)
 + \int_{t_0}^{t_1}\Phi(t_1,s)\mat{B}(s)\du(s)\,\dd s
-\]
+$$
 is the exact accumulation of these exact local effects. Residuals arise from curvature
 (when we compare the true finite-displacement trajectory to the linear prediction), not
 from integration itself.
@@ -375,9 +375,9 @@ We bound the series term by term. For the $k$-th term:
 \end{align}
 
 Thus the series is bounded by the exponential series:
-\[
+$$
 \sum_{k=0}^{\infty}\|\Phi_k(t,t_0)\| \leq \sum_{k=0}^{\infty}\frac{M^k(t-t_0)^k}{k!} = e^{M(t-t_0)},
-\]
+$$
 which is finite and independent of the ordering in $\mat{A}$. Hence the series converges uniformly
 on any finite interval $[t_0,T]$, and the sum satisfies the ODE~\eqref{eq:ch2:stm-ode}.
 \end{proof}

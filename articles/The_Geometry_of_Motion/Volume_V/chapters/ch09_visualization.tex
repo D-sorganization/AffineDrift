@@ -1,0 +1,83 @@
+\chapter{Visualization and Analysis Tools}
+\label{ch:visualization}
+
+\epigraph{If you cannot see it, you cannot understand it.}{}
+
+\section{3D Motion Visualization}
+
+\begin{lstlisting}[language=Python, caption={Stick-figure animation for multi-body motion.}]
+import numpy as np
+
+def compute_joint_positions_2d(
+    q: np.ndarray,
+    lengths: list[float]
+) -> np.ndarray:
+    """Compute 2D joint positions for a serial chain.
+
+    Parameters
+    ----------
+    q : np.ndarray, shape (n,)
+        Joint angles.
+    lengths : list[float]
+        Segment lengths.
+
+    Returns
+    -------
+    np.ndarray, shape (n+1, 2)
+        XY positions of each joint (including base).
+    """
+    n = len(q)
+    positions = np.zeros((n + 1, 2))
+    angle_cumulative = 0.0
+
+    for i in range(n):
+        angle_cumulative += q[i]
+        positions[i + 1, 0] = (positions[i, 0] +
+                               lengths[i] * np.cos(angle_cumulative))
+        positions[i + 1, 1] = (positions[i, 1] +
+                               lengths[i] * np.sin(angle_cumulative))
+
+    return positions
+
+
+def phase_portrait(
+    q_history: np.ndarray,
+    qd_history: np.ndarray,
+    joint_idx: int = 0,
+    label: str = "Joint 0"
+) -> dict:
+    """Compute phase portrait data for a single joint.
+
+    Parameters
+    ----------
+    q_history : (N, n) trajectory data
+    qd_history : (N, n) velocity data
+    joint_idx : int
+    label : str
+
+    Returns
+    -------
+    dict with 'x', 'y', 'label' keys
+    """
+    return {
+        'x': q_history[:, joint_idx],
+        'y': qd_history[:, joint_idx],
+        'label': label
+    }
+\end{lstlisting}
+
+\section{Jacobian and Manipulability Visualization}
+
+Visualizing the velocity manipulability ellipsoid $J J^T$ at each configuration.
+
+\section{Energy Flow Diagrams}
+
+Tracking kinetic and potential energy across segments to understand energy transfer
+in the kinetic chain.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Animate a 3-link arm tracking a circular path.
+  \item Plot the manipulability ellipsoid during a reaching movement.
+  \item Create an energy flow diagram for the double pendulum golf model.
+\end{enumerate}

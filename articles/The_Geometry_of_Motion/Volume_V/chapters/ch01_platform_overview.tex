@@ -1,0 +1,217 @@
+\chapter{The UpstreamDrift Platform}
+\label{ch:platform}
+
+\epigraph{%
+  The best theory is one you can run.
+}{}
+
+\section{Architecture Overview}
+
+UpstreamDrift is a unified platform for multi-body dynamics simulation, trajectory
+optimization, and motor control analysis. It wraps multiple physics engines behind
+a consistent Python API.
+
+\subsection{Core Components}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Component} & \textbf{Location} & \textbf{Purpose} \\
+\midrule
+Physics Engines & \texttt{src/engines/physics\_engines/} & Multi-body simulation \\
+Shared Infrastructure & \texttt{src/engines/common/} & State, export, diagnostics \\
+Pendulum Models & \texttt{src/engines/pendulum\_models/} & Simplified test cases \\
+Learning Modules & \texttt{src/learning/} & ML integration \\
+Reinforcement Learning & \texttt{src/reinforcement\_learning/} & RL benchmarks \\
+Robotics & \texttt{src/robotics/} & Robot control modules \\
+API & \texttt{src/api/} & External access layer \\
+Tools & \texttt{src/tools/} & Development utilities \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Supported Physics Engines}
+
+\begin{enumerate}
+  \item \textbf{MuJoCo} (\texttt{physics\_engines/mujoco/}): Google DeepMind's
+        multi-joint dynamics engine. Soft contacts, muscle actuators, fast simulation.
+        Primary engine for biomechanical modeling.
+
+  \item \textbf{Drake} (\texttt{physics\_engines/drake/}): MIT's multibody dynamics
+        toolbox. Mathematical rigor, analytical gradients, trajectory optimization.
+        Primary engine for control design.
+
+  \item \textbf{Pinocchio} (\texttt{physics\_engines/pinocchio/}): LAAS-CNRS C++ library
+        with Python bindings. Efficient rigid-body dynamics with analytical derivatives.
+        Primary engine for real-time control.
+
+  \item \textbf{OpenSim} (\texttt{physics\_engines/opensim/}): Stanford's musculoskeletal
+        modeling software. Hill-type muscle models, inverse dynamics. Primary engine
+        for biomechanics.
+
+  \item \textbf{MyoSuite} (\texttt{physics\_engines/myosuite/}): Muscle-driven
+        reinforcement learning environments. Primary engine for motor learning research.
+\end{enumerate}
+
+\section{Getting Started}
+
+\begin{lstlisting}[language=Python, caption={Basic UpstreamDrift usage pattern.}]
+"""UpstreamDrift: Getting started with multi-engine simulation.
+
+This script demonstrates the basic workflow:
+1. Load a model
+2. Configure simulation parameters
+3. Run a simulation
+4. Extract and analyze results
+"""
+import numpy as np
+from pathlib import Path
+
+# Configuration
+MODEL_PATH = Path("src/engines/pendulum_models")
+ENGINE = "mujoco"  # or "drake", "pinocchio"
+
+def create_simple_pendulum(
+    length: float = 1.0,
+    mass: float = 1.0,
+    damping: float = 0.1
+) -> dict:
+    """Create a simple pendulum model configuration.
+
+    Parameters
+    ----------
+    length : float
+        Pendulum length in meters.
+    mass : float
+        Bob mass in kilograms.
+    damping : float
+        Joint damping coefficient.
+
+    Returns
+    -------
+    dict
+        Model configuration dictionary.
+    """
+    return {
+        "name": "simple_pendulum",
+        "n_dof": 1,
+        "segments": [{
+            "name": "bob",
+            "mass": mass,
+            "length": length,
+            "com_position": length / 2,
+            "inertia": mass * length**2 / 3,
+        }],
+        "joints": [{
+            "name": "pivot",
+            "type": "revolute",
+            "axis": [0, 0, 1],
+            "damping": damping,
+        }],
+        "gravity": [0, -9.81, 0],
+    }
+
+
+def simulate_pendulum(
+    config: dict,
+    q0: float = np.pi / 4,
+    t_end: float = 5.0,
+    dt: float = 0.001
+) -> dict:
+    """Simulate a simple pendulum using Euler integration.
+
+    Parameters
+    ----------
+    config : dict
+        Model configuration.
+    q0 : float
+        Initial angle (radians from vertical).
+    t_end : float
+        Simulation duration (seconds).
+    dt : float
+        Time step.
+
+    Returns
+    -------
+    dict
+        Simulation results with keys 't', 'q', 'qd', 'energy'.
+    """
+    seg = config["segments"][0]
+    m = seg["mass"]
+    L = seg["length"]
+    b = config["joints"][0]["damping"]
+    g = abs(config["gravity"][1])
+    I = seg["inertia"]
+
+    n_steps = int(t_end / dt)
+    t = np.zeros(n_steps)
+    q = np.zeros(n_steps)
+    qd = np.zeros(n_steps)
+    energy = np.zeros(n_steps)
+
+    q[0] = q0
+    qd[0] = 0.0
+
+    for k in range(n_steps - 1):
+        # Equations of motion: I * qdd + b * qd + m*g*L/2*sin(q) = 0
+        qdd = (-b * qd[k] - m * g * L / 2 * np.sin(q[k])) / I
+
+        # Semi-implicit Euler
+        qd[k + 1] = qd[k] + qdd * dt
+        q[k + 1] = q[k] + qd[k + 1] * dt
+        t[k + 1] = t[k] + dt
+
+        # Energy
+        KE = 0.5 * I * qd[k + 1]**2
+        PE = m * g * L / 2 * (1 - np.cos(q[k + 1]))
+        energy[k + 1] = KE + PE
+
+    return {"t": t, "q": q, "qd": qd, "energy": energy}
+
+
+# Run simulation
+config = create_simple_pendulum(length=1.0, mass=1.0, damping=0.05)
+results = simulate_pendulum(config, q0=np.pi/3, t_end=10.0)
+
+print(f"Simulation complete: {len(results['t'])} timesteps")
+print(f"Initial energy: {results['energy'][0]:.4f} J")
+print(f"Final energy:   {results['energy'][-1]:.4f} J")
+print(f"Energy loss:    {(1 - results['energy'][-1]/results['energy'][0])*100:.1f}%")
+\end{lstlisting}
+
+\section{Engine Selection Guide}
+
+\begin{handson}{Choosing the Right Engine}{engine-choice}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}lll@{}}
+  \toprule
+  \textbf{If you need\ldots} & \textbf{Use} & \textbf{Why} \\
+  \midrule
+  Fast contact simulation & MuJoCo & Soft contact model, GPU \\
+  Trajectory optimization & Drake & Analytical gradients \\
+  Real-time forward dynamics & Pinocchio & C++ speed, O(n) \\
+  Muscle-driven biomechanics & OpenSim & Hill models built-in \\
+  RL with muscles & MyoSuite & Gym-compatible \\
+  Quick prototyping & Built-in Python & No dependencies \\
+  \bottomrule
+  \end{tabular}
+  \end{center}
+\end{handson}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{First Simulation.} Run the pendulum simulation and plot angle vs.\ time
+        and energy vs.\ time. Verify that energy decreases due to damping.
+
+  \item \textbf{Integration Method.} Replace the semi-implicit Euler with RK4. Compare
+        energy conservation over 100 seconds.
+
+  \item \textbf{Double Pendulum.} Extend the code to a double pendulum. Plot the
+        chaotic trajectory in configuration space.
+
+  \item \textbf{Engine Comparison.} Run the same pendulum simulation in MuJoCo and
+        in the built-in Python code. Compare results quantitatively.
+\end{enumerate}

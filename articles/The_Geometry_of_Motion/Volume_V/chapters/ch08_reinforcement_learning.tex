@@ -1,0 +1,91 @@
+\chapter{Reinforcement Learning for Motor Control}
+\label{ch:rl}
+
+\epigraph{When the model is too complex for optimal control, let the agent learn.}{}
+
+\section{RL Environments in UpstreamDrift}
+
+UpstreamDrift provides Gymnasium-compatible environments for motor control tasks:
+
+\begin{lstlisting}[language=Python, caption={Custom RL environment for pendulum control.}]
+import numpy as np
+
+class PendulumEnv:
+    """Simple pendulum environment for RL benchmarks.
+
+    State: [cos(theta), sin(theta), theta_dot]
+    Action: torque (continuous, clipped to [-2, 2])
+    Reward: -(angle^2 + 0.1*vel^2 + 0.01*action^2)
+    """
+
+    def __init__(self, dt: float = 0.05, max_steps: int = 200):
+        self.dt = dt
+        self.max_steps = max_steps
+        self.g = 9.81
+        self.l = 1.0
+        self.m = 1.0
+        self.max_torque = 2.0
+        self.state = np.zeros(2)
+        self.step_count = 0
+
+    def reset(self, seed: int | None = None) -> np.ndarray:
+        if seed is not None:
+            np.random.seed(seed)
+        self.state = np.array([
+            np.pi + np.random.uniform(-0.1, 0.1),
+            np.random.uniform(-0.5, 0.5)
+        ])
+        self.step_count = 0
+        return self._get_obs()
+
+    def _get_obs(self) -> np.ndarray:
+        theta, theta_dot = self.state
+        return np.array([np.cos(theta), np.sin(theta), theta_dot])
+
+    def step(self, action: float) -> tuple:
+        theta, theta_dot = self.state
+        u = np.clip(action, -self.max_torque, self.max_torque)
+
+        # Dynamics
+        theta_ddot = (-self.g / self.l * np.sin(theta) +
+                      u / (self.m * self.l**2))
+        theta_dot += theta_ddot * self.dt
+        theta += theta_dot * self.dt
+
+        self.state = np.array([theta, theta_dot])
+        self.step_count += 1
+
+        # Reward
+        angle_normalized = ((theta + np.pi) % (2*np.pi)) - np.pi
+        reward = -(angle_normalized**2 +
+                   0.1 * theta_dot**2 +
+                   0.01 * u**2)
+
+        done = self.step_count >= self.max_steps
+        return self._get_obs(), reward, done, {}
+
+
+# Quick test
+env = PendulumEnv()
+obs = env.reset(seed=42)
+total_reward = 0.0
+for _ in range(200):
+    action = np.random.uniform(-2, 2)
+    obs, reward, done, _ = env.step(action)
+    total_reward += reward
+    if done:
+        break
+print(f"Random policy total reward: {total_reward:.1f}")
+\end{lstlisting}
+
+\section{From Gym to Golf}
+
+The UpstreamDrift RL pipeline extends from simple benchmarks to full golf swing optimization
+using MyoSuite muscle-driven environments.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Train a PPO agent to swing up the pendulum. Plot the learning curve.
+  \item Compare RL-learned policy with the iLQR solution from Chapter~5.
+  \item Design a reward function for maximizing clubhead speed in a golf model.
+\end{enumerate}

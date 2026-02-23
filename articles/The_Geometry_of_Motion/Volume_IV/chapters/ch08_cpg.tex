@@ -1,0 +1,118 @@
+\chapter{Central Pattern Generators}
+\label{ch:cpg}
+
+\epigraph{%
+  Rhythm is the most ancient form of motor control.
+}{}
+
+\section{CPGs in Biological Motor Control}
+
+Central pattern generators are neural circuits that produce rhythmic motor output
+without rhythmic sensory input or supraspinal commands. They underlie locomotion,
+respiration, chewing, and other rhythmic behaviors.
+
+\section{The Matsuoka Oscillator}
+
+The most widely used CPG model in robotics is the Matsuoka oscillator
+\cite{Matsuoka1985}:
+\begin{align}
+  \tau_1 \dot{x}_i &= -x_i - \beta v_i - \sum_{j \neq i} w_{ij} y_j + u_i + s_i, \\
+  \tau_2 \dot{v}_i &= -v_i + y_i, \\
+  y_i &= \max(0, x_i),
+  \label{eq:ch8:matsuoka}
+\end{align}
+where $x_i$ is the membrane potential, $v_i$ is the adaptation variable, $y_i$ is the
+output, $w_{ij}$ are inhibitory coupling weights, $u_i$ is the tonic input, and
+$s_i$ is the sensory feedback.
+
+\begin{lstlisting}[language=Python, caption={Matsuoka oscillator CPG implementation.}]
+import numpy as np
+from scipy.integrate import solve_ivp
+
+class MatsuokaOscillator:
+    """Two-neuron Matsuoka oscillator for CPG-based control."""
+
+    def __init__(
+        self,
+        tau1: float = 0.1,
+        tau2: float = 0.3,
+        beta: float = 2.5,
+        w_mutual: float = 2.0,
+        tonic_input: float = 1.0
+    ):
+        self.tau1 = tau1
+        self.tau2 = tau2
+        self.beta = beta
+        self.w = w_mutual
+        self.u = tonic_input
+
+    def dynamics(self, t: float, state: np.ndarray) -> np.ndarray:
+        x1, v1, x2, v2 = state
+        y1 = max(0.0, x1)
+        y2 = max(0.0, x2)
+
+        dx1 = (-x1 - self.beta * v1 - self.w * y2 + self.u) / self.tau1
+        dv1 = (-v1 + y1) / self.tau2
+        dx2 = (-x2 - self.beta * v2 - self.w * y1 + self.u) / self.tau1
+        dv2 = (-v2 + y2) / self.tau2
+
+        return np.array([dx1, dv1, dx2, dv2])
+
+    def simulate(self, t_end: float = 5.0,
+                 dt: float = 0.001) -> tuple[np.ndarray, np.ndarray]:
+        state0 = np.array([0.1, 0.0, -0.1, 0.0])
+        t_eval = np.arange(0, t_end, dt)
+        sol = solve_ivp(self.dynamics, [0, t_end], state0,
+                        t_eval=t_eval, method='RK45')
+
+        # Extract outputs
+        y1 = np.maximum(0, sol.y[0])
+        y2 = np.maximum(0, sol.y[2])
+        output = y1 - y2  # Net output
+
+        return sol.t, output
+
+
+# Simulate and print summary
+cpg = MatsuokaOscillator(tau1=0.1, tau2=0.3)
+t, output = cpg.simulate(t_end=5.0)
+
+# Estimate frequency from zero crossings
+crossings = np.where(np.diff(np.sign(output)))[0]
+if len(crossings) >= 4:
+    periods = np.diff(t[crossings[::2]])
+    freq = 1.0 / np.mean(periods)
+    print(f"CPG frequency: {freq:.2f} Hz")
+    print(f"CPG amplitude: {np.max(np.abs(output[len(output)//2:])):.3f}")
+\end{lstlisting}
+
+\section{Phase Coupling and Inter-Limb Coordination}
+
+Multiple CPGs can be coupled to produce coordinated multi-limb movement:
+\begin{equation}
+  \dot{\phi}_i = \omega_i + \sum_{j} K_{ij} \sin(\phi_j - \phi_i - \psi_{ij}),
+  \label{eq:ch8:phase-coupling}
+\end{equation}
+where $\phi_i$ is the phase of the $i$-th oscillator, $\omega_i$ is its natural
+frequency, $K_{ij}$ is the coupling strength, and $\psi_{ij}$ is the desired phase
+relationship.
+
+For quadruped locomotion:
+\begin{itemize}
+  \item Walk: $\psi = (0, \pi, \pi/2, 3\pi/2)$ (diagonal pairs alternating)
+  \item Trot: $\psi = (0, \pi, \pi, 0)$ (diagonal pairs synchronized)
+  \item Gallop: $\psi = (0, 0, \pi, \pi)$ (front-back alternating)
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{CPG Tuning.} Vary $\tau_1/\tau_2$ ratio and plot the resulting
+        frequency and duty cycle. How does the ratio control the waveform shape?
+
+  \item \textbf{Phase Coupling.} Implement 4 coupled oscillators and produce
+        walk, trot, and gallop patterns by varying $\psi_{ij}$.
+
+  \item \textbf{(Programming.)} Use the Matsuoka CPG to drive a simulated bipedal
+        walker. Tune the CPG parameters for stable walking.
+\end{enumerate}

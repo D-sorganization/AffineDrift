@@ -1,0 +1,142 @@
+\chapter{Motor Learning and Adaptation}
+\label{ch:motor-learning}
+
+\epigraph{%
+  Practice does not make perfect.
+  Practice makes permanent.
+  Only perfect practice makes perfect.
+}{}
+
+\section{Three Learning Systems}
+
+Motor learning involves three distinct neural systems:
+
+\begin{enumerate}
+  \item \textbf{Error-based learning} (cerebellar): uses sensory prediction errors to
+        update forward models. Fast, trial-by-trial updates. The dominant mechanism
+        for adaptation to perturbations.
+
+  \item \textbf{Reinforcement learning} (basal ganglia): uses reward signals to
+        strengthen successful motor strategies. Slower than error-based learning but
+        can discover novel solutions.
+
+  \item \textbf{Use-dependent learning} (cortical): repetition of a movement biases
+        future movements toward the repeated pattern. Explains why practice builds
+        habits.
+\end{enumerate}
+
+\section{Visuomotor Adaptation}
+
+The classic paradigm for studying error-based learning:
+
+\begin{lstlisting}[language=Python, caption={Visuomotor adaptation simulation.}]
+import numpy as np
+
+def simulate_visuomotor_adaptation(
+    n_baseline: int = 50,
+    n_adaptation: int = 200,
+    n_washout: int = 100,
+    perturbation_deg: float = 30.0,
+    learning_rate: float = 0.05,
+    retention: float = 0.98
+) -> dict:
+    """Simulate visuomotor rotation adaptation.
+
+    A simple state-space model of adaptation:
+    x_{k+1} = retention * x_k + learning_rate * e_k
+
+    Parameters
+    ----------
+    n_baseline : int
+        Baseline trials (no perturbation).
+    n_adaptation : int
+        Adaptation trials (perturbation on).
+    n_washout : int
+        Post-adaptation trials (perturbation off).
+    perturbation_deg : float
+        Rotation perturbation in degrees.
+    learning_rate : float
+        Rate of error-based learning.
+    retention : float
+        Memory retention between trials.
+
+    Returns
+    -------
+    dict
+        Keys: 'trial', 'reaching_error', 'internal_state',
+              'phase' (labels for each trial)
+    """
+    n_total = n_baseline + n_adaptation + n_washout
+    p = np.radians(perturbation_deg)
+
+    # Internal state (learned compensation)
+    x = 0.0
+    errors = np.zeros(n_total)
+    states = np.zeros(n_total)
+    phases = []
+
+    for trial in range(n_total):
+        if trial < n_baseline:
+            perturbation = 0.0
+            phases.append('baseline')
+        elif trial < n_baseline + n_adaptation:
+            perturbation = p
+            phases.append('adaptation')
+        else:
+            perturbation = 0.0
+            phases.append('washout')
+
+        # Reaching error = perturbation - compensation
+        error = perturbation - x
+        errors[trial] = np.degrees(error)
+        states[trial] = np.degrees(x)
+
+        # Update internal state
+        x = retention * x + learning_rate * error
+
+    return {
+        'trial': np.arange(n_total),
+        'reaching_error': errors,
+        'internal_state': states,
+        'phase': phases
+    }
+
+
+result = simulate_visuomotor_adaptation()
+print("Visuomotor Adaptation Summary:")
+print(f"  Baseline error:  {np.mean(np.abs(result['reaching_error'][:50])):.1f} deg")
+print(f"  Final adaptation error: "
+      f"{np.abs(result['reaching_error'][249]):.1f} deg")
+print(f"  Aftereffect: {result['reaching_error'][250]:.1f} deg")
+\end{lstlisting}
+
+\section{Savings and Interference}
+
+\subsection{Savings}
+Re-learning a previously learned adaptation is faster than initial learning,
+even after complete washout. This ``savings'' effect suggests that motor memories
+are not erased but suppressed.
+
+\subsection{Interference}
+Learning opposite perturbations (A then B) produces \emph{anterograde interference}:
+learning B interferes with retention of A. This is analogous to catastrophic
+forgetting in neural networks.
+
+\section{Structural Learning}
+
+Over many adaptation experiences, subjects develop the ability to adapt faster---they
+learn to learn. In the language of meta-learning: the structure of the learning
+problem (which parameters to update, how to respond to errors) is itself learned.
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{State-Space Model.} Using the provided code, explore how learning
+        rate and retention affect adaptation speed and aftereffect size.
+
+  \item \textbf{Dual-Rate Model.} Implement a dual-rate model (fast + slow process)
+        and show that it can explain savings.
+
+  \item \textbf{(Programming.)} Simulate interference by adapting to $+30^\circ$ then
+        $-30^\circ$. Plot the adaptation curves and aftereffects.
+\end{enumerate}

@@ -1,0 +1,152 @@
+\documentclass[11pt,letterpaper,openany]{book}
+
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, positioning}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{imakeidx}
+\makeindex[intoc, title=Index]
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% Code formatting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false, breaklines=true,
+    captionpos=b, keepspaces=true, numbers=left,
+    numbersep=5pt, showspaces=false, showstringspaces=false,
+    showtabs=false, tabsize=2
+}
+\lstset{style=mystyle}
+
+% Colors
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{toolorange}{RGB}{200, 120, 20}
+
+% Theorem environments
+\newtcbtheorem[number within=chapter]{handson}{Hands-On}{
+  colback=toolorange!5, colframe=toolorange!80,
+  fonttitle=\bfseries, separator sign={.~}, breakable
+}{ho}
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~}, breakable
+}{ex}
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=chapblue!5, colframe=chapblue!75,
+  fonttitle=\bfseries, separator sign={.~}, breakable
+}{def}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+
+% Custom commands
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+% Chapter formatting
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Volume V: Practical Application}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% Title
+\title{%
+  {\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm]
+  {\Large Volume V: Practical Application\\
+  The UpstreamDrift Educational Platform}\\[0.6cm]
+  {\color{chapblue}\rule{\textwidth}{2pt}}
+}
+\date{}
+
+\hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
+
+\newtcbtheorem[number within=chapter]{laymansbox}{In Laymans Terms}{colback=blue!5,colframe=blue!75,fonttitle=fseries,breakable}{layman}
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\cleardoublepage
+
+\frontmatter
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+This is a book about \emph{doing}. Volumes 0--IV developed the theory of motion: from
+differential geometry through nonlinear control, biomechanics, and motor control. This
+volume puts every tool to work.
+
+The UpstreamDrift platform provides a unified simulation environment for multi-body
+dynamics, trajectory optimization, and controller design. It wraps multiple physics
+engines (MuJoCo, Drake, Pinocchio, OpenSim) behind a consistent Python API, allowing
+the reader to run every example from the preceding four volumes and to build their own
+analyses.
+
+Every chapter in this volume produces a concrete, runnable result. There are no
+hypothetical exercises---every example uses real code, real models, and real data.
+By the end, you will have implemented a complete pipeline from model construction
+through trajectory optimization to robustness analysis, applied to the golf swing
+as the running case study.
+
+\tableofcontents
+\include{../nomenclature}
+\cleardoublepage
+
+\mainmatter
+
+\include{chapters/ch01_platform_overview}
+\include{chapters/ch02_engine_comparison}
+\include{chapters/ch03_building_models}
+\include{chapters/ch04_simulation}
+\include{chapters/ch05_trajectory_optimization}
+\include{chapters/ch06_controller_design}
+\include{chapters/ch07_parameter_estimation}
+\include{chapters/ch08_reinforcement_learning}
+\include{chapters/ch09_visualization}
+\include{chapters/ch10_golf_swing_project}
+
+\backmatter
+\printindex
+
+\bibliographystyle{plain}
+\bibliography{../geometry_of_motion}
+
+\end{document}

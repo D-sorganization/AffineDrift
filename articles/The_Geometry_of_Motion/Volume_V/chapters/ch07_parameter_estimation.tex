@@ -1,0 +1,63 @@
+\chapter{Parameter Estimation and Model Fitting}
+\label{ch:param-estimation}
+
+\epigraph{All models are wrong, but some are less wrong than others once you fit them.}{}
+
+\section{System Identification for Multi-Body Models}
+
+\begin{lstlisting}[language=Python, caption={Inertial parameter estimation from motion data.}]
+import numpy as np
+from scipy.optimize import minimize
+
+def estimate_inertial_params(
+    q_data: np.ndarray,
+    qd_data: np.ndarray,
+    qdd_data: np.ndarray,
+    tau_data: np.ndarray,
+    n_params: int
+) -> np.ndarray:
+    """Estimate inertial parameters using least-squares.
+
+    The equations of motion are LINEAR in inertial parameters:
+    tau = Y(q, qd, qdd) * pi
+    where Y is the regressor matrix and pi is the parameter vector.
+
+    Parameters
+    ----------
+    q_data : (N, n) joint positions
+    qd_data : (N, n) joint velocities
+    qdd_data : (N, n) joint accelerations
+    tau_data : (N, n) joint torques
+    n_params : int number of inertial parameters
+
+    Returns
+    -------
+    np.ndarray estimated parameters
+    """
+    N, n = q_data.shape
+
+    # Build regressor matrix (simplified for 1-DOF)
+    Y = np.zeros((N * n, n_params))
+    tau_vec = tau_data.reshape(-1)
+
+    for k in range(N):
+        for j in range(n):
+            row = k * n + j
+            Y[row, 0] = qdd_data[k, j]  # Inertia
+            Y[row, 1] = np.sin(q_data[k, j])  # Gravity
+
+    # Least squares solution
+    params, _, _, _ = np.linalg.lstsq(Y, tau_vec, rcond=None)
+    return params
+\end{lstlisting}
+
+\section{Muscle Parameter Calibration}
+
+Using the Hill model from Volume~III with optimization to match experimental data.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Estimate the mass and length of a pendulum from simulated motion data.
+  \item Add measurement noise and study estimation robustness.
+  \item Implement Bayesian estimation with prior knowledge from literature.
+\end{enumerate}

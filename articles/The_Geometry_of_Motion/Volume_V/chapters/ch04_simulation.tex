@@ -1,0 +1,96 @@
+\chapter{Forward and Inverse Simulation}
+\label{ch:simulation}
+
+\epigraph{Forward simulation answers ``what happens if\ldots?''\\
+Inverse dynamics answers ``what caused this?''}{}
+
+\section{Forward Dynamics with UpstreamDrift}
+
+\begin{lstlisting}[language=Python, caption={Forward dynamics simulation pipeline.}]
+import numpy as np
+from scipy.integrate import solve_ivp
+
+def forward_dynamics_rnea(
+    q: np.ndarray,
+    qd: np.ndarray,
+    tau: np.ndarray,
+    model_params: dict
+) -> np.ndarray:
+    """Compute joint accelerations using RNEA-based forward dynamics.
+
+    Parameters
+    ----------
+    q : np.ndarray, shape (n,)
+        Joint positions.
+    qd : np.ndarray, shape (n,)
+        Joint velocities.
+    tau : np.ndarray, shape (n,)
+        Applied joint torques.
+    model_params : dict
+        Model parameters (masses, lengths, inertias).
+
+    Returns
+    -------
+    np.ndarray, shape (n,)
+        Joint accelerations.
+    """
+    n = len(q)
+    masses = model_params['masses']
+    lengths = model_params['lengths']
+    g = model_params.get('gravity', 9.81)
+
+    # Simple 2-link model for demonstration
+    if n == 2:
+        m1, m2 = masses[:2]
+        l1, l2 = lengths[:2]
+        lc1, lc2 = l1/2, l2/2
+        I1 = m1 * l1**2 / 12
+        I2 = m2 * l2**2 / 12
+
+        # Mass matrix
+        M = np.array([
+            [I1 + I2 + m1*lc1**2 + m2*(l1**2 + lc2**2 + 2*l1*lc2*np.cos(q[1])),
+             I2 + m2*(lc2**2 + l1*lc2*np.cos(q[1]))],
+            [I2 + m2*(lc2**2 + l1*lc2*np.cos(q[1])),
+             I2 + m2*lc2**2]
+        ])
+
+        # Coriolis
+        h = m2 * l1 * lc2 * np.sin(q[1])
+        C = np.array([[-h*qd[1], -h*(qd[0]+qd[1])],
+                       [h*qd[0], 0]])
+
+        # Gravity
+        gvec = np.array([
+            (m1*lc1 + m2*l1)*g*np.sin(q[0]) + m2*lc2*g*np.sin(q[0]+q[1]),
+            m2*lc2*g*np.sin(q[0]+q[1])
+        ])
+
+        qdd = np.linalg.solve(M, tau - C @ qd - gvec)
+    else:
+        # Placeholder for general n-DOF
+        qdd = np.zeros(n)
+
+    return qdd
+
+# Example simulation
+params = {'masses': [2.0, 1.0], 'lengths': [0.3, 0.25], 'gravity': 9.81}
+q0 = np.array([np.pi/4, np.pi/6])
+qd0 = np.zeros(2)
+qdd = forward_dynamics_rnea(q0, qd0, np.zeros(2), params)
+print(f"Gravity-driven accelerations: {qdd}")
+\end{lstlisting}
+
+\section{Inverse Dynamics Pipeline}
+
+The inverse pipeline: given $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$, compute
+$\bm{\tau}(t)$. This is the Recursive Newton-Euler Algorithm (RNEA) running in
+reverse: instead of computing accelerations from torques, we compute torques from
+accelerations.
+
+\section*{Exercises}
+\begin{enumerate}
+  \item Run forward dynamics for a 2-link pendulum and plot trajectories.
+  \item Implement inverse dynamics and verify $\text{ID}(\text{FD}(\tau)) = \tau$.
+  \item Compare with Pinocchio's RNEA implementation for timing.
+\end{enumerate}

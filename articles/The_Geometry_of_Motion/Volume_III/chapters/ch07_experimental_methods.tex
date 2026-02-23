@@ -1,0 +1,168 @@
+\chapter{Experimental Methods}
+\label{ch:experimental}
+
+\epigraph{%
+  The quality of a biomechanical analysis is limited by the quality of the measurements,
+  not the sophistication of the model.
+}{}
+
+\section{Motion Capture Systems}
+
+\subsection{Marker-Based Systems}
+
+Optoelectronic motion capture systems (Vicon, Qualisys, OptiTrack) track retroreflective
+markers attached to the body surface. Standard configurations use 30--80 markers placed
+on bony landmarks following established protocols (Plug-in-Gait, Cleveland Clinic, ISB).
+
+Key specifications for biomechanical applications:
+\begin{itemize}
+  \item \textbf{Sampling rate}: 100--500~Hz for human motion (higher for impacts)
+  \item \textbf{Spatial accuracy}: $<1$~mm in calibrated volume
+  \item \textbf{Marker size}: 9--14~mm diameter
+  \item \textbf{Latency}: important for real-time applications ($<10$~ms achievable)
+\end{itemize}
+
+\subsection{Markerless Systems}
+
+Computer vision approaches (OpenPose, MediaPipe, DeepLabCut) estimate joint positions
+from video without physical markers. Accuracy is currently 10--30~mm, insufficient for
+clinical-grade inverse dynamics but useful for field measurements and large-scale studies.
+
+\begin{lstlisting}[language=Python, caption={Motion capture data processing pipeline.}]
+import numpy as np
+from scipy.signal import butter, filtfilt
+
+def process_mocap_data(
+    marker_data: np.ndarray,
+    sample_rate: float,
+    cutoff_freq: float = 6.0,
+    filter_order: int = 4
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Process raw motion capture marker data.
+
+    Parameters
+    ----------
+    marker_data : np.ndarray, shape (n_frames, n_markers, 3)
+        Raw marker positions in meters.
+    sample_rate : float
+        Sampling frequency in Hz.
+    cutoff_freq : float
+        Low-pass filter cutoff frequency in Hz.
+    filter_order : int
+        Butterworth filter order.
+
+    Returns
+    -------
+    tuple of np.ndarray
+        (positions, velocities, accelerations)
+        Each shape (n_frames, n_markers, 3).
+    """
+    # Design low-pass Butterworth filter
+    nyquist = sample_rate / 2.0
+    b, a = butter(filter_order, cutoff_freq / nyquist, btype='low')
+
+    n_frames, n_markers, _ = marker_data.shape
+    positions = np.zeros_like(marker_data)
+    velocities = np.zeros_like(marker_data)
+    accelerations = np.zeros_like(marker_data)
+
+    dt = 1.0 / sample_rate
+
+    for m in range(n_markers):
+        for axis in range(3):
+            # Filter position data
+            positions[:, m, axis] = filtfilt(
+                b, a, marker_data[:, m, axis]
+            )
+
+    # Central difference for velocities
+    velocities[1:-1] = (positions[2:] - positions[:-2]) / (2 * dt)
+    velocities[0] = velocities[1]
+    velocities[-1] = velocities[-2]
+
+    # Central difference for accelerations
+    accelerations[1:-1] = (
+        positions[2:] - 2 * positions[1:-1] + positions[:-2]
+    ) / dt**2
+    accelerations[0] = accelerations[1]
+    accelerations[-1] = accelerations[-2]
+
+    return positions, velocities, accelerations
+\end{lstlisting}
+
+\section{Electromyography (EMG)}
+
+EMG measures the electrical activity of muscles, providing a window into neural
+commands. Surface EMG (sEMG) is non-invasive; intramuscular EMG (using fine-wire
+or needle electrodes) targets deep muscles.
+
+\subsection{EMG Processing}
+
+The raw EMG signal must be processed before use:
+\begin{enumerate}
+  \item \textbf{Band-pass filter}: 20--450~Hz (remove movement artifact and noise)
+  \item \textbf{Full-wave rectification}: $|e(t)|$
+  \item \textbf{Envelope extraction}: low-pass filter at 3--6~Hz
+  \item \textbf{Normalization}: divide by maximum voluntary contraction (MVC) value
+\end{enumerate}
+
+\section{Force Plates}
+
+Force plates measure ground reaction forces (GRF) and moments. Standard specifications:
+\begin{itemize}
+  \item 6-component measurement: $F_x, F_y, F_z, M_x, M_y, M_z$
+  \item Sampling rate: 1000--2000~Hz
+  \item Range: 0--5000~N vertical, 0--2500~N horizontal
+  \item Center of pressure (CoP) accuracy: $<2$~mm
+\end{itemize}
+
+The center of pressure is computed from force plate outputs:
+\begin{equation}
+  x_{\text{CoP}} = -\frac{M_y + F_x \cdot d_z}{F_z}, \quad
+  y_{\text{CoP}} = \frac{M_x - F_y \cdot d_z}{F_z},
+  \label{eq:ch7:cop}
+\end{equation}
+where $d_z$ is the distance from the force plate surface to the transducer plane.
+
+\section{Inertial Measurement Units (IMUs)}
+
+IMUs combine accelerometers, gyroscopes, and magnetometers in a compact package.
+They provide:
+\begin{itemize}
+  \item Angular velocity: $\bm{\omega}(t) \in \Reals^3$
+  \item Linear acceleration: $\bm{a}(t) \in \Reals^3$
+  \item Magnetic field: $\bm{B}(t) \in \Reals^3$ (for heading)
+\end{itemize}
+
+Orientation estimation from IMU data is a state estimation problem solvable using
+the extended Kalman filter (Volume~I, Chapter~6) or complementary filters.
+
+\section{Data Synchronization}
+
+Multiple measurement systems must be temporally synchronized. Best practices:
+\begin{itemize}
+  \item Hardware sync: trigger all systems from a common clock pulse
+  \item Minimum: force plate and motion capture on the same clock
+  \item EMG-to-motion delay: typically 10--80~ms (electromechanical delay)
+  \item Cross-correlation for post-hoc alignment when hardware sync is unavailable
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Filter Selection.}
+        Using the provided code, filter a synthetic marker trajectory with cutoff
+        frequencies of 4, 6, 8, and 12~Hz. Plot the effect on position, velocity,
+        and acceleration. Discuss the trade-off between noise reduction and signal distortion.
+
+  \item \textbf{CoP Computation.}
+        Given force plate data from a vertical jump ($F_z$ peak = 3000~N), compute
+        the center of pressure trajectory during takeoff.
+
+  \item \textbf{EMG Processing.}
+        Process a synthetic EMG signal (sum of sinusoids + white noise) through the
+        full processing pipeline. Plot each stage.
+
+  \item \textbf{(Programming.)} Implement an IMU orientation estimator using a
+        complementary filter. Test with synthetic gyroscope and accelerometer data.
+\end{enumerate}

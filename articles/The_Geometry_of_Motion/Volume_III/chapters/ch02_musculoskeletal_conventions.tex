@@ -1,0 +1,276 @@
+\chapter{Musculoskeletal Modeling Conventions}
+\label{ch:msk-conventions}
+
+\epigraph{%
+  In biomechanics, the first source of error is not the mathematics
+  but the coordinate system.
+}{--- ISB Standardization Committee}
+
+\section{Anatomical Reference Frames}
+
+Biomechanical analysis requires a standardized language for describing body position and
+motion. The International Society of Biomechanics (ISB) has published recommendations
+for joint coordinate systems \cite{Wu2002, Wu2005} that serve as the international
+standard.
+
+\subsection{The Anatomical Position}
+
+All references to body position begin from the \textbf{anatomical position}: the subject
+stands upright, feet together, arms at sides, palms facing forward. This defines the
+\emph{zero configuration} from which all joint angles are measured.
+
+\begin{definition}{Global Reference Frame}{global-frame}
+  The global (laboratory) reference frame $\{G\}$ is defined as:
+  \begin{itemize}
+    \item $\hat{\bm{x}}_G$: anterior (forward)
+    \item $\hat{\bm{y}}_G$: superior (upward)
+    \item $\hat{\bm{z}}_G$: lateral right
+  \end{itemize}
+  This is a right-handed coordinate system. Note that different communities use
+  different conventions: biomechanics typically uses $Y$-up, while robotics often
+  uses $Z$-up. \textbf{Always verify the convention before combining data from
+  different sources.}
+\end{definition}
+
+\subsection{Segment Reference Frames}
+
+Each body segment has a local reference frame attached to it, defined by bony landmarks
+that can be palpated or identified from medical imaging. The ISB recommendations specify
+these landmarks for each segment.
+
+\begin{example}{The Thigh Reference Frame}{thigh-frame}
+  The ISB-recommended thigh reference frame $\{T\}$ is defined by:
+  \begin{itemize}
+    \item \textbf{Origin}: midpoint between medial and lateral femoral epicondyles
+    \item $\hat{\bm{y}}_T$: from origin to hip joint center (proximal direction)
+    \item $\hat{\bm{z}}_T$: perpendicular to the plane formed by the two epicondyles
+          and the hip center, pointing laterally
+    \item $\hat{\bm{x}}_T$: cross product $\hat{\bm{y}}_T \times \hat{\bm{z}}_T$
+          (anterior direction)
+  \end{itemize}
+  The hip joint center is estimated from the pelvis landmarks using regression
+  equations (e.g., Harrington et al.\ 2007).
+\end{example}
+
+\subsection{Connection to Screw Theory}
+
+In the language of Volume~0, each segment frame $\{S_i\}$ is related to the global
+frame $\{G\}$ by a homogeneous transformation matrix $T_{GS_i} \in \SE$:
+\begin{equation}
+  T_{GS_i} = \begin{bmatrix} R_{GS_i} & \bm{p}_{GS_i} \\ \bm{0}^T & 1 \end{bmatrix},
+  \label{eq:ch2:homogeneous}
+\end{equation}
+where $R_{GS_i} \in \SO$ is the rotation matrix and $\bm{p}_{GS_i} \in \Reals^3$ is
+the position of the segment origin in the global frame.
+
+The \emph{relative configuration} of segment $j$ with respect to proximal segment $i$
+is:
+\begin{equation}
+  T_{S_i S_j} = T_{GS_i}^{-1} T_{GS_j}.
+  \label{eq:ch2:relative-config}
+\end{equation}
+Joint angles are extracted from this relative transformation.
+
+\section{Joint Coordinate Systems}
+
+The ISB recommends decomposing the relative rotation $R_{S_i S_j}$ into three
+angles using a specific Euler angle sequence for each joint. The choice of
+sequence is \emph{not arbitrary}---it is selected to align with the clinical
+definitions of flexion-extension, abduction-adduction, and internal-external
+rotation.
+
+\subsection{The Grood--Suntay Convention for the Knee}
+
+The knee joint coordinate system, originally proposed by Grood and Suntay (1983)
+\cite{GroodSuntay1983}, decomposes knee motion into:
+
+\begin{enumerate}
+  \item \textbf{Flexion-Extension} ($\alpha$): rotation about the femoral medio-lateral
+        axis (the ``fixed'' axis of the femur)
+  \item \textbf{Abduction-Adduction} ($\beta$): rotation about the ``floating'' axis
+        (perpendicular to both the femoral and tibial body-fixed axes)
+  \item \textbf{Internal-External Rotation} ($\gamma$): rotation about the tibial
+        longitudinal axis (the ``body-fixed'' axis of the tibia)
+\end{enumerate}
+
+This is a ZXY Euler angle sequence when expressed in the Grood--Suntay convention.
+The key insight is that the floating axis is neither fixed in the femur nor in the
+tibia---it is defined by the cross product of the other two axes.
+
+\begin{lstlisting}[language=Python, caption={Computing knee joint angles using the Grood-Suntay convention.}]
+import numpy as np
+from typing import Tuple
+
+def grood_suntay_knee_angles(
+    R_femur: np.ndarray,
+    R_tibia: np.ndarray
+) -> Tuple[float, float, float]:
+    """Compute knee joint angles using Grood-Suntay convention.
+
+    Parameters
+    ----------
+    R_femur : np.ndarray, shape (3, 3)
+        Rotation matrix of femur segment frame in global coordinates.
+    R_tibia : np.ndarray, shape (3, 3)
+        Rotation matrix of tibia segment frame in global coordinates.
+
+    Returns
+    -------
+    Tuple[float, float, float]
+        (flexion_deg, adduction_deg, internal_rotation_deg)
+
+    References
+    ----------
+    Grood, E.S. and Suntay, W.J. (1983). A joint coordinate system
+    for the clinical description of three-dimensional motions.
+    J. Biomechanical Engineering, 105(2), 136-144.
+    """
+    # Femoral medio-lateral axis (e1) - flexion axis
+    e1 = R_femur[:, 2]  # lateral axis of femur
+
+    # Tibial longitudinal axis (e3) - rotation axis
+    e3 = R_tibia[:, 1]  # proximal axis of tibia
+
+    # Floating axis (e2) - perpendicular to both
+    e2 = np.cross(e3, e1)
+    e2 = e2 / np.linalg.norm(e2)
+
+    # Flexion-extension angle
+    # Angle between femur anterior axis and floating axis
+    femur_anterior = R_femur[:, 0]
+    flexion = np.arctan2(
+        np.dot(e2, R_femur[:, 1]),
+        np.dot(e2, femur_anterior)
+    )
+
+    # Abduction-adduction angle
+    # Angle between e1 and e3 minus 90 degrees
+    sin_abd = -np.dot(e1, e3)
+    cos_abd = np.linalg.norm(np.cross(e1, e3))
+    adduction = np.arcsin(np.clip(sin_abd, -1.0, 1.0))
+
+    # Internal-external rotation
+    # Angle between floating axis and tibia anterior axis
+    tibia_anterior = R_tibia[:, 0]
+    internal_rot = np.arctan2(
+        np.dot(e2, R_tibia[:, 2]),
+        np.dot(e2, tibia_anterior)
+    )
+
+    return (
+        np.degrees(flexion),
+        np.degrees(adduction),
+        np.degrees(internal_rot)
+    )
+\end{lstlisting}
+
+\subsection{Multi-Representation Joint Angles}
+
+Following the multi-representation philosophy of this series, we express joint
+rotations in all four standard representations:
+
+\textbf{1. Euler Angles (ISB Convention):}
+\begin{equation}
+  R_{ij} = R_z(\alpha) \, R_x(\beta) \, R_y(\gamma),
+  \label{eq:ch2:euler-isb}
+\end{equation}
+where $\alpha, \beta, \gamma$ are the clinical angles (flexion, adduction, rotation).
+
+\textbf{2. Rotation Matrix (SO(3)):}
+\begin{equation}
+  R_{ij} = \exp([\bm{\omega}]_\times \theta) \in \SO,
+  \label{eq:ch2:rotmat}
+\end{equation}
+which avoids gimbal lock but requires 9 parameters with 6 constraints.
+
+\textbf{3. Unit Quaternion:}
+\begin{equation}
+  \bm{q} = (\cos\tfrac{\theta}{2},\; \bm{\omega}\sin\tfrac{\theta}{2}),
+  \quad \norm{\bm{q}} = 1,
+  \label{eq:ch2:quaternion}
+\end{equation}
+which is singularity-free and computationally efficient.
+
+\textbf{4. Screw Axis (Primary):}
+\begin{equation}
+  T_{ij} = e^{[\screw]\theta} \in \SE,
+  \quad \screw = (\bm{\omega}, \bm{v}) \in \Reals^6,
+  \label{eq:ch2:screw}
+\end{equation}
+which captures the coupled rotation-translation of biological joints naturally.
+
+\begin{comparison}{Why Screw Axis Theory Is Natural for Biological Joints}{screw-bio}
+  Unlike engineering revolute joints (pure rotation about a fixed axis), biological
+  joints exhibit \emph{coupled} rotation and translation. The knee slides anteriorly
+  as it flexes; the glenohumeral joint translates inferiorly during abduction.
+  Screw axis theory captures this coupling naturally: every rigid-body motion is a
+  rotation about and translation along a screw axis. The instantaneous screw axis
+  (ISA) of a biological joint moves through space as the joint moves, unlike the
+  fixed axis of an ideal revolute.
+
+  This is precisely why Park and Lynch's \emph{Modern Robotics} framework is
+  preferred: it handles coupled rotation-translation without special cases.
+\end{comparison}
+
+\section{Body Segment Parameters}
+
+\subsection{Regression Equations}
+
+The most widely used body segment parameter (BSP) data comes from:
+\begin{enumerate}
+  \item \textbf{Dempster (1955)}: cadaver study of 8 elderly males. Still widely cited
+        but limited demographic range.
+  \item \textbf{Zatsiorsky \& Seluyanov (1983, 1990)}: gamma-ray scanning of 100 living
+        young males. More representative but uses different segment definitions.
+  \item \textbf{de Leva (1996)}: adjustment of Zatsiorsky data to standard segment
+        definitions. The current gold standard for adult male and female BSP.
+  \item \textbf{Pavol et al.\ (2002)}: elderly adult data.
+  \item \textbf{Jensen (1986, 1989)}: pediatric data.
+\end{enumerate}
+
+\subsection{Computing the Mass Matrix}
+
+Given segment inertial properties, the mass matrix $M(\bm{q}) \in \Reals^{n \times n}$
+of the multi-body system is computed using the composite rigid-body algorithm
+(Volume~0, Chapter~10). In the body-fixed frame of segment $i$, the spatial
+inertia is:
+\begin{equation}
+  \mathcal{G}_i = \begin{bmatrix} I_i & m_i [\bm{c}_i]_\times^T \\
+  m_i [\bm{c}_i]_\times & m_i \mathbb{I}_3 \end{bmatrix} \in \Reals^{6 \times 6},
+  \label{eq:ch2:spatial-inertia}
+\end{equation}
+where $I_i$ is the $3 \times 3$ rotational inertia about the segment frame origin,
+$m_i$ is the segment mass, $\bm{c}_i$ is the center of mass position in the segment
+frame, and $[\cdot]_\times$ denotes the skew-symmetric matrix.
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Coordinate System Verification.}
+        Verify that the Grood--Suntay knee joint coordinate system produces zero
+        angles when the femur and tibia reference frames are aligned. Test with
+        known rotations.
+
+  \item \textbf{Euler Angle Singularity.}
+        For the ZXY Euler angle sequence used in the knee, identify the gimbal lock
+        configuration. Is this configuration ever reached during normal gait?
+        During deep squatting?
+
+  \item \textbf{Multi-Representation Conversion.}
+        Write Python functions to convert between all four representations
+        (Euler ZXY, rotation matrix, quaternion, screw axis) for a knee joint angle
+        of $60^\circ$ flexion, $5^\circ$ adduction, $10^\circ$ internal rotation.
+
+  \item \textbf{BSP Sensitivity.}
+        Using the de~Leva segment properties, compute the knee extension torque
+        required to hold the lower leg horizontal (isometric). Repeat using the
+        Dempster data. What is the percentage difference? Discuss the implications for
+        inverse dynamics accuracy.
+
+  \item \textbf{(Programming.)} Implement the spatial inertia matrix computation
+        for a 3-segment leg model (thigh, shank, foot). Verify positive-definiteness.
+
+  \item \textbf{(Programming.)} Using motion capture data (or simulated data),
+        compute knee joint angles from segment orientations using the Grood--Suntay
+        code provided. Plot flexion angle over one gait cycle.
+\end{enumerate}

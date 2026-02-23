@@ -1,0 +1,159 @@
+\chapter{Inference on Biological Systems}
+\label{ch:inference}
+
+\epigraph{%
+  We cannot open the body and read the parameters.
+  We must infer them from the traces left by motion.
+}{}
+
+\section{Parameter Identification from Motion Data}
+
+Biological system parameters (muscle strengths, tendon slack lengths, segment inertias)
+cannot typically be measured directly in vivo. They must be inferred from observable
+motion data using optimization and estimation techniques.
+
+\subsection{Maximum Likelihood Estimation}
+
+Given a parameterized model $\dot{\state} = f(\state, \bm{\theta})$ with parameters
+$\bm{\theta}$ and noisy observations $\bm{y}_k = h(\state_k) + \bm{v}_k$ at times
+$t_k$, the maximum likelihood estimate is:
+\begin{equation}
+  \hat{\bm{\theta}} = \argmin_{\bm{\theta}} \sum_{k=1}^{N}
+  \norm{\bm{y}_k - h(\state_k(\bm{\theta}))}_{R^{-1}}^2,
+  \label{eq:ch8:mle}
+\end{equation}
+where $R$ is the measurement noise covariance.
+
+\subsection{Bayesian Estimation with Physical Constraints}
+
+The Bayesian framework (introduced in Chapter~6) is particularly valuable for
+biomechanical parameter estimation because it naturally incorporates prior knowledge
+from the literature:
+
+\begin{lstlisting}[language=Python, caption={Bayesian parameter estimation for musculoskeletal model.}]
+import numpy as np
+from scipy.optimize import minimize
+
+def log_posterior(
+    theta: np.ndarray,
+    observations: np.ndarray,
+    forward_model,
+    prior_mean: np.ndarray,
+    prior_cov: np.ndarray,
+    noise_cov: np.ndarray
+) -> float:
+    """Compute the log-posterior for parameter estimation.
+
+    Parameters
+    ----------
+    theta : np.ndarray
+        Model parameters.
+    observations : np.ndarray, shape (n_obs, n_dims)
+        Observed data.
+    forward_model : callable
+        theta -> predicted_observations.
+    prior_mean : np.ndarray
+        Prior parameter mean.
+    prior_cov : np.ndarray
+        Prior parameter covariance.
+    noise_cov : np.ndarray
+        Observation noise covariance.
+
+    Returns
+    -------
+    float
+        Negative log-posterior (for minimization).
+    """
+    # Log-likelihood
+    predicted = forward_model(theta)
+    residuals = observations - predicted
+    R_inv = np.linalg.inv(noise_cov)
+    log_likelihood = -0.5 * np.sum(residuals @ R_inv * residuals)
+
+    # Log-prior
+    prior_residuals = theta - prior_mean
+    P_inv = np.linalg.inv(prior_cov)
+    log_prior = -0.5 * prior_residuals @ P_inv @ prior_residuals
+
+    return -(log_likelihood + log_prior)
+
+
+def map_estimate(
+    observations: np.ndarray,
+    forward_model,
+    prior_mean: np.ndarray,
+    prior_cov: np.ndarray,
+    noise_cov: np.ndarray,
+    bounds: list[tuple[float, float]] | None = None
+) -> np.ndarray:
+    """Compute Maximum A Posteriori (MAP) parameter estimate.
+
+    Parameters
+    ----------
+    observations : np.ndarray
+        Observed data.
+    forward_model : callable
+        Parameter-to-observation mapping.
+    prior_mean : np.ndarray
+        Prior mean from literature.
+    prior_cov : np.ndarray
+        Prior uncertainty.
+    noise_cov : np.ndarray
+        Measurement noise covariance.
+    bounds : list of tuple, optional
+        Physical bounds on parameters.
+
+    Returns
+    -------
+    np.ndarray
+        MAP parameter estimate.
+    """
+    result = minimize(
+        log_posterior,
+        prior_mean,
+        args=(observations, forward_model, prior_mean,
+              prior_cov, noise_cov),
+        method='L-BFGS-B',
+        bounds=bounds
+    )
+    return result.x
+\end{lstlisting}
+
+\section{System Identification for Biological Systems}
+
+System identification techniques from control theory (Volume~I) apply to biomechanical
+systems with modifications:
+
+\begin{enumerate}
+  \item \textbf{Joint impedance identification}: Perturb the limb and measure the
+        response. The stiffness, damping, and inertia of the joint can be estimated
+        from the transfer function.
+  \item \textbf{Muscle parameter identification}: Optimize muscle parameters (F0,
+        optimal length, tendon slack length) to match experimental force or torque data.
+  \item \textbf{Neural control identification}: Estimate the feedback gains used by
+        the nervous system from perturbation experiments.
+\end{enumerate}
+
+\section{Machine Learning Approaches}
+
+Modern ML approaches to biomechanical inference include:
+\begin{itemize}
+  \item Physics-informed neural networks (PINNs) that enforce equations of motion
+  \item Gaussian process regression for joint angle estimation from sparse data
+  \item Deep learning for markerless motion capture pose estimation
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{MAP Estimation.}
+        Using the provided code, estimate the optimal fiber length of a biceps muscle
+        from simulated isometric force data at 5 joint angles.
+
+  \item \textbf{Identifiability Analysis.}
+        For a Hill-type muscle model, analyze which parameters can be uniquely estimated
+        from isometric force-angle data alone. Which require dynamic data?
+
+  \item \textbf{(Programming.)} Implement a joint impedance identification experiment:
+        simulate a perturbed pendulum and estimate stiffness and damping from the response.
+\end{enumerate}
