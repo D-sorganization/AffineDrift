@@ -393,7 +393,7 @@ successive linearization:
   \State \quad For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
   \State \quad \quad For $k = 0, \ldots, T-1$:
   \State \quad \quad \quad $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
-  \State \quad \quad \quad $\x_k = \bar\x_k^{(i)} + \alpha (\x_k - \bar\x_k^{(i)}) + \text{dynamics\_integration}$
+  \State \quad \quad \quad $\x_k = \bar\x_k^{(i)} + \alpha (\x_k - \bar\x_k^{(i)}) + \text{dynamics_integration}$
   \State \quad \quad \quad $\uvec_k = \bar\uvec_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k^{(i)})$
   \State \quad \quad Roll out full trajectory and compute cost $J_{\text{trial}}$.
   \State \quad \quad If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
