@@ -11,7 +11,7 @@
 \begin{laymansbox}{Context \& Use Case: Smooth Interpolation}{context_box}
 \textbf{The Math You Will See:} We will introduce \textbf{Lie Algebras} ($so(3)$ and $se(3)$), the \textbf{Matrix Exponential} (\textit{exp}), and the \textbf{Matrix Logarithm} (\textit{log}).
 \textbf{Why We Need It:} Imagine a robotic arm needs to move from Pose A to Pose B. You cannot just average the $4 \times 4$ matrices of Pose A and Pose B ($ [T_A + T_B]/2 $); the resulting matrix is garbage and physically means nothing. Because 3D space is curved (due to rotation), moving smoothly requires calculating the exact "axis" of motion and sliding along it. The Logarithm extracts that axis, and the Exponential walks along it.
-\textbf{All Variables Defined:} $se(3)$ represents the flat tangent velocity space, $SE(3)$ represents the curved position manifold, and $\hat{\boldsymbol{\omega}}$ is the unit rotation axis.
+\textbf{All Variables Defined:} $\mathfrak{se}(3)$ represents the flat tangent velocity space (Lie Algebra), $SE(3)$ represents the curved position manifold (Lie Group), and $\hat{\boldsymbol{\omega}}$ is the unit rotation axis.
 \end{laymansbox}
 
 \section{The Lie Algebra mapping to Lie Groups}
@@ -22,7 +22,13 @@ But how does a system actually \emph{move} between two poses? If a robotic arm s
 
 To govern this continuous motion algorithmically, mathematicians map the curved, non-linear space of $SE(3)$ (where addition breaks) into a perfectly flat, linear tangent space where standard calculus operations (like addition, scaling, and derivatives) work flawlessly. 
 
-This flat tangent space is called the \textbf{Lie Algebra}, mathematically denoted as $so(3)$ for pure rotations and $se(3)$ for complete spatial poses (Twists). While the \emph{Lie Group} represents "Where am I?", the \emph{Lie Algebra} represents "In what exact direction and how fast am I moving?".
+This flat tangent space is called the \textbf{Lie Algebra}, mathematically denoted as $\mathfrak{so}(3)$ for pure rotations and $\mathfrak{se}(3)$ for complete spatial poses (Twists). While the \emph{Lie Group} represents "Where am I?" (position on the curved manifold), the \emph{Lie Algebra} represents "In what exact direction and how fast am I moving?" (velocity in the flat tangent space).
+
+\begin{laymansbox}{Mathematical Reminder: The Differential Geometry Bridge}{exp_map_reminder}
+In differential geometry, we formulate control policies and perturbations entirely in the flat Tangent Space (the Lie Algebra). However, the system's true state evolves on the curved Manifold (the Lie Group). 
+
+The \textbf{Exponential Map} is the formal mathematical bridge that integrates a straight flow in the flat tangent space and wraps it perfectly along a smooth, curved path (a \emph{geodesic}) on the manifold. Conversely, the \textbf{Logarithm Map} takes a curved path between two points on the manifold and correctly "flattens" it into a straight velocity vector in the tangent space.
+\end{laymansbox}
 
 \section{Exponential Coordinates and Axis-Angle}
 
@@ -47,16 +53,16 @@ To convert our flat, linear velocity commands (Lie Algebra) into the true, curve
 
 First, consider just rotation. We expand the 3-element exponential coordinate $\mathbf{r} = \hat{\boldsymbol{\omega}}\theta$ into a $3 \times 3$ skew-symmetric matrix, denoted as $[\mathbf{r}]$:
 \begin{equation}
-  [\mathbf{r}] = [\hat{\boldsymbol{\omega}}]\theta = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix} \in so(3)
+  [\mathbf{r}] = [\hat{\boldsymbol{\omega}}]\theta = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix} \in \mathfrak{so}(3)
 \end{equation}
 
-This skew-symmetric matrix literally \emph{is} the Lie Algebra $so(3)$. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $SO(3)$ to produce our final Rotation Matrix. Because calculating an infinite Taylor series ($e^A = I + A + A^2/2! + \dots$) is too slow for computers, we use \textbf{Rodrigues' Formula}:
+This skew-symmetric matrix literally \emph{is} the Lie Algebra $\mathfrak{so}(3)$. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $SO(3)$ to produce our final Rotation Matrix. Because calculating an infinite Taylor series ($e^A = I + A + A^2/2! + \dots$) is too slow for computers, we use \textbf{Rodrigues' Formula}:
 
 \begin{equation}
    \mathbf{R} = \exp([\hat{\boldsymbol{\omega}}]\theta) = \mathbf{I} + \sin\theta [\hat{\boldsymbol{\omega}}] + (1 - \cos\theta)[\hat{\boldsymbol{\omega}}]^2
 \end{equation}
 
-This exact same exponential mapping scales up effortlessly to the full $4 \times 4$ spatial Twists ($\mathcal{V} \in se(3)$) we learned about in Chapter 5. By passing a Twist and a time step into the Matrix Exponential, we get the exact 3D rigid body transformation:
+This exact same exponential mapping scales up effortlessly to the full $4 \times 4$ spatial Twists ($\mathcal{V} \in \mathfrak{se}(3)$) we learned about in Chapter 5. By passing a Twist and a time step into the Matrix Exponential, we get the exact 3D rigid body transformation:
 \begin{equation}
     \mathbf{T} = \exp([\mathcal{V}]\theta) = \begin{bmatrix} e^{[\hat{\boldsymbol{\omega}}]\theta} & \mathbf{V} \\ \mathbf{0} & 1 \end{bmatrix} \in SE(3)
 \end{equation}
@@ -66,7 +72,7 @@ This exact same exponential mapping scales up effortlessly to the full $4 \times
 
 What if we have the opposite problem? What if a computer vision system gives us a Rotation Matrix $\mathbf{R}$, and we need to know what physical axis it spun around, and by how much? 
 
-We must perform the exact inverse operation: the \textbf{Matrix Logarithm}. The Matrix Logarithm takes a curved element from the Lie Group ($\mathbf{R} \in SO(3)$) and perfectly flattens it back onto the tangent space to extract the axis-angle representation.
+We must perform the exact inverse operation: the \textbf{Matrix Logarithm}. The Matrix Logarithm takes a curved element from the Lie Group ($\mathbf{R} \in SO(3)$) and perfectly flattens it back onto the tangent space $\mathfrak{so}(3)$ to extract the axis-angle representation.
 
 \begin{equation}
    [\hat{\boldsymbol{\omega}}]\theta = \log(\mathbf{R})

@@ -69,6 +69,16 @@ We develop only as much manifold theory as the control engineer needs. The
 reader seeking a comprehensive treatment should consult Lee~(2012) or
 Abraham \& Marsden~(1978).
 
+\begin{laymansbox}{Mathematical Reminder: The Foundations Re-applied}{vol0_reminder_manifolds}
+In Volume 0, we introduced Manifolds and Tangent Spaces as abstract geometric concepts to explain configuration and rotation. Here in Volume II, we mathematically formalize them to build robust control algorithms. Remember the core definitions:
+\begin{enumerate}
+    \item \textbf{Manifold ($\mathcal{Q}$):} The curved, global "position" space of the robot.
+    \item \textbf{Tangent Space ($T_q\mathcal{Q}$):} The perfectly flat, linear "velocity" space attached to one specific position.
+    \item \textbf{Tangent Bundle ($T\mathcal{Q}$):} The total \textbf{State Space} combining all positions and all their velocities.
+\end{enumerate}
+Our motor torques compute inside the flat tangent space. We rely on differential geometry to project those flat velocities back onto the curved physical reality.
+\end{laymansbox}
+
 \begin{definition}{Smooth Manifold}{manifold}
   A \textbf{smooth manifold} $\manifold$ of dimension $n$ is a set together
   with a collection of \textbf{coordinate charts}

@@ -43,6 +43,10 @@ Let our control objective be to drive the state $\state$ to the invariant manifo
   \mathcal{Z} = \{ \state \mid \state - \traj^*(s(\state)) = \bm{0} \}.
 \end{equation}
 
+\begin{laymansbox}{Mathematical Reminder: The Invariant Manifold}{invariant_manifold_reminder}
+Recall our manifold definition from Volume 0: a curved geometric surface. The \textbf{Virtual Constraints} physically force the system to stick to a very specific, lower-dimensional "submanifold" embedded within the full State Space. We call this an \textbf{Invariant Manifold} because once the feedback controller forces the system onto this surface, the system's own natural physics (combined with the controller) ensures it never leaves it. The system "slides" perfectly along this curved surface toward the goal.
+\end{laymansbox}
+
 By using partial feedback linearization (Chapter 5), we can design a synthetic input $\bm{v}_a$ that drives the actuated degrees of freedom $\bm{q}_a$ onto their nominal surfaces proportional to the phase:
 \begin{equation}
   y = \bm{q}_a - \traj^*_a(s(\state)) \to 0.
