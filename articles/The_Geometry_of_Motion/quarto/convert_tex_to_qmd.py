@@ -2,7 +2,20 @@ import os
 import re
 
 
-def convert_tex_to_qmd(input_file, output_file):
+def convert_tex_to_qmd(input_file: str, output_file: str) -> None:
+    """Convert a LaTeX .tex file to a Quarto .qmd file.
+
+    Performs basic structural conversion: chapter/section headers to
+    markdown headings, theorem environments to callout blocks, and
+    lstlisting blocks to fenced code blocks.
+
+    Parameters
+    ----------
+    input_file : str
+        Path to the input .tex file.
+    output_file : str
+        Path to the output .qmd file.
+    """
     with open(input_file, encoding="utf-8") as f:
         content = f.read()
 
