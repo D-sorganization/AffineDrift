@@ -1,0 +1,95 @@
+\chapter{Neural Architecture of Motor Control}
+\label{ch:neural-arch}
+
+\epigraph{%
+  The motor system is not one controller.
+  It is an orchestra of specialized modules,
+  each playing its part in the symphony of movement.
+}{}
+
+\section{Cortical Motor Areas}
+
+The cerebral cortex contains several distinct motor areas, each with specialized roles:
+
+\subsection{Primary Motor Cortex (M1)}
+
+M1 (Brodmann area 4) is the final cortical output stage for voluntary movement.
+Layer V contains the giant pyramidal (Betz) cells whose axons form the corticospinal
+tract---the most direct neural pathway from cortex to spinal motor neurons.
+
+Key properties of M1:
+\begin{itemize}
+  \item \textbf{Somatotopic organization}: body parts are mapped to cortical regions
+        (the motor homunculus), but with overlapping representations
+  \item \textbf{Population coding}: individual neurons have broad tuning; movement
+        direction is encoded by the \emph{population vector} \cite{Georgopoulos1986}
+  \item \textbf{Preparatory activity}: M1 neurons are active 100--200~ms before
+        movement onset, during motor preparation
+\end{itemize}
+
+\subsection{Premotor Cortex (PMC) and Supplementary Motor Area (SMA)}
+
+\begin{itemize}
+  \item \textbf{PMC}: movement planning based on external cues (visually guided reaching)
+  \item \textbf{SMA}: movement planning based on internal cues (self-initiated sequences)
+  \item Both areas project to M1 and directly to the spinal cord
+\end{itemize}
+
+\section{Subcortical Motor Structures}
+
+\subsection{Cerebellum: The Forward Model}
+
+The cerebellum contains more neurons than the rest of the brain combined ($\sim$70 billion
+granule cells). Its primary role in motor control is as a \textbf{forward model}:
+
+\begin{neurobox}{The Cerebellum as a Forward Model}{cerebellum-forward}
+  The cerebellum:
+  \begin{enumerate}
+    \item Receives a copy of the motor command (efference copy) via the pontine nuclei
+    \item Receives sensory feedback via the inferior olive and mossy fibers
+    \item Computes the \emph{predicted} sensory consequences of the command
+    \item Compares prediction with actual sensory feedback
+    \item Generates an error signal that updates the forward model (climbing fiber
+          pathway, long-term depression of parallel fiber--Purkinje cell synapses)
+  \end{enumerate}
+  In the language of control theory (Volume~I):
+  \begin{itemize}
+    \item The cerebellum implements $\hat{\state}_{k+1} = f(\hat{\state}_k, \control_k)$
+          --- the state prediction step of the Kalman filter
+    \item The climbing fiber error signal implements the innovation update
+    \item The granule cell layer provides the basis functions for the nonlinear mapping
+  \end{itemize}
+\end{neurobox}
+
+\subsection{Basal Ganglia: Action Selection}
+
+The basal ganglia implement an action selection mechanism through competitive
+inhibition. The direct pathway facilitates a desired action; the indirect pathway
+suppresses competing actions. This is analogous to a model predictive controller
+evaluating multiple candidate trajectories and selecting the best one.
+
+\section{Spinal Cord: The Local Controller}
+
+The spinal cord is not merely a relay station. It contains:
+\begin{itemize}
+  \item \textbf{Motor neuron pools}: lower motor neurons that directly innervate muscles
+  \item \textbf{Interneuron networks}: local circuits that implement reflexes, pattern
+        generation, and coordination
+  \item \textbf{Central pattern generators} (CPGs): oscillatory circuits for rhythmic
+        movements (Chapter~8)
+\end{itemize}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Population Vector.}
+        Given neurons with preferred directions every $45^\circ$, compute the population
+        vector for a movement at $30^\circ$. Plot individual neuron contributions.
+
+  \item \textbf{Cerebellar Forward Model.}
+        Implement a simple forward model using a lookup table. Show how climbing
+        fiber errors update the model over successive trials.
+
+  \item \textbf{(Research.)} Read Georgopoulos et al.\ (1986) and summarize the
+        evidence for population coding in M1.
+\end{enumerate}

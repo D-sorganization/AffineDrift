@@ -1,0 +1,144 @@
+\chapter{Computational Models of Motor Control}
+\label{ch:computational}
+
+\epigraph{%
+  A theory of motor control must ultimately be a theory of
+  computation: what is computed, how, and why.
+}{}
+
+\section{Optimal Feedback Control}
+
+The dominant computational theory of motor control is optimal feedback control (OFC)
+\cite{TodorovJordan2002}:
+
+\begin{definition}{The OFC Framework}{ofc-def}
+  The nervous system controls movement by solving, in real-time, the stochastic
+  optimal control problem:
+  \begin{equation}
+    \min_{\control(\cdot)} \mathbb{E}\left[
+    \phi(\state_T) + \int_0^T \ell(\state_t, \control_t) \dt
+    \right],
+    \label{eq:ch10:ofc}
+  \end{equation}
+  subject to:
+  \begin{equation}
+    \dd\state = f(\state, \control) \dt + G(\state) \dd\bm{w},
+  \end{equation}
+  where $\dd\bm{w}$ is Brownian noise representing signal-dependent motor noise.
+\end{definition}
+
+\subsection{The Minimum Intervention Principle}
+
+OFC naturally explains why the nervous system tolerates task-irrelevant variability
+(the UCM from Chapter~1): the optimal controller only corrects deviations that
+affect the cost function. Task-irrelevant deviations are ``free'' and need not be
+corrected.
+
+\begin{lstlisting}[language=Python, caption={Linear-quadratic optimal feedback controller.}]
+import numpy as np
+from scipy.linalg import solve_continuous_are
+
+def lqr_ofc(
+    A: np.ndarray,
+    B: np.ndarray,
+    Q: np.ndarray,
+    R: np.ndarray,
+    state_noise_cov: np.ndarray | None = None
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute LQR optimal feedback gains.
+
+    This implements the infinite-horizon OFC solution.
+
+    Parameters
+    ----------
+    A : np.ndarray, shape (n, n)
+        State dynamics matrix.
+    B : np.ndarray, shape (n, m)
+        Input matrix.
+    Q : np.ndarray, shape (n, n)
+        State cost matrix.
+    R : np.ndarray, shape (m, m)
+        Control cost matrix.
+    state_noise_cov : np.ndarray, shape (n, n), optional
+        Process noise covariance.
+
+    Returns
+    -------
+    tuple
+        (K, P) where K is the optimal gain and P is the Riccati solution.
+    """
+    # Solve continuous algebraic Riccati equation
+    P = solve_continuous_are(A, B, Q, R)
+
+    # Optimal gain
+    K = np.linalg.solve(R, B.T @ P)
+
+    return K, P
+
+
+# Example: 2D reaching with motor noise
+# State: [x, y, dx, dy], Control: [Fx, Fy]
+A = np.array([
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
+    [0, 0, -2, 0],  # damping
+    [0, 0, 0, -2],
+])
+B = np.array([
+    [0, 0],
+    [0, 0],
+    [1, 0],
+    [0, 1],
+])
+
+# Task: reach to target with minimum effort
+# High cost on position at target, low cost on path
+Q = np.diag([10, 10, 1, 1])  # Position matters more than velocity
+R = 0.01 * np.eye(2)  # Low control cost
+
+K, P = lqr_ofc(A, B, Q, R)
+print("OFC gain matrix K:")
+print(K)
+print("\nMinimum intervention: gains are higher for")
+print("task-relevant (position) than task-irrelevant dimensions")
+\end{lstlisting}
+
+\section{Signal-Dependent Noise}
+
+A key feature of biological motor systems is that motor noise is
+\textbf{signal-dependent}: the noise variance scales with the control signal magnitude:
+\begin{equation}
+  \control = \bar{\control} + \sigma(\bar{\control}) \bm{\xi},
+  \quad \sigma(\bar{\control}) = k \norm{\bar{\control}},
+  \label{eq:ch10:signal-dep-noise}
+\end{equation}
+where $\bm{\xi}$ is white noise and $k$ is the noise coefficient.
+
+This explains minimum-jerk trajectories: the optimal trajectory under signal-dependent
+noise minimizes the time-integral of squared jerk \cite{FlashHogan1985, Harris1998}.
+
+\section{Active Inference (Friston Framework)}
+
+Active inference reframes motor control as inference: the agent infers the
+actions that would make its predictions come true:
+\begin{equation}
+  F = \mathbb{E}_q[\ln q(\state) - \ln p(\state, \bm{y})],
+  \label{eq:ch10:free-energy}
+\end{equation}
+where $F$ is the variational free energy, $q(\state)$ is the approximate posterior,
+and $p(\state, \bm{y})$ is the generative model.
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{OFC Reaching.} Using the LQR code, simulate reaching movements
+        to different targets. Show that task-irrelevant variability is tolerated.
+
+  \item \textbf{Signal-Dependent Noise.} Simulate reaching with and without
+        signal-dependent noise. Plot the trajectory variability as a function of
+        movement speed.
+
+  \item \textbf{(Programming.)} Implement the minimum-jerk model and the
+        minimum-variance model. Show that both predict smooth bell-shaped velocity
+        profiles.
+\end{enumerate}

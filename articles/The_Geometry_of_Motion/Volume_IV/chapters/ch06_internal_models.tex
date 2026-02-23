@@ -1,0 +1,122 @@
+\chapter{Internal Models: Forward and Inverse}
+\label{ch:internal-models}
+
+\epigraph{%
+  To control is to predict.
+  To predict is to have a model.
+  To have a model is to have learned.
+}{}
+
+\section{Forward Models}
+
+A forward model predicts the sensory consequences of a motor command:
+\begin{equation}
+  \hat{\state}_{k+1} = f(\hat{\state}_k, \control_k),
+  \label{eq:ch6:forward-model}
+\end{equation}
+which is exactly the state propagation used in Volume~I.
+
+\subsection{The MOSAIC Architecture}
+
+The MOSAIC model (Modular Selection and Identification for Control)
+\cite{WolpertKawato1998} proposes that the brain maintains \emph{multiple}
+paired forward-inverse models, each tuned to a different context:
+
+\begin{lstlisting}[language=Python, caption={MOSAIC-style multiple model architecture.}]
+import numpy as np
+from typing import List, Tuple
+
+class ForwardInversePair:
+    """A paired forward-inverse model for one context."""
+    def __init__(self, A: np.ndarray, B: np.ndarray):
+        self.A = A  # State transition
+        self.B = B  # Input matrix
+
+    def forward_predict(self, x: np.ndarray,
+                        u: np.ndarray) -> np.ndarray:
+        """Predict next state."""
+        return self.A @ x + self.B @ u
+
+    def inverse(self, x: np.ndarray,
+                x_desired: np.ndarray) -> np.ndarray:
+        """Compute control to reach desired state."""
+        return np.linalg.lstsq(self.B,
+                               x_desired - self.A @ x,
+                               rcond=None)[0]
+
+
+class MOSAIC:
+    """Multiple paired forward-inverse model architecture."""
+    def __init__(self, models: List[ForwardInversePair]):
+        self.models = models
+        self.n_models = len(models)
+        self.responsibilities = np.ones(self.n_models) / self.n_models
+
+    def update_responsibilities(self, x: np.ndarray,
+                                u: np.ndarray,
+                                x_next: np.ndarray) -> None:
+        """Update model responsibilities based on prediction errors."""
+        errors = np.zeros(self.n_models)
+        for i, model in enumerate(self.models):
+            prediction = model.forward_predict(x, u)
+            errors[i] = np.sum((x_next - prediction)**2)
+
+        # Softmax weighting (lower error = higher responsibility)
+        log_resp = -0.5 * errors
+        log_resp -= np.max(log_resp)  # numerical stability
+        self.responsibilities = np.exp(log_resp)
+        self.responsibilities /= np.sum(self.responsibilities)
+
+    def predict(self, x: np.ndarray,
+                u: np.ndarray) -> np.ndarray:
+        """Weighted prediction across all models."""
+        prediction = np.zeros_like(x)
+        for i, model in enumerate(self.models):
+            prediction += self.responsibilities[i] * \
+                         model.forward_predict(x, u)
+        return prediction
+
+    def control(self, x: np.ndarray,
+                x_desired: np.ndarray) -> np.ndarray:
+        """Weighted inverse model output."""
+        u = np.zeros(self.models[0].B.shape[1])
+        for i, model in enumerate(self.models):
+            u += self.responsibilities[i] * \
+                 model.inverse(x, x_desired)
+        return u
+\end{lstlisting}
+
+\section{Inverse Models}
+
+An inverse model computes the motor command required to achieve a desired state:
+\begin{equation}
+  \control_k = f^{-1}(\state_k, \state_{k+1}^{\text{des}}),
+  \label{eq:ch6:inverse-model}
+\end{equation}
+which corresponds to the feedforward control of Volume~II.
+
+\section{Smith Predictor for Neural Delays}
+
+The sensorimotor system faces delays of 50--200~ms. The Smith predictor
+architecture uses a forward model to compensate:
+\begin{equation}
+  \hat{\state}_{\text{current}} = \hat{\state}(t - \Delta t) +
+  \int_{t-\Delta t}^{t} f(\hat{\state}, \control) \, \dd\tau,
+  \label{eq:ch6:smith-predictor}
+\end{equation}
+where $\Delta t$ is the sensory delay. The controller operates on the
+\emph{predicted current state} rather than the delayed sensory measurement.
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{MOSAIC.} Using the provided code, simulate a system that switches
+        between two dynamics (e.g., carrying an empty cup vs.\ a full cup). Show
+        how the responsibilities shift.
+
+  \item \textbf{Smith Predictor.} Implement a Smith predictor for a simple pendulum
+        with a 100~ms sensory delay. Compare performance with and without prediction.
+
+  \item \textbf{(Research.)} Summarize evidence for multiple internal models in
+        human motor control, citing at least three experimental studies.
+\end{enumerate}

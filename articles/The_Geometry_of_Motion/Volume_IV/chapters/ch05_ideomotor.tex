@@ -1,0 +1,93 @@
+\chapter{Ideomotor Theory and the Predictive Brain}
+\label{ch:ideomotor}
+
+\epigraph{%
+  Every representation of a movement awakens in some degree
+  the actual movement which is its object.
+}{--- William James, 1890}
+
+\section{Historical Ideomotor Theory}
+
+The ideomotor principle, articulated by William James in 1890 \cite{James1890}, states
+that the mere \emph{idea} of a movement tends to produce that movement. Modern
+reformulations by Greenwald (1970) and Hommel et al.\ (2001) have transformed this
+philosophical observation into a testable scientific framework.
+
+\begin{definition}{The Theory of Event Coding (TEC)}{tec-def}
+  The Theory of Event Coding \cite{Hommel2001} proposes that:
+  \begin{enumerate}
+    \item Perception and action share a \textbf{common representational format}
+          (event codes or feature codes)
+    \item Actions are planned in terms of their \textbf{desired sensory effects},
+          not in terms of muscle commands
+    \item The mapping from desired effects to motor commands is learned through
+          experience (bidirectional action-effect associations)
+  \end{enumerate}
+\end{definition}
+
+\section{The Predictive Processing Framework}
+
+Modern neuroscience interprets the brain as a \textbf{prediction machine}
+\cite{Clark2013, Hohwy2013}:
+
+\begin{insight}{The Brain as a Prediction Machine}{prediction-machine}
+  The brain continuously generates predictions about incoming sensory data.
+  Neural processing is dominated by \textbf{prediction error minimization}:
+  \begin{equation}
+    \varepsilon_k = \bm{y}_k - \hat{\bm{y}}_k = \bm{y}_k - h(\hat{\state}_k),
+    \label{eq:ch5:prediction-error}
+  \end{equation}
+  where $\hat{\bm{y}}_k$ is the predicted observation and $\bm{y}_k$ is the actual
+  observation. This error drives updates to the internal model.
+
+  In the language of Volume~I, Chapter~6: this is exactly the
+  \textbf{Kalman filter innovation}. The brain implements Bayesian state estimation.
+\end{insight}
+
+\subsection{Active Inference}
+
+Karl Friston's active inference framework \cite{Friston2010} extends predictive
+processing to action: instead of only updating beliefs to match observations,
+the agent can also \emph{act} to make observations match predictions:
+\begin{equation}
+  \control^* = \argmin_{\control} \mathbb{E}\left[
+  \sum_{k=0}^{T} \norm{\bm{y}_k - \hat{\bm{y}}_k}^2_{R^{-1}}
+  + \norm{\control_k}^2_Q
+  \right],
+  \label{eq:ch5:active-inference}
+\end{equation}
+which is formally equivalent to model predictive control (Volume~I, Chapter~5).
+
+\section{Connection to Control Theory}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Neuroscience Term} & \textbf{Control Theory Term} \\
+\midrule
+Forward model & State transition matrix / predictor \\
+Prediction error & Innovation (Kalman filter) \\
+Efference copy & Feedforward control signal \\
+Active inference & Model predictive control \\
+Prior beliefs & State constraints / initial conditions \\
+Precision weighting & Kalman gain / observation weights \\
+Free energy & Variational cost functional \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Conceptual.} Explain how the ideomotor principle relates to
+        trajectory-centric control (Volume~II). When a golfer imagines impact,
+        what ``prediction'' are they generating?
+
+  \item \textbf{Kalman Connection.} Write out the Kalman filter equations and identify
+        which term corresponds to the prediction error in the predictive processing
+        framework.
+
+  \item \textbf{(Programming.)} Implement an active inference agent that controls a
+        pendulum by minimizing prediction error rather than tracking a reference.
+\end{enumerate}
