@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 2: Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}
+%  Chapter 3: Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}
 % ==========================================================================
 \chapter{Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}}
 \label{ch:configuration}
@@ -8,65 +8,80 @@
   To command a body to move, we must first establish exactly where it is. We do not use the raw atoms of the universe to map a body; we use its independent coordinates—its configuration.
 }{}
 
+\begin{laymansbox}[Context \& Use Case: Mapping the Possible]
+\textbf{The Math You Will See:} We define the \textbf{Configuration Space ($\mathcal{Q}$)}, count Degrees of Freedom (DOF), and define \textbf{Forward Kinematics} functions mapping joint angles ($\mathbf{q}$) to Cartesian workspace coordinates ($\mathbf{p} \in \Reals^3$).
+\textbf{Why We Need It:} If you want a robot arm to pick up a coffee cup, you know where the cup is in physical 3D space ($X, Y, Z$). But you cannot command the robot's $X, Y, Z$ position directly! You can only command the motors at its joints (its "configuration"). We must build mathematical maps that translate between the physical space where the coffee cup lives, and the abstract angular "configuration space" where the robot's motors live.
+\textbf{All Variables Defined:} $\mathbf{q}$ represents joint angles, $\mathcal{Q}$ is the configuration manifold, and $\mathbf{p}_{end}$ is the end-effector position.
+\end{laymansbox}
+
 \section{Degrees of Freedom (DOF)}
 
-In Chapter 1, we learned that the State Space\index{State Space} consists of both the position coordinates ($q$) and the velocity coordinates ($\dot{q}$). But how many position coordinates $q$ does our system actually have? And why?
+In Chapter 2, we learned that the State Space $\mathcal{X}$ consists of both the position coordinates ($\mathbf{q}$) and the velocity coordinates ($\dot{\mathbf{q}}$). But how many position coordinates does our system actually have? And why?
 
-Consider a single speck of dust floating completely unconstrained in a room. To perfectly define where it is, you need $x, y, z$. If it is a rigid block of steel floating in the room, knowing $x, y, z$ only fixes its center of mass. It could be spun around, pitched entirely backward, or rolled on its side. It therefore has three additional \textbf{angles} (roll, pitch, yaw) defining its rotation. 
+Consider a single speck of dust floating completely unconstrained in a room. To perfectly define where it is, you need 3 coordinates: $x, y, z$. If it is instead a rigid block of steel floating in the room, knowing $x, y, z$ only fixes its center of mass. It could be pitched entirely backward, or rolled on its side. It therefore requires three additional \textbf{angles} (roll, pitch, yaw) defining its rotation. 
 
-This rigid block has exactly 6 \textbf{Degrees of Freedom (DOF)}. It requires a minimum of 6 independent parameters (or coordinates) to fully define its posture in 3D Euclidean space.
+This unconstrained rigid block has exactly 6 \textbf{Degrees of Freedom (DOF)}. It requires a minimum of 6 independent parameters (or coordinates) to fully define its posture in 3D Euclidean space.
 
 \begin{definition}{Degrees of Freedom (DOF)}{dof}
-  The Degrees of Freedom of a system represents the absolute minimum number of independent coordinates required to perfectly and unambiguously define the position of every single particle in that system.
+  The Degrees of Freedom of a system represents the absolute minimum number of independent scalar coordinates required to perfectly and unambiguously define the position and orientation of every single particle in that system.
 \end{definition}
 
-If you connect two floating, rigid steel blocks together with a perfectly rigid bar (welded so they cannot move relative to each other), you do not have 12 DOF. Since the distance and orientation between them are perfectly locked by the weld, you still only have 6 DOF for the combined assembly. The weld acts as a geometric constraint.
+If you connect two floating, rigid steel blocks together with a perfectly rigid bar (welded so they cannot move relative to each other), you do not have 12 DOF. Since the distance and orientation between them are perfectly locked by the weld, you still only have 6 DOF for the combined assembly. The weld acts as a geometric \emph{constraint}. Every independent constraint you add mathematically subtracts a DOF. A hinge joint locking two 6-DOF bodies together removes 5 DOF, leaving exactly 1 DOF of relative rotation between them.
 
-\section{The Configuration Space $\configspace$}
+\section{The Configuration Space $\mathcal{Q}$}
 
-The collection of all valid configurations a system can possibly achieve—accounting for all of its physical constraints, linkages, pins, and bearings—is called its \textbf{Configuration Space}, denoted by the symbol $\configspace$.
+The collection of all valid configurations a system can possibly achieve—accounting for all of its physical constraints, linkages, pins, and bearings—is called its \textbf{Configuration Space}, mathematically denoted by the symbol $\mathcal{Q}$.
 
-Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold} (which we explore deeply in Volume I). The number of dimensions of this space is exactly equal to the Degrees of Freedom. 
+Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold} (which we explore deeply in Volume I). The number of dimensions of this space is exactly equal to the system's Degrees of Freedom. 
 
 \begin{laymansbox}{Configuration Space vs. State Space\index{State Space}}{config_state}
-  A system with $n$ Degrees of Freedom has a Configuration Space $\configspace$ of dimension $n$, defined completely by the vector $\bm{q} = [q_1, q_2, ..., q_n]^T$. 
+  A system with $n$ Degrees of Freedom has a Configuration Space $\mathcal{Q}$ of dimension $n$, defined completely by the vector $\mathbf{q} = [q_1, q_2, \dots, q_n]^T$. 
 
-  The corresponding \textbf{State Space} $\statespace$ (from Chapter 1) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
+  The corresponding \textbf{State Space} $\mathcal{X}$ (from Chapter 2) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
   
-  $$ \text{State} \ \state = [\bm{q}, \dot{\bm{q}}]^T \in \statespace = \configspace \times \Reals^n $$
+  $$ \text{State} \ \mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T \in \mathcal{X} = T\mathcal{Q} $$
+  (Where $T\mathcal{Q}$ represents the Tangent Bundle of the configuration manifold).
 \end{laymansbox}
 
 \section{Generalized Coordinates}
 
-When we model a complex physical system (such as the 15-DOF human golfer in Volume II), we do not track the 3D $(x,y,z)$ position of the golfer's wrist, elbow, and shoulder separately, and then painstakingly write algebraic constraints ensuring their bones don't stretch or compress.
+When we model a complex physical system (such as the 15-DOF human golfer in Volume III), we do not track the 3D $(x,y,z)$ position of the golfer's wrist, elbow, and shoulder separately, and then painstakingly write huge algebraic constraint equations ensuring their bones don't stretch or compress during simulation.
 
-Instead, we use \textbf{Generalized Coordinates}. Since an elbow is a pin joint allowing only 1 DOF of rotation, we abandon $(x,y,z)$ mapping entirely and instead just track the single angle $\theta_\text{elbow}$. If we define the angle of the shoulder $\theta_\text{shoulder}$, and the length of the humerus bone $L_1$, the position of the elbow is instantly known.
+Instead, we use \textbf{Generalized Coordinates}. Since an elbow is a pin joint allowing only 1 DOF of rotation, we abandon $(x,y,z)$ mapping entirely and instead just track the single angle $\theta_\text{elbow}$. If we define the angle of the shoulder $\theta_\text{shoulder}$, and the fixed length of the humerus bone $L_1$, the Cartesian position of the elbow is instantly known.
 
-Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors. 
+Generalized coordinates are the minimal set of independent variables $q_1, q_2, \dots q_n$ that perfectly span the Configuration Space. They are the most mathematically efficient map of the mechanism's geometry. In robotics, $\mathbf{q}$ almost always refers to the physical joint angles of the motors. 
 
 \subsection{Forward Kinematics\index{Kinematics}}
 
-The mathematical function that translates our abstract Generalized Coordinates $\bm{q}$ (the angles in our configuration space) back into the physical 3D Euclidean space of the real world is called \textbf{Forward Kinematics\index{Kinematics}}.
+The mathematical function that translates our abstract Generalized Coordinates $\mathbf{q}$ (the angles in our configuration space) back into the physical 3D Euclidean space of the real world is called \textbf{Forward Kinematics}.
 
-If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics\index{Forward Kinematics} is the nonlinear function $\bm{f}_{kin}$:
+If $\mathbf{p}_{end} = [x, y, z]^T \in \Reals^3$ is the Cartesian workspace position of the end of our robotic arm (or a golf clubhead), Forward Kinematics is the generally nonlinear function $f_{kin}$:
 
 \begin{equation}
-   \bm{p}_{end} = \bm{f}_{kin}(\bm{q})
+   \mathbf{p}_{end} = f_{kin}(\mathbf{q})
 \end{equation}
 
-By using trigonometry, we stack the lengths of the links and the angles of the joints $q$ to find exactly where the end-effector sits in physical space. For a simple 2-link robotic arm rotating on a flat 2D plane (with link lengths $L_1, L_2$ and joint angles $q_1, q_2$):
+By using trigonometry, we stack the lengths of the links and the angles of the joints $\mathbf{q}$ to compute exactly where the end-effector sits in physical space. For a simple 2-link robotic arm rotating on a flat 2D plane (with fixed link lengths $L_1, L_2$ and variable joint angles $q_1, q_2$):
 
 \begin{align}
   x &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) \\
   y &= L_1 \sin(q_1) + L_2 \sin(q_1 + q_2)
 \end{align}
 
-Notice that to know where the physical end of the arm is, we only needed the configuration vector $\bm{q} \in \configspace$. 
+Notice that to know where the physical end of the arm is in the real world, we only needed the configuration vector $\mathbf{q} \in \mathcal{Q}$. The inverse problem---finding the required joint angles to reach a desired target $(x,y)$---is called Inverse Kinematics (IK), and is significantly harder because multiple joint configurations might reach the same physical target (e.g., reaching overhand vs. underhand to grab a cup).
+
+\section{Holonomic vs. Non-Holonomic Constraints}
+
+It is critical to distinguish between constraints that restrict position versus those that restrict velocity.
+\begin{itemize}
+    \item \textbf{Holonomic Constraints:} These restrict the actual \emph{position} of the system (e.g., a train locked to a physical track, or two robot links welded together). They permanently reduce the dimension of the Configuration Space $\mathcal{Q}$. 
+    \item \textbf{Non-Holonomic Constraints:} These restrict the \emph{velocity} of the system, but not its reachable positions. The classic example is a car: a car cannot move perfectly sideways (its velocity $v_y = 0$ in its local frame). However, by parallel parking (going forward, turning, reversing), a car can eventually reach \emph{any} $(X, Y)$ position and orientation on the 2D plane. It has 3 DOF (X, Y, Heading), but only 2 inputs (Gas, Steering). Thus, its Configuration Space is not reduced, but its instantaneous control is severely constrained.
+\end{itemize}
 
 \section{Summary}
 
-When controlling physical motion, you are fundamentally commanding a point to traverse through Configuration Space $\configspace$. 
+When controlling physical motion, you are fundamentally commanding a point to traverse through Configuration Space $\mathcal{Q}$. 
 
-However, mapping $\configspace$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\configspace$ is NOT a simple flat plane. It curves recursively onto itself like a circle or a sphere. 
+However, mapping $\mathcal{Q}$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\mathcal{Q}$ is NOT a simple flat plane. It curves recursively onto itself like a circle or a sphere. 
 
-To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock\index{Gimbal Lock}"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.
+To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock"—we must upgrade from linear vectors and Euler angles to transformation matrices. We must transition to the Special Orthogonal Group $SO(3)$.
