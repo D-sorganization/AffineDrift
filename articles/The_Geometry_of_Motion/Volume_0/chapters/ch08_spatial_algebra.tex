@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 7: Spatial Vector Algebra and Inertia
+%  Chapter 8: Spatial Vector Algebra and Inertia
 % ==========================================================================
 \chapter{Spatial Vector Algebra and Inertia}
 \label{ch:spatial_algebra}
@@ -8,51 +8,54 @@
   Why manage six tiny numbers loosely floating in space when you can forge them into an unbreakable, 6-dimensional spear?
 }{}
 
+\begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
+\textbf{The Math You Will See:} We introduce \textbf{Spatial Vector Algebra}, defining the $6 \times 6$ \textbf{Spatial Cross Product} ($[\mathcal{V} \times]$) and the $6 \times 6$ \textbf{Spatial Inertia Matrix} ($\mathcal{I}$).
+\textbf{Why We Need It:} In classical 3D mechanics, linear motion ($F = ma$) and angular motion ($\tau = I\alpha + \omega \times I\omega$) are computed separately, leading to a tangled web of cross products and messy offsets when bodies are connected together. Spatial Algebra fuses them. A "Spatial Vector" describes pushing and turning simultaneously. By doing math in $6D$, the complex gyroscopic and Coriolis forces of a multi-joint robot swinging through space are resolved with a single matrix multiplication.
+\textbf{All Variables Defined:} $\mathcal{V}$ is a spatial velocity (Twist), $\mathcal{F}$ is a spatial force (Wrench), and $\mathcal{I}$ is the combined 6D mass/inertia tensor.
+\end{laymansbox}
+
 \section{Featherstone's Spatial Algebra}
 
-In Chapters 3 and 4, we unified translation and rotation into 6-dimensional Twists ($\twist$) and Wrenches ($\wrench$). While the geometry of the Screw Axis\index{Screw Axis} inherently links them, operating on these 6-dimensional vectors using standard 3D linear algebra creates a bloated, confusing mess of cross products and offsets.
+In Chapters 4 and 5, we unified 3D translation and rotation into 6-dimensional Twists ($\mathcal{V} \in \se$) and Wrenches ($\mathcal{F} \in \se^*$). While the geometry of the Screw Axis inherently links them, operating on these 6-dimensional vectors using standard 3D linear algebra creates a bloated, confusing mess of cross products, lever arms, and parallel-axis theorems.
 
-To fix this, Roy Featherstone formalized \textbf{Spatial Vector Algebra}. Rather than writing Newton's equations as two separate 3D systems (one for $F = ma$ and one for $\tau = I\alpha + \omega \times I\omega$), Spatial Algebra unifies them into a single, breathtakingly elegant 6D format.
-
-\begin{laymansbox}{The Spatial Paradigm}{featherstone_intuition}
-  In 3D mechanics, linear motion ($v$) and angular motion ($\omega$) behave differently. In Spatial Algebra, they are fused. A "Spatial Vector" does not simply have a direction and a magnitude; it fundamentally exists as a line floating in the universe with a pitch. When math is done in this space, the separation between "turning" and "pushing" disappears completely.
-\end{laymansbox}
+To fix this, Roy Featherstone formalized \textbf{Spatial Vector Algebra}. Rather than writing Newton's equations as two separate 3D systems (one for linear, one for rotational), Spatial Algebra unifies them into a single, breathtakingly elegant 6D format.
 
 \section{The Spatial Cross Product}
 
-In classical 3D mechanics, the cross product $a \times b$ finds a perpendicular vector. In 6D Spatial Algebra, because Twists ($\twist$) and Wrenches ($\wrench$) transform differently under coordinate frame shifts, there are actually \textit{two} spatial cross products: one for motion vectors (like velocity) and one for force vectors.
+In classical 3D mechanics, the cross product $\mathbf{a} \times \mathbf{b}$ finds a perpendicular vector. In 6D Spatial Algebra, because Twists ($\mathcal{V}$) and Wrenches ($\mathcal{F}$) transform differently under coordinate frame shifts, there are actually \textit{two} spatial cross products: one for motion vectors (like velocity) and one for force vectors.
 
-The spatial cross product for motion ($\times$) is defined as a $6 \times 6$ matrix operator. If a frame has an angular velocity $\omega$ and linear velocity $v$, its Spatial Motion Cross operator $[\twist \times]$ is:
-
-\begin{equation}
-   [\twist \times] = \begin{bmatrix} [\omega] & 0 \\ [v] & [\omega] \end{bmatrix} \in \Reals^{6 \times 6}
-\end{equation}
-where $[\omega]$ and $[v]$ are the standard $3 \times 3$ skew-symmetric matrices.
-
-The spatial force cross product ($\times^*$) is simply the negative transpose of the motion operator:
-\begin{equation}
-   [\twist \times^*] = -[\twist \times]^T = \begin{bmatrix} [\omega] & [v] \\ 0 & [\omega] \end{bmatrix}
-\end{equation}
-
-By keeping forces and motions in their respective dual spaces, calculating the Coriolis forces tearing at the joints of a swinging golf club requires only a single line of 6D matrix multiplication rather than pages of complex calculus.
-
-\section{The Spatial Inertia Matrix}
-
-Just as mass $m$ resists linear acceleration, and a $3 \times 3$ inertia tensor $I$ resists angular acceleration, standard 6D Spatial Algebra unifies them into a single $6 \times 6$ \textbf{Spatial Inertia Matrix} $I_s$.
-
-For a rigid body with mass $m$, a center of mass located at vector $\bm{c}$, and a $3 \times 3$ rotational inertia tensor $I_c$ about that center of mass, the total Spatial Inertia Matrix $I_s$ about the origin of the frame is:
+The spatial cross product for motion ($\times$) is defined as a $6 \times 6$ matrix operator. If a frame has a spatial velocity Twist $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, its Spatial Motion Cross operator $[\mathcal{V} \times]$ is:
 
 \begin{equation}
-  I_s = \begin{bmatrix} I_c + m[\bm{c}][\bm{c}]^T & m[\bm{c}] \\ m[\bm{c}]^T & m \mathbf{1}_{3 \times 3} \end{bmatrix} \in \Reals^{6 \times 6}
+   [\mathcal{V} \times] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{0} \ [\mathbf{v}] & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
+\end{equation}
+where $[\boldsymbol{\omega}]$ and $[\mathbf{v}]$ are the standard $3 \times 3$ skew-symmetric matrices.
+
+The spatial cross product for forces ($\times^*$), which acts on Wrenches, is simply the negative transpose of the motion operator:
+\begin{equation}
+   [\mathcal{V} \times^*] = -[\mathcal{V} \times]^T = \begin{bmatrix} [\boldsymbol{\omega}] & [\mathbf{v}] \ \mathbf{0} & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
 \end{equation}
 
-This single matrix fundamentally dictates how hard it is to alter the trajectory of a physical object crossing through any dimensional axis.
+By keeping forces and motions in their respective dual spaces, calculating the complex Coriolis and centrifugal forces tearing at the joints of a swinging robot arm requires only a single line of 6D matrix multiplication ($\mathcal{V} \times^* \mathcal{I}\mathcal{V}$), entirely eliminating pages of complex calculus.
+
+\section{The Spatial Inertia Matrix ($\mathcal{I}$)}
+
+Just as scalar mass $m$ resists linear acceleration, and a $3 \times 3$ inertia tensor $\mathbf{I}_c$ resists angular acceleration, Spatial Algebra unifies them into a single $6 \times 6$ \textbf{Spatial Inertia Matrix} $\mathcal{I}$.
+
+For a rigid body with mass $m$, a vector $\mathbf{c}$ pointing from the origin to its center of mass, and a $3 \times 3$ rotational inertia tensor $\mathbf{I}_c$ about that center of mass, the total Spatial Inertia Matrix $\mathcal{I}$ expressed at the frame's origin is:
+
+\begin{equation}
+  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}] & m[\mathbf{c}] \ -m[\mathbf{c}] & m \mathbf{1}_{3 \times 3} \end{bmatrix} \in \Reals^{6 \times 6}
+\end{equation}
+(Note: $-[\mathbf{c}][\mathbf{c}] = [\mathbf{c}][\mathbf{c}]^T$).
+
+This single symmetric, positive-definite matrix fundamentally dictates how hard it is to alter the trajectory of a physical object moving through any dimensional axis.
 
 \section{Worked Example: Spatial Inertia of a Cylinder}
 
-Let us build a computational example verifying these principles. In robot design, human body modeling (like the 15-DOF golfer), or physics engines (MuJoCo), we must frequently construct $6 \times 6$ inertia tensors from basic geometric primitive shapes. 
+Let us build a computational example verifying these principles. In robot design or human biomechanics modeling, we must frequently construct $6 \times 6$ inertia tensors from basic geometric primitive shapes. 
 
-Here is the python code required to compute the Spatial Inertia Matrix for a solid cylinder (such as a robotic forearm or a humerus bone) of mass $m$, radius $r$, and length $L$, whose center of mass is shifted along the Z-axis by a distance $d$.
+Here is the Python code required to compute the Spatial Inertia Matrix for a solid cylinder (such as a robotic forearm) of mass $m$, radius $r$, and length $L$, whose center of mass is shifted along the Z-axis by a distance $d$.
 
 \begin{lstlisting}[language=Python, caption=Computing 6D Spatial Inertia for a Cylinder]
 import numpy as np
@@ -79,14 +82,12 @@ def cylinder_spatial_inertia(m, r, L, d):
     # 3. Assemble the 6x6 Spatial Inertia Matrix
     I_s = np.zeros((6, 6))
     
-    # Top Left: I_c + m * [c][c]^T (Parallel Axis Theorem)
-    I_s[0:3, 0:3] = I_c + m * (c_skew @ np.transpose(c_skew))
+    # Top Left: I_c - m * [c][c] (Parallel Axis Theorem)
+    I_s[0:3, 0:3] = I_c - m * (c_skew @ c_skew)
     
-    # Top Right: m * [c]
+    # Top Right / Bottom Left: m * [c]
     I_s[0:3, 3:6] = m * c_skew
-    
-    # Bottom Left: m * [c]^T
-    I_s[3:6, 0:3] = m * np.transpose(c_skew)
+    I_s[3:6, 0:3] = -m * c_skew
     
     # Bottom Right: m * Identity
     I_s[3:6, 3:6] = m * np.eye(3)

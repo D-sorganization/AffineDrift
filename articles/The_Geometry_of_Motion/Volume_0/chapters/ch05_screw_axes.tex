@@ -8,7 +8,7 @@
   Chasles' Theorem mathematically ensures that all motion of a rigid body in the universe, no matter how chaotic, is equivalent to spinning a screw on a single perfect axis.
 }{}
 
-\begin{laymansbox}[Context \& Use Case: Unifying Translation and Rotation]
+\begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
 \textbf{The Math You Will See:} We will merge 3D translation vectors ($\mathbf{p}$) and $3 \times 3$ rotation matrices ($\mathbf{R}$) together into a massive $4 \times 4$ \textbf{Homogeneous Transformation Matrix} ($\mathbf{T}$). Furthermore, we will combine linear and angular velocities into a 6D \textbf{Twist} ($\mathcal{V}$), and linear forces and torques into a 6D \textbf{Wrench} ($\mathcal{F}$). 
 \textbf{Why We Need It:} In code, doing math on rotation and translation separately is messy, prone to bugs, and algebraically slow. If we pack everything into $4 \times 4$ matrices and 6D vectors, the equations for moving a robot arm, calculating gravity, and applying motor torques all collapse down into elegant, single-line matrix multiplications. This is exactly how industrial physics engines (like MuJoCo and Drake) do their internal calculations!
 \textbf{All Variables Defined:} $\mathbf{T} \in SE(3)$ describes a full pose, $\mathcal{V} \in \Reals^6$ describes 6D spatial velocity, and $\mathcal{F} \in \Reals^6$ describes 6D spatial force. See the \textbf{Nomenclature} at the start of the book.

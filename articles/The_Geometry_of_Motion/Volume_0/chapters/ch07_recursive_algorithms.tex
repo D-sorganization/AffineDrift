@@ -8,7 +8,7 @@
   You do not solve the equations of motion for a 15-DOF robot in a single monolithic formula. You walk from the base to the tip, and then from the tip back to the base.
 }{}
 
-\begin{laymansbox}[Context \& Use Case: Beating the Math Explosion]
+\begin{laymansbox}{Context \& Use Case: Beating the Math Explosion}{context_box}
 \textbf{The Math You Will See:} We will introduce the \textbf{Adjoint Matrix} ($[\text{Ad}_{\mathbf{T}}]$), the \textbf{Spatial Inertia Matrix} ($\mathcal{I}$), and the two-pass \textbf{Recursive Newton-Euler Algorithm (RNEA)}.
 \textbf{Why We Need It:} If you try to write down the exact algebra connecting the shoulder motor of a robot to the tip of its finger, the equation takes up a whole page. If you try to write the equation for a 15-joint humanoid robot, the trigonometric math expands to fill \emph{tens of thousands} of pages of dense algebra. No computer can solve that in real-time. Instead, we use "Recursive Algorithms" that only ever look at two bones at a time. By chaining these tiny, fast calculations together sequentially, we can simulate complex physics at 1,000 frames per second.
 \textbf{All Variables Defined:} $\mathcal{V}_i$ is the velocity of link $i$, $\mathcal{F}_i$ is the force on link $i$, and $\mathbf{T}_{i, i-1}$ is the relative pose between them.

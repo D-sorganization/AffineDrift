@@ -8,23 +8,29 @@
   Why break a machine apart into agonizing lists of individual pulling and pushing forces when you can extract its exact motion by simply observing where its energy wants to go?
 }{}
 
+\begin{laymansbox}{Context \& Use Case: Energy-Based Dynamics}{context_box}
+\textbf{The Math You Will See:} We will define the \textbf{Lagrangian} ($\mathcal{L}$) and the \textbf{Euler-Lagrange Equations}. We will derive the classic standard form: $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$.
+\textbf{Why We Need It:} The Recursive Newton-Euler Algorithm (Chapter 7) is unmatched for fast computer simulations. However, when we need to mathematically \emph{prove} that a robot won't fall over, or design an optimal control law like LQR or Contraction Metrics, we need explicit equations. Lagrangian mechanics abandons vectors and forces entirely. It looks purely at the kinetic and potential \textit{energy} of the system, gracefully ignoring invisible internal constraint forces (like the tension in a rigid arm) to instantly yield elegant, closed-form equations of motion.
+\textbf{All Variables Defined:} $T$ is Kinetic Energy, $V$ is Potential Energy, and $\mathcal{L} = T - V$.
+\end{laymansbox}
+
 \section{The Limitations of Newton}
 
-In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler\index{Newton-Euler Equations} algorithm in Chapter 10), motion is determined by explicit forces: $\sum F = ma$.
+In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in Chapter 7), motion is determined by analyzing explicit spatial forces: $\sum \mathbf{F} = m\mathbf{a}$.
 
-While Newton's equations are spectacular for computational algorithms evaluating rigid bodies link-by-link, they suffer from a fatal flaw when deriving mathematical models by hand: \textbf{Constraint Forces}.
+While Newton's equations are spectacular for computational algorithms evaluating rigid bodies link-by-link in a physics engine, they suffer from a fatal flaw when deriving mathematical models by hand: \textbf{Constraint Forces}.
 
-If a bead slides down a curved wire, or a pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing.
+If a bead slides along a curved wire, or a heavy pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing and analytically useless for control theory.
 
 \section{The Principle of Least Action}
 
 Joseph-Louis Lagrange bypassed forces entirely. His formulation relies on a profound truth about the universe known as the \textbf{Principle of Least Action}.
 
-Nature minimizes effort. If a ball rolls down a hill, it fundamentally seeks the path that minimizes the difference between its active, moving energy (Kinetic) and its stored, resting energy (Potential) over time.
+Nature minimizes effort. If a ball rolls down a hill, it fundamentally seeks the path that minimizes the action integral, elegantly balancing its active, moving energy (Kinetic) and its stored, resting energy (Potential) over time.
 
 \begin{laymansbox}{Kinetic vs. Potential Energy}{energy_intuition}
   \textbf{Kinetic Energy} ($T$) is the energy of motion. If you are moving fast, $T$ is high. 
-  $$ T = \frac{1}{2}mv^2 \quad (\text{or for rotational: } \frac{1}{2}\omega^T I \omega) $$
+  $$ T = \frac{1}{2}mv^2 \quad (\text{or for rotational: } \frac{1}{2}\boldsymbol{\omega}^T \mathbf{I} \boldsymbol{\omega}) $$
   
   \textbf{Potential Energy} ($V$) is stored energy. If you are high up on a cliff, gravity's potential $V$ to pull you down is high. 
   $$ V = mgh $$
@@ -32,48 +38,48 @@ Nature minimizes effort. If a ball rolls down a hill, it fundamentally seeks the
 
 \section{The Lagrangian ($\mathcal{L}$) and the Euler-Lagrange\index{Euler-Lagrange Equations} Equations}
 
-Lagrange defined a single, massive scalar function—the **Lagrangian** ($\mathcal{L}$)—which is simply the total Kinetic Energy of the entire system minus its total Potential Energy:
+Lagrange defined a single, massive scalar function—the \textbf{Lagrangian} ($\mathcal{L}$)—which is simply the total Kinetic Energy of the entire system minus its total Potential Energy:
 \begin{equation}
-   \mathcal{L}(\bm{q}, \dot{\bm{q}}) = T(\bm{q}, \dot{\bm{q}}) - V(\bm{q})
+   \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}) = T(\mathbf{q}, \dot{\mathbf{q}}) - V(\mathbf{q})
 \end{equation}
 
-Where $\bm{q}$ are the generalized coordinates (the motor angles) we defined back in Chapter 3.
+Where $\mathbf{q}$ are the generalized coordinates (the minimal independent variables, like motor angles) we defined back in Chapter 3.
 
-Because the Lagrangian is built on generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension.
+Because the Lagrangian is built on minimal generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension because it has no degree of freedom $\mathbf{q}$ to map it.
 
-To extract the exact Newtonian equations of motion from this single scalar function $\mathcal{L}$, we pass it through the magnificent \textbf{Euler-Lagrange\index{Euler-Lagrange Equations} Equation}:
+To extract the exact Newtonian equations of motion from this single scalar functional $\mathcal{L}$, we pass it through the magnificent \textbf{Euler-Lagrange\index{Euler-Lagrange Equations} Equation}:
 \begin{equation}
    \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
 \end{equation}
 
-For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be applied by the motor!
+For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be actively applied by the motor!
 
 \section{Deriving the Standard Form}
 
-When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q})\dot{\bm{q}}$ of a deeply connected robotic chain, the calculus organically unpacks into three vastly distinct physical phenomena that constitute the standard equation of motion:
+When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$ of a deeply connected robotic chain, the calculus organically unpacks into three vastly distinct physical phenomena that constitute the standard equation of motion:
 
 \begin{equation}
-   M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \frac{\partial V}{\partial \bm{q}} = \bm{\tau}
+   \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}
 \end{equation}
 
-\subsection{1. The Mass Matrix}
-The strict mass/inertia of the configuration $M(\bm{q})$. This is exactly what the Articulated Body Algorithm\index{Articulated Body Algorithm} avoids inverting.
+\subsection{1. The Mass Matrix ($\mathbf{M}(\mathbf{q})$)}
+The strict mass/inertia of the configuration $\mathbf{M}(\mathbf{q})$. This symmetric, positive-definite matrix dictates the instantaneous resistance to acceleration. This is exactly what the Articulated Body Algorithm avoids inverting in real-time.
 
-\subsection{2. The Coriolis and Centripetal Matrix}
-This matrix $C(\bm{q}, \dot{\bm{q}})$ naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating.
+\subsection{2. The Coriolis and Centripetal Matrix ($\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$)}
+This matrix naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating internally.
 \begin{itemize}
     \item \textbf{Centripetal Forces:} Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
     \item \textbf{Coriolis Forces:} Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
 \end{itemize}
 
-\subsection{3. The Gravity Vector}
-The spatial derivative of the Potential Energy naturally yields the exact vector of gravitational torques $\frac{\partial V}{\partial \bm{q}}$ dragging down on every single joint. It is often written cleanly as $G(\bm{q})$.
+\subsection{3. The Gravity Vector ($\mathbf{G}(\mathbf{q})$)}
+The spatial derivative of the Potential Energy exactly yields the vector of gravitational torques $\frac{\partial V}{\partial \mathbf{q}}$ dragging down on every single joint. It is written cleanly as $\mathbf{G}(\mathbf{q})$.
 
 \section{Why Both Formulations Exist}
 
-In *The Geometry of Motion*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler\index{Newton-Euler Equations} used routinely, depending on the computational goal.
+In \textit{The Geometry of Motion}, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely, depending on the exact computational goal.
 
 \begin{itemize}
-    \item We use \textbf{Euler-Lagrange} when we are analytically designing the control law (such as Contraction\index{Contraction Analysis} Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
-    \item We use \textbf{Recursive Newton-Euler} when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{\bm{q}}, \bm{q})$ matrix algebraically.
+    \item We use \textbf{Euler-Lagrange} when we are analytically designing the control law (such as Contraction Metrics or LQR in Volume I). The elegant $\mathbf{M}, \mathbf{C}, \mathbf{G}$ matrices allow us to explicitly cancel gravity conceptually (Feedback Linearization) or prove mathematical stability via Lyapunov functions.
+    \item We use \textbf{Recursive Newton-Euler} when code is executing rapidly inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using $O(N)$ Newton-Euler tracking than unpacking the massive $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$ matrix algebraically.
 \end{itemize}
