@@ -16,6 +16,7 @@ from typing import Any
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
+from matplotlib.figure import Figure
 
 from src.core.contracts import require
 
@@ -254,7 +255,7 @@ def _create_plot_figure(
     params: dict[str, Any],
     t: np.ndarray,  # type: ignore[type-arg]
     input_torque: np.ndarray,  # type: ignore[type-arg]
-) -> plt.Figure:
+) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 
     Args:
@@ -268,7 +269,7 @@ def _create_plot_figure(
     plot_type = params["plot_type"]
 
     if plot_type == "Torque":
-        return plot_torque(
+        return plot_torque(  # type: ignore[no-any-return]
             t,
             input_torque,
             params["grip_angle"],
@@ -281,7 +282,7 @@ def _create_plot_figure(
             params["show_gamma"],
         )
     if plot_type == "Angular Acceleration":
-        return plot_acceleration(
+        return plot_acceleration(  # type: ignore[no-any-return]
             t,
             input_torque,
             params["grip_angle"],
@@ -292,7 +293,7 @@ def _create_plot_figure(
             params["show_gamma"],
         )
     # Transmission Ratio
-    return plot_transmission_sweep(
+    return plot_transmission_sweep(  # type: ignore[no-any-return]
         params["grip_angle"],
         params["wrist_angle"],
         params["I_alpha"],

@@ -163,7 +163,7 @@ def _compute_adaptive_timesteps(
 
     # dt = sqrt( 2 * eps / (M * delta_x^2) )
     dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
-    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)
+    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
 
 
 def _simulate_trajectory(
