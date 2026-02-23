@@ -472,8 +472,8 @@ class SwingOptimizer:
 
         # If no improvement was ever made, use initial trajectory
         if best_x_traj is None or best_u_traj is None:
-            best_x_traj = x_traj  # type: ignore[possibly-undefined]
-            best_u_traj = u_traj  # type: ignore[possibly-undefined]
+            best_x_traj = x_traj
+            best_u_traj = u_traj
 
         # Extract final velocity (norm of velocity portion of terminal state)
         final_state = best_x_traj[-1]

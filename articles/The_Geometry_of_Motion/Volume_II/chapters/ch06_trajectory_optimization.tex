@@ -1,0 +1,161 @@
+\chapter{Trajectory Optimization}
+\label{ch:trajectory_optimization}
+
+\epigraph{%
+  We do not merely seek a path that obeys the laws of physics.\\
+  We seek the path that bends them to our advantage.
+}{}
+
+\vspace{0.5cm}
+
+\begin{laymansbox}{Discovering the Best Motion}{discovering_motion}
+How does an athlete instinctively know exactly how to move their arms to swing a bat as fast as possible? Up until now, we've talked about how to follow a path, but where does the path come from? This chapter is about how computers can simulate and "discover" these optimal paths. By giving the computer a goal—like "maximize the speed of the clubhead exactly when it hits the ball"—it can test thousands of different ways to swing, constrained by the laws of physics, until it discovers the perfect motion. You don't have to tell it how to swing; you just tell it what the goal is, and the math figures out the rest.
+\end{laymansbox}
+
+% ══════════════════════════════════════════════
+\section{The Moving Target Problem}
+% ══════════════════════════════════════════════
+
+In Chapter 1, we fundamentally reframed our control objective from "reaching a destination" to "tracking a trajectory." Up to this point, we have assumed that this optimal reference trajectory $\traj^*(t)$ is given to us by an oracle. This chapter answers the obvious next question: \emph{Where does this reference come from?}
+
+For systems whose purpose is to move---like our running example of the golf swing---the optimal trajectory is not arbitrary. We are not just trying to go from point A to point B while minimizing energy. We are trying to fulfill what we term the \textbf{Moving Target Objective}: optimizing the kinematics (velocity, pose, acceleration) of a system precisely at the moment it intersects a target manifold (e.g., the golf ball). 
+
+Crucially, \emph{the exact clock time that impact occurs does not matter}. A golfer has the freedom to start their backswing slowly and pause at the top. The optimization is entirely concerned with the \emph{shape} of the motion and its terminal kinematics. Time is a resource, not a constraint.
+
+\begin{definition}{The Moving Target Optimal Control Problem (OCP)}{moving_target_ocp}
+  Find the state trajectory $\state(t)$, control input $\control(t)$, and terminal time $t_f$ that minimize the cost functional:
+  \begin{equation}\label{eq:ocp_cost}
+    J = \phi(\state(t_f)) + \int_0^{t_f} L(\state(t), \control(t)) \dt
+  \end{equation}
+  subject to the dynamics and constraints:
+  \begin{align}
+    \dot{\state}(t) &= \bm{f}(\state(t), \control(t)) \qquad &\text{(Dynamics)}\\
+    \bm{h}(\state(t), \control(t)) &\leq \bm{0} \qquad &\text{(Path constraints)}\\
+    \psi(\state(t_f)) &= \bm{0} \qquad &\text{(Terminal manifold/Moving goal)}\\
+    \state(0) &= \state_0 \qquad &\text{(Initial state)}
+  \end{align}
+\end{definition}
+
+In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative clubhead speed (to maximize speed), the integral cost $L$ might penalize excessive joint torques to ensure repeatability, and the terminal manifold constraint $\psi(\state(t_f)) = \bm{0}$ forces the clubhead to be geometrically located at the ball with a squared face. Notice that $t_f$ is a \emph{free parameter} in the optimization.
+
+% ══════════════════════════════════════════════
+\section{Transcribing the Continuous Problem}
+% ══════════════════════════════════════════════
+
+The OCP described above occurs in infinite-dimensional function space. To solve it on a computer, we must transcribe it into a finite-dimensional Nonlinear Programming problem (NLP):
+\begin{align*}
+  \min_{\bm{w}} \quad & f(\bm{w}) \\
+  \text{subject to} \quad & \bm{c}(\bm{w}) \leq \bm{0},
+\end{align*}
+where $\bm{w}$ is a large vector of decision variables. How we discretize the integrals and differential equations defines the transcription method. We will focus on two modern approaches: \textbf{Direct Shooting} and \textbf{Direct Collocation}.
+
+\subsection{Direct Multi-Shooting}
+
+In direct multi-shooting, we break the time interval $[0, t_f]$ into $N$ segments. The decision variables are the control parameters $\control_k$ on each interval and the state values $\state_k$ at the beginning of each interval.
+
+The dynamic constraint $\dot{\state} = \bm{f}(\state, \control)$ is enforced by numerical integration (e.g., Runge-Kutta). We require that the integrated state at the end of interval $k$ exactly matches the assumed starting state of interval $k+1$:
+\begin{equation}
+  \state_{k+1} - \bm{\Phi}(\state_k, \control_k, \Delta t) = \bm{0} \qquad \text{(Defect constraint)}
+\end{equation}
+where $\bm{\Phi}$ represents the numerical integrator step. Multi-shooting is excellent for highly nonlinear dynamics because it keeps the integration intervals short, preventing the massive nonlinear sensitivities that plague single-shooting methods.
+
+\subsection{Direct Collocation}
+
+Direct Collocation takes this a step further. We represent both the state trajectory and the control signal as piecewise polynomials (e.g., cubic splines for state, linear splines for control). The decision variables are the coefficients of these polynomials, typically located at discrete \textbf{collocation points}.
+
+Instead of using a numerical integrator, we enforce the differential equation algebraicaly at the collocation points:
+\begin{equation}
+  \dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
+\end{equation}
+where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations. 
+
+\begin{keyidea}{Fidelity vs. Flexibility}{collocation_vs_shooting}
+  Direct collocation results in a massive, highly sparse NLP. Because the solver has access to the state at every grid point simultaneously, it can easily manipulate the physical trajectory to satisfy difficult path constraints without waiting to "simulate" the result. Collocation is widely considered the state-of-the-art for generating complex dynamic motions like walking, jumping, and swinging.
+\end{keyidea}
+
+% ══════════════════════════════════════════════
+\section{Optimizing Underactuated Geometries}
+% ══════════════════════════════════════════════
+
+Recall from Chapter 5 that the underactuated dynamics enforce a strict algebraic constraint on the system:
+\begin{equation}
+  \Bmat^\perp(\state) \Bigl[ \Mmat(\state)\ddot{\state} + \Cmat(\state, \dot{\state})\dot{\state} + \gvec(\state) \Bigr] = \bm{0}.
+\end{equation}
+
+When optimizing for a golf swing, direct collocation handles this underactuation organically. We do not need to explicitly partition the variables into actuated and unactuated sets for the solver. The collocation constraint $\dot{\state} - \bm{f} = \bm{0}$ already implicitly contains the passive dynamic constraints. 
+
+\begin{example}{The Golf Swing OCP}{golf_ocp}
+  Consider our planar double pendulum model from Chapter 5. The solver is given the task to maximize $\dot{\theta}_2(t_f)$ (club speed). 
+  
+  \textbf{Initial Guess:} If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
+  
+  \textbf{The Optimized Result:} The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematicaly "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{Repeatability: The Stochastic OCP}
+% ══════════════════════════════════════════════
+
+The previous sections frame a deterministic problem: "Find the swing that maximizes terminal speed."
+
+But as we argued in Chapter 1, biological systems and athletes do not optimize for peak deterministic performance. If you instruct an NLP solver to maximize golf club speed without regard for motor noise, the solver will ride the very edge of the constraint boundaries. It will produce a swing so delicately timed that a 5-millisecond execution error would result in a complete whiff.
+
+\begin{principle}{The Repeatability Addendum}{repeatability_OCP}
+  The theoretically optimal trajectory is useless if its local topology amplifies small execution errors into catastrophic terminal misses. The true objective must account for \emph{variance}.
+\end{principle}
+
+We modify our deterministic cost $J = \phi(\state(t_f)) + \int L$ into a stochastic expectation:
+\begin{equation}
+  \min_{\traj^*} \quad \mathbb{E}\left[ \phi(\state(t_f, \bm{w})) \right] + \lambda \cdot \mathrm{Var}\left[ \psi(\state(t_f, \bm{w})) \right]
+\end{equation}
+where $\bm{w} \sim \mathcal{N}(0, \Sigma_w)$ represents signal-dependent motor noise (a known property of human muscle actuation, where noise scales proportionally to the applied torque).
+
+To solve this in a collocation framework without massive Monte Carlo simulations, we use \textbf{Covariance Steering} or \textbf{Linear Covariance Analysis}. We augment the state vector $\state(t)$ with its local covariance matrix $\bm{\Sigma}(t)$. The dynamics of $\bm{\Sigma}(t)$ are propagated alongside the nominal trajectory using the linearized Jacobian matrices along the path. 
+
+The optimizer is now forced to "widen the funnel" as it approaches the moving goal. It sacrifices a small amount of peak clubhead speed to select a trajectory geometry where the passive dynamics are heavily stabilizing in the transverse direction. The result is a trajectory that a human can actually \emph{repeat}.
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{8.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Significance} \\
+  \midrule
+  Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
+  Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
+  Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
+  Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
+  Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+Determining the shape of the reference trajectory is the cornerstone of Control Is Motion. With our passive geometry understood (Chap 5) and our optimal reference trajectory computed (Chap 6), we must now surround that reference trajectory with a guaranteed, robust control tube to reject disturbances online. We turn to Funnel Synthesis in Chapter 7.
+
+% ══════════════════════════════════════════════
+\section{Exercises}
+% ══════════════════════════════════════════════
+
+\begin{enumerate}[label=\textbf{6.\arabic*.}, leftmargin=1.5cm]
+
+\item \textbf{(Free Terminal Time Formulation.)} Explain how one sets up an OCP where final time $t_f$ is a decision variable in a fixed-grid Direct Collocation solver. (Hint: consider scaling time $t = \tau \cdot t_f$, where $\tau \in [0, 1]$). Show how the dynamic constraint $\dot{\state} = \bm{f}$ changes under this substitution.
+
+\item \textbf{(Kinematic Goals vs Setpoints.)} You are optimizing a baseball bat swing. Your state is $(\theta, \dot{\theta})$. Assume the ball arrives at the plate between $t=0.5$ and $t=0.6$ seconds. Formulate the path constraint and the terminal manifold constraint $\psi$ assuming you want maximum $\dot{\theta}$ when $\theta = \pi/2$, but the exact time of impact within that window does not matter.
+
+\item \textbf{(Signal-Dependent Noise Penalty.)} Human muscle torque output $\tau$ has variance $\sigma^2 = k |\tau|^2$. Write a modified integral cost function $L(\state, \tau)$ that penalizes the introduction of variance into the system. Interpret what this does to the optimal trajectory shape.
+
+\end{enumerate}
+
+\vspace{1cm}
+\begin{center}
+  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
+  {\small\itshape
+  The perfect motion is rarely the fastest.\\
+  It is the one that survives reality.}
+\end{center}
+

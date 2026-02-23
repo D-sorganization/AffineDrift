@@ -1,0 +1,904 @@
+\chapter{Configuration Manifolds}
+\label{ch:configuration_manifolds}
+
+\epigraph{%
+  The map is not the territory. The coordinate chart is not the manifold.
+  Every time you write $\theta$ for an angle, you are lying---just a little.
+}{}
+
+\vspace{0.5cm}
+
+\begin{laymansbox}{Angles Are Not Numbers}{angles_not_numbers}
+When we measure the position of a car on a straight road, we use a regular number: 0 miles, 1 mile, 2 miles, stretching on forever. But think about a spinning wheel or a robotic joint. If you rotate it by 360 degrees, it ends up in the exact same physical position as 0 degrees. Regular numbers don't work like this ($0 \neq 360$). If we force angles to act like regular numbers, our math gets tangled up in "singularities" or sudden jumps, confusing the control system. To fix this, we have to admit that the space of possible rotations is more like the surface of a sphere or a donut than a flat sheet of paper. This chapter explores how to do math on these curved spaces, known as "manifolds."
+\end{laymansbox}
+
+% ══════════════════════════════════════════════
+\section{The Lie That Coordinates Tell}
+% ══════════════════════════════════════════════
+
+In Chapter~2 we developed the geometry of curves in $\Reals^n$. This was a
+necessary starting point, but it was also a simplification. The state spaces
+of real mechanical systems are \emph{not} $\Reals^n$.
+
+Consider the simplest possible rotating joint: a hinge. Its configuration is
+an angle $\theta$, which we habitually write as a real number. But an angle
+is not a real number. The configuration $\theta = 0$ and the configuration
+$\theta = 2\pi$ are \emph{the same physical state}. No point in $\Reals$
+has this property. The true configuration space of a hinge is the
+\emph{circle} $\Sone$---a one-dimensional manifold that is locally like
+$\Reals$ but globally has a completely different topology.
+
+This is not pedantry. It is the source of real engineering failures.
+
+\begin{warning}{The Gimbal Lock Catastrophe}{gimbal_lock}
+  If we represent orientation using three Euler angles
+  $(\phi, \theta, \psi) \in \Reals^3$, we encounter \textbf{gimbal lock}:
+  configurations where the representation degenerates and loses a degree of
+  freedom. At $\theta = \pm\pi/2$, the axes for $\phi$ and $\psi$ align,
+  making the system appear to have only 2~DOF when it actually has~3.
+
+  This is not a hardware problem---it is a \emph{coordinate singularity},
+  an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
+  coordinates ($\Reals^3$). Apollo~13's inertial measurement unit
+  experienced gimbal lock operationally. Every modern spacecraft avoids
+  Euler angles for precisely this reason.
+
+  The lesson for control: \textbf{if you use the wrong coordinates, your
+  controller will have singularities that the physical system does not.}
+\end{warning}
+
+\begin{keyidea}{The Manifold Imperative}{manifold_imperative}
+  The configuration space of a mechanical system is a \emph{smooth manifold}
+  $\configspace$---a space that is locally like $\Reals^n$ but may have
+  nontrivial global topology. Control theory built on $\Reals^n$ must be
+  replaced by control theory built on $\configspace$ whenever:
+  \begin{enumerate}[label=(\roman*)]
+    \item Joints allow full rotation (wrapping around $\Sone$ or $\SOthree$).
+    \item The trajectory traverses a significant fraction of the configuration space.
+    \item Singularity-free representation is required for robustness.
+  \end{enumerate}
+  For the golf swing---which involves large rotations in multiple joints
+  simultaneously---all three conditions are met.
+\end{keyidea}
+
+% ══════════════════════════════════════════════
+\section{Smooth Manifolds: The Minimum You Need}
+% ══════════════════════════════════════════════
+
+We develop only as much manifold theory as the control engineer needs. The
+reader seeking a comprehensive treatment should consult Lee~(2012) or
+Abraham \& Marsden~(1978).
+
+\begin{definition}{Smooth Manifold}{manifold}
+  A \textbf{smooth manifold} $\manifold$ of dimension $n$ is a set together
+  with a collection of \textbf{coordinate charts}
+  $\{(U_\alpha, \varphi_\alpha)\}$ such that:
+  \begin{enumerate}[label=(\roman*)]
+    \item Each $U_\alpha \subseteq \manifold$ is an open set, and the
+      $U_\alpha$ cover $\manifold$.
+    \item Each $\varphi_\alpha: U_\alpha \to \Reals^n$ is a homeomorphism
+      onto an open subset of $\Reals^n$.
+    \item Where two charts overlap, the \textbf{transition maps}
+      $\varphi_\beta \circ \varphi_\alpha^{-1}$ are smooth
+      ($C^\infty$) functions from $\Reals^n$ to $\Reals^n$.
+  \end{enumerate}
+\end{definition}
+
+The key intuition is: a manifold is a space where you can \emph{locally} use
+coordinates, but no single coordinate system works \emph{globally}. You need
+an atlas of overlapping charts, like a road atlas needs multiple pages to cover
+a country.
+
+\begin{example}{The Circle $\Sone$}{circle_manifold}
+  The circle $\Sone = \{(\cos\theta, \sin\theta) : \theta \in \Reals\}$ is a
+  1-dimensional manifold. It cannot be covered by a single coordinate chart:
+  any angle parameterization $\theta \in [0, 2\pi)$ has a discontinuity
+  at $\theta = 0 = 2\pi$. We need at least two charts:
+  \begin{align}
+    U_1 &= \Sone \setminus \{(-1, 0)\}, &
+    \varphi_1(p) &= \theta \in (-\pi, \pi), \\
+    U_2 &= \Sone \setminus \{(1, 0)\}, &
+    \varphi_2(p) &= \theta \in (0, 2\pi).
+  \end{align}
+  On the overlap $U_1 \cap U_2$, the transition map is either the identity
+  or a shift by $2\pi$---both smooth.
+
+  For a hinge joint, this means: no single angle variable $\theta$ can
+  represent all configurations without a discontinuity. If the joint rotates
+  past the discontinuity, any controller using that angle will experience
+  a ``jump''---a coordinate artifact, not a physical event.
+\end{example}
+
+\subsection{Tangent Spaces and Tangent Vectors}
+
+On a manifold, there is no global notion of ``direction.'' Velocity is a
+\emph{local} concept, defined at each point.
+
+\begin{definition}{Tangent Space}{tangent_space}
+  The \textbf{tangent space} $\tangentspace{p}$ at a point $p \in \manifold$
+  is the vector space of all possible velocity vectors at $p$. If $\manifold$
+  has dimension $n$, then $\tangentspace{p} \cong \Reals^n$ as a vector
+  space, but each point has its \emph{own} tangent space.
+
+  Given a curve $\gamma: (-\varepsilon, \varepsilon) \to \manifold$ with
+  $\gamma(0) = p$, the tangent vector $\dot{\gamma}(0)$ is an element of
+  $\tangentspace{p}$.
+\end{definition}
+
+\begin{definition}{Tangent Bundle}{tangent_bundle}
+  The \textbf{tangent bundle} $T\!\manifold = \bigsqcup_{p \in \manifold}
+  \tangentspace{p}$ is the collection of all tangent spaces, one for each
+  point. It is itself a smooth manifold of dimension $2n$. A point in
+  $T\!\manifold$ is a pair $(p, v)$ where $p \in \manifold$ and
+  $v \in \tangentspace{p}$.
+
+  For a mechanical system with configuration manifold $\configspace$, the
+  \textbf{state space is the tangent bundle} $\statespace = \tangentbundle$.
+  A state is a pair $(\bm{q}, \dot{\bm{q}})$---a configuration and a
+  velocity.
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  % Manifold surface
+  \draw[thick, fill=chapblue!8]
+    (-3, 0) .. controls (-2, 1.2) and (-0.5, 1.5) .. (0, 1.2)
+    .. controls (0.5, 0.9) and (2, 1.5) .. (3, 0.8)
+    .. controls (3.3, 0.2) and (2.5, -0.5) .. (1.5, -0.3)
+    .. controls (0.5, -0.1) and (-0.5, -0.8) .. (-1.5, -0.5)
+    .. controls (-2.5, -0.2) and (-3.3, 0.2) .. (-3, 0);
+  \node[font=\large\bfseries, chapblue] at (-2.2, 0.5) {$\manifold$};
+
+  % Point p
+  \coordinate (P) at (0.5, 0.7);
+  \filldraw[accentred] (P) circle (2.5pt);
+  \node[below left, font=\small\bfseries, accentred] at (P) {$p$};
+
+  % Tangent plane
+  \draw[fill=darkgold!10, opacity=0.7, thick, darkgold!60]
+    (-0.8, 1.8) -- (1.8, 2.5) -- (2.2, 0.5) -- (-0.4, -0.2) -- cycle;
+  \node[font=\small, darkgold!80!black] at (1.8, 1.0) {$\tangentspace{p}$};
+
+  % Tangent vector
+  \draw[-{Stealth[length=3.5mm]}, very thick, accentred]
+    (P) -- ++(1.0, 0.8) node[above right, font=\small] {$v \in \tangentspace{p}$};
+
+  % Curve on manifold
+  \draw[thick, trajgreen, decoration={markings,
+      mark=at position 0.6 with {\arrow{Stealth[length=2.5mm]}}
+    }, postaction={decorate}]
+    (-1.5, 0.1) .. controls (-0.5, 0.3) and (0, 0.5) .. (P)
+    .. controls (1.0, 0.9) and (1.8, 1.0) .. (2.3, 0.7);
+  \node[trajgreen!80!black, font=\small] at (-1.7, 0.4) {$\gamma(t)$};
+\end{tikzpicture}
+\end{center}
+
+% ══════════════════════════════════════════════
+\section{The Configuration Manifolds of Joints}
+% ══════════════════════════════════════════════
+
+Every mechanical joint constrains relative motion between two rigid bodies.
+The set of allowed relative configurations forms a manifold whose topology
+depends on the joint type.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{} l c c l @{}}
+  \toprule
+  \textbf{Joint type} & \textbf{DOF} & \textbf{Manifold} & \textbf{Topology} \\
+  \midrule
+  Revolute (hinge) & 1 & $\Sone$ & Circle \\
+  Prismatic (slider) & 1 & $\Reals$ & Line (or interval) \\
+  Universal & 2 & $\Stwo$ & 2-sphere \\
+  Ball-and-socket & 3 & $\SOthree$ & Rotation group \\
+  Planar & 3 & $\SEthree|_{\text{2D}} = \Reals^2 \times \Sone$ & Plane + rotation \\
+  Free body & 6 & $\SEthree = \Reals^3 \rtimes \SOthree$ & Rigid motions of 3-space \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+The configuration space of a multi-body system is the \emph{product} of
+individual joint manifolds (modulo kinematic constraints):
+
+\begin{definition}{Product Configuration Space}{product_config}
+  For a serial chain of $k$ joints with individual configuration manifolds
+  $\manifold_1, \ldots, \manifold_k$, the total configuration space is
+  \begin{equation}\label{eq:product_config}
+    \configspace = \manifold_1 \times \manifold_2 \times \cdots \times \manifold_k.
+  \end{equation}
+  For example, a robot arm with three revolute joints has
+  $\configspace = \Sone \times \Sone \times \Sone = \Torus^3$, the
+  3-dimensional torus.
+\end{definition}
+
+\begin{example}{The Human Shoulder}{shoulder}
+  The glenohumeral (shoulder) joint is approximately a ball-and-socket joint
+  with configuration manifold $\SOthree$. Combined with the 1-DOF hinge at
+  the elbow ($\Sone$) and the 1-DOF pronation/supination of the forearm
+  ($\Sone$), the arm has configuration space
+  \begin{equation}
+    \configspace_{\text{arm}} = \SOthree \times \Sone \times \Sone.
+  \end{equation}
+  This is a 5-dimensional manifold with the topology of $\SOthree \times \Torus^2$.
+  No set of 5 angle variables can parameterize this space without singularities.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{The Rotation Group $\SOthree$}
+% ══════════════════════════════════════════════
+
+The rotation group $\SOthree$ appears wherever a joint allows full 3D rotation.
+It is the single most important non-Euclidean manifold in mechanical control,
+and its properties drive many of the challenges we will encounter.
+
+\begin{definition}{The Special Orthogonal Group}{SO3}
+  $\SOthree$ is the group of $3 \times 3$ real orthogonal matrices with
+  determinant $+1$:
+  \begin{equation}
+    \SOthree = \{\bm{R} \in \Reals^{3 \times 3} :
+    \bm{R}^\top\!\bm{R} = \bm{I},\; \det(\bm{R}) = 1\}.
+  \end{equation}
+  It is a 3-dimensional compact Lie group. As a manifold, it is diffeomorphic
+  to the real projective space $\Reals P^3$.
+\end{definition}
+
+\subsection{Why Euler Angles Fail}
+
+The most common parameterization of $\SOthree$ uses three Euler angles
+$(\phi, \theta, \psi)$, defining the rotation matrix as a product of three
+elemental rotations. This parameterization has two fundamental problems:
+
+\begin{enumerate}[label=\textbf{P\arabic*.}, leftmargin=1.5cm]
+  \item \textbf{Singularities.} Every 3-parameter representation of $\SOthree$
+    has at least one singularity. For the ZYX convention, gimbal lock occurs
+    at $\theta = \pm\pi/2$. This is a topological necessity, not a flaw
+    in the choice of convention: $\SOthree$ is not homeomorphic to any open
+    subset of $\Reals^3$.
+
+  \item \textbf{Non-uniqueness.} Euler angles are periodic: $(\phi, \theta, \psi)$
+    and $(\phi + 2\pi, \theta, \psi)$ represent the same rotation. Near the
+    singularity, drastically different angle triples can represent nearly
+    identical orientations, creating numerical chaos in controllers.
+\end{enumerate}
+
+\begin{principle}{Representation Principle for Rotations}{rotation_rep}
+  For trajectory control on $\SOthree$, use one of:
+  \begin{enumerate}[label=(\alph*)]
+    \item \textbf{Rotation matrices} $\bm{R} \in \Reals^{3 \times 3}$: 9
+      parameters with 6 orthogonality constraints. Singularity-free but
+      redundant.
+    \item \textbf{Unit quaternions} $\bm{q} \in S^3 \subset \Reals^4$: 4
+      parameters with 1 unit-norm constraint. Singularity-free, minimal
+      redundancy, excellent for interpolation and computation.
+    \item \textbf{Exponential coordinates} (axis-angle or Lie algebra):
+      3 parameters with a singularity at $\norm{\bm{\omega}} = \pi$, but
+      natural for small rotations and linearization.
+  \end{enumerate}
+  Never use Euler angles for control of large-rotation trajectories.
+\end{principle}
+
+\subsection{The Lie Algebra $\sothree$}
+
+The tangent space of $\SOthree$ at the identity is the \textbf{Lie algebra}
+$\sothree$---the space of $3 \times 3$ skew-symmetric matrices:
+\begin{equation}
+  \sothree = \{\bm{\Omega} \in \Reals^{3\times 3} :
+  \bm{\Omega}^\top = -\bm{\Omega}\}
+  = \left\{ \skewmat{\bm{\omega}} :=
+  \begin{pmatrix} 0 & -\omega_3 & \omega_2 \\
+  \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{pmatrix}
+  : \bm{\omega} \in \Reals^3 \right\}.
+\end{equation}
+The ``hat map'' $(\cdot)^\wedge: \Reals^3 \to \sothree$ and its inverse
+``vee map'' $(\cdot)^\vee: \sothree \to \Reals^3$ identify the Lie algebra
+with $\Reals^3$ (the space of angular velocity vectors).
+
+\begin{definition}{Exponential Map}{exp_map}
+  The \textbf{exponential map} $\exp: \sothree \to \SOthree$ connects the
+  Lie algebra to the Lie group:
+  \begin{equation}\label{eq:exp_map}
+    \bm{R} = \exp(\skewmat{\bm{\omega}})
+    = \bm{I} + \frac{\sin\theta}{\theta}\skewmat{\bm{\omega}}
+    + \frac{1 - \cos\theta}{\theta^2}\skewmat{\bm{\omega}}^2,
+  \end{equation}
+  where $\theta = \norm{\bm{\omega}}$. This is the \textbf{Rodrigues formula}.
+  Geometrically, $\bm{R}$ is a rotation by angle $\theta$ about the axis
+  $\bm{\omega}/\theta$.
+
+  The inverse map $\log: \SOthree \to \sothree$ is well-defined for
+  rotations with angle $\theta < \pi$ and gives the \textbf{rotation vector}
+  representation.
+\end{definition}
+
+The exponential map is the bridge between the linear world (the Lie algebra,
+where we can add and scale) and the nonlinear world (the Lie group, where
+the actual dynamics live). This bridge is the central tool for linearization
+on manifolds.
+
+% ══════════════════════════════════════════════
+\section{The Golf Swing Configuration Space}
+% ══════════════════════════════════════════════
+
+We now apply the manifold framework to our running example. The result will
+show exactly why Euclidean control theory is insufficient for the golf swing.
+
+\subsection{A Simplified Kinematic Model}
+
+Consider a 4-segment model of the golf swing:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Torso}: rotates relative to ground via the spine. Modeled as a
+    3-DOF ball joint: $\manifold_1 = \SOthree$.
+  \item \textbf{Lead arm}: rotates relative to the torso via the shoulder.
+    Modeled as a 3-DOF ball joint: $\manifold_2 = \SOthree$.
+  \item \textbf{Forearm/hands}: rotates relative to the upper arm via the
+    elbow (1~DOF) and wrist flexion (1~DOF): $\manifold_3 = \Sone \times \Sone$.
+  \item \textbf{Club}: rotates relative to the hands via wrist
+    cock/uncock (1~DOF): $\manifold_4 = \Sone$.
+\end{enumerate}
+
+The total configuration space is:
+\begin{equation}\label{eq:golf_config}
+  \configspace_{\text{golf}} = \SOthree \times \SOthree \times \Sone \times \Sone
+  \times \Sone.
+\end{equation}
+This is a \textbf{9-dimensional manifold}. Its topology is
+$\SOthree \times \SOthree \times \Torus^3$---decidedly not $\Reals^9$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+  % Stick figure
+  % Ground
+  \draw[thick, gray] (-1, 0) -- (4, 0);
+
+  % Torso
+  \draw[very thick, chapblue] (1.5, 0.3) -- (1.5, 2.5);
+  \filldraw[chapblue] (1.5, 2.5) circle (2pt);
+  \node[right, chapblue, font=\footnotesize] at (1.8, 1.4) {torso};
+
+  % Shoulder joint
+  \draw[fill=accentred, accentred] (1.5, 2.5) circle (5pt);
+  \node[above right, accentred, font=\footnotesize\bfseries] at (1.7, 2.6)
+    {$\SOthree$};
+
+  % Upper arm
+  \draw[very thick, trajgreen] (1.5, 2.5) -- (0.3, 1.5);
+  \filldraw[trajgreen] (0.3, 1.5) circle (2pt);
+  \node[left, trajgreen, font=\footnotesize] at (0.1, 2.0) {arm};
+
+  % Elbow joint
+  \draw[fill=darkgold, darkgold] (0.3, 1.5) circle (4pt);
+  \node[left, darkgold, font=\footnotesize\bfseries] at (0.0, 1.3) {$\Sone$};
+
+  % Forearm
+  \draw[very thick, purplehaze] (0.3, 1.5) -- (-0.3, 0.3);
+  \node[left, purplehaze, font=\footnotesize] at (-0.3, 0.9) {forearm};
+
+  % Wrist joint
+  \draw[fill=darkgold, darkgold] (-0.3, 0.3) circle (4pt);
+  \node[left, darkgold, font=\footnotesize\bfseries] at (-0.6, 0.1) {$\Sone \times \Sone$};
+
+  % Club
+  \draw[very thick, black!70] (-0.3, 0.3) -- (-1.2, -0.8);
+  \filldraw[black] (-1.2, -0.8) circle (3pt);
+  \node[below, font=\footnotesize] at (-1.2, -1.0) {clubhead};
+
+  % Spine joint
+  \draw[fill=accentred, accentred] (1.5, 0.3) circle (5pt);
+  \node[right, accentred, font=\footnotesize\bfseries] at (1.8, 0.3) {$\SOthree$};
+
+  % Configuration space annotation
+  \draw[thick, gray, rounded corners, dashed]
+    (3.2, -0.5) rectangle (7.2, 3.2);
+  \node[font=\bfseries, chapblue] at (5.2, 2.8) {Configuration Space};
+  \node[font=\normalsize, align=left] at (5.2, 1.8)
+    {$\configspace = \SOthree \times \SOthree$};
+  \node[font=\normalsize, align=left] at (5.2, 1.1)
+    {$\phantom{\configspace = {}} \times\;\Sone \times \Sone \times \Sone$};
+  \node[font=\small, align=left] at (5.2, 0.2)
+    {dim $= 3 + 3 + 1 + 1 + 1 = 9$};
+  \node[font=\small, accentred, align=center] at (5.2, -0.4)
+    {\textbf{Not $\Reals^9$!}};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Why This Matters for Control}
+
+The state space (tangent bundle) has dimension $2 \times 9 = 18$. A trajectory
+through this space is a curve on an 18-dimensional manifold. The consequences
+for control are immediate:
+
+\begin{enumerate}[label=\textbf{C\arabic*.}, leftmargin=1.5cm]
+  \item \textbf{No global linearization.} You cannot write
+    $\state = \state^* + \delta\state$ with $\delta\state \in \Reals^{18}$,
+    because the ``$+$'' operation is not defined globally on the manifold.
+    Linearization must be done in the \emph{tangent space}, using the
+    exponential map.
+
+  \item \textbf{Error is not a vector.} The ``error'' between two configurations
+    $\bm{q}_1, \bm{q}_2 \in \configspace$ is not $\bm{q}_2 - \bm{q}_1$
+    (subtraction is undefined on manifolds). The correct notion of error
+    is the \emph{logarithmic map}: $\bm{e} = \log(\bm{q}_1^{-1} \bm{q}_2)$,
+    which lives in the Lie algebra.
+
+  \item \textbf{Geodesics replace straight lines.} The ``shortest path'' between
+    two configurations is not a straight line in any coordinate system---it
+    is a \emph{geodesic} on the manifold, determined by the Riemannian metric
+    (mass-inertia matrix).
+
+  \item \textbf{Parallel transport replaces vector addition.} To compare
+    tangent vectors (velocities, errors) at different points on the trajectory,
+    we must \emph{transport} them along the manifold using the connection.
+    Simply subtracting velocity vectors at different times is mathematically
+    meaningless.
+\end{enumerate}
+
+\begin{warning}{Euler Angle Catastrophe in Golf Modeling}{euler_golf}
+  Many biomechanics studies parameterize the golf swing using Euler angles for
+  each joint. For the shoulder joint ($\SOthree$), this means three angles
+  $(\phi_s, \theta_s, \psi_s)$. But during the backswing, the shoulder
+  passes through configurations near gimbal lock ($\theta_s \approx \pm\pi/2$).
+
+  In these regions:
+  \begin{itemize}[leftmargin=1cm]
+    \item The Jacobian mapping angular velocities to Euler angle rates becomes
+      singular.
+    \item Small physical rotations produce large jumps in angle coordinates.
+    \item Any controller computing torques from angle errors will produce
+      \emph{infinite} commanded torques at the singularity.
+  \end{itemize}
+  The fix is not to ``choose a better Euler angle convention'' (all conventions
+  have singularities somewhere). The fix is to work on $\SOthree$ directly,
+  using rotation matrices or quaternions.
+\end{warning}
+
+% ══════════════════════════════════════════════
+\section{Riemannian Metrics and the Mass Matrix}
+% ══════════════════════════════════════════════
+
+A manifold by itself has no notion of distance, angle, or length. To measure
+these, we need a \textbf{Riemannian metric}---a smooth choice of inner product
+on each tangent space.
+
+\begin{definition}{Riemannian Metric}{riemannian}
+  A \textbf{Riemannian metric} on a manifold $\manifold$ is a smooth assignment
+  of an inner product $\inner{\cdot}{\cdot}_p$ on each tangent space
+  $\tangentspace{p}$. In local coordinates $\bm{q} = (q_1, \ldots, q_n)$, the
+  metric is represented by a positive-definite matrix $\bm{G}(\bm{q})$:
+  \begin{equation}
+    \inner{\bm{v}}{\bm{w}}_{\bm{q}} = \bm{v}^\top \bm{G}(\bm{q})\, \bm{w},
+    \qquad \bm{v}, \bm{w} \in T_{\bm{q}}\manifold.
+  \end{equation}
+\end{definition}
+
+For mechanical systems, nature provides a canonical Riemannian metric: the
+\textbf{kinetic energy metric}.
+
+\begin{principle}{The Mass Matrix as Riemannian Metric}{mass_metric}
+  For a mechanical system with generalized coordinates $\bm{q}$ and
+  mass-inertia matrix $\bm{M}(\bm{q})$, the kinetic energy
+  \begin{equation}
+    T = \frac{1}{2}\dot{\bm{q}}^\top \bm{M}(\bm{q})\, \dot{\bm{q}}
+  \end{equation}
+  defines a Riemannian metric $\bm{G} = \bm{M}(\bm{q})$ on $\configspace$.
+  This metric has deep physical significance:
+  \begin{enumerate}[label=(\roman*)]
+    \item \textbf{Distance} between configurations is measured in ``units of
+      kinetic energy''---configurations connected by high-inertia motions
+      are ``far apart.''
+    \item \textbf{Geodesics} (shortest paths) under this metric are the
+      trajectories of the \emph{unforced} system---free motions with no
+      applied torques.
+    \item \textbf{Arc length} from Chapter~2, computed with this metric,
+      naturally weights each DOF by its effective inertia.
+  \end{enumerate}
+\end{principle}
+
+\begin{example}{Inertia-Weighted Distance in the Swing}{inertia_distance}
+  Consider two configurations that differ by either:
+  \begin{enumerate}[label=(\alph*)]
+    \item A $10^\circ$ rotation of the torso (high inertia, $I \approx 12\;\text{kg}\cdot\text{m}^2$), or
+    \item A $10^\circ$ rotation of the wrist (low inertia, $I \approx 0.03\;\text{kg}\cdot\text{m}^2$).
+  \end{enumerate}
+  In Euclidean coordinates, both represent ``$10^\circ$ of change.'' In the
+  kinetic energy metric, the torso rotation is $\sqrt{12/0.03} = 20$ times
+  ``farther'' than the wrist rotation. This correctly reflects the physical
+  reality: rotating the torso requires 400 times more energy than rotating
+  the wrist by the same angle.
+
+  The curvature of a trajectory measured in this metric therefore naturally
+  captures the \emph{physical} difficulty of the motion, not merely the
+  angular change.
+\end{example}
+
+\subsection{Geodesics as Natural Trajectories}
+
+\begin{definition}{Geodesic}{geodesic}
+  A \textbf{geodesic} on a Riemannian manifold $(\manifold, \bm{G})$ is a
+  curve that locally minimizes arc length. Geodesics satisfy the
+  \textbf{geodesic equation}:
+  \begin{equation}\label{eq:geodesic}
+    \ddot{q}^i + \sum_{j,k} \Gamma^i_{jk}(\bm{q})\, \dot{q}^j\, \dot{q}^k = 0,
+  \end{equation}
+  where $\Gamma^i_{jk}$ are the \textbf{Christoffel symbols} of the metric
+  $\bm{G}$.
+\end{definition}
+
+The remarkable fact is that the geodesic equation \eqref{eq:geodesic} is
+\emph{exactly} the equation of motion for the unforced mechanical system
+$\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} = \bm{0}$.
+The Coriolis and centrifugal terms are precisely the Christoffel symbol terms.
+Free motions of mechanical systems are geodesics on the configuration manifold
+equipped with the kinetic energy metric.
+
+\begin{principle}{Geodesics and Passive Dynamics}{geodesic_passive}
+  For trajectory design, geodesics represent the ``easiest'' paths---the
+  motions the system would naturally follow with no applied forces. A
+  well-designed trajectory stays close to geodesics where possible,
+  deviating only where task requirements (e.g., impact conditions) demand
+  it.
+
+  In the golf swing, the follow-through is nearly geodesic: after impact,
+  the golfer relaxes and the body follows its natural, inertia-weighted
+  path through configuration space. The downswing deviates significantly
+  from the geodesic because the task (delivering maximum clubhead speed at
+  impact) requires active torques to redirect the motion.
+\end{principle}
+
+% ══════════════════════════════════════════════
+\section{Curves on Manifolds Revisited}
+% ══════════════════════════════════════════════
+
+With the manifold framework in place, we can extend every concept from
+Chapter~2 to non-Euclidean configuration spaces.
+
+\subsection{Covariant Differentiation}
+
+On $\Reals^n$, we differentiate vector fields by taking component-wise
+derivatives. On a manifold, this does not work---the tangent spaces at
+different points are different vector spaces, so we cannot simply subtract
+vectors at different points.
+
+\begin{definition}{Covariant Derivative}{covariant}
+  The \textbf{covariant derivative} (or \textbf{Levi-Civita connection})
+  $\nabla$ is the unique way to differentiate vector fields along curves on
+  a Riemannian manifold that:
+  \begin{enumerate}[label=(\roman*)]
+    \item Is compatible with the metric:
+      $\frac{\dd}{\dd t}\inner{\bm{V}}{\bm{W}} =
+      \inner{\nabla_{\dot{\gamma}} \bm{V}}{\bm{W}} +
+      \inner{\bm{V}}{\nabla_{\dot{\gamma}} \bm{W}}$.
+    \item Is torsion-free: $\nabla_{\bm{V}}\bm{W} - \nabla_{\bm{W}}\bm{V}
+      = [\bm{V}, \bm{W}]$.
+  \end{enumerate}
+  In local coordinates, the covariant derivative of a vector field
+  $\bm{V}$ along a curve $\gamma(t)$ is
+  \begin{equation}
+    (\nabla_{\dot{\gamma}} \bm{V})^i
+    = \dot{V}^i + \sum_{j,k} \Gamma^i_{jk}\, \dot{\gamma}^j\, V^k.
+  \end{equation}
+\end{definition}
+
+The covariant derivative replaces the ordinary derivative in all of our
+Chapter~2 formulas. The generalized curvatures, the Frenet--Serret frame,
+and the transverse decomposition all carry over, with $\dd/\dd s$ replaced
+by $\nabla_{\dot{\gamma}}$.
+
+\subsection{Manifold Curvature of Trajectories}
+
+\begin{definition}{Geodesic Curvature}{geodesic_curvature}
+  The \textbf{geodesic curvature} of a curve $\gamma(s)$ on a Riemannian
+  manifold, parameterized by arc length, is
+  \begin{equation}
+    \kappa_g(s) = \norm{\nabla_{\dot{\gamma}} \dot{\gamma}}.
+  \end{equation}
+  This measures how much the curve deviates from a geodesic. A geodesic
+  has $\kappa_g = 0$ everywhere.
+\end{definition}
+
+Geodesic curvature is the manifold generalization of the curvature from
+Chapter~2, and it has the same control interpretation: \emph{geodesic
+curvature measures the force per unit mass needed to follow the curve},
+beyond what the natural dynamics would provide for free.
+
+\begin{proposition}
+  The control force required to track a trajectory $\gamma^*(s)$ at speed
+  $v$ on a configuration manifold with metric $\bm{M}(\bm{q})$ has magnitude
+  \begin{equation}
+    \norm{\bm{\tau}_{\perp}} = \kappa_g(s)\, v^2,
+  \end{equation}
+  where $\norm{\cdot}$ is measured in the dual (force) metric. Comparing with
+  the Euclidean formula $a_\perp = \kappa v^2$ from Chapter~2: the Euclidean
+  curvature $\kappa$ is replaced by the geodesic curvature $\kappa_g$, which
+  accounts for the curvature of the manifold itself.
+\end{proposition}
+
+This is a deeper version of the Curvature--Authority Principle. The control
+demand is reduced along directions where the manifold's own curvature
+``helps''---i.e., where the natural dynamics carry the system in the desired
+direction. The control demand increases where the trajectory fights the
+natural dynamics.
+
+\begin{example}{Geodesic Curvature of the Downswing}{downswing_geod_curv}
+  During the downswing, the trajectory has two sources of curvature:
+  \begin{enumerate}[label=(\alph*)]
+    \item \textbf{Euclidean curvature}: the path bends in coordinate space
+      (the club changes direction).
+    \item \textbf{Manifold curvature}: the Christoffel symbol terms
+      ($\Gamma^i_{jk}\dot{q}^j\dot{q}^k$) represent Coriolis and centrifugal
+      effects that curve the natural trajectories.
+  \end{enumerate}
+  The geodesic curvature $\kappa_g$ is the \emph{difference}. When the
+  Coriolis/centrifugal terms push the system in the direction the trajectory
+  wants to go (as happens during the wrist release, where centrifugal
+  acceleration ``unhinges'' the club), $\kappa_g$ is \emph{less} than the
+  Euclidean $\kappa$. The passive dynamics are doing work for free.
+
+  This is the geometric explanation for the ``free speed'' of the golf swing:
+  a well-designed trajectory aligns with the manifold's geodesics during the
+  speed-critical phase, exploiting the natural dynamics rather than fighting
+  them.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{Error Metrics on Manifolds}
+% ══════════════════════════════════════════════
+
+We now address the critical question: how do we measure tracking error when
+the state space is a manifold?
+
+\subsection{The Logarithmic Error}
+
+\begin{definition}{Configuration Error on a Lie Group}{log_error}
+  For two configurations $\bm{q}_1, \bm{q}_2 \in \configspace$ where
+  $\configspace$ is a Lie group, the \textbf{error} is
+  \begin{equation}\label{eq:log_error}
+    \bm{e} = \log(\bm{q}_1^{-1}\, \bm{q}_2) \in \text{Lie algebra}.
+  \end{equation}
+  For the rotation group $\SOthree$, this gives
+  \begin{equation}
+    \bm{e}_R = \log(\bm{R}_1^\top \bm{R}_2)^\vee \in \Reals^3,
+  \end{equation}
+  which is the rotation vector needed to go from $\bm{R}_1$ to $\bm{R}_2$.
+  This error is zero if and only if $\bm{q}_1 = \bm{q}_2$, and it varies
+  smoothly with both arguments (away from the cut locus at $\norm{\bm{e}} = \pi$).
+\end{definition}
+
+\begin{remark}{Why Not Just Subtract Quaternions?}{quat_subtract}
+  Given two unit quaternions $\bm{q}_1$ and $\bm{q}_2$, a tempting error
+  metric is $\bm{e} = \bm{q}_2 - \bm{q}_1$. But this lives in $\Reals^4$,
+  not in the tangent space of $S^3$. Worse, it violates the double-cover
+  property: $\bm{q}$ and $-\bm{q}$ represent the same rotation, so the
+  error $\bm{q}_2 - \bm{q}_1$ and $-\bm{q}_2 - \bm{q}_1$ should be
+  ``the same,'' but they point in opposite directions.
+
+  The logarithmic error correctly handles the group structure and produces
+  an error vector in the Lie algebra that has a clear physical interpretation
+  (the angular velocity needed to correct the error in unit time).
+\end{remark}
+
+\subsection{The Trajectory Tube on a Manifold}
+
+The trajectory tube from Chapter~1 now generalizes naturally:
+
+\begin{definition}{Manifold Trajectory Tube}{manifold_tube}
+  Let $\traj^*: [0, T] \to \configspace$ be a reference trajectory on a
+  Riemannian manifold $(\configspace, \bm{G})$ and let
+  $\varepsilon: [0, T] \to \Reals_{>0}$ be a tube radius function. The
+  \textbf{manifold trajectory tube} is
+  \begin{equation}
+    \mathcal{T}(t) = \left\{\, \bm{q} \in \configspace :
+    d_{\bm{G}}\!\left(\bm{q},\, \traj^*(t)\right) \leq \varepsilon(t) \,\right\},
+  \end{equation}
+  where $d_{\bm{G}}$ is the \textbf{geodesic distance}---the length of the
+  shortest geodesic connecting $\bm{q}$ and $\traj^*(t)$.
+\end{definition}
+
+The geodesic distance correctly accounts for the topology of the configuration
+space. On $\SOthree$, the maximum distance between any two orientations is $\pi$
+(a half-rotation), and the tube wraps properly around the group.
+
+% ══════════════════════════════════════════════
+\section{Equations of Motion on Manifolds}
+% ══════════════════════════════════════════════
+
+The Euler--Lagrange equations on a manifold take a coordinate-free form that
+reveals the geometric structure:
+
+\begin{theorem}[Lagrangian Mechanics on Manifolds]\label{thm:lagrange_manifold}
+  For a mechanical system on a configuration manifold $(\configspace, \bm{M})$
+  with potential energy $V: \configspace \to \Reals$ and generalized forces
+  $\bm{\tau}$, the equations of motion are
+  \begin{equation}\label{eq:euler_lagrange_manifold}
+    \bm{M}(\bm{q})\, \nabla_{\dot{\bm{q}}} \dot{\bm{q}} = -\mathrm{grad}\, V + \bm{B}\, \control,
+  \end{equation}
+  where $\nabla_{\dot{\bm{q}}} \dot{\bm{q}}$ is the covariant acceleration and
+  $\mathrm{grad}\, V$ is the Riemannian gradient of the potential energy.
+\end{theorem}
+
+In local coordinates, this reduces to the familiar
+$\bm{M}\ddot{\bm{q}} + \bm{C}\dot{\bm{q}} + \bm{g} = \bm{B}\control$,
+but the coordinate-free form \eqref{eq:euler_lagrange_manifold} makes clear that:
+\begin{itemize}[leftmargin=1.5cm]
+  \item The Coriolis matrix $\bm{C}$ is not a separate ``term''---it is the
+    Christoffel symbol contribution to the covariant derivative.
+  \item The equation has the same form on any manifold, regardless of coordinate
+    choice.
+  \item The ``centrifugal and Coriolis forces'' are geometric artifacts of the
+    manifold's curvature, not real forces. On a flat manifold ($\Reals^n$),
+    they vanish.
+\end{itemize}
+
+% ══════════════════════════════════════════════
+\section{Practical Implications for Controller Implementation}
+% ══════════════════════════════════════════════
+
+We conclude with concrete guidance for implementing trajectory controllers
+on manifold-valued configuration spaces.
+
+\begin{principle}{Manifold-Aware Controller Design}{manifold_control}
+  A trajectory tracking controller for a system on $\configspace$ must:
+  \begin{enumerate}[label=(\roman*)]
+    \item \textbf{Compute errors using the logarithmic map}, not coordinate
+      subtraction:
+      \begin{equation}
+        \bm{e}_q = \log\!\left((\bm{q}^*)^{-1}\, \bm{q}\right), \qquad
+        \bm{e}_v = \dot{\bm{q}} - \mathrm{PT}_{q^* \to q}(\dot{\bm{q}}^*),
+      \end{equation}
+      where $\mathrm{PT}$ denotes parallel transport of the reference velocity
+      to the current configuration.
+    \item \textbf{Compute feedforward using the covariant derivative}, not
+      ordinary differentiation of coordinates.
+    \item \textbf{Design feedback gains in the tangent space}, then map the
+      resulting control back to the manifold via the exponential map.
+    \item \textbf{Monitor for cut-locus proximity}: when the error approaches
+      $\pi$ (for $\SOthree$), the logarithmic map becomes ill-conditioned.
+      Switch to a recovery strategy.
+  \end{enumerate}
+\end{principle}
+
+\begin{example}{PD Control on $\SOthree$}{pd_so3}
+  The manifold-correct PD controller for tracking a reference orientation
+  $\bm{R}^*(t)$ with a rigid body (moment of inertia $\bm{J}$,
+  angular velocity $\bm{\omega}$) is:
+  \begin{equation}\label{eq:pd_so3}
+    \bm{\tau} = -k_p\, \log(\bm{R}^{*\top}\bm{R})^\vee
+    - k_d\, (\bm{\omega} - \bm{R}^{*\top}\bm{R}\,\bm{\omega}^*)
+    + \bm{J}\dot{\bm{\omega}}^* + \bm{\omega} \times \bm{J}\bm{\omega},
+  \end{equation}
+  where the first term is the manifold-correct proportional error
+  (logarithmic map), the second is the velocity error (parallel-transported),
+  and the last two terms are the feedforward (covariant derivative of the
+  reference).
+
+  Compare with the na\"{\i}ve Euler-angle PD controller:
+  $\tau = -k_p(\bm{\theta} - \bm{\theta}^*) - k_d(\dot{\bm{\theta}} - \dot{\bm{\theta}}^*)$.
+  The na\"{\i}ve controller has singularities; Eq.~\eqref{eq:pd_so3} does not.
+  The na\"{\i}ve controller produces torques proportional to angle differences
+  (which can be misleading near $\pm\pi$); Eq.~\eqref{eq:pd_so3} produces
+  torques proportional to the \emph{true rotation} needed to correct the error.
+\end{example}
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l l @{}}
+  \toprule
+  \textbf{Euclidean assumption} & \textbf{Manifold replacement} \\
+  \midrule
+  $\configspace = \Reals^n$ & $\configspace = \SOthree^k \times \Torus^m \times \cdots$ \\
+  Error: $\bm{e} = \bm{q} - \bm{q}^*$ & Error: $\bm{e} = \log((\bm{q}^*)^{-1}\bm{q})$ \\
+  Derivative: $\ddot{\bm{q}}$ & Covariant derivative: $\nabla_{\dot{q}}\dot{\bm{q}}$ \\
+  Shortest path: straight line & Shortest path: geodesic \\
+  Distance: $\norm{\bm{q}_2 - \bm{q}_1}$ & Geodesic distance: $d_{\bm{G}}(\bm{q}_1, \bm{q}_2)$ \\
+  Curvature: $\kappa$ (Ch.~2) & Geodesic curvature: $\kappa_g$ \\
+  Trajectory tube: Euclidean ball & Geodesic ball \\
+  Coriolis terms: ``extra forces'' & Christoffel symbols: manifold geometry \\
+  PD: $-k_p\bm{e} - k_d\dot{\bm{e}}$ & $-k_p\log(\cdot)^\vee - k_d(\text{parallel transport})$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+The central message of this chapter is that the configuration spaces of
+mechanical systems have geometry, and this geometry matters for control.
+Working in $\Reals^n$ when the true space is $\SOthree \times \Torus^k$
+introduces artificial singularities, incorrect error metrics, and
+controllers that fail when the system moves far from a nominal configuration.
+
+The trajectory-first philosophy of this book demands that we take the
+geometry seriously from the start. The curves we designed in Chapter~2 live
+on manifolds, and the stability theory we will develop in Chapter~4 must
+respect the manifold structure. The payoff is controllers that work globally,
+without singularities, and that correctly exploit the natural dynamics
+encoded in the manifold's Riemannian geometry.
+
+% ══════════════════════════════════════════════
+\section{Exercises}
+% ══════════════════════════════════════════════
+
+\begin{enumerate}[label=\textbf{3.\arabic*.}, leftmargin=1.5cm]
+
+\item \textbf{(Topology.)} Determine the configuration manifold and its
+  dimension for each system:
+  \begin{enumerate}[label=(\alph*)]
+    \item A planar double pendulum (two revolute joints in 2D).
+    \item A spherical pendulum (a point mass on a rigid rod, free to swing
+      in all directions).
+    \item A spacecraft with two reaction wheels (the body rotates freely in
+      3D; each wheel adds one internal DOF).
+  \end{enumerate}
+  For each, identify whether $\Reals^n$ coordinates would have singularities.
+
+\item \textbf{(Euler angle singularity.)} For the ZYX Euler angle representation
+  $\bm{R} = R_z(\phi)\, R_y(\theta)\, R_x(\psi)$:
+  \begin{enumerate}[label=(\alph*)]
+    \item Compute the Jacobian $\bm{J}$ relating angular velocity
+      $\bm{\omega}$ to Euler angle rates $(\dot{\phi}, \dot{\theta}, \dot{\psi})$.
+    \item Show that $\bm{J}$ is singular at $\theta = \pm\pi/2$.
+    \item Find an orientation trajectory $\bm{R}(t)$ that passes through the
+      singularity and compute the Euler angle rates. What happens?
+  \end{enumerate}
+
+\item \textbf{(Logarithmic error.)} For two rotations
+  $\bm{R}_1 = \bm{I}$ and $\bm{R}_2 = R_z(\alpha)$ (rotation by $\alpha$
+  about $z$):
+  \begin{enumerate}[label=(\alph*)]
+    \item Compute $\log(\bm{R}_1^\top\bm{R}_2)^\vee$ for
+      $\alpha = \pi/6, \pi/2, \pi, 5\pi/3$.
+    \item Compare with the ``error'' $\alpha - 0 = \alpha$ as a function of
+      $\alpha$. At what point do they differ significantly?
+    \item What happens at $\alpha = \pi$? Explain geometrically.
+  \end{enumerate}
+
+\item \textbf{(Geodesics.)} For a double pendulum with masses $m_1, m_2$ and
+  lengths $l_1, l_2$:
+  \begin{enumerate}[label=(\alph*)]
+    \item Write the mass matrix $\bm{M}(\theta_1, \theta_2)$.
+    \item Compute the Christoffel symbols (or use the Coriolis matrix formula
+      $C_{ijk} = \frac{1}{2}(\partial M_{ij}/\partial q_k +
+      \partial M_{ik}/\partial q_j - \partial M_{jk}/\partial q_i)$).
+    \item Numerically integrate the geodesic equation from initial condition
+      $(\theta_1, \theta_2) = (0, 0)$ with $(\dot{\theta}_1, \dot{\theta}_2) = (1, 0)$.
+      Plot the geodesic on $\Torus^2$.
+  \end{enumerate}
+
+\item \textbf{(Manifold PD control.)} Implement and compare:
+  \begin{enumerate}[label=(\alph*)]
+    \item An Euler-angle PD controller for a rigid body tracking a reference
+      orientation $\bm{R}^*(t) = R_z(\omega t)$ (constant-speed rotation).
+    \item The manifold PD controller from Eq.~\eqref{eq:pd_so3} for the
+      same task.
+    \item Run both controllers with the reference trajectory passing through
+      $\theta = \pi/2$ (gimbal lock for ZYX convention). Compare the
+      tracking errors and commanded torques.
+  \end{enumerate}
+
+\item \textbf{(Golf swing configuration space.)} For the 9-DOF golf swing
+  model of Eq.~\eqref{eq:golf_config}:
+  \begin{enumerate}[label=(\alph*)]
+    \item How many Euler angles would be needed to parameterize the full
+      configuration space? How many singularity surfaces exist?
+    \item Propose a quaternion-based parameterization for the two $\SOthree$
+      joints. What is the total number of parameters? What constraints
+      must be maintained?
+    \item Discuss the trade-offs between the Euler angle and quaternion
+      representations for numerical simulation of the golf swing.
+  \end{enumerate}
+
+\end{enumerate}
+
+\vspace{1cm}
+\begin{center}
+  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
+  {\small\itshape
+  The sphere cannot be flattened without tearing.\\
+  The rotation group cannot be charted without singularity.\\
+  Do not fight the topology---ride it.\\[0.3cm]
+  The manifold is not an obstacle. It is the landscape\\
+  through which every motion flows.}
+\end{center}
+

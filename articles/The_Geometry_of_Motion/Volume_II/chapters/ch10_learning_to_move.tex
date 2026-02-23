@@ -1,0 +1,59 @@
+\chapter{Learning to Move}
+\label{ch:learning_to_move}
+
+\epigraph{%
+  The first swing establishes the manifold. The ten-thousandth swing perfects the funnel.
+}{}
+
+\vspace{0.5cm}
+
+\begin{laymansbox}{Practice Makes Funnels}{practice_makes_funnels}
+When you swing a golf club for the first time, your brain is guessing how much force to use, guessing the weight of the club, and guessing how your muscles will respond. The mathematical models we've built so far are just like that first swing—a really smart guess, but still a guess. Real physics (wind, friction, fatigue) is too messy to model perfectly. This chapter is about how systems *learn*. Instead of trying to calculate the perfect math equations from scratch every time, the system tries a movement, measures how badly it missed the target, and updates its "muscle memory" for the next try. Over thousands of repetitions, the brain (or the computer) learns the true physics of the motion without ever needing the exact equations. It builds a whole library of these learned motions, letting it instantly adjust to new situations without thinking.
+\end{laymansbox}
+
+% ══════════════════════════════════════════════
+\section{Iterative Learning Control (ILC)}
+% ══════════════════════════════════════════════
+
+Trajectory optimization (Chapter 6) computes a reference motion strictly from a mathematical model. However, dynamic models of humans—and even robots—are invariably flawed. Frictional forces are unmodeled, inertias are estimated, and actuators possess hidden dynamics. If you execute a computed reference $\traj^*(t)$ open-loop, the physical system will likely fail to strike the moving target due to these discrepancies.
+
+\textbf{Iterative Learning Control (ILC)} resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, \emph{the unmodeled dynamics are highly deterministic across repeated trials}. 
+
+If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the \emph{second} attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters. 
+
+\begin{definition}{ILC Update Law}{ilc_law}
+  Let $j$ denote the trial index. The feedforward command for trial $j+1$ is updated based on the command and the \emph{transverse error} $\bm{\xi}$ from trial $j$:
+  \begin{equation}
+    \control_j(t) = \control_{\text{ff}, j}(t) + \bm{K}_\perp(t) \bm{\xi}_j(t)
+  \end{equation}
+  \begin{equation}
+    \control_{\text{ff}, j+1}(t) = \control_{\text{ff}, j}(t) + \bm{L}(t) \bm{\xi}_j(t)
+  \end{equation}
+  where $\bm{L}(t)$ is a learning filter. This updates the nominal trajectory to iteratively cancel out deterministic disturbances.
+\end{definition}
+
+% ══════════════════════════════════════════════
+\section{Policy Search and Reinforcement Learning}
+% ══════════════════════════════════════════════
+
+While ILC updates the feedforward commands to zero-out deterministic tracking errors, \textbf{Policy Search} algorithms optimize the \emph{shape of the funnel} itself.
+
+Instead of computing the transverse LQR gains $\bm{K}_\perp(t)$ from an analytical Riccati equation (Chapter 4), we parameterize the controller as a policy $\pi_{\bm{\theta}}(\state)$ and search the parameter space $\bm{\theta}$ to minimize the variance at the moving goal under realistic noise.
+
+Reinforcement Learning (RL), specifically policy gradient methods, allows the agent to sample thousands of golf swings in simulation, continuously updating its policy parameters to maximize the expected reward (clubhead speed and squareness at impact). A heavily trained RL agent organically converges on the very principles we mathematically derived in earlier chapters:
+\begin{enumerate}
+    \item It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
+    \item It exploits the underactuated double-pendulum whipping motion to gain speed.
+    \item It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
+\end{enumerate}
+
+% ══════════════════════════════════════════════
+\section{Trajectory Libraries}
+% ══════════════════════════════════════════════
+
+A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F}$ are highly specific to a single objective. What if the golfer wishes to fade the ball, hit a draw, or execute a punch shot out of the rough?
+
+Instead of re-running a massive NLP optimization for every scenario, biological systems and advanced controllers maintain \textbf{Trajectory Libraries}. A library consists of several distinct, pre-computed optimal trajectories and their corresponding local funnels.
+
+When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees~\cite{Tedrake2009} or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
+

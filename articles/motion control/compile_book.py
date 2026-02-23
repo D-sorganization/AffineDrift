@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def extract_chapter_content(filepath):
+def extract_chapter_content(filepath: str) -> str:
     """Extract the content between \\begin{document} and \\end{document}"""
     try:
         with open(filepath, encoding="utf-8") as f:
@@ -36,7 +36,7 @@ def extract_chapter_content(filepath):
         return ""
 
 
-def create_complete_book():
+def create_complete_book() -> str:
     """Create a complete book from all chapter files"""
 
     # LaTeX preamble
@@ -225,7 +225,7 @@ def create_complete_book():
     return output_file
 
 
-def compile_pdf(tex_file):
+def compile_pdf(tex_file: str) -> str | None:
     """Compile the LaTeX file to PDF"""
     try:
         # Change to the directory containing the tex file
@@ -258,7 +258,7 @@ def compile_pdf(tex_file):
         return None
 
 
-def create_summary():
+def create_summary() -> None:
     """Create a summary of what was accomplished"""
     summary = """
 # Control Is Motion - Complete Textbook

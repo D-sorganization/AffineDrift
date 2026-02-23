@@ -1,0 +1,73 @@
+\chapter{Phase-Variable Control}
+\label{ch:phase_variable_control}
+
+\epigraph{%
+  Time is a river that carries us forward. Phase is the boat we build to navigate it.
+}{}
+
+\vspace{0.5cm}
+
+\begin{laymansbox}{Ditching the Clock}{ditching_clock}
+If a robot is programmed to walk across a room in exactly 10 seconds, and you push it backwards halfway through, the robot will try to instantly teleport to where it was "supposed" to be at second 6. It will fall over. A human, on the other hand, doesn't walk by the clock. A human walks by physical milestones: "When my left foot hits the ground, swing my right leg forward." This is called using a "phase variable" instead of time. A phase variable is a physical marker (like the angle of the left leg) that tells the system where it is in the motion. By throwing away the clock and linking all actions to physical progress, the motion becomes incredibly resilient to being slowed down, sped up, or paused.
+\end{laymansbox}
+
+% ══════════════════════════════════════════════
+\section{Spatial Paths vs. Temporal Execution}
+% ══════════════════════════════════════════════
+
+The most glaring flaw in classical control architecture, when applied to biomechanics or advanced robotics, is its rigid adherence to the clock. If you construct a time-varying trajectory $\traj^*(t)$ for a robotic arm and command a tracking controller to follow it, the controller will evaluate the error as $\bm{e}(t) = \state(t) - \traj^*(t)$. 
+
+If the robot hits an unmodeled friction patch and slows down, the reference trajectory $\traj^*(t)$ continues advancing relentlessly. The controller calculates a massive position error not because the robot deviated physically from the path, but simply because it is *behind schedule*. In a desperate attempt to catch up, the actuators max out, applying violent torques that throw the system entirely off the stable path.
+
+\begin{keyidea}{The Autonomy of Time}{autonomy_of_time}
+  A system executing a motion should dictate its own progress. If the system is impeded, the reference should slow down. We must decouple the spatial geometry of the motion from its temporal execution. We achieve this by replacing chronological time $t$ with a monotonically increasing \textbf{phase variable} $s$.
+\end{keyidea}
+
+Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a purely spatial curve.
+
+\begin{definition}{Phase Variable}{phase_variable}
+  A phase variable $s(\state)$ is a continuously differentiable scalar function of the state $\state$ such that its time derivative is strictly positive along all feasible trajectories inside the nominal funnel:
+  \begin{equation}
+    \dot{s}(\state) > 0 \quad \text{for all } \state \in \mathcal{F}.
+  \end{equation}
+\end{definition}
+
+% ══════════════════════════════════════════════
+\section{Virtual Constraints}
+% ══════════════════════════════════════════════
+
+If the goal is no longer to match a time sequence but rather to conform to a spatial path defined by $s(\state)$, we can express the control objective as a set of holonomic constraints on the state. However, because these constraints are not mechanical linkages but rather enforced by software, they are termed \textbf{Virtual Constraints}.
+
+Let our control objective be to drive the state $\state$ to the invariant manifold $\mathcal{Z}$ defined by:
+\begin{equation}
+  \mathcal{Z} = \{ \state \mid \state - \traj^*(s(\state)) = \bm{0} \}.
+\end{equation}
+
+By using partial feedback linearization (Chapter 5), we can design a synthetic input $\bm{v}_a$ that drives the actuated degrees of freedom $\bm{q}_a$ onto their nominal surfaces proportional to the phase:
+\begin{equation}
+  y = \bm{q}_a - \traj^*_a(s(\state)) \to 0.
+\end{equation}
+As $y \to 0$, the system converges toward the virtual constraints. Crucially, the rate at which it progresses along the path is entirely governed by $\dot{s}$, which is itself determined by the current momentum and state of the system, not a stopwatch.
+
+% ══════════════════════════════════════════════
+\section{Hybrid Zero Dynamics}
+% ══════════════════════════════════════════════
+
+When the virtual constraints are perfectly satisfied ($y = 0$), the entire complexity of the $n$-dimensional state space collapses down into a highly reduced dynamical system that evolves strictly along the manifold $\mathcal{Z}$. This is the \textbf{Zero Dynamics} of the system.
+
+For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered, followed by an instantaneous jump map (a reset) dictated by conservation of momentum.
+
+\begin{principle}{Hybrid Zero Dynamics (HZD)}{hzd}
+  A control architecture achieves Hybrid Zero Dynamics if the invariant manifold $\mathcal{Z}$ (the zero dynamics surface) is invariant not just under the continuous flow of the differential equations, but also invariant under the discrete impact map. That is, an impact starting on the manifold $\mathcal{Z}$ must immediately map to a new state that is also on $\mathcal{Z}$.
+\end{principle}
+
+By enforcing HZD, we can design rhythmic walking gaits that are astonishingly robust. If the robot trips, its phase slows down, but the virtual constraints remain active, keeping the limbs on the correct spatial path until the next footfall resets the sequence. The temporal sequence arises naturally from the interplay of gravity and momentum.
+
+% ══════════════════════════════════════════════
+\section{Application: The Golf Downswing}
+% ══════════════════════════════════════════════
+
+While the golf swing is not a periodic walking gait, the phase-variable approach perfectly encapsulates the athletic reality of the swing. The golfer's shoulder angle defines the phase $s$. The target manifold is $s = 1.0$ (the impact location). 
+
+By structuring the control scheme computationally through Virtual Constraints, the golfer is impervious to slight hesitations at the top of the backswing. The transverse feedback LQR (Chapter 4) corrects spatial deviations from the unactuated club ($\theta_2$), while the phase variable ensures the arm actuation ($u_1$) applies the necessary parametric braking entirely in synchrony with the physical location of the arms, leading to perfectly timed passive impact dynamics regardless of chronological speed.
+
