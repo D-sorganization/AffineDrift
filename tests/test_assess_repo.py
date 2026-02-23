@@ -114,12 +114,15 @@ except Exception:
 def test_assess_error_handling_bare_except():
     """Test error handling assessment with bare excepts."""
     mock_file = MagicMock()
-    mock_file.read_text.return_value = """
+    mock_file.read_text.return_value = (
+        """
 try:
     pass
 except:
     pass
-""" * 6
+"""
+        * 6
+    )
     result = assess_repo.assess_error_handling([mock_file])
     # 6 bare excepts (>5) => -2
     # try_count=  6 (<=20) => no bonus
