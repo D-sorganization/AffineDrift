@@ -18,6 +18,13 @@ pathways. The goal is to move from theory to implementation.
 \section{Biomechanics: The Golf Swing as a Control-Affine System}
 %% ==========================================================================
 
+\begin{laymansbox}[Context & Use Case: Modeling Complex Human Motion]
+\textbf{The Math You Will See:} We will build a high-dimensional state vector $\mathbf{x}$ containing joint angles ($\mathbf{q}$) and velocities ($\dot{\mathbf{q}}$), and construct massive Inertia ($\mathbf{M}$) and Centrifugal/Coriolis ($\mathbf{C}$) matrices to predict motion. 
+\textbf{Why We Need It:} The golf swing isn't just about swinging a stick; it involves the torso, arm, wrist, and a flexible/bending golf club shaft. By packing all these moving parts into vectors and matrices, we can use a single set of equations to calculate the forces required to hit the ball optimally. 
+\textbf{All Variables Defined:} Variables like $\mathbf{q}$ (angles), $\dot{\mathbf{q}}$ (angular velocities), and $\mathbf{M(q)}$ (mass matrix) follow standard robotics conventions. Check the \textbf{Nomenclature} at the start of this volume if you forget what a symbol means!
+\end{laymansbox}
+
+
 \subsection{System Definition and Parameterization}
 
 The golfer--club--shaft system is a coupled rigid--flexible multibody chain:
