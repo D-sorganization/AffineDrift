@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 10: Machine Learning and Neural Networks
+%  Chapter 12: Machine Learning and Neural Networks
 % ==========================================================================
 \chapter{Machine Learning and Neural Networks}
 \label{ch:machine_learning}
@@ -8,62 +8,62 @@
   We map the geometry of physics using calculus and Lie Groups. We map the geometry of behavior using function approximation and gradient descent.
 }{}
 
+\begin{laymansbox}[Context \& Use Case: Learning Instead of Deriving]
+\textbf{The Math You Will See:} We introduce \textbf{Neural Networks}, \textbf{Gradient Descent} ($\nabla_W \mathcal{L}$), and the concept of a \textbf{Policy} ($\pi(\mathbf{x})$).
+\textbf{Why We Need It:} Analytical physics engines (Euler-Lagrange and Newton-Euler) are flawless for rigid robots made of perfectly measured titanium. But what about a human golfer? We do not know the exact mass distribution of their shirt, the friction of the grass, or the elasticity of their muscle fibers. When equations become too clouded with uncertainty or too wildly nonlinear to solve analytically, we use Machine Learning. We build a massive, flexible mathematical structure (a neural network) and repeatedly bend its shape using calculus until it naturally approximates the correct physics without us having to write them.
+\textbf{All Variables Defined:} $W$ and $b$ are the weights and biases of the network, $\sigma$ is the nonlinear activation function (like ReLU), and $\mathcal{L}$ is the Loss/Error we are trying to minimize.
+\end{laymansbox}
+
 \section{The Limits of Analytical Control}
 
 By utilizing the Spatial Algebra, Exponential Coordinates, and Recursive Algorithms established in the preceding chapters, we can write a perfect mathematical model of a purely rigid robotic system.
 
-But what if the system isn't rigid? What if we are modeling the 15-DOF golf swing of an athlete with deformable muscles, unpredictable wind friction, and complex contact dynamics with the ground? The mathematical model $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\dot{\bm{q}}, \bm{q}) - G(\bm{q})$ becomes inherently flawed. We do not know the exact friction. We do not know the exact mass of the golfer's shirt.
+But what if the system isn't rigid? What if we are modeling the 15-DOF golf swing of an athlete with deformable muscles, unpredictable wind friction, and complex contact dynamics with the ground? The mathematical model $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})$ becomes inherently flawed. We do not know the exact friction. We do not know the exact mass of the golfer's shirt.
 
-When analytical equations fail due to extreme nonlinear complexity or uncertainty, we pivot from \textit{deriving} the control laws to \textit{learning} them.
-
-\begin{laymansbox}{What is Machine Learning?}{ml_intuition}
-  Machine Learning (specifically neural networks) is fundamentally just a very advanced, very massive curve-fitting algorithm. 
-  
-  If we do not know the exact mathematical function mapping "Current Posture" to "Correct Motor Torque," we create a blank, highly flexible mathematical structure (a Neural Network) and slowly bend it, tweak it, and shift it until it accurately approximates the unseen, perfect function.
-\end{laymansbox}
+When analytical equations fail due to extreme nonlinear complexity or uncertainty, we pivot from \textit{deriving} the control laws exactly to \textit{learning} them empirically.
 
 \section{Neural Networks as Function Approximators}
 
-At its core, a Neural Network is a series of matrix operations passed through nonlinear functions.
+At its core, a Neural Network is a series of matrix operations passed through nonlinear continuous functions.
 
-Suppose we want a control policy $\pi$ that takes our current state vector $\state$ (position and velocity) and outputs a control torque $\control$:
+Suppose we want a control policy $\pi$ that takes our current state vector $\mathbf{x}$ (joint positions, velocities, and targets) and outputs an optimal control torque $\mathbf{u}$:
 \begin{equation}
-   \control = \pi(\state)
+   \mathbf{u} = \pi(\mathbf{x})
 \end{equation}
 
-A simple "feedforward" neural network approximates this function $\pi$ using layers of "neurons." A deep neural network translates the state vector $\state \in \Reals^n$ through weight matrices $W$ and bias vectors $b$:
+A simple "feedforward" neural network approximates this exact function $\pi$ using layers of "neurons." A deep neural network translates the state vector $\mathbf{x} \in \Reals^n$ through successive weight matrices $\mathbf{W}$ and bias vectors $\mathbf{b}$:
 \begin{align}
-   h_1 &= \sigma(W_1 \state + b_1) \\
-   h_2 &= \sigma(W_2 h_1 + b_2) \\
-   \control &= W_3 h_2 + b_3
+   \mathbf{h}_1 &= \sigma(\mathbf{W}_1 \mathbf{x} + \mathbf{b}_1) \\
+   \mathbf{h}_2 &= \sigma(\mathbf{W}_2 \mathbf{h}_1 + \mathbf{b}_2) \\
+   \mathbf{u} &= \mathbf{W}_3 \mathbf{h}_2 + \mathbf{b}_3
 \end{align}
 
-Where $\sigma$ is an activation function (like ReLU or Tanh) which introduces nonlinearity, preventing the entire network from collapsing into just a single linear matrix multiplication.
+Where $\sigma$ is a scalar activation function (like ReLU or Tanh) applied element-wise. The activation function introduces critical nonlinearity, preventing the entire massive network from algebraically collapsing into just a single linear matrix multiplication.
 
 \section{Backpropagation and Gradient Descent}
 
-How does the network "learn" the correct weights ($W_1, W_2, \dots$) to control the robot?
+How does the network "learn" the correct weights ($\mathbf{W}_1, \mathbf{W}_2, \dots$) to optimally control the robot?
 We define a \textbf{Loss Function} $\mathcal{L}$, which mathematically penalizes the network for making mistakes. If the network commands the robot to punch a wall, the loss $\mathcal{L}$ spikes massively.
 
-Using basic calculus (the Chain Rule), we can evaluate the derivative of the Loss function with respect to every single weight matrix $W$ in the network. This is called the \textbf{Gradient} ($\nabla_W \mathcal{L}$). The Gradient simply points uphill towards higher error.
+Using basic multi-variable calculus (the Chain Rule), we can evaluate the derivative of the Loss function with respect to every single weight matrix $\mathbf{W}$ in the network simultaneously. This is called the \textbf{Gradient} ($\nabla_W \mathcal{L}$). The Gradient simply points uphill towards the direction of higher error.
 
-We update the weights by stepping gently downhill (the opposite direction of the gradient) scaled by a Learning Rate $\alpha$:
+We update the weights by stepping gently downhill (the exact opposite direction of the gradient) scaled by a Learning Rate $\alpha$:
 \begin{equation}
-   W_{new} = W_{old} - \alpha \nabla_W \mathcal{L}
+   \mathbf{W}_{\text{new}} = \mathbf{W}_{\text{old}} - \alpha \nabla_W \mathcal{L}
 \end{equation}
 This incredibly robust, iterative calculus calculation is called \textbf{Backpropagation (Backprop)}.
 
 \section{Reinforcement Learning (RL)}
 
-In Supervised Learning, a human must constantly provide the "correct" answer to calculate the gradient. But in robotic control, we often do not know the correct joint torques for a 15-DOF golf swing.
+In Supervised Learning, a human must constantly provide the "correct" answer (a labeled dataset) to calculate the gradient. But in robotic control, we often do not know the correct joint torques for a 15-DOF golf swing to use as a label.
 
-\textbf{Reinforcement Learning (RL)} solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\control$ at state $\state$, observes the new state $\state'$, and receives a scalar \textbf{Reward} $R$ (e.g., +100 for hitting the ball, -10 for falling over). 
+\textbf{Reinforcement Learning (RL)} solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\mathbf{u}$ at state $\mathbf{x}$, observes the new resulting state $\mathbf{x}'$ from the simulator, and receives a scalar \textbf{Reward} $R$ (e.g., +100 for hitting the ball perfectly, -10 for falling over clumsily). 
 
-RL algorithms seek to learn the \textbf{Value Function} $V(\state)$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\state$. By maximizing the Value Function, the neural network organically discovers complex behaviors—often outperforming classical control theory because it fully exploits passive geometric dynamics instead of fighting them.
+RL algorithms seek to learn the \textbf{Value Function} $V(\mathbf{x})$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\mathbf{x}$. By maximizing the Value Function over millions of iterations, the neural network organically discovers complex behaviors—often outperforming classical analytical control theory because it fully exploits passive geometric dynamics instead of fighting them.
 
 \section{Worked Example: Forward Pass in Python}
 
-Implementing a Neural Network does not require massive libraries, just standard linear algebra. Here is the mathematical Forward Pass of a policy $\pi(\state)$ mapping a 4-dimensional state (e.g., an inverted pendulum) to a 1-dimensional control torque using \texttt{NumPy}.
+Implementing the usage of a Neural Network does not require massive libraries (like PyTorch or TensorFlow), just standard linear algebra. Here is the mathematical Forward Pass of a policy $\pi(\mathbf{x})$ mapping a 4-dimensional state (e.g., balancing an inverted pendulum) to a 1-dimensional control torque using \texttt{NumPy}.
 
 \begin{lstlisting}[language=Python, caption=Neural Network Forward Pass for Policy Control]
 import numpy as np
@@ -109,6 +109,6 @@ commanded_u = neural_network_policy(current_state, W1, b1, W2, b2)
 print("Commanded Torque from Neural Network policy:", np.round(commanded_u[0, 0], 4))
 \end{lstlisting}
 
-This code block demonstrates exactly how Reinforcement Learning algorithms map physics. Millions of times per second, matrices multiply vectors and pass through ReLU functions to output physical torques inside the UpstreamDrift physics simulation.
+This code block demonstrates exactly how Reinforcement Learning algorithms map physics internally at runtime. Millions of times per second, matrices multiply state vectors and pass through ReLU functions to output physical motor torques inside the UpstreamDrift physics simulation.
 
-With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds securely established, you are now completely prepared to tackle the advanced control theory in Volume I and Volume II of \textit{The Geometry of Motion}.
+With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds securely established, you are now completely prepared to tackle the advanced control theory contained in Volume I and Volume II of \textit{The Geometry of Motion}.

@@ -1,67 +1,73 @@
 % ==========================================================================
-%  Chapter 9: The Articulated Body Algorithm\index{Articulated Body Algorithm}
+%  Chapter 10: The Articulated Body Algorithm
 % ==========================================================================
-\chapter{The Articulated Body Algorithm\index{Articulated Body Algorithm}}
+\chapter{The Articulated Body Algorithm}
 \label{ch:articulated_body_algorithm}
 
 \epigraph{%
   You cannot push a single domino. When a body is linked, pushing one piece means pushing the entire chain, yet we compute the physical consequences of the entire cascading collision with linear precision.
 }{}
 
+\begin{laymansbox}[Context \& Use Case: Forward Simulation]
+\textbf{The Math You Will See:} We will cover the $O(N)$ \textbf{Articulated Body Algorithm (ABA)} and define the \textbf{Articulated Inertia} ($\mathcal{I}^A$).
+\textbf{Why We Need It:} In Chapter 7, we asked: "I want to move my arm here, how much motor torque do I need?" (Inverse Dynamics). ABA solves the exact opposite: "I am applying this much torque, what acceleration will result?" (Forward Dynamics). Physics simulators like MuJoCo or games use ABA every single frame to predict how a robot or character will move. If you use a massive matrix equation, it takes an impossibly long $O(N^3)$ calculation time to invert for 30 joints. ABA computes it perfectly recursively in just $O(N)$ time.
+\textbf{All Variables Defined:} $\mathbf{p}_i$ is the bias force dragging on a link, and $\mathcal{I}^A_i$ is the apparent inertia of a link when dragged along with all its children. 
+\end{laymansbox}
+
 \section{Forward Dynamics}
 
-In Chapter 6, we introduced the Recursive Newton-Euler\index{Newton-Euler Equations} Algorithm. That algorithm solved the \textbf{Inverse Dynamics} problem: Given a desired trajectory ($\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}$), what forces $\bm{\tau}$ must the motors output to achieve it?
+In Chapter 7, we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the \textbf{Inverse Dynamics} problem: Given a desired trajectory ($\mathbf{q}, \dot{\mathbf{q}}, \ddot{\mathbf{q}}$), what forces $\boldsymbol{\tau}$ must the motors output to achieve it?
 
 However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments (as used in UpstreamDrift's simulation core), we face the exact opposite problem: \textbf{Forward Dynamics}. 
 
-Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), and the forces currently being produced by the motors ($\bm{\tau}$), what will the resulting acceleration ($\ddot{\bm{q}}$) be?
+Given the current position ($\mathbf{q}$), current speed ($\dot{\mathbf{q}}$), and the forces currently being produced by the motors ($\boldsymbol{\tau}$), what will the resulting physical acceleration ($\ddot{\mathbf{q}}$) mathematically be?
 \begin{equation}
-   \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})
+   \ddot{\mathbf{q}} = \text{ForwardDynamics}(\mathbf{q}, \dot{\mathbf{q}}, \boldsymbol{\tau})
 \end{equation}
 
-If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$.
+If we construct the monolithic mass matrix $\mathbf{M}(\mathbf{q})$ and solve $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for multi-jointed robots, as the computational time scales worse than $O(N^3)$. Simulating a 50-joint human hand and arm with a monolithic matrix inversion is prohibitively slow for real-time physics.
 
 \section{Featherstone's $O(N)$ Solution: Articulated Inertia}
 
-In 1983, Roy Featherstone published a monumental paper outlining the \textbf{Articulated Body Algorithm (ABA)}. ABA solves the Forward Dynamics problem recursively without ever constructing or inverting the monolithic mass matrix $M(\bm{q})$. Instead, it computes the exact accelerations ($\ddot{\bm{q}}$) link by link in just $O(N)$ time.
+In 1983, Roy Featherstone published a monumental paper outlining the \textbf{Articulated Body Algorithm (ABA)}. ABA solves the Forward Dynamics problem recursively without ever constructing or inverting the monolithic mass matrix $\mathbf{M}(\mathbf{q})$. Instead, it computes the exact joint accelerations ($\ddot{\mathbf{q}}$) sequentially in just $O(N)$ time.
 
-The secret to ABA lies in the concept of \textbf{Articulated Inertia} ($I_A^i$). 
+The secret to ABA lies in the concept of \textbf{Articulated Inertia} ($\mathcal{I}^A_i$). 
 
 \begin{laymansbox}{What is Articulated Inertia?}{aba_intuition}
-  Imagine pushing a heavy metal rod lying on a frictionless table. The resistance you feel is its standard rigid-body spatial inertia ($I_s$). 
+  Imagine pushing a heavy metal rod lying on a frictionless table. The resistance you feel is its standard rigid-body spatial inertia ($\mathcal{I}$). 
   
-  Now, imagine that rod is bolted via a rusty, friction-filled hinge to another rod, which holds a giant brick. If you push the first rod now, it feels immensely heavier. By pushing the base element, you are forcing the entire interconnected structure to move. The \textit{effective} resistance you feel at that base link, accounting for all the connected chains swinging behind it, is its \textbf{Articulated Inertia}.
+  Now, imagine that rod is bolted via a rusty, friction-filled hinge to another rod, which holds a giant heavy brick. If you push the first rod now, it feels immensely heavier. By pushing the base element, you are forcing the entire interconnected structure to move. The \textit{effective} resistance you feel at that base link, accounting for all the connected chains swinging behind it, is its \textbf{Articulated Inertia}.
 \end{laymansbox}
 
 \section{The Three Passes of ABA}
 
-The algorithm runs sequentially across the branches of the robot tree and operates entirely in the 6D Spatial Vector Algebra developed in Chapter 7. It consists of three sweeps:
+The algorithm runs sequentially across the branches of the robot tree and operates entirely in the 6D Spatial Vector Algebra developed in Chapter 8. It consists of three sweeps:
 
 \subsection{1. Outward Pass: Velocity and Bias Forces}
-Starting at the root (the ground), propagate outward to the leaves (the end effectors). For every link $i$, compute its absolute spatial velocity $\twist_i$, its Coriolis accelerations, and extract the spatial \textbf{Bias Force} $\bm{p}_i$ (the force that would act on the link even if the joint accelerations were exactly zero).
+Starting at the root (the ground), propagate outward to the leaves (the end effectors). For every link $i$, compute its absolute spatial velocity $\mathcal{V}_i$. Then, compute the Coriolis accelerations, and extract the spatial \textbf{Bias Force} $\mathbf{p}_i$ (the force that would act upon the link even if the current joint accelerations were exactly zero).
 
 \subsection{2. Inward Pass: Articulated Inertias}
 Starting at the leaves and propagating inward towards the root base. 
-At the tip, the Articulated Inertia is identical to the standard rigid Spatial Inertia: $I_A^{tip} = I_s^{tip}$.
-But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $S_i$ via a recursive equation:
+At the tip, the Articulated Inertia is completely identical to the standard rigid Spatial Inertia: $\mathcal{I}^A_{\text{tip}} = \mathcal{I}_{\text{tip}}$.
+But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $\mathcal{S}_{i+1}$ via a recursive equation:
 \begin{equation}
-   I_A^i = I_s^i + I_A^{i+1} - \frac{ (I_A^{i+1} \screw_{i+1}) (I_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T I_A^{i+1} \screw_{i+1} }
+   \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{ (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T }{ \mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1} }
 \end{equation}
 
-The denominator $\screw^T I_A \screw$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor across the geometric pin joint.
+The denominator $\mathcal{S}^T \mathcal{I}^A \mathcal{S}$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor safely across the geometric pin joint.
 
 \subsection{3. Outward Pass: Joint Accelerations}
-Once the Articulated Inertia has propagated completely to the base, we reverse direction one final time.
-Because we know the true apparent "weight" of the entire chain resting on the base link, we can immediately solve for the exact scalar acceleration $\ddot{q}_1$ of the first joint based on its applied torque $\tau_1$.
+Once the Articulated Inertia has propagated completely back to the base, we reverse direction one final time.
+Because we now know the true apparent "weight" of the entire chain resting on the base link, we can immediately solve for the exact scalar acceleration $\ddot{q}_1$ of the first joint based purely on its applied torque $\tau_1$.
 \begin{equation}
-   \ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T I_A^i \screw_i}
+   \ddot{q}_i = \frac{\tau_i - \mathcal{S}_i^T \mathbf{p}_i}{\mathcal{S}_i^T \mathcal{I}^A_i \mathcal{S}_i}
 \end{equation}
 
-Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\twist}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
+Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\mathcal{V}}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
 
-\section{Worked Example: The Pseudocode of Articulated Inertia}
+\section{Worked Example: ABA Pseudocode}
 
-Here is python pseudocode demonstrating how the recursive articulated inertia loop works.
+Here is Python pseudocode demonstrating how the recursive articulated inertia loop functions algorithmically.
 
 \begin{lstlisting}[language=Python, caption=The Inward Pass: Articulated Inertia Propagation]
 import numpy as np
@@ -71,7 +77,7 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
     # (assuming no child links yet)
     I_A = list(spatial_inertias) 
     
-    # Loop from leaf (tip) to root (base)
+    # Loop from leaf (tip) to root (base) backward
     for i in range(n_links - 1, 0, -1):
         
         # Parent Index
@@ -96,4 +102,4 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
 # I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
 \end{lstlisting}
 
-This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *The Geometry of Motion*.
+This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time forward simulation logic throughout computational dynamics.
