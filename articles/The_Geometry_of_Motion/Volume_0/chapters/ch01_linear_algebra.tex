@@ -8,21 +8,34 @@
   You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
 }{}
 
-\section{Vectors and Matrices}
+\begin{laymansbox}[Context \& Use Case: Why Linear Algebra is the Language of Motion]
+\textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), and Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$). 
+\textbf{Why We Need It:} A robot's joints or a car's velocity don't exist as single numbers; they exist as large arrays of interacting numbers. Linear algebra is the mathematics of these arrays. If you want to know if a drone will crash into the ground, you don't track every single rotor separately; you assemble the entire system into a single matrix and look at its eigenvalues. 
+\textbf{All Variables Defined:} Check the \textbf{Nomenclature} at the start of the book for standard vector and matrix conventions.
+\end{laymansbox}
+
+\section{Vectors, Matrices, and Vector Spaces}
 
 Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
 
-A **vector** $\bm{v}$ is an array of numbers that can represent a position in space, a velocity, or a set of sensor readings. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$).
+A \textbf{vector} $\mathbf{v}$ is an ordered array of numbers. It can represent a position in space, a velocity profile, or a list of sensor readings. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
 \begin{equation}
-   \bm{v} = \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} \in \Reals^3
+   \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} \in \Reals^n
 \end{equation}
 
-A **matrix** $M$ is a 2D grid of numbers. If a vector represents a point, a matrix acts as a set of instructions on how to transform that point—stretching it, rotating it, or moving it into an entirely different dimensional space.
+A \textbf{matrix} $\mathbf{M}$ is a 2D grid of numbers. If a vector represents a point, a matrix acts as a set of instructions on how to \emph{transform} that point---stretching it, rotating it, or moving it into an entirely different dimensional space. It maps vectors from one space to another ($\mathbf{M} : \Reals^m \to \Reals^n$).
 \begin{equation}
-   M = \begin{bmatrix} a_1 & b_1 & c_1 \\ a_2 & b_2 & c_2 \\ a_3 & b_3 & c_3 \end{bmatrix} \in \Reals^{3 \times 3}
+   \mathbf{M} = \begin{bmatrix} m_{11} & m_{12} & \cdots & m_{1m} \\ m_{21} & m_{22} & \cdots & m_{2m} \\ \vdots & \vdots & \ddots & \vdots \\ m_{n1} & m_{n2} & \cdots & m_{nm} \end{bmatrix} \in \Reals^{n \times m}
 \end{equation}
 
-When we multiply a matrix by a vector ($M\bm{v}$), the matrix literally reshapes the vector. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its bones.
+When we multiply a matrix by a vector ($\mathbf{M}\mathbf{v}$), the matrix takes a linear combination of its columns using the elements of $\mathbf{v}$ as weights. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its links.
+
+\subsection{Rank and Null Space}
+Not all transformations lose information, but some do. 
+\begin{itemize}
+    \item \textbf{Rank:} The \emph{rank} of a matrix is the number of linearly independent columns it contains. If a $3 \times 3$ matrix has a rank of 2, it collapses full 3D space into a completely flat 2D plane. In robotics, the rank of the Jacobian matrix tells you how many directions your end-effector can actually move. If the rank drops, the robot is in a \emph{singularity} (stuck).
+    \item \textbf{Null Space (Kernel):} The null space $\mathcal{N}(\mathbf{M})$ is the set of all vectors $\mathbf{x}$ that get crushed to zero: $\mathbf{M}\mathbf{x} = \mathbf{0}$. For a humanoid robot, the null space of the arm's Jacobian describes all the "internal motions" it can make (like wildly swinging its elbow) while keeping its hand completely still holding a cup of coffee.
+\end{itemize}
 
 \section{The Dot Product and Cross Product}
 
@@ -31,28 +44,58 @@ Two fundamental operations exist for combining vectors in 3-dimensional space:
 \subsection{The Dot Product}
 The dot product (or inner product) is a scalar (a single number). It measures how much two vectors "align" with each other. It is calculated by multiplying matching components and summing them.
 \begin{equation}
-   \bm{a} \cdot \bm{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\bm{a}}\norm{\bm{b}}\cos(\theta)
+   \mathbf{a} \cdot \mathbf{b} = \mathbf{a}^T \mathbf{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos(\theta)
 \end{equation}
-If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces mathematically onto specific mechanical joints.
+If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\mathbf{v}^T \mathbf{M} \mathbf{v}$) and to project forces mathematically onto specific mechanical joints. The inner product fundamentally generalizes the concept of an angle to high dimensions.
 
-\subsection{The Cross Product}
+\subsection{The Cross Product and the Skew-Symmetric Matrix}
 The cross product is a vector. It takes two vectors and generates a brand new vector that is perfectly perpendicular to both of them.
 \begin{equation}
-   \bm{a} \times \bm{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
+   \mathbf{a} \times \mathbf{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
 \end{equation}
 
-In physics, the cross product is the mathematical engine of rotation. If you apply a force $\bm{F}$ at a distance $\bm{r}$ from a hinge, the resulting torque $\bm{\tau}$ twisting the hinge is exactly the cross product: $\bm{\tau} = \bm{r} \times \bm{F}$. 
-Crucially, the magnitude of a cross product scales with the sine of the angle ($|\bm{a} \times \bm{b}| = \norm{\bm{a}}\norm{\bm{b}}\sin \theta$).
-
-\section{Eigenvalues and Eigenvectors: The Shape of the System}
-
-When you multiply a vector by a matrix, the vector usually changes direction. However, for almost every matrix, there are a few special vectors that do \textit{not} change direction when the matrix hits them. They only stretch or shrink. 
-
-These magical vectors are called **Eigenvectors** ($\bm{v}$), and the amount they stretch is called the **Eigenvalue** ($\lambda$).
+In physics, the cross product is the mathematical engine of rotation. If you apply a force $\mathbf{F}$ at a distance $\mathbf{r}$ from a hinge, the resulting torque $\boldsymbol{\tau}$ twisting the hinge is exactly the cross product: $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}$. 
+Crucially, the cross product can be rewritten as a matrix multiplication. We define the \emph{skew-symmetric matrix} $[\mathbf{a}_\times]$:
 \begin{equation}
-   M\bm{v} = \lambda\bm{v}
+    [\mathbf{a}_\times] = \begin{bmatrix} 0 & -a_z & a_y \\ a_z & 0 & -a_x \\ -a_y & a_x & 0 \end{bmatrix} \quad \implies \quad \mathbf{a} \times \mathbf{b} = [\mathbf{a}_\times] \mathbf{b}
+\end{equation}
+Notice that for a skew-symmetric matrix, $[\mathbf{a}_\times]^T = -[\mathbf{a}_\times]$. This matrix representation is absolutely pivotal for representing 3D rotations in Lie Algebra, which we cover heavily in Chapter 4.
+
+\section{Eigenvalues, Eigenvectors, and Quadratic Forms}
+
+When you multiply a vector by a matrix, the vector usually changes direction. However, for almost every square matrix, there are a few special directions that do \emph{not} change their axis when the matrix hits them. They only stretch, shrink, or flip. 
+
+\subsection{The Eigen-Decomposition}
+These magical vectors are called \textbf{Eigenvectors} ($\mathbf{v}_i$), and the amount they stretch is called the \textbf{Eigenvalue} ($\lambda_i$). 
+\begin{equation}
+   \mathbf{M}\mathbf{v}_i = \lambda_i \mathbf{v}_i
 \end{equation}
 
 Why do we care? 
-If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin. 
-If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate if the system will explode out of control ($\lambda > 0$) or safely stabilize back to resting ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.
+\begin{enumerate}
+    \item If $\mathbf{M}$ represents the mass and inertia tensor of a tumbling satellite in space, its eigenvectors tell us the "Principal Axes"---the natural axes where the satellite is easiest and hardest to spin stably. 
+    \item If $\mathbf{M}$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate stability. If any eigenvalue has a positive real part ($Re(\lambda) > 0$), the system will explode exponentially. If all eigenvalues are negative ($Re(\lambda) < 0$), the system safely stabilizes back to rest. Eigenvalues are the fundamental heartbeat of linear dynamics.
+\end{enumerate}
+
+\subsection{Symmetric Matrices and Quadratic Forms}
+In optimization and energy mechanics, we frequently encounter \emph{quadratic forms}, written as $\mathbf{x}^T \mathbf{M} \mathbf{x}$. 
+\begin{equation}
+    q(\mathbf{x}) = \mathbf{x}^T \mathbf{M} \mathbf{x} = \sum_{i,j} M_{ij} x_i x_j
+\end{equation}
+Kinetic energy ($E = \frac{1}{2} \mathbf{v}^T \mathbf{M} \mathbf{v}$), optimal control costs ($J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$), and Lyapunov functions all rely on symmetric metrics. A symmetric matrix ($\mathbf{M} = \mathbf{M}^T$) has a beautiful property: \emph{all of its eigenvalues are strictly real, and all of its eigenvectors are perfectly orthogonal to each other}.
+
+If all eigenvalues of a symmetric matrix $\mathbf{M}$ are strictly positive ($\lambda_i > 0$), the matrix is called \textbf{Positive Definite} ($\mathbf{M} \succ 0$). This guarantees that $\mathbf{x}^T \mathbf{M} \mathbf{x} > 0$ for any non-zero $\mathbf{x}$. In control, if you can prove your energy matrix is positive definite, you have mathematically proven that your system's energy has a strict "bottom" (a minimum), which is the cornerstone of stability proofs.
+
+\section{The Singular Value Decomposition (SVD)}
+What if a matrix isn't square? Or what if it doesn't have a full set of eigenvectors? The \textbf{Singular Value Decomposition (SVD)} is the ultimate, bulletproof factorization of \emph{any} matrix, regardless of size or rank.
+\begin{equation}
+    \mathbf{M} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T
+\end{equation}
+\begin{itemize}
+    \item $\mathbf{V}$ (Right singular vectors): A rotation in the input space.
+    \item $\mathbf{\Sigma}$ (Singular values, $\sigma_i$): Diagonal scaling factors (always positive).
+    \item $\mathbf{U}$ (Left singular vectors): A rotation in the output space.
+\end{itemize}
+
+Geometrically, the SVD says that \emph{any} linear transformation can be broken down into three simple steps: Rotate the input ($\mathbf{V}^T$), stretch it along the axes ($\mathbf{\Sigma}$), and rotate the output ($\mathbf{U}$). 
+In robotics, if we take the SVD of the Jacobian matrix, the vectors in $\mathbf{U}$ describe the actual geometric directions the end-effector can push, while the singular values $\sigma_i$ form the "Velocity Ellipsoid", telling us exactly how fast the robot can move in those directions. If a singular value $\sigma_k = 0$, the robot has lost a degree of freedom!

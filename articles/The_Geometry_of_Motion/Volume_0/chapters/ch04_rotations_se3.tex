@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 3: Rotations, Quaternions, and SO(3)
+%  Chapter 4: Rotations, Quaternions, and SO(3)
 % ==========================================================================
 \chapter{Rotations, Quaternions, and SO(3)}
 \label{ch:rotations}
@@ -8,66 +8,84 @@
   The tragedy of Euclidean space is that it works perfectly until you spin.
 }{}
 
+\begin{laymansbox}[Context \& Use Case: The Problem with Spinning]
+\textbf{The Math You Will See:} We introduce \textbf{Rotation Matrices} ($\mathbf{R}$), the \textbf{Special Orthogonal Group} $SO(3)$, and \textbf{Quaternions} ($\mathbf{q}$). 
+\textbf{Why We Need It:} Moving a robot arm up, down, left, or right is easy; you just add numbers to $X, Y, Z$. But calculating what happens when a drone performs a backflip while spinning like a top is a mathematical nightmare. The most intuitive way to track rotation (Euler angles like Roll, Pitch, Yaw) literally breaks the laws of math in certain positions, causing flight controllers to crash. To solve this, we must map rotations using completely different objects: $3 \times 3$ matrices and 4-dimensional Quaternions.
+\textbf{All Variables Defined:} $\mathbf{R} \in SO(3)$ is a rotation matrix, and $\mathbf{q} \in \Reals^4$ is a quaternion.
+\end{laymansbox}
+
 \section{The Coordinate Frame}
 
-When we model movement or control robotic systems, we are not looking at the physical object itself; we are tracking a \textbf{Coordinate Frame} rigidly attached to the object, often denoted as the Body Frame ($B$). 
+When we model movement or control robotic systems, we are not looking at the physical object itself; we are tracking a \textbf{Coordinate Frame} rigidly attached to the object, often denoted as the Body Frame ($\{b\}$). 
 
-To know where the Body Frame $B$ is relative to the absolute stationary universe—the Spatial (or World) Frame ($S$)—we must define two mathematical properties:
-1. The **translation** vector $\bm{p} \in \Reals^3$ pointing from the origin of $S$ to the origin of $B$. 
-2. The **rotation** of the axes of $B$ relative to the axes of $S$.
+To know where the Body Frame $\{b\}$ is relative to the absolute stationary universe—the Spatial (or World) Frame ($\{s\}$)—we must define two mathematical properties:
+\begin{enumerate}
+    \item The \textbf{translation} vector $\mathbf{p} \in \Reals^3$ pointing from the origin of $\{s\}$ to the origin of $\{b\}$. 
+    \item The \textbf{rotation} of the axes of $\{b\}$ relative to the axes of $\{s\}$.
+\end{enumerate}
 
 Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is profoundly mathematically problematic.
 
-\section{Euler Angles\index{Euler Angles} and Gimbal Lock\index{Gimbal Lock}}
+\section{Euler Angles and Gimbal Lock}
 
-The most intuitive way to describe the orientation of an aircraft, drone, or robotic arm is to split rotation into three successive angles around axes, usually denoted as Roll, Pitch, and Yaw ($X, Y, Z$). 
+The most intuitive way for a human to describe the orientation of an aircraft or robotic arm is to split rotation into three successive angles around primary axes, usually denoted as Roll, Pitch, and Yaw. 
 
-This is known as an \textbf{Euler Angle} representation: $\bm{\theta} = [\theta_1, \theta_2, \theta_3]^T$. While highly intuitive for a human pilot, Euler Angles\index{Euler Angles} harbor a fatal mathematical flaw known as \textbf{Gimbal Lock\index{Gimbal Lock}}.
+This is known as an \textbf{Euler Angle} representation: $\boldsymbol{\theta} = [\phi, \theta, \psi]^T$. While highly intuitive for a human pilot, Euler Angles harbor a fatal mathematical flaw known as \textbf{Gimbal Lock}.
 
 \begin{laymansbox}{Gimbal Lock}{gimballock}
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth). 
   
-  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this "Singularity", your matrices become non-invertible and your computer instantly crashes mapping a physical impossibility.
+  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this "Singularity", your matrices become non-invertible and your computer instantly crashes trying to compute a physical impossibility.
 \end{laymansbox}
 
-Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles. We cannot afford mathematical singularities.
+Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles for internal calculations. We cannot afford mathematical singularities.
 
 \section{The Special Orthogonal Group: SO(3)}
 
-To map 3D orientation without singularities in all continuous space, we define a rotation by looking at the purely physical unit vectors defining the Body Frame $B$: the $\hat{x}_b, \hat{y}_b, \hat{z}_b$ axes.
+To map 3D orientation without singularities in all continuous space, we define a rotation by looking at the purely physical unit vectors defining the Body Frame $\{b\}$: the $\hat{\mathbf{x}}_b, \hat{\mathbf{y}}_b, \hat{\mathbf{z}}_b$ axes.
 
-If we write these three body axes explicitly in the coordinates of the Space Frame $S$, we can stack them vertically into a $3 \times 3$ matrix:
+If we write these three body axes explicitly in the coordinates of the Space Frame $\{s\}$, we can stack them side-by-side into a $3 \times 3$ matrix:
 \begin{equation}
-   R = \begin{bmatrix} | & | & | \\ \hat{x}_b & \hat{y}_b & \hat{z}_b \\ | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
+   \mathbf{R} = \begin{bmatrix} | & | & | \\ \hat{\mathbf{x}}_b & \hat{\mathbf{y}}_b & \hat{\mathbf{z}}_b \\ | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
 \end{equation}
 
 This is a \textbf{Rotation Matrix}. 
 
-Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitude) and perfectly orthogonal (all $90^\circ$ apart), the columns are an orthonormal basis. The strict mathematical definitions that guarantee this orthonormality are:
-1. $R^T R = I$ (The transpose equals the inverse)
-2. $\det(R) = 1$ (The determinant is 1 to preserve right-handed orientation—no reflecting through a mirror)
+Because $\hat{\mathbf{x}}_b, \hat{\mathbf{y}}_b,$ and $\hat{\mathbf{z}}_b$ are all length $1$ (unit magnitude) and perfectly orthogonal (all $90^\circ$ apart, meaning their dot products with each other are 0), the columns form an \emph{orthonormal basis}. The strict mathematical conditions that guarantee this orthonormality are:
+\begin{enumerate}
+    \item $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ (The transpose is exactly equal to the inverse: $\mathbf{R}^T = \mathbf{R}^{-1}$). This means reversing a rotation is as trivial as transposing the matrix!
+    \item $\det(\mathbf{R}) = 1$ (The determinant is 1 to preserve right-handed orientation—it strictly prevents the matrix from reflecting the object through a mirror).
+\end{enumerate}
 
-\begin{principle}{The SO(3) Manifold\index{Manifold}}{so3}
-  The continuous, infinite geometric space of all possible valid $3 \times 3$ rotation matrices satisfying $R^T R = I$ and $\det(R) = 1$ is a mathematical \textbf{manifold} called the \textbf{Special Orthogonal Group in 3 Dimensions}, denoted as $\SO$. 
+Notice a paradox: a $3 \times 3$ matrix has 9 numbers, but a 3D object only has 3 rotational degrees of freedom. The 6 constraints embedded in $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ (3 length constraints and 3 orthogonality constraints) perfectly reduce the 9 numbers down to exactly 3 DOF.
 
-  If a Configuration Space\index{Configuration Space} $\configspace$ is simply a rigid body rotating around a point, we say $\configspace = \SO$.
+\begin{principle}{The SO(3) Manifold}{so3}
+  The continuous, infinite geometric space of all possible valid $3 \times 3$ rotation matrices satisfying $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ and $\det(\mathbf{R}) = 1$ is a mathematical \textbf{manifold} called the \textbf{Special Orthogonal Group in 3 Dimensions}, denoted as $SO(3)$. 
+
+  If a Configuration Space $\mathcal{Q}$ is simply a rigid body freely rotating around a fixed point, we say $\mathcal{Q} = SO(3)$.
 \end{principle}
 
-\section{Unit Quaternions $\so$}
+\section{Unit Quaternions ($\mathcal{H}$)}
 
-While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz. 
+While $SO(3)$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for a physics engine updating a 15-DOF human model at 1,000 Hertz. 
 
-To solve this, William Rowan Hamilton invented \textbf{Quaternions} ($\mathcal{H}$) in 1843. Rather than tracking a full Cartesian body frame $R \in \SO$, any 3D rotation can be flawlessly described as a combination of precisely two things:
-1. A single unit vector $\hat{\bm{\omega}}$ defining the solitary physical axis of rotation.
-2. An angle $\theta$ denoting how far to spin around that axis.
+To solve this, William Rowan Hamilton invented \textbf{Quaternions} ($\mathcal{H}$). Following Euler's Theorem, any arbitrary 3D rotation can be flawlessly described as a combination of precisely two things:
+\begin{enumerate}
+    \item A single unit vector $\hat{\boldsymbol{\omega}}$ defining a solitary physical axis of rotation.
+    \item An angle $\theta$ denoting how far to spin around that specific axis.
+\end{enumerate}
 
-A Unit Quaternion $q$ mathematically encodes these into 4 variables representing an exponential scalar and vector map:
+A Unit Quaternion $\mathbf{q}$ mathematically encodes these into 4 variables representing an exponential scalar and vector map:
 \begin{equation}
-  q = \begin{bmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}}_x \sin(\theta/2) \\ \hat{\bm{\omega}}_y \sin(\theta/2) \\ \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
+  \mathbf{q} = \begin{bmatrix} q_w \\ q_x \\ q_y \\ q_z \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\omega}_x \sin(\theta/2) \\ \hat{\omega}_y \sin(\theta/2) \\ \hat{\omega}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
 \end{equation}
 
-By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
+By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_w^2 + q_x^2 + q_y^2 + q_z^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $SO(3)$ using only 4 numbers instead of 9.
 
-Throughout *The Geometry of Motion*, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
+\begin{laymansbox}{Why the Half-Angles?}{quaternion_half_angle}
+  You might notice $\theta/2$ in the formula instead of just $\theta$. This is because applying a quaternion rotation to a vector $\mathbf{v}$ requires multiplying it from the front \emph{and} the back ($\mathbf{q} \mathbf{v} \mathbf{q}^{-1}$). The half-angles combine during this double-multiplication to give the perfect full-angle $\theta$ rotation! Note also that the quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the exact same physical rotation in 3D space.
+\end{laymansbox}
 
-To merge Translation and Rotation into a single unified control framework for physical bodies mapping the full world, we must upgrade from $3 \times 3$ Rotation Matrices to the magnificent $4 \times 4$ space of $\SE$.
+Throughout \textit{The Geometry of Motion}, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $SO(3)$ Rotation Matrices.
+
+To merge Translation and Rotation into a single unified control framework for physical bodies moving through the world, we must upgrade from $3 \times 3$ Rotation Matrices to the magnificent $4 \times 4$ space of $SE(3)$.
