@@ -36,6 +36,35 @@ jobs:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_II
 
+      - name: Compile Volume III
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_III
+
+      - name: Compile Volume IV
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_IV
+
+      - name: Compile Volume V
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_V
+
+      - name: Count Pages
+        run: |
+          apt-get update && apt-get install -y poppler-utils || echo "poppler-utils not available via apt-get"
+          sudo apt-get update && sudo apt-get install -y poppler-utils || echo "sudo not available"
+          for vol in Volume_0 Volume_I Volume_II Volume_III Volume_IV Volume_V; do
+            if [ -f articles/The_Geometry_of_Motion/$vol/main.pdf ]; then
+              pages=$(pdfinfo articles/The_Geometry_of_Motion/$vol/main.pdf | grep Pages | awk '{print $2}')
+              echo "Volume $vol pages: $pages"
+            fi
+          done
+
       - name: Upload Volume 0 Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,3 +82,21 @@ jobs:
         with:
           name: Geometry_of_Motion_Volume_2
           path: articles/The_Geometry_of_Motion/Volume_II/main.pdf
+
+      - name: Upload Volume III Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Geometry_of_Motion_Volume_3
+          path: articles/The_Geometry_of_Motion/Volume_III/main.pdf
+
+      - name: Upload Volume IV Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Geometry_of_Motion_Volume_4
+          path: articles/The_Geometry_of_Motion/Volume_IV/main.pdf
+
+      - name: Upload Volume V Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Geometry_of_Motion_Volume_5
+          path: articles/The_Geometry_of_Motion/Volume_V/main.pdf
