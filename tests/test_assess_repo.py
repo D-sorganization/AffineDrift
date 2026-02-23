@@ -93,9 +93,13 @@ def test_assess_test_coverage_high():
     with patch("pathlib.Path.rglob") as mock_rglob:
         # > 20 files
         mock_rglob.return_value = [Path(f"test_{i}.py") for i in range(25)]
-        result = assess_repo.assess_test_coverage(Path("/tmp"))
-        # 3 + 1 (>5) + 2 (>20)=  6. Limited to 10.
-        assert result["grade"] == 6
+        root = Path("/tmp")
+        # Mock requirements.txt for coverage bonus
+        with patch("pathlib.Path.read_text", return_value="pytest-cov"):
+            with patch("pathlib.Path.exists", return_value=True):
+                result = assess_repo.assess_test_coverage(root)
+                # 3 + 1 (>5) + 2 (>20) + 2 (bonus) = 8.
+                assert result["grade"] == 8
 
 
 def test_assess_error_handling_mock():
@@ -237,15 +241,40 @@ def test_assess_configuration():
     assert result["grade"] == 8
 
 
-def test_assess_scalability_maintainability():
-    """Test scalability assessment."""
+def test_assess_maintainability():
+    """Test maintainability assessment."""
     mock_file = MagicMock()
     # High complexity: many branches
-    mock_file.read_text.return_value = "if a: pass\n" * 20 + "def foo(): pass"
-
-    result = assess_repo.assess_scalability_maintainability([mock_file])
-    # Complexity > 10 => -5. 10 - 5=  5.
+    # Need to mock get_python_metrics or provide content that parses
+    # assess_maintainability calls get_python_metrics which uses ast.parse
+    # So the content must be valid python.
+    mock_file.read_text.return_value = """
+def foo():
+    if a: pass
+    if b: pass
+    if c: pass
+    if d: pass
+    if e: pass
+    if f: pass
+    if g: pass
+    if h: pass
+    if i: pass
+    if j: pass
+    if k: pass
+"""
+    # 11 branches / 1 function = 11 > 10 => -5.
+    result = assess_repo.assess_maintainability([mock_file])
     assert result["grade"] == 5
+
+
+def test_assess_scalability():
+    """Test scalability assessment."""
+    mock_file = MagicMock()
+    mock_file.read_text.return_value = "import asyncio\nasync def foo(): pass"
+
+    result = assess_repo.assess_scalability([mock_file])
+    # Base 5 + 2 (hits > 0) = 7.
+    assert result["grade"] == 7
 
 
 @patch("scripts.assess_repo.generate_markdown_report")

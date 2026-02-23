@@ -1,9 +1,9 @@
 # Assessment: Scalability
 
-## Grade: 10.0/10
+## Grade: 7.0/10
 
 ## Details
-Avg Complexity (branches/func): 2.0
+Scalability patterns found in 2 files.
 
 ## Recommendations
-- Reduce cyclomatic complexity by breaking down complex functions.
+- Consider using async I/O or parallelism for scalable operations where appropriate.
