@@ -1,0 +1,210 @@
+\chapter{Applications of Control Theory to Biological Systems}
+\label{ch:control-bio}
+
+\epigraph{%
+  The body is not a robot that happens to be made of meat.
+  It is a system that has evolved to exploit its own physics.
+}{}
+
+\section{Forward Dynamics Simulation}
+
+Forward dynamics simulation integrates the equations of motion given muscle
+excitations $\bm{u}(t)$:
+\begin{equation}
+  \ddot{\bm{q}} = M(\bm{q})^{-1}\left[R(\bm{q})\bm{F}_{\text{muscle}} + J_c^T \bm{F}_c
+  - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - g(\bm{q})\right],
+  \label{eq:ch10:forward-dynamics}
+\end{equation}
+coupled with the muscle state equations (Chapter~3):
+\begin{align}
+  \dot{a}_i &= (u_i - a_i) / \tau_i, \\
+  \dot{\ell}_i^M &= v_i^M(a_i, \ell_i^M, \ell_i^{MT}(\bm{q})).
+\end{align}
+
+\begin{lstlisting}[language=Python, caption={Forward dynamics integration for a musculoskeletal model.}]
+import numpy as np
+from scipy.integrate import solve_ivp
+from typing import Callable
+
+def forward_dynamics_simulation(
+    mass_matrix_func: Callable,
+    coriolis_func: Callable,
+    gravity_func: Callable,
+    moment_arm_func: Callable,
+    muscle_force_func: Callable,
+    excitation_func: Callable,
+    q0: np.ndarray,
+    qdot0: np.ndarray,
+    a0: np.ndarray,
+    t_span: tuple[float, float],
+    n_eval: int = 500
+) -> dict:
+    """Simulate forward dynamics of a musculoskeletal system.
+
+    Parameters
+    ----------
+    mass_matrix_func : callable
+        q -> M(q), shape (n_dof, n_dof)
+    coriolis_func : callable
+        (q, qdot) -> C(q, qdot) @ qdot, shape (n_dof,)
+    gravity_func : callable
+        q -> g(q), shape (n_dof,)
+    moment_arm_func : callable
+        q -> R(q), shape (n_dof, n_muscles)
+    muscle_force_func : callable
+        (a, l_M, v_M) -> F_muscle for each muscle
+    excitation_func : callable
+        t -> u(t), shape (n_muscles,)
+    q0 : np.ndarray
+        Initial joint angles.
+    qdot0 : np.ndarray
+        Initial joint velocities.
+    a0 : np.ndarray
+        Initial muscle activations.
+    t_span : tuple
+        (t_start, t_end)
+    n_eval : int
+        Number of output time points.
+
+    Returns
+    -------
+    dict
+        Keys: 't', 'q', 'qdot', 'a', 'tau'
+    """
+    n_dof = len(q0)
+    n_muscles = len(a0)
+    t_eval = np.linspace(t_span[0], t_span[1], n_eval)
+
+    def dynamics(t: float, state: np.ndarray) -> np.ndarray:
+        q = state[:n_dof]
+        qdot = state[n_dof:2*n_dof]
+        a = np.clip(state[2*n_dof:], 0.0, 1.0)
+
+        # Muscle forces (simplified: assume known fiber length)
+        F_muscle = np.array([
+            a[i] * 500.0  # Simplified: F = a * F0
+            for i in range(n_muscles)
+        ])
+
+        # Joint torques
+        R = moment_arm_func(q)
+        tau = R @ F_muscle
+
+        # Skeletal dynamics
+        M = mass_matrix_func(q)
+        C_qdot = coriolis_func(q, qdot)
+        g = gravity_func(q)
+        qddot = np.linalg.solve(M, tau - C_qdot - g)
+
+        # Activation dynamics
+        u = excitation_func(t)
+        tau_act = 0.015  # 15 ms activation
+        tau_deact = 0.050  # 50 ms deactivation
+        adot = np.where(
+            u > a,
+            (u - a) / tau_act,
+            (u - a) / tau_deact
+        )
+
+        return np.concatenate([qdot, qddot, adot])
+
+    state0 = np.concatenate([q0, qdot0, a0])
+    sol = solve_ivp(dynamics, t_span, state0, t_eval=t_eval,
+                    method='RK45', max_step=0.001)
+
+    return {
+        't': sol.t,
+        'q': sol.y[:n_dof].T,
+        'qdot': sol.y[n_dof:2*n_dof].T,
+        'a': sol.y[2*n_dof:].T,
+    }
+\end{lstlisting}
+
+\section{Predictive Simulation}
+
+Predictive simulation uses trajectory optimization (Volume~I, Chapter~5) to find
+the muscle excitations that produce a desired motion while minimizing a cost:
+\begin{equation}
+  \min_{\bm{u}(\cdot)} \int_0^T \mathcal{L}(\state, \bm{u}) \dt
+  \quad \text{s.t.} \quad \dot{\state} = f(\state, \bm{u}),\;
+  \state(0) = \state_0,\; h(\state, \bm{u}) \leq 0,
+  \label{eq:ch10:predictive-sim}
+\end{equation}
+where $\mathcal{L}$ is a physiologically motivated cost (e.g., metabolic energy,
+muscle fatigue, deviation from desired kinematics) and $h$ captures physical
+constraints (joint limits, muscle force capacity, contact constraints).
+
+\section{Prosthetics and Exoskeleton Control}
+
+The control theory of Volumes~I--II applies directly to assistive devices:
+\begin{itemize}
+  \item \textbf{Powered prostheses}: trajectory tracking with impedance modulation
+  \item \textbf{Exoskeletons}: assist-as-needed control using contraction theory
+  \item \textbf{FES (Functional Electrical Stimulation)}: direct muscle activation
+        control for paralyzed limbs
+\end{itemize}
+
+\section{Sport Biomechanics Applications}
+
+\subsection{The Golf Swing as a Biomechanical System}
+
+The golf swing demonstrates every concept in this volume:
+\begin{enumerate}
+  \item Multi-segment kinematic chain (15+ DOF)
+  \item Muscle-driven actuation with co-contraction
+  \item Bi-articular coupling (forearm muscles, lats)
+  \item Passive dynamics exploitation (wrist release)
+  \item Shaft flexibility (deformable body)
+  \item Ground reaction force coupling (closed chain at the feet)
+\end{enumerate}
+
+The complete biomechanical analysis integrates:
+\begin{itemize}
+  \item Motion capture (kinematics)
+  \item Force plates (ground reaction forces)
+  \item EMG (muscle activation patterns)
+  \item Inverse dynamics (joint torques)
+  \item Static optimization (muscle forces)
+  \item Forward dynamics validation (predictive simulation)
+\end{itemize}
+
+\section{Synthesis: From Theory to Application}
+
+The progression through this volume mirrors the progression through the series:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Volume} & \textbf{Concept} & \textbf{Biomechanical Application} \\
+\midrule
+Vol~0 & Screw axes, PoE & Joint kinematics, ISA analysis \\
+Vol~I & Contraction theory & Stability of muscle-driven systems \\
+Vol~I & DDP/iLQR & Optimal muscle excitation patterns \\
+Vol~II & Trajectory tubes & Motor variability envelopes \\
+Vol~II & Phase variables & Gait cycle parameterization \\
+Vol~III & Hill model & Force prediction \\
+Vol~III & Inverse dynamics & Joint torque estimation \\
+Vol~IV & Motor control & Neural command generation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Forward Simulation.}
+        Using the provided code (adapted for a simple 2-DOF model), simulate a
+        reaching movement with prescribed muscle excitation ramps.
+
+  \item \textbf{Predictive vs.\ Tracking.}
+        Compare the muscle activations from static optimization (tracking measured
+        kinematics) with those from predictive simulation (optimizing a metabolic cost).
+
+  \item \textbf{Prosthetic Control.}
+        Design an impedance controller for a prosthetic knee that provides different
+        stiffness during stance and swing phases.
+
+  \item \textbf{(Programming.)} Implement a complete inverse dynamics $\to$ static
+        optimization pipeline for a 3-DOF planar arm model with 6 muscles.
+\end{enumerate}

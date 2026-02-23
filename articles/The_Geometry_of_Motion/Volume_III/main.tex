@@ -1,0 +1,221 @@
+\documentclass[11pt,letterpaper,openany]{book}
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning, 3d}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{imakeidx}
+\makeindex[intoc, title=Index]
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{listings}
+
+% ──────────────────────────────────────────────
+% Code Formatting (Listings)
+% ──────────────────────────────────────────────
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% ──────────────────────────────────────────────
+% Colors
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+\definecolor{biored}{RGB}{140, 20, 60}
+
+% ──────────────────────────────────────────────
+% Theorem environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Biomechanical Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{clinicalbox}{Clinical Significance}{
+  colback=biored!5, colframe=biored!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{clin}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\newtcbtheorem[number within=chapter]{comparison}{Biology vs.\ Engineering}{
+  colback=trajgreen!5, colframe=trajgreen!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{comp}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+
+% ──────────────────────────────────────────────
+% Chapter formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{Volume III: Biomechanics of Motion}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% ──────────────────────────────────────────────
+% Custom commands
+% ──────────────────────────────────────────────
+\newcommand{\state}{\bm{x}}
+\newcommand{\control}{\bm{u}}
+\newcommand{\traj}{\bm{\gamma}}
+\newcommand{\manifold}{\mathcal{M}}
+\newcommand{\configspace}{\mathcal{Q}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\dt}{\,\dd t}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\newcommand{\se}{\mathfrak{se}(3)}
+\newcommand{\so}{\mathfrak{so}(3)}
+\newcommand{\SE}{\mathrm{SE}(3)}
+\newcommand{\SO}{\mathrm{SO}(3)}
+\newcommand{\screw}{\mathcal{S}}
+\newcommand{\twist}{\mathcal{V}}
+\newcommand{\wrench}{\mathcal{F}}
+
+% Biomechanics-specific commands
+\newcommand{\muscle}{F_{\mathrm{m}}}
+\newcommand{\tendon}{F_{\mathrm{t}}}
+\newcommand{\activation}{a}
+\newcommand{\momentarm}{r}
+\newcommand{\pennation}{\alpha}
+
+% ──────────────────────────────────────────────
+% Title Page
+% ──────────────────────────────────────────────
+\title{%
+  {\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm]
+  {\Large Volume III: Biomechanics\\
+  From Rigid Bodies to Biological Systems}\\[0.6cm]
+  {\color{chapblue}\rule{\textwidth}{2pt}}
+}
+\date{}
+
+\hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\cleardoublepage
+
+\frontmatter
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+The first two volumes of \emph{The Geometry of Motion} developed the mathematical language of
+tangent spaces, contraction theory, and trajectory-centric control with the implicit assumption
+that the systems under study are \emph{rigid bodies}---that joints are perfect revolutes, that
+links are perfectly stiff, and that actuators produce torques on command. In biological systems,
+\emph{none of these assumptions hold}.
+
+This volume confronts reality. Biological tissues are viscoelastic, not rigid. Joints permit
+coupled translations and rotations, not single-axis pivots. Muscles produce force through a
+complex cascade from neural excitation through calcium dynamics to cross-bridge cycling, with
+force depending on length, velocity, and activation history. Tendons store and release elastic
+energy. Ligaments constrain motion in ways that change with loading rate.
+
+And yet, the mathematical framework of Volumes~0--II is not abandoned---it is \emph{extended}.
+The mass matrix $M(\bm{q})$ still exists, but it now includes the effective inertia of muscles
+and the compliance of tendons. The configuration space $\mathcal{Q}$ is still a manifold, but
+its geometry is richer because biological joints are not simple revolutes. The control input
+$\bm{u}$ is no longer a torque but a neural excitation signal, and the mapping from excitation
+to torque passes through the muscle model.
+
+The philosophy remains unchanged: mathematics \emph{driven by physical reality}, with every
+abstraction justified by measurement and every model validated against experiment. Where
+engineering systems are designed to be simple, biological systems have evolved to be
+\emph{robust}. Understanding why requires the tools of this volume.
+
+\tableofcontents
+\cleardoublepage
+
+\mainmatter
+
+\include{chapters/ch01_biology_vs_engineering}
+\include{chapters/ch02_musculoskeletal_conventions}
+\include{chapters/ch03_muscle_models}
+\include{chapters/ch04_joint_kinematics}
+\include{chapters/ch05_multibody_bio}
+\include{chapters/ch06_inverse_problems}
+\include{chapters/ch07_experimental_methods}
+\include{chapters/ch08_inference}
+\include{chapters/ch09_deformable_bodies}
+\include{chapters/ch10_control_theory_applications}
+
+\backmatter
+\printindex
+
+\bibliographystyle{plain}
+\bibliography{../geometry_of_motion}
+
+\end{document}

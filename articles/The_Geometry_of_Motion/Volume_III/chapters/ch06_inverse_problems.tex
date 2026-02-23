@@ -1,0 +1,159 @@
+\chapter{Inverse Problems in Biomechanics}
+\label{ch:inverse-problems}
+
+\epigraph{%
+  In biomechanics, we almost never measure forces directly.
+  We measure motion and infer the forces that caused it.
+}{}
+
+\section{The Inverse Dynamics Pipeline}
+
+Inverse dynamics is the most widely used computational tool in biomechanics: given
+measured kinematics $\bm{q}(t)$, $\dot{\bm{q}}(t)$, $\ddot{\bm{q}}(t)$ and external
+forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques:
+\begin{equation}
+  \bm{\tau}(t) = M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
+  - J_c^T(\bm{q}) \bm{F}_{\text{ext}}.
+  \label{eq:ch6:inverse-dynamics}
+\end{equation}
+
+The standard pipeline comprises five stages:
+\begin{enumerate}
+  \item \textbf{Data Collection}: Motion capture markers + force plates
+  \item \textbf{Marker Processing}: Filtering, gap-filling, labeling
+  \item \textbf{Inverse Kinematics}: Fit skeleton model to marker data
+  \item \textbf{Inverse Dynamics}: Compute joint torques from RNEA
+  \item \textbf{Muscle Force Estimation}: Distribute torques among muscles
+\end{enumerate}
+
+\subsection{Inverse Kinematics}
+
+Given marker positions $\bm{m}_i^{\text{meas}}(t) \in \Reals^3$ for $i = 1, \ldots, N_m$
+markers, inverse kinematics solves:
+\begin{equation}
+  \bm{q}^*(t) = \argmin_{\bm{q}} \sum_{i=1}^{N_m} w_i
+  \norm{\bm{m}_i^{\text{model}}(\bm{q}) - \bm{m}_i^{\text{meas}}(t)}^2,
+  \label{eq:ch6:ik-optimization}
+\end{equation}
+where $\bm{m}_i^{\text{model}}(\bm{q})$ is the predicted marker position from the
+skeleton model and $w_i$ are weighting factors.
+
+\begin{lstlisting}[language=Python, caption={Simplified inverse kinematics solver.}]
+import numpy as np
+from scipy.optimize import minimize
+
+def inverse_kinematics_frame(
+    marker_positions_measured: np.ndarray,
+    marker_positions_model_func,
+    q_initial: np.ndarray,
+    weights: np.ndarray | None = None
+) -> np.ndarray:
+    """Solve inverse kinematics for a single frame.
+
+    Parameters
+    ----------
+    marker_positions_measured : np.ndarray, shape (n_markers, 3)
+        Measured marker positions.
+    marker_positions_model_func : callable
+        Function q -> (n_markers, 3) predicted marker positions.
+    q_initial : np.ndarray, shape (n_dof,)
+        Initial guess for joint angles.
+    weights : np.ndarray, shape (n_markers,), optional
+        Per-marker weights.
+
+    Returns
+    -------
+    np.ndarray, shape (n_dof,)
+        Optimal joint angles.
+    """
+    n_markers = marker_positions_measured.shape[0]
+    if weights is None:
+        weights = np.ones(n_markers)
+
+    def objective(q: np.ndarray) -> float:
+        m_model = marker_positions_model_func(q)
+        residuals = m_model - marker_positions_measured
+        return float(np.sum(weights[:, None] * residuals**2))
+
+    result = minimize(objective, q_initial, method='L-BFGS-B')
+    return result.x
+\end{lstlisting}
+
+\subsection{Bottom-Up vs.\ Top-Down Inverse Dynamics}
+
+\textbf{Bottom-up}: start from the ground contact (where forces are measured by
+force plates) and propagate upward through the kinematic chain. Most accurate when
+force plate data is available.
+
+\textbf{Top-down}: start from the most distal segment and work inward. Useful when
+ground reaction forces are not available (e.g., swimming, throwing).
+
+\section{The Muscle Redundancy Problem}
+
+Inverse dynamics gives net joint torques $\bm{\tau} \in \Reals^n$, but we want
+individual muscle forces $\bm{F} \in \Reals^p$ with $p > n$ (typically $p = 3n$
+to $5n$). This is an underdetermined system:
+\begin{equation}
+  R(\bm{q}) \bm{F} = \bm{\tau}, \quad \bm{F} \geq 0.
+  \label{eq:ch6:redundancy}
+\end{equation}
+
+\subsection{Static Optimization}
+
+The most common approach minimizes a cost function:
+\begin{equation}
+  \min_{\bm{F}} \sum_{i=1}^{p} \left(\frac{F_i}{F_{0,i}}\right)^\alpha
+  \quad \text{subject to} \quad R(\bm{q})\bm{F} = \bm{\tau},\;
+  0 \leq F_i \leq a_i \cdot f_L(\tilde{\ell}_i) \cdot F_{0,i},
+  \label{eq:ch6:static-opt}
+\end{equation}
+where $\alpha = 2$ (minimize sum of squared activations) or $\alpha = 3$ (minimize
+metabolic energy proxy). The constraint $F_i \leq a_i \cdot f_L \cdot F_{0,i}$ enforces
+the force-length and activation constraints from Chapter~3.
+
+\subsection{Computed Muscle Control (CMC)}
+
+CMC \cite{Thelen2003} combines forward dynamics with feedback control. It uses a
+PD controller to track the measured kinematics, with the controller output being
+the desired muscle excitations:
+\begin{equation}
+  \ddot{\bm{q}}_{\text{des}} = \ddot{\bm{q}}_{\text{meas}} + K_v(\dot{\bm{q}}_{\text{meas}} - \dot{\bm{q}})
+  + K_p(\bm{q}_{\text{meas}} - \bm{q}),
+  \label{eq:ch6:cmc}
+\end{equation}
+where $K_v$ and $K_p$ are velocity and position feedback gains.
+
+\section{Parameter Estimation}
+
+Many biomechanical parameters (segment masses, muscle strengths, joint axis locations)
+are not directly measurable and must be estimated from motion data.
+
+\subsection{Bayesian Framework}
+
+The parameter estimation problem is naturally Bayesian:
+\begin{equation}
+  p(\bm{\theta} | \bm{y}) \propto p(\bm{y} | \bm{\theta}) \cdot p(\bm{\theta}),
+  \label{eq:ch6:bayes}
+\end{equation}
+where $\bm{\theta}$ are model parameters, $\bm{y}$ are observations, $p(\bm{y} | \bm{\theta})$
+is the likelihood, and $p(\bm{\theta})$ is the prior (from literature values and
+physical constraints).
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Inverse Dynamics.}
+        For a 2-segment pendulum model of the arm, compute the shoulder and elbow
+        torques required during a reaching movement given $\bm{q}(t) = (\sin(\pi t/T), \pi t / (2T))$.
+
+  \item \textbf{Muscle Redundancy.}
+        For a single-DOF elbow with 3 muscles (biceps, brachialis, brachioradialis),
+        solve the static optimization for a given elbow torque. Show that the solution
+        depends on the cost function exponent~$\alpha$.
+
+  \item \textbf{(Programming.)} Implement the static optimization for a 2-DOF,
+        6-muscle system. Compare $\alpha = 2$ and $\alpha = 3$ solutions.
+
+  \item \textbf{(Programming.)} Implement an inverse kinematics solver for a
+        3-segment arm model with 7 markers. Test with synthetic marker data.
+\end{enumerate}

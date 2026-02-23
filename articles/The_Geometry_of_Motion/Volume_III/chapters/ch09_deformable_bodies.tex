@@ -1,0 +1,178 @@
+\chapter{Deformable Bodies and Continuum Mechanics}
+\label{ch:deformable}
+
+\epigraph{%
+  When the rigid-body assumption fails, we do not abandon mechanics.
+  We embrace the continuum.
+}{}
+
+\section{When Rigid-Body Assumptions Fail}
+
+The rigid-body model fails when:
+\begin{enumerate}
+  \item \textbf{Internal stresses are needed}: to predict injury, fracture, or tissue damage
+  \item \textbf{Deformation affects kinematics}: shaft flexibility in golf, spine compliance
+  \item \textbf{Wave propagation matters}: impact biomechanics, blast injury
+  \item \textbf{Fluid-structure interaction}: blood flow, synovial fluid, respiratory mechanics
+\end{enumerate}
+
+\section{Beam Models for Long Bones and Shafts}
+
+When deformation is small and the body is slender (length $\gg$ diameter), beam
+theory provides an efficient model. For a Euler-Bernoulli beam:
+\begin{equation}
+  EI \frac{\partial^4 w}{\partial x^4} + \rho A \frac{\partial^2 w}{\partial t^2} = f(x, t),
+  \label{eq:ch9:euler-bernoulli}
+\end{equation}
+where $E$ is the elastic modulus, $I$ is the second moment of area, $\rho$ is
+density, $A$ is cross-sectional area, $w(x,t)$ is transverse displacement, and
+$f$ is the distributed load.
+
+\subsection{Modal Analysis}
+
+The solution is expanded in modes:
+\begin{equation}
+  w(x, t) = \sum_{k=1}^{N} \phi_k(x) \eta_k(t),
+  \label{eq:ch9:modal-expansion}
+\end{equation}
+where $\phi_k(x)$ are mode shapes and $\eta_k(t)$ are modal coordinates. This converts
+the PDE to a system of ODEs that can be appended to the rigid-body equations of motion.
+
+\subsection{Golf Club Shaft Flexibility}
+
+The golf club shaft is the most accessible example of a flexible link in sport
+biomechanics. A typical shaft has:
+\begin{itemize}
+  \item Length: $\sim$1.1~m
+  \item First bending mode: 4--6~Hz (driver), 6--10~Hz (irons)
+  \item Tip deflection at impact: 5--15~cm
+  \item Lead/lag deflection: 2--5~cm
+  \item Toe-down droop: 3--8~cm (gravity effect during downswing)
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Modal analysis of a golf club shaft.}]
+import numpy as np
+from scipy.linalg import eigh
+
+def shaft_modal_analysis(
+    n_elements: int = 20,
+    length: float = 1.1,
+    EI_root: float = 50.0,
+    EI_tip: float = 15.0,
+    rho_A: float = 0.15
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute natural frequencies and mode shapes of a tapered shaft.
+
+    Uses finite element beam model with linear EI taper.
+
+    Parameters
+    ----------
+    n_elements : int
+        Number of finite elements.
+    length : float
+        Shaft length in meters.
+    EI_root : float
+        Flexural rigidity at root (grip end) in N*m^2.
+    EI_tip : float
+        Flexural rigidity at tip (head end) in N*m^2.
+    rho_A : float
+        Mass per unit length in kg/m.
+
+    Returns
+    -------
+    tuple of np.ndarray
+        (frequencies_hz, mode_shapes)
+    """
+    n_nodes = n_elements + 1
+    n_dof = 2 * n_nodes  # displacement + rotation at each node
+    h = length / n_elements
+
+    K = np.zeros((n_dof, n_dof))
+    M = np.zeros((n_dof, n_dof))
+
+    for e in range(n_elements):
+        # Local EI for this element (linear taper)
+        xi = (e + 0.5) / n_elements
+        EI_local = EI_root + (EI_tip - EI_root) * xi
+
+        # Euler-Bernoulli beam element stiffness matrix
+        k_e = EI_local / h**3 * np.array([
+            [12,   6*h,  -12,   6*h],
+            [6*h,  4*h**2, -6*h, 2*h**2],
+            [-12, -6*h,   12,  -6*h],
+            [6*h,  2*h**2, -6*h, 4*h**2]
+        ])
+
+        # Consistent mass matrix
+        m_e = rho_A * h / 420 * np.array([
+            [156,   22*h,  54,   -13*h],
+            [22*h,  4*h**2, 13*h, -3*h**2],
+            [54,    13*h,  156,  -22*h],
+            [-13*h, -3*h**2, -22*h, 4*h**2]
+        ])
+
+        # Assembly
+        dofs = [2*e, 2*e+1, 2*e+2, 2*e+3]
+        for i_idx, i in enumerate(dofs):
+            for j_idx, j in enumerate(dofs):
+                K[i, j] += k_e[i_idx, j_idx]
+                M[i, j] += m_e[i_idx, j_idx]
+
+    # Boundary conditions: clamped at root (grip)
+    free_dofs = list(range(2, n_dof))  # Remove first node
+    K_free = K[np.ix_(free_dofs, free_dofs)]
+    M_free = M[np.ix_(free_dofs, free_dofs)]
+
+    # Solve eigenvalue problem
+    eigenvalues, eigenvectors = eigh(K_free, M_free)
+
+    # Convert to Hz
+    frequencies = np.sqrt(np.abs(eigenvalues)) / (2 * np.pi)
+
+    return frequencies[:6], eigenvectors[:, :6]
+
+
+# Example
+freqs, modes = shaft_modal_analysis()
+print("Natural frequencies (Hz):")
+for i, f in enumerate(freqs):
+    print(f"  Mode {i+1}: {f:.1f} Hz")
+\end{lstlisting}
+
+\section{Finite Element Methods (Overview)}
+
+For complex geometries (vertebral bodies, skull, articular surfaces), the finite
+element method (FEM) provides the most general approach. While a full treatment is
+beyond this text's scope, the key concept is:
+
+The continuous domain $\Omega$ is divided into elements, and the displacement field
+is approximated using shape functions:
+\begin{equation}
+  \bm{u}(\bm{x}, t) \approx \sum_{i} N_i(\bm{x}) \bm{u}_i(t),
+  \label{eq:ch9:fem-approx}
+\end{equation}
+leading to the assembled system:
+\begin{equation}
+  M_{\text{FEM}} \ddot{\bm{u}} + C_{\text{FEM}} \dot{\bm{u}} + K_{\text{FEM}} \bm{u} = \bm{f}_{\text{ext}}.
+  \label{eq:ch9:fem-system}
+\end{equation}
+
+\section*{Exercises}
+
+\begin{enumerate}
+  \item \textbf{Shaft Frequency.}
+        Using the provided code, compute how the first natural frequency changes
+        as the tip-to-root EI ratio varies from 0.1 to 0.9. Plot the result.
+
+  \item \textbf{Mode Shapes.}
+        Plot the first three mode shapes of the shaft. Identify nodes (zero-crossings)
+        and antinodes (maximum displacement).
+
+  \item \textbf{Timescale Separation.}
+        If the golf downswing takes 0.25~s, estimate the number of oscillation cycles
+        for each of the first 3 modes. Which modes are quasi-static?
+
+  \item \textbf{(Programming.)} Add a tip mass (clubhead, 0.2~kg) to the shaft FEM
+        model and recompute the natural frequencies. How does the clubhead mass affect
+        the frequencies?
+\end{enumerate}
