@@ -8,7 +8,7 @@
   You do not need to invent abstract coordinate frames at every joint of a robot. The kinematics of the entire complex machine can be elegantly described by a single product of twisting screws.
 }{}
 
-\begin{laymansbox}[Context \& Use Case: Universal Forward Kinematics]
+\begin{laymansbox}{Context \& Use Case: Universal Forward Kinematics}{context_box}
 \textbf{The Math You Will See:} We introduce the \textbf{Product of Exponentials (PoE)} formula, utilizing the Matrix Exponential ($e^{[\mathcal{S}]\theta}$) directly.
 \textbf{Why We Need It:} In classical robotics (taught in the 1980s), you tracked the position of a robot arm using "Denavit-Hartenberg (D-H) parameters", which required manually attaching weird local coordinate frames to every single joint using confusing perpendicular rules. The modern way (PoE) drops this completely. We just look at the robot in one global frame, find where the hinges point, and mathematically "twist" the arm around each hinge sequentially using our exact exponential maps. It is cleaner, faster, and never suffers from alignment ambiguities.
 \textbf{All Variables Defined:} $\mathbf{M}$ is the $4 \times 4$ "home" pose of the robot. $\mathcal{S}_i$ is the 6D Screw Axis of joint $i$. $\theta_i$ is how far the motor has moved.

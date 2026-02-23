@@ -10,7 +10,7 @@
 
 \section{Introduction: The Physics Abstraction}
 
-\begin{laymansbox}[Context \& Use Case: Why We Banish 3D Physics]
+\begin{laymansbox}{Context \& Use Case: Why We Banish 3D Physics}{context_box}
 \textbf{The Math You Will See:} We will build the \textbf{State Vector} ($\mathbf{x}$), a vertical stack of numbers containing positions ($\mathbf{q}$) and velocities ($\dot{\mathbf{q}}$). We will formulate the universal control equation $\dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}, t)$, and its linear cousin $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$. 
 \textbf{Why We Need It:} When a robotic arm swings a bat, the shoulder, elbow, and wrist all move in weird, overlapping arcs in 3D physics space ($X, Y, Z$). This is impossibly hard to calculate directly. Instead, we map the entire robot into an abstract mathematical realm called "State Space". In State Space, the complex multi-joint swinging robot is represented by a \emph{single, infinitesimally small dot} moving along a single curved line. This abstraction makes solving incredibly complex control problems possible. 
 \textbf{All Variables Defined:} $\mathbf{x}$ is the state, $\mathbf{u}$ is the control input (e.g., motor torque), and $f$ is the system dynamics mapping. See the \textbf{Nomenclature} at the start of the book for a full reference.

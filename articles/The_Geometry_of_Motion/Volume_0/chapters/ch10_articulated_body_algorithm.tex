@@ -8,7 +8,7 @@
   You cannot push a single domino. When a body is linked, pushing one piece means pushing the entire chain, yet we compute the physical consequences of the entire cascading collision with linear precision.
 }{}
 
-\begin{laymansbox}[Context \& Use Case: Forward Simulation]
+\begin{laymansbox}{Context \& Use Case: Forward Simulation}{context_box}
 \textbf{The Math You Will See:} We will cover the $O(N)$ \textbf{Articulated Body Algorithm (ABA)} and define the \textbf{Articulated Inertia} ($\mathcal{I}^A$).
 \textbf{Why We Need It:} In Chapter 7, we asked: "I want to move my arm here, how much motor torque do I need?" (Inverse Dynamics). ABA solves the exact opposite: "I am applying this much torque, what acceleration will result?" (Forward Dynamics). Physics simulators like MuJoCo or games use ABA every single frame to predict how a robot or character will move. If you use a massive matrix equation, it takes an impossibly long $O(N^3)$ calculation time to invert for 30 joints. ABA computes it perfectly recursively in just $O(N)$ time.
 \textbf{All Variables Defined:} $\mathbf{p}_i$ is the bias force dragging on a link, and $\mathcal{I}^A_i$ is the apparent inertia of a link when dragged along with all its children. 
