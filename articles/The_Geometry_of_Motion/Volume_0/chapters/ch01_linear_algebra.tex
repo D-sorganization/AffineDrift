@@ -35,6 +35,12 @@ Not all transformations lose information, but some do.
 \begin{itemize}
     \item \textbf{Rank:} The \emph{rank} of a matrix is the number of linearly independent columns it contains. If a $3 \times 3$ matrix has a rank of 2, it collapses full 3D space into a completely flat 2D plane. In robotics, the rank of the Jacobian matrix tells you how many directions your end-effector can actually move. If the rank drops, the robot is in a \emph{singularity} (stuck).
     \item \textbf{Null Space (Kernel):} The null space $\mathcal{N}(\mathbf{M})$ is the set of all vectors $\mathbf{x}$ that get crushed to zero: $\mathbf{M}\mathbf{x} = \mathbf{0}$. For a humanoid robot, the null space of the arm's Jacobian describes all the "internal motions" it can make (like wildly swinging its elbow) while keeping its hand completely still holding a cup of coffee.
+    \item \textbf{The Determinant (Volumetric Interpretation):} For a square matrix, the determinant calculates the factor by which the matrix scales lengths, areas, or volumes. Imagine a theoretical $1 \times 1 \times 1$ cube. If you multiply every point in that cube by a $3 \times 3$ matrix $\mathbf{M}$, the cube warps into a parallelepiped. The newly formed volume is precisely $\det(\mathbf{M})$. 
+    \begin{itemize}
+        \item If $\det(\mathbf{M}) = 1$, the volume is perfectly preserved (like a pure rotation in space).
+        \item If $\det(\mathbf{M}) = 0$, the volume is crushed completely flat (the matrix loses rank and goes singular).
+        \item If $\det(\mathbf{M}) < 0$, the space has been turned completely inside out (a mirror reflection). 
+    \end{itemize}
 \end{itemize}
 
 \section{The Dot Product and Cross Product}
@@ -73,9 +79,15 @@ These magical vectors are called \textbf{Eigenvectors} ($\mathbf{v}_i$), and the
 
 Why do we care? 
 \begin{enumerate}
-    \item If $\mathbf{M}$ represents the mass and inertia tensor of a tumbling satellite in space, its eigenvectors tell us the "Principal Axes"---the natural axes where the satellite is easiest and hardest to spin stably. 
+    \item If $\mathbf{M}$ represents the mass and inertia tensor of a tumbling satellite in space, its eigenvectors tell us the "Principal Axes"---the natural axes where the satellite is easiest and hardest to spin stably. Think of spinning a book in the air: it spins cleanly along its shortest or longest axis (eigenvectors), but tumbles chaotically if you try to spin it along the intermediate axis.
     \item If $\mathbf{M}$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate stability. If any eigenvalue has a positive real part ($Re(\lambda) > 0$), the system will explode exponentially. If all eigenvalues are negative ($Re(\lambda) < 0$), the system safely stabilizes back to rest. Eigenvalues are the fundamental heartbeat of linear dynamics.
 \end{enumerate}
+
+\begin{example}{Visualizing Eigenvectors: The Stretching Rubber Sheet}{visualize_eigenvectors}
+Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it wildly in various directions. The circle stretches into an ellipse. 
+
+Most straight lines drawn on the circle have now been rotated and tilted. However, exactly two lines pointing across the circle did not rotate at all; they only got \emph{longer}. These non-rotating axes are your \textbf{Eigenvectors}. The factor by which those specific lines stretched (perhaps one stretched by $3\times$ and the other shrunk by $0.5\times$) are your \textbf{Eigenvalues}. The matrix $\mathbf{M}$ is simply the algebraic instruction set for that stretching operation.
+\end{example}
 
 \subsection{Symmetric Matrices and Quadratic Forms}
 In optimization and energy mechanics, we frequently encounter \emph{quadratic forms}, written as $\mathbf{x}^T \mathbf{M} \mathbf{x}$. 
@@ -98,4 +110,15 @@ What if a matrix isn't square? Or what if it doesn't have a full set of eigenvec
 \end{itemize}
 
 Geometrically, the SVD says that \emph{any} linear transformation can be broken down into three simple steps: Rotate the input ($\mathbf{V}^T$), stretch it along the axes ($\mathbf{\Sigma}$), and rotate the output ($\mathbf{U}$). 
-In robotics, if we take the SVD of the Jacobian matrix, the vectors in $\mathbf{U}$ describe the actual geometric directions the end-effector can push, while the singular values $\sigma_i$ form the "Velocity Ellipsoid", telling us exactly how fast the robot can move in those directions. If a singular value $\sigma_k = 0$, the robot has lost a degree of freedom!
+
+\begin{example}{The SVD of the Jacobian (Mobility) Matrix}{svd_jacobian}
+In robotics, the Jacobian matrix ($\mathbf{J}$) maps joint speeds to the physical cartesian velocity of the hand ($\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$). Because the robot likely has more joints than spatial dimensions (e.g., 7 joints moving in 3D space), $\mathbf{J}$ is a non-square $3 \times 7$ matrix. You cannot calculate its eigenvectors. 
+
+Instead, we take the SVD of the Jacobian ($\mathbf{J} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T$):
+\begin{itemize}
+    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns of $\mathbf{U}$ define the actual geometric 3D directions the hand can push in the physical room.
+    \item $\mathbf{\Sigma} \in \Reals^{3\times7}$: The singular values ($\sigma_1, \sigma_2, \sigma_3$) form the axes of the \textbf{Velocity Manipulability Ellipsoid}. They tell us exactly how fast the robot can move in the corresponding $\mathbf{U}$ directions. If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$, the ellipsoid flattens into a pancake, and the robot loses a degree of freedom (it cannot pull straight back).
+    \item $\mathbf{V}^T \in \Reals^{7\times7}$: These vectors define the specific combinations of joint motors required to move the hand along those lines.
+\end{itemize}
+ Conversely, the \textbf{Force Manipulability Ellipsoid} uses the exact same axes $\mathbf{U}$, but its scaling is defined by $1/\sigma_i$. Where a robot is fastest, it is mechanically weakest. Where it is slowest (near singularities), it can exert infinite mechanical leverage.
+\end{example}
