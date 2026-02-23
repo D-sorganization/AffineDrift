@@ -98,12 +98,19 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
     """
     test_files = list(root.rglob("test_*.py")) + list(root.rglob("*_test.py"))
 
-    # Heuristic based on file count, memory note says 19%
+    # Heuristic based on file count
     score = 3
     if len(test_files) > 5:
         score += 1
     if len(test_files) > 20:
         score += 2
+
+    # Check for coverage tools in requirements.txt
+    req_txt = root / "requirements.txt"
+    if req_txt.exists():
+        content = req_txt.read_text(encoding="utf-8")
+        if "pytest-cov" in content or "coverage" in content:
+            score += 2
 
     return {
         "grade": min(10, score),
@@ -439,9 +446,49 @@ def assess_configuration(root: Path) -> dict[str, Any]:
     }
 
 
-def assess_scalability_maintainability(files: list[Path]) -> dict[str, Any]:
+def assess_scalability(files: list[Path]) -> dict[str, Any]:
     """
-    Estimates scalability and maintainability based on code complexity metrics.
+    Estimates scalability based on usage of async, multiprocessing, and caching patterns.
+    """
+    scalability_patterns = [
+        "async def",
+        "asyncio",
+        "multiprocessing",
+        "concurrent.futures",
+        "redis",
+        "celery",
+        "kafka",
+        "rabbitmq",
+        "dask",
+        "pyspark",
+    ]
+    hits = 0
+    for f in files:
+        try:
+            content = f.read_text(encoding="utf-8", errors="ignore")
+            # Simple string check is usually enough for this level of assessment
+            if any(p in content for p in scalability_patterns):
+                hits += 1
+        except (OSError, UnicodeDecodeError):
+            pass
+
+    score = 5
+    if hits > 0:
+        score += 2
+        details = f"Scalability patterns found in {hits} files."
+    else:
+        details = "No explicit scalability patterns found (async, multiprocessing, etc.)."
+
+    return {
+        "grade": min(10, score),
+        "details": details,
+        "recommendation": "Consider using async I/O or parallelism for scalable operations where appropriate.",
+    }
+
+
+def assess_maintainability(files: list[Path]) -> dict[str, Any]:
+    """
+    Estimates maintainability based on code complexity metrics.
     Calculates average complexity per function across files, ignoring empty/script files without functions.
     """
     complexities = []
@@ -493,8 +540,8 @@ def _run_all_assessments(root: Path, py_files: list[Path]) -> dict[str, dict[str
         "K": assess_data_handling(py_files),
         "L": assess_logging(py_files),
         "M": assess_configuration(root),
-        "N": assess_scalability_maintainability(py_files),
-        "O": assess_scalability_maintainability(py_files),
+        "N": assess_scalability(py_files),
+        "O": assess_maintainability(py_files),
     }
 
 
