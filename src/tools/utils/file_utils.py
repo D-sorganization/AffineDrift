@@ -51,9 +51,10 @@ def find_qmd_files(
 
     # Recursive search excluding certain directories
     for f in root.rglob("*.qmd"):
-        if not any(excluded in f.parts for excluded in exclude_dirs):
-            if not include_root or f.parent != root:
-                files.append(f)
+        if not any(excluded in f.parts for excluded in exclude_dirs) and (
+            not include_root or f.parent != root
+        ):
+            files.append(f)
 
     return files
 
@@ -90,9 +91,12 @@ def find_markdown_files(
 
     # Root files
     for f in root.iterdir():
-        if f.is_file() and f.suffix in suffixes:
-            if not (exclude_readme and f.name.startswith("README")):
-                files.append(f)
+        if (
+            f.is_file()
+            and f.suffix in suffixes
+            and not (exclude_readme and f.name.startswith("README"))
+        ):
+            files.append(f)
 
     # Search specified directories
     for d in search_dirs:

@@ -325,12 +325,8 @@ def main() -> None:
     passed = results.get("passed", False)
     has_issues = bool(results.get("issues"))
 
-    if args.strict:
-        # Strict mode: fail if any issues found
-        exit_code = 0 if (passed and not has_issues) else 1
-    else:
-        # Normal mode: fail only if checks didn't pass
-        exit_code = 0 if passed else 1
+    # Strict mode: fail if any issues found; normal: fail only if checks didn't pass
+    exit_code = (0 if (passed and not has_issues) else 1) if args.strict else (0 if passed else 1)
 
     sys.exit(exit_code)
 

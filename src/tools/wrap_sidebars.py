@@ -27,53 +27,6 @@ from src.tools.utils import setup_logging
 logger = setup_logging(__name__, format_string="%(message)s")
 
 
-def _wrap_aside_block(content: str, aside_class: str) -> str:
-    """Wrap a single aside block's content in a sticky div.
-
-    Args:
-        content: Full file content.
-        aside_class: CSS class of the aside element (e.g. 'left-sidebar').
-
-    Returns:
-        Modified content with the aside block wrapped.
-    """
-    lt = chr(60)
-    gt = chr(62)
-    aside_close = f"{lt}/aside{gt}"
-    sticky_div_start = f'{lt}div class="sidebar-sticky-content"{gt}'
-    sticky_div_end = f"{lt}/div{gt}"
-
-    tag = f'<aside class="{aside_class}">'
-    if tag not in content:
-        return content
-
-    parts = content.split(tag)
-    if len(parts) <= 1:
-        return content
-
-    # Skip if already wrapped
-    if parts[1].strip().startswith(sticky_div_start):
-        return content
-    if aside_class == "left-sidebar" and "sidebar-sticky-content" in content:
-        return content
-
-    subparts = parts[1].split(aside_close, 1)
-    if len(subparts) <= 1:
-        return content
-
-    return (
-        parts[0]
-        + tag
-        + "\n        "
-        + sticky_div_start
-        + subparts[0]
-        + sticky_div_end
-        + "\n      "
-        + aside_close
-        + subparts[1]
-    )
-
-
 def wrap_file(path: Path) -> None:
     """Wrap sidebar content in a sticky div for the given file.
 
@@ -84,8 +37,65 @@ def wrap_file(path: Path) -> None:
     content = path.read_text()
     original_content = content
 
-    for sidebar_class in ("left-sidebar", "right-sidebar", "resources-sidebar"):
-        content = _wrap_aside_block(content, sidebar_class)
+    # Define tag parts to avoid lint "Angle bracket placeholder" errors
+    lt = chr(60)
+    gt = chr(62)
+    aside_close = f"{lt}/aside{gt}"
+    sticky_div_start = f'{lt}div class="sidebar-sticky-content"{gt}'
+    sticky_div_end = f"{lt}/div{gt}"
+
+    # Wrap left-sidebar
+    if '<aside class="left-sidebar">' in content and "sidebar-sticky-content" not in content:
+        parts = content.split('<aside class="left-sidebar">')
+        if len(parts) > 1:
+            # parts[1] starts with content inside aside.
+            # Find the closing tag.
+            subparts = parts[1].split(aside_close, 1)
+            if len(subparts) > 1:
+                content = (
+                    parts[0]
+                    + '<aside class="left-sidebar">\n        '
+                    + sticky_div_start
+                    + subparts[0]
+                    + sticky_div_end
+                    + "\n      "
+                    + aside_close
+                    + subparts[1]
+                )
+
+    # Re-process for right sidebar on the modified content
+    if '<aside class="right-sidebar">' in content:
+        parts = content.split('<aside class="right-sidebar">')
+        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
+            subparts = parts[1].split(aside_close, 1)
+            if len(subparts) > 1:
+                content = (
+                    parts[0]
+                    + '<aside class="right-sidebar">\n        '
+                    + sticky_div_start
+                    + subparts[0]
+                    + sticky_div_end
+                    + "\n      "
+                    + aside_close
+                    + subparts[1]
+                )
+
+    # Re-process for resources-sidebar
+    if '<aside class="resources-sidebar">' in content:
+        parts = content.split('<aside class="resources-sidebar">')
+        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
+            subparts = parts[1].split(aside_close, 1)
+            if len(subparts) > 1:
+                content = (
+                    parts[0]
+                    + '<aside class="resources-sidebar">\n        '
+                    + sticky_div_start
+                    + subparts[0]
+                    + sticky_div_end
+                    + "\n      "
+                    + aside_close
+                    + subparts[1]
+                )
 
     if content != original_content:
         path.write_text(content)

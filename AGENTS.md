@@ -154,12 +154,21 @@ All code produced must adhere to the following design principles. These are eval
 - ❌ **DO NOT** embed project-specific assumptions in utility functions.
 - ✅ **Parameterize** behavior instead of hard-coding it.
 
-#### 5g. Function Length & Signature Quality
+#### 5g. Function Length & Signature Quality (CRITICAL — ENFORCED)
 
-- ❌ **DO NOT** write functions longer than **50 lines**. Target ≤20 lines.
+> **⚠️ 2026-02-17 Assessment**: This repository had **54 functions exceeding 50 lines (5.1%)**. `initUI` at 484 lines is a critical violation.
+
+- ❌ **HARD LIMIT**: Functions MUST NOT exceed **50 lines**. Target ≤20 lines.
+- ❌ **BLOCKING**: Any PR introducing a function >50 lines will be rejected.
 - ❌ **DO NOT** use more than **4 parameters**. Target ≤3.
 - ✅ **Each function** must have a **single, clear purpose**.
 - ✅ **Use** dataclasses or TypedDict for functions that need many inputs.
+- ✅ **Decomposition checklist** — if your function does any 2+ of these, it MUST be split:
+  - Creates UI widgets/layouts
+  - Validates input data
+  - Performs calculations/business logic
+  - Handles I/O (file, network, database)
+  - Formats output/results
 
 #### 5h. Law of Demeter
 
@@ -167,11 +176,15 @@ All code produced must adhere to the following design principles. These are eval
 - ✅ **Use** wrapper/delegate methods to encapsulate internal structure.
 - ✅ **Talk to friends, not strangers** — only call methods on own object, parameters, created objects, or direct components.
 
-#### 5i. No God Functions
+#### 5i. No God Functions (CRITICAL — ENFORCED)
+
+> **⚠️ 2026-02-17 Assessment**: `initUI` (484 lines) and `update_diagram` (333 lines) are duplicated monoliths that MUST be decomposed.
 
 - ❌ **DO NOT** create functions that handle >2 distinct responsibilities.
-- ❌ **Any function >80 lines** is almost certainly a God Function.
+- ❌ **HARD LIMIT**: Any function >80 lines is a God Function and MUST be decomposed.
+- ❌ **Any function >200 lines** is a CRITICAL incident requiring immediate remediation.
 - ✅ **Extract** each responsibility into its own well-named function.
+- ✅ **Pattern**: For UI setup functions, use the builder pattern: `_create_menu_bar()`, `_create_toolbar()`, `_create_main_panel()`, etc.
 
 #### 5j. No Magic Numbers
 

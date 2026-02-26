@@ -500,9 +500,7 @@ def is_safe_path(filepath: str) -> bool:
     if any(p.startswith(".") or p == "__pycache__" or p == "vendor" for p in parts):
         return False
     # Only modify .py files
-    if path.suffix != ".py":
-        return False
-    return True
+    return path.suffix == ".py"
 
 
 # Fix strategies in priority order (real fixes first, suppressions last)

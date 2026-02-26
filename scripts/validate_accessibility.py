@@ -116,24 +116,21 @@ def check_colorblind_safe_colors(file_path: Path) -> list[str]:
     hex_colors = re.finditer(r"#[0-9A-Fa-f]{6}", content)
     for match in hex_colors:
         color = match.group(0).upper()
-        if color not in all_allowed:
-            # Only flag colors that are likely problematic
-            # Skip very light and very dark colors as they're usually safe
-            if not any(
-                [
-                    color.startswith("#F"),  # Light colors
-                    color.startswith("#E"),  # Light colors
-                    color.startswith("#D"),  # Light colors
-                    color.startswith("#C"),  # Light colors
-                    color.startswith("#2"),  # Dark colors
-                    color.startswith("#3"),  # Dark colors
-                    color.startswith("#4"),  # Dark colors
-                    color.startswith("#5"),  # Dark colors
-                    color.startswith("#0"),  # Very dark colors
-                    color.startswith("#1"),  # Very dark colors
-                ]
-            ):
-                issues.append(f"Potentially problematic color: {color}")
+        if color not in all_allowed and not any(
+            [
+                color.startswith("#F"),  # Light colors
+                color.startswith("#E"),  # Light colors
+                color.startswith("#D"),  # Light colors
+                color.startswith("#C"),  # Light colors
+                color.startswith("#2"),  # Dark colors
+                color.startswith("#3"),  # Dark colors
+                color.startswith("#4"),  # Dark colors
+                color.startswith("#5"),  # Dark colors
+                color.startswith("#0"),  # Very dark colors
+                color.startswith("#1"),  # Very dark colors
+            ]
+        ):
+            issues.append(f"Potentially problematic color: {color}")
 
     return issues
 
