@@ -3,6 +3,7 @@
 This module provides base classes and utilities for validating data structures
 using Pydantic models.
 """
+
 from typing import Any, TypeVar
 
 from pydantic import BaseModel, ConfigDict, ValidationError

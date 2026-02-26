@@ -3,6 +3,7 @@
 This module provides tools to measure and analyze the performance of
 functions and code blocks.
 """
+
 import functools
 import timeit
 from collections.abc import Callable
@@ -32,8 +33,6 @@ def profile_execution_time(func: Callable[..., Any]) -> Callable[..., Any]:
         finally:
             end_time = timeit.default_timer()
             execution_time = end_time - start_time
-            logger.info(
-                f"Function {func.__name__} took {execution_time:.4f} seconds to execute."
-            )
+            logger.info(f"Function {func.__name__} took {execution_time:.4f} seconds to execute.")
 
     return wrapper
