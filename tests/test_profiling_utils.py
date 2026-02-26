@@ -1,5 +1,6 @@
-import time
 import logging
+import time
+
 from src.tools.utils.profiling_utils import profile_execution_time
 
 

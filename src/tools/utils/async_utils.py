@@ -3,8 +3,10 @@
 This module provides helper functions for managing asyncio event loops
 and running synchronous code in separate threads.
 """
+
 import asyncio
-from typing import Any, Callable, Coroutine
+from collections.abc import Callable, Coroutine
+from typing import Any
 
 
 async def run_async_task(coroutine: Coroutine[Any, Any, Any]) -> Any:
@@ -16,9 +18,7 @@ async def run_async_task(coroutine: Coroutine[Any, Any, Any]) -> Any:
     return await coroutine
 
 
-def run_sync_in_thread(
-    func: Callable[..., Any], *args: Any
-) -> Coroutine[Any, Any, Any]:
+def run_sync_in_thread(func: Callable[..., Any], *args: Any) -> Coroutine[Any, Any, Any]:
     """Run a synchronous function in a separate thread to avoid blocking the event loop.
 
     Args:

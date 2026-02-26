@@ -1,5 +1,3 @@
-from typing import Optional
-
 from src.tools.utils.validation_utils import BaseValidator
 
 

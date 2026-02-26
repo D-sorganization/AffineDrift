@@ -1,5 +1,6 @@
 import asyncio
-from src.tools.utils.async_utils import run_sync_in_thread, run_async_task
+
+from src.tools.utils.async_utils import run_async_task, run_sync_in_thread
 
 
 def sync_function(x):

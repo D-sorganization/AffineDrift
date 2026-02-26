@@ -3,7 +3,8 @@
 This module provides base classes and utilities for validating data structures
 using Pydantic models.
 """
-from typing import Any, Dict, Optional, Type, TypeVar
+
+from typing import Any, TypeVar
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -24,7 +25,7 @@ class BaseValidator(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @classmethod
-    def validate_data(cls: Type[T], data: Dict[str, Any]) -> Optional[T]:
+    def validate_data(cls: type[T], data: dict[str, Any]) -> T | None:
         """Validate a dictionary against the model.
 
         Args:
