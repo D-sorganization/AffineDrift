@@ -33,6 +33,7 @@ from .assessment_utils import (
     PRAGMATIC_PRINCIPLES,
     classify_assessment_category,
 )
+from .async_utils import run_async_task, run_sync_in_thread
 from .constants import (
     EXCLUDE_DIRS,
     EXCLUDE_DIRS_CONTENT,
@@ -63,6 +64,7 @@ from .html_utils import (
 )
 from .issue_utils import format_issue_body, get_repo_short_name
 from .logging_utils import setup_logging, setup_logging_with_timestamp
+from .profiling_utils import profile_execution_time
 from .report_utils import (
     AssessmentFinding,
     generate_issue_document,
@@ -70,6 +72,7 @@ from .report_utils import (
     generate_report_from_finding,
 )
 from .shell_utils import ToolResult
+from .validation_utils import BaseValidator
 
 __all__ = [
     # Constants
@@ -129,4 +132,11 @@ __all__ = [
     "get_repo_short_name",
     # Shell utilities
     "ToolResult",
+    # Async utilities
+    "run_async_task",
+    "run_sync_in_thread",
+    # Profiling utilities
+    "profile_execution_time",
+    # Validation utilities
+    "BaseValidator",
 ]

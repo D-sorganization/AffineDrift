@@ -1469,6 +1469,51 @@ Residual-aware methods enable **real-time nonlinear control** with theoretical g
 
 ---
 
+
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        This article introduces a way to make robots and control systems smarter by listening to their own errors. Instead of blindly following a plan, the system uses "drift" to understand the terrain.
+      </p>
+
+      <div class="laymans-item">
+        <h3>Residuals as Sensors</h3>
+        <p>In control theory, a "residual" is usually seen as an error to be minimized. Here, we treat it as a sensor reading. The amount of error tells us how complex the environment is.</p>
+        <div class="analogy">
+<strong>Think of it like:</strong> Driving on a foggy road. If you feel the car drifting sideways, you know the road is banking or curving, even if you can't see it clearly. The drift gives you information.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Adaptive Attention</h3>
+        <p>The system adjusts how much computing power it uses based on the situation. It skims through easy parts (straight roads) and focuses deeply on hard parts (sharp turns).</p>
+        <div class="analogy">
+<strong>Think of it like:</strong> A student studying for an exam. They flip quickly through pages they know well (low curvature), but stop to read every word of the difficult chapters (high curvature).
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Mode Switching</h3>
+        <p>The controller switches between a simple, fast mode and a complex, careful mode depending on how hard the task is right now.</p>
+        <div class="analogy">
+<strong>Think of it like:</strong> Autopilot vs. Manual. On a straight highway, you relax (simple mode). But when a storm hits or traffic stops, you grip the wheel and pay full attention (complex mode).
+        </div>
+      </div>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> By treating errors as information, we can build systems that remain fast on easy tasks while becoming careful and precise on difficult ones.
+      </div>
+    </div>
+  </div>
+</section>
+
+---
+
 ## Appendix: Mathematical Proofs {.appendix}
 
 ### Proof of Theorem 1.1 (Complete)

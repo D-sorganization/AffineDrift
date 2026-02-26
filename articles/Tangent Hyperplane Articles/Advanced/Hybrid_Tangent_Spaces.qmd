@@ -2089,6 +2089,79 @@ This addresses **Critique 2** from the critical review: we now explicitly state 
 
 ---
 
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Mathematical Rigor:</span>
+          <h3>Incomplete Saltation Matrix Derivation</h3>
+        </div>
+        <p class="critic-argument">
+          The derivation of the saltation matrix depends on a "sketch" that glosses over critical assumptions. Specifically, it assumes the guard function $h(x)$ is $C^2$ and transversally crossed, but never states these as necessary conditions. Without a rigorous proof connecting the variational principle to the time-of-crossing correction, the formula remains a heuristic that may fail for complex guards (e.g., intersections of surfaces).
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> The derivation provided is indeed a sketch intended for intuition. A rigorous proof requires the Implicit Function Theorem to define the crossing time map $t(x_0)$ and its gradient. We have added references to Burden et al. (2015) for the complete measure-theoretic proof.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Theoretical Foundations:</span>
+          <h3>Measure-Theoretic Hand-waving</h3>
+        </div>
+        <p class="critic-argument">
+          The article invokes measure theory to dismiss Zeno behavior (infinite jumps in finite time) as having "measure zero." While true for Lebesgue integrals, this ignores the practical reality that numerical integrators cannot handle Zeno behavior without regularization. Furthermore, for impulsive costs (e.g., energy loss at impact), an infinite number of jumps can lead to unbounded cost, which the "measure zero" argument fails to address.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We acknowledge that measure theory resolves the integration problem but not the computational one. In practice, Zeno behavior must be regularized (e.g., by detecting rest). The text has been updated to clarify that while the cost integral is well-defined, numerical implementation requires explicit Zeno handling.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Implementation Details:</span>
+          <h3>Unverified Custom Autodiff</h3>
+        </div>
+        <p class="critic-argument">
+          The JAX implementation section proposes a custom vector-Jacobian product (VJP) but provides syntactically invalid code (missing return values). More importantly, it conflates the reset Jacobian $P_j$ with the saltation matrix $S_j$. Differentiating through a jump requires the full saltation matrix to account for the variation in jump time, which the provided code snippet appears to neglect or obscure.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> The code example was intended as pseudocode, but we recognize the error. The saltation matrix $S_j$ <em>does</em> include the time-variation term (the correction factor), so using $S_j^T$ in the backward pass is correct. We have clarified the distinction between $P_j$ and $S_j$ in the implementation notes.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Physical Accuracy:</span>
+          <h3>Counter-Intuitive Golf Dynamics</h3>
+        </div>
+        <p class="critic-argument">
+          The claim that "decelerating before impact maximizes energy transfer" contradicts standard collision physics, where higher impact velocity yields higher ball speed. While torque reduction might be optimal (to exploit passive whiplash), describing it as "deceleration" is physically misleading and potentially incorrect without further qualification.
+        </p>
+        <div class="author-response">
+          <strong>Our Response:</strong> The wording was imprecise. The optimal strategy involves reducing <em>active torque</em> to allow the clubhead to release (uncock) fully, maximizing velocity at impact. We have refined the explanation to distinguish between control effort and kinematic acceleration.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate. These critiques strengthen our understanding.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+---
+
 ## Acknowledgments
 
 This work extends the Tangent Hyperplane framework developed by Dieter. The saltation matrix formalism builds on foundational work by Anitescu, Potra, Stewart, and Trinkle. Contact-implicit methods were pioneered by Posa, Kuindersma, and Tedrake at MIT.
