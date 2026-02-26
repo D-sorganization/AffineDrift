@@ -242,9 +242,8 @@ class ResidualMonitor(ContractChecker):
         if self.mode == "LQR":
             if self.high_count >= self.n:
                 next_mode = "MPC_FULL"
-        elif self.mode == "MPC_FULL":
-            if self.low_count >= self.n:
-                next_mode = "LQR"
+        elif self.mode == "MPC_FULL" and self.low_count >= self.n:
+            next_mode = "LQR"
 
         if next_mode != self.mode:
             logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)

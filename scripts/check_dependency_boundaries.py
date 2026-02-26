@@ -26,9 +26,8 @@ def _extract_import_prefixes(path: Path) -> tuple[list[tuple[int, str]], bool]:
         if isinstance(node, ast.Import):
             for name in node.names:
                 imports.append((node.lineno, name.name))
-        elif isinstance(node, ast.ImportFrom):
-            if node.module:
-                imports.append((node.lineno, node.module))
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imports.append((node.lineno, node.module))
 
     return (imports, False)
 

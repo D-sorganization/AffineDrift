@@ -120,9 +120,8 @@ def collect_files(repo_root: Path) -> list[Path]:
     """Collect all text files in the repository."""
     files: list[Path] = []
     for item in repo_root.rglob("*"):
-        if item.is_file() and not should_exclude_path(item, repo_root):
-            if is_text_file(item):
-                files.append(item)
+        if item.is_file() and not should_exclude_path(item, repo_root) and is_text_file(item):
+            files.append(item)
     return files
 
 

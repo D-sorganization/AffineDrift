@@ -66,15 +66,8 @@ def check_url(url: str, file_path: Path) -> str | None:
         except (FileNotFoundError, PermissionError, OSError) as e:
             return f"BROKEN (External): {url} in {file_path} (Error: {e})"
     else:
-        # Local file
-        # Handle relative paths
-        if url.startswith("/"):
-            # Absolute path relative to site root? Or system root?
-            # Usually / starts from root of website.
-            local_path = Path(url.lstrip("/"))
-        else:
-            # Relative to the file
-            local_path = Path(file_path).parent / url
+        # Local file — handle relative vs absolute paths
+        local_path = Path(url.lstrip("/")) if url.startswith("/") else Path(file_path).parent / url
 
         if not local_path.exists():
             # Try checking relative to root if above fails (common in some SSGs)

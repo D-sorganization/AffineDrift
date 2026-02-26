@@ -63,10 +63,7 @@ def is_excluded(filepath: str) -> bool:
     if fp.startswith("./"):
         fp = fp[2:]
 
-    for excl in EXCLUDED_PATHS:
-        if fp.startswith(excl) or excl in fp:
-            return True
-    return False
+    return any(fp.startswith(excl) or excl in fp for excl in EXCLUDED_PATHS)
 
 
 def _parse_grep_line(line: str) -> tuple[str | None, str | None, str | None]:
@@ -305,7 +302,7 @@ def generate_mermaid_charts(
 
     # Breakdown by Top Modules (Bar Chart equivalent using pie or just text for now as mermaid bar is verbose)
     # Let's do a simple count by top-level dir
-    counts = {}
+    counts: dict[str, int] = {}
     for item in criticals + todos + fixmes + placeholders:
         path_parts = item["file"].split("/")
         root = path_parts[0] if path_parts else "unknown"
