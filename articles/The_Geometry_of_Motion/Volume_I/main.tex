@@ -425,7 +425,7 @@ log map recovers axis-angle:
 For $\SE(3)$, the exponential combines rotation with translated screw motion and is used directly
 in product-of-exponentials kinematics and geodesic interpolation.
 
-\begin{example}{Python Example: SO(3) Exp/Log}{app_so3_exp_log}
+\begin{example}{Python Example: SO(3) Exp/Log}{app-so3-exp-log}
 \begin{lstlisting}[language=Python]
 import numpy as np
 from scipy.linalg import expm, logm
@@ -600,7 +600,7 @@ Large-scale discretizations produce sparse operators. Storing sparse matrices in
 reduces memory and enables scalable iterative solvers (CG, GMRES, MINRES). This matters for
 trajectory optimization and model predictive control where linear solves dominate runtime.
 
-\begin{example}{Python Example: Sparse Solve with SciPy}{app_sparse_solve}
+\begin{example}{Python Example: Sparse Solve with SciPy}{app-sparse-solve}
 \begin{lstlisting}[language=Python]
 import numpy as np
 import scipy.sparse as sp
@@ -622,7 +622,7 @@ Linear matrix inequalities encode convex constraints such as Lyapunov stability:
 Controller synthesis and contraction metric search can be cast as semidefinite programs.
 In practice, this is solved with CVX-family tools. A minimal Python workflow uses \texttt{cvxpy}.
 
-\begin{example}{Python Example: Lyapunov LMI in cvxpy}{app_lmi_cvxpy}
+\begin{example}{Python Example: Lyapunov LMI in cvxpy}{app-lmi-cvxpy}
 \begin{lstlisting}[language=Python]
 import cvxpy as cp
 import numpy as np
