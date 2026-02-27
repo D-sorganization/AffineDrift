@@ -24,7 +24,7 @@ from src.tools.utils.link_utils import (
 )
 
 logger = setup_logging(__name__, format_string="%(message)s")
-SCANNED_EXTENSIONS = {".qmd", ".html", ".md"}
+SCANNED_EXTENSIONS = {".qmd", ".html"}
 SKIP_FILES = {
     "WEBSITE_ENHANCEMENT_RECOMMENDATIONS.md",
     "WEBSITE_MANAGEMENT.md",

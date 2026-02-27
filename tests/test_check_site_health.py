@@ -168,6 +168,26 @@ def test_check_site_health_archive_excluded(mock_docs_dir, caplog):
     assert "No orphaned files found" in caplog.text
 
 
+def test_check_site_health_ignores_coverage_artifacts(mock_docs_dir, caplog):
+    """Coverage reports should be excluded from website health checks."""
+    caplog.set_level(logging.INFO)
+    create_html_file(mock_docs_dir, "index.html", "<html></html>")
+    create_html_file(
+        mock_docs_dir,
+        "coverage/lcov-report/AffineDrift/src/js/main.js.html",
+        '<html><body><a href="../../../index.html">All files</a></body></html>',
+    )
+
+    with patch("src.tools.check_site_health.DOCS_DIR", mock_docs_dir):
+        exit_code = check_site_health(
+            fail_on={"broken"},
+            ignore_quarto_alternate_formats=True,
+        )
+
+    assert exit_code == 0
+    assert "No broken links found" in caplog.text
+
+
 def test_check_site_health_entry_points_excluded(mock_docs_dir, caplog):
     """Test check_site_health excludes known entry points from orphan check."""
     caplog.set_level(logging.INFO)

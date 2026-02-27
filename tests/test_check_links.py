@@ -23,6 +23,7 @@ from src.tools.check_links import (
         "${item.url}",
         "...",
         "x",
+        "\\x",
     ],
 )
 def test_normalize_internal_url_filters_non_internal_links(url: str) -> None:
@@ -128,7 +129,7 @@ def test_check_links_integration(tmp_path: Path) -> None:
     (tmp_path / "index.qmd").write_text("[Valid](page.html)", encoding="utf-8")
     (tmp_path / "page.qmd").write_text("Content", encoding="utf-8")
 
-    (tmp_path / "broken.md").write_text("[Broken](missing.html)", encoding="utf-8")
+    (tmp_path / "broken.qmd").write_text("[Broken](missing.html)", encoding="utf-8")
 
     # Run check
     results = check_links(str(tmp_path))
@@ -136,7 +137,7 @@ def test_check_links_integration(tmp_path: Path) -> None:
     # Verify results
     assert len(results) == 1
     file, line, link = results[0]
-    assert file == "broken.md"
+    assert file == "broken.qmd"
     assert line == 1
     assert link == "missing.html"
 
