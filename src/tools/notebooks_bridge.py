@@ -35,6 +35,7 @@ class ChapterRef:
 
 
 def _load_json(path: Path) -> dict[str, Any]:
+    """Load a JSON object from disk with contract validation."""
     require(path.exists(), f"Missing file: {path}")
     with path.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
@@ -43,16 +44,19 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _slug(text: str) -> str:
+    """Convert free text into a stable filename-friendly slug."""
     normalized = re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")
     return normalized or "chapter"
 
 
 def _notebook_rel_path(chapter: ChapterRef) -> Path:
+    """Return canonical relative notebook path for a chapter."""
     filename = f"vol{chapter.volume}_ch{chapter.chapter}_{_slug(chapter.title)}.ipynb"
     return Path("notebooks/geometry_of_motion") / filename
 
 
 def _build_notebook(chapter: ChapterRef) -> dict[str, Any]:
+    """Build a minimal deterministic tutorial notebook scaffold."""
     title = f"# Tutorial: Volume {chapter.volume} Chapter {chapter.chapter} {chapter.title}\n"
     chapter_label = f"Volume {chapter.volume} Chapter {chapter.chapter}"
     return {
@@ -126,6 +130,7 @@ def discover_book_chapters(*, repo_root: Path) -> list[ChapterRef]:
 
 
 def _entry_from_chapter(chapter: ChapterRef) -> dict[str, Any]:
+    """Convert a chapter reference into a manifest entry."""
     notebook_rel = _notebook_rel_path(chapter)
     return {
         "id": f"vol{chapter.volume}-ch{chapter.chapter}-{_slug(chapter.title)}",
@@ -137,6 +142,7 @@ def _entry_from_chapter(chapter: ChapterRef) -> dict[str, Any]:
 
 
 def _write_notebook(path: Path, notebook_data: dict[str, Any]) -> None:
+    """Write notebook JSON content to disk."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
         json.dump(notebook_data, handle, indent=2)
@@ -144,6 +150,7 @@ def _write_notebook(path: Path, notebook_data: dict[str, Any]) -> None:
 
 
 def _write_manifest(*, manifest_path: Path, entries: list[dict[str, Any]]) -> None:
+    """Persist notebook bridge manifest in canonical schema."""
     manifest = {
         "series": "The Geometry of Motion",
         "description": "Executable chapter bridge between textbook pages and Jupyter notebooks.",
@@ -156,6 +163,7 @@ def _write_manifest(*, manifest_path: Path, entries: list[dict[str, Any]]) -> No
 
 
 def _prune_stale_notebooks(*, output_dir: Path, expected_files: set[Path]) -> None:
+    """Remove notebook files in output_dir not listed in expected_files."""
     if not output_dir.exists():
         return
     for notebook_file in output_dir.glob("*.ipynb"):
@@ -180,6 +188,7 @@ def sync_notebook_bridge(*, repo_root: Path, output_dir: Path, manifest_path: Pa
 
 
 def _parse_source_ref(source_ref: str) -> tuple[Path, str | None]:
+    """Split source reference into file path and optional anchor."""
     if "#" not in source_ref:
         return Path(source_ref), None
     file_part, anchor = source_ref.split("#", maxsplit=1)
@@ -187,6 +196,7 @@ def _parse_source_ref(source_ref: str) -> tuple[Path, str | None]:
 
 
 def _has_tutorial_title(notebook_data: dict[str, Any]) -> bool:
+    """Return True when notebook starts with tutorial markdown title cell."""
     cells = notebook_data.get("cells")
     if not isinstance(cells, list) or not cells:
         return False
@@ -202,6 +212,7 @@ def _has_tutorial_title(notebook_data: dict[str, Any]) -> bool:
 
 
 def _validate_entry(entry: dict[str, Any], repo_root: Path) -> list[str]:
+    """Validate a single manifest entry against source and notebook files."""
     errors: list[str] = []
     entry_id = str(entry.get("id", "<missing-id>"))
     for field in ("id", "title", "source_ref", "notebook_path", "status"):
