@@ -1,0 +1,97 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{geometry_of_motion}[2026/02/27 Shared style primitives for the Geometry of Motion series]
+
+\RequirePackage{xcolor}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\RequirePackage{listings}
+
+\makeatletter
+\newcommand{\gom@definecolorifmissing}[4]{%
+  \@ifundefined{color@#1}{\definecolor{#1}{#2}{#3}}{}%
+}
+\makeatother
+
+% Shared series palette
+\gom@definecolorifmissing{chapblue}{RGB}{0, 70, 130}
+\gom@definecolorifmissing{accentred}{RGB}{180, 40, 40}
+\gom@definecolorifmissing{softgray}{RGB}{245, 245, 245}
+\gom@definecolorifmissing{trajgreen}{RGB}{30, 130, 60}
+\gom@definecolorifmissing{darkgold}{RGB}{160, 120, 20}
+\gom@definecolorifmissing{purplehaze}{RGB}{100, 40, 140}
+
+% Shared code/listings style
+\gom@definecolorifmissing{gomcodegreen}{rgb}{0,0.6,0}
+\gom@definecolorifmissing{gomcodegray}{rgb}{0.5,0.5,0.5}
+\gom@definecolorifmissing{gomcodepurple}{rgb}{0.58,0,0.82}
+\gom@definecolorifmissing{gombackcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{gompython}{
+  backgroundcolor=\color{gombackcolour},
+  commentstyle=\color{gomcodegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{gomcodegray},
+  stringstyle=\color{gomcodepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+\newcommand{\gomapplylistingstyle}{\lstset{style=gompython}}
+
+% Shared callout boxes (idempotent)
+\makeatletter
+\@ifundefined{intuitionbox}{
+\newtcolorbox{intuitionbox}[1][]{
+  colback=chapblue!5!white,
+  colframe=chapblue!75!black,
+  fonttitle=\bfseries,
+  title={Geometric Intuition},
+  #1
+}}{}
+\@ifundefined{warningbox}{
+\newtcolorbox{warningbox}[1][]{
+  colback=accentred!5!white,
+  colframe=accentred!80!black,
+  fonttitle=\bfseries,
+  title={Warning},
+  #1
+}}{}
+\@ifundefined{designbox}{
+\newtcolorbox{designbox}[1][]{
+  colback=darkgold!5!white,
+  colframe=darkgold!80!black,
+  fonttitle=\bfseries,
+  title={Design Implication},
+  #1
+}}{}
+\makeatother
+
+% Optional shared theorem primitives
+\newcommand{\gomdeclaretheorems}{%
+  \makeatletter
+  \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}%
+  \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}%
+  \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%
+  \@ifundefined{example}{\newtheorem{example}[theorem]{Example}}{}%
+  \@ifundefined{remark}{\newtheorem{remark}[theorem]{Remark}}{}%
+  \makeatother
+}
+
+% Shared math commands (idempotent)
+\providecommand{\R}{\mathbb{R}}
+\providecommand{\N}{\mathbb{N}}
+\providecommand{\dd}{\mathrm{d}}
+\providecommand{\dt}{\,\dd t}
+\providecommand{\mat}[1]{\mathbf{#1}}
+\providecommand{\x}{\bm{x}}
+\providecommand{\q}{\bm{q}}
+\providecommand{\uvec}{\bm{u}}
+\providecommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\providecommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
