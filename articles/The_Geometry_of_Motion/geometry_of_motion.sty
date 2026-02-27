@@ -7,24 +7,24 @@
 \RequirePackage{listings}
 
 \makeatletter
-\newcommand{\gom@definecolorifmissing}[4]{%
+\newcommand{\gomdefinecolorifmissing}[3]{%
   \@ifundefined{color@#1}{\definecolor{#1}{#2}{#3}}{}%
 }
 \makeatother
 
 % Shared series palette
-\gom@definecolorifmissing{chapblue}{RGB}{0, 70, 130}
-\gom@definecolorifmissing{accentred}{RGB}{180, 40, 40}
-\gom@definecolorifmissing{softgray}{RGB}{245, 245, 245}
-\gom@definecolorifmissing{trajgreen}{RGB}{30, 130, 60}
-\gom@definecolorifmissing{darkgold}{RGB}{160, 120, 20}
-\gom@definecolorifmissing{purplehaze}{RGB}{100, 40, 140}
+\gomdefinecolorifmissing{chapblue}{RGB}{0, 70, 130}
+\gomdefinecolorifmissing{accentred}{RGB}{180, 40, 40}
+\gomdefinecolorifmissing{softgray}{RGB}{245, 245, 245}
+\gomdefinecolorifmissing{trajgreen}{RGB}{30, 130, 60}
+\gomdefinecolorifmissing{darkgold}{RGB}{160, 120, 20}
+\gomdefinecolorifmissing{purplehaze}{RGB}{100, 40, 140}
 
 % Shared code/listings style
-\gom@definecolorifmissing{gomcodegreen}{rgb}{0,0.6,0}
-\gom@definecolorifmissing{gomcodegray}{rgb}{0.5,0.5,0.5}
-\gom@definecolorifmissing{gomcodepurple}{rgb}{0.58,0,0.82}
-\gom@definecolorifmissing{gombackcolour}{rgb}{0.95,0.95,0.92}
+\gomdefinecolorifmissing{gomcodegreen}{rgb}{0,0.6,0}
+\gomdefinecolorifmissing{gomcodegray}{rgb}{0.5,0.5,0.5}
+\gomdefinecolorifmissing{gomcodepurple}{rgb}{0.58,0,0.82}
+\gomdefinecolorifmissing{gombackcolour}{rgb}{0.95,0.95,0.92}
 \lstdefinestyle{gompython}{
   backgroundcolor=\color{gombackcolour},
   commentstyle=\color{gomcodegreen},
