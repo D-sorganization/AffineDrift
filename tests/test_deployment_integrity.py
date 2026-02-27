@@ -31,6 +31,7 @@ def test_deploy_workflow_integrity() -> None:
     # Check for Verification
     assert "Verify Deployment" in content, "Deployment verification step missing"
     assert "curl" in content, "Curl verification missing"
+    assert "PYTHONPATH: ." in content, "Deploy workflow must set PYTHONPATH for script imports"
 
 
 def test_requirements_integrity() -> None:
