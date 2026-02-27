@@ -17,13 +17,13 @@ VOLUME_MAIN_FILES = (
 
 
 def test_shared_style_file_exists_with_core_primitives() -> None:
-    """Shared style should provide color, callout, theorem, and listing primitives."""
+    """Shared style should provide color, theorem, and listing primitives."""
     text = STYLE_FILE.read_text(encoding="utf-8")
     assert r"\ProvidesPackage{geometry_of_motion}" in text
     assert "chapblue" in text
     assert r"\gomapplylistingstyle" in text
     assert r"\gomdeclaretheorems" in text
-    assert r"\newtcolorbox{intuitionbox}" in text
+    assert r"\RequirePackage{tcolorbox}" not in text
     assert r"\providecommand{\dd}" not in text
 
 

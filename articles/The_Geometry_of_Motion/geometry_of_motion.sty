@@ -2,8 +2,6 @@
 \ProvidesPackage{geometry_of_motion}[2026/02/27 Shared style primitives for the Geometry of Motion series]
 
 \RequirePackage{xcolor}
-\RequirePackage{tcolorbox}
-\tcbuselibrary{theorems, breakable, skins}
 \RequirePackage{listings}
 
 \makeatletter
@@ -44,34 +42,6 @@
   tabsize=2
 }
 \newcommand{\gomapplylistingstyle}{\lstset{style=gompython}}
-
-% Shared callout boxes (idempotent)
-\makeatletter
-\@ifundefined{intuitionbox}{
-\newtcolorbox{intuitionbox}[1][]{
-  colback=chapblue!5!white,
-  colframe=chapblue!75!black,
-  fonttitle=\bfseries,
-  title={Geometric Intuition},
-  #1
-}}{}
-\@ifundefined{warningbox}{
-\newtcolorbox{warningbox}[1][]{
-  colback=accentred!5!white,
-  colframe=accentred!80!black,
-  fonttitle=\bfseries,
-  title={Warning},
-  #1
-}}{}
-\@ifundefined{designbox}{
-\newtcolorbox{designbox}[1][]{
-  colback=darkgold!5!white,
-  colframe=darkgold!80!black,
-  fonttitle=\bfseries,
-  title={Design Implication},
-  #1
-}}{}
-\makeatother
 
 % Optional shared theorem primitives
 \newcommand{\gomdeclaretheorems}{%
