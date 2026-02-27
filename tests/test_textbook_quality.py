@@ -76,3 +76,11 @@ def test_target_pages_have_balanced_fenced_div_blocks() -> None:
     for qmd_file in FENCED_DIV_FILES:
         issues = _collect_fenced_div_balance_issues(qmd_file.read_text(encoding="utf-8"))
         assert issues == [], f"{qmd_file}: {issues}"
+
+
+def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
+    """Target pages should avoid raw ::: markers that leak into rendered HTML."""
+    for qmd_file in FENCED_DIV_FILES:
+        text = qmd_file.read_text(encoding="utf-8")
+        assert "::: {.callout-note}" not in text
+        assert "::: {.abstract-section}" not in text

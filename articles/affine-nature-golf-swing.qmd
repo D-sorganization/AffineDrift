@@ -11,12 +11,10 @@ format:
     code-fold: true
 ---
 
-::: {.abstract-section}
 ## Abstract
 
 The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
 
-:::
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
@@ -164,7 +162,6 @@ In this section we define the mathematical structure of the golfer--club--shaft 
 ### Modeling assumptions
 {#subsec:assumptions}
 
-::: {.callout-note}
 ## Modeling Assumptions for the Theoretical Framework
 These assumptions apply strictly to the theoretical decomposition presented in this manuscript (Part~I). They define the mathematical boundaries of the model; empirical validation and relaxation of these assumptions will be addressed in later work.
 
@@ -177,7 +174,6 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 6. **Ground contact modeled as holonomic constraint.** Feet--ground interaction is simplified as a fixed base with no slip or compliance; the golfer is treated as rooted at the ground.
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
-:::
 
 To translate these assumptions into a rigorous mathematical structure, we must first define the geometric manifold on which the system evolves. The assumptions above simplify the biomechanical reality into a deterministic state space, allowing us to describe the golfer not as a collection of tissues, but as a point moving along a curved surface defined by the joint constraints.
 
@@ -212,10 +208,8 @@ $$
 $$
 This identifies the drift vector field components. The "inertial drift" corresponds to the term $-\Gamma^k_{ij} \dot{x}^i \dot{x}^j$, which appears in the mechanical equations as $-M^{-1} C(x)\dot{x}$. This geometric definition ensures that $f(x)$ is a coordinate-independent object—a global section of the tangent bundle—guaranteeing that our decomposition is intrinsic to the mechanics, not an artifact of the choice of variables.
 
-::: {.callout-note}
 ## Note on Constrained Subsystems (The Wrist)
 While the global system evolves on $T\mathcal{Q}$, specific joints may have internal constraints that reduce the local degrees of freedom. For example, the wrist joint functions as a universal joint with a constrained third axis (forearm rotation). These local constraints generate internal **constraint torques** that reside in the null space of the actuation map $B(q)$ but are critical for force transmission. For a detailed derivation of these constraint dynamics, see [Constraint Torques at the Wrist](wrist-universal-joint.qmd).
-:::
 
 The geometric structure defined thus far—the manifold $\mathcal{Q}$ and metric $M$—describes the *capacity* for motion, but not its cause. In a passive universe, the system would simply follow geodesics forever. To model a golfer, we must introduce agency: a mechanism that allows the system to deviate from its natural inertial path.
 
@@ -995,12 +989,10 @@ The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. T
 $$\nabla_u f(x) \equiv 0.$$
 This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
-::: {.callout-note}
 ## Assumption of Viscous-Only Damping
 This invariance proof strictly relies on the assumption that all dissipative forces $h_{\text{dissip}}$ depend only on state $(q, \dot{q})$. Specifically, we assume damping is viscous (linear in velocity).
 If the system included **Coulomb friction** ($\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$), where the normal force $F_N$ depends on constraint forces (and thus on input $u$), the drift term $f(x)$ would become input-dependent ($\nabla_u f \neq 0$), violating the affine structure.
 For the high-speed ballistic phases of the golf swing, we assume inertial forces dominate frictional forces ($F_{\text{inertia}} \gg \mu F_N$), justifying this viscous-only approximation.
-:::
 
 $\square$
 
@@ -1235,10 +1227,8 @@ Velocity-dependent drift forces include:
 
 These forces can be large---often dominant---in fast regions of the swing (e.g., late downswing).
 
-::: {.callout-note}
 ## Note on Causal History
 While classified as "Drift" because they do not depend on the *instantaneous* torque input $u(t)$, these velocity-dependent forces are causally linked to the *history* of prior inputs that accelerated the system to its current state. They represent the "kinetic momentum" of the swing established by past effort, not an exogenous source of energy.
-:::
 
 ### Category 3: Input (torque-driven) forces
 
@@ -1374,10 +1364,8 @@ The feasible set of torques $\mathcal{U}(x)$ may depend on configuration, streng
 
 ##### Parameter identification and causality.
 When passive parameters (stiffness, damping) are identified from active motion data, they may implicitly capture the "effective" impedance of the active system (e.g., co-contraction) rather than the purely passive mechanics. In this case, the "Drift" term $f(x)$ represents the dynamics of the "Effective Plant" conditioned on the task, and the clean causal separation between input and plant is approximate. This implies that the ZTCF acts as a **"frozen strategy" baseline**: it asks how the system would evolve if the golfer ceased *driving* the motion but maintained the *structural impedance* required for the task. It does not simulate a flaccid collapse.
-::: {.callout-note}
 ## Defense (The Effective Plant Fallacy)
 Critics argue that an "Effective Plant" that depends on the task renders the baseline tautological ("The plant is what the plant does"). We defend this by acknowledging that the ZTCF represents **"Impedance-Conditioned Drift"**. While a truly passive (cadaveric) baseline exists in theory, it is biologically inaccessible during high-speed motion. The "Effective Plant" baseline is the only relevant counterfactual for analyzing control *around* the intended trajectory.
-:::
 
 ##### Exact parameter knowledge.
 The decomposition assumes perfect knowledge of:
@@ -1407,10 +1395,8 @@ A common objection to 'Zero Torque' analysis in biological systems is the presen
 
 ##### Ambiguity of "Braking" (Impedance vs. Drive) -- Teleological Blindness.
 The decomposition identifies the net torque vector $\tau_{\text{input}}$ but is structurally blind to the *intent* behind it. Specifically, it cannot distinguish between torque applied to accelerate the system (work) and co-contraction torque applied to increase stiffness (stability) if the latter results in a net bias. A negative or "braking" input $\tau_{\text{input}}$ may represent a functional strategy to stabilize the clubhead against impact disturbances rather than an inefficient opposition to the swing's momentum.
-::: {.callout-note}
 ## Defense
 We explicitly warn against the **Efficiency Fallacy**—the assumption that all "braking" torque is error. "Fighting the drift" should be interpreted neutrally as "modulating the drift," a process that may serve robustness (minimizing variance) rather than speed. The framework diagnoses the *mechanical cost* of control, not the *tactical utility* of that cost.
-:::
 
 ##### No claims about optimality or intent.
 The decomposition quantifies how torques shape motion, but it does not imply:
