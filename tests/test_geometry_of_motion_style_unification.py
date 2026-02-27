@@ -24,6 +24,7 @@ def test_shared_style_file_exists_with_core_primitives() -> None:
     assert r"\gomapplylistingstyle" in text
     assert r"\gomdeclaretheorems" in text
     assert r"\newtcolorbox{intuitionbox}" in text
+    assert r"\providecommand{\dd}" not in text
 
 
 def test_all_volumes_import_shared_style_package() -> None:
