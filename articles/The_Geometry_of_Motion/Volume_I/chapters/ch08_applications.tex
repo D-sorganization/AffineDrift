@@ -4,7 +4,7 @@
 \chapter{Applications: Biomechanics, Robotics, and Beyond}
 \label{ch:applications}
 
-\begin{laymansbox}
+\begin{laymansbox}{The Theory in the Real World}{theory_real_world}
 This chapter shows the unified framework in action. From a golfer's swing to a robot
 arm to a docking spacecraft, the same geometric tools---tangent-space analysis,
 contraction metrics, drift--input decomposition, and Riccati-based optimal control---provide
@@ -17,13 +17,6 @@ pathways. The goal is to move from theory to implementation.
 %% ==========================================================================
 \section{Biomechanics: The Golf Swing as a Control-Affine System}
 %% ==========================================================================
-
-\begin{laymansbox}[Context & Use Case: Modeling Complex Human Motion]
-\textbf{The Math You Will See:} We will build a high-dimensional state vector $\mathbf{x}$ containing joint angles ($\mathbf{q}$) and velocities ($\dot{\mathbf{q}}$), and construct massive Inertia ($\mathbf{M}$) and Centrifugal/Coriolis ($\mathbf{C}$) matrices to predict motion. 
-\textbf{Why We Need It:} The golf swing isn't just about swinging a stick; it involves the torso, arm, wrist, and a flexible/bending golf club shaft. By packing all these moving parts into vectors and matrices, we can use a single set of equations to calculate the forces required to hit the ball optimally. 
-\textbf{All Variables Defined:} Variables like $\mathbf{q}$ (angles), $\dot{\mathbf{q}}$ (angular velocities), and $\mathbf{M(q)}$ (mass matrix) follow standard robotics conventions. Check the \textbf{Nomenclature} at the start of this volume if you forget what a symbol means!
-\end{laymansbox}
-
 
 \subsection{System Definition and Parameterization}
 
@@ -242,7 +235,7 @@ to store and release elastic energy.
 
 \subsubsection{System Dynamics}
 
-The coupled Lagrangian yields the control-affine form:
+The coupled Lagrangian\index{Lagrangian Mechanics} yields the control-affine form:
 \begin{equation}
 \dot\x = \underbrace{\begin{bmatrix}
 \dot\q \\ \dot{\vec\eta} \\
@@ -426,13 +419,13 @@ and any violation of this order degrades performance.
 \end{designbox}
 
 %% ==========================================================================
-\section{Robotics: Contraction-Certified Manipulation}
+\section{Robotics: Contraction\index{Contraction Analysis}-Certified Manipulation}
 %% ==========================================================================
 
-\subsection{Operational Space Control with Contraction Guarantees}
+\subsection{Operational Space Control with Contraction\index{Contraction Analysis} Guarantees}
 
 For a robot manipulator tracking a task-space trajectory $\vec{y}_d(t)$ with task
-Jacobian $J(\q)$ such that $\dot{\vec{y}} = J(\q)\dot\q$, the pullback metric from
+Jacobian\index{Jacobian} $J(\q)$ such that $\dot{\vec{y}} = J(\q)\dot\q$, the pullback metric from
 task space to joint space is
 \begin{equation}
 \mat{M}(\q) = J(\q)^\T\mat{W}\!\bigl(\vec{y}\bigr)\,J(\q),
@@ -458,7 +451,7 @@ y &= l_1 s_1 + l_2 s_{12} + l_3 s_{123},
 \end{align}
 where $c_i = \cos(q_1 + \cdots + q_i)$ and $s_i = \sin(q_1 + \cdots + q_i)$.
 
-The task Jacobian is:
+The task Jacobian\index{Jacobian} is:
 \begin{equation}
 J(\q) = \begin{bmatrix}
 -l_1 s_1 - l_2 s_{12} - l_3 s_{123} & -l_2 s_{12} - l_3 s_{123} & -l_3 s_{123} \\
@@ -959,7 +952,7 @@ against trajectory accuracy.
 \section{Autonomous Driving: Vehicle Dynamics and Lane-Keeping}
 %% ==========================================================================
 
-\subsection{Bicycle Model Kinematics}
+\subsection{Bicycle Model Kinematics\index{Kinematics}}
 
 \subsubsection{System Definition}
 
@@ -1102,7 +1095,7 @@ that fully parameterize the system's position and orientation.
 T(\q, \dot\q) = \frac{1}{2}\dot\q^\T M(\q)\dot\q, \quad V(\q).
 \end{equation}
 
-\item \textbf{Compute the Lagrangian:} $L = T - V$.
+\item \textbf{Compute the Lagrangian\index{Lagrangian Mechanics}:} $L = T - V$.
 
 \item \textbf{Apply Lagrange equations with control forces:}
 \begin{equation}

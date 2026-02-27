@@ -4,7 +4,7 @@
 \chapter{Variational Dynamics and the Moving Frame}
 \label{ch:variational}
 
-\begin{laymansbox}
+\begin{laymansbox}{Linearizing the Curve}{linearizing_curve}
 Even though a nonlinear system curves and twists through state space, tiny errors around
 a reference trajectory evolve by a linear rule that we can compute and exploit. This
 chapter derives that rule---the variational equation---from first principles, constructs its
@@ -51,7 +51,7 @@ f(\bar\x+\dx) = f(\bar\x) + \frac{\partial f}{\partial \x}\bigg|_{\bar\x}\,\dx
 \label{eq:ch2:f-taylor}
 \end{equation}
 
-The first derivative is the Jacobian $J_f(\bar\x) := \partial f/\partial\x|_{\bar\x}$, which
+The first derivative is the Jacobian\index{Jacobian} $J_f(\bar\x) := \partial f/\partial\x|_{\bar\x}$, which
 is an $n\times n$ matrix. The second derivative term represents the Hessian applied to the
 perturbation: for each state component $i$, we have
 \[
@@ -126,7 +126,7 @@ Define
 \label{eq:ch2:AB-def}
 \end{equation}
 
-The matrix $\mat{A}(t)$ is the Jacobian of the vector field $f + G\bar\uvec$ along the
+The matrix $\mat{A}(t)$ is the Jacobian\index{Jacobian} of the vector field $f + G\bar\uvec$ along the
 nominal trajectory. Explicitly,
 \begin{equation}
 \mat{A}(t) = J_f(\bar\x(t)) + \frac{\partial G}{\partial\x}\bigg|_{\bar\x(t)} \, (\mathbf{1} \otimes \bar\uvec(t))^T,
@@ -841,7 +841,7 @@ incorporated into machine learning infrastructure.
 \end{remark}
 
 
-\section{Liouville's Formula and Phase Space Volume}
+\section{Liouville's Formula and Phase Space\index{Phase Space} Volume}
 
 Liouville's formula (Theorem~\ref{thm:ch2:liouville}) has a beautiful geometric interpretation related
 to the evolution of phase-space volumes.
@@ -1138,7 +1138,7 @@ error remains bounded for all time (it oscillates rather than drifting).
 Higher-order symplectic methods (Störmer--Verlet, Yoshida compositions) achieve $O(h^p)$
 accuracy while maintaining the symplectic property.
 
-\subsection{Lie Group Integrators}
+\subsection{Lie Group\index{Lie Group} Integrators}
 
 When the state space includes rotation groups (SO(3) for rigid-body attitude, SE(3) for
 pose), standard integrators that parameterize rotations via Euler angles or quaternions
@@ -1161,8 +1161,8 @@ variational principle (discrete Hamilton's principle) rather than discretizing t
 continuous equations. The resulting integrator automatically preserves the symplectic
 structure and momentum maps.
 
-For the discrete Lagrangian $L_d(\q_k, \q_{k+1}) \approx \int_{t_k}^{t_{k+1}} L(\q, \dot\q) \, \dd t$,
-the discrete Euler-Lagrange equations yield:
+For the discrete Lagrangian\index{Lagrangian Mechanics} $L_d(\q_k, \q_{k+1}) \approx \int_{t_k}^{t_{k+1}} L(\q, \dot\q) \, \dd t$,
+the discrete Euler-Lagrange\index{Euler-Lagrange Equations} equations yield:
 \begin{equation}
 D_2 L_d(\q_{k-1}, \q_k) + D_1 L_d(\q_k, \q_{k+1}) = 0,
 \label{eq:ch2:discrete-euler-lagrange}

@@ -4,7 +4,7 @@
 \chapter{Foundations: Tangent Spaces and Exactness}
 \label{ch:foundations}
 
-\begin{laymansbox}
+\begin{laymansbox}{Zooming in on the Map}{tangent_patch}
 Every curved surface, no matter how complex, has a flat patch touching it at each point.
 On that flat patch, the familiar rules of addition and scaling work perfectly.
 This chapter establishes that these flat patches---tangent spaces---are not approximations
@@ -146,7 +146,7 @@ both arguments. Where higher-order residual bounds are needed, we assume $C^2$ s
 \end{assumption}
 
 This assumption is minimal yet physically reasonable. Virtually all systems derived from
-classical mechanics---Newtonian, Lagrangian, or Hamiltonian---produce smooth vector fields.
+classical mechanics---Newtonian, Lagrangian\index{Lagrangian Mechanics}, or Hamiltonian---produce smooth vector fields.
 The $C^1$ requirement is the bare mathematical condition for derivatives to exist.
 
 \begin{warningbox}
@@ -161,7 +161,7 @@ treatment. We address smooth systems exclusively and note hybrid extensions wher
 
 \subsection{Definition and Uniqueness}
 
-At a fixed operating point $(\bar\x, \bar\uvec)$, the \textbf{Jacobian} of the vector
+At a fixed operating point $(\bar\x, \bar\uvec)$, the \textbf{Jacobian\index{Jacobian}} of the vector
 field with respect to the state is the matrix
 \begin{equation}
 \mat{A} := \frac{\partial f}{\partial \x}\bigg|_{(\bar\x,\bar\uvec)} \in \R^{n\times n},
@@ -250,7 +250,7 @@ For the purposes of this book, we always assume Fréchet differentiability (part
 assumption), which ensures the robust infinitesimal linearization on which all subsequent
 theory depends.
 
-\subsection{Worked Example: The Pendulum Jacobian}
+\subsection{Worked Example: The Pendulum Jacobian\index{Jacobian}}
 
 Consider a simple pendulum with friction and torque input:
 \begin{equation}
@@ -343,7 +343,7 @@ subsequent chapter will build upon.
 
 \subsection{Abstract Definition}
 
-\begin{definition}[Tangent Space]\label{def:tangent-space}
+\begin{definition}[Tangent Space\index{Tangent Space}]\label{def:tangent-space}
 Let $\mathcal{M}$ be a smooth manifold and $p\in\mathcal{M}$. The \textbf{tangent space}
 $T_p\mathcal{M}$ is the vector space of all tangent vectors at $p$---equivalently, the
 space of all velocity vectors of smooth curves passing through $p$.
@@ -515,7 +515,7 @@ points and other geometrically special configurations.
 \toprule
 & \textbf{Standard View} & \textbf{Tangent-Space View} \\
 \midrule
-Residual is\ldots & Approximation error & Manifold curvature \\
+Residual is\ldots & Approximation error & Manifold\index{Manifold} curvature \\
 Strategy & Minimize error & Measure and exploit curvature \\
 Linearization is\ldots & ``Good enough'' & Exact at the infinitesimal limit \\
 Goal & Better approximation & Navigate the tangent bundle \\
@@ -529,7 +529,7 @@ view, the residual is information: it tells us about the curvature of the state-
 and this information is essential for understanding transport and nonlinear phenomena.
 
 
-\section{Manifold Examples: From Theory to Application}
+\section{Manifold\index{Manifold} Examples: From Theory to Application}
 
 The abstract theory of tangent spaces becomes concrete and powerful when applied to specific
 manifolds that arise in dynamics and control. Three examples are essential.
@@ -604,7 +604,7 @@ twist vectors, represented as $4 \times 4$ matrices of the form
 where $[\boldsymbol{\omega}]_{\times} \in \mathfrak{so}(3)$ and $\vec{v} \in \R^3$ is a linear velocity.
 This is the Lie algebra $\mathfrak{se}(3)$, a 6-dimensional space.
 
-\subsubsection{Kinematics and Dynamics}
+\subsubsection{Kinematics\index{Kinematics} and Dynamics}
 
 For a rigid body in space with configuration $\mat{T}(t) \in \SE(3)$ and twist (spatial
 velocity) $\boldsymbol{\xi} = (\vec{v}, \boldsymbol{\omega})$, the kinematic equation is
@@ -627,14 +627,14 @@ and $\theta_2$. The configuration space is naturally a torus:
 \end{equation}
 where each $S^1$ is a circle (angle wraparound).
 
-\subsubsection{Coordinates and Tangent Space}
+\subsubsection{Coordinates and Tangent Space\index{Tangent Space}}
 
 Coordinates on $T^2$ are $(\theta_1, \theta_2) \in [0, 2\pi) \times [0, 2\pi)$ with wraparound
 identification. The tangent space $T_{(\theta_1, \theta_2)}(T^2)$ is a 2-dimensional space
 representing the angular velocities $(\dot\theta_1, \dot\theta_2)$.
 
 The state is $\x = (\theta_1, \theta_2, \dot\theta_1, \dot\theta_2) \in T^2 \times \R^2$.
-The dynamics come from the Lagrangian or energy conservation, with gravity and friction.
+The dynamics come from the Lagrangian\index{Lagrangian Mechanics} or energy conservation, with gravity and friction.
 For example:
 \begin{equation}
 \ddot\theta_1 = g(\sin\theta_1 + \frac{1}{2}\sin(\theta_1 + \theta_2)) + (\text{friction, control}) ,
@@ -883,7 +883,7 @@ avoid the psychological barrier of thinking that everything about perturbations 
 
 Chapter~\ref{ch:variational} develops the theory of perturbation evolution: how infinitesimal
 variations propagate along a trajectory, quantifying the sensitivity of orbits to initial
-conditions. The state transition matrix and Lyapunov exponents emerge as central objects.
+conditions. The state transition matrix and Lyapunov\index{Lyapunov Stability} exponents emerge as central objects.
 
 Chapter~\ref{ch:contraction} introduces contractivity and metric tensors, translating the
 intuition that ``some directions are more stable than others'' into a precise geometric
@@ -905,7 +905,7 @@ chapter connect to the book's primary application domain: the biomechanics of th
 This preview is deliberately non-technical; the full mathematical treatment appears in
 Chapter~\ref{ch:applications}.
 
-\begin{laymansbox}
+\begin{laymansbox}{The Golfer's Frame of Reference}{golfer_frame}
 A golfer's swing is a chain of rotating body segments---torso, arms, wrists, club---that
 accelerates a clubhead to high speed and launches a ball. The physics is ferociously
 nonlinear: centrifugal forces grow as the square of rotational speed, the club shaft
