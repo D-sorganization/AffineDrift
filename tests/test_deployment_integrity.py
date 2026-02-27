@@ -19,12 +19,14 @@ def test_deploy_workflow_integrity() -> None:
         content = f.read()
 
     # Check for Pre-build checks
-    assert "tools/check_links.py" in content, "Pre-build link check missing from workflow"
+    assert (
+        "python -m src.tools.check_links" in content
+    ), "Pre-build link check must run as module to resolve imports"
 
     # Check for Post-build checks
     assert (
-        "tools/check_site_health.py" in content
-    ), "Post-build site health check missing from workflow"
+        "python -m src.tools.check_site_health --fail-on broken" in content
+    ), "Post-build site health check must run as module to resolve imports"
 
     # Check for Verification
     assert "Verify Deployment" in content, "Deployment verification step missing"

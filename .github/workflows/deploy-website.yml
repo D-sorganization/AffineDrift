@@ -62,7 +62,7 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
 
       - name: Pre-build Link Check
-        run: python src/tools/check_links.py
+        run: python -m src.tools.check_links
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
@@ -80,7 +80,7 @@ jobs:
           to: html
 
       - name: Post-build Health Check
-        run: python src/tools/check_site_health.py --fail-on broken
+        run: python -m src.tools.check_site_health --fail-on broken
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
