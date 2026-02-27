@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).parent.parent
 WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "deploy-website.yml"
 REQUIREMENTS_PATH = ROOT_DIR / "requirements.txt"
+LATEX_RELEASE_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "latex-release-volumes.yml"
 
 
 def test_deploy_workflow_integrity() -> None:
@@ -50,3 +51,12 @@ def test_check_scripts_exist() -> None:
     """Ensure the check scripts actually exist."""
     assert (ROOT_DIR / "src" / "tools" / "check_links.py").exists()
     assert (ROOT_DIR / "src" / "tools" / "check_site_health.py").exists()
+
+
+def test_latex_release_workflow_integrity() -> None:
+    """Ensure textbook release workflow compiles and uploads Vol I/II PDFs."""
+    assert LATEX_RELEASE_WORKFLOW_PATH.exists(), "LaTeX release workflow file missing"
+    content = LATEX_RELEASE_WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "Volume_I" in content
+    assert "Volume_II" in content
+    assert "gh release upload" in content
