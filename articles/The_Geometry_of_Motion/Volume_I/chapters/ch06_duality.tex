@@ -4,7 +4,7 @@
 \chapter{The Stability--Optimality Duality}
 \label{ch:duality}
 
-\begin{laymansbox}{Two Sides of the Same Coin}{stability_optimality}
+\begin{laymansbox}
 The same matrix that LQR uses to score future cost can also serve as a ruler proving
 that small errors shrink under the feedback law. This chapter reveals that optimality
 and stability are not separate concerns but two views of the same geometric object: the
@@ -21,7 +21,7 @@ simultaneously.
 Chapters~\ref{ch:contraction} and~\ref{ch:optimal-control} developed two apparently
 independent threads:
 \begin{itemize}
-\item \textbf{Contraction\index{Contraction Analysis} theory}: find a metric $\mat{M}$ such that
+\item \textbf{Contraction theory}: find a metric $\mat{M}$ such that
 $\mat{A}_{\text{cl}}^\T\mat{M}+\mat{M}\mat{A}_{\text{cl}}+\dot{\mat{M}}
 \preceq -2\lambda\mat{M}$.
 \item \textbf{Optimal control}: find a gain $\mat{K}$ via the Riccati equation,
@@ -39,8 +39,8 @@ and contraction metric for the closed-loop tangent dynamics.
 
 \section{Historical Context: Discovering the Duality}
 
-The connection between Lyapunov\index{Lyapunov Stability} stability and optimal control emerged gradually in the mid-twentieth century.
-Lyapunov\index{Lyapunov Stability}'s foundational work (1892) established that a suitable energy-like function can certify stability;
+The connection between Lyapunov stability and optimal control emerged gradually in the mid-twentieth century.
+Lyapunov's foundational work (1892) established that a suitable energy-like function can certify stability;
 nearly 70 years later, Kalman's pivotal contributions recognized that the optimal control problem and the
 stability problem share a common certificate.
 
@@ -168,7 +168,7 @@ which is a key form that appears throughout duality theory.
 
 Now we compute $V_{k+1} - V_k$ step by step.
 
-\begin{theorem}[Value Decrease = Contraction\index{Contraction Analysis} Certificate]
+\begin{theorem}[Value Decrease = Contraction Certificate]
 \label{thm:ch6:duality}
 Under the LQR-optimal feedback with gain defined by~\eqref{eq:ch6:gain-definition}:
 \begin{equation}
@@ -888,9 +888,9 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 In both cases, the duality theorem holds: the Riccati solution (time-varying or steady-state) is simultaneously the optimal
 cost-to-go and the contraction metric.
 
-\section{Tangent Bundle\index{Tangent Bundle} Geometry and Geodesics}
+\section{Tangent Bundle Geometry and Geodesics}
 
-\subsection{The Tangent Bundle\index{Tangent Bundle}}
+\subsection{The Tangent Bundle}
 
 A trajectory on a state-space manifold is a curve $\gamma(t) = (x_1(t), \ldots, x_n(t))$. At each point $x$ on the trajectory,
 the \textbf{tangent space} $T_x M$ is the space of infinitesimal perturbation vectors $\dx$. The \textbf{tangent bundle}
@@ -932,7 +932,7 @@ can be rewritten, using the Riccati solution, as a metric-weighted length:
 J \approx \int_0^T \norm{\dot{\gamma}}_\mat{S} \, dt,
 \label{eq:ch6:geodesic-length}
 \end{equation}
-where the precise relationship depends on the details of the derivation. The Euler-Lagrange\index{Euler-Lagrange Equations} equations for minimizing this
+where the precise relationship depends on the details of the derivation. The Euler-Lagrange equations for minimizing this
 metric-weighted path length are equivalent to the optimal control equations.
 
 \subsection{Convergence of Neighboring Trajectories}
