@@ -356,8 +356,8 @@ homeomorphism, with smooth transition maps $\phi_\beta \circ \phi_\alpha^{-1}$ o
 \item $\R^n$ (state space of most control systems)
 \item $S^1$ (circle; configuration space of a revolute joint)
 \item $\mathbb{T}^n = (S^1)^n$ (torus; configuration space of an $n$-joint robot)
-\item SO(3) (rotation group; attitude of a rigid body)
-\item SE(3) (rigid-body pose: rotation + translation)
+\item $\SO(3)$ (rotation group; attitude of a rigid body)
+\item $\SE(3)$ (rigid-body pose: rotation + translation)
 \end{itemize}
 
 \section{Tangent Spaces and Tangent Bundles}
@@ -390,6 +390,109 @@ it is represented by a positive-definite matrix $\mat{G}(p)$:
 For mechanical systems, the mass matrix $M(\q)$ is a Riemannian metric on configuration space.
 The contraction metric $\mat{M}(\x)$ of Chapter~\ref{ch:contraction} is a Riemannian metric on
 state space.
+
+\section{Lie Groups and Lie Algebras}
+
+The most important manifolds in rigid-body control are matrix Lie groups. A Lie group is both
+a smooth manifold and a group, with smooth multiplication and inversion.
+\begin{itemize}
+\item $\SO(3) = \{ \mat{R}\in\R^{3\times 3}: \mat{R}^T\mat{R}=\mat{I},\,\det(\mat{R})=1\}$ (rotations)
+\item $\SE(3) = \left\{\begin{bmatrix}\mat{R}&\vec{p}\\\vec{0}^T&1\end{bmatrix}: \mat{R}\in\SO(3),\,\vec{p}\in\R^3\right\}$ (poses)
+\end{itemize}
+
+Their Lie algebras are tangent spaces at identity:
+\[
+\mathfrak{so}(3)=\{\mat{\Omega}\in\R^{3\times 3}:\mat{\Omega}^T=-\mat{\Omega}\},\quad
+\mathfrak{se}(3)=\left\{\begin{bmatrix}\mat{\Omega}&\vec{v}\\\vec{0}^T&0\end{bmatrix}\right\}.
+\]
+Using the hat map $\widehat{\omega}$, angular velocity vectors become algebra elements. This is
+the algebraic backbone of variational dynamics in Chapter~\ref{ch:variational} and motion
+composition in Chapter~\ref{ch:applications}.
+
+\section{Exponential and Logarithmic Maps}
+
+The exponential map converts tangent directions into finite motions. For $\SO(3)$:
+\[
+\exp(\widehat{\omega}\theta)=\mat{I}
++\frac{\sin\theta}{\theta}\widehat{\omega}\theta
++\frac{1-\cos\theta}{\theta^2}(\widehat{\omega}\theta)^2.
+\]
+Given $\mat{R}\in\SO(3)$ with $\theta=\cos^{-1}\!\left(\frac{\trace(\mat{R})-1}{2}\right)$, the
+log map recovers axis-angle:
+\[
+\log(\mat{R})=\frac{\theta}{2\sin\theta}(\mat{R}-\mat{R}^T).
+\]
+For $\SE(3)$, the exponential combines rotation with translated screw motion and is used directly
+in product-of-exponentials kinematics and geodesic interpolation.
+
+\begin{example}{Python Example: SO(3) Exp/Log}{app-so3-exp-log}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.linalg import expm, logm
+
+def hat(w: np.ndarray) -> np.ndarray:
+    return np.array([[0, -w[2], w[1]],
+                     [w[2], 0, -w[0]],
+                     [-w[1], w[0], 0]], dtype=float)
+
+w = np.array([0.3, -0.2, 0.5])
+R = expm(hat(w))              # exp map to SO(3)
+w_hat = logm(R).real          # log map back to so(3)
+\end{lstlisting}
+\end{example}
+
+\section{Adjoint Representation}
+
+Adjoint operators transport twists and wrenches across frames:
+\[
+\mathrm{Ad}_{(\mat{R},\vec{p})}
+=\begin{bmatrix}
+\mat{R} & \vec{0}\\
+[\vec{p}]_\times\mat{R} & \mat{R}
+\end{bmatrix},\quad
+\mathrm{ad}_{(\omega,v)}=
+\begin{bmatrix}
+[\omega]_\times & \vec{0}\\
+[v]_\times & [\omega]_\times
+\end{bmatrix}.
+\]
+In Chapter~\ref{ch:applications}, this map explains why equivalent perturbations look different
+between body-fixed and world-fixed coordinates.
+
+\section{Fiber Bundles}
+
+Tangent and cotangent bundles are canonical fiber bundles:
+\[
+\pi_T:T\mathcal{M}\to\mathcal{M},\quad \pi_T(p,v)=p,\qquad
+\pi_{T^*}:T^*\mathcal{M}\to\mathcal{M}.
+\]
+The base point is configuration; the fiber stores admissible velocities ($T\mathcal{M}$) or
+covectors/momenta ($T^*\mathcal{M}$). This viewpoint clarifies why state and costate evolve on
+different but coupled geometric objects in Chapters~\ref{ch:optimal-control}
+and~\ref{ch:duality}.
+
+\section{Connections and Parallel Transport}
+
+A connection specifies how to compare tangent vectors at different points. In local coordinates,
+the Levi-Civita connection of metric $\mat{G}$ has Christoffel symbols
+$\Gamma^k_{ij}$. Covariant acceleration is
+\[
+\frac{D\dot{q}^k}{dt}=\ddot{q}^k+\Gamma^k_{ij}\dot{q}^i\dot{q}^j.
+\]
+Parallel transport ($D v/dt=0$ along a curve) is the right way to carry perturbations when
+curvature is nonzero. This geometric correction underlies stable trajectory tracking on curved
+configuration manifolds.
+
+\section{Curvature and Trajectory Sensitivity}
+
+Curvature quantifies how geodesics separate. Sectional curvature $K(u,v)$ for a 2-plane
+$\Span\{u,v\}\subset T_p\mathcal{M}$ predicts local sensitivity:
+\begin{itemize}
+\item $K>0$: geodesics tend to reconverge (spherical-like geometry)
+\item $K<0$: geodesics diverge faster (hyperbolic-like sensitivity)
+\end{itemize}
+Contraction analysis in Chapter~\ref{ch:contraction} can be interpreted as enforcing metric
+dynamics that dominate this geometric divergence.
 
 
 \chapter{Linear Algebra for Control}
@@ -446,6 +549,91 @@ transition matrix for LTI systems: $\Phi(t, t_0) = e^{\mat{A}(t-t_0)}$.
 \textbf{Caution:} For time-varying $\mat{A}(t)$, $\Phi(t, t_0) \neq e^{\int_{t_0}^t \mat{A}(s)\,\dd s}$
 in general. Equality holds only when $[\mat{A}(t_1), \mat{A}(t_2)] = 0$ for all $t_1, t_2$
 (Theorem~\ref{thm:ch2:magnus-condition}).
+
+\section{Kronecker Products}
+
+The Kronecker product $\mat{A}\otimes\mat{B}$ expands block structure and is essential for
+vectorized Lyapunov/Riccati equations:
+\[
+\mathrm{vec}(\mat{A}\mat{X}\mat{B})
+=(\mat{B}^T\otimes\mat{A})\mathrm{vec}(\mat{X}).
+\]
+For $\mat{A}^T\mat{P}+\mat{P}\mat{A}+\mat{Q}=0$, vectorization yields
+\[
+\big(\mat{I}\otimes\mat{A}^T+\mat{A}^T\otimes\mat{I}\big)\mathrm{vec}(\mat{P})
+=-\mathrm{vec}(\mat{Q}),
+\]
+which is directly useful in Chapter~\ref{ch:duality}.
+
+\section{Matrix Calculus}
+
+Control derivations repeatedly require gradients with respect to vectors and matrices:
+\[
+\frac{\partial}{\partial x}(x^T\mat{A}x)=(\mat{A}+\mat{A}^T)x,\quad
+\frac{\partial}{\partial \mat{X}}\trace(\mat{A}^T\mat{X})=\mat{A}.
+\]
+These identities support second-order expansions in DDP and local quadratic models in
+Chapter~\ref{ch:optimal-control}.
+
+\section{Generalized Eigenvalue Problems}
+
+Many stability questions appear as matrix pencils:
+\[
+\mat{A}v=\lambda \mat{B}v,\quad \det(\mat{A}-\lambda\mat{B})=0.
+\]
+Generalized eigenanalysis is required when constraints, descriptor dynamics, or mass matrices
+lead to non-identity state weighting.
+
+\section{Perturbation Theory and Pseudospectra}
+
+Eigenvalues can be highly sensitive in non-normal systems. The $\varepsilon$-pseudospectrum is
+\[
+\Lambda_\varepsilon(\mat{A})=
+\{z\in\mathbb{C}: \|(z\mat{I}-\mat{A})^{-1}\|>1/\varepsilon\}.
+\]
+This captures transient growth that eigenvalues alone miss, which is directly relevant to
+``small perturbation, large excursion'' behavior in Chapter~\ref{ch:variational}.
+
+\section{Sparse Matrix Methods}
+
+Large-scale discretizations produce sparse operators. Storing sparse matrices in CSR/CSC formats
+reduces memory and enables scalable iterative solvers (CG, GMRES, MINRES). This matters for
+trajectory optimization and model predictive control where linear solves dominate runtime.
+
+\begin{example}{Python Example: Sparse Solve with SciPy}{app-sparse-solve}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import scipy.sparse as sp
+import scipy.sparse.linalg as spla
+
+n = 2000
+A = sp.diags([2*np.ones(n), -np.ones(n-1), -np.ones(n-1)], [0, -1, 1], format="csc")
+b = np.ones(n)
+x = spla.spsolve(A, b)
+\end{lstlisting}
+\end{example}
+
+\section{LMI Fundamentals}
+
+Linear matrix inequalities encode convex constraints such as Lyapunov stability:
+\[
+\mat{P}\succ 0,\qquad \mat{A}^T\mat{P}+\mat{P}\mat{A}\prec 0.
+\]
+Controller synthesis and contraction metric search can be cast as semidefinite programs.
+In practice, this is solved with CVX-family tools. A minimal Python workflow uses \texttt{cvxpy}.
+
+\begin{example}{Python Example: Lyapunov LMI in cvxpy}{app-lmi-cvxpy}
+\begin{lstlisting}[language=Python]
+import cvxpy as cp
+import numpy as np
+
+A = np.array([[0.0, 1.0], [-2.0, -0.4]])
+P = cp.Variable((2, 2), PSD=True)
+constraints = [A.T @ P + P @ A << -1e-3 * np.eye(2), P >> 1e-3 * np.eye(2)]
+problem = cp.Problem(cp.Minimize(cp.trace(P)), constraints)
+problem.solve(solver=cp.SCS)
+\end{lstlisting}
+\end{example}
 
 
 %% ---------- Bibliography ----------
