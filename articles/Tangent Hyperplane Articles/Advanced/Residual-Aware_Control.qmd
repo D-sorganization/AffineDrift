@@ -179,7 +179,7 @@ For systems with bounded state spaces (e.g., joint limits), precompute $M = \max
 
 ### Real-Time Residual Monitoring
 
-The key insight: **We can estimate $r(t)$ without knowing the true nonlinear trajectory $x(t)$.**
+The key insight: **We can estimate the residual without knowing the true nonlinear trajectory $x(t)$.**
 
 **Method 1: Predicted Residual (Offline)**
 
@@ -1511,6 +1511,59 @@ Residual-aware methods enable **real-time nonlinear control** with theoretical g
     </div>
   </div>
 </section>
+
+<section class="critics-comments">
+  <button class="critics-comments-header" aria-expanded="false">
+    <h2>Critics' Comments</h2>
+    <span class="critics-comments-icon">💬</span>
+  </button>
+  <div class="critics-comments-content">
+    <div class="critics-comments-inner">
+      <p class="critics-intro">
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+      </p>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Computational Overhead vs. Benefit</h3>
+        </div>
+        <p class="critic-argument">While adapting control frequency based on residuals (where the time step is inversely proportional to the square root of the residual norm) sounds elegant in theory, the computational overhead of continuously evaluating the Hessian and resolving the optimization problem can negate the benefits. In high-speed motions like a golf swing (under 300ms), checking the "curvature" at every step may introduce latency that causes instability, defeating the purpose of residual-awareness. Traditional fixed-rate, high-frequency control loops paired with robust feedback often outperform adaptive methods purely through brute-force predictability and zero computational jitter.</p>
+        <div class="author-response">
+          <strong>Our Response:</strong> This is a highly valid concern for real-time systems. The theoretical beauty of adaptive sampling is bounded by processor limits. That is exactly why we emphasize using pre-computed surrogate models or bounds on the Hessian norm rather than online Hessian computation. However, we acknowledge that for extremely fast, predictable tasks, a fixed high-rate loop might indeed be the safest engineering choice. The residual-aware approach shines brightest when dealing with unknown or highly variable interaction dynamics where fixed rates struggle.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>Biomechanics vs. Rigid Body Assumptions</h3>
+        </div>
+        <p class="critic-argument">The article applies residual analysis to human motion (golfers) to distinguish "expert" from "amateur" motor control. However, the human musculoskeletal system is not a rigid-body robot with clean analytic Jacobians. Soft tissue deformation, muscle activation delays, and neuromuscular noise create massive "residuals" that do not represent physical curvature but biological variance. Attributing a golfer's swing errors to "failure to manage tangent hyperplane residuals" imposes a rigid mechanical framework on what might simply be optimal stochastic control under biological noise.</p>
+        <div class="author-response">
+          <strong>Our Response:</strong> We completely agree that biological noise is a massive factor. We are not suggesting the central nervous system explicitly computes Lie bracket residuals. Rather, we are proposing a mathematical lens to *describe* the observed behavior: experts subconsciously navigate paths that minimize these nonlinear deviations, allowing simple linear approximations (muscle memory) to suffice. We must be careful, as the critique points out, not to conflate biological stochasticity with rigid-body geometric curvature.
+        </div>
+      </div>
+
+      <div class="critic-item">
+        <div class="critic-perspective">
+          <span class="critic-label">Alternative View:</span>
+          <h3>The Danger of "Trusting" Residuals</h3>
+        </div>
+        <p class="critic-argument">Treating residuals as "sensors" for the environment is dangerous when dealing with model mismatch versus sensor noise. If a system experiences a large residual, the residual-aware controller assumes it has hit a region of high curvature and slows down. But what if the residual is caused by a gust of wind, a faulty sensor, or an unmodeled friction spike? Adapting the fundamental control strategy based on raw residuals without robust state estimation or filtering can lead to "chattering" or freezing in the presence of noise, making the system less robust, not more.</p>
+        <div class="author-response">
+          <strong>Our Response:</strong> An excellent point. Our framework assumes that the residual is primarily composed of second-order linearization errors. In reality, the residual comprises linearization errors, sensor noise, and modeling errors. If sensor noise dominates, the adaptive timestep will inappropriately shrink. Future work must integrate robust Kalman filtering or H-infinity estimators to isolate the geometric residual from external disturbances before triggering adaptive responses.
+        </div>
+      </div>
+
+      <div class="academic-note">
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding.
+      </div>
+    </div>
+  </div>
+</section>
+
 
 ---
 
