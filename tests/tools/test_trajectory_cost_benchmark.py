@@ -9,7 +9,7 @@ from src.tools.trajectory_cost_benchmark import (
     trajectory_tracking_cost,
     benchmark_cost_gap,
 )
-from src.core.contracts import PreconditionError
+from src.core.contracts import ContractViolationError
 
 def test_as_2d():
     arr1d = np.array([1.0, 2.0])
@@ -22,7 +22,7 @@ def test_as_2d():
     assert arr2d_new.shape == (2, 1)
 
     # Empty array should trigger precondition
-    with pytest.raises(PreconditionError):
+    with pytest.raises(ContractViolationError):
         _as_2d(np.array([], dtype=np.float64))
 
 def test_setpoint_cost():
@@ -36,7 +36,7 @@ def test_setpoint_cost():
 
     # Target state not single vector
     bad_target = np.array([[3.0], [4.0]], dtype=np.float64)
-    with pytest.raises(PreconditionError):
+    with pytest.raises(ContractViolationError):
         setpoint_cost(state_traj, bad_target)
 
 def test_trajectory_tracking_cost():
@@ -49,7 +49,7 @@ def test_trajectory_tracking_cost():
 
     # Mismatched shapes
     bad_ref = np.array([0.0, 2.0])
-    with pytest.raises(PreconditionError):
+    with pytest.raises(ContractViolationError):
         trajectory_tracking_cost(state_traj, bad_ref)
 
 def test_benchmark_cost_gap():

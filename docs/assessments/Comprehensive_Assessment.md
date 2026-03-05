@@ -7,7 +7,7 @@
 | Category | Grade | Weight |
 |----------|-------|--------|
 | Code Structure | 8.0 | - |
-| Documentation | 8.6 | - |
+| Documentation | 8.7 | - |
 | Test Coverage | 8.0 | - |
 | Error Handling | 8.0 | - |
 | Performance | 8.0 | - |
