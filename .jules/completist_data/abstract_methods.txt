@@ -1,5 +1,28 @@
-scripts/analyze_completist_data.py:183:if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
-scripts/generate_completist_data.py:228:"""Scan Python files for @abstractmethod decorators."""
-scripts/generate_completist_data.py:229:pattern = re.compile(r"@abstractmethod")
-src/tangent_models/examples.py:17:@abstractmethod
-src/tangent_models/examples.py:24:@abstractmethod
+./src/tangent_models/examples.py:17:    @abstractmethod
+./src/tangent_models/examples.py-18-    def dynamics(
+./src/tangent_models/examples.py-19-        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+./src/tangent_models/examples.py-20-    ) -> np.ndarray[Any, Any]:
+./src/tangent_models/examples.py-21-        """Compute system dynamics."""
+./src/tangent_models/examples.py-22-        pass  # Abstract method
+--
+./src/tangent_models/examples.py:24:    @abstractmethod
+./src/tangent_models/examples.py-25-    def linearize(
+./src/tangent_models/examples.py-26-        self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
+./src/tangent_models/examples.py-27-    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+./src/tangent_models/examples.py-28-        """
+./src/tangent_models/examples.py-29-        Returns A, B matrices where dx_dot = A*dx + B*du
+--
+./scripts/analyze_completist_data.py:180:        if f_path and l_no and c_txt and "@abstractmethod" in c_txt:
+./scripts/analyze_completist_data.py-181-            return {"file": f_path, "line": l_no, "text": c_txt, "type": "Abstract"}
+./scripts/analyze_completist_data.py-182-        return None
+./scripts/analyze_completist_data.py-183-
+./scripts/analyze_completist_data.py-184-    return _scan_completist_file("ABSTRACT", _parser)
+./scripts/analyze_completist_data.py-185-
+--
+./scripts/generate_completist_data.py:227:    """Scan Python files for @abstractmethod decorators."""
+./scripts/generate_completist_data.py:228:    pattern = re.compile(r"@abstractmethod")
+./scripts/generate_completist_data.py-229-    return _scan_files_by_line(files, repo_root, pattern, py_only=True)
+./scripts/generate_completist_data.py-230-
+./scripts/generate_completist_data.py-231-
+./scripts/generate_completist_data.py-232-def _iter_python_file_lines(
+./scripts/generate_completist_data.py-233-    files: list[Path],
