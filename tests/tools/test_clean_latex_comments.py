@@ -3,19 +3,19 @@ from pathlib import Path
 from src.tools.clean_latex_comments import remove_latex_comments, clean_latex_comments_in_file
 
 def test_remove_latex_comments():
-    original = \"\"\"Some normal text
+    original = """Some normal text
 % A comment here
 More text
     % Indented comment
 %% A double percent should stay
 %================
 End text
-\"\"\"
-    expected = \"\"\"Some normal text
+"""
+    expected = """Some normal text
 More text
 %% A double percent should stay
 End text
-\"\"\"
+"""
     result = remove_latex_comments(original)
     
     # We may have extra newlines based on the regex
