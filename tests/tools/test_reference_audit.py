@@ -29,17 +29,17 @@ def test_collect_citation_keys_from_tex():
 
 def test_validate_bibtex_identifier_fields():
     bib = """
-    @article{has_doi,
-        doi = {10.1234/5678},
+@article{has_doi,
+    doi = {10.1234/5678},
 }
-    @article{missing_id,
-        author = {Unknown},
+@article{missing_id,
+    author = {Unknown},
 }
-    @book{has_isbn,
-        ISBN={123-456},
+@book{has_isbn,
+    ISBN={123-456},
 }
-    @misc{has_url,
-        Url = {https://example.com},
+@misc{has_url,
+    Url = {https://example.com},
 }
     """
     errors = validate_bibtex_identifier_fields(bib)

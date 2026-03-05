@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.core.contracts import PreconditionError
+from src.core.contracts import ContractViolationError
 from src.tools.trajectory_cost_benchmark import (
     _as_2d,
     benchmark_cost_gap,
