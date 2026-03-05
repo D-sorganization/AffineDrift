@@ -1,6 +1,6 @@
 ---
 title: "Incomplete Placeholder in research-review-interaction-forces.qmd:73"
-labels: ['incomplete-implementation', 'critical', 'high-impact']
+labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---

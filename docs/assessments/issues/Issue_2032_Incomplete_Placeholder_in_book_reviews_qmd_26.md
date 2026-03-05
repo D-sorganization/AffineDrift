@@ -1,6 +1,6 @@
 ---
 title: "Incomplete Placeholder in book-reviews.qmd:26"
-labels: ['incomplete-implementation', 'critical', 'high-impact']
+labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
