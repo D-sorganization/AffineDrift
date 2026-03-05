@@ -246,13 +246,9 @@ def create_issue_file(item: Mapping[str, Any], issue_id: int) -> str:
 
     filepath = os.path.join(ISSUES_DIR, f"Issue_{issue_id:03d}_{fname_title}.md")
     impact, coverage, complexity = calculate_metrics(item)
-    labels = ["incomplete-implementation", "critical"]
-    if impact >= 5:
-        labels.append("high-impact")
-
     content = f"""---
 title: "{title}"
-labels: {labels}
+labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---

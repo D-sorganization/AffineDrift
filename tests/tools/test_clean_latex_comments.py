@@ -4,6 +4,7 @@ from src.tools.clean_latex_comments import clean_latex_comments_in_file, remove_
 
 
 def test_remove_latex_comments():
+    """Test removing latex comments."""
     original = """Some normal text
 % A comment here
 More text
@@ -24,6 +25,7 @@ End text
 
 
 def test_clean_latex_comments_in_file(tmp_path):
+    """Test cleaning latex comments in file."""
     f = tmp_path / "test.qmd"
     f.write_text("Hello\n% comment\nWorld", encoding="utf-8")
 
