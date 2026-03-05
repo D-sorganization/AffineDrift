@@ -12,11 +12,6 @@ More text
 %================
 End text
 """
-    expected = """Some normal text
-More text
-%% A double percent should stay
-End text
-"""
     result = remove_latex_comments(original)
 
     # We may have extra newlines based on the regex

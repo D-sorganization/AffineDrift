@@ -43,7 +43,7 @@ def clean_latex_comments_in_file(file_path: Path) -> bool:
     try:
         content = file_path.read_text(encoding="utf-8")
         cleaned_content = remove_latex_comments(content)
-        
+
         if content != cleaned_content:
             file_path.write_text(cleaned_content, encoding="utf-8")
         return True
