@@ -289,6 +289,10 @@ jobs:
           PROMPT_EOF
           )
           
+          PROMPT="${PROMPT//\$MODE/$MODE}"
+          PROMPT="${PROMPT//\$TARGET_FILE/$TARGET_FILE}"
+          PROMPT="${PROMPT//\$REVIEW_NUM/$REVIEW_NUM}"
+
           echo "Creating Jules session..."
           REQUEST_JSON=$(jq -n \
             --arg prompt "$PROMPT" \
