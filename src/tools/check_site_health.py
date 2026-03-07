@@ -33,6 +33,7 @@ logger = setup_logging(__name__)
 DOCS_DIR = Path("docs")
 ENTRY_POINT_NAMES = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
 ENTRY_POINT_PATHS = {"articles/ux-verification-test.html"}
+IGNORED_ARTIFACT_DIRS = {"coverage", "lcov-report"}
 
 
 @dataclass(frozen=True)
@@ -68,14 +69,26 @@ def is_inside_quarto_alternate_formats(tag: Any) -> bool:
 
 def _collect_html_files(*, docs_dir: Path) -> list[Path]:
     """Return all HTML files relative to docs directory."""
-    return [full_path.relative_to(docs_dir) for full_path in docs_dir.rglob("*.html")]
+    html_files: list[Path] = []
+    for full_path in docs_dir.rglob("*.html"):
+        relative = full_path.relative_to(docs_dir)
+        if any(part in IGNORED_ARTIFACT_DIRS for part in relative.parts):
+            continue
+        html_files.append(relative)
+    return html_files
 
 
 def _collect_all_files(*, docs_dir: Path) -> set[Path]:
     """Return all files relative to docs directory."""
-    return {
-        full_path.relative_to(docs_dir) for full_path in docs_dir.rglob("*") if full_path.is_file()
-    }
+    files: set[Path] = set()
+    for full_path in docs_dir.rglob("*"):
+        if not full_path.is_file():
+            continue
+        relative = full_path.relative_to(docs_dir)
+        if any(part in IGNORED_ARTIFACT_DIRS for part in relative.parts):
+            continue
+        files.add(relative)
+    return files
 
 
 def _log_site_map(html_files: list[Path]) -> None:

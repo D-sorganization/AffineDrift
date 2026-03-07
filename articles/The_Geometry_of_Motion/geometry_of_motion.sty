@@ -1,0 +1,55 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{geometry_of_motion}[2026/02/27 Shared style primitives for the Geometry of Motion series]
+
+\RequirePackage{xcolor}
+\RequirePackage{listings}
+
+\makeatletter
+\newcommand{\gomdefinecolorifmissing}[3]{%
+  \@ifundefined{color@#1}{\definecolor{#1}{#2}{#3}}{}%
+}
+\makeatother
+
+% Shared series palette
+\gomdefinecolorifmissing{chapblue}{RGB}{0, 70, 130}
+\gomdefinecolorifmissing{accentred}{RGB}{180, 40, 40}
+\gomdefinecolorifmissing{softgray}{RGB}{245, 245, 245}
+\gomdefinecolorifmissing{trajgreen}{RGB}{30, 130, 60}
+\gomdefinecolorifmissing{darkgold}{RGB}{160, 120, 20}
+\gomdefinecolorifmissing{purplehaze}{RGB}{100, 40, 140}
+
+% Shared code/listings style
+\gomdefinecolorifmissing{gomcodegreen}{rgb}{0,0.6,0}
+\gomdefinecolorifmissing{gomcodegray}{rgb}{0.5,0.5,0.5}
+\gomdefinecolorifmissing{gomcodepurple}{rgb}{0.58,0,0.82}
+\gomdefinecolorifmissing{gombackcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{gompython}{
+  backgroundcolor=\color{gombackcolour},
+  commentstyle=\color{gomcodegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{gomcodegray},
+  stringstyle=\color{gomcodepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+\newcommand{\gomapplylistingstyle}{\lstset{style=gompython}}
+
+% Optional shared theorem primitives
+\newcommand{\gomdeclaretheorems}{%
+  \makeatletter
+  \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}%
+  \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}%
+  \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%
+  \@ifundefined{example}{\newtheorem{example}[theorem]{Example}}{}%
+  \@ifundefined{remark}{\newtheorem{remark}[theorem]{Remark}}{}%
+  \makeatother
+}

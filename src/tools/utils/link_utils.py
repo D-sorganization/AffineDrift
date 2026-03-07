@@ -112,6 +112,10 @@ def normalize_internal_url(url: str) -> str | None:
         return None
     if len(stripped) == 1:
         return None
+    # Treat LaTeX command targets from math expressions (e.g., [f](\x))
+    # as non-links; they are not navigable website URLs.
+    if stripped.startswith("\\"):
+        return None
     return unquote(stripped)
 
 

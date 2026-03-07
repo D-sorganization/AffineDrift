@@ -67,14 +67,13 @@ AffineDrift/
 3. Run `quarto preview` to see changes live
 4. Commit and push to automatically deploy via GitHub Actions
 
-See [WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md) for detailed instructions.
+See [Repository Inventory](docs/development/repository_inventory.md) for maintenance and documentation synchronization guidance.
 
 ## 📚 Documentation
 
-- **[DEVELOPMENT_GUIDE.md](docs/development/DEVELOPMENT_GUIDE.md)**: Complete beginner's guide to web development and this project
-- **[WEBSITE_MANAGEMENT.md](docs/development/WEBSITE_MANAGEMENT.md)**: How to update content, add resources, and manage the site
-- **[DOCS_ARTIFACT_POLICY.md](docs/development/DOCS_ARTIFACT_POLICY.md)**: Source-of-truth and generated `docs/` artifact rules
-- **[NOTES_WORKSPACE.md](docs/development/NOTES_WORKSPACE.md)**: Project notes workspace behavior and storage model
+- **[Geometry of Motion Architecture](docs/development/geometry_of_motion_architecture.md)**: Series architecture and issue-to-deliverable tracking
+- **[Repository Inventory](docs/development/repository_inventory.md)**: Component inventory map with implementation status and known gaps
+- **[src/README.md](src/README.md)**: Python source-tree overview and status notes
 
 ## 🛠️ Technologies
 
@@ -118,7 +117,7 @@ This is a personal research platform, but suggestions and discussions are welcom
 
 New to web development? Check out:
 
-- [DEVELOPMENT_GUIDE.md](docs/development/DEVELOPMENT_GUIDE.md) for a comprehensive introduction
+- [Repository Inventory](docs/development/repository_inventory.md) for current component status and maintenance notes
 - [MDN Web Docs](https://developer.mozilla.org/) for HTML/CSS/JS reference
 - [GitHub Pages Documentation](https://docs.github.com/pages)
 

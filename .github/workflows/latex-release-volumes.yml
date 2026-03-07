@@ -1,0 +1,50 @@
+name: LaTeX Release Volumes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "articles/The_Geometry_of_Motion/Volume_I/**"
+      - "articles/The_Geometry_of_Motion/Volume_II/**"
+      - ".github/workflows/latex-release-volumes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  compile-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile Volume I
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_I
+
+      - name: Compile Volume II
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/Volume_II
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometry-of-motion-pdfs
+          path: |
+            articles/The_Geometry_of_Motion/Volume_I/main.pdf
+            articles/The_Geometry_of_Motion/Volume_II/main.pdf
+
+      - name: Publish release assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG_NAME="textbook-pdfs-latest"
+          gh release view "$TAG_NAME" >/dev/null 2>&1 || gh release create "$TAG_NAME" --title "Textbook PDFs (Latest)" --notes "Automated latest PDFs for Volume I and Volume II."
+          gh release upload "$TAG_NAME" articles/The_Geometry_of_Motion/Volume_I/main.pdf#Volume_I_main.pdf --clobber
+          gh release upload "$TAG_NAME" articles/The_Geometry_of_Motion/Volume_II/main.pdf#Volume_II_main.pdf --clobber
