@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="% Chapter 1: Foundations — Tangent Spaces and Exactness">
+
+<title>ch01_foundations – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-0da2bdd6902c8c95d2e6813da368b65a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+
+<meta property="og:site_name" content="AffineDrift">
+
+<meta property="og:type" content="website">
+
+<meta property="og:locale" content="en_US">
+
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+
+
+<!-- SEO: JSON-LD Structured Data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "WebSite",
+
+  "name": "AffineDrift",
+
+  "url": "https://affinedrift.com",
+
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+
+  "potentialAction": {
+
+    "@type": "SearchAction",
+
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+
+    "query-input": "required name=search_term_string"
+
+  },
+
+  "author": {
+
+    "@type": "Person",
+
+    "name": "Dieter Olson"
+
+  },
+
+  "publisher": {
+
+    "@type": "Organization",
+
+    "name": "AffineDrift",
+
+    "logo": {
+
+      "@type": "ImageObject",
+
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+
+    }
+
+  }
+
+}
+
+</script>
+
+
+
+<!-- SEO: Additional meta tags -->
+
+<meta name="robots" content="index, follow">
+
+<meta name="googlebot" content="index, follow">
+
+<meta name="author" content="Dieter Olson">
+
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+
+<link rel="canonical" href="https://affinedrift.com">
+
+
+
+<!-- Performance: Preload critical resources -->
+
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+
+<link rel="preload" href="../../../styles.css" as="style">
+
+<link rel="stylesheet" href="../../../css/print.css" media="print">
+
+<link rel="preload" href="../../../script.js" as="script">
+
+<link rel="modulepreload" href="../../../js/main.js">
+
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+
+<link rel="modulepreload" href="../../../js/utils.js">
+
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+
+<script src="../../../js/startup-launcher.js"></script>
+
+
+
+<!-- PWA and Mobile Optimization -->
+
+<link rel="manifest" href="../../../manifest.json">
+
+<meta name="theme-color" content="#1a1a2e">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="format-detection" content="telephone=no">
+
+
+
+<!-- Preconnect and Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+
+<style>
+
+  .rss-feed-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2.75rem;
+
+    height: 2.75rem;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    text-decoration: none;
+
+    border-radius: 4px;
+
+    transition: all 0.2s ease;
+
+    margin-left: 0.5rem;
+
+  }
+
+  .rss-feed-link:hover {
+
+    color: #ffa500;
+
+    background-color: rgba(255, 165, 0, 0.1);
+
+  }
+
+  .rss-feed-link svg {
+
+    width: 1.25rem;
+
+    height: 1.25rem;
+
+    fill: currentColor;
+
+  }
+
+  .quarto-navbar-tools {
+
+    display: flex;
+
+    align-items: center;
+
+  }
+
+</style>
+
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-books" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Books</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-books">    
+        <li>
+    <a class="dropdown-item" href="../../../books/index.html">
+ <span class="dropdown-text">Book Series</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/tangent-space-methods.html">
+ <span class="dropdown-text">Volume I: Tangent-Space Methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/control-is-motion.html">
+ <span class="dropdown-text">Volume II: Control Is Motion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/biomechanics-biology-to-systems.html">
+ <span class="dropdown-text">Volume III: Biomechanics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/human-motor-control.html">
+ <span class="dropdown-text">Volume IV: Human Motor Control</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../daydreams-doodles.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#foundations-tangent-spaces-and-exactness" id="toc-foundations-tangent-spaces-and-exactness" class="nav-link active" data-scroll-target="#foundations-tangent-spaces-and-exactness">Foundations: Tangent Spaces and Exactness</a>
+  <ul class="collapse">
+  <li><a href="#motivation-why-geometry-matters-for-control" id="toc-motivation-why-geometry-matters-for-control" class="nav-link" data-scroll-target="#motivation-why-geometry-matters-for-control">Motivation: Why Geometry Matters for Control</a></li>
+  <li><a href="#historical-context-from-newton-to-modern-differential-geometry" id="toc-historical-context-from-newton-to-modern-differential-geometry" class="nav-link" data-scroll-target="#historical-context-from-newton-to-modern-differential-geometry">Historical Context: From Newton to Modern Differential Geometry</a>
+  <ul class="collapse">
+  <li><a href="#newton-leibniz-and-the-birth-of-the-infinitesimal" id="toc-newton-leibniz-and-the-birth-of-the-infinitesimal" class="nav-link" data-scroll-target="#newton-leibniz-and-the-birth-of-the-infinitesimal">Newton, Leibniz, and the Birth of the Infinitesimal</a></li>
+  <li><a href="#cauchy-weierstrass-and-the-rigorous-foundation" id="toc-cauchy-weierstrass-and-the-rigorous-foundation" class="nav-link" data-scroll-target="#cauchy-weierstrass-and-the-rigorous-foundation">Cauchy, Weierstrass, and the Rigorous Foundation</a></li>
+  <li><a href="#riemanns-vision-of-intrinsic-geometry" id="toc-riemanns-vision-of-intrinsic-geometry" class="nav-link" data-scroll-target="#riemanns-vision-of-intrinsic-geometry">Riemann’s Vision of Intrinsic Geometry</a></li>
+  <li><a href="#from-approximation-to-exact-structure" id="toc-from-approximation-to-exact-structure" class="nav-link" data-scroll-target="#from-approximation-to-exact-structure">From Approximation to Exact Structure</a></li>
+  <li><a href="#the-conceptual-shift" id="toc-the-conceptual-shift" class="nav-link" data-scroll-target="#the-conceptual-shift">The Conceptual Shift</a></li>
+  </ul></li>
+  <li><a href="#smooth-dynamical-systems" id="toc-smooth-dynamical-systems" class="nav-link" data-scroll-target="#smooth-dynamical-systems">Smooth Dynamical Systems</a></li>
+  <li><a href="#the-fréchet-derivative-linearization-as-exact-structure" id="toc-the-fréchet-derivative-linearization-as-exact-structure" class="nav-link" data-scroll-target="#the-fréchet-derivative-linearization-as-exact-structure">The Fréchet Derivative: Linearization as Exact Structure</a>
+  <ul class="collapse">
+  <li><a href="#definition-and-uniqueness" id="toc-definition-and-uniqueness" class="nav-link" data-scroll-target="#definition-and-uniqueness">Definition and Uniqueness</a></li>
+  <li><a href="#proof-of-uniqueness" id="toc-proof-of-uniqueness" class="nav-link" data-scroll-target="#proof-of-uniqueness">Proof of Uniqueness</a></li>
+  <li><a href="#relationship-to-the-gâteaux-derivative" id="toc-relationship-to-the-gâteaux-derivative" class="nav-link" data-scroll-target="#relationship-to-the-gâteaux-derivative">Relationship to the Gâteaux Derivative</a></li>
+  <li><a href="#worked-example-the-pendulum-jacobian" id="toc-worked-example-the-pendulum-jacobian" class="nav-link" data-scroll-target="#worked-example-the-pendulum-jacobian">Worked Example: The Pendulum Jacobian</a></li>
+  <li><a href="#the-input-jacobian" id="toc-the-input-jacobian" class="nav-link" data-scroll-target="#the-input-jacobian">The Input Jacobian</a></li>
+  </ul></li>
+  <li><a href="#tangent-spaces-as-vector-spaces" id="toc-tangent-spaces-as-vector-spaces" class="nav-link" data-scroll-target="#tangent-spaces-as-vector-spaces">Tangent Spaces as Vector Spaces</a>
+  <ul class="collapse">
+  <li><a href="#abstract-definition" id="toc-abstract-definition" class="nav-link" data-scroll-target="#abstract-definition">Abstract Definition</a></li>
+  <li><a href="#isomorphism-with-directional-derivatives" id="toc-isomorphism-with-directional-derivatives" class="nav-link" data-scroll-target="#isomorphism-with-directional-derivatives">Isomorphism with Directional Derivatives</a></li>
+  <li><a href="#why-tangent-spaces-are-the-natural-home-of-superposition" id="toc-why-tangent-spaces-are-the-natural-home-of-superposition" class="nav-link" data-scroll-target="#why-tangent-spaces-are-the-natural-home-of-superposition">Why Tangent Spaces Are the Natural Home of Superposition</a></li>
+  <li><a href="#coordinate-representation" id="toc-coordinate-representation" class="nav-link" data-scroll-target="#coordinate-representation">Coordinate Representation</a></li>
+  </ul></li>
+  <li><a href="#residuals-geometry-not-error" id="toc-residuals-geometry-not-error" class="nav-link" data-scroll-target="#residuals-geometry-not-error">Residuals: Geometry, Not Error</a>
+  <ul class="collapse">
+  <li><a href="#residual-scaling-a-concrete-example" id="toc-residual-scaling-a-concrete-example" class="nav-link" data-scroll-target="#residual-scaling-a-concrete-example">Residual Scaling: A Concrete Example</a></li>
+  <li><a href="#two-perspectives-on-linearization" id="toc-two-perspectives-on-linearization" class="nav-link" data-scroll-target="#two-perspectives-on-linearization">Two Perspectives on Linearization</a></li>
+  </ul></li>
+  <li><a href="#manifold-examples-from-theory-to-application" id="toc-manifold-examples-from-theory-to-application" class="nav-link" data-scroll-target="#manifold-examples-from-theory-to-application">Manifold Examples: From Theory to Application</a>
+  <ul class="collapse">
+  <li><a href="#so3-rotations-and-attitude-dynamics" id="toc-so3-rotations-and-attitude-dynamics" class="nav-link" data-scroll-target="#so3-rotations-and-attitude-dynamics">SO(3): Rotations and Attitude Dynamics</a></li>
+  <li><a href="#se3-rigid-body-transformations" id="toc-se3-rigid-body-transformations" class="nav-link" data-scroll-target="#se3-rigid-body-transformations">SE(3): Rigid Body Transformations</a></li>
+  <li><a href="#the-double-pendulum-configuration-manifold" id="toc-the-double-pendulum-configuration-manifold" class="nav-link" data-scroll-target="#the-double-pendulum-configuration-manifold">The Double Pendulum Configuration Manifold</a></li>
+  </ul></li>
+  <li><a href="#nonlinearity-re-enters-through-transport" id="toc-nonlinearity-re-enters-through-transport" class="nav-link" data-scroll-target="#nonlinearity-re-enters-through-transport">Nonlinearity Re-enters Through Transport</a>
+  <ul class="collapse">
+  <li><a href="#transport-as-curved-geometry" id="toc-transport-as-curved-geometry" class="nav-link" data-scroll-target="#transport-as-curved-geometry">Transport as Curved Geometry</a></li>
+  <li><a href="#state-transition-matrix-and-variational-equations" id="toc-state-transition-matrix-and-variational-equations" class="nav-link" data-scroll-target="#state-transition-matrix-and-variational-equations">State Transition Matrix and Variational Equations</a></li>
+  <li><a href="#christoffel-symbols-and-parallel-transport-intuitive-picture" id="toc-christoffel-symbols-and-parallel-transport-intuitive-picture" class="nav-link" data-scroll-target="#christoffel-symbols-and-parallel-transport-intuitive-picture">Christoffel Symbols and Parallel Transport (Intuitive Picture)</a></li>
+  <li><a href="#connection-to-differential-dynamic-programming" id="toc-connection-to-differential-dynamic-programming" class="nav-link" data-scroll-target="#connection-to-differential-dynamic-programming">Connection to Differential Dynamic Programming</a></li>
+  </ul></li>
+  <li><a href="#scope-of-exactness-when-the-tangent-space-picture-breaks-down" id="toc-scope-of-exactness-when-the-tangent-space-picture-breaks-down" class="nav-link" data-scroll-target="#scope-of-exactness-when-the-tangent-space-picture-breaks-down">Scope of Exactness: When the Tangent-Space Picture Breaks Down</a>
+  <ul class="collapse">
+  <li><a href="#discontinuities-and-piecewise-smooth-systems" id="toc-discontinuities-and-piecewise-smooth-systems" class="nav-link" data-scroll-target="#discontinuities-and-piecewise-smooth-systems">Discontinuities and Piecewise-Smooth Systems</a></li>
+  <li><a href="#chattering-and-sliding-modes" id="toc-chattering-and-sliding-modes" class="nav-link" data-scroll-target="#chattering-and-sliding-modes">Chattering and Sliding Modes</a></li>
+  <li><a href="#zeno-behavior-and-accumulation-of-events" id="toc-zeno-behavior-and-accumulation-of-events" class="nav-link" data-scroll-target="#zeno-behavior-and-accumulation-of-events">Zeno Behavior and Accumulation of Events</a></li>
+  <li><a href="#singular-configurations-on-manifolds" id="toc-singular-configurations-on-manifolds" class="nav-link" data-scroll-target="#singular-configurations-on-manifolds">Singular Configurations on Manifolds</a></li>
+  <li><a href="#summary-boundaries-of-the-theory" id="toc-summary-boundaries-of-the-theory" class="nav-link" data-scroll-target="#summary-boundaries-of-the-theory">Summary: Boundaries of the Theory</a></li>
+  </ul></li>
+  <li><a href="#the-five-axioms-a-summary" id="toc-the-five-axioms-a-summary" class="nav-link" data-scroll-target="#the-five-axioms-a-summary">The Five Axioms: A Summary</a></li>
+  <li><a href="#scope-and-limitations" id="toc-scope-and-limitations" class="nav-link" data-scroll-target="#scope-and-limitations">Scope and Limitations</a>
+  <ul class="collapse">
+  <li><a href="#when-to-use-this-framework" id="toc-when-to-use-this-framework" class="nav-link" data-scroll-target="#when-to-use-this-framework">When to Use This Framework</a></li>
+  <li><a href="#important-distinction-linearization-vs.-linear-approximation" id="toc-important-distinction-linearization-vs.-linear-approximation" class="nav-link" data-scroll-target="#important-distinction-linearization-vs.-linear-approximation">Important Distinction: Linearization vs.&nbsp;Linear Approximation</a></li>
+  <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead">Looking Ahead</a></li>
+  </ul></li>
+  <li><a href="#preview-why-these-ideas-matter-for-the-golf-swing" id="toc-preview-why-these-ideas-matter-for-the-golf-swing" class="nav-link" data-scroll-target="#preview-why-these-ideas-matter-for-the-golf-swing">Preview: Why These Ideas Matter for the Golf Swing</a>
+  <ul class="collapse">
+  <li><a href="#the-golfers-tangent-space" id="toc-the-golfers-tangent-space" class="nav-link" data-scroll-target="#the-golfers-tangent-space">The Golfer’s Tangent Space</a></li>
+  <li><a href="#curvature-as-a-diagnostic" id="toc-curvature-as-a-diagnostic" class="nav-link" data-scroll-target="#curvature-as-a-diagnostic">Curvature as a Diagnostic</a></li>
+  <li><a href="#transport-and-the-kinematic-chain" id="toc-transport-and-the-kinematic-chain" class="nav-link" data-scroll-target="#transport-and-the-kinematic-chain">Transport and the Kinematic Chain</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">% ==========================================================================</h1></header>
+
+<header id="title-block-header">
+
+<p class="author">% Chapter 1: Foundations — Tangent Spaces and Exactness</p>
+
+<p class="date">% ==========================================================================</p>
+</header>
+
+
+<section id="foundations-tangent-spaces-and-exactness" class="level1">
+<h1>Foundations: Tangent Spaces and Exactness</h1>
+<p></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every curved surface, no matter how complex, has a flat patch touching it at each point. On that flat patch, the familiar rules of addition and scaling work perfectly. This chapter establishes that these flat patches—tangent spaces—are not approximations of the surface. They <em>are</em> the exact infinitesimal structure of the surface, by the very definition of what ``smooth’’ means.</p>
+</div>
+</div>
+<section id="motivation-why-geometry-matters-for-control" class="level2">
+<h2 class="anchored" data-anchor-id="motivation-why-geometry-matters-for-control">Motivation: Why Geometry Matters for Control</h2>
+<p>Nonlinear dynamics are often described as systems in which superposition does not apply. Students learn early that while linear systems permit the combination of solutions—if <span class="math inline">\(\x_1(t)\)</span> and <span class="math inline">\(\x_2(t)\)</span> are solutions, then so is <span class="math inline">\(\alpha\x_1(t)+\beta\x_2(t)\)</span>—nonlinear systems deny this convenience. The narrative typically stops there, leaving the impression that nonlinearity and superposition are fundamentally incompatible.</p>
+<p>That impression is incomplete. It is true that <em>trajectories</em> in a nonlinear system do not generally superpose. But at each point in state space, there exists a tangent space that is a genuine vector space, and within that vector space, superposition holds exactly. Not approximately. Not ``for small enough perturbations.’’ <em>Exactly</em>, by the axioms of linear algebra.</p>
+<p>The purpose of this book is to take that geometric fact seriously and trace its consequences through contraction theory, optimal control, and the practical decomposition of complex motions into interpretable components.</p>
+</section>
+<section id="historical-context-from-newton-to-modern-differential-geometry" class="level2">
+<h2 class="anchored" data-anchor-id="historical-context-from-newton-to-modern-differential-geometry">Historical Context: From Newton to Modern Differential Geometry</h2>
+<p>To appreciate the force of the tangent-space framework, it helps to understand how it emerged from the practical concerns of mechanics and the rigorous formalization of analysis.</p>
+<section id="newton-leibniz-and-the-birth-of-the-infinitesimal" class="level3">
+<h3 class="anchored" data-anchor-id="newton-leibniz-and-the-birth-of-the-infinitesimal">Newton, Leibniz, and the Birth of the Infinitesimal</h3>
+<p>The modern concept of tangent space originates in the Newton–Leibniz calculus of the late 17th century. Newton’s method of <code>fluxions'' (rates of change) and Leibniz's differential notation $\dd x$ both captured an intuitive idea: at each point on a smooth curve, there is a direction of motion, a</code>tangent line.’’ For a curve <span class="math inline">\(y = f(x)\)</span> in the plane, the tangent line at <span class="math inline">\((x_0, f(x_0))\)</span> has slope <span class="math inline">\(f'(x_0)\)</span> and can be written as <span class="math display">\[\begin{equation}
+y - f(x_0) = f'(x_0)(x - x_0).
+\label{eq:ch1:tangent-line}
+\end{equation}\]</span></p>
+<p>This is purely one-dimensional geometry. But the insight—that the tangent line is the ``best linear approximation’’ to the curve at that point—proved far more general than the original calculus allowed.</p>
+</section>
+<section id="cauchy-weierstrass-and-the-rigorous-foundation" class="level3">
+<h3 class="anchored" data-anchor-id="cauchy-weierstrass-and-the-rigorous-foundation">Cauchy, Weierstrass, and the Rigorous Foundation</h3>
+<p>By the 19th century, Cauchy and especially Weierstrass placed the derivative on a rigorous footing. The limit definition <span class="math display">\[\begin{equation}
+f'(x_0) := \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}
+\label{eq:ch1:derivative-limit}
+\end{equation}\]</span> made the tangent line precise: it is the unique linear function whose error vanishes faster than the perturbation itself.</p>
+<p>The power of this formulation is that it is <em>coordinate-free</em>: it depends only on the behavior of <span class="math inline">\(f\)</span> in a neighborhood of <span class="math inline">\(x_0\)</span>, not on the choice of coordinates. A function is differentiable at <span class="math inline">\(x_0\)</span> if and only if the above limit exists, regardless of whether we write the function as <span class="math inline">\(y = f(x)\)</span> or in any other smooth parameterization.</p>
+</section>
+<section id="riemanns-vision-of-intrinsic-geometry" class="level3">
+<h3 class="anchored" data-anchor-id="riemanns-vision-of-intrinsic-geometry">Riemann’s Vision of Intrinsic Geometry</h3>
+<p>Bernhard Riemann’s 1854 paper (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment. Riemann observed that just as Newton and Leibniz could construct a local approximation (the tangent line) at each point of a curve, one could construct a local vector space (the tangent space) at each point of any smooth manifold, even if the manifold itself were curved, high-dimensional, or not embedded in Euclidean space.</p>
+Riemann’s innovation—and its modern development by Élie Cartan, Hermann Weyl, and others—fundamentally separated two ideas:
+<p>This separation is conceptually profound. Curvature is not a failure of linearity; it is the nonlinearity of how tangent spaces connect as you move through the manifold.</p>
+</section>
+<section id="from-approximation-to-exact-structure" class="level3">
+<h3 class="anchored" data-anchor-id="from-approximation-to-exact-structure">From Approximation to Exact Structure</h3>
+For most of the 20th century, even when differential geometry was fully developed, the relationship between a nonlinear dynamical system and its tangent-space (linearized) dynamics remained framed as an <em>approximation</em>. Textbooks would write:
+<p>The language—<code>linearize,''</code>approximate,’’ ``close to’’—suggests that the tangent space is a crutch, a convenience for analysis. But this framing obscures the true mathematical situation.</p>
+</section>
+<section id="the-conceptual-shift" class="level3">
+<h3 class="anchored" data-anchor-id="the-conceptual-shift">The Conceptual Shift</h3>
+<p>The recognition that linearization is <em>exact</em> at the infinitesimal level, not an approximation, came from careful attention to the definition of the Fr'echet derivative. If we define smoothness via the condition <span class="math display">\[\begin{equation}
+f(\bar\x + \dx) = f(\bar\x) + \mat{A}\,\dx + o(\norm{\dx}),
+\label{eq:ch1:frechet-heuristic}
+\end{equation}\]</span> then there is <em>exactly one</em> matrix <span class="math inline">\(\mat{A}\)</span> satisfying this property (at the infinitesimal scale). The matrix <span class="math inline">\(\mat{A}\)</span> is not an approximation; it is the <em>definition</em> of what smoothness means at that point.</p>
+<p>This modern viewpoint—which permeates contemporary differential geometry, control theory, and optimization (especially gradient-based learning)—is the foundation of this book. We do not linearize for convenience and accept error. We recognize that linearization <em>is</em> the exact infinitesimal description, and we use this exactness as a structural principle for analyzing and controlling nonlinear systems.</p>
+</section>
+</section>
+<section id="smooth-dynamical-systems" class="level2">
+<h2 class="anchored" data-anchor-id="smooth-dynamical-systems">Smooth Dynamical Systems</h2>
+<p>Consider a dynamical system <span class="math display">\[\begin{equation}
+\dot\x = f(\x, \uvec), \quad \x \in \R^n, \quad \uvec \in \R^m,
+\label{eq:ch1:dynamics}
+\end{equation}\]</span> where <span class="math inline">\(\x\)</span> is the state vector and <span class="math inline">\(\uvec\)</span> is the control input. We impose the following standing assumption throughout this book.</p>
+<p>This assumption is minimal yet physically reasonable. Virtually all systems derived from classical mechanics—Newtonian, Lagrangian, or Hamiltonian—produce smooth vector fields. The <span class="math inline">\(C^1\)</span> requirement is the bare mathematical condition for derivatives to exist.</p>
+</section>
+<section id="the-fréchet-derivative-linearization-as-exact-structure" class="level2">
+<h2 class="anchored" data-anchor-id="the-fréchet-derivative-linearization-as-exact-structure">The Fréchet Derivative: Linearization as Exact Structure</h2>
+<section id="definition-and-uniqueness" class="level3">
+<h3 class="anchored" data-anchor-id="definition-and-uniqueness">Definition and Uniqueness</h3>
+<p>At a fixed operating point <span class="math inline">\((\bar\x, \bar\uvec)\)</span>, the <strong>Jacobian</strong> of the vector field with respect to the state is the matrix <span class="math display">\[\begin{equation}
+\mat{A} := \frac{\partial f}{\partial \x}\bigg|_{(\bar\x,\bar\uvec)} \in \R^{n\times n},
+\label{eq:ch1:jacobian-A}
+\end{equation}\]</span> defined as the unique linear map satisfying the Fréchet derivative condition: <span class="math display">\[\begin{equation}
+f(\bar\x + \dx, \bar\uvec)
+= f(\bar\x, \bar\uvec) + \mat{A}\,\dx + o(\norm{\dx}).
+\label{eq:ch1:frechet}
+\end{equation}\]</span></p>
+<p>The notation <span class="math inline">\(o(\norm{\dx})\)</span> denotes a remainder that vanishes faster than <span class="math inline">\(\norm{\dx}\)</span> as <span class="math inline">\(\norm{\dx}\to 0\)</span>: <span class="math display">\[\begin{equation}
+\lim_{\norm{\dx}\to 0}
+\frac{\norm{f(\bar\x+\dx,\bar\uvec) - f(\bar\x,\bar\uvec) - \mat{A}\dx}}{\norm{\dx}} = 0.
+\label{eq:ch1:frechet-limit}
+\end{equation}\]</span></p>
+</section>
+<section id="proof-of-uniqueness" class="level3">
+<h3 class="anchored" data-anchor-id="proof-of-uniqueness">Proof of Uniqueness</h3>
+<p>This uniqueness is the cornerstone of the book’s philosophy. There is exactly one candidate for ``the infinitesimal structure’’ of <span class="math inline">\(f\)</span> at <span class="math inline">\(\bar\x\)</span>, and it is <span class="math inline">\(\mat{A}\)</span>.</p>
+This distinction is the conceptual foundation of the entire book. The standard narrative—``we linearize for convenience and accept some error’’—conflates two distinct operations:
+</section>
+<section id="relationship-to-the-gâteaux-derivative" class="level3">
+<h3 class="anchored" data-anchor-id="relationship-to-the-gâteaux-derivative">Relationship to the Gâteaux Derivative</h3>
+<p>The Fréchet derivative is stronger than the more permissive Gâteaux derivative. The <strong>Gâteaux derivative</strong> of <span class="math inline">\(f\)</span> at <span class="math inline">\(\bar\x\)</span> in direction <span class="math inline">\(\vec{v}\)</span> is <span class="math display">\[\begin{equation}
+D_{\vec{v}} f(\bar\x) := \lim_{t \to 0} \frac{f(\bar\x + t\vec{v}) - f(\bar\x)}{t},
+\label{eq:ch1:gateaux}
+\end{equation}\]</span> provided the limit exists. If <span class="math inline">\(f\)</span> is Fréchet-differentiable at <span class="math inline">\(\bar\x\)</span> with derivative <span class="math inline">\(\mat{A}\)</span>, then the Gâteaux derivative in any direction <span class="math inline">\(\vec{v}\)</span> exists and equals <span class="math inline">\(\mat{A}\vec{v}\)</span>.</p>
+<p>However, the converse is false: a function can have all Gâteaux derivatives in all directions (even linearly) without being Fréchet-differentiable. The Fréchet condition is uniform in all directions; the remainder <span class="math inline">\(o(\norm{\dx})\)</span> must be small relative to <span class="math inline">\(\norm{\dx}\)</span> for <em>all</em> perturbations <span class="math inline">\(\dx\)</span>, not just along specific rays.</p>
+<p>For the purposes of this book, we always assume Fréchet differentiability (part of the <span class="math inline">\(C^1\)</span> assumption), which ensures the robust infinitesimal linearization on which all subsequent theory depends.</p>
+</section>
+<section id="worked-example-the-pendulum-jacobian" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example-the-pendulum-jacobian">Worked Example: The Pendulum Jacobian</h3>
+<p>Consider a simple pendulum with friction and torque input: <span class="math display">\[\begin{equation}
+\dot\theta = \omega, \quad \dot\omega = -g\sin(\theta) - b\omega + u,
+\label{eq:ch1:pendulum-dyn}
+\end{equation}\]</span> where <span class="math inline">\(\theta\)</span> is angle, <span class="math inline">\(\omega\)</span> is angular velocity, <span class="math inline">\(g\)</span> is gravitational acceleration, <span class="math inline">\(b\)</span> is friction, and <span class="math inline">\(u\)</span> is applied torque. The state is <span class="math inline">\(\x = (\theta, \omega)\)</span> and control is <span class="math inline">\(\uvec = u\)</span>.</p>
+<p>The vector field is <span class="math display">\[\begin{equation}
+f(\x, u) = \begin{pmatrix} \omega \\ -g\sin\theta - b\omega + u \end{pmatrix}.
+\label{eq:ch1:pendulum-f}
+\end{equation}\]</span></p>
+<p>At an equilibrium <span class="math inline">\((\bar\theta, \bar\omega) = (\bar\theta, 0)\)</span> (the pendulum at rest), with input <span class="math inline">\(\bar{u} = g\sin\bar\theta\)</span> (input compensating gravity), the Jacobians are:</p>
+<p><span class="math display">\[\begin{equation}
+\mat{A} = \frac{\partial f}{\partial \x}\bigg|_{(\bar\theta, 0)} = \begin{pmatrix} 0 &amp; 1 \\ -g\cos\bar\theta &amp; -b \end{pmatrix},
+\label{eq:ch1:pendulum-A}
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\mat{B} = \frac{\partial f}{\partial u}\bigg|_{(\bar\theta, 0)} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}.
+\label{eq:ch1:pendulum-B}
+\end{equation}\]</span></p>
+<p>Now, consider a perturbation <span class="math inline">\(\dx = (\delta\theta, \delta\omega)\)</span> from the equilibrium. The Fréchet property says <span class="math display">\[\begin{equation}
+f(\bar\theta + \delta\theta, 0 + \delta\omega, \bar{u}) \approx f(\bar\theta, 0, \bar{u}) + \mat{A}\,\dx
+\end{equation}\]</span> for small <span class="math inline">\(\dx\)</span>. Let us verify this numerically.</p>
+<p>Take <span class="math inline">\(g = 10 \, \text{m/s}^2\)</span>, <span class="math inline">\(b = 0.1 \, \text{s}^{-1}\)</span>, and <span class="math inline">\(\bar\theta = \pi/6\)</span> (30 degrees). Then <span class="math inline">\(\cos(\pi/6) = \sqrt{3}/2 \approx 0.866\)</span>, so <span class="math display">\[\begin{equation}
+\mat{A} = \begin{pmatrix} 0 &amp; 1 \\ -10 \times 0.866 &amp; -0.1 \end{pmatrix} = \begin{pmatrix} 0 &amp; 1 \\ -8.66 &amp; -0.1 \end{pmatrix}.
+\end{equation}\]</span></p>
+<p>Consider perturbations of increasing size. At equilibrium, <span class="math inline">\(f(\bar\theta, 0, \bar{u}) = (0, 0)\)</span>.</p>
+<p>For <span class="math inline">\(\dx = (0.01, 0)\)</span> (small angle perturbation): <span class="math display">\[\begin{align}
+\text{True:} \quad f(\bar\theta + 0.01, 0, \bar{u}) &amp;= \begin{pmatrix} 0 \\ -g(\sin(\pi/6 + 0.01) - \sin(\pi/6)) \end{pmatrix} \\
+&amp;= \begin{pmatrix} 0 \\ -10(0.5145 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.1450 \end{pmatrix}, \\
+\text{Linear:} \quad \mat{A}\,\dx &amp;= \begin{pmatrix} 0 &amp; 1 \\ -8.66 &amp; -0.1 \end{pmatrix} \begin{pmatrix} 0.01 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0866 \end{pmatrix}, \\
+\text{Residual:} \quad r(\dx) &amp;= \begin{pmatrix} 0 \\ -0.0584 \end{pmatrix}, \quad \norm{r(\dx)} = 0.0584, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 5.84.
+\end{align}\]</span></p>
+<p>For <span class="math inline">\(\dx = (0.001, 0)\)</span> (one-tenth the size): <span class="math display">\[\begin{align}
+\text{Residual:} \quad \norm{r(\dx)} &amp;\approx 0.000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.585.
+\end{align}\]</span></p>
+<p>For <span class="math inline">\(\dx = (0.0001, 0)\)</span>: <span class="math display">\[\begin{align}
+\text{Residual:} \quad \norm{r(\dx)} &amp;\approx 0.0000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0585.
+\end{align}\]</span></p>
+<p>The ratio <span class="math inline">\(\norm{r(\dx)}/\norm{\dx}\)</span> decreases approximately as <span class="math inline">\(\norm{\dx}\)</span> (i.e., <span class="math inline">\(o(\norm{\dx})\)</span> behavior), confirming the Fréchet property. For a mixed perturbation like <span class="math inline">\(\dx = (0.01, 0.01)\)</span>, we would see this same scaling: the residual is dominated by the quadratic term (curvature) in the <span class="math inline">\(\sin\)</span> function, which is <span class="math inline">\(O(\norm{\dx}^2)\)</span>.</p>
+</section>
+<section id="the-input-jacobian" class="level3">
+<h3 class="anchored" data-anchor-id="the-input-jacobian">The Input Jacobian</h3>
+<p>Similarly, the Jacobian with respect to the input is <span class="math display">\[\begin{equation}
+\mat{B} := \frac{\partial f}{\partial \uvec}\bigg|_{(\bar\x,\bar\uvec)} \in \R^{n\times m},
+\label{eq:ch1:jacobian-B}
+\end{equation}\]</span> satisfying <span class="math display">\[\begin{equation}
+f(\bar\x, \bar\uvec + \du)
+= f(\bar\x, \bar\uvec) + \mat{B}\,\du + o(\norm{\du}).
+\label{eq:ch1:frechet-u}
+\end{equation}\]</span></p>
+<p>Together, the pair <span class="math inline">\((\mat{A}, \mat{B})\)</span> encodes the complete first-order sensitivity of the dynamics at <span class="math inline">\((\bar\x, \bar\uvec)\)</span>. These are the objects that every subsequent chapter will build upon.</p>
+</section>
+</section>
+<section id="tangent-spaces-as-vector-spaces" class="level2">
+<h2 class="anchored" data-anchor-id="tangent-spaces-as-vector-spaces">Tangent Spaces as Vector Spaces</h2>
+<section id="abstract-definition" class="level3">
+<h3 class="anchored" data-anchor-id="abstract-definition">Abstract Definition</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Let <span class="math inline">\(\mathcal{M}\)</span> be a smooth manifold and <span class="math inline">\(p\in\mathcal{M}\)</span>. The <strong>tangent space</strong> <span class="math inline">\(T_p\mathcal{M}\)</span> is the vector space of all tangent vectors at <span class="math inline">\(p\)</span>—equivalently, the space of all velocity vectors of smooth curves passing through <span class="math inline">\(p\)</span>.</p>
+</div>
+</div>
+<p>More formally, two smooth curves <span class="math inline">\(\gamma_1, \gamma_2: (-\epsilon, \epsilon) \to \mathcal{M}\)</span> with <span class="math inline">\(\gamma_1(0) = \gamma_2(0) = p\)</span> are said to be <em>equivalent at order one</em> if they have the same velocity vector at <span class="math inline">\(t=0\)</span>: <span class="math display">\[\begin{equation}
+\dot{\gamma}_1(0) = \dot{\gamma}_2(0).
+\label{eq:ch1:curve-equivalence}
+\end{equation}\]</span></p>
+<p>The tangent space <span class="math inline">\(T_p\mathcal{M}\)</span> is the set of equivalence classes of such curves, where the equivalence relation is having the same velocity. Vector addition and scalar multiplication are defined by concatenating velocities: if <span class="math inline">\([\gamma_1]\)</span> and <span class="math inline">\([\gamma_2]\)</span> are two tangent vectors (equivalence classes), then <span class="math inline">\([\gamma_1] + [\gamma_2]\)</span> is the equivalence class of the curve that travels at velocity <span class="math inline">\(\dot{\gamma}_1(0) + \dot{\gamma}_2(0)\)</span>. This makes <span class="math inline">\(T_p\mathcal{M}\)</span> a vector space.</p>
+<p>For systems evolving in <span class="math inline">\(\R^n\)</span>, the tangent space at any point is isomorphic to <span class="math inline">\(\R^n\)</span> itself. The distinction becomes non-trivial on curved manifolds (e.g., <span class="math inline">\(\SO(3)\)</span> for rotational dynamics), where the tangent space is a genuinely different object from the manifold.</p>
+</section>
+<section id="isomorphism-with-directional-derivatives" class="level3">
+<h3 class="anchored" data-anchor-id="isomorphism-with-directional-derivatives">Isomorphism with Directional Derivatives</h3>
+<p>There is another perspective on tangent vectors: as directional derivatives of functions on the manifold. A tangent vector <span class="math inline">\(v_p \in T_p\mathcal{M}\)</span> can be viewed as a linear functional on the space of smooth functions <span class="math inline">\(f: \mathcal{M} \to \R\)</span>, defined by <span class="math display">\[\begin{equation}
+v_p(f) := \frac{\dd}{\dd t}\Big|_{t=0} f(\gamma(t)),
+\label{eq:ch1:tangent-derivative}
+\end{equation}\]</span> where <span class="math inline">\(\gamma\)</span> is any curve representing <span class="math inline">\(v_p\)</span>. This definition is independent of the choice of curve (by equivalence), and it gives a derivation: a linear map that satisfies the Leibniz rule <span class="math inline">\(v_p(fg) = f(p) v_p(g) + g(p) v_p(f)\)</span>.</p>
+<p>Conversely, every derivation at <span class="math inline">\(p\)</span> arises from a unique tangent vector. This isomorphism between geometric tangent vectors (equivalence classes of curves) and algebraic derivations is fundamental to modern differential geometry and will underlie our treatment of variational equations in Chapter~<span class="math inline">\(\ref{ch:variational}\)</span>.</p>
+</section>
+<section id="why-tangent-spaces-are-the-natural-home-of-superposition" class="level3">
+<h3 class="anchored" data-anchor-id="why-tangent-spaces-are-the-natural-home-of-superposition">Why Tangent Spaces Are the Natural Home of Superposition</h3>
+<p>When one says ``superposition fails in nonlinear systems,’’ the precise meaning is: <em>you cannot add trajectories in state space</em>. But you <em>can</em> add infinitesimal variations in the tangent space. This is not an approximation—it is the definition of the tangent space as a vector space.</p>
+</section>
+<section id="coordinate-representation" class="level3">
+<h3 class="anchored" data-anchor-id="coordinate-representation">Coordinate Representation</h3>
+<p>In local coordinates <span class="math inline">\(\x = (x_1,\dots,x_n)\)</span> on a chart of <span class="math inline">\(\mathcal{M}\)</span>, a tangent vector <span class="math inline">\(\dx \in T_{\bar\x}\mathcal{M}\)</span> is represented by its components <span class="math inline">\((\delta x_1, \dots, \delta x_n) \in \R^n\)</span>. The Jacobian <span class="math inline">\(\mat{A}\)</span> then acts as a linear map <span class="math inline">\(\mat{A}: T_{\bar\x}\mathcal{M} \to T_{\bar\x}\mathcal{M}\)</span>, sending one tangent vector to another.</p>
+<p>Under a smooth coordinate change <span class="math inline">\(\vec{z} = \phi(\x)\)</span> with Jacobian <span class="math inline">\(\mat{T} = \partial\phi/\partial\x\)</span>, tangent vectors transform as <span class="math display">\[\begin{equation}
+\delta\vec{z} = \mat{T}\,\dx,
+\label{eq:ch1:tangent-transform}
+\end{equation}\]</span> and the Jacobian transforms as <span class="math display">\[\begin{equation}
+\mat{A}_z = \mat{T}\,\mat{A}\,\mat{T}^{-1} + \dot{\mat{T}}\,\mat{T}^{-1},
+\label{eq:ch1:jacobian-transform}
+\end{equation}\]</span> ensuring that the <em>geometric content</em>—eigenvalues, contraction rates, stability conclusions—is coordinate-invariant.</p>
+</section>
+</section>
+<section id="residuals-geometry-not-error" class="level2">
+<h2 class="anchored" data-anchor-id="residuals-geometry-not-error">Residuals: Geometry, Not Error</h2>
+<p>When we use the linear model <span class="math inline">\(\mat{A}\dx\)</span> to predict the evolution of a <em>finite</em> perturbation, a residual appears: <span class="math display">\[\begin{equation}
+f(\bar\x + \dx, \bar\uvec) - f(\bar\x, \bar\uvec) - \mat{A}\dx
+= r(\dx),
+\label{eq:ch1:residual-def}
+\end{equation}\]</span> where <span class="math inline">\(\norm{r(\dx)} = o(\norm{\dx})\)</span> by the Fréchet property. If <span class="math inline">\(f\)</span> is <span class="math inline">\(C^2\)</span>, a sharper bound holds via the mean-value form of Taylor’s theorem: <span class="math display">\[\begin{equation}
+\norm{r(\dx)} \leq \frac{1}{2}\,\sup_{\xi \in [\bar\x,\,\bar\x+\dx]}
+\left\lVert \frac{\partial^2 f}{\partial \x^2}(\xi,\bar\uvec)\right\rVert
+\cdot \norm{\dx}^2.
+\label{eq:ch1:residual-bound}
+\end{equation}\]</span></p>
+<section id="residual-scaling-a-concrete-example" class="level3">
+<h3 class="anchored" data-anchor-id="residual-scaling-a-concrete-example">Residual Scaling: A Concrete Example</h3>
+<p>To illustrate the <span class="math inline">\(O(\norm{\dx}^2)\)</span> scaling of the residual, consider the one-dimensional function <span class="math display">\[\begin{equation}
+f(x) = \sin(x).
+\label{eq:ch1:sin-example}
+\end{equation}\]</span></p>
+<p>At <span class="math inline">\(\bar{x} = 0\)</span>, the derivative is <span class="math inline">\(f'(0) = \cos(0) = 1\)</span>. The linear approximation is <span class="math inline">\(\hat{f}(\delta x) = \delta x\)</span>. The residual is <span class="math display">\[\begin{equation}
+r(\delta x) = \sin(\delta x) - \delta x.
+\label{eq:ch1:sin-residual}
+\end{equation}\]</span></p>
+<p>For a function with nonzero second derivative—such as <span class="math inline">\(f(x) = \cos(x)\)</span> at <span class="math inline">\(\bar{x} = 0\)</span>, where <span class="math inline">\(f''(0) = -1\)</span>—the residual <em>is</em> quadratic: <span class="math inline">\(r(\delta x) = -(\delta x)^2/2 + O(\delta x^4)\)</span>, and the ratio <span class="math inline">\(r/(\delta x)^2 \to -1/2\)</span> exactly. The general bound <span class="math inline">\(\eqref{eq:ch1:residual-bound}\)</span> is tight whenever <span class="math inline">\(f''(\bar{x}) \neq 0\)</span>.</p>
+<p>The practical lesson: the residual quantifies curvature. Zero residual at second order means the manifold is locally ``flatter than expected’’—which happens precisely at inflection points and other geometrically special configurations.</p>
+</section>
+<section id="two-perspectives-on-linearization" class="level3">
+<h3 class="anchored" data-anchor-id="two-perspectives-on-linearization">Two Perspectives on Linearization</h3>
+<p>In the standard view, we apologize for the residual: ``Yes, the linear model is wrong for finite perturbations, but for small perturbations it is good enough.’’ In the tangent-space view, the residual is information: it tells us about the curvature of the state-space manifold, and this information is essential for understanding transport and nonlinear phenomena.</p>
+</section>
+</section>
+<section id="manifold-examples-from-theory-to-application" class="level2">
+<h2 class="anchored" data-anchor-id="manifold-examples-from-theory-to-application">Manifold Examples: From Theory to Application</h2>
+<p>The abstract theory of tangent spaces becomes concrete and powerful when applied to specific manifolds that arise in dynamics and control. Three examples are essential.</p>
+<section id="so3-rotations-and-attitude-dynamics" class="level3">
+<h3 class="anchored" data-anchor-id="so3-rotations-and-attitude-dynamics">SO(3): Rotations and Attitude Dynamics</h3>
+<p>The special orthogonal group <span class="math inline">\(\SO(3)\)</span> is the set of all <span class="math inline">\(3 \times 3\)</span> orthogonal matrices with determinant <span class="math inline">\(+1\)</span>: <span class="math display">\[\begin{equation}
+\SO(3) = \{\mat{R} \in \R^{3 \times 3} : \mat{R}\T \mat{R} = \mat{I}, \, \det(\mat{R}) = 1\}.
+\label{eq:ch1:SO3-def}
+\end{equation}\]</span></p>
+<p><span class="math inline">\(\SO(3)\)</span> is a 3-dimensional Lie group: it is a smooth manifold that is also a group under matrix multiplication. The tangent space to <span class="math inline">\(\SO(3)\)</span> at any point <span class="math inline">\(\mat{R} \in \SO(3)\)</span> is the space of skew-symmetric matrices: <span class="math display">\[\begin{equation}
+T_{\mat{R}}\SO(3) = \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
+\label{eq:ch1:so3-tangent}
+\end{equation}\]</span></p>
+<p>This space is 3-dimensional and is often denoted <span class="math inline">\(\mathfrak{so}(3)\)</span>, the Lie algebra of <span class="math inline">\(\SO(3)\)</span>.</p>
+<p>Consider a rigid body with rotation matrix <span class="math inline">\(\mat{R} \in \SO(3)\)</span> and angular velocity <span class="math inline">\(\boldsymbol{\omega} = (\omega_x, \omega_y, \omega_z)\)</span>. The kinematic equation is <span class="math display">\[\begin{equation}
+\dot{\mat{R}} = \mat{R} \, [\boldsymbol{\omega}]_{\times},
+\label{eq:ch1:attitude-kinematics}
+\end{equation}\]</span> where <span class="math inline">\([\boldsymbol{\omega}]_{\times}\)</span> is the skew-symmetric matrix representation: <span class="math display">\[\begin{equation}
+[\boldsymbol{\omega}]_{\times} = \begin{pmatrix} 0 &amp; -\omega_z &amp; \omega_y \\ \omega_z &amp; 0 &amp; -\omega_x \\ -\omega_y &amp; \omega_x &amp; 0 \end{pmatrix}.
+\label{eq:ch1:skew-symmetric}
+\end{equation}\]</span></p>
+<p>The Jacobian of this system with respect to a perturbation in angular velocity is <span class="math display">\[\begin{equation}
+\frac{\partial \dot{\mat{R}}}{\partial \boldsymbol{\omega}} = \mat{R} \, \frac{\partial [\boldsymbol{\omega}]_{\times}}{\partial \boldsymbol{\omega}}.
+\label{eq:ch1:attitude-jacobian}
+\end{equation}\]</span></p>
+<p>This reveals a key point: perturbations to the angular velocity propagate through the system as skew-symmetric matrices, which is precisely the tangent space structure. The linear perturbation dynamics lives naturally in <span class="math inline">\(\mathfrak{so}(3)\)</span>, the Lie algebra.</p>
+<p>For quadcopters, satellites, and any system with rotational degrees of freedom, using Euler angles or quaternions often introduces artificial singularities or redundancy. By working directly with <span class="math inline">\(\SO(3)\)</span> and its tangent space, we eliminate these complications and gain access to the rich structure of Lie groups and Lie algebras, which provide exact (non-approximate) transport laws through the state space.</p>
+</section>
+<section id="se3-rigid-body-transformations" class="level3">
+<h3 class="anchored" data-anchor-id="se3-rigid-body-transformations">SE(3): Rigid Body Transformations</h3>
+<p>The special Euclidean group <span class="math inline">\(\SE(3)\)</span> describes rigid body motions in 3D: rotations and translations. It is the semidirect product <span class="math inline">\(\SO(3) \ltimes \R^3\)</span>, represented as <span class="math inline">\(4 \times 4\)</span> homogeneous transformation matrices: <span class="math display">\[\begin{equation}
+\mat{T} = \begin{pmatrix} \mat{R} &amp; \vec{p} \\ 0 &amp; 1 \end{pmatrix}, \quad \mat{R} \in \SO(3), \quad \vec{p} \in \R^3.
+\label{eq:ch1:SE3-def}
+\end{equation}\]</span></p>
+<p>The tangent space to <span class="math inline">\(\SE(3)\)</span> at any <span class="math inline">\(\mat{T}\)</span> is the space of Plücker coordinates or twist vectors, represented as <span class="math inline">\(4 \times 4\)</span> matrices of the form <span class="math display">\[\begin{equation}
+\begin{pmatrix} [\boldsymbol{\omega}]_{\times} &amp; \vec{v} \\ 0 &amp; 0 \end{pmatrix},
+\label{eq:ch1:se3-tangent}
+\end{equation}\]</span> where <span class="math inline">\([\boldsymbol{\omega}]_{\times} \in \mathfrak{so}(3)\)</span> and <span class="math inline">\(\vec{v} \in \R^3\)</span> is a linear velocity. This is the Lie algebra <span class="math inline">\(\mathfrak{se}(3)\)</span>, a 6-dimensional space.</p>
+<p>For a rigid body in space with configuration <span class="math inline">\(\mat{T}(t) \in \SE(3)\)</span> and twist (spatial velocity) <span class="math inline">\(\boldsymbol{\xi} = (\vec{v}, \boldsymbol{\omega})\)</span>, the kinematic equation is <span class="math display">\[\begin{equation}
+\dot{\mat{T}} = \mat{T} \, \begin{pmatrix} [\boldsymbol{\omega}]_{\times} &amp; \vec{v} \\ 0 &amp; 0 \end{pmatrix}.
+\label{eq:ch1:SE3-kinematics}
+\end{equation}\]</span></p>
+<p>Again, the dynamics live in the tangent space (the Lie algebra), and perturbations evolve linearly within that space—an expression of Axiom 2. The nonlinearity re-enters through the composition of infinitesimal steps, as formalized in Axiom 4 (transport).</p>
+</section>
+<section id="the-double-pendulum-configuration-manifold" class="level3">
+<h3 class="anchored" data-anchor-id="the-double-pendulum-configuration-manifold">The Double Pendulum Configuration Manifold</h3>
+<p>A double pendulum consists of two rigid links connected by hinges, with angles <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span>. The configuration space is naturally a torus: <span class="math display">\[\begin{equation}
+\mathcal{M} = T^2 = S^1 \times S^1,
+\label{eq:ch1:double-pend-manifold}
+\end{equation}\]</span> where each <span class="math inline">\(S^1\)</span> is a circle (angle wraparound).</p>
+<p>Coordinates on <span class="math inline">\(T^2\)</span> are <span class="math inline">\((\theta_1, \theta_2) \in [0, 2\pi) \times [0, 2\pi)\)</span> with wraparound identification. The tangent space <span class="math inline">\(T_{(\theta_1, \theta_2)}(T^2)\)</span> is a 2-dimensional space representing the angular velocities <span class="math inline">\((\dot\theta_1, \dot\theta_2)\)</span>.</p>
+<p>The state is <span class="math inline">\(\x = (\theta_1, \theta_2, \dot\theta_1, \dot\theta_2) \in T^2 \times \R^2\)</span>. The dynamics come from the Lagrangian or energy conservation, with gravity and friction. For example: <span class="math display">\[\begin{equation}
+\ddot\theta_1 = g(\sin\theta_1 + \frac{1}{2}\sin(\theta_1 + \theta_2)) + (\text{friction, control}) ,
+\label{eq:ch1:double-pend-dyn}
+\end{equation}\]</span> and similarly for <span class="math inline">\(\theta_2\)</span>.</p>
+The double pendulum exhibits rich nonlinear phenomena:
+<p>The torus structure is essential: wraparound in angles is handled correctly only by recognizing that the manifold is curved (topologically), not flat. Standard treatments that treat <span class="math inline">\(\theta_i\)</span> as real variables miss this structure.</p>
+</section>
+</section>
+<section id="nonlinearity-re-enters-through-transport" class="level2">
+<h2 class="anchored" data-anchor-id="nonlinearity-re-enters-through-transport">Nonlinearity Re-enters Through Transport</h2>
+<section id="transport-as-curved-geometry" class="level3">
+<h3 class="anchored" data-anchor-id="transport-as-curved-geometry">Transport as Curved Geometry</h3>
+<p>The relationship between successive tangent spaces is governed by the <span class="math inline">\(\Phi(t_1, t_0)\)</span>, which we develop fully in Chapter~<span class="math inline">\(\ref{ch:variational}\)</span>. For now, we sketch the idea.</p>
+</section>
+<section id="state-transition-matrix-and-variational-equations" class="level3">
+<h3 class="anchored" data-anchor-id="state-transition-matrix-and-variational-equations">State Transition Matrix and Variational Equations</h3>
+<p>Consider the system <span class="math inline">\(\dot\x = f(\x)\)</span> and a reference trajectory <span class="math inline">\(\bar\x(t)\)</span>. A nearby trajectory with initial condition <span class="math inline">\(\bar\x(t_0) + \dx(t_0)\)</span> follows <span class="math display">\[\begin{equation}
+\x(t) = \bar\x(t) + \dx(t) + o(\norm{\dx(t_0)}),
+\label{eq:ch1:perturbed-traj}
+\end{equation}\]</span> where <span class="math inline">\(\dx(t)\)</span> satisfies the variational equation: <span class="math display">\[\begin{equation}
+\dot{\dx}(t) = \mat{A}(t) \, \dx(t), \quad \mat{A}(t) := \frac{\partial f}{\partial \x}\bigg|_{\bar\x(t)}.
+\label{eq:ch1:variational-eq}
+\end{equation}\]</span></p>
+<p>The unique solution with initial condition <span class="math inline">\(\dx(t_0)\)</span> is <span class="math display">\[\begin{equation}
+\dx(t) = \Phi(t, t_0) \, \dx(t_0),
+\label{eq:ch1:dx-solution}
+\end{equation}\]</span> where <span class="math inline">\(\Phi(t, t_0)\)</span> is the state transition matrix (also called fundamental matrix).</p>
+</section>
+<section id="christoffel-symbols-and-parallel-transport-intuitive-picture" class="level3">
+<h3 class="anchored" data-anchor-id="christoffel-symbols-and-parallel-transport-intuitive-picture">Christoffel Symbols and Parallel Transport (Intuitive Picture)</h3>
+<p>In Riemannian geometry on a curved manifold, <code>parallel transport'' means moving a tangent vector along a curve while keeping it</code>as parallel as possible’’ (minimizing rotation relative to the manifold curvature). This is formalized by the Christoffel symbols <span class="math inline">\(\Gamma^k_{ij}\)</span>, which measure how basis vectors change as you move along the manifold.</p>
+<p>For our nonlinear dynamics, an analogous concept applies: as the reference trajectory <span class="math inline">\(\bar\x(t)\)</span> evolves, the linearized dynamics at successive points are not simply comparable; they must be ``transported’’ via the state transition matrix <span class="math inline">\(\Phi(t, t_1)\)</span>. The transport is exact (no approximation), but it encodes the manifold’s curvature.</p>
+</section>
+<section id="connection-to-differential-dynamic-programming" class="level3">
+<h3 class="anchored" data-anchor-id="connection-to-differential-dynamic-programming">Connection to Differential Dynamic Programming</h3>
+In Differential Dynamic Programming (DDP) and iLQR (discussed in later chapters), the algorithm repeatedly:
+<p>Each iteration solves an <em>exact</em> local problem (Axiom 1) within the tangent spaces, then accounts for curvature via <em>exact</em> transport (Axiom 4). The algorithm does not approximate; it refines the nominal trajectory by exploiting the local structure at each point.</p>
+</section>
+</section>
+<section id="scope-of-exactness-when-the-tangent-space-picture-breaks-down" class="level2">
+<h2 class="anchored" data-anchor-id="scope-of-exactness-when-the-tangent-space-picture-breaks-down">Scope of Exactness: When the Tangent-Space Picture Breaks Down</h2>
+<p>The tangent-space framework is powerful and exact for smooth systems. But it has boundaries. Understanding these boundaries is essential for knowing when the theory applies and when generalizations are needed.</p>
+<section id="discontinuities-and-piecewise-smooth-systems" class="level3">
+<h3 class="anchored" data-anchor-id="discontinuities-and-piecewise-smooth-systems">Discontinuities and Piecewise-Smooth Systems</h3>
+<p>The <span class="math inline">\(C^1\)</span> smoothness assumption (Assumption~<span class="math inline">\(\ref{ass:smoothness}\)</span>) is critical. If the vector field <span class="math inline">\(f\)</span> or its Jacobian <span class="math inline">\(\partial f / \partial \x\)</span> jumps or is undefined at a point, the Fréchet derivative fails to exist. Common examples:</p>
+<p>For such systems, the Fréchet derivative and Axiom 1 do not apply. Instead, one must use generalized notions: Filippov solutions, saltation matrices (for impacts), or differential inclusions. These are beyond the scope of this book but represent important extensions.</p>
+</section>
+<section id="chattering-and-sliding-modes" class="level3">
+<h3 class="anchored" data-anchor-id="chattering-and-sliding-modes">Chattering and Sliding Modes</h3>
+<p>In optimal control with control constraints (e.g., <span class="math inline">\(|u| \leq u_{\max}\)</span>), the optimal control can be <em>bang-bang</em>: switching infinitely often between <span class="math inline">\(u = u_{\max}\)</span> and <span class="math inline">\(u = -u_{\max}\)</span>. On a time interval where infinitely many switches occur (sliding mode), the averaged effect of the rapid switching can be captured by a generalized velocity constraint, but the instantaneous dynamics are discontinuous and do not satisfy <span class="math inline">\(C^1\)</span> smoothness.</p>
+<p>The tangent-space framework applies to the intervals between switches and to the averaged dynamics, but not at the switching surfaces themselves.</p>
+</section>
+<section id="zeno-behavior-and-accumulation-of-events" class="level3">
+<h3 class="anchored" data-anchor-id="zeno-behavior-and-accumulation-of-events">Zeno Behavior and Accumulation of Events</h3>
+<p>In some hybrid systems, an infinite number of discrete events (impacts, mode switches) can accumulate in finite time, a phenomenon called Zeno behavior. At the accumulation point, the system’s state may be well-defined (by continuity), but the dynamics are singular and do not admit a classical smooth vector field.</p>
+</section>
+<section id="singular-configurations-on-manifolds" class="level3">
+<h3 class="anchored" data-anchor-id="singular-configurations-on-manifolds">Singular Configurations on Manifolds</h3>
+<p>On manifolds like <span class="math inline">\(\SO(3)\)</span> or <span class="math inline">\(\SE(3)\)</span>, certain configurations are singular: the exponential map or logarithmic map may not be invertible, or the intrinsic metric may degenerate. For example, the quaternion representation of rotations has a singularity at the antipodal point: two different quaternions represent the same rotation. When the system passes through such a point, local coordinates become singular, and care must be taken to handle the transition.</p>
+<p>The tangent-space theory remains valid (the Lie group structure is smooth everywhere), but global coordinate charts cannot cover the entire manifold without singularities (a topological consequence of the Hairy Ball Theorem for <span class="math inline">\(S^2\)</span> and its generalizations).</p>
+</section>
+<section id="summary-boundaries-of-the-theory" class="level3">
+<h3 class="anchored" data-anchor-id="summary-boundaries-of-the-theory">Summary: Boundaries of the Theory</h3>
+<p>Throughout this book, we work exclusively with smooth systems and note extensions where relevant. The exactness of the tangent-space picture is one of its greatest strengths, and understanding its boundaries is essential for applying it responsibly.</p>
+</section>
+</section>
+<section id="the-five-axioms-a-summary" class="level2">
+<h2 class="anchored" data-anchor-id="the-five-axioms-a-summary">The Five Axioms: A Summary</h2>
+<p>The conceptual framework of this book rests on five axioms, each a consequence of standard differential geometry but rarely stated explicitly in control texts.</p>
+<p>These axioms inform every derivation in the chapters that follow. When we write a Jacobian, we are not approximating. When we solve a Riccati equation in tangent coordinates, we are solving an exact local problem. When we iterate (as in DDP), we are re-centering the exact local analysis at a new base point. The ``error’’ is always transport cost—the price of moving through curved space.</p>
+</section>
+<section id="scope-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="scope-and-limitations">Scope and Limitations</h2>
+<p>The mathematical framework developed here applies to smooth (<span class="math inline">\(C^1\)</span>) nonlinear systems, including mechanical systems (Newtonian, Lagrangian, Hamiltonian), robotic manipulators, vehicles, aerospace systems, and chemical process control.</p>
+<p>The framework <em>does not</em> directly apply to discontinuous systems, impact dynamics, Coulomb friction, or hybrid switching systems. For these, generalizations exist—saltation matrices for impacts, differential inclusions for set-valued dynamics, complementarity systems for contact—and we note these extensions where appropriate.</p>
+<section id="when-to-use-this-framework" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-use-this-framework">When to Use This Framework</h3>
+This textbook is most applicable when:
+</section>
+<section id="important-distinction-linearization-vs.-linear-approximation" class="level3">
+<h3 class="anchored" data-anchor-id="important-distinction-linearization-vs.-linear-approximation">Important Distinction: Linearization vs.&nbsp;Linear Approximation</h3>
+<p>A linearization is always exact. A linear approximation introduces error (residual). By keeping these concepts distinct, we unlock the structural power of tangent spaces and avoid the psychological barrier of thinking that everything about perturbations is approximate.</p>
+</section>
+<section id="looking-ahead" class="level3">
+<h3 class="anchored" data-anchor-id="looking-ahead">Looking Ahead</h3>
+<p>Chapter~<span class="math inline">\(\ref{ch:variational}\)</span> develops the theory of perturbation evolution: how infinitesimal variations propagate along a trajectory, quantifying the sensitivity of orbits to initial conditions. The state transition matrix and Lyapunov exponents emerge as central objects.</p>
+<p>Chapter~<span class="math inline">\(\ref{ch:contraction}\)</span> introduces contractivity and metric tensors, translating the intuition that ``some directions are more stable than others’’ into a precise geometric framework.</p>
+<p>Chapter~<span class="math inline">\(\ref{ch:optimal}\)</span> applies these ideas to optimal control, showing how DDP and iLQR are exact local algorithms operating in tangent spaces, with control constraints and terminal costs handled via their residual geometry.</p>
+<p>The journey from foundations (this chapter) to applications (later chapters) is one of increasing structure and pragmatism: we leverage the exactness of the tangent space to build algorithms that are both conceptually clear and computationally efficient.</p>
+</section>
+</section>
+<section id="preview-why-these-ideas-matter-for-the-golf-swing" class="level2">
+<h2 class="anchored" data-anchor-id="preview-why-these-ideas-matter-for-the-golf-swing">Preview: Why These Ideas Matter for the Golf Swing</h2>
+<p>Before proceeding to the formal theory, it is worth previewing how the foundations of this chapter connect to the book’s primary application domain: the biomechanics of the golf swing. This preview is deliberately non-technical; the full mathematical treatment appears in Chapter~<span class="math inline">\(\ref{ch:applications}\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A golfer’s swing is a chain of rotating body segments—torso, arms, wrists, club—that accelerates a clubhead to high speed and launches a ball. The physics is ferociously nonlinear: centrifugal forces grow as the square of rotational speed, the club shaft bends and rebounds elastically, and the mass distribution changes as the golfer’s posture evolves. Yet at each instant, the tangent-space picture gives us an exact local model of how small changes propagate.</p>
+</div>
+</div>
+<section id="the-golfers-tangent-space" class="level3">
+<h3 class="anchored" data-anchor-id="the-golfers-tangent-space">The Golfer’s Tangent Space</h3>
+<p>At any instant during the downswing, the golfer’s state is a point on a high-dimensional manifold: joint angles, angular velocities, shaft bending amplitudes, and their rates. The tangent space at this point is the space of all infinitesimal variations—a slightly different wrist angle, a marginally faster shoulder rotation, a small change in shaft flex.</p>
+<p>By Axiom~1, the Jacobian at this point is the <em>exact</em> description of how these small variations evolve over the next instant. By Axiom~2, these variations add as vectors. A small wrist perturbation and a small shoulder perturbation evolve independently at first order, even though the full nonlinear swing couples them through centrifugal and Coriolis forces.</p>
+</section>
+<section id="curvature-as-a-diagnostic" class="level3">
+<h3 class="anchored" data-anchor-id="curvature-as-a-diagnostic">Curvature as a Diagnostic</h3>
+<p>The residual—the gap between tangent-space prediction and actual evolution—measures the ``curvature’’ of the swing manifold. During the early backswing, velocities are low and the dynamics are nearly linear (small residual). During the late downswing, when the clubhead is moving at high speed, centrifugal forces dominate and the residual becomes large. This is not a failure of the theory; it is a geometric signal that the system is passing through a high-curvature region.</p>
+Practically, this means:
+</section>
+<section id="transport-and-the-kinematic-chain" class="level3">
+<h3 class="anchored" data-anchor-id="transport-and-the-kinematic-chain">Transport and the Kinematic Chain</h3>
+<p>Axiom~4 (transport) is especially vivid in the golf swing. As the club sweeps through a large arc, the tangent space rotates and stretches. The state transition matrix <span class="math inline">\(\Phi(t_1, t_0)\)</span> maps perturbations at one phase of the swing to perturbations at another. A small error in wrist lag at the top of the backswing may amplify into a large clubface angle error at impact—or it may be ``washed out’’ by the dynamics. The eigenvalues of <span class="math inline">\(\Phi\)</span> tell us which scenario applies.</p>
+<p>This is the deep connection between the abstract mathematics of this chapter and the practical question every golfer cares about: ? Tangent-space analysis provides a principled, quantitative answer.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+
+  (function() {
+
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
+
+
+    // Try to load modular ES6 version first, fallback to legacy bundle
+
+    const moduleScript = document.createElement('script');
+
+    moduleScript.type = 'module';
+
+    moduleScript.src = `${normalizedBase}js/main.js`;
+
+
+
+    // Fallback for browsers without ES module support
+
+    const noModuleScript = document.createElement('script');
+
+    noModuleScript.setAttribute('nomodule', '');
+
+    noModuleScript.src = `${normalizedBase}script.js`;
+
+
+
+    document.body.appendChild(moduleScript);
+
+    document.body.appendChild(noModuleScript);
+
+  })();
+
+</script>
+
+<script>
+
+  // Register Service Worker for PWA support
+
+  if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', function() {
+
+      navigator.serviceWorker.register('/service-worker.js')
+
+        .catch(function(error) {
+
+          console.warn('ServiceWorker registration failed:', error);
+
+        });
+
+    });
+
+  }
+
+</script>
+
+<script src="../../../js/notes-workspace.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

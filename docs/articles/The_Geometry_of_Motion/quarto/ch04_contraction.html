@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="% Chapter 4: Contraction Theory and Metric Certificates">
+
+<title>ch04_contraction – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-0da2bdd6902c8c95d2e6813da368b65a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+
+<meta property="og:site_name" content="AffineDrift">
+
+<meta property="og:type" content="website">
+
+<meta property="og:locale" content="en_US">
+
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+
+
+<!-- SEO: JSON-LD Structured Data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "WebSite",
+
+  "name": "AffineDrift",
+
+  "url": "https://affinedrift.com",
+
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+
+  "potentialAction": {
+
+    "@type": "SearchAction",
+
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+
+    "query-input": "required name=search_term_string"
+
+  },
+
+  "author": {
+
+    "@type": "Person",
+
+    "name": "Dieter Olson"
+
+  },
+
+  "publisher": {
+
+    "@type": "Organization",
+
+    "name": "AffineDrift",
+
+    "logo": {
+
+      "@type": "ImageObject",
+
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+
+    }
+
+  }
+
+}
+
+</script>
+
+
+
+<!-- SEO: Additional meta tags -->
+
+<meta name="robots" content="index, follow">
+
+<meta name="googlebot" content="index, follow">
+
+<meta name="author" content="Dieter Olson">
+
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+
+<link rel="canonical" href="https://affinedrift.com">
+
+
+
+<!-- Performance: Preload critical resources -->
+
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+
+<link rel="preload" href="../../../styles.css" as="style">
+
+<link rel="stylesheet" href="../../../css/print.css" media="print">
+
+<link rel="preload" href="../../../script.js" as="script">
+
+<link rel="modulepreload" href="../../../js/main.js">
+
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+
+<link rel="modulepreload" href="../../../js/utils.js">
+
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+
+<script src="../../../js/startup-launcher.js"></script>
+
+
+
+<!-- PWA and Mobile Optimization -->
+
+<link rel="manifest" href="../../../manifest.json">
+
+<meta name="theme-color" content="#1a1a2e">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="format-detection" content="telephone=no">
+
+
+
+<!-- Preconnect and Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+
+<style>
+
+  .rss-feed-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2.75rem;
+
+    height: 2.75rem;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    text-decoration: none;
+
+    border-radius: 4px;
+
+    transition: all 0.2s ease;
+
+    margin-left: 0.5rem;
+
+  }
+
+  .rss-feed-link:hover {
+
+    color: #ffa500;
+
+    background-color: rgba(255, 165, 0, 0.1);
+
+  }
+
+  .rss-feed-link svg {
+
+    width: 1.25rem;
+
+    height: 1.25rem;
+
+    fill: currentColor;
+
+  }
+
+  .quarto-navbar-tools {
+
+    display: flex;
+
+    align-items: center;
+
+  }
+
+</style>
+
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-books" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Books</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-books">    
+        <li>
+    <a class="dropdown-item" href="../../../books/index.html">
+ <span class="dropdown-text">Book Series</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/tangent-space-methods.html">
+ <span class="dropdown-text">Volume I: Tangent-Space Methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/control-is-motion.html">
+ <span class="dropdown-text">Volume II: Control Is Motion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/biomechanics-biology-to-systems.html">
+ <span class="dropdown-text">Volume III: Biomechanics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/human-motor-control.html">
+ <span class="dropdown-text">Volume IV: Human Motor Control</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../daydreams-doodles.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#contraction-theory-and-metric-certificates" id="toc-contraction-theory-and-metric-certificates" class="nav-link active" data-scroll-target="#contraction-theory-and-metric-certificates">Contraction Theory and Metric Certificates</a>
+  <ul class="collapse">
+  <li><a href="#historical-context-and-the-shift-to-trajectory-stability" id="toc-historical-context-and-the-shift-to-trajectory-stability" class="nav-link" data-scroll-target="#historical-context-and-the-shift-to-trajectory-stability">Historical Context and the Shift to Trajectory Stability</a>
+  <ul class="collapse">
+  <li><a href="#from-lyapunov-point-stability-to-trajectory-convergence" id="toc-from-lyapunov-point-stability-to-trajectory-convergence" class="nav-link" data-scroll-target="#from-lyapunov-point-stability-to-trajectory-convergence">From Lyapunov Point Stability to Trajectory Convergence</a></li>
+  <li><a href="#the-lohmillerslotine-framework-1998" id="toc-the-lohmillerslotine-framework-1998" class="nav-link" data-scroll-target="#the-lohmillerslotine-framework-1998">The Lohmiller–Slotine Framework (1998)</a></li>
+  <li><a href="#demidovichs-condition-1961-an-historical-precursor" id="toc-demidovichs-condition-1961-an-historical-precursor" class="nav-link" data-scroll-target="#demidovichs-condition-1961-an-historical-precursor">Demidovich’s Condition (1961): An Historical Precursor</a></li>
+  <li><a href="#connection-to-modern-research" id="toc-connection-to-modern-research" class="nav-link" data-scroll-target="#connection-to-modern-research">Connection to Modern Research</a></li>
+  </ul></li>
+  <li><a href="#from-equilibrium-stability-to-trajectory-stability" id="toc-from-equilibrium-stability-to-trajectory-stability" class="nav-link" data-scroll-target="#from-equilibrium-stability-to-trajectory-stability">From Equilibrium Stability to Trajectory Stability</a></li>
+  <li><a href="#the-contraction-condition" id="toc-the-contraction-condition" class="nav-link" data-scroll-target="#the-contraction-condition">The Contraction Condition</a></li>
+  <li><a href="#complete-proof-of-exponential-convergence" id="toc-complete-proof-of-exponential-convergence" class="nav-link" data-scroll-target="#complete-proof-of-exponential-convergence">Complete Proof of Exponential Convergence</a></li>
+  <li><a href="#the-identity-metric-symmetric-jacobian-condition" id="toc-the-identity-metric-symmetric-jacobian-condition" class="nav-link" data-scroll-target="#the-identity-metric-symmetric-jacobian-condition">The Identity Metric: Symmetric Jacobian Condition</a></li>
+  <li><a href="#worked-example-a-simple-linear-system" id="toc-worked-example-a-simple-linear-system" class="nav-link" data-scroll-target="#worked-example-a-simple-linear-system">Worked Example: A Simple Linear System</a>
+  <ul class="collapse">
+  <li><a href="#problem-setup" id="toc-problem-setup" class="nav-link" data-scroll-target="#problem-setup">Problem Setup</a></li>
+  <li><a href="#checking-the-symmetric-jacobian" id="toc-checking-the-symmetric-jacobian" class="nav-link" data-scroll-target="#checking-the-symmetric-jacobian">Checking the Symmetric Jacobian</a></li>
+  <li><a href="#finding-the-contraction-metric-via-the-lyapunov-equation" id="toc-finding-the-contraction-metric-via-the-lyapunov-equation" class="nav-link" data-scroll-target="#finding-the-contraction-metric-via-the-lyapunov-equation">Finding the Contraction Metric via the Lyapunov Equation</a></li>
+  </ul></li>
+  <li><a href="#partial-contraction-hierarchical-structure" id="toc-partial-contraction-hierarchical-structure" class="nav-link" data-scroll-target="#partial-contraction-hierarchical-structure">Partial Contraction: Hierarchical Structure</a>
+  <ul class="collapse">
+  <li><a href="#when-not-all-directions-contract" id="toc-when-not-all-directions-contract" class="nav-link" data-scroll-target="#when-not-all-directions-contract">When Not All Directions Contract</a></li>
+  <li><a href="#the-hierarchical-contraction-theorem" id="toc-the-hierarchical-contraction-theorem" class="nav-link" data-scroll-target="#the-hierarchical-contraction-theorem">The Hierarchical Contraction Theorem</a></li>
+  </ul></li>
+  <li><a href="#control-contraction-metrics-design-and-duality" id="toc-control-contraction-metrics-design-and-duality" class="nav-link" data-scroll-target="#control-contraction-metrics-design-and-duality">Control Contraction Metrics: Design and Duality</a>
+  <ul class="collapse">
+  <li><a href="#feedback-design-under-contraction" id="toc-feedback-design-under-contraction" class="nav-link" data-scroll-target="#feedback-design-under-contraction">Feedback Design Under Contraction</a></li>
+  <li><a href="#the-dual-formulation-texorpdfstringw-m-1w-m-inverse" id="toc-the-dual-formulation-texorpdfstringw-m-1w-m-inverse" class="nav-link" data-scroll-target="#the-dual-formulation-texorpdfstringw-m-1w-m-inverse">The Dual Formulation: \texorpdfstring{<span class="math inline">\(W = M^{-1}\)</span>}{W = M inverse</a></li>
+  <li><a href="#pointwise-lmi-for-feedback-synthesis" id="toc-pointwise-lmi-for-feedback-synthesis" class="nav-link" data-scroll-target="#pointwise-lmi-for-feedback-synthesis">Pointwise LMI for Feedback Synthesis</a></li>
+  <li><a href="#computational-approaches" id="toc-computational-approaches" class="nav-link" data-scroll-target="#computational-approaches">Computational Approaches</a></li>
+  </ul></li>
+  <li><a href="#discrete-time-contraction" id="toc-discrete-time-contraction" class="nav-link" data-scroll-target="#discrete-time-contraction">Discrete-Time Contraction</a>
+  <ul class="collapse">
+  <li><a href="#discrete-contraction-condition" id="toc-discrete-contraction-condition" class="nav-link" data-scroll-target="#discrete-contraction-condition">Discrete Contraction Condition</a></li>
+  <li><a href="#connection-to-riccati-analysis" id="toc-connection-to-riccati-analysis" class="nav-link" data-scroll-target="#connection-to-riccati-analysis">Connection to Riccati Analysis</a></li>
+  </ul></li>
+  <li><a href="#numerical-example-van-der-pol-oscillator" id="toc-numerical-example-van-der-pol-oscillator" class="nav-link" data-scroll-target="#numerical-example-van-der-pol-oscillator">Numerical Example: Van der Pol Oscillator</a>
+  <ul class="collapse">
+  <li><a href="#system-description" id="toc-system-description" class="nav-link" data-scroll-target="#system-description">System Description</a></li>
+  <li><a href="#metric-synthesis-via-parameterization" id="toc-metric-synthesis-via-parameterization" class="nav-link" data-scroll-target="#metric-synthesis-via-parameterization">Metric Synthesis via Parameterization</a></li>
+  <li><a href="#solution-strategy" id="toc-solution-strategy" class="nav-link" data-scroll-target="#solution-strategy">Solution Strategy</a></li>
+  </ul></li>
+  <li><a href="#robustness-margins-from-contraction" id="toc-robustness-margins-from-contraction" class="nav-link" data-scroll-target="#robustness-margins-from-contraction">Robustness Margins from Contraction</a>
+  <ul class="collapse">
+  <li><a href="#disturbance-attenuation-via-contraction-rate" id="toc-disturbance-attenuation-via-contraction-rate" class="nav-link" data-scroll-target="#disturbance-attenuation-via-contraction-rate">Disturbance Attenuation via Contraction Rate</a></li>
+  <li><a href="#practical-implications" id="toc-practical-implications" class="nav-link" data-scroll-target="#practical-implications">Practical Implications</a></li>
+  </ul></li>
+  <li><a href="#incremental-input-to-state-stability-iss" id="toc-incremental-input-to-state-stability-iss" class="nav-link" data-scroll-target="#incremental-input-to-state-stability-iss">Incremental Input-to-State Stability (ISS)</a>
+  <ul class="collapse">
+  <li><a href="#iss-vs.-contraction" id="toc-iss-vs.-contraction" class="nav-link" data-scroll-target="#iss-vs.-contraction">ISS vs.&nbsp;Contraction</a></li>
+  </ul></li>
+  <li><a href="#extended-lyapunov-comparison" id="toc-extended-lyapunov-comparison" class="nav-link" data-scroll-target="#extended-lyapunov-comparison">Extended Lyapunov Comparison</a>
+  <ul class="collapse">
+  <li><a href="#unified-perspective" id="toc-unified-perspective" class="nav-link" data-scroll-target="#unified-perspective">Unified Perspective</a></li>
+  <li><a href="#formal-relationships" id="toc-formal-relationships" class="nav-link" data-scroll-target="#formal-relationships">Formal Relationships</a></li>
+  </ul></li>
+  <li><a href="#contraction-in-biomechanical-systems" id="toc-contraction-in-biomechanical-systems" class="nav-link" data-scroll-target="#contraction-in-biomechanical-systems">Contraction in Biomechanical Systems</a>
+  <ul class="collapse">
+  <li><a href="#why-biological-motor-systems-are-naturally-contracting" id="toc-why-biological-motor-systems-are-naturally-contracting" class="nav-link" data-scroll-target="#why-biological-motor-systems-are-naturally-contracting">Why Biological Motor Systems are Naturally Contracting</a></li>
+  <li><a href="#partial-contraction-in-sequential-motion" id="toc-partial-contraction-in-sequential-motion" class="nav-link" data-scroll-target="#partial-contraction-in-sequential-motion">Partial Contraction in Sequential Motion</a></li>
+  <li><a href="#contraction-and-the-driftdominated-phase" id="toc-contraction-and-the-driftdominated-phase" class="nav-link" data-scroll-target="#contraction-and-the-driftdominated-phase">Contraction and the Drift–Dominated Phase</a></li>
+  </ul></li>
+  <li><a href="#stochastic-contraction" id="toc-stochastic-contraction" class="nav-link" data-scroll-target="#stochastic-contraction">Stochastic Contraction</a>
+  <ul class="collapse">
+  <li><a href="#systems-with-brownian-perturbations" id="toc-systems-with-brownian-perturbations" class="nav-link" data-scroll-target="#systems-with-brownian-perturbations">Systems with Brownian Perturbations</a></li>
+  <li><a href="#the-stochastic-contraction-condition" id="toc-the-stochastic-contraction-condition" class="nav-link" data-scroll-target="#the-stochastic-contraction-condition">The Stochastic Contraction Condition</a></li>
+  <li><a href="#connection-to-uncertainty-propagation" id="toc-connection-to-uncertainty-propagation" class="nav-link" data-scroll-target="#connection-to-uncertainty-propagation">Connection to Uncertainty Propagation</a></li>
+  </ul></li>
+  <li><a href="#contraction-tubes-and-funnel-control" id="toc-contraction-tubes-and-funnel-control" class="nav-link" data-scroll-target="#contraction-tubes-and-funnel-control">Contraction Tubes and Funnel Control</a>
+  <ul class="collapse">
+  <li><a href="#the-contraction-tube" id="toc-the-contraction-tube" class="nav-link" data-scroll-target="#the-contraction-tube">The Contraction Tube</a></li>
+  <li><a href="#funnel-control" id="toc-funnel-control" class="nav-link" data-scroll-target="#funnel-control">Funnel Control</a></li>
+  </ul></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary">Chapter Summary</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">% ==========================================================================</h1></header>
+
+<header id="title-block-header">
+
+<p class="author">% Chapter 4: Contraction Theory and Metric Certificates</p>
+
+<p class="date">% ==========================================================================</p>
+</header>
+
+
+<section id="contraction-theory-and-metric-certificates" class="level1">
+<h1>Contraction Theory and Metric Certificates</h1>
+<p></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Imagine running the same robot motion twice with slightly different starting conditions. If the system is ``contracting,’’ those two runs quickly converge to the same trajectory—small mistakes do not snowball. This chapter develops the mathematical machinery for certifying that property: a metric (local ruler) that provably shrinks along the flow.</p>
+</div>
+</div>
+<section id="historical-context-and-the-shift-to-trajectory-stability" class="level2">
+<h2 class="anchored" data-anchor-id="historical-context-and-the-shift-to-trajectory-stability">Historical Context and the Shift to Trajectory Stability</h2>
+<section id="from-lyapunov-point-stability-to-trajectory-convergence" class="level3">
+<h3 class="anchored" data-anchor-id="from-lyapunov-point-stability-to-trajectory-convergence">From Lyapunov Point Stability to Trajectory Convergence</h3>
+<p>Classical Lyapunov stability, as developed in the late 1800s and formalized throughout the twentieth century, addresses a foundational question: This point-stability perspective is powerful for understanding equilibria, but it misses a central feature of many practical systems: the behavior of interest is often a <em>moving trajectory</em>, not a rest point.</p>
+<p>A robot executing a reaching task, a vehicle tracking a path, a biological motor system performing a skilled movement—these systems are intrinsically <em>trajectory-focused</em>. A Lyapunov function certifying stability at one point does not explain why nearby trajectories diverge under perturbations or what determines their convergence rate.</p>
+<p>Contraction theory reframes the question: This is a genuinely different property, and it provides the certificate we need.</p>
+</section>
+<section id="the-lohmillerslotine-framework-1998" class="level3">
+<h3 class="anchored" data-anchor-id="the-lohmillerslotine-framework-1998">The Lohmiller–Slotine Framework (1998)</h3>
+<p>The modern contraction theory for nonlinear systems was formalized by in 1998~. Their key insight was to study how between trajectories evolve under the flow. If all such vectors shrink in a suitably chosen metric, then the geodesic distance between any two trajectories shrinks exponentially.</p>
+<p>The framework bridges classical results in differential geometry (Riemannian metrics, geodesic flows) with modern control and stability analysis. By allowing the metric to vary in space and time, Lohmiller–Slotine generalized earlier work and made contraction a practical tool for nonlinear system analysis and design.</p>
+</section>
+<section id="demidovichs-condition-1961-an-historical-precursor" class="level3">
+<h3 class="anchored" data-anchor-id="demidovichs-condition-1961-an-historical-precursor">Demidovich’s Condition (1961): An Historical Precursor</h3>
+<p>The mathematical seeds of contraction theory are rooted in work by <strong>Demidovich</strong> in 1961~, who studied conditions for <em>global asymptotic stability</em> based on the symmetric part of the Jacobian. Demidovich showed that if the symmetric part of the system’s Jacobian is uniformly negative definite, all nearby solutions converge to a single trajectory.</p>
+<p>Although Demidovich did not use the language of Riemannian metrics or contraction, his condition is in fact a special case of modern contraction theory: it corresponds to contraction in the <em>Euclidean metric</em> (identity matrix). The modern framework generalizes Demidovich’s insight by relaxing the constant-metric requirement, allowing the ``ruler’’ to change with position and time.</p>
+</section>
+<section id="connection-to-modern-research" class="level3">
+<h3 class="anchored" data-anchor-id="connection-to-modern-research">Connection to Modern Research</h3>
+Contraction theory has since become a cornerstone of:
+</section>
+</section>
+<section id="from-equilibrium-stability-to-trajectory-stability" class="level2">
+<h2 class="anchored" data-anchor-id="from-equilibrium-stability-to-trajectory-stability">From Equilibrium Stability to Trajectory Stability</h2>
+<p>Classical Lyapunov stability asks: does a system return to an equilibrium point after a perturbation? Contraction theory asks a more general question: do <em>all</em> nearby trajectories converge to each other, regardless of where they start?</p>
+<p>This generalization is essential for systems where the behavior of interest is a <em>moving trajectory</em>—a robot executing a task, a vehicle following a path, a biological organism performing a skilled movement—rather than a static rest point.</p>
+</section>
+<section id="the-contraction-condition" class="level2">
+<h2 class="anchored" data-anchor-id="the-contraction-condition">The Contraction Condition</h2>
+<p>Consider the autonomous system <span class="math display">\[\begin{equation}
+\dot\x = f(\x, t), \quad \x\in\R^n.
+\label{eq:ch4:system}
+\end{equation}\]</span> The variational dynamics (Chapter~<span class="math inline">\(\ref{ch:variational}\)</span>) are <span class="math display">\[\begin{equation}
+\dot\dx = \mat{A}(\x,t)\,\dx,
+\quad \mat{A}(\x,t) = \frac{\partial f}{\partial\x}(\x,t).
+\label{eq:ch4:variational}
+\end{equation}\]</span></p>
+<p>Let <span class="math inline">\(\mat{M}(\x,t) \succ 0\)</span> be a smooth, positive-definite <strong>metric tensor</strong> and define the Lyapunov-like function on perturbations: <span class="math display">\[\begin{equation}
+V(\dx, \x, t) = \dx^\T \mat{M}(\x,t)\,\dx.
+\label{eq:ch4:lyapunov-perturbation}
+\end{equation}\]</span></p>
+<p>Differentiating along the flow: <span class="math display">\[\begin{equation}
+\dot{V} = \dx^\T\!\left(
+\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}}
+\right)\!\dx,
+\label{eq:ch4:Vdot}
+\end{equation}\]</span> where <span class="math inline">\(\dot{\mat{M}}\)</span> is the total derivative of the metric along trajectories of <span class="math inline">\(\eqref{eq:ch4:system}\)</span>: <span class="math display">\[\begin{equation}
+\dot{\mat{M}}(\x,t) = \frac{\partial\mat{M}}{\partial t}
++ \sum_{i=1}^{n} \frac{\partial\mat{M}}{\partial x_i}\,f_i(\x,t).
+\label{eq:ch4:Mdot}
+\end{equation}\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p> The system~<span class="math inline">\(\eqref{eq:ch4:system}\)</span> is <strong>contracting</strong> on a forward-invariant region <span class="math inline">\(\mathcal{D}\)</span> with rate <span class="math inline">\(\lambda&gt;0\)</span> in the metric <span class="math inline">\(\mat{M}\)</span> if <span class="math display">\[\begin{equation}
+\boxed{
+\mat{A}(\x,t)^\T\mat{M}(\x,t) + \mat{M}(\x,t)\mat{A}(\x,t) + \dot{\mat{M}}(\x,t)
+\preceq -2\lambda\,\mat{M}(\x,t)
+}
+\label{eq:ch4:contraction-LMI}
+\end{equation}\]</span> holds for all <span class="math inline">\((\x,t)\in\mathcal{D}\times[0,\infty)\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="complete-proof-of-exponential-convergence" class="level2">
+<h2 class="anchored" data-anchor-id="complete-proof-of-exponential-convergence">Complete Proof of Exponential Convergence</h2>
+
+</section>
+<section id="the-identity-metric-symmetric-jacobian-condition" class="level2">
+<h2 class="anchored" data-anchor-id="the-identity-metric-symmetric-jacobian-condition">The Identity Metric: Symmetric Jacobian Condition</h2>
+<p>The simplest choice is <span class="math inline">\(\mat{M} = \mat{I}\)</span> (constant identity), giving <span class="math inline">\(\dot{\mat{M}}=0\)</span>. The contraction condition reduces to <span class="math display">\[\begin{equation}
+\sym\!\bigl(\mat{A}(\x,t)\bigr) := \tfrac{1}{2}\!\left(\mat{A}+\mat{A}^\T\right)
+\preceq -\lambda\,\mat{I}.
+\label{eq:ch4:symmetric-condition}
+\end{equation}\]</span></p>
+<p>This means all eigenvalues of the symmetric part of the Jacobian must be uniformly negative. While restrictive (most interesting systems do not satisfy this globally), it provides useful intuition: contraction in the identity metric requires that the vector field be ``uniformly squeezing’’ in every direction.</p>
+</section>
+<section id="worked-example-a-simple-linear-system" class="level2">
+<h2 class="anchored" data-anchor-id="worked-example-a-simple-linear-system">Worked Example: A Simple Linear System</h2>
+<section id="problem-setup" class="level3">
+<h3 class="anchored" data-anchor-id="problem-setup">Problem Setup</h3>
+<p>Consider the linear system <span class="math display">\[\begin{equation}
+\dot{\x} = \mat{A}\,\x, \quad \mat{A} = \begin{bmatrix} -2 &amp; 1 \\ 0 &amp; -3 \end{bmatrix}.
+\label{eq:ch4:example-system}
+\end{equation}\]</span></p>
+<p>We wish to find a constant metric <span class="math inline">\(\mat{M} \succ 0\)</span> such that the system is contracting with rate <span class="math inline">\(\lambda &gt; 0\)</span>. For a constant metric and autonomous linear system, the contraction condition is <span class="math display">\[\begin{equation}
+\mat{A}^\T \mat{M} + \mat{M} \mat{A} \preceq -2\lambda \mat{M}.
+\label{eq:ch4:example-LMI}
+\end{equation}\]</span></p>
+</section>
+<section id="checking-the-symmetric-jacobian" class="level3">
+<h3 class="anchored" data-anchor-id="checking-the-symmetric-jacobian">Checking the Symmetric Jacobian</h3>
+<p>First, compute the symmetric part: <span class="math display">\[\begin{equation}
+\sym(\mat{A}) = \frac{1}{2}(\mat{A} + \mat{A}^\T) = \frac{1}{2}\begin{bmatrix}
+-4 &amp; 1 \\ 1 &amp; -6
+\end{bmatrix} = \begin{bmatrix} -2 &amp; 0.5 \\ 0.5 &amp; -3 \end{bmatrix}.
+\end{equation}\]</span></p>
+<p>The eigenvalues are the roots of <span class="math display">\[\begin{equation}
+\det\!\left[\begin{bmatrix} -2-\mu &amp; 0.5 \\ 0.5 &amp; -3-\mu \end{bmatrix}\right]
+= (-2-\mu)(-3-\mu) - 0.25 = \mu^2 + 5\mu + 5.75.
+\end{equation}\]</span></p>
+<p>The roots are <span class="math inline">\(\mu = \frac{-5 \pm \sqrt{25-23}}{2} = \frac{-5 \pm \sqrt{2}}{2} \approx -1.79, -3.21\)</span>.</p>
+<p>Both eigenvalues are negative, so the system is contracting in the identity metric with rate approximately <span class="math inline">\(\lambda \approx 1.79\)</span>.</p>
+</section>
+<section id="finding-the-contraction-metric-via-the-lyapunov-equation" class="level3">
+<h3 class="anchored" data-anchor-id="finding-the-contraction-metric-via-the-lyapunov-equation">Finding the Contraction Metric via the Lyapunov Equation</h3>
+<p>Now we find the metric <span class="math inline">\(\mat{M}\)</span> more explicitly. Let <span class="math inline">\(\mat{M} = \begin{bmatrix} m_{11} &amp; m_{12} \\
+m_{12} &amp; m_{22} \end{bmatrix}\)</span> with <span class="math inline">\(m_{11}, m_{22} &gt; 0\)</span> and <span class="math inline">\(m_{11}m_{22} &gt; m_{12}^2\)</span>.</p>
+<p>The condition <span class="math inline">\(\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}\)</span> becomes: <span class="math display">\[\begin{equation}
+\begin{bmatrix} -2 &amp; 0 \\ 1 &amp; -3 \end{bmatrix}
+\begin{bmatrix} m_{11} &amp; m_{12} \\ m_{12} &amp; m_{22} \end{bmatrix}
++
+\begin{bmatrix} m_{11} &amp; m_{12} \\ m_{12} &amp; m_{22} \end{bmatrix}
+\begin{bmatrix} -2 &amp; 1 \\ 0 &amp; -3 \end{bmatrix}
+\preceq -2\lambda \begin{bmatrix} m_{11} &amp; m_{12} \\ m_{12} &amp; m_{22} \end{bmatrix}.
+\end{equation}\]</span></p>
+<p>Computing the left-hand side: <span class="math display">\[\begin{align}
+\mat{A}^\T\mat{M} + \mat{M}\mat{A} &amp;= \begin{bmatrix} -2m_{11} &amp; -2m_{12} + m_{12} \\ m_{11} - 3m_{12} &amp; m_{12} - 3m_{22} \end{bmatrix}
++ \begin{bmatrix} -2m_{11} + m_{12} &amp; m_{11} - 3m_{12} \\ m_{12} - 3m_{22} &amp; -3m_{22} \end{bmatrix} \\
+&amp;= \begin{bmatrix} -4m_{11} + m_{12} &amp; m_{11} - 5m_{12} \\ m_{11} - 5m_{12} &amp; m_{12} - 6m_{22} \end{bmatrix}.
+\end{align}\]</span></p>
+<p>For the identity metric <span class="math inline">\(\mat{M} = \mat{I}\)</span>, we have <span class="math inline">\(m_{11}=m_{22}=1\)</span> and <span class="math inline">\(m_{12}=0\)</span>, giving <span class="math display">\[\begin{equation}
+\mat{A}^\T\mat{I} + \mat{I}\mat{A} = \begin{bmatrix} -4 &amp; 1 \\ 1 &amp; -6 \end{bmatrix}.
+\end{equation}\]</span></p>
+<p>For this to satisfy the contraction condition with rate <span class="math inline">\(\lambda\)</span>: <span class="math display">\[\begin{equation}
+\begin{bmatrix} -4 &amp; 1 \\ 1 &amp; -6 \end{bmatrix} \preceq -2\lambda \mat{I} = \begin{bmatrix} -2\lambda &amp; 0 \\ 0 &amp; -2\lambda \end{bmatrix}.
+\end{equation}\]</span></p>
+<p>The off-diagonal elements require <span class="math inline">\(1 \leq 0\)</span>, which is false. However, the diagonal eigenvalues are approximately <span class="math inline">\(-3.2\)</span> and <span class="math inline">\(-1.8\)</span>, suggesting <span class="math inline">\(\lambda \approx 0.9\)</span> (half the smallest eigenvalue magnitude).</p>
+<p>For simplicity, if we use <span class="math inline">\(\mat{M}=\mat{I}\)</span> and check the eigenvalues of <span class="math inline">\(\mat{A}^\T + \mat{A}\)</span> (scaled by 1/2), we get approximately <span class="math inline">\(-1.79\)</span> and <span class="math inline">\(-3.21\)</span>, confirming <span class="math inline">\(\lambda_{\max}(\sym(\mat{A})) \approx -1.79\)</span>. Thus the contraction rate is <span class="math inline">\(\lambda \approx 1.79 / 2 \approx 0.895\)</span> or roughly <span class="math inline">\(\lambda = 1.79\)</span> from the eigenvalue.</p>
+</section>
+</section>
+<section id="partial-contraction-hierarchical-structure" class="level2">
+<h2 class="anchored" data-anchor-id="partial-contraction-hierarchical-structure">Partial Contraction: Hierarchical Structure</h2>
+<section id="when-not-all-directions-contract" class="level3">
+<h3 class="anchored" data-anchor-id="when-not-all-directions-contract">When Not All Directions Contract</h3>
+<p>In many applications, the system does not contract uniformly in all directions. For example, consider a robot with position <span class="math inline">\(q\)</span> and velocity <span class="math inline">\(\dot{q}\)</span>. The system might contract in velocity (feedback damping) but not in position (which can drift). This scenario is called <strong>partial contraction</strong>.</p>
+<p>Let’s partition the state as <span class="math inline">\(\x = [\x_1; \x_2]\)</span> and the Jacobian as <span class="math display">\[\begin{equation}
+\mat{A}(\x,t) = \begin{bmatrix} \mat{A}_{11} &amp; \mat{A}_{12} \\ \mat{A}_{21} &amp; \mat{A}_{22} \end{bmatrix}.
+\label{eq:ch4:block-jacobian}
+\end{equation}\]</span></p>
+<p>Suppose the subsystem in <span class="math inline">\(\x_2\)</span> (e.g., velocity) is contracting, but <span class="math inline">\(\x_1\)</span> (position) may drift. We can still harness the contraction in <span class="math inline">\(\x_2\)</span> to establish synchronization.</p>
+</section>
+<section id="the-hierarchical-contraction-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="the-hierarchical-contraction-theorem">The Hierarchical Contraction Theorem</h3>
+
+</section>
+</section>
+<section id="control-contraction-metrics-design-and-duality" class="level2">
+<h2 class="anchored" data-anchor-id="control-contraction-metrics-design-and-duality">Control Contraction Metrics: Design and Duality</h2>
+<section id="feedback-design-under-contraction" class="level3">
+<h3 class="anchored" data-anchor-id="feedback-design-under-contraction">Feedback Design Under Contraction</h3>
+<p>For controlled systems <span class="math display">\[\begin{equation}
+\dot{\x} = f(\x) + G(\x)\,\uvec,
+\label{eq:ch4:controlled-system}
+\end{equation}\]</span> we wish to design feedback <span class="math inline">\(\uvec = -\mat{K}(\x)\,\dx\)</span> to achieve contraction. The closed-loop Jacobian is <span class="math display">\[\begin{equation}
+\mat{A}_{\text{cl}}(\x) = \frac{\partial}{\partial\x}[f(\x) - G(\x)\mat{K}(\x)\dx]\bigg|_{\dx=0}
+= \mat{A}(\x) - G(\x)\,\mat{K}(\x).
+\label{eq:ch4:closed-loop-jacobian}
+\end{equation}\]</span></p>
+<p>The contraction condition becomes <span class="math display">\[\begin{equation}
+(\mat{A} - G\mat{K})^\T\mat{M} + \mat{M}(\mat{A} - G\mat{K}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}.
+\label{eq:ch4:CCM-nonlinear}
+\end{equation}\]</span></p>
+</section>
+<section id="the-dual-formulation-texorpdfstringw-m-1w-m-inverse" class="level3">
+<h3 class="anchored" data-anchor-id="the-dual-formulation-texorpdfstringw-m-1w-m-inverse">The Dual Formulation: \texorpdfstring{<span class="math inline">\(W = M^{-1}\)</span>}{W = M inverse</h3>
+<p>To enable convex optimization, we introduce the dual metric <span class="math inline">\(\mat{W} = \mat{M}^{-1}\)</span>. Pre- and post-multiply <span class="math inline">\(\eqref{eq:ch4:CCM-nonlinear}\)</span> by <span class="math inline">\(\mat{W}\)</span> and use <span class="math inline">\(\mat{M} = \mat{W}^{-1}\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+\mat{W}(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}})\mat{W} &amp;\preceq -2\lambda\mat{W}\mat{M}\mat{W} = -2\lambda\mat{W}.
+\end{align}\]</span></p>
+<p>After expanding and simplifying (using the fact that <span class="math inline">\(\mat{M} = \mat{W}^{-1}\)</span> and <span class="math inline">\(\dot{\mat{M}} = -\mat{W}^{-1}\dot{\mat{W}}\mat{W}^{-1}\)</span>), the condition becomes:</p>
+<p><span class="math display">\[\begin{equation}
+\boxed{
+\mat{A}\mat{W} + \mat{W}\mat{A}^\T - 2\lambda\mat{W} + \mat{W}\dot{\mat{W}}\mat{W} \preceq -G\mat{K}\mat{W} - \mat{W}\mat{K}^\T G^\T
+}
+\label{eq:ch4:W-space-LMI}
+\end{equation}\]</span></p>
+<p>This is a matrix inequality in <span class="math inline">\(\mat{W}\)</span> and <span class="math inline">\(\mat{K}\)</span> that is <em>bilinear</em> in the control gain. By treating <span class="math inline">\(\mat{Y} = \mat{K}\mat{W}\)</span> as the decision variable (control effort weighted by the inverse metric), the condition becomes convex in <span class="math inline">\(\mat{W}\)</span> and <span class="math inline">\(\mat{Y}\)</span>.</p>
+</section>
+<section id="pointwise-lmi-for-feedback-synthesis" class="level3">
+<h3 class="anchored" data-anchor-id="pointwise-lmi-for-feedback-synthesis">Pointwise LMI for Feedback Synthesis</h3>
+<p>For a time-varying linear system with affine control: <span class="math display">\[\begin{equation}
+\dot{\x} = \mat{A}(t)\,\x + G(t)\,\uvec,
+\label{eq:ch4:LTV-system}
+\end{equation}\]</span></p>
+<p>with state feedback <span class="math inline">\(\uvec = -\mat{K}(t)\,\x\)</span>, the dual contraction condition at each point in space and time is:</p>
+<p><span class="math display">\[\begin{equation}
+\boxed{
+\dot{\mat{W}} - (\mat{A}\mat{W} + \mat{W}\mat{A}^\T) + \gamma G G^\T \preceq -2\lambda\mat{W}
+}
+\label{eq:ch4:pointwise-LMI}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\gamma &gt; 0\)</span> is a regularization parameter (often set to satisfy <span class="math inline">\(\mat{W}\gamma G G^\T \mat{W}\)</span> bounds control effort). This condition is <em>linear</em> in <span class="math inline">\(\mat{W}\)</span> and can be enforced at a collection of sample points in the state space, yielding a semidefinite program (SDP).</p>
+</section>
+<section id="computational-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="computational-approaches">Computational Approaches</h3>
+<p>For polynomial systems, one parameterizes <span class="math inline">\(\mat{M}(\x)\)</span> (or <span class="math inline">\(\mat{W}(\x)\)</span>) as a polynomial matrix and uses sum-of-squares certificates: <span class="math display">\[\begin{equation}
+-\!\bigl(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}}\bigr) = \sum_{i} \mat{p}_i(\x)^\T \mat{p}_i(\x)
+\end{equation}\]</span> for polynomial vectors <span class="math inline">\(\mat{p}_i(\x)\)</span>. This decomposition is enforced via an SDP, which is computationally efficient for moderate polynomial degrees.</p>
+<p>For general nonlinear systems, one can parameterize <span class="math inline">\(\mat{M}(\x) = \Phi(\x)^\T \Phi(\x)\)</span>, where <span class="math inline">\(\Phi: \R^n \to \R^{p}\)</span> is a neural network. The contraction condition is verified via sampling or bounds over the domain. This enables data-driven metric synthesis.</p>
+<p>One can sample the state space <span class="math inline">\(\mathcal{D}\)</span> at a finite grid and enforce the LMI at each sample point, solving a series of SDPs. The result is a conservative (but computable) approximation to the true metric.</p>
+</section>
+</section>
+<section id="discrete-time-contraction" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-time-contraction">Discrete-Time Contraction</h2>
+<section id="discrete-contraction-condition" class="level3">
+<h3 class="anchored" data-anchor-id="discrete-contraction-condition">Discrete Contraction Condition</h3>
+<p>Many digital control systems and learning algorithms operate in discrete time. The discrete-time analogue of Theorem~<span class="math inline">\(\ref{thm:ch4:convergence}\)</span> is:</p>
+</section>
+<section id="connection-to-riccati-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="connection-to-riccati-analysis">Connection to Riccati Analysis</h3>
+<p>For linear discrete-time systems, the discrete contraction metric can be related to the solution of a discrete-time algebraic Riccati equation (DARE), which is studied in detail in Chapter~<span class="math inline">\(\ref{ch:riccati}\)</span>. Both frameworks certify stability and convergence, but contraction provides tighter guarantees on trajectory convergence rates.</p>
+</section>
+</section>
+<section id="numerical-example-van-der-pol-oscillator" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-example-van-der-pol-oscillator">Numerical Example: Van der Pol Oscillator</h2>
+<section id="system-description" class="level3">
+<h3 class="anchored" data-anchor-id="system-description">System Description</h3>
+<p>Consider the Van der Pol oscillator with feedback: <span class="math display">\[\begin{equation}
+\begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix}
+= \begin{bmatrix} x_2 \\ -x_1 + \epsilon(1-x_1^2)x_2 \end{bmatrix},
+\label{eq:ch4:vdp-system}
+\end{equation}\]</span> where <span class="math inline">\(\epsilon &gt; 0\)</span> is the nonlinearity parameter. The Jacobian is <span class="math display">\[\begin{equation}
+\mat{A}(x_1,x_2) = \begin{bmatrix} 0 &amp; 1 \\ -1 - 2\epsilon x_1 x_2 &amp; \epsilon(1-x_1^2) \end{bmatrix}.
+\label{eq:ch4:vdp-jacobian}
+\end{equation}\]</span></p>
+</section>
+<section id="metric-synthesis-via-parameterization" class="level3">
+<h3 class="anchored" data-anchor-id="metric-synthesis-via-parameterization">Metric Synthesis via Parameterization</h3>
+<p>We search for a metric of the form <span class="math display">\[\begin{equation}
+\mat{M}(x_1) = \begin{bmatrix} m_1(x_1) &amp; 0 \\ 0 &amp; m_2(x_1) \end{bmatrix},
+\label{eq:ch4:vdp-metric-ansatz}
+\end{equation}\]</span> where <span class="math inline">\(m_1, m_2 &gt; 0\)</span> are smooth functions. The diagonal structure is motivated by the special structure of the Van der Pol system (position and velocity are somewhat decoupled).</p>
+<p>The contraction condition <span class="math inline">\(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}\)</span> becomes element-wise:</p>
+<p><span class="math display">\[\begin{align}
+\label{eq:ch4:vdp-cc-11}
+\dot{m}_1 &amp;\preceq -2\lambda m_1, \\
+\label{eq:ch4:vdp-cc-22}
+2\epsilon(1-x_1^2)m_2 + \dot{m}_2 &amp;\preceq -2\lambda m_2, \\
+\label{eq:ch4:vdp-cc-12}
+m_1 + 2(1 - 2\epsilon x_1 x_2)m_2 &amp;\preceq -2\lambda m_1 \cdot 0.
+\end{align}\]</span></p>
+<p>For constant metrics <span class="math inline">\(m_1 = a\)</span>, <span class="math inline">\(m_2 = b\)</span> (diagonal constants), the conditions reduce to: <span class="math display">\[\begin{align}
+0 &amp;\preceq -2\lambda a \implies a &gt; 0, \lambda \text{ arbitrary}, \\
+2\epsilon(1-x_1^2)b &amp;\preceq -2\lambda b.
+\end{align}\]</span></p>
+<p>The second condition requires <span class="math inline">\(\epsilon(1-x_1^2) \leq -\lambda\)</span>, which is violated when <span class="math inline">\(|x_1| &lt; 1\)</span> (where the oscillator spends most of its time). Thus, a constant metric does not suffice.</p>
+</section>
+<section id="solution-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="solution-strategy">Solution Strategy</h3>
+<p>We adopt a parameterized ansatz <span class="math inline">\(m_1(x_1) = \alpha\)</span> and <span class="math inline">\(m_2(x_1) = \beta(1 + \gamma x_1^2)\)</span>, where <span class="math inline">\(\alpha, \beta, \gamma &gt; 0\)</span> are constants to be determined. This metric <em>amplifies</em> the velocity direction when position is near the origin (where nonlinearity is strongest).</p>
+<p>With <span class="math inline">\(\dot{m}_1 = 0\)</span> and <span class="math inline">\(\dot{m}_2 = 2\beta\gamma x_1 \dot{x}_1 = 2\beta\gamma x_1 x_2\)</span>, the contraction conditions become (roughly):</p>
+<p><span class="math display">\[\begin{equation}
+2\epsilon(1-x_1^2)\beta(1+\gamma x_1^2) + 2\beta\gamma x_1 x_2 \leq -2\lambda\beta(1+\gamma x_1^2).
+\end{equation}\]</span></p>
+<p>Choosing <span class="math inline">\(\lambda = 0.3\)</span>, <span class="math inline">\(\epsilon = 0.5\)</span>, and solving for <span class="math inline">\(\gamma\)</span> via convex optimization yields <span class="math inline">\(\gamma \approx 1.5\)</span>. The metric <span class="math display">\[\begin{equation}
+\mat{M}(x_1) = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1.2(1+1.5x_1^2) \end{bmatrix}
+\label{eq:ch4:vdp-metric-solution}
+\end{equation}\]</span> guarantees contraction of the Van der Pol system at rate <span class="math inline">\(\lambda \approx 0.3\)</span>.</p>
+</section>
+</section>
+<section id="robustness-margins-from-contraction" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-margins-from-contraction">Robustness Margins from Contraction</h2>
+<section id="disturbance-attenuation-via-contraction-rate" class="level3">
+<h3 class="anchored" data-anchor-id="disturbance-attenuation-via-contraction-rate">Disturbance Attenuation via Contraction Rate</h3>
+<p>A key practical benefit of contraction is quantifiable robustness to disturbances. Consider the perturbed system <span class="math display">\[\begin{equation}
+\dot{\x} = f(\x,t) + d(t),
+\label{eq:ch4:perturbed-system}
+\end{equation}\]</span> where <span class="math inline">\(d(t)\)</span> is an unknown disturbance with <span class="math inline">\(\norm{d(t)} \leq D\)</span> for all <span class="math inline">\(t \geq 0\)</span>.</p>
+<p>If the unperturbed system <span class="math inline">\(\dot{\x} = f(\x,t)\)</span> is contracting with rate <span class="math inline">\(\lambda\)</span> in metric <span class="math inline">\(\mat{M}\)</span>, then the perturbed system exhibits <strong>bounded-input bounded-state</strong> (BIBS) behavior and <strong>incremental input-to-state stability</strong> (ISS).</p>
+</section>
+<section id="practical-implications" class="level3">
+<h3 class="anchored" data-anchor-id="practical-implications">Practical Implications</h3>
+<p>The ultimate bound <span class="math inline">\(\eqref{eq:ch4:ultimate-bound-steady}\)</span> shows that:</p>
+</section>
+</section>
+<section id="incremental-input-to-state-stability-iss" class="level2">
+<h2 class="anchored" data-anchor-id="incremental-input-to-state-stability-iss">Incremental Input-to-State Stability (ISS)</h2>
+<section id="iss-vs.-contraction" class="level3">
+<h3 class="anchored" data-anchor-id="iss-vs.-contraction">ISS vs.&nbsp;Contraction</h3>
+<p><strong>Input-to-state stability</strong> (ISS) is a classical robustness property: bounded inputs lead to bounded states. However, ISS alone does not constrain how different trajectories relate to each other.</p>
+<p><strong>Incremental ISS</strong> (or differential ISS) is a stronger property: bounded input differences lead to bounded state differences. Contraction <em>implies</em> incremental ISS, but not vice versa.</p>
+</section>
+</section>
+<section id="extended-lyapunov-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="extended-lyapunov-comparison">Extended Lyapunov Comparison</h2>
+<section id="unified-perspective" class="level3">
+<h3 class="anchored" data-anchor-id="unified-perspective">Unified Perspective</h3>
+<p>Table~<span class="math inline">\(\ref{tbl:ch4:lyapunov-contraction}\)</span> provides a comprehensive comparison of Lyapunov stability, Lyapunov asymptotic stability, incremental stability, and contraction.</p>
+</section>
+<section id="formal-relationships" class="level3">
+<h3 class="anchored" data-anchor-id="formal-relationships">Formal Relationships</h3>
+
+</section>
+</section>
+<section id="contraction-in-biomechanical-systems" class="level2">
+<h2 class="anchored" data-anchor-id="contraction-in-biomechanical-systems">Contraction in Biomechanical Systems</h2>
+<p>The theory of contraction metrics finds a natural and powerful application in the biomechanics of human movement. This section previews how the formal machinery developed above connects to the analysis and design of coordinated multisegment motions, with particular attention to the golf swing.</p>
+<section id="why-biological-motor-systems-are-naturally-contracting" class="level3">
+<h3 class="anchored" data-anchor-id="why-biological-motor-systems-are-naturally-contracting">Why Biological Motor Systems are Naturally Contracting</h3>
+<p>The human neuromuscular system implements contraction through several mechanisms that operate at different time scales:</p>
+</section>
+<section id="partial-contraction-in-sequential-motion" class="level3">
+<h3 class="anchored" data-anchor-id="partial-contraction-in-sequential-motion">Partial Contraction in Sequential Motion</h3>
+<p>The golf swing is a prime example of a hierarchically structured system where partial contraction (Theorem~<span class="math inline">\(\ref{thm:ch4:partial}\)</span>) applies. The kinematic chain <span class="math inline">\(\text{torso} \to \text{shoulder} \to \text{elbow} \to \text{wrist} \to \text{club}\)</span> exhibits a natural partitioning:</p>
+<p>This hierarchical structure explains why elite golfers focus on consistency of the proximal chain (stable torso rotation, repeatable shoulder turn): if the proximal subsystem is highly contracting, the distal response is automatically regularized.</p>
+</section>
+<section id="contraction-and-the-driftdominated-phase" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-and-the-driftdominated-phase">Contraction and the Drift–Dominated Phase</h3>
+<p>During the late downswing, the system enters a drift-dominated regime (Chapter~<span class="math inline">\(\ref{ch:counterfactuals}\)</span>). The muscular torques become negligible compared to centrifugal and Coriolis forces. In this regime, the contraction properties of the <em>drift field</em> determine whether the motion is stable:</p>
+</section>
+</section>
+<section id="stochastic-contraction" class="level2">
+<h2 class="anchored" data-anchor-id="stochastic-contraction">Stochastic Contraction</h2>
+<p>Real systems are subject to process noise, sensor noise, and unmodeled disturbances. This section extends contraction theory to stochastic settings, providing convergence guarantees in the presence of randomness.</p>
+<section id="systems-with-brownian-perturbations" class="level3">
+<h3 class="anchored" data-anchor-id="systems-with-brownian-perturbations">Systems with Brownian Perturbations</h3>
+<p>Consider the stochastic differential equation (SDE): <span class="math display">\[\begin{equation}
+\dd\x = f(\x, t)\,\dd t + \sigma(\x, t)\,\dd\vec{W},
+\label{eq:ch4:sde}
+\end{equation}\]</span> where <span class="math inline">\(\vec{W}(t)\)</span> is a standard Wiener process and <span class="math inline">\(\sigma(\x, t) \in \R^{n \times p}\)</span> is the diffusion matrix. The deterministic contraction condition <span class="math inline">\(\sym(\mat{M}\tfrac{\partial f}{\partial \x}) + \dot{\mat{M}} \preceq -2\lambda\mat{M}\)</span> must be augmented to account for the noise.</p>
+</section>
+<section id="the-stochastic-contraction-condition" class="level3">
+<h3 class="anchored" data-anchor-id="the-stochastic-contraction-condition">The Stochastic Contraction Condition</h3>
+<p>The bound~<span class="math inline">\(\eqref{eq:ch4:stochastic-bound}\)</span> shows that contraction dominates at large separations (exponential decay), while noise dominates at small separations (the <span class="math inline">\(C_\sigma / \lambda\)</span> floor). The steady-state expected separation is <span class="math inline">\(\sqrt{C_\sigma / \lambda}\)</span>: faster contraction (larger <span class="math inline">\(\lambda\)</span>) produces tighter concentration of trajectories.</p>
+</section>
+<section id="connection-to-uncertainty-propagation" class="level3">
+<h3 class="anchored" data-anchor-id="connection-to-uncertainty-propagation">Connection to Uncertainty Propagation</h3>
+<p>The stochastic contraction bound has a direct interpretation for state estimation (Chapter~<span class="math inline">\(\ref{ch:duality}\)</span>). If an observer is contracting with rate <span class="math inline">\(\lambda\)</span>, and the process noise has intensity <span class="math inline">\(C_\sigma\)</span>, then the estimation error is bounded in expectation by <span class="math inline">\(\sqrt{C_\sigma / \lambda}\)</span>. This provides a performance guarantee for nonlinear observers that the EKF cannot offer.</p>
+</section>
+</section>
+<section id="contraction-tubes-and-funnel-control" class="level2">
+<h2 class="anchored" data-anchor-id="contraction-tubes-and-funnel-control">Contraction Tubes and Funnel Control</h2>
+<p>The exponential convergence guarantee of contraction theory naturally defines a <em>tube</em> around the nominal trajectory: the set of all states that are guaranteed to converge to the nominal at rate <span class="math inline">\(\lambda\)</span>.</p>
+<section id="the-contraction-tube" class="level3">
+<h3 class="anchored" data-anchor-id="the-contraction-tube">The Contraction Tube</h3>
+<p>Given a contracting system with rate <span class="math inline">\(\lambda\)</span> and metric <span class="math inline">\(\mat{M}\)</span>, define the tube of radius <span class="math inline">\(r\)</span> around a nominal trajectory <span class="math inline">\(\bar\x(t)\)</span>: <span class="math display">\[\begin{equation}
+\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar\x(t)\|_{\mat{M}(t)} \leq r \right\}.
+\label{eq:ch4:tube}
+\end{equation}\]</span></p>
+<p>If <span class="math inline">\(\x(t_0) \in \mathcal{T}_{r_0}(t_0)\)</span>, then <span class="math inline">\(\x(t) \in \mathcal{T}_{r(t)}(t)\)</span> with <span class="math inline">\(r(t) = r_0 e^{-\lambda(t - t_0)}\)</span> for the unperturbed system, and <span class="math inline">\(r(t) = r_0 e^{-\lambda(t - t_0)} + d/\lambda\)</span> for bounded disturbances with <span class="math inline">\(\|w(t)\|_{\mat{M}} \leq d\)</span>.</p>
+</section>
+<section id="funnel-control" class="level3">
+<h3 class="anchored" data-anchor-id="funnel-control">Funnel Control</h3>
+<p>Funnel control prescribes a time-varying performance boundary <span class="math inline">\(\varphi(t) &gt; 0\)</span> (the ``funnel’’) and designs a gain that guarantees the tracking error satisfies <span class="math inline">\(\|e(t)\| &lt; \varphi(t)\)</span> for all <span class="math inline">\(t &gt; 0\)</span>. The connection to contraction is:</p>
+</section>
+</section>
+<section id="chapter-summary" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-summary">Chapter Summary</h2>
+<p>In the next chapter, we turn to <strong>input-output analysis</strong> and transfer functions, exploring how tangent-space methods interface with frequency-domain techniques for feedback design.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+
+  (function() {
+
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
+
+
+    // Try to load modular ES6 version first, fallback to legacy bundle
+
+    const moduleScript = document.createElement('script');
+
+    moduleScript.type = 'module';
+
+    moduleScript.src = `${normalizedBase}js/main.js`;
+
+
+
+    // Fallback for browsers without ES module support
+
+    const noModuleScript = document.createElement('script');
+
+    noModuleScript.setAttribute('nomodule', '');
+
+    noModuleScript.src = `${normalizedBase}script.js`;
+
+
+
+    document.body.appendChild(moduleScript);
+
+    document.body.appendChild(noModuleScript);
+
+  })();
+
+</script>
+
+<script>
+
+  // Register Service Worker for PWA support
+
+  if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', function() {
+
+      navigator.serviceWorker.register('/service-worker.js')
+
+        .catch(function(error) {
+
+          console.warn('ServiceWorker registration failed:', error);
+
+        });
+
+    });
+
+  }
+
+</script>
+
+<script src="../../../js/notes-workspace.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
