@@ -198,14 +198,14 @@
             <button id="save">Save</button>
             <button id="close">Close</button>
           </div>
-          <script>
+          <scr` + `ipt>
             const area = document.getElementById("notes");
             const targetOrigin = "${openerOrigin}";
             document.getElementById("save").addEventListener("click", function () {
               window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, targetOrigin);
             });
             document.getElementById("close").addEventListener("click", function () { window.close(); });
-          </script>
+          <` + `/script>
         </body></html>
       `);
       pop.document.close();
