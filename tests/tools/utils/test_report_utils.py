@@ -60,6 +60,6 @@ def test_generate_issue_document(tmp_path):
 
     content = expected_file.read_text(encoding="utf-8")
     assert 'title: "Assessment Finding: Low Score in Low Score Category"' in content
-    assert "labels: jules:assessment, needs-attention" in content
+    assert "labels: jules:assessment,needs-attention" in content
     assert "Grade**: 3.0/10" in content
     assert "Bad things found." in content

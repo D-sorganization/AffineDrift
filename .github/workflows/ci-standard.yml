@@ -91,10 +91,10 @@ jobs:
           fi
       - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
       - name: Verify Code Quality
-        run: python src/tools/code_quality_check.py
+        run: python -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
-        run: python src/tools/check_site_health.py --fail-on broken
+        run: python -m src.tools.check_site_health --fail-on broken
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
       # Non-blocking: Script not present in all repos

@@ -1,6 +1,6 @@
 ---
 title: "Incomplete Placeholder in resources-researchers.qmd:303"
-labels: ['incomplete-implementation', 'critical', 'high-impact']
+labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---

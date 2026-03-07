@@ -1,0 +1,873 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{microtype}
+\usepackage{needspace}
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\setlength{\parskip}{0.5\baselineskip}
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{5pt}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\widowpenalty=10000
+\clubpenalty=10000
+\displaywidowpenalty=10000
+\allowdisplaybreaks[2]
+\setlength{\abovedisplayskip}{8pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{8pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{6pt plus 2pt minus 2pt}
+\setlength{\belowdisplayshortskip}{6pt plus 2pt minus 2pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\title{Multibody Dynamics Formalisms:\\Drift, Control, and the Geometry of Physical Law\\[0.5em]
+\large A Unified Treatment of Affine Decomposition Across Calculational Frameworks}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Introduction}\label{sec:introduction}
+%% ============================================================
+
+\subsection{The Central Question}
+
+Every mechanical system evolves according to physical laws that exist independently of how we choose to describe them.
+A double pendulum swinging under gravity does not care whether the analyst uses Lagrangian mechanics, Newton--Euler body-by-body balance, screw-theoretic spatial algebra, or coordinate-free differential geometry.
+The underlying physics---the forces, the accelerations, the energy exchanges---remain identical.
+
+Yet different calculational frameworks exist because they illuminate different aspects of the same physics.
+Euler--Lagrange methods reveal the energetic structure of motion.
+Newton--Euler recursions expose internal load paths between bodies.
+Screw-theoretic formulations provide a unified language for spatial velocity and force.
+Operational-space methods connect joint-level effort to task-level objectives.
+Coordinate-free geometric methods strip away chart-dependent artifacts to reveal the intrinsic structure of dynamics.
+
+This article has three interwoven goals:
+
+\begin{enumerate}
+\item \textbf{To demonstrate that every framework admits a clean affine decomposition into drift and control}, and to show precisely what these components look like in each representation.
+
+\item \textbf{To establish that constraint forces and torques, despite doing no net generalized work, are active and essential participants in energy transfer and motion redirection}, and that their inclusion refines but never breaks the drift--control decomposition.
+
+\item \textbf{To make explicit the symmetry and representation-independence that underlies all of mechanics}: the physics does not depend on coordinate labels, reference frames, or the mathematical language chosen for description.
+\end{enumerate}
+
+The organizing mathematical structure is the \textbf{control-affine decomposition}:
+\begin{equation}\label{eq:affine-master}
+\dot{x} = f_{\mathrm{drift}}(x) + G(x)\,u.
+\end{equation}
+Here $x$ is the system state, $f_{\mathrm{drift}}(x)$ is the drift vector field determined entirely by the current state, and $G(x)\,u$ is the control contribution driven by external inputs.
+This decomposition is not a modeling convenience---it is a structural property of mechanical systems with independent actuation channels.
+
+
+\subsection{Theme 1: The Independence of Drift and Control}
+
+The drift field $f_{\mathrm{drift}}(x)$ encodes everything the system would do on its own---the inertial coupling, the velocity-dependent (Coriolis and centripetal) effects, and gravitational loading.
+It is a complete dynamical prediction conditioned on the current state with zero actuation.
+
+The control field $G(x)\,u$ encodes the incremental effect of actuation.
+It depends on the current state (through the input map $G(x)$) and on the applied input $u$, but it is structurally independent of the drift field.
+This independence means:
+
+\begin{itemize}
+\item \textbf{Drift can be evaluated without knowledge of control intent.}
+At any instant, one can compute what the system would do with zero input.
+This is the \textbf{Zero Torque Counterfactual (ZTCF)}---an instantaneous diagnostic of accumulated state effects.
+
+\item \textbf{Control can be evaluated as a perturbation from drift.}
+The actual acceleration is always drift plus the incremental control contribution.
+No cross-coupling terms between drift and control exist in a properly decomposed model.
+
+\item \textbf{The decomposition persists across all frameworks.}
+Whether we write the equations in generalized coordinates, spatial wrenches, or intrinsic geometric form, the same structural split exists.
+\end{itemize}
+
+
+\subsection{Theme 2: Constraint Forces Are Not Passive}
+
+A widespread misconception treats constraint forces as passive because they do no net generalized work: $P_{\mathrm{constr}} = (J_c^T \lambda)^T \dot{q} = \lambda^T J_c \dot{q} = 0$ when the velocity-level constraint $J_c \dot{q} = 0$ is satisfied.
+
+But ``no net work'' does not mean ``no physical effect.''
+Constraint forces actively redirect motion and mediate internal energy transfer between bodies.
+In a whip crack, the constraint forces at each link junction are enormous and are the primary mechanism by which kinetic energy migrates from proximal to distal segments.
+
+When constraints are present, the drift--control decomposition must be refined to include constraint reactions in the passive baseline:
+\begin{equation}\label{eq:constrained-master}
+M\ddot{q} + h(q,\dot{q}) = \tau + J_c^T\lambda + \tau_{\mathrm{ext}}.
+\end{equation}
+The multiplier $\lambda$ depends on the state and on the actuation, so the ``passive'' baseline is the solution at $\tau = 0$:
+\begin{equation}
+\ddot{q}_{\mathrm{drift},t}^{c} = \left[M^{-1}\bigl(-h + J_c^T\lambda_0 + \tau_{\mathrm{ext}}\bigr)\right]_{(q(t),\dot{q}(t))}
+\end{equation}
+where $\lambda_0$ is the constraint multiplier under zero actuation.
+
+
+\subsection{Theme 3: Symmetry and Representation Independence}
+
+The equations of motion are \textbf{objective}: they express physical law that does not depend on the observer's choice of coordinates, reference frame, or mathematical framework.
+
+This is not merely a philosophical statement---it has concrete computational consequences:
+\begin{itemize}
+\item \textbf{Frame changes are similarity transformations.}
+If $g \in SE(3)$ maps between frames, then twists transform as $V_s = \mathrm{Ad}_g\, V_b$ and wrenches as $F_s = \mathrm{Ad}_g^{-T} F_b$.
+Instantaneous power $F^T V$ is invariant.
+
+\item \textbf{Every framework computes the same physical accelerations.}
+The Euler--Lagrange $\ddot{q}$, the Newton--Euler body accelerations, the screw-theoretic twist rates, and the operational-space task accelerations are all related by known kinematic transformations.
+
+\item \textbf{Conservation laws are symmetry consequences.}
+By Noether's theorem: translational symmetry yields linear momentum conservation, rotational symmetry yields angular momentum conservation, and time-translation symmetry yields energy conservation.
+\end{itemize}
+
+
+\subsection{The Zero Torque Counterfactual (ZTCF)}
+
+The ZTCF is an evaluation rule, not a separate physical concept.
+At time $t$, with state $x(t)$:
+\begin{equation}\label{eq:ztcf-def}
+\dot{x}_{\mathrm{ZTCF},t} \coloneqq \dot{x}\bigl(x(t), u = 0\bigr) = f_{\mathrm{drift}}\bigl(x(t)\bigr).
+\end{equation}
+
+ZTCF is simply the drift field sampled at the current state.
+It answers the question: ``What would the system do right now if all actuation were removed?''
+
+\textbf{ZTCF is time-local.}
+It is defined at a single instant, not as a trajectory prediction.
+The first-order propagation
+\begin{equation}
+x(t + \Delta t) = x(t) + \Delta t\, \mathcal{F}(x(t), u(t)) + \mathcal{O}(\Delta t^2)
+\end{equation}
+shows that ZTCF is the $u = 0$ evaluation of a local vector field, not a statement about global future behavior.
+
+\textbf{ZTCF in constrained systems.}
+When constraints are present, ``zero actuation'' still requires constraint reactions for kinematic compatibility:
+\begin{equation}
+\ddot{q}_{\mathrm{ZTCF},t}^{c} = \ddot{q}_{\mathrm{drift},t}^{c},
+\end{equation}
+where the constrained drift includes $J_c^T \lambda_0$, the reaction forces under zero actuation.
+
+
+\subsection{State Accumulation and Causality}
+
+The current state stores the entire past acceleration history:
+\begin{equation}\label{eq:state-accumulation}
+\dot{q}(t) = \dot{q}(t_0) + \int_{t_0}^{t} \ddot{q}(\sigma)\,d\sigma, \qquad h_m(t) = M(q(t))\,\dot{q}(t),
+\end{equation}
+and in first-order state form:
+\begin{equation}
+x(t) = x(t_0) + \int_{t_0}^{t} \mathcal{F}(x(\sigma), u(\sigma))\,d\sigma.
+\end{equation}
+
+This means that what appears as ``drift'' at time $t$ is the accumulated result of all prior inputs, gravity, and interactions.
+A system moving fast at time $t$ has high drift accelerations not because of current input, but because of past input that built up the current velocity.
+
+
+\subsection{Linearization and the Drift--Control Connection}\label{sec:linearization}
+
+Linearization provides a natural bridge from the geometric drift--control decomposition to standard control and estimation workflows.
+For control-affine dynamics~\eqref{eq:affine-master}, linearizing at the ZTCF operating point $(x(t), u = 0)$ gives:
+\begin{equation}\label{eq:linearized}
+\dot{x} \approx \dot{x}_{\mathrm{ZTCF},t} + A_t\,(x - x(t)) + B_t\,u,
+\end{equation}
+with
+\begin{equation}
+A_t = \left.\frac{\partial f_{\mathrm{drift}}}{\partial x}\right|_{x(t)}, \qquad B_t = G\bigl(x(t)\bigr).
+\end{equation}
+
+This reveals a clear hierarchy:
+\begin{itemize}
+\item \textbf{ZTCF/drift provides the zeroth-order anchor}: the baseline vector at the current state.
+\item \textbf{Linearization adds first-order sensitivity}: how the dynamics change with small perturbations in state and input.
+\end{itemize}
+
+The linearized model is the foundation for local stability analysis, feedback design (LQR, pole placement, linear MPC), observer and estimator design, and gain-scheduled controllers along trajectories.
+
+
+\subsection{Article Layout}
+
+Each calculational framework is treated with the same structure:
+\begin{enumerate}
+\item General equations in that formalism, with explicit identification of drift and control components.
+\item Discussion of the drift--control form, explaining how the affine decomposition appears and what each component represents physically.
+\item The calculational method: how computations are organized.
+\item A complete double-pendulum derivation.
+\item Procedure checklist for implementation.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Notation and Modeling Assumptions}\label{sec:notation}
+%% ============================================================
+
+Generalized coordinates are $q \in \mathbb{R}^n$, with velocities $\dot{q}$ and accelerations $\ddot{q}$.
+The full state is $x = (q, \dot{q}) \in T\mathbb{R}^n$.
+
+Generalized effort $\tau$ denotes torques for rotational coordinates and forces for translational coordinates.
+We distinguish control effort $\tau$, constraint reactions $J_c^T \lambda$, and external loads $\tau_{\mathrm{ext}}$.
+
+$A^{-1}$ denotes matrix inverse and $A^T$ denotes transpose.
+For unconstrained rigid-body systems, $M(q)$ is symmetric positive definite.
+
+For constrained systems, holonomic constraints are $\phi(q) = 0$ with Jacobian $J_c(q) = \partial\phi/\partial q$.
+The velocity-level constraint is $J_c \dot{q} = 0$, and the acceleration-level constraint is $J_c \ddot{q} + \dot{J}_c \dot{q} = 0$.
+
+All ZTCF comparisons are made at fixed instantaneous state unless explicitly noted.
+
+
+%% ============================================================
+\section{Running Example: Planar Double Pendulum}\label{sec:double-pendulum}
+%% ============================================================
+
+We use a two-link planar pendulum throughout.
+Let
+\begin{equation}\label{eq:dp-coords}
+q = \begin{bmatrix}\theta_1 \\ \theta_2\end{bmatrix}, \qquad
+\dot{q} = \begin{bmatrix}\dot\theta_1 \\ \dot\theta_2\end{bmatrix},
+\end{equation}
+with link lengths $(l_1,l_2)$, masses $(m_1,m_2)$, and point masses at each distal end.
+
+Endpoint kinematics:
+\begin{equation}\label{eq:dp-kinematics}
+x_2 = l_1\sin\theta_1 + l_2\sin(\theta_1+\theta_2), \qquad
+y_2 = -l_1\cos\theta_1 - l_2\cos(\theta_1+\theta_2).
+\end{equation}
+
+The endpoint Jacobian:
+\begin{equation}\label{eq:dp-jacobian}
+J(q) = \begin{bmatrix}
+l_1\cos\theta_1 + l_2\cos(\theta_1+\theta_2) & l_2\cos(\theta_1+\theta_2) \\
+l_1\sin\theta_1 + l_2\sin(\theta_1+\theta_2) & l_2\sin(\theta_1+\theta_2)
+\end{bmatrix}.
+\end{equation}
+
+Manipulator-form dynamics: $\tau = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q)$, with
+\begin{equation}\label{eq:dp-mass}
+M(q) = \begin{bmatrix}
+(m_1+m_2)l_1^2 + m_2l_2^2 + 2m_2l_1l_2\cos\theta_2 & m_2l_2^2+m_2l_1l_2\cos\theta_2 \\
+m_2l_2^2+m_2l_1l_2\cos\theta_2 & m_2l_2^2
+\end{bmatrix},
+\end{equation}
+\begin{equation}\label{eq:dp-coriolis}
+C(q,\dot{q})\dot{q} = \begin{bmatrix}
+-2c\dot\theta_1\dot\theta_2 - c\dot\theta_2^2 \\
+c\dot\theta_1^2
+\end{bmatrix}, \qquad
+c \coloneqq m_2l_1l_2\sin\theta_2,
+\end{equation}
+\begin{equation}\label{eq:dp-gravity}
+g(q) = \begin{bmatrix}
+(m_1+m_2)gl_1\sin\theta_1 + m_2gl_2\sin(\theta_1+\theta_2) \\
+m_2gl_2\sin(\theta_1+\theta_2)
+\end{bmatrix}.
+\end{equation}
+
+
+%% ============================================================
+\section{Euler--Lagrange Analysis}\label{sec:euler-lagrange}
+%% ============================================================
+
+\subsection{General Equations}
+
+From $L(q,\dot{q}) = T(q,\dot{q}) - V(q)$:
+\begin{equation}\label{eq:el-general}
+\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}}\right) - \frac{\partial L}{\partial q} = \tau
+\end{equation}
+gives the manipulator equation:
+\begin{equation}\label{eq:el-manipulator}
+M(q)\,\ddot{q} + C(q,\dot{q})\,\dot{q} + g(q) = \tau,
+\end{equation}
+where $M(q)\ddot{q}$ is the inertia term, $C(q,\dot{q})\dot{q}$ is the velocity-product (Coriolis/centripetal) term, and $g(q) = \partial V/\partial q$ is the gravity term.
+
+\subsection{The Drift--Control Decomposition}
+
+Solving for acceleration:
+\begin{equation}\label{eq:el-drift-control}
+\ddot{q} = \underbrace{-M^{-1}(q)\bigl[C(q,\dot{q})\dot{q} + g(q)\bigr]}_{\ddot{q}_{\mathrm{drift}}} + \underbrace{M^{-1}(q)\,\tau}_{\ddot{q}_{\mathrm{ctrl}}}.
+\end{equation}
+
+The drift component $\ddot{q}_{\mathrm{drift}} = -M^{-1}(C\dot{q} + g)$ represents the acceleration with zero actuation.
+The $-M^{-1}C\dot{q}$ part captures inertial coupling effects; the $-M^{-1}g$ part captures gravitational loading.
+
+The control component $\ddot{q}_{\mathrm{ctrl}} = M^{-1}\tau$ represents the incremental acceleration produced by actuation.
+The mass matrix $M^{-1}$ acts as the input gain: it maps applied generalized forces to resulting accelerations.
+
+The drift and control components are structurally independent.
+The ZTCF attribution identity holds exactly:
+\begin{equation}
+\ddot{q}_{\mathrm{total}} - \ddot{q}_{\mathrm{drift}} = M^{-1}\tau = \ddot{q}_{\mathrm{ctrl}}.
+\end{equation}
+
+\subsection{Calculational Method}
+
+The Coriolis matrix is obtained from the Christoffel symbols of $M$:
+\begin{equation}
+C_{ij} = \sum_{k=1}^{n} \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)\dot{q}_k.
+\end{equation}
+At measured state, define $h(q,\dot{q}) \coloneqq C(q,\dot{q})\dot{q} + g(q)$ and compute $\ddot{q}_{\mathrm{drift}} = -M^{-1}h$.
+
+\subsection{Double-Pendulum Derivation}
+
+\subsubsection{Kinetic Energy}
+
+The velocity of mass~1 is $v_1^2 = l_1^2\dot\theta_1^2$.
+The velocity of mass~2:
+\begin{align}
+v_2^2 &= l_1^2\dot\theta_1^2 + l_2^2(\dot\theta_1+\dot\theta_2)^2 + 2l_1l_2\cos\theta_2\,\dot\theta_1(\dot\theta_1+\dot\theta_2).
+\end{align}
+The total kinetic energy $T = \frac{1}{2}m_1v_1^2 + \frac{1}{2}m_2v_2^2$ yields the mass matrix entries in~\eqref{eq:dp-mass}.
+
+\subsubsection{Potential Energy and Gravity}
+
+$V = -m_1gl_1\cos\theta_1 - m_2g[l_1\cos\theta_1 + l_2\cos(\theta_1+\theta_2)]$.
+Taking partial derivatives gives~\eqref{eq:dp-gravity}.
+
+\subsubsection{Coriolis/Centripetal Terms}
+
+From the Christoffel symbols with $c = m_2l_1l_2\sin\theta_2$:
+the term $-2c\dot\theta_1\dot\theta_2$ is a Coriolis effect,
+$-c\dot\theta_2^2$ is a centripetal effect on joint~1,
+and $c\dot\theta_1^2$ is the reaction on joint~2.
+
+\subsubsection{Complete Drift--Control Split}
+
+The drift acceleration is:
+\begin{equation}
+\ddot{q}_{\mathrm{drift}} = -M^{-1}\begin{bmatrix}
+-2c\dot\theta_1\dot\theta_2 - c\dot\theta_2^2 + g_1 \\
+c\dot\theta_1^2 + g_2
+\end{bmatrix},
+\end{equation}
+and the control acceleration is $\ddot{q}_{\mathrm{ctrl}} = M^{-1}\tau$.
+The total acceleration is the sum: $\ddot{q} = \ddot{q}_{\mathrm{drift}} + \ddot{q}_{\mathrm{ctrl}}$.
+
+For the $2\times 2$ case, $M^{-1}$ has explicit form $M^{-1} = (\det M)^{-1}\bigl[\begin{smallmatrix}M_{22}&-M_{12}\\-M_{21}&M_{11}\end{smallmatrix}\bigr]$.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Define generalized coordinates and physical parameters.
+\item Derive $T$ and $V$.
+\item Extract $M(q)$, $C(q,\dot{q})$, and $g(q)$.
+\item Evaluate drift: $\ddot{q}_{\mathrm{drift}} = -M^{-1}(C\dot{q}+g)$ at measured state.
+\item Apply control and compute total acceleration.
+\item Compare measured acceleration with model prediction.
+\item Use residuals to diagnose unmodeled effects.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Constrained Euler--Lagrange Analysis}\label{sec:constrained-el}
+%% ============================================================
+
+\subsection{General Equations}
+
+For holonomic constraints $\phi(q)=0$:
+\begin{equation}\label{eq:cel-dynamics}
+M\ddot{q} + C\dot{q} + g = \tau + J_c^T\lambda + \tau_{\mathrm{ext}},
+\end{equation}
+\begin{equation}\label{eq:cel-constraint}
+J_c\ddot{q} + \dot{J}_c\dot{q} = 0.
+\end{equation}
+
+The constraint equation defines an affine hyperplane of admissible accelerations:
+\begin{equation}\label{eq:hyperplane}
+\mathcal{H}_t \coloneqq \left\{\ddot{q}\;\middle|\;J_c\ddot{q} = -\dot{J}_c\dot{q}\right\}.
+\end{equation}
+
+\subsection{The Drift--Control Decomposition with Constraints}
+
+Solving for $\lambda$:
+\begin{equation}\label{eq:lambda-general}
+\lambda = -(J_cM^{-1}J_c^T)^{-1}\bigl[J_cM^{-1}(\tau+\tau_{\mathrm{ext}}-C\dot{q}-g)+\dot{J}_c\dot{q}\bigr].
+\end{equation}
+
+Setting $\tau=0$ gives the constrained drift:
+\begin{equation}\label{eq:constrained-drift}
+\ddot{q}_{\mathrm{drift}}^{c} = M^{-1}\bigl[-C\dot{q}-g+J_c^T\lambda_0+\tau_{\mathrm{ext}}\bigr].
+\end{equation}
+
+The constrained control includes the actuation-induced change in constraint reactions:
+\begin{equation}\label{eq:constrained-ctrl}
+\ddot{q}_{\mathrm{ctrl}}^{c} = M^{-1}\bigl[\tau+J_c^T(\lambda-\lambda_0)\bigr].
+\end{equation}
+
+The decomposition remains additive: $\ddot{q} = \ddot{q}_{\mathrm{drift}}^{c} + \ddot{q}_{\mathrm{ctrl}}^{c}$.
+
+\subsection{The Tangent-Hyperplane Interpretation}
+
+ZTCF gives the base point on $\mathcal{H}_t$.
+Control moves along allowable directions:
+\begin{equation}\label{eq:hyperplane-control}
+\ddot{q} = \ddot{q}_{\mathrm{ZTCF},t}^{c} + B_c(x(t))\,\tau,
+\end{equation}
+where $B_c = M^{-1}[I - J_c^T(J_cM^{-1}J_c^T)^{-1}J_cM^{-1}]$ is the constraint-consistent input map.
+This is exact, not heuristic.
+
+\subsection{Why Constraint Forces Matter Despite Zero Generalized Work}
+
+Even when $P_{\mathrm{constr}}=0$ globally, constraint forces:
+\begin{itemize}
+\item redirect motion and directly affect which accelerations occur,
+\item mediate energy transfer between coordinates (per-coordinate power can be large and nonzero),
+\item produce enormous local interface forces (critical in whip-like motions),
+\item modify the drift baseline.
+\end{itemize}
+
+\subsection{Double-Pendulum Instance: Endpoint on a Circle}
+
+Constrain the endpoint to a circle:
+\begin{equation}
+\phi(q) = (x_2-x_c)^2 + (y_2-y_c)^2 - R^2 = 0.
+\end{equation}
+Then $J_c = \partial\phi/\partial q$ and the coupled KKT system
+\begin{equation}
+\begin{bmatrix}M & -J_c^T \\ J_c & 0\end{bmatrix}
+\begin{bmatrix}\ddot{q}\\\lambda\end{bmatrix} =
+\begin{bmatrix}\tau-C\dot{q}-g+\tau_{\mathrm{ext}}\\-\dot{J}_c\dot{q}\end{bmatrix}
+\end{equation}
+yields both constrained accelerations and constraint multipliers.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Define $\phi(q)=0$.
+\item Compute $J_c$ and $\dot{J}_c\dot{q}$.
+\item Build $\mathcal{H}_t$.
+\item Solve the KKT system for $(\ddot{q},\lambda)$.
+\item Compute $\ddot{q}_{\mathrm{ZTCF},t}^{c}$ by setting $\tau=0$.
+\item Recover $J_c^T\lambda$ and decompose into passive and actuation-induced parts.
+\item Compare constrained and unconstrained drift baselines.
+\item Audit per-coordinate power flow.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Newton--Euler Analysis}\label{sec:newton-euler}
+%% ============================================================
+
+\subsection{General Equations}
+
+For each rigid body $i$:
+\begin{equation}\label{eq:ne-trans}
+m_i a_{c,i} = f_i^{\mathrm{in}} - f_i^{\mathrm{out}} + f_i^{\mathrm{ext}} + f_i^{\mathrm{ctrl}},
+\end{equation}
+\begin{equation}\label{eq:ne-rot}
+I_i\dot\omega_i + \omega_i\times(I_i\omega_i) = n_i^{\mathrm{in}} - n_i^{\mathrm{out}} + n_i^{\mathrm{ext}} + n_i^{\mathrm{ctrl}}.
+\end{equation}
+
+Spatial (wrench) form:
+\begin{equation}\label{eq:ne-assembled}
+\mathcal{M}(x)\dot{v} + \mathcal{C}(x,v)v + \mathcal{G}(x) = \mathcal{W}_{\mathrm{ctrl}} + \mathcal{W}_{\mathrm{constr}} + \mathcal{W}_{\mathrm{ext}}.
+\end{equation}
+
+\subsection{The Drift--Control Decomposition}
+
+The body-level drift is the acceleration each body would experience under zero control.
+The joint forces under drift ($f_i^{\mathrm{in,drift}}$, $f_i^{\mathrm{out,drift}}$) are constraint reactions---the Newton--Euler analogues of constrained drift forces.
+
+When projected to generalized coordinates through the system Jacobian, the Newton--Euler decomposition reproduces the Euler--Lagrange decomposition exactly.
+
+\subsection{The Recursive Algorithm}
+
+\textbf{Forward recursion (base to tip):} propagate $\omega_i, \dot\omega_i, a_{c,i}$.
+
+\textbf{Backward recursion (tip to base):} compute forces and moments at each joint.
+For body $i$:
+\begin{equation}
+f_i = m_i a_{c,i} - f_i^{\mathrm{ext}} + f_{i+1}, \qquad \tau_i = n_i^T \hat{z}_i.
+\end{equation}
+
+ZTCF: set $\tau=0$ and solve the forward-backward system for drift accelerations and passive joint reactions.
+
+\subsection{Double-Pendulum Derivation}
+
+\textbf{Forward recursion:}
+Body~1 has $\omega_1=\dot\theta_1$, $\dot\omega_1=\ddot\theta_1$, and COM acceleration $a_{c,1}$.
+Body~2 has $\omega_2=\dot\theta_1+\dot\theta_2$, $\dot\omega_2=\ddot\theta_1+\ddot\theta_2$, and COM acceleration $a_{c,2}$ built from the joint~2 acceleration plus rotational terms.
+
+\textbf{Backward recursion:}
+Free-body diagram of body~2 yields the joint~2 reaction $f_2^{\mathrm{joint}}$.
+Free-body diagram of body~1 uses $-f_2^{\mathrm{joint}}$ (Newton's third law) to determine the joint~1 reaction.
+
+The Newton--Euler formulation makes internal load transfer between bodies explicit: the joint reaction $f_2^{\mathrm{joint}}$ is a specific Cartesian force vector that the Euler--Lagrange form hides inside the mass matrix coupling.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Define local frames, inertias, and COM offsets.
+\item Forward kinematics/acceleration recursion.
+\item Apply external/contact loads.
+\item Backward force-moment recursion.
+\item Extract actuator torques and joint reactions.
+\item Repeat with $\tau=0$ for ZTCF.
+\item Compare drift and total joint reactions.
+\item Map local forces to generalized coordinates for cross-validation.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Product-of-Exponentials and Screw-Axis Analysis}\label{sec:poe-screw}
+%% ============================================================
+
+\subsection{General Equations}
+
+Forward kinematics on $SE(3)$:
+\begin{equation}\label{eq:poe-fk}
+g_{sb}(q) = e^{\hat{S}_1 q_1}e^{\hat{S}_2 q_2}\cdots e^{\hat{S}_n q_n}g_{sb}(0),
+\end{equation}
+where $\hat{S}_i\in\mathfrak{se}(3)$ is the twist-hat representation of screw axis $S_i$.
+
+Velocity and acceleration:
+\begin{equation}\label{eq:poe-vel}
+\mathcal{V}_s = J_s(q)\dot{q}, \qquad
+\dot{\mathcal{V}}_s = J_s(q)\ddot{q} + \dot{J}_s(q,\dot{q})\dot{q}.
+\end{equation}
+The bias acceleration $\dot{J}_s\dot{q}$ is the screw-coordinate analogue of Coriolis/centripetal effects.
+
+Spatial dynamics for each body:
+\begin{equation}\label{eq:poe-wrench}
+\mathcal{F}_i = \mathcal{I}_i\dot{\mathcal{V}}_i + \mathrm{ad}_{\mathcal{V}_i}^{*}(\mathcal{I}_i\mathcal{V}_i) - \mathcal{F}_i^{\mathrm{ext}}.
+\end{equation}
+
+\subsection{The Drift--Control Decomposition}
+
+ZTCF is evaluated as before: freeze state and set actuation to zero.
+\begin{equation}
+\ddot{q}_{\mathrm{ZTCF},t} = [\ddot{q}(\tau=0)]_{(q(t),\dot{q}(t))}, \qquad
+\dot{\mathcal{V}}_{s,\mathrm{ZTCF}} = J_s\ddot{q}_{\mathrm{ZTCF}} + \dot{J}_s\dot{q}.
+\end{equation}
+
+The velocity-dependent term $\mathrm{ad}_{\mathcal{V}}^{*}(\mathcal{I}\mathcal{V})$ is the Lie bracket (coadjoint) of the spatial velocity acting on the spatial momentum---the same physics as Coriolis/centripetal terms in Euler--Lagrange, expressed on the Lie algebra.
+
+\subsection{Double-Pendulum Instance}
+
+Screw axes:
+\begin{equation}\label{eq:dp-screws}
+S_1 = \begin{bmatrix}0\\0\\1\\0\\0\\0\end{bmatrix}, \qquad
+S_2 = \begin{bmatrix}0\\0\\1\\0\\-l_1\\0\end{bmatrix}.
+\end{equation}
+
+Forward kinematics: $g_{sb}(q)=e^{\hat{S}_1\theta_1}e^{\hat{S}_2\theta_2}g_{sb}(0)$.
+
+Space Jacobian: $J_s = [S_1 \;\; \mathrm{Ad}_{e^{\hat{S}_1\theta_1}}S_2]$, where
+\begin{equation}
+S_2' = \mathrm{Ad}_{e^{\hat{S}_1\theta_1}}S_2 = \begin{bmatrix}0\\0\\1\\l_1\sin\theta_1\\-l_1\cos\theta_1\\0\end{bmatrix}.
+\end{equation}
+
+Extracting the planar components recovers the same endpoint velocity as the geometric Jacobian~\eqref{eq:dp-jacobian}.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Define $g_{sb}(0)$ and screw axes $S_i$.
+\item Build PoE forward kinematics and Jacobians.
+\item Compute twist and bias acceleration terms.
+\item Run recursive Newton--Euler in spatial coordinates.
+\item Project wrenches to joint torques.
+\item Evaluate ZTCF at fixed state.
+\item Compare with Euler--Lagrange ZTCF mapped through the Jacobian.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Operational-Space Analysis}\label{sec:operational-space}
+%% ============================================================
+
+\subsection{General Equations}
+
+Operational-space analysis reformulates dynamics in terms of \textbf{task variables} that directly describe quantities of interest---endpoint position, orientation, or any function of joint coordinates.
+
+Define task coordinates $x=\psi(q)$ with task Jacobian $J=\partial\psi/\partial q$:
+\begin{equation}\label{eq:os-kinematics}
+\dot{x}=J\dot{q}, \qquad \ddot{x}=J\ddot{q}+\dot{J}\dot{q}.
+\end{equation}
+
+Task-space dynamics:
+\begin{equation}\label{eq:os-dynamics}
+\Lambda(x)\ddot{x}+\mu(x,\dot{x})+p(x) = F_{\mathrm{ctrl}}+F_{\mathrm{constr}}+F_{\mathrm{ext}},
+\end{equation}
+where:
+\begin{itemize}
+\item $\Lambda=(JM^{-1}J^T)^{-1}$ is the \textbf{task-space mass matrix} (operational-space inertia): the effective inertia ``felt'' at the task point.
+\item $\mu=\Lambda(JM^{-1}C\dot{q}-\dot{J}\dot{q})$ is the \textbf{task-space Coriolis/centripetal term}.
+\item $p=\Lambda JM^{-1}g$ is the \textbf{task-space gravity term}.
+\end{itemize}
+
+The mapping between task-space forces and joint torques follows virtual work: $\tau = J^T F$.
+For the inverse mapping, the dynamically consistent formulation uses $F = \Lambda J M^{-1}\tau$.
+
+\subsection{The Drift--Control Decomposition}
+
+The joint-level decomposition maps directly to task space.
+
+Task-space drift:
+\begin{equation}\label{eq:os-drift}
+\ddot{x}_{\mathrm{drift}} = J\ddot{q}_{\mathrm{drift}} + \dot{J}\dot{q} = J[-M^{-1}(C\dot{q}+g)] + \dot{J}\dot{q}.
+\end{equation}
+
+This includes both the joint-level drift mapped through the Jacobian ($J\ddot{q}_{\mathrm{drift}}$) and the \textbf{bias acceleration} $\dot{J}\dot{q}$ due to the changing Jacobian.
+
+Task-space control: $\ddot{x}_{\mathrm{ctrl}} = JM^{-1}\tau$.
+
+Total: $\ddot{x} = \ddot{x}_{\mathrm{drift}} + \ddot{x}_{\mathrm{ctrl}}$.
+
+The drift answers ``how would the task point accelerate with all actuators off?''
+If task-level constraints are active, the same tangent-hyperplane interpretation applies in $\ddot{x}$-space.
+
+\subsection{Double-Pendulum Instance}
+
+For endpoint task $x=[x_2\;y_2]^T$, the task Jacobian is~\eqref{eq:dp-jacobian} and the task-space inertia is $\Lambda=(JM^{-1}J^T)^{-1}$, a $2\times 2$ configuration-dependent matrix.
+
+At stretched configurations ($\theta_2\approx 0$), the endpoint inertia along the radial direction is high.
+At folded configurations ($\theta_2\approx\pi$), the kinematic mapping changes character.
+
+The task-space drift is:
+\begin{equation}
+\ddot{x}_{\mathrm{drift}} = J\ddot{q}_{\mathrm{drift}} + \dot{J}\dot{q},
+\end{equation}
+where $\ddot{q}_{\mathrm{drift}}=-M^{-1}(C\dot{q}+g)$ from the Euler--Lagrange computation.
+
+Singularities occur when $\theta_2=0$ or $\theta_2=\pi$ (collinear links), where $J$ loses rank and $\Lambda$ becomes singular---infinite force would be required to produce acceleration along the lost direction.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Choose task variables $x=\psi(q)$.
+\item Derive $J$ and $\dot{J}\dot{q}$.
+\item Compute $\Lambda,\mu,p$.
+\item Specify desired task-space acceleration or force.
+\item Map task commands to joint torques via $J^T$ and the null-space projection.
+\item Evaluate drift baseline in task space: $\ddot{x}_{\mathrm{drift}}=J\ddot{q}_{\mathrm{drift}}+\dot{J}\dot{q}$.
+\item Compare total and drift task-space accelerations.
+\item Check for singularities and examine task-space inertia variation.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Coordinate-Free Geometric Analysis}\label{sec:geometric}
+%% ============================================================
+
+\subsection{General Equations}
+
+On configuration manifold $Q$ with kinetic-energy Riemannian metric:
+\begin{equation}\label{eq:geo-eom}
+\nabla_{\dot{q}}\dot{q} + \mathrm{grad}\,V(q) = \mathcal{G}(q)u + \mathcal{F}_{\mathrm{ext}} + \mathcal{F}_{\mathrm{constr}}.
+\end{equation}
+
+Control-affine state form on $TQ$:
+\begin{equation}\label{eq:geo-affine}
+\dot{x} = f_{\mathrm{drift}}(x) + \sum_{i=1}^{m}g_i(x)u_i.
+\end{equation}
+
+\subsection{The Drift--Control Decomposition}
+
+Intrinsic drift:
+\begin{equation}\label{eq:geo-drift}
+f_{\mathrm{drift}}(q,\dot{q}) = \begin{pmatrix}\dot{q}\\-\Gamma(\dot{q},\dot{q})-\mathrm{grad}\,V(q)+\mathcal{F}_{\mathrm{ext}}\end{pmatrix},
+\end{equation}
+where $\Gamma(\dot{q},\dot{q})$ is the Christoffel connection applied to velocity (the same physics as $M^{-1}C\dot{q}$ in Euler--Lagrange).
+
+Intrinsic control: $g_i(q,\dot{q}) = (0, \mathcal{G}_i(q))$.
+
+The geometric perspective makes transparent that:
+the drift field is intrinsic (independent of coordinates),
+the connection encodes inertial coupling,
+constraints restrict to submanifolds,
+and ZTCF is geodesic deviation modified by potential.
+
+\subsection{Double-Pendulum Instance}
+
+Configuration manifold: $Q = S^1\times S^1$ (a torus).
+
+The kinetic-energy metric in coordinates $(\theta_1,\theta_2)$ is the mass matrix~\eqref{eq:dp-mass}.
+The Christoffel symbols generate the Coriolis/centripetal terms.
+With zero potential and zero control, the equations reduce to the geodesic equation:
+\begin{equation}
+\ddot\theta_i + \Gamma^i_{jk}\dot\theta_j\dot\theta_k = 0.
+\end{equation}
+
+The full drift field on $TQ$ matches the Euler--Lagrange drift exactly.
+Coordinate independence is verified by switching to $(\phi_1,\phi_2)=(\theta_1,\theta_1+\theta_2)$: the predicted physical accelerations are identical despite different coordinate expressions.
+
+\subsection{Procedure Checklist}
+
+\begin{enumerate}
+\item Define $Q$ and admissible states on $TQ$.
+\item Build the kinetic-energy metric.
+\item Compute the connection and potential gradient.
+\item Add control and external covector fields.
+\item Simulate intrinsic flow with and without control.
+\item Use coordinate charts only for computation/plotting.
+\item Verify conclusions by changing charts.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Cross-Formalism Equivalence}\label{sec:cross-formalism}
+%% ============================================================
+
+\subsection{The Same Physics, Different Languages}
+
+For the same mechanism at the same state, each formalism encodes the same force balance:
+\begin{align}
+\text{Euler--Lagrange:}\quad & M\ddot{q}+C\dot{q}+g-J_c^T\lambda = \tau+\tau_{\mathrm{ext}}, \label{eq:xf-gen}\\
+\text{Screw:}\quad & \mathcal{I}\dot{\mathcal{V}}+\mathrm{ad}_{\mathcal{V}}^*(\mathcal{I}\mathcal{V})+\mathcal{W}_g-\mathcal{W}_{\mathrm{constr}} = \mathcal{W}_{\mathrm{ctrl}}+\mathcal{W}_{\mathrm{ext}}, \label{eq:xf-screw}\\
+\text{Operational-space:}\quad & \Lambda\ddot{x}+\mu+p = F_{\mathrm{ctrl}}+F_{\mathrm{constr}}+F_{\mathrm{ext}}, \label{eq:xf-os}\\
+\text{Geometric:}\quad & \nabla_{\dot{q}}\dot{q}+\mathrm{grad}\,V = \mathcal{G}u+\mathcal{F}_{\mathrm{ext}}+\mathcal{F}_{\mathrm{constr}}. \label{eq:xf-geo}
+\end{align}
+
+\subsection{Term-by-Term Correspondence}
+
+\textbf{Inertia:} $M\ddot{q}$ $\leftrightarrow$ $\mathcal{I}\dot{\mathcal{V}}$ $\leftrightarrow$ $\Lambda\ddot{x}$ $\leftrightarrow$ inertial part of $\nabla_{\dot{q}}\dot{q}$.
+
+\textbf{Velocity-product:} $C\dot{q}$ $\leftrightarrow$ $\mathrm{ad}_{\mathcal{V}}^*(\mathcal{I}\mathcal{V})+\dot{J}_s\dot{q}$ $\leftrightarrow$ $\mu$ $\leftrightarrow$ $\Gamma(\dot{q},\dot{q})$.
+
+\textbf{Gravity:} $g(q)$ $\leftrightarrow$ gravity wrenches $\leftrightarrow$ $p(x)$ $\leftrightarrow$ $\mathrm{grad}\,V$.
+
+\textbf{Constraints:} $J_c^T\lambda$ $\leftrightarrow$ constraint wrenches $\leftrightarrow$ $F_{\mathrm{constr}}$ $\leftrightarrow$ reaction covectors.
+
+\textbf{Control:} $\tau$ $\leftrightarrow$ control wrenches $\leftrightarrow$ $F_{\mathrm{ctrl}}$ $\leftrightarrow$ $\mathcal{G}u$.
+
+\subsection{Frame Changes and Invariants}
+
+Twists and wrenches transform as $V_s=\mathrm{Ad}_g V_b$, $F_s=\mathrm{Ad}_g^{-T}F_b$.
+Instantaneous power is frame-invariant: $F_s^TV_s = F_b^TV_b$.
+
+\subsection{ZTCF Anchor in Each Formalism}
+
+At fixed state:
+\begin{itemize}
+\item Euler--Lagrange: evaluate $\ddot{q}$ with $\tau=0$.
+\item Newton--Euler: run recursion with control removed.
+\item Screw: evaluate spatial dynamics with zero control wrenches.
+\item Operational-space: map passive acceleration to task space.
+\item Geometric: evaluate intrinsic drift field.
+\end{itemize}
+
+Constraints do not break equivalence: all frameworks predict the same physical accelerations, forces, and power flows at any state.
+
+
+%% ============================================================
+\section{Hidden Loads and Internal Energy Transfer}\label{sec:hidden-loads}
+%% ============================================================
+
+Compact equations hide joint reactions, internal energy transfer, actuator internals, and distributed contact loads.
+
+\subsection{Power-Channel Decomposition}
+
+\begin{equation}
+P_{\mathrm{ctrl}}=\tau^T\dot{q}, \qquad
+P_{\mathrm{drift}}=(C\dot{q}+g)^T\dot{q}, \qquad
+P_{\mathrm{constr}}=(J_c^T\lambda)^T\dot{q}=0.
+\end{equation}
+
+Even when total constraint power is zero, per-coordinate power $P_{\mathrm{constr},i}=[J_c^T\lambda]_i\dot{q}_i$ can be large---only their sum is zero.
+Constraint forces actively extract power from some coordinates and inject it into others.
+
+\subsection{Recommended Workflow}
+
+\begin{enumerate}
+\item Add explicit constraint and external-load channels.
+\item Solve the augmented KKT system for $(\ddot{q},\lambda)$.
+\item Map generalized reactions to local force/torque quantities.
+\item Audit global and per-coordinate/per-body power flow.
+\end{enumerate}
+
+
+%% ============================================================
+\section{Symmetry, Invariance, and Conservation Laws}\label{sec:symmetry}
+%% ============================================================
+
+Symmetry underlies physical law.
+The equations of motion are objective: they do not depend on the coordinate frame.
+Coordinate changes alter symbolic form, not physical content.
+
+By Noether's theorem:
+\begin{itemize}
+\item Translation symmetry $\Rightarrow$ linear momentum conservation.
+\item Rotation symmetry $\Rightarrow$ angular momentum conservation.
+\item Time-translation symmetry $\Rightarrow$ energy conservation.
+\end{itemize}
+
+Conservation laws interact with the drift--control decomposition:
+if a quantity is conserved under drift, then control is the only mechanism that can change it.
+If energy is conserved under drift, the drift dynamics preserve energy surfaces and control moves between them.
+
+These are structural properties of the physics, not of one coordinate system or framework.
+They hold in every representation and provide framework-independent cross-validation checks.
+
+
+%% ============================================================
+\section{Workflow Comparison}\label{sec:workflow}
+%% ============================================================
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.1cm}Y Y Y}
+\toprule
+Formalism & Best question answered & Core unknowns & Practical workflow \\
+\midrule
+Euler--Lagrange & How inputs change generalized accelerations & $\ddot{q}$ or $\tau$ & Derive $M,C,g$; compute drift; compare with controlled response \\
+\midrule
+Constrained E--L & How constraints redirect motion and loads & $(\ddot{q},\lambda)$ & Solve KKT system; recover $J_c^T\lambda$ \\
+\midrule
+Newton--Euler & Where local loads and transfer pathways occur & Body forces, moments, joint torques & Forward/backward recursion; interpret load paths \\
+\midrule
+PoE / screw & How motion, twists, wrenches compose across frames & $g_{sb}$, $J$, twists, wrenches & PoE kinematics; recursive propagation \\
+\midrule
+Operational-space & How task objectives map to joint effort & Task accel/force, joint torques & Build $J,\Lambda,\mu,p$; close task loop \\
+\midrule
+Coordinate-free & Which conclusions are representation-invariant & Intrinsic drift and input fields & Formulate on $Q$/$TQ$; verify across charts \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+
+%% ============================================================
+\section{Conclusion}\label{sec:conclusion}
+%% ============================================================
+
+This article has demonstrated three interlocking principles through six calculational frameworks:
+
+\textbf{The drift--control decomposition is universal.}
+Every framework admits a clean affine split $\dot{x}=f_{\mathrm{drift}}(x)+G(x)u$.
+In Euler--Lagrange form: $\ddot{q}=-M^{-1}(C\dot{q}+g)+M^{-1}\tau$.
+In Newton--Euler: per-body force balance with and without actuator loads.
+In screw form: wrench decomposition.
+In operational-space: task-level drift and control.
+In geometric form: intrinsic drift on $TQ$.
+
+\textbf{Constraint forces are active participants.}
+Despite zero net generalized work, constraint forces redirect motion, mediate energy transfer, and modify the drift baseline.
+The tangent-hyperplane interpretation provides exact geometric meaning.
+
+\textbf{Representation independence is the physics.}
+The equations are objective.
+Different frameworks produce equivalent predictions.
+Conservation laws are framework-independent.
+Cross-validation between methods is possible and powerful.
+
+The ZTCF provides a unifying diagnostic across all frameworks: at any instant, it answers ``what would the system do without actuation?''
+This single question isolates state effects from control, defines the constraint hyperplane anchor, and connects to linearization for design.
+
+\end{document}

@@ -107,7 +107,7 @@ def generate_issue_document(
 
     content = f"""---
 title: "Assessment Finding: Low Score in {category_name}"
-labels: jules:assessment, needs-attention
+labels: jules:assessment,needs-attention
 ---
 
 # Issue: Low Score in {category_name}
