@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="% Chapter 6: The Stability–Optimality Duality">
+
+<title>ch06_duality – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../favicon.ico" rel="icon">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-0da2bdd6902c8c95d2e6813da368b65a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+
+<meta property="og:site_name" content="AffineDrift">
+
+<meta property="og:type" content="website">
+
+<meta property="og:locale" content="en_US">
+
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+
+
+<!-- SEO: JSON-LD Structured Data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "WebSite",
+
+  "name": "AffineDrift",
+
+  "url": "https://affinedrift.com",
+
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+
+  "potentialAction": {
+
+    "@type": "SearchAction",
+
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+
+    "query-input": "required name=search_term_string"
+
+  },
+
+  "author": {
+
+    "@type": "Person",
+
+    "name": "Dieter Olson"
+
+  },
+
+  "publisher": {
+
+    "@type": "Organization",
+
+    "name": "AffineDrift",
+
+    "logo": {
+
+      "@type": "ImageObject",
+
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+
+    }
+
+  }
+
+}
+
+</script>
+
+
+
+<!-- SEO: Additional meta tags -->
+
+<meta name="robots" content="index, follow">
+
+<meta name="googlebot" content="index, follow">
+
+<meta name="author" content="Dieter Olson">
+
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+
+<link rel="canonical" href="https://affinedrift.com">
+
+
+
+<!-- Performance: Preload critical resources -->
+
+<link rel="preload" href="../../../css/startup-launcher.css" as="style">
+
+<link rel="preload" href="../../../styles.css" as="style">
+
+<link rel="stylesheet" href="../../../css/print.css" media="print">
+
+<link rel="preload" href="../../../script.js" as="script">
+
+<link rel="modulepreload" href="../../../js/main.js">
+
+<link rel="preload" href="../../../js/startup-launcher.js" as="script">
+
+<link rel="modulepreload" href="../../../js/utils.js">
+
+<link rel="modulepreload" href="../../../js/metrics.js">
+
+
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+
+<script src="../../../js/startup-launcher.js"></script>
+
+
+
+<!-- PWA and Mobile Optimization -->
+
+<link rel="manifest" href="../../../manifest.json">
+
+<meta name="theme-color" content="#1a1a2e">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+
+<link rel="apple-touch-icon" href="../../../logo/logo_transparent_1.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="format-detection" content="telephone=no">
+
+
+
+<!-- Preconnect and Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../../feed.xml">
+
+<style>
+
+  .rss-feed-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2.75rem;
+
+    height: 2.75rem;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    text-decoration: none;
+
+    border-radius: 4px;
+
+    transition: all 0.2s ease;
+
+    margin-left: 0.5rem;
+
+  }
+
+  .rss-feed-link:hover {
+
+    color: #ffa500;
+
+    background-color: rgba(255, 165, 0, 0.1);
+
+  }
+
+  .rss-feed-link svg {
+
+    width: 1.25rem;
+
+    height: 1.25rem;
+
+    fill: currentColor;
+
+  }
+
+  .quarto-navbar-tools {
+
+    display: flex;
+
+    align-items: center;
+
+  }
+
+</style>
+
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../../styles.css">
+<link rel="stylesheet" href="../../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-books" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Books</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-books">    
+        <li>
+    <a class="dropdown-item" href="../../../books/index.html">
+ <span class="dropdown-text">Book Series</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/tangent-space-methods.html">
+ <span class="dropdown-text">Volume I: Tangent-Space Methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/control-is-motion.html">
+ <span class="dropdown-text">Volume II: Control Is Motion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/biomechanics-biology-to-systems.html">
+ <span class="dropdown-text">Volume III: Biomechanics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../books/human-motor-control.html">
+ <span class="dropdown-text">Volume IV: Human Motor Control</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../../daydreams-doodles.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-stabilityoptimality-duality" id="toc-the-stabilityoptimality-duality" class="nav-link active" data-scroll-target="#the-stabilityoptimality-duality">The Stability–Optimality Duality</a>
+  <ul class="collapse">
+  <li><a href="#the-central-bridge" id="toc-the-central-bridge" class="nav-link" data-scroll-target="#the-central-bridge">The Central Bridge</a></li>
+  <li><a href="#historical-context-discovering-the-duality" id="toc-historical-context-discovering-the-duality" class="nav-link" data-scroll-target="#historical-context-discovering-the-duality">Historical Context: Discovering the Duality</a>
+  <ul class="collapse">
+  <li><a href="#kalmans-insight-1960" id="toc-kalmans-insight-1960" class="nav-link" data-scroll-target="#kalmans-insight-1960">Kalman’s Insight (1960)</a></li>
+  <li><a href="#dissipation-inequalities-and-willems-framework-1971" id="toc-dissipation-inequalities-and-willems-framework-1971" class="nav-link" data-scroll-target="#dissipation-inequalities-and-willems-framework-1971">Dissipation Inequalities and Willems’ Framework (1971)</a></li>
+  <li><a href="#robustness-margins-from-lqr" id="toc-robustness-margins-from-lqr" class="nav-link" data-scroll-target="#robustness-margins-from-lqr">Robustness Margins from LQR</a></li>
+  </ul></li>
+  <li><a href="#discrete-time-duality-the-value-decrease-identity" id="toc-discrete-time-duality-the-value-decrease-identity" class="nav-link" data-scroll-target="#discrete-time-duality-the-value-decrease-identity">Discrete-Time Duality: The Value Decrease Identity</a>
+  <ul class="collapse">
+  <li><a href="#the-core-derivation" id="toc-the-core-derivation" class="nav-link" data-scroll-target="#the-core-derivation">The Core Derivation</a></li>
+  <li><a href="#extracting-exponential-decay" id="toc-extracting-exponential-decay" class="nav-link" data-scroll-target="#extracting-exponential-decay">Extracting Exponential Decay</a></li>
+  </ul></li>
+  <li><a href="#worked-numerical-example-the-discrete-pendulum" id="toc-worked-numerical-example-the-discrete-pendulum" class="nav-link" data-scroll-target="#worked-numerical-example-the-discrete-pendulum">Worked Numerical Example: The Discrete Pendulum</a>
+  <ul class="collapse">
+  <li><a href="#system-setup" id="toc-system-setup" class="nav-link" data-scroll-target="#system-setup">System Setup</a></li>
+  <li><a href="#riccati-solution" id="toc-riccati-solution" class="nav-link" data-scroll-target="#riccati-solution">Riccati Solution</a></li>
+  <li><a href="#optimal-gain" id="toc-optimal-gain" class="nav-link" data-scroll-target="#optimal-gain">Optimal Gain</a></li>
+  <li><a href="#closed-loop-dynamics" id="toc-closed-loop-dynamics" class="nav-link" data-scroll-target="#closed-loop-dynamics">Closed-Loop Dynamics</a></li>
+  <li><a href="#stage-cost-matrix" id="toc-stage-cost-matrix" class="nav-link" data-scroll-target="#stage-cost-matrix">Stage Cost Matrix</a></li>
+  <li><a href="#contraction-rate-from-riccati-bounds" id="toc-contraction-rate-from-riccati-bounds" class="nav-link" data-scroll-target="#contraction-rate-from-riccati-bounds">Contraction Rate from Riccati Bounds</a></li>
+  <li><a href="#trajectory-of-value-function-over-10-time-steps" id="toc-trajectory-of-value-function-over-10-time-steps" class="nav-link" data-scroll-target="#trajectory-of-value-function-over-10-time-steps">Trajectory of Value Function Over 10 Time Steps</a></li>
+  </ul></li>
+  <li><a href="#continuous-time-duality-detailed-derivation" id="toc-continuous-time-duality-detailed-derivation" class="nav-link" data-scroll-target="#continuous-time-duality-detailed-derivation">Continuous-Time Duality: Detailed Derivation</a>
+  <ul class="collapse">
+  <li><a href="#setup-and-objectives" id="toc-setup-and-objectives" class="nav-link" data-scroll-target="#setup-and-objectives">Setup and Objectives</a></li>
+  <li><a href="#value-function-time-derivative" id="toc-value-function-time-derivative" class="nav-link" data-scroll-target="#value-function-time-derivative">Value Function Time Derivative</a></li>
+  <li><a href="#simplifying-using-the-riccati-equation" id="toc-simplifying-using-the-riccati-equation" class="nav-link" data-scroll-target="#simplifying-using-the-riccati-equation">Simplifying Using the Riccati Equation</a></li>
+  <li><a href="#exponential-decay-in-continuous-time" id="toc-exponential-decay-in-continuous-time" class="nav-link" data-scroll-target="#exponential-decay-in-continuous-time">Exponential Decay in Continuous Time</a></li>
+  <li><a href="#comparison-with-contraction-lmi" id="toc-comparison-with-contraction-lmi" class="nav-link" data-scroll-target="#comparison-with-contraction-lmi">Comparison with Contraction LMI</a></li>
+  </ul></li>
+  <li><a href="#robustness-margins-from-lqr-1" id="toc-robustness-margins-from-lqr-1" class="nav-link" data-scroll-target="#robustness-margins-from-lqr-1">Robustness Margins from LQR</a>
+  <ul class="collapse">
+  <li><a href="#gain-margin" id="toc-gain-margin" class="nav-link" data-scroll-target="#gain-margin">Gain Margin</a></li>
+  <li><a href="#phase-margin" id="toc-phase-margin" class="nav-link" data-scroll-target="#phase-margin">Phase Margin</a></li>
+  <li><a href="#disk-margin" id="toc-disk-margin" class="nav-link" data-scroll-target="#disk-margin">Disk Margin</a></li>
+  <li><a href="#implication-for-design" id="toc-implication-for-design" class="nav-link" data-scroll-target="#implication-for-design">Implication for Design</a></li>
+  </ul></li>
+  <li><a href="#condition-number-and-its-effect-on-contraction-rate" id="toc-condition-number-and-its-effect-on-contraction-rate" class="nav-link" data-scroll-target="#condition-number-and-its-effect-on-contraction-rate">Condition Number and Its Effect on Contraction Rate</a>
+  <ul class="collapse">
+  <li><a href="#definition-and-interpretation" id="toc-definition-and-interpretation" class="nav-link" data-scroll-target="#definition-and-interpretation">Definition and Interpretation</a></li>
+  <li><a href="#ill-conditioning-signals-loss-of-controllability" id="toc-ill-conditioning-signals-loss-of-controllability" class="nav-link" data-scroll-target="#ill-conditioning-signals-loss-of-controllability">Ill-Conditioning Signals Loss of Controllability</a></li>
+  <li><a href="#condition-number-and-contraction-rate" id="toc-condition-number-and-contraction-rate" class="nav-link" data-scroll-target="#condition-number-and-contraction-rate">Condition Number and Contraction Rate</a></li>
+  </ul></li>
+  <li><a href="#connections-to-h-infinity-and-robust-control" id="toc-connections-to-h-infinity-and-robust-control" class="nav-link" data-scroll-target="#connections-to-h-infinity-and-robust-control">Connections to H-Infinity and Robust Control</a>
+  <ul class="collapse">
+  <li><a href="#the-h-infinity-problem" id="toc-the-h-infinity-problem" class="nav-link" data-scroll-target="#the-h-infinity-problem">The H-Infinity Problem</a></li>
+  <li><a href="#the-h-infinity-riccati-equation" id="toc-the-h-infinity-riccati-equation" class="nav-link" data-scroll-target="#the-h-infinity-riccati-equation">The H-Infinity Riccati Equation</a></li>
+  <li><a href="#duality-in-the-robust-setting" id="toc-duality-in-the-robust-setting" class="nav-link" data-scroll-target="#duality-in-the-robust-setting">Duality in the Robust Setting</a></li>
+  <li><a href="#worked-example-pendulum-with-wind-disturbance" id="toc-worked-example-pendulum-with-wind-disturbance" class="nav-link" data-scroll-target="#worked-example-pendulum-with-wind-disturbance">Worked Example: Pendulum with Wind Disturbance</a></li>
+  </ul></li>
+  <li><a href="#time-varying-vs.-steady-state-duality" id="toc-time-varying-vs.-steady-state-duality" class="nav-link" data-scroll-target="#time-varying-vs.-steady-state-duality">Time-Varying vs.&nbsp;Steady-State Duality</a>
+  <ul class="collapse">
+  <li><a href="#the-discrete-riccati-equation-dre" id="toc-the-discrete-riccati-equation-dre" class="nav-link" data-scroll-target="#the-discrete-riccati-equation-dre">The Discrete Riccati Equation (DRE)</a></li>
+  <li><a href="#the-algebraic-riccati-equation-are" id="toc-the-algebraic-riccati-equation-are" class="nav-link" data-scroll-target="#the-algebraic-riccati-equation-are">The Algebraic Riccati Equation (ARE)</a></li>
+  <li><a href="#geometric-interpretation" id="toc-geometric-interpretation" class="nav-link" data-scroll-target="#geometric-interpretation">Geometric Interpretation</a></li>
+  </ul></li>
+  <li><a href="#tangent-bundle-geometry-and-geodesics" id="toc-tangent-bundle-geometry-and-geodesics" class="nav-link" data-scroll-target="#tangent-bundle-geometry-and-geodesics">Tangent Bundle Geometry and Geodesics</a>
+  <ul class="collapse">
+  <li><a href="#the-tangent-bundle" id="toc-the-tangent-bundle" class="nav-link" data-scroll-target="#the-tangent-bundle">The Tangent Bundle</a></li>
+  <li><a href="#riemannian-metric-on-the-tangent-bundle" id="toc-riemannian-metric-on-the-tangent-bundle" class="nav-link" data-scroll-target="#riemannian-metric-on-the-tangent-bundle">Riemannian Metric on the Tangent Bundle</a></li>
+  <li><a href="#geodesics-and-optimal-control" id="toc-geodesics-and-optimal-control" class="nav-link" data-scroll-target="#geodesics-and-optimal-control">Geodesics and Optimal Control</a></li>
+  <li><a href="#convergence-of-neighboring-trajectories" id="toc-convergence-of-neighboring-trajectories" class="nav-link" data-scroll-target="#convergence-of-neighboring-trajectories">Convergence of Neighboring Trajectories</a></li>
+  <li><a href="#visualization-in-2d" id="toc-visualization-in-2d" class="nav-link" data-scroll-target="#visualization-in-2d">Visualization in 2D</a></li>
+  </ul></li>
+  <li><a href="#practical-design-with-duality" id="toc-practical-design-with-duality" class="nav-link" data-scroll-target="#practical-design-with-duality">Practical Design with Duality</a>
+  <ul class="collapse">
+  <li><a href="#integrated-design-workflow" id="toc-integrated-design-workflow" class="nav-link" data-scroll-target="#integrated-design-workflow">Integrated Design Workflow</a></li>
+  <li><a href="#when-duality-breaks-down" id="toc-when-duality-breaks-down" class="nav-link" data-scroll-target="#when-duality-breaks-down">When Duality Breaks Down</a></li>
+  </ul></li>
+  <li><a href="#the-estimationcontrol-duality" id="toc-the-estimationcontrol-duality" class="nav-link" data-scroll-target="#the-estimationcontrol-duality">The Estimation–Control Duality</a>
+  <ul class="collapse">
+  <li><a href="#the-dual-riccati-equation" id="toc-the-dual-riccati-equation" class="nav-link" data-scroll-target="#the-dual-riccati-equation">The Dual Riccati Equation</a></li>
+  <li><a href="#the-extended-kalman-filter-as-tangent-space-estimation" id="toc-the-extended-kalman-filter-as-tangent-space-estimation" class="nav-link" data-scroll-target="#the-extended-kalman-filter-as-tangent-space-estimation">The Extended Kalman Filter as Tangent-Space Estimation</a></li>
+  <li><a href="#contraction-based-observer-design" id="toc-contraction-based-observer-design" class="nav-link" data-scroll-target="#contraction-based-observer-design">Contraction-Based Observer Design</a></li>
+  <li><a href="#the-observability-gramian" id="toc-the-observability-gramian" class="nav-link" data-scroll-target="#the-observability-gramian">The Observability Gramian</a></li>
+  <li><a href="#the-separation-principle" id="toc-the-separation-principle" class="nav-link" data-scroll-target="#the-separation-principle">The Separation Principle</a></li>
+  </ul></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary">Chapter Summary</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">% ==========================================================================</h1></header>
+
+<header id="title-block-header">
+
+<p class="author">% Chapter 6: The Stability–Optimality Duality</p>
+
+<p class="date">% ==========================================================================</p>
+</header>
+
+
+<section id="the-stabilityoptimality-duality" class="level1">
+<h1>The Stability–Optimality Duality</h1>
+<p></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The same matrix that LQR uses to score future cost can also serve as a ruler proving that small errors shrink under the feedback law. This chapter reveals that optimality and stability are not separate concerns but two views of the same geometric object: the Riccati solution acting simultaneously as cost curvature and contraction metric. This connection, recognized in the 1960s by Kalman and formalized by Willems, remains one of the most powerful principles in modern control: the controller that minimizes energy consumption guarantees robustness, and the controller that maximizes robustness often minimizes energy. Duality is why we can design once and verify both objectives simultaneously.</p>
+</div>
+</div>
+<section id="the-central-bridge" class="level2">
+<h2 class="anchored" data-anchor-id="the-central-bridge">The Central Bridge</h2>
+Chapters~<span class="math inline">\(\ref{ch:contraction}\)</span> and~<span class="math inline">\(\ref{ch:optimal-control}\)</span> developed two apparently independent threads:
+<p>The duality theorem shows these are the same computation under the right interpretation.</p>
+</section>
+<section id="historical-context-discovering-the-duality" class="level2">
+<h2 class="anchored" data-anchor-id="historical-context-discovering-the-duality">Historical Context: Discovering the Duality</h2>
+<p>The connection between Lyapunov stability and optimal control emerged gradually in the mid-twentieth century. Lyapunov’s foundational work (1892) established that a suitable energy-like function can certify stability; nearly 70 years later, Kalman’s pivotal contributions recognized that the optimal control problem and the stability problem share a common certificate.</p>
+<section id="kalmans-insight-1960" class="level3">
+<h3 class="anchored" data-anchor-id="kalmans-insight-1960">Kalman’s Insight (1960)</h3>
+In his seminal papers on linear-quadratic regulation, Kalman showed that the unique positive-definite solution <span class="math inline">\(\mat{S}\)</span> of the algebraic Riccati equation (ARE) <span class="math display">\[\begin{equation}
+\mat{0} = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
+\label{eq:ch6:are-steady}
+\end{equation}\]</span> is simultaneously:
+<p>This insight unified two previously separate fields: . This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize energy) and separately checked stability (find a Lyapunov function). Afterward, they solved it once and received both certifications.</p>
+</section>
+<section id="dissipation-inequalities-and-willems-framework-1971" class="level3">
+<h3 class="anchored" data-anchor-id="dissipation-inequalities-and-willems-framework-1971">Dissipation Inequalities and Willems’ Framework (1971)</h3>
+<p>Jan Willems formalized and generalized Kalman’s observation into the language of <em>dissipation inequalities</em>. His work (Willems, 1972) showed that a system is stable if and only if there exists a positive-definite matrix <span class="math inline">\(\mat{S}\)</span> and a cost function <span class="math inline">\(\ell(x, u)\)</span> such that the system ``dissipates’’ energy at a rate determined by <span class="math inline">\(\mat{S}\)</span>: <span class="math display">\[\begin{equation}
+V_{k+1} - V_k \leq -\ell(x_k, u_k),
+\label{eq:ch6:dissipation}
+\end{equation}\]</span> where <span class="math inline">\(V_k = x_k^\T \mat{S} x_k\)</span>. The LQR problem is precisely the one where the cost function <span class="math inline">\(\ell\)</span> is the stage cost <span class="math inline">\(x^\T\mat{Q} x + u^\T\mat{R} u\)</span>, and the dissipation inequality becomes an equality: <span class="math display">\[\begin{equation}
+V_{k+1} - V_k = -\ell(x_k, u_k).
+\label{eq:ch6:lqr-dissipation}
+\end{equation}\]</span></p>
+<p>Willems’ perspective recast the Riccati solution as a <strong>dissipation certificate</strong>: proof that the system loses energy (in the <span class="math inline">\(\mat{S}\)</span>-weighted sense) at a rate equal to the optimal cost.</p>
+</section>
+<section id="robustness-margins-from-lqr" class="level3">
+<h3 class="anchored" data-anchor-id="robustness-margins-from-lqr">Robustness Margins from LQR</h3>
+<p>Anderson and Moore’s foundational book (1971) and subsequent work by Doyle and Stein emphasized that LQR not only optimizes the cost but also delivers remarkable robustness properties <em>for free</em>:</p>
+<p>This proposition is not academic: it explains why tuning an LQR controller by scaling the gain (increasing <span class="math inline">\(\eta\)</span> to be more aggressive) fails only when <span class="math inline">\(\eta \leq 1/2\)</span>—and by then, the system is already far too aggressive for practical use.</p>
+</section>
+</section>
+<section id="discrete-time-duality-the-value-decrease-identity" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-time-duality-the-value-decrease-identity">Discrete-Time Duality: The Value Decrease Identity</h2>
+<section id="the-core-derivation" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-derivation">The Core Derivation</h3>
+<p>Under the optimal feedback <span class="math inline">\(\du_k = -\mat{K}_k\dx_k\)</span>, the closed-loop perturbation dynamics are <span class="math display">\[\begin{equation}
+\dx_{k+1} = (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k.
+\label{eq:ch6:closed-loop}
+\end{equation}\]</span></p>
+<p>Define the quadratic Lyapunov candidate <span class="math display">\[\begin{equation}
+V_k = \dx_k^\T\mat{S}_k\dx_k,
+\label{eq:ch6:lyapunov-candidate}
+\end{equation}\]</span> where <span class="math inline">\(\mat{S}_k\)</span> is the Riccati solution from~<span class="math inline">\(\eqref{eq:ch5:riccati}\)</span>: <span class="math display">\[\begin{equation}
+\mat{S}_k = \mat{Q}_k + \mat{A}_k^\T \mat{S}_{k+1} \mat{A}_k - \mat{A}_k^\T \mat{S}_{k+1} \mat{B}_k
+(\mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k)^{-1} \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k.
+\label{eq:ch6:riccati-full}
+\end{equation}\]</span></p>
+<p>Introduce the gain matrix <span class="math display">\[\begin{equation}
+\mat{K}_k = (\mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k)^{-1} \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k,
+\label{eq:ch6:gain-definition}
+\end{equation}\]</span> which allows us to rewrite the Riccati equation in the <strong>alternative (or canonical) form</strong>: <span class="math display">\[\begin{equation}
+\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
+\label{eq:ch6:riccati-alt-form}
+\end{equation}\]</span> which is a key form that appears throughout duality theory.</p>
+<p>Now we compute <span class="math inline">\(V_{k+1} - V_k\)</span> step by step.</p>
+<p>\begin{proof}[Complete Step-by-Step Derivation] **Step 1: Compute <span class="math inline">\(V_{k+1**\)</span> using the closed-loop dynamics}. From~<span class="math inline">\(\eqref{eq:ch6:closed-loop}\)</span>: <span class="math display">\[\begin{align}
+\dx_{k+1} &amp;= (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k, \\
+V_{k+1} &amp;= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
+&amp;= \dx_k^\T(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)\dx_k.
+\label{eq:ch6:Vk1-full}
+\end{align}\]</span></p>
+<p>**Step 2: Write <span class="math inline">\(V_{k+1** - V_k\)</span>}. We have <span class="math inline">\(V_k = \dx_k^\T\mat{S}_k\dx_k\)</span>, so: <span class="math display">\[\begin{align}
+V_{k+1}-V_k &amp;= \dx_k^\T\!\left[
+(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
+- \mat{S}_k\right]\!\dx_k.
+\label{eq:ch6:diff-raw}
+\end{align}\]</span></p>
+<p><strong>Step 3: Invoke the Riccati alternative form</strong>. Equation~<span class="math inline">\(\eqref{eq:ch6:riccati-alt-form}\)</span> states: <span class="math display">\[\begin{equation}
+\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
+\end{equation}\]</span></p>
+<p>Therefore: <span class="math display">\[\begin{equation}
+(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k) = \mat{S}_k - \mat{Q}_k.
+\label{eq:ch6:riccati-substitution}
+\end{equation}\]</span></p>
+<p><strong>Step 4: Substitute back</strong>: <span class="math display">\[\begin{align}
+V_{k+1}-V_k &amp;= \dx_k^\T\!\left[
+(\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
+&amp;= \dx_k^\T\!\left[-\mat{Q}_k\right]\!\dx_k \\
+&amp;= -\dx_k^\T\mat{Q}_k\dx_k.
+\label{eq:ch6:first-drop}
+\end{align}\]</span></p>
+<p><strong>Step 5: Add the control cost</strong>. The optimal value function satisfies a fundamental recursion: <span class="math display">\[\begin{equation}
+V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
+\label{eq:ch6:cost-recursion}
+\end{equation}\]</span></p>
+<p>Rearranging for perturbations: <span class="math display">\[\begin{equation}
+V_{k+1} - V_k = -\dx_k^\T\mat{Q}_k\dx_k - \du_k^\T\mat{R}_k\du_k.
+\label{eq:ch6:value-drop-with-control}
+\end{equation}\]</span></p>
+<p>With the optimal control <span class="math inline">\(\du_k = -\mat{K}_k\dx_k\)</span>: <span class="math display">\[\begin{align}
+V_{k+1} - V_k &amp;= -\dx_k^\T\mat{Q}_k\dx_k - (-\mat{K}_k\dx_k)^\T\mat{R}_k(-\mat{K}_k\dx_k) \notag\\
+&amp;= -\dx_k^\T\mat{Q}_k\dx_k - \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k \\
+&amp;= -\dx_k^\T(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)\dx_k.
+\label{eq:ch6:value-drop-final}
+\end{align}\]</span></p>
+<p>Since <span class="math inline">\(\mat{Q}_k \succ 0\)</span> and <span class="math inline">\(\mat{R}_k \succ 0\)</span> by assumption (Assumption from Chapter~<span class="math inline">\(\ref{ch:optimal-control}\)</span>), we have <span class="math inline">\(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k \succ 0\)</span>. Let <span class="math inline">\(\alpha_k = \lambda_{\min}(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)\)</span>. Then: <span class="math display">\[\begin{equation}
+V_{k+1} - V_k \leq -\alpha_k \norm{\dx_k}^2.
+\label{eq:ch6:value-drop-alpha}
+\end{equation}\]</span> \end{proof}</p>
+</section>
+<section id="extracting-exponential-decay" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-exponential-decay">Extracting Exponential Decay</h3>
+<p>Suppose there exist uniform bounds: <span class="math display">\[\begin{equation}
+\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k \succeq \alpha\mat{I},
+\qquad
+\underline{s}\,\mat{I} \preceq \mat{S}_k \preceq \overline{s}\,\mat{I},
+\label{eq:ch6:bounds}
+\end{equation}\]</span> for constants <span class="math inline">\(\alpha, \underline{s}, \overline{s} &gt; 0\)</span> with <span class="math inline">\(\alpha &lt; \overline{s}\)</span>.</p>
+<p>Then from~<span class="math inline">\(\eqref{eq:ch6:value-drop}\)</span>: <span class="math display">\[\begin{equation}
+V_{k+1} \leq V_k - \alpha\norm{\dx_k}^2.
+\label{eq:ch6:first-ineq}
+\end{equation}\]</span></p>
+<p>Since <span class="math inline">\(\underline{s}\norm{\dx_k}^2 \leq V_k = \dx_k^\T\mat{S}_k\dx_k \leq \overline{s}\norm{\dx_k}^2\)</span>, we have <span class="math inline">\(\norm{\dx_k}^2 \leq V_k/\underline{s}\)</span>, giving: <span class="math display">\[\begin{equation}
+V_{k+1} \leq V_k - \frac{\alpha}{\overline{s}}\,V_k
+= \left(1-\frac{\alpha}{\overline{s}}\right)V_k.
+\label{eq:ch6:exp-decay}
+\end{equation}\]</span></p>
+<p>Define the decay rate: <span class="math display">\[\begin{equation}
+\rho := 1-\frac{\alpha}{\overline{s}} \in (0,1).
+\label{eq:ch6:decay-rate}
+\end{equation}\]</span></p>
+<p>Iterating the inequality: <span class="math display">\[\begin{equation}
+V_k \leq \rho^k V_0,
+\label{eq:ch6:Vk-bound}
+\end{equation}\]</span></p>
+<p>and converting to Euclidean norm via the bounds on <span class="math inline">\(\mat{S}_k\)</span>: <span class="math display">\[\begin{align}
+\underline{s}\norm{\dx_k}^2 &amp;\leq V_k \leq \rho^k V_0 \leq \rho^k \overline{s}\norm{\dx_0}^2, \\
+\norm{\dx_k}^2 &amp;\leq \frac{\overline{s}}{\underline{s}}\rho^k\norm{\dx_0}^2.
+\label{eq:ch6:norm-decay}
+\end{align}\]</span></p>
+<p>This is a <strong>discrete contraction inequality</strong> with the Riccati matrix as the metric. The contraction rate <span class="math inline">\(\rho\)</span> is determined by the smallest eigenvalue of the stage cost and the condition number of the value matrix.</p>
+</section>
+</section>
+<section id="worked-numerical-example-the-discrete-pendulum" class="level2">
+<h2 class="anchored" data-anchor-id="worked-numerical-example-the-discrete-pendulum">Worked Numerical Example: The Discrete Pendulum</h2>
+<p>We now apply the duality theory to a concrete system: the linearized discrete-time inverted pendulum from Chapter~<span class="math inline">\(\ref{ch:optimal-control}\)</span>.</p>
+<section id="system-setup" class="level3">
+<h3 class="anchored" data-anchor-id="system-setup">System Setup</h3>
+<p><span class="math display">\[\begin{equation}
+\mat{A} = \begin{bmatrix} 1 &amp; 0.1 \\ 0.981 &amp; 1 \end{bmatrix}, \quad
+\mat{B} = \begin{bmatrix} 0.005 \\ 0.1 \end{bmatrix}, \quad
+\mat{Q} = \begin{bmatrix} 10 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}, \quad
+\mat{R} = 0.1.
+\label{eq:ch6:example-system}
+\end{equation}\]</span></p>
+<p>We apply the discrete-time Riccati recursion backward from time <span class="math inline">\(k=20\)</span> to <span class="math inline">\(k=0\)</span> with zero terminal cost <span class="math inline">\(\mat{S}_{20} = 0\)</span>.</p>
+</section>
+<section id="riccati-solution" class="level3">
+<h3 class="anchored" data-anchor-id="riccati-solution">Riccati Solution</h3>
+<p>At steady state (or at the beginning of the task horizon), the Riccati solution stabilizes to approximately: <span class="math display">\[\begin{equation}
+\mat{S} \approx \begin{bmatrix} 31.62 &amp; 3.16 \\ 3.16 &amp; 5.01 \end{bmatrix}.
+\label{eq:ch6:riccati-solution}
+\end{equation}\]</span></p>
+<p>The eigenvalues of <span class="math inline">\(\mat{S}\)</span> are <span class="math inline">\(\lambda_{\max}(\mat{S}) \approx 32.07\)</span> and <span class="math inline">\(\lambda_{\min}(\mat{S}) \approx 4.56\)</span>, giving a condition number: <span class="math display">\[\begin{equation}
+\kappa(\mat{S}) = \frac{\lambda_{\max}(\mat{S})}{\lambda_{\min}(\mat{S})} \approx \frac{32.07}{4.56} \approx 7.03.
+\label{eq:ch6:condition-number}
+\end{equation}\]</span></p>
+</section>
+<section id="optimal-gain" class="level3">
+<h3 class="anchored" data-anchor-id="optimal-gain">Optimal Gain</h3>
+<p>From the Riccati recursion, the steady-state optimal gain is: <span class="math display">\[\begin{equation}
+\mat{K} = (\mat{R} + \mat{B}^\T\mat{S}\mat{B})^{-1}\mat{B}^\T\mat{S}\mat{A}.
+\label{eq:ch6:gain-computation}
+\end{equation}\]</span></p>
+<p>Computing step-by-step: <span class="math display">\[\begin{align}
+\mat{B}^\T\mat{S} &amp;= \begin{bmatrix} 0.005 &amp; 0.1 \end{bmatrix} \begin{bmatrix} 31.62 &amp; 3.16 \\ 3.16 &amp; 5.01 \end{bmatrix}
+                    = \begin{bmatrix} 0.475 &amp; 0.667 \end{bmatrix}, \\
+\mat{B}^\T\mat{S}\mat{A} &amp;= \begin{bmatrix} 0.475 &amp; 0.667 \end{bmatrix} \begin{bmatrix} 1 &amp; 0.1 \\ 0.981 &amp; 1 \end{bmatrix}
+                          = \begin{bmatrix} 0.975 &amp; 0.715 \end{bmatrix}, \\
+\mat{B}^\T\mat{S}\mat{B} &amp;= \begin{bmatrix} 0.475 &amp; 0.667 \end{bmatrix} \begin{bmatrix} 0.005 \\ 0.1 \end{bmatrix}
+                         = 0.0721, \\
+\mat{R} + \mat{B}^\T\mat{S}\mat{B} &amp;= 0.1 + 0.0721 = 0.1721, \\
+\mat{K} &amp;= \frac{1}{0.1721}\begin{bmatrix} 0.975 &amp; 0.715 \end{bmatrix}
+       = \begin{bmatrix} 5.66 &amp; 4.15 \end{bmatrix}.
+\label{eq:ch6:gain-values}
+\end{align}\]</span></p>
+<p>This gain means: the optimal feedback is <span class="math inline">\(u_k = -5.66\theta_k - 4.15\dot\theta_k\)</span>, using much more aggressive feedback on the angle than on the angular velocity.</p>
+</section>
+<section id="closed-loop-dynamics" class="level3">
+<h3 class="anchored" data-anchor-id="closed-loop-dynamics">Closed-Loop Dynamics</h3>
+<p>The closed-loop system is: <span class="math display">\[\begin{align}
+\mat{A}_{\text{cl}} &amp;= \mat{A} - \mat{B}\mat{K} \\
+&amp;= \begin{bmatrix} 1 &amp; 0.1 \\ 0.981 &amp; 1 \end{bmatrix} - \begin{bmatrix} 0.005 \\ 0.1 \end{bmatrix}
+  \begin{bmatrix} 5.66 &amp; 4.15 \end{bmatrix} \\
+&amp;= \begin{bmatrix} 1 &amp; 0.1 \\ 0.981 &amp; 1 \end{bmatrix} - \begin{bmatrix} 0.0283 &amp; 0.0208 \\ 0.566 &amp; 0.415 \end{bmatrix} \\
+&amp;= \begin{bmatrix} 0.9717 &amp; 0.0792 \\ 0.415 &amp; 0.585 \end{bmatrix}.
+\label{eq:ch6:acl}
+\end{align}\]</span></p>
+<p>The eigenvalues of <span class="math inline">\(\mat{A}_{\text{cl}}\)</span> are: <span class="math display">\[\begin{equation}
+\lambda_1(\mat{A}_{\text{cl}}) \approx 0.862, \quad \lambda_2(\mat{A}_{\text{cl}}) \approx 0.695.
+\label{eq:ch6:closed-loop-eigs}
+\end{equation}\]</span></p>
+<p>Both eigenvalues lie inside the unit circle, confirming stability. The dominant eigenvalue is <span class="math inline">\(0.862\)</span>, which means perturbations decay by a factor of <span class="math inline">\(0.862\)</span> per time step in the Euclidean sense (without the Riccati metric).</p>
+</section>
+<section id="stage-cost-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="stage-cost-matrix">Stage Cost Matrix</h3>
+<p>The stage cost matrix is: <span class="math display">\[\begin{align}
+\mat{Q} + \mat{K}^\T\mat{R}\mat{K} &amp;= \begin{bmatrix} 10 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}
+                                       + \begin{bmatrix} 5.66 \\ 4.15 \end{bmatrix}(0.1)\begin{bmatrix} 5.66 &amp; 4.15 \end{bmatrix} \\
+&amp;= \begin{bmatrix} 10 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}
+   + \begin{bmatrix} 3.204 &amp; 2.347 \\ 2.347 &amp; 1.722 \end{bmatrix} \\
+&amp;= \begin{bmatrix} 13.204 &amp; 2.347 \\ 2.347 &amp; 2.722 \end{bmatrix}.
+\label{eq:ch6:stage-cost}
+\end{align}\]</span></p>
+<p>The eigenvalues are <span class="math inline">\(\lambda_{\max} \approx 14.45\)</span> and <span class="math inline">\(\lambda_{\min} \approx 1.48\)</span>, so <span class="math inline">\(\alpha = 1.48\)</span> is the smallest eigenvalue of the stage cost.</p>
+</section>
+<section id="contraction-rate-from-riccati-bounds" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-rate-from-riccati-bounds">Contraction Rate from Riccati Bounds</h3>
+<p>From the Riccati bounds: <span class="math display">\[\begin{equation}
+\rho = 1 - \frac{\alpha}{\overline{s}} = 1 - \frac{1.48}{32.07} = 1 - 0.0461 = 0.9539.
+\label{eq:ch6:rho-example}
+\end{equation}\]</span></p>
+<p>The Euclidean norm decay is bounded by: <span class="math display">\[\begin{equation}
+\norm{\dx_k} \leq \sqrt{\kappa(\mat{S})} \, \rho^{k/2} \norm{\dx_0}
+             = \sqrt{7.03} \, (0.9539)^{k/2} \norm{\dx_0}
+             \approx 2.65 \, (0.9539)^{k/2} \norm{\dx_0}.
+\label{eq:ch6:euclidean-decay}
+\end{equation}\]</span></p>
+<p>After 10 time steps, the perturbation is bounded by: <span class="math display">\[\begin{equation}
+\norm{\dx_{10}} \leq 2.65 \times (0.9539)^5 \norm{\dx_0} \approx 2.65 \times 0.779 \norm{\dx_0} \approx 2.06 \norm{\dx_0}.
+\label{eq:ch6:10step}
+\end{equation}\]</span></p>
+<p>Wait: this suggests the norm can actually grow! This is because the condition number <span class="math inline">\(\kappa(\mat{S}) \approx 7\)</span> introduces a factor of <span class="math inline">\(\sqrt{7} \approx 2.65\)</span>. The true contraction is in the Riccati-weighted norm <span class="math inline">\(V_k\)</span>: <span class="math display">\[\begin{equation}
+V_k \leq (0.9539)^k V_0.
+\label{eq:ch6:V-decay}
+\end{equation}\]</span></p>
+<p>After 10 steps: <span class="math display">\[\begin{equation}
+V_{10} \leq (0.9539)^{10} V_0 \approx 0.606 V_0,
+\label{eq:ch6:V10}
+\end{equation}\]</span> meaning the <span class="math inline">\(\mat{S}\)</span>-weighted norm decays by 39.4%.</p>
+</section>
+<section id="trajectory-of-value-function-over-10-time-steps" class="level3">
+<h3 class="anchored" data-anchor-id="trajectory-of-value-function-over-10-time-steps">Trajectory of Value Function Over 10 Time Steps</h3>
+<p>Starting from an initial perturbation <span class="math inline">\(\dx_0 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\)</span> (unit angle error), the value function evolves as:</p>
+<p>The constant decay rate (last column) of <span class="math inline">\(0.954\)</span> confirms the theoretical prediction <span class="math inline">\(\rho = 0.9539\)</span>.</p>
+</section>
+</section>
+<section id="continuous-time-duality-detailed-derivation" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-time-duality-detailed-derivation">Continuous-Time Duality: Detailed Derivation</h2>
+<section id="setup-and-objectives" class="level3">
+<h3 class="anchored" data-anchor-id="setup-and-objectives">Setup and Objectives</h3>
+<p>For the continuous-time system: <span class="math display">\[\begin{equation}
+\dot\x = \mat{A}\x + \mat{B}\uvec,
+\label{eq:ch6:ct-system}
+\end{equation}\]</span> with cost: <span class="math display">\[\begin{equation}
+J = \int_0^\infty (\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec) \, dt,
+\label{eq:ch6:ct-cost}
+\end{equation}\]</span> the optimal control is: <span class="math display">\[\begin{equation}
+\uvec^\star = -\mat{K}\x = -\mat{R}^{-1}\mat{B}^\T\mat{S}\x,
+\label{eq:ch6:ct-optimal-control}
+\end{equation}\]</span> where <span class="math inline">\(\mat{S}\)</span> is the solution to the algebraic Riccati equation~<span class="math inline">\(\eqref{eq:ch6:are-steady}\)</span>.</p>
+<p>For time-varying systems or finite-horizon problems, we use the dynamic Riccati equation (DRE): <span class="math display">\[\begin{equation}
+-\dot{\mat{S}} = \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{Q},
+\label{eq:ch6:DRE-explicit}
+\end{equation}\]</span> with terminal condition <span class="math inline">\(\mat{S}(T) = \mat{S}_f\)</span> (typically zero or a penalty on final state).</p>
+</section>
+<section id="value-function-time-derivative" class="level3">
+<h3 class="anchored" data-anchor-id="value-function-time-derivative">Value Function Time Derivative</h3>
+<p>Consider perturbations <span class="math inline">\(\dx\)</span> in the closed-loop system: <span class="math display">\[\begin{equation}
+\dot{\dx} = (\mat{A} - \mat{B}\mat{K})\,\dx = \mat{A}_{\text{cl}}\,\dx,
+\label{eq:ch6:ct-closed-loop}
+\end{equation}\]</span> where <span class="math inline">\(\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}\)</span>.</p>
+<p>The quadratic value function is: <span class="math display">\[\begin{equation}
+V(t) = \dx(t)^\T\mat{S}(t)\dx(t).
+\label{eq:ch6:ct-value}
+\end{equation}\]</span></p>
+<p>Taking the time derivative: <span class="math display">\[\begin{align}
+\dot{V} &amp;= \frac{d}{dt}[\dx^\T\mat{S}\dx] \notag\\
+&amp;= \dot{\dx}^\T\mat{S}\dx + \dx^\T\dot{\mat{S}}\dx + \dx^\T\mat{S}\dot{\dx} \notag\\
+&amp;= (\mat{A}_{\text{cl}}\dx)^\T\mat{S}\dx + \dx^\T\dot{\mat{S}}\dx + \dx^\T\mat{S}(\mat{A}_{\text{cl}}\dx) \notag\\
+&amp;= \dx^\T[\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}]\dx.
+\label{eq:ch6:V-derivative}
+\end{align}\]</span></p>
+</section>
+<section id="simplifying-using-the-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="simplifying-using-the-riccati-equation">Simplifying Using the Riccati Equation</h3>
+<p>Recall that <span class="math inline">\(\mat{A}_{\text{cl}} = \mat{A} - \mat{B}\mat{K}\)</span>. The key is to show that: <span class="math display">\[\begin{equation}
+\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} = -(\mat{Q} + \mat{K}^\T\mat{R}\mat{K}).
+\label{eq:ch6:key-identity}
+\end{equation}\]</span></p>
+<p>To prove this, we expand the left-hand side: <span class="math display">\[\begin{align}
+&amp;\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} \notag\\
+&amp;= (\mat{A} - \mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \mat{B}\mat{K}) + \dot{\mat{S}} \notag\\
+&amp;= \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{K}^\T\mat{B}^\T\mat{S} - \mat{S}\mat{B}\mat{K} + \dot{\mat{S}}.
+\label{eq:ch6:expanded-lhs}
+\end{align}\]</span></p>
+<p>Now recall the DRE~<span class="math inline">\(\eqref{eq:ch6:DRE-explicit}\)</span>: <span class="math display">\[\begin{equation}
+-\dot{\mat{S}} = \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{Q}.
+\label{eq:ch6:dre-rearrange}
+\end{equation}\]</span></p>
+<p>Rearranging: <span class="math display">\[\begin{equation}
+\mat{A}^\T\mat{S} + \mat{S}\mat{A} + \dot{\mat{S}} = -\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch6:dre-alt}
+\end{equation}\]</span></p>
+<p>Substituting into~<span class="math inline">\(\eqref{eq:ch6:expanded-lhs}\)</span>: <span class="math display">\[\begin{align}
+&amp;\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}} \notag\\
+&amp;= [-\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}] - \mat{K}^\T\mat{B}^\T\mat{S} - \mat{S}\mat{B}\mat{K}.
+\label{eq:ch6:partial}
+\end{align}\]</span></p>
+<p>Now use the fact that <span class="math inline">\(\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}\)</span>. Then: <span class="math display">\[\begin{align}
+\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} &amp;= \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
+&amp;= 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \quad \text{(using } \mat{R} = \mat{R}^\T \text{)} \\
+&amp;\quad - \mat{S}\mat{B}\mat{R}^{-1}\mat{R}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S}.
+\label{eq:ch6:trick}
+\end{align}\]</span></p>
+<p>Actually, let’s use a cleaner approach. Note that: <span class="math display">\[\begin{equation}
+\mat{K}^\T\mat{R}\mat{K} = \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{R}\mat{R}^{-1}\mat{B}^\T\mat{S}
+                        = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch6:K-R-K}
+\end{equation}\]</span></p>
+<p>Also: <span class="math display">\[\begin{equation}
+\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = \mat{S}\mat{B}\mat{K} + \mat{K}^\T\mat{B}^\T\mat{S}
+                                                    = (\mat{S}\mat{B}\mat{K} + (\mat{S}\mat{B}\mat{K})^\T)
+                                                    = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
+                                                    = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch6:symmetric-form}
+\end{equation}\]</span></p>
+<p>Wait, let me reconsider. We have <span class="math inline">\(\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}\)</span>, so: <span class="math display">\[\begin{align}
+\mat{K}^\T\mat{B}^\T\mat{S} &amp;= \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S} = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}, \\
+\mat{S}\mat{B}\mat{K} &amp;= \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\end{align}\]</span></p>
+<p>So indeed: <span class="math display">\[\begin{equation}
+\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch6:key-sum}
+\end{equation}\]</span></p>
+<p>Substituting back: <span class="math display">\[\begin{align}
+\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}
+&amp;= -\mat{Q} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} - 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
+&amp;= -\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
+&amp;= -\mat{Q} - \mat{K}^\T\mat{R}\mat{K}.
+\label{eq:ch6:final-identity}
+\end{align}\]</span></p>
+<p>Therefore: <span class="math display">\[\begin{equation}
+\dot{V} = \dx^\T[\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}]\dx
+        = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx.
+\label{eq:ch6:ct-value-drop}
+\end{equation}\]</span></p>
+</section>
+<section id="exponential-decay-in-continuous-time" class="level3">
+<h3 class="anchored" data-anchor-id="exponential-decay-in-continuous-time">Exponential Decay in Continuous Time</h3>
+<p>If <span class="math inline">\(\mat{Q} + \mat{K}^\T\mat{R}\mat{K} \succeq \alpha\mat{I}\)</span> and <span class="math inline">\(\underline{s}\mat{I} \preceq \mat{S} \preceq \overline{s}\mat{I}\)</span>, then: <span class="math display">\[\begin{equation}
+\dot{V} \leq -\alpha\norm{\dx}^2 \leq -\frac{\alpha}{\overline{s}}V.
+\label{eq:ch6:ct-decay-ineq}
+\end{equation}\]</span></p>
+<p>Solving the differential inequality: <span class="math display">\[\begin{equation}
+V(t) \leq e^{-\lambda t}V(0), \quad \text{where} \quad \lambda = \frac{\alpha}{2\overline{s}}.
+\label{eq:ch6:ct-exp-decay}
+\end{equation}\]</span></p>
+<p>Converting to Euclidean norm: <span class="math display">\[\begin{equation}
+\norm{\dx(t)}^2 \leq \frac{\overline{s}}{\underline{s}}e^{-2\lambda t}\norm{\dx(0)}^2,
+\label{eq:ch6:ct-euclidean-decay}
+\end{equation}\]</span> or: <span class="math display">\[\begin{equation}
+\norm{\dx(t)} \leq \sqrt{\frac{\overline{s}}{\underline{s}}} \, e^{-\lambda t}\norm{\dx(0)}.
+\label{eq:ch6:ct-norm-decay-final}
+\end{equation}\]</span></p>
+</section>
+<section id="comparison-with-contraction-lmi" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-with-contraction-lmi">Comparison with Contraction LMI</h3>
+<p>Comparing~<span class="math inline">\(\eqref{eq:ch6:ct-value-drop}\)</span> with the contraction condition from Chapter~<span class="math inline">\(\ref{ch:contraction}\)</span>: <span class="math display">\[\begin{equation}
+\mat{A}_{\text{cl}}^\T\mat{M} + \mat{M}\mat{A}_{\text{cl}} + \dot{\mat{M}} \preceq -2\lambda\mat{M},
+\label{eq:ch6:contraction-lmi}
+\end{equation}\]</span> we see that setting <span class="math inline">\(\mat{M} = \mat{S}\)</span> and <span class="math inline">\(\lambda = \alpha/(2\overline{s})\)</span> gives: <span class="math display">\[\begin{equation}
+\mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}
+= -(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})
+\preceq -\alpha\mat{I}
+\preceq -\frac{\alpha}{\overline{s}}\mat{S}.
+\label{eq:ch6:contraction-satisfied}
+\end{equation}\]</span></p>
+<p>This is precisely the contraction condition: <strong>the Riccati solution simultaneously certifies optimality and contraction</strong>.</p>
+</section>
+</section>
+<section id="robustness-margins-from-lqr-1" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-margins-from-lqr-1">Robustness Margins from LQR</h2>
+<section id="gain-margin" class="level3">
+<h3 class="anchored" data-anchor-id="gain-margin">Gain Margin</h3>
+
+</section>
+<section id="phase-margin" class="level3">
+<h3 class="anchored" data-anchor-id="phase-margin">Phase Margin</h3>
+<p>The proof uses the Nyquist criterion and the Riccati-induced positive real condition on the return difference <span class="math inline">\(\mat{I} + \mat{K}(\mat{sI}-\mat{A})^{-1}\mat{B}\)</span>. We omit the technical details but note the key insight: the Riccati solution makes the closed-loop system ``strictly positive real,’’ which bounds phase perturbations.</p>
+</section>
+<section id="disk-margin" class="level3">
+<h3 class="anchored" data-anchor-id="disk-margin">Disk Margin</h3>
+<p>The disk margin, or <span class="math inline">\(\mu\)</span>-margin, quantifies robustness in the complex plane. For LQR, the loop transfer matrix satisfies a disk margin condition: the poles of the closed-loop system remain in a half-plane with guaranteed clearance from the origin. This is a consequence of the Riccati solution being positive definite and the ARE’s structure.</p>
+</section>
+<section id="implication-for-design" class="level3">
+<h3 class="anchored" data-anchor-id="implication-for-design">Implication for Design</h3>
+<p>These robustness margins explain why LQR is ubiquitously used in practice: not only does it minimize a well-defined cost, but it automatically provides guardrails against model uncertainty, sensor noise, and actuator saturation. The engineer need not separately verify robustness—the LQR computation provides it.</p>
+</section>
+</section>
+<section id="condition-number-and-its-effect-on-contraction-rate" class="level2">
+<h2 class="anchored" data-anchor-id="condition-number-and-its-effect-on-contraction-rate">Condition Number and Its Effect on Contraction Rate</h2>
+<section id="definition-and-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="definition-and-interpretation">Definition and Interpretation</h3>
+<p>Define the condition number of the Riccati solution: <span class="math display">\[\begin{equation}
+\kappa(\mat{S}) := \frac{\lambda_{\max}(\mat{S})}{\lambda_{\min}(\mat{S})} = \frac{\overline{s}}{\underline{s}}.
+\label{eq:ch6:kappa-S}
+\end{equation}\]</span></p>
+<p>A well-conditioned matrix has <span class="math inline">\(\kappa(\mat{S}) \approx 1\)</span>; a poorly conditioned matrix has <span class="math inline">\(\kappa(\mat{S}) \gg 1\)</span>.</p>
+</section>
+<section id="ill-conditioning-signals-loss-of-controllability" class="level3">
+<h3 class="anchored" data-anchor-id="ill-conditioning-signals-loss-of-controllability">Ill-Conditioning Signals Loss of Controllability</h3>
+When <span class="math inline">\(\kappa(\mat{S})\)</span> is large, it often indicates that:
+<p>In the limit of complete uncontrollability, <span class="math inline">\(\lambda_{\min}(\mat{S}) \to 0\)</span>, and <span class="math inline">\(\kappa(\mat{S}) \to \infty\)</span>.</p>
+</section>
+<section id="condition-number-and-contraction-rate" class="level3">
+<h3 class="anchored" data-anchor-id="condition-number-and-contraction-rate">Condition Number and Contraction Rate</h3>
+<p>From the discrete-time analysis: <span class="math display">\[\begin{equation}
+\rho = 1 - \frac{\alpha}{\overline{s}} = 1 - \frac{\alpha}{\kappa(\mat{S})\underline{s}}.
+\label{eq:ch6:rho-vs-kappa}
+\end{equation}\]</span></p>
+<p>As <span class="math inline">\(\kappa(\mat{S})\)</span> increases, <span class="math inline">\(\overline{s}\)</span> increases (for fixed <span class="math inline">\(\underline{s}\)</span> and <span class="math inline">\(\alpha\)</span>), and the contraction rate <span class="math inline">\(\rho\)</span> increases (approaches 1), meaning convergence slows. More precisely: <span class="math display">\[\begin{equation}
+1 - \rho = \frac{\alpha}{\overline{s}} \approx \frac{\alpha}{\kappa(\mat{S})\underline{s}}.
+\label{eq:ch6:contraction-loss}
+\end{equation}\]</span></p>
+<p>The number of time steps to reduce the value by a factor of <span class="math inline">\(e\)</span> is: <span class="math display">\[\begin{equation}
+\tau = \frac{1}{\ln(1/\rho)} \approx \frac{1}{\alpha/\overline{s}} = \frac{\overline{s}}{\alpha} = \kappa(\mat{S})\frac{\underline{s}}{\alpha}.
+\label{eq:ch6:time-constant}
+\end{equation}\]</span></p>
+<strong>Conclusion</strong>: A large condition number <span class="math inline">\(\kappa(\mat{S})\)</span> is a warning sign. It means the system has directions that are hard to control, and convergence is slower. The designer should either:
+</section>
+</section>
+<section id="connections-to-h-infinity-and-robust-control" class="level2">
+<h2 class="anchored" data-anchor-id="connections-to-h-infinity-and-robust-control">Connections to H-Infinity and Robust Control</h2>
+<section id="the-h-infinity-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-h-infinity-problem">The H-Infinity Problem</h3>
+<p>The <span class="math inline">\(H^\infty\)</span> optimal control problem is: given a system with disturbances <span class="math inline">\(\mat{w}\)</span>, <span class="math display">\[\begin{equation}
+\dot\x = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
+\label{eq:ch6:hinf-system}
+\end{equation}\]</span> with controlled output: <span class="math display">\[\begin{equation}
+\mat{z} = \begin{bmatrix} \mat{C}_1 \\ \mat{D}_{uu} \end{bmatrix}\x + \begin{bmatrix} 0 \\ \mat{D}_{uw} \end{bmatrix}\mat{w},
+\label{eq:ch6:hinf-output}
+\end{equation}\]</span> find a feedback controller <span class="math inline">\(\mat{K}\)</span> that minimizes the <span class="math inline">\(L_2\)</span>-induced norm from disturbances to outputs: <span class="math display">\[\begin{equation}
+\gamma^\star = \min_{\mat{K}} \max_{\mat{w} \neq 0} \frac{\|\mat{z}\|_{L_2}}{\|\mat{w}\|_{L_2}}.
+\label{eq:ch6:hinf-objective}
+\end{equation}\]</span></p>
+</section>
+<section id="the-h-infinity-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="the-h-infinity-riccati-equation">The H-Infinity Riccati Equation</h3>
+<p>The optimal <span class="math inline">\(H^\infty\)</span> controller satisfies a Riccati equation similar in structure to the LQR ARE: <span class="math display">\[\begin{equation}
+0 = \mat{A}^\T\mat{S}_\infty + \mat{S}_\infty\mat{A} + \mat{C}_1^\T\mat{C}_1
+  - \mat{S}_\infty(\mat{B}_u\mat{D}_{uu}^{-1}\mat{B}_u^\T - \gamma^{-2}\mat{B}_w\mat{B}_w^\T)\mat{S}_\infty,
+\label{eq:ch6:hinf-are}
+\end{equation}\]</span> where <span class="math inline">\(\gamma\)</span> is the worst-case <span class="math inline">\(L_2\)</span> gain.</p>
+</section>
+<section id="duality-in-the-robust-setting" class="level3">
+<h3 class="anchored" data-anchor-id="duality-in-the-robust-setting">Duality in the Robust Setting</h3>
+The duality theorem extends to <span class="math inline">\(H^\infty\)</span> control: the Riccati solution <span class="math inline">\(\mat{S}_\infty\)</span> serves as both:
+The key insight is the disturbance direction in the Riccati equation: <span class="math inline">\(\gamma^{-2}\mat{B}_w\mat{B}_w^\T\)</span> enters with a <em>negative</em> sign (compared to the control input <span class="math inline">\(\mat{B}_u\)</span> which is positive). This asymmetry means the controller is simultaneously designed to:
+</section>
+<section id="worked-example-pendulum-with-wind-disturbance" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example-pendulum-with-wind-disturbance">Worked Example: Pendulum with Wind Disturbance</h3>
+<p>Consider the pendulum with a wind force disturbance <span class="math inline">\(w\)</span> entering as: <span class="math display">\[\begin{equation}
+\ddot\theta = \theta - u + w.
+\label{eq:ch6:pendulum-wind}
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\(H^\infty\)</span> design seeks a controller that minimizes the gain from wind <span class="math inline">\(w\)</span> to angle tracking error <span class="math inline">\(\theta\)</span>. The Riccati solution provides a controller that is simultaneously as energy-efficient as possible while rejecting the worst-case wind disturbance. The duality theorem guarantees that this single controller solves both the performance and robustness objectives.</p>
+</section>
+</section>
+<section id="time-varying-vs.-steady-state-duality" class="level2">
+<h2 class="anchored" data-anchor-id="time-varying-vs.-steady-state-duality">Time-Varying vs.&nbsp;Steady-State Duality</h2>
+<section id="the-discrete-riccati-equation-dre" class="level3">
+<h3 class="anchored" data-anchor-id="the-discrete-riccati-equation-dre">The Discrete Riccati Equation (DRE)</h3>
+<p>For finite-horizon problems (e.g., trajectory optimization over a <span class="math inline">\(T\)</span>-step horizon), the cost-to-go matrix evolves backward according to the discrete Riccati recursion: <span class="math display">\[\begin{equation}
+\mat{S}_k = \mat{Q}_k + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k(\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k,
+\label{eq:ch6:dre-discrete}
+\end{equation}\]</span> with <span class="math inline">\(\mat{S}_T = \mat{S}_f\)</span> (a terminal cost, often zero).</p>
+<p>At each time <span class="math inline">\(k\)</span>, the contraction property holds in the tangent space: <span class="math display">\[\begin{equation}
+\norm{\dx_{k+1}}_{\mat{S}_{k+1}} \leq \rho_k \norm{\dx_k}_{\mat{S}_k},
+\label{eq:ch6:time-varying-contraction}
+\end{equation}\]</span> where <span class="math inline">\(\rho_k = 1 - \alpha_k/\overline{s}_k\)</span> is <em>time-dependent</em>.</p>
+</section>
+<section id="the-algebraic-riccati-equation-are" class="level3">
+<h3 class="anchored" data-anchor-id="the-algebraic-riccati-equation-are">The Algebraic Riccati Equation (ARE)</h3>
+<p>For infinite-horizon, time-invariant LQR, the Riccati recursion converges to a fixed point, the ARE: <span class="math display">\[\begin{equation}
+0 = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
+\label{eq:ch6:are-again}
+\end{equation}\]</span></p>
+<p>The solution <span class="math inline">\(\mat{S}\)</span> is <em>constant</em> in time, and the contraction rate <span class="math inline">\(\rho\)</span> is also constant: <span class="math display">\[\begin{equation}
+\norm{\dx_k}_\mat{S} \leq \rho^k \norm{\dx_0}_\mat{S},
+\label{eq:ch6:steady-state-contraction}
+\end{equation}\]</span> with <span class="math inline">\(\rho = 1 - \alpha/\overline{s}\)</span> independent of <span class="math inline">\(k\)</span>.</p>
+</section>
+<section id="geometric-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-interpretation">Geometric Interpretation</h3>
+<p>In both cases, the duality theorem holds: the Riccati solution (time-varying or steady-state) is simultaneously the optimal cost-to-go and the contraction metric.</p>
+</section>
+</section>
+<section id="tangent-bundle-geometry-and-geodesics" class="level2">
+<h2 class="anchored" data-anchor-id="tangent-bundle-geometry-and-geodesics">Tangent Bundle Geometry and Geodesics</h2>
+<section id="the-tangent-bundle" class="level3">
+<h3 class="anchored" data-anchor-id="the-tangent-bundle">The Tangent Bundle</h3>
+<p>A trajectory on a state-space manifold is a curve <span class="math inline">\(\gamma(t) = (x_1(t), \ldots, x_n(t))\)</span>. At each point <span class="math inline">\(x\)</span> on the trajectory, the <strong>tangent space</strong> <span class="math inline">\(T_x M\)</span> is the space of infinitesimal perturbation vectors <span class="math inline">\(\dx\)</span>. The <strong>tangent bundle</strong> <span class="math inline">\(TM\)</span> is the union of all tangent spaces: <span class="math display">\[\begin{equation}
+TM = \bigcup_{x \in M} T_x M = \{(x, \dx) : x \in M, \dx \in \mathbb{R}^n\}.
+\label{eq:ch6:tangent-bundle}
+\end{equation}\]</span></p>
+</section>
+<section id="riemannian-metric-on-the-tangent-bundle" class="level3">
+<h3 class="anchored" data-anchor-id="riemannian-metric-on-the-tangent-bundle">Riemannian Metric on the Tangent Bundle</h3>
+<p>A Riemannian metric is a positive-definite inner product on the tangent space at each point. In our context, the Riccati solution <span class="math inline">\(\mat{S}(x)\)</span> (which may depend on the state <span class="math inline">\(x\)</span> for nonlinear systems, but is constant for linear systems) defines a Riemannian metric: <span class="math display">\[\begin{equation}
+\langle \dx_1, \dx_2 \rangle_\mat{S} = \dx_1^\T\mat{S}\,\dx_2.
+\label{eq:ch6:riemannian-metric}
+\end{equation}\]</span></p>
+<p>The length of a tangent vector is: <span class="math display">\[\begin{equation}
+\|\dx\|_\mat{S} = \sqrt{\dx^\T\mat{S}\,\dx}.
+\label{eq:ch6:metric-norm}
+\end{equation}\]</span></p>
+</section>
+<section id="geodesics-and-optimal-control" class="level3">
+<h3 class="anchored" data-anchor-id="geodesics-and-optimal-control">Geodesics and Optimal Control</h3>
+<p>In Riemannian geometry, a <strong>geodesic</strong> is a curve of shortest length (in the metric sense). For our system, the optimal trajectories (those minimizing the LQR cost) are precisely the <strong>geodesics</strong> with respect to the Riccati metric.</p>
+<p>Here’s why: the LQR cost functional <span class="math display">\[\begin{equation}
+J = \int_0^T \left(\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec\right) dt
+\label{eq:ch6:lqr-cost-again}
+\end{equation}\]</span> can be rewritten, using the Riccati solution, as a metric-weighted length: <span class="math display">\[\begin{equation}
+J \approx \int_0^T \norm{\dot{\gamma}}_\mat{S} \, dt,
+\label{eq:ch6:geodesic-length}
+\end{equation}\]</span> where the precise relationship depends on the details of the derivation. The Euler-Lagrange equations for minimizing this metric-weighted path length are equivalent to the optimal control equations.</p>
+</section>
+<section id="convergence-of-neighboring-trajectories" class="level3">
+<h3 class="anchored" data-anchor-id="convergence-of-neighboring-trajectories">Convergence of Neighboring Trajectories</h3>
+<p>A key property of geodesics is that they are <em>stable</em> (in a local sense): neighboring geodesics maintain bounded separation. In our setting, the contraction property guarantees stronger convergence: <span class="math display">\[\begin{equation}
+\|\Delta \gamma(t)\|_\mat{S} \leq \rho^{t/\tau} \|\Delta \gamma(0)\|_\mat{S},
+\label{eq:ch6:geodesic-convergence}
+\end{equation}\]</span> where <span class="math inline">\(\Delta\gamma\)</span> is the difference between two nearby optimal trajectories, and <span class="math inline">\(\tau\)</span> is the natural time scale.</p>
+<p>This is a remarkable property: not only are the optimal trajectories geodesics (shortest paths), but . This is what makes the LQR solution so robust and widely applicable.</p>
+</section>
+<section id="visualization-in-2d" class="level3">
+<h3 class="anchored" data-anchor-id="visualization-in-2d">Visualization in 2D</h3>
+<p>For a 2D system (e.g., the pendulum with angle and angular velocity), the Riccati metric defines an elliptical ``distance metric.’’ The level sets of the Lyapunov function <span class="math inline">\(V = \dx^\T\mat{S}\,\dx = 1\)</span> form ellipses. The principal axes of the ellipse are the eigenvectors of <span class="math inline">\(\mat{S}\)</span>, with radii proportional to <span class="math inline">\(1/\sqrt{\lambda_i(\mat{S})}\)</span>.</p>
+<p>A smaller (more negative) eigenvalue means a longer radius in that direction: perturbations along that eigenvector are ``cheaper’’ in the metric sense. Conversely, a larger eigenvalue means a shorter radius: perturbations are expensive.</p>
+<p>Under the optimal feedback, all perturbation ellipses shrink at the rate <span class="math inline">\(\rho\)</span> per time step, and the ellipses align with the eigenvectors of <span class="math inline">\(\mat{A}_{\text{cl}}\)</span>.</p>
+</section>
+</section>
+<section id="practical-design-with-duality" class="level2">
+<h2 class="anchored" data-anchor-id="practical-design-with-duality">Practical Design with Duality</h2>
+<section id="integrated-design-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="integrated-design-workflow">Integrated Design Workflow</h3>
+<p>The duality theorem suggests a unified design methodology:</p>
+</section>
+<section id="when-duality-breaks-down" class="level3">
+<h3 class="anchored" data-anchor-id="when-duality-breaks-down">When Duality Breaks Down</h3>
+<p>The duality requires several conditions:</p>
+</section>
+</section>
+<section id="the-estimationcontrol-duality" class="level2">
+<h2 class="anchored" data-anchor-id="the-estimationcontrol-duality">The Estimation–Control Duality</h2>
+<p>The duality developed so far connects stability to optimality on the <em>control</em> side. But the Riccati equation has a mirror image: the <em>estimation</em> Riccati, which determines how uncertainty propagates through the system and how observations reduce it. This section develops the estimation side of the duality.</p>
+<section id="the-dual-riccati-equation" class="level3">
+<h3 class="anchored" data-anchor-id="the-dual-riccati-equation">The Dual Riccati Equation</h3>
+<p>Consider the system with process noise and output measurement: <span class="math display">\[\begin{align}
+\dot\x &amp;= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
+\vec{y} &amp;= \mat{C}(t)\x + v, \label{eq:ch6:measurement}
+\end{align}\]</span> where <span class="math inline">\(w \sim \mathcal{N}(0, \mat{W})\)</span> and <span class="math inline">\(v \sim \mathcal{N}(0, \mat{V})\)</span> are process and measurement noise. The <em>estimation Riccati equation</em> governs the covariance <span class="math inline">\(\mat{P}(t)\)</span> of the optimal (Kalman) state estimate: <span class="math display">\[\begin{equation}
+\dot{\mat{P}} = \mat{A}\mat{P} + \mat{P}\mat{A}^T + \mat{G}_w \mat{W} \mat{G}_w^T
+- \mat{P}\mat{C}^T \mat{V}^{-1} \mat{C}\mat{P}.
+\label{eq:ch6:estimation-riccati}
+\end{equation}\]</span></p>
+<p>Compare with the control Riccati: <span class="math display">\[\begin{equation}
+-\dot{\mat{S}} = \mat{A}^T\mat{S} + \mat{S}\mat{A} + \mat{Q}
+- \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^T\mat{S}.
+\label{eq:ch6:control-riccati-recall}
+\end{equation}\]</span></p>
+<p>The duality is exact: the estimation Riccati for <span class="math inline">\((\mat{A}, \mat{C}, \mat{W}, \mat{V})\)</span> is the control Riccati for <span class="math inline">\((\mat{A}^T, \mat{C}^T, \mat{G}_w \mat{W} \mat{G}_w^T, \mat{V})\)</span>. The estimation gain <span class="math inline">\(\mat{L} = \mat{P}\mat{C}^T\mat{V}^{-1}\)</span> is the dual of the control gain <span class="math inline">\(\mat{K} = \mat{R}^{-1}\mat{B}^T\mat{S}\)</span>.</p>
+</section>
+<section id="the-extended-kalman-filter-as-tangent-space-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="the-extended-kalman-filter-as-tangent-space-estimation">The Extended Kalman Filter as Tangent-Space Estimation</h3>
+<p>For nonlinear systems <span class="math inline">\(\dot\x = f(\x) + G(\x)\uvec + w\)</span>, the Extended Kalman Filter (EKF) propagates the state estimate and covariance using the tangent-space (linearized) dynamics: <span class="math display">\[\begin{align}
+\dot{\hat\x} &amp;= f(\hat\x) + G(\hat\x)\uvec
++ \mat{L}(t)\bigl(\vec{y} - h(\hat\x)\bigr), \label{eq:ch6:ekf-state} \\
+\dot{\mat{P}} &amp;= \mat{A}(t)\mat{P} + \mat{P}\mat{A}(t)^T + \mat{G}_w \mat{W} \mat{G}_w^T
+- \mat{P}\mat{C}(t)^T \mat{V}^{-1} \mat{C}(t)\mat{P}, \label{eq:ch6:ekf-cov}
+\end{align}\]</span> where <span class="math inline">\(\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat\x(t)}\)</span> and <span class="math inline">\(\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat\x(t)}\)</span>.</p>
+</section>
+<section id="contraction-based-observer-design" class="level3">
+<h3 class="anchored" data-anchor-id="contraction-based-observer-design">Contraction-Based Observer Design</h3>
+<p>The EKF has no convergence guarantees for nonlinear systems—the estimate may diverge if the linearization is poor. Contraction theory provides a rigorous alternative.</p>
+<p>An observer <span class="math inline">\(\dot{\hat\x} = f(\hat\x) + G(\hat\x)\uvec + L(\hat\x)(\vec{y} - h(\hat\x))\)</span> is a <em>contracting observer</em> if the observer error dynamics <span class="math inline">\(\dot{e} = \dot\x - \dot{\hat\x}\)</span> are contracting in some metric <span class="math inline">\(\mat{M}(\x)\)</span>: <span class="math display">\[\begin{equation}
+\sym\left(\mat{M} \left[\frac{\partial f}{\partial \x} - L(\x)\frac{\partial h}{\partial \x}\right]\right)
++ \dot{\mat{M}} \preceq -2\lambda \mat{M}.
+\label{eq:ch6:contracting-observer}
+\end{equation}\]</span></p>
+<p>This is precisely the contraction condition of Chapter~<span class="math inline">\(\ref{ch:contraction}\)</span>, applied to the observer error dynamics. The observer gain <span class="math inline">\(L(\x)\)</span> plays the same role as the feedback gain <span class="math inline">\(\mat{K}\)</span> in control contraction metrics: it shapes the closed-loop dynamics to achieve contraction.</p>
+</section>
+<section id="the-observability-gramian" class="level3">
+<h3 class="anchored" data-anchor-id="the-observability-gramian">The Observability Gramian</h3>
+<p>The observability Gramian <span class="math inline">\(\mathcal{W}_o(t_0, t_1)\)</span> quantifies how much information the output <span class="math inline">\(\vec{y}\)</span> reveals about the initial state <span class="math inline">\(\x(t_0)\)</span>: <span class="math display">\[\begin{equation}
+\mathcal{W}_o(t_0, t_1) = \int_{t_0}^{t_1} \Phi(s, t_0)^T \mat{C}(s)^T \mat{C}(s) \Phi(s, t_0) \, \dd s,
+\label{eq:ch6:obs-gramian}
+\end{equation}\]</span> where <span class="math inline">\(\Phi\)</span> is the state transition matrix from Chapter~<span class="math inline">\(\ref{ch:variational}\)</span>.</p>
+<p>The system is <em>observable</em> on <span class="math inline">\([t_0, t_1]\)</span> if <span class="math inline">\(\mathcal{W}_o \succ 0\)</span>. The eigenvectors of <span class="math inline">\(\mathcal{W}_o\)</span> reveal the most and least observable state directions; the condition number <span class="math inline">\(\kappa(\mathcal{W}_o)\)</span> measures the anisotropy of observability.</p>
+</section>
+<section id="the-separation-principle" class="level3">
+<h3 class="anchored" data-anchor-id="the-separation-principle">The Separation Principle</h3>
+<p>When both observer and controller are available, the celebrated <em>separation principle</em> allows independent design:</p>
+<p>For nonlinear systems, the separation principle does not hold in general. However, when both the controller and observer are designed via contraction metrics, the overall system (controller + observer) contracts at a rate determined by the <em>minimum</em> of the controller and observer contraction rates: <span class="math inline">\(\lambda_{\text{overall}} \geq \min(\lambda_{\text{control}}, \lambda_{\text{observer}})\)</span>. This is a practical nonlinear extension of the separation principle.</p>
+</section>
+</section>
+<section id="chapter-summary" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-summary">Chapter Summary</h2>
+<p>This chapter has shown that optimality and stability are not independent concerns but two facets of a single geometric object. The Riccati matrix, solved once, provides both the controller and the robustness certificate. This is the power of duality: one computation, two major objectives accomplished.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+
+  (function() {
+
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
+
+
+    // Try to load modular ES6 version first, fallback to legacy bundle
+
+    const moduleScript = document.createElement('script');
+
+    moduleScript.type = 'module';
+
+    moduleScript.src = `${normalizedBase}js/main.js`;
+
+
+
+    // Fallback for browsers without ES module support
+
+    const noModuleScript = document.createElement('script');
+
+    noModuleScript.setAttribute('nomodule', '');
+
+    noModuleScript.src = `${normalizedBase}script.js`;
+
+
+
+    document.body.appendChild(moduleScript);
+
+    document.body.appendChild(noModuleScript);
+
+  })();
+
+</script>
+
+<script>
+
+  // Register Service Worker for PWA support
+
+  if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', function() {
+
+      navigator.serviceWorker.register('/service-worker.js')
+
+        .catch(function(error) {
+
+          console.warn('ServiceWorker registration failed:', error);
+
+        });
+
+    });
+
+  }
+
+</script>
+
+<script src="../../../js/notes-workspace.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

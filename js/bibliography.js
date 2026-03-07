@@ -217,16 +217,28 @@
   };
 
   const loadEntries = async () => {
-    const response = await fetch("data/bibliography.json", {
-      cache: "no-cache",
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to load bibliography data (${response.status})`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    try {
+      const response = await fetch("data/bibliography.json", {
+        cache: "no-cache",
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to load bibliography data (${response.status})`);
+      }
+      const data = await response.json();
+      if (!Array.isArray(data))
+        throw new Error("Invalid bibliography data format");
+      return data;
+    } catch (error) {
+      if (error.name === "AbortError") {
+        throw new Error("Bibliography data request timed out after 10 seconds");
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
     }
-    const data = await response.json();
-    if (!Array.isArray(data))
-      throw new Error("Invalid bibliography data format");
-    return data;
   };
 
   const init = async () => {
