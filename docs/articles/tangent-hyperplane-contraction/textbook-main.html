@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AffineDrift Working Notes">
+<meta name="dcterms.date" content="2026-02-18">
+
+<title>Contraction Metrics and Tangent-Space Optimal Control – AffineDrift</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.ico" rel="icon">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0da2bdd6902c8c95d2e6813da368b65a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- SEO: Open Graph / Twitter Cards -->
+
+<meta property="og:site_name" content="AffineDrift">
+
+<meta property="og:type" content="website">
+
+<meta property="og:locale" content="en_US">
+
+<meta property="og:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:image" content="https://affinedrift.com/logo/logo_transparent_1.png">
+
+
+
+<!-- SEO: JSON-LD Structured Data -->
+
+<script type="application/ld+json">
+
+{
+
+  "@context": "https://schema.org",
+
+  "@type": "WebSite",
+
+  "name": "AffineDrift",
+
+  "url": "https://affinedrift.com",
+
+  "description": "Applying affine control theory to understand golf swing biomechanics",
+
+  "potentialAction": {
+
+    "@type": "SearchAction",
+
+    "target": "https://affinedrift.com/bibliography.html?q={search_term_string}",
+
+    "query-input": "required name=search_term_string"
+
+  },
+
+  "author": {
+
+    "@type": "Person",
+
+    "name": "Dieter Olson"
+
+  },
+
+  "publisher": {
+
+    "@type": "Organization",
+
+    "name": "AffineDrift",
+
+    "logo": {
+
+      "@type": "ImageObject",
+
+      "url": "https://affinedrift.com/logo/logo_transparent_1.png"
+
+    }
+
+  }
+
+}
+
+</script>
+
+
+
+<!-- SEO: Additional meta tags -->
+
+<meta name="robots" content="index, follow">
+
+<meta name="googlebot" content="index, follow">
+
+<meta name="author" content="Dieter Olson">
+
+<meta name="keywords" content="golf biomechanics, control theory, affine systems, drift dynamics, robotics, swing mechanics, double pendulum, motor control">
+
+<link rel="canonical" href="https://affinedrift.com">
+
+
+
+<!-- Performance: Preload critical resources -->
+
+<link rel="preload" href="../../css/startup-launcher.css" as="style">
+
+<link rel="preload" href="../../styles.css" as="style">
+
+<link rel="stylesheet" href="../../css/print.css" media="print">
+
+<link rel="preload" href="../../script.js" as="script">
+
+<link rel="modulepreload" href="../../js/main.js">
+
+<link rel="preload" href="../../js/startup-launcher.js" as="script">
+
+<link rel="modulepreload" href="../../js/utils.js">
+
+<link rel="modulepreload" href="../../js/metrics.js">
+
+
+
+<!-- Startup Launcher: Load immediately for splash screen -->
+
+<script src="../../js/startup-launcher.js"></script>
+
+
+
+<!-- PWA and Mobile Optimization -->
+
+<link rel="manifest" href="../../manifest.json">
+
+<meta name="theme-color" content="#1a1a2e">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<meta name="apple-mobile-web-app-title" content="AffineDrift">
+
+<link rel="apple-touch-icon" href="../../logo/logo_transparent_1.png">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="format-detection" content="telephone=no">
+
+
+
+<!-- Preconnect and Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="">
+
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+<link rel="alternate" type="application/rss+xml" title="AffineDrift RSS Feed" href="../../feed.xml">
+
+<style>
+
+  .rss-feed-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 2.75rem;
+
+    height: 2.75rem;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    text-decoration: none;
+
+    border-radius: 4px;
+
+    transition: all 0.2s ease;
+
+    margin-left: 0.5rem;
+
+  }
+
+  .rss-feed-link:hover {
+
+    color: #ffa500;
+
+    background-color: rgba(255, 165, 0, 0.1);
+
+  }
+
+  .rss-feed-link svg {
+
+    width: 1.25rem;
+
+    height: 1.25rem;
+
+    fill: currentColor;
+
+  }
+
+  .quarto-navbar-tools {
+
+    display: flex;
+
+    align-items: center;
+
+  }
+
+</style>
+
+<script>
+
+  // MathJax Configuration - MUST be defined before loading MathJax
+
+  window.MathJax = {
+
+    tex: {
+
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+
+      processEscapes: true,
+
+      processEnvironments: true,
+
+      tags: 'ams'
+
+    },
+
+    svg: {
+
+      fontCache: 'global'
+
+    },
+
+    options: {
+
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+
+      ignoreHtmlClass: 'tex2jax_ignore'
+
+    },
+
+    startup: {
+
+      ready: function() {
+
+        MathJax.startup.defaultReady();
+
+        // Process any math that was added dynamically
+
+        MathJax.startup.promise.then(function() {
+
+          MathJax.typeset();
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  window.Quarto = window.Quarto || {};
+
+  window.Quarto.typesetMath = function(el) {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      window.MathJax.typeset([el]);
+
+      return;
+
+    }
+
+
+
+    if (!window.katex) {
+
+      return;
+
+    }
+
+
+
+    const mathElements = el.getElementsByClassName("math");
+
+    const macros = [];
+
+    for (let i = 0; i < mathElements.length; i++) {
+
+      const texText = mathElements[i].firstChild;
+
+      if (mathElements[i].tagName === "SPAN" && texText && texText.data) {
+
+        window.katex.render(texText.data, mathElements[i], {
+
+          displayMode: mathElements[i].classList.contains("display"),
+
+          throwOnError: false,
+
+          macros: macros,
+
+          fleqn: false
+
+        });
+
+      }
+
+    }
+
+  };
+
+
+
+  // Load MathJax immediately - don't wait for DOMContentLoaded
+
+  (function() {
+
+    // Check if MathJax is already loaded
+
+    if (document.querySelector('script[src*="mathjax"]')) {
+
+      return;
+
+    }
+
+
+
+    // Load polyfill for older browsers
+
+    const polyfill = document.createElement("script");
+
+    polyfill.src = "https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6";
+
+    polyfill.async = true;
+
+    polyfill.dataset.adMathjax = "polyfill";
+
+    document.head.appendChild(polyfill);
+
+
+
+    // Load MathJax
+
+    const mathjax = document.createElement("script");
+
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+
+    mathjax.async = true;
+
+    mathjax.id = "MathJax-script";
+
+    mathjax.dataset.adMathjax = "mathjax";
+
+    document.head.appendChild(mathjax);
+
+  })();
+
+
+
+  // Also process math on DOMContentLoaded as a fallback
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if (window.MathJax && window.MathJax.typeset) {
+
+      // Re-typeset to catch any math that wasn't processed
+
+      setTimeout(function() {
+
+        MathJax.typeset();
+
+      }, 100);
+
+    }
+
+  });
+
+</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../css/startup-launcher.css">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../css/search-metrics.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo light-content">
+    <img src="../../logo/logo_transparent_1.png" alt="AffineDrift Logo" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AffineDrift</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../overview.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-articles" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Articles</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-articles">    
+        <li>
+    <a class="dropdown-item" href="../../drifter-manifesto.html">
+ <span class="dropdown-text">Drifter Manifesto</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../tangent-hyperplanes.html">
+ <span class="dropdown-text">Tangent Hyperplanes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../articles.html">
+ <span class="dropdown-text">Articles</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../research-reviews.html">
+ <span class="dropdown-text">Research Reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../book-reviews.html">
+ <span class="dropdown-text">Book Reviews</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-books" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Books</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-books">    
+        <li>
+    <a class="dropdown-item" href="../../books/index.html">
+ <span class="dropdown-text">Book Series</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../books/tangent-space-methods.html">
+ <span class="dropdown-text">Volume I: Tangent-Space Methods</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../books/control-is-motion.html">
+ <span class="dropdown-text">Volume II: Control Is Motion</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../books/biomechanics-biology-to-systems.html">
+ <span class="dropdown-text">Volume III: Biomechanics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../books/human-motor-control.html">
+ <span class="dropdown-text">Volume IV: Human Motor Control</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../models.html"> 
+<span class="menu-text">Models</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="../../resources-videos.html">
+ <span class="dropdown-text">Videos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-software.html">
+ <span class="dropdown-text">Software</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-websites.html">
+ <span class="dropdown-text">Websites</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-datasets.html">
+ <span class="dropdown-text">Datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-books.html">
+ <span class="dropdown-text">Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-papers.html">
+ <span class="dropdown-text">Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-researchers.html">
+ <span class="dropdown-text">Researchers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../resources-notebooklm.html">
+ <span class="dropdown-text">NotebookLM</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../bibliography.html">
+ <span class="dropdown-text">Bibliography</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-repositories" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Repositories</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-repositories">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/D-sorganization/Golf_Modeling_Suite">
+ <span class="dropdown-text">D-sorganization: Golf Modeling Suite</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../daydreams-doodles.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-contact" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Contact</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-contact">    
+        <li>
+    <a class="dropdown-item" href="../../contact.html">
+ <span class="dropdown-text">Contact</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../about.html">
+ <span class="dropdown-text">About</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../collaborate.html">
+ <span class="dropdown-text">Collaborate</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#roadmap-and-scope" id="toc-roadmap-and-scope" class="nav-link" data-scroll-target="#roadmap-and-scope">Roadmap and Scope</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose" id="toc-introduction-and-qualitative-purpose" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms" id="toc-in-laymans-terms" class="nav-link" data-scroll-target="#in-laymans-terms">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition" id="toc-geometric-intuition" class="nav-link" data-scroll-target="#geometric-intuition">Geometric Intuition</a></li>
+  </ul></li>
+  <li><a href="#contraction-theory-primer" id="toc-contraction-theory-primer" class="nav-link" data-scroll-target="#contraction-theory-primer">Contraction Theory Primer</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-1" id="toc-introduction-and-qualitative-purpose-1" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-1">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-1" id="toc-in-laymans-terms-1" class="nav-link" data-scroll-target="#in-laymans-terms-1">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-1" id="toc-geometric-intuition-1" class="nav-link" data-scroll-target="#geometric-intuition-1">Geometric Intuition</a></li>
+  <li><a href="#differential-condition" id="toc-differential-condition" class="nav-link" data-scroll-target="#differential-condition">Differential Condition</a></li>
+  </ul></li>
+  <li><a href="#tangent-space-dynamics-and-local-linearization" id="toc-tangent-space-dynamics-and-local-linearization" class="nav-link" data-scroll-target="#tangent-space-dynamics-and-local-linearization">Tangent-Space Dynamics and Local Linearization</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-2" id="toc-introduction-and-qualitative-purpose-2" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-2">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-2" id="toc-in-laymans-terms-2" class="nav-link" data-scroll-target="#in-laymans-terms-2">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-2" id="toc-geometric-intuition-2" class="nav-link" data-scroll-target="#geometric-intuition-2">Geometric Intuition</a></li>
+  <li><a href="#continuous-to-discrete-convention" id="toc-continuous-to-discrete-convention" class="nav-link" data-scroll-target="#continuous-to-discrete-convention">Continuous-to-Discrete Convention</a></li>
+  </ul></li>
+  <li><a href="#local-optimal-control-lqr-and-ddp" id="toc-local-optimal-control-lqr-and-ddp" class="nav-link" data-scroll-target="#local-optimal-control-lqr-and-ddp">Local Optimal Control: LQR and DDP</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-3" id="toc-introduction-and-qualitative-purpose-3" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-3">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-3" id="toc-in-laymans-terms-3" class="nav-link" data-scroll-target="#in-laymans-terms-3">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-3" id="toc-geometric-intuition-3" class="nav-link" data-scroll-target="#geometric-intuition-3">Geometric Intuition</a></li>
+  <li><a href="#canonical-riccati-recursion" id="toc-canonical-riccati-recursion" class="nav-link" data-scroll-target="#canonical-riccati-recursion">Canonical Riccati Recursion</a></li>
+  </ul></li>
+  <li><a href="#stability-optimality-duality" id="toc-stability-optimality-duality" class="nav-link" data-scroll-target="#stability-optimality-duality">Stability-Optimality Duality</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-4" id="toc-introduction-and-qualitative-purpose-4" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-4">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-4" id="toc-in-laymans-terms-4" class="nav-link" data-scroll-target="#in-laymans-terms-4">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-4" id="toc-geometric-intuition-4" class="nav-link" data-scroll-target="#geometric-intuition-4">Geometric Intuition</a></li>
+  <li><a href="#decay-statement" id="toc-decay-statement" class="nav-link" data-scroll-target="#decay-statement">Decay Statement</a></li>
+  </ul></li>
+  <li><a href="#coordinate-free-and-riemannian-formulation" id="toc-coordinate-free-and-riemannian-formulation" class="nav-link" data-scroll-target="#coordinate-free-and-riemannian-formulation">Coordinate-Free and Riemannian Formulation</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-5" id="toc-introduction-and-qualitative-purpose-5" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-5">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-5" id="toc-in-laymans-terms-5" class="nav-link" data-scroll-target="#in-laymans-terms-5">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-5" id="toc-geometric-intuition-5" class="nav-link" data-scroll-target="#geometric-intuition-5">Geometric Intuition</a></li>
+  <li><a href="#pullback-metric-caveat" id="toc-pullback-metric-caveat" class="nav-link" data-scroll-target="#pullback-metric-caveat">Pullback Metric Caveat</a></li>
+  </ul></li>
+  <li><a href="#contraction-constrained-computation" id="toc-contraction-constrained-computation" class="nav-link" data-scroll-target="#contraction-constrained-computation">Contraction-Constrained Computation</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-6" id="toc-introduction-and-qualitative-purpose-6" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-6">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-6" id="toc-in-laymans-terms-6" class="nav-link" data-scroll-target="#in-laymans-terms-6">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-6" id="toc-geometric-intuition-6" class="nav-link" data-scroll-target="#geometric-intuition-6">Geometric Intuition</a></li>
+  <li><a href="#representative-programs" id="toc-representative-programs" class="nav-link" data-scroll-target="#representative-programs">Representative Programs</a></li>
+  </ul></li>
+  <li><a href="#high-dimensional-applications" id="toc-high-dimensional-applications" class="nav-link" data-scroll-target="#high-dimensional-applications">High-Dimensional Applications</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-7" id="toc-introduction-and-qualitative-purpose-7" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-7">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-7" id="toc-in-laymans-terms-7" class="nav-link" data-scroll-target="#in-laymans-terms-7">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-7" id="toc-geometric-intuition-7" class="nav-link" data-scroll-target="#geometric-intuition-7">Geometric Intuition</a></li>
+  <li><a href="#example-mechanical-form" id="toc-example-mechanical-form" class="nav-link" data-scroll-target="#example-mechanical-form">Example Mechanical Form</a></li>
+  </ul></li>
+  <li><a href="#implementation-and-validation-checklist" id="toc-implementation-and-validation-checklist" class="nav-link" data-scroll-target="#implementation-and-validation-checklist">Implementation and Validation Checklist</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-8" id="toc-introduction-and-qualitative-purpose-8" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-8">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-8" id="toc-in-laymans-terms-8" class="nav-link" data-scroll-target="#in-laymans-terms-8">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-8" id="toc-geometric-intuition-8" class="nav-link" data-scroll-target="#geometric-intuition-8">Geometric Intuition</a></li>
+  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#introduction-and-qualitative-purpose-9" id="toc-introduction-and-qualitative-purpose-9" class="nav-link" data-scroll-target="#introduction-and-qualitative-purpose-9">Introduction and Qualitative Purpose</a></li>
+  <li><a href="#in-laymans-terms-9" id="toc-in-laymans-terms-9" class="nav-link" data-scroll-target="#in-laymans-terms-9">In Laymans Terms</a></li>
+  <li><a href="#geometric-intuition-9" id="toc-geometric-intuition-9" class="nav-link" data-scroll-target="#geometric-intuition-9">Geometric Intuition</a></li>
+  <li><a href="#next-expansion-targets" id="toc-next-expansion-targets" class="nav-link" data-scroll-target="#next-expansion-targets">Next Expansion Targets</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Contraction Metrics and Tangent-Space Optimal Control</h1></header>
+
+<header id="title-block-header">
+
+<p class="subtitle lead">A Geometry-First Textbook Draft for High-Dimensional Nonlinear Control</p>
+<p class="author">AffineDrift Working Notes</p>
+
+<p class="date">2026-02-18</p>
+</header>
+
+
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>This manuscript develops a unified framework for nonlinear control based on tangent-space dynamics, contraction metrics, and Riccati-based local optimal control. The central claim is that local stability certificates and local optimality recursions act on the same infinitesimal objects. The document is structured for textbook development: every major section includes qualitative framing, non-technical explanation, geometric interpretation, and mathematical details.</p>
+</section>
+<section id="roadmap-and-scope" class="level1">
+<h1>Roadmap and Scope</h1>
+<section id="introduction-and-qualitative-purpose" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose">Introduction and Qualitative Purpose</h2>
+<p>The purpose is to establish a mathematically coherent and physically interpretable bridge between contraction analysis and trajectory optimization. The practical objective is not only proof-level correctness but usable design guidance for complex, many-dimensional systems.</p>
+</section>
+<section id="in-laymans-terms" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms">In Laymans Terms</h2>
+<p>We want controllers that do two things at once: make motion good and make motion reliable. This draft shows that both goals can be addressed through one set of local error equations.</p>
+</section>
+<section id="geometric-intuition" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition">Geometric Intuition</h2>
+<p>The dynamics evolve on a manifold, but perturbations evolve in tangent spaces. A metric defines local distances in those tangent spaces. Contraction and optimal control each shape how these tangent vectors evolve.</p>
+</section>
+</section>
+<section id="contraction-theory-primer" class="level1">
+<h1>Contraction Theory Primer</h1>
+<section id="introduction-and-qualitative-purpose-1" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-1">Introduction and Qualitative Purpose</h2>
+<p>Contraction theory asks whether nearby trajectories converge to each other exponentially. This trajectory-to-trajectory perspective is especially useful for time-varying motions and underactuated tasks where equilibrium-only analysis is too narrow <span class="citation" data-cites="lohmiller1998contraction forni2014contraction">(<a href="#ref-lohmiller1998contraction" role="doc-biblioref">Lohmiller and Slotine 1998</a>; <a href="#ref-forni2014contraction" role="doc-biblioref">Forni and Sepulchre 2014</a>)</span>.</p>
+</section>
+<section id="in-laymans-terms-1" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-1">In Laymans Terms</h2>
+<p>If you run the same movement twice with tiny differences, contraction says those differences should fade quickly.</p>
+</section>
+<section id="geometric-intuition-1" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-1">Geometric Intuition</h2>
+<p>Contraction is local shrinking of tangent vectors under a metric, integrated along trajectories into global distance decay.</p>
+</section>
+<section id="differential-condition" class="level2">
+<h2 class="anchored" data-anchor-id="differential-condition">Differential Condition</h2>
+<p>For</p>
+<p><span class="math display">\[
+\dot x = f(x,t),
+\]</span></p>
+<p>with variational dynamics</p>
+<p><span class="math display">\[
+\dot{\delta x} = A(x,t)\,\delta x, \qquad A(x,t)=\frac{\partial f}{\partial x}(x,t),
+\]</span></p>
+<p>a metric <span class="math inline">\(M(x,t)\succ0\)</span> is contracting with rate <span class="math inline">\(\lambda&gt;0\)</span> if</p>
+<p><span class="math display">\[
+A^\top M + MA + \dot M \preceq -2\lambda M.
+\]</span></p>
+<p>A rigorous trajectory-distance result also requires forward invariance, geodesic regularity, and uniform bounds on <span class="math inline">\(M\)</span>.</p>
+</section>
+</section>
+<section id="tangent-space-dynamics-and-local-linearization" class="level1">
+<h1>Tangent-Space Dynamics and Local Linearization</h1>
+<section id="introduction-and-qualitative-purpose-2" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-2">Introduction and Qualitative Purpose</h2>
+<p>Local linearization is the exact infinitesimal description of deviation dynamics, not merely a computational trick. It separates nominal motion from perturbation behavior.</p>
+</section>
+<section id="in-laymans-terms-2" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-2">In Laymans Terms</h2>
+<p>At each instant, we zoom in enough that nonlinear behavior looks linear for tiny errors.</p>
+</section>
+<section id="geometric-intuition-2" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-2">Geometric Intuition</h2>
+<p>Linearization defines a map between neighboring tangent spaces along a nominal trajectory.</p>
+</section>
+<section id="continuous-to-discrete-convention" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-to-discrete-convention">Continuous-to-Discrete Convention</h2>
+<p>For sampled-data control, define</p>
+<p><span class="math display">\[
+x_{k+1}=f_d(x_k,u_k)=\Phi_h(x_k,u_k),
+\]</span></p>
+<p>where <span class="math inline">\(\Phi_h\)</span> is the time-<span class="math inline">\(h\)</span> flow map. Linearization along <span class="math inline">\((x_k^\star,u_k^\star)\)</span> yields</p>
+<p><span class="math display">\[
+\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k,
+\]</span></p>
+<p>with Jacobians of <span class="math inline">\(f_d\)</span>.</p>
+</section>
+</section>
+<section id="local-optimal-control-lqr-and-ddp" class="level1">
+<h1>Local Optimal Control: LQR and DDP</h1>
+<section id="introduction-and-qualitative-purpose-3" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-3">Introduction and Qualitative Purpose</h2>
+<p>LQR and DDP use tangent dynamics to compute feedback corrections that balance state error and control effort.</p>
+</section>
+<section id="in-laymans-terms-3" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-3">In Laymans Terms</h2>
+<p>Take a hard nonlinear problem, solve a local linear-quadratic version, update, and repeat.</p>
+</section>
+<section id="geometric-intuition-3" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-3">Geometric Intuition</h2>
+<p>The Riccati matrix is local curvature of cost-to-go in tangent space.</p>
+</section>
+<section id="canonical-riccati-recursion" class="level2">
+<h2 class="anchored" data-anchor-id="canonical-riccati-recursion">Canonical Riccati Recursion</h2>
+<p>Given <span class="math inline">\(\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k\)</span>, minimize</p>
+<p><span class="math display">\[
+J=\frac{1}{2}\delta x_T^\top Q_T\delta x_T + \frac{1}{2}\sum_{k=0}^{T-1}
+\left(\delta x_k^\top Q_k\delta x_k + \delta u_k^\top R_k\delta u_k\right).
+\]</span></p>
+<p>The backward recursion is</p>
+<p><span class="math display">\[
+\begin{aligned}
+S_T &amp;= Q_T,\\
+K_k &amp;= (R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k,\\
+S_k &amp;= Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
+\end{aligned}
+\]</span></p>
+</section>
+</section>
+<section id="stability-optimality-duality" class="level1">
+<h1>Stability-Optimality Duality</h1>
+<section id="introduction-and-qualitative-purpose-4" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-4">Introduction and Qualitative Purpose</h2>
+<p>In linear-quadratic settings, the Riccati matrix can be interpreted both as value-function curvature and as a contraction metric candidate for closed-loop tangent dynamics.</p>
+</section>
+<section id="in-laymans-terms-4" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-4">In Laymans Terms</h2>
+<p>The same matrix that tells you future cost can also prove errors shrink.</p>
+</section>
+<section id="geometric-intuition-4" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-4">Geometric Intuition</h2>
+<p>Optimization and contraction both specify a quadratic geometry on perturbations; duality occurs when those geometries coincide.</p>
+</section>
+<section id="decay-statement" class="level2">
+<h2 class="anchored" data-anchor-id="decay-statement">Decay Statement</h2>
+<p>For closed-loop perturbations <span class="math inline">\(\delta x_{k+1}=(A_k-B_kK_k)\delta x_k\)</span> and <span class="math inline">\(V_k=\delta x_k^\top S_k\delta x_k\)</span>,</p>
+<p><span class="math display">\[
+V_{k+1}-V_k = -\delta x_k^\top(Q_k+K_k^\top R_kK_k)\delta x_k.
+\]</span></p>
+<p>Under uniform bounds</p>
+<p><span class="math display">\[
+Q_k+K_k^\top R_kK_k\succeq \alpha I,\quad \underline s I\preceq S_k\preceq \overline s I,
+\]</span></p>
+<p>we obtain exponential decay in both <span class="math inline">\(V_k\)</span> and Euclidean norm.</p>
+</section>
+</section>
+<section id="coordinate-free-and-riemannian-formulation" class="level1">
+<h1>Coordinate-Free and Riemannian Formulation</h1>
+<section id="introduction-and-qualitative-purpose-5" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-5">Introduction and Qualitative Purpose</h2>
+<p>High-dimensional mechanical and robotic systems often evolve on manifolds. Coordinate-free statements avoid misleading chart artifacts.</p>
+</section>
+<section id="in-laymans-terms-5" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-5">In Laymans Terms</h2>
+<p>Some state spaces are curved, and we need rulers that respect that curvature.</p>
+</section>
+<section id="geometric-intuition-5" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-5">Geometric Intuition</h2>
+<p>A metric assigns an inner product to each tangent space; pullbacks transfer task-space priorities into configuration space.</p>
+</section>
+<section id="pullback-metric-caveat" class="level2">
+<h2 class="anchored" data-anchor-id="pullback-metric-caveat">Pullback Metric Caveat</h2>
+<p>For task map <span class="math inline">\(y=h(x)\)</span>,</p>
+<p><span class="math display">\[
+M(x)=J(x)^\top W(h(x))J(x).
+\]</span></p>
+<p>This is positive definite only if <span class="math inline">\(J\)</span> has full column rank. Otherwise, use regularization or nullspace completion to obtain a true metric.</p>
+</section>
+</section>
+<section id="contraction-constrained-computation" class="level1">
+<h1>Contraction-Constrained Computation</h1>
+<section id="introduction-and-qualitative-purpose-6" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-6">Introduction and Qualitative Purpose</h2>
+<p>Controller synthesis can be framed as optimization under contraction inequalities, turning robustness goals into explicit constraints.</p>
+</section>
+<section id="in-laymans-terms-6" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-6">In Laymans Terms</h2>
+<p>Do not only optimize performance. Also require a mathematical shrinking guarantee.</p>
+</section>
+<section id="geometric-intuition-6" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-6">Geometric Intuition</h2>
+<p>The optimizer selects both control action and local measurement geometry that bends perturbations toward the target trajectory.</p>
+</section>
+<section id="representative-programs" class="level2">
+<h2 class="anchored" data-anchor-id="representative-programs">Representative Programs</h2>
+<ul>
+<li>LTI metric-gain synthesis via LMIs <span class="citation" data-cites="boyd1994">(<a href="#ref-boyd1994" role="doc-biblioref">Boyd et al. 1994</a>)</span>.</li>
+<li>Time-varying trajectory synthesis with stage-wise constraints.</li>
+<li>Sampled nonlinear metric search with autodiff and constrained optimization.</li>
+</ul>
+</section>
+</section>
+<section id="high-dimensional-applications" class="level1">
+<h1>High-Dimensional Applications</h1>
+<section id="introduction-and-qualitative-purpose-7" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-7">Introduction and Qualitative Purpose</h2>
+<p>Applications in biomechanics and robotics motivate the framework by coupling strong performance demands with disturbance rejection requirements.</p>
+</section>
+<section id="in-laymans-terms-7" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-7">In Laymans Terms</h2>
+<p>In complex motions, you need speed and precision without losing repeatability.</p>
+</section>
+<section id="geometric-intuition-7" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-7">Geometric Intuition</h2>
+<p>Many-dimensional motion is a curve in a large state manifold. Metrics encode which deviation directions matter most for success.</p>
+</section>
+<section id="example-mechanical-form" class="level2">
+<h2 class="anchored" data-anchor-id="example-mechanical-form">Example Mechanical Form</h2>
+<p><span class="math display">\[
+H(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J_c(q)^\top\lambda.
+\]</span></p>
+<p>This structure supports physically grounded tangent-space analysis and task-relevant metric shaping.</p>
+</section>
+</section>
+<section id="implementation-and-validation-checklist" class="level1">
+<h1>Implementation and Validation Checklist</h1>
+<section id="introduction-and-qualitative-purpose-8" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-8">Introduction and Qualitative Purpose</h2>
+<p>A textbook treatment must be reproducible. This section defines minimum standards for derivation quality, numerics, and verification.</p>
+</section>
+<section id="in-laymans-terms-8" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-8">In Laymans Terms</h2>
+<p>Every new equation should answer: what does it mean physically, and how would we test it?</p>
+</section>
+<section id="geometric-intuition-8" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-8">Geometric Intuition</h2>
+<p>For each contribution, identify the tangent object, the metric, and the claimed decay/optimality property.</p>
+</section>
+<section id="checklist" class="level2">
+<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
+<ol type="1">
+<li>Verify linearization against finite differences.</li>
+<li>Track conditioning of Riccati factors.</li>
+<li>Log contraction residual spectra along trajectories.</li>
+<li>Stress-test under model mismatch and contact variation.</li>
+<li>State assumptions explicitly before every theorem-level claim.</li>
+</ol>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<section id="introduction-and-qualitative-purpose-9" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-qualitative-purpose-9">Introduction and Qualitative Purpose</h2>
+<p>This draft establishes the core architecture for a full textbook on nonlinear control via tangent-space and contraction perspectives.</p>
+</section>
+<section id="in-laymans-terms-9" class="level2">
+<h2 class="anchored" data-anchor-id="in-laymans-terms-9">In Laymans Terms</h2>
+<p>The same local error geometry can guide design and certify stability.</p>
+</section>
+<section id="geometric-intuition-9" class="level2">
+<h2 class="anchored" data-anchor-id="geometric-intuition-9">Geometric Intuition</h2>
+<p>Trajectory, tangent perturbations, and metric are the minimal geometric triad for unifying nonlinear stability and optimality.</p>
+</section>
+<section id="next-expansion-targets" class="level2">
+<h2 class="anchored" data-anchor-id="next-expansion-targets">Next Expansion Targets</h2>
+<ol type="1">
+<li>Full proof chapter for discrete and continuous duality.</li>
+<li>Worked numerical chapter with complete reproducible experiments.</li>
+<li>Hybrid/contact chapter with mode-dependent metrics.</li>
+<li>Extended chapter on estimation and identification under affine structure.</li>
+</ol>
+
+
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-boyd1994" class="csl-entry" role="listitem">
+Boyd, Stephen, Laurent El Ghaoui, Eric Feron, and Venkataramanan Balakrishnan. 1994. <em>Linear Matrix Inequalities in System and Control Theory</em>. Philadelphia, PA: SIAM.
+</div>
+<div id="ref-forni2014contraction" class="csl-entry" role="listitem">
+Forni, Fulvio, and Rodolphe Sepulchre. 2014. <span>“A Differential Lyapunov Framework for Contraction Analysis.”</span> <em>IEEE Transactions on Automatic Control</em> 59 (3): 614–28.
+</div>
+<div id="ref-lohmiller1998contraction" class="csl-entry" role="listitem">
+Lohmiller, Winfried, and Jean-Jacques E. Slotine. 1998. <span>“On Contraction Analysis for Nonlinear Systems.”</span> <em>Automatica</em> 34 (6): 683–96.
+</div>
+</div></section></div></main> <!-- /main -->
+<script>
+
+  (function() {
+
+    const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
+
+    const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
+
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
+
+
+    // Try to load modular ES6 version first, fallback to legacy bundle
+
+    const moduleScript = document.createElement('script');
+
+    moduleScript.type = 'module';
+
+    moduleScript.src = `${normalizedBase}js/main.js`;
+
+
+
+    // Fallback for browsers without ES module support
+
+    const noModuleScript = document.createElement('script');
+
+    noModuleScript.setAttribute('nomodule', '');
+
+    noModuleScript.src = `${normalizedBase}script.js`;
+
+
+
+    document.body.appendChild(moduleScript);
+
+    document.body.appendChild(noModuleScript);
+
+  })();
+
+</script>
+
+<script>
+
+  // Register Service Worker for PWA support
+
+  if ('serviceWorker' in navigator) {
+
+    window.addEventListener('load', function() {
+
+      navigator.serviceWorker.register('/service-worker.js')
+
+        .catch(function(error) {
+
+          console.warn('ServiceWorker registration failed:', error);
+
+        });
+
+    });
+
+  }
+
+</script>
+
+<script src="../../js/notes-workspace.js"></script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/affinedrift\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

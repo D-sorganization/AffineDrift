@@ -181,13 +181,7 @@
         setStatus("Pop-out blocked by browser.");
         return;
       }
-      const escaped = textArea.value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-      const openerOrigin = window.location.origin;
+      const escaped = textArea.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       pop.document.write(`
         <!doctype html>
         <html><head><title>AffineDrift Project Notes</title></head>
@@ -200,9 +194,8 @@
           </div>
           <script>
             const area = document.getElementById("notes");
-            const targetOrigin = "${openerOrigin}";
             document.getElementById("save").addEventListener("click", function () {
-              window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, targetOrigin);
+              window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, "*");
             });
             document.getElementById("close").addEventListener("click", function () { window.close(); });
           </script>
@@ -213,8 +206,6 @@
     }
 
     window.addEventListener("message", function (event) {
-      // Security: only accept messages from our own origin (pop-out window)
-      if (event.origin !== window.location.origin) return;
       if (!event || !event.data || event.data.type !== "AD_NOTES_SAVE") return;
       if (typeof event.data.content !== "string") return;
       store.saveActive(event.data.content);
