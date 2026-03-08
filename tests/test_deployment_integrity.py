@@ -20,14 +20,14 @@ def test_deploy_workflow_integrity() -> None:
         content = f.read()
 
     # Check for Pre-build checks
-    assert "python -m src.tools.check_links" in content, (
-        "Pre-build link check must run as module to resolve imports"
-    )
+    assert (
+        "python -m src.tools.check_links" in content
+    ), "Pre-build link check must run as module to resolve imports"
 
     # Check for Post-build checks
-    assert "python -m src.tools.check_site_health --fail-on broken" in content, (
-        "Post-build site health check must run as module to resolve imports"
-    )
+    assert (
+        "python -m src.tools.check_site_health --fail-on broken" in content
+    ), "Post-build site health check must run as module to resolve imports"
 
     # Check for Verification
     assert "Verify Deployment" in content, "Deployment verification step missing"
@@ -42,9 +42,9 @@ def test_requirements_integrity() -> None:
     with open(REQUIREMENTS_PATH, encoding="utf-8") as f:
         reqs = f.read()
 
-    assert "beautifulsoup4" in reqs, (
-        "beautifulsoup4 missing from requirements (needed for health check)"
-    )
+    assert (
+        "beautifulsoup4" in reqs
+    ), "beautifulsoup4 missing from requirements (needed for health check)"
 
 
 def test_check_scripts_exist() -> None:
