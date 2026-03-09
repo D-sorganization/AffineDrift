@@ -11,7 +11,7 @@ from typing import Any
 
 try:
     import numpy as np
-except ModuleNotFoundError:  # pragma: no cover
+except ImportError:  # pragma: no cover - numpy optional or transiently unavailable
     np = None  # type: ignore[assignment]
 
 from src.core.contracts.definitions import require
