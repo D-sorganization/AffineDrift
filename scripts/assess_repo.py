@@ -584,6 +584,7 @@ def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: 
         "# Comprehensive Repository Assessment",
         "",
         f"## Overall Grade: {final_grade:.2f}/10",
+        f"**Weighted Average:** {final_grade:.2f}/10 (Code 25%, Testing 15%, Docs 10%, Security 15%, Perf 15%, Ops 10%, Design 10%)",
         "",
         "## Category Breakdown",
         "",
@@ -591,7 +592,8 @@ def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: 
         "|----------|-------|--------|",
     ]
     for cat_code, info in scores.items():
-        lines.append(f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | - |")
+        weight = f"{GROUP_WEIGHTS.get(GROUP_MAPPING.get(cat_code, 'Code'), 0) * 100:.0f}%"
+        lines.append(f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | {weight} |")
 
     # Top 5 recommendations (lowest scores first)
     recommendations_list = sorted(
