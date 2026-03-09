@@ -17,7 +17,7 @@ from typing import Any, TypeVar, cast
 
 try:
     import numpy as np
-except ModuleNotFoundError:  # pragma: no cover - numpy optional for non-numeric usage
+except ImportError:  # pragma: no cover - numpy optional or transiently unavailable
     np = None  # type: ignore[assignment]
 
 logger = logging.getLogger(__name__)
@@ -79,7 +79,7 @@ class ContractViolationError(AssertionError, ValueError):
         self.value = value
         detail = f"[DbC {condition_type}] {message}"
         if value is not None:
-            if isinstance(value, np.ndarray):
+            if np is not None and isinstance(value, np.ndarray):
                 detail += f" (shape={value.shape}, dtype={value.dtype})"
             else:
                 detail += f" (got: {value!r})"
