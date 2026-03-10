@@ -88,4 +88,31 @@ By simply enforcing that the sum of the squares of these 4 variables equals 1 ($
 
 Throughout *The Geometry of Motion*, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
 
+
+## Numerical Stability: A Practical Consideration
+
+
+The choice between different rotation parameterizations has profound implications not just for singularities (which Gimbal Lock handles for Euler Angles), but for **numerical stability** during computation. This is critically important for practitioners implementing control algorithms and physics simulators. Rather than treating numerical stability as a post-hoc "patch," it deserves integration into the design of the rotation representation itself.
+
+### Rotation Matrices: Stability Through Constraints
+
+**Rotation Matrices** ($R \in \SO$) are numerically robust once computed correctly—multiplication is simple matrix multiplication, and the 9 entries intrinsically encode orthonormality constraints. However, maintaining this orthonormality over thousands of sequential matrix multiplications (as in iterative dynamics algorithms) requires periodic re-orthogonalization (e.g., QR factorization), adding computational cost. The advantage of matrices is that once you enforce $R^T R = I$ (which is cheap to check), you directly access the body-frame axes $\hat{x}_b, \hat{y}_b, \hat{z}_b$ needed for many geometric calculations. In robotics engines like MuJoCo and Pinocchio, rotation matrices are preferred for their transparency, even at the cost of occasional re-orthogonalization during long kinematic chains.
+
+### Unit Quaternions: Efficiency Meets Stability
+
+**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
+
+### Euler Angles: Where Singularities Propagate
+
+**Euler Angles** suffer from Gimbal Lock (a singularity), but *near* the singularity—even when not exactly at $90°$—the Jacobian becomes poorly conditioned, meaning small changes in joint angles produce wildly inconsistent changes in orientation. This numerical ill-conditioning makes Euler Angles dangerous for iterative algorithms, not just at the singularity itself, but in a neighborhood around it. For these reasons, Euler Angles should be avoided entirely in computational algorithms—reserve them only for human-readable initialization and visualization.
+
+### Practical Guidance
+
+For real-time control and simulation, the recommendation depends on the application context:
+
+- **Continuous dynamics and long kinematic chains:** Use unit quaternions internally for efficiency and numerical robustness. Convert to rotation matrices only when geometric insight (e.g., body-frame projections) is needed.
+- **Frequent composition with geometric constraints:** Use rotation matrices with periodic re-orthogonalization. The cost of QR decomposition is negligible compared to the computational savings of avoiding quaternion-to-matrix conversion overhead.
+- **High-speed ballistic motion (e.g., golf swing):** Prefer quaternions to handle rapid changes in angular velocity without singularity concerns.
+
+
 To merge Translation and Rotation into a single unified control framework for physical bodies mapping the full world, we must upgrade from $3 \times 3$ Rotation Matrices to the magnificent $4 \times 4$ space of $\SE$.

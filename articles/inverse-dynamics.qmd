@@ -21,16 +21,16 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        "Inverse Dynamics" is how scientists figure out forces by watching movement. It's powerful, but this article warns that it's often misinterpreted.
+        Here's a trick question: if I show you a video of a ball being thrown, can you tell me how hard the thrower pushed? Surprisingly, the answer is yes—and this is what inverse dynamics does. It watches the motion and works backward to figure out what forces must have caused it. But here's the catch: it's often misinterpreted, and this article explains why.
       </p>
 
       <div class="laymans-item">
-        <h3>The Core Problem</h3>
+        <h3>The Core Problem: You Can't Tell How Hard the Engine is Working</h3>
         <p>
           Calculating force from motion is like trying to guess how hard a car's engine is working just by watching it drive.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> If you see a car going 60mph downhill, is the engine pushing hard, or is it just gravity? You can't tell just by looking at the speed. You need to know the slope of the hill (drift) to figure out the engine effort (input).
+          <strong>Analogy:</strong> If you see a car going 60mph downhill, is the engine pushing hard, or is it just gravity? You can't tell just by looking at the speed. You need to know the slope of the hill (drift) to figure out the engine effort (input). The same problem haunts inverse dynamics: the total force the club experiences includes both what the golfer is doing AND what physics is doing for free.
         </div>
       </div>
 
@@ -530,7 +530,7 @@ $$
     
 - With drag consideration: $C_\alpha = -11.1$ Nm
 
-This represents a **40\
+This represents a **40% reduction** in the calculated couple magnitude when drag is accounted for.
 
 [Figure: Effect of accounting for air resistance on force and couple calculations. When drag is neglected, inverse dynamics attributes all forces to the golfer's hands, leading to substantially different couple values.]
 
@@ -568,6 +568,18 @@ Unlike the spatial ambiguity (which requires knowing force distribution) or the 
 Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation provides more accurate estimates of the forces actually applied by the golfer.
 
 :::
+
+## Connection to ZTCF: Separating Drift from Control
+
+A critical insight emerges from control theory: inverse dynamics gives you the **total** forces, but not the decomposition of those forces into passive and active components. This is where the Zero Torque Counterfactual (ZTCF) becomes essential.
+
+**What Inverse Dynamics Tells You:** The total net force at the grip (gravity, momentum, and control combined).
+
+**What You Actually Want:** The control component—what the golfer is actively doing versus what physics is doing passively.
+
+The ZTCF framework solves this by asking: "What would the club do if the golfer applied zero effort?" That simulation reveals the drift component—all the motion that would happen from gravity and momentum alone. Subtracting drift from the total gives you the true control contribution: what the golfer actually had to contribute.
+
+This is why examining inverse dynamics numbers in isolation can be misleading. Two golfers might show identical total forces at impact, but one might be relying heavily on passive dynamics (high drift) while the other is actively muscling through (high control). Only by decomposing drift and control can you understand what's truly happening.
 
 ## The Path from Inverse Dynamics to Golfer Effort
 

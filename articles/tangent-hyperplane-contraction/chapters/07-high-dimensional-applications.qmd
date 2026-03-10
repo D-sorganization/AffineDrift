@@ -3,6 +3,10 @@ title: "Chapter 7 - High-Dimensional Applications"
 bibliography: ../references.bib
 ---
 
+## Why Do Humans Make It Look Easy and Robots Make It Look Hard?
+
+Watch a gymnast swing on uneven bars—fluid, natural, robust to small bumps. Watch a robot arm do the same task—jerky, fragile, falls apart if the model is slightly wrong. The difference is that the human's nervous system is optimized for *coupled* motion with *active feedback*, while robots are often controlled piece-by-piece. Biomechanics and robotics teach us that when everything is coupled together (masses connected through joints, actuation competing with gravity), your control law must respect the coupling. The framework in this textbook was built for exactly this setting.
+
 ## Introduction and Qualitative Purpose
 
 This chapter transfers the framework into biomechanics and robotics, where coupling, constraints, and contact make purely heuristic tuning fragile.
@@ -22,3 +26,36 @@ H(q)\ddot q + C(q,\dot q)\dot q + g(q)=\tau+J_c(q)^\top\lambda.
 $$
 
 The tangent model around this dynamics is the bridge to both contraction and local optimal-control design.
+
+## Application Domains
+
+### Quadrotor Trajectory Tracking
+
+A quadrotor's thrust and moment commands couple all degrees of freedom: vertical thrust supports weight and accelerates the center of mass, while tilting the body trades vertical thrust for horizontal acceleration. The control-affine structure is natural: drift is gravity and inertia, control channels are the four thrust commands. The framework directly addresses how to design attitude and position gains that respect this coupling while tracking aggressive trajectories.
+
+### Bipedal Walking and Underactuated Locomotion
+
+A biped has many degrees of freedom but only two point contacts (or one during flight). This *underactuated* structure means some directions cannot be directly commanded. The decomposition into drift (unactuated passive dynamics) and controlled directions is essential. Contraction metrics help design step-to-step stability: a controller that guarantees each footstep is closer to the nominal gait than the previous one, independent of initial conditions.
+
+### Robotic Manipulation and Impedance Control
+
+Dexterous manipulation often involves *compliant* interaction: the robot touches, presses, and slides on objects. Purely rigid control (exact end-effector tracking) is fragile; it breaks with small model errors. Impedance control—shaping the robot's apparent stiffness and damping in the task frame—is the standard approach. The Riemannian metric formulation in Chapter 5 directly models how task-space stiffness priorities pullback into joint-space control gains, and the duality in Chapter 4 ensures that impedance gains also certify stability margins.
+
+### Golf Swing Mechanics (Biomechanics)
+
+A skilled golfer translates power from the lower body (large muscles, slow) through the trunk and shoulders (medium muscles, medium speed) to the arms and club (small mass, high speed)—a kinetic chain. Coupled biomechanics and neural latency make the timing subtle. The framework applies by treating the biomechanical chain as a high-dimensional system with passive (muscle) and active (neural command) dynamics, using metrics to prioritize which joints should be tightly controlled versus allowed to swing freely.
+
+---
+
+:::{.callout-warning}
+## Scope and Limitations
+
+- **Computational scaling with dimension becomes prohibitive beyond moderate dimension.** The tangent space linearization and Riccati recursion require storing and factoring matrices of dimension $n \times n$ and $n \times m$ where $n$ is the system dimension (e.g., 20 DOF for the human arm). Computing contraction metrics and solving differential Riccati equations scales as $O(n^3)$ per time step. For real-time control, this becomes infeasible beyond $n \sim 10$—$15$ dimensions. We present the framework as scalable and "suitable for high-dimensional systems," but "high-dimensional" means "up to about 20 DOF," not "thousands of DOF" like neural networks routinely handle. The framework is elegant in theory but dimensionality-limited in practice.
+
+- **Model fidelity requirements grow with dimension, making the framework fragile.** A 20-DOF model of the human swing requires accurate estimates of 20 segment masses, 20+ moment-arm functions, contact stiffnesses, friction coefficients, and neural delays. Small errors in any of these parameters corrupt the linearized dynamics and the subsequent Riccati solution. The control law derived from a slightly-wrong model may be destabilizing on the real system. For low-dimensional systems (3–5 DOF), you can often hand-tune parameters from basic biomechanical intuition. For 20 DOF, you are relying entirely on model identification, and identification error propagates directly into control failure.
+
+- **Real-time certification of nonlinear stability is hard despite claims of "guarantees."** We can certify that the linearized system is stable (via Lyapunov or contraction metrics). But certifying stability of the actual nonlinear system requires checking second-order and higher-order derivatives, solving large-scale matrix inequalities, or performing trajectory sampling over high-dimensional perturbation spaces. In practice, you test on simulation or real hardware and hope the linearization was faithful. The word "guarantee" in our framework means "guarantee if the linearization is accurate," which is a substantial if.
+
+:::
+
+---

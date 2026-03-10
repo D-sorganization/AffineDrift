@@ -13,6 +13,10 @@ format:
 
 ## Introduction
 
+There are two ways to think about mechanics. Newton said: "Find all the forces, add them up, and F=ma." Lagrange said: "Forget forces. Just track the energy." Remarkably, both approaches give exactly the same answers—but Lagrange's method is often dramatically simpler for complex systems. Why? Because energy is a scalar. You just add numbers. Forces are vectors pointing in all directions, and adding vectors is hard.
+
+The golf swing has many moving parts: a rotating torso, swinging arms, bending shaft, clubhead spinning and translating. Tracking all the forces would be a nightmare. But tracking energy? That's elegant. And from energy, we can extract everything we need to understand how the system behaves—including the crucial distinction between passive dynamics (what happens by itself) and active control (what the golfer must do).
+
 This reference document summarizes the Lagrangian formulation of multibody mechanical systems and shows how the control-affine structure
 
 $$
@@ -239,6 +243,18 @@ Thus the Lagrangian formulation supports the same drift--input decomposition and
 ## Summary
 
 The Lagrangian formalism provides a principled route from kinetic and potential energy to the manipulator equations, and from there to the control-affine state-space representation. Drift dynamics collect all velocity-dependent, gravitational, and elastic effects, including those of a flexible shaft, while inputs enter linearly via the actuator mapping. This alignment with the control-affine structure underpins the theoretical framework developed in the main body of the work.
+
+## Limitations
+
+:::{.callout-warning}
+The Lagrangian approach, while mathematically elegant, operates under several restrictive assumptions:
+
+1. **Assumes holonomic constraints only (no rolling without slipping)**: The framework assumes all constraints can be written as algebraic relations between coordinates ($\Phi(q) = 0$). Non-holonomic constraints—such as rolling contact (wheel rolling without slipping on the ground) or knife-edge constraints—cannot be directly incorporated into the standard Lagrangian formulation. Foot-ground interaction during the golf swing is approximated as a holonomic contact, but the actual rolling and sticking of the shoe sole involves non-holonomic effects.
+
+2. **Dissipative forces (friction, damping) require Rayleigh dissipation function extension**: The classical Lagrangian formulation (kinetic minus potential energy) cannot directly represent velocity-proportional damping. Adding this requires the Rayleigh dissipation function, which extends the framework but introduces additional phenomenological terms that must be separately identified. Muscle damping, joint friction, and air resistance all require this extension, meaning the "pure" Lagrangian elegance is compromised.
+
+3. **Electromagnetic and thermodynamic couplings excluded**: The Lagrangian mechanics framework applies to mechanical systems. Muscle activation involves neural signaling and biochemical processes—energy transduction from ATP to mechanical work. These thermodynamic and electromechanical couplings are outside the scope of classical mechanics. Any heat dissipation, muscle efficiency losses, or fatigue-induced stiffness changes cannot be captured within the purely mechanical Lagrangian description.
+:::
 
 <section class="laymans-terms">
   <button class="laymans-terms-header" aria-expanded="false">

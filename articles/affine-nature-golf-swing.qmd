@@ -171,8 +171,44 @@ These assumptions apply strictly to the theoretical decomposition presented in t
 4. **No aerodynamic forces.** Drag and lift forces on the clubhead and shaft are omitted in this theoretical treatment. All modeled external forces arise from gravity or internal mechanical interactions. Note that aerodynamic forces $F_{aero}(q, \dot{q})$ are strictly state-dependent and thus mathematically compatible with the affine structure $\dot{x} = f(x) + g(x)u$. Their inclusion would simply enrich the drift vector field $f(x)$ with dissipative terms. They are omitted here to isolate the inertial and elastic energy exchange fundamental to the swing, but the theoretical framework generalizes to include them without modification.
 5. **Torques treated as generalized inputs.** Muscular physiology (activation dynamics, force--velocity, force--length, tendon elasticity) is abstracted into a net generalized torque vector $\tau = B(q) u$. These torques serve as the control inputs in the affine control formulation.
     *   *Mathematical Justification:* In a biological model, torque is a function of activation $a$, length $l(q)$, and velocity $v(\dot{q})$, i.e., $\tau = \tau_{\text{max}} \cdot f_{\text{FL}}(q) \cdot f_{\text{FV}}(\dot{q}) \cdot a$. If we treated activation $a$ as the input, the system would become control-non-affine due to the multiplicative state dependency $f_{\text{FV}}(\dot{q})$. By defining the input at the *torque level* ($u \equiv \tau$), we preserve the affine structure $\dot{x} = f(x) + g(x)u$, treating the force-velocity relationship as a constraint on the *feasible set* of inputs $\mathcal{U}(x)$ rather than a nonlinearity in the system dynamics. While we treat $u$ as an exogenous mechanical input, we acknowledge that biological actuation modulates joint impedance (stiffness/damping) alongside torque. In this framework, the term $f(x)$ represents the **skeletal drift**—the dynamics of the system in the absence of activation-dependent stiffness. The Zero Torque Counterfactual (ZTCF) therefore describes the motion of the underlying passive mechanism, serving as a 'skeletal baseline' rather than a representation of a flaccid or neurologically relaxed golfer.
+
+::: {.callout-important}
+## On Co-Contraction and Drift Invariance
+
+A careful reader will note that muscular co-contraction alters the effective stiffness and damping of joints without producing net torque. This appears to violate Drift Invariance—the assumption that $f(x)$ does not depend on $u$.
+
+We resolve this as follows. The input vector $u$ represents net generalized torques at each joint. Co-contraction is an internal muscular strategy that modulates the effective impedance (stiffness and damping) of the joint, but does not appear as a net generalized force in the equations of motion. In our formulation, the effect of co-contraction is captured by treating the effective impedance as a state-dependent parameter that evolves on a slower timescale than the mechanical dynamics.
+
+More precisely, if we decompose muscle activation into agonist and antagonist components $a_+$ and $a_-$, then:
+- Net torque: $\tau = \tau(a_+ - a_-)$ (enters as input $u$)
+- Net stiffness: $K = K(a_+ + a_-)$ (enters as a modulation of the drift field)
+
+For the AffineDrift framework to hold rigorously, we require that $K$ varies slowly relative to the mechanical dynamics—an assumption validated by the 50–100 ms timescale of neural activation transients versus the $<10$ ms timescale of impact dynamics.
+
+When this separation of timescales breaks down (e.g., during the "stiffness pulse" near impact described in the Intentional Constraint Collapse article), we transition to a switched affine model where $f(x)$ takes different forms in different temporal phases, each phase individually satisfying Drift Invariance.
+:::
+
 6. **Ground contact modeled as holonomic constraint.** Feet--ground interaction is simplified as a fixed base with no slip or compliance; the golfer is treated as rooted at the ground.
 7. **Smooth dynamical evolution (no discontinuities).** Between impacts, the system evolves via smooth ordinary differential equations. Shaft deformation and all segmental interactions are continuous in time.
+
+::: {.callout-important}
+## On Smoothness, Impacts, and Hybrid Dynamics
+
+The framework assumes $C^1$ (continuously differentiable) system dynamics, excluding impacts, friction with stiction, muscle activation saturation, and ground contact transitions. These are significant physical phenomena in golf biomechanics.
+
+We address this as follows. The AffineDrift framework applies rigorously to **smooth phases** of the swing: the backswing, downswing before ground contact, and the follow-through. Within these phases, the system evolves according to smooth differential equations satisfying the control-affine structure.
+
+At **discontinuous events** (ball impact, ground contact transitions, muscle activation saturation at maximum effort), the framework naturally extends via three mechanisms:
+
+1. **Hybrid Dynamical Systems:** Model the swing as a piecewise-smooth system where each smooth phase has its own affine structure $\dot{x} = f_i(x) + g_i(x)u$ for phase $i$, with discrete transition rules between phases. Each phase individually satisfies Drift Invariance.
+
+2. **Filippov Solutions for Friction/Stiction:** When sliding friction or stiction prevents smooth evolution, the differential inclusion $\dot{x} \in f(x) + g(x)u$ can be analyzed using Filippov convex regularization, maintaining the causal separation of drift and input through convex combinations.
+
+3. **Input Saturation as Constraint:** Muscle activation saturation (e.g., maximum isometric torque) is modeled not as a nonlinearity in the drift field $f(x)$, but as a constraint on the feasible input set: $u \in \mathcal{U}(x) = \{u: \|u\|_\infty \leq u_{\max}\}$. The control-affine structure remains intact; only the available inputs are bounded.
+
+Future work will implement hybrid extensions to address the transition from backswing through impact and into the follow-through, treating each phase as a separate affine system with well-defined switching conditions.
+:::
+
 8. **No measurement noise or parameter uncertainty.** The theoretical decomposition assumes perfect state knowledge and exact model parameters. Sensitivity to uncertainty and noise is a topic for subsequent empirical work.
 
 To translate these assumptions into a rigorous mathematical structure, we must first define the geometric manifold on which the system evolves. The assumptions above simplify the biomechanical reality into a deterministic state space, allowing us to describe the golfer not as a collection of tissues, but as a point moving along a curved surface defined by the joint constraints.
@@ -195,6 +231,16 @@ The dynamics of the system evolve on the **tangent bundle** $T\mathcal{Q}$, the 
 $$T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}.$$
 We define the full state vector $x$ as a point in this bundle. In local coordinates:
 $$x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong \mathbb{R}^{2(n+m)}.$$
+
+::: {.callout-note}
+## On the Markov Property and Hidden States
+
+The control-affine formulation assumes that the state vector $x = (q, \eta, \dot{q}, \dot{\eta})$ contains all information needed to predict future evolution—the Markov property. This is mathematically exact for ideal rigid-body and linear-elastic systems. However, biological systems may contain hidden states not captured in our model: muscle fatigue, calcium buffering dynamics, proprioceptive adaptation, and short-term motor learning.
+
+We argue this omission is acceptable for the following reason: the AffineDrift framework is designed to analyze the mechanical dynamics of a **single trial** (one swing, one throw, one stride). Over the timescale of a single movement ($\sim$1–2 seconds), fatigue accumulation is negligible, calcium dynamics are fast enough to be quasi-static, and motor learning does not occur. The hidden states that would violate the Markov assumption operate on timescales of minutes to hours, not milliseconds to seconds.
+
+For analysis of motor variability **across trials**, the Markov assumption must be relaxed, and the framework would need to be extended to include slow state variables representing neuromuscular adaptation.
+:::
 
 The equations of motion are generated by the **Levi-Civita connection** $\nabla$ associated with the metric $\mathbb{G}$. The drift vector field $f(x)$ is formally the **geodesic spray** $S: T\mathcal{Q} \to TT\mathcal{Q}$ of the metric, modified by the vertical lift of the potential and dissipative forces.
 
@@ -229,6 +275,28 @@ where $\tau \in \mathbb{R}^{n}$ is the generalized joint torque vector and $B(q)
 Throughout this paper we treat $u$ as the exogenous input at the mechanical level. The mapping from neural commands to $u$ is outside the scope of this theoretical work.
 
 While inputs drive the system, they do not act in a vacuum. The golfer must contend with—and exploit—the environmental and inertial field. The effectiveness of any torque input is conditioned by the external forces that define the system's potential energy landscape and reaction constraints.
+
+::: {.callout-note}
+## Definition: The Effective Plant
+
+The **Effective Plant** at state $x$ and impedance configuration $\sigma$ is the instantaneous linear mapping from controls to task-space accelerations:
+
+$$
+\mathcal{P}(x, \sigma) = J(q) M^{-1}(q, \sigma) B
+$$
+
+where $J(q)$ is the task Jacobian (mapping joint accelerations to task-space accelerations), $M(q, \sigma)$ is the mass matrix (potentially modified by co-contraction impedance $\sigma$), and $B$ is the input selection matrix.
+
+This definition unifies three perspectives used across this site:
+
+1. **Kinematic Effective Plant** (used in Force Mobility Matrices): $J(q)$ alone, describing the geometric leverage available at the current configuration.
+
+2. **Dynamic Effective Plant** (used in this article): $J(q)M^{-1}(q)B$, describing the full force-to-motion transmission including inertial effects.
+
+3. **Impedance-Modified Effective Plant** (used in Intentional Constraint Collapse): $J(q)M^{-1}(q, \sigma)B$, where the mass matrix is augmented by neuromuscular stiffness, describing the transiently stiffened mechanism near impact.
+
+All three are evaluations of the same underlying object at different levels of modeling fidelity.
+:::
 
 ### External forces and constraints
 {#subsec:external_forces}

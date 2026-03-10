@@ -13,6 +13,10 @@ format:
 
 ## Introduction
 
+Every rigid body motion in three dimensions—no matter how complicated—is equivalent to a twist about a single axis in space. This astonishing fact, discovered by Michel Chasles in 1830, is the foundation of screw theory. It means that a combination of rotation AND translation can always be described as a "screwing" motion about one particular axis. Your arm rotating while it swings forward? That's a screw motion. The club twisting while it accelerates downward? Also a screw. Even the most complex simultaneous spinning and translating motion of a golf club can be expressed as a single screw.
+
+This simplicity is powerful. Instead of tracking six separate numbers (three rotational components, three translational components), you track them together as a unified geometric object: the screw axis and the "pitch" of the screw. And the beautiful part: forces and moments also fit into this same screw framework, as "wrenches." Once you think in screws, complex 3D mechanics becomes elegant.
+
 Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group $SE(3)$ and its Lie algebra $\mathfrak{se}(3)$. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
 
 ## The Lie Group $SE(3)$ and Its Algebra
@@ -263,6 +267,18 @@ These constructions mirror the affine decomposition in screw space.
 ## Summary
 
 Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.
+
+## Limitations
+
+:::{.callout-warning}
+Screw theory provides a powerful geometric language for rigid-body mechanics, but it has inherent boundaries:
+
+1. **Screw coordinates assume rigid body motion**: The entire framework—twists, wrenches, the Lie group $SE(3)$—is predicated on rigid body kinematics. When a limb segment, the club shaft, or the ball deforms during motion, the assumption breaks. Finite deformations require extension to continuum mechanics or distributed parameter models, and the elegant screw representation becomes local (differential) rather than global.
+
+2. **Flexible shaft dynamics require extended screw formulations**: While modal decomposition of shaft bending can be incorporated into the extended generalized coordinates (as in the Lagrangian section), the wrench representation becomes cluttered. Distributed elastic wrenches do not combine as cleanly as rigid-body wrenches. The superposition principle still holds, but the geometric intuition—one screw axis per degree of freedom—is lost.
+
+3. **Gyroscopic effects in 3D require careful treatment of angular momentum coupling**: When a body spins rapidly (e.g., the club's handle rotation during the downswing) while simultaneously following a changing trajectory, gyroscopic torques emerge from $\mathrm{ad}^*_{\mathcal{V}} I_s \mathcal{V}$. These are nonlinear couplings between different twist components. The screw Jacobian formulation assumes these are captured in the drift term, but the high sensitivity of gyroscopic forces to measurement noise and modeling error can make the decomposition unstable.
+:::
 
 <section class="laymans-terms">
   <button class="laymans-terms-header" aria-expanded="false">

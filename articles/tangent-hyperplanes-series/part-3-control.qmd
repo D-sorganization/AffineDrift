@@ -3,13 +3,94 @@ title: "Tangent Hyperplanes III: Control"
 description: "Control design in the tangent space."
 ---
 
-## Control in the Tangent Space
+## The Linearization-Based Control Principle
 
-Optimal control operates locally in the tangent hyperplane.
+If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind DDP, iLQR, and virtually every practical nonlinear control method.**
 
-## Linear Quadratic Regulation
+The logic is elegant: linearize around a nominal trajectory, solve a linear optimal control problem to get a feedback gain, apply that gain, and repeat. Each iteration refines the trajectory. Eventually — if the problem is well-conditioned — the iterations converge to a solution of the nonlinear optimal control problem.
 
-LQR computes optimal policies assuming local linear dynamics
-and quadratic costs.
+## Linear Quadratic Regulation (LQR)
 
-This assumption is exact in the limit.
+The finite-horizon linear quadratic regulator solves the following problem: minimize
+
+$$
+J = \int_{t_0}^{t_f} \left( \|\delta x(t)\|_Q^2 + \|\delta u(t)\|_R^2 \right) dt + \|\delta x(t_f)\|_{Q_f}^2
+$$
+
+subject to the linear dynamics:
+
+$$
+\delta\dot{x} = A(t)\delta x + B(t)\delta u
+$$
+
+Here $Q(t) \succeq 0$ and $R(t) \succ 0$ are cost matrices (positive semidefinite and positive definite, respectively), and $\|\cdot\|_M$ denotes the weighted norm $v^T M v$.
+
+The optimal feedback control law is:
+
+$$
+\delta u^*(t) = -K(t) \delta x(t)
+$$
+
+where the gain matrix $K(t)$ is computed via the backward Riccati differential equation:
+
+$$
+-\dot{S}(t) = A(t)^T S(t) + S(t) A(t) - S(t) B(t) R(t)^{-1} B(t)^T S(t) + Q(t)
+$$
+
+with terminal condition $S(t_f) = Q_f$. The gain is then:
+
+$$
+K(t) = R(t)^{-1} B(t)^T S(t)
+$$
+
+The matrix $S(t)$ is the **value function Hessian** — it encodes the cost-to-go from state $x$ at time $t$ under optimal control.
+
+## Differential Dynamic Programming (DDP) and iLQR
+
+The power of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). These algorithms work as follows:
+
+1. **Start with a nominal trajectory** $(x̄(t), ū(t))$ — perhaps from some heuristic or previous iteration.
+
+2. **Linearize around it:** Compute the Jacobians $A(t)$ and $B(t)$ along the trajectory.
+
+3. **Solve LQR backwards:** Run the Riccati equation to get the feedback gain $K(t)$.
+
+4. **Apply the gain:** Integrate forward with the feedback control
+$$u(t) = ū(t) - K(t)(x(t) - x̄(t))$$
+
+5. **Accept or adjust:** If the cost improved, accept the new trajectory and iterate. Otherwise, backtrack.
+
+This procedure is called **successive approximation** or **shooting.** Each iteration solves a linear optimal control problem on the linearized system, but the actual system integrated forward is nonlinear. The iterations refine the trajectory and the gain, accounting for nonlinear effects through repeated linearization.
+
+## Exactness in the Limit
+
+**LQR is exact for the linearized system.** That is: if you solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$, you will get the optimal trajectory for that linear system, to machine precision.
+
+Residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped — are not captured by the linearized LQR solution. However, these residuals are *handled by iteration.* You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
+
+This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the fact that linearization is exact infinitesimally, and uses iteration to handle the nonlinear corrections systematically.
+
+## Connection to Stability and Optimality
+
+The site's [Stability-Optimality Duality](../stability-optimality-duality.qmd) framework reveals a deep connection: **The Riccati matrix $S(t)$ serves a dual role.**
+
+- **As a value function:** $S(t)$ encodes the cost-to-go from time $t$ onward under optimal control.
+- **As a contraction metric:** $S(t)$ defines a metric with respect to which the optimal feedback controller is a contraction. Perturbations decay exponentially under the optimal feedback law.
+
+This duality means that optimizing for cost and ensuring stability are not separate concerns — they are two faces of the same geometric structure. The Riccati matrix simultaneously minimizes cost and ensures robust convergence.
+
+## Limitations and Practical Considerations
+
+:::{.callout-warning}
+**Convergence Requires Small Perturbations or Good Initialization:** DDP/iLQR converge only if the initial trajectory is close enough to the optimal one, or if the nonlinearity is mild. Large deviations cause the linearization to fail, and the iteration may not improve.
+
+**Singular Value Issues:** If the Riccati matrix $S(t)$ becomes ill-conditioned, numerical issues arise. In practice, regularization is often added to ensure robustness.
+
+**Computational Cost:** Solving the Riccati equation is $O(n^3)$ per time step. For high-dimensional systems or long horizons, this can be expensive. Approximations like truncated feedback or time-varying gains are sometimes used.
+
+**No Global Guarantees:** iLQR is a local optimization method. It finds a local minimum, not a global one. The quality of the solution depends heavily on initialization.
+:::
+
+## Looking Ahead
+
+We have now seen the full chain: from geometric tangent spaces to linearized dynamics to linear optimal control to iterative nonlinear control algorithms. The final piece is understanding the error: what happens when the linearization breaks down? In [Part 4](./part-4-residuals-curvature.qmd), we examine residuals and curvature — the mechanisms by which nonlinearity limits the range of validity of linear tools.

@@ -18,6 +18,10 @@ The golf swing represents one of the most complex coordinated movements in human
 
 :::
 
+## Conceptual Overview
+
+Before diving into the mathematics, here's the core idea: a constrained mechanical system can only move in certain directions. The null space of the constraint Jacobian tells us exactly which directions are "free"—and understanding these free directions is how we decompose forces into useful categories. In the golf swing, your hands gripping the club, your feet on the ground, and your spine's connection to the pelvis all create constraints. These constraints don't eliminate motion; they channel it. The null space reveals which joint motions produce actual clubhead movement, and which muscle efforts are wasted fighting against the system's own geometry. This distinction is central to understanding effortless technique.
+
 ## Introduction
 
 The human body during a golf swing can be modeled as a kinematic chain of rigid bodies connected by joints. Unlike a simple serial chain, the golf swing involves *loop closures*---the hands gripping the club create a closed kinematic loop, and the interaction between the feet and ground introduces additional constraint surfaces. These constraints reduce the effective degrees of freedom of the system and introduce algebraic relationships between the generalized coordinates.
@@ -549,6 +553,20 @@ The null space of the constraint Jacobian provides a powerful framework for anal
 5. **Computational efficiency**: Null space methods enable simulation of complex biomechanical systems with fewer equations and better numerical properties.
 
 For golf swing analysis specifically, this framework explains how elite players achieve high clubhead speeds with apparent ease: they structure their technique to align muscle forces with the null space and exploit drift dynamics, rather than fighting against constraints.
+
+## Limitations
+
+:::{.callout-warning}
+The null space framework provides elegant mathematical structure but operates under several important constraints:
+
+1. **Assumes rigid body segments with ideal joints**: The model treats bones as rigid bodies and joints as mathematical constraints (pins, ball-joints, etc.). In reality, cartilage compliance, ligament laxity, and muscle-tendon elasticity create "soft" constraints. These create a bandwidth around the theoretical null space within which small deviations are kinematically permissible.
+
+2. **Constraint Jacobian rank can change at singular configurations**: As the system moves through its workspace, the constraint Jacobian may lose rank—some constraints become temporarily dependent. At these singular configurations, the dimensionality of the null space increases suddenly. The golf swing encounters these singularities at full wrist cock and extreme backswing positions, where the mathematical description becomes ill-conditioned and prediction becomes unreliable.
+
+3. **26-DOF model is simplified—scapular gliding and spinal flexibility are approximated**: The lumped model aggregates the shoulder's 9 degrees of freedom (glenohumeral joint plus scapular gliding) into fewer effective DOFs. The spine's 24 segments are reduced to rigid torso rotation. These approximations reduce computational burden but sacrifice the detailed kinematic synergies that individual athletes exploit. Some golfers achieve asymmetric power through nuanced spinal side-bending that the simplified model cannot distinguish.
+
+4. **SVD-based null space computation assumes full state knowledge**: The Singular Value Decomposition method for computing the null space basis requires precise knowledge of the constraint Jacobian at each instant. Measurement noise, modeling approximation, and parameter uncertainty all degrade the rank estimates, particularly for singular values near the threshold. Small numerical errors in identifying which singular values are "zero" can significantly distort the computed null space basis.
+:::
 
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">

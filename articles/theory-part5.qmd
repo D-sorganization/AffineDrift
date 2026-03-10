@@ -48,20 +48,18 @@ format:
 </section>
 ```
 
+::: {.callout-warning}
+## Dimensionality Gap
+This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part III). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
+:::
+
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
 The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
 
 Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the entire causal attribution collapses.
 
-To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Part III), we require a numerical proof-of-concept.
-
-The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in a simplified **planar** environment. We acknowledge that this planar model cannot test the 3D gyroscopic predictions (e.g., face stability), which remain theoretical until 3D simulation or experiment is performed. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
-
-::: {.callout-warning}
-## Dimensionality Gap
-We acknowledge that this planar model ($q \in \mathbb{R}^3$) cannot test the 3D gyroscopic predictions (e.g., face stability) discussed in Part III. These effects, which rely on the cross-product terms $\omega \times I \omega$, are absent by definition in 2D. The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment, leaving the verification of 3D drift invariance to future spatial simulations.
-:::
+To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Part III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
 ### Model construction
 
@@ -121,17 +119,20 @@ The Simulink implementation has been extended to compute the Zero Velocity Count
 A key numerical result was verified:
 
 ::: {.callout-important}
-## Key Empirical Validation
-When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.
+## Implementation Verification: Not Theoretical Validation
+When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant:
+
+$$F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t).$$
+
+This is a **Numerical Consistency Check**—a verification that discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts. It does NOT validate the control-affine model itself against reality. The identity holds as a mathematical consequence of the Lagrangian formulation; its numerical truth in simulation proves only that the implementation is correct, not that the model accurately predicts actual golf swings. Model validation requires comparison with experimental data from real athletes.
 :::
 
-That is,
-
-$$F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),$$
-
-matching the analytical identity predicted by the force taxonomy. This serves as a **Numerical Consistency Check** rather than empirical validation. It confirms that the discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory without introducing numerical artifacts.
-
 ### Implications for future work
+
+::: {.callout-note}
+## Numerical Identity ≠ Model Validation
+The fact that $F_{\text{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$ holds numerically in simulation confirms correct implementation of the counterfactual algorithms, not the validity of the control-affine model itself. Model validation requires comparison with experimental data from real golfers—comparing measured torques and forces to the predictions of the theory. This simulation documents that the mathematical framework is internally consistent; future experimental work must test whether the model accurately describes the physical golf swing.
+:::
 
 The current Simulink model provides:
 

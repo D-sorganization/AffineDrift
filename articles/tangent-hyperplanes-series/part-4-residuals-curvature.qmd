@@ -3,14 +3,126 @@ title: "Tangent Hyperplanes IV: Residuals and Curvature"
 description: "Residuals arise from curvature, not modeling error."
 ---
 
-## Interaction Residuals
+## The Residual Question
 
-Residuals arise from curvature, not modeling error.
+So if tangent spaces are exact infinitesimally, what happens at finite scale? The answer is **residuals** — and understanding them is the key to knowing when your linear tools are trustworthy and when they're not.
+
+We have seen that the linearized perturbation equation:
 
 $$
-\Delta x_{res} = \Delta x_{full} - \sum_i \Delta x_i
+\delta\dot{x} = A(t)\delta x + B(t)\delta u
 $$
 
-## Interpretation
+captures the first-order behavior of the nonlinear system. But the full nonlinear system satisfies:
 
-Residuals quantify higher-order coupling terms.
+$$
+\dot{x} = f(x, u)
+$$
+
+When we solve the linearized system and compare the solution to the actual nonlinear trajectory, there is a gap. This gap is the **residual** — not because our model is wrong, but because we deliberately dropped the second-order and higher-order terms.
+
+## Residual Definition and Bounds
+
+Let $x(t)$ be a solution to the nonlinear system starting from $x_0 = x̄(t_0) + \delta x(t_0)$ under control $u(t) = ū(t) + \delta u(t)$. Let $\hat{x}(t)$ be the solution predicted by the linearized system:
+
+$$
+\delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \delta u(\tau) \, d\tau
+$$
+
+where $\Phi$ is the state transition matrix of the linearized system. Then the full perturbed state is:
+
+$$
+x(t) = x̄(t) + \hat{x}(t)
+$$
+
+The residual is the error between the true trajectory and the linearized prediction:
+
+$$
+r(t) = x(t) - [x̄(t) + \hat{x}(t)]
+$$
+
+**Key bound:** There exist constants $C > 0$ and $\epsilon_0 > 0$ such that for $\|\delta x(t_0)\| + \|\delta u\|_\infty \leq \epsilon_0$:
+
+$$
+\|r(t)\| \leq C \cdot [\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2]
+$$
+
+The residual is **quadratic in the size of the perturbation.** This is not a coincidence — it comes from the second-order Taylor expansion of $f$.
+
+## Geometric Interpretation: Curvature
+
+Why does the residual scale as the square of the perturbation? The answer is geometry. In the neighborhood of the reference trajectory, the true nonlinear flow is curved. The linearization gives you the tangent direction at each instant, but if you follow the tangent for a finite distance, you will deviate from the actual curved path.
+
+The amount of deviation is proportional to the curvature of the flow, integrated over the distance traveled. For small perturbations, curvature effects are small. For large perturbations, curvature dominates.
+
+Formally, the Hessian (second derivatives) of $f$ determines this curvature. The residual can be bounded in terms of the second-order Taylor remainder:
+
+$$
+f(x̄ + \delta x, ū + \delta u) = f(x̄, ū) + Jf|_{(x̄,ū)} \begin{pmatrix} \delta x \\ \delta u \end{pmatrix} + \frac{1}{2} H \begin{pmatrix} \delta x^2 \\ \delta u^2 \end{pmatrix} + \text{higher order}
+$$
+
+where $H$ represents the Hessian tensor of $f$. The curvature is captured by these second derivatives, and they propagate through the dynamics to create the quadratic residual.
+
+## Practical Implication: A Scaling Law
+
+Here is the most important takeaway: **If you double the perturbation size, the residual quadruples.**
+
+Mathematically: if $\|\delta x(t_0)\| \to 2\|\delta x(t_0)\|$, then $\|r(t)\| \to 4\|r(t)\|$.
+
+This tells you exactly how far you can trust linearization:
+
+- If your perturbation is 1 cm and the residual is 0.1 mm, then doubling to 2 cm makes the residual 0.4 mm (still small).
+- But if your perturbation grows to 10 cm, the residual balloons to 10 mm (now significant).
+
+The **margin before breakdown** is encoded in this quadratic scaling. You can use it to set error tolerances, determine when to re-linearize, and decide if a linear approximation is good enough for your application.
+
+## Residuals in DDP/iLQR
+
+In iterative linear-quadratic methods, residuals are implicitly handled by the iteration scheme:
+
+1. You linearize at the current trajectory.
+2. You solve LQR and integrate the nonlinear system forward.
+3. The new trajectory generally has smaller initial perturbation.
+4. You linearize at the new trajectory, where residuals are smaller.
+5. You repeat.
+
+Each iteration reduces the perturbation magnitude, which quadratically reduces the residual. The algorithm is thus a **residual-reduction algorithm** disguised as a trajectory refinement algorithm.
+
+However, understanding residuals explicitly is crucial for:
+
+- **Detecting convergence failure:** If iterations stop improving, residuals may be too large, and initialization is too far from the optimum.
+- **Estimating convergence rate:** The quadratic convergence of DDP is intimately related to the quadratic scaling of residuals.
+- **Adaptive step sizing:** You can use the residual estimate to decide whether to accept a proposed new trajectory or to take a smaller step.
+
+## Residual-Aware Control
+
+Understanding residuals opens the door to **adaptive control algorithms** that explicitly monitor and compensate for nonlinear effects. Instead of blindly trusting the linearization, these methods:
+
+- Estimate residuals online.
+- Use them to adjust the feedback gain or the LQR weight matrices.
+- Re-linearize or use higher-order corrections when residuals grow too large.
+
+For advanced treatments of these ideas, see the site's article on [Residual-Aware Control](../Tangent Hyperplane Articles/Advanced/Residual-Aware_Control.qmd).
+
+## Limitations and Edge Cases
+
+:::{.callout-warning}
+**Residual Bounds Are Conservative:** The bound $\|r(t)\| \leq C \cdot [\|\delta x\|^2 + \|\delta u\|_\infty^2]$ is a worst-case bound. The actual residual can be much smaller if higher-order terms have favorable signs or if the flow is sufficiently flat in certain directions.
+
+**Exponential Growth:** Even though individual residuals are second-order at each instant, they can accumulate and grow exponentially over long time horizons if the system is unstable. The total error is not just the local residual squared, but also integrates the effect of residual propagation.
+
+**Singular Points:** At points where the Hessian is large or the flow is highly curved, residuals can be large even for modest perturbations. Near saddle points or bifurcations, linearization breaks down faster than the quadratic scaling might suggest.
+
+**Control Nonlinearity:** If the control input enters nonlinearly (e.g., $\dot{x} = f(x, u^2)$), the perturbation equation has a different form, and residuals may scale differently.
+:::
+
+## Summary: The Four Parts
+
+We have now completed the journey:
+
+1. **Geometry:** Tangent spaces are exact infinitesimal linear approximations to curved manifolds.
+2. **Dynamics:** Nonlinear systems linearize exactly on the tangent space; the linearized system is exact infinitesimally.
+3. **Control:** Linear optimal control tools (LQR, Riccati equations) can be applied at each instant along a trajectory via iteration.
+4. **Residuals:** Nonlinearity introduces curvature, which produces quadratic residuals. These residuals bound the range of validity of linear approximations.
+
+Together, these ideas form the foundation of modern nonlinear control: linearize, solve optimally on the linearized system, integrate forward, measure the gap, and iterate. The gap shrinks quadratically with perturbation size. This is not a hack or an approximation — it is the rigorous mathematics of derivatives and curvature, turned into an algorithm.

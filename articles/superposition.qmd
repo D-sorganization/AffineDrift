@@ -22,6 +22,53 @@ for finite-dimensional mechanical systems actuated by generalized forces, and pr
 In the broader context of the AffineDrift framework, this linearity provides the rigorous justification for the **Zero Torque Counterfactual (ZTCF)**. Because the input enters linearly, we can mathematically "turn off" the golfer's torque ($u=0$) without altering the passive drift vector field $f(x)$. This justifies the separation of the swing into a history-dependent passive layer (Drift) and an instantaneous active layer (Input).
 :::
 
+```{=html}
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        This article answers a deceptively simple question: in a system as complicated as a golf swing, can you study one force at a time and then add them up?
+      </p>
+
+      <div class="laymans-item">
+        <h3>The Snapshot Principle</h3>
+        <p>
+          Imagine freezing a golfer mid-swing — like pressing pause on a video. In that frozen instant, every force acting on the system (gravity, muscle torque, centrifugal effects) has a perfectly predictable effect on the club's acceleration. And here's the key: these effects <strong>add up exactly</strong>, just like they would for a simple pendulum. Gravity pulls down by X, your shoulder pushes by Y, and the club accelerates by X + Y. No surprises, no interactions, no "nonlinear weirdness."
+        </p>
+        <div class="analogy">
+          <strong>Think of it like a bank account:</strong> Your salary deposits, your rent withdrawals, and your grocery spending all add up to your final balance. Each transaction is independent. The "nonlinearity" of your finances (spending habits change based on your balance) only matters when you look at how things evolve over <em>time</em> — not at a single frozen snapshot.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Why This Matters</h3>
+        <p>
+          Because forces add up at each instant, we can study them one at a time. We can ask: "How much does gravity contribute to clubhead speed right now?" or "What would happen if we turned off the shoulder torque?" These are meaningful, well-defined questions — not because the swing is simple, but because at each frozen moment, the physics IS simple.
+        </p>
+      </div>
+
+      <div class="laymans-item">
+        <h3>The Catch: Trajectories Don't Add Up</h3>
+        <p>
+          Here's what does NOT work: you can't take two complete swings, add them together, and get a third valid swing. That's because the forces at each instant depend on WHERE you are and HOW FAST you're moving — and those change as the swing progresses. Forces superpose. Trajectories don't.
+        </p>
+        <div class="analogy">
+          <strong>Think of it like cooking:</strong> Adding salt and pepper to a dish at any moment gives predictable flavor (superposition works). But you can't take two complete recipes and add them together to get a new valid recipe — the order and timing matter (trajectories don't superpose).
+        </div>
+      </div>
+
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> The forces in a golf swing add up perfectly at each instant, even though the swing itself is deeply nonlinear. This is the mathematical foundation that makes the entire AffineDrift framework possible.
+      </div>
+    </div>
+  </div>
+</section>
+```
+
 ## 1. Introduction
 
 Superposition is often invoked informally in robotics and biomechanics: one speaks of "the gravitational torque," "the Coriolis torque," "the control torque," as if these were independently meaningful and add linearly to produce the net motion. At the same time, the underlying dynamics are nonlinear in configuration and velocity, so **naïve trajectory superposition is false**. This tension is a constant source of conceptual confusion.
@@ -1060,13 +1107,137 @@ $$
 
 Still, this local superposition is extremely useful in practice: it allows you to calculate, at each time, how much of the instantaneous acceleration or joint torque is attributable to gravity, inertial coupling, specific actuators, or external loads, etc.
 
+### 6.3 The Snapshot Principle: Why Instantaneous Suffices
+
+A natural question arises: "If superposition only holds at a *fixed state*, how is that useful? Control and motion happen over *time*, not at frozen moments."
+
+The answer reveals why instantaneous superposition is exactly what we need.
+
+**The key insight:** Superposition is instantaneous because that is precisely the level at which causation and force accounting operate in mechanics. Newton's second law is a *local* statement:
+
+$$
+F_{\text{net}} = m a \quad \text{(at each instant)}
+$$
+
+The trajectory—the path through state space—is nonlinear and unfolds over time. But at each slice of time, the force decomposition is exact and linear. The trajectory emerges from integrating these instantaneous force rules forward in time.
+
+**A physical analogy:** Imagine photographing a ballet dancer mid-leap using a high-speed flash. The frozen image captures the dancer suspended in air. The position is complex, the pose is nonlinear, the motion is chaotic—but at that frozen moment, you can ask: "What forces are acting? Gravity? Muscle tension? Air resistance?" The forces decompose cleanly. The *jump* as a whole is a complex, nonlinear arc. But each frame of the motion obeys superposed forces.
+
+**The temporal picture:** As time steps forward, the state $x(t)$ evolves according to $\dot x = f(x) + G(x)u(t)$. At time $t_1$, the state is $x(t_1)$, and superposition tells us exactly how much acceleration each input channel contributes at that instant. At time $t_2 = t_1 + \Delta t$, the state has moved (nonlinearly) to $x(t_2)$, and superposition again applies—now at a different state. The nonlinear trajectory emerges from gluing together these locally linear force decompositions.
+
+**Why this matters for control:** When you design a controller, you often ask: "At the current state, if I apply force $u_1$, what happens?" or "How do I decompose the current acceleration into what gravity is doing versus what my actuators need to do?" These are instantaneous questions, and superposition answers them perfectly. The fact that the long-term trajectory is nonlinear doesn't invalidate this—it just means you need to re-evaluate the decomposition as the state changes.
+
+::: {.callout-tip}
+## Definition: The Snapshot Principle
+
+At any fixed state $x_0 = (q_0, \dot{q}_0)$, the mapping from control inputs to generalized accelerations is **exactly linear**:
+
+$$
+\ddot{q}(u_1 + u_2; x_0) = \ddot{q}(u_1; x_0) + \ddot{q}(u_2; x_0) - \ddot{q}(0; x_0)
+$$
+
+We call this the **Snapshot Principle**: freeze time, freeze the state, and the system behaves as if it were linear. This is not an approximation — it is an exact consequence of the control-affine structure. The nonlinearity of the system manifests only when the state *evolves* — when we release the snapshot and let time flow.
+
+This principle is the mathematical foundation for the force decomposition used throughout this site. It justifies analyzing the contributions of individual muscles, gravity, and Coriolis effects independently, then summing them — provided we evaluate all contributions at the same instantaneous state.
+:::
+
+### 6.4 Coordinate Invariance of the Decomposition
+
+One might worry: "If I change coordinates on the configuration space $Q$, does the decomposition into drift and control change? Is the conclusion somehow dependent on my choice of basis?"
+
+The answer is subtle and important: **the components change, but the geometric content does not.**
+
+**Component-level changes:** If you perform a coordinate transformation $q \to q'(q)$ on the configuration manifold, the drift vector field $f(x)$ and control distribution $G(x)u$ do not have the same numerical coordinates in the new frame. Just as the velocity of a car is different in mph vs. km/h (the number changes), the components of $f$ and $G$ change under coordinate transformation.
+
+**Geometric invariance:** However, the *geometric objects* underlying the decomposition are coordinate-independent:
+
+* The **drift vector field** $f(x)$ is a section of the tangent bundle $T(TQ)$. It is a vector field, and vector fields transform naturally under coordinate changes—the field itself is invariant; only its components change.
+* The **control distribution** (spanned by the columns of $G(x)$) is a subspace of the tangent space at each point in $TQ$. As a geometric object—a subspace—it is independent of the coordinates used to describe it. You can describe a line through the origin in hundreds of ways, but it remains the same line.
+* The **linearity of the input** is a property of the equations themselves, not of any particular representation. If $\dot x = f(x) + G(x)u$ is affine in $u$ in one coordinate system, it remains affine in any other.
+
+**Physical meaning:** The decomposition into "passive" and "active" forces has direct physical meaning: gravity and Coriolis are passive; actuator torques are active. This decomposition doesn't depend on your choice of coordinates. The numerical coefficients might change, but the *identity* of which forces are passive and which are active is invariant.
+
+**Example:** In a 2-link robot, you might measure joint angles in degrees or radians. The equations look different numerically. But the geometric fact—"there is a drift from gravity and Coriolis; the control input adds torque additively"—is true in both coordinate systems. The decomposition is real, even though its numerical form is not.
+
 ---
 
-## 7. Applications and Worked Examples Across Formulations
+## 7. The Modeling Question: Why Control-Affine?
+
+At this point, a critical reader should ask: **Is the affine structure actually true, or is it a convenient fiction?** The equations $\dot x = f(x) + G(x)u$ look clean and mathematically beautiful, but does nature really obey them?
+
+The honest answer: *The affine structure is a modeling choice, not a physical truth.* And understanding why it's the *right* choice reveals something deep about abstraction in physics and engineering.
+
+### 7.1 The Muscle Reality: Why Raw Biology Isn't Affine
+
+Consider a muscle actuated by neural activation $a$ (a signal from the nervous system). A detailed biomechanical model might include:
+
+* **Activation dynamics:** $a$ doesn't instantly produce force; there are calcium dynamics, actin-myosin binding kinetics, etc.
+* **Force-velocity relationship:** the force a muscle can produce depends on how fast it's shortening (Hill's equation). This is fundamentally nonlinear and *couples force to length and velocity*.
+* **Force-length relationship:** passive fibers have spring-like properties; active fibers have length-dependent strength.
+* **Tendon compliance:** tendons aren't rigid; they store and release elastic energy.
+
+If you try to model a robot arm using *activation* as the control input—that is, $u = a$ (neural signals)—the system is **decidedly not affine**. The muscle's force depends on its current length, its current velocity, and its activation history. Force enters the equations in a deeply nonlinear, state-dependent way.
+
+So why does the robotics and biomechanics literature routinely use affine models?
+
+### 7.2 The Right Level of Description: Abstraction and Torque
+
+The answer is that we choose a *different level of abstraction*. Instead of using neural activation as the control input, we use **torque at the joint** as the input:
+
+$$
+u = \tau_{\text{joint}}
+$$
+
+At this level, the affine structure emerges naturally. Here's why:
+
+**The muscle complex as a constraint:** When you set the model input to be joint torque, all the details of muscle activation, force-velocity coupling, and tendon compliance *don't disappear*—they become **constraints on the feasible input set** $\mathcal{U}(x)$. You cannot arbitrarily command any joint torque; your neuromuscular system can only produce torques within a certain range that depends on the current configuration, velocity, and fatigue state. But that constraint is about *which torques are feasible*, not about whether torque enters linearly into the dynamics.
+
+**The physics of the joint:** At the joint level, Newton's laws are unambiguous:
+
+$$
+I(q) \ddot q + C(q,\dot q) \dot q + g(q) = \tau
+$$
+
+Torque is torque. It enters the equations linearly. The fact that a particular $\tau$ value is hard or impossible for the muscle to produce is a separate question—a question about the constraints on the input space, not about the structure of the differential equation itself.
+
+**Analogy from mechanics:** This is like choosing coordinate systems in physics. You can describe a particle's motion in Cartesian or polar coordinates. The laws of motion are "simpler" in some coordinates than others (gravity is simpler in Cartesian; circular motion is simpler in polar). But the underlying physics doesn't depend on your choice. Once you make the choice, you get a definite equation of motion, and that equation has structural properties (like affinity or linearity) that reflect the *coordinate choice* as much as the physics.
+
+### 7.3 The Modeling Philosophy: Physics Doesn't Care
+
+Here's the key philosophical point, in Feynman's spirit: **The question isn't whether nature is affine. The question is whether, at the level of description we care about, the affine decomposition captures the physics correctly.**
+
+You might object: "But muscles aren't linear springs! They're complex biological systems with activation dynamics, force-velocity coupling, and all sorts of nonlinearities!"
+
+And you'd be absolutely right. But consider: when an engineer asks "What torque is the shoulder joint producing?" they don't care about the molecular details of actin-myosin sliding. The torque is *defined* at the joint, and it enters the equations of motion linearly. The fact that complex biology underlies that torque is irrelevant to the question being asked.
+
+**An analogy:** Imagine a thermometer. Thermometers work because mercury or a gas expands with temperature, and we calibrate that expansion to read out a number. The microscopic physics of the glass, the mercury, and thermal equilibration is fantastically complex. But when a doctor reads the thermometer, they don't care about any of that complexity. The thermometer abstracts away the details and gives a clean, linear-looking relationship: higher temperature → higher reading. The abstraction is *useful and valid* even though the underlying physics is complex.
+
+The same is true for the affine control model:
+
+* At the **muscle-activation level**, you'd need a detailed, nonlinear, state-coupled model. That level is correct if you're studying how neural signals drive movement or how fatigue affects performance.
+* At the **joint-torque level**, the system is affine. This level is correct if you're studying robotics, biomechanical motion, or control strategy. You don't need to (and shouldn't) model the details of muscle biology at this level—that would be like asking your thermometer to explain quantum mechanics.
+
+### 7.4 Affinity as an Abstraction, Not a Constraint
+
+A final insight: **the affine structure is not a constraint imposed by physics—it's a *consequence of the abstraction we choose*.**
+
+Different abstractions give different structures:
+
+* **Muscle-activation level:** System is nonlinear, with state-dependent force production. Affinity fails.
+* **Joint-torque level:** System is affine. Superposition holds for torques and accelerations.
+* **End-effector wrench level:** Wrench (force + moment) enters linearly, but may be in a different state space (end-effector pose rather than joint angles). Affinity still holds geometrically.
+
+Which level you use depends on your question. A neural motor control researcher cares about the first. A roboticist cares about the second. A biomechanist studying the operational space might use the third.
+
+The article proves that at the joint-torque level, superposition is rigorous and powerful. It doesn't claim that biological reality is secretly affine. It claims that when you abstract to joint torques—a sensible and natural level of description—you get an affine, superposable system. And that's exactly what you need for the control theory and physics on which the AffineDrift framework rests.
+
+---
+
+## 8. Applications and Worked Examples Across Formulations
 
 To make the parallels concrete, we now present two more worked examples: a planar 2R manipulator and a brief screw-theoretic example.
 
-### 7.1 Example: 2R planar robot arm (Newton–Euler / Lagrangian)
+### 8.1 Example: 2R planar robot arm (Newton–Euler / Lagrangian)
 
 Consider a 2-link planar robot arm with joint angles $q_1,q_2$, link lengths $l_1,l_2$, link masses $m_1,m_2$, and moments of inertia $I_1,I_2$ about their centers of mass. Gravity acts in $-y$.
 
@@ -1176,7 +1347,7 @@ From the Lagrangian viewpoint, the same equations arise from
 
 The key distinction is *interpretive*: Lagrangian mechanics frames $M(q)$ as a metric on $Q$, and $g(q)$ as the gradient of a potential. But the linearity in $u$ (here $u=\tau$) is identical to the Newton–Euler derivation.
 
-### 7.2 Example: planar end-effector wrench (screw-theoretic flavor)
+### 8.2 Example: planar end-effector wrench (screw-theoretic flavor)
 
 For the same 2R planar manipulator, consider the end-effector exerting a planar force $f_e = [f_x;f_y]^\top$ (moments ignored for simplicity). The Jacobian $J(q) \in \mathbb{R}^{2\times 2}$ satisfies
 
@@ -1243,7 +1414,7 @@ This is a direct screw-theoretic superposition: the **total acceleration is the 
 
 ---
 
-## 8. Conclusions
+## 9. Conclusions
 
 We have shown, in three formulations (Newton–Euler, Lagrangian, screw-theoretic), that:
 
@@ -1290,35 +1461,42 @@ This structural insight connects directly to the **Drift--Control Ratio**. While
       <div class="laymans-item">
         <h3>Adding Forces vs. Adding Paths</h3>
         <p>
-          In complex systems like a golf swing, adding two full swings doesn't make a "double swing." However, at any single split-second, we can simply add the force you apply to the force the club already has.
+          Here's the beautiful bit: in a golf swing, the forces acting on the club at any given instant are simple and additive. Gravity pulls down, your muscles push, friction acts—all at the same time, all adding up. But here's what trips people up: if you try to add two *complete golf swings* together, you don't get a "double swing." The complex, nonlinear dance of the club through space breaks superposition. What *doesn't* break is the force budget at any frozen moment.
         </p>
         <div class="analogy">
-<strong>Think of it like:</strong> Rowing a boat in a river. You can calculate your total speed at any moment by simply adding your rowing speed to the river's current. But predicting where you end up is much harder because the river's path is winding and complex.
+<strong>Think of it like:</strong> A snapshot of a ballet dancer mid-leap. That frozen frame tells you exactly what forces are supporting the dancer—gravity, the push-off from the legs, air resistance. You can calculate the net force at that instant by simply adding them up. But the shape of the actual leap—the arc, the timing, the recovery—that's a complex, nonlinear dance that doesn't superpose with another leap. Still, the force accounting at each moment is clean.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>Why "Superposition" Matters</h3>
         <p>
-          "Superposition" is just a technical term for being able to study things separately and then add them back together. Because the math allows this for forces, we can isolate exactly what the golfer is doing distinct from what gravity and momentum are doing.
+          "Superposition" means being able to study forces separately and then add them back together. It sounds obvious, but it's not: in many complex systems, you *can't* do this because things interact in tangled ways. But in mechanical systems—golf clubs, robot arms, your body—the forces enter the equations in a special, linear way. That's the gift: we can point at the acceleration you're producing and say "that piece is gravity, that piece is your muscles, that piece is friction" and they truly add up.
         </p>
         <div class="analogy">
-<strong>Think of it like:</strong> A restaurant receipt. The total bill is complex, but it's made up of individual items (burger + fries + shake) that are simply added together. We can look at the "burger" cost separately from the "fries" cost.
+<strong>Think of it like:</strong> Recording a song where each instrument is on a separate track. The final mix is the sum of all tracks. You can turn off the drums and hear just the guitars and bass. The parts don't interact—they truly add. This is unlike, say, blending colors of paint, where you can't easily "subtract out" the blue from green. Forces in mechanics are like separate tracks, not like paint colors.
         </div>
       </div>
 
       <div class="laymans-item">
-        <h3>The "Affine" Structure</h3>
+        <h3>The "Affine" Structure: Separating Passive and Active</h3>
         <p>
-          This article talks about "affine control systems," which means the system has two distinct parts: a "passive" part that happens automatically (drift) and an "active" part controlled by you (input). The active part is simple and direct.
+          "Affine" is a fancy word for a very concrete thing: the system splits into two pieces. One part happens passively—gravity, momentum, friction—and it does what it does regardless of your control. The other part is what you actively control. The key is that your control enters the equations *additively and linearly*. It doesn't change the rules of gravity or friction; it just adds a new force on top.
         </p>
         <div class="analogy">
-<strong>Think of it like:</strong> An electric bike. The bike has a natural coasting speed (drift) depending on the hill. The electric motor adds power (input) directly on top of that. The motor doesn't change the hill; it just adds to your speed.
+<strong>Think of it like:</strong> A surfer riding a wave. The wave itself (drift) carries the surfer passively. The surfer can lean and shift balance (input), which adds forces on top of the wave. The surfer's lean doesn't change the wave itself; the surfer just adds acceleration in the forward or backward direction. The total motion is wave-motion-plus-surfer-control. Neither the surfer nor the wave, individually—both together, additively.
         </div>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> While a golf swing is a complex motion, the forces driving it at any instant are simple and additive, allowing us to mathematically "subtract" the golfer to see the pure physics underneath.
+        <strong>Key Takeaway:</strong> The golf swing is complex and nonlinear—the trajectory is a tangle you can't simply add up. But at any frozen instant, the forces are clean, simple, and truly additive. You can point at a moment in time and say exactly how much acceleration gravity is producing, how much your muscles are adding, how much friction is subtracting. That's what this article proves, rigorously, in three different mathematical languages. And that's powerful.
+      </div>
+
+      <div class="laymans-item">
+        <h3>The Snapshot Principle</h3>
+        <p>
+          Imagine freezing the golfer mid-swing like a photograph. In that frozen instant, forces add up the same way they do for a simple spring or pendulum — perfectly linearly. The complexity only returns when you press "play" and let time move forward.
+        </p>
       </div>
     </div>
   </div>
@@ -1386,6 +1564,19 @@ This structural insight connects directly to the **Drift--Control Ratio**. While
 ```
 
 ---
+
+:::{.callout-warning}
+## Scope and Limitations
+
+- **This analysis is instantaneous, not trajectorial.** We prove that at any frozen moment in time, forces superpose and accelerations are linear in the control input. But the actual *path* the club takes through space is nonlinear, and you cannot simply add two golf swings to get a third. Think of it like a photograph: in one frame, forces are simple and additive; press play and the story becomes much more tangled.
+
+- **The affine structure is a modeling choice, not physics itself.** We choose to write the equations as $\dot{x} = f(x) + G(x)u$ and separate "drift" from "input." But this decomposition is useful only if the boundary between passive and active is crisp. In reality, muscles have state-dependent stiffness and damping that blur this boundary—a high-speed contraction feels different from a low-speed one because tissue behavior changes. Our model freezes this into a fixed "passive" baseline, which is an approximation that works well at high speeds but breaks down in quasi-static regimes.
+
+- **Biological actuation may not follow the $G(x)u$ form.** We assume torque generation scales linearly with neural drive and configuration. Hill-type muscle models support this roughly, but only if you're careful about contraction velocity and length-tension relationships. In extreme configurations (joints near singularity or at full stretch), the assumption that "muscle force enters linearly" becomes questionable. Saturation, fatigue, and reflex delays all introduce nonlinearities that the simple $G(x)u$ term cannot capture.
+
+- **The experimental validation of this decomposition is indirect.** We cannot measure the drift field $f(x)$ directly because you cannot command "zero muscular torque" in a living organism—only zero voluntary effort, which still leaves passive viscoelasticity. This forces us to infer drift from models or from counterfactual simulations, introducing model-dependence into something we present as fundamental.
+
+:::
 
 ## References
 

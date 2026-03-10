@@ -5,21 +5,88 @@ description: "Geometric foundations for tangent hyperplanes."
 
 ## Overview
 
-This article establishes the geometric foundations of tangent hyperplanes
-for smooth nonlinear systems.
+This article establishes the geometric foundations of tangent hyperplanes for smooth nonlinear systems. We will see that tangent spaces are not approximate tools — they are exact infinitesimal descriptions of how curved surfaces behave near a point.
+
+## The Intuition: Standing on a Hill
+
+Imagine you're standing on a hill. The ground under your feet is curved — the elevation changes as you walk in any direction. But if you look at just the small patch where you're standing, it looks flat. Perfectly flat. You could lay a sheet of paper down and it would fit without creasing.
+
+That flat patch is the tangent space — and here's the remarkable thing: *it's not an approximation*. It's the exact local structure of the curved surface. Not approximately exact. Exactly exact. In the limit as you shrink the patch to infinitesimal size, the difference between the curved surface and its flat approximation vanishes faster than the shrinkage itself. This is what mathematicians mean by "the tangent space is the limit definition of the derivative."
 
 ## Manifolds and Tangent Spaces
 
-A smooth manifold admits a tangent space at every point. This tangent space
-is a linear vector space defined by derivatives.
+A smooth manifold $M$ is a curved space that is locally flat. At every point $x \in M$, we can define a tangent space $T_x M$ — a linear vector space that captures the directions in which we can move at that point while staying on (or infinitesimally near) the manifold.
 
-## Tangent Hyperplanes
+For a manifold defined implicitly by a smooth constraint $h(x) = 0$ (where $h: \mathbb{R}^n \to \mathbb{R}^p$ with $p < n$), the tangent space is:
 
-![Tangent hyperplane](./figures/tangent_plane.svg)
+$$
+T_x M = \ker(\nabla h(x)) = \{v \in \mathbb{R}^n : \nabla h(x) \cdot v = 0\}
+$$
 
-The tangent hyperplane captures the exact first-order structure of the manifold.
+In other words, the tangent space consists of all infinitesimal directions that do not change $h$ — the directions in which you can move without violating the constraint.
 
-## Exactness
+## Formal Definition of the Tangent Hyperplane
 
-The tangent hyperplane is not an approximation. It is the limit definition
-of the derivative itself.
+The tangent hyperplane at a point $x \in M$ is the affine subspace:
+
+$$
+H_x := x + T_x M
+$$
+
+This is a flat hyperplane passing through $x$ and parallel to the tangent space. It lives in the ambient space $\mathbb{R}^n$, not on the curved manifold itself.
+
+## The Exactness Claim
+
+Here is the key insight: **The tangent hyperplane is exact infinitesimally.**
+
+What does "exact" mean? It means that if you move by a perturbation $\delta x$ with $\|\delta x\| = \epsilon$ in a direction in the tangent space, then the residual difference between where you are and where the constraint surface is located decays as $O(\epsilon^2)$ — quadratically in perturbation size:
+
+$$
+\|x + \delta x - \text{(closest point on } M)\| = O(\|\delta x\|^2)
+$$
+
+This is not an approximation statement. It is a precise asymptotic characterization. By 'exact,' we mean in the infinitesimal limit: for sufficiently small perturbations, the tangent hyperplane is an excellent linear approximation. For finite perturbations, second-order residuals arise — and we can bound them, as we will see in [Part 4](./part-4-residuals-curvature.qmd).
+
+## Simple Example: The Unit Circle
+
+Let's make this concrete. Consider the unit circle in $\mathbb{R}^2$ defined by the constraint:
+
+$$
+h(x, y) = x^2 + y^2 - 1 = 0
+$$
+
+The constraint gradient is $\nabla h = (2x, 2y)$. At the point $(1, 0)$ on the circle, the tangent space is:
+
+$$
+T_{(1,0)} M = \{(v_x, v_y) : 2 \cdot v_x + 0 \cdot v_y = 0\} = \{(0, v_y) : v_y \in \mathbb{R}\}
+$$
+
+The tangent hyperplane (in this case, a tangent line) is the vertical line through $(1, 0)$. If we move along this line by a small amount $\delta x = (0, \epsilon)$, we land at $(1, \epsilon)$. The closest point on the actual circle is $(\sqrt{1 - \epsilon^2}, \epsilon) \approx (1 - \epsilon^2/2, \epsilon)$. The residual distance is:
+
+$$
+\|(1, \epsilon) - (1 - \epsilon^2/2, \epsilon)\| = \epsilon^2/2 = O(\epsilon^2)
+$$
+
+Exactly as predicted. Shrink the perturbation by a factor of 10, and the residual shrinks by a factor of 100.
+
+## Why This Matters for Control and Dynamics
+
+The exactness of tangent spaces is not merely a curiosity. It justifies using linear approximations for system analysis and control design. Because the tangent space captures the exact first-order structure, we can:
+
+- Design controllers using linear tools (LQR, Riccati equations) that are valid in the limit.
+- Bound the error that accumulates from nonlinearity.
+- Know precisely when linear tools fail: when perturbations grow large.
+
+## Limitations
+
+The tangent space framework requires some care:
+
+:::{.callout-warning}
+**C¹ Smoothness Required:** The tangent space is defined only where $h$ is continuously differentiable. At singular points (where $\nabla h = 0$), the implicit function theorem fails and the manifold may not be smooth. The construction breaks down, and linear approximations become unreliable.
+
+**Constraint Regularity:** The constraint must have full rank ($\text{rank}(\nabla h) = p$) at every point of interest. Otherwise, the manifold is singular or the dimension of the tangent space is undefined.
+:::
+
+## Looking Ahead
+
+Now that we have a rigorous understanding of tangent spaces, we can ask: what happens to the dynamics when the system evolves along a manifold? In [Part 2](./part-2-dynamics.qmd), we will see how the equations of motion decompose into a linear system on the moving tangent space.

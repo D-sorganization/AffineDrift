@@ -121,3 +121,21 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
 
 
 This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *The Geometry of Motion*.
+
+
+## Connection to Automatic Differentiation
+
+
+A subtle but profound fact emerges when combining Articulated Body Algorithm with modern machine learning: the recursive passes of ABA are perfectly amenable to **Automatic Differentiation (AD)**.
+
+In chapters on machine learning and optimal control, we often need to compute the derivatives of the dynamics with respect to the state and control inputs. That is, if we have accelerations $\ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})$, we need:
+
+\begin{equation}
+   \frac{\partial \ddot{\bm{q}}}{\partial \bm{q}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \dot{\bm{q}}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \bm{\tau}}
+\end{equation}
+
+Rather than deriving these derivatives by hand (which quickly becomes intractable for complex systems), we can wrap the ABA algorithm in an automatic differentiation framework (such as JAX, PyTorch, or TensorFlow). The AD system automatically tracks how each intermediate computation depends on the inputs, and by the chain rule, produces exact derivatives of the final accelerations with respect to any parameter.
+
+This is not only computationally feasible—it is elegant. Libraries like Pinocchio now expose their recursive dynamics algorithms through differentiable layers, allowing practitioners to directly optimize trajectories or learn inverse models via gradient descent without manually writing down a single Jacobian or Hessian matrix.
+
+The practical consequence: in modern robotics and control, the same ABA function that drives forward simulation at 1000 Hz can simultaneously drive learning algorithms computing gradients of control loss. The mathematical recursion is the same; only the computational graph changes.
