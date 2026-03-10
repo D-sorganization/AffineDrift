@@ -12,7 +12,14 @@ format:
 
 ## Abstract
 
+::: {.callout-note}
+## Scope & Exclusions
+This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as control inputs. It explicitly excludes aerodynamic drag, ground reaction forces, marker dynamics, muscle activation delays, and impacts. What is included can be mathematically decomposed into passive and active components; what is excluded lies outside the model's scope and should not be attributed to the decomposition.
+:::
+
 The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate generalized joint torques and hand forces from motion capture and external force measurements, but it cannot distinguish how much of those forces arise from the golfer's active muscular effort versus passive mechanical dynamics such as inertia, gravity, and shaft deformation. This paper develops a strictly theoretical framework that models the golfer--club--shaft system as a nonlinear control-affine mechanical system and uses that structure to decompose forces into drift (passive) and input (torque-driven) components. We define the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as mathematical tools for isolating passive dynamics and torque effectiveness, and we derive a force taxonomy that classifies measured forces by their causal origin within the model. Applications and empirical validation will be presented in subsequent simulation and experimental papers.
+
+Before we write a single equation, let's ask a simple question: when a golfer swings a club, how much of the resulting motion was *inevitable*—dictated by momentum, gravity, and the elastic whip of the shaft—and how much was *chosen* by the golfer's muscles? Stand at a range and watch a golfer in slow motion. The acceleration late in the downswing is violent, almost automatic. Is the golfer *doing* this, or is the club *falling* through this motion, carried by its own inertia? And if some of it is inevitable, which parts are chosen? This is the question that drives everything that follows. Physics tells us the swing is governed by equations of motion; those equations have a hidden structure that will let us answer it precisely.
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
@@ -502,6 +509,22 @@ By isolating the torque input $u$ into the linear term $g(x)u$, we transform the
 The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are **mechanically orthogonal**.
 
 This orthogonality is what allows us to perform the "surgical" operations defined in the next part. If the drift field $f(x)$ encapsulates the system's passive destiny, we can theoretically allow it to play out uninterrupted. By mathematically amputating the input term ($u \equiv 0$), we can expose the underlying inertial current that the golfer is fighting—or riding. This leads us directly to the concept of **counterfactual simulation**. However, the affine equation $\dot{x} = f(x) + g(x)u$ describes only instantaneous tendencies (a vector field), not an outcome. To see the destiny that the drift field $f(x)$ prescribes, we must **integrate** it over time. Part II performs this integration, using the affine structure not just to describe the swing that happened, but to computationally reveal the **"Shadow Swings"**—the unobserved trajectories that *would* have occurred had the golfer chosen differently.
+
+::: {.callout-warning}
+## Model Limitations
+
+This Part I analysis is based on the mechanical model only and is subject to the following constraints:
+
+(a) **Rigid body segments:** All anatomical segments are modeled as rigid bodies connected by ideal joints; soft-tissue compliance and marker dynamics are excluded.
+
+(b) **Constant grip impedance:** The boundary condition at the grip is treated as a fixed mechanical constraint, not as a state-dependent or input-dependent stiffness parameter.
+
+(c) **Aerodynamic forces neglected:** Air resistance on clubhead and shaft is not modeled; these forces enter nonlinearly and do not preserve the affine structure.
+
+(d) **Neural control delays not modeled:** All torques are applied instantaneously; activation dynamics, sensorimotor delays, and muscle force-velocity relations are outside the model scope.
+
+Within these constraints, the affine decomposition is exact. Outside them, causal interpretations must be qualified.
+:::
 
 ## Recommended Resources
 

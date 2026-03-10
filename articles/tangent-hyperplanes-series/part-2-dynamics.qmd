@@ -3,20 +3,106 @@ title: "Tangent Hyperplanes II: Dynamics"
 description: "Infinitesimal dynamics and moving tangent spaces."
 ---
 
-## Local Linear Dynamics
+## The Hidden Linearity of Nonlinear Systems
 
-Nonlinear dynamics are exactly linear in the infinitesimal.
+Now here's where it gets interesting. The tangent space isn't just a geometric curiosity — it's where dynamics live. Consider a nonlinear dynamical system:
 
 $$
-\delta \dot{x} = A(x)\delta x + B(x)\delta u
+\dot{x} = f(x, u)
 $$
+
+where $x \in \mathbb{R}^n$ is the state, $u \in \mathbb{R}^m$ is the control input, and $f$ is a smooth vector field. This system is genuinely nonlinear. The future state depends on $x$ in a complex, nonlinear way.
+
+But here is the key insight: **At every instant, the equations of motion decompose into a linear system on the tangent space. The matrices A(t) and B(t) — the Jacobians of the dynamics — encode the system's instantaneous behavior with complete fidelity.**
+
+This is not saying that the system is "approximately linear." It is saying that the derivative itself — the infinitesimal response to perturbations — *is* a linear operator, by definition.
+
+## Linearization Along a Reference Trajectory
+
+Suppose we have a reference trajectory $(x̄(t), ū(t))$ satisfying:
+
+$$
+\dot{x̄}(t) = f(x̄(t), ū(t))
+$$
+
+Now consider a perturbed trajectory $x(t) = x̄(t) + \delta x(t)$ driven by a perturbed control $u(t) = ū(t) + \delta u(t)$. The perturbed system satisfies:
+
+$$
+\dot{x̄}(t) + \delta\dot{x}(t) = f(x̄(t) + \delta x(t), ū(t) + \delta u(t))
+$$
+
+Subtracting the reference trajectory equation and expanding the right-hand side to first order using the Taylor series:
+
+$$
+f(x̄ + \delta x, ū + \delta u) = f(x̄, ū) + \frac{\partial f}{\partial x}\bigg|_{(x̄,ū)} \delta x + \frac{\partial f}{\partial u}\bigg|_{(x̄,ū)} \delta u + O(\|\delta x\|^2, \|\delta u\|^2)
+$$
+
+This gives us the perturbation equation:
+
+$$
+\delta\dot{x}(t) = A(t)\delta x(t) + B(t)\delta u(t)
+$$
+
+where the Jacobian matrices are defined as:
+
+$$
+A(t) = \frac{\partial f}{\partial x}\bigg|_{(x̄(t),ū(t))}
+$$
+
+$$
+B(t) = \frac{\partial f}{\partial u}\bigg|_{(x̄(t),ū(t))}
+$$
+
+These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$.
 
 ## Moving Tangent Spaces
 
 ![Moving tangent spaces](./figures/moving_tangent.svg)
 
-As the system evolves, the tangent hyperplane evolves with it.
+The tangent space at the reference state $x̄(t)$ is exactly the space in which this linear system evolves. As the system evolves, the reference state moves along the trajectory, and the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
 
-## Superposition
+$$
+H_{x̄(t)} = x̄(t) + T_{x̄(t)} M
+$$
 
-Superposition holds exactly within each tangent space.
+The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how perturbations grow or shrink within this space.
+
+## Superposition: Exact, Not Approximate
+
+Here is a crucial property: **Within each tangent space, superposition holds exactly. Two small perturbations combine linearly. This is not an approximation — it's the definition of the derivative.**
+
+If $\delta x_1(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_1$ and $\delta x_2(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_2$, then $\delta x_1(t) + \delta x_2(t)$ is exactly a solution to $\delta\dot{x} = A(t)\delta x + B(t)(\delta u_1 + \delta u_2)$.
+
+This is true to machine precision (within numerical error only) because we are working with the definition of linearity itself. The tangent space is a linear space, and the linearized dynamics preserve linearity.
+
+## The State Transition Matrix
+
+Solutions to the linearized system can be expressed using the state transition matrix (also called the fundamental matrix) $\Phi(t, t_0)$, which satisfies:
+
+$$
+\dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \quad \Phi(t_0, t_0) = I
+$$
+
+A solution to the linearized system with control input is:
+
+$$
+\delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \delta u(\tau) \, d\tau
+$$
+
+This is the exact solution to the perturbation equation, valid to all orders in the perturbation variables themselves (since the perturbation equation is linear).
+
+## Limitations: Finite Perturbations and Nonlinearity
+
+The linearized system is exact infinitesimally. For finite perturbations, the story is more complicated:
+
+:::{.callout-warning}
+**Higher-Order Terms Neglected:** The error from dropping $O(\|\delta x\|^2, \|\delta u\|^2)$ terms is bounded but non-zero. The bound is proportional to the square of the perturbation size. If you double the perturbation, the error quadruples.
+
+**Superposition Breaks Down:** Superposition holds exactly for the linearized system. But when you add the higher-order correction terms back in, two small perturbations no longer combine linearly — there are interaction terms.
+
+**Validity Range:** The linearized system is trustworthy only when $\|\delta x(t)\|$ and $\|\delta u(t)\|$ remain small. In nonlinear systems, small initial perturbations can grow exponentially. Eventually, the linearization fails.
+:::
+
+## Looking Ahead
+
+The fact that we can extract a linear system from nonlinear dynamics — and that this linear system is exact infinitesimally — opens the door to using powerful control tools. In [Part 3](./part-3-control.qmd), we will see how differential dynamic programming and iterative linear-quadratic regulation exploit this fact to design nonlinear controllers.

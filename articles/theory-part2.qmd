@@ -216,7 +216,15 @@ The ZTCF trajectory is not strictly required to compute this decomposition: eval
 
 There is a dynamical imperative hidden in this construction. In phases of low velocity (takeaway), the ZTCF is merely one of many possible paths, and the golfer retains high authority to deviate from it. However, as swing speed increases, the passive drift field $f(x)$ grows energetically while the input authority $g(x)u$ remains bounded by physiological limits. In this high-energy regime, the ZTCF transforms from a passive reference into a **Dominant Attractor**. As the **Drift-Control Ratio** (defined in subsequent work) rises, the swing trajectory is increasingly "railroaded" by the inertial terms. The ZTCF thus evolves from a mere counterfactual "what-if" into a prediction of the inevitable, revealing that late-swing mechanics are governed more by **Inertial Memory** than by current agency.
 
-### Interpretational scope and limitations
+### Worked Numerical Example
+
+To make this concrete, consider a snapshot during mid-downswing. Inverse dynamics computed from motion capture yields a total torque magnitude of $\tau_{\text{total}} = 100 \text{ Nm}$ at the lead shoulder. The drift torque—evaluated from the passive terms at the actual state $x(t)$—is $\tau_{\text{drift}} = 85 \text{ Nm}$. The input torque is therefore:
+
+$$\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}} = 100 - 85 = 15 \text{ Nm}.$$
+
+This tells us something striking: the golfer is applying only 15 Nm of active torque, while passive momentum, gravity, and elastic shaft forces are contributing 85 Nm—*85%* of the mechanical load. This is the essence of "surfing on momentum." The golfer's muscles are not driving the downswing; they are *steering* it. The drift dominates. In the takeaway, this ratio would be reversed: the golfer might apply 60 Nm of active torque against only 10 Nm of drift, because the system has less momentum and requires more muscular steering. This shift from "steering a momentum-driven system" to "actively powering the early motion" is invisible in raw inverse dynamics but transparent in the drift--input decomposition.
+
+## Scope and Limitations
 
 The ZTCF is a counterfactual *within the model*. It answers the question:
 
@@ -319,7 +327,7 @@ ZVCF and ZTCF play complementary roles:
 
 Within the drift--input decomposition,
 
-$$\tau_{\mathrm{total}}(t) = \tau_{\mathrm{drift}}(t) + \tau_{\mathrm{input}}(t),$$
+$$\tau_{\mathrm{total}}(t) = \tau_{\mathrm{drift}}(x(t)) + \tau_{\mathrm{input}}(t),$$
 
 the ZVCF satisfies
 
@@ -329,7 +337,7 @@ so ZVCF should be viewed as the *zero-velocity slice* of the drift torque field.
 
 The full drift torque can be written as
 
-$$\tau_{\text{drift}}(t)
+$$\tau_{\text{drift}}(x(t))
   =
   \tau_{\mathrm{ZVCF}}(t)
   +
@@ -356,8 +364,8 @@ This makes it especially useful for:
 - analyzing torque effectiveness by comparing total torque to ZVCF and ZTCF baselines.
 
 ::: {.callout-important}
-## Note on Dynamic Relevance (The "Static Fallacy")
-A common scientific objection is that static forces (gravity, elastic stiffness) are negligible compared to inertial forces in a high-speed swing (e.g., $1g \ll 100g$), rendering the ZVCF physically irrelevant. This critique misses the analytical purpose of the counterfactual. We do not calculate ZVCF because we believe gravity "steers" the downswing; we calculate it to mathematically subtract the configuration-dependent baseline from the total passive force. Without the ZVCF, one cannot analytically distinguish "Geometric Stiffness" (a velocity-dependent stiffening effect) from "Elastic Stiffness" (a static material property). The ZVCF is the necessary "tare" operation for the dynamic scale—it zeros out the scale so that the "weight" of the velocity-dependent terms can be measured accurately.
+## Why Configuration-Dependent Forces Must Be Subtracted
+The ZVCF isolates configuration-dependent forces—gravity and elastic stiffness—not because they dominate the downswing (they don't), but because they must be algebraically separated to measure velocity-dependent terms accurately. Think of ZVCF as a "tare weight" operation on a scale: to measure the true weight of velocity-dependent forces (Coriolis, centrifugal, shaft damping), you must first zero out the static load (gravity, elasticity). Without this mathematical baseline, you cannot distinguish "Geometric Stiffness" (a velocity-dependent re-stiffening effect) from "Elastic Stiffness" (the shaft's intrinsic material property). The decomposition thus has mathematical necessity: configuration-dependent and velocity-dependent drift forces are *structurally distinct* in the equations of motion, and only by computing ZVCF can we isolate each category with precision.
 :::
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.

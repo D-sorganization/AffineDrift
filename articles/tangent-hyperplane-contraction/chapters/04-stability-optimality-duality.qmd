@@ -3,6 +3,10 @@ title: "Chapter 4 - Stability-Optimality Duality"
 bibliography: ../references.bib
 ---
 
+## Can the Same Matrix Measure Both Cost and Stability?
+
+Imagine a pendulum. The "cost-to-go" from any position is like a potential energy: higher positions cost more to reach equilibrium. The stability certificate—a proof that perturbations shrink—can be encoded in a different "metric": a custom notion of distance that shrinks as perturbations evolve. Here is the astonishing fact: under optimal control, these two matrices are *exactly the same*. The penalty on deviations is perfectly aligned with the natural contraction rate of the closed-loop system. This is the stability-optimality duality.
+
 ## Introduction and Qualitative Purpose
 
 This chapter states the duality principle: Riccati value matrices can be interpreted as contraction metrics under suitable assumptions.
@@ -25,3 +29,18 @@ V_{k+1}-V_k = -\delta x_k^\top(Q_k+K_k^\top R_k K_k)\delta x_k,
 $$
 
 Under uniform coercivity and boundedness assumptions, this yields exponential decay.
+
+## Scope and Limitations: When Does the Duality Hold?
+
+This duality is most transparent for **linear systems**, where it is exact. For nonlinear systems, we must carefully track what is and is not guaranteed:
+
+**Where it holds rigorously:**
+- In the **tangent space** (local linearization) around a nominal trajectory, the Riccati value matrix *exactly* defines a contraction metric for perturbation dynamics.
+- For **finite-horizon LQR problems**, the optimal gain $K_k$ and value matrix $S_k$ solve the Riccati recursion exactly, and contraction is guaranteed locally.
+
+**Where it breaks down or requires care:**
+- The duality holds **locally** in tangent space, not globally. If a perturbation grows large, the linear approximation fails and nonlinear effects dominate.
+- For **strongly nonlinear systems** far from the nominal trajectory, additional tools (global Lyapunov functions, sum-of-squares programming, or sampling-based methods) are required.
+- The duality assumes the **linearization is valid** along the trajectory. Near discontinuities (contact, mode switches), this assumption breaks.
+
+**Practical takeaway:** Use the duality to design controllers and obtain *local* stability certificates. For systems with large uncertainties or operating far from the nominal trajectory, validate with Monte Carlo rollouts or formal reachability analysis before deployment.

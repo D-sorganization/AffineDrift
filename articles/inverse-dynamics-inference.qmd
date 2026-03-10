@@ -13,13 +13,13 @@ format:
 
 ## Introduction
 
-Inverse dynamics is a foundational tool in biomechanics for estimating joint torques from kinematic measurements. For a multibody system such as the golfer--club--shaft chain, the classical inverse dynamics approach solves the equations of motion for the generalized torques required to reproduce a measured motion. However, in a nonlinear control-affine system of the form
+You're a detective. A golfer swings the club and hits a ball. You have perfect video of what happened—every position, every acceleration, every twist. The question: what forces did the golfer apply? This is inverse dynamics: detective work, working backward from what happened to figure out what must have caused it.
 
-$$
-\dot{x} = f(x) + G(x)u,
-$$
+But here's the detective's dilemma: imagine you see a car accelerating downhill at constant speed. Did the driver press the gas (active force) or is the hill doing it (passive drift)? Without knowing the slope of the hill, you can't tell. You see the acceleration, but you can't separate the driver's input from gravity's free push.
 
-the torques recovered from classical inverse dynamics do not isolate the contributions of active muscular torques from those of drift dynamics. This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) resolve these ambiguities.
+The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two sources: drift (passive physics—momentum, gravity, inertia), and input (the golfer actively pulling). Classical inverse dynamics gives you the total, but not the split. And the split matters, because what golfers "feel" and what they consciously control is the input component, not the total.
+
+This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
 
 ## Classical Inverse Dynamics and Its Limitations
 
@@ -130,6 +130,20 @@ The affine decomposition, ZTCF, and ZVCF enable:
 
 - improved machine learning models based on drift-removed data.
 This section provides the conceptual and computational foundation for replacing classical inverse dynamics with a more rigorous framework grounded in nonlinear affine dynamics.
+
+## Limitations
+
+:::{.callout-warning}
+The ZTCF and ZVCF framework, while powerful, operates within several constraints that practitioners should recognize:
+
+1. **Full model and initial conditions required**: ZTCF computation requires knowledge of the complete system model—inertia matrices, damping coefficients, gravity, and shaft properties. Without precise initial conditions, the counterfactual trajectory diverges rapidly, compounding error in the estimated drift forces.
+
+2. **Computational cost scales with complexity**: As model fidelity increases (more degrees of freedom, flexible segments, joint stiffness distributions), the cost of running high-fidelity counterfactual simulations scales superlinearly. For real-time biomechanics or online coaching, this becomes prohibitive.
+
+3. **Assumes perfectly known system parameters**: The drift estimation is only as good as the parameterization. In practice, mass distributions, joint friction, and passive elastic properties are approximated. Small parameter errors can create large errors in drift estimation, particularly when inertial forces dwarf muscular contributions.
+
+4. **Cannot distinguish voluntary braking from reflexive co-contraction**: If a golfer is simultaneously contracting agonist and antagonist muscles (co-contraction), the ZVCF isolation sees only the *net* input torque. It cannot separate deliberate stabilization efforts from reflex responses, potentially mischaracterizing the cognitive control component of motion.
+:::
 
 <section class="laymans-terms">
   <button class="laymans-terms-header" aria-expanded="false">

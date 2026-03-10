@@ -56,6 +56,11 @@ This Part IV collects the detailed mathematical proofs that substantiate those a
 
 ## Appendix A: Mathematical Derivations
 
+::: {.callout-important}
+## Critical Assumption: Fixed Grip Impedance
+The derivations in this appendix treat the grip boundary condition as a fixed mechanical constraint: the hand is clamped with constant stiffness and damping (the "Effective Plant" impedance). Physiologically, grip stiffness modulates with muscle activation, which is part of the input $u$. If grip impedance were state-dependent or input-dependent, the boundary conditions defining the modal shapes would depend on $u$, making the inertia matrix $M(q,\eta,u)$ input-dependent and violating the affine structure. To preserve the validity of the control-affine form $\dot{x} = f(x) + g(x)u$, we assume constant boundary conditions. This is justified during the ballistic phases of the swing (takeaway through impact), where grip adjustments are minimal; it may fail during the address or follow-through. All results in this Part IV assume this constant impedance context.
+:::
+
 This appendix provides detailed derivations supporting the unified control-affine formulation. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
 
 $$\dot{x} = f(x) + g(x)u$$
@@ -330,6 +335,11 @@ with orthogonality relations
 $$\int_0^L \rho A \,\phi_i(s)\,\phi_j(s)\,ds = \delta_{ij}.$$
 
 Substituting the modal expansion into the beam equation and projecting onto each $\phi_i$ yields the modal equations of motion.
+
+::: {.callout-note}
+## Sufficient Modes for Golf Shafts
+In practice, how many modes $m$ are required to capture shaft dynamics in the golf swing? For typical golf club shafts (length 0.9 m, hollow steel or composite), empirical studies show that the first 2–3 bending modes capture more than 95% of the shaft's kinetic and strain energy during the swing. Higher modes have natural frequencies (20+ Hz) that are damped by grip compliance and rarely excited by the joint-driven excitation of the swing (which typically has energy content up to 10–15 Hz). For theoretical completeness, we retain the full modal series; in practice, truncating at $m = 2$ or $m = 3$ yields excellent fidelity while reducing computational cost.
+:::
 
 ### Modal equations of motion
 

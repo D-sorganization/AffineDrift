@@ -34,7 +34,7 @@ format:
           This basically means they selectively lock down their joints (wrists, grip) right before contact. They turn their body into a rigid structure momentarily to handle the shock.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Think of a baseball batter or a martial artist. They stay relaxed for speed, but at the moment of contact, they tense up to transfer maximum force and protect themselves. It's a "pulse" of stiffness, not a permanent state.
+          <strong>The Karate Analogy:</strong> Think of a karate expert about to break a board. They don't just swing their arm loosely at the board—that would dissipate force and risk injury. Instead, they spend the entire approach with muscles relaxed and flexible, generating speed. But at the exact moment of impact, they contract *every* muscle in their wrist, elbow, shoulder, and torso. They lock their joints into a rigid configuration, turning their entire arm-shoulder-torso system into a solid battering ram. The kinetic energy generated during the relaxed approach is suddenly channeled through an unyielding structure, concentrating all that force into the impact point. Then, immediately after the break, they relax again. That's constraint collapse: the deliberate stiffening of selected joints at the critical instant to concentrate force and prevent the system from twisting or rebounding.
         </div>
       </div>
 
@@ -111,7 +111,59 @@ In mechanical terms, this is not brute stiffness, nor passive locking. It is **t
 
 ---
 
-## 2. The Golfer–Club System as a Constrained Mechanism
+## 2. Formal Definition: What “Collapse” Means
+
+The term “intentional constraint collapse” requires a rigorous mathematical definition to distinguish it from kinematic singularities and to clarify the role of impedance modulation.
+
+### Impedance-Based Definition
+
+By **intentional constraint collapse**, we mean the neuromuscular strategy of rapidly increasing the **effective impedance** (stiffness and damping) in selected degrees of freedom of the configuration space, such that the ratio
+
+$$
+\frac{K_{\text{eff}}(t)}{K_{\text{perturbation}}} \to \infty
+$$
+
+in those directions over a short time interval near impact.
+
+More formally, the effective stiffness matrix evolves as:
+
+$$
+K_{\text{eff}}(t) = K_0 + \Delta K_{\text{co-contraction}}(t),
+$$
+
+where $\Delta K_{\text{co-contraction}}(t)$ is the stiffness contribution from neuromuscular co-contraction. During the interval $[t_{\text{impact}} - \tau, t_{\text{impact}}]$ (where $\tau \sim 50$–100 ms), the term $\Delta K_{\text{co-contraction}}$ increases sharply:
+
+$$
+K_{\text{eff}}(t) \gg K_{\text{nominal}} \quad \text{for } t \in [t_{\text{impact}} - \tau, t_{\text{impact}}].
+$$
+
+### Distinction: Impedance Modulation vs. Kinematic Singularity
+
+**Critical Clarification:** This is NOT a kinematic singularity (rank loss in the Jacobian $J_c$). Kinematic singularities are *discrete events* at isolated configuration points—they are non-generic and discontinuous in parameter space. Constraint collapse, by contrast, is a *continuous, time-varying* increase in impedance.
+
+- **Kinematic Singularity**: The Jacobian rank drops (e.g., from 3 to 2). This is a geometric property of configuration; it occurs for *all* movement plans passing through that configuration.
+
+- **Impedance Constraint**: The effective stiffness increases while the Jacobian structure remains unchanged. This is a *dynamic* property controlled by muscle activation; it can be selective (applied to certain directions only) and transient (duration ~50–100 ms).
+
+The neuromuscular co-contraction creates a “virtual constraint” that mimics the behavior of a kinematic constraint (suppressed motion in certain directions) without actually changing the geometric degrees of freedom. The system *appears* to have fewer degrees of freedom, but this appearance arises from high damping, not from bone-on-bone locking.
+
+### Effective Impedance in Configuration Space
+
+The effective impedance observed at the clubhead can be expressed in task space as:
+
+$$
+K_{\text{task}} = J(q)^{-T} K_{\text{eff}}(q) J(q)^{-1},
+$$
+
+where $J(q)$ is the task Jacobian. During constraint collapse, the eigenvalues of $K_{\text{task}}$ in destabilizing directions (e.g., clubface twist, loft perturbation) increase dramatically:
+
+$$
+\lambda_{\text{face twist}}(t) \to \infty \quad \text{as } t \to t_{\text{impact}},
+$$
+
+while the eigenvalues in productive directions (forward drive, swing path) remain moderate, allowing the ballistic motion to continue unimpeded.
+
+## 3. The Golfer–Club System as a Constrained Mechanism
 
 Consider the golfer and club as a constrained multibody system with generalized coordinates $q$. The club is coupled to the hands through bilateral constraints, and the hands themselves are linked through the torso and upper limbs, forming a **closed kinematic chain**.
 
@@ -143,7 +195,7 @@ Crucially, **forces transmitted to the club are mediated by $\lambda$**, not dir
 
 ---
 
-## 3. Constraint-Space Inertia and Force Amplification
+## 4. Constraint-Space Inertia and Force Amplification
 
 The relationship between applied torques and constraint forces depends on the **constraint-space inertia**:
 
@@ -162,7 +214,7 @@ A “collapsed” constraint Jacobian does **not** imply complete loss of motion
 
 ---
 
-## 4. What “Constraint Collapse” Means in Golf (Biomechanically)
+## 5. What “Constraint Collapse” Means in Golf (Biomechanically)
 
 In golf, the goal is *not* to collapse the entire Jacobian. That would sacrifice control and robustness. Instead, elite golfers exhibit **anisotropic collapse**:
 
@@ -179,7 +231,7 @@ This selective conditioning allows the club to behave as a **stiff tool at impac
 
 ---
 
-## 5. Internal Forces and Redundancy Exploitation
+## 6. Internal Forces and Redundancy Exploitation
 
 Because the golfer grips the club with **two hands separated along the shaft**, the system is kinematically redundant. This redundancy allows the generation of **internal forces**:
 
@@ -207,7 +259,7 @@ Importantly, these internal forces **do not add speed**—they add *control*.
 
 ---
 
-## 6. Timing: Late Constraint Stiffening, Not Early Locking
+## 7. Timing: Late Constraint Stiffening, Not Early Locking
 
 A critical feature of this strategy is **timing**.
 
@@ -220,9 +272,15 @@ Instead, constraint collapse occurs **late**, during the final approach to impac
 
 In control terms, the golfer increases effective constraint stiffness and damping only when robustness matters most—during collision with the ball.
 
+### Temporal Constraint from DCR Analysis
+
+This timing constraint connects directly to the Drift-Control Ratio analysis: the planar DCR imposes a **temporal accuracy constraint** on the stiffness pulse. The golfer must execute the impedance transition within a window dictated by the DCR-determined arrival time. The DCR collapse means this timing cannot be adjusted late—the stiffness pulse must be pre-programmed, not reactive. In other words, the planar DCR creates an arrival-time prediction error that is exponentially amplified by the high drift, leaving no room for a feedback-based adjustment of when to stiffen. Instead, the motor system pre-computes when impact will occur and pre-programs the stiffness activation accordingly.
+
 ---
 
-## 7. Relationship to Drift and Control (Affine Dynamics View)
+## 8. Relationship to Drift and Control (Affine Dynamics View)
+
+### The Affine Structure and Constraint Collapse
 
 From an affine control perspective:
 
@@ -238,9 +296,92 @@ It is about **controlling how drift-generated momentum is delivered**.
 
 This distinction explains why elite players can look “passive” near impact while still producing enormous forces.
 
+### The Effective Plant and Switched Affine Systems
+
+A critical question arises: **if constraint collapse modulates the stiffness matrix $K_{\text{eff}}(t)$, does this alter the drift field $f(x)$, violating the assumption that drift is input-independent?**
+
+The answer requires careful modeling via the **switched affine system** framework.
+
+#### Mode-Specific Affine Dynamics
+
+We model the swing as a hybrid system with two regimes:
+
+**Mode 1 (Free Motion — $t < t_{\text{impact}} - \tau$):**
+$$
+\dot{x} = f_1(x) + g_1(x)u, \quad K_{\text{eff}} = K_{\text{nominal}}
+$$
+
+The drift $f_1(x)$ encodes passive dynamics with nominal impedance. Control $u$ drives motion by generating torques.
+
+**Mode 2 (Impact Preparation — $t_{\text{impact}} - \tau \leq t \leq t_{\text{impact}}$):**
+$$
+\dot{x} = f_2(x) + g_2(x)u, \quad K_{\text{eff}} = K_{\text{nominal}} + \Delta K_{\text{co-contraction}}(t)
+$$
+
+The drift $f_2(x)$ is modified by the increased stiffness, which creates additional “virtual forces” that suppress motion in high-stiffness directions. However, $f_2(x)$ *remains* independent of $u$ in the strict affine sense: the stiffness modulation is achieved through internal forces (in the nullspace of the task Jacobian) that do not appear in the task-level dynamics.
+
+#### Preservation of Affine Structure Within Each Mode
+
+**Key insight:** Each mode preserves the affine form. The dynamics are:
+
+**Mode 1:**
+$$
+\dot{x} = f_1(x) + g_1(x)u
+$$
+
+**Mode 2:**
+$$
+\dot{x} = f_2(x) + g_2(x)u
+$$
+
+where $f_2(x) \neq f_1(x)$ (due to increased impedance effects) but both are still affine in control—$u$ enters linearly through $g_i(x)$.
+
+The **switching transition** at $t = t_{\text{impact}} - \tau$ is a discrete event controlled by the nervous system (a deliberate intervention), not a dynamical discontinuity. Once the system switches to Mode 2, it evolves under affine dynamics with the modified drift.
+
+#### How This Resolves the Drift Invariance Concern
+
+The apparent violation of “drift invariance” (the claim that $f(x)$ is independent of $u$) is resolved by recognizing that:
+
+1. **Impedance modulation is achieved via internal forces**, which are control actions living in the nullspace of the task Jacobian. These internal forces modify the *effective* drift without violating the mathematical structure of the control term.
+
+2. **The stiffness pulse is a timed, intentional intervention**, not a continuous function of $u$. The golfer switches control strategies (Mode 1 → Mode 2) at a specific instant, not as a feedback function of current state or control.
+
+3. **Within each mode, affine structure is preserved**, ensuring the Zero Torque Counterfactual (ZTCF) baseline remains valid (though mode-dependent: ZTCF_Mode1 ≠ ZTCF_Mode2).
+
+::: {.callout-important}
+## Resolving the Drift Invariance Concern
+
+The switched affine model may appear to violate Drift Invariance, because the nervous system (an “input”) selects the impedance regime. We resolve this by distinguishing two types of control authority:
+
+**Continuous control** $u(t)$: Joint torques that enter linearly through $g(x)u$. Drift invariance holds: $\partial f/\partial u \equiv 0$.
+
+**Discrete control** $\sigma(t)$: Impedance regime selection (e.g., compliant vs. stiff). This modifies the plant parameters but does NOT enter through the continuous channel.
+
+Formally, the system is a **controlled hybrid automaton**:
+$$
+\dot{x} = f_\sigma(x) + g_\sigma(x) u, \quad \sigma \in \{1, 2, \ldots, N\}
+$$
+
+Within each mode $\sigma$, the drift $f_\sigma(x)$ is independent of $u$. The mode transitions are governed by a separate discrete controller (the motor planning system) that operates on a slower timescale. The ZTCF is well-defined within each mode: set $u = 0$ and evolve under $f_\sigma(x)$.
+
+This formulation is standard in hybrid control theory (Branicky 1998, Goebel et al. 2012) and resolves the apparent paradox: the golfer can modulate impedance (change $\sigma$) without violating the force-level superposition that holds within each mode.
+:::
+
+
+### The Effective Plant as a Control Reserve
+
+The “Effective Plant” in Mode 2 can be understood as a **control reserve**: the golfer uses available redundancy (multiple hands, multiple joints) to generate internal forces that stiffen the system without performing external work on the ball. This reserve is:
+
+- **Energetically costly** (co-contraction consumes metabolic energy),
+- **Transient** (active only near impact),
+- **Non-work-performing** (orthogonal to the task Jacobian's range),
+- **Necessary for robustness** (protects against impact shock).
+
+The drift field $f_2(x)$ in Mode 2 reflects this stiffening but remains causally independent of the instantaneous control $u$, preserving the affine structure on which the ZTCF is built.
+
 ---
 
-## 8. Observable Consequences and Testable Predictions
+## 9. Observable Consequences and Testable Predictions
 
 This framework makes concrete, testable predictions:
 
@@ -259,7 +400,7 @@ These effects should be observable in high-resolution motion capture, force prox
 
 ---
 
-## 9. Implications
+## 10. Implications
 
 Understanding impact stability as **intentional constraint Jacobian shaping** reframes several long-standing debates in golf science:
 
@@ -271,7 +412,7 @@ The golfer is not fighting physics at impact—they are **leaning into it**.
 
 ---
 
-## 10. Conclusion
+## 11. Conclusion
 
 Near impact, elite golfers intentionally collapse selected directions of the constraint Jacobian, creating a mechanical environment where:
 
@@ -286,7 +427,7 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 
 ---
 
-## 11. Synthesis: The AffineDrift Context
+## 12. Synthesis: The AffineDrift Context
 
 **The "Effective Plant" and Drift Invariance**
 This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.

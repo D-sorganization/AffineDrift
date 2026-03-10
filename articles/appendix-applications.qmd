@@ -65,6 +65,18 @@ ML models can be trained on drift-free input data, improving sample efficiency a
 
 The control-affine decomposition provides actionable guidance for simulation, measurement interpretation, torque reconstruction, shaft mechanics, and ML-based modeling. The separation of drift and input forces yields a rigorous framework for analyzing and understanding the golf swing.
 
+## Limitations
+
+:::{.callout-warning}
+While the applications described above leverage the control-affine framework effectively, they operate within important constraints:
+
+1. **All applications assume control-affine structure holds**: The entire methodology assumes that inputs enter the dynamics linearly ($\dot{x} = f(x) + G(x)u$). If the system exhibits strong input saturation (e.g., muscles have hard limits on torque that vary with velocity), input nonlinearities, or state-dependent input gain modulation, the affine decomposition becomes approximate or invalid. Biological systems often exhibit these nonlinearities at high intensity.
+
+2. **ML applications require sufficient training data to separate drift from input effects**: Machine learning models trained to predict or classify drift versus input components require labeled data or sufficient observational diversity. With limited swing samples (typical for individual golfers), the ML model may overfit to spurious correlations between drift and input, failing to generalize. The sample efficiency improves with transfer learning from a large reference population, but this reintroduces population-level bias.
+
+3. **Real-time ZTCF computation may not be feasible for high-DOF systems**: Counterfactual simulation (particularly ZTCF) requires forward integration of the full system model at high temporal resolution. For a 26+ DOF model on a motion capture system operating at 60+ Hz, this computational load can exceed real-time constraints on standard hardware. Coaches or systems requiring sub-50ms latency for online feedback may be forced to use approximate or reduced-order drift estimates, sacrificing accuracy.
+:::
+
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <button class="laymans-terms-header" aria-expanded="false">

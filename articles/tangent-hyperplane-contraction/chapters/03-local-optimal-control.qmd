@@ -3,6 +3,10 @@ title: "Chapter 3 - Local Optimal Control: LQR and DDP"
 bibliography: ../references.bib
 ---
 
+## If You Have Only Today to Correct a Trajectory, What Is Your Best Move?
+
+Imagine a robot has drifted slightly off its planned path. You have one control action to correct it. What should you do? Push as hard as possible toward the plan? No—doing so might overshoot tomorrow. Instead, you pick a control that balances two things: getting back on track, and not using too much energy. Solve this one-step problem optimally. Then solve it again tomorrow from the new state. This backward-in-time recursion is the Riccati equation: arguably the simplest optimal control law anyone has ever discovered.
+
 ## Introduction and Qualitative Purpose
 
 This chapter develops finite-horizon local quadratic control and the Riccati recursion used in trajectory optimization.
@@ -24,3 +28,34 @@ $$
 ## Link to DDP
 
 DDP extends this local recursion with repeated model updates and forward rollout, but the local stabilizing core is unchanged [@jacobson1970ddp; @todorov2002optimal].
+
+## Prior Art and What Is New Here
+
+The control-affine structure and its implications for feedback design are well-established in control theory. The decomposition of dynamics into drift (uncontrolled) and control (actuation) channels is standard in robotics:
+
+- **Classical references:** Isidori (1995), Khalil (2002), Nijmeijer & van der Schaft (1990) establish the theory of control-affine systems and their geometric properties.
+- **Robotics foundations:** Spong (1994), Murray/Li/Sastry (1994) developed the mechanical systems framework that makes drift and control forces explicit.
+- **Trajectory optimization:** The Riccati recursion here is the backbone of DDP, which originated in Jacobson (1970) and has been widely adopted in robotics.
+
+What is **new** in this textbook is not the mathematics, but the systematic pedagogical organization:
+
+1. **Unified framework:** Using contraction metrics and tangent-space geometry to unify stability analysis and optimal control design in one language.
+2. **Trajectory-centric perspective:** Organizing all results around how errors evolve along nominal paths, rather than equilibrium stability alone.
+3. **Interpretability through decomposition:** Explicitly connecting control-affine structure to counterfactual analysis—asking "what happens without actuation?"—for model interpretability.
+
+This pedagogical reframing makes the tools accessible to practitioners who need both *performance* and *certainty* simultaneously.
+
+---
+
+:::{.callout-warning}
+## Scope and Limitations
+
+- **LQR and DDP solve local optimal control problems, not global ones.** The Riccati recursion gives you the best possible control law in a small neighborhood around your nominal trajectory. But if a disturbance pushes you far from that trajectory, the local LQR law may steer you toward a different (suboptimal or unstable) local basin. We prove optimality within a ball of radius $\epsilon$ around the reference path, but we do not prove the trajectory is globally optimal or that the controller is globally stabilizing. For large perturbations or highly nonlinear systems with multiple modes (like a swing with discrete phases: backswing, downswing, impact, follow-through), this is a serious limitation.
+
+- **The derivation assumes controllability of the linearization.** The Riccati equation requires that $\rank[B, AB, A^2B, \ldots]$ equals the system dimension (or achieves controllability in finite steps). If the linearization around your nominal path is uncontrollable, the Riccati equation becomes singular and the whole framework breaks. This can happen if your reference trajectory visits a singular configuration or if your input channels are geometrically misaligned with the error space. We assume this away with a statement like "assume controllability," but empirically, verifying controllability for a high-dimensional nonlinear system is nontrivial.
+
+- **The cost function heavily influences the result, and there is no principled way to choose it.** The "optimal" control law depends entirely on your choice of $Q$ (state cost) and $R$ (control cost). Different choices yield wildly different behaviors. A coach and a roboticist will optimize different cost functions, arriving at different "optimal" swings. The LQR framework is silent on whether your cost function is biomechanically sensible, energetically efficient, or injury-avoiding. You are choosing your goal (implicitly) through matrix entries, and if your goal is stated badly, your "optimal" solution will achieve that bad goal perfectly.
+
+:::
+
+---

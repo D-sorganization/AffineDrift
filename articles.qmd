@@ -81,6 +81,9 @@ page-layout: full
           <p class="lead">
             Explore our collection of research articles covering control-affine theory, biomechanics, and golf swing dynamics. The articles are organized by topic, from foundational theory to advanced applications.
           </p>
+          <div class="callout-note" style="background: #f0f7ff; border-left: 4px solid #2563eb; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+            <strong>Suggested Reading Path:</strong> Start with the <em>Drifter Manifesto</em> (Parts 1–3) for the core framework, then explore <em>Superposition in Affine Control Systems</em> and <em>Controllability and Drift–Control Ratio</em> for deeper analysis. The <em>Tangent Hyperplanes</em> series extends these ideas to general nonlinear systems. The <em>Geometry of Motion</em> textbook provides comprehensive mathematical foundations.
+          </div>
         </div>
         <div class="articles-list">
           <div id="drifter-manifesto" class="article-category">
@@ -212,6 +215,41 @@ page-layout: full
           </div>
         </div>
       </div>
+
+          <div id="textbook-series" class="article-category">
+            <h3 class="category-title">The Geometry of Motion &mdash; Textbook Series</h3>
+            <p class="category-intro">A comprehensive textbook covering the mathematical foundations of multibody dynamics, from linear algebra through Lagrangian mechanics to machine learning. <a href="articles/The_Geometry_of_Motion/quarto/index.html">View full series →</a></p>
+            <div class="accordion-item">
+              <button class="accordion-header" type="button" aria-expanded="false">
+                <span>Volume 0 &mdash; Mathematical Foundations</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <p>Twelve chapters covering linear algebra, state-space representations, rotation matrices, screw axes, exponential coordinates, recursive algorithms, spatial algebra, product of exponentials, articulated body algorithms, Lagrangian mechanics, and machine learning for dynamics.</p>
+                <a href="articles/The_Geometry_of_Motion/quarto/volume0.html" class="resource-link">Open Volume 0 →</a>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-header" type="button" aria-expanded="false">
+                <span>Volume I &mdash; Tangent-Space Methods for Nonlinear Control</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <p>Eight chapters developing tangent-space dynamics, variational equations, local optimal control, the stability-optimality duality, coordinate-free Riemannian methods, computational certification, high-dimensional applications, and implementation guidance.</p>
+                <a href="articles/The_Geometry_of_Motion/quarto/volume1.html" class="resource-link">Open Volume I →</a>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-header" type="button" aria-expanded="false">
+                <span>Volume II &mdash; Control Is Motion</span>
+                <span class="accordion-icon">+</span>
+              </button>
+              <div class="accordion-content">
+                <p>Extending the framework to biomechanics, human motor control, and practical applications in sports science and robotics.</p>
+                <a href="articles/The_Geometry_of_Motion/quarto/volume2.html" class="resource-link">Open Volume II →</a>
+              </div>
+            </div>
+          </div>
 
           <div id="articles" class="article-category">
             <h3 class="category-title">Articles</h3>
@@ -360,7 +398,7 @@ page-layout: full
             <span class="accordion-icon">+</span>
           </button>
           <div class="accordion-content">
-            <p>Applications and examples of the affine control framework.</p>
+            <p>Practical applications of the control-affine framework: counterfactual analysis, shaft mechanics, simulation strategies, and machine learning directions.</p>
             <a href="articles/appendix-applications.html" class="resource-link">Read Article →</a>
           </div>
         </div>
@@ -370,7 +408,7 @@ page-layout: full
             <span class="accordion-icon">+</span>
           </button>
           <div class="accordion-content">
-            <p>Lagrangian mechanics reference material supporting the main theory.</p>
+            <p>Derives the control-affine drift/input decomposition directly from the Lagrangian energy formulation, showing how passive dynamics emerge naturally from kinetic and potential energy.</p>
             <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
           </div>
         </div>
@@ -380,7 +418,7 @@ page-layout: full
             <span class="accordion-icon">+</span>
           </button>
           <div class="accordion-content">
-            <p>Screw theory reference material for spatial mechanics and wrenches.</p>
+            <p>Connects the drift-control framework to coordinate-free screw theory, expressing wrenches and twists in a formulation that reveals the geometric structure of force transmission.</p>
             <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
           </div>
         </div>
@@ -390,52 +428,12 @@ page-layout: full
             <h3 class="category-title">Affine Background Articles</h3>
         <div class="accordion-item">
           <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Nonlinear Control Theory Insights</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Nonlinear control theory insights, drift causality, and future research directions for control-affine mechanical systems.</p>
-            <a href="articles/nonlinear-control-insights.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
             <span>Force Mobility Matrices</span>
             <span class="accordion-icon">+</span>
           </button>
           <div class="accordion-content">
-            <p>Analysis of force and mobility matrices in constrained multibody systems.</p>
+            <p>Geometric interpretation of how the Jacobian creates force and velocity ellipsoids, revealing the dual relationship between mobility and force capability in constrained systems.</p>
             <a href="articles/force-mobility-matrices.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Inverse Dynamics Inference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Theoretical framework for inferring forces and torques from motion data in control-affine systems.</p>
-            <a href="articles/inverse-dynamics-inference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Lagrangian Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on Lagrangian mechanics for multibody systems.</p>
-            <a href="articles/lagrangian-reference.html" class="resource-link">Read Article →</a>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" type="button" aria-expanded="false">
-            <span>Screw Theory Reference</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            <p>Reference material on screw theory for spatial mechanics, wrenches, and twists.</p>
-            <a href="articles/screw-theory-reference.html" class="resource-link">Read Article →</a>
           </div>
         </div>
         <div class="accordion-item">
@@ -444,8 +442,18 @@ page-layout: full
             <span class="accordion-icon">+</span>
           </button>
           <div class="accordion-content">
-            <p>Analysis of null spaces and constraint Jacobians in constrained mechanical systems.</p>
+            <p>How constraint Jacobians and their null spaces determine which motions are free and which are locked, with application to the golf swing's 26-DOF kinematic chain.</p>
             <a href="articles/null-space-constraint-jacobian.html" class="resource-link">Read Article →</a>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" type="button" aria-expanded="false">
+            <span>Classic Sources of Nonlinearity in Mechanical Systems</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Comprehensive catalog of nonlinearity sources&mdash;stiction, backlash, saturation, aerodynamic drag, muscle dynamics, and more&mdash;examining how each interacts with the control-affine framework and force superposition.</p>
+            <a href="articles/sources-of-nonlinearity.html" class="resource-link">Read Article →</a>
           </div>
         </div>
           </div>

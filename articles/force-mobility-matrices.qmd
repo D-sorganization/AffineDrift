@@ -89,11 +89,10 @@ as intuition-building analogies.
 
 ## Introduction
 
-The golf swing is a dynamically evolving multibody system composed of the torso, 
-arms, hands, and club.  
-At any instant during the swing, the configuration of these linked bodies imposes 
-constraints on how the clubhead can move and how forces applied to the clubhead 
-propagate back through the joints.  
+Think of a bicycle chain. When you push on the pedal, force travels through the chain to the wheel. But here's the key question: how much of your pushing force actually moves the wheel forward? Some of it gets "lost" in friction, in the geometry of the system, in the mechanical advantage. The force mobility matrix tells you exactly this—it's the "transfer function" of a mechanism, showing how forces at one point create motions at another.
+
+The golf swing is the same. Your hands are one point, the clubhead is another. The geometry of your arms and the club acts like a transmission. At any instant during the swing, the configuration of these linked bodies (torso, arms, hands, club) imposes constraints on how the clubhead can move and how forces applied to the clubhead propagate back through the joints.
+
 These instantaneous capabilities are captured compactly by two geometric objects:
 
 - the **mobility ellipsoid**, describing directions in which motion 
@@ -308,21 +307,40 @@ The following video provides a visual demonstration of mobility and force ellips
 
 [Watch on YouTube](https://www.youtube.com/watch?v=8VSrYDi_cs0)
 
+## Connection to Drift-Control Decomposition
+
+The force and mobility ellipsoids are more than geometric curiosities—they define the battleground between passive drift and active control. In the AffineDrift framework, directions of high mobility (where the ellipsoid stretches far) are exactly where the control input has maximum effectiveness. But paradoxically, these are also directions where passive drift dominates, where the club's momentum and inertia already carry it along that path.
+
+This is the essence of drift dominance: near impact, when the club has extremely high tangential mobility (a tiny wrist adjustment creates huge clubhead motion), the system is most susceptible to being steered off course by its own momentum. The golfer cannot "steer" effectively in high-mobility directions because the control input is dwarfed by the massive passive forces already present.
+
+Conversely, in low-mobility directions, the force ellipsoid bulges outward—the golfer has tremendous "structural stiffness" but cannot move easily. This is where stability lives. Elite golfers exploit this duality by arranging their bodies at impact so that the force ellipsoid's major axis aligns with the critical stability vectors (clubface normal), allowing the skeleton's geometry to stabilize the club without active muscular effort.
+
 ## Conclusion
 
-The mobility and force ellipsoids provide a precise geometric language for 
-understanding the instantaneous capabilities of the golf swing.  
-Using the double pendulum analogy, we see that when the club and lead arm are 
-aligned, the system moves easily in a direction perpendicular to the links but 
-resists force most strongly along the links.  
-This illustrates the universal rule: mobility and force capabilities are 
+The mobility and force ellipsoids provide a precise geometric language for
+understanding the instantaneous capabilities of the golf swing.
+Using the double pendulum analogy, we see that when the club and lead arm are
+aligned, the system moves easily in a direction perpendicular to the links but
+resists force most strongly along the links.
+This illustrates the universal rule: mobility and force capabilities are
 geometric duals arising from the Jacobian and its constraints.  
 
 These ellipsoids explain why release occurs naturally, why impact loads joints, 
 and why certain swing positions feel "strong" or "weak" independent of muscle 
 strength.  
-Ultimately, they reveal that the geometry of the body--club system, not muscular 
+Ultimately, they reveal that the geometry of the body--club system, not muscular
 effort, determines what motions and forces are possible at each instant.
+
+:::{.callout-warning}
+## Scope and Limitations
+
+- **This analysis assumes rigid body dynamics.** The Jacobian $J(q)$ describes how rigid segments connected by ideal joints transform motion. But real bodies are not rigid: the shaft flexes, the wrist ligaments stretch, bone deforms under load. These compliances shift the effective "point of rotation" and couple dynamics between segments in ways the rigid-body Jacobian misses. For high-speed impacts, compliance becomes substantial, and the elegant geometry of ellipsoids becomes muddied by elastic effects we have ignored.
+
+- **Mobility ellipsoid conditioning degrades near singularities.** When the links approach a singular configuration (nearly straight line for a 2-link system), the Jacobian's numerical conditioning worsens and the ellipsoid becomes arbitrarily thin. Mathematically this is correct—mobility vanishes in singular directions. But numerically and biologically, systems near singularity are unstable and difficult to control, so the prediction that "you can move freely perpendicular to the singular direction" becomes practically irrelevant. The mathematics is honest; the practical implication is that singular-adjacent regions are simply fragile.
+
+- **Static analysis does not capture dynamic coupling effects.** The force and mobility ellipsoids are based on the Jacobian alone, which encodes instantaneous kinematics. But in a dynamic system, inertia ($M(q)$) and Coriolis forces ($C(q,\dot{q})$) create coupling that the kinematic ellipsoids do not show. A direction might have high kinematic mobility but extreme inertial resistance—you can move there kinematically but your inertia won't let you accelerate in that direction quickly. The ellipsoids tell you the skeleton's geometric possibilities, not the body's dynamic capabilities. We call this the "effective plant," but we measure only half of it.
+
+:::
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
@@ -369,6 +387,19 @@ effort, determines what motions and forces are possible at each instant.
 
       <div class="key-takeaway">
         <strong>Key Takeaway:</strong> Elite golfers arrange their bodies to have "high speed" mobility during the downswing, but instantly shift to "high force" stability at the moment of impact.
+      </div>
+
+      <div class="laymans-item">
+        <h3>Real-World Analogies: Configuration-Dependent Behavior</h3>
+        <p>
+          The force-mobility matrix reveals something profound: the relationship between input (force) and output (motion) depends entirely on your current configuration. Here's how this appears in everyday life:
+        </p>
+        <div class="analogy">
+          <strong>A car's steering wheel at different speeds:</strong> When you're driving slowly, a tiny turn of the steering wheel creates a sharp change in direction (high control authority). But at highway speed, the same small turn barely curves the car—the inertia dominates, and steering is sluggish (low control authority). The steering wheel hasn't changed, but the relationship between your input (hand angle) and output (car direction) is completely different depending on the car's state (speed). The force-mobility matrix is exactly this: how your input effectiveness changes with configuration.
+        </div>
+        <div class="analogy">
+          <strong>A puppet's strings and poses:</strong> Consider a puppet made of rigid segments (arms, legs) connected by hinges. The strings are your forces; the puppet's limb motions are the output. But here's the key: pulling a string has very different effects depending on the puppet's current pose. When the arm is bent, pulling the string creates a big motion (high mobility). When the arm is fully extended and locked straight, pulling the same string creates almost no motion—all your force goes into compressing joints rather than moving the limb (low mobility). The puppet's ability to respond to your input depends on its geometry at that instant.
+        </div>
       </div>
     </div>
   </div>

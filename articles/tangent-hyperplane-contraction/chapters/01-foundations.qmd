@@ -3,6 +3,10 @@ title: "Chapter 1 - Foundations and Motivation"
 bibliography: ../references.bib
 ---
 
+## Why Do Small Errors Evolve the Same Way in Linear and Nonlinear Systems?
+
+Imagine you're driving down a winding mountain road. Your car's actual path depends on the curve's shape and your speed—deeply nonlinear. But if you drift slightly from the ideal line, the *direction* and *speed* of your correction follow a much simpler rule: proportional to the deviation. This is the secret of linearization. The question that threads through this textbook is: what does it mean to use this linear rule to design *controllers* that guarantee performance in the *nonlinear* world?
+
 ## Introduction and Qualitative Purpose
 
 This chapter defines the central motivation for the textbook: nonlinear control in high-dimensional systems needs a framework that is simultaneously geometric, computationally useful, and certifiable.
@@ -20,3 +24,22 @@ The geometry starts with manifolds and tangent spaces. Perturbations live in tan
 1. Tangent-space dynamics are the common local language for stability and optimality.
 2. Metrics are the common local object in contraction and Riccati analysis.
 3. High-dimensional systems benefit from trajectory-centric, not equilibrium-only, thinking.
+
+## A Note on 'Exactness'
+
+We use 'exact' here in a specific geometric sense: the tangent space at a point IS a genuine vector space, not an approximation to one. This is distinct from the notion of 'exact differential equations' in classical ODE theory (where 'exact' means the equation can be written as a total derivative). Our usage is closer to the differential geometry sense: the derivative IS the linear map, not an approximation to it. This distinction matters because it clarifies what we are and are not assuming when we move from nonlinear to linearized dynamics.
+
+---
+
+:::{.callout-warning}
+## Scope and Limitations
+
+- **Tangent space analysis is infinitesimally exact but finite deviations require higher-order terms.** When you perturb from a nominal trajectory by a small amount $\delta x$, the tangent linearization $A(t)\delta x$ predicts the evolution perfectly in the limit $\|\delta x\| \to 0$. But for real perturbations—a golfer's swing that deviates by even 5% from nominal—cubic and higher-order terms in the Taylor expansion become significant. We develop a tool that is asymptotically rigorous but practically approximate. The framework does not tell you when the approximation becomes unreliable; that requires testing on your specific system.
+
+- **The smooth manifold assumption excludes impacts, switching, and discrete events.** This entire framework assumes the system evolves smoothly on a differentiable manifold. But real biomechanical systems have ground contact (discrete switching), joint limits (inequality constraints that become active), and tissue failure modes. The moment a foot strikes the ground or a joint reaches its range of motion, the manifold assumption breaks. We have a beautiful theory for smooth trajectories between these discrete events, but the events themselves—which often dominate control—are outside the framework.
+
+- **Computational tractability versus theoretical elegance creates a gap.** Computing the contraction metric that certifies stability in a high-dimensional system can require solving large matrix inequalities or differential Riccati equations. For a 20-degree-of-freedom system like the human arm, this becomes numerically challenging. We present the theory as if certification is straightforward ("compute the metric, check the contraction condition"), but in practice, numerical stability and computational cost force approximations and simplifications that we do not explicitly account for. The theory is elegant; the implementation is messy.
+
+:::
+
+---

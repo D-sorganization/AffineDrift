@@ -63,6 +63,11 @@ In the previous chapter, we constructed two counterfactual baselines:
 Both tools rely on the mathematical subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$.
 :::
 
+::: {.callout-important}
+## Critical Assumption: Parameter Identification and Causality
+When passive parameters (segment inertias, shaft stiffness, damping) are identified from active motion data, they may implicitly capture the effective impedance of the active system—that is, the joint stiffness when muscles are co-contracting. In this case, the "Drift" term $f(x)$ represents the dynamics of the **Effective Plant** conditioned on the task, not purely passive mechanics. All drift decompositions inherit this assumption: the passive parameters are treated as fixed for the duration of the swing, even though physiologically they may vary with activation. This does not invalidate the framework; it clarifies what the counterfactuals actually compute. The ZTCF simulates what would happen if the golfer ceased *driving* the motion while maintaining the structural *impedance* required for the swing—not a flaccid collapse.
+:::
+
 In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
 
 However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
@@ -488,7 +493,7 @@ Those require empirical studies (Parts II and III).
 
 **Linearity in torque does not imply linearity in outcomes.**
 
-Although torque enters linearly in the equations of motion, its effect on the motion is highly nonlinear due to state-dependent inertia and coupling. Therefore, the taxonomy partitions forces cleanly but cannot be interpreted as a "simple additive explanation" of the swing's motion.
+Although torque enters linearly in the equations of motion, its effect on the motion is highly nonlinear due to state-dependent inertia and coupling. For example: doubling the input torque does NOT double the clubhead speed at impact. Why? Because the same doubled torque acts on a system whose inertia matrix $M(q,\eta)$ changes during the swing (the golfer's configuration shifts), whose velocity-dependent forces (Coriolis, centrifugal) scale nonlinearly with the resulting motion, and whose shaft compliance dynamically filters the applied force. The system is *affine* in torque (the equation $\dot{x} = f(x) + g(x)u$ is exact), but *nonlinear* in outcomes. Therefore, the taxonomy partitions forces cleanly but cannot be interpreted as a "simple additive explanation" of the swing's motion.
 
 ### Scope of applicability
 
@@ -497,6 +502,21 @@ Within these assumptions, the decomposition
 $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input}}(t)$$
 
 is exact for the model and provides a well-defined mechanical basis for analyzing forces in the golf swing. Outside this scope, interpretations must be made with explicit reference to model fidelity, parameter uncertainty, and empirical validation.
+
+## Future Work: Distinguishing Braking Types
+
+One unresolved ambiguity in the current decomposition concerns the interpretation of negative (braking) input torques. The framework cleanly separates drift from input, but it does not distinguish between:
+
+1. **Active Deceleration:** Negative torque applied to *resist* the momentum of the drift, absorbing energy and reducing clubhead speed.
+2. **Stiffness Modulation:** Negative torque applied to *stabilize* or *stiffen* the system against destabilizing forces (e.g., centrifugal effects or impact disturbances), without necessarily reducing the primary motion.
+
+In practice, both mechanisms may be active simultaneously, and distinguishing them from inverse dynamics alone is not possible. Future work should address this by:
+
+- **Incorporating time-domain models of muscle activation:** Embedding known physiological constraints (force-velocity relations, activation dynamics) into the control space $\mathcal{U}(x)$ to narrow the set of plausible braking strategies.
+- **Multi-sensor fusion:** Combining joint torques with direct measurement of grip forces, club acceleration, and shaft bend rate to infer whether the golfer is decelerating or stabilizing.
+- **Optimal control analysis:** Formulating the swing as an optimal control problem with explicit cost functions for speed, precision, and impact robustness, then comparing the theoretically optimal braking policy to what is observed.
+
+This distinction is critical for coaching: if a player's negative torque is genuine resistance to momentum (inefficiency), coaching should aim to reduce it; if it is stabilization (prudence), coaching should preserve it. The current framework cannot make this judgment, but the mathematical structure we have developed provides a foundation for future work to address it.
 
 ## Conclusion and Future Directions
 
