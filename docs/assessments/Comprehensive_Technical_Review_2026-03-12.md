@@ -8,11 +8,11 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **76 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **84 issues** across four domains:
 
 - **Technical Claims & Content Accuracy**: 42 issues (7 critical, 13 major, 22 moderate)
 - **UI/UX & Website Implementation**: 12 issues (2 critical, 4 major, 6 moderate)
-- **Maintainability & Architecture**: 13 issues (3 critical, 5 major, 5 moderate)
+- **Maintainability & Architecture**: 21 issues (4 critical, 8 major, 9 moderate)
 - **Content Completeness & Quality**: 9 issues (2 critical, 4 major, 3 moderate)
 
 ---
@@ -801,6 +801,95 @@ Multiple archive directories contain old versions of articles and code. There's 
 
 ---
 
+#### ISSUE-MA14: 56 CI/CD Workflow Files (10,400+ Lines of YAML)
+**Files:** `.github/workflows/` (56 files)
+**Severity:** CRITICAL
+
+The repository has 56 GitHub Actions workflow files totaling over 10,400 lines of YAML. The "Jules" agent system defines 10+ specialized bot workflows with overlapping mandates:
+- `Jules-Code-Quality-Reviewer.yml`, `Jules-Code-Quality-Fixer.yml`, `Jules-Assessment-AutoFix.yml`, and `Jules-Auto-Repair.yml` have overlapping responsibilities
+- Each workflow needs updating when project structure changes
+- Complex interactions between bots create maintenance burden and bot-loop risk
+
+**Recommendation:** Audit and consolidate to ~15-20 workflows. Merge overlapping Jules agents. Core CI (`ci-standard.yml` + `deploy-website.yml`) is solid; the agent workflows need rationalization.
+
+---
+
+#### ISSUE-MA15: Root-Level Artifact Files Should Be Cleaned Up
+**Files:** `1007_status.json`, `1008_status.json`, `pr_615_comments.json`, `pr_615_comments_api.json`, `pr_615_feedback.json`, `checks.json`, `split_vol2.py`, `AffineDrift_Adversarial_Review_2026-03-07.md`
+**Severity:** MAJOR
+
+Multiple debugging/status artifacts committed to the repository root:
+- Issue status JSON snapshots (2 files)
+- PR feedback JSON files (3 files, 154KB combined)
+- Build output files
+- One-off scripts
+- Assessment files that belong in `docs/assessments/`
+
+**Recommendation:** Delete or .gitignore artifact files. Move assessment docs to proper location.
+
+---
+
+#### ISSUE-MA16: script.js (1,740 lines) and styles.css (2,655 lines) Violate File Size Limits
+**Files:** `script.js`, `styles.css`
+**Severity:** MAJOR
+
+Both files exceed the project's own 400-line file limit documented in AGENTS.md. `script.js` at 1,740 lines and `styles.css` at 2,655 lines are monolithic files that should be decomposed into the modular structures already present in `js/` and `css/`.
+
+**Recommendation:** Decompose both files or establish them as generated output from the modular source files.
+
+---
+
+#### ISSUE-MA17: docs/ Serves Dual Purpose (Build Output + Manual Docs)
+**Severity:** MAJOR
+
+The `docs/` directory is both Quarto's HTML output AND contains manually maintained documentation:
+- `docs/adr/` - Architecture Decision Records
+- `docs/development/` - Development guides
+- `docs/assessments/` - Quality assessments (60+ files)
+- `docs/reference/` - Notation references
+
+Running `quarto render` could conflict with these manually maintained files.
+
+**Recommendation:** Move manually maintained documentation to a `documentation/` directory outside the Quarto output path.
+
+---
+
+#### ISSUE-MA18: LaTeX Build Artifacts Committed to Git
+**Files:** `articles/The_Geometry_of_Motion/Volume_I/chapters/*.aux`, `articles/textbook/chapters/*.aux`
+**Severity:** MODERATE
+
+LaTeX compilation artifacts (`.aux`, `.out`, `.toc`, `.log` files) are committed to the repository.
+
+**Recommendation:** Add LaTeX artifacts to `.gitignore`.
+
+---
+
+#### ISSUE-MA19: Deprecated articles/textbook/ Directory Still Present
+**File:** `articles/textbook/README.md`
+**Severity:** MODERATE
+
+The `articles/textbook/` directory is self-described as deprecated in its README, superseded by `articles/The_Geometry_of_Motion/`. It should be deleted.
+
+---
+
+#### ISSUE-MA20: Pre-commit Config Python Version Mismatch
+**File:** `.pre-commit-config.yaml`
+**Severity:** MODERATE
+
+Pre-commit config specifies Python 3.11 as default while the project targets Python 3.12 in `pyproject.toml`. This can cause tool version mismatches.
+
+---
+
+#### ISSUE-MA21: Duplicate Python Tool Configuration
+**Files:** `mypy.ini`, `ruff.toml`, `pyproject.toml`
+**Severity:** MODERATE
+
+Both `mypy.ini` and `pyproject.toml` configure mypy. Both `ruff.toml` and `pyproject.toml` configure ruff. Additionally, both ruff-format and black are configured despite serving overlapping purposes.
+
+**Recommendation:** Consolidate all Python tool config into `pyproject.toml`. Choose either ruff-format or black.
+
+---
+
 ## Part IV: Content Completeness & Quality
 
 ### CRITICAL Issue
@@ -951,6 +1040,7 @@ The following issues should be created in the GitHub repository, organized by pr
 | 13 | Add missing figures and fix truncated text in inverse-dynamics.qmd | `content`, `quality` | ISSUE-CQ08 |
 | 14 | Remove unrevised AI draft text ("Wait, let me recalculate") from Hybrid Tangent Spaces | `bug`, `content` | ISSUE-TC31 |
 | 15 | Remove or cite fabricated empirical claims in tangent hyperplane articles | `bug`, `technical-accuracy` | ISSUE-TC32 |
+| 16 | Audit and consolidate 56 CI/CD workflow files | `architecture`, `ci-cd` | ISSUE-MA14 |
 
 ### Priority 2 (Major - Address Soon)
 
@@ -982,6 +1072,9 @@ The following issues should be created in the GitHub repository, organized by pr
 | 33 | Mark draft textbook content with visual indicators | `content`, `ux` | ISSUE-CQ02 |
 | 34 | Standardize article frontmatter (author, date, abstract, citations) | `content`, `quality` | ISSUE-CQ03 |
 | 35 | Add systematic cross-references between related articles | `content`, `ux` | ISSUE-CQ04 |
+| 36 | Clean up root-level artifact files (status JSONs, PR feedback, etc.) | `tech-debt` | ISSUE-MA15 |
+| 37 | Decompose script.js (1740 lines) and styles.css (2655 lines) | `tech-debt`, `architecture` | ISSUE-MA16 |
+| 38 | Separate docs/ into build output and manual documentation directories | `architecture` | ISSUE-MA17 |
 
 ### Priority 3 (Moderate - Address When Convenient)
 
@@ -1021,6 +1114,10 @@ The following issues should be created in the GitHub repository, organized by pr
 | 61 | Surface critiques directory on website with links from articles | `content`, `ux` | ISSUE-CQ05 |
 | 62 | Add version history/changelog to revised articles | `documentation` | ISSUE-CQ06 |
 | 63 | Clarify relationship between overlapping textbook projects | `documentation`, `content` | ISSUE-CQ07 |
+| 64 | Add LaTeX build artifacts to .gitignore | `tech-debt` | ISSUE-MA18 |
+| 65 | Delete deprecated articles/textbook/ directory | `tech-debt` | ISSUE-MA19 |
+| 66 | Fix Python version mismatch in pre-commit config (3.11 vs 3.12) | `bug` | ISSUE-MA20 |
+| 67 | Consolidate duplicate Python tool config (mypy.ini, ruff.toml into pyproject.toml) | `tech-debt` | ISSUE-MA21 |
 
 ---
 
@@ -1030,9 +1127,9 @@ The following issues should be created in the GitHub repository, organized by pr
 |----------|----------|-------|----------|-------|
 | Technical Claims | 7 | 13 | 22 | 42 |
 | UI/UX | 2 | 4 | 6 | 12 |
-| Maintainability | 3 | 5 | 5 | 13 |
+| Maintainability | 4 | 8 | 9 | 21 |
 | Content Quality | 2 | 4 | 3 | 9 |
-| **Total** | **14** | **26** | **36** | **76** |
+| **Total** | **15** | **29** | **40** | **84** |
 
 ---
 
