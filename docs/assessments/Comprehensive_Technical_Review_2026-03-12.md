@@ -8,12 +8,12 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **47 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **64 issues** across four domains:
 
-- **Technical Claims & Content Accuracy**: 15 issues (3 critical, 5 major, 7 moderate)
+- **Technical Claims & Content Accuracy**: 30 issues (5 critical, 9 major, 16 moderate)
 - **UI/UX & Website Implementation**: 12 issues (2 critical, 4 major, 6 moderate)
 - **Maintainability & Architecture**: 13 issues (3 critical, 5 major, 5 moderate)
-- **Content Completeness & Quality**: 7 issues (1 critical, 3 major, 3 moderate)
+- **Content Completeness & Quality**: 9 issues (2 critical, 4 major, 3 moderate)
 
 ---
 
@@ -193,6 +193,150 @@ Some articles reference works that do not appear in the centralized bibliography
 - Some use neither and just mention authors by name
 
 **Recommendation:** Standardize on Quarto's built-in citation system across all articles.
+
+---
+
+#### ISSUE-TC16: ZVCF Definition Error in inverse-dynamics-inference.qmd
+**File:** `articles/inverse-dynamics-inference.qmd:97-103`
+**Severity:** CRITICAL
+
+The article states "The Zero Velocity Counterfactual (ZVCF) holds the state fixed and disables drift contributions. Gravity, shaft elasticity, and other passive contributions are set to zero. Only the input vector fields G(x)u remain active." This is **factually incorrect** based on the definition in all other articles. The ZVCF sets velocities to zero but evaluates the *drift* at zero velocity, yielding configuration-dependent forces (gravity + elasticity). It does NOT isolate input forces. The claim `F_ZVCF = F_input` contradicts every other article in the series, which consistently defines ZVCF as the configuration-dependent *slice of drift*.
+
+**Recommendation:** Correct the ZVCF definition to match the rest of the series. This is a fundamental definitional error that undermines the article's credibility.
+
+---
+
+#### ISSUE-TC17: State Vector Ordering Inconsistency Across Articles
+**Files:** `articles/theory-part1.qmd`, `articles/affine-nature-golf-swing.qmd`
+**Severity:** CRITICAL
+
+The state vector ordering is inconsistent:
+- Notation tables define `x = [q, η, q̇, η̇]` (positions grouped, then velocities)
+- The f(x) and g(x) definitions use `x = [q, q̇, η, η̇]` (rigid DOFs grouped, then flexible)
+
+This inconsistency appears in both theory-part1 and the full affine-nature-golf-swing.qmd article. The f(x) matrix structure assumes one ordering while the notation table defines another.
+
+**Recommendation:** Standardize on one ordering throughout and verify all matrix expressions match.
+
+---
+
+#### ISSUE-TC18: Markdown `*` Rendering as `+` in Superposition Equations
+**File:** `articles/superposition.qmd:373-376, 559, 635-636, 645, 773-774, 1333-1335, 1399-1401`
+**Severity:** CRITICAL (produces incorrect mathematical output)
+
+Multiple equation blocks contain bare `*` characters that are being interpreted as markdown bold/italic markers instead of mathematical operators. For example, line 374: `* M(q)^{-1}τ` should be `+ M(q)^{-1}τ`. This is a systematic issue that produces **incorrect equations in the rendered output**.
+
+**Recommendation:** Escape all `*` characters in equations or use `\ast` or `\cdot` in LaTeX math mode.
+
+---
+
+#### ISSUE-TC19: Numerical Identity `F_total - F_ZTCF = F_ZVCF` Lacks Rigorous Justification
+**File:** `articles/theory-part5.qmd:123-128, 269-275`
+**Severity:** MAJOR
+
+The claimed identity `F_total(t) - F_ZTCF(t) = F_ZVCF(t)` is presented as a validated numerical result, but it is mathematically suspect. The ZTCF forces are evaluated along the *ZTCF trajectory* (which diverges from the actual trajectory), while F_total is evaluated along the actual trajectory. This subtraction is only clean at t=t_0 where both trajectories share the same state. The theoretical justification is not provided.
+
+**Recommendation:** Either provide a rigorous proof of this identity or explicitly note it is an approximation that is exact only at t_0.
+
+---
+
+#### ISSUE-TC20: "Mechanical Orthogonality" Term Misused
+**File:** `articles/theory-part2.qmd:68`
+**Severity:** MAJOR
+
+The term "Mechanical Orthogonality" is used to describe the additive separability of drift and input terms. However, "orthogonality" has a precise mathematical meaning (inner product = 0) that is not what is meant here. The terms are additively separable (linearly independent contributions), not orthogonal in any inner-product sense.
+
+**Recommendation:** Replace "Mechanical Orthogonality" with "Mechanical Separability" or "Additive Decomposition" and add a note explaining the terminology.
+
+---
+
+#### ISSUE-TC21: Incomplete/Missing 3D Pendulum Examples
+**File:** `articles/theory-part4.qmd:399-403`
+**Severity:** MAJOR
+
+The article introduction promises "a spatial (3D) pendulum with and without a flexible shaft" but only presents planar (2D) pendulum examples. The 3D examples are referenced in the summary but never derived.
+
+**Recommendation:** Either add the 3D examples or remove the promise from the introduction.
+
+---
+
+#### ISSUE-TC22: DCR "Monotonic Growth Invariance" Proof Is Informal
+**File:** `articles/controllability-drift-ratio.qmd:311-313`
+**Severity:** MAJOR
+
+The claimed "theorem" about norm-independent monotonic growth is stated formally but proved by a qualitative "squeeze theorem" argument. The claim that "every component of drift increases and every component of control decreases" is not necessarily true component-wise -- it is the norms that grow/shrink, not necessarily every component.
+
+**Recommendation:** Either provide a rigorous proof or downgrade from "theorem" to "conjecture" or "empirical observation."
+
+---
+
+#### ISSUE-TC23: Unsupported Quantitative Claims in DCR Article
+**File:** `articles/controllability-drift-ratio.qmd:287, 386`
+**Severity:** MODERATE
+
+Claims like "DCR increases by 100x-300x" and "Collapse begins 70-120 ms before impact" are stated without citation or simulation data. These appear to be estimates from a planar model but are presented as facts.
+
+**Recommendation:** Add citations, simulation references, or mark as estimates.
+
+---
+
+#### ISSUE-TC24: Inconsistent Block Matrix Naming Across Articles
+**Files:** `articles/theory-part4.qmd`, `articles/affine-nature-golf-swing.qmd`
+**Severity:** MODERATE
+
+Inertia matrix blocks are called `M_rr, M_rf, M_fr, M_ff` in theory-part4 but `M_qq, M_qη, M_ηq, M_ηη` in affine-nature-golf-swing.qmd. Both conventions appear without cross-referencing.
+
+**Recommendation:** Standardize block matrix naming and add a notation reference table.
+
+---
+
+#### ISSUE-TC25: Terminology Inconsistency: "Causal Orthogonality" vs "Mechanical Orthogonality"
+**Files:** `articles/affine-nature-golf-swing.qmd`, `articles/theory-part2.qmd`
+**Severity:** MODERATE
+
+The full article uses "Causal Orthogonality" while theory-part2 uses "Mechanical Orthogonality" for the same concept.
+
+---
+
+#### ISSUE-TC26: Broken Quarto Cross-Reference Syntax
+**File:** `articles/affine-nature-golf-swing.qmd` (throughout)
+**Severity:** MODERATE
+
+Multiple uses of LaTeX-style cross-references (`Section~@sec-affine`, `Equation~@eq-affine_repeat`) that may not render correctly in Quarto. Some references use colon-based labels (`@subsec:assumptions`) while others use hyphen-based (`@sec-affine`). These likely produce broken links in the rendered output.
+
+---
+
+#### ISSUE-TC27: Inverse Dynamics Article Has Placeholder Figures and Tables
+**File:** `articles/inverse-dynamics.qmd:201, 229, 253, 277, 384, 438, 535, 674, 602`
+**Severity:** MODERATE
+
+8 figure placeholders (`[Figure: ...]`) and 1 table placeholder (`[Table]`) indicate incomplete content. This article also has truncated text at lines 552 and 564, and mixed unit systems (lbs vs N).
+
+---
+
+#### ISSUE-TC28: Air Resistance Calculation Self-Contradicts
+**File:** `articles/inverse-dynamics.qmd:496-531`
+**Severity:** MODERATE
+
+The step-by-step air drag calculation computes a result, then says "But wait -- this is incorrect" and restarts with a different approach. The final comparison claims a 40% reduction but the arithmetic path is muddled and self-contradicting.
+
+**Recommendation:** Clean up into a single coherent derivation.
+
+---
+
+#### ISSUE-TC29: Controllability Gramian Used Without Linearization Caveat
+**File:** `articles/controllability-drift-ratio.qmd:546-550`
+**Severity:** MODERATE
+
+The Gramian-based reachable ellipsoid formula is stated without noting it is valid only for linearized systems. For the nonlinear system being discussed, this is an approximation.
+
+---
+
+#### ISSUE-TC30: Equation Numbering Conflicts in Superposition Article
+**File:** `articles/superposition.qmd:1251`
+**Severity:** MODERATE
+
+Equation tag `(7.1)` is used in a section labeled "8.1", indicating numbering carried over from a draft reorganization.
 
 ---
 
@@ -628,6 +772,32 @@ Articles like `controllability-drift-ratio` and `secondary-axis-stability` have 
 
 ---
 
+#### ISSUE-CQ08: inverse-dynamics.qmd Has 8 Placeholder Figures and Truncated Text
+**File:** `articles/inverse-dynamics.qmd`
+**Severity:** CRITICAL
+
+The article has:
+- 8 figure placeholders (`[Figure: ...]`) where actual visualizations should be
+- 1 table placeholder (`[Table]`)
+- Truncated text at lines 552 and 564 (sentences cut off mid-word)
+- Mixed unit systems (lbs and N used without conversion)
+
+This article is published on the live site in an incomplete state.
+
+**Recommendation:** Complete the figures, fix truncated text, and standardize units.
+
+---
+
+#### ISSUE-CQ09: Confusing "Parts" Numbering Across Series and Project
+**Files:** `articles/theory-part3.qmd:397`, `articles/theory-part5.qmd:142, 156`
+**Severity:** MAJOR
+
+The theory series uses "Parts 1-5" for the article sequence. But the broader project also uses "Parts II and III" to refer to simulation and experimental phases. These two numbering systems overlap, creating confusion when theory-part3 references "Parts II and III of this project."
+
+**Recommendation:** Use "Phase" for project stages and "Part" for article series.
+
+---
+
 #### ISSUE-CQ07: The Geometry of Motion and Tangent Hyperplane Contraction Textbooks Overlap
 **Files:** `articles/The_Geometry_of_Motion/`, `articles/tangent-hyperplane-contraction/`
 **Severity:** MODERATE
@@ -655,59 +825,75 @@ The following issues should be created in the GitHub repository, organized by pr
 | 2 | Add scope-limitation caveats to core theory articles (Part 1-3) | `content`, `technical-accuracy` | ISSUE-TC01 |
 | 3 | Standardize "Instantaneous Force-Acceleration Superposition" terminology | `content`, `technical-accuracy` | ISSUE-TC02 |
 | 4 | Distinguish novel claims from established results across all articles | `content`, `documentation` | ISSUE-TC03 |
-| 5 | Fix serif font assigned to $font-family-sans-serif in custom.scss | `bug`, `ui` | ISSUE-UX02 |
-| 6 | Consolidate triplicated CSS/JS directories (css/, src/css/, docs/css/) | `architecture`, `tech-debt` | ISSUE-MA01 |
-| 7 | Move QMD content files out of repository root into subdirectories | `architecture`, `tech-debt` | ISSUE-MA02 |
-| 8 | Define canonical content hierarchy to resolve overlapping directories | `architecture`, `documentation` | ISSUE-MA03 |
-| 9 | Remove "coming soon" and placeholder content from live pages | `content`, `quality` | ISSUE-CQ01 |
+| 5 | Fix ZVCF definition error in inverse-dynamics-inference.qmd | `bug`, `technical-accuracy` | ISSUE-TC16 |
+| 6 | Fix state vector ordering inconsistency across theory articles | `bug`, `technical-accuracy` | ISSUE-TC17 |
+| 7 | Fix markdown `*` rendering as incorrect math operators in superposition.qmd | `bug`, `technical-accuracy` | ISSUE-TC18 |
+| 8 | Fix serif font assigned to $font-family-sans-serif in custom.scss | `bug`, `ui` | ISSUE-UX02 |
+| 9 | Consolidate triplicated CSS/JS directories (css/, src/css/, docs/css/) | `architecture`, `tech-debt` | ISSUE-MA01 |
+| 10 | Move QMD content files out of repository root into subdirectories | `architecture`, `tech-debt` | ISSUE-MA02 |
+| 11 | Define canonical content hierarchy to resolve overlapping directories | `architecture`, `documentation` | ISSUE-MA03 |
+| 12 | Remove "coming soon" and placeholder content from live pages | `content`, `quality` | ISSUE-CQ01 |
+| 13 | Add missing figures and fix truncated text in inverse-dynamics.qmd | `content`, `quality` | ISSUE-CQ08 |
 
 ### Priority 2 (Major - Address Soon)
 
 | # | Title | Labels | Related Issues Above |
 |---|-------|--------|---------------------|
-| 10 | Add ZTCF identifiability discussion to theory-part2 | `content`, `technical-accuracy` | ISSUE-TC04 |
-| 11 | Address dimensional inconsistency in DCR article | `content`, `technical-accuracy` | ISSUE-TC05 |
-| 12 | Clarify accessibility vs. controllability in Lie bracket discussions | `content`, `technical-accuracy` | ISSUE-TC06 |
-| 13 | Complete proofs in contraction-tangent unification article | `content`, `technical-accuracy` | ISSUE-TC07 |
-| 14 | Formally define "Control Is Motion" paradigm | `content`, `documentation` | ISSUE-TC08 |
-| 15 | Audit and reduce CSS codebase (~7,400 lines) | `tech-debt`, `ui` | ISSUE-UX03 |
-| 16 | Standardize page layouts across site | `ui`, `ux` | ISSUE-UX04 |
-| 17 | Implement dark mode | `enhancement`, `ui` | ISSUE-UX05 |
-| 18 | Redesign navigation for scalability | `enhancement`, `ux` | ISSUE-UX06 |
-| 19 | Add minimal build pipeline for assets | `architecture`, `enhancement` | ISSUE-MA04 |
-| 20 | Rename directories with spaces to use hyphens | `tech-debt`, `architecture` | ISSUE-MA05 |
-| 21 | Move docs/ to CI/CD build output (stop committing generated files) | `architecture`, `ci-cd` | ISSUE-MA06 |
-| 22 | Consolidate root-level configuration files | `tech-debt` | ISSUE-MA07 |
-| 23 | Archive stale assessment and status files | `tech-debt` | ISSUE-MA08 |
-| 24 | Add content validation pipeline (link checker, frontmatter lint) | `ci-cd`, `quality` | ISSUE-MA09 |
-| 25 | Mark draft textbook content with visual indicators | `content`, `ux` | ISSUE-CQ02 |
-| 26 | Standardize article frontmatter (author, date, abstract, citations) | `content`, `quality` | ISSUE-CQ03 |
-| 27 | Add systematic cross-references between related articles | `content`, `ux` | ISSUE-CQ04 |
+| 14 | Add ZTCF identifiability discussion to theory-part2 | `content`, `technical-accuracy` | ISSUE-TC04 |
+| 15 | Address dimensional inconsistency in DCR article | `content`, `technical-accuracy` | ISSUE-TC05 |
+| 16 | Clarify accessibility vs. controllability in Lie bracket discussions | `content`, `technical-accuracy` | ISSUE-TC06 |
+| 17 | Complete proofs in contraction-tangent unification article | `content`, `technical-accuracy` | ISSUE-TC07 |
+| 18 | Formally define "Control Is Motion" paradigm | `content`, `documentation` | ISSUE-TC08 |
+| 19 | Provide rigorous justification for F_total - F_ZTCF = F_ZVCF identity | `content`, `technical-accuracy` | ISSUE-TC19 |
+| 20 | Replace "Mechanical Orthogonality" with correct terminology | `content`, `technical-accuracy` | ISSUE-TC20 |
+| 21 | Add missing 3D pendulum examples to theory-part4 | `content` | ISSUE-TC21 |
+| 22 | Provide rigorous proof for DCR monotonic growth invariance theorem | `content`, `technical-accuracy` | ISSUE-TC22 |
+| 23 | Audit and reduce CSS codebase (~7,400 lines) | `tech-debt`, `ui` | ISSUE-UX03 |
+| 24 | Standardize page layouts across site | `ui`, `ux` | ISSUE-UX04 |
+| 25 | Implement dark mode | `enhancement`, `ui` | ISSUE-UX05 |
+| 26 | Redesign navigation for scalability | `enhancement`, `ux` | ISSUE-UX06 |
+| 27 | Add minimal build pipeline for assets | `architecture`, `enhancement` | ISSUE-MA04 |
+| 28 | Rename directories with spaces to use hyphens | `tech-debt`, `architecture` | ISSUE-MA05 |
+| 29 | Move docs/ to CI/CD build output (stop committing generated files) | `architecture`, `ci-cd` | ISSUE-MA06 |
+| 30 | Consolidate root-level configuration files | `tech-debt` | ISSUE-MA07 |
+| 31 | Archive stale assessment and status files | `tech-debt` | ISSUE-MA08 |
+| 32 | Add content validation pipeline (link checker, frontmatter lint) | `ci-cd`, `quality` | ISSUE-MA09 |
+| 33 | Mark draft textbook content with visual indicators | `content`, `ux` | ISSUE-CQ02 |
+| 34 | Standardize article frontmatter (author, date, abstract, citations) | `content`, `quality` | ISSUE-CQ03 |
+| 35 | Add systematic cross-references between related articles | `content`, `ux` | ISSUE-CQ04 |
 
 ### Priority 3 (Moderate - Address When Convenient)
 
 | # | Title | Labels | Related Issues Above |
 |---|-------|--------|---------------------|
-| 28 | Revise intermediate axis theorem application in secondary-axis-stability | `content`, `technical-accuracy` | ISSUE-TC09 |
-| 29 | Reframe strokes-gained critique as limitations analysis | `content` | ISSUE-TC10 |
-| 30 | Add DOF limitation discussion to wrist-universal-joint article | `content` | ISSUE-TC11 |
-| 31 | Add energy balance to double pendulum wrench analysis | `content` | ISSUE-TC12 |
-| 32 | Formalize Intentional Constraint Collapse with DCR thresholds | `content`, `technical-accuracy` | ISSUE-TC13 |
-| 33 | Complete proofs in textbook chapters | `content` | ISSUE-TC14 |
-| 34 | Standardize bibliography cross-references across all articles | `content`, `quality` | ISSUE-TC15 |
-| 35 | Replace emoji icons with SVG/icon library on homepage | `ui` | ISSUE-UX07 |
-| 36 | Add breadcrumb navigation to nested articles | `ux`, `enhancement` | ISSUE-UX08 |
-| 37 | Enable table of contents globally, disable per-page as needed | `ux` | ISSUE-UX09 |
-| 38 | Implement content-hash cache busting for service worker | `enhancement` | ISSUE-UX10 |
-| 39 | Add actual book cover images to resources-books | `content` | ISSUE-UX11 |
-| 40 | Remove custom mobile menu in favor of Quarto's responsive nav | `tech-debt`, `ui` | ISSUE-UX12 |
-| 41 | Improve test coverage (service worker, mobile, visual regression) | `testing` | ISSUE-MA10 |
-| 42 | Integrate Python tools with website or document relationship | `documentation` | ISSUE-MA11 |
-| 43 | Define archive/retention policy for old assessments and versions | `documentation`, `tech-debt` | ISSUE-MA12 |
-| 44 | Remove duplicate data files from docs/data/ | `tech-debt` | ISSUE-MA13 |
-| 45 | Surface critiques directory on website with links from articles | `content`, `ux` | ISSUE-CQ05 |
-| 46 | Add version history/changelog to revised articles | `documentation` | ISSUE-CQ06 |
-| 47 | Clarify relationship between overlapping textbook projects | `documentation`, `content` | ISSUE-CQ07 |
+| 36 | Revise intermediate axis theorem application in secondary-axis-stability | `content`, `technical-accuracy` | ISSUE-TC09 |
+| 37 | Reframe strokes-gained critique as limitations analysis | `content` | ISSUE-TC10 |
+| 38 | Add DOF limitation discussion to wrist-universal-joint article | `content` | ISSUE-TC11 |
+| 39 | Add energy balance to double pendulum wrench analysis | `content` | ISSUE-TC12 |
+| 40 | Formalize Intentional Constraint Collapse with DCR thresholds | `content`, `technical-accuracy` | ISSUE-TC13 |
+| 41 | Complete proofs in textbook chapters | `content` | ISSUE-TC14 |
+| 42 | Standardize bibliography cross-references across all articles | `content`, `quality` | ISSUE-TC15 |
+| 43 | Add citations for unsupported quantitative claims in DCR article | `content` | ISSUE-TC23 |
+| 44 | Standardize block matrix naming across articles | `content` | ISSUE-TC24 |
+| 45 | Resolve "Causal Orthogonality" vs "Mechanical Orthogonality" inconsistency | `content` | ISSUE-TC25 |
+| 46 | Fix broken Quarto cross-reference syntax in affine-nature-golf-swing | `bug` | ISSUE-TC26 |
+| 47 | Replace placeholder figures/tables and fix truncated text in inverse-dynamics | `content` | ISSUE-TC27 |
+| 48 | Clean up self-contradicting air resistance calculation | `content` | ISSUE-TC28 |
+| 49 | Add linearization caveat to Gramian reachable ellipsoid in DCR | `content` | ISSUE-TC29 |
+| 50 | Fix equation numbering conflicts in superposition article | `content` | ISSUE-TC30 |
+| 51 | Replace emoji icons with SVG/icon library on homepage | `ui` | ISSUE-UX07 |
+| 52 | Add breadcrumb navigation to nested articles | `ux`, `enhancement` | ISSUE-UX08 |
+| 53 | Enable table of contents globally, disable per-page as needed | `ux` | ISSUE-UX09 |
+| 54 | Implement content-hash cache busting for service worker | `enhancement` | ISSUE-UX10 |
+| 55 | Add actual book cover images to resources-books | `content` | ISSUE-UX11 |
+| 56 | Remove custom mobile menu in favor of Quarto's responsive nav | `tech-debt`, `ui` | ISSUE-UX12 |
+| 57 | Improve test coverage (service worker, mobile, visual regression) | `testing` | ISSUE-MA10 |
+| 58 | Integrate Python tools with website or document relationship | `documentation` | ISSUE-MA11 |
+| 59 | Define archive/retention policy for old assessments and versions | `documentation`, `tech-debt` | ISSUE-MA12 |
+| 60 | Remove duplicate data files from docs/data/ | `tech-debt` | ISSUE-MA13 |
+| 61 | Surface critiques directory on website with links from articles | `content`, `ux` | ISSUE-CQ05 |
+| 62 | Add version history/changelog to revised articles | `documentation` | ISSUE-CQ06 |
+| 63 | Clarify relationship between overlapping textbook projects | `documentation`, `content` | ISSUE-CQ07 |
 
 ---
 
@@ -715,11 +901,11 @@ The following issues should be created in the GitHub repository, organized by pr
 
 | Category | Critical | Major | Moderate | Total |
 |----------|----------|-------|----------|-------|
-| Technical Claims | 3 | 5 | 7 | 15 |
+| Technical Claims | 5 | 9 | 16 | 30 |
 | UI/UX | 2 | 4 | 6 | 12 |
 | Maintainability | 3 | 5 | 5 | 13 |
-| Content Quality | 1 | 3 | 3 | 7 |
-| **Total** | **9** | **17** | **21** | **47** |
+| Content Quality | 2 | 4 | 3 | 9 |
+| **Total** | **12** | **22** | **30** | **64** |
 
 ---
 
