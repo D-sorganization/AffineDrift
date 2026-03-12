@@ -8,12 +8,12 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **84 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **93 issues** across four domains:
 
-- **Technical Claims & Content Accuracy**: 42 issues (7 critical, 13 major, 22 moderate)
+- **Technical Claims & Content Accuracy**: 48 issues (8 critical, 17 major, 23 moderate)
 - **UI/UX & Website Implementation**: 12 issues (2 critical, 4 major, 6 moderate)
 - **Maintainability & Architecture**: 21 issues (4 critical, 8 major, 9 moderate)
-- **Content Completeness & Quality**: 9 issues (2 critical, 4 major, 3 moderate)
+- **Content Completeness & Quality**: 12 issues (2 critical, 6 major, 4 moderate)
 
 ---
 
@@ -452,6 +452,71 @@ Line 1281 states: "This part is intentionally brief in the current version... Pa
 **Severity:** MODERATE
 
 Multiple cross-references use `.md` extension when actual files are `.qmd`. References to `LAYMANS_TERMS_SUMMARY.md`, `TECHNICAL_ASSESSMENT.md`, `CRITICAL_REVIEW.md` will produce broken links.
+
+---
+
+#### ISSUE-TC43: Books Section Systematic Cross-Reference Mismatch
+**Files:** `books/tangent-space-methods.qmd`, `articles/tangent-hyperplane-contraction/chapters/`, `articles/The_Geometry_of_Motion/`
+**Severity:** CRITICAL
+
+The Books landing page (`books/tangent-space-methods.qmd`) describes chapter titles that match *The Geometry of Motion* (GoM) Volume I naming conventions, but the HTML links point to the Tangent Hyperplane Contraction (THC) chapter files, which have **different titles, scopes, and much thinner content**. For example:
+- Chapter description says "Foundations of Nonlinear Dynamics" (GoM naming)
+- Link points to `articles/tangent-hyperplane-contraction/chapters/01-foundations.html` (THC file)
+- The THC chapter covers different material at much less depth
+
+This means the Books section's chapter descriptions systematically misrepresent the content they link to. Readers clicking through get unexpectedly different material.
+
+**Recommendation:** Either update the Books page descriptions to match the THC chapter content, or re-point the links to the GoM chapters. Alternatively, consolidate the two textbook projects into one canonical version.
+
+---
+
+#### ISSUE-TC44: Schur Complement Numerical Error Contradicts Positive-Definiteness Claim
+**File:** `articles/tangent-hyperplane-contraction/chapters/ch08_applications.qmd:~211`
+**Severity:** MAJOR
+
+The chapter presents a Schur complement matrix claimed to be positive definite, but the (3,3) entry is **negative**. A positive-definite matrix must have all positive diagonal entries. This either indicates a sign error in the derivation or the positive-definiteness claim is incorrect.
+
+**Recommendation:** Verify the Schur complement calculation and correct the sign error or the claim.
+
+---
+
+#### ISSUE-TC45: Contraction Rate Off by Factor of 2
+**File:** `articles/tangent-hyperplane-contraction/chapters/ch04_contraction.qmd:~412-418`
+**Severity:** MAJOR
+
+The contraction rate derivation contains a factor-of-2 error. The symmetric part of the Jacobian gives the contraction rate as `λ_max(sym(J))`, but the text appears to drop or double a factor of 2 in the relationship between the matrix measure and the contraction rate. This propagates to subsequent stability conclusions.
+
+**Recommendation:** Re-derive the contraction rate carefully, tracking factors of 2 from the symmetric part of the Jacobian to the exponential convergence bound.
+
+---
+
+#### ISSUE-TC46: Pendulum Gravity Sign Ambiguity
+**File:** `articles/tangent-hyperplane-contraction/chapters/ch05_optimal_control.qmd:~572`
+**Severity:** MAJOR
+
+The pendulum example has an ambiguous gravity sign convention. The equation uses `+g sin(θ)` which corresponds to measuring θ from the **upright** equilibrium. However, the context discusses swinging from the **downward** equilibrium, where the correct sign is `-g sin(θ)`. This sign convention mismatch affects the linearization, the LQR design, and the claimed stability properties.
+
+**Recommendation:** State the angle convention explicitly and verify all signs are consistent with the chosen convention.
+
+---
+
+#### ISSUE-TC47: LQR Robustness Proof Is Tautological
+**File:** `articles/tangent-hyperplane-contraction/chapters/ch06_duality.qmd:~128-142`
+**Severity:** MAJOR
+
+The "proof" of LQR robustness margins (infinite gain margin, 60° phase margin) simply states the well-known result without derivation. It claims to prove it from the return-difference inequality but then just asserts the conclusion. The return-difference inequality `(I + L)^H R^{-1} (I + L) ≥ R^{-1}` is stated but the steps connecting it to specific gain/phase margins are omitted.
+
+**Recommendation:** Either provide the complete derivation from the return-difference inequality to the gain/phase margin bounds, or cite a textbook reference (e.g., Anderson & Moore, Optimal Control) and label the result as "well-known."
+
+---
+
+#### ISSUE-TC48: LTI Controllability Rank Test Applied to Time-Varying System
+**File:** `articles/The_Geometry_of_Motion/quarto/03-local-optimal-control.qmd:55`
+**Severity:** MODERATE
+
+The chapter applies the LTI controllability rank condition `rank[B, AB, A²B, ..., Aⁿ⁻¹B] = n` to a linearized system that is explicitly time-varying (the linearization point changes along a trajectory). The correct test for time-varying systems is the controllability Gramian, not the constant-matrix rank test. This is a common pedagogical error but incorrect in this context.
+
+**Recommendation:** Either note that the rank test applies at a frozen operating point (frozen-time approximation) or use the controllability Gramian for the time-varying case.
 
 ---
 
@@ -1002,6 +1067,42 @@ The theory series uses "Parts 1-5" for the article sequence. But the broader pro
 
 ---
 
+#### ISSUE-CQ10: THC Textbook Chapters Are Skeletal (6 of 8 Under 35 Lines)
+**Files:** `articles/tangent-hyperplane-contraction/chapters/ch01-ch08*.qmd`
+**Severity:** MAJOR
+
+The Tangent Hyperplane Contraction textbook has 8 chapter files, but 6 of them are under 35 lines of content. These chapters contain section headings and brief introductory paragraphs but no substantive mathematical development, no complete proofs, and no worked examples. This makes the "textbook" effectively an outline masquerading as a finished product.
+
+Combined with ISSUE-TC43 (the Books page linking to these thin chapters with descriptions promising rich content), this creates a poor reader experience.
+
+**Recommendation:** Either develop the chapters into full textbook content or clearly label them as outlines/drafts with a progress indicator showing completion percentage.
+
+---
+
+#### ISSUE-CQ11: Volume 0 (Geometry of Motion) Has Duplicate Chapter Files
+**Files:** `articles/The_Geometry_of_Motion/Volume_I/chapters/`, `articles/The_Geometry_of_Motion/quarto/`
+**Severity:** MODERATE
+
+The Geometry of Motion project has two sets of chapter files:
+1. `Volume_I/chapters/` — LaTeX-format chapters (`.tex` files with `.aux` artifacts)
+2. `quarto/` — Quarto-format chapters (`.qmd` files)
+
+These appear to be parallel versions of the same content in different formats, with inconsistent naming conventions (`ch01_foundations.tex` vs `01-foundations-of-nonlinear-dynamics.qmd`). It's unclear which is canonical.
+
+**Recommendation:** Designate one format as canonical, derive the other automatically, or archive the deprecated version. Document which version is authoritative.
+
+---
+
+#### ISSUE-CQ12: Books Volume I Content Links Do Not Match Descriptions
+**Files:** `books/tangent-space-methods.qmd`
+**Severity:** MAJOR
+
+Volume I "Tangent-Space Methods for Nonlinear Control" describes 8 chapters with detailed descriptions, but the `_quarto.yml` sidebar links all point to `books/tangent-space-methods.qmd#book1-chN` anchors. The actual chapter content at these anchors may not match the detailed descriptions, especially given that the THC textbook chapters they derive from are skeletal (ISSUE-CQ10).
+
+**Recommendation:** Audit all 8 chapter anchor targets to ensure the content matches the descriptions. Consider linking to the richer GoM chapters instead if available.
+
+---
+
 #### ISSUE-CQ07: The Geometry of Motion and Tangent Hyperplane Contraction Textbooks Overlap
 **Files:** `articles/The_Geometry_of_Motion/`, `articles/tangent-hyperplane-contraction/`
 **Severity:** MODERATE
@@ -1041,6 +1142,7 @@ The following issues should be created in the GitHub repository, organized by pr
 | 14 | Remove unrevised AI draft text ("Wait, let me recalculate") from Hybrid Tangent Spaces | `bug`, `content` | ISSUE-TC31 |
 | 15 | Remove or cite fabricated empirical claims in tangent hyperplane articles | `bug`, `technical-accuracy` | ISSUE-TC32 |
 | 16 | Audit and consolidate 56 CI/CD workflow files | `architecture`, `ci-cd` | ISSUE-MA14 |
+| 17 | Fix Books section cross-reference mismatch (descriptions don't match linked content) | `bug`, `content` | ISSUE-TC43 |
 
 ### Priority 2 (Major - Address Soon)
 
@@ -1075,6 +1177,12 @@ The following issues should be created in the GitHub repository, organized by pr
 | 36 | Clean up root-level artifact files (status JSONs, PR feedback, etc.) | `tech-debt` | ISSUE-MA15 |
 | 37 | Decompose script.js (1740 lines) and styles.css (2655 lines) | `tech-debt`, `architecture` | ISSUE-MA16 |
 | 38 | Separate docs/ into build output and manual documentation directories | `architecture` | ISSUE-MA17 |
+| 39 | Fix Schur complement sign error contradicting positive-definiteness claim | `bug`, `technical-accuracy` | ISSUE-TC44 |
+| 40 | Fix contraction rate factor-of-2 error in ch04 | `bug`, `technical-accuracy` | ISSUE-TC45 |
+| 41 | Fix pendulum gravity sign ambiguity in ch05 | `bug`, `technical-accuracy` | ISSUE-TC46 |
+| 42 | Complete LQR robustness proof or cite source in ch06 | `content`, `technical-accuracy` | ISSUE-TC47 |
+| 43 | Develop skeletal THC textbook chapters into substantive content | `content`, `quality` | ISSUE-CQ10 |
+| 44 | Audit Books Volume I chapter anchors to match descriptions | `content`, `quality` | ISSUE-CQ12 |
 
 ### Priority 3 (Moderate - Address When Convenient)
 
@@ -1118,6 +1226,8 @@ The following issues should be created in the GitHub repository, organized by pr
 | 65 | Delete deprecated articles/textbook/ directory | `tech-debt` | ISSUE-MA19 |
 | 66 | Fix Python version mismatch in pre-commit config (3.11 vs 3.12) | `bug` | ISSUE-MA20 |
 | 67 | Consolidate duplicate Python tool config (mypy.ini, ruff.toml into pyproject.toml) | `tech-debt` | ISSUE-MA21 |
+| 68 | Fix LTI controllability rank test misapplied to time-varying system | `content`, `technical-accuracy` | ISSUE-TC48 |
+| 69 | Resolve Volume 0 duplicate chapter files (LaTeX vs Quarto) | `tech-debt`, `content` | ISSUE-CQ11 |
 
 ---
 
@@ -1125,11 +1235,11 @@ The following issues should be created in the GitHub repository, organized by pr
 
 | Category | Critical | Major | Moderate | Total |
 |----------|----------|-------|----------|-------|
-| Technical Claims | 7 | 13 | 22 | 42 |
+| Technical Claims | 8 | 17 | 23 | 48 |
 | UI/UX | 2 | 4 | 6 | 12 |
 | Maintainability | 4 | 8 | 9 | 21 |
-| Content Quality | 2 | 4 | 3 | 9 |
-| **Total** | **15** | **29** | **40** | **84** |
+| Content Quality | 2 | 6 | 4 | 12 |
+| **Total** | **16** | **35** | **42** | **93** |
 
 ---
 
