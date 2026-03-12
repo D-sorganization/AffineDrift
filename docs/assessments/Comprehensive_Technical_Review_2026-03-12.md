@@ -8,12 +8,12 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **104 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **111 issues** across four domains:
 
 - **Technical Claims & Content Accuracy**: 48 issues (8 critical, 17 major, 23 moderate)
 - **UI/UX & Website Implementation**: 22 issues (3 critical, 8 major, 11 moderate)
 - **Maintainability & Architecture**: 22 issues (4 critical, 9 major, 9 moderate)
-- **Content Completeness & Quality**: 12 issues (2 critical, 6 major, 4 moderate)
+- **Content Completeness & Quality**: 19 issues (3 critical, 10 major, 6 moderate)
 
 ---
 
@@ -1237,6 +1237,74 @@ Volume I "Tangent-Space Methods for Nonlinear Control" describes 8 chapters with
 
 ---
 
+#### ISSUE-CQ13: Book Reviews Page Has Complete Placeholder Content
+**File:** `book-reviews.qmd:26, 32, 43-60`
+**Severity:** CRITICAL
+
+The "Detailed Reviews" section (lines 43-60) is an untouched template: `[Book Title]`, `Author Name`, `Year`, "Review content will be added here..." Additionally, `(AUTO-FIXED)` tags are visible in the book title text at lines 26 and 32. The Bookfinder URL has empty author/title/isbn parameters.
+
+**Recommendation:** Either populate with real reviews or remove the placeholder section entirely.
+
+---
+
+#### ISSUE-CQ14: Researcher Name Misspelled Throughout Site
+**File:** `resources-researchers.qmd:72, 75, 77, 106`
+**Severity:** MAJOR
+
+"Robert Groeber" is consistently misspelled — the correct name is **"Robert Grober"** (Frederick Phineas Rose Professor of Applied Physics at Yale). The Google Scholar search URL also uses the wrong spelling, reducing search results.
+
+**Recommendation:** Correct to "Grober" in all instances. Update the Google Scholar URL.
+
+---
+
+#### ISSUE-CQ15: Four "Anonymized for Review" Author Fields Still Published
+**Files:** `articles/lagrangian-reference.qmd:4`, `articles/nonlinear-control-insights.qmd:4`, `articles/screw-theory-reference.qmd:4`, `articles/appendix-applications.qmd:4`
+**Severity:** MAJOR
+
+Four articles still have `author: "Anonymized for Review"` — a pre-publication artifact from a journal submission workflow that was never updated.
+
+**Recommendation:** Replace with the actual author name or remove the author field.
+
+---
+
+#### ISSUE-CQ16: Broken Anchor Links to Researcher Cards
+**Files:** `research-review-baseball-pitching.qmd:41`, `research-review-induced-acceleration-analysis.qmd:40`, `research-review-shaft-flexibility.qmd:40`, `research-review-interaction-forces.qmd:40`
+**Severity:** MODERATE
+
+All four research review pages link to `resources-researchers.html#researcher-name` but the researchers page has **no id anchors** on the researcher cards. These fragment links navigate to the page but never scroll to the intended section.
+
+**Recommendation:** Add `id` attributes to researcher cards in `resources-researchers.qmd`.
+
+---
+
+#### ISSUE-CQ17: Seven Model Pages Are Empty "Coming Soon" Placeholders
+**Files:** `models-drake.qmd`, `models-mujoco.qmd`, `models-myosim.qmd`, `models-opensim.qmd`, `models-simulink.qmd`, `models-pendulum.qmd`, `models-pinocchio.qmd`
+**Severity:** MAJOR
+
+All seven model-specific pages contain only placeholder "coming soon" content with no models, code, or substantive information. These pages are linked from the main models page but provide no value.
+
+**Recommendation:** Either add content or remove from navigation until content is ready.
+
+---
+
+#### ISSUE-CQ18: Author Name Inconsistency ("Dieter Butz" vs "Dieter Olson")
+**File:** `articles/wrist-universal-joint.qmd:5`, `about.qmd:14`
+**Severity:** MODERATE
+
+`wrist-universal-joint.qmd` lists `author: "Dieter Butz"` while `about.qmd` identifies the site author as "Dieter Olson" and `package.json` uses "Dieter Olson."
+
+**Recommendation:** Standardize the author name across all files.
+
+---
+
+#### ISSUE-CQ19: Broken LaTeX Command in Null-Space Article
+**File:** `articles/null-space-constraint-jacobian.qmd:249`
+**Severity:** MODERATE
+
+`$\lambdavec$` is a non-existent LaTeX command. Should be `$\boldsymbol{\lambda}$` or a properly defined custom command.
+
+---
+
 #### ISSUE-CQ07: The Geometry of Motion and Tangent Hyperplane Contraction Textbooks Overlap
 **Files:** `articles/The_Geometry_of_Motion/`, `articles/tangent-hyperplane-contraction/`
 **Severity:** MODERATE
@@ -1278,6 +1346,7 @@ The following issues should be created in the GitHub repository, organized by pr
 | 16 | Audit and consolidate 56 CI/CD workflow files | `architecture`, `ci-cd` | ISSUE-MA14 |
 | 17 | Fix Books section cross-reference mismatch (descriptions don't match linked content) | `bug`, `content` | ISSUE-TC43 |
 | 18 | Wire up or remove dead global search code (Cmd+K, search_index.json) | `bug`, `ui` | ISSUE-UX13 |
+| 19 | Remove placeholder book review template and (AUTO-FIXED) tags | `bug`, `content` | ISSUE-CQ13 |
 
 ### Priority 2 (Major - Address Soon)
 
@@ -1323,6 +1392,9 @@ The following issues should be created in the GitHub repository, organized by pr
 | 47 | Add noscript fallback for splash screen overlay | `bug`, `accessibility` | ISSUE-UX16 |
 | 48 | Fix manifest.json invalid icon sizes and 1.4MB logo | `bug`, `performance` | ISSUE-UX17 |
 | 49 | Resolve divergent src/js/ vs js/ files (bibliography.js, main.js) | `tech-debt`, `architecture` | ISSUE-MA22 |
+| 50 | Fix misspelled researcher name "Groeber" → "Grober" | `bug`, `content` | ISSUE-CQ14 |
+| 51 | Replace "Anonymized for Review" author fields in 4 articles | `content`, `quality` | ISSUE-CQ15 |
+| 52 | Remove or add content to 7 empty model placeholder pages | `content`, `quality` | ISSUE-CQ17 |
 
 ### Priority 3 (Moderate - Address When Convenient)
 
@@ -1373,6 +1445,9 @@ The following issues should be created in the GitHub repository, organized by pr
 | 72 | Resolve conflicting responsive breakpoints across CSS files | `bug`, `ui` | ISSUE-UX20 |
 | 73 | Fix search box min-width causing mobile horizontal overflow | `bug`, `ui` | ISSUE-UX21 |
 | 74 | Remove unnecessary polyfill.io script (security concern) | `security`, `tech-debt` | ISSUE-UX22 |
+| 75 | Add id anchors to researcher cards for fragment link navigation | `bug`, `ux` | ISSUE-CQ16 |
+| 76 | Fix author name inconsistency ("Dieter Butz" vs "Dieter Olson") | `bug`, `content` | ISSUE-CQ18 |
+| 77 | Fix broken LaTeX command `\lambdavec` in null-space article | `bug`, `content` | ISSUE-CQ19 |
 
 ---
 
@@ -1383,8 +1458,8 @@ The following issues should be created in the GitHub repository, organized by pr
 | Technical Claims | 8 | 17 | 23 | 48 |
 | UI/UX | 3 | 8 | 11 | 22 |
 | Maintainability | 4 | 9 | 9 | 22 |
-| Content Quality | 2 | 6 | 4 | 12 |
-| **Total** | **17** | **40** | **47** | **104** |
+| Content Quality | 3 | 10 | 6 | 19 |
+| **Total** | **18** | **44** | **49** | **111** |
 
 ---
 
