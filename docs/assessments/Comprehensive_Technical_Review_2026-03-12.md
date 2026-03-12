@@ -8,11 +8,11 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **93 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **104 issues** across four domains:
 
 - **Technical Claims & Content Accuracy**: 48 issues (8 critical, 17 major, 23 moderate)
-- **UI/UX & Website Implementation**: 12 issues (2 critical, 4 major, 6 moderate)
-- **Maintainability & Architecture**: 21 issues (4 critical, 8 major, 9 moderate)
+- **UI/UX & Website Implementation**: 22 issues (3 critical, 8 major, 11 moderate)
+- **Maintainability & Architecture**: 22 issues (4 critical, 9 major, 9 moderate)
 - **Content Completeness & Quality**: 12 issues (2 critical, 6 major, 4 moderate)
 
 ---
@@ -676,6 +676,125 @@ The homepage implements a custom mobile menu toggle button with custom CSS, but 
 
 ---
 
+#### ISSUE-UX13: Custom Global Search Is Completely Non-Functional
+**Files:** `src/js/global-search.js`, `css/search-metrics.css`
+**Severity:** CRITICAL
+
+The custom global search feature (Cmd+K shortcut, fuzzy matching, category filtering) is entirely dead code:
+1. `src/js/global-search.js` is **never loaded** — not referenced in `_quarto.yml`, `site-head.html`, or `site-after-body.html`
+2. The required data file `/data/search_index.json` **does not exist**
+3. The CSS for the search modal (`css/search-metrics.css`) IS loaded by `_quarto.yml`, adding dead styles
+
+The Quarto built-in search works, but the custom search with its advanced features is completely disconnected.
+
+**Recommendation:** Either wire up the global search (load the JS, generate the search index) or remove all dead search code and CSS.
+
+---
+
+#### ISSUE-UX14: Undefined CSS Custom Properties Break Homepage Rendering
+**Files:** `css/home.css`, `styles.css`
+**Severity:** MAJOR
+
+Six CSS custom properties are **used but never defined** in any `:root` declaration:
+- `--border-light`, `--text-dark`, `--text-light`, `--legal-pad-yellow-border`, `--legal-pad-yellow-accent`, `--bg-dark`
+
+Since CSS variables fail silently, this causes:
+- Invisible sidebar borders (transparent fallback)
+- Text rendering in inherited/default colors instead of intended palette
+- Welcome header bottom border is invisible
+- Tooltip backgrounds have no color
+
+**Recommendation:** Add all missing CSS variable definitions to `:root` in `styles.css` or `css/base.css`.
+
+---
+
+#### ISSUE-UX15: script.js Preloaded on Every Page but Only Serves Legacy Browsers
+**Files:** `_includes/site-head.html:48`, `_includes/site-after-body.html:11-22`
+**Severity:** MAJOR
+
+The module/nomodule pattern in `site-after-body.html` loads `js/main.js` for modern browsers and `script.js` as legacy fallback. However, `site-head.html` **preloads** `script.js` on every page (`<link rel="preload" href="/script.js" as="script">`), wasting ~60KB of bandwidth for a file that will never execute in any browser from the last 8 years. The service worker also precaches `script.js`.
+
+**Recommendation:** Remove the preload hint. Only serve `script.js` to browsers that actually need it.
+
+---
+
+#### ISSUE-UX16: Splash Screen Has No noscript Fallback
+**Files:** `js/startup-launcher.js`, `css/startup-launcher.css`
+**Severity:** MAJOR
+
+The startup launcher creates a full-screen overlay with `z-index: 10000` and sets `overflow: hidden` on both `<html>` and `<body>`. If JavaScript fails or is disabled, the splash **never hides** — permanently blocking all site content. There is no `<noscript>` fallback.
+
+**Recommendation:** Add a `<noscript><style>.startup-overlay { display: none !important; }</style></noscript>` tag.
+
+---
+
+#### ISSUE-UX17: manifest.json Has Invalid Icon Size and 1.4MB Logo
+**File:** `manifest.json:19`
+**Severity:** MAJOR
+
+The PWA manifest specifies `"sizes": "192x192 512x512"` but the actual image is 1563x1563px at **1.4MB** — far too large for a PWA icon (should be under 50KB). The sizes specification is also invalid; separate icon entries should be used for each size.
+
+**Recommendation:** Generate properly sized (192x192, 512x512) optimized icons. Create separate manifest entries for each size.
+
+---
+
+#### ISSUE-UX18: Competing Color Systems in CSS
+**Files:** `custom.scss:5-12`, `css/base.css`, `styles.css`
+**Severity:** MODERATE
+
+Two incompatible color palettes are defined:
+- `custom.scss`: Okabe-Ito colorblind-safe palette (e.g., `$color-blue: #0072B2`)
+- `css/base.css` / `styles.css`: "Modern Scientific Palette" (e.g., `--primary-blue: #0f4c75`)
+
+The SCSS palette sets headings to `var(--color-blue)` (#0072B2) while `base.css` sets them to `var(--primary-blue)` (#0f4c75). The actual heading color depends on CSS load order.
+
+**Recommendation:** Consolidate to a single palette. The Okabe-Ito system is the better choice for accessibility.
+
+---
+
+#### ISSUE-UX19: MathJax Triple-Typeset Causes Unnecessary Reflow
+**File:** `_includes/mathjax-loader.html`
+**Severity:** MODERATE
+
+`MathJax.typeset()` is called three times: inside `startup.ready()`, inside `startup.promise.then()`, and on `DOMContentLoaded` with a 100ms delay. This causes unnecessary re-rendering and visible reflow on math-heavy pages.
+
+**Recommendation:** Call `MathJax.typeset()` only once, after both MathJax and DOM content are ready.
+
+---
+
+#### ISSUE-UX20: Conflicting Responsive Breakpoints Across CSS Files
+**Files:** `css/responsive.css`, `css/overrides.css`, `css/mobile.css`
+**Severity:** MODERATE
+
+The right sidebar is hidden at different breakpoints depending on which CSS rule wins:
+- `css/responsive.css`: hidden at `< 992px`
+- `css/overrides.css`: hidden at `< 1200px`
+- `css/mobile.css`: `.home-toc` hidden at `<= 1200px`
+
+Since only `styles.css` (the monolith) is actually loaded, the modular files' intent is unclear and behavior depends on which rules the monolith chose to include.
+
+---
+
+#### ISSUE-UX21: Search Box min-width Causes Horizontal Overflow on Mobile
+**File:** `css/navigation.css:131-143`
+**Severity:** MODERATE
+
+`#quarto-header #quarto-search` has `min-width: 300px` and `flex-basis: 400px`. On screens narrower than ~500px, this causes the navbar to overflow horizontally.
+
+**Recommendation:** Use `max-width: 100%` or clamp the search box width on small screens.
+
+---
+
+#### ISSUE-UX22: polyfill.io Script Loaded Unnecessarily
+**File:** `_includes/mathjax-loader.html:64`
+**Severity:** MODERATE
+
+The page loads `polyfill.min.js` from cdnjs.cloudflare.com. The polyfill.io service had security concerns in 2024 (domain sale). Additionally, MathJax v3 handles its own polyfills internally, making this load unnecessary.
+
+**Recommendation:** Remove the polyfill.io script tag.
+
+---
+
 ## Part III: Maintainability & Architecture
 
 ### CRITICAL Issues
@@ -955,6 +1074,21 @@ Both `mypy.ini` and `pyproject.toml` configure mypy. Both `ruff.toml` and `pypro
 
 ---
 
+#### ISSUE-MA22: src/js/ Contains Divergent Files from js/ (Not Simple Duplicates)
+**Files:** `src/js/bibliography.js`, `src/js/main.js`, `js/bibliography.js`, `js/main.js`
+**Severity:** MAJOR
+
+Unlike `src/css/` (which is byte-identical to `css/`), the `src/js/` directory has files that **differ** from `js/`:
+- `src/js/bibliography.js`: 13,299 lines vs `js/bibliography.js`: 8,803 lines
+- `src/js/main.js`: 1,204 lines vs `js/main.js`: 3,259 lines
+- `src/js/global-search.js` and `src/js/seo-enhancements.js` have no counterpart in `js/`
+
+It's unclear which directory is canonical. Changes to one are not reflected in the other, creating a maintenance trap.
+
+**Recommendation:** Determine canonical source, merge differences, and eliminate the duplicate directory. Add a build step if transformation is needed.
+
+---
+
 ## Part IV: Content Completeness & Quality
 
 ### CRITICAL Issue
@@ -1143,6 +1277,7 @@ The following issues should be created in the GitHub repository, organized by pr
 | 15 | Remove or cite fabricated empirical claims in tangent hyperplane articles | `bug`, `technical-accuracy` | ISSUE-TC32 |
 | 16 | Audit and consolidate 56 CI/CD workflow files | `architecture`, `ci-cd` | ISSUE-MA14 |
 | 17 | Fix Books section cross-reference mismatch (descriptions don't match linked content) | `bug`, `content` | ISSUE-TC43 |
+| 18 | Wire up or remove dead global search code (Cmd+K, search_index.json) | `bug`, `ui` | ISSUE-UX13 |
 
 ### Priority 2 (Major - Address Soon)
 
@@ -1183,6 +1318,11 @@ The following issues should be created in the GitHub repository, organized by pr
 | 42 | Complete LQR robustness proof or cite source in ch06 | `content`, `technical-accuracy` | ISSUE-TC47 |
 | 43 | Develop skeletal THC textbook chapters into substantive content | `content`, `quality` | ISSUE-CQ10 |
 | 44 | Audit Books Volume I chapter anchors to match descriptions | `content`, `quality` | ISSUE-CQ12 |
+| 45 | Define missing CSS custom properties (--border-light, --text-dark, etc.) | `bug`, `ui` | ISSUE-UX14 |
+| 46 | Remove legacy script.js preload hint from site-head.html | `performance`, `tech-debt` | ISSUE-UX15 |
+| 47 | Add noscript fallback for splash screen overlay | `bug`, `accessibility` | ISSUE-UX16 |
+| 48 | Fix manifest.json invalid icon sizes and 1.4MB logo | `bug`, `performance` | ISSUE-UX17 |
+| 49 | Resolve divergent src/js/ vs js/ files (bibliography.js, main.js) | `tech-debt`, `architecture` | ISSUE-MA22 |
 
 ### Priority 3 (Moderate - Address When Convenient)
 
@@ -1228,6 +1368,11 @@ The following issues should be created in the GitHub repository, organized by pr
 | 67 | Consolidate duplicate Python tool config (mypy.ini, ruff.toml into pyproject.toml) | `tech-debt` | ISSUE-MA21 |
 | 68 | Fix LTI controllability rank test misapplied to time-varying system | `content`, `technical-accuracy` | ISSUE-TC48 |
 | 69 | Resolve Volume 0 duplicate chapter files (LaTeX vs Quarto) | `tech-debt`, `content` | ISSUE-CQ11 |
+| 70 | Consolidate competing color systems (Okabe-Ito vs Modern Scientific) | `ui`, `tech-debt` | ISSUE-UX18 |
+| 71 | Fix MathJax triple-typeset causing unnecessary reflow | `performance`, `bug` | ISSUE-UX19 |
+| 72 | Resolve conflicting responsive breakpoints across CSS files | `bug`, `ui` | ISSUE-UX20 |
+| 73 | Fix search box min-width causing mobile horizontal overflow | `bug`, `ui` | ISSUE-UX21 |
+| 74 | Remove unnecessary polyfill.io script (security concern) | `security`, `tech-debt` | ISSUE-UX22 |
 
 ---
 
@@ -1236,10 +1381,10 @@ The following issues should be created in the GitHub repository, organized by pr
 | Category | Critical | Major | Moderate | Total |
 |----------|----------|-------|----------|-------|
 | Technical Claims | 8 | 17 | 23 | 48 |
-| UI/UX | 2 | 4 | 6 | 12 |
-| Maintainability | 4 | 8 | 9 | 21 |
+| UI/UX | 3 | 8 | 11 | 22 |
+| Maintainability | 4 | 9 | 9 | 22 |
 | Content Quality | 2 | 6 | 4 | 12 |
-| **Total** | **16** | **35** | **42** | **93** |
+| **Total** | **17** | **40** | **47** | **104** |
 
 ---
 
