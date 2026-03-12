@@ -34,14 +34,12 @@
 ## Issues Created
 
 
-## Completist Summary
+## Pragmatic Programmer Audit
+- **DRY Violations**: Found multiple duplicate code blocks (MAJOR). Review `docs/assessments/Assessment_Pragmatic_Programmer.md` for details.
 
+## Completist Audit
 - **Critical Gaps**: 81
 - **Feature Gaps (TODO)**: 16
 - **Content Gaps (Placeholders)**: 102
 - **Technical Debt**: 50
 - **Documentation Gaps**: 454
-
-## Pragmatic Programmer Summary
-
-- DRY Violations Found: 50
