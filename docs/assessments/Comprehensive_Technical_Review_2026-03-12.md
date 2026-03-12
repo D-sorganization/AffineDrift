@@ -8,9 +8,9 @@
 
 ## Executive Summary
 
-AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **64 issues** across four domains:
+AffineDrift is an ambitious Quarto-based website presenting novel applications of control theory, differential geometry, and nonlinear dynamics to golf swing biomechanics. The site contains ~146 QMD content files, 4 book volumes, multiple article series, and extensive supplementary resources. This review identifies **76 issues** across four domains:
 
-- **Technical Claims & Content Accuracy**: 30 issues (5 critical, 9 major, 16 moderate)
+- **Technical Claims & Content Accuracy**: 42 issues (7 critical, 13 major, 22 moderate)
 - **UI/UX & Website Implementation**: 12 issues (2 critical, 4 major, 6 moderate)
 - **Maintainability & Architecture**: 13 issues (3 critical, 5 major, 5 moderate)
 - **Content Completeness & Quality**: 9 issues (2 critical, 4 major, 3 moderate)
@@ -337,6 +337,121 @@ The Gramian-based reachable ellipsoid formula is stated without noting it is val
 **Severity:** MODERATE
 
 Equation tag `(7.1)` is used in a section labeled "8.1", indicating numbering carried over from a draft reorganization.
+
+---
+
+#### ISSUE-TC31: Unrevised AI Draft Text in Hybrid Tangent Spaces Article
+**File:** `articles/Tangent Hyperplane Articles/Advanced/Hybrid_Tangent_Spaces.qmd:581, 913, 969`
+**Severity:** CRITICAL
+
+Three instances of unedited AI draft self-correction text visible in the published article:
+- Line 581: "Wait, let me recalculate"
+- Line 913: "Wait, let me correct this"
+- Line 969: "Wait, this doesn't look right"
+
+These are clear evidence of AI-generated content that was not reviewed before publication. While the corrected results that follow are mathematically correct, the draft process text is unprofessional and damages credibility.
+
+**Recommendation:** Remove all "Wait, let me..." text and present only the corrected derivations.
+
+---
+
+#### ISSUE-TC32: Fabricated or Unsourced Empirical Claims in Tangent Hyperplane Articles
+**Files:** `Contraction_Tangent_Unification.qmd:817, 931-963`, `Residual-Aware_Control.qmd:25, 805-853`
+**Severity:** CRITICAL
+
+Multiple articles present specific numerical results as empirical data without any citation or data source:
+1. **Contraction article line 817**: "Professional golfers exhibit γ(t) > 0.5 throughout swing, while amateurs have γ(t) < 0.2" -- no citation or data source. Appears fabricated.
+2. **Contraction article lines 931-963**: Specific results for a "KUKA LWR 7-DOF arm" experiment with no citation. If simulated, labeled misleadingly.
+3. **Residual-Aware Control line 25**: Claims "experimental validation on quadrotor aerobatics, humanoid walking, and golf swing optimization" but all results appear to be simulations.
+4. **Residual-Aware Control lines 805-853**: References "ATRIAS bipedal robot" with specific numbers but no citation.
+
+**Recommendation:** Either cite real experimental sources or clearly label results as simulated. Remove unsourced quantitative claims about golfer performance.
+
+---
+
+#### ISSUE-TC33: Residual Bound Dimensional Error and Factor-of-10 Calculation Mistake
+**File:** `articles/Tangent Hyperplane Articles/Advanced/Residual-Aware_Control.qmd:159, 165-168`
+**Severity:** MAJOR
+
+Two errors in the pendulum residual calculation:
+1. Line 159: Hessian bound units stated as s⁻¹, should be s⁻² (dimensions are rad/s² per rad)
+2. Lines 165-168: The calculation yields ‖r‖ ≤ 0.0049 rad ≈ 0.28°, but the text claims "0.05 rad (2.8 degrees)" -- a factor of 10 error
+
+**Recommendation:** Fix both the dimensional units and the numerical result.
+
+---
+
+#### ISSUE-TC34: Riemann Curvature Tensor Conflated with Hessian Remainder
+**File:** `articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.qmd:749`
+**Severity:** MAJOR
+
+The equation uses R for both "residual" and "Riemann curvature tensor," and claims the second-order Taylor remainder involves the Riemann curvature. In ℝⁿ (flat space), the Riemann curvature tensor is identically zero. The relevant object is the Hessian of f, not the Riemann curvature of the state-space manifold. This is a significant conceptual conflation.
+
+---
+
+#### ISSUE-TC35: Residual Bound in Unified Thesis Uses Wrong Quantity
+**File:** `articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.qmd:728`
+**Severity:** MAJOR
+
+The residual bound ‖r‖ ≤ C ε² ∫‖A(t)‖dt uses the Jacobian norm ‖A(t)‖ instead of the Hessian norm ‖H_f‖. The Jacobian governs perturbation growth, not residual magnitude. The correct bound should involve the Hessian (as done in the Residual-Aware Control article).
+
+---
+
+#### ISSUE-TC36: Double Integrator ARE Solution Appears Numerically Incorrect
+**File:** `articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.qmd:547-558`
+**Severity:** MAJOR
+
+The double integrator example claims Q = diag(16, 1), R = 1 gives specific S∞ and eigenvalue values. For these weights, the standard ARE solution yields different gains than stated. The claimed gain K = [2, 2] does not correspond to the stated Q, R values.
+
+**Recommendation:** Verify the ARE solution numerically and correct the example.
+
+---
+
+#### ISSUE-TC37: "Exact" Language Inconsistency Across Tangent Hyperplane Series
+**Files:** Multiple tangent hyperplane articles
+**Severity:** MODERATE
+
+The parallel article series (parts 1-4 in `tangent-hyperplanes-series/`) hedges on "exactness" calling linearization an "excellent approximation" (part-1-geometry.qmd:48), while the Unified Thesis insists on "exact, not approximate." This internal contradiction undermines the core messaging. The Critics Corner acknowledges this issue but the proposed terminology fix has not been implemented.
+
+---
+
+#### ISSUE-TC38: Integral Accumulation Principle Stated Too Broadly
+**File:** `articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.qmd:1140-1155`
+**Severity:** MODERATE
+
+The callout claims Ψ(u₁ + u₂) = Ψ(u₁) + Ψ(u₂) when g is linear in u. But if the state trajectory x(t) depends nonlinearly on u, then the superposition breaks. The principle only holds for variations at fixed x(t), which the warning box partially addresses but the formal statement does not qualify.
+
+---
+
+#### ISSUE-TC39: Stochastic Contraction Metric Equation Non-Standard
+**File:** `articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.qmd:771`
+**Severity:** MODERATE
+
+The noise term ½ S G Σ Gᵀ S does not match standard stochastic Riccati equations, which have additive noise terms. If this is a nonstandard formulation, justification is needed.
+
+---
+
+#### ISSUE-TC40: Frechet Derivative Definition Error in Critics Corner
+**File:** `articles/Tangent Hyperplane Articles/CRITICS_CORNER.qmd:64`
+**Severity:** MODERATE
+
+The Frechet derivative is written as A = lim(δx→0) [f(x+δx) - f(x)] / ‖δx‖, which divides a vector by a scalar giving a vector, not a matrix. The correct definition is: A is the linear map satisfying ‖f(x+δx) - f(x) - Aδx‖ / ‖δx‖ → 0.
+
+---
+
+#### ISSUE-TC41: Unified Thesis Part III Explicitly Incomplete
+**File:** `articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.qmd:1281`
+**Severity:** MODERATE
+
+Line 1281 states: "This part is intentionally brief in the current version... Part III requires substantial expansion." This is a published document with an acknowledged incomplete section.
+
+---
+
+#### ISSUE-TC42: File Extension Mismatches in Cross-References
+**Files:** `TABLE_OF_CONTENTS.qmd:75-82`, `LAYMANS_TERMS_SUMMARY.qmd:209`
+**Severity:** MODERATE
+
+Multiple cross-references use `.md` extension when actual files are `.qmd`. References to `LAYMANS_TERMS_SUMMARY.md`, `TECHNICAL_ASSESSMENT.md`, `CRITICAL_REVIEW.md` will produce broken links.
 
 ---
 
@@ -834,12 +949,14 @@ The following issues should be created in the GitHub repository, organized by pr
 | 11 | Define canonical content hierarchy to resolve overlapping directories | `architecture`, `documentation` | ISSUE-MA03 |
 | 12 | Remove "coming soon" and placeholder content from live pages | `content`, `quality` | ISSUE-CQ01 |
 | 13 | Add missing figures and fix truncated text in inverse-dynamics.qmd | `content`, `quality` | ISSUE-CQ08 |
+| 14 | Remove unrevised AI draft text ("Wait, let me recalculate") from Hybrid Tangent Spaces | `bug`, `content` | ISSUE-TC31 |
+| 15 | Remove or cite fabricated empirical claims in tangent hyperplane articles | `bug`, `technical-accuracy` | ISSUE-TC32 |
 
 ### Priority 2 (Major - Address Soon)
 
 | # | Title | Labels | Related Issues Above |
 |---|-------|--------|---------------------|
-| 14 | Add ZTCF identifiability discussion to theory-part2 | `content`, `technical-accuracy` | ISSUE-TC04 |
+| 16 | Add ZTCF identifiability discussion to theory-part2 | `content`, `technical-accuracy` | ISSUE-TC04 |
 | 15 | Address dimensional inconsistency in DCR article | `content`, `technical-accuracy` | ISSUE-TC05 |
 | 16 | Clarify accessibility vs. controllability in Lie bracket discussions | `content`, `technical-accuracy` | ISSUE-TC06 |
 | 17 | Complete proofs in contraction-tangent unification article | `content`, `technical-accuracy` | ISSUE-TC07 |
@@ -848,7 +965,11 @@ The following issues should be created in the GitHub repository, organized by pr
 | 20 | Replace "Mechanical Orthogonality" with correct terminology | `content`, `technical-accuracy` | ISSUE-TC20 |
 | 21 | Add missing 3D pendulum examples to theory-part4 | `content` | ISSUE-TC21 |
 | 22 | Provide rigorous proof for DCR monotonic growth invariance theorem | `content`, `technical-accuracy` | ISSUE-TC22 |
-| 23 | Audit and reduce CSS codebase (~7,400 lines) | `tech-debt`, `ui` | ISSUE-UX03 |
+| 23 | Fix residual bound dimensional error and factor-of-10 mistake in Residual-Aware Control | `bug`, `technical-accuracy` | ISSUE-TC33 |
+| 24 | Fix Riemann curvature tensor conflation with Hessian in Unified Thesis | `content`, `technical-accuracy` | ISSUE-TC34 |
+| 25 | Fix residual bound using wrong quantity (Jacobian vs Hessian) in Unified Thesis | `content`, `technical-accuracy` | ISSUE-TC35 |
+| 26 | Verify and correct double integrator ARE solution in Contraction article | `bug`, `technical-accuracy` | ISSUE-TC36 |
+| 27 | Audit and reduce CSS codebase (~7,400 lines) | `tech-debt`, `ui` | ISSUE-UX03 |
 | 24 | Standardize page layouts across site | `ui`, `ux` | ISSUE-UX04 |
 | 25 | Implement dark mode | `enhancement`, `ui` | ISSUE-UX05 |
 | 26 | Redesign navigation for scalability | `enhancement`, `ux` | ISSUE-UX06 |
@@ -881,6 +1002,12 @@ The following issues should be created in the GitHub repository, organized by pr
 | 48 | Clean up self-contradicting air resistance calculation | `content` | ISSUE-TC28 |
 | 49 | Add linearization caveat to Gramian reachable ellipsoid in DCR | `content` | ISSUE-TC29 |
 | 50 | Fix equation numbering conflicts in superposition article | `content` | ISSUE-TC30 |
+| 51 | Resolve "exact" vs "excellent approximation" language across tangent hyperplane series | `content` | ISSUE-TC37 |
+| 52 | Qualify Integral Accumulation Principle to require fixed trajectory | `content`, `technical-accuracy` | ISSUE-TC38 |
+| 53 | Justify or correct stochastic contraction metric equation | `content`, `technical-accuracy` | ISSUE-TC39 |
+| 54 | Fix Frechet derivative definition error in Critics Corner | `bug` | ISSUE-TC40 |
+| 55 | Mark Unified Thesis Part III as draft/incomplete with visual indicator | `content` | ISSUE-TC41 |
+| 56 | Fix .md to .qmd file extension mismatches in cross-references | `bug` | ISSUE-TC42 |
 | 51 | Replace emoji icons with SVG/icon library on homepage | `ui` | ISSUE-UX07 |
 | 52 | Add breadcrumb navigation to nested articles | `ux`, `enhancement` | ISSUE-UX08 |
 | 53 | Enable table of contents globally, disable per-page as needed | `ux` | ISSUE-UX09 |
@@ -901,11 +1028,11 @@ The following issues should be created in the GitHub repository, organized by pr
 
 | Category | Critical | Major | Moderate | Total |
 |----------|----------|-------|----------|-------|
-| Technical Claims | 5 | 9 | 16 | 30 |
+| Technical Claims | 7 | 13 | 22 | 42 |
 | UI/UX | 2 | 4 | 6 | 12 |
 | Maintainability | 3 | 5 | 5 | 13 |
 | Content Quality | 2 | 4 | 3 | 9 |
-| **Total** | **12** | **22** | **30** | **64** |
+| **Total** | **14** | **26** | **36** | **76** |
 
 ---
 
