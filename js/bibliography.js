@@ -220,7 +220,8 @@
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
     try {
-      const response = await fetch("data/bibliography.json", {
+      const dataUrl = window.BIBLIOGRAPHY_DATA_URL || "data/bibliography.json";
+      const response = await fetch(dataUrl, {
         cache: "no-cache",
         signal: controller.signal,
       });
