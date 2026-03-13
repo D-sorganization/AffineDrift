@@ -1,0 +1,282 @@
+---
+title: "Ideomotor Theory and the Predictive Brain Model"
+description: "Cross-cutting treatment of ideomotor theory, predictive coding, and forward models as they relate to motor control and the Geometry of Motion framework."
+author: "AffineDrift Research"
+date: today
+---
+
+## Overview
+
+The brain does not react to the world — it predicts it. This insight, formalized over the
+past 30 years in predictive coding theory (Helmholtz, 1867; Rao & Ballard, 1999; Friston,
+2010), has profound implications for understanding motor control. A golfer does not compute
+a muscle-by-muscle control sequence during the swing. Instead, the brain generates a
+*prediction* of the desired sensory outcome (the sound, feel, and trajectory of impact),
+and the motor system executes whatever movements minimize the discrepancy between predicted
+and actual sensation.
+
+This document develops the ideomotor framework as a cross-cutting theme throughout the
+*Geometry of Motion* series.
+
+::: {.callout-note}
+## Core Thesis
+
+**Skilled motor control is forward-model prediction, not feedback error correction.**
+The mathematical structure of forward models maps directly onto the control-affine
+framework developed in Volume I: the drift term is the forward model's prediction of
+passive dynamics, and the control term corrects prediction errors.
+:::
+
+
+## Ideomotor Theory
+
+### Historical Development
+
+**William James (1890):** "Every representation of a movement awakens in some degree the
+actual movement which is its object." Actions are represented by their anticipated effects,
+not by their muscular kinematics. A tennis player imagines the ball trajectory, not the
+arm muscle sequence.
+
+**Greenwald (1970):** Ideomotor compatibility — responses are executed faster when the
+required movement matches the anticipated sensory effect. Experimental evidence that
+action planning operates in sensory space.
+
+**Hommel, Müsseler, Aschersleben & Prinz (2001):** Theory of Event Coding (TEC) —
+perception and action share the same representational currency (feature codes). Planning
+an action activates the sensory features of its expected consequences.
+
+### Mathematical Formulation
+
+Let the desired sensory outcome be $\mathbf{y}^* \in \mathcal{Y}$ (ball trajectory,
+sound of impact, proprioceptive feel). The forward model $\hat{f}$ predicts sensory
+outcome from state and action:
+
+$$\hat{\mathbf{y}} = \hat{f}(\mathbf{x}, \mathbf{u}).$$
+
+The ideomotor controller selects actions to minimize **sensory prediction error**:
+
+$$\mathbf{u}^* = \arg\min_{\mathbf{u}} \|\hat{f}(\mathbf{x}, \mathbf{u}) - \mathbf{y}^*\|^2.$$
+
+This is fundamentally different from tracking a state reference $\mathbf{x}^*(t)$. The
+motor system does not know (and does not care about) the intermediate joint angles —
+only about the sensory outcome.
+
+**Connection to Vol I:** In Chapter 7 (counterfactual analysis), we ask "what would
+have happened if $\mathbf{u} = 0$?" The ideomotor framework answers a dual question:
+"what action $\mathbf{u}$ produces the target outcome $\mathbf{y}^*$?" Both questions
+require inverting the forward dynamics.
+
+
+## Predictive Coding and Active Inference
+
+### Hierarchical Prediction
+
+Friston's **active inference** framework (2010) extends ideomotor theory to a full
+probabilistic model. The brain maintains a generative model $p(\mathbf{y} | \mathbf{x}, \mathbf{u})$
+and seeks actions that minimize **free energy** $F$:
+
+$$F = \underbrace{\mathbb{E}_q[\log q(\mathbf{x}) - \log p(\mathbf{x} | \mathbf{y})]}_{\text{perception: update beliefs}} + \underbrace{\mathbb{E}_q[-\log p(\mathbf{y})]}_{\text{action: change world}}.$$
+
+Minimizing $F$ simultaneously:
+1. Updates the brain's model of the current state (perception)
+2. Selects actions to make observations conform to predictions (action)
+
+This is a unified theory of perception AND action from a single principle.
+
+### Prediction Error as Control Signal
+
+In predictive coding, **prediction errors** are the only signals that propagate forward
+in the brain. If the predicted sensory consequence matches actual sensation, no signal is
+sent. If they differ, a **precision-weighted prediction error** travels up the hierarchy.
+
+The precision (inverse variance) weighting is critical: high-precision predictions (the
+familiar "muscle memory" of a skilled golfer) suppress prediction errors at lower levels,
+allowing top-down planning to dominate. Low-precision predictions (in a novel situation)
+allow bottom-up signals to correct the model.
+
+**Mathematical structure:** prediction error at level $l$:
+$$\boldsymbol{\varepsilon}_l = \mathbf{y}_l - \hat{f}_l(\mathbf{x}_{l+1}).$$
+The control signal at level $l$ is the precision-weighted error:
+$$\mathbf{u}_l = \Pi_l \boldsymbol{\varepsilon}_l,$$
+where $\Pi_l$ is the precision (inverse covariance) matrix — which is exactly the
+cost matrix $R^{-1}$ in LQR control.
+
+
+## Forward Models in Motor Control
+
+### Wolpert's MOSAIC Framework
+
+Wolpert & Kawato (1998) proposed that the cerebellum contains a population of paired
+**forward-inverse model modules** (MOSAIC: Modular Selection and Identification for
+Control). Each module:
+- **Forward model:** predicts the next state $\hat{\mathbf{x}}_{t+1}$ given current
+  state $\mathbf{x}_t$ and command $\mathbf{u}_t$
+- **Inverse model:** maps desired next state $\mathbf{x}_{t+1}^*$ to required command $\mathbf{u}_t$
+
+Multiple modules compete (soft selection based on prediction error), and the best-fitting
+module takes control. This is **mixture-of-experts** in modern machine learning terminology.
+
+### Connection to Drift-Control Decomposition
+
+The drift-control decomposition of Volume I maps naturally onto the forward model:
+
+$$\dot{\mathbf{x}} = f(\mathbf{x}) + g(\mathbf{x})\mathbf{u}$$
+
+The **drift** $f(\mathbf{x})$ is the forward model's prediction of what happens
+**without** control (passive dynamics). The **control** $g(\mathbf{x})\mathbf{u}$
+is the correction term.
+
+An expert golfer's forward model has learned $f(\mathbf{x})$ so accurately that control
+is only needed for small corrections. This is why experts use less muscular effort for
+the same outcome — they exploit the drift (passive dynamics of gravity, elastic energy,
+inertial forces) and control only deviations.
+
+
+## Implications for Skill Acquisition
+
+### Bernstein's Three Stages Revisited
+
+Nikolai Bernstein's (1967) classic description of motor learning maps onto predictive
+coding:
+
+1. **Freezing degrees of freedom:** Reducing uncertainty by eliminating variability.
+   In predictive coding terms: using high-precision priors to constrain the action space.
+
+2. **Freeing degrees of freedom:** Progressively allowing more joints to participate.
+   In predictive coding terms: lowering precision at lower levels, allowing exploration.
+
+3. **Exploiting degrees of freedom:** Using passive dynamics and elastic energy.
+   In predictive coding terms: the forward model has learned to *predict* passive dynamics
+   and the control signal approaches zero (pure drift utilization).
+
+### Differential Learning (Schöllhorn)
+
+Schöllhorn's **differential learning** (2000) deliberately introduces random perturbations
+to prevent the learner from forming stable attractors. This forces continuous updating of
+the forward model, preventing premature convergence to a suboptimal local minimum.
+
+**Mathematical interpretation:** differential learning maintains high entropy in the
+action-effect distribution, preventing precision (confidence) from concentrating too
+early in training.
+
+
+## Cross-Volume Treatment
+
+| Volume | Ideomotor / Predictive Brain Connection |
+|--------|----------------------------------------|
+| Vol 0 | Configuration space as the representation of sensory outcomes |
+| Vol I, Ch 7 | Counterfactual analysis = asking the ideomotor question |
+| Vol II | Forward kinematics = forward model for end-effector position |
+| Vol III | Optimal control = action selection to minimize predictive error |
+| Vol IV | Neural forward models; learning $f(\mathbf{x})$ from experience |
+
+
+## Python: Forward Model Simulation
+
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+
+
+class ForwardModel:
+    """
+    Learned forward model: predicts next state given current state and action.
+    Uses a simple linear model for demonstration.
+    """
+
+    def __init__(self, A, B):
+        """
+        Initialize with true dynamics matrices.
+        In practice, these would be learned from experience.
+        """
+        self.A = A  # Drift Jacobian
+        self.B = B  # Control matrix
+
+    def predict(self, x, u, dt=0.01):
+        """Predict next state using learned forward model (Euler integration)."""
+        x_dot = self.A @ x + self.B @ u
+        return x + dt * x_dot
+
+    def prediction_error(self, x_actual, x_predicted):
+        """Compute prediction error as Euclidean distance."""
+        return np.linalg.norm(x_actual - x_predicted)
+
+
+class IdeomotorController:
+    """
+    Ideomotor controller: selects action to minimize sensory prediction error.
+    Target is specified in output space (sensory consequences), not state space.
+    """
+
+    def __init__(self, forward_model, C, Q_sens, R_ctrl):
+        """
+        Parameters
+        ----------
+        forward_model : ForwardModel
+            Learned forward model of dynamics
+        C : np.ndarray
+            Output matrix y = C x (sensory consequences)
+        Q_sens : np.ndarray
+            Sensory error cost matrix
+        R_ctrl : np.ndarray
+            Control effort cost matrix
+        """
+        self.model = forward_model
+        self.C = C
+        self.Q = Q_sens
+        self.R = R_ctrl
+
+    def select_action(self, x, y_star, n_iter=10, lr=0.1):
+        """
+        Gradient descent on sensory prediction error.
+
+        J(u) = (C(x + dt*f(x,u)) - y*)' Q (C(x + dt*f(x,u)) - y*) + u' R u
+        """
+        u = np.zeros(self.model.B.shape[1])
+        for _ in range(n_iter):
+            x_pred = self.model.predict(x, u)
+            y_pred = self.C @ x_pred
+            sens_error = y_pred - y_star
+            # Gradient w.r.t. u (chain rule through forward model)
+            grad = (self.model.B.T @ self.C.T @ self.Q @ sens_error
+                    + self.R @ u)
+            u = u - lr * grad
+        return u
+
+
+# Example: 2-DoF pendulum with position as sensory output
+A = np.array([[0, 1], [-9.81, -0.5]])
+B = np.array([[0], [1.0]])
+C = np.array([[1, 0]])  # Only measure angle (sensory output)
+
+model = ForwardModel(A, B)
+ctrl = IdeomotorController(model, C,
+                           Q_sens=np.array([[10.0]]),
+                           R_ctrl=np.array([[0.1]]))
+
+x = np.array([0.3, 0.0])  # Current state: displaced
+y_star = np.array([0.0])  # Desired sensory consequence: zero angle
+
+u = ctrl.select_action(x, y_star)
+print(f"Ideomotor action: u = {u[0]:.3f} N·m")
+print(f"Current angle: {np.degrees(x[0]):.1f}°")
+print(f"Prediction error before: {abs(C @ x - y_star)[0]:.3f} rad")
+x_next = model.predict(x, u)
+print(f"Prediction error after:  {abs(C @ x_next - y_star)[0]:.3f} rad")
+```
+
+
+## Summary
+
+Ideomotor theory and predictive coding provide a cognitive science grounding for the
+mathematical framework of Volume I:
+
+- **Action planning in sensory space** ↔ output-space optimal control
+- **Forward model** ↔ drift term $f(\mathbf{x})$ of control-affine dynamics
+- **Prediction error** ↔ LQR cost-to-go gradient
+- **Precision weighting** ↔ cost matrix $Q$ and $R$ in optimal control
+- **Bernstein's stages** ↔ progressive unfreezing of DoF = reducing precision constraints
+
+The expert performer is one whose forward model is accurate enough that control signals
+approach zero — the motion runs on passive dynamics alone, with control only correcting
+small prediction errors.
