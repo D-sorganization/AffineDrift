@@ -24,7 +24,7 @@ def main() -> int:
         logger.error("project.render is not a list")
         return 1
 
-    required_rules = {"*.qmd", "articles/**/*.qmd"}
+    required_rules = {"*.qmd", "articles/**/*.qmd", "pages/**/*.qmd", "resources/**/*.qmd"}
     missing = [rule for rule in required_rules if rule not in render_rules]
     if missing:
         logger.error("Missing required render rules:")
