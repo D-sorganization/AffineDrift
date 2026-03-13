@@ -309,11 +309,15 @@ A system with DCR$_2 = 47.3$ might have DCR$_\infty = 89.2$ or DCR$_M = 12.1$. T
 
 Here is the key insight: while the numerical value of DCR depends on the norm, the *direction and magnitude of change* does not.
 
-**Theorem (Monotonic Growth Invariance):** Across the downswing, DCR *increases monotonically* under *any* norm. More precisely: if drift components grow and control components shrink under one norm, they do so under all norms.
+**Conjecture (Monotonic Growth Invariance):** Across the downswing, DCR *increases monotonically* under *any* norm.
 
-*Proof:* The drift magnitude $\|f_{acc}\|$ grows monotonically with $\|\dot{q}\|^2$ because Coriolis and centrifugal terms scale as $\|\dot{q}\|^2$, and velocity strictly increases through the downswing. Simultaneously, the control magnitude $\|g_{acc}u\|$ is bounded by physiological torque limits, which typically *decrease* during peak velocity. Now consider any norm. A norm is a scaling of Euclidean measurement—stretching or compressing different directions. But if every component of drift increases and every component of control decreases, then the ratio of *any* norm of drift to *any* norm of control must increase. This follows from the squeeze theorem applied componentwise: there is no norm under which a growing numerator and shrinking denominator produce a shrinking ratio.
+::: {.callout-warning}
+## Status: Conjecture, Not Proven Theorem
 
-Therefore, **the conclusion—that drift dominates control by two to three orders of magnitude—holds under every norm**.
+The intuitive argument is: drift magnitude grows with $\|\dot{q}\|^2$ (Coriolis/centrifugal scaling) while physiological torque capacity decreases under peak velocity, so the ratio should grow under any norm. However, this reasoning assumes **component-wise** monotonicity — that every drift component grows and every control component shrinks — which is not necessarily true. Individual components can increase or decrease in complex ways along a nonlinear trajectory. A rigorous proof would require either (a) showing the argument holds for the specific norm families of interest, or (b) providing empirical evidence from multi-subject simulation data showing the monotonic trend is consistent across norm choices. Until such a proof or validation is available, this claim should be treated as a well-motivated empirical observation rather than a mathematical theorem.
+:::
+
+The qualitative claim — that DCR increases dramatically from backswing to impact — is supported by the planar model simulations cited in this article. The conjecture that this trend is norm-independent follows from physical reasoning but remains to be formally verified.
 
 #### The Physically Natural Norm: Inertia-Weighted
 

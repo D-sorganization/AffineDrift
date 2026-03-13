@@ -274,13 +274,13 @@ $$\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k)
 
 matching the analytical identity predicted by the affine decomposition.
 
-This numerical equality is a strong validation of the framework, showing that:
+::: {.callout-warning}
+## Approximation Note on the Subtraction Identity
 
-$$F_{\mathrm{input}}(t_k)
-  = 
-  F_{\mathrm{config}}(t_k)
-  \quad\text{when evaluated as}\quad
-  F_{\mathrm{total}} - F_{\mathrm{ZTCF}}.$$
+The identity $\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k) = \tau_{\mathrm{ZVCF}}(t_k)$ is **exact only at $t = t_0$** (the initial instant). After $t_0$, the ZTCF trajectory diverges from the actual trajectory — $F_{\mathrm{ZTCF}}(t)$ is evaluated along a *different* state path than $F_{\mathrm{total}}(t)$. The subtraction mixes forces from two trajectories at different states, which is not generally equal to $F_{\mathrm{ZVCF}}(t)$ at the *actual* trajectory state. The numerical near-equality observed in simulation is explained by the fact that the ZTCF trajectory remains close to the actual trajectory over short time windows, making the approximation tight. This is not a flaw in the method — it is inherent to counterfactual reasoning — but it means the result should be interpreted as "the instantaneous counterfactual attribution at each step," not as a globally exact algebraic identity.
+:::
+
+This numerical result confirms correct implementation of the counterfactual algorithms — the discrete-time "kill switch" logic correctly preserves the near-equality that the affine theory predicts over short time steps.
 
 ### Practical considerations
 
