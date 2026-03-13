@@ -61,7 +61,14 @@ jobs:
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
       - name: Verify frontend asset sync
-        run: python3 scripts/sync_frontend_assets.py --check
+        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
+        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
+        run: |
+          if [ -d "docs" ] && [ -f "docs/index.html" ]; then
+            python3 scripts/sync_frontend_assets.py --check
+          else
+            echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
+          fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
       - name: Validate Article Frontmatter
@@ -86,6 +93,8 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
       - name: Verify DRY Shared-Helper Adoption
         run: python3 scripts/check_dry_adoption.py
+      - name: Verify Bibliography Quality
+        run: python3 scripts/check_bibliography_quality.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -96,7 +105,14 @@ jobs:
         run: python -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
-        run: python -m src.tools.check_site_health --fail-on broken
+        # docs/ HTML is no longer committed (issue #1419); site health runs in
+        # deploy-website.yml after Quarto renders the site. Skip here if no HTML.
+        run: |
+          if [ -f "docs/index.html" ]; then
+            python -m src.tools.check_site_health --fail-on broken
+          else
+            echo "docs/ HTML not present (expected: built by deploy workflow). Skipping site health check."
+          fi
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
       # Non-blocking: Script not present in all repos
@@ -188,11 +204,17 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
       - name: Run E2E Smoke Tests (Critical Flows)
+        # docs/ HTML is no longer committed (issue #1419); e2e tests require a
+        # built site. Skip here if docs/index.html is absent (built by deploy workflow).
         run: |
-          npx playwright test \
-            --project=chromium \
-            --retries=0 \
-            tests/e2e/smoke.spec.js
+          if [ -f "docs/index.html" ]; then
+            npx playwright test \
+              --project=chromium \
+              --retries=0 \
+              tests/e2e/smoke.spec.js
+          else
+            echo "docs/ not present (expected: built by deploy workflow). Skipping e2e smoke tests."
+          fi
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
