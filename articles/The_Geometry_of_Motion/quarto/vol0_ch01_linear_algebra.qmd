@@ -1,15 +1,10 @@
-% ==========================================================================
-%  Chapter 1: A Primer on Linear Algebra
-% ==========================================================================
+---
+title: "Chapter 1: A Primer on Linear Algebra"
+---
 
-# A Primer on Linear Algebra
+# A Primer on Linear Algebra {#sec-linear-algebra}
 
-\label{ch:linear_algebra}
-
-\epigraph{%
-  You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
-}{}
-
+> *You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.*
 
 ## Vectors and Matrices
 
@@ -67,6 +62,201 @@ These magical vectors are called **Eigenvectors** ($\bm{v}$), and the amount the
    M\bm{v} = \lambda\bm{v}
 \end{equation}
 
-Why do we care? 
-If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin. 
+Why do we care?
+If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin.
 If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate if the system will explode out of control ($\lambda > 0$) or safely stabilize back to resting ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.
+
+::: {.callout-tip}
+## Key Insight: Eigenvalues and Stability
+
+For a linear system $\dot{\bm{x}} = A\bm{x}$, the real part of each eigenvalue $\lambda_i$ of $A$ determines stability:
+
+- $\text{Re}(\lambda_i) < 0$ for all $i$: the system is **asymptotically stable** (trajectories converge to zero)
+- $\text{Re}(\lambda_i) > 0$ for any $i$: the system is **unstable** (trajectories diverge)
+- $\text{Re}(\lambda_i) = 0$: marginal stability (requires further analysis)
+:::
+
+
+## Linear Independence and Span {#sec-linear-independence}
+
+A set of vectors $\{\bm{v}_1, \bm{v}_2, \ldots, \bm{v}_k\}$ is **linearly independent** if no vector in the set can be written as a combination of the others. Formally:
+
+$$c_1 \bm{v}_1 + c_2 \bm{v}_2 + \cdots + c_k \bm{v}_k = \bm{0} \implies c_1 = c_2 = \cdots = c_k = 0.$$
+
+The **span** of a set of vectors is the collection of all possible linear combinations you can form from them. If $n$ linearly independent vectors span $\mathbb{R}^n$, they form a **basis**—a minimal complete description of that space.
+
+**Why this matters for robotics:** When a robot arm has $n$ joints, its joint velocities live in $\mathbb{R}^n$. If some combinations of joint velocities produce no end-effector motion (a singularity), those joint velocity vectors are *linearly dependent* with the others—the arm has "run out of independent directions."
+
+
+## Matrix Rank and the Four Fundamental Subspaces {#sec-rank}
+
+The **rank** of a matrix $M \in \mathbb{R}^{m \times n}$ is the number of linearly independent rows (equivalently, columns). It tells you how much independent information $M$ transmits.
+
+For a matrix $M$, there are four fundamental subspaces:
+
+| Subspace | Definition | Physical meaning |
+|----------|-----------|-----------------|
+| Column space $\mathcal{C}(M)$ | All possible outputs $M\bm{v}$ | Reachable configurations |
+| Null space $\mathcal{N}(M)$ | Inputs $\bm{v}$ with $M\bm{v} = 0$ | Unobservable/uncontrollable modes |
+| Row space $\mathcal{C}(M^\top)$ | All possible inputs that affect output | Observable input directions |
+| Left null space $\mathcal{N}(M^\top)$ | Outputs unreachable from any input | Unobservable outputs |
+
+**The rank-nullity theorem** connects these:
+$$\text{rank}(M) + \text{nullity}(M) = n,$$
+where $\text{nullity}(M) = \dim \mathcal{N}(M)$.
+
+
+## Singular Value Decomposition {#sec-svd}
+
+The **Singular Value Decomposition (SVD)** is the most powerful factorization in applied linear algebra. Every matrix $M \in \mathbb{R}^{m \times n}$ can be written as:
+
+$$M = U \Sigma V^\top,$$
+
+where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices (pure rotations/reflections), and $\Sigma \in \mathbb{R}^{m \times n}$ is diagonal with non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$ called **singular values**.
+
+The singular values quantify how much $M$ stretches space in each independent direction. A zero singular value indicates a direction that $M$ collapses entirely—a singularity.
+
+::: {.callout-note}
+## SVD in Robotics: The Jacobian Pseudoinverse
+
+When computing inverse kinematics for a robot, we need to invert the Jacobian $J$. If $J$ is not square or is near-singular, we use the **Moore-Penrose pseudoinverse**:
+
+$$J^+ = V \Sigma^+ U^\top,$$
+
+where $\Sigma^+$ replaces each nonzero singular value $\sigma_i$ with $1/\sigma_i$ and leaves zeros as zeros. This gives the minimum-norm solution and is numerically stable even near singularities.
+:::
+
+
+## Worked Examples {#sec-examples}
+
+### Example 1.1: Rotation Matrix as Linear Map
+
+The $2 \times 2$ rotation matrix that rotates vectors by angle $\theta$ counterclockwise is:
+
+$$R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}.$$
+
+**Verification that it preserves lengths:** For any $\bm{v} \in \mathbb{R}^2$:
+$$\|R\bm{v}\|^2 = \bm{v}^\top R^\top R \bm{v} = \bm{v}^\top I \bm{v} = \|\bm{v}\|^2,$$
+since $R^\top R = I$ (orthogonality). This shows rotation matrices preserve all distances—they are **isometries**.
+
+**Eigenvalues:** The eigenvalues of $R(\theta)$ are $e^{\pm i\theta}$—complex numbers on the unit circle. For $\theta \neq 0, \pi$, there are no real eigenvectors, confirming that rotation (in 2D) has no invariant direction.
+
+### Example 1.2: Dot Product for Joint Torque Projection
+
+A golf club shaft exerts a force $\bm{F} = [0, -10, 0]$ N (downward) at a point $\bm{r} = [0.5, 0, 0]$ m from the wrist joint. The torque about the wrist is:
+
+$$\bm{\tau} = \bm{r} \times \bm{F} = \begin{bmatrix} 0.5 \\ 0 \\ 0 \end{bmatrix} \times \begin{bmatrix} 0 \\ -10 \\ 0 \end{bmatrix} = \begin{bmatrix} (0)(0) - (0)(-10) \\ (0)(0) - (0.5)(0) \\ (0.5)(-10) - (0)(0) \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ -5 \end{bmatrix} \text{ N·m}.$$
+
+The torque is $5$ N·m about the $-z$ axis (into the page for a standard right-handed frame), correctly representing a wrist-flexion moment.
+
+### Example 1.3: Eigenvalue Stability Analysis
+
+Consider a simplified pendulum linearized at the upright (unstable) equilibrium:
+
+$$A = \begin{bmatrix} 0 & 1 \\ g/L & 0 \end{bmatrix},$$
+
+where $g = 9.81$ m/s² and $L = 1$ m. The eigenvalues satisfy:
+
+$$\lambda^2 - g/L = 0 \implies \lambda = \pm\sqrt{g/L} \approx \pm 3.13.$$
+
+Since $\lambda_1 \approx +3.13 > 0$, the equilibrium is **unstable**—small perturbations grow exponentially. A pendulum balanced on its tip will fall. The positive eigenvalue tells you the time-scale: perturbations double roughly every $\ln(2)/3.13 \approx 0.22$ seconds.
+
+
+## Python Implementations {#sec-python}
+
+```python
+import numpy as np
+
+# --- Vectors and basic operations ---
+v = np.array([1.0, 2.0, 3.0])
+w = np.array([4.0, 5.0, 6.0])
+
+dot_product = np.dot(v, w)          # 32.0
+cross_product = np.cross(v, w)      # [-3, 6, -3]
+v_norm = np.linalg.norm(v)         # sqrt(14) ≈ 3.742
+
+print(f"Dot product: {dot_product}")
+print(f"Cross product: {cross_product}")
+print(f"Norm of v: {v_norm:.3f}")
+```
+
+```python
+# --- Eigenvalue decomposition ---
+A = np.array([[0., 1.],
+              [9.81, 0.]])   # Inverted pendulum (L=1m)
+
+eigenvalues, eigenvectors = np.linalg.eig(A)
+print(f"Eigenvalues: {eigenvalues}")
+# [3.13, -3.13] — one positive (unstable mode), one negative
+
+# Stability check
+if np.all(np.real(eigenvalues) < 0):
+    print("System is asymptotically stable")
+else:
+    print(f"System is UNSTABLE: max Re(λ) = {np.max(np.real(eigenvalues)):.3f}")
+```
+
+```python
+# --- Singular Value Decomposition ---
+# Robot Jacobian (3 end-effector DOF, 4 joint DOF)
+J = np.array([[1.0, 0.5, 0.2, 0.0],
+              [0.0, 1.0, 0.8, 0.3],
+              [0.0, 0.0, 1.0, 0.9]])
+
+U, sigma, Vt = np.linalg.svd(J, full_matrices=False)
+print(f"Singular values: {sigma}")
+# Smallest singular value near zero → near-singular configuration
+
+# Moore-Penrose pseudoinverse
+J_pinv = np.linalg.pinv(J)   # V Σ⁺ Uᵀ
+print(f"Pseudoinverse shape: {J_pinv.shape}")  # (4, 3)
+```
+
+```python
+# --- 2D Rotation matrix ---
+def rotation_2d(theta_deg):
+    theta = np.radians(theta_deg)
+    return np.array([[np.cos(theta), -np.sin(theta)],
+                     [np.sin(theta),  np.cos(theta)]])
+
+R45 = rotation_2d(45)
+v = np.array([1.0, 0.0])
+v_rotated = R45 @ v
+print(f"Rotated vector: {v_rotated}")    # [0.707, 0.707]
+print(f"Length preserved: {np.linalg.norm(v_rotated):.6f}")  # 1.000000
+```
+
+
+## Exercises {#sec-exercises}
+
+**1.1** A force sensor on a robot wrist reads $\bm{F} = [3, -4, 0]$ N. The wrist joint axis is $\hat{\bm{z}} = [0, 0, 1]$. What is the magnitude of the force component perpendicular to the joint axis? *(Hint: decompose $\bm{F}$ into components parallel and perpendicular to $\hat{\bm{z}}$.)*
+
+**1.2** A $2 \times 2$ matrix has eigenvalues $\lambda_1 = -2 + 3i$ and $\lambda_2 = -2 - 3i$. Is the corresponding linear system stable? What is the frequency of oscillation (in rad/s)?
+
+**1.3** Compute the rank of the following matrix and identify a basis for its null space:
+$$M = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 6 \\ 1 & 1 & 1 \end{bmatrix}.$$
+
+**1.4 (Python)** Using `numpy`, compute the SVD of the $3 \times 3$ inertia matrix of a uniform rectangular plate with dimensions $a=0.4$ m, $b=0.3$ m, mass $m=2$ kg:
+$$I = \frac{m}{12}\begin{bmatrix} b^2 & 0 & 0 \\ 0 & a^2 & 0 \\ 0 & 0 & a^2+b^2 \end{bmatrix}.$$
+What are the principal moments of inertia? Which axis is easiest to spin about?
+
+**1.5 (Challenge)** For the double pendulum, the linearized dynamics matrix near the downward equilibrium has the form:
+$$A = \begin{bmatrix} 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \\ -g(m_1+m_2)/(m_1 L_1) & g m_2/(m_1 L_1) & 0 & 0 \\ g(m_1+m_2)/(m_1 L_2) & -g(m_1+m_2)/(m_1 L_2) & 0 & 0 \end{bmatrix}.$$
+With $m_1 = m_2 = 1$ kg, $L_1 = L_2 = 0.5$ m, $g = 9.81$ m/s²: compute the eigenvalues numerically in Python and determine the natural frequencies of the two normal modes.
+
+
+## Summary {#sec-summary-ch1}
+
+This chapter established the fundamental vocabulary of linear algebra needed throughout the book:
+
+| Concept | Definition | Role in control/robotics |
+|---------|-----------|--------------------------|
+| Vector | Ordered array of numbers | State, velocity, force |
+| Matrix | 2D array; a linear map | Dynamics, rotation, inertia |
+| Dot product | Scalar alignment measure | Energy, projection, sensing |
+| Cross product | Perpendicular vector | Torque, angular velocity |
+| Eigenvector/value | Invariant direction / stretch | Natural modes, stability |
+| Rank | Independent information count | Controllability, observability |
+| SVD | $U\Sigma V^\top$ factorization | Pseudoinverse, conditioning |
+
+The key takeaway: **eigenvalues determine whether a system is stable or unstable**; **SVD reveals which directions a system can and cannot control**. These two facts drive almost every design decision in modern robotics control.

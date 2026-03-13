@@ -17,6 +17,40 @@ format:
     theme: cosmo
     toc: true
     number-sections: true
+    include-in-header:
+      text: |
+        <script>
+        window.MathJax = {
+          tex: {
+            macros: {
+              // Vector/matrix notation
+              bm: ["\\boldsymbol{#1}", 1],
+              mat: ["\\mathbf{#1}", 1],
+              norm: ["\\left\\lVert #1 \\right\\rVert", 1],
+              // Number sets
+              Reals: "\\mathbb{R}",
+              R: "\\mathbb{R}",
+              // State-space shorthand
+              state: "\\mathbf{x}",
+              dx: "\\delta\\mathbf{x}",
+              x: "\\mathbf{x}",
+              control: "\\mathbf{u}",
+              uvec: "\\mathbf{u}",
+              statespace: "\\mathcal{X}",
+              configspace: "\\mathcal{Q}",
+              traj: "\\xi",
+              // Lie groups / screw theory
+              SO: ["\\mathrm{SO}(#1)", 1],
+              SE: ["\\mathrm{SE}(#1)", 1],
+              so: ["\\mathfrak{so}(#1)", 1],
+              se: ["\\mathfrak{se}(#1)", 1],
+              screw: "\\mathcal{S}",
+              twist: "\\mathcal{V}",
+              wrench: "\\mathcal{F}"
+            }
+          }
+        };
+        </script>
   pdf:
     documentclass: book
     keep-tex: true
