@@ -1240,7 +1240,7 @@ The equations of motion can be written as
 
 $$
 M(q) \ddot q + C(q,\dot q)\dot q + g(q) = \tau,
-\tag{7.1}
+\tag{8.1}
 $$
 
 with $q = [q_1;q_2]^\top$, $\tau = [\tau_1;\tau_2]^\top$.
@@ -1253,7 +1253,7 @@ M(q) =
 a + 2b \cos q_2 & d + b \cos q_2 \\
 d + b \cos q_2 & d
 \end{bmatrix},
-\tag{7.2}
+\tag{8.2}
 $$
 
 where
@@ -1275,7 +1275,7 @@ C(q,\dot q)\dot q =
 * b \sin q_2, (2\dot q_1 \dot q_2 + \dot q_2^2) \\
   b \sin q_2, \dot q_1^2
   \end{bmatrix},
-  \tag{7.3}
+  \tag{8.3}
 $$
 
 and the gravity vector
@@ -1286,14 +1286,14 @@ g(q) =
 (m_1 c_1 + m_2 l_1)g \cos q_1 + m_2 c_2 g \cos(q_1 + q_2) \\
 m_2 c_2 g \cos(q_1 + q_2)
 \end{bmatrix}.
-\tag{7.4}
+\tag{8.4}
 $$
 
 Rewrite (7.1) as
 
 $$
 \ddot q = - M(q)^{-1}\big(C(q,\dot q)\dot q + g(q)\big) + M(q)^{-1}\tau.
-\tag{7.5}
+\tag{8.5}
 $$
 
 At a fixed $(q,\dot q)$, define:
@@ -1310,14 +1310,14 @@ Then
 
 $$
 \ddot q = \ddot q^{(\text{drift})}(q,\dot q) + L(q,\dot q) \tau.
-\tag{7.6}
+\tag{8.6}
 $$
 
 As before, if we decompose
 
 $$
 \tau = \tau^{(g)} + \tau^{(c)} + \tau^{(d)},
-\tag{7.7}
+\tag{8.7}
 $$
 
 corresponding to gravity compensation, control, and disturbance, we have
@@ -1327,7 +1327,7 @@ $$
 + L(q,\dot q) \tau^{(g)}
 + L(q,\dot q) \tau^{(c)}
 + L(q,\dot q) \tau^{(d)}.
-  \tag{7.8}
+  \tag{8.8}
 $$
 
 Each term $L(q,\dot q) \tau^{(i)}$ is the **instantaneous acceleration contribution** of the corresponding torque component.
@@ -1353,21 +1353,21 @@ $$
 \begin{bmatrix}
 \dot q_1 \ \dot q_2
 \end{bmatrix},
-\tag{7.9}
+\tag{8.9}
 $$
 
 so that the power duality implies
 
 $$
 \tau = J(q)^\top f_e.
-\tag{7.10}
+\tag{8.10}
 $$
 
 Decompose the end-effector force as
 
 $$
 f_e = f_e^{(1)} + f_e^{(2)},
-\tag{7.11}
+\tag{8.11}
 $$
 
 with, say,
@@ -1381,7 +1381,7 @@ $$
 \tau
 = J(q)^\top f_e^{(1)} + J(q)^\top f_e^{(2)}
 = \tau^{(1)} + \tau^{(2)}.
-\tag{7.12}
+\tag{8.12}
 $$
 
 Substituting into (7.5),
@@ -1391,7 +1391,7 @@ $$
 = \ddot q^{(\text{drift})}
 + L(q,\dot q) \tau^{(1)}
 + L(q,\dot q) \tau^{(2)}.
-  \tag{7.13}
+  \tag{8.13}
 $$
 
 If we are interested in the acceleration "due to environment forces" versus "due to commanded forces," we can compute each term separately at a given $(q,\dot q)$:
@@ -1400,7 +1400,7 @@ $$
 \Delta \ddot q^{(1)} = L(q,\dot q),J(q)^\top f_e^{(1)},
 \quad
 \Delta \ddot q^{(2)} = L(q,\dot q),J(q)^\top f_e^{(2)}.
-\tag{7.14}
+\tag{8.14}
 $$
 
 This is a direct screw-theoretic superposition: the **total acceleration is the sum of accelerations induced by separate wrenches**.
