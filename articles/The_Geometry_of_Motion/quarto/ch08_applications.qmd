@@ -211,8 +211,15 @@ M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
 \end{bmatrix}.
 \end{equation}
 
-(Note: The third eigenvalue becomes small but remains positive, indicating the system
-is on the edge of a kinematic singularity.)
+\begin{remark}[Sign Error / Singularity Warning]
+The $(3,3)$ entry $-0.67 < 0$ implies this matrix is \textbf{not} positive definite.
+This indicates either a sign error in the numerical example or that the chosen
+configuration is near a kinematic singularity where $M_{\eta\eta}^{-1}$ is
+ill-conditioned. For a positive definite Schur complement (required for $H_{qq}$ to
+be well-defined as a mobility tensor), all diagonal entries and all eigenvalues must
+be positive. In practice, one should verify these values numerically for the actual
+robot configuration before interpreting $H_{qq}$.
+\end{remark}
 
 Inverting to get $H_{qq}$:
 \begin{equation}

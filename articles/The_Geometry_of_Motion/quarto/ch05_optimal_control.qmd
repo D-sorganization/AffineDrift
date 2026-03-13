@@ -566,6 +566,14 @@ m &= 1 \text{ kg (mass)}, \quad \ell = 1 \text{ m (length)}, \quad g = 10 \text{
 \end{align}
 
 The state is $\x = [\theta, \dot\theta]^\T$ (angle and angular velocity), and the input is $\uvec = \tau$ (torque).
+
+\begin{remark}[Sign Convention]
+We use $\theta = 0$ at the \textbf{upright (inverted) equilibrium}. With this convention,
+gravity acts to increase $|\theta|$ (destabilizing), giving $+g\sin\theta$. If $\theta = 0$
+were the downward (stable) equilibrium, the sign would be $-g\sin\theta$ (restoring force).
+The goal is to stabilize $\theta = 0$ (the inverted position) using the control torque $\tau$.
+\end{remark}
+
 The nonlinear dynamics are:
 \begin{equation}
 \ddot\theta = g\sin\theta + \mu\dot\theta + \tau,

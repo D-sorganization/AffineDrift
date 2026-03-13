@@ -725,30 +725,30 @@ This follows from Taylor expansion: the first-order terms (tangent space) cancel
 More precisely, for perturbations of size $\epsilon$:
 
 $$
-\|r\| \leq C \epsilon^2 \int_{t_0}^{t_1} \|A(t)\| \, dt
+\|r\| \leq \frac{1}{2} \epsilon^2 \int_{t_0}^{t_1} \|H_f(x(t))\| \, dt
 $$ {#eq-residual-bound}
 
-for some constant $C$ depending on the second derivatives of $f$ (the Hessian).
+where $H_f(x) = \nabla^2 f(x)$ is the Hessian of $f$ (encoding the second-order curvature of the vector field).
 
 ::: {.callout-note}
 ## Interpretation
 
-- Residuals scale quadratically with perturbation size
-- They accumulate over time (integral term)
-- They depend on how much the tangent space varies ($A(t)$)
+- Residuals scale quadratically with perturbation size $\epsilon$
+- They accumulate over time (integral over trajectory)
+- They depend on the local curvature of the vector field ($\|H_f\|$), not the Jacobian
 
 For small perturbations and short times, residuals are negligible. For large perturbations or long times, they become significant.
 :::
 
-### Connection to Curvature Tensor
+### Connection to Second-Order Geometry
 
-In differential geometry, manifold curvature is formalized via the **Riemann curvature tensor** $R$. For our dynamical systems context:
+For control systems evolving in $\mathbb{R}^n$ (flat space), the relevant curvature object is the **Hessian** of the vector field $f$, not the Riemann curvature tensor (which vanishes identically in flat space). The residual accumulation is approximated as:
 
 $$
-r \approx \int_{t_0}^{t_1} R(x(t)) : (\delta x_1 \otimes \delta x_2) \, dt
+r \approx \frac{1}{2} \int_{t_0}^{t_1} H_f(x(t))[\delta x(t), \delta x(t)] \, dt
 $$ {#eq-curvature-connection}
 
-where $:$ denotes tensor contraction. This formalizes the intuition that residuals measure how the tangent spaces "twist" relative to each other along the trajectory.
+where $H_f(x)[\delta x, \delta x]$ denotes the quadratic form defined by the Hessian of $f$ at $x$. This formalizes the intuition that residuals measure how the vector field "curves" away from its linear approximation along the trajectory.
 
 ## Practical Implications
 
