@@ -1,6 +1,7 @@
 // AffineDrift Service Worker for offline support
-// Version 2: Added startup launcher for improved perceived performance
-const CACHE_NAME = 'affinedrift-v2';
+// Version 3: Updated 2026-03-13 (batch fixes for content accuracy, CSS, PWA manifest)
+// TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
+const CACHE_NAME = 'affinedrift-v3';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
