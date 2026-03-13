@@ -61,7 +61,14 @@ jobs:
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
       - name: Verify frontend asset sync
-        run: python3 scripts/sync_frontend_assets.py --check
+        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
+        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
+        run: |
+          if [ -d "docs" ] && [ -f "docs/index.html" ]; then
+            python3 scripts/sync_frontend_assets.py --check
+          else
+            echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
+          fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
       - name: Validate Article Frontmatter
