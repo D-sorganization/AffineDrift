@@ -39,13 +39,69 @@ exclude_lines = [
 
 [tool.mypy]
 python_version = "3.12"
+strict = true
 warn_return_any = true
 warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_any_explicit = false
+disallow_any_generics = true
+disallow_subclassing_any = true
 ignore_missing_imports = true
+follow_imports = "normal"
+explicit_package_bases = true
+exclude = "^(matlab/|matlab_optimized/|javascript/|docs/|content/|venv/|env/|\\.env/|node_modules/|tests/|scripts/)|(?:^|/)archive/|(?:^|/)Archive/"
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "matplotlib.*", "pandas.*", "torch.*", "pytest.*", "moderngl.*", "numba.*", "psutil.*", "PyQt5.*", "PyQt6.*", "PySide6.*", "yaml.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["archive.*", "legacy.*", "experimental.*"]
+ignore_errors = true
 
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+    "env",
+    ".env",
+    "node_modules",
+    "*.ipynb",
+    "content",
+    "docs",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["D", "RUF001"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*" = ["S101", "E501"]
+"tools/**/*.py" = ["E501"]
+"scripts/**/*.py" = ["E501"]
+"docs/**/*.py" = ["E501"]
+"build-html.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "games", "tools"]
 
 [tool.black]
 line-length = 100
