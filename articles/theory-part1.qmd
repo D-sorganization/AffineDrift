@@ -13,6 +13,14 @@ format:
 ## Abstract
 
 ::: {.callout-note}
+## Novelty Status
+
+- **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + g(x)u$; Lagrangian derivation of rigid-body multibody dynamics; tangent space linearization.
+- **Novel application:** Applying the drift/input decomposition to golf biomechanics; the "Frozen Strategy" assumption for biological impedance; defining ZTCF and ZVCF as diagnostic tools for swing analysis.
+- **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
+:::
+
+::: {.callout-note}
 ## Scope & Exclusions
 This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as control inputs. It explicitly excludes aerodynamic drag, ground reaction forces, marker dynamics, muscle activation delays, and impacts. What is included can be mathematically decomposed into passive and active components; what is excluded lies outside the model's scope and should not be attributed to the decomposition.
 :::
@@ -523,7 +531,11 @@ This Part I analysis is based on the mechanical model only and is subject to the
 
 (d) **Neural control delays not modeled:** All torques are applied instantaneously; activation dynamics, sensorimotor delays, and muscle force-velocity relations are outside the model scope.
 
-Within these constraints, the affine decomposition is exact. Outside them, causal interpretations must be qualified.
+(e) **Control-affine structure requires torque-level inputs:** The affine decomposition $\dot{x} = f(x) + g(x)u$ treats joint torque $u = \tau$ as the exogenous input. This is valid at the mechanical level, but at the muscle level, the Hill model introduces multiplicative state-dependency ($\tau = \tau_{\max} \cdot f_{\text{FL}}(q) \cdot f_{\text{FV}}(\dot{q}) \cdot a$) that violates affine structure if activation $a$ is treated as input. The affine framework is therefore a *mechanical* model, not a neuromuscular model; the torque feasibility set $\mathcal{U}(x)$ is state-dependent but the structure $\dot{x} = f(x) + g(x)u$ remains valid as long as inputs are parameterized as torques rather than activations.
+
+(f) **Co-contraction not captured:** When antagonist muscles co-contract, they produce zero net torque but modulate joint stiffness in the null space of the torque map. This stiffness modulation is classified as part of the drift term $f(x)$ under the Frozen Strategy assumption (see §Note on Biological Impedance), and is not separately identifiable from the drift without additional measurements or models.
+
+Within these constraints, the affine decomposition is exact. Outside them, causal interpretations must be qualified. See also `sources-of-nonlinearity.qmd` for a detailed treatment of biological nonlinearities that fall outside this scope.
 :::
 
 ## Recommended Resources

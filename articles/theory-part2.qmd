@@ -242,6 +242,22 @@ $$\tau_{\text{total}}(t) = \tau_{\text{drift}}\big(x(t)\big) + \tau_{\text{input
 
 and the associated ZTCF construction are analytically exact. Outside that scope, their interpretation must be made with care and with explicit reference to model fidelity, parameter uncertainty, and unmodeled physiological effects.
 
+### Practical Considerations: ZTCF Identifiability
+
+::: {.callout-warning}
+## ZTCF Cannot Be Directly Measured from Real Swing Data
+
+A critical practical limitation is that the ZTCF trajectory is **not directly observable** from real golf swing data. Three identifiability challenges arise:
+
+1. **Muscles always apply some force.** A living golfer cannot truly apply zero torque; even passive muscle tone, joint stiffness, and co-contraction produce residual forces. The "zero torque" baseline is a modeling construct, not a physiologically achievable state.
+
+2. **Separating drift from control requires a complete model.** To evaluate $f(x)$ at the measured state, one needs the full inertia matrix $M(q)$, the Coriolis/centrifugal matrix $C(q,\dot{q})$, gravity $G(q)$, and shaft elasticity parameters. Each of these introduces model uncertainty that propagates directly into the ZTCF estimate.
+
+3. **Initial condition sensitivity.** Because $\dot{x}^{\text{ZTCF}} = f(x^{\text{ZTCF}})$ is a nonlinear ODE, small errors in the initial state $(q_0, \dot{q}_0)$ at the moment of ZTCF branching will cause the counterfactual trajectory to diverge exponentially over time. The ZTCF is most reliable over short time horizons (tens of milliseconds) near the branch point.
+
+These challenges mean that ZTCF-based analyses must be validated against simulation data with known ground truth, not directly against raw motion capture. See [ZTCF Identifiability Critique](../../critiques/ztcf_identifiability.md) for a more detailed treatment.
+:::
+
 ### Decomposing the drift
 
 The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
