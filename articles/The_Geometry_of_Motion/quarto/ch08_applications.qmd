@@ -1765,3 +1765,162 @@ performance and robustness from a single computation.
       and contraction rate $\lambda$ using the prescribed methods. Compare the
       qualitative signatures with the predictions in the text.
 \end{enumerate}
+
+
+## Python Implementations {#sec-ch8-python}
+
+### Double Pendulum Golf Swing Simulation
+
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+
+def double_pendulum_dynamics(t, state, m1, m2, L1, L2, g=9.81):
+    """
+    Double pendulum dynamics (uncontrolled drift).
+    state = [theta1, theta2, dtheta1, dtheta2]
+    """
+    th1, th2, dth1, dth2 = state
+    c12 = np.cos(th1 - th2)
+    s12 = np.sin(th1 - th2)
+
+    M = np.array([
+        [(m1 + m2) * L1**2,       m2 * L1 * L2 * c12],
+        [m2 * L1 * L2 * c12,      m2 * L2**2]
+    ])
+
+    C = np.array([
+        -m2 * L1 * L2 * dth2**2 * s12 - (m1 + m2) * g * L1 * np.sin(th1),
+         m2 * L1 * L2 * dth1**2 * s12 - m2 * g * L2 * np.sin(th2)
+    ])
+
+    ddth = np.linalg.solve(M, C)
+    return [dth1, dth2, ddth[0], ddth[1]]
+
+
+# Simulate a golf-like downswing: shoulder starts at top of backswing
+m1, m2, L1, L2 = 5.0, 2.0, 0.6, 1.2  # kg, m
+state0 = [np.pi / 2, np.pi / 4, 0.0, 0.0]  # [th1, th2, w1, w2]
+t_span = (0, 0.5)
+sol = solve_ivp(
+    lambda t, y: double_pendulum_dynamics(t, y, m1, m2, L1, L2),
+    t_span, state0, max_step=0.001, dense_output=True
+)
+
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+plt.plot(sol.t, np.degrees(sol.y[0]), label="Shoulder θ₁")
+plt.plot(sol.t, np.degrees(sol.y[1]), label="Wrist θ₂")
+plt.xlabel("Time (s)"); plt.ylabel("Angle (deg)"); plt.legend()
+plt.title("Joint Angles — Passive Downswing")
+
+plt.subplot(1, 2, 2)
+plt.plot(sol.t, np.degrees(sol.y[2]), label="ω₁ (shoulder)")
+plt.plot(sol.t, np.degrees(sol.y[3]), label="ω₂ (wrist)")
+plt.xlabel("Time (s)"); plt.ylabel("Angular velocity (deg/s)"); plt.legend()
+plt.title("Angular Velocities — Kinematic Chain Effect")
+plt.tight_layout()
+```
+
+### LQR Controller for Linearized Dynamics
+
+```python
+from scipy.linalg import solve_continuous_are
+
+
+def lqr(A, B, Q, R):
+    """
+    Compute the infinite-horizon LQR gain matrix K such that
+    u = -K x minimizes integral(x'Qx + u'Ru)dt.
+
+    Returns K, P where A - B K is stable and P is the cost matrix.
+    """
+    P = solve_continuous_are(A, B, Q, R)
+    K = np.linalg.solve(R, B.T @ P)
+    return K, P
+
+
+# Linearized single-link pendulum at downward equilibrium
+g, L, m, b = 9.81, 1.0, 1.0, 0.2
+A_pend = np.array([[0, 1], [-g / L, -b / (m * L**2)]])
+B_pend = np.array([[0], [1.0 / (m * L**2)]])
+
+# Cost weights: penalize angle error 10x more than control effort
+Q = np.diag([10.0, 1.0])
+R = np.array([[0.1]])
+
+K, P = lqr(A_pend, B_pend, Q, R)
+print(f"LQR gain K = {K}")
+print(f"Closed-loop eigenvalues: {np.linalg.eigvals(A_pend - B_pend @ K)}")
+
+# Simulate closed-loop response
+def lqr_pendulum(t, x):
+    u = -K @ x
+    return (A_pend @ x + B_pend.flatten() * u[0]).tolist()
+
+x0 = [0.3, 0.0]  # 0.3 rad initial displacement
+sol_lqr = solve_ivp(lqr_pendulum, (0, 5), x0, max_step=0.01, dense_output=True)
+
+plt.figure(figsize=(8, 4))
+plt.plot(sol_lqr.t, np.degrees(sol_lqr.y[0]), label="Angle (deg)")
+plt.xlabel("Time (s)"); plt.ylabel("Angle (deg)")
+plt.title("LQR Pendulum Stabilization"); plt.legend(); plt.grid(True)
+```
+
+### Drift-Control Ratio Computation
+
+```python
+def compute_drift_control_ratio(f_drift, g_control, x_traj, u_traj, dt):
+    """
+    Compute the drift-control ratio rho(t) = ||f(x,0)|| / ||g(x) * u||
+    along a trajectory.
+
+    Parameters
+    ----------
+    f_drift : callable
+        Drift vector field f(x, 0): uncontrolled dynamics
+    g_control : callable
+        Control-gain field g(x): columns are control directions
+    x_traj : np.ndarray, shape (T, n)
+        State trajectory
+    u_traj : np.ndarray, shape (T, m)
+        Control input trajectory
+    dt : float
+        Time step
+
+    Returns
+    -------
+    rho : np.ndarray, shape (T,)
+        Drift-control ratio at each time step
+    """
+    T = len(x_traj)
+    rho = np.zeros(T)
+    for k in range(T):
+        drift_norm = np.linalg.norm(f_drift(x_traj[k]))
+        control_contribution = g_control(x_traj[k]) @ u_traj[k]
+        control_norm = np.linalg.norm(control_contribution)
+        rho[k] = drift_norm / (control_norm + 1e-10)
+    return rho
+
+
+# Example: compute rho along LQR trajectory
+n_steps = len(sol_lqr.t)
+x_traj = sol_lqr.y.T
+u_traj = np.array([(-K @ x_traj[k])[np.newaxis] for k in range(n_steps)])
+u_traj = u_traj.reshape(n_steps, 1)
+
+f_drift = lambda x: A_pend @ x       # drift at u=0
+g_ctrl = lambda x: B_pend             # constant input matrix
+
+rho = compute_drift_control_ratio(f_drift, g_ctrl, x_traj, u_traj,
+                                   sol_lqr.t[1] - sol_lqr.t[0])
+
+plt.figure(figsize=(8, 4))
+plt.semilogy(sol_lqr.t, rho)
+plt.axhline(1.0, color="r", linestyle="--", label="ρ = 1 (balanced)")
+plt.xlabel("Time (s)"); plt.ylabel("ρ = ||drift|| / ||control||")
+plt.title("Drift-Control Ratio Along LQR Trajectory")
+plt.legend(); plt.grid(True)
+```
