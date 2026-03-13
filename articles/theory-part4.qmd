@@ -398,8 +398,9 @@ All flexible-body dynamics remain embedded in the drift vector field $f(x)$.
 
 This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
 
-- a planar (2D) pendulum with and without a flexible shaft, and
-- a spatial (3D) pendulum with and without a flexible shaft.
+- a planar (2D) pendulum with and without a flexible shaft.
+
+The same affine structure extends to the spatial (3D) case — the Coriolis and gyroscopic terms become more complex, but the torque input still appears linearly — however the detailed 3D derivation is deferred to future work.
 
 In each case, we show that the equations of motion can be written as
 
@@ -541,7 +542,7 @@ $$\begin{bmatrix}
 
 ### Summary: Superposition and affine structure
 
-Across all cases—planar rigid pendulum, planar flexible pendulum, 3D rigid pendulum, and 3D flexible pendulum—the same pattern holds:
+Across both cases—planar rigid pendulum and planar flexible pendulum—the same pattern holds (and extends by the same reasoning to the spatial cases):
 
 - Flexible dynamics (shaft modes) modify the drift term $f(x)$ by adding state-dependent inertia, Coriolis, and restoring forces.
 - The torque input $u$ enters linearly through an input matrix $g(x)$ that depends only on configuration and flexible coordinates, not on $u$.
