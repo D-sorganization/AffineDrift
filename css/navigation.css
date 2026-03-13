@@ -127,12 +127,18 @@ nav .container {
 /* Search box styling */
 #quarto-header #quarto-search {
     margin-left: auto !important;
-    min-width: 300px;
+    min-width: 0;
+    max-width: 100%;
 
-    /* Force minimum width */
-    flex-basis: 400px;
+    /* Target around 400px width on larger screens */
+    flex-basis: clamp(150px, 30vw, 400px);
+}
 
-    /* Target around 400px width */
+@media (width <= 500px) {
+    #quarto-header #quarto-search {
+        flex-basis: auto;
+        width: 100%;
+    }
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
