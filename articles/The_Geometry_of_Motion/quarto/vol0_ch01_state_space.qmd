@@ -1,14 +1,10 @@
-% ==========================================================================
-%  Chapter 1: The Transition to State Space
-% ==========================================================================
+---
+title: "Chapter 1: The Transition to State Space"
+---
 
-# The Transition to State Space
+# The Transition to State Space {#sec-state-space}
 
-\label{ch:state_space}
-
-\epigraph{%
-  You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.
-}{}
+> *You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.*
 
 
 ## Introduction: The Physics Abstraction
@@ -97,9 +93,161 @@ This is called the **State Space Representation**. It is universally written in 
 Whether you are controlling a single gear or a 15-DOF musculoskeletal golf swing (as discussed in Volume II), you are always, fundamentally, trying to shape the trajectory $\state(t)$ by manipulating the vector field $\bm{f}$ using your control inputs $\control$.
 
 
-## Summary
+## Linear State Space: The $A$, $B$, $C$, $D$ Form {#sec-linear-state-space}
+
+When $\bm{f}(\state, \control)$ is linear, we can write it exactly as:
+
+$$\dot{\state} = A\state + B\control, \qquad \bm{y} = C\state + D\control,$$
+
+where:
+
+- $A \in \mathbb{R}^{n \times n}$: **state transition matrix** — how the current state drives future state
+- $B \in \mathbb{R}^{n \times m}$: **input matrix** — how control affects state evolution
+- $C \in \mathbb{R}^{p \times n}$: **output matrix** — what we can measure
+- $D \in \mathbb{R}^{p \times m}$: **feedthrough matrix** — direct control-to-output coupling
+
+For our mass-spring-damper:
+$$A = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}, \quad B = \begin{bmatrix} 0 \\ 1/m \end{bmatrix}.$$
+
+The eigenvalues of $A$ determine stability (see @sec-linear-algebra). If we can only measure position ($y = x_1$), then $C = [1, 0]$, $D = 0$.
+
+::: {.callout-tip}
+## Engineering Insight: Controllability and Observability
+
+Two fundamental questions about any state-space system:
+
+1. **Controllability:** Can we drive the state anywhere we want using the control input $\control$? Test: the **controllability matrix** $\mathcal{C} = [B, AB, A^2B, \ldots, A^{n-1}B]$ must have rank $n$.
+
+2. **Observability:** Can we reconstruct the full state from output measurements? Test: the **observability matrix** $\mathcal{O} = [C^\top, (CA)^\top, (CA^2)^\top, \ldots]^\top$ must have rank $n$.
+
+If a system is not controllable, no controller can fix it. If it is not observable, no estimator can reconstruct it.
+:::
 
 
-State space fundamentally decouples physics from geometry. We no longer treat a system as physical objects bumping into each other in 3D space. We treat it as a single point—a cursor—moving through hyper-dimensional coordinates based on a vector field. 
+## Phase Portraits: Visualizing State Trajectories {#sec-phase-portraits}
+
+For a 2D state space $(\state_1, \state_2) = (q, \dot{q})$, we can draw the **phase portrait**: arrows showing the direction $\dot{\state}$ at every point, with trajectories flowing along those arrows.
+
+**Stable equilibrium:** trajectories spiral/converge inward (damped spring).
+
+**Unstable equilibrium:** trajectories spiral/diverge outward (inverted pendulum).
+
+**Limit cycle:** trajectories converge to a closed orbit (sustained oscillation, e.g., a walking gait).
+
+Reading a phase portrait is the fastest way to understand a nonlinear system's qualitative behavior without solving any equations.
+
+
+## Worked Examples {#sec-state-space-examples}
+
+### Example 1.4: Golf Swing as a State-Space System
+
+A simplified driver swing can be modeled as a double pendulum with generalized coordinates $\bm{q} = [\theta_\text{shoulder}, \theta_\text{wrist}]^\top$ (shoulder and wrist angles). The state vector is:
+
+$$\state = \begin{bmatrix} \theta_s \\ \theta_w \\ \dot\theta_s \\ \dot\theta_w \end{bmatrix} \in \mathbb{R}^4.$$
+
+The entire biomechanical complexity of the swing—muscle activations, angular momentum transfer, wrist release timing—reduces to a single point moving through a 4-dimensional state space. The controller's job is to shape this trajectory to maximize club-head speed at impact.
+
+### Example 1.5: Converting Second-Order to First-Order
+
+A damped pendulum: $mL^2\ddot\theta + bL\dot\theta + mgL\sin\theta = \tau$, where $\tau$ is the applied torque.
+
+**State:** $\state = [\theta, \dot\theta]^\top$.
+
+**First-order form:**
+$$\dot\state = \begin{bmatrix} \dot\theta \\ \frac{\tau - bL\dot\theta - mgL\sin\theta}{mL^2} \end{bmatrix} = \bm{f}(\state, \tau).$$
+
+With $m=1$, $L=1$, $b=0.5$, $g=9.81$: this is a 2D state space. Linearizing around $\theta^* = 0$ (hanging equilibrium) gives $A = \begin{bmatrix}0&1\\-g/L&-b/(mL^2)\end{bmatrix}$, with eigenvalues having negative real parts — stable.
+
+
+## Python Implementations {#sec-state-space-python}
+
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# --- Mass-spring-damper in state space ---
+m, c, k = 1.0, 0.5, 2.0   # mass, damping, stiffness
+
+A = np.array([[0,    1  ],
+              [-k/m, -c/m]])
+
+B = np.array([[0  ],
+              [1/m]])
+
+print("A matrix:")
+print(A)
+print(f"Eigenvalues: {np.linalg.eigvals(A)}")
+# Complex conjugate pair with negative real part → stable
+```
+
+```python
+# --- Simulate trajectory with zero control ---
+def dynamics(t, x):
+    return A @ x  # No control: u=0
+
+x0 = [1.0, 0.0]  # Initial condition: displaced, at rest
+t_span = (0, 10)
+t_eval = np.linspace(0, 10, 500)
+
+sol = solve_ivp(dynamics, t_span, x0, t_eval=t_eval)
+
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+plt.plot(sol.t, sol.y[0], label="Position")
+plt.plot(sol.t, sol.y[1], label="Velocity")
+plt.xlabel("Time (s)"); plt.legend(); plt.title("Time-domain response")
+
+plt.subplot(1, 2, 2)
+plt.plot(sol.y[0], sol.y[1])
+plt.xlabel("Position"); plt.ylabel("Velocity")
+plt.title("Phase portrait"); plt.tight_layout()
+```
+
+```python
+# --- Controllability check ---
+def controllability_matrix(A, B):
+    n = A.shape[0]
+    cols = [B]
+    for i in range(1, n):
+        cols.append(np.linalg.matrix_power(A, i) @ B)
+    return np.hstack(cols)
+
+C_mat = controllability_matrix(A, B)
+rank = np.linalg.matrix_rank(C_mat)
+n = A.shape[0]
+print(f"Controllability rank: {rank}/{n}")
+print("System is controllable" if rank == n else "System is NOT controllable")
+```
+
+
+## Exercises {#sec-state-space-exercises}
+
+**1.6** A rocket has mass $m=1000$ kg and thrust $F$ (control). Its state is $[h, \dot{h}]^\top$ (altitude and velocity). Write the state-space matrices $A$ and $B$. Is this system controllable?
+
+**1.7** For the mass-spring-damper with $m=2$, $c=3$, $k=10$: compute the eigenvalues of $A$ and determine whether the system is overdamped, underdamped, or critically damped.
+
+**1.8** The state of a DC motor is $[\omega, i]^\top$ (angular velocity and current). The dynamics are:
+$$J\dot\omega = Ki, \qquad L\dot{i} = V - Ri - K\omega,$$
+with $J=0.01$, $K=0.1$, $L=0.5$, $R=1$. Write in $\dot\state = A\state + B\control$ form with $V$ as control.
+
+**1.9 (Python)** Simulate the pendulum $\ddot\theta = -(g/L)\sin\theta - b\dot\theta$ from initial condition $\theta_0 = \pi/4$, $\dot\theta_0 = 0$ using `scipy.integrate.solve_ivp`. Plot both the time response and the phase portrait. What type of equilibrium is $\theta^* = 0$?
+
+**1.10 (Challenge)** A system has $A = \begin{bmatrix}-1&0\\0&-2\end{bmatrix}$, $B = \begin{bmatrix}1\\0\end{bmatrix}$, $C = [0, 1]$. Is it controllable? Is it observable? What does this mean physically — which states can you drive, and which can you measure?
+
+
+## Summary {#sec-state-space-summary}
+
+State space fundamentally decouples physics from geometry. We no longer treat a system as physical objects bumping into each other in 3D space. We treat it as a single point—a cursor—moving through hyper-dimensional coordinates based on a vector field.
+
+| Concept | Symbol | Meaning |
+|---------|--------|---------|
+| State vector | $\state \in \mathbb{R}^n$ | Complete system description |
+| State space | $\mathcal{X}$ | All possible states |
+| Trajectory | $\state(t)$ | Time-parameterized curve in $\mathcal{X}$ |
+| Vector field | $\bm{f}(\state, \control)$ | "Flow" direction at each point |
+| Equilibrium | $\bm{f}(\state^*, \control^*) = 0$ | Fixed point of the flow |
+| Controllability | $\text{rank}(\mathcal{C}) = n$ | Can reach any state |
+| Observability | $\text{rank}(\mathcal{O}) = n$ | Can reconstruct any state |
 
 But what defines those coordinates? How do we mathematically decide what the angles and positions of highly complex mechanisms are? For that, we turn to Configuration Space.
