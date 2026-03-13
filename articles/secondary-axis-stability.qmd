@@ -43,6 +43,18 @@ It is important to acknowledge that the *gyroscopic* torque term responsible for
 However, the **alignment** of principal axes remains critical even at low speeds. When principal axes are misaligned with the stroke plane, the inertia tensor contains off-diagonal terms ($I_{xy}$) in the stroke frame. This creates **Inertial Coupling** (a linear effect, $\tau = I \dot{\omega}$), where a pure rotation torque applied by the golfer creates parasitic accelerations in orthogonal directions. The "Central Spine" design thus provides two benefits: **Kinematic Decoupling** (linear, dominant in putting) and **Dynamic Stability** (quadratic, dominant in full swing).
 :::
 
+::: {.callout-warning}
+## Constrained vs. Free-Body Dynamics
+
+The classical intermediate axis theorem applies to **free rigid bodies** under torque-free conditions. The golf club is **not** a free body: it is held by the golfer's hands, which apply grip forces and torques throughout the swing. This changes the dynamics in important ways:
+
+- The golfer's grip can actively suppress intermediate-axis instability by applying corrective torques.
+- The instability does not cause spontaneous tumbling (as in the "tennis racket theorem") but instead creates an increased demand for stabilizing grip torque.
+- The quantitative predictions of Euler's torque-free equations do not apply directly; the relevant measure is the **extra grip effort** required when the angular velocity drifts toward the intermediate axis.
+
+The analysis below should therefore be read as: "proximity to the intermediate axis increases the **control effort** needed to maintain club orientation," not "the club will tumble without active intervention at this axis."
+:::
+
 Although a golf club is not in torque-free flight, the same structural instability affects its forced rotational behavior, increasing the required grip torque to maintain orientation when the angular velocity vector drifts near the intermediate axis direction.
 
 # Changing Effective Rotation Axes in Golf Swings
