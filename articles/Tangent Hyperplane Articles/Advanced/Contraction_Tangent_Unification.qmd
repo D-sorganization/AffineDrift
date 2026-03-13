@@ -544,19 +544,19 @@ $$ {#eq-double-integrator}
 
 **Design goal**: Contraction rate $\lambda = 2.0$ rad/s.
 
-Choose $\mathbf{Q} = \text{diag}(16, 1)$, $\mathbf{R} = 1$. Solve ARE:
+Choose $\mathbf{Q} = \text{diag}(16, 1)$, $\mathbf{R} = 1$. Solving the ARE analytically with $A = \begin{bmatrix}0&1\\0&0\end{bmatrix}$, $B = \begin{bmatrix}0\\1\end{bmatrix}$:
 $$
-\mathbf{S}_\infty = \begin{bmatrix} 5.236 & 2.000 \\ 2.000 & 2.000 \end{bmatrix}
+\mathbf{S}_\infty = \begin{bmatrix} 12 & 4 \\ 4 & 3 \end{bmatrix}
 $$ {#eq-double-integrator-riccati}
 
 Optimal gain:
 $$
-\mathbf{K} = \begin{bmatrix} 2.000 & 2.000 \end{bmatrix}
+\mathbf{K} = \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}_\infty = \begin{bmatrix} 4 & 3 \end{bmatrix}
 $$ {#eq-double-integrator-gain}
 
-Closed-loop eigenvalues: $\{-1.0 \pm j\}$, implying $\lambda_{\min} = 1.0$.
+Closed-loop eigenvalues: $\{-\tfrac{3}{2} \pm \tfrac{\sqrt{7}}{2}j\}$, implying $\lambda_{\min} = \tfrac{3}{2} = 1.5$.
 
-**To increase** $\lambda$: Increase $\mathbf{Q}/\mathbf{R}$ ratio. E.g., $\mathbf{Q} = \text{diag}(64, 4)$ yields $\lambda = 2.0$.
+**To increase** $\lambda$: Increase $\mathbf{Q}/\mathbf{R}$ ratio. E.g., $\mathbf{Q} = \text{diag}(64, 4)$ gives higher contraction rate.
 
 ---
 

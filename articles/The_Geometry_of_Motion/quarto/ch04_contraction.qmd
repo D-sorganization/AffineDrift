@@ -409,13 +409,17 @@ For this to satisfy the contraction condition with rate $\lambda$:
 \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} \preceq -2\lambda \mat{I} = \begin{bmatrix} -2\lambda & 0 \\ 0 & -2\lambda \end{bmatrix}.
 \end{equation}
 
-The off-diagonal elements require $1 \leq 0$, which is false. However, the diagonal
-eigenvalues are approximately $-3.2$ and $-1.8$, suggesting $\lambda \approx 0.9$
-(half the smallest eigenvalue magnitude).
+The off-diagonal elements require $1 \leq 0$, which is false. This means $\mat{M} = \mat{I}$
+does not certify contraction at rate $2\lambda$ for any $\lambda > 0$ (the LMI is infeasible
+for the off-diagonal structure), but the system is still contracting—one must use a
+non-identity metric $\mat{M}$.
 
-For simplicity, if we use $\mat{M}=\mat{I}$ and check the eigenvalues of $\mat{A}^\T + \mat{A}$
-(scaled by 1/2), we get approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
-Thus the contraction rate is $\lambda \approx 1.79 / 2 \approx 0.895$ or roughly $\lambda = 1.79$ from the eigenvalue.
+For reference, the symmetric part $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}^\T + \mat{A})$ has
+eigenvalues approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
+The contraction rate with the identity metric (ignoring the off-diagonal constraint) would
+be $\lambda = |\lambda_{\max}(\sym(\mat{A}))| = 1.79$ rad/s directly—\textbf{no additional
+factor of $1/2$} is needed, since $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}+\mat{A}^\T)$
+already incorporates the scaling.
 
 \begin{designbox}
 In practice, for linear systems, one solves the LMI \eqref{eq:ch4:example-LMI} using
