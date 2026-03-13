@@ -339,6 +339,12 @@ For practice:
 2. **Report growth ratio** (e.g., "100× increase from top to impact") rather than absolute threshold values.
 3. **Recommend inertia-weighted norm** as the default, because it measures kinetic energy—what physics actually cares about.
 
+::: {.callout-warning}
+## Cross-Joint Comparison Caveat
+
+DCR values for different degrees of freedom (e.g., shoulder rotation vs. wrist flexion) are **not directly comparable** without normalization. Rotational DOFs (rad/s²) and translational DOFs (m/s²) have different physical units; even within the rotational subspace, joints with different inertias will exhibit different DCR magnitudes for identical mechanical situations. The inertia-weighted norm $\|f_{acc}\|_M$ partially addresses this by weighting by $M(q)$, but comparisons across subsystems should still be interpreted cautiously. DCR is most reliable as a **within-DOF, temporal** measure (tracking how a single DOF's drift-to-control ratio evolves over the swing) rather than as a cross-DOF comparison.
+:::
+
 ---
 
 **The numbers change with the measuring stick. The physics doesn't.**
@@ -544,9 +550,15 @@ A critical nuance (see *Planar DCR Blindness* critique) is that the loss of cont
 
 This suggests the control cone is "pancake-shaped": thin in the dimension of travel, but wide in the dimension of face orientation.
 
-### Lie Bracket Analysis of Anisotropic Controllability
+### Lie Bracket Analysis of Anisotropic Accessibility
 
-The pancake shape can be made precise through the accessibility Lie algebra. For the planar subsystem with drift $f_{plane}$ and control $g_{plane}$, the first-order Lie bracket $[f_{plane}, g_{plane}]$ generates acceleration corrections perpendicular to drift. However, as $\|f_{plane}\|$ grows, the ratio $\|[f_{plane}, g_{plane}]\| / \|f_{plane}\|$ diminishes—the bracket-generated directions become negligible relative to the drift flow. For the axial subsystem, $f_{axial}$ remains small (low angular momentum about the shaft axis), so $\|[f_{axial}, g_{axial}]\| / \|f_{axial}\|$ remains $\mathcal{O}(1)$, preserving controllability.
+::: {.callout-note}
+## Accessibility vs. Controllability
+
+Lie brackets (via the Lie Algebra Rank Condition, LARC) establish **local accessibility**: the ability to reach an open neighborhood of states from any initial condition. This is a weaker property than **controllability** (the ability to reach *any* target state from *any* initial state). For underactuated nonlinear systems like the golf swing, LARC-based arguments should be interpreted as accessibility claims, not full controllability. In particular, the "anisotropy" discussed below describes the *relative richness* of accessible directions, not a formal controllability certificate.
+:::
+
+The pancake shape can be made precise through the accessibility Lie algebra. For the planar subsystem with drift $f_{plane}$ and control $g_{plane}$, the first-order Lie bracket $[f_{plane}, g_{plane}]$ generates acceleration corrections perpendicular to drift. However, as $\|f_{plane}\|$ grows, the ratio $\|[f_{plane}, g_{plane}]\| / \|f_{plane}\|$ diminishes—the bracket-generated directions become negligible relative to the drift flow. For the axial subsystem, $f_{axial}$ remains small (low angular momentum about the shaft axis), so $\|[f_{axial}, g_{axial}]\| / \|f_{axial}\|$ remains $\mathcal{O}(1)$, preserving local accessibility in that subsystem.
 
 More concretely, the Gramian-based reachable ellipsoid over time horizon $\Delta t$ is:
 $$

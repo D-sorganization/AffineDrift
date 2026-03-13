@@ -458,11 +458,17 @@ Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contract
 
 | Feature | Classical DDP | Contraction-DDP |
 |---------|--------------|-----------------|
-| **Stability** | Local (unquantified) | Global (certified) |
-| **Convergence Rate** | Unknown | Guaranteed $\geq \lambda$ |
-| **Basin of Attraction** | Unknown | Computable via $\mathbf{M}_t$ |
+| **Stability** | Local (unquantified) | Local-to-semi-global (certified within basin) |
+| **Convergence Rate** | Unknown | Guaranteed $\geq \lambda$ within basin |
+| **Basin of Attraction** | Unknown | Computable via $\mathbf{M}_t$ (linearization-limited) |
 | **Robustness** | Heuristic | Quantified by metric condition number |
 | **Computational Cost** | $O(n^3 T)$ | $O(n^3 T + n^4 T)$ (SDP) |
+
+::: {.callout-important}
+## Scope of Stability Claim
+
+The "certified" stability for Contraction-DDP is **local**, not global. The proof of Theorem 4.1 relies on linearization validity: the contraction condition is enforced at $(\mathbf{x}^*_t, \mathbf{u}^*_t)$ and holds in a neighborhood whose size $\epsilon$ is limited by the validity of the first-order expansion. For strongly nonlinear systems, this basin may be small. Claiming "global" stability would require showing the contraction metric remains uniformly positive-definite across the entire state space, which is not established here.
+:::
 
 The extra $O(n^4 T)$ cost comes from solving (@eq-metric-optimization) as an SDP at each timestep.
 
