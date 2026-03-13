@@ -10,6 +10,34 @@ toc-depth: 2
 Volume II extends the tangent-space framework into trajectory-native control design.
 This page publishes the current chapter map and source links for the active manuscript in `articles/The_Geometry_of_Motion/Volume_II/`.
 
+## The 'Control Is Motion' Paradigm
+
+::: {.callout-note}
+## Formal Definition
+
+**Control Is Motion (CIM)** is a paradigm for nonlinear control design built on the following principle:
+
+> *Control inputs are best understood not as setpoint commands but as geometric deformations of a reference trajectory in state space. The objective of a controller is to shape the geometry of motion — its orbit, its convergence tube, and its timing — rather than to steer toward a static target.*
+
+**Mathematically:** For a control-affine system $\dot{x} = f(x) + g(x)u$ with a nominal trajectory $x^*(t)$, the CIM paradigm defines control effectiveness through the transverse dynamics operator:
+
+$$
+\delta \dot{x}_\perp = A_\perp(t) \delta x_\perp + B_\perp(t) \delta u
+$$
+
+where $\delta x_\perp$ is the component of perturbation **transverse** to $x^*(t)$, and $A_\perp(t), B_\perp(t)$ are the projected linearization matrices. Control authority is measured by the ability to modify $\delta x_\perp$, not by proximity to a static target.
+
+**Key distinctions from classical control:**
+- The "reference" is a trajectory (orbit), not a point.
+- Stability is orbital (convergence to $x^*(t)$ for all $t$), not asymptotic to a fixed equilibrium.
+- Control design must respect the manifold structure of state space; coordinate-free formulations are preferred.
+- Drift $f(x)$ encodes the passive geometry of motion; control $g(x)u$ deforms it.
+
+**Relationship to established theory:** CIM is not a new mathematical framework but a design philosophy that unifies transverse dynamics (Hauser & Hindman, 1995), virtual holonomic constraints (Shiriaev et al., 2005), and orbital stabilization under one conceptual lens. Volume II develops this philosophy systematically using the tangent-space machinery of Volume I.
+:::
+
+
+
 [View Main Source Manuscript](https://github.com/D-sorganization/AffineDrift/blob/main/articles/The_Geometry_of_Motion/Volume_II/main.tex){.resource-link}
 
 ## Scientific Status
