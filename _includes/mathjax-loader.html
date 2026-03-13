@@ -18,10 +18,8 @@
     startup: {
       ready: function() {
         MathJax.startup.defaultReady();
-        // Process any math that was added dynamically
-        MathJax.startup.promise.then(function() {
-          MathJax.typeset();
-        });
+        // MathJax.startup.defaultReady() already typesets the page once.
+        // No additional typeset() call needed here.
       }
     }
   };
@@ -60,6 +58,7 @@
     }
 
     // Load MathJax (MathJax v3 handles its own polyfills internally)
+    // Load MathJax (v3 handles its own polyfills internally)
     const mathjax = document.createElement("script");
     mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
     mathjax.async = true;
@@ -67,14 +66,6 @@
     mathjax.dataset.adMathjax = "mathjax";
     document.head.appendChild(mathjax);
   })();
-
-  // Also process math on DOMContentLoaded as a fallback
-  document.addEventListener("DOMContentLoaded", function() {
-    if (window.MathJax && window.MathJax.typeset) {
-      // Re-typeset to catch any math that wasn't processed
-      setTimeout(function() {
-        MathJax.typeset();
-      }, 100);
-    }
-  });
+  // Note: MathJax.startup.defaultReady() in the startup.ready callback above
+  // handles the initial typeset. No additional DOMContentLoaded listener needed.
 </script>
