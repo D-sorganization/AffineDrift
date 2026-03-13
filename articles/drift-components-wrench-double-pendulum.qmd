@@ -615,6 +615,18 @@ This decomposition allows us to answer: **"Is the club gaining energy because I 
 This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**. In the full flexible shaft model (Part I), active torque often does work to deform the shaft (increasing $V_{\text{elastic}}$), effectively "banking" energy that is later released passively. The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release.
 :::
 
+### 6.1 Energy Balance in the ZTCF Trajectory
+
+The Zero Torque Counterfactual (ZTCF) sets $u = 0$, leaving only drift dynamics $\dot{x} = f(x)$. For a conservative mechanical system (no dissipation), the total mechanical energy is conserved along the ZTCF:
+
+$$
+\frac{d}{dt}\left(T(q, \dot{q}) + V(q)\right)\bigg|_{\text{ZTCF}} = 0.
+$$
+
+This provides a useful **sanity check** for numerical ZTCF simulations: if the total energy drifts under zero-torque integration, it signals solver error or incorrect constraint enforcement rather than physical dynamics. In practice, dissipation (joint damping, air resistance) breaks strict energy conservation; the ZTCF trajectory then follows the conservative drift augmented by passive dissipative forces.
+
+The energy difference between the full trajectory and the ZTCF trajectory accumulates the net work done by the golfer's torques over time, providing an energy-based interpretation of the active input contribution.
+
 ---
 
 ## Theoretical Synthesis
