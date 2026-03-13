@@ -19,11 +19,14 @@ def test_books_volume1_page_points_to_canonical_volume_i_sources() -> None:
     assert "articles/The_Geometry_of_Motion/Volume_I/" in text
 
 
-def test_textbook_path_has_deprecation_notice() -> None:
-    """Legacy textbook path should provide a clear canonical redirect note."""
-    text = TEXTBOOK_README.read_text(encoding="utf-8")
-    assert "deprecated" in text.lower()
-    assert "articles/The_Geometry_of_Motion/Volume_I/main.tex" in text
+def test_textbook_path_is_removed() -> None:
+    """Legacy textbook path should be removed now that migration is complete."""
+    # The deprecated articles/textbook/ directory was fully removed in #1472.
+    # Verify it is gone so we don't accidentally re-introduce it.
+    assert not TEXTBOOK_README.exists(), (
+        "articles/textbook/README.md should not exist; "
+        "the directory was removed as part of the deprecation migration"
+    )
 
 
 def test_volume_i_main_uses_shared_geometry_bibliography() -> None:
