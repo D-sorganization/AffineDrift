@@ -27,13 +27,15 @@ from scipy.linalg import solve_continuous_are
 
 logger = logging.getLogger(__name__)
 
+GRAVITY_M_S2: float = 9.81
+
 
 # ---------------------------------------------------------------------------
 # System definition: double pendulum (2-DoF golf swing proxy)
 # ---------------------------------------------------------------------------
 
 
-def double_pendulum_drift(t: float, x: np.ndarray, g: float = 9.81) -> np.ndarray:
+def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> np.ndarray:
     """Passive dynamics of a double pendulum (drift term f(x,0)).
 
     State: x = [theta1, theta2, dtheta1, dtheta2]
@@ -140,6 +142,7 @@ def setpoint_lqr_controller(
     K = np.linalg.solve(R_sp, B0.T @ P)
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
+        """Apply setpoint LQR control law u = -K(x - x_target)."""
         return -K @ (x - x_target)
 
     return controller
@@ -188,12 +191,14 @@ def trajectory_tracking_lqr(
 
     # Interpolate gains and reference trajectory
     def get_K(t: float) -> np.ndarray:
+        """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
         return gains_array[idx]
 
     x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
+        """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
         x_star = x_ref_interp(t)
         K = get_K(t)
         return -K @ (x - x_star)
@@ -219,6 +224,7 @@ def run_benchmark(
     start = time.perf_counter()
 
     def closed_loop(t: float, x: np.ndarray) -> np.ndarray:
+        """Closed-loop ODE: drift + controlled input with saturation."""
         u = controller(t, x)
         # Clip control to prevent divergence
         u = np.clip(u, -50, 50)
@@ -299,6 +305,7 @@ def run_comparison(
     logger.info("Running passive baseline...")
 
     def passive_ctrl(t: float, x: np.ndarray) -> np.ndarray:
+        """Return zero torque (passive baseline, no active control)."""
         return np.zeros(2)
 
     results.append(
@@ -335,6 +342,7 @@ def print_results(results: list[BenchmarkResult]) -> None:
 
 
 def main() -> None:
+    """CLI entry point: parse arguments and run benchmark comparison."""
     parser = argparse.ArgumentParser(
         description="RL and Funnel Benchmark: Compare setpoint vs trajectory tracking control"
     )
