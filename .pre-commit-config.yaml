@@ -42,7 +42,7 @@ repos:
     hooks:
       - id: black
         name: "black (format)"
-        language_version: python3.11
+        language_version: python3.12
         types: [python]
         exclude: ^(\.github/|docs/|.*\.md$)
 
@@ -127,7 +127,8 @@ repos:
       - id: bandit
         name: "bandit (security scan)"
         stages: [pre-push]
-        args: ["-r", ".", "-ll", "-ii", "-x", "tests/,archive/,legacy/,.github/"]
+        args:
+          ["-r", ".", "-ll", "-ii", "-x", "tests/,archive/,legacy/,.github/"]
         pass_filenames: false
         # Only run if Python files changed
         types: [python]
@@ -149,7 +150,7 @@ repos:
 # =============================================================================
 
 default_language_version:
-  python: python3.11
+  python: python3.12
 
 # Files to always exclude from all hooks
 exclude: |
@@ -179,4 +180,4 @@ ci:
   autofix_prs: true
   autoupdate_branch: "main"
   autoupdate_commit_msg: "chore: update pre-commit hooks"
-  skip: [pytest-unit, bandit, mypy]  # Skip slow hooks in CI
+  skip: [pytest-unit, bandit, mypy] # Skip slow hooks in CI

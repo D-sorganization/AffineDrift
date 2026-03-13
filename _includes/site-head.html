@@ -45,7 +45,6 @@
 <link rel="preload" href="/css/startup-launcher.css" as="style">
 <link rel="preload" href="/styles.css" as="style">
 <link rel="stylesheet" href="/css/print.css" media="print">
-<link rel="preload" href="/script.js" as="script">
 <link rel="modulepreload" href="/js/main.js">
 <link rel="preload" href="/js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="/js/utils.js">
@@ -53,6 +52,8 @@
 
 <!-- Startup Launcher: Load immediately for splash screen -->
 <script src="/js/startup-launcher.js"></script>
+<!-- Fallback for browsers with JavaScript disabled: hide splash overlay immediately -->
+<noscript><style>.startup-overlay { display: none !important; }</style></noscript>
 
 <!-- PWA and Mobile Optimization -->
 <link rel="manifest" href="/manifest.json">
