@@ -49,6 +49,11 @@ format:
 </section>
 ```
 
+::: {.callout-note}
+## Units Convention
+This article uses mixed SI and imperial units in some sections, reflecting the source literature. Forces in pounds-force (lbs) are provided alongside SI equivalents (N) where noted. For consistency in analysis: 1 lbs ≈ 4.448 N. All torques and moments are in SI units (Nm).
+:::
+
 ## Understanding Inverse Dynamics
 
 ### What Inverse Dynamics Calculates
@@ -198,7 +203,10 @@ This equivalence is *dynamic*: both systems produce identical translational and 
 
 The fundamental principle is that a couple is a *free vector*—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is *bound* to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
 
-[Figure: Force-couple equivalence: a force $\mathbf{F}$]
+::: {.callout-note}
+## Figure Pending
+**Figure: Force-couple equivalence.** Diagram showing that a force $\mathbf{F}$ applied at an offset point is dynamically equivalent to the same force applied at the reference point plus a couple $\mathbf{C}_{\text{eq}} = \mathbf{r} \times \mathbf{F}$. Visualization pending.
+:::
 
 ### Coordinate Transformation of Force-Couple Pairs
 
@@ -226,7 +234,10 @@ where:
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
-[Figure: Golf club grip schematic showing reference points and distance measures. The center of mass (COM) is closer to the clubhead than to the hands. Distances are measured with consistent sign convention.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Golf club grip schematic.** Diagram showing the club with labeled reference points (top of grip, midpoint $m$, bottom of grip) and signed distances $d_i$ from the center of mass (COM). COM is located closer to the clubhead than to the hands. Visualization pending.
+:::
 
 ### The Range of Equivalent Couples
 
@@ -250,7 +261,10 @@ The range of viable equivalent couples increases linearly with the moment of for
 
 :::
 
-[Figure: Equivalent couple as a function of position along the grip for three different moments of force, with constant $C_m = -4.0$ Nm at the midpoint. The region between dashed lines represents typical hand placement. Note how the range of possible couple values increases with $M_m$.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Equivalent couple vs. grip position.** Plot of $C_i$ as a function of reference point position $d_i$ for three values of $M_m$ (high, medium, low), all with $C_m = -4.0$ Nm. Dashed vertical lines mark typical hand placement range. The linearly increasing spread illustrates how spatial ambiguity grows with larger moments of force. Visualization pending.
+:::
 
 ### Physical Interpretation: The Non-Uniqueness Problem
 
@@ -274,13 +288,19 @@ This example reveals the core issue: inverse dynamics conflates two physically d
     
 2. **Offset forces:** Single or net forces applied away from the reference point
 
-[Figure: Two physically distinct force applications that produce identical inverse dynamics results at the reference point. Left: True couple from opposing forces. Right: Apparent couple from single offset force. Inverse dynamics cannot distinguish between them.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Ambiguity of inverse dynamics couples.** Side-by-side diagrams of two force configurations that produce identical inverse dynamics output at the reference point. Left: A true couple — equal and opposite forces applied at two grip locations. Right: A single force applied offset from the reference point, creating an "apparent" couple. Inverse dynamics cannot distinguish these cases. Visualization pending.
+:::
 
 ### Implications for Distributed Force Application
 
 In reality, golfers apply forces at multiple points on the grip: individual fingers, palm heel, thumb pads, etc. Each force contributes to both the net force and the equivalent couple at any chosen reference point.
 
-[Figure: Inverse dynamics reduces distributed forces from multiple fingers and palm contact points to a single equivalent force and couple at the reference point. This reduction is mathematically valid but loses information about the spatial distribution.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Distributed force reduction.** Diagram showing a golf grip with multiple contact points (individual fingers, palm heel, thumb pad) each with distinct force vectors, and the corresponding reduction to a single equivalent force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at the reference point. The reduction is mathematically exact but loses information about the spatial distribution. Visualization pending.
+:::
 
 ::: {.limitation-box}
 **Fundamental Limitation:** 
@@ -381,7 +401,10 @@ $$
 
 :::
 
-[Figure: Forward vs. inverse dynamics in control-affine systems. Forward: drift and input combine uniquely to produce motion. Inverse: given motion alone, we cannot uniquely recover the drift-input decomposition.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Forward vs. inverse dynamics in control-affine systems.** Two-panel diagram. Left (forward): drift $f(x)$ and input $g(x)u$ combine uniquely via $\dot{x} = f(x) + g(x)u$ to produce observed motion $\dot{x}$. Right (inverse): given only observed motion $\dot{x}$, there is no unique decomposition — any split satisfying $\tau_{\text{drift}} + \tau_{\text{input}} = \tau_{\text{total}}$ is consistent. Visualization pending.
+:::
 
 ### Why a Model is Necessary
 
@@ -435,7 +458,10 @@ When inverse dynamics reports, for example, a radial force at the grip, we canno
     
 - Some combination of both
 
-[Figure: In a rotating golf club system, inverse dynamics measures total force at the grip. Without a model, we cannot separate passive forces (centrifugal, gravitational) from active control inputs applied by the golfer.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Model-dependent decomposition.** Diagram of a rotating golf club showing the radial force arrow at the grip. Without a dynamic model (left), the total force is the only observable. With the model (right), the force is decomposed into the centrifugal drift component and the active input component, showing what the golfer is actually contributing vs. passively resisting. Visualization pending.
+:::
 
 ## Limitation 3: The Air Resistance Problem
 
@@ -518,7 +544,10 @@ $$
 
 This represents a **40% reduction** in the calculated couple magnitude when drag is accounted for.
 
-[Figure: Effect of accounting for air resistance on force and couple calculations. When drag is neglected, inverse dynamics attributes all forces to the golfer's hands, leading to substantially different couple values.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Air resistance correction effect.** Bar chart or table comparing inverse dynamics results with and without drag correction. When drag (~8.9 N) is neglected, all moment is attributed to the golfer's hands; when included, the couple values are reduced by the drag moment ($\approx 2.0$ Nm at the grip). Visualization pending.
+:::
 
 ### Broader Implications
 
@@ -535,7 +564,7 @@ Neglecting air resistance leads to systematic errors in calculated forces and co
 
 :::
 
-This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The 40\
+This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The magnitude of this discrepancy depends on drag magnitude and moment arm; based on the estimates above ($\approx 2.0$ Nm drag moment at impact), omitting drag can shift couple estimates by a non-negligible fraction of the total couple value.
 
 ### Why Air Resistance Matters for Interpretation
 
@@ -547,7 +576,7 @@ Unlike the spatial ambiguity (which requires knowing force distribution) or the 
     
 - **Correctable:** Can be included in inverse dynamics with reasonable assumptions
     
-- **Significant:** 40\
+- **Significant:** Estimated drag moment $\approx 2.0$ Nm near impact — a non-negligible fraction of the total couple for a 7-iron
 
 ::: {.keypoint-box}
 **Key Point:** 
@@ -585,7 +614,14 @@ These ambiguities compound each other. Even perfect knowledge of one aspect leav
 
 To successfully interpret inverse dynamics, we need:
 
-[Table]
+| Required Tool / Information | Resolves Ambiguity | Acquisition Method |
+|---|---|---|
+| **Grip force distribution** (multi-point sensors) | Spatial ambiguity (§2) | Instrumented grip or glove sensor array |
+| **Full dynamic model** (inertia, geometry, stiffness) | Drift-input ambiguity (§3) | CAD + MOCAP + system identification |
+| **Aerodynamic model** (drag coefficient, clubhead geometry) | External force ambiguity (§4) | Wind tunnel measurements or CFD |
+| **ZTCF simulation** (drift-only trajectory) | Drift-input ambiguity (§3) | Numerical integration using dynamic model |
+| **Motion capture** at ≥200 Hz | All (base data) | Standard MOCAP system |
+| **Club inertia parameters** | Drift-input ambiguity (§3) | Pendulum test or inertia measurement rig |
 
 ## Quantitative Examples
 
@@ -657,7 +693,10 @@ $$
 
 So the golfer actively pulls inward with 58 lbs (what they *feel*), while 42 lbs of the measured force is passive resistance to centrifugal effects.
 
-[Figure: Decomposition of measured radial force into drift (passive centrifugal) and input (active) components. The drift component grows quadratically with angular velocity. The input component represents what the golfer actively controls and feels.]
+::: {.callout-note}
+## Figure Pending
+**Figure: Radial force drift-input decomposition.** Plot of radial force components as a function of angular velocity $\omega$. The drift component $F_{\text{centrifugal}} = m_c \omega^2 r$ grows quadratically. The input component $F_{\text{input}} = F_{\text{total}} - F_{\text{centrifugal}}$ represents what the golfer actively provides. At $\omega = 30$ rad/s the decomposition gives $F_{\text{drift}} \approx 42$ lbs ($187$ N), $F_{\text{input}} \approx 58$ lbs ($258$ N). Visualization pending.
+:::
 
 ## Implications and Best Practices
 
