@@ -11,6 +11,10 @@ on:
     paths:
       - "articles/The_Geometry_of_Motion/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build_textbooks:
     runs-on: ubuntu-latest
