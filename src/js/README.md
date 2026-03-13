@@ -1,4 +1,13 @@
-# JavaScript Modules
+# JavaScript Modules (`src/js/`)
+
+> **⚠ Divergence Warning (Issue #1425):** This directory (`src/js/`) is **not** the canonical runtime JS directory. The website serves JS from the root `js/` directory. The two directories currently have divergent content:
+>
+> - `js/bibliography.js` (293 lines) vs `src/js/bibliography.js` (493 lines)
+> - `js/main.js` (146 lines) vs `src/js/main.js` (51 lines)
+> - `src/js/seo-enhancements.js`, `src/js/global-search.js` — no counterpart in `js/`
+> - `src/js/modules/` (modular refactor) — no counterpart in `js/`
+>
+> **Status:** `src/js/` contains a partially-developed modular refactor. The two versions are not interchangeable without review. Resolving this divergence is tracked in [issue #1425](https://github.com/D-sorganization/AffineDrift/issues/1425).
 
 This directory contains the modular JavaScript architecture for AffineDrift.
 
@@ -17,20 +26,25 @@ src/js/
 ## Modules
 
 ### main.js
+
 Main entry point that imports and initializes all modules.
 
 **Exports:**
+
 - All module functions for testing
 
 **Usage:**
+
 ```html
 <script type="module" src="/src/js/main.js"></script>
 ```
 
 ### modules/utils.js
+
 Common utility functions used throughout the application.
 
 **Functions:**
+
 - `debounce(func, wait)` - Debounce function execution
 - `runOnDomReady(callback)` - Run callback when DOM is ready
 - `runWhenIdle(callback)` - Run non-critical tasks when idle
@@ -39,41 +53,50 @@ Common utility functions used throughout the application.
 - `smoothScrollTo(element, offset)` - Smooth scroll to element
 
 ### modules/accessibility.js
+
 Handles ARIA labels, keyboard navigation, and accessibility features.
 
 **Functions:**
+
 - `initAriaLabels()` - Initialize ARIA labels for all interactive elements
 - `addHeadingIds()` - Add IDs to headings for anchor links
 - `setupKeyboardNav()` - Setup keyboard shortcuts (Escape, Ctrl+K)
 
 **Features:**
+
 - Automatic ARIA label generation
 - Keyboard navigation support
 - Heading ID generation for TOC
 
 ### modules/navigation.js
+
 Handles smooth scrolling, TOC highlighting, and navigation interactions.
 
 **Functions:**
+
 - `setupSmoothScrolling()` - Setup smooth scrolling for anchor links
 - `setupTocHighlighting()` - Highlight active section in TOC
 - `setupNavigationMenu()` - Setup mobile menu toggle
 - `setupBackToTop()` - Setup back to top button
 
 **Features:**
+
 - Smooth scrolling with offset
 - Active section highlighting
 - Mobile menu support
 - Back to top button
 
 ### modules/search.js
+
 Handles search functionality and modal interactions.
 
 **Functions:**
+
 - `initSearch()` - Initialize search modal and interactions
 - `setupSearchAutocomplete(searchIndex)` - Setup search autocomplete
 
 **Features:**
+
 - Search modal with keyboard shortcuts
 - Autocomplete suggestions
 - Result highlighting
@@ -81,6 +104,7 @@ Handles search functionality and modal interactions.
 ## Migration from Monolithic script.js
 
 The original `script.js` (1,389 lines) has been refactored into:
+
 - **main.js** (50 lines) - Entry point
 - **utils.js** (110 lines) - Utilities
 - **accessibility.js** (120 lines) - Accessibility
@@ -100,6 +124,7 @@ The original `script.js` (1,389 lines) has been refactored into:
 ### Migration Path
 
 **Option 1: Direct Replacement (Recommended for new builds)**
+
 ```html
 <!-- Replace -->
 <script src="/script.js"></script>
@@ -109,6 +134,7 @@ The original `script.js` (1,389 lines) has been refactored into:
 ```
 
 **Option 2: Gradual Migration (For existing deployments)**
+
 1. Keep `script.js` for compatibility
 2. Add modules alongside
 3. Test thoroughly
@@ -116,6 +142,7 @@ The original `script.js` (1,389 lines) has been refactored into:
 5. Remove old `script.js`
 
 **Option 3: Bundle for Production**
+
 ```bash
 # Use a bundler like esbuild or rollup
 npm install -D esbuild
@@ -125,6 +152,7 @@ npx esbuild src/js/main.js --bundle --outfile=dist/bundle.js
 ## Browser Support
 
 ES6 modules are supported in:
+
 - Chrome 61+
 - Firefox 60+
 - Safari 11+
@@ -137,11 +165,11 @@ For older browsers, use a bundler or transpiler.
 All modules export their functions for testing:
 
 ```javascript
-import { debounce, generateUniqueId } from './modules/utils.js';
-import { initAriaLabels } from './modules/accessibility.js';
+import { debounce, generateUniqueId } from "./modules/utils.js";
+import { initAriaLabels } from "./modules/accessibility.js";
 
 // Test in Jest or other test framework
-test('debounce delays execution', () => {
+test("debounce delays execution", () => {
   // Test code
 });
 ```
@@ -158,6 +186,7 @@ See `tests/script.test.js` for examples.
 4. Add tests in `tests/`
 
 Example:
+
 ```javascript
 // src/js/modules/analytics.js
 export function trackPageView() {
@@ -165,7 +194,7 @@ export function trackPageView() {
 }
 
 // src/js/main.js
-import { trackPageView } from './modules/analytics.js';
+import { trackPageView } from "./modules/analytics.js";
 
 runOnDomReady(() => {
   trackPageView();

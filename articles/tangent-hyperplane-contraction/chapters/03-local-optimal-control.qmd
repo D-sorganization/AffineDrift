@@ -25,6 +25,16 @@ $$
 S_k = Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
 $$
 
+::: {.callout-note}
+## Proof Sketch (Riccati Recursion)
+
+This recursion is derived by minimizing the one-step cost $\ell_k(\delta x_k, \delta u_k) = \delta x_k^\top Q_k \delta x_k + \delta u_k^\top R_k \delta u_k$ subject to the linear dynamics $\delta x_{k+1} = A_k \delta x_k + B_k \delta u_k$. Completing the square in $\delta u_k$ yields the optimal gain:
+
+$$K_k = (R_k + B_k^\top S_{k+1} B_k)^{-1} B_k^\top S_{k+1} A_k$$
+
+and substituting back gives the recursion above. Full proof: Anderson & Moore (1989) *Optimal Control: Linear Quadratic Methods*, §2.3; Bertsekas (2005) *Dynamic Programming and Optimal Control*, Vol. 1, §4.1. The infinite-horizon limit (LQR) is the steady-state solution of this recursion when $(A_k, B_k)$ is time-invariant; see Khalil (2002), §14.3.
+:::
+
 ## Link to DDP
 
 DDP extends this local recursion with repeated model updates and forward rollout, but the local stabilizing core is unchanged [@jacobson1970ddp; @todorov2002optimal].

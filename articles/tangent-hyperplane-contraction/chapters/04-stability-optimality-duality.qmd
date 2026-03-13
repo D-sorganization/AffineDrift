@@ -30,6 +30,19 @@ $$
 
 Under uniform coercivity and boundedness assumptions, this yields exponential decay.
 
+::: {.callout-note}
+## Proof Sketch (Discrete Decay Identity)
+
+**Derivation:** Expand $V_{k+1} = \delta x_{k+1}^\top S_{k+1} \delta x_{k+1}$ using $\delta x_{k+1} = (A_k - B_k K_k)\delta x_k$:
+
+$$V_{k+1} = \delta x_k^\top (A_k - B_k K_k)^\top S_{k+1} (A_k - B_k K_k) \delta x_k.$$
+
+Subtract $V_k = \delta x_k^\top S_k \delta x_k$ and apply the Riccati identity (Chapter 3 recursion) with optimal gain $K_k$. The key identity $S_k = Q_k + A_k^\top S_{k+1} A_k - K_k^\top (R_k + B_k^\top S_{k+1} B_k) K_k$ simplifies the expression to give $V_{k+1} - V_k = -\delta x_k^\top(Q_k + K_k^\top R_k K_k)\delta x_k$.
+
+**Exponential decay:** If $S_k \geq \alpha I$ (coercivity, $\alpha > 0$) and $Q_k + K_k^\top R_k K_k \geq \beta I$ ($\beta > 0$) uniformly in $k$, then $V_{k+1} \leq (1 - \beta/\|S_k\|) V_k$, giving exponential contraction. Full proof: Lohmiller & Slotine (1998) §III; Crouch & Lamnabhi-Lagarrigue (1988) for continuous-time analogues.
+:::
+
+
 ## Scope and Limitations: When Does the Duality Hold?
 
 This duality is most transparent for **linear systems**, where it is exact. For nonlinear systems, we must carefully track what is and is not guaranteed:
