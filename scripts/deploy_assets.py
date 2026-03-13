@@ -20,8 +20,8 @@ def main() -> int:
     # Robust root detection
     root = Path(__file__).resolve().parent.parent
 
-    src_js = root / "src/js/startup-launcher.js"
-    src_css = root / "src/css/startup-launcher.css"
+    src_js = root / "js/startup-launcher.js"
+    src_css = root / "css/startup-launcher.css"
 
     docs_js_dir = root / "docs/js"
     docs_css_dir = root / "docs/css"
