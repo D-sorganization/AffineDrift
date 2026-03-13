@@ -55,17 +55,19 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         source="css/resources.css",
         mirrors=("docs/css/resources.css",),
     ),
+    # js/ is the canonical source; docs/js/ is the Quarto-served mirror.
+    # src/js/ has been removed (issue #1425); js/ syncs directly to docs/js/.
     SyncMap(
         source="js/metrics.js",
-        mirrors=("src/js/metrics.js", "docs/js/metrics.js"),
+        mirrors=("docs/js/metrics.js",),
     ),
     SyncMap(
         source="js/startup-launcher.js",
-        mirrors=("src/js/startup-launcher.js", "docs/js/startup-launcher.js"),
+        mirrors=("docs/js/startup-launcher.js",),
     ),
     SyncMap(
         source="js/notes-workspace.js",
-        mirrors=("src/js/notes-workspace.js", "docs/js/notes-workspace.js"),
+        mirrors=("docs/js/notes-workspace.js",),
     ),
     SyncMap(
         source="js/bibliography.js",
@@ -78,11 +80,7 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
 )
 
 # These are intentionally different architectures and are not synchronized.
-INTENTIONAL_DIVERGENCE: tuple[str, ...] = (
-    "js/main.js vs src/js/main.js",
-    "js/bibliography.js vs src/js/bibliography.js",
-    "script.js vs docs/script.js",
-)
+INTENTIONAL_DIVERGENCE: tuple[str, ...] = ("script.js vs docs/script.js",)
 
 
 def sha256(path: Path) -> str:

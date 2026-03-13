@@ -15,7 +15,7 @@ const {
   clearData,
   escapeHtml,
   truncate,
-} = require("../src/js/metrics.js");
+} = require("../js/metrics.js");
 
 describe("Metrics Module", () => {
   const STORAGE_KEY = "affinedrift_metrics";

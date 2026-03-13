@@ -13,7 +13,7 @@ describe("Notes Workspace", () => {
     document.body.innerHTML = "";
     window.__AFFINEDRIFT_NOTES_NO_AUTO_INIT__ = true;
 
-    const mod = require("../src/js/notes-workspace.js");
+    const mod = require("../js/notes-workspace.js");
     NotesWorkspaceStore = mod.NotesWorkspaceStore;
     initNotesWorkspace = mod.initNotesWorkspace;
     STORAGE_KEYS = mod.STORAGE_KEYS;
