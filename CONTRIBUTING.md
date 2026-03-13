@@ -28,17 +28,20 @@ Thank you for your interest in contributing to AffineDrift! This document provid
 1. **Fork the repository** on GitHub
 
 2. **Clone your fork**:
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/AffineDrift.git
    cd AffineDrift
    ```
 
 3. **Install Python dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Verify Quarto installation**:
+
    ```bash
    quarto check
    ```
@@ -56,17 +59,19 @@ Thank you for your interest in contributing to AffineDrift! This document provid
    quarto preview
    ```
 3. **Run quality checks**:
+
    ```bash
    # Python linting
    ruff check .
    ruff format .
-   
+
    # Type checking
    mypy .
-   
+
    # Run tests
    pytest
    ```
+
 4. **Build the site**:
    ```bash
    quarto render
@@ -86,6 +91,7 @@ Thank you for your interest in contributing to AffineDrift! This document provid
 Quarto files are the source for all content pages.
 
 **Structure:**
+
 ```yaml
 ---
 title: "Your Article Title"
@@ -94,26 +100,41 @@ date: "2026-01-22"
 description: "Brief description for SEO"
 categories: [category1, category2]
 ---
-
 ## Introduction
 
 Your content here...
 ```
 
 **Best Practices:**
+
 - Use YAML frontmatter for metadata
 - Include `description` for SEO
 - Add `categories` for organization
 - Use proper heading hierarchy (h2, h3, h4)
 - Include alt text for images: `![Description](image.png)`
-- Cite sources using bibliography references
+- Cite sources using bibliography references (see citation guidelines below)
+
+**Citation Guidelines (issue #1441):**
+
+AffineDrift uses a mixed citation approach. When writing new content:
+
+1. **Prefer Quarto's `@key` citation system** for formal articles. Add the bibliography key to `data/bibliography.json` or the article's local `.bib` file, then use `[@khalil2002nonlinear]` inline.
+2. **For website-oriented pages** (research reviews, resource pages) where formal citations are awkward, use inline references with author-year format: _(Khalil 2002, §4.1)_.
+3. **Avoid mixing styles** within a single article — choose one approach and be consistent.
+4. **Required frontmatter for articles with formal citations:**
+   ```yaml
+   bibliography: ../references.bib # or path to relevant .bib file
+   ```
+5. The global bibliography is in `data/bibliography.json` (JSON) and `data/bibliography.yaml` (YAML). When adding new references, add them to `data/bibliography.yaml` as the canonical source.
 
 **Math Equations:**
+
 - Inline: `$E = mc^2$`
 - Display: `$$\frac{a}{b}$$`
 - Use LaTeX syntax for equations
 
 **Code Blocks:**
+
 ````markdown
 ```python
 def example():
@@ -132,6 +153,7 @@ Follow PEP 8 and project-specific standards in [AGENTS.md](AGENTS.md):
 - **Specific exception handling** (no bare `except:`)
 
 **Example:**
+
 ```python
 import logging
 from pathlib import Path
@@ -141,13 +163,13 @@ logger = logging.getLogger(__name__)
 def process_file(file_path: Path) -> dict[str, str]:
     """
     Process a file and return results.
-    
+
     Args:
         file_path: Path to the file to process
-        
+
     Returns:
         Dictionary containing processing results
-        
+
     Raises:
         FileNotFoundError: If file doesn't exist
     """
@@ -174,6 +196,7 @@ def process_file(file_path: Path) -> dict[str, str]:
 - Use `stylelint` for linting
 
 **Example:**
+
 ```css
 /* Component: Article Card */
 .article-card {
@@ -200,6 +223,7 @@ def process_file(file_path: Path) -> dict[str, str]:
 - Follow patterns in existing `script.js`
 
 **Example:**
+
 ```javascript
 /**
  * Scrolls to a specific element with offset
@@ -212,9 +236,10 @@ const scrollToElement = (elementId, offset = 140) => {
     console.error(`Element ${elementId} not found`);
     return;
   }
-  
-  const position = element.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top: position, behavior: 'smooth' });
+
+  const position =
+    element.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: position, behavior: "smooth" });
 };
 ```
 
@@ -239,6 +264,7 @@ For architecture-impacting changes, add or update an ADR in `docs/adr/`.
 - Link the ADR in the pull request description
 
 Examples of changes requiring ADRs:
+
 - New boundary/layering rules
 - Major testing strategy changes
 - Canonical source-of-truth changes for generated/synced assets
@@ -246,23 +272,25 @@ Examples of changes requiring ADRs:
 ### Before Submitting
 
 1. **Run all quality checks locally**:
+
    ```bash
    # Python linting (REQUIRED - must pass)
    ruff check .
    ruff check --fix .  # Auto-fix issues
    ruff format .       # Format code
-   
+
    # Type checking
    mypy .
-   
+
    # Run tests
    pytest
-   
+
    # HTML validation
    html-validate "docs/**/*.html"
    ```
 
 2. **Build and verify the site**:
+
    ```bash
    quarto render
    # Check for build errors
@@ -289,6 +317,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -298,6 +327,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 - `chore`: Maintenance tasks
 
 **Examples:**
+
 ```bash
 git commit -m "feat(articles): add new article on drift ratio"
 git commit -m "fix(navigation): correct broken link in sidebar"
@@ -308,11 +338,13 @@ git commit -m "test(scripts): add tests for sitemap generator"
 ### Creating the Pull Request
 
 1. **Push your branch**:
+
    ```bash
    git push origin feature/your-feature-name
    ```
 
 2. **Open PR on GitHub** with:
+
    - **Clear title** following commit message format
    - **Description** including:
      - What changes did you make?
@@ -322,11 +354,13 @@ git commit -m "test(scripts): add tests for sitemap generator"
    - **Link related issues** using `Fixes #123` or `Relates to #456`
 
 3. **Ensure CI passes**:
+
    - All GitHub Actions workflows must pass
    - Fix any linting or test failures
    - Address any security warnings
 
 4. **Keep PRs focused**:
+
    - One feature or fix per PR
    - Avoid mixing unrelated changes
    - Keep diffs manageable (< 500 lines preferred)
@@ -377,13 +411,14 @@ When suggesting resources for the Resources page:
    - Computational Tools
    - Helpful Links
 4. **Format as Quarto markdown**:
+
    ```markdown
    ### Resource Title
-   
+
    **Author:** Name
    **Link:** [URL](https://example.com)
    **Description:** Brief description of the resource.
-   
+
    Why it's valuable: Explanation of relevance to affine control theory or golf biomechanics.
    ```
 
@@ -410,6 +445,7 @@ AffineDrift/
 ```
 
 **Key Files:**
+
 - `_quarto.yml` - Site configuration, navigation, metadata
 - `custom.scss` - SCSS variables and custom styles
 - `script.js` - Interactive features and navigation
@@ -420,11 +456,13 @@ AffineDrift/
 ### Adding a New Article
 
 1. Create `.qmd` file in `articles/` directory:
+
    ```bash
    touch articles/my-new-article.qmd
    ```
 
 2. Add frontmatter:
+
    ```yaml
    ---
    title: "My New Article"
@@ -438,6 +476,7 @@ AffineDrift/
 3. Write content using Markdown and LaTeX
 
 4. Add to navigation in `_quarto.yml`:
+
    ```yaml
    website:
      navbar:
@@ -568,27 +607,32 @@ if __name__ == "__main__":
 #### Tool Development Checklist
 
 1. **Structure**
+
    - [ ] Module-level docstring with usage examples
    - [ ] `main()` function as entry point
    - [ ] `if __name__ == "__main__":` guard
    - [ ] Argument parsing with `argparse`
 
 2. **Documentation**
+
    - [ ] Google-style docstrings for all functions
    - [ ] Type hints for parameters and return values
    - [ ] Usage examples in module docstring
 
 3. **Error Handling**
+
    - [ ] Specific exceptions (not bare `except:`)
    - [ ] Informative error messages
    - [ ] Proper exit codes
 
 4. **Logging**
+
    - [ ] Use `logging` module (NO `print()`)
    - [ ] Configurable verbosity level
    - [ ] Meaningful log messages
 
 5. **Testing**
+
    - [ ] Create `tests/test_<tool_name>.py`
    - [ ] Test happy path and error cases
    - [ ] Mock file I/O where appropriate
@@ -644,14 +688,14 @@ export const myFeature = {
    */
   process(data) {
     return data;
-  }
+  },
 };
 ```
 
 Import in `script.js`:
 
 ```javascript
-import { myFeature } from './src/js/my-module.js';
+import { myFeature } from "./src/js/my-module.js";
 myFeature.init();
 ```
 
@@ -682,18 +726,22 @@ Add styles in `custom.scss`:
 **Title:** `feat(articles): add article on drift ratio analysis`
 
 **Description:**
+
 ```markdown
 ## Summary
+
 - Add new article explaining drift ratio concepts
 - Include interactive examples with MathJax
 - Add to Articles navigation
 
 ## Changes
+
 - `articles/drift-ratio-analysis.qmd` - New article
 - `_quarto.yml` - Updated navigation
 - `docs/` - Generated HTML
 
 ## Testing
+
 - [ ] `quarto preview` shows article correctly
 - [ ] Math equations render properly
 - [ ] Navigation links work
@@ -707,17 +755,22 @@ Fixes #123
 **Title:** `fix(navigation): correct broken sidebar links`
 
 **Description:**
+
 ```markdown
 ## Summary
+
 Fix broken links in the right sidebar that were pointing to old URLs.
 
 ## Root Cause
+
 Links were using relative paths that broke after restructuring.
 
 ## Solution
+
 Updated to use absolute paths from site root.
 
 ## Testing
+
 - Verified all sidebar links in Chrome, Firefox, Safari
 - Checked mobile navigation
 
@@ -729,26 +782,33 @@ Fixes #456
 **Title:** `feat(tools): add batch processing to latex_to_qmd`
 
 **Description:**
-```markdown
+
+````markdown
 ## Summary
+
 Add ability to process multiple LaTeX files in one command.
 
 ## Changes
+
 - Add `--batch` flag for directory processing
 - Add progress reporting
 - Add summary statistics
 
 ## Usage
+
 ```bash
 python latex_to_qmd.py --batch articles/latex/
 ```
+````
 
 ## Testing
+
 - Added tests in `tests/test_latex_to_qmd.py`
 - Tested with 50+ files
 
 Relates to #789
-```
+
+````
 
 ## Code of Conduct
 
@@ -796,7 +856,7 @@ pytest --cov=. --cov-report=html
 
 # Run with verbose output
 pytest -v
-```
+````
 
 ### Writing Tests
 
@@ -807,15 +867,16 @@ pytest -v
 - Follow Arrange-Act-Assert pattern
 
 **Example:**
+
 ```python
 def test_convert_latex_equation():
     """Test LaTeX to QMD equation conversion."""
     # Arrange
     latex_input = r"\frac{a}{b}"
-    
+
     # Act
     result = convert_latex(latex_input)
-    
+
     # Assert
     assert result == expected_output
     assert result.is_valid()
