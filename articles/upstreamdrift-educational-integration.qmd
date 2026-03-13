@@ -1,0 +1,248 @@
+---
+title: "UpstreamDrift: Educational Tool Integration Guide"
+description: "Review of UpstreamDrift simulation platform capabilities and integration plan for the Geometry of Motion book series."
+author: "AffineDrift Research"
+date: today
+---
+
+## Overview
+
+UpstreamDrift is a multi-physics simulation platform supporting the quantitative
+claims in *The Geometry of Motion* book series. This article documents the platform's
+capabilities and provides a guide for using it as an educational companion.
+
+::: {.callout-note}
+## Repository
+
+UpstreamDrift is maintained at
+[D-sorganization/Golf_Modeling_Suite](https://github.com/D-sorganization/Golf_Modeling_Suite).
+Access requires D-sorganization membership.
+:::
+
+
+## Physics Engines Available
+
+### MuJoCo
+
+**Purpose:** Fast GPU-accelerated rigid-body dynamics for golf swing simulations and RL training.
+
+**Key models:**
+- 3-DOF simplified golf swing (shoulder + wrist + club)
+- Full-body musculoskeletal model (MyoSuite integration)
+- Double pendulum benchmark
+
+**Example usage:**
+```python
+import mujoco
+import mujoco.viewer
+import numpy as np
+
+# Load golf swing model
+model = mujoco.MjModel.from_xml_path("models/golf_3dof.xml")
+data = mujoco.MjData(model)
+
+# Run passive simulation (u=0)
+mujoco.mj_resetData(model, data)
+data.qpos[0] = np.radians(90)   # Shoulder at top of backswing
+trajectories = []
+for _ in range(500):
+    mujoco.mj_step(model, data)
+    trajectories.append(data.qpos.copy())
+```
+
+### Drake
+
+**Purpose:** Trajectory optimization and optimal control with formal guarantees.
+
+**Key capabilities:**
+- Direct collocation for swing trajectories
+- LQR stabilization around nominal trajectories
+- Differential Dynamic Programming (DDP)
+
+**Example usage:**
+```python
+from pydrake.all import (DiagramBuilder, AddMultibodyPlantSceneGraph,
+                          Parser, Simulator)
+
+builder = DiagramBuilder()
+plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=0.001)
+Parser(plant).AddModelFromFile("models/golf_sdf/golf_arm.sdf")
+plant.Finalize()
+diagram = builder.Build()
+simulator = Simulator(diagram)
+```
+
+### Pinocchio
+
+**Purpose:** Efficient $O(n)$ rigid-body dynamics with Python bindings for control design.
+
+**Key capabilities:**
+- Forward/inverse kinematics
+- Articulated Body Algorithm (ABA) for forward dynamics
+- Recursive Newton-Euler Algorithm (RNEA) for inverse dynamics
+- Jacobian computation for operational-space control
+
+**Example usage:**
+```python
+import pinocchio as pin
+import numpy as np
+
+# Load URDF model
+model = pin.buildModelFromUrdf("models/golf_arm.urdf")
+data = model.createData()
+
+# Compute forward kinematics
+q = np.zeros(model.nq)   # joint configuration
+v = np.zeros(model.nv)   # joint velocities
+pin.forwardKinematics(model, data, q, v)
+
+# Compute Jacobian at end-effector
+frame_id = model.getFrameId("club_head")
+pin.computeFrameJacobian(model, data, q, frame_id)
+J = pin.getFrameJacobian(model, data, frame_id, pin.LOCAL_WORLD_ALIGNED)
+print(f"Club-head Jacobian shape: {J.shape}")  # (6, nv)
+```
+
+### OpenSim
+
+**Purpose:** Biomechanical modeling with muscle-driven dynamics (MTU models).
+
+**Key capabilities:**
+- Musculoskeletal geometry
+- Muscle force-velocity-length relationships
+- Inverse dynamics with experimental motion capture data
+
+### MyoSuite
+
+**Purpose:** Muscle-driven RL environments for biologically realistic motor control.
+
+**Key capabilities:**
+- 200+ muscle DoF upper body model
+- OpenAI Gym-compatible interface
+- Integration with stable-baselines3 and SAC/TD3 algorithms
+
+**Example usage:**
+```python
+import myosuite
+import gym
+
+env = gym.make("myoChallengeBimanuaReachFixed-v0")
+obs = env.reset()
+for _ in range(100):
+    action = env.action_space.sample()  # Random muscle activations
+    obs, reward, done, info = env.step(action)
+    if done:
+        obs = env.reset()
+```
+
+
+## Chapter-by-Chapter Integration Map
+
+| Book Chapter | UpstreamDrift Tool | Key Experiment |
+|-------------|-------------------|----------------|
+| Vol 0, Ch 1 (Linear Algebra) | Pinocchio | Compute Jacobian, verify orthogonality of rotation matrix |
+| Vol 0, Ch 3 (Rotations) | Pinocchio | Forward kinematics through rotation chain |
+| Vol 0, Ch 6 (Recursive) | Pinocchio ABA | Forward dynamics $O(n)$ timing benchmark |
+| Vol I, Ch 1 (Foundations) | Any engine | Compute Fréchet derivative numerically |
+| Vol I, Ch 4 (Contraction) | MuJoCo | Measure contraction rate from multiple initial conditions |
+| Vol I, Ch 5 (Optimal Control) | Drake DDP | Solve swing trajectory optimization |
+| Vol I, Ch 8 (Applications) | MuJoCo + Pinocchio | Compute drift-control ratio $\rho(t)$ |
+| Vol II, Ch 4 (Orbital Stability) | MuJoCo | Compute Floquet multipliers for passive swing |
+| Vol II, Ch 6 (Trajectory Opt.) | Drake | Direct collocation golf swing |
+| Vol III (RL & Policy) | MyoSuite | Train SAC agent on muscle-driven swing |
+
+
+## Recommended Learning Path
+
+### Beginner (Vol 0 readers)
+
+1. Install Pinocchio: `pip install pin`
+2. Load the double pendulum URDF from `models/pendulum_2dof.urdf`
+3. Verify that the rotation matrices along the chain are orthogonal
+4. Compute the end-effector Jacobian and check its rank
+
+### Intermediate (Vol I readers)
+
+1. Install MuJoCo: `pip install mujoco`
+2. Load the 3-DOF golf swing model
+3. Run passive simulation (zero control) and plot the drift trajectory
+4. Add LQR stabilization and measure the contraction rate
+
+### Advanced (Vol II-III readers)
+
+1. Install Drake (see [Drake installation guide](https://drake.mit.edu/installation.html))
+2. Set up the direct collocation problem for swing trajectory optimization
+3. Compare the optimal trajectory against the passive trajectory
+4. Implement a DDP iteration and visualize convergence
+
+### Research (Vol IV readers)
+
+1. Install MyoSuite: `pip install myosuite`
+2. Train a SAC agent on the golf swing task
+3. Compare the learned latent policy against the geometric control law
+4. Measure the effective dimensionality of the learned representation
+
+
+## Running Existing Benchmarks
+
+UpstreamDrift includes several benchmark scripts:
+
+```bash
+# Run the drift-control ratio computation
+python3 -m src.tools.compute_drift_control_ratio --model golf_3dof --horizon 0.5
+
+# Run contraction rate measurement
+python3 -m src.tools.measure_contraction --model pendulum_2dof --n_trials 50
+
+# Run forward dynamics timing benchmark
+python3 -m src.engines.pinocchio.benchmarks.aba_timing --n_dof 7 --n_steps 1000
+```
+
+
+## Installation
+
+```bash
+# Clone UpstreamDrift
+git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
+cd Golf_Modeling_Suite
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Optional: Drake (requires separate installer)
+# See https://drake.mit.edu/installation.html
+
+# Run tests to verify installation
+python3 -m pytest tests/ -x -q
+```
+
+
+## Connection to Book Theorems
+
+### Drift-Control Ratio (Vol I, Ch 8)
+
+The drift-control ratio $\rho(t)$ can be computed directly from UpstreamDrift:
+
+```python
+from src.tools.compute_drift_control_ratio import DriftControlAnalyzer
+
+analyzer = DriftControlAnalyzer(model_path="models/golf_3dof.xml")
+trajectory = analyzer.load_expert_trajectory("data/expert_swing.npz")
+rho = analyzer.compute_ratio(trajectory)
+print(f"Peak rho (impact phase): {max(rho):.2f}")
+# Expert swings show rho > 10 during downswing (drift-dominated)
+```
+
+### Contraction Rate Verification (Vol I, Ch 4)
+
+```python
+from src.tools.contraction_verifier import ContractionVerifier
+
+verifier = ContractionVerifier(model_path="models/pendulum_2dof.xml")
+# Perturb from nominal and measure convergence
+lambda_measured = verifier.estimate_contraction_rate(
+    n_trials=50, perturbation_scale=0.1
+)
+print(f"Measured contraction rate: λ = {lambda_measured:.4f}")
+# Should match the theoretical prediction from LQR eigenvalues
+```
