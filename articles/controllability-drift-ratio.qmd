@@ -631,7 +631,12 @@ High DCR implies large $A_f$, hence exponential amplification of small errors.
 **Conclusion:**
 Impact is extremely sensitive to early-swing structure. While the golfer may retain the torque authority to rotate the clubface (low axial inertia), the **high Planar DCR** denies them the ability to slow or steer the clubhead to *meet* that face angle at the correct millisecond. Thus, **Path Drift** enforces **Face Error**.
 
-# 8. Numerical Example: Drift vs Control Magnitude
+# 8. Schematic Illustration: Drift vs Control Magnitude
+
+::: {.callout-note}
+## Schematic Only — Not Real Data
+The plot below is a **schematic illustration** generated from qualitatively motivated mathematical functions. It is **not** output from a real biomechanical model or motion-capture measurement. The functional forms (exponential growth of drift near impact, gradual decay of control authority) are chosen to reflect the qualitative pattern described in the theoretical analysis. Calibrated curves from an instrumented swing model would be needed to validate the specific magnitudes and timing.
+:::
 
 ```{python}
 import numpy as np
@@ -641,12 +646,13 @@ t = np.linspace(0, 1, 500)
 drift = 0.2 + 2.5 * np.exp(-((t - 0.80)**2) / 0.002)
 control = 0.6 - 0.3 * np.exp(-((t - 0.10)**2) / 0.01)
 
-plt.figure(figsize=(10,5))
-plt.plot(t, drift, label="Drift Magnitude", linewidth=3)
-plt.plot(t, control, label="Control Magnitude", linewidth=3)
-plt.title("Drift vs Control Magnitude Throughout the Golf Swing")
-plt.xlabel("Normalized Swing Phase")
-plt.ylabel("Relative Magnitude")
+plt.figure(figsize=(10, 5))
+plt.plot(t, drift, label="Drift Magnitude (schematic)", linewidth=3)
+plt.plot(t, control, label="Control Magnitude (schematic)", linewidth=3)
+plt.title("Drift vs Control Magnitude Throughout the Golf Swing\n"
+          "[Schematic illustration — not real model output]")
+plt.xlabel("Normalized Swing Phase (0 = address, 1 = impact)")
+plt.ylabel("Relative Magnitude (arbitrary units)")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
