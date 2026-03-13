@@ -1,0 +1,265 @@
+---
+title: "Rotation Representations: A Cross-Reference Guide"
+description: "Comprehensive reference for conversion between rotation matrices, quaternions, Euler angles, and screw/axis-angle representations."
+author: "AffineDrift Research"
+date: today
+---
+
+## Overview
+
+Every volume of *The Geometry of Motion* uses rotations. Different representations
+are optimal for different purposes:
+
+| Representation | DoF stored | Pros | Cons |
+|----------------|-----------|------|------|
+| Rotation matrix $R \in SO(3)$ | 9 numbers | Intuitive; composition = multiplication | Over-parameterized; need orthogonality constraint |
+| Quaternion $\mathbf{q} \in S^3$ | 4 numbers | No singularities; efficient composition | Less intuitive; double cover of $SO(3)$ |
+| Euler angles $(\phi, \theta, \psi)$ | 3 numbers | Minimal; human-readable | Gimbal lock; 12 conventions; non-unique |
+| Axis-angle $(\hat{\mathbf{n}}, \theta)$ | 4 numbers (or 3 compact) | Geometric intuition | Singularity at $\theta = 0$ |
+| Exponential coordinates $\omega \in \mathfrak{so}(3)$ | 3 numbers | Lie algebra; first-order dynamics | Non-unique for large angles |
+
+This reference follows Park & Lynch (*Modern Robotics*, 2017) in preferring the
+screw/exponential approach as the primary formalism, while showing equivalences
+to all other conventions.
+
+
+## Rotation Matrices
+
+A rotation matrix $R \in SO(3)$ satisfies $R^\top R = I$ and $\det(R) = +1$.
+
+**Composition:** $R_{AC} = R_{AB} R_{BC}$ (rotate $B$-to-$C$ first, then $A$-to-$B$).
+
+**Inverse:** $R^{-1} = R^\top$ (orthogonality).
+
+**Rotation of a vector:** $\mathbf{v}' = R\mathbf{v}$.
+
+### Standard Rotation Matrices
+
+Rotation by angle $\theta$ about the $x$, $y$, $z$ axes respectively:
+
+$$R_x(\theta) = \begin{bmatrix}1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta\end{bmatrix}, \quad
+R_y(\theta) = \begin{bmatrix}\cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta\end{bmatrix}, \quad
+R_z(\theta) = \begin{bmatrix}\cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1\end{bmatrix}.$$
+
+
+## Euler Angles
+
+**ZYX (aerospace / yaw-pitch-roll):** $R = R_z(\psi) R_y(\theta) R_x(\phi)$.
+
+**ZYZ (physics / precession-nutation-spin):** $R = R_z(\alpha) R_y(\beta) R_z(\gamma)$.
+
+::: {.callout-warning}
+## Gimbal Lock
+
+Euler angles become singular (gimbal lock) when the middle rotation equals $\pm 90°$.
+For ZYX: singularity at $\theta = \pm\pi/2$. Near singularity, small physical rotations
+require large Euler angle changes — numerical differentiation fails.
+
+**Rule of thumb:** avoid Euler angles for dynamics integration. Use quaternions or
+exponential coordinates instead.
+:::
+
+### Converting Euler Angles to Rotation Matrix
+
+ZYX convention:
+$$R = R_z(\psi) R_y(\theta) R_x(\phi) = \begin{bmatrix}
+c_\psi c_\theta & c_\psi s_\theta s_\phi - s_\psi c_\phi & c_\psi s_\theta c_\phi + s_\psi s_\phi \\
+s_\psi c_\theta & s_\psi s_\theta s_\phi + c_\psi c_\phi & s_\psi s_\theta c_\phi - c_\psi s_\phi \\
+-s_\theta & c_\theta s_\phi & c_\theta c_\phi
+\end{bmatrix},$$
+where $c_\alpha = \cos\alpha$, $s_\alpha = \sin\alpha$.
+
+
+## Axis-Angle Representation
+
+A rotation by angle $\theta$ about unit axis $\hat{\mathbf{n}} = [n_x, n_y, n_z]^\top$:
+
+$$R = I + \sin\theta \, [\hat{\mathbf{n}}]_\times + (1-\cos\theta) \, [\hat{\mathbf{n}}]_\times^2,$$
+
+where $[\hat{\mathbf{n}}]_\times$ is the skew-symmetric matrix:
+
+$$[\hat{\mathbf{n}}]_\times = \begin{bmatrix}0 & -n_z & n_y \\ n_z & 0 & -n_x \\ -n_y & n_x & 0\end{bmatrix}.$$
+
+This is the **Rodrigues formula** (also called the matrix exponential):
+$R = \exp(\theta [\hat{\mathbf{n}}]_\times)$.
+
+
+## Exponential Coordinates (Lie Algebra $\mathfrak{so}(3)$)
+
+The compact exponential coordinates store the rotation as a single 3-vector
+$\boldsymbol{\omega} = \theta \hat{\mathbf{n}} \in \mathbb{R}^3$:
+
+$$R = \exp([\boldsymbol{\omega}]_\times).$$
+
+**Key properties:**
+- $\boldsymbol{\omega} = \mathbf{0}$ gives $R = I$ (identity)
+- The inverse map: $\boldsymbol{\omega} = \log(R)$ (matrix logarithm of $SO(3)$)
+- Angular velocity in body frame: $\dot{R} = R [\boldsymbol{\omega}_b]_\times$
+- Angular velocity in world frame: $\dot{R} = [\boldsymbol{\omega}_w]_\times R$
+
+This is the formalism used throughout *The Geometry of Motion* and in the
+screw theory reference.
+
+
+## Quaternions
+
+A unit quaternion $\mathbf{q} = (w, x, y, z)$ with $w^2 + x^2 + y^2 + z^2 = 1$
+represents a rotation by angle $\theta = 2\arccos(w)$ about axis $\hat{\mathbf{n}} = (x,y,z)/\sin(\theta/2)$.
+
+### Quaternion to Rotation Matrix
+
+$$R = \begin{bmatrix}
+1-2(y^2+z^2) & 2(xy-wz) & 2(xz+wy) \\
+2(xy+wz) & 1-2(x^2+z^2) & 2(yz-wx) \\
+2(xz-wy) & 2(yz+wx) & 1-2(x^2+y^2)
+\end{bmatrix}.$$
+
+### Quaternion Composition
+
+$$\mathbf{q}_1 \otimes \mathbf{q}_2 = \begin{bmatrix}
+w_1 w_2 - x_1 x_2 - y_1 y_2 - z_1 z_2 \\
+w_1 x_2 + x_1 w_2 + y_1 z_2 - z_1 y_2 \\
+w_1 y_2 - x_1 z_2 + y_1 w_2 + z_1 x_2 \\
+w_1 z_2 + x_1 y_2 - y_1 x_2 + z_1 w_2
+\end{bmatrix}.$$
+
+### Quaternion Derivative
+
+For angular velocity $\boldsymbol{\omega}$ in the body frame:
+
+$$\dot{\mathbf{q}} = \frac{1}{2} \begin{bmatrix}0 \\ \boldsymbol{\omega}\end{bmatrix} \otimes \mathbf{q}.$$
+
+::: {.callout-note}
+## Double Cover
+
+Both $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation. When interpolating
+or integrating quaternions, always check that consecutive quaternions have positive
+dot product $\mathbf{q}_1 \cdot \mathbf{q}_2 > 0$; if not, negate one before
+interpolating to take the short path.
+:::
+
+
+## Conversion Summary Table
+
+| From → To | Formula |
+|-----------|---------|
+| $R$ → axis-angle | $\theta = \arccos\frac{\text{tr}(R)-1}{2}$, $\hat{\mathbf{n}} = \frac{1}{2\sin\theta}\begin{bmatrix}R_{32}-R_{23}\\R_{13}-R_{31}\\R_{21}-R_{12}\end{bmatrix}$ |
+| $R$ → quaternion | $w=\frac{1}{2}\sqrt{1+\text{tr}(R)}$, $(x,y,z)=\frac{1}{4w}(R_{32}-R_{23}, R_{13}-R_{31}, R_{21}-R_{12})$ |
+| $R$ → ZYX Euler | $\psi=\text{atan2}(R_{21},R_{11})$, $\theta=-\arcsin(R_{31})$, $\phi=\text{atan2}(R_{32},R_{33})$ |
+| quaternion → $R$ | Rodrigues formula above |
+| quaternion → axis-angle | $\theta=2\arccos(w)$, $\hat{\mathbf{n}}=(x,y,z)/\sin(\theta/2)$ |
+| axis-angle → $R$ | Rodrigues: $R=I+\sin\theta[\hat{\mathbf{n}}]_\times+(1-\cos\theta)[\hat{\mathbf{n}}]_\times^2$ |
+| ZYX Euler → $R$ | $R=R_z(\psi)R_y(\theta)R_x(\phi)$ |
+
+
+## Python Implementation
+
+```python
+import numpy as np
+
+
+def skew(v):
+    """Skew-symmetric matrix from 3-vector."""
+    return np.array([[0, -v[2], v[1]],
+                     [v[2], 0, -v[0]],
+                     [-v[1], v[0], 0]])
+
+
+def axis_angle_to_R(n_hat, theta):
+    """Rodrigues formula: rotation matrix from axis n_hat and angle theta."""
+    K = skew(n_hat)
+    return np.eye(3) + np.sin(theta) * K + (1 - np.cos(theta)) * K @ K
+
+
+def R_to_axis_angle(R):
+    """Extract axis and angle from rotation matrix."""
+    theta = np.arccos(np.clip((np.trace(R) - 1) / 2, -1, 1))
+    if abs(theta) < 1e-10:
+        return np.array([0, 0, 1.0]), 0.0
+    n_hat = np.array([R[2, 1] - R[1, 2],
+                      R[0, 2] - R[2, 0],
+                      R[1, 0] - R[0, 1]]) / (2 * np.sin(theta))
+    return n_hat, theta
+
+
+def R_to_quaternion(R):
+    """Convert rotation matrix to unit quaternion (w, x, y, z)."""
+    w = 0.5 * np.sqrt(max(0, 1 + np.trace(R)))
+    if w < 1e-10:
+        # Degenerate case: 180° rotation
+        w = 0.0
+        x = np.sqrt(max(0, (1 + R[0, 0]) / 2))
+        y = np.sqrt(max(0, (1 + R[1, 1]) / 2))
+        z = np.sqrt(max(0, (1 + R[2, 2]) / 2))
+        if R[2, 1] - R[1, 2] < 0:
+            x = -x
+        if R[0, 2] - R[2, 0] < 0:
+            y = -y
+        if R[1, 0] - R[0, 1] < 0:
+            z = -z
+    else:
+        x = (R[2, 1] - R[1, 2]) / (4 * w)
+        y = (R[0, 2] - R[2, 0]) / (4 * w)
+        z = (R[1, 0] - R[0, 1]) / (4 * w)
+    return np.array([w, x, y, z])
+
+
+def quaternion_to_R(q):
+    """Convert unit quaternion (w, x, y, z) to rotation matrix."""
+    w, x, y, z = q / np.linalg.norm(q)
+    return np.array([
+        [1 - 2*(y**2 + z**2),     2*(x*y - w*z),     2*(x*z + w*y)],
+        [    2*(x*y + w*z), 1 - 2*(x**2 + z**2),     2*(y*z - w*x)],
+        [    2*(x*z - w*y),     2*(y*z + w*x), 1 - 2*(x**2 + y**2)]
+    ])
+
+
+def R_to_euler_zyx(R):
+    """Extract ZYX Euler angles (psi, theta, phi) from rotation matrix."""
+    psi = np.arctan2(R[1, 0], R[0, 0])
+    theta = -np.arcsin(np.clip(R[2, 0], -1, 1))
+    phi = np.arctan2(R[2, 1], R[2, 2])
+    return psi, theta, phi
+
+
+def euler_zyx_to_R(psi, theta, phi):
+    """ZYX Euler angles to rotation matrix: R = Rz(psi) Ry(theta) Rx(phi)."""
+    Rz = np.array([[np.cos(psi), -np.sin(psi), 0],
+                   [np.sin(psi),  np.cos(psi), 0],
+                   [0,            0,            1]])
+    Ry = np.array([[ np.cos(theta), 0, np.sin(theta)],
+                   [0,              1, 0             ],
+                   [-np.sin(theta), 0, np.cos(theta)]])
+    Rx = np.array([[1, 0,           0          ],
+                   [0, np.cos(phi), -np.sin(phi)],
+                   [0, np.sin(phi),  np.cos(phi)]])
+    return Rz @ Ry @ Rx
+
+
+# --- Verification: round-trip conversion ---
+n_hat = np.array([1, 1, 1]) / np.sqrt(3)
+theta = np.radians(47.3)
+R_orig = axis_angle_to_R(n_hat, theta)
+
+n_hat_back, theta_back = R_to_axis_angle(R_orig)
+q = R_to_quaternion(R_orig)
+R_from_q = quaternion_to_R(q)
+psi, th, phi = R_to_euler_zyx(R_orig)
+R_from_euler = euler_zyx_to_R(psi, th, phi)
+
+print(f"Axis-angle round-trip error:  {abs(theta - theta_back):.2e}")
+print(f"Quaternion round-trip error:  {np.max(np.abs(R_orig - R_from_q)):.2e}")
+print(f"Euler ZYX round-trip error:   {np.max(np.abs(R_orig - R_from_euler)):.2e}")
+```
+
+
+## Cross-Reference with Book Chapters
+
+| Chapter | Rotation representation used | Cross-reference |
+|---------|------------------------------|-----------------|
+| Vol 0, Ch 3–4 | $SO(3)$, $\mathfrak{so}(3)$, $SE(3)$ | Primary formalism |
+| Vol 0, Ch 5 | Exponential coordinates $e^{[\omega]}$ | Product of Exponentials |
+| Vol I, Ch 1 | Fréchet derivative of $R$ | Tangent space of $SO(3)$ |
+| Vol I, Ch 7 | Counterfactual: what if no rotation? | Drift-control decomposition |
+| Vol II, Ch 3 | All four representations side-by-side | Multi-representation derivations |
+| Screw Theory Ref. | Twists as $\mathfrak{se}(3)$ elements | Joint screw axes |
