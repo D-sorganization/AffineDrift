@@ -1139,19 +1139,19 @@ Both impulse and work illustrate a general principle:
 ::: {.callout-important}
 ## Integral Accumulation Principle
 
-For any quantity that is defined as an integral of a linear function of inputs:
+**Along a fixed trajectory** $x(t)$, for any quantity defined as an integral of a linear function of inputs:
 
 $$
 \Psi = \int_{t_0}^{t_1} g(x(t), u(t), t) \, dt
 $$
 
-where $g$ is linear in $u$, the contributions from different inputs superpose exactly:
+where $g$ is linear in $u$ with $x(t)$ held fixed, the contributions from different inputs superpose exactly:
 
 $$
 \Psi(u_1 + u_2) = \Psi(u_1) + \Psi(u_2)
 $$
 
-This holds even if the state trajectory $x(t)$ depends nonlinearly on $u$.
+**Important caveat:** This superposition holds only for variations at a fixed trajectory $x(t)$. If $x(t)$ itself depends nonlinearly on $u$ (as it generally does in closed-loop or trajectory optimization settings), then the principle does not hold globally — changing $u$ changes the trajectory, and the two contributions cannot be evaluated independently.
 :::
 
 Impulse and work are special cases where $g = u$ and $g = u^T \dot{q}$ respectively. The linearity of integration ensures exact additivity of these quantities, even as the underlying dynamics remain nonlinear.
@@ -1278,7 +1278,12 @@ This provides a data-driven criterion for switching between linear and nonlinear
 
 # Part III: Hamiltonian Structure and Optimal Control {.unnumbered}
 
-*[Note: This part is intentionally brief in the current version. Based on the technical assessment, Part III requires substantial expansion with detailed derivations, algorithms, and worked examples before final thesis submission. The following provides the conceptual framework and key equations, marking areas for future development.]*
+::: {.callout-warning}
+## Work in Progress
+
+**Part III is a draft/incomplete section.** The following provides the conceptual framework and key equations but requires substantial expansion — detailed derivations, complete algorithms, and worked examples are not yet present. Treat this section as a preliminary outline, not a finished exposition.
+:::
+
 
 # Variational Principles and Hamiltonian Formulation
 
