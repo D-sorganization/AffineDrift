@@ -1,0 +1,979 @@
+---
+title: "Rotation Representation Converter"
+description: "Interactive calculator for converting between rotation matrices, quaternions, ZYX Euler angles, axis-angle, and exponential coordinates — with 3D screw axis visualization and step-by-step formulas."
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: true
+    page-layout: full
+---
+
+## Background
+
+Every 3-D rotation can be described in multiple equivalent ways. This tool converts between the five most common representations and visualises the underlying screw axis in 3-D. Full derivations live in the [Rotation Representations Reference](rotation-representations-reference.html).
+
+| Representation | Parameters | Key property |
+|---|---|---|
+| Rotation matrix $R \in SO(3)$ | 9 numbers | $R^\top R = I$, $\det R = +1$ |
+| Quaternion $\mathbf{q} = (w, x, y, z)$ | 4 numbers | $|\mathbf{q}| = 1$; double cover of $SO(3)$ |
+| ZYX Euler angles $(\psi, \theta, \phi)$ | 3 numbers | Yaw-pitch-roll; gimbal lock at $\theta = \pm 90°$ |
+| Axis-angle $(\hat{\mathbf{n}}, \theta)$ | 4 numbers | Rodrigues formula; undefined axis at $\theta = 0$ |
+| Exponential coordinates $\boldsymbol{\omega} = \theta\hat{\mathbf{n}}$ | 3 numbers | Lie algebra $\mathfrak{so}(3)$; $|\boldsymbol{\omega}| = \theta$ |
+
+::: {.callout-note}
+## Provenance
+The Rodrigues formula, quaternion algebra, and ZYX Euler extraction follow Park & Lynch, *Modern Robotics*, Cambridge University Press, 2017, Chapters 3–4.
+All conversion functions implement the same algorithms as the Python reference in [Rotation Representations Reference](rotation-representations-reference.html).
+:::
+
+---
+
+## Interactive Calculator
+
+```{=html}
+<div id="rc-app" style="font-family: system-ui, sans-serif;">
+
+<!-- ── Top bar: degree/radian toggle ─────────────────────────────────────── -->
+<div id="rc-toolbar" style="
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.25rem; padding: 0.6rem 1rem;
+  background: var(--bg-secondary,#f3f4f6); border-radius: 8px;
+  border: 1px solid var(--border-color,#e5e7eb);
+">
+  <span style="font-weight:600; color:var(--text-dark,#111);">Angle units:</span>
+  <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+    <input type="radio" name="rc-units" value="deg" checked id="rc-deg"> Degrees
+  </label>
+  <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+    <input type="radio" name="rc-units" value="rad" id="rc-rad"> Radians
+  </label>
+  <span style="margin-left:auto;font-size:0.85rem;color:var(--text-light,#6b7280);">
+    Edit any field to update all representations
+  </span>
+</div>
+
+<!-- ── Status bar ──────────────────────────────────────────────────────────── -->
+<div id="rc-status" style="
+  display:none; padding:0.5rem 1rem; border-radius:6px;
+  margin-bottom:1rem; font-size:0.9rem; font-weight:500;
+"></div>
+
+<!-- ── Two-column main panels ─────────────────────────────────────────────── -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+
+<!-- Left column ── -->
+<div style="display:flex;flex-direction:column;gap:1rem;">
+
+  <!-- Rotation Matrix -->
+  <fieldset id="rc-panel-R" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">
+      Rotation Matrix <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$R \in SO(3)$</span>
+    </legend>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.35rem;margin-bottom:0.6rem;">
+      <input class="rc-matrix-cell" data-row="0" data-col="0" type="text" value="1">
+      <input class="rc-matrix-cell" data-row="0" data-col="1" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="0" data-col="2" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="1" data-col="0" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="1" data-col="1" type="text" value="1">
+      <input class="rc-matrix-cell" data-row="1" data-col="2" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="2" data-col="0" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="2" data-col="1" type="text" value="0">
+      <input class="rc-matrix-cell" data-row="2" data-col="2" type="text" value="1">
+    </div>
+    <div id="rc-R-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <button class="rc-load-btn" data-rep="R" style="font-size:0.85rem;">↑ Use this R</button>
+    <div class="rc-formula-box" id="rc-formula-R" style="display:none;"></div>
+  </fieldset>
+
+  <!-- Quaternion -->
+  <fieldset id="rc-panel-q" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">
+      Quaternion <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$(w, x, y, z)$</span>
+    </legend>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.35rem;margin-bottom:0.6rem;">
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">w (scalar)</label>
+           <input class="rc-q-cell" data-comp="0" type="text" value="1" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">x</label>
+           <input class="rc-q-cell" data-comp="1" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">y</label>
+           <input class="rc-q-cell" data-comp="2" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">z</label>
+           <input class="rc-q-cell" data-comp="3" type="text" value="0" style="width:100%;"></div>
+    </div>
+    <div id="rc-q-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <button class="rc-load-btn" data-rep="quaternion">↑ Use this q</button>
+    <div class="rc-formula-box" id="rc-formula-q" style="display:none;"></div>
+  </fieldset>
+
+  <!-- ZYX Euler -->
+  <fieldset id="rc-panel-euler" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">
+      ZYX Euler Angles <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$R = R_z(\psi)R_y(\theta)R_x(\phi)$</span>
+    </legend>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:0.6rem;">
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-psi">ψ (yaw, about Z)</label>
+           <input class="rc-euler-cell" data-comp="psi" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-theta">θ (pitch, about Y)</label>
+           <input class="rc-euler-cell" data-comp="theta" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-phi">φ (roll, about X)</label>
+           <input class="rc-euler-cell" data-comp="phi" type="text" value="0" style="width:100%;"></div>
+    </div>
+    <div id="rc-euler-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <button class="rc-load-btn" data-rep="eulerZYX">↑ Use these angles</button>
+    <div class="rc-formula-box" id="rc-formula-euler" style="display:none;"></div>
+  </fieldset>
+
+</div><!-- end left column -->
+
+<!-- Right column ── -->
+<div style="display:flex;flex-direction:column;gap:1rem;">
+
+  <!-- Axis-Angle -->
+  <fieldset id="rc-panel-aa" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">
+      Axis-Angle <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$(\hat{\mathbf{n}}, \theta)$</span>
+    </legend>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr;gap:0.35rem;margin-bottom:0.6rem;">
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">nₓ</label>
+           <input class="rc-aa-cell" data-comp="nx" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">n_y</label>
+           <input class="rc-aa-cell" data-comp="ny" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">n_z</label>
+           <input class="rc-aa-cell" data-comp="nz" type="text" value="1" style="width:100%;"></div>
+      <div><label class="rc-aa-angle-lbl" style="font-size:0.78rem;color:#6b7280;display:block;">θ</label>
+           <input class="rc-aa-cell" data-comp="angle" type="text" value="0" style="width:100%;"></div>
+    </div>
+    <div id="rc-aa-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <button class="rc-load-btn" data-rep="axisAngle">↑ Use this axis-angle</button>
+    <div class="rc-formula-box" id="rc-formula-aa" style="display:none;"></div>
+  </fieldset>
+
+  <!-- Exponential Coordinates -->
+  <fieldset id="rc-panel-exp" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">
+      Exponential Coordinates <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$\boldsymbol{\omega} = \theta\hat{\mathbf{n}}$</span>
+    </legend>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.35rem;margin-bottom:0.6rem;">
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ωₓ</label>
+           <input class="rc-exp-cell" data-comp="0" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ω_y</label>
+           <input class="rc-exp-cell" data-comp="1" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ω_z</label>
+           <input class="rc-exp-cell" data-comp="2" type="text" value="0" style="width:100%;"></div>
+    </div>
+    <div id="rc-exp-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <button class="rc-load-btn" data-rep="expCoord">↑ Use these coords</button>
+    <div class="rc-formula-box" id="rc-formula-exp" style="display:none;"></div>
+  </fieldset>
+
+  <!-- Rotation Properties summary -->
+  <fieldset style="border:2px solid #d1fae5;border-radius:10px;padding:1rem;background:#f0fdf4;">
+    <legend style="font-weight:700;padding:0 0.5rem;color:#065f46;">Properties</legend>
+    <table style="width:100%;font-size:0.88rem;border-collapse:collapse;">
+      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">Rotation angle θ:</td>
+          <td id="rc-prop-angle" style="font-weight:600;font-family:monospace;">—</td></tr>
+      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">Screw axis n̂:</td>
+          <td id="rc-prop-axis" style="font-weight:600;font-family:monospace;">—</td></tr>
+      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">det(R):</td>
+          <td id="rc-prop-det" style="font-weight:600;font-family:monospace;">—</td></tr>
+      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">‖RᵀR − I‖∞:</td>
+          <td id="rc-prop-orth" style="font-weight:600;font-family:monospace;">—</td></tr>
+      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">‖q‖:</td>
+          <td id="rc-prop-qnorm" style="font-weight:600;font-family:monospace;">—</td></tr>
+      <tr id="rc-row-gimbal" style="display:none;">
+          <td colspan="2" id="rc-prop-gimbal" style="
+            color:#92400e;background:#fef3c7;border-radius:4px;
+            padding:0.3rem 0.5rem;font-size:0.82rem;font-weight:600;
+          "></td></tr>
+    </table>
+  </fieldset>
+
+  <!-- Preset rotations -->
+  <fieldset style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
+    <legend style="font-weight:700;padding:0 0.5rem;">Presets</legend>
+    <div style="display:flex;flex-wrap:wrap;gap:0.4rem;">
+      <button class="rc-preset-btn" data-preset="identity">Identity</button>
+      <button class="rc-preset-btn" data-preset="rx90">Rx(90°)</button>
+      <button class="rc-preset-btn" data-preset="ry90">Ry(90°)</button>
+      <button class="rc-preset-btn" data-preset="rz90">Rz(90°)</button>
+      <button class="rc-preset-btn" data-preset="rz180">Rz(180°)</button>
+      <button class="rc-preset-btn" data-preset="arbitrary">n̂=[1,1,1]/√3, 47.3°</button>
+      <button class="rc-preset-btn" data-preset="gimbal">Gimbal lock (θ=90°)</button>
+    </div>
+  </fieldset>
+
+</div><!-- end right column -->
+</div><!-- end grid -->
+
+<!-- ── Formula panel ──────────────────────────────────────────────────────── -->
+<details id="rc-formula-panel" style="margin-top:1.25rem;">
+  <summary style="
+    font-weight:700; font-size:1rem; cursor:pointer;
+    padding:0.6rem 1rem; background:var(--bg-secondary,#f3f4f6);
+    border:1px solid var(--border-color,#e5e7eb); border-radius:8px;
+  ">Step-by-step Conversion Formulas</summary>
+  <div id="rc-formula-content" style="
+    margin-top:0.5rem; padding:1rem;
+    border:1px solid var(--border-color,#e5e7eb); border-radius:8px;
+    background:var(--bg-primary,#fff); overflow-x:auto;
+  ">
+    <div id="rc-formula-text" style="font-size:0.92rem; line-height:1.6;"></div>
+  </div>
+</details>
+
+<!-- ── 3-D Screw Axis Visualiser ───────────────────────────────────────────── -->
+<details id="rc-viz-details" open style="margin-top:1.25rem;">
+  <summary style="
+    font-weight:700; font-size:1rem; cursor:pointer;
+    padding:0.6rem 1rem; background:var(--bg-secondary,#f3f4f6);
+    border:1px solid var(--border-color,#e5e7eb); border-radius:8px;
+  ">3-D Screw Axis Visualisation</summary>
+  <div style="
+    margin-top:0.5rem; padding:0.75rem;
+    border:1px solid var(--border-color,#e5e7eb); border-radius:8px;
+    background:#0a0a14;
+  ">
+    <div style="
+      display:flex; gap:0.75rem; flex-wrap:wrap;
+      margin-bottom:0.5rem; font-size:0.82rem; color:#bbb;
+    ">
+      <span>🖱 Left-drag: orbit</span>
+      <span>🖱 Scroll: zoom</span>
+      <span>🖱 Right-drag: pan</span>
+      <span id="rc-viz-info" style="margin-left:auto;color:#fbbf24;"></span>
+    </div>
+    <canvas id="rc-canvas" style="width:100%;height:450px;display:block;border-radius:6px;"></canvas>
+    <div id="rc-webgl-fallback" style="display:none; padding:1rem; color:#e5e7eb; text-align:center;">
+      WebGL not available — see Properties panel above for numeric results.
+    </div>
+  </div>
+</details>
+
+</div><!-- end #rc-app -->
+
+<style>
+.rc-panel input[type="text"] {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 0.88rem;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-primary, #fff);
+  color: var(--text-dark, #111);
+  transition: border-color 0.15s;
+}
+.rc-panel input[type="text"]:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.15);
+}
+.rc-panel input.rc-input-active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+.rc-load-btn, .rc-preset-btn {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: var(--bg-secondary, #f9fafb);
+  color: var(--text-dark, #374151);
+  cursor: pointer;
+  font-size: 0.83rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rc-load-btn:hover, .rc-preset-btn:hover {
+  background: #e0e7ff;
+  border-color: #6366f1;
+}
+.rc-panel-active {
+  border-color: #3b82f6 !important;
+  background: rgba(59,130,246,0.03);
+}
+.rc-formula-box {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: monospace;
+  color: #334155;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+</style>
+
+<!-- ── Scripts ──────────────────────────────────────────────────────────────
+     rotation-converter.js is the pure math engine (no DOM dependencies).
+     Three.js and OrbitControls are loaded from CDN for the 3-D visualiser.
+──────────────────────────────────────────────────────────────────────────── -->
+<script src="../js/rotation-converter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+/* ─── Rotation Converter UI ────────────────────────────────────────────────
+ *
+ * Responsibilities:
+ *   1. Read active-panel inputs  →  parse  →  call RotationConverter.convert()
+ *   2. Write all other panels with the results
+ *   3. Show validation badges, gimbal-lock warning, and properties
+ *   4. Show step-by-step formula text
+ *   5. Drive the Three.js screw axis visualiser
+ *
+ * State: `activeRep` — which panel was last edited (drives the convert call).
+ * ─────────────────────────────────────────────────────────────────────────── */
+(function () {
+  "use strict";
+
+  const RC = window.RotationConverter;
+
+  /* ── State ──────────────────────────────────────────────────────────────── */
+  let activeRep  = "eulerZYX";   // last-edited representation
+  let angleDeg   = true;         // true = display/input angles in degrees
+  let currentResult = null;      // last successful convert() output
+
+  /* ── Helpers ────────────────────────────────────────────────────────────── */
+  const $ = id => document.getElementById(id);
+  const fmt = (n, d = 6) => Number(n).toFixed(d);
+  const fmtAngle = rad => angleDeg ? fmt(RC.rad2deg(rad), 4) : fmt(rad, 6);
+  const parseAngle = str => {
+    const v = parseFloat(str);
+    return angleDeg ? RC.deg2rad(v) : v;
+  };
+
+  /* ── Status bar ─────────────────────────────────────────────────────────── */
+  function showStatus(msg, type = "info") {
+    const el = $("rc-status");
+    el.style.display = "block";
+    el.style.background = type === "error" ? "#fef2f2" : "#f0fdf4";
+    el.style.color      = type === "error" ? "#991b1b" : "#166534";
+    el.style.border     = `1px solid ${type === "error" ? "#fca5a5" : "#86efac"}`;
+    el.textContent = msg;
+    if (type !== "error") setTimeout(() => { el.style.display = "none"; }, 3000);
+  }
+
+  /* ── Angle-unit toggle ──────────────────────────────────────────────────── */
+  document.querySelectorAll('input[name="rc-units"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+      angleDeg = radio.value === "deg";
+      if (currentResult) populateAllPanels(currentResult);
+      updateAngleLabels();
+    });
+  });
+
+  function updateAngleLabels() {
+    const unit = angleDeg ? "°" : "rad";
+    document.querySelectorAll(".rc-aa-angle-lbl").forEach(el => {
+      el.textContent = `θ (${unit})`;
+    });
+    ["psi","theta","phi"].forEach(c => {
+      const el = $(`rc-lbl-${c}`);
+      if (el) el.textContent = el.textContent.replace(/\(°\)|\(rad\)/, `(${unit})`);
+    });
+  }
+
+  /* ── Read helpers ───────────────────────────────────────────────────────── */
+  function readMatrix() {
+    const R = [];
+    document.querySelectorAll(".rc-matrix-cell").forEach(inp => {
+      R.push(parseFloat(inp.value) || 0);
+    });
+    return R;    // length-9 row-major
+  }
+
+  function readQuaternion() {
+    const q = [0,0,0,0];
+    document.querySelectorAll(".rc-q-cell").forEach(inp => {
+      q[parseInt(inp.dataset.comp)] = parseFloat(inp.value) || 0;
+    });
+    return q;
+  }
+
+  function readEuler() {
+    const vals = {};
+    document.querySelectorAll(".rc-euler-cell").forEach(inp => {
+      vals[inp.dataset.comp] = parseAngle(inp.value);
+    });
+    return { psi: vals.psi || 0, theta: vals.theta || 0, phi: vals.phi || 0 };
+  }
+
+  function readAxisAngle() {
+    const vals = {};
+    document.querySelectorAll(".rc-aa-cell").forEach(inp => {
+      vals[inp.dataset.comp] = parseFloat(inp.value) || 0;
+    });
+    const rawAxis = [vals.nx, vals.ny, vals.nz];
+    const axisNorm = RC.norm3(rawAxis);
+    const axis = axisNorm > 1e-12 ? rawAxis.map(v => v / axisNorm) : [0, 0, 1];
+    const angle = parseAngle(String(vals.angle));
+    return { axis, angle };
+  }
+
+  function readExpCoord() {
+    const w = [0,0,0];
+    document.querySelectorAll(".rc-exp-cell").forEach(inp => {
+      w[parseInt(inp.dataset.comp)] = parseFloat(inp.value) || 0;
+    });
+    return w;
+  }
+
+  /* ── Write helpers ──────────────────────────────────────────────────────── */
+  function writeMatrix(R, skipFocus) {
+    document.querySelectorAll(".rc-matrix-cell").forEach(inp => {
+      const idx = parseInt(inp.dataset.row) * 3 + parseInt(inp.dataset.col);
+      inp.value = fmt(R[idx]);
+    });
+    updateRValidity(R);
+  }
+
+  function writeQuaternion(q) {
+    document.querySelectorAll(".rc-q-cell").forEach(inp => {
+      inp.value = fmt(q[parseInt(inp.dataset.comp)]);
+    });
+    const norm = Math.sqrt(q.reduce((s,v)=>s+v*v,0));
+    $("rc-q-validity").textContent = `‖q‖ = ${fmt(norm,8)}`;
+    $("rc-q-validity").style.color = Math.abs(norm-1) < 1e-5 ? "#059669" : "#dc2626";
+  }
+
+  function writeEuler(euler) {
+    document.querySelectorAll(".rc-euler-cell").forEach(inp => {
+      inp.value = fmtAngle(euler[inp.dataset.comp]);
+    });
+    const gl = euler.gimbalLock;
+    const el = $("rc-euler-validity");
+    if (gl) {
+      el.style.color = "#d97706";
+      el.textContent = "⚠ Gimbal lock — pitch = ±90°. ψ and φ cannot be independently resolved; φ set to 0.";
+      $("rc-row-gimbal").style.display = "table-row";
+      $("rc-prop-gimbal").textContent = "⚠ Gimbal lock: ZYX pitch = ±90°. Use quaternion or exponential coords for interpolation.";
+    } else {
+      el.textContent = "";
+      $("rc-row-gimbal").style.display = "none";
+    }
+  }
+
+  function writeAxisAngle(aa) {
+    const { axis, angle } = aa;
+    ["nx","ny","nz"].forEach((c, i) => {
+      document.querySelector(`.rc-aa-cell[data-comp="${c}"]`).value = fmt(axis[i]);
+    });
+    document.querySelector('.rc-aa-cell[data-comp="angle"]').value = fmtAngle(angle);
+    const el = $("rc-aa-validity");
+    if (Math.abs(angle) < 1e-8) {
+      el.textContent = "θ ≈ 0: identity rotation. Axis direction is arbitrary.";
+      el.style.color = "#6b7280";
+    } else {
+      const n = RC.norm3(axis);
+      el.textContent = `‖n̂‖ = ${fmt(n,8)}`;
+      el.style.color = Math.abs(n-1) < 1e-5 ? "#059669" : "#dc2626";
+    }
+  }
+
+  function writeExpCoord(omega) {
+    document.querySelectorAll(".rc-exp-cell").forEach(inp => {
+      inp.value = fmt(omega[parseInt(inp.dataset.comp)]);
+    });
+    const mag = RC.norm3(omega);
+    $("rc-exp-validity").textContent = `|ω| = ${fmtAngle(mag)} ${angleDeg?"°":"rad"} (= rotation angle θ)`;
+    $("rc-exp-validity").style.color = "#059669";
+  }
+
+  function updateRValidity(R) {
+    const { valid, detError, orthogError } = RC.validateR(R);
+    const el = $("rc-R-validity");
+    el.textContent = valid
+      ? `✓ Valid SO(3): det error=${detError.toExponential(1)}, ‖RᵀR−I‖∞=${orthogError.toExponential(1)}`
+      : `✗ Not valid SO(3): det error=${detError.toExponential(2)}, ‖RᵀR−I‖∞=${orthogError.toExponential(2)}`;
+    el.style.color = valid ? "#059669" : "#dc2626";
+  }
+
+  /* ── Properties panel ───────────────────────────────────────────────────── */
+  function updateProperties(result) {
+    const { R, axisAngle, quaternion } = result;
+    const { axis, angle } = axisAngle;
+    const { valid, detError, orthogError } = RC.validateR(R);
+    const det = 1 - detError;   // approximate
+    const qnorm = Math.sqrt(quaternion.reduce((s,v)=>s+v*v,0));
+
+    $("rc-prop-angle").textContent = `${fmtAngle(angle)} ${angleDeg?"°":"rad"}`;
+    $("rc-prop-axis").textContent  =
+      Math.abs(angle) < 1e-8 ? "(identity — axis undefined)" :
+      `[${axis.map(v=>fmt(v,4)).join(", ")}]`;
+    $("rc-prop-det").textContent   = fmt(1 - detError + (RC.validateR(R).detError), 8);
+    $("rc-prop-orth").textContent  = orthogError.toExponential(2);
+    $("rc-prop-qnorm").textContent = fmt(qnorm, 8);
+
+    // Recompute det properly
+    const [r] = [R];
+    const detR = r[0]*(r[4]*r[8]-r[5]*r[7]) - r[1]*(r[3]*r[8]-r[5]*r[6]) + r[2]*(r[3]*r[7]-r[4]*r[6]);
+    $("rc-prop-det").textContent = fmt(detR, 8);
+  }
+
+  /* ── Formula text panel ─────────────────────────────────────────────────── */
+  function buildFormulaText(result, fromRep) {
+    const { R, quaternion: q, axisAngle: aa, eulerZYX: eu, expCoord: ow } = result;
+    const { axis, angle } = aa;
+    const lines = [];
+    const th = fmtAngle(angle);
+    const unit = angleDeg ? "°" : " rad";
+
+    lines.push(`Source representation: ${fromRep}`);
+    lines.push("─".repeat(50));
+
+    if (fromRep === "axisAngle" || fromRep === "expCoord") {
+      lines.push("Rodrigues formula (axis-angle → R):");
+      lines.push("  R = I + sin(θ)·[n̂]× + (1−cos θ)·[n̂]×²");
+      lines.push(`  θ = ${th}${unit},  n̂ = [${axis.map(v=>fmt(v,4)).join(", ")}]`);
+    }
+    if (fromRep === "quaternion") {
+      lines.push("Quaternion → R:");
+      lines.push("  R = I·(w²−|v|²) + 2vvᵀ + 2w[v]×  (abbreviated)");
+      lines.push(`  q = [${q.map(v=>fmt(v,6)).join(", ")}]`);
+    }
+    if (fromRep === "eulerZYX") {
+      lines.push("ZYX Euler → R:  R = Rz(ψ)·Ry(θ)·Rx(φ)");
+      lines.push(`  ψ = ${fmtAngle(eu.psi)}${unit}`);
+      lines.push(`  θ = ${fmtAngle(eu.theta)}${unit}${eu.gimbalLock?" ← GIMBAL LOCK":""}`);
+      lines.push(`  φ = ${fmtAngle(eu.phi)}${unit}`);
+    }
+    if (fromRep === "R") {
+      lines.push("R → axis-angle:");
+      lines.push("  θ = arccos((tr(R)−1)/2)");
+      lines.push(`  θ = arccos((${fmt(R[0]+R[4]+R[8],4)}−1)/2) = ${th}${unit}`);
+      lines.push("  n̂ = (1/2sinθ)·[R₃₂−R₂₃, R₁₃−R₃₁, R₂₁−R₁₂]ᵀ");
+    }
+
+    lines.push("");
+    lines.push("R → quaternion:  w = ½√(1+tr(R)),  (x,y,z) = 1/(4w)·[R₃₂−R₂₃, R₁₃−R₃₁, R₂₁−R₁₂]");
+    lines.push(`  Result: q = [${q.map(v=>fmt(v,6)).join(", ")}]`);
+
+    lines.push("");
+    lines.push("R → ZYX Euler:  ψ = atan2(R₂₁,R₁₁),  θ = −arcsin(R₃₁),  φ = atan2(R₃₂,R₃₃)");
+    lines.push(`  Result: ψ=${fmtAngle(eu.psi)}${unit}, θ=${fmtAngle(eu.theta)}${unit}, φ=${fmtAngle(eu.phi)}${unit}`);
+
+    lines.push("");
+    lines.push("Exponential coords:  ω = θ·n̂");
+    lines.push(`  ω = [${ow.map(v=>fmt(v,6)).join(", ")}],  |ω| = ${fmt(RC.norm3(ow),6)}`);
+
+    $("rc-formula-text").textContent = lines.join("\n");
+  }
+
+  /* ── Master update ──────────────────────────────────────────────────────── */
+  function update() {
+    let input, fromRep;
+    try {
+      switch (activeRep) {
+        case "R":         input = readMatrix();    fromRep = "R";         break;
+        case "quaternion": input = readQuaternion(); fromRep = "quaternion"; break;
+        case "eulerZYX":  input = readEuler();     fromRep = "eulerZYX";  break;
+        case "axisAngle": input = readAxisAngle();  fromRep = "axisAngle"; break;
+        case "expCoord":  input = readExpCoord();   fromRep = "expCoord";  break;
+      }
+
+      // Normalise quaternion before passing to convert
+      if (fromRep === "quaternion") {
+        const n = Math.sqrt(input.reduce((s,v)=>s+v*v,0));
+        if (n < 1e-12) throw new Error("Quaternion is zero — cannot normalize");
+        input = input.map(v => v/n);
+      }
+
+      const result = RC.convert(input, fromRep);
+      currentResult = result;
+
+      // Update all panels EXCEPT the active one
+      if (fromRep !== "R")          writeMatrix(result.R);
+      if (fromRep !== "quaternion") writeQuaternion(result.quaternion);
+      if (fromRep !== "eulerZYX")   writeEuler(result.eulerZYX);
+      if (fromRep !== "axisAngle")  writeAxisAngle(result.axisAngle);
+      if (fromRep !== "expCoord")   writeExpCoord(result.expCoord);
+
+      // Always update validity on active panel too
+      if (fromRep === "R")         updateRValidity(result.R);
+      if (fromRep === "eulerZYX")  writeEuler(result.eulerZYX);  // for gimbal
+
+      updateProperties(result);
+      buildFormulaText(result, fromRep);
+      updateViz(result);
+
+      // Highlight active panel
+      document.querySelectorAll(".rc-panel").forEach(p => p.classList.remove("rc-panel-active"));
+      const panelMap = { R: "rc-panel-R", quaternion: "rc-panel-q",
+                         eulerZYX: "rc-panel-euler", axisAngle: "rc-panel-aa",
+                         expCoord: "rc-panel-exp" };
+      const activePanel = document.getElementById(panelMap[fromRep]);
+      if (activePanel) activePanel.classList.add("rc-panel-active");
+
+    } catch (err) {
+      showStatus(`Error: ${err.message}`, "error");
+    }
+  }
+
+  /* ── Populate all panels from a result object (e.g. after unit toggle) ─── */
+  function populateAllPanels(result) {
+    writeMatrix(result.R);
+    writeQuaternion(result.quaternion);
+    writeEuler(result.eulerZYX);
+    writeAxisAngle(result.axisAngle);
+    writeExpCoord(result.expCoord);
+    updateProperties(result);
+    buildFormulaText(result, activeRep);
+  }
+
+  /* ── Wire up all input events ───────────────────────────────────────────── */
+  function wireInputs(selector, rep) {
+    document.querySelectorAll(selector).forEach(inp => {
+      inp.addEventListener("input", () => {
+        activeRep = rep;
+        update();
+      });
+    });
+  }
+  wireInputs(".rc-matrix-cell", "R");
+  wireInputs(".rc-q-cell",      "quaternion");
+  wireInputs(".rc-euler-cell",  "eulerZYX");
+  wireInputs(".rc-aa-cell",     "axisAngle");
+  wireInputs(".rc-exp-cell",    "expCoord");
+
+  /* ── Load buttons (the ↑ Use this … buttons) ────────────────────────────── */
+  document.querySelectorAll(".rc-load-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeRep = btn.dataset.rep;
+      update();
+      showStatus(`Loaded from ${btn.dataset.rep} panel.`);
+    });
+  });
+
+  /* ── Preset buttons ─────────────────────────────────────────────────────── */
+  const PRESETS = {
+    identity:  { rep: "axisAngle", data: { axis:[0,0,1], angle:0 } },
+    rx90:      { rep: "axisAngle", data: { axis:[1,0,0], angle: Math.PI/2 } },
+    ry90:      { rep: "axisAngle", data: { axis:[0,1,0], angle: Math.PI/2 } },
+    rz90:      { rep: "axisAngle", data: { axis:[0,0,1], angle: Math.PI/2 } },
+    rz180:     { rep: "axisAngle", data: { axis:[0,0,1], angle: Math.PI } },
+    arbitrary: { rep: "axisAngle", data: { axis:[1/Math.sqrt(3),1/Math.sqrt(3),1/Math.sqrt(3)], angle: 47.3*Math.PI/180 } },
+    gimbal:    { rep: "eulerZYX",  data: { psi:0, theta: Math.PI/2, phi:0 } },
+  };
+
+  document.querySelectorAll(".rc-preset-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+      const result = RC.convert(p.data, p.rep);
+      currentResult = result;
+      activeRep = p.rep;
+      populateAllPanels(result);
+      buildFormulaText(result, p.rep);
+      updateViz(result);
+    });
+  });
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * THREE.JS SCREW AXIS VISUALISER
+   * ═════════════════════════════════════════════════════════════════════ */
+  let vizScene, vizCamera, vizRenderer, vizControls;
+  let vizAxisArrow, vizArcLine, vizFrame0, vizFrameR;
+  const VIZ_AXIS_LEN   = 1.0;
+  const VIZ_SCREW_LEN  = 1.4;
+  const VIZ_FRAME_LEN  = 0.7;
+  const VIZ_ARC_SEGS   = 64;
+
+  function initViz() {
+    const canvas = $("rc-canvas");
+    if (!window.THREE) {
+      $("rc-webgl-fallback").style.display = "block";
+      canvas.style.display = "none";
+      return;
+    }
+    const THREE = window.THREE;
+
+    vizRenderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    vizRenderer.setPixelRatio(window.devicePixelRatio);
+    vizRenderer.setClearColor(0x0a0a14, 1);
+
+    vizScene = new THREE.Scene();
+    vizScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(3, 5, 3);
+    vizScene.add(dirLight);
+
+    const w = canvas.clientWidth, h = canvas.clientHeight || 450;
+    vizCamera = new THREE.PerspectiveCamera(40, w / h, 0.01, 100);
+    vizCamera.position.set(2.2, 1.8, 2.2);
+    vizCamera.lookAt(0, 0, 0);
+
+    if (window.THREE.OrbitControls) {
+      vizControls = new THREE.OrbitControls(vizCamera, vizRenderer.domElement);
+      vizControls.enableDamping = true;
+      vizControls.dampingFactor = 0.08;
+      vizControls.target.set(0, 0, 0);
+    }
+
+    // Grid
+    const grid = new THREE.GridHelper(4, 8, 0x222233, 0x1a1a2e);
+    vizScene.add(grid);
+
+    // World frame axes
+    vizFrame0 = makeCoordFrame(VIZ_FRAME_LEN, [0xff4444, 0x44ff44, 0x4488ff], 3);
+    vizScene.add(vizFrame0);
+
+    // Axis labels
+    addAxisLabel("X", [VIZ_FRAME_LEN + 0.12, 0, 0], 0xff4444);
+    addAxisLabel("Y", [0, VIZ_FRAME_LEN + 0.12, 0], 0x44ff44);
+    addAxisLabel("Z", [0, 0, VIZ_FRAME_LEN + 0.12], 0x4488ff);
+
+    // Rotated frame (updated each frame)
+    vizFrameR = makeCoordFrame(VIZ_FRAME_LEN, [0xff8888, 0x88ff88, 0x88aaff], 2, true);
+    vizScene.add(vizFrameR);
+
+    // Screw axis placeholder
+    vizAxisArrow = makeArrow([0,0,0], [0,1,0], VIZ_SCREW_LEN, 0xfbbf24, 0.025, 0.08);
+    vizScene.add(vizAxisArrow);
+
+    // Arc placeholder
+    vizArcLine = makeArc([0,0,1], 0, 0.5, VIZ_ARC_SEGS);
+    vizScene.add(vizArcLine);
+
+    // Origin dot
+    const dotGeo = new THREE.SphereGeometry(0.03, 12, 8);
+    const dotMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+    vizScene.add(new THREE.Mesh(dotGeo, dotMat));
+
+    // Resize observer
+    new ResizeObserver(() => resizeViz()).observe(canvas);
+
+    requestAnimationFrame(animateViz);
+  }
+
+  function resizeViz() {
+    const canvas = $("rc-canvas");
+    if (!vizRenderer || !canvas) return;
+    const w = canvas.clientWidth, h = canvas.clientHeight || 450;
+    vizRenderer.setSize(w, h, false);
+    vizCamera.aspect = w / h;
+    vizCamera.updateProjectionMatrix();
+  }
+
+  function animateViz() {
+    requestAnimationFrame(animateViz);
+    if (vizControls) vizControls.update();
+    if (vizRenderer) vizRenderer.render(vizScene, vizCamera);
+  }
+
+  /** Update the screw axis arrow and rotated frame from a convert() result. */
+  function updateViz(result) {
+    if (!vizScene || !window.THREE) return;
+    const THREE = window.THREE;
+    const { R, axisAngle } = result;
+    const { axis, angle } = axisAngle;
+
+    /* Rotated frame — apply R to each basis vector */
+    updateCoordFrame(vizFrameR, R);
+
+    /* Screw axis arrow */
+    vizScene.remove(vizAxisArrow);
+    const axisDir = Math.abs(angle) < 1e-8 ? [0,1,0] : axis;
+    vizAxisArrow = makeArrow(
+      axisDir.map(v => -v * VIZ_SCREW_LEN * 0.5),  // center the arrow at origin
+      axisDir, VIZ_SCREW_LEN, 0xfbbf24, 0.018, 0.07
+    );
+    vizScene.add(vizAxisArrow);
+
+    /* Rotation arc */
+    vizScene.remove(vizArcLine);
+    if (Math.abs(angle) > 1e-4) {
+      vizArcLine = makeArc(axisDir, angle, VIZ_FRAME_LEN * 0.85, VIZ_ARC_SEGS);
+      vizScene.add(vizArcLine);
+    }
+
+    /* Info label */
+    const th = angleDeg ? RC.rad2deg(angle).toFixed(2) + "°" : angle.toFixed(4) + " rad";
+    $("rc-viz-info").textContent = Math.abs(angle) < 1e-8
+      ? "Identity (θ = 0)"
+      : `n̂ = [${axis.map(v=>v.toFixed(3)).join(", ")}]   θ = ${th}`;
+  }
+
+  /* ── Three.js geometry builders ─────────────────────────────────────────── */
+
+  /** Create a coordinate frame as a group of three arrow helpers. */
+  function makeCoordFrame(length, colors, lineW, dashed = false) {
+    const THREE = window.THREE;
+    const group = new THREE.Group();
+    const dirs = [[1,0,0],[0,1,0],[0,0,1]];
+    dirs.forEach((d, i) => {
+      const mat = new THREE.LineBasicMaterial({ color: colors[i], linewidth: lineW });
+      const pts = [new THREE.Vector3(0,0,0), new THREE.Vector3(...d.map(v=>v*length))];
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      group.add(new THREE.Line(geo, mat));
+      // Arrowhead cone
+      const coneH = length * 0.14, coneR = length * 0.04;
+      const coneGeo = new THREE.ConeGeometry(coneR, coneH, 8);
+      const coneMat = new THREE.MeshPhongMaterial({ color: colors[i] });
+      const cone = new THREE.Mesh(coneGeo, coneMat);
+      cone.position.set(...d.map(v=>v*(length + coneH/2)));
+      cone.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), new THREE.Vector3(...d));
+      group.add(cone);
+    });
+    return group;
+  }
+
+  /** Build or rebuild an arrow from origin+direction. */
+  function makeArrow(origin, dir, length, color, shaftR, headR) {
+    const THREE = window.THREE;
+    const group = new THREE.Group();
+    const d = new THREE.Vector3(...dir).normalize();
+    const o = new THREE.Vector3(...origin);
+
+    // Shaft
+    const shaftH = length * 0.82;
+    const shaftGeo = new THREE.CylinderGeometry(shaftR, shaftR, shaftH, 12);
+    const shaftMat = new THREE.MeshPhongMaterial({ color });
+    const shaft = new THREE.Mesh(shaftGeo, shaftMat);
+    shaft.position.copy(o).addScaledVector(d, shaftH / 2);
+    shaft.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d);
+    group.add(shaft);
+
+    // Head
+    const headH = length * 0.18;
+    const headGeo = new THREE.ConeGeometry(headR, headH, 12);
+    const headMat = new THREE.MeshPhongMaterial({ color });
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.copy(o).addScaledVector(d, shaftH + headH / 2);
+    head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d);
+    group.add(head);
+
+    return group;
+  }
+
+  /** Build a circular arc in the plane perpendicular to axis, radius r, swept angle θ. */
+  function makeArc(axis, angle, radius, segments) {
+    const THREE = window.THREE;
+    const n = new THREE.Vector3(...axis).normalize();
+    // Find a perpendicular vector
+    const ref = Math.abs(n.x) < 0.9 ? new THREE.Vector3(1,0,0) : new THREE.Vector3(0,1,0);
+    const u = ref.clone().sub(n.clone().multiplyScalar(n.dot(ref))).normalize();
+    const v = n.clone().cross(u);
+
+    const pts = [];
+    const steps = Math.max(4, Math.ceil(Math.abs(angle) / (2*Math.PI) * segments));
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * angle;
+      const p = u.clone().multiplyScalar(Math.cos(t) * radius)
+                 .addScaledVector(v, Math.sin(t) * radius);
+      pts.push(p);
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineBasicMaterial({ color: 0xfbbf24, linewidth: 2 });
+    return new THREE.Line(geo, mat);
+  }
+
+  /** Update a coord-frame group's basis vectors using rotation matrix R (row-major). */
+  function updateCoordFrame(group, R) {
+    const THREE = window.THREE;
+    // R maps body frame to world: column i of R is the image of eᵢ
+    // children: 0,1,2 = x,y,z lines; 3,4,5 = x,y,z cones
+    const dirs = [
+      [R[0], R[3], R[6]],  // image of ex  (column 0 of R)
+      [R[1], R[4], R[7]],  // image of ey
+      [R[2], R[5], R[8]],  // image of ez
+    ];
+    const L = VIZ_FRAME_LEN;
+    group.children.forEach((child, ci) => {
+      const axIdx = Math.floor(ci / 2);
+      const isLine = ci % 2 === 0;
+      const d = new THREE.Vector3(...dirs[axIdx]);
+      if (isLine) {
+        const pos = child.geometry.attributes.position;
+        pos.setXYZ(1, d.x*L, d.y*L, d.z*L);
+        pos.needsUpdate = true;
+      } else {
+        const coneH = L * 0.14;
+        child.position.set(...d.toArray().map(v=>v*(L + coneH/2)));
+        child.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d);
+      }
+    });
+  }
+
+  /** Add a canvas-sprite text label at position [x,y,z]. */
+  function addAxisLabel(text, pos, color) {
+    if (!window.THREE) return;
+    const THREE = window.THREE;
+    const canvas = document.createElement("canvas");
+    canvas.width = 64; canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#" + color.toString(16).padStart(6,"0");
+    ctx.font = "bold 48px sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(text, 32, 32);
+    const tex = new THREE.CanvasTexture(canvas);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+    const sprite = new THREE.Sprite(mat);
+    sprite.position.set(...pos);
+    sprite.scale.set(0.22, 0.22, 1);
+    vizScene.add(sprite);
+  }
+
+  /* ── Boot ───────────────────────────────────────────────────────────────── */
+  document.addEventListener("DOMContentLoaded", () => {
+    initViz();
+    resizeViz();
+    update();   // populate with identity
+  });
+
+})();
+</script>
+```
+
+---
+
+## Mathematical Reference
+
+### Rodrigues Formula (Axis-Angle → R)
+
+Given unit axis $\hat{\mathbf{n}}$ and angle $\theta$:
+
+$$R = I + \sin\theta \,[\hat{\mathbf{n}}]_\times + (1-\cos\theta)\,[\hat{\mathbf{n}}]_\times^2$$
+
+where the skew-symmetric matrix is
+
+$$[\hat{\mathbf{n}}]_\times = \begin{bmatrix}0 & -n_z & n_y \\ n_z & 0 & -n_x \\ -n_y & n_x & 0\end{bmatrix}.$$
+
+### Rotation Matrix → Axis-Angle
+
+$$\theta = \arccos\!\left(\frac{\operatorname{tr}(R)-1}{2}\right), \qquad \hat{\mathbf{n}} = \frac{1}{2\sin\theta}\begin{bmatrix}R_{32}-R_{23}\\R_{13}-R_{31}\\R_{21}-R_{12}\end{bmatrix}.$$
+
+Special cases: $\theta = 0$ (identity, axis undefined) and $\theta = \pi$ (180° rotation, Shepperd's method on diagonal).
+
+### Rotation Matrix → Quaternion (Shepperd)
+
+$$w = \tfrac{1}{2}\sqrt{1+\operatorname{tr}(R)}, \quad x = \frac{R_{32}-R_{23}}{4w}, \quad y = \frac{R_{13}-R_{31}}{4w}, \quad z = \frac{R_{21}-R_{12}}{4w}.$$
+
+At $\theta = 180°$ (where $w \approx 0$) the formula is numerically degenerate; the implementation uses the diagonal entries of $(R+I)/2$ instead.
+
+### Quaternion → Rotation Matrix
+
+$$R = \begin{bmatrix}1-2(y^2+z^2) & 2(xy-wz) & 2(xz+wy) \\ 2(xy+wz) & 1-2(x^2+z^2) & 2(yz-wx) \\ 2(xz-wy) & 2(yz+wx) & 1-2(x^2+y^2)\end{bmatrix}.$$
+
+Both $\mathbf{q}$ and $-\mathbf{q}$ produce identical $R$ (double cover of $SO(3)$).
+
+### ZYX Euler Angles
+
+Composition order: $R = R_z(\psi) R_y(\theta) R_x(\phi)$.  Extraction:
+
+$$\psi = \operatorname{atan2}(R_{21}, R_{11}), \quad \theta = -\arcsin(R_{31}), \quad \phi = \operatorname{atan2}(R_{32}, R_{33}).$$
+
+**Gimbal lock** occurs when $\theta = \pm 90°$ ($R_{31} = \mp 1$). In that configuration $\psi$ and $\phi$ cannot be independently resolved; the implementation sets $\phi = 0$ and encodes all remaining rotation in $\psi$.
+
+### Exponential Coordinates
+
+$\boldsymbol{\omega} = \theta\hat{\mathbf{n}} \in \mathbb{R}^3$. The magnitude $|\boldsymbol{\omega}| = \theta$ is the rotation angle; the direction $\hat{\mathbf{n}} = \boldsymbol{\omega}/\theta$ is the screw axis. These are the coordinates of the Lie algebra $\mathfrak{so}(3)$:
+
+$$R = \exp([\boldsymbol{\omega}]_\times).$$
+
+---
+
+**See also:** [Rotation Representations Reference](rotation-representations-reference.html) — full derivations and Python implementation.
+[Screw Theory Reference](screw-theory-reference.html) — SE(3) twists, wrenches, and product of exponentials.
