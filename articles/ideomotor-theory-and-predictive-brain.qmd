@@ -173,28 +173,43 @@ early in training.
 
 ## Python: Forward Model Simulation
 
+The following example uses a nonlinear damped pendulum to match the nonlinear setting of
+the control-affine framework $\dot{\mathbf{x}} = f(\mathbf{x}) + g(\mathbf{x})\mathbf{u}$,
+where $f(\mathbf{x})$ captures the genuinely nonlinear passive dynamics (gravity, damping)
+rather than a linearised approximation.
+
 ```python
 import numpy as np
-from scipy.integrate import solve_ivp
 
 
 class ForwardModel:
     """
     Learned forward model: predicts next state given current state and action.
-    Uses a simple linear model for demonstration.
+    Uses a simple nonlinear pendulum model to demonstrate the nonlinear drift term.
     """
 
-    def __init__(self, A, B):
+    def __init__(self, m=1.0, l=1.0, b=0.5, g=9.81):
         """
-        Initialize with true dynamics matrices.
-        In practice, these would be learned from experience.
+        Parameters for a damped pendulum:
+        m: mass, l: length, b: damping, g: gravity
         """
-        self.A = A  # Drift Jacobian
-        self.B = B  # Control matrix
+        self.m = m
+        self.l = l
+        self.b = b
+        self.g = g
+
+    def f(self, x):
+        """Nonlinear drift: f(x) = [dtheta/dt, -(g/l)*sin(theta) - b*dtheta/dt]"""
+        theta, dtheta = x
+        return np.array([dtheta, -(self.g / self.l) * np.sin(theta) - self.b * dtheta])
+
+    def g_mat(self, x):
+        """Control gain matrix: g(x) — for this pendulum, control acts on acceleration"""
+        return np.array([0.0, 1.0 / (self.m * self.l**2)])
 
     def predict(self, x, u, dt=0.01):
-        """Predict next state using learned forward model (Euler integration)."""
-        x_dot = self.A @ x + self.B @ u
+        """Predict next state using control-affine forward model (Euler integration)."""
+        x_dot = self.f(x) + self.g_mat(x) * u
         return x + dt * x_dot
 
     def prediction_error(self, x_actual, x_predicted):
@@ -218,8 +233,8 @@ class IdeomotorController:
             Output matrix y = C x (sensory consequences)
         Q_sens : np.ndarray
             Sensory error cost matrix
-        R_ctrl : np.ndarray
-            Control effort cost matrix
+        R_ctrl : float
+            Control effort cost scalar
         """
         self.model = forward_model
         self.C = C
@@ -230,35 +245,37 @@ class IdeomotorController:
         """
         Gradient descent on sensory prediction error.
 
-        J(u) = (C(x + dt*f(x,u)) - y*)' Q (C(x + dt*f(x,u)) - y*) + u' R u
+        J(u) = (C(x + dt*f(x,u)) - y*)' Q (C(x + dt*f(x,u)) - y*) + R * u^2
+
+        The gradient of the forward model w.r.t. u is estimated by finite differences
+        to handle the nonlinear drift f(x) without requiring an analytic Jacobian.
         """
-        u = np.zeros(self.model.B.shape[1])
+        u = 0.0
+        eps = 1e-4
         for _ in range(n_iter):
             x_pred = self.model.predict(x, u)
             y_pred = self.C @ x_pred
             sens_error = y_pred - y_star
-            # Gradient w.r.t. u (chain rule through forward model)
-            grad = (self.model.B.T @ self.C.T @ self.Q @ sens_error
-                    + self.R @ u)
+            # Finite-difference gradient of predict w.r.t. u
+            dx_du = (self.model.predict(x, u + eps) - self.model.predict(x, u - eps)) / (2 * eps)
+            grad = self.C @ dx_du @ self.Q @ sens_error + self.R * u
             u = u - lr * grad
         return u
 
 
-# Example: 2-DoF pendulum with position as sensory output
-A = np.array([[0, 1], [-9.81, -0.5]])
-B = np.array([[0], [1.0]])
+# Example: nonlinear damped pendulum with angle as sensory output
 C = np.array([[1, 0]])  # Only measure angle (sensory output)
 
-model = ForwardModel(A, B)
+model = ForwardModel(m=1.0, l=1.0, b=0.5, g=9.81)
 ctrl = IdeomotorController(model, C,
                            Q_sens=np.array([[10.0]]),
-                           R_ctrl=np.array([[0.1]]))
+                           R_ctrl=0.1)
 
-x = np.array([0.3, 0.0])  # Current state: displaced
+x = np.array([0.3, 0.0])  # Current state: displaced 0.3 rad, at rest
 y_star = np.array([0.0])  # Desired sensory consequence: zero angle
 
 u = ctrl.select_action(x, y_star)
-print(f"Ideomotor action: u = {u[0]:.3f} N·m")
+print(f"Ideomotor action: u = {u:.3f} N·m")
 print(f"Current angle: {np.degrees(x[0]):.1f}°")
 print(f"Prediction error before: {abs(C @ x - y_star)[0]:.3f} rad")
 x_next = model.predict(x, u)
