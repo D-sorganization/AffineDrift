@@ -766,12 +766,14 @@ $$
 d\mathbf{x} = \mathbf{f}(\mathbf{x}, \mathbf{W} \mathbf{c}) dt + \mathbf{G} d\mathbf{w}
 $$ {#eq-stochastic-dynamics}
 
-**Our contribution**: The solution is a **stochastic contraction metric** $\mathbf{S}(t)$ satisfying:
+**Proposed formulation**: A **stochastic contraction metric** $\mathbf{S}(t)$ for the mean-field dynamics satisfying:
 $$
 -\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}
 $$ {#eq-stochastic-riccati}
 
-The noise term $\mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top$ **opposes** contraction—the CNS must work harder to maintain stability.
+> **Note on non-standard formulation:** The quadratic noise term $\tfrac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}$ does not appear in the standard stochastic LQR/Riccati equation, which has an additive noise term of the form $+\mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top$ (from the Itô correction). The equation above is a heuristic extension motivated by contraction-theoretic robustness analysis; a rigorous derivation from the stochastic Lyapunov/contraction framework would require careful application of Itô's lemma. This equation should be treated as an illustrative proposal rather than a derived result.
+
+The qualitative interpretation holds regardless: noise terms tend to **oppose** contraction—the CNS must work harder to maintain stability in the presence of variability.
 
 ## Golf Swing Stability Margins
 
