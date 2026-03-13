@@ -29,29 +29,31 @@ class SyncMap:
 
 
 SYNC_MAPS: tuple[SyncMap, ...] = (
+    # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
+    # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
     SyncMap(
         source="css/startup-launcher.css",
-        mirrors=("src/css/startup-launcher.css", "docs/css/startup-launcher.css"),
+        mirrors=("docs/css/startup-launcher.css",),
     ),
     SyncMap(
         source="css/search-metrics.css",
-        mirrors=("src/css/search-metrics.css", "docs/css/search-metrics.css"),
+        mirrors=("docs/css/search-metrics.css",),
     ),
     SyncMap(
         source="css/print.css",
-        mirrors=("src/css/print.css", "docs/css/print.css"),
+        mirrors=("docs/css/print.css",),
     ),
     SyncMap(
         source="css/bibliography.css",
-        mirrors=("src/css/bibliography.css", "docs/css/bibliography.css"),
+        mirrors=("docs/css/bibliography.css",),
     ),
     SyncMap(
         source="css/critics-corner.css",
-        mirrors=("src/css/critics-corner.css", "docs/css/critics-corner.css"),
+        mirrors=("docs/css/critics-corner.css",),
     ),
     SyncMap(
         source="css/resources.css",
-        mirrors=("src/css/resources.css", "docs/css/resources.css"),
+        mirrors=("docs/css/resources.css",),
     ),
     SyncMap(
         source="js/metrics.js",
