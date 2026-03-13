@@ -13,11 +13,11 @@ test.describe("PR Smoke", () => {
   test("key public pages return success", async ({ page }) => {
     for (const route of [
       "/",
-      "/articles.html",
-      "/bibliography.html",
-      "/overview.html",
-      "/resources-books.html",
-      "/models.html",
+      "/resources/articles.html",
+      "/resources/bibliography.html",
+      "/pages/overview.html",
+      "/resources/resources-books.html",
+      "/models/models.html",
     ]) {
       const response = await page.goto(route, { waitUntil: "domcontentloaded" });
       expect(response).toBeTruthy();
