@@ -1,0 +1,286 @@
+---
+title: "Zero-Torque Counterfactual"
+description: "The Zero-Torque Counterfactual (ZTCF): definition, interpretation, and numerical computation algorithm for the AffineDrift golf swing framework."
+author: "AffineDrift Research"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+```{=html}
+<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
+<section class="laymans-terms">
+  <button class="laymans-terms-header" aria-expanded="false">
+    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-icon">▼</span>
+  </button>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Not familiar with control theory or differential equations? Here is what the Zero-Torque Counterfactual means in everyday language.
+      </p>
+
+      <div class="laymans-item">
+        <h3>The "Shadow Swing"</h3>
+        <p>
+          Imagine freezing a golfer at the top of the downswing and asking: "If this golfer suddenly stopped applying any muscular effort — completely relaxed every muscle — where would the club go?"
+        </p>
+        <p>
+          The answer is the <strong>Zero-Torque Counterfactual (ZTCF)</strong>: the path the club would travel if carried only by gravity, momentum, and the elastic whip of the shaft. No muscles. Pure physics.
+        </p>
+        <div class="analogy">
+          <strong>Analogy:</strong> Think of a car on the highway. If you let go of the steering wheel and take your foot off the gas, the car does not stop — it drifts forward under its own momentum. The ZTCF is the golfer's equivalent of "letting go of the wheel." It traces where the club drifts when no one is steering.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Why Does This Matter?</h3>
+        <p>
+          By comparing the actual swing to this "shadow swing," you can see exactly how much the golfer's muscles are contributing at every moment. Early in the downswing the golfer is doing most of the work; late in the downswing the swing is largely running on momentum, and muscles are just steering.
+        </p>
+        <div class="key-takeaway">
+          The ZTCF separates "what physics would do anyway" from "what the golfer chose to do." That separation is the engine of the entire AffineDrift analysis.
+        </div>
+      </div>
+
+      <div class="laymans-item">
+        <h3>A Thought Experiment, Not a Real Swing</h3>
+        <p>
+          A golfer cannot actually apply zero torque — muscles are always doing something. The ZTCF is a mathematical tool, not a physical experiment. It is computed from the model equations, not measured directly. Think of it like the "expected path" that a physicist would predict before watching the swing.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+```
+
+::: {.callout-note}
+## Novelty Status
+
+- **Established (textbook):** Lagrangian drift/input decomposition of control-affine systems; counterfactual simulation as a diagnostic technique in mechanics.
+- **Novel application:** Applying the ZTCF framework specifically to golf swing biomechanics; using it as a standard diagnostic tool for practitioners and researchers.
+- **Terminology:** "Zero Torque Counterfactual (ZTCF)" is the authors' label for this construction in the golf context; the underlying mathematics is standard rigid-body dynamics.
+:::
+
+## Motivation
+
+The golf swing is a high-speed ballistic motion in which passive mechanical forces — inertia, gravity, Coriolis effects, and elastic shaft recoil — interact continuously with active muscular torques. Conventional inverse dynamics can estimate the total generalized forces acting at each joint, but it cannot distinguish how much of those forces arise from the golfer's deliberate muscular effort versus the unavoidable momentum of the system.
+
+The *drift--input decomposition* of the control-affine system $\dot{x} = f(x) + g(x)u$ provides the formal separation between passive dynamics $f(x)$ and input-driven dynamics $g(x)u$. However, this separation is instantaneous: it classifies the current velocity of the state, not the trajectory over time. The golf swing is not an instant; it is a history-dependent ballistic process in which momentum generated during the backswing shapes forces throughout the downswing.
+
+To convert the instantaneous decomposition into a trajectory-level diagnostic, we integrate the drift-only equations forward from a chosen initial state. The resulting trajectory is the **Zero-Torque Counterfactual**.
+
+## Formal Definition
+
+### Control-Affine Setting
+
+Following Part I of this series, the golfer--club--shaft system is governed by the nonlinear control-affine equations of motion:
+
+$$\dot{x} = f(x) + g(x)\,u, \qquad x(t_0) = x_0,$$
+
+where:
+
+- $x(t) = [q(t),\,\dot{q}(t),\,\eta(t),\,\dot{\eta}(t)]^T$ is the state vector (rigid-body generalized coordinates $q$, their velocities $\dot{q}$, flexible shaft modal coordinates $\eta$, and their velocities $\dot{\eta}$),
+- $f(x)$ is the *drift vector field* — the autonomous, torque-free evolution of the system,
+- $g(x)$ is the *input matrix* — how applied joint torques enter the equations,
+- $u(t)$ is the vector of applied joint torques (the golfer's muscular input),
+- $t_0$ is the initial time at which the counterfactual branches.
+
+The drift field $f(x)$ encodes all passive mechanical effects: inertial coupling among rigid segments, Coriolis and centrifugal terms, gravitational loading, and elastic and damping forces from shaft bending. It depends only on the current state $x$ and fixed model parameters — not on the applied torque $u$.
+
+### The ZTCF Trajectory
+
+Let $x(t)$ denote the actual trajectory of the system under some torque input $u(t)$ on the interval $t \in [t_0, t_f]$, with initial condition $x(t_0) = x_0$.
+
+We define the **Zero-Torque Counterfactual** trajectory, denoted $x^{\mathrm{ZTCF}}(t)$, as the unique solution of the drift-only initial value problem:
+
+$$\boxed{\dot{x}^{\mathrm{ZTCF}}(t) = f\!\left(x^{\mathrm{ZTCF}}(t)\right), \qquad x^{\mathrm{ZTCF}}(t_0) = x_0.}$$
+
+By construction:
+
+1. The initial condition is identical to that of the actual swing: same joint angles, same velocities, same shaft deformation state.
+2. All mechanical parameters (segment masses and inertias, shaft stiffness, damping) are identical to those of the actual model.
+3. The only difference is that the torque input is held at zero for all $t \geq t_0$: $u(t) \equiv 0$.
+
+Thus $x^{\mathrm{ZTCF}}(t)$ is the unique trajectory the model predicts when the system is released from the same initial state and allowed to evolve purely under its own passive dynamics.
+
+### The Torque-Driven Deviation
+
+Along the actual trajectory, the state derivative contains both drift and input contributions:
+
+$$\dot{x}(t) = f\!\left(x(t)\right) + g\!\left(x(t)\right)\,u(t).$$
+
+Along the ZTCF trajectory, the derivative contains only the drift:
+
+$$\dot{x}^{\mathrm{ZTCF}}(t) = f\!\left(x^{\mathrm{ZTCF}}(t)\right).$$
+
+The drift field is invariant with respect to the applied torque — $f(x)$ depends only on the state and model parameters, not on $u$. When $u = 0$ the input term $g(x)u$ vanishes identically. The difference between the two trajectories, accumulated over time, therefore isolates the integral effect of the torque input on the swing path.
+
+## Geometric Interpretation
+
+The ZTCF is an *integral curve* of the drift vector field $f$. In the language of differential geometry, $f$ defines a vector field on the state space $\mathcal{X}$; the ZTCF is the unique flow line of that field passing through $x_0$ at time $t_0$.
+
+Physically, this integral curve traces the "natural" path of the system under:
+
+- **Inertia** — the momentum of all rigid segments, accumulated through the backswing and early downswing,
+- **Centrifugal and Coriolis forces** — arising from the high-speed rotation of the arm-club chain,
+- **Gravitational loading** — acting on each segment throughout the motion,
+- **Elastic shaft recoil** — the restoring force of the bent shaft as it tries to return to its neutral shape,
+- **Passive joint damping** — any modeled energy dissipation in the joints.
+
+What is absent from the ZTCF is any contribution from the golfer's muscles. The difference between the actual trajectory $x(t)$ and the counterfactual $x^{\mathrm{ZTCF}}(t)$ — visualized as the gap between two swing paths evolving from the same starting point — captures the cumulative effect of muscular torques. Broadly:
+
+- Where the actual path matches the ZTCF closely, the swing is dominated by passive momentum; muscles are steering rather than powering.
+- Where the actual path deviates substantially from the ZTCF, active muscular torques are contributing significantly to the motion.
+
+## Relationship to the Drift–Input Decomposition
+
+The drift--input decomposition used throughout this series is the algebraic identity:
+
+$$\dot{x} = \underbrace{f(x)}_{\text{passive drift}} + \underbrace{g(x)\,u}_{\text{active input}}.$$
+
+This identity is *instantaneous*: it classifies the current velocity vector at a single point in time. The ZTCF extends this instantaneous decomposition into the temporal domain by integrating the passive component forward through time.
+
+At the torque-force level, the decomposition reads:
+
+$$\tau_{\mathrm{total}}(t) = \tau_{\mathrm{drift}}\!\left(x(t)\right) + \tau_{\mathrm{input}}(t),$$
+
+where the drift torque $\tau_{\mathrm{drift}}$ is the generalized force required to sustain the passive acceleration $a_{\mathrm{drift}}(x)$ along the actual trajectory, and $\tau_{\mathrm{input}}$ is the remainder attributable to muscular effort. The ZTCF provides a visual and computational realization of the drift term: it is the trajectory that $\tau_{\mathrm{drift}}$ alone would produce, starting from the same initial state.
+
+::: {.callout-note}
+## Worked Illustrative Example
+
+The values below are hypothetical and chosen only to illustrate the decomposition method.
+
+Consider a snapshot during mid-downswing. Inverse dynamics applied to the actual trajectory yields a lead-shoulder torque magnitude of $\tau_{\mathrm{total}} = 100\,\mathrm{Nm}$. Evaluating the passive drift terms at the actual state gives $\tau_{\mathrm{drift}} = 85\,\mathrm{Nm}$. The input torque is therefore:
+
+$$\tau_{\mathrm{input}} = 100 - 85 = 15\,\mathrm{Nm}.$$
+
+Passive momentum, gravity, and shaft elasticity account for 85% of the mechanical load at this instant. The golfer is steering a momentum-driven system, not powering it. In the takeaway the ratio would be reversed: perhaps 60 Nm active against 10 Nm drift. This evolution from "active powering" to "passive steering" is invisible in raw inverse dynamics but explicit in the drift--input decomposition centered on the ZTCF.
+:::
+
+## High-DCR Regime: ZTCF as a Dominant Attractor
+
+The relative magnitudes of passive and active forces change systematically over the course of the downswing. Early in the motion — during takeaway and the initial downswing — the system has little momentum. The drift field $f(x)$ is energetically small, and the golfer retains broad authority to shape the trajectory.
+
+As the downswing accelerates, inertial and centrifugal forces grow with the square of angular velocity while physiological torque capacity remains bounded. The **Drift-Control Ratio (DCR)** — the ratio of passive drift force magnitude to available input force magnitude — rises sharply. In the high-DCR regime near impact:
+
+- The ZTCF ceases to be merely one possible path and becomes increasingly close to the only achievable path,
+- Muscular effort is largely expended in small corrections to the drift trajectory rather than shaping the overall motion,
+- The "inertial memory" of momentum generated earlier in the swing dominates the current dynamics.
+
+The ZTCF therefore transitions from a counterfactual "what if" into a near-prediction of the actual trajectory as impact approaches. For a detailed treatment of the DCR and its implications for swing control, see the [Drift-Control Ratio article](controllability-drift-ratio.html).
+
+## Numerical Algorithm
+
+This section documents the computational procedure for evaluating the ZTCF within a forward-dynamics simulation environment. The algorithm was developed and validated using MATLAB and Simulink, but the procedure is general to any platform that can express the system in control-affine form with inverse-dynamics evaluation available.
+
+### Notation and Discretization
+
+Let the continuous-time state be
+
+$$x(t) = [q(t),\,\dot{q}(t),\,\eta(t),\,\dot{\eta}(t)]^T,$$
+
+and let the simulation produce samples at discrete times
+
+$$t_k = t_0 + k\,\Delta t, \qquad k = 0,\dots,N.$$
+
+Let:
+
+- $x_k$ denote the simulated state at time $t_k$,
+- $u_k$ denote the applied torque input at $t_k$,
+- $f(x_k)$ denote the drift acceleration vector at $x_k$,
+- $x^{\mathrm{ZTCF}}_k$ denote the ZTCF state at time $t_k$.
+
+### Kill-Switch Approach (Simulink)
+
+In the Simulink forward-dynamics environment, the ZTCF was evaluated using a "kill-switch" method:
+
+1. The model evolved normally from $t_0$ under the full torque input $u(t)$.
+2. At a prescribed kill time $t_k$, all joint torques were instantaneously set to zero while leaving the state $x_k$ untouched.
+3. The model continued to integrate forward under drift dynamics only ($u \equiv 0$).
+4. The resulting hand-on-club interaction forces were recorded at the kill instant.
+
+A total of 56 kill-switch times were distributed uniformly across the downswing to sample the drift forces at representative points throughout the motion.
+
+### Discrete-Time Integration
+
+For a general-purpose discrete implementation, the ZTCF trajectory can be approximated by integrating the drift field:
+
+$$x^{\mathrm{ZTCF}}_{k+1} = x^{\mathrm{ZTCF}}_k + \Delta t\,f\!\left(x^{\mathrm{ZTCF}}_k\right) + \mathcal{O}(\Delta t^2),$$
+
+with the initial condition $x^{\mathrm{ZTCF}}_0 = x(t_0)$.
+
+In practice, higher-order integration should be used. The drift ODE is nonlinear and can be stiff during the high-acceleration phase of the late downswing. Recommended solvers:
+
+- **Variable-step stiff solvers** (`ode15s`, `ode23t` in MATLAB) during the late downswing where curvature of $f$ is large.
+- **Low step-size fixed-step solvers** when solver-matching between the actual trajectory and the ZTCF is required for a valid subtraction.
+
+### Consistency Verification
+
+Once the ZTCF is computed, numerical implementation correctness can be verified using the identity:
+
+$$\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k) \approx \tau_{\mathrm{ZVCF}}(t_k),$$
+
+where $\tau_{\mathrm{ZTCF}}$ are the forces along the ZTCF trajectory and $\tau_{\mathrm{ZVCF}}$ are the configuration-dependent (zero-velocity) forces.
+
+::: {.callout-warning}
+## Approximation Note
+
+This identity is **exact only at $t = t_0$**. After $t_0$, the ZTCF trajectory diverges from the actual trajectory, so forces evaluated along the two paths are at different states. The near-equality observed in simulation holds because the ZTCF remains close to the actual trajectory over short time windows. It should be interpreted as "instantaneous counterfactual attribution at each step," not a globally exact algebraic identity. See [Part 5: Numerical Validation](theory-part5.html) for a full discussion.
+:::
+
+### Practical Considerations
+
+**Consistent parameter sets.** All inverse-dynamics evaluations and drift field computations must use the exact same inertia, stiffness, and damping parameters to ensure numerical consistency between $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ and $\tau_{\mathrm{ZVCF}}$.
+
+**Solver matching.** ZTCF trajectories must use the same ODE solver, tolerances, and step sizes as the forward simulation. Mismatched solvers introduce artificial numerical drift between the two trajectories.
+
+**Filtering.** When applied to motion-capture data, velocities and accelerations should be computed from smoothed position data (e.g., Savitzky--Golay filter) before evaluating the drift field, to prevent amplification of measurement noise.
+
+## Scope and Limitations
+
+### What the ZTCF Answers
+
+The ZTCF answers a precisely defined question within the mechanical model:
+
+> "Given the same initial configuration, velocities, shaft deformation, and model parameters, what motion would the system execute if all muscular torques were set to zero at time $t_0$?"
+
+It does *not* claim that such a motion could be physically achieved by a real golfer, nor that the nervous system ever selects "zero torque" as a control strategy. The ZTCF is a mathematical device for isolating the passive mechanical contribution to the dynamics within the model.
+
+### Key Limitations
+
+::: {.callout-warning}
+## ZTCF Cannot Be Directly Measured from Real Swing Data
+
+The ZTCF trajectory is **not directly observable** from real golf swing data. Three identifiability challenges apply:
+
+1. **Muscles always apply some force.** A living golfer cannot achieve true zero torque; even passive muscle tone, joint stiffness, and co-contraction produce residual forces. The "zero torque" baseline is a modeling construct, not a physiologically achievable state.
+
+2. **Requires a complete dynamic model.** To evaluate $f(x)$ at the measured state, one needs the full inertia matrix $M(q)$, the Coriolis/centrifugal matrix $C(q,\dot{q})$, gravity $G(q)$, and shaft elasticity parameters. Each parameter introduces model uncertainty that propagates directly into the ZTCF estimate.
+
+3. **Initial condition sensitivity.** Because $\dot{x}^{\mathrm{ZTCF}} = f(x^{\mathrm{ZTCF}})$ is a nonlinear ODE, small errors in the initial state $(q_0, \dot{q}_0)$ at the branching point cause the counterfactual trajectory to diverge over time. The ZTCF is most reliable over short time horizons (tens of milliseconds) near $t_0$.
+
+ZTCF-based analyses must therefore be validated against simulation data with known ground truth before application to real swing data.
+:::
+
+### Scope of the Numerical Validation
+
+The Simulink validation documented in [Part 5: Numerical Validation](theory-part5.html) confirms the **algebraic consistency** of the ZTCF subtraction in a planar, constant-impedance model. It does not:
+
+- validate the control-affine model against real golfer data,
+- test the drift invariance assumption against 3D gyroscopic terms ($\omega \times I\omega$),
+- verify the ZTCF under time-varying stiffness ("Stiffness Pulse") or intentional constraint collapse mechanisms.
+
+Model validation against experimental data from real athletes remains a future research goal.
+
+## See Also
+
+- [Part 1: Control-Affine Framework](theory-part1.html) — Derivation of $\dot{x} = f(x) + g(x)u$ and the mechanical separability of drift and input
+- [Part 2: ZTCF and ZVCF Tools](theory-part2.html) — Full treatment of both counterfactuals, including ZVCF definition and drift invariance discussion
+- [Part 5: Numerical Validation](theory-part5.html) — Simulink implementation and kill-switch algorithm; Appendix D with full numerical procedures
+- [Drift-Control Ratio](controllability-drift-ratio.html) — Analysis of ZTCF dominance over the downswing as the DCR rises toward impact
