@@ -95,13 +95,13 @@ including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft 
 
 ## ZVCF for Input Estimation
 
-The Zero Velocity Counterfactual (ZVCF) holds the state fixed and disables drift contributions. Gravity, shaft elasticity, and other passive contributions are set to zero. Only the input vector fields $G(x)u$ remain active. The forces obtained from the ZVCF correspond to
+The Zero Velocity Counterfactual (ZVCF) sets all velocities to zero while keeping the configuration fixed, then evaluates the drift at this zero-velocity state. This yields configuration-dependent forces (gravity and elastic restoring forces) without velocity-dependent terms (Coriolis, centrifugal). The forces obtained from the ZVCF correspond to
 
 $$
-F_{\mathrm{ZVCF}} = F_{\mathrm{input}}.
+F_{\mathrm{ZVCF}} = f(q, 0) = F_{\mathrm{gravity}} + F_{\mathrm{elastic}}.
 $$
 
-The ZVCF therefore generates the pure input component of generalized forces, enabling direct inference of the joint torques required to produce the observed deviation of $F_{\mathrm{total}}$ from $F_{\mathrm{drift}}$.
+The ZVCF therefore isolates the configuration-dependent passive component of generalized forces. The pure input contribution is then inferred from the deviation of $F_{\mathrm{total}}$ from $F_{\mathrm{ZVCF}}$.
 
 ## Hand--Club and Ground Reaction Forces as Mixed Forces
 
