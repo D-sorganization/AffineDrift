@@ -146,6 +146,18 @@ These two rotational degrees of freedom occur about approximately perpendicular 
 
 From a control perspective, muscles can directly generate torques about the flexion/extension and radial/ulnar axes at the wrist. However, rotation about the forearm axis occurs through forearm muscles acting at the proximal radioulnar joint. This configuration is critical: the wrist joint itself has no direct actuation about the forearm rotation axis, making this a *constrained* rather than *actuated* degree of freedom at the wrist.
 
+::: {.callout-note}
+## Limitations of the 2-DOF Wrist Model
+
+Modeling the wrist as a 2-DOF universal joint is a deliberate simplification. The full human wrist system has three rotational degrees of freedom (flexion/extension, radial/ulnar deviation, and forearm pronation/supination). This model sets aside two additional considerations:
+
+1. **Soft-tissue compliance**: Ligaments and cartilage introduce deformability that a rigid universal joint ignores. This affects the *transmission* of constraint torques at high loads (e.g., impact).
+
+2. **Coupled motion**: In practice, wrist DOFs exhibit kinematic coupling (e.g., the dart-thrower's motion follows an oblique diagonal path, not a pure cardinal axis). The rigid 2-DOF model treats the axes as independent.
+
+These limitations do not affect the core thesis—that constraint torques arise at the constrained axis regardless of actuation—but they do mean the quantitative predictions from this model should be treated as order-of-magnitude estimates rather than precise biomechanical predictions.
+:::
+
 ## Universal Joints and Constraint Torques
 
 ### Mechanical Properties of Universal Joints

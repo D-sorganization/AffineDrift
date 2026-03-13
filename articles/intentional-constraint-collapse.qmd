@@ -272,7 +272,15 @@ Instead, constraint collapse occurs **late**, during the final approach to impac
 
 In control terms, the golfer increases effective constraint stiffness and damping only when robustness matters most—during collision with the ball.
 
-### Temporal Constraint from DCR Analysis
+### Temporal Constraint from DCR Analysis: When Is ICC Optimal?
+
+The qualitative condition for ICC to be **optimal** rather than merely possible is that the cost of maintaining active constraints (grip effort) exceeds the cost of releasing them. In terms of the Drift-Control Ratio (DCR), this occurs when the system is in a **drift-dominated regime**: when DCR $\gg 1$, drift forces dominate and active constraint maintenance is expensive relative to the inertial forces already in play. The appropriate switching time $t^*$ satisfies:
+
+$$
+\text{DCR}(t^*) = \frac{\|f(x(t^*))\|}{\|g(x(t^*))u_{\max}\|} \approx \gamma_{\text{threshold}}
+$$
+
+where $\gamma_{\text{threshold}}$ is the critical DCR value at which releasing active constraint becomes lower-cost than maintaining it. When DCR exceeds $\gamma_{\text{threshold}}$, the system's natural drift is already sufficient to carry the trajectory toward impact; ICC exploits this by releasing the high-impedance constraint and converting grip torque to club stiffness precisely at the moment natural momentum takes over.
 
 This timing constraint connects directly to the Drift-Control Ratio analysis: the planar DCR imposes a **temporal accuracy constraint** on the stiffness pulse. The golfer must execute the impedance transition within a window dictated by the DCR-determined arrival time. The DCR collapse means this timing cannot be adjusted late—the stiffness pulse must be pre-programmed, not reactive. In other words, the planar DCR creates an arrival-time prediction error that is exponentially amplified by the high drift, leaving no room for a feedback-based adjustment of when to stiffen. Instead, the motor system pre-computes when impact will occur and pre-programs the stiffness activation accordingly.
 
