@@ -814,9 +814,9 @@ $$ {#eq-stability-margin}
 
 This quantifies the **robustness** to perturbations at time $t$.
 
-**Result**: Professional golfers exhibit $\gamma(t) > 0.5$ throughout swing, while amateurs have $\gamma(t) < 0.2$ near impact ($t \approx T$).
+**Illustrative hypothesis**: If contraction stability margins were measured empirically, one would expect professional golfers to maintain higher $\gamma(t)$ throughout the swing than amateurs, particularly near impact ($t \approx T$). This prediction follows from the framework but has not yet been validated against motion-capture data.
 
-**Interpretation**: Pros maintain high contraction rate even during rapid motion; amateurs lose stability near impact.
+**Interpretation**: This framework predicts that pros maintain higher contraction rate even during rapid motion; amateurs may lose stability near impact. Empirical validation is a direction for future work.
 
 ---
 
@@ -928,11 +928,13 @@ If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), t
 
 **Application**: Peg-in-hole insertion with guaranteed convergence despite intermittent contact.
 
-## Experimental Validation: 7-DOF Robot Arm
+## Simulation Study: 7-DOF Robot Arm
+
+> **Note**: The following numerical results are illustrative simulations, not empirical experiments. They demonstrate expected theoretical behavior but have not been validated on physical hardware. Experimental validation is a direction for future work.
 
 ### Setup
 
-- **Robot**: KUKA LWR 7-DOF arm
+- **Robot model**: 7-DOF arm dynamics (KUKA LWR geometry, simulated)
 - **Task**: Circular trajectory (radius 10 cm, period 2 s)
 - **Controller**: Contraction-based task space (@eq-task-force) with $\lambda = 5.0$ Hz
 
@@ -944,7 +946,7 @@ If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), t
    \lambda_{\text{meas}} = -\frac{1}{\Delta t} \log \frac{\|e(t+\Delta t)\|_{\mathbf{M}}}{\|e(t)\|_{\mathbf{M}}}
    $$ {#eq-measured-contraction}
 
-### Results
+### Simulated Results
 
 | Metric | Contraction Controller | Standard PD | Improvement |
 |--------|----------------------|-------------|-------------|
@@ -953,15 +955,15 @@ If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), t
 | Measured $\lambda$ (Hz) | 4.87 | 2.13 | 129% |
 | Settling time (s) | 0.31 | 1.15 | 73% |
 
-**Key finding**: The measured contraction rate (4.87 Hz) closely matches the design value (5.0 Hz), **validating the theory**.
+**Key finding**: In simulation, the measured contraction rate (4.87 Hz) closely matches the design value (5.0 Hz), **consistent with the theory**. Physical validation remains future work.
 
-### Robustness Test
+### Robustness Test (Simulated)
 
 Applied **external disturbance** (5 N impulse) at $t = 1.0$ s:
 - **Contraction controller**: Recovers in 0.28 s (within theoretical bound $3/\lambda = 0.60$ s)
 - **PD controller**: Recovers in 1.43 s
 
-**Contraction provides 5× faster disturbance rejection.**
+**Contraction provides 5× faster disturbance rejection in simulation.**
 
 ---
 
