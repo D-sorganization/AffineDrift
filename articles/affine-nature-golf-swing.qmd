@@ -109,6 +109,22 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
         <p class="critic-argument">
           The Zero Velocity Counterfactual (ZVCF) analyzes static forces like gravity and shaft droop. Critics point out that in a high-speed swing, centripetal accelerations exceed $100g$, making gravity negligible ($<1\%$). They argue that analyzing ZVCF is akin to studying the aerodynamics of a parked car to understand racing.
         </p>
+
+        <div class="calculation-box" style="margin: 1rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--primary-blue, #0057b8); border-radius: 6px; font-size: 0.92rem;">
+          <strong style="display: block; margin-bottom: 0.75rem; font-size: 1rem;">Worked Example: Centripetal Acceleration at Impact</strong>
+          <p style="margin-bottom: 0.5rem;">For a driver swing at 100 mph (44.7 m/s) with a 45-inch (1.14 m) shaft, the centripetal acceleration acting on the clubhead is:</p>
+          <div style="text-align: center; margin: 0.75rem 0;">
+            $$a_c = \frac{v^2}{r} = \frac{(44.7\,\text{m/s})^2}{1.14\,\text{m}} \approx 1{,}754\,\text{m/s}^2 \approx 179\,g$$
+          </div>
+          <p style="margin-bottom: 0.5rem;">Equivalently, using angular velocity $\omega = v/r \approx 39.2\,\text{rad/s}$:</p>
+          <div style="text-align: center; margin: 0.75rem 0;">
+            $$a_c = \omega^2 r = (39.2)^2 \times 1.14 \approx 1{,}752\,\text{m/s}^2$$
+          </div>
+          <p style="margin: 0; color: var(--text-light, #6c757d); font-style: italic;">
+            Gravity ($9.8\,\text{m/s}^2$) is therefore $\approx 0.56\%$ of the centripetal load — confirming the critique. Yet the ZVCF baseline is not evaluated to measure gravity's <em>magnitude</em>; it is evaluated to isolate <em>configuration-dependent</em> stiffness from <em>velocity-dependent</em> geometric stiffening.
+          </p>
+        </div>
+
         <div class="author-response">
           <strong>Our Response:</strong> While the <em>magnitude</em> of static forces is small relative to peak dynamic loads, the ZVCF is analytically essential. It serves as a necessary "tare" operation to distinguish "Geometric Stiffness" (velocity-dependent stiffening) from "Elastic Stiffness" (material properties). Without explicitly subtracting the configuration-dependent baseline, we cannot accurately isolate the pure inertial drift that dominates the downswing.
         </div>

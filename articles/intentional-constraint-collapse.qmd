@@ -115,6 +115,22 @@ In mechanical terms, this is not brute stiffness, nor passive locking. It is **t
 
 The term “intentional constraint collapse” requires a rigorous mathematical definition to distinguish it from kinematic singularities and to clarify the role of impedance modulation.
 
+<div class=”definition-box” style=”margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--accent-secondary, #6c757d); border-radius: 6px;”>
+<strong style=”display: block; font-size: 1rem; margin-bottom: 0.75rem;”>Definition 2.1 — Intentional Constraint Collapse (ICC)</strong>
+
+Let $q(t) \in \mathcal{Q}$ be the generalized coordinates of the golfer–club system and let $K_{\mathrm{eff}}(q, t)$ denote the effective joint-space impedance (stiffness) matrix arising from passive tissue properties and active neuromuscular co-contraction. Let $J(q)$ be the task-space Jacobian mapping joint velocities to clubhead velocity, and let $K_{\mathrm{task}}(q, t) = J(q)^{-T} K_{\mathrm{eff}}(q, t)\, J(q)^{-1}$ be the resulting task-space stiffness.
+
+**Intentional Constraint Collapse** is the neuromuscular control strategy in which, over a preparation interval $[t^* - \tau,\, t^*]$ of duration $\tau \sim 50$–$100\,\text{ms}$ terminating at impact time $t^*$, the co-contraction component $\Delta K_{\mathrm{co}}(t)$ of the joint-space stiffness satisfies:
+
+$$\Delta K_{\mathrm{co}}(t) \succ 0, \qquad \frac{d}{dt}\Delta K_{\mathrm{co}}(t) \succ 0 \quad \text{for } t \in [t^* - \tau,\, t^*],$$
+
+such that the maximum eigenvalue of $K_{\mathrm{task}}$ in perturbation-sensitive directions (clubface twist, loft) satisfies:
+
+$$\lambda_{\max}\!\left(P\, K_{\mathrm{task}}(t)\, P^T\right) \gg \lambda_{\max}\!\left(P\, K_{\mathrm{task}}(t^* - \tau)\, P^T\right),$$
+
+where $P$ is the projection onto the perturbation-sensitive subspace. The collapse is **intentional** in that it is a planned, anticipatory strategy, not a reactive response to the impact impulse — its onset precedes contact by $\tau \gg 0$.
+</div>
+
 ### Impedance-Based Definition
 
 By **intentional constraint collapse**, we mean the neuromuscular strategy of rapidly increasing the **effective impedance** (stiffness and damping) in selected degrees of freedom of the configuration space, such that the ratio
