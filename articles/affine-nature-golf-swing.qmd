@@ -229,12 +229,12 @@ $$T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T
 The dynamics of the system evolve on the **tangent bundle** $T\mathcal{Q}$, the smooth manifold formed by the union of all tangent spaces:
 $$T\mathcal{Q} = \bigcup_{p \in \mathcal{Q}} T_p \mathcal{Q}.$$
 We define the full state vector $x$ as a point in this bundle. In local coordinates:
-$$x = [q^{T}, \eta^{T}, \dot{q}^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong \mathbb{R}^{2(n+m)}.$$
+$$x = [q^{T}, \dot{q}^{T}, \eta^{T}, \dot{\eta}^{T}]^{T} \in T\mathcal{Q} \cong \mathbb{R}^{2(n+m)}.$$
 
 ::: {.callout-important}
 ## On the Markov Property and Hidden States
 
-The control-affine formulation assumes that the state vector $x = (q, \eta, \dot{q}, \dot{\eta})$ contains all information needed to predict future evolution—the Markov property. This is mathematically exact for ideal rigid-body and linear-elastic systems. However, biological systems may contain hidden states not captured in our model: muscle fatigue, calcium buffering dynamics, proprioceptive adaptation, and short-term motor learning.
+The control-affine formulation assumes that the state vector $x = (q, \dot{q}, \eta, \dot{\eta})$ contains all information needed to predict future evolution—the Markov property. This is mathematically exact for ideal rigid-body and linear-elastic systems. However, biological systems may contain hidden states not captured in our model: muscle fatigue, calcium buffering dynamics, proprioceptive adaptation, and short-term motor learning.
 
 We argue this omission is acceptable for the following reason: the AffineDrift framework is designed to analyze the mechanical dynamics of a **single trial** (one swing, one throw, one stride). Over the timescale of a single movement ($\sim$1–2 seconds), fatigue accumulation is negligible, calcium dynamics are fast enough to be quasi-static, and motor learning does not occur. The hidden states that would violate the Markov assumption operate on timescales of minutes to hours, not milliseconds to seconds.
 
@@ -389,7 +389,7 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 | $\dot{q}, \ddot{q}$ | Joint angular velocities and accelerations |
 | $\eta \in \mathbb{R}^{m}$ | Modal coordinates of the flexible shaft |
 | $\dot{\eta}, \ddot{\eta}$ | Modal velocities and accelerations |
-| $x \in \mathbb{R}^{2(n+m)}$ | Full system state: $x = [q,\eta,\dot{q},\dot{\eta}]^{T}$ |
+| $x \in \mathbb{R}^{2(n+m)}$ | Full system state: $x = [q,\dot{q},\eta,\dot{\eta}]^{T}$ |
 | $u \in \mathbb{R}^{m_{u}}$ | Control input vector (abstracted muscular torques) |
 | $\tau \in \mathbb{R}^{n}$ | Generalized torque vector: $\tau = B(q) u$ |
 | $B(q)$ | Input mapping matrix from control channels to generalized torques |
