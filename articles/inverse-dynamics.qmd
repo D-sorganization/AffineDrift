@@ -37,10 +37,10 @@ format:
       <div class="laymans-item">
         <h3>The Invisible Wind (Air Resistance)</h3>
         <p>
-          Most golf science ignores air resistance on the club. This article argues that at 100mph, wind drag is huge—ignoring it is like ignoring friction on a slide. It skews the results, making it look like the golfer is doing things they aren't.
+          Most golf science ignores air resistance on the club. At 100 mph, aerodynamic drag on the clubhead is measurable — roughly 6–9 N based on published measurements — and neglecting it introduces systematic errors when interpreting inverse dynamics results. Note: the core AffineDrift control-affine framework excludes aerodynamics from its model scope (see Theory Part 1). This section discusses aerodynamics as a practical confound in inverse dynamics interpretation, not as a modeled force in the framework.
         </p>
         <div class="key-takeaway">
-          Without a proper model that accounts for gravity, momentum, and air resistance, "measured" forces are just guesses about what the golfer feels.
+          Without accounting for gravity, momentum, and aerodynamic drag, "measured" forces from inverse dynamics may systematically misattribute drag moments to the golfer's hands.
         </div>
       </div>
 
@@ -464,6 +464,11 @@ When inverse dynamics reports, for example, a radial force at the grip, we canno
 :::
 
 ## Limitation 3: The Air Resistance Problem
+
+::: {.callout-note}
+## Scope Note
+Aerodynamic drag is **outside the scope** of the core AffineDrift control-affine framework (see [Theory Part 1](theory-part1.html#modeling-assumptions)), which models the golf swing as a rigid multibody system driven by joint torques and gravity only. This section discusses air resistance as a practical confound in inverse dynamics data interpretation — a real-world source of systematic error that affects how measured forces should be read, even if aerodynamics are not included in the theoretical model.
+:::
 
 ### The Neglected External Force
 
