@@ -66,6 +66,9 @@ jobs:
       - name: Pre-build Link Check
         run: python -m src.tools.check_links
 
+      - name: Update Service Worker Cache Version
+        run: python3 scripts/update_sw_cache_version.py
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
