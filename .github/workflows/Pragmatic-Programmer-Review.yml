@@ -9,21 +9,21 @@ on:
   workflow_dispatch:
     inputs:
       create_issues:
-        description: 'Create GitHub issues for findings'
+        description: "Create GitHub issues for findings"
         required: false
-        default: 'true'
+        default: "true"
         type: choice
         options:
-          - 'true'
-          - 'false'
+          - "true"
+          - "false"
       dry_run:
-        description: 'Dry run mode (no issues created)'
+        description: "Dry run mode (no issues created)"
         required: false
-        default: 'false'
+        default: "false"
         type: choice
         options:
-          - 'false'
-          - 'true'
+          - "false"
+          - "true"
   schedule:
     # Run daily at 3 AM PST (11 UTC) - PRIMARY PRIORITY for tracking key repo issues
     - cron: "0 8 * * 0,4"
@@ -49,14 +49,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Run Pragmatic Programmer Review
         id: review
