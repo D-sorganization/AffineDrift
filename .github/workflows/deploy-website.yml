@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   build:
+    if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: .
@@ -96,6 +97,7 @@ jobs:
           path: docs
 
   deploy:
+    if: github.repository == 'D-sorganization/AffineDrift'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
