@@ -1410,33 +1410,33 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
       <div class="critic-item">
         <div class="critic-perspective">
 <span class="critic-label">Alternative View:</span>
-<h3>The Utility of Bidirectional "Duality" as a Design Concept</h3>
+<h3>The Pragmatic Value of the "Duality" Framework</h3>
         </div>
-        <p class="critic-argument">While it is mathematically true that the relationship between optimal control and contraction is asymmetrical (LQR always induces contraction, but a contraction metric does not uniquely determine an LQR problem), characterizing the relationship as a "duality" remains a highly effective conceptual design tool. By treating them as duals, control engineers are encouraged to seamlessly map stability requirements directly onto cost functions during design, accelerating the synthesis of robust controllers even if an exact mathematical equivalence is lacking.</p>
+        <p class="critic-argument">While the mathematical mapping between LQR and contraction metrics is formally asymmetric (as LQR uniquely yields a contraction metric, but the inverse is non-unique), treating this relationship as a bidirectional "duality" is arguably a necessary abstraction for modern control engineering. By conceptually bridging stability and optimality, practitioners are empowered to inject geometric stability constraints directly into cost functions. In applied robotics, this heuristic accelerates the design of safe controllers significantly, and insisting on strict mathematical equivalence may unnecessarily gatekeep a highly productive engineering tool.</p>
         <div class="author-response">
-<strong>Our Response:</strong> We concede that "duality" serves as a powerful heuristic in control design, effectively guiding intuition. Our concern remains that without explicitly stating the limitations of this asymmetry (the non-uniqueness of the inverse optimal control problem), the article risks misleading theorists who rely on formal mathematical equivalences.
+<strong>Our Response:</strong> This is a strong and valid point; engineering often relies on productive heuristics that outpace formal theory. We agree that the "duality" framework is a powerful design accelerator. Our primary concern is simply one of taxonomy: if the text clarified that this is a <em>pragmatic</em> duality rather than a strict mathematical isomorphism, it would serve both practitioners and theorists without causing theoretical confusion.
         </div>
       </div>
 
       <div class="critic-item">
         <div class="critic-perspective">
 <span class="critic-label">Alternative View:</span>
-<h3>Theoretical Biomechanics Often Precedes Empirical Validation</h3>
+<h3>Mathematical Frameworks as Predictive Biological Models</h3>
         </div>
-        <p class="critic-argument">The assertion that muscle synergies maximize contraction rate (Section 7) is criticized for lacking empirical evidence. However, in computational biomechanics and neuroscience, proposing a new organizing principle—such as maximal contraction—is often a necessary precursor to experimental design. Just as theories of variance minimization or energy efficiency were proposed mathematically long before they were fully verified in vivo, introducing this hypothesis establishes a new, testable framework that can direct future motor control experiments.</p>
+        <p class="critic-argument">Criticizing the muscle synergy claims (Section 7) for lacking empirical data misunderstands the role of theoretical computational neuroscience. New organizing principles, such as the hypothesis that synergies maximize contraction rate, must be mathematically formalized <em>before</em> they can be experimentally tested. Foundational theories like the minimum-jerk or minimum-variance models were initially proposed purely mathematically. By introducing contraction maximization as a theoretical construct, the authors are providing a clear, falsifiable framework that experimentalists can now target with EMG or motion capture data.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is a valid perspective; theoretical proposals are crucial for advancing biomechanical science. Our critique simply advocates for clearer scientific communication: the concept should be explicitly labeled as a speculative, predictive hypothesis to be tested, rather than being presented as an established, validated mechanism of the central nervous system.
+<strong>Our Response:</strong> We fully concede that theoretical formulation is a vital precursor to empirical study, and the contraction-maximization hypothesis is a compelling, falsifiable model. The critique's goal is not to dismiss the theory, but to ensure it is framed explicitly as a predictive model rather than an established biological fact, ensuring readers differentiate between the rigorous control math and the speculative biomechanics.
         </div>
       </div>
 
       <div class="critic-item">
         <div class="critic-perspective">
 <span class="critic-label">Alternative View:</span>
-<h3>Empirical Robustness as "Certified" Stability</h3>
+<h3>Rethinking "Certified" in the Context of Optimization-Based Control</h3>
         </div>
-        <p class="critic-argument">The critique targets Theorem 4.1 for lacking a rigorous formal proof to back its claim of "certified stability", pointing out missing explicit bounds for the penalty $\mu$. However, in the context of high-dimensional robotics and complex trajectory optimization, "certified" is increasingly used to describe algorithms that structurally enforce stability conditions at every step, yielding highly robust empirical convergence. Demanding exhaustive formal proofs may be an unrealistic standard that ignores the practical safety demonstrated by the Contraction controller in simulation and hardware.</p>
+        <p class="critic-argument">The demand for an exhaustive formal proof to justify the term "certified stability" (Theorem 4.1) applies a standard from classical linear control that may be overly restrictive for modern, high-dimensional trajectory optimization. In contemporary robotics, "certified" often refers to algorithms that embed verifiable stability constraints directly into the solver at runtime (e.g., SDP conditions). Because the solver verifies these conditions step-by-step, the resulting control is practically certified by the algorithmic structure itself, even if deriving a closed-form global proof with explicit bounds on the penalty parameter $\mu$ is analytically intractable.</p>
         <div class="author-response">
-<strong>Our Response:</strong> We acknowledge that the Contraction controller demonstrates impressive empirical reliability and that formal proofs can be computationally prohibitive for complex systems. Nonetheless, in rigorous control theory literature, the term "certified" carries a specific expectation of checkable, mathematical guarantees. Using terms like "structurally enforced" or "empirically robust" would prevent ambiguity.
+<strong>Our Response:</strong> This perspective correctly highlights a shift in how stability is practically verified in optimization-based control—runtime algorithmic guarantees are indeed a form of certification. Acknowledging this, the critique's focus narrows: the text would benefit from clarifying that the stability is "algorithmically certified" at runtime rather than "analytically proven" globally, bridging the gap between classical expectations and modern methods.
         </div>
       </div>
 
