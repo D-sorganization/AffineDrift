@@ -136,6 +136,7 @@ jobs:
   tests:
     needs: quality-gate
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       matrix:
         python: ["3.12"]
@@ -153,7 +154,7 @@ jobs:
       - name: Run Tests
         env:
           PYTHONPATH: src
-        run: pytest tests/ --cov=src/tools --cov-report=xml
+        run: pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=60 --timeout=60
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@v5
