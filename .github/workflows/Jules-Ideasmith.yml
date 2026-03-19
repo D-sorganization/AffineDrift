@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       category:
-        description: 'Focus category for idea generation'
+        description: "Focus category for idea generation"
         required: false
-        default: 'all'
+        default: "all"
         type: choice
         options:
           - all
@@ -16,16 +16,16 @@ on:
           - biomechanics
           - equipment
       count:
-        description: 'Number of ideas to generate'
+        description: "Number of ideas to generate"
         required: false
-        default: '5'
+        default: "5"
         type: choice
         options:
-          - '3'
-          - '5'
-          - '8'
+          - "3"
+          - "5"
+          - "8"
   schedule:
-    - cron: "0 8 * * 0,4"  # Weekly on Wednesday at 7 AM PST (15:00 UTC)
+    - cron: "0 8 * * 0,4" # Weekly on Wednesday at 7 AM PST (15:00 UTC)
 
 permissions:
   contents: write
@@ -34,7 +34,7 @@ jobs:
   generate-ideas:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 

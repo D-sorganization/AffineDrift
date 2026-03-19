@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Compile Volume I
         uses: xu-cheng/latex-action@v4
@@ -33,7 +33,7 @@ jobs:
           working_directory: articles/The_Geometry_of_Motion/Volume_II
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: geometry-of-motion-pdfs
           path: |
