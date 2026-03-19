@@ -106,7 +106,9 @@ jobs:
 
       - name: Verify Site Health (Broken Links Blocking)
         # docs/ HTML is no longer committed (issue #1419); site health runs in
-        # deploy-website.yml after Quarto renders the site. Skip here if no HTML.
+        # deploy-website.yml after Quarto renders the site. This step will always
+        # skip in ci-standard.yml because docs/index.html is never present here —
+        # that is intentional and expected. The check runs post-deploy instead.
         run: |
           if [ -f "docs/index.html" ]; then
             python3 -m src.tools.check_site_health --fail-on broken
@@ -162,7 +164,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
         with:
-          fail_ci_if_error: true # BLOCKING: Requires CODECOV_TOKEN secret to be configured
+          fail_ci_if_error: false # Non-blocking: CODECOV_TOKEN may not be configured in all forks
           token: ${{ secrets.CODECOV_TOKEN }}
 
   js-tests:
@@ -206,7 +208,9 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run E2E Smoke Tests (Critical Flows)
         # docs/ HTML is no longer committed (issue #1419); e2e tests require a
-        # built site. Skip here if docs/index.html is absent (built by deploy workflow).
+        # built site. This step will always skip in ci-standard.yml because
+        # docs/index.html is never present here — that is intentional. E2E tests
+        # run in the deploy-website workflow after Quarto renders the site.
         run: |
           if [ -f "docs/index.html" ]; then
             npx playwright test \

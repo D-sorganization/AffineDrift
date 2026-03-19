@@ -656,8 +656,8 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
                 error_msg = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."  # noqa: E501
                 self.polynomial_error = error_msg
                 torque = t**2 - t  # Use fallback polynomial
-            except Exception:
-                # Other unexpected errors
+            except (NameError, SyntaxError, ArithmeticError):
+                # Other unexpected errors (e.g. eval-related exceptions)
                 error_msg = (
                     "Unexpected error evaluating polynomial expression. Please check your formula."
                 )

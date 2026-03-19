@@ -183,7 +183,7 @@ def trajectory_tracking_lqr(
         try:
             P = solve_continuous_are(A, B0, Q_tt, R_tt)
             K = np.linalg.solve(R_tt, B0.T @ P)
-        except Exception:
+        except (np.linalg.LinAlgError, ValueError):
             K = np.zeros((m, n))
         gains.append(K)
 
