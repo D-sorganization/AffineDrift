@@ -30,8 +30,8 @@ jobs:
     env:
       PYTHONPATH: .
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
 
       - name: Install System Dependencies
@@ -39,12 +39,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
 
-      - run: pip install ruff==0.14.10 black==26.1.0 mypy==1.13.0 bandit==1.7.7 pydocstyle==6.3.0
+      - run: pip install ruff black mypy==1.13.0 bandit==1.7.7 pydocstyle==6.3.0
 
       # Validate that environment is sane
       - name: Environment Health Check
         run: |
-          python --version
+          python3 --version
           pip --version
           ruff --version
           black --version
@@ -102,14 +102,14 @@ jobs:
           fi
       - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
       - name: Verify Code Quality
-        run: python -m src.tools.code_quality_check
+        run: python3 -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
         # docs/ HTML is no longer committed (issue #1419); site health runs in
         # deploy-website.yml after Quarto renders the site. Skip here if no HTML.
         run: |
           if [ -f "docs/index.html" ]; then
-            python -m src.tools.check_site_health --fail-on broken
+            python3 -m src.tools.check_site_health --fail-on broken
           else
             echo "docs/ HTML not present (expected: built by deploy workflow). Skipping site health check."
           fi
@@ -120,14 +120,14 @@ jobs:
         continue-on-error: true
         run: |
           if [ -f "tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
-            python tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
+            python3 tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
             cat matlab_quality_report.txt
           else
             echo "MATLAB quality check script not found, skipping..."
           fi
 
       - name: Upload MATLAB Report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: matlab-quality-report
@@ -141,8 +141,8 @@ jobs:
       matrix:
         python: ["3.12"]
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - run: pip install -r requirements.txt pytest-timeout
@@ -157,7 +157,7 @@ jobs:
         run: pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -169,14 +169,14 @@ jobs:
     needs: quality-gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with: { node-version: "20" }
       - name: Install Dependencies
         run: npm ci
       - name: Run JS Tests
         run: npm test -- --coverage
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -189,10 +189,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with: { node-version: "20" }
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
 
       - name: Install System Dependencies
@@ -216,7 +216,7 @@ jobs:
           else
             echo "docs/ not present (expected: built by deploy workflow). Skipping e2e smoke tests."
           fi
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
@@ -228,8 +228,8 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with: { node-version: "20" }
       - name: Install & Lint
         run: |
@@ -249,7 +249,7 @@ jobs:
   #   needs: quality-gate
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v6
+  #     - uses: actions/checkout@v4
   #     - uses: matlab-actions/setup-matlab@v2
   #     - uses: matlab-actions/run-command@v2
   #       with:
@@ -269,7 +269,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -312,7 +312,7 @@ jobs:
 
       - name: Cache Cargo registry and build
         if: steps.rust-changes.outputs.has_changes == 'true'
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cargo/registry

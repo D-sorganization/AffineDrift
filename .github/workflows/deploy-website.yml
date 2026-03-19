@@ -23,10 +23,10 @@ jobs:
       PYTHONPATH: .
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
@@ -65,7 +65,7 @@ jobs:
         run: python3 scripts/check_tech_debt_budget.py
 
       - name: Pre-build Link Check
-        run: python -m src.tools.check_links
+        run: python3 -m src.tools.check_links
 
       - name: Update Service Worker Cache Version
         run: python3 scripts/update_sw_cache_version.py
@@ -86,7 +86,7 @@ jobs:
           to: html
 
       - name: Post-build Health Check
-        run: python -m src.tools.check_site_health --fail-on broken
+        run: python3 -m src.tools.check_site_health --fail-on broken
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

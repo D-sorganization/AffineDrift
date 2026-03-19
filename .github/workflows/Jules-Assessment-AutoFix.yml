@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Full history for git analysis
 
@@ -62,7 +62,7 @@ jobs:
           echo "ASSESSMENT_BRANCH=$BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -76,7 +76,7 @@ jobs:
         id: assessment_a
         run: |
           echo "Running Architecture Assessment..."
-          python scripts/run_assessment.py --assessment A --output docs/assessments/Assessment_A_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment A --output docs/assessments/Assessment_A_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment B (Hygiene & Quality)
         id: assessment_b
@@ -92,23 +92,23 @@ jobs:
           # Run mypy
           mypy python/ tests/ --junit-xml mypy_results.xml || true
 
-          python scripts/run_assessment.py --assessment B --output docs/assessments/Assessment_B_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment B --output docs/assessments/Assessment_B_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment C (Documentation)
         run: |
-          python scripts/run_assessment.py --assessment C --output docs/assessments/Assessment_C_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment C --output docs/assessments/Assessment_C_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment D (User Experience)
         run: |
-          python scripts/run_assessment.py --assessment D --output docs/assessments/Assessment_D_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment D --output docs/assessments/Assessment_D_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment E (Performance)
         run: |
-          python scripts/run_assessment.py --assessment E --output docs/assessments/Assessment_E_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment E --output docs/assessments/Assessment_E_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment F (Installation)
         run: |
-          python scripts/run_assessment.py --assessment F --output docs/assessments/Assessment_F_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment F --output docs/assessments/Assessment_F_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment G (Testing)
         id: assessment_g
@@ -118,11 +118,11 @@ jobs:
           COLLECTION_ERRORS=$(grep -c "ERROR" test_collection.log || echo "0")
           echo "collection_errors=$COLLECTION_ERRORS" >> $GITHUB_OUTPUT
 
-          python scripts/run_assessment.py --assessment G --output docs/assessments/Assessment_G_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment G --output docs/assessments/Assessment_G_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment H (Error Handling)
         run: |
-          python scripts/run_assessment.py --assessment H --output docs/assessments/Assessment_H_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment H --output docs/assessments/Assessment_H_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment I (Security)
         run: |
@@ -130,18 +130,18 @@ jobs:
           pip-audit --output security_audit.json --format json || true
           bandit -r python/ -f json -o bandit_results.json || true
 
-          python scripts/run_assessment.py --assessment I --output docs/assessments/Assessment_I_Results_$(date +%Y-%m-%d).md
+          python3 scripts/run_assessment.py --assessment I --output docs/assessments/Assessment_I_Results_$(date +%Y-%m-%d).md
 
       - name: Run Assessment J-O (Remaining)
         run: |
           for assessment in J K L M N O; do
-            python scripts/run_assessment.py --assessment $assessment --output docs/assessments/Assessment_${assessment}_Results_$(date +%Y-%m-%d).md
+            python3 scripts/run_assessment.py --assessment $assessment --output docs/assessments/Assessment_${assessment}_Results_$(date +%Y-%m-%d).md
           done
 
       - name: Generate Comprehensive Summary
         id: analyze
         run: |
-          python scripts/generate_assessment_summary.py \
+          python3 scripts/generate_assessment_summary.py \
             --input docs/assessments/Assessment_*_Results_$(date +%Y-%m-%d).md \
             --output docs/assessments/COMPREHENSIVE_ASSESSMENT_SUMMARY_$(date +%Y-%m-%d).md \
             --json-output assessment_summary.json
@@ -154,7 +154,7 @@ jobs:
           echo "critical_issues=$CRITICAL_ISSUES" >> $GITHUB_OUTPUT
 
       - name: Upload Assessment Reports
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: assessment-reports
           path: |
@@ -219,12 +219,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -291,7 +291,7 @@ jobs:
           echo "=== Running Test Fixes ==="
           # Fix common import issues if script exists
           if [ -f scripts/fix_test_imports.py ]; then
-            python scripts/fix_test_imports.py || true
+            python3 scripts/fix_test_imports.py || true
           fi
 
           # Verify test collection (informational only)
@@ -392,7 +392,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Download assessment summary
         uses: actions/download-artifact@v8
@@ -400,7 +400,7 @@ jobs:
           name: assessment-reports
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -408,7 +408,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python scripts/create_issues_from_assessment.py \
+          python3 scripts/create_issues_from_assessment.py \
             --input assessment_summary.json \
             --severity CRITICAL,BLOCKER \
             --check-existing

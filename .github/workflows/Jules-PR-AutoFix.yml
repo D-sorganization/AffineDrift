@@ -131,7 +131,7 @@ jobs:
 
       - name: Checkout PR Branch
         if: steps.branch.outputs.skip != 'true' && steps.limits.outputs.exceeded != 'true'
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ steps.branch.outputs.branch }}
           fetch-depth: 0
@@ -139,15 +139,15 @@ jobs:
 
       - name: Setup Python
         if: steps.branch.outputs.skip != 'true' && steps.limits.outputs.exceeded != 'true'
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install Fix Tools
         if: steps.branch.outputs.skip != 'true' && steps.limits.outputs.exceeded != 'true'
         run: |
-          # Pin versions to match CI Standard quality gate
-          pip install ruff==0.14.10 black==26.1.0 mypy==1.13.0 autoflake
+          # Install quality tools (versions unpinned to match CI Standard quality gate)
+          pip install ruff black mypy==1.13.0 autoflake
           # Install project deps so mypy can resolve imports
           pip install -e ".[dev]" 2>/dev/null || pip install -e . 2>/dev/null || true
 
@@ -230,7 +230,7 @@ jobs:
 
             echo ">>> Running mypy autofix agent..."
             if [ -f "scripts/mypy_autofix_agent.py" ]; then
-              python scripts/mypy_autofix_agent.py \
+              python3 scripts/mypy_autofix_agent.py \
                 --max-fixes 30 --max-files 20 --verbose \
                 --config-file pyproject.toml $CHANGED_FILES 2>&1 || true
 
