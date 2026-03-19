@@ -104,7 +104,15 @@ repos:
           - types-requests
           - types-PyYAML
           - pydantic
-        args: [--ignore-missing-imports]
+        # Suppress error codes with 454+ pre-existing violations across src/ (#1616-#1622).
+        # Full strict mypy runs in CI; pre-push hook checks for critical new errors only.
+        args:
+          - --ignore-missing-imports
+          - --disable-error-code=no-any-unimported
+          - --disable-error-code=type-arg
+          - --disable-error-code=no-any-return
+          - --disable-error-code=unused-ignore
+          - --disable-error-code=import-untyped
         types: [python]
         files: ^src/
         exclude: |
