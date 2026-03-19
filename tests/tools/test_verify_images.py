@@ -31,7 +31,7 @@ class TestExtractImageUrls:
 
     def test_extracts_multiple_images(self) -> None:
         """Should extract all image URLs from mixed content."""
-        content = '<img src="a.png" />\n' "![md](b.jpg)\n" '<img src="c.svg" />'
+        content = '<img src="a.png" />\n![md](b.jpg)\n<img src="c.svg" />'
         result = extract_image_urls(content)
         assert len(result) >= 3
         assert "a.png" in result

@@ -16,7 +16,7 @@ class TestFixQuartoSyntaxMainBranches:
         articles_dir = tmp_path / "articles"
         articles_dir.mkdir()
         qmd = articles_dir / "superposition.qmd"
-        content = "---\ntitle: Superposition\n---\n" "This is content without special markers.\n"
+        content = "---\ntitle: Superposition\n---\nThis is content without special markers.\n"
         qmd.write_text(content, encoding="utf-8")
 
         original = os.getcwd()

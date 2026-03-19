@@ -67,7 +67,7 @@ class TestIsInsideQuartoAlternateFormats:
         """Should return True for a tag inside quarto-alternate-formats div."""
         from bs4 import BeautifulSoup
 
-        html = '<div class="quarto-alternate-formats">' '<a href="page.pdf">PDF</a>' "</div>"
+        html = '<div class="quarto-alternate-formats"><a href="page.pdf">PDF</a></div>'
         soup = BeautifulSoup(html, "html.parser")
         anchor = soup.find("a")
         assert is_inside_quarto_alternate_formats(anchor) is True
