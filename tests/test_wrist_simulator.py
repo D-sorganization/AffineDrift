@@ -174,6 +174,62 @@ class TestGenerateSampleTorque:
         assert error is not None
         assert torque.shape == t.shape
 
+    def test_golf_like_random_signal(self) -> None:
+        """Test golf-like random signal generation."""
+        t = np.linspace(0, 1, 500)
+        torque, error = generate_sample_torque("Golf-like Random", t)
+        assert error is None
+        assert torque.shape == t.shape
+        assert np.all(np.isfinite(torque))
+
+    def test_pulse_signal(self) -> None:
+        """Test pulse signal generation."""
+        t = np.linspace(0, 1, 500)
+        torque, error = generate_sample_torque("Pulse", t)
+        assert error is None
+        assert torque.shape == t.shape
+        # Outside pulse range should be zero
+        assert torque[0] == 0.0
+
+    def test_burst_signal(self) -> None:
+        """Test burst signal generation."""
+        t = np.linspace(0, 1, 500)
+        torque, error = generate_sample_torque("Burst", t)
+        assert error is None
+        assert torque.shape == t.shape
+
+    def test_random_signal(self) -> None:
+        """Test random signal generation."""
+        t = np.linspace(0, 1, 500)
+        torque, error = generate_sample_torque("Random", t)
+        assert error is None
+        assert torque.shape == t.shape
+        assert np.all(np.isfinite(torque))
+
+    def test_unknown_type_falls_back_to_golf_like(self) -> None:
+        """Test that unknown noise type falls back to golf-like signal."""
+        t = np.linspace(0, 1, 500)
+        torque, error = generate_sample_torque("UnknownType", t)
+        assert error is None
+        assert torque.shape == t.shape
+
+    def test_polynomial_division_by_zero(self) -> None:
+        """Test polynomial expression causing division by zero returns error."""
+        t = np.linspace(0, 1, 500)
+        # 1/0 is a ZeroDivisionError which the except clause catches
+        torque, error = generate_sample_torque("Polynomial", t, "1/0")
+        assert error is not None
+        assert torque.shape == t.shape
+
+    def test_polynomial_with_scalar_result(self) -> None:
+        """Test polynomial expression returning scalar is broadcast to array."""
+        t = np.linspace(0, 1, 500)
+        # Expression evaluating to a constant
+        torque, error = generate_sample_torque("Polynomial", t, "3.14")
+        assert error is None
+        assert torque.shape == t.shape
+        assert np.allclose(torque, 3.14)
+
 
 # ─── Property-Based Tests ────────────────────────────────────
 
