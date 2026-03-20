@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from src.tools.latex_to_html import LaTeXToHTMLConverter
@@ -127,6 +129,101 @@ This is the body content.
         assert 'author: "Author"' in frontmatter
         assert 'date: "2024-01-01"' in frontmatter
         assert "---" in frontmatter
+
+
+# ─── File I/O and end-to-end pipeline tests ────────────────────
+
+
+class TestLaTeXToQuartoConverterIO:
+    """Tests for file reading, convert_to_qmd pipeline, and convert_file."""
+
+    _SAMPLE_LATEX = r"""
+\title{Sample Article}
+\author{Test Author}
+\begin{document}
+\section{Introduction}
+Hello world. See \url{https://example.com}.
+\begin{equation}
+x = y
+\end{equation}
+\begin{figure}
+\caption{A figure}
+\end{figure}
+\end{document}
+"""
+
+    def test_read_latex_file_reads_content(self, tmp_path: Path) -> None:
+        """read_latex_file should return the file content as a string."""
+
+        f = tmp_path / "article.tex"
+        f.write_text(self._SAMPLE_LATEX, encoding="utf-8")
+        converter = LaTeXToQuartoConverter()
+        content = converter.read_latex_file(f)
+        assert "Sample Article" in content
+
+    def test_read_latex_file_raises_on_missing_file(self, tmp_path: Path) -> None:
+        """read_latex_file should raise FileNotFoundError for missing files."""
+
+        converter = LaTeXToQuartoConverter()
+        with pytest.raises(FileNotFoundError):
+            converter.read_latex_file(tmp_path / "ghost.tex")
+
+    def test_convert_to_qmd_returns_string_with_frontmatter(self) -> None:
+        """convert_to_qmd should return a string starting with YAML frontmatter."""
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_to_qmd(self._SAMPLE_LATEX)
+        assert result.startswith("---\n")
+        assert "title:" in result
+
+    def test_convert_to_qmd_includes_body_content(self) -> None:
+        """convert_to_qmd should include converted body content."""
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_to_qmd(self._SAMPLE_LATEX)
+        assert "Introduction" in result
+
+    def test_convert_to_qmd_handles_equations(self) -> None:
+        """convert_to_qmd should preserve equation environments."""
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_to_qmd(self._SAMPLE_LATEX)
+        assert "$$" in result
+
+    def test_convert_to_qmd_handles_figures(self) -> None:
+        """convert_to_qmd should convert figure environments."""
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_to_qmd(self._SAMPLE_LATEX)
+        assert "Figure" in result
+
+    def test_convert_to_qmd_handles_links(self) -> None:
+        """convert_to_qmd should convert URLs to Markdown links."""
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_to_qmd(self._SAMPLE_LATEX)
+        assert "https://example.com" in result
+
+    def test_convert_file_writes_output(self, tmp_path: Path) -> None:
+        """convert_file should write the .qmd file and return its path."""
+
+        input_file = tmp_path / "article.tex"
+        input_file.write_text(self._SAMPLE_LATEX, encoding="utf-8")
+        output_file = tmp_path / "article.qmd"
+
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_file(input_file, output_file)
+        assert result == output_file
+        assert output_file.exists()
+        content = output_file.read_text(encoding="utf-8")
+        assert "title:" in content
+
+    def test_convert_file_infers_output_path_from_input(self, tmp_path: Path) -> None:
+        """convert_file with no output_file argument should infer .qmd path."""
+
+        input_file = tmp_path / "article.tex"
+        input_file.write_text(self._SAMPLE_LATEX, encoding="utf-8")
+
+        converter = LaTeXToQuartoConverter()
+        result = converter.convert_file(input_file)
+        expected = tmp_path / "article.qmd"
+        assert result == expected
+        assert expected.exists()
 
 
 # ─── ConversionPipeline Protocol Conformance (Issue #1250) ────
