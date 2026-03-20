@@ -10,8 +10,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-logger = logging.getLogger(__name__)
-
 try:
     import numpy as np
 except ImportError:  # pragma: no cover - numpy optional or transiently unavailable
@@ -19,6 +17,7 @@ except ImportError:  # pragma: no cover - numpy optional or transiently unavaila
 
 from src.core.contracts.definitions import require
 
+logger = logging.getLogger(__name__)
 
 def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:
     """Assert that a numpy array contains only finite values."""
@@ -28,16 +27,13 @@ def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:
         arr,
     )
 
-
 def check_positive(value: float, name: str = "value") -> None:
     """Assert that a numeric value is strictly positive."""
     require(value > 0, f"{name} must be positive", value)
 
-
 def check_non_negative(value: float, name: str = "value") -> None:
     """Assert that a numeric value is non-negative."""
     require(value >= 0, f"{name} must be non-negative", value)
-
 
 def check_range(
     value: float,
@@ -47,7 +43,6 @@ def check_range(
 ) -> None:
     """Assert that a numeric value falls within [low, high]."""
     require(low <= value <= high, f"{name} must be in [{low}, {high}]", value)
-
 
 def check_shape(
     arr: np.ndarray[Any, Any],

@@ -15,8 +15,6 @@ from src.core.constants import (
     DT_CLIP_MIN,
     EPSILON,
 )
-
-logger = logging.getLogger(__name__)
 from src.core.contracts import (
     check_finite_array,
     check_non_negative,
@@ -25,6 +23,7 @@ from src.core.contracts import (
     require,
 )
 
+logger = logging.getLogger(__name__)
 
 def estimate_perturbation_size(
     x: np.ndarray[Any, Any],
@@ -58,7 +57,6 @@ def estimate_perturbation_size(
 
     ensure(result >= 0, "perturbation size must be non-negative", result)
     return result
-
 
 def adaptive_timestep_ddp_mock(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
@@ -133,7 +131,6 @@ def adaptive_timestep_ddp_mock(
 
     return x_traj, u_traj, t
 
-
 def _compute_adaptive_timesteps(
     f: Callable[..., np.ndarray[Any, Any]],
     x_traj: np.ndarray[Any, Any],
@@ -168,7 +165,6 @@ def _compute_adaptive_timesteps(
     dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
     return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
 
-
 def _simulate_trajectory(
     f: Callable[..., np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
@@ -190,7 +186,6 @@ def _simulate_trajectory(
         curr_x = curr_x + dx * dt
         x.append(curr_x)
     return np.array(x)
-
 
 def _resample_controls(
     u_old: np.ndarray[Any, Any], t_old: np.ndarray[Any, Any], t_new: np.ndarray[Any, Any]

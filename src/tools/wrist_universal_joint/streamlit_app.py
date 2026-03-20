@@ -10,6 +10,7 @@ Run with: streamlit run streamlit_app.py
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -21,9 +22,6 @@ from matplotlib.figure import Figure
 from src.core.contracts import require
 
 from .constants import (
-import logging
-
-logger = logging.getLogger(__name__)
     DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
     DEFAULT_CLUBHEAD_WEIGHT,
@@ -43,6 +41,8 @@ from .visualization import (
     plot_transmission_sweep,
 )
 
+logger = logging.getLogger(__name__)
+
 # Page config
 st.set_page_config(
     page_title="Enhanced Wrist Universal Joint Model",
@@ -57,7 +57,6 @@ if "polynomial_expression" not in st.session_state:
 if "polynomial_error" not in st.session_state:
     st.session_state.polynomial_error = None
 
-
 def _inject_custom_css() -> None:
     """Inject custom CSS styles into the Streamlit page."""
     template_dir = Path(__file__).parent / "templates"
@@ -65,7 +64,6 @@ def _inject_custom_css() -> None:
     if css_path.exists():
         css = css_path.read_text()
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-
 
 def _render_header() -> None:
     """Render the main app header and description."""
@@ -75,7 +73,6 @@ def _render_header() -> None:
     if header_path.exists():
         header_html = header_path.read_text()
         st.markdown(header_html, unsafe_allow_html=True)
-
 
 def _render_angle_controls() -> dict[str, float]:
     """Render grip and wrist angle sliders.
@@ -104,7 +101,6 @@ def _render_angle_controls() -> dict[str, float]:
     )
 
     return {"grip_angle": grip_angle, "wrist_angle": wrist_angle}
-
 
 def _render_club_properties() -> dict[str, float]:
     """Render club property inputs and compute moments of inertia.
@@ -138,7 +134,6 @@ def _render_club_properties() -> dict[str, float]:
         "I_alpha": i_alpha,
         "I_gamma": i_gamma,
     }
-
 
 def _render_signal_generator() -> dict[str, Any]:
     """Render signal type selection and polynomial input.
@@ -175,7 +170,6 @@ def _render_signal_generator() -> dict[str, Any]:
 
     return {"noise_type": noise_type}
 
-
 def _render_sidebar() -> dict[str, Any]:
     """Render sidebar controls and return the selected parameters.
 
@@ -208,7 +202,6 @@ def _render_sidebar() -> dict[str, Any]:
         params.update(_render_signal_checkboxes(params["plot_type"]))
 
     return params
-
 
 def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
     """Render signal visibility checkboxes based on plot type.
@@ -252,7 +245,6 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
         "show_accel_alpha": st.checkbox("Accel α Ratio", value=False),
         "show_accel_gamma": st.checkbox("Accel γ Ratio", value=False),
     }
-
 
 def _create_plot_figure(
     params: dict[str, Any],
@@ -307,7 +299,6 @@ def _create_plot_figure(
         params["show_accel_gamma"],
     )
 
-
 def _render_main_content(params: dict[str, Any]) -> None:
     """Render the main content area with diagram and plots.
 
@@ -341,7 +332,6 @@ def _render_main_content(params: dict[str, Any]) -> None:
         plt.close(plot_fig)
 
     _render_info_panel(params, input_torque)
-
 
 def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
     """Render the expandable model information panel.
@@ -403,7 +393,6 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
         - Wrist angle represents radial/ulnar deviation
         """,
         )
-
 
 # ===== Main App Entry Point =====
 _inject_custom_css()

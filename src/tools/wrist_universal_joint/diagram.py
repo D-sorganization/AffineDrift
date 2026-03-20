@@ -20,11 +20,10 @@ from matplotlib.patches import Ellipse, Polygon
 
 from src.core.contracts import check_range
 
-logger = logging.getLogger(__name__)
-
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
+logger = logging.getLogger(__name__)
 
 def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:
     """Draw the horizontal club shaft and return the shaft end X-coordinate."""
@@ -39,7 +38,6 @@ def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: floa
         zorder=3,
     )
     return shaft_end_x
-
 
 def _draw_clubhead(ax: Any, base_x: float, base_y: float) -> None:
     """Draw the tilted trapezoid clubhead at the shaft end."""
@@ -74,7 +72,6 @@ def _draw_clubhead(ax: Any, base_x: float, base_y: float) -> None:
         )
     )
 
-
 def _draw_hand(
     ax: Any,
     wrist_x: float,
@@ -97,7 +94,6 @@ def _draw_hand(
         )
     )
 
-
 def _draw_wrist_joint(ax: Any, wrist_x: float, wrist_y: float) -> None:
     """Draw the wrist joint marker and label."""
     ax.plot(wrist_x, wrist_y, "ko", markersize=12, zorder=10)
@@ -110,7 +106,6 @@ def _draw_wrist_joint(ax: Any, wrist_x: float, wrist_y: float) -> None:
         fontweight="bold",
         zorder=11,
     )
-
 
 def _draw_fingers(
     ax: Any,
@@ -151,7 +146,6 @@ def _draw_fingers(
         )
         ax.add_patch(finger)
 
-
 def _draw_forearm(
     ax: Any,
     wrist_x: float,
@@ -187,7 +181,6 @@ def _draw_forearm(
         zorder=5,
     )
     ax.add_patch(forearm)
-
 
 def _draw_grip_angle_arc(
     ax: Any,
@@ -243,7 +236,6 @@ def _draw_grip_angle_arc(
         fontweight="bold",
         zorder=9,
     )
-
 
 def _draw_wrist_angle_arc(
     ax: Any,
@@ -305,7 +297,6 @@ def _draw_wrist_angle_arc(
         fontweight="bold",
         zorder=9,
     )
-
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles

@@ -10,10 +10,9 @@
         from src.tools.code_quality import check_file, main
         from src.tools.code_quality import check_banned_patterns
         from src.tools.code_quality import check_ast_issues
-import logging
-
-logger = logging.getLogger(__name__)
 """
+
+import logging
 
 from src.tools.code_quality import (  # noqa: F401
     Colors,
@@ -32,6 +31,8 @@ from src.tools.code_quality.pattern_checker import (  # noqa: F401
     MAGIC_NUMBERS,
     PASS_PATTERNS,
 )
+
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     main()

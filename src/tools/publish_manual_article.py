@@ -13,23 +13,22 @@ Note:
     in main() to publish different articles.
 """
 
+import logging
 import re
 import sys
 from pathlib import Path
 
 # Add project root to path for imports
 from src.tools.utils import (
-import logging
-
-logger = logging.getLogger(__name__)
     create_html_page,
     extract_frontmatter,
     extract_title_description,
     setup_logging,
 )
 
-logger = setup_logging(__name__)
+logger = logging.getLogger(__name__)
 
+logger = setup_logging(__name__)
 
 def simple_markdown_to_html(md_text: str) -> str:
     """Convert simple Markdown to HTML.
@@ -97,7 +96,6 @@ def simple_markdown_to_html(md_text: str) -> str:
 
     return "\n".join(html_lines)
 
-
 def wrap_in_article_section(body_html: str) -> str:
     """Wrap body HTML in the standard article section structure.
 
@@ -130,7 +128,6 @@ def wrap_in_article_section(body_html: str) -> str:
   </div>
 </section>
 """
-
 
 def main() -> None:
     """Publish a manually-authored article."""
@@ -180,7 +177,6 @@ def main() -> None:
     else:
         logger.error("Failed to publish article: %s", output_path)
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

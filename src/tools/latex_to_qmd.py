@@ -5,6 +5,7 @@ Converts LaTeX article files to Quarto Markdown with preserved equations.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sys
@@ -13,9 +14,6 @@ from pathlib import Path
 
 from src.tools.utils import setup_logging_with_timestamp
 from src.tools.utils.latex_utils import (
-import logging
-
-logger = logging.getLogger(__name__)
     clean_common_latex,
     convert_lists_to_markdown,
     convert_quotes,
@@ -26,8 +24,9 @@ logger = logging.getLogger(__name__)
     extract_metadata,
 )
 
-logger = setup_logging_with_timestamp(__name__)
+logger = logging.getLogger(__name__)
 
+logger = setup_logging_with_timestamp(__name__)
 
 class LaTeXToQuartoConverter:
     """Converter class for handling LaTeX to Quarto transformation."""
@@ -268,7 +267,6 @@ class LaTeXToQuartoConverter:
 
         return output_path
 
-
 def main() -> None:
     """Main entry point."""
     if len(sys.argv) < 2:
@@ -287,7 +285,6 @@ def main() -> None:
         converter.convert_file(input_file, output_file)
     except (FileNotFoundError, PermissionError, OSError):
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

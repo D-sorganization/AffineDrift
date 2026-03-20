@@ -11,20 +11,20 @@ Example:
     python check_links.py docs/articles/my-article.html
 """
 
+import logging
 import sys
 from pathlib import Path
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
 from src.tools.utils.link_utils import (
-import logging
-
-logger = logging.getLogger(__name__)
     ALL_LINK_PATTERNS,
     normalize_internal_url,
     path_exists_in_search_roots,
     resolve_relative_path,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 SCANNED_EXTENSIONS = {".qmd", ".html"}
@@ -39,7 +39,6 @@ SKIP_FILES = {
     "CONTRIBUTING.md",
 }
 
-
 def find_links(file_path: Path) -> list[tuple[str, int]]:
     """Extract links and exact source line numbers from a file."""
     require(file_path is not None, "file_path must not be None")
@@ -53,7 +52,6 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
                 links.append((match.strip(), line_number))
     return links
 
-
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
     """Remove duplicate broken links."""
     seen = set()
@@ -63,7 +61,6 @@ def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str
             unique.append(link)
             seen.add(link)
     return unique
-
 
 def _should_scan_file(file_path: Path) -> bool:
     """Return whether a file should be scanned for internal links."""
@@ -80,21 +77,17 @@ def _should_scan_file(file_path: Path) -> bool:
         or file_path.name in SKIP_FILES
     )
 
-
 def _normalize_internal_url(link: str) -> str | None:
     """Normalize link and return internal URL or None for skipped links."""
     return normalize_internal_url(link)
-
 
 def _resolve_target_path(*, root_path: Path, file_path: Path, url: str) -> Path:
     """Resolve a link URL against a source file and root path."""
     return resolve_relative_path(root=root_path, source_file=file_path, url=url)
 
-
 def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
     """Check for target existence in root, src, and docs prefixes."""
     return path_exists_in_search_roots(root=root_path, target=target_path)
-
 
 def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
     """Check whether an HTML link can map to source or generated files."""
@@ -108,7 +101,6 @@ def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
         return True
     return target_path.is_dir() and (target_path / "index.qmd").exists()
 
-
 def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
     """Return True if a link is internal and unresolved."""
     url = _normalize_internal_url(link)
@@ -118,7 +110,6 @@ def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
     if target_path.suffix == ".html":
         return not _is_html_link_resolvable(root_path=root_path, target_path=target_path)
     return not _path_exists_in_search_roots(root_path=root_path, target_path=target_path)
-
 
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
     """Check for broken internal links in the project."""
@@ -143,7 +134,6 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
                 broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
-
 
 if __name__ == "__main__":
     broken = check_links(".")

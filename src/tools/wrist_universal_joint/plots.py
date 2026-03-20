@@ -8,6 +8,7 @@ This module contains matplotlib-based plotting functions:
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
@@ -18,9 +19,6 @@ from src.core.contracts import check_positive, check_range
 
 from .constants import EPSILON
 from .torque_calculator import (
-import logging
-
-logger = logging.getLogger(__name__)
     distribute_torque_by_grip_angle,
     universal_joint_transmission_ratio,
 )
@@ -28,6 +26,7 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
+logger = logging.getLogger(__name__)
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
@@ -112,7 +111,6 @@ def plot_torque(
     plt.tight_layout()
     return fig
 
-
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
 @st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
@@ -182,7 +180,6 @@ def plot_acceleration(
     plt.tight_layout()
     return fig
 
-
 def _compute_transmission_sweep(
     phi_sweep_deg: np.ndarray[Any, Any],
     theta_grip_rad: float,
@@ -225,7 +222,6 @@ def _compute_transmission_sweep(
         np.array(accel_alpha_ratios_list),
         np.array(accel_gamma_ratios_list),
     )
-
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
