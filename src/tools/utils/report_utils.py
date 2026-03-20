@@ -6,10 +6,13 @@ and GitHub-style issue documents from assessment findings.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from src.core.contracts import check_range, require
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Data containers

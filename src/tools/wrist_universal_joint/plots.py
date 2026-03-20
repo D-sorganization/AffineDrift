@@ -8,6 +8,7 @@ This module contains matplotlib-based plotting functions:
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
@@ -21,6 +22,8 @@ from .torque_calculator import (
     distribute_torque_by_grip_angle,
     universal_joint_transmission_ratio,
 )
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure

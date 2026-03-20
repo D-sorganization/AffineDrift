@@ -9,6 +9,7 @@ This module contains the physics and mathematics for:
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import numpy as np
@@ -17,6 +18,8 @@ from simpleeval import EvalWithCompoundTypes
 from src.core.contracts import check_positive, ensure, require
 
 from .constants import MAX_DELTA_DEGREES, rng
+
+logger = logging.getLogger(__name__)
 
 
 def calculate_moments_of_inertia(

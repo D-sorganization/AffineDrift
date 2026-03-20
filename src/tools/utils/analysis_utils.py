@@ -8,12 +8,15 @@ and code complexity.
 from __future__ import annotations
 
 import ast
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from src.core.contracts import ensure, require
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Data containers (dataclasses for type safety)
