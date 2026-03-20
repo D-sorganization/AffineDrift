@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -5,9 +6,6 @@ import numpy as np
 
 from src.affine_control.residuals import compute_hessian_bound
 from src.core.constants import (
-import logging
-
-logger = logging.getLogger(__name__)
     DEFAULT_BASE_NOISE,
     DEFAULT_DT_INIT,
     DEFAULT_EPS_RESIDUAL,
@@ -17,6 +15,8 @@ logger = logging.getLogger(__name__)
     DT_CLIP_MIN,
     EPSILON,
 )
+
+logger = logging.getLogger(__name__)
 from src.core.contracts import (
     check_finite_array,
     check_non_negative,
