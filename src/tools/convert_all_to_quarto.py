@@ -3,12 +3,15 @@
 Converts all LaTeX article files to Quarto .qmd format.
 """
 
+import logging
 import os
 import sys
 
 from latex_to_qmd import LaTeXToQuartoConverter
 
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

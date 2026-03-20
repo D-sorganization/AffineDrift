@@ -7,7 +7,11 @@ torque transmission model.
 
 from __future__ import annotations
 
+import logging
+
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 # Random seed for reproducibility
 # Set to None for non-reproducible random behavior, or an integer for reproducibility

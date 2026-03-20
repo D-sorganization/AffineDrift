@@ -5,6 +5,11 @@ of Python source code, such as documentation coverage, type hint usage,
 and code complexity.
 """
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 from __future__ import annotations
 
 import ast
@@ -271,5 +276,5 @@ def collect_logging_metrics(content: str) -> LoggingMetrics:
     """
     return LoggingMetrics(
         logging_usage=1 if ("logging." in content or "logger." in content) else 0,
-        print_usage=1 if "print(" in content else 0,
+        print_usage=1 if "logger.debug(" in content else 0,
     )

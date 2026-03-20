@@ -25,6 +25,9 @@ from pathlib import Path
 
 from src.tools.utils import find_files_by_extension, setup_logging
 from src.tools.utils.latex_utils import (
+import logging
+
+logger = logging.getLogger(__name__)
     clean_common_latex,
     convert_sections_to_markdown,
     extract_body,

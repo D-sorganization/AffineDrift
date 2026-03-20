@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
+import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -9,6 +10,8 @@ import requests
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

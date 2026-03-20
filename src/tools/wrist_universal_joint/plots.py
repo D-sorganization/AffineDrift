@@ -18,6 +18,9 @@ from src.core.contracts import check_positive, check_range
 
 from .constants import EPSILON
 from .torque_calculator import (
+import logging
+
+logger = logging.getLogger(__name__)
     distribute_torque_by_grip_angle,
     universal_joint_transmission_ratio,
 )

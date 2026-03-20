@@ -5,6 +5,9 @@ import numpy as np
 
 from src.affine_control.residuals import compute_hessian_bound
 from src.core.constants import (
+import logging
+
+logger = logging.getLogger(__name__)
     DEFAULT_BASE_NOISE,
     DEFAULT_DT_INIT,
     DEFAULT_EPS_RESIDUAL,

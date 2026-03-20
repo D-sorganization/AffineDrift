@@ -19,6 +19,9 @@ from pathlib import Path
 
 # Add project root to path for imports
 from src.tools.utils import (
+import logging
+
+logger = logging.getLogger(__name__)
     create_html_page,
     extract_frontmatter,
     extract_title_description,

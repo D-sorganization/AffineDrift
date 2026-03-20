@@ -18,12 +18,15 @@ Example:
 from __future__ import annotations
 
 import html
+import logging
 import re
 from pathlib import Path
 
 from src.core.contracts import require
 
 from .constants import PATH_REPLACEMENT_PATTERNS
+
+logger = logging.getLogger(__name__)
 
 
 def escape_html(text: str) -> str:

@@ -7,7 +7,10 @@ core ``require()`` primitive from ``definitions``.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 try:
     import numpy as np

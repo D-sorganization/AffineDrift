@@ -3,12 +3,15 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence

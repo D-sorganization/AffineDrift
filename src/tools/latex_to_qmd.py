@@ -13,6 +13,9 @@ from pathlib import Path
 
 from src.tools.utils import setup_logging_with_timestamp
 from src.tools.utils.latex_utils import (
+import logging
+
+logger = logging.getLogger(__name__)
     clean_common_latex,
     convert_lists_to_markdown,
     convert_quotes,

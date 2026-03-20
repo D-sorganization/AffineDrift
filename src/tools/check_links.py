@@ -17,6 +17,9 @@ from pathlib import Path
 from src.core.contracts import require
 from src.tools.utils import setup_logging
 from src.tools.utils.link_utils import (
+import logging
+
+logger = logging.getLogger(__name__)
     ALL_LINK_PATTERNS,
     normalize_internal_url,
     path_exists_in_search_roots,

@@ -10,6 +10,9 @@
         from src.tools.code_quality import check_file, main
         from src.tools.code_quality import check_banned_patterns
         from src.tools.code_quality import check_ast_issues
+import logging
+
+logger = logging.getLogger(__name__)
 """
 
 from src.tools.code_quality import (  # noqa: F401

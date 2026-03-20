@@ -21,6 +21,9 @@ from matplotlib.figure import Figure
 from src.core.contracts import require
 
 from .constants import (
+import logging
+
+logger = logging.getLogger(__name__)
     DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
     DEFAULT_CLUBHEAD_WEIGHT,

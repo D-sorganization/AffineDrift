@@ -10,6 +10,7 @@ This module contains the forearm-hand-club diagram rendering:
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
@@ -18,6 +19,8 @@ import streamlit as st
 from matplotlib.patches import Ellipse, Polygon
 
 from src.core.contracts import check_range
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
