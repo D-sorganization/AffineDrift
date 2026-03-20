@@ -54,3 +54,22 @@ def test_is_html_link_resolvable_accepts_directory_with_index_qmd(tmp_path: Path
 def test_unique_broken_deduplicates_identical_findings() -> None:
     links = [("a.qmd", 10, "missing.html"), ("a.qmd", 10, "missing.html")]
     assert unique_broken(links) == [("a.qmd", 10, "missing.html")]
+
+
+def test_is_html_link_resolvable_accepts_md_source(tmp_path: Path) -> None:
+    """HTML link should resolve when a matching .md source file exists."""
+    target = tmp_path / "pages" / "guide.html"
+    md_file = tmp_path / "pages" / "guide.md"
+    md_file.parent.mkdir(parents=True)
+    md_file.write_text("# Guide", encoding="utf-8")
+    assert _is_html_link_resolvable(root_path=tmp_path, target_path=target)
+
+
+def test_is_broken_link_returns_false_for_external_links(tmp_path: Path) -> None:
+    """_is_broken_link should return False for external (https://) links."""
+    from src.tools.check_links import _is_broken_link
+
+    source = tmp_path / "page.qmd"
+    source.write_text("", encoding="utf-8")
+    # External links are normalized to None so should not be broken
+    assert not _is_broken_link(root_path=tmp_path, file_path=source, link="https://example.com")
