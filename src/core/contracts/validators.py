@@ -7,6 +7,7 @@ core ``require()`` primitive from ``definitions``.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 try:
@@ -15,6 +16,8 @@ except ImportError:  # pragma: no cover - numpy optional or transiently unavaila
     np = None  # type: ignore[assignment]
 
 from src.core.contracts.definitions import require
+
+logger = logging.getLogger(__name__)
 
 
 def check_finite_array(arr: np.ndarray[Any, Any], name: str = "array") -> None:

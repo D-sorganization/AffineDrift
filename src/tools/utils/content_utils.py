@@ -7,11 +7,14 @@ duplicating content directory iteration logic.
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
 from src.core.contracts import require
 from src.tools.utils import parse_frontmatter_dict
+
+logger = logging.getLogger(__name__)
 
 # Standard content directories to scan for QMD pages
 DEFAULT_CONTENT_DIRS: list[str] = [".", "articles"]

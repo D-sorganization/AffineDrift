@@ -13,8 +13,11 @@ The script applies various fixes including:
 - Malformed LaTeX commands
 """
 
+import logging
 import os
 import re
+
+logger = logging.getLogger(__name__)
 
 
 def fix_superposition(content: str) -> str:
