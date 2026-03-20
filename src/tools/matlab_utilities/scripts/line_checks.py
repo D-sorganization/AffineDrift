@@ -18,6 +18,53 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+# ── Module-level constants for magic number detection ────────────────────────
+
+_ACCEPTABLE_NUMBERS: frozenset[str] = frozenset(
+    {
+        "0",
+        "0.0",
+        "1",
+        "1.0",
+        "2",
+        "2.0",
+        "3",
+        "3.0",
+        "4",
+        "4.0",
+        "5",
+        "5.0",
+        "10",
+        "10.0",
+        "100",
+        "100.0",
+        "1000",
+        "1000.0",
+        "0.5",
+        "0.1",
+        "0.01",
+        "0.001",
+        "0.0001",
+    }
+)
+"""Numeric literals that are universally acceptable without a named constant."""
+
+_GRAVITY_DESC = "gravitational acceleration [m/s^2] - approximate standard gravity"
+
+_KNOWN_CONSTANTS: dict[str, str] = {
+    "3.14159": "pi constant [dimensionless] - mathematical constant",
+    "3.1416": "pi constant [dimensionless] - mathematical constant",
+    "3.14": "pi constant [dimensionless] - mathematical constant",
+    "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
+    "1.57": "pi/2 constant [dimensionless] - mathematical constant",
+    "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
+    "0.785": "pi/4 constant [dimensionless] - mathematical constant",
+    "9.81": _GRAVITY_DESC,
+    "9.8": _GRAVITY_DESC,
+    "9.807": _GRAVITY_DESC,
+}
+"""Well-known physical and mathematical constants that require a named constant definition."""
+
 
 def update_function_scope(
     line_stripped: str,
@@ -146,6 +193,25 @@ def append_anti_pattern_issues(
         )
 
 
+def _is_number_in_code(line_original: str, number: str) -> bool:
+    """Return True if *number* appears in the code portion of a MATLAB line.
+
+    A number is considered to be in code (not in a comment) when:
+    - there is no ``%`` comment delimiter on the line, OR
+    - the number's first occurrence precedes the comment delimiter.
+
+    Args:
+        line_original: The original (non-stripped) source line.
+        number: The numeric literal string to locate.
+
+    Returns:
+        True if the number appears before any comment delimiter, False otherwise.
+    """
+    comment_index = line_original.find("%")
+    number_index = line_original.find(number)
+    return comment_index == -1 or (number_index != -1 and number_index < comment_index)
+
+
 def append_magic_number_issues(
     *,
     line_original: str,
@@ -154,58 +220,29 @@ def append_magic_number_issues(
     file_name: str,
     issues: list[str],
 ) -> None:
-    """Flag unexplained literals."""
+    """Flag unexplained numeric literals in a MATLAB source line.
+
+    Uses ``_ACCEPTABLE_NUMBERS`` and ``_KNOWN_CONSTANTS`` module-level sets
+    to classify each literal found on the line.
+
+    Args:
+        line_original: The original (non-stripped) source line (used for comment detection).
+        line_stripped: The stripped source line (used for pattern matching).
+        line_number: 1-based line number for issue messages.
+        file_name: File name for issue messages.
+        issues: Mutable list to which new issue strings are appended.
+    """
     magic_number_pattern = r"(?<![.\w])(?:\d+\.\d+|\d+)(?![.\w])"
-    acceptable_numbers = {
-        "0",
-        "0.0",
-        "1",
-        "1.0",
-        "2",
-        "2.0",
-        "3",
-        "3.0",
-        "4",
-        "4.0",
-        "5",
-        "5.0",
-        "10",
-        "10.0",
-        "100",
-        "100.0",
-        "1000",
-        "1000.0",
-        "0.5",
-        "0.1",
-        "0.01",
-        "0.001",
-        "0.0001",
-    }
-    gravity_desc = "gravitational acceleration [m/s^2] - approximate standard gravity"
-    known_constants = {
-        "3.14159": "pi constant [dimensionless] - mathematical constant",
-        "3.1416": "pi constant [dimensionless] - mathematical constant",
-        "3.14": "pi constant [dimensionless] - mathematical constant",
-        "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
-        "1.57": "pi/2 constant [dimensionless] - mathematical constant",
-        "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
-        "0.785": "pi/4 constant [dimensionless] - mathematical constant",
-        "9.81": gravity_desc,
-        "9.8": gravity_desc,
-        "9.807": gravity_desc,
-    }
     for number in re.findall(magic_number_pattern, line_stripped):
-        if number in known_constants:
+        if number in _KNOWN_CONSTANTS:
             issues.append(
                 f"{file_name} (line {line_number}): Magic number {number} "
-                f"({known_constants[number]}) - define as named constant",
+                f"({_KNOWN_CONSTANTS[number]}) - define as named constant",
             )
             continue
-        if number in acceptable_numbers:
+        if number in _ACCEPTABLE_NUMBERS:
             continue
-        comment_index = line_original.find("%")
-        number_index = line_original.find(number)
-        if comment_index == -1 or (number_index != -1 and number_index < comment_index):
+        if _is_number_in_code(line_original, number):
             issues.append(
                 f"{file_name} (line {line_number}): Magic number {number} "
                 "should be defined as constant with units and source",
