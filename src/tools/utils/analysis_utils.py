@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 # Data containers (dataclasses for type safety)
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class PythonFileMetrics:
     """Structured metrics extracted from a Python source file."""
@@ -31,6 +32,7 @@ class PythonFileMetrics:
     docstrings: int = 0
     typed_returns: int = 0
     branches: int = 0
+
 
 @dataclass(frozen=True, slots=True)
 class FunctionDetail:
@@ -42,12 +44,14 @@ class FunctionDetail:
     body_lines: int
     has_docstring: bool
 
+
 @dataclass(frozen=True, slots=True)
 class ErrorHandlingMetrics:
     """Error handling pattern counts for a source file."""
 
     try_count: int
     bare_except_count: int
+
 
 @dataclass(frozen=True, slots=True)
 class LoggingMetrics:
@@ -56,9 +60,11 @@ class LoggingMetrics:
     logging_usage: int
     print_usage: int
 
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def get_python_metrics(filepath: Path) -> dict[str, int]:
     """Extract metrics from a Python file using AST analysis.
@@ -80,6 +86,7 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
         "typed_returns": metrics.typed_returns,
         "branches": metrics.branches,
     }
+
 
 def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
     """Extract structured metrics from a Python file using AST analysis.
@@ -129,6 +136,7 @@ def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
         branches=branches,
     )
 
+
 def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
     """Extract detailed function metrics from Python source code.
 
@@ -150,6 +158,7 @@ def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
         }
         for d in details
     ]
+
 
 def collect_function_details(content: str) -> list[FunctionDetail]:
     """Extract structured function details from Python source code.
@@ -189,6 +198,7 @@ def collect_function_details(content: str) -> list[FunctionDetail]:
         pass
     return functions
 
+
 def calculate_complexity(metrics: dict[str, int]) -> float:
     """Calculate average cyclomatic-like complexity.
 
@@ -205,6 +215,7 @@ def calculate_complexity(metrics: dict[str, int]) -> float:
     ensure(result >= 0, "complexity must be non-negative")
     return result
 
+
 def assess_error_handling_content(content: str) -> dict[str, int]:
     """Analyze error handling patterns in file content.
 
@@ -220,6 +231,7 @@ def assess_error_handling_content(content: str) -> dict[str, int]:
         "bare_except_count": result.bare_except_count,
     }
 
+
 def collect_error_handling_metrics(content: str) -> ErrorHandlingMetrics:
     """Analyze error handling patterns, returning a typed dataclass.
 
@@ -233,6 +245,7 @@ def collect_error_handling_metrics(content: str) -> ErrorHandlingMetrics:
         try_count=content.count("try:"),
         bare_except_count=len(re.findall(r"except\s*:", content)),
     )
+
 
 def assess_logging_content(content: str) -> dict[str, int]:
     """Analyze logging versus print usage in file content.
@@ -248,6 +261,7 @@ def assess_logging_content(content: str) -> dict[str, int]:
         "logging_usage": result.logging_usage,
         "print_usage": result.print_usage,
     }
+
 
 def collect_logging_metrics(content: str) -> LoggingMetrics:
     """Analyze logging versus print usage, returning a typed dataclass.

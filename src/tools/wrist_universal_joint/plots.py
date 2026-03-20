@@ -28,6 +28,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
 @st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
@@ -111,6 +112,7 @@ def plot_torque(
     plt.tight_layout()
     return fig
 
+
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
 @st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
@@ -180,6 +182,7 @@ def plot_acceleration(
     plt.tight_layout()
     return fig
 
+
 def _compute_transmission_sweep(
     phi_sweep_deg: np.ndarray[Any, Any],
     theta_grip_rad: float,
@@ -222,6 +225,7 @@ def _compute_transmission_sweep(
         np.array(accel_alpha_ratios_list),
         np.array(accel_gamma_ratios_list),
     )
+
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles

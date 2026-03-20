@@ -50,6 +50,7 @@ def prompt_for_files() -> list[Path]:
     except ImportError:
         sys.exit(1)
 
+
 def _build_yaml_frontmatter(title: str, toc: bool, abstract: str | None) -> str:
     """Build YAML frontmatter block for a Quarto document.
 
@@ -70,6 +71,7 @@ def _build_yaml_frontmatter(title: str, toc: bool, abstract: str | None) -> str:
         yaml += f"abstract: |\n  {indented_abstract}\n"
     yaml += "---\n\n"
     return yaml
+
 
 def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, int]:
     r"""Convert a LaTeX article to Quarto markdown (.qmd).
@@ -118,6 +120,7 @@ def latex_to_quarto_md(tex_text: str, fallback_title: str) -> tuple[str, int, in
     md_word_count = len(md.split())
     return md, original_word_count, md_word_count
 
+
 def main() -> None:
     """Main entry point for LaTeX to Quarto converter."""
     if len(sys.argv) > 1:
@@ -141,6 +144,7 @@ def main() -> None:
             logger.info("Converted: %s -> %s", tex_path, qmd_path)
         except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
             logger.error("Failed to convert %s: %s", tex_path, e)
+
 
 if __name__ == "__main__":
     main()

@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 logger = setup_logging_with_timestamp(__name__)
 
+
 class LaTeXToQuartoConverter:
     """Converter class for handling LaTeX to Quarto transformation."""
 
@@ -267,6 +268,7 @@ class LaTeXToQuartoConverter:
 
         return output_path
 
+
 def main() -> None:
     """Main entry point."""
     if len(sys.argv) < 2:
@@ -285,6 +287,7 @@ def main() -> None:
         converter.convert_file(input_file, output_file)
     except (FileNotFoundError, PermissionError, OSError):
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

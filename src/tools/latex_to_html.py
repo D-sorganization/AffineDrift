@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 
+
 class LaTeXToHTMLConverter:
     """Converter class for handling LaTeX to HTML transformation.
 
@@ -227,6 +228,7 @@ class LaTeXToHTMLConverter:
         logger.info("Converted %s -> %s", input_file, output_file)
         return str(output_file)
 
+
 def main() -> None:
     """Main entry point."""
     if len(sys.argv) < 2:
@@ -242,6 +244,7 @@ def main() -> None:
 
     converter = LaTeXToHTMLConverter()
     converter.convert_file(input_file, output_file)
+
 
 if __name__ == "__main__":
     main()

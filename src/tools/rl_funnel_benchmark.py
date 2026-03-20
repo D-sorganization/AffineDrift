@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 # System definition: double pendulum (2-DoF golf swing proxy)
 # ---------------------------------------------------------------------------
 
+
 def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> np.ndarray:
     """Passive dynamics of a double pendulum (drift term f(x,0)).
 
@@ -53,6 +54,7 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
     ddth = np.linalg.solve(M, rhs)
     return np.array([dth1, dth2, ddth[0], ddth[1]])
 
+
 def double_pendulum_B(x: np.ndarray) -> np.ndarray:
     """Control input matrix g(x): torques applied at both joints."""
     m1, m2, L1, L2 = 1.0, 1.0, 0.5, 0.5
@@ -64,9 +66,11 @@ def double_pendulum_B(x: np.ndarray) -> np.ndarray:
     B_full[2:, :] = M_inv  # torques affect angular accelerations
     return B_full
 
+
 # ---------------------------------------------------------------------------
 # Reference trajectory generation
 # ---------------------------------------------------------------------------
+
 
 def generate_reference_trajectory(
     t_span: tuple[float, float],
@@ -88,9 +92,11 @@ def generate_reference_trajectory(
     x_ref = sol.sol(t_ref)
     return t_ref, x_ref
 
+
 # ---------------------------------------------------------------------------
 # Controllers
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class BenchmarkResult:
@@ -100,6 +106,7 @@ class BenchmarkResult:
     runtime_sec: float
     trajectory: np.ndarray = field(repr=False)
     t_grid: np.ndarray = field(repr=False)
+
 
 def setpoint_lqr_controller(
     x_target: np.ndarray,
@@ -137,6 +144,7 @@ def setpoint_lqr_controller(
         return -K @ (x - x_target)
 
     return controller
+
 
 def trajectory_tracking_lqr(
     t_ref: np.ndarray,
@@ -195,9 +203,11 @@ def trajectory_tracking_lqr(
 
     return controller
 
+
 # ---------------------------------------------------------------------------
 # Simulation runner
 # ---------------------------------------------------------------------------
+
 
 def run_benchmark(
     controller: Callable[[float, np.ndarray], np.ndarray],
@@ -248,9 +258,11 @@ def run_benchmark(
         t_grid=t_eval,
     )
 
+
 # ---------------------------------------------------------------------------
 # Main benchmark comparison
 # ---------------------------------------------------------------------------
+
 
 def run_comparison(
     perturbation_scale: float = 0.1,
@@ -302,6 +314,7 @@ def run_comparison(
 
     return results
 
+
 def print_results(results: list[BenchmarkResult]) -> None:
     """Print formatted benchmark comparison table."""
     out = sys.stdout
@@ -324,6 +337,7 @@ def print_results(results: list[BenchmarkResult]) -> None:
             out.write("✓ Trajectory tracking cost functional outperforms setpoint control.\n")
         else:
             out.write("✗ Setpoint control outperforms TTCF in this scenario.\n")
+
 
 def main() -> None:
     """CLI entry point: parse arguments and run benchmark comparison."""
@@ -351,6 +365,7 @@ def main() -> None:
         seed=args.seed,
     )
     print_results(results)
+
 
 if __name__ == "__main__":
     main()

@@ -55,6 +55,7 @@ NAV_LIST_PATTERN = re.compile(
 RAW_NAV_PATTERN = re.compile(r"<nav(?![^>]*class=)", re.IGNORECASE)
 LOGGER = setup_logging(__name__, format_string="%(message)s")
 
+
 def _ensure_top_nav(html: str) -> str:
     """Attach the `top-nav` class to bare <nav> tags for styling consistency."""
 
@@ -64,18 +65,22 @@ def _ensure_top_nav(html: str) -> str:
 
     return RAW_NAV_PATTERN.sub(_inject_class, html)
 
+
 def _replace_logo_path(html: str) -> str:
     """Point legacy logo references at the optimized transparent logo asset."""
     return html.replace(LOGO_LEGACY, LOGO_UPDATED)
+
 
 def _resolve_targets(pages: Iterable[str | Path]) -> list[Path]:
     """Normalize CLI arguments into concrete paths."""
     return [Path(page).resolve() for page in pages]
 
+
 def _render_nav(match: re.Match[str], nav_markup: str = NEW_NAV) -> str:
     """Apply the supplied navigation markup while preserving indentation."""
     indent = match.group("indent")
     return "\n".join(f"{indent}{line}" for line in nav_markup.splitlines())
+
 
 def update_navigation(file_path: Path, nav_markup: str = NEW_NAV) -> bool:
     """Update the navigation list, nav class, and logo references for a file.
@@ -105,6 +110,7 @@ def update_navigation(file_path: Path, nav_markup: str = NEW_NAV) -> bool:
     file_path.write_text(updated, encoding="utf-8")
     return True
 
+
 def main(pages: Sequence[str] | None = None) -> int:
     """CLI entry point for batch-updating navigation markup."""
     targets = _resolve_targets(pages or PAGES_TO_UPDATE)
@@ -126,6 +132,7 @@ def main(pages: Sequence[str] | None = None) -> int:
         LOGGER.info("%s %s", status, target)
 
     return exit_code
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
