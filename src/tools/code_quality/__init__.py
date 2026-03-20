@@ -8,6 +8,8 @@ Decomposed from the monolithic ``code_quality_check.py`` (Phase 3.1):
 - ``check``             — Orchestration (file walking, aggregation, CLI)
 """
 
+import logging
+
 from src.tools.code_quality.ast_analyzer import check_ast_issues
 from src.tools.code_quality.check import check_file, main
 from src.tools.code_quality.pattern_checker import (
