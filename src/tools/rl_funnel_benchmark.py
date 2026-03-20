@@ -102,6 +102,17 @@ def generate_reference_trajectory(
 
 @dataclass
 class BenchmarkResult:
+    """Container for the output of a single benchmark run.
+
+    Attributes:
+        name: Human-readable controller name used in reports.
+        tracking_error: Integrated squared state-tracking error.
+        control_effort: Integrated squared control input norm.
+        runtime_sec: Wall-clock time for the benchmark run in seconds.
+        trajectory: State trajectory array, shape ``(T, n)``.
+        t_grid: Time grid corresponding to *trajectory*, shape ``(T,)``.
+    """
+
     name: str
     tracking_error: float
     control_effort: float

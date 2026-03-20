@@ -1,3 +1,10 @@
+"""Differential Dynamic Programming (DDP) with adaptive timestep for affine systems.
+
+Implements a mock DDP trajectory optimiser that adapts the integration timestep
+based on estimated perturbation size and Hessian residual bounds.  Used by the
+AffineDrift benchmarks and control loop tests.
+"""
+
 from collections.abc import Callable
 from typing import Any
 
