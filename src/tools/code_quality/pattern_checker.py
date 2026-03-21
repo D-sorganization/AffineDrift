@@ -6,8 +6,11 @@ illegitimate pass statements, and magic numbers using regex.
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 # ─── Configuration ────────────────────────────────────────────
 

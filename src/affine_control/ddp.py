@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -21,6 +22,8 @@ from src.core.contracts import (
     ensure,
     require,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def estimate_perturbation_size(

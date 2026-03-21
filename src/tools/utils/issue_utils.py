@@ -6,9 +6,12 @@ and interacting with the GitHub CLI.
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 
 def get_repo_short_name(repo_path: Path | None = None) -> str:

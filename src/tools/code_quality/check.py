@@ -7,6 +7,7 @@ Can be invoked directly or via pre-commit hooks.
 
 from __future__ import annotations
 
+import logging
 import sys
 from pathlib import Path
 
@@ -15,6 +16,8 @@ from src.core.contracts import require
 from .ast_analyzer import check_ast_issues
 from .pattern_checker import check_banned_patterns, check_magic_numbers
 from .report_generator import report_issues
+
+logger = logging.getLogger(__name__)
 
 
 def check_file(filepath: Path) -> list[tuple[int, str, str]]:
