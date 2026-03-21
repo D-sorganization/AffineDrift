@@ -268,6 +268,33 @@ class MATLABQualityChecker:
         return self.results
 
 
+def _print_text_results(results: dict[str, object]) -> None:
+    """Print MATLAB quality check results in human-readable text format.
+
+    Logs a formatted summary including timestamp, file count, pass/fail status,
+    summary message, and an enumerated list of any issues found.
+
+    Args:
+        results: Results dictionary as returned by ``MATLABQualityChecker.run_all_checks``.
+    """
+    logger.info("\n" + "=" * 60)
+    logger.info("MATLAB QUALITY CHECK RESULTS")
+    logger.info("=" * 60)
+    logger.info(f"Timestamp: {results.get('timestamp', 'N/A')}")
+    logger.info(f"Total Files: {results.get('total_files', 0)}")
+    logger.info(f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}")
+    logger.info(f"Summary: {results.get('summary', 'N/A')}")
+
+    issues_raw = results.get("issues", [])
+    issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
+    if issues:
+        logger.info(f"\nIssues Found ({len(issues)}):")
+        for i, issue in enumerate(issues, 1):
+            logger.info(f"  {i}. {issue}")
+
+    logger.info("\n" + "=" * 60)
+
+
 def main() -> None:
     """Main entry point for the MATLAB quality check script."""
     parser = argparse.ArgumentParser(description="MATLAB Code Quality Checker")
@@ -287,45 +314,21 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # Get project root
     project_root = Path(args.project_root).resolve()
     if not project_root.exists():
         logger.error(f"Project root does not exist: {project_root}")
         sys.exit(1)
 
-    # Initialize and run quality checks
     checker = MATLABQualityChecker(project_root)
     results = checker.run_all_checks()
 
-    # Output results
     if args.output_format == "json":
         logger.info(json.dumps(results, indent=2, default=str))
     else:
-        logger.info("\n" + "=" * 60)
-        logger.info("MATLAB QUALITY CHECK RESULTS")
-        logger.info("=" * 60)
-        logger.info(f"Timestamp: {results.get('timestamp', 'N/A')}")
-        logger.info(f"Total Files: {results.get('total_files', 0)}")
-        logger.info(
-            f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}",
-        )
-        logger.info(f"Summary: {results.get('summary', 'N/A')}")
+        _print_text_results(results)
 
-        issues_raw = results.get("issues", [])
-        issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
-        if issues:
-            logger.info(f"\nIssues Found ({len(issues)}):")
-            for i, issue in enumerate(issues, 1):
-                logger.info(f"  {i}. {issue}")
-
-        logger.info("\n" + "=" * 60)
-
-    # Exit with appropriate code
-    # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass
     passed = results.get("passed", False)
     has_issues = bool(results.get("issues"))
-
-    # Strict mode: fail if any issues found; normal: fail only if checks didn't pass
     exit_code = (0 if (passed and not has_issues) else 1) if args.strict else (0 if passed else 1)
 
     sys.exit(exit_code)

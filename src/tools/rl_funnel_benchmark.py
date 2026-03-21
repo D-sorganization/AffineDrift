@@ -157,31 +157,36 @@ def setpoint_lqr_controller(
     return controller
 
 
-def trajectory_tracking_lqr(
+def _precompute_lqr_gains(
     t_ref: np.ndarray,
     x_ref: np.ndarray,
-    Q_tt: np.ndarray | None = None,
-    R_tt: np.ndarray | None = None,
-) -> Callable[[float, np.ndarray], np.ndarray]:
-    """Trajectory Tracking Cost Functional (TTCF) controller.
+    n: int,
+    m: int,
+    Q_tt: np.ndarray,
+    R_tt: np.ndarray,
+) -> np.ndarray:
+    """Precompute time-varying LQR gains at each reference time step.
 
-    Time-varying LQR that tracks x*(t) with time-varying linearization.
-    Uses frozen-time LQR at each point (approximation; exact requires Riccati ODE).
+    For each step, linearises the double-pendulum dynamics via finite differences,
+    then solves the continuous algebraic Riccati equation (CARE) to obtain the
+    feedback gain matrix.  Falls back to a zero-gain matrix when the CARE is
+    infeasible.
+
+    Args:
+        t_ref: Reference time array of shape (T,).
+        x_ref: Reference state trajectory of shape (n, T).
+        n: State dimension.
+        m: Input dimension.
+        Q_tt: State cost matrix of shape (n, n).
+        R_tt: Input cost matrix of shape (m, m).
+
+    Returns:
+        Gains array of shape (T, m, n).
     """
-    from scipy.interpolate import interp1d
-
-    n = 4
-    m = 2
-    if Q_tt is None:
-        Q_tt = np.diag([10.0, 10.0, 1.0, 1.0])
-    if R_tt is None:
-        R_tt = 0.1 * np.eye(m)
-
-    # Precompute gains at each reference time step
     gains = []
-    for i, t in enumerate(t_ref):
-        x_ref_i = x_ref[:, i]
-        eps = 1e-6
+    eps = 1e-6
+    for _i, t in enumerate(t_ref):
+        x_ref_i = x_ref[:, _i]
         A = np.zeros((n, n))
         f0 = double_pendulum_drift(t, x_ref_i)
         for j in range(n):
@@ -195,10 +200,33 @@ def trajectory_tracking_lqr(
         except (np.linalg.LinAlgError, ValueError):
             K = np.zeros((m, n))
         gains.append(K)
+    return np.array(gains)
 
-    gains_array = np.array(gains)  # shape (T, m, n)
 
-    # Interpolate gains and reference trajectory
+def trajectory_tracking_lqr(
+    t_ref: np.ndarray,
+    x_ref: np.ndarray,
+    Q_tt: np.ndarray | None = None,
+    R_tt: np.ndarray | None = None,
+) -> Callable[[float, np.ndarray], np.ndarray]:
+    """Trajectory Tracking Cost Functional (TTCF) controller.
+
+    Time-varying LQR that tracks x*(t) with time-varying linearization.
+    Uses frozen-time LQR at each point (approximation; exact requires Riccati ODE).
+
+    Gain precomputation is delegated to ``_precompute_lqr_gains``.
+    """
+    from scipy.interpolate import interp1d
+
+    n = 4
+    m = 2
+    if Q_tt is None:
+        Q_tt = np.diag([10.0, 10.0, 1.0, 1.0])
+    if R_tt is None:
+        R_tt = 0.1 * np.eye(m)
+
+    gains_array = _precompute_lqr_gains(t_ref, x_ref, n, m, Q_tt, R_tt)
+
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
