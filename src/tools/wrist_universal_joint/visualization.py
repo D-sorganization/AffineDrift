@@ -10,8 +10,12 @@ Sub-modules:
 
 from __future__ import annotations
 
+import logging
+
 from .diagram import draw_diagram
 from .plots import plot_acceleration, plot_torque, plot_transmission_sweep
+
+logger = logging.getLogger(__name__)
 
 __all__ = [
     "draw_diagram",

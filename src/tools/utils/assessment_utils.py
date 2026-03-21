@@ -6,7 +6,11 @@ and mappings used by various assessment and reporting scripts.
 
 from __future__ import annotations
 
+import logging
+
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 # Assessment definitions (Standardized A-O)
 ASSESSMENT_DEFINITIONS = {
