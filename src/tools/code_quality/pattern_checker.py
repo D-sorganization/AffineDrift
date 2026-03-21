@@ -64,6 +64,7 @@ _PATTERN_SELF_CHECK_FILES = frozenset(
         "ast_analyzer.py",
         # Test files that exercise pattern-checker rules with intentional violations
         "test_code_quality_extras.py",
+        "test_code_quality_module.py",
         "test_wrist_universal_joint_visual.py",
     }
 )
