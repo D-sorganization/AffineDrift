@@ -41,9 +41,10 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
 
     # Exclude certain files/directories from docstring checks
     skip_docstring_checks = False
-    if "scripts/" in str(filepath) or "tests/" in str(filepath):
+    filepath_str = str(filepath).replace("\\", "/")
+    if "scripts/" in filepath_str or "tests/" in filepath_str:
         skip_docstring_checks = True
-    if str(filepath).replace("\\", "/").endswith("src/core/contracts.py"):
+    if filepath_str.endswith("src/core/contracts.py"):
         skip_docstring_checks = True
 
     try:

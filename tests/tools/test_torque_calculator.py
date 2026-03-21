@@ -85,7 +85,8 @@ class TestUniversalJointTransmissionRatio:
 
         # Should not raise for very large delta
         omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_rad=0.0, delta_rad=np.radians(91)  # > 89 degrees
+            phi_rad=0.0,
+            delta_rad=np.radians(91),  # > 89 degrees
         )
         assert isinstance(omega_ratio, float)
 

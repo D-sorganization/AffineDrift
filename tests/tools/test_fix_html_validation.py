@@ -191,9 +191,7 @@ class TestApplyAllFixes:
     def test_applies_multiple_fixes(self) -> None:
         """Should apply all fixes to HTML content."""
         html = (
-            "<button>Click</button>"
-            '<iframe src="x.html"></iframe>'
-            '<a href="x" role="link">link</a>'
+            '<button>Click</button><iframe src="x.html"></iframe><a href="x" role="link">link</a>'
         )
         result = apply_all_fixes(html)
         assert 'type="button"' in result

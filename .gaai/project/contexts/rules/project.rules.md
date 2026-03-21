@@ -6,7 +6,27 @@
 3. No destructive git history operations.
 4. No secret commits (.env, API keys, credentials).
 
-## Quality Gates (CI)
+## Quality Gates (CI) — MANDATORY PRE-PR CHECKLIST
+
+**Before creating a PR, the delivery agent MUST run these commands and fix all issues:**
+
+```bash
+# Step 1: Auto-format (fixes most issues automatically)
+python3 -m black --line-length 100 .
+
+# Step 2: Lint and auto-fix what's possible
+python3 -m ruff check --fix .
+
+# Step 3: Verify clean (must exit 0)
+python3 -m black --check --line-length 100 .
+python3 -m ruff check .
+
+# Step 4: Run tests on changed files
+python3 -m pytest -x --timeout=60 -q
+```
+
+**If any step fails after auto-fix, manually resolve before proceeding. Do NOT create a PR with known lint/format failures.**
+
 5. `ruff check` must pass on modified Python files before PR creation.
 6. `black --check` must pass (this repo uses Black, NOT ruff format). Line length: 100 characters.
 7. No new `print()` calls in `src/` (use logging).
@@ -14,10 +34,14 @@
 9. Quarto documentation builds must succeed (`quarto render` must not fail).
 10. No TODO/FIXME comments unless a tracked GitHub issue exists.
 
+## CI Watch (Post-PR)
+11. After creating a PR, invoke the `ci-watch-and-fix` skill to monitor CI and remediate failures.
+12. Do NOT mark a story as `done` until CI passes or the skill escalates after 3 remediation cycles.
+
 ## Escalation
-11. If a story requires modifying CI pipelines in a breaking way — escalate.
-12. If a story touches shared/core modules affecting multiple subsystems — escalate.
-13. If a story affects Quarto build output or published docs — verify render before PR.
+13. If a story requires modifying CI pipelines in a breaking way — escalate.
+14. If a story touches shared/core modules affecting multiple subsystems — escalate.
+15. If a story affects Quarto build output or published docs — verify render before PR.
 
 ---
 

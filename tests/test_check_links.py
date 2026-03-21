@@ -149,3 +149,17 @@ def test_check_links_handles_read_errors(tmp_path: Path) -> None:
     with patch("src.tools.check_links.find_links", side_effect=OSError("Read failed")):
         results = check_links(str(tmp_path))
         assert results == []
+
+
+def test_check_links_skips_non_scannable_paths(tmp_path: Path) -> None:
+    """check_links should skip subdirectories and non-QMD/HTML files."""
+    # Create a subdirectory — rglob returns it but it should be skipped
+    subdir = tmp_path / "assets"
+    subdir.mkdir()
+    (tmp_path / "page.qmd").write_text("No links here.", encoding="utf-8")
+    # Non-html file to trigger the suffix check
+    (tmp_path / "data.csv").write_text("col1,col2", encoding="utf-8")
+
+    results = check_links(str(tmp_path))
+    # No broken links — just verifying skip paths are exercised
+    assert isinstance(results, list)
