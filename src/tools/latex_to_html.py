@@ -8,6 +8,7 @@ to avoid duplicated logic (DRY — Phase 2 consolidation).
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sys
@@ -25,6 +26,8 @@ from src.tools.utils.latex_utils import (
     extract_body,
     extract_title,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 from textwrap import dedent
@@ -12,6 +13,8 @@ from src.tools.utils import setup_logging
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
+
+logger = logging.getLogger(__name__)
 
 NEW_NAV = dedent(
     """
