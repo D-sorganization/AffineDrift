@@ -23,6 +23,8 @@ from .torque_calculator import (
     universal_joint_transmission_ratio,
 )
 
+logger = logging.getLogger(__name__)
+
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 

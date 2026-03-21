@@ -20,6 +20,8 @@ from matplotlib.patches import Ellipse, Polygon
 
 from src.core.contracts import check_range
 
+logger = logging.getLogger(__name__)
+
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
