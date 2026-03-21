@@ -10,6 +10,7 @@ This module contains the forearm-hand-club diagram rendering:
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any, cast
 
 import matplotlib.pyplot as plt
@@ -21,6 +22,8 @@ from src.core.contracts import check_range
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
+
+logger = logging.getLogger(__name__)
 
 
 def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:

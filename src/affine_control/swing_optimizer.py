@@ -31,7 +31,7 @@ Usage
     config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
     optimizer = SwingOptimizer(config)
     result = optimizer.optimize(initial_state, dynamics_fn)
-    print(f"Achieved velocity: {result.final_velocity:.2f} m/s")
+    logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
 """
 
 from __future__ import annotations

@@ -11,6 +11,7 @@ Example:
     python check_links.py docs/articles/my-article.html
 """
 
+import logging
 import sys
 from pathlib import Path
 
@@ -22,6 +23,8 @@ from src.tools.utils.link_utils import (
     path_exists_in_search_roots,
     resolve_relative_path,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 SCANNED_EXTENSIONS = {".qmd", ".html"}

@@ -13,6 +13,7 @@ Note:
     in main() to publish different articles.
 """
 
+import logging
 import re
 import sys
 from pathlib import Path
@@ -24,6 +25,8 @@ from src.tools.utils import (
     extract_title_description,
     setup_logging,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

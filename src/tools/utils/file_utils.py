@@ -11,12 +11,15 @@ Example:
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from src.core.contracts import require
 
 from .constants import EXCLUDE_DIRS_CONTENT, EXCLUDE_DIRS_PYTHON
+
+logger = logging.getLogger(__name__)
 
 
 def find_qmd_files(

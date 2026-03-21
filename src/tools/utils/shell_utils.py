@@ -6,12 +6,15 @@ returning standardized result dictionaries.
 
 from __future__ import annotations
 
+import logging
 import subprocess
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Data containers

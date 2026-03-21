@@ -15,6 +15,7 @@ The script will:
 """
 
 import argparse
+import logging
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,6 +28,8 @@ from src.core.contracts import require
 from src.tools.utils import setup_logging
 from src.tools.utils.cli_contracts import ensure_existing_dir, parse_csv_enum
 from src.tools.utils.link_utils import is_external_url, is_fragment_only
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

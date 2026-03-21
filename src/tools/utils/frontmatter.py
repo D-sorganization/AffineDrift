@@ -13,9 +13,12 @@ Example:
 
 from __future__ import annotations
 
+import logging
 import re
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 
 def extract_frontmatter(content: str) -> tuple[str | None, str]:

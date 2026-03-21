@@ -25,10 +25,8 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
-logger = logging.getLogger(__name__)
-
 GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
-
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # System definition: double pendulum (2-DoF golf swing proxy)

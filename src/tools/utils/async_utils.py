@@ -5,8 +5,11 @@ and running synchronous code in separate threads.
 """
 
 import asyncio
+import logging
 from collections.abc import Awaitable, Callable, Coroutine
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 async def run_async_task(coroutine: Coroutine[Any, Any, Any]) -> Any:

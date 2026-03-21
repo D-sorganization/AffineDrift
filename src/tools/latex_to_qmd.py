@@ -5,6 +5,7 @@ Converts LaTeX article files to Quarto Markdown with preserved equations.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sys
@@ -22,6 +23,8 @@ from src.tools.utils.latex_utils import (
     extract_body,
     extract_metadata,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging_with_timestamp(__name__)
 

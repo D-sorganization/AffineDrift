@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import logging
+
 import numpy as np
 from numpy.typing import NDArray
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 FloatArray = NDArray[np.float64]
 

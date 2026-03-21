@@ -9,7 +9,10 @@ Provides structural checks that require parsing the full Python AST:
 from __future__ import annotations
 
 import ast
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 _SKIP_AST_CHECK_NAMES: frozenset[str] = frozenset(
     {
