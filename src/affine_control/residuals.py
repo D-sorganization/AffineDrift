@@ -1,3 +1,10 @@
+"""Residual bound computation for affine drift control systems.
+
+Provides Hessian bound estimation and residual monitoring utilities used to
+certify convergence of the DDP optimiser and detect numerical instability
+during trajectory tracking.
+"""
+
 import logging
 from collections.abc import Callable
 from typing import Any
