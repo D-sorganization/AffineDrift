@@ -14,6 +14,63 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+_SKIP_AST_CHECK_NAMES: frozenset[str] = frozenset(
+    {
+        "quality_check_script.py",
+        "matlab_quality_check.py",
+        "code_quality_check.py",
+        "quality-check.py",
+    }
+)
+"""File names that are excluded from AST quality checks."""
+
+
+def _should_skip_docstring_checks(filepath: Path) -> bool:
+    """Determine whether docstring checks should be skipped for a given file.
+
+    Docstring checks are skipped for scripts directories, test directories,
+    and the core contracts module.
+
+    Args:
+        filepath: Path to the Python source file.
+
+    Returns:
+        True if docstring checks should be skipped, False otherwise.
+    """
+    filepath_str = str(filepath).replace("\\", "/")
+    if "scripts/" in filepath_str or "tests/" in filepath_str:
+        return True
+    return filepath_str.endswith("src/core/contracts.py")
+
+
+def _check_function_docstrings(
+    tree: ast.Module,
+    issues: list[tuple[int, str, str]],
+) -> None:
+    """Walk the AST and append missing-docstring issues for function definitions.
+
+    Stub functions (body is a single ``...`` expression) are exempt.
+
+    Args:
+        tree: Parsed AST module.
+        issues: Mutable list to which ``(line_number, message, snippet)`` tuples
+            are appended.
+    """
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.FunctionDef):
+            continue
+        if ast.get_docstring(node):
+            continue
+        # Exempt stub functions whose body is solely ``...``
+        if (
+            len(node.body) == 1
+            and isinstance(node.body[0], ast.Expr)
+            and isinstance(node.body[0].value, ast.Constant)
+            and node.body[0].value.value == ...
+        ):
+            continue
+        issues.append((node.lineno, f"Function '{node.name}' missing docstring", ""))
+
 
 def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]:
     """Check AST for quality issues.
@@ -21,6 +78,8 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
     Analyses the parsed AST of *content* for:
     - Missing docstrings on function definitions (unless in scripts/tests)
     - Relaxed return-type hint checks (delegated to MyPy)
+
+    Delegates docstring scanning to ``_check_function_docstrings``.
 
     Args:
         content: Full source text of the file.
@@ -30,44 +89,17 @@ def check_ast_issues(content: str, filepath: Path) -> list[tuple[int, str, str]]
         List of ``(line_number, message, code_snippet)`` tuples.
     """
     issues: list[tuple[int, str, str]] = []
-    # Skip checking quality check scripts for AST issues
-    if filepath.name in (
-        "quality_check_script.py",
-        "matlab_quality_check.py",
-        "code_quality_check.py",
-        "quality-check.py",
-    ):
+
+    if filepath.name in _SKIP_AST_CHECK_NAMES:
         return issues
 
-    # Exclude certain files/directories from docstring checks
-    skip_docstring_checks = False
-    filepath_str = str(filepath).replace("\\", "/")
-    if "scripts/" in filepath_str or "tests/" in filepath_str:
-        skip_docstring_checks = True
-    if filepath_str.endswith("src/core/contracts.py"):
-        skip_docstring_checks = True
+    skip_docstring_checks = _should_skip_docstring_checks(filepath)
 
     try:
         tree = ast.parse(content)
-        for node in ast.walk(tree):
-            if (
-                isinstance(node, ast.FunctionDef)
-                and not skip_docstring_checks
-                and not ast.get_docstring(node)
-            ):
-                if (
-                    len(node.body) == 1
-                    and isinstance(node.body[0], ast.Expr)
-                    and isinstance(node.body[0].value, ast.Constant)
-                    and node.body[0].value.value == ...
-                ):
-                    continue
-
-                issues.append(
-                    (node.lineno, f"Function '{node.name}' missing docstring", ""),
-                )
-            # Return-type enforcement is delegated to MyPy.
-            # To enforce here, check `node.returns` and append issue.
+        if not skip_docstring_checks:
+            _check_function_docstrings(tree, issues)
+        # Return-type enforcement is delegated to MyPy.
     except SyntaxError as e:
         issues.append((0, f"Syntax error: {e}", ""))
     return issues

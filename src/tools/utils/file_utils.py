@@ -112,6 +112,40 @@ def find_markdown_files(
     return files
 
 
+def _search_paths(
+    paths: Sequence[str | Path],
+    extensions: list[str],
+    recursive: bool,
+) -> list[Path]:
+    """Search specified paths (files or directories) for files with given extensions.
+
+    Skips paths that do not exist. For directories, delegates to ``glob`` or
+    ``rglob`` depending on the ``recursive`` flag.
+
+    Args:
+        paths: Sequence of file or directory paths to search.
+        extensions: Normalized list of file extensions (each starts with ``"."``).
+        recursive: Whether to search directories recursively.
+
+    Returns:
+        List of matching Path objects.
+    """
+    found_files: list[Path] = []
+    for path_str in paths:
+        path = Path(path_str)
+        if not path.exists():
+            continue
+        if path.is_file() and path.suffix in extensions:
+            found_files.append(path)
+        elif path.is_dir():
+            for ext in extensions:
+                if recursive:
+                    found_files.extend(path.rglob(f"*{ext}"))
+                else:
+                    found_files.extend(path.glob(f"*{ext}"))
+    return found_files
+
+
 def find_files_by_extension(
     extensions: list[str],
     paths: Sequence[str | Path] | None = None,
@@ -119,6 +153,9 @@ def find_files_by_extension(
     recursive: bool = False,
 ) -> list[Path]:
     """Find files by extension in given paths or root directory.
+
+    When *paths* is None, searches *root_dir* using glob patterns.
+    When *paths* is provided, delegates to ``_search_paths``.
 
     Args:
         extensions: List of file extensions to find (e.g., [".tex", ".py"]).
@@ -134,37 +171,19 @@ def find_files_by_extension(
         py_files = find_files_by_extension([".py"], recursive=True)
     """
     require(len(extensions) > 0, "extensions list must not be empty")
-    # Normalize extensions
     extensions = [ext if ext.startswith(".") else f".{ext}" for ext in extensions]
 
-    found_files: list[Path] = []
-
     if paths is None:
-        # Search root directory
         root = Path(root_dir)
-        if recursive:
-            for ext in extensions:
+        found_files: list[Path] = []
+        for ext in extensions:
+            if recursive:
                 found_files.extend(root.rglob(f"*{ext}"))
-        else:
-            for ext in extensions:
+            else:
                 found_files.extend(root.glob(f"*{ext}"))
-    else:
-        # Search specified paths
-        for path_str in paths:
-            path = Path(path_str)
-            if not path.exists():
-                continue
+        return found_files
 
-            if path.is_file() and path.suffix in extensions:
-                found_files.append(path)
-            elif path.is_dir():
-                for ext in extensions:
-                    if recursive:
-                        found_files.extend(path.rglob(f"*{ext}"))
-                    else:
-                        found_files.extend(path.glob(f"*{ext}"))
-
-    return found_files
+    return _search_paths(paths, extensions, recursive)
 
 
 def process_file_content(

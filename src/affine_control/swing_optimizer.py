@@ -368,78 +368,74 @@ class SwingOptimizer:
         ensure(total >= -EPSILON, "trajectory cost must be non-negative", total)
         return max(total, 0.0)
 
-    def optimize(
+    def _build_initial_conditions(
+        self,
+        cfg: SwingOptimizationConfig,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Build the target state vector and initial control guess.
+
+        Args:
+            cfg: Optimizer configuration.
+
+        Returns:
+            Tuple of (x_target, u_init) where x_target is the desired terminal
+            state and u_init is the zero initial control sequence.
+        """
+        x_target = np.zeros(cfg.state_dim)
+        x_target[cfg.n_joints :] = cfg.target_velocity
+        u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
+        return x_target, u_init
+
+    def _run_optimization_loop(
         self,
         initial_state: np.ndarray[Any, Any],
         dynamics_fn: Callable[
             [np.ndarray[Any, Any], np.ndarray[Any, Any]],
             np.ndarray[Any, Any],
         ],
-    ) -> SwingOptimizationResult:
-        """Run the swing optimization pipeline.
+        x_target: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        cfg: SwingOptimizationConfig,
+    ) -> tuple[
+        np.ndarray[Any, Any],
+        np.ndarray[Any, Any],
+        float,
+        bool,
+        int,
+    ]:
+        """Run the iterative DDP optimization loop.
 
-        This method:
-        1. Validates the initial state dimensions.
-        2. Constructs a zero initial control guess.
-        3. Builds the target state from ``config.target_velocity``.
-        4. Calls the DDP solver (``adaptive_timestep_ddp_mock``).
-        5. Evaluates convergence by comparing successive cost values.
-        6. Packages and returns a ``SwingOptimizationResult``.
+        Repeatedly calls the DDP solver, tracks the best trajectory found,
+        and checks for convergence.
 
         Args:
-            initial_state: Initial state vector of dimension ``state_dim``.
-            dynamics_fn: Dynamics function ``f(x, u) -> dx/dt``.
+            initial_state: Initial state vector.
+            dynamics_fn: Dynamics function f(x, u) -> dx/dt.
+            x_target: Target state vector.
+            u_init: Initial control sequence (warm-started each iteration).
+            cfg: Optimizer configuration.
 
         Returns:
-            SwingOptimizationResult with optimal trajectory and metadata.
-
-        Raises:
-            PreconditionError: On invalid inputs (wrong dimensions, non-finite, etc.).
+            Tuple of (best_x_traj, best_u_traj, best_cost, converged, iteration).
         """
-        check_finite_array(initial_state, "initial_state")
-        check_shape(
-            initial_state,
-            (self._config.state_dim,),
-            "initial_state",
-        )
-        require(callable(dynamics_fn), "dynamics_fn must be callable")
-
-        cfg = self._config
-        n = cfg.state_dim
-
-        # Build target state
-        x_target = np.zeros(n)
-        x_target[cfg.n_joints :] = cfg.target_velocity
-
-        # Initial control guess: zero torques
-        u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
-
-        logger.info(
-            "Starting swing optimization: n_joints=%d, horizon=%d, dt=%.4f",
-            cfg.n_joints,
-            cfg.horizon_steps,
-            cfg.dt,
-        )
-
-        # Iterative DDP with convergence check
         best_cost = float("inf")
         converged = False
         iteration = 0
         best_x_traj: np.ndarray[Any, Any] | None = None
         best_u_traj: np.ndarray[Any, Any] | None = None
+        x_traj: np.ndarray[Any, Any]
+        u_traj: np.ndarray[Any, Any]
 
         for iteration in range(1, cfg.max_iterations + 1):
-            # Call the DDP solver
-            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(
+            x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
                 f=dynamics_fn,
                 x0=initial_state,
                 xf=x_target,
                 u_init=u_init,
                 eps_residual=cfg.convergence_tol,
-                max_iters=min(5, cfg.max_iterations),  # inner DDP iters
+                max_iters=min(5, cfg.max_iterations),
             )
 
-            # Evaluate cost on the returned trajectory
             traj_list = [x_traj[i] for i in range(len(x_traj))]
             ctrl_list = [u_traj[i] for i in range(len(u_traj))]
             current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
@@ -457,25 +453,42 @@ class SwingOptimizer:
                 best_x_traj = x_traj
                 best_u_traj = u_traj
 
-            # Convergence check
             if abs(cost_improvement) < cfg.convergence_tol and iteration > 1:
                 converged = True
-                logger.info(
-                    "Converged at iteration %d (cost=%.6f)",
-                    iteration,
-                    best_cost,
-                )
+                logger.info("Converged at iteration %d (cost=%.6f)", iteration, best_cost)
                 break
 
-            # Warm-start next iteration with current best controls
             u_init = u_traj
 
-        # If no improvement was ever made, use initial trajectory
+        # Fallback: if no improvement was ever recorded, use last trajectory
         if best_x_traj is None or best_u_traj is None:
             best_x_traj = x_traj
             best_u_traj = u_traj
 
-        # Extract final velocity (norm of velocity portion of terminal state)
+        return best_x_traj, best_u_traj, best_cost, converged, iteration
+
+    def _package_result(
+        self,
+        best_x_traj: np.ndarray[Any, Any],
+        best_u_traj: np.ndarray[Any, Any],
+        best_cost: float,
+        converged: bool,
+        iteration: int,
+        cfg: SwingOptimizationConfig,
+    ) -> SwingOptimizationResult:
+        """Build and log a SwingOptimizationResult from raw trajectory data.
+
+        Args:
+            best_x_traj: Optimal state trajectory array.
+            best_u_traj: Optimal control trajectory array.
+            best_cost: Best cost achieved.
+            converged: Whether the loop converged.
+            iteration: Last iteration index.
+            cfg: Optimizer configuration (used for velocity extraction).
+
+        Returns:
+            A fully populated SwingOptimizationResult.
+        """
         final_state = best_x_traj[-1]
         velocity_portion = final_state[cfg.n_joints :]
         final_velocity = float(np.linalg.norm(velocity_portion))
@@ -488,7 +501,6 @@ class SwingOptimizer:
             converged=converged,
             iterations=iteration,
         )
-
         logger.info(
             "Optimization complete: velocity=%.2f m/s, cost=%.4f, converged=%s, iterations=%d",
             result.final_velocity,
@@ -496,8 +508,51 @@ class SwingOptimizer:
             result.converged,
             result.iterations,
         )
-
         return result
+
+    def optimize(
+        self,
+        initial_state: np.ndarray[Any, Any],
+        dynamics_fn: Callable[
+            [np.ndarray[Any, Any], np.ndarray[Any, Any]],
+            np.ndarray[Any, Any],
+        ],
+    ) -> SwingOptimizationResult:
+        """Run the swing optimization pipeline.
+
+        This method:
+        1. Validates the initial state dimensions.
+        2. Constructs a zero initial control guess via ``_build_initial_conditions``.
+        3. Runs the iterative DDP loop via ``_run_optimization_loop``.
+        4. Packages and returns a ``SwingOptimizationResult`` via ``_package_result``.
+
+        Args:
+            initial_state: Initial state vector of dimension ``state_dim``.
+            dynamics_fn: Dynamics function ``f(x, u) -> dx/dt``.
+
+        Returns:
+            SwingOptimizationResult with optimal trajectory and metadata.
+
+        Raises:
+            PreconditionError: On invalid inputs (wrong dimensions, non-finite, etc.).
+        """
+        check_finite_array(initial_state, "initial_state")
+        check_shape(initial_state, (self._config.state_dim,), "initial_state")
+        require(callable(dynamics_fn), "dynamics_fn must be callable")
+
+        cfg = self._config
+        logger.info(
+            "Starting swing optimization: n_joints=%d, horizon=%d, dt=%.4f",
+            cfg.n_joints,
+            cfg.horizon_steps,
+            cfg.dt,
+        )
+
+        x_target, u_init = self._build_initial_conditions(cfg)
+        best_x_traj, best_u_traj, best_cost, converged, iteration = self._run_optimization_loop(
+            initial_state, dynamics_fn, x_target, u_init, cfg
+        )
+        return self._package_result(best_x_traj, best_u_traj, best_cost, converged, iteration, cfg)
 
 
 __all__ = [
