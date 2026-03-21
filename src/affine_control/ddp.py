@@ -1,3 +1,11 @@
+"""Differential Dynamic Programming (DDP) with adaptive timestep for affine systems.
+
+Implements a mock DDP trajectory optimiser that adapts the integration timestep
+based on estimated perturbation size and Hessian residual bounds.  Used by the
+AffineDrift benchmarks and control loop tests.
+"""
+
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -21,6 +29,8 @@ from src.core.contracts import (
     ensure,
     require,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def estimate_perturbation_size(

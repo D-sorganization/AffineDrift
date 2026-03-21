@@ -25,10 +25,8 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
-logger = logging.getLogger(__name__)
-
 GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
-
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # System definition: double pendulum (2-DoF golf swing proxy)
@@ -102,6 +100,17 @@ def generate_reference_trajectory(
 
 @dataclass
 class BenchmarkResult:
+    """Container for the output of a single benchmark run.
+
+    Attributes:
+        name: Human-readable controller name used in reports.
+        tracking_error: Integrated squared state-tracking error.
+        control_effort: Integrated squared control input norm.
+        runtime_sec: Wall-clock time for the benchmark run in seconds.
+        trajectory: State trajectory array, shape ``(T, n)``.
+        t_grid: Time grid corresponding to *trajectory*, shape ``(T,)``.
+    """
+
     name: str
     tracking_error: float
     control_effort: float
