@@ -62,6 +62,10 @@ _PATTERN_SELF_CHECK_FILES = frozenset(
         # Decomposed modules that define/reference the patterns they check for
         "pattern_checker.py",
         "ast_analyzer.py",
+        # Test files that intentionally contain banned patterns as test fixtures
+        "test_code_quality_extras.py",
+        "test_code_quality_module.py",
+        "test_wrist_universal_joint_visual.py",
     }
 )
 
