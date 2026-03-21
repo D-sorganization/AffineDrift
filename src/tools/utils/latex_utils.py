@@ -14,6 +14,7 @@ Shared operations:
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -21,6 +22,8 @@ from typing import Protocol, runtime_checkable
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

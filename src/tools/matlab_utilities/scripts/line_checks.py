@@ -15,8 +15,11 @@ Functions:
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def update_function_scope(

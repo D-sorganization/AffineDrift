@@ -3,12 +3,15 @@
 Converts all LaTeX article files to HTML and updates root-level HTML files.
 """
 
+import logging
 import os
 import sys
 
 from latex_to_html import LaTeXToHTMLConverter
 
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

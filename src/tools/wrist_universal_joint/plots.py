@@ -8,6 +8,7 @@ This module contains matplotlib-based plotting functions:
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
@@ -24,6 +25,8 @@ from .torque_calculator import (
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
+
+logger = logging.getLogger(__name__)
 
 
 # Cache figure generation to prevent expensive redraws

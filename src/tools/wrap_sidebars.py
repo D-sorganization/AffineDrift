@@ -20,9 +20,12 @@ Note:
 """
 
 import glob
+import logging
 from pathlib import Path
 
 from src.tools.utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 
