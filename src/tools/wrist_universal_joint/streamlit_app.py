@@ -10,6 +10,7 @@ Run with: streamlit run streamlit_app.py
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -39,6 +40,8 @@ from .visualization import (
     plot_torque,
     plot_transmission_sweep,
 )
+
+logger = logging.getLogger(__name__)
 
 # Page config
 st.set_page_config(

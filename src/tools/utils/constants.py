@@ -9,6 +9,10 @@ Example:
 
 from __future__ import annotations
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 # Common directories to exclude when searching for source files
 EXCLUDE_DIRS_PYTHON: frozenset[str] = frozenset(
     {

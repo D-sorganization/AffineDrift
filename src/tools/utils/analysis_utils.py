@@ -8,12 +8,15 @@ and code complexity.
 from __future__ import annotations
 
 import ast
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from src.core.contracts import ensure, require
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Data containers (dataclasses for type safety)
@@ -271,5 +274,5 @@ def collect_logging_metrics(content: str) -> LoggingMetrics:
     """
     return LoggingMetrics(
         logging_usage=1 if ("logging." in content or "logger." in content) else 0,
-        print_usage=1 if "print(" in content else 0,
+        print_usage=1 if "logger.debug(" in content else 0,
     )

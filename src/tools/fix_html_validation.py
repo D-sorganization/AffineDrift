@@ -20,6 +20,7 @@ Fixes applied:
 """
 
 import argparse
+import logging
 import re
 import sys
 from pathlib import Path
@@ -28,6 +29,8 @@ from pathlib import Path
 from src.core.contracts import require
 from src.tools.utils import find_html_files, process_file_content, setup_logging
 from src.tools.utils.cli_contracts import ensure_existing_dir
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

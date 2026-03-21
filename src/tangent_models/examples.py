@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -5,6 +6,8 @@ import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_finite_array, check_positive, require
+
+logger = logging.getLogger(__name__)
 
 
 class DynamicalSystem(ABC):

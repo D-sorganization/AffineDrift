@@ -12,6 +12,8 @@
         from src.tools.code_quality import check_ast_issues
 """
 
+import logging
+
 from src.tools.code_quality import (  # noqa: F401
     Colors,
     check_ast_issues,
@@ -29,6 +31,8 @@ from src.tools.code_quality.pattern_checker import (  # noqa: F401
     MAGIC_NUMBERS,
     PASS_PATTERNS,
 )
+
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     main()

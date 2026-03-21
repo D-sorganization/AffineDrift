@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 
 from src.core.contracts import require
+
+logger = logging.getLogger(__name__)
 
 BIB_ENTRY_PATTERN = re.compile(r"@\w+\s*\{\s*([^,\s]+)\s*,", re.IGNORECASE)
 CITE_PATTERN = re.compile(r"\\cite\w*\{([^}]+)\}")

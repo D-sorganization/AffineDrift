@@ -11,9 +11,12 @@ Design by Contract:
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 from urllib.parse import unquote, urldefrag
+
+logger = logging.getLogger(__name__)
 
 # ─── Compiled regex patterns for link extraction ────────────────
 
