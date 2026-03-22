@@ -46,9 +46,7 @@ class TestBatchConvertDryRun:
         converter.convert_file.assert_not_called()
         mock_logger.info.assert_called()
 
-    def test_dry_run_with_missing_source_returns_false(
-        self, mock_logger: logging.Logger
-    ) -> None:
+    def test_dry_run_with_missing_source_returns_false(self, mock_logger: logging.Logger) -> None:
         """dry_run=True with a missing source file should return False."""
         converter = MagicMock()
         result = batch_convert(
@@ -65,9 +63,7 @@ class TestBatchConvertDryRun:
 class TestBatchConvertLive:
     """Tests for batch_convert in dry_run=False (live) mode."""
 
-    def test_live_conversion_success(
-        self, mock_logger: logging.Logger, tmp_path
-    ) -> None:
+    def test_live_conversion_success(self, mock_logger: logging.Logger, tmp_path) -> None:
         """Successful convert_file call should return True."""
         source = tmp_path / "input.tex"
         source.write_text(r"\begin{document}\end{document}", encoding="utf-8")
@@ -133,9 +129,7 @@ class TestBatchConvertLive:
         assert result is False
         converter.convert_file.assert_not_called()
 
-    def test_partial_failure_returns_false(
-        self, mock_logger: logging.Logger, tmp_path
-    ) -> None:
+    def test_partial_failure_returns_false(self, mock_logger: logging.Logger, tmp_path) -> None:
         """One missing + one success should return False overall."""
         good_source = tmp_path / "good.tex"
         good_source.write_text("data", encoding="utf-8")
