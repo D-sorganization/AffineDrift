@@ -242,15 +242,27 @@ class ResidualMonitor(ContractChecker):
             self.low_count += 1
             self.high_count = 0
         else:
-            # Hysteresis zone
-            pass  # No change in counters when in hysteresis band
+            # Hysteresis zone: between eps_warning and eps_critical, no counter changes
+            pass
 
-        # Transitions
+        # Three-state transitions: LQR <-> MPC_WARN <-> MPC_FULL
+        # Escalation path: LQR -> MPC_WARN -> MPC_FULL
+        # Recovery path:   MPC_FULL -> MPC_WARN -> LQR
         if self.mode == "LQR":
             if self.high_count >= self.n:
+                next_mode = "MPC_WARN"
+                self.high_count = 0
+        elif self.mode == "MPC_WARN":
+            if self.high_count >= self.n:
                 next_mode = "MPC_FULL"
-        elif self.mode == "MPC_FULL" and self.low_count >= self.n:
-            next_mode = "LQR"
+                self.high_count = 0
+            elif self.low_count >= self.n:
+                next_mode = "LQR"
+                self.low_count = 0
+        elif self.mode == "MPC_FULL":
+            if self.low_count >= self.n:
+                next_mode = "MPC_WARN"
+                self.low_count = 0
 
         if next_mode != self.mode:
             logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
