@@ -73,7 +73,6 @@ class TestResiduals(unittest.TestCase):
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
-
     def test_residual_bound_mismatched_M_traj_raises(self) -> None:
         """predict_residual_bound must raise when M_traj length differs from others."""
         dt_traj = np.ones(10) * 0.1
