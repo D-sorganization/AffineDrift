@@ -152,25 +152,27 @@ def generate_sample_torque(
     error: str | None = None
     torque: np.ndarray[Any, Any]
 
+    n = len(t)
     if noise_type == "Golf-like Random":
-        torque = rng.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
+        torque = rng.normal(0, 1, n)
+        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(n)
         torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Step":
         torque = np.zeros_like(t)
-        torque[250:] = 3.0  # Step at midpoint
+        midpoint = n // 2
+        torque[midpoint:] = 3.0  # Step at midpoint
     elif noise_type == "Pulse":
         torque = np.zeros_like(t)
-        pulse_start = 200
-        pulse_end = 300
+        pulse_start = int(0.4 * n)
+        pulse_end = int(0.6 * n)
         torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
     elif noise_type == "Burst":
         torque = np.zeros_like(t)
-        burst_center = 250
-        burst_width = 50
+        burst_center = n // 2
+        burst_width = max(1, n // 10)
         burst_indices = np.arange(
             max(0, burst_center - burst_width),
-            min(len(t), burst_center + burst_width),
+            min(n, burst_center + burst_width),
         )
         torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
     elif noise_type == "Sinusoidal":

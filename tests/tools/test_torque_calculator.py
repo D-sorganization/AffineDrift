@@ -212,6 +212,52 @@ class TestGenerateSampleTorque:
         with pytest.raises(AssertionError):
             generate_sample_torque("Step", np.array([]))
 
+    def test_step_indices_relative_to_length(self) -> None:
+        """Step should activate at midpoint regardless of array length."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Step", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+            midpoint = n // 2
+            # All samples before midpoint should be zero
+            assert np.all(torque[:midpoint] == 0.0), f"Pre-midpoint not zero for n={n}"
+            # All samples from midpoint onward should be 3.0
+            assert np.all(torque[midpoint:] == 3.0), f"Post-midpoint not 3.0 for n={n}"
+
+    def test_pulse_indices_relative_to_length(self) -> None:
+        """Pulse should be centered relative to array length, not at fixed 200-300."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Pulse", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+            pulse_start = int(0.4 * n)
+            pulse_end = int(0.6 * n)
+            # All samples outside the pulse window should be zero
+            assert np.all(torque[:pulse_start] == 0.0), f"Pre-pulse not zero for n={n}"
+            assert np.all(torque[pulse_end:] == 0.0), f"Post-pulse not zero for n={n}"
+
+    def test_burst_indices_relative_to_length(self) -> None:
+        """Burst should be centered at midpoint for any array length."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Burst", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+
+    def test_all_noise_types_work_with_short_array(self) -> None:
+        """All noise types should produce valid output for a short time array (n=50)."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        t = np.linspace(0, 1, 50)
+        for noise_type in ("Golf-like Random", "Step", "Pulse", "Burst", "Sinusoidal", "Random"):
+            torque, err = generate_sample_torque(noise_type, t)
+            assert torque.shape == (50,), f"Shape mismatch for noise_type={noise_type}"
+
 
 class TestEvaluatePolynomial:
     """Tests for _evaluate_polynomial() error paths."""
