@@ -129,6 +129,31 @@ class MATLABQualityChecker:
             logger.error(f"Error running MATLAB quality checks: {e}")
             return {"error": str(e)}
 
+    def _build_matlab_commands(self, script_path: Path) -> list[list[str]]:
+        """Return ordered list of MATLAB/Octave commands to attempt."""
+        return [
+            ["matlab", "-batch", f"run('{script_path}')"],
+            ["matlab", "-nosplash", "-nodesktop", "-batch", f"run('{script_path}')"],
+            ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
+        ]
+
+    def _try_matlab_command(self, cmd: list[str]) -> dict[str, object] | None:
+        """Try a single MATLAB command. Returns result dict on success, None on failure."""
+        try:
+            logger.info(f"Trying command: {' '.join(cmd)}")
+            result = subprocess.run(
+                cmd, capture_output=True, text=True,
+                cwd=self.matlab_dir, timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS, check=False,
+            )
+            if result.returncode == 0:
+                logger.info("MATLAB quality checks completed successfully")
+                return {"success": True, "output": result.stdout, "method": "matlab_script"}
+            logger.warning(f"Command failed with return code {result.returncode}")
+            logger.debug(f"stderr: {result.stderr}")
+            return None
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return None
+
     def _run_matlab_script(self, script_path: Path) -> dict[str, object]:
         """Attempt to run MATLAB script from command line.
 
@@ -139,51 +164,12 @@ class MATLABQualityChecker:
             Dictionary containing script results
         """
         try:
-            # Try different ways to run MATLAB
-            commands = [
-                ["matlab", "-batch", f"run('{script_path}')"],
-                [
-                    "matlab",
-                    "-nosplash",
-                    "-nodesktop",
-                    "-batch",
-                    f"run('{script_path}')",
-                ],
-                ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
-            ]
-
-            for cmd in commands:
-                try:
-                    logger.info(f"Trying command: {' '.join(cmd)}")
-                    result = subprocess.run(
-                        cmd,
-                        capture_output=True,
-                        text=True,
-                        cwd=self.matlab_dir,
-                        timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
-                        check=False,
-                    )
-
-                    if result.returncode == 0:
-                        logger.info("MATLAB quality checks completed successfully")
-                        return {
-                            "success": True,
-                            "output": result.stdout,
-                            "method": "matlab_script",
-                        }
-                    else:
-                        logger.warning(
-                            f"Command failed with return code {result.returncode}",
-                        )
-                        logger.debug(f"stderr: {result.stderr}")
-
-                except (subprocess.TimeoutExpired, FileNotFoundError):
-                    continue
-
-            # If all commands fail, fall back to static analysis
+            for cmd in self._build_matlab_commands(script_path):
+                result = self._try_matlab_command(cmd)
+                if result is not None:
+                    return result
             logger.info("All MATLAB commands failed, falling back to static analysis")
             return self._static_matlab_analysis()
-
         except (FileNotFoundError, PermissionError, OSError, UnicodeDecodeError) as e:
             logger.error(f"Error running MATLAB script: {e}")
             return {"error": str(e)}

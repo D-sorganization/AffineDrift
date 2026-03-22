@@ -128,6 +128,40 @@ def distribute_torque_by_grip_angle(
     return torque_alpha, torque_gamma
 
 
+def _generate_golf_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a golf-swing-like random torque signal."""
+    torque = rng.normal(0, 1, len(t))
+    torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
+    return np.convolve(torque, np.ones(10) / 10, mode="same")
+
+
+def _generate_step_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a step torque signal (step at index 250)."""
+    torque = np.zeros_like(t)
+    torque[250:] = 3.0  # Step at midpoint
+    return torque
+
+
+def _generate_pulse_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a pulse torque signal (random burst from index 200 to 300)."""
+    torque = np.zeros_like(t)
+    pulse_start, pulse_end = 200, 300
+    torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
+    return torque
+
+
+def _generate_burst_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a burst torque signal (Gaussian burst centered at index 250)."""
+    torque = np.zeros_like(t)
+    burst_center, burst_width = 250, 50
+    burst_indices = np.arange(
+        max(0, burst_center - burst_width),
+        min(len(t), burst_center + burst_width),
+    )
+    torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
+    return torque
+
+
 def generate_sample_torque(
     noise_type: str,
     t: np.ndarray[Any, Any],
@@ -143,9 +177,7 @@ def generate_sample_torque(
 
     Returns:
     -------
-        A tuple containing:
-            - torque: Generated torque signal array.
-            - error: Error message string, or None if successful.
+        Tuple of (torque array, error string or None).
 
     """
     require(len(t) > 0, "time array must not be empty")
@@ -153,26 +185,13 @@ def generate_sample_torque(
     torque: np.ndarray[Any, Any]
 
     if noise_type == "Golf-like Random":
-        torque = rng.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = _generate_golf_torque(t)
     elif noise_type == "Step":
-        torque = np.zeros_like(t)
-        torque[250:] = 3.0  # Step at midpoint
+        torque = _generate_step_torque(t)
     elif noise_type == "Pulse":
-        torque = np.zeros_like(t)
-        pulse_start = 200
-        pulse_end = 300
-        torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
+        torque = _generate_pulse_torque(t)
     elif noise_type == "Burst":
-        torque = np.zeros_like(t)
-        burst_center = 250
-        burst_width = 50
-        burst_indices = np.arange(
-            max(0, burst_center - burst_width),
-            min(len(t), burst_center + burst_width),
-        )
-        torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
+        torque = _generate_burst_torque(t)
     elif noise_type == "Sinusoidal":
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
@@ -181,12 +200,41 @@ def generate_sample_torque(
     elif noise_type == "Polynomial":
         torque, error = _evaluate_polynomial(t, polynomial_expression)
     else:
-        # Default to golf-like
-        torque = rng.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = _generate_golf_torque(t)
 
     return torque, error
+
+
+def _build_polynomial_namespace(
+    t: np.ndarray[Any, Any],
+) -> EvalWithCompoundTypes:
+    """Build a safe evaluator with allowed names and functions for polynomial expressions."""
+    return EvalWithCompoundTypes(
+        names={"t": t, "pi": np.pi, "e": np.e},
+        functions={
+            "sin": np.sin,
+            "cos": np.cos,
+            "exp": np.exp,
+            "sqrt": np.sqrt,
+            "log": np.log,
+        },
+    )
+
+
+def _validate_polynomial_result(
+    result: Any,
+    t: np.ndarray[Any, Any],
+) -> tuple[np.ndarray[Any, Any], str | None]:
+    """Validate and coerce a polynomial evaluation result to match the time array shape."""
+    if isinstance(result, np.ndarray):
+        if result.shape != t.shape:
+            return (
+                t**2 - t,
+                f"Polynomial result shape {result.shape} does not match "
+                f"time array shape {t.shape}.",
+            )
+        return result, None
+    return np.full_like(t, float(result)), None
 
 
 def _evaluate_polynomial(
@@ -202,36 +250,13 @@ def _evaluate_polynomial(
 
     Returns:
     -------
-        A tuple containing:
-            - torque: Evaluated result array.
-            - error: Error message string, or None if successful.
+        Tuple of (evaluated result array, error string or None).
 
     """
     try:
-        evaluator = EvalWithCompoundTypes(
-            names={
-                "t": t,
-                "pi": np.pi,
-                "e": np.e,
-            },
-            functions={
-                "sin": np.sin,
-                "cos": np.cos,
-                "exp": np.exp,
-                "sqrt": np.sqrt,
-                "log": np.log,
-            },
-        )
+        evaluator = _build_polynomial_namespace(t)
         result = evaluator.eval(expression)
-        if isinstance(result, np.ndarray):
-            if result.shape != t.shape:
-                return (
-                    t**2 - t,
-                    f"Polynomial result shape {result.shape} does not match "
-                    f"time array shape {t.shape}.",
-                )
-            return result, None
-        return np.full_like(t, float(result)), None
+        return _validate_polynomial_result(result, t)
     except SyntaxError:
         return t**2 - t, "Invalid polynomial syntax. Please check your expression."
     except NameError:

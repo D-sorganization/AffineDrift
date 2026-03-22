@@ -386,7 +386,7 @@ class SwingOptimizer:
         u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
         return x_target, u_init
 
-    def _run_optimization_loop(
+    def _execute_ddp_step(
         self,
         initial_state: np.ndarray[Any, Any],
         dynamics_fn: Callable[
@@ -396,24 +396,49 @@ class SwingOptimizer:
         x_target: np.ndarray[Any, Any],
         u_init: np.ndarray[Any, Any],
         cfg: SwingOptimizationConfig,
-    ) -> tuple[
-        np.ndarray[Any, Any],
-        np.ndarray[Any, Any],
-        float,
-        bool,
-        int,
-    ]:
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], float]:
+        """Run one DDP solver step and compute trajectory cost.
+
+        Returns:
+            Tuple of (x_traj, u_traj, current_cost).
+        """
+        x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
+            f=dynamics_fn,
+            x0=initial_state,
+            xf=x_target,
+            u_init=u_init,
+            eps_residual=cfg.convergence_tol,
+            max_iters=min(5, cfg.max_iterations),
+        )
+        traj_list = [x_traj[i] for i in range(len(x_traj))]
+        ctrl_list = [u_traj[i] for i in range(len(u_traj))]
+        current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
+        return x_traj, u_traj, current_cost
+
+    def _select_best_trajectory(
+        self,
+        x_traj: np.ndarray[Any, Any],
+        u_traj: np.ndarray[Any, Any],
+        current_cost: float,
+        best_cost: float,
+        best_x_traj: np.ndarray[Any, Any] | None,
+        best_u_traj: np.ndarray[Any, Any] | None,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], float]:
+        """Update best trajectory if current cost improves on the record."""
+        if current_cost < best_cost:
+            return x_traj, u_traj, current_cost
+        return best_x_traj if best_x_traj is not None else x_traj, \
+            best_u_traj if best_u_traj is not None else u_traj, best_cost
+
+    def _run_optimization_loop(
+        self,
+        initial_state: np.ndarray[Any, Any],
+        dynamics_fn: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x_target: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        cfg: SwingOptimizationConfig,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], float, bool, int]:
         """Run the iterative DDP optimization loop.
-
-        Repeatedly calls the DDP solver, tracks the best trajectory found,
-        and checks for convergence.
-
-        Args:
-            initial_state: Initial state vector.
-            dynamics_fn: Dynamics function f(x, u) -> dx/dt.
-            x_target: Target state vector.
-            u_init: Initial control sequence (warm-started each iteration).
-            cfg: Optimizer configuration.
 
         Returns:
             Tuple of (best_x_traj, best_u_traj, best_cost, converged, iteration).
@@ -427,43 +452,22 @@ class SwingOptimizer:
         u_traj: np.ndarray[Any, Any]
 
         for iteration in range(1, cfg.max_iterations + 1):
-            x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
-                f=dynamics_fn,
-                x0=initial_state,
-                xf=x_target,
-                u_init=u_init,
-                eps_residual=cfg.convergence_tol,
-                max_iters=min(5, cfg.max_iterations),
+            x_traj, u_traj, current_cost = self._execute_ddp_step(
+                initial_state, dynamics_fn, x_target, u_init, cfg
             )
-
-            traj_list = [x_traj[i] for i in range(len(x_traj))]
-            ctrl_list = [u_traj[i] for i in range(len(u_traj))]
-            current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
-
             cost_improvement = best_cost - current_cost
             logger.debug(
                 "Iteration %d: cost=%.6f, improvement=%.6e",
-                iteration,
-                current_cost,
-                cost_improvement,
+                iteration, current_cost, cost_improvement,
             )
-
-            if current_cost < best_cost:
-                best_cost = current_cost
-                best_x_traj = x_traj
-                best_u_traj = u_traj
-
+            best_x_traj, best_u_traj, best_cost = self._select_best_trajectory(
+                x_traj, u_traj, current_cost, best_cost, best_x_traj, best_u_traj
+            )
             if abs(cost_improvement) < cfg.convergence_tol and iteration > 1:
                 converged = True
                 logger.info("Converged at iteration %d (cost=%.6f)", iteration, best_cost)
                 break
-
             u_init = u_traj
-
-        # Fallback: if no improvement was ever recorded, use last trajectory
-        if best_x_traj is None or best_u_traj is None:
-            best_x_traj = x_traj
-            best_u_traj = u_traj
 
         return best_x_traj, best_u_traj, best_cost, converged, iteration
 
