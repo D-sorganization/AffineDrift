@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from src.tools.rl_funnel_benchmark import (
+    CONTROL_SATURATION_DEFAULT,
     BenchmarkResult,
     double_pendulum_B,
     double_pendulum_drift,
@@ -184,6 +185,23 @@ class TestTrajectoryTrackingLqr:
         assert u.shape == (2,)
 
 
+class TestControlSaturationDefault:
+    """Tests for the CONTROL_SATURATION_DEFAULT module-level constant."""
+
+    def test_constant_is_tuple_of_two_floats(self) -> None:
+        """CONTROL_SATURATION_DEFAULT should be a 2-tuple of floats."""
+        assert isinstance(CONTROL_SATURATION_DEFAULT, tuple)
+        assert len(CONTROL_SATURATION_DEFAULT) == 2
+
+    def test_default_lower_bound(self) -> None:
+        """Default lower saturation limit should be -50.0."""
+        assert CONTROL_SATURATION_DEFAULT[0] == pytest.approx(-50.0)
+
+    def test_default_upper_bound(self) -> None:
+        """Default upper saturation limit should be 50.0."""
+        assert CONTROL_SATURATION_DEFAULT[1] == pytest.approx(50.0)
+
+
 class TestRunBenchmark:
     """Tests for run_benchmark()."""
 
@@ -200,6 +218,38 @@ class TestRunBenchmark:
         assert result.name == "test"
         assert result.tracking_error >= 0.0
         assert result.runtime_sec >= 0.0
+
+    def test_custom_control_limits_accepted(self) -> None:
+        """run_benchmark() should accept a custom control_limits parameter."""
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        t_ref, x_ref = generate_reference_trajectory((0.0, 0.05), dt=0.01)
+        x_target = x_ref[:, -1]
+        controller = setpoint_lqr_controller(x_target)
+        x0 = x_ref[:, 0] + 0.01
+        # Use tighter limits (-10, 10); should still produce a valid result
+        result = run_benchmark(
+            controller,
+            x0,
+            (0.0, 0.05),
+            t_ref,
+            x_ref,
+            "tight-limits",
+            dt=0.005,
+            control_limits=(-10.0, 10.0),
+        )
+        assert isinstance(result, BenchmarkResult)
+        assert result.tracking_error >= 0.0
+
+    def test_default_limits_match_constant(self) -> None:
+        """Default control_limits should equal CONTROL_SATURATION_DEFAULT."""
+        import inspect
+
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        sig = inspect.signature(run_benchmark)
+        default = sig.parameters["control_limits"].default
+        assert default == CONTROL_SATURATION_DEFAULT
 
 
 class TestPrintResults:
