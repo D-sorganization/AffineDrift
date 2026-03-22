@@ -318,7 +318,11 @@ class RobotArm(DynamicalSystem):
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Linearize robot arm dynamics."""
+        """Linearize robot arm dynamics using central finite differences.
+
+        Central differences give O(epsilon^2) accuracy vs O(epsilon) for forward differences,
+        consistent with _finite_diff_jacobian in residuals.py.
+        """
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
         # Using numerical linearization for the 2-link arm due to complexity
@@ -329,21 +333,21 @@ class RobotArm(DynamicalSystem):
         A = np.zeros((n, n))
         B = np.zeros((n, m))
 
-        f0 = self.dynamics(x, u)
-
-        # Compute A
+        # Compute A using central differences: (f(x+eps) - f(x-eps)) / (2*eps)
         for i in range(n):
-            x_pert = x.copy()
-            x_pert[i] += epsilon
-            f_pert = self.dynamics(x_pert, u)
-            A[:, i] = (f_pert - f0) / epsilon
+            x_plus = x.copy()
+            x_plus[i] += epsilon
+            x_minus = x.copy()
+            x_minus[i] -= epsilon
+            A[:, i] = (self.dynamics(x_plus, u) - self.dynamics(x_minus, u)) / (2 * epsilon)
 
-        # Compute B
+        # Compute B using central differences: (f(u+eps) - f(u-eps)) / (2*eps)
         u_arr = np.array(u, dtype=float)
         for i in range(m):
-            u_pert = u_arr.copy()
-            u_pert[i] += epsilon
-            f_pert = self.dynamics(x, u_pert)
-            B[:, i] = (f_pert - f0) / epsilon
+            u_plus = u_arr.copy()
+            u_plus[i] += epsilon
+            u_minus = u_arr.copy()
+            u_minus[i] -= epsilon
+            B[:, i] = (self.dynamics(x, u_plus) - self.dynamics(x, u_minus)) / (2 * epsilon)
 
         return A, B

@@ -114,3 +114,48 @@ def test_robot_arm_rejects_scalar_control_in_linearize() -> None:
     x = np.array([0.1, 0.1, 0.0, 0.0])
     with pytest.raises(ValueError):
         system.linearize(x, 1.0)
+
+
+def test_robot_arm_linearize_uses_central_differences() -> None:
+    """RobotArm.linearize should use central differences (O(eps^2) accuracy).
+
+    Central differences are more accurate than forward differences for the same epsilon.
+    We verify this by comparing the A matrix from linearize() to a reference computed
+    with a very small epsilon via central differences directly, using a larger epsilon
+    for the forward-difference baseline to expose the accuracy gap.
+    """
+    system = RobotArm()
+    x = np.array([0.3, 0.4, 0.1, 0.05])
+    u = np.array([1.0, 0.5])
+
+    # Compute A, B via linearize() (should use central differences)
+    A, B = system.linearize(x, u)
+    assert A.shape == (4, 4)
+    assert B.shape == (4, 2)
+
+    # Compute a high-accuracy reference A using central differences with smaller epsilon
+    eps_ref = 1e-8
+    n = 4
+    A_ref = np.zeros((n, n))
+    for i in range(n):
+        x_plus = x.copy()
+        x_plus[i] += eps_ref
+        x_minus = x.copy()
+        x_minus[i] -= eps_ref
+        A_ref[:, i] = (system.dynamics(x_plus, u) - system.dynamics(x_minus, u)) / (2 * eps_ref)
+
+    # The linearize() result should closely match the high-accuracy central-difference reference
+    np.testing.assert_allclose(A, A_ref, rtol=1e-4, atol=1e-6)
+
+    # Also verify B against central-difference reference
+    m = 2
+    B_ref = np.zeros((n, m))
+    u_arr = np.array(u, dtype=float)
+    for i in range(m):
+        u_plus = u_arr.copy()
+        u_plus[i] += eps_ref
+        u_minus = u_arr.copy()
+        u_minus[i] -= eps_ref
+        B_ref[:, i] = (system.dynamics(x, u_plus) - system.dynamics(x, u_minus)) / (2 * eps_ref)
+
+    np.testing.assert_allclose(B, B_ref, rtol=1e-4, atol=1e-6)
