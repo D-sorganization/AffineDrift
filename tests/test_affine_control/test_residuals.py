@@ -2,6 +2,7 @@ import unittest
 from typing import Any
 
 import numpy as np
+import pytest
 
 from src.affine_control.residuals import (
     ResidualMonitor,
@@ -71,6 +72,32 @@ class TestResiduals(unittest.TestCase):
         # 5. Low error (0.05) for 2nd step -> Switch back
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
+
+
+    def test_residual_bound_mismatched_M_traj_raises(self) -> None:
+        """predict_residual_bound must raise when M_traj length differs from others."""
+        dt_traj = np.ones(10) * 0.1
+        M_traj = np.ones(8) * 2.0  # shorter
+        dx_traj = np.ones(10) * 0.1
+        with pytest.raises((ValueError, AssertionError)):
+            predict_residual_bound(M_traj, dx_traj, dt_traj)
+
+    def test_residual_bound_mismatched_delta_x_traj_raises(self) -> None:
+        """predict_residual_bound must raise when delta_x_traj length differs from others."""
+        dt_traj = np.ones(10) * 0.1
+        M_traj = np.ones(10) * 2.0
+        dx_traj = np.ones(5) * 0.1  # shorter
+        with pytest.raises((ValueError, AssertionError)):
+            predict_residual_bound(M_traj, dx_traj, dt_traj)
+
+    def test_residual_bound_all_equal_length_passes(self) -> None:
+        """predict_residual_bound must succeed when all arrays have equal length."""
+        N = 5
+        dt_traj = np.ones(N) * 0.1
+        M_traj = np.ones(N) * 2.0
+        dx_traj = np.ones(N) * 0.1
+        result = predict_residual_bound(M_traj, dx_traj, dt_traj)
+        self.assertGreaterEqual(result, 0.0)
 
 
 if __name__ == "__main__":
