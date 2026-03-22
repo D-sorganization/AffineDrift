@@ -24,8 +24,33 @@ class TestCalculateMomentsOfInertia:
         assert i_alpha > 0
         assert i_gamma > 0
 
-    def test_i_gamma_is_half_i_alpha(self) -> None:
-        """I_gamma should be 0.5 * I_alpha."""
+    def test_i_gamma_default_ratio(self) -> None:
+        """I_gamma should default to 0.5 * I_alpha when no ratio is supplied."""
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            calculate_moments_of_inertia,
+        )
+
+        # Default call — backward compatibility
+        i_alpha, i_gamma = calculate_moments_of_inertia(
+            clubhead_weight_g=200.0,
+            shaft_weight_g=60.0,
+            club_length_m=1.15,
+            cg_distance_m=0.95,
+        )
+        assert i_gamma == pytest.approx(0.5 * i_alpha)
+
+        # Explicit default — same result
+        i_alpha2, i_gamma2 = calculate_moments_of_inertia(
+            clubhead_weight_g=200.0,
+            shaft_weight_g=60.0,
+            club_length_m=1.15,
+            cg_distance_m=0.95,
+            i_gamma_ratio=0.5,
+        )
+        assert i_gamma2 == pytest.approx(0.5 * i_alpha2)
+
+    def test_i_gamma_custom_ratio(self) -> None:
+        """I_gamma should equal i_gamma_ratio * I_alpha for a non-default ratio."""
         from src.tools.wrist_universal_joint.torque_calculator import (
             calculate_moments_of_inertia,
         )
@@ -35,8 +60,24 @@ class TestCalculateMomentsOfInertia:
             shaft_weight_g=60.0,
             club_length_m=1.15,
             cg_distance_m=0.95,
+            i_gamma_ratio=0.3,
         )
-        assert i_gamma == pytest.approx(0.5 * i_alpha)
+        assert i_gamma == pytest.approx(0.3 * i_alpha)
+
+    def test_raises_on_non_positive_i_gamma_ratio(self) -> None:
+        """Should raise on non-positive i_gamma_ratio (contract)."""
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            calculate_moments_of_inertia,
+        )
+
+        with pytest.raises(AssertionError):
+            calculate_moments_of_inertia(
+                clubhead_weight_g=200.0,
+                shaft_weight_g=60.0,
+                club_length_m=1.15,
+                cg_distance_m=0.95,
+                i_gamma_ratio=0.0,
+            )
 
     def test_raises_on_non_positive_weight(self) -> None:
         """Should raise on non-positive clubhead weight (contract)."""
