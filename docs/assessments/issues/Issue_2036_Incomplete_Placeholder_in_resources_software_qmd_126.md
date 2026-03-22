@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in styles.css:316"
+title: "Incomplete Placeholder in resources-software.qmd:126"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `styles.css` at line 316.
+Found critical incomplete implementation in `resources-software.qmd` at line 126.
 
 ## Context
-**Type**: Placeholder | **Location**: `styles.css:316`
+**Type**: Placeholder | **Location**: `resources-software.qmd:126`
 
 ```python
-/* Lazy loading placeholder */
+<img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
 ```
 
 ## Audit Metrics
