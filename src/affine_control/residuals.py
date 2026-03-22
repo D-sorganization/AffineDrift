@@ -112,6 +112,22 @@ def compute_hessian_norm(
     H_f is the tensor [d^2f / dx_i dx_j].
     The norm used is the maximum spectral norm of the component Hessians.
 
+    **Complexity:** O(n^3) dynamics evaluations, where n = len(x).
+    The outer loop iterates n times (one per state dimension j); for each
+    iteration, ``_finite_diff_jacobian`` calls f 2n times (central
+    differences over all n state components), giving 2n^2 calls total.
+    For a 6-DOF spacecraft (n=6) this is 72 evaluations per Hessian;
+    for the double pendulum (n=4) it is 32 evaluations.
+
+    **Performance note:** This implementation is acceptable for n<=6 but
+    will not scale to higher-dimensional systems.  For production use,
+    prefer automatic differentiation via JAX (``jax.hessian``) or CasADi
+    (``casadi.hessian``), which compute exact Hessians in O(n) passes via
+    reverse-mode AD.  Jacobian caching is also worth exploring when the
+    trajectory changes slowly: if consecutive calls share the same or
+    similar (x, u), caching the Jacobian from the previous step can
+    reduce dynamics evaluations by up to n-fold.
+
     Args:
         f: Dynamics function dx = f(x, u).
         x: State vector.
