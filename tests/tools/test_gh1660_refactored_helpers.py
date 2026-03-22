@@ -19,9 +19,8 @@ from __future__ import annotations
 
 import sys
 import types
-from pathlib import Path
 from typing import Any
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -44,10 +43,24 @@ def _install_streamlit_mock() -> None:
         st.session_state = _FakeState()  # type: ignore[attr-defined]
 
         for name in [
-            "set_page_config", "title", "header", "subheader", "markdown",
-            "pyplot", "sidebar", "columns", "slider", "number_input",
-            "selectbox", "checkbox", "button", "text_input", "expander",
-            "error", "rerun", "stop",
+            "set_page_config",
+            "title",
+            "header",
+            "subheader",
+            "markdown",
+            "pyplot",
+            "sidebar",
+            "columns",
+            "slider",
+            "number_input",
+            "selectbox",
+            "checkbox",
+            "button",
+            "text_input",
+            "expander",
+            "error",
+            "rerun",
+            "stop",
         ]:
             setattr(st, name, MagicMock())
 
@@ -284,11 +297,13 @@ class TestComputeAccelerationSignals:
         assert accel_gamma.shape == input_torque.shape
 
     def test_zero_inertia_gives_zero_acceleration(self) -> None:
-        from src.tools.wrist_universal_joint.plots import _compute_acceleration_signals
         from src.core.constants import EPSILON
+        from src.tools.wrist_universal_joint.plots import _compute_acceleration_signals
 
         input_torque = np.ones(50)
-        accel_alpha, accel_gamma = _compute_acceleration_signals(input_torque, 30.0, 0.0, EPSILON / 2, EPSILON / 2)
+        accel_alpha, accel_gamma = _compute_acceleration_signals(
+            input_torque, 30.0, 0.0, EPSILON / 2, EPSILON / 2
+        )
         # Below EPSILON threshold, should fall back to zeros_like
         assert np.all(accel_alpha == 0.0)
         assert np.all(accel_gamma == 0.0)
@@ -311,8 +326,12 @@ class TestSelectBestTrajectory:
         x_new = np.ones(2)
         u_new = np.ones(1)
         x_best, u_best, best_cost = optimizer._select_best_trajectory(
-            x_new, u_new, current_cost=0.5, best_cost=1.0,
-            best_x_traj=np.zeros(2), best_u_traj=np.zeros(1)
+            x_new,
+            u_new,
+            current_cost=0.5,
+            best_cost=1.0,
+            best_x_traj=np.zeros(2),
+            best_u_traj=np.zeros(1),
         )
         np.testing.assert_array_equal(x_best, x_new)
         assert best_cost == pytest.approx(0.5)
@@ -322,8 +341,12 @@ class TestSelectBestTrajectory:
         x_old = np.zeros(2)
         u_old = np.zeros(1)
         x_best, u_best, best_cost = optimizer._select_best_trajectory(
-            np.ones(2), np.ones(1), current_cost=2.0, best_cost=1.0,
-            best_x_traj=x_old, best_u_traj=u_old
+            np.ones(2),
+            np.ones(1),
+            current_cost=2.0,
+            best_cost=1.0,
+            best_x_traj=x_old,
+            best_u_traj=u_old,
         )
         np.testing.assert_array_equal(x_best, x_old)
         assert best_cost == pytest.approx(1.0)
@@ -361,7 +384,15 @@ class TestDispatchLineChecks:
         issues: list[str] = []
         lines = ["% eval('bad')"]
         # This is a comment line — anti_pattern_issues should not fire
-        _dispatch_line_checks(lines, 1, lines[0], is_comment=True, in_function=False, file_name="test.m", issues=issues)
+        _dispatch_line_checks(
+            lines,
+            1,
+            lines[0],
+            is_comment=True,
+            in_function=False,
+            file_name="test.m",
+            issues=issues,
+        )
         # No anti-pattern issues for a comment
         anti_pattern_hits = [i for i in issues if "eval" in i.lower()]
         assert len(anti_pattern_hits) == 0
@@ -371,7 +402,15 @@ class TestDispatchLineChecks:
 
         issues: list[str] = []
         lines = ["eval('bad_code')"]
-        _dispatch_line_checks(lines, 1, lines[0], is_comment=False, in_function=False, file_name="test.m", issues=issues)
+        _dispatch_line_checks(
+            lines,
+            1,
+            lines[0],
+            is_comment=False,
+            in_function=False,
+            file_name="test.m",
+            issues=issues,
+        )
         assert any("eval" in i.lower() for i in issues)
 
 
@@ -384,7 +423,9 @@ class TestIssueBodyTemplate:
     def test_contains_all_fields(self) -> None:
         from src.tools.utils.issue_utils import _issue_body_template
 
-        body = _issue_body_template("CRITICAL", "Code Quality", "repo_scan", "Description here", "2026-01-01")
+        body = _issue_body_template(
+            "CRITICAL", "Code Quality", "repo_scan", "Description here", "2026-01-01"
+        )
         assert "CRITICAL" in body
         assert "Code Quality" in body
         assert "repo_scan" in body

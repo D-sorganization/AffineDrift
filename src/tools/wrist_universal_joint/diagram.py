@@ -200,13 +200,28 @@ def _draw_arc_arrows(
 ) -> None:
     """Draw two annotation arrows for a grip-angle arc: baseline and rotated."""
     ax.arrow(
-        center_x, center_y, radius, 0,
-        head_width=0.012, head_length=0.018, fc="k", ec="k", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius,
+        0,
+        head_width=0.012,
+        head_length=0.018,
+        fc="k",
+        ec="k",
+        linewidth=2,
+        zorder=8,
     )
     ax.arrow(
-        center_x, center_y,
-        radius * np.cos(theta_grip_rad), radius * np.sin(theta_grip_rad),
-        head_width=0.012, head_length=0.018, fc="r", ec="r", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius * np.cos(theta_grip_rad),
+        radius * np.sin(theta_grip_rad),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
     )
 
 
@@ -228,8 +243,14 @@ def _draw_grip_angle_arc(
     label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad / 2) * 0.7
     label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad / 2) * 0.7
     ax.text(
-        label_x, label_y + 0.02, r"$\theta_{grip}$",
-        color="g", fontsize=13, ha="center", fontweight="bold", zorder=9,
+        label_x,
+        label_y + 0.02,
+        r"$\theta_{grip}$",
+        color="g",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
     )
 
 
@@ -243,14 +264,28 @@ def _draw_wrist_arrows(
 ) -> None:
     """Draw two annotation arrows for the wrist deviation arc."""
     ax.arrow(
-        center_x, center_y,
-        radius * np.cos(hand_axis_angle), radius * np.sin(hand_axis_angle),
-        head_width=0.012, head_length=0.018, fc="r", ec="r", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius * np.cos(hand_axis_angle),
+        radius * np.sin(hand_axis_angle),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
     )
     ax.arrow(
-        center_x, center_y,
-        radius * np.cos(forearm_axis_angle), radius * np.sin(forearm_axis_angle),
-        head_width=0.012, head_length=0.018, fc="b", ec="b", linewidth=2, zorder=8,
+        center_x,
+        center_y,
+        radius * np.cos(forearm_axis_angle),
+        radius * np.sin(forearm_axis_angle),
+        head_width=0.012,
+        head_length=0.018,
+        fc="b",
+        ec="b",
+        linewidth=2,
+        zorder=8,
     )
 
 
@@ -276,8 +311,14 @@ def _draw_wrist_angle_arc(
     phi_label_x = center_x + radius * np.cos(phi_mid) * 0.7
     phi_label_y = center_y + radius * np.sin(phi_mid) * 0.7
     ax.text(
-        phi_label_x, phi_label_y + 0.02, r"$\phi$",
-        color="b", fontsize=13, ha="center", fontweight="bold", zorder=9,
+        phi_label_x,
+        phi_label_y + 0.02,
+        r"$\phi$",
+        color="b",
+        fontsize=13,
+        ha="center",
+        fontweight="bold",
+        zorder=9,
     )
 
 

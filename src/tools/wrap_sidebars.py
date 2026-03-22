@@ -59,9 +59,15 @@ def _reassemble_wrapped(
 ) -> str:
     """Reassemble content with the aside inner content wrapped in a sticky div."""
     return (
-        parts[0] + aside_open_tag + "\n        "
-        + sticky_div_start + subparts[0] + sticky_div_end
-        + "\n      " + aside_close + subparts[1]
+        parts[0]
+        + aside_open_tag
+        + "\n        "
+        + sticky_div_start
+        + subparts[0]
+        + sticky_div_end
+        + "\n      "
+        + aside_close
+        + subparts[1]
     )
 
 

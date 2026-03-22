@@ -142,8 +142,12 @@ class MATLABQualityChecker:
         try:
             logger.info(f"Trying command: {' '.join(cmd)}")
             result = subprocess.run(
-                cmd, capture_output=True, text=True,
-                cwd=self.matlab_dir, timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS, check=False,
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=self.matlab_dir,
+                timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
+                check=False,
             )
             if result.returncode == 0:
                 logger.info("MATLAB quality checks completed successfully")

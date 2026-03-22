@@ -427,8 +427,11 @@ class SwingOptimizer:
         """Update best trajectory if current cost improves on the record."""
         if current_cost < best_cost:
             return x_traj, u_traj, current_cost
-        return best_x_traj if best_x_traj is not None else x_traj, \
-            best_u_traj if best_u_traj is not None else u_traj, best_cost
+        return (
+            best_x_traj if best_x_traj is not None else x_traj,
+            best_u_traj if best_u_traj is not None else u_traj,
+            best_cost,
+        )
 
     def _run_optimization_loop(
         self,
@@ -458,7 +461,9 @@ class SwingOptimizer:
             cost_improvement = best_cost - current_cost
             logger.debug(
                 "Iteration %d: cost=%.6f, improvement=%.6e",
-                iteration, current_cost, cost_improvement,
+                iteration,
+                current_cost,
+                cost_improvement,
             )
             best_x_traj, best_u_traj, best_cost = self._select_best_trajectory(
                 x_traj, u_traj, current_cost, best_cost, best_x_traj, best_u_traj
