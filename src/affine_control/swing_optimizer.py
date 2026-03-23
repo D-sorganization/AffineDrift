@@ -178,11 +178,11 @@ class SwingOptimizationResult:
     def __post_init__(self) -> None:
         """Validate result consistency."""
         require(
-            len(self.optimal_controls) >= 0,
+            isinstance(self.optimal_controls, list),
             "optimal_controls must be a list",
         )
         require(
-            len(self.optimal_trajectory) >= 0,
+            isinstance(self.optimal_trajectory, list),
             "optimal_trajectory must be a list",
         )
         check_non_negative(self.final_velocity, "final_velocity")
