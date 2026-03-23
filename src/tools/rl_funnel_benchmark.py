@@ -31,6 +31,11 @@ from src.core.constants import GRAVITY_M_S2
 # for different systems by passing `control_limits` to run_benchmark().
 CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
 
+# Double pendulum physical parameters (2-DoF golf swing proxy)
+PENDULUM_M1 = 1.0  # kg, mass of upper link
+PENDULUM_M2 = 1.0  # kg, mass of lower link
+PENDULUM_L1 = 0.5  # m, length of upper link
+PENDULUM_L2 = 0.5  # m, length of lower link
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +50,7 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
     State: x = [theta1, theta2, dtheta1, dtheta2]
     Parameters: m1=m2=1kg, L1=L2=0.5m
     """
-    m1, m2, L1, L2 = 1.0, 1.0, 0.5, 0.5
+    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, dth1, dth2 = x
     c12 = np.cos(th1 - th2)
     s12 = np.sin(th1 - th2)
@@ -63,7 +68,7 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
 
 def double_pendulum_B(x: np.ndarray) -> np.ndarray:
     """Control input matrix g(x): torques applied at both joints."""
-    m1, m2, L1, L2 = 1.0, 1.0, 0.5, 0.5
+    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, _, _ = x
     c12 = np.cos(th1 - th2)
     M = np.array([[(m1 + m2) * L1**2, m2 * L1 * L2 * c12], [m2 * L1 * L2 * c12, m2 * L2**2]])
