@@ -1,59 +1,41 @@
 # Pragmatic Programmer Review: app
-**Date**: 2026-03-09
-**Files**: 180
+**Date**: 2026-03-23
+**Files**: 187
 
 ## Findings
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/build-html.py, /app/src/tools/publish_manual_article.py
+  - Found in 3 locations
+  - Files: /app/scripts/analyze_completist_data.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 3 locations
-  - Files: /app/split_vol2.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/split_vol2.py
+  - Files: /app/scripts/analyze_completist_data.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 3 locations
-  - Files: /app/split_vol2.py
+  - Files: /app/scripts/analyze_completist_data.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 6 locations
-  - Files: /app/scripts/check_css_architecture.py, /app/scripts/check_js_dependency_boundaries.py, /app/scripts/check_styles_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+  - Found in 4 locations
+  - Files: /app/scripts/add_meta_descriptions.py, /app/scripts/generate_search_index.py, /app/scripts/seo_audit.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+  - Files: /app/scripts/generate_search_index.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/generate_search_index.py, /app/scripts/seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/check_quarto_render_coverage.py, /app/src/tools/code_quality/check.py, /app/src/tools/code_quality/report_generator.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_dry_adoption.py, /app/scripts/check_module_size_budget.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 3 locations
   - Files: /app/scripts/check_module_size_budget.py, /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 5 locations
-  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_dry_adoption.py, /app/scripts/check_module_size_budget.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
   - Files: /app/scripts/check_changed_file_size_budget.py, /app/scripts/check_module_size_budget.py
@@ -86,37 +68,28 @@
   - Files: /app/scripts/check_changed_file_size_budget.py, /app/scripts/check_contract_coverage.py, /app/scripts/check_css_architecture.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 3 locations
-  - Files: /app/scripts/check_css_architecture.py, /app/scripts/check_js_dependency_boundaries.py, /app/scripts/check_styles_budget.py
+  - Files: /app/scripts/generate_completist_data.py, /app/scripts/mypy_autofix_agent.py, /app/src/tools/rl_funnel_benchmark.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 4 locations
-  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_css_architecture.py, /app/scripts/check_dependency_boundaries.py
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py, /app/scripts/mypy_autofix_agent.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 4 locations
-  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_css_architecture.py, /app/scripts/check_dependency_boundaries.py
+  - Found in 9 locations
+  - Files: /app/scripts/generate_completist_data.py, /app/src/core/protocols.py, /app/src/tools/rl_funnel_benchmark.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 3 locations
-  - Files: /app/scripts/analyze_completist_data.py
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 3 locations
-  - Files: /app/scripts/analyze_completist_data.py
+  - Found in 2 locations
+  - Files: /app/scripts/generate_completist_data.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 3 locations
-  - Files: /app/scripts/analyze_completist_data.py
+  - Found in 2 locations
+  - Files: /app/scripts/check_coverage_gates.py, /app/src/tools/utils/shell_utils.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
   - Files: /app/scripts/check_coverage_gates.py, /app/scripts/check_critical_module_coverage.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 43 locations
-  - Files: /app/scripts/check_coverage_gates.py, /app/src/core/protocols.py, /app/src/tools/fix_quarto_syntax.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_styles_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/check_dry_adoption.py, /app/scripts/check_styles_budget.py
-- **DRY** [MAJOR]: Duplicate code block
-  - Found in 4 locations
-  - Files: /app/scripts/run_assessment.py
+  - Found in 51 locations
+  - Files: /app/scripts/__init__.py, /app/scripts/check_coverage_gates.py, /app/src/core/protocols.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 3 locations
   - Files: /app/scripts/validate_accessibility.py
@@ -131,25 +104,52 @@
   - Files: /app/scripts/validate_accessibility.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+  - Files: /app/scripts/check_bibliography_quality.py, /app/scripts/convert_bibliography_to_bib.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/seo_audit.py, /app/scripts/validate_accessibility.py
+  - Files: /app/scripts/check_bibliography_quality.py, /app/src/tools/utils/budget_check_utils.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/generate_completist_data.py, /app/scripts/mypy_autofix_agent.py
+  - Files: /app/scripts/check_bibliography_quality.py, /app/src/tools/utils/budget_check_utils.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/check_bibliography_quality.py, /app/src/tools/utils/budget_check_utils.py, /app/src/tools/utils/shell_utils.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/generate_completist_data.py, /app/scripts/mypy_autofix_agent.py
+  - Files: /app/scripts/check_bibliography_quality.py, /app/scripts/convert_bibliography_to_bib.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 6 locations
+  - Files: /app/scripts/check_css_architecture.py, /app/scripts/check_js_dependency_boundaries.py, /app/scripts/check_styles_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: /app/scripts/check_tech_debt_budget.py, /app/scripts/check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: /app/scripts/deploy_assets.py, /app/scripts/setup_hooks.py, /app/src/tools/code_quality/report_generator.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
   - Files: /app/scripts/mypy_autofix_agent.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 2 locations
-  - Files: /app/scripts/generate_completist_data.py
+  - Files: /app/scripts/convert_bibliography_to_bib.py, /app/src/tools/fix_html_validation.py
 - **DRY** [MAJOR]: Duplicate code block
-  - Found in 2 locations
-  - Files: /app/scripts/generate_completist_data.py
+  - Found in 3 locations
+  - Files: /app/scripts/check_css_architecture.py, /app/scripts/check_js_dependency_boundaries.py, /app/scripts/check_styles_budget.py
 - **DRY** [MAJOR]: Duplicate code block
   - Found in 4 locations
-  - Files: /app/scripts/add_meta_descriptions.py, /app/scripts/generate_search_index.py, /app/scripts/seo_audit.py
+  - Files: /app/scripts/check_contract_coverage.py, /app/scripts/check_css_architecture.py, /app/scripts/check_dependency_boundaries.py
