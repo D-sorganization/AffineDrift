@@ -80,6 +80,60 @@ def estimate_perturbation_size(
     return result
 
 
+def _initialize_ddp_trajectory(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    u_init: np.ndarray[Any, Any],
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Initialize DDP trajectory with a uniform timestep grid.
+
+    Args:
+        f: Dynamics function f(x, u).
+        x0: Initial state vector.
+        u_init: Initial control trajectory.
+
+    Returns:
+        Tuple of (u_traj, x_traj, t) on a uniform initial grid.
+    """
+    u_traj = np.array(u_init)
+    N = len(u_traj)
+    t = np.linspace(0, N * DEFAULT_DT_INIT, N + 1)
+    x_traj = _simulate_trajectory(f, x0, u_traj, t)
+    return u_traj, x_traj, t
+
+
+def _run_ddp_iteration(
+    f: Callable[..., np.ndarray[Any, Any]],
+    x0: np.ndarray[Any, Any],
+    x_traj: np.ndarray[Any, Any],
+    u_traj: np.ndarray[Any, Any],
+    t: np.ndarray[Any, Any],
+    eps_residual: float,
+    compute_hessian_bound_func: Callable[..., float],
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Run one DDP iteration: adapt timesteps, resample controls, simulate.
+
+    Args:
+        f: Dynamics function f(x, u).
+        x0: Initial state vector.
+        x_traj: Current state trajectory.
+        u_traj: Current control trajectory.
+        t: Current time grid.
+        eps_residual: Maximum acceptable residual.
+        compute_hessian_bound_func: Function returning local Hessian bound.
+
+    Returns:
+        Updated (u_traj, x_traj, t_new) after one iteration.
+    """
+    dt_adaptive = _compute_adaptive_timesteps(
+        f, x_traj, u_traj, eps_residual, compute_hessian_bound_func
+    )
+    t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
+    u_traj = _resample_controls(u_traj, t, t_new[:-1])
+    x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
+    return u_traj, x_traj, t_new
+
+
 def adaptive_timestep_ddp_mock(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
@@ -91,8 +145,7 @@ def adaptive_timestep_ddp_mock(
         [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
     ] = compute_hessian_bound,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-    """
-    DDP with curvature-adaptive timestep selection.
+    """DDP with curvature-adaptive timestep selection.
 
     WARNING: This is a non-functional mock implementation. The backward pass and
     Riccati equation solving are not implemented. This skeleton serves as a placeholder
@@ -109,13 +162,10 @@ def adaptive_timestep_ddp_mock(
         compute_hessian_bound_func: Function M(x, u) returning local Hessian bound
 
     Returns:
-        x_traj: Optimized state trajectory
-        u_traj: Optimized control trajectory
-        t_traj: Adaptive time grid
+        Tuple of (x_traj, u_traj, t_traj).
     """
     warnings.warn(_DDP_MOCK_WARNING, UserWarning, stacklevel=2)
 
-    # --- Preconditions ---
     check_finite_array(x0, "x0")
     check_finite_array(xf, "xf")
     require(x0.shape == xf.shape, "x0 and xf must have same shape")
@@ -123,31 +173,13 @@ def adaptive_timestep_ddp_mock(
     require(max_iters >= 1, "max_iters must be >= 1", max_iters)
     require(len(u_init) > 0, "u_init must not be empty")
 
-    # Step 1: Initialize with uniform timestep
-    u_traj = np.array(u_init)
-    N = len(u_traj)
-    dt_init = DEFAULT_DT_INIT  # Initial guess
-    # Time grid needs N+1 points for N intervals
-    t = np.linspace(0, N * dt_init, N + 1)
-
-    # Initial Forward pass
-    x_traj = _simulate_trajectory(f, x0, u_traj, t)
+    u_traj, x_traj, t = _initialize_ddp_trajectory(f, x0, u_init)
 
     for iteration in range(max_iters):
-        dt_adaptive = _compute_adaptive_timesteps(
-            f, x_traj, u_traj, eps_residual, compute_hessian_bound_func
+        u_traj, x_traj, t = _run_ddp_iteration(
+            f, x0, x_traj, u_traj, t, eps_residual, compute_hessian_bound_func
         )
-
-        # Create new time grid and resample controls
-        t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
-        u_traj = _resample_controls(u_traj, t, t_new[:-1])
-
-        # Simulate on new grid (mock: no backward pass / Riccati solve)
-        x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
-        t = t_new
-
-        # Mock: cap at 3 iterations (backward pass not implemented)
-        if iteration > 2:
+        if iteration > 2:  # Break early for prototype
             break
 
     return x_traj, u_traj, t

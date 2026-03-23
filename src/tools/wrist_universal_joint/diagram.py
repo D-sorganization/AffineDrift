@@ -191,6 +191,40 @@ def _draw_forearm(
     ax.add_patch(forearm)
 
 
+def _draw_arc_arrows(
+    ax: Any,
+    center_x: float,
+    center_y: float,
+    radius: float,
+    theta_grip_rad: float,
+) -> None:
+    """Draw two annotation arrows for a grip-angle arc: baseline and rotated."""
+    ax.arrow(
+        center_x,
+        center_y,
+        radius,
+        0,
+        head_width=0.012,
+        head_length=0.018,
+        fc="k",
+        ec="k",
+        linewidth=2,
+        zorder=8,
+    )
+    ax.arrow(
+        center_x,
+        center_y,
+        radius * np.cos(theta_grip_rad),
+        radius * np.sin(theta_grip_rad),
+        head_width=0.012,
+        head_length=0.018,
+        fc="r",
+        ec="r",
+        linewidth=2,
+        zorder=8,
+    )
+
+
 def _draw_grip_angle_arc(
     ax: Any,
     wrist_x: float,
@@ -202,37 +236,10 @@ def _draw_grip_angle_arc(
     arc_center_y = wrist_y
     arc_radius = 0.12
     arc_theta = np.linspace(0, theta_grip_rad, 30)
-    arc_x = arc_center_x + arc_radius * np.cos(arc_theta)
-    arc_x = cast("np.ndarray[Any, Any]", arc_x)
-    arc_y = arc_center_y + arc_radius * np.sin(arc_theta)
-    arc_y = cast("np.ndarray[Any, Any]", arc_y)
+    arc_x = cast("np.ndarray[Any, Any]", arc_center_x + arc_radius * np.cos(arc_theta))
+    arc_y = cast("np.ndarray[Any, Any]", arc_center_y + arc_radius * np.sin(arc_theta))
     ax.plot(arc_x, arc_y, "g-", linewidth=2.5, zorder=8)
-
-    ax.arrow(
-        arc_center_x,
-        arc_center_y,
-        arc_radius,
-        0,
-        head_width=0.012,
-        head_length=0.018,
-        fc="k",
-        ec="k",
-        linewidth=2,
-        zorder=8,
-    )
-    ax.arrow(
-        arc_center_x,
-        arc_center_y,
-        arc_radius * np.cos(theta_grip_rad),
-        arc_radius * np.sin(theta_grip_rad),
-        head_width=0.012,
-        head_length=0.018,
-        fc="r",
-        ec="r",
-        linewidth=2,
-        zorder=8,
-    )
-
+    _draw_arc_arrows(ax, arc_center_x, arc_center_y, arc_radius, theta_grip_rad)
     label_x = arc_center_x + arc_radius * np.cos(theta_grip_rad / 2) * 0.7
     label_y = arc_center_y + arc_radius * np.sin(theta_grip_rad / 2) * 0.7
     ax.text(
@@ -247,28 +254,15 @@ def _draw_grip_angle_arc(
     )
 
 
-def _draw_wrist_angle_arc(
+def _draw_wrist_arrows(
     ax: Any,
-    wrist_arc_center_x: float,
-    wrist_arc_center_y: float,
-    theta_grip_rad: float,
-    phi_wrist_rad: float,
+    center_x: float,
+    center_y: float,
+    radius: float,
+    hand_axis_angle: float,
+    forearm_axis_angle: float,
 ) -> None:
-    """Draw the wrist deviation angle arc annotation."""
-    center_x = wrist_arc_center_x - 0.05
-    center_y = wrist_arc_center_y
-    radius = 0.12
-
-    hand_axis_angle = theta_grip_rad
-    forearm_axis_angle = theta_grip_rad + phi_wrist_rad
-
-    wrist_arc_theta = np.linspace(hand_axis_angle, forearm_axis_angle, 30)
-    w_arc_x = center_x + radius * np.cos(wrist_arc_theta)
-    w_arc_x = cast("np.ndarray[Any, Any]", w_arc_x)
-    w_arc_y = center_y + radius * np.sin(wrist_arc_theta)
-    w_arc_y = cast("np.ndarray[Any, Any]", w_arc_y)
-    ax.plot(w_arc_x, w_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
-
+    """Draw two annotation arrows for the wrist deviation arc."""
     ax.arrow(
         center_x,
         center_y,
@@ -294,6 +288,25 @@ def _draw_wrist_angle_arc(
         zorder=8,
     )
 
+
+def _draw_wrist_angle_arc(
+    ax: Any,
+    wrist_arc_center_x: float,
+    wrist_arc_center_y: float,
+    theta_grip_rad: float,
+    phi_wrist_rad: float,
+) -> None:
+    """Draw the wrist deviation angle arc annotation."""
+    center_x = wrist_arc_center_x - 0.05
+    center_y = wrist_arc_center_y
+    radius = 0.12
+    hand_axis_angle = theta_grip_rad
+    forearm_axis_angle = theta_grip_rad + phi_wrist_rad
+    wrist_arc_theta = np.linspace(hand_axis_angle, forearm_axis_angle, 30)
+    w_arc_x = cast("np.ndarray[Any, Any]", center_x + radius * np.cos(wrist_arc_theta))
+    w_arc_y = cast("np.ndarray[Any, Any]", center_y + radius * np.sin(wrist_arc_theta))
+    ax.plot(w_arc_x, w_arc_y, "b-", linewidth=2.5, alpha=0.8, zorder=8)
+    _draw_wrist_arrows(ax, center_x, center_y, radius, hand_axis_angle, forearm_axis_angle)
     phi_mid = (hand_axis_angle + forearm_axis_angle) / 2
     phi_label_x = center_x + radius * np.cos(phi_mid) * 0.7
     phi_label_y = center_y + radius * np.sin(phi_mid) * 0.7
@@ -307,6 +320,15 @@ def _draw_wrist_angle_arc(
         fontweight="bold",
         zorder=9,
     )
+
+
+def _setup_diagram_axes(ax: Any) -> None:
+    """Configure final axis limits, aspect, and title for the diagram."""
+    ax.set_xlim(-1.5, 0.8)
+    ax.set_ylim(-0.2, 1.2)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
 
 
 # Cache figure generation to prevent expensive redraws
@@ -338,40 +360,18 @@ def draw_diagram(
     hand_dir_x = np.cos(theta_grip_rad)
     hand_dir_y = np.sin(theta_grip_rad)
 
-    # Club components
     shaft_end_x = _draw_club_shaft(ax, wrist_x, wrist_y, shaft_length=1.05)
     _draw_clubhead(ax, shaft_end_x, wrist_y)
-
-    # Hand and fingers
     _draw_hand(ax, wrist_x, wrist_y, hand_length, theta_grip_rad)
     _draw_fingers(ax, wrist_x, wrist_y, hand_dir_x, hand_dir_y)
-
-    # Forearm
     _draw_forearm(
-        ax,
-        wrist_x,
-        wrist_y,
-        hand_length,
-        hand_dir_x,
-        hand_dir_y,
-        theta_grip_rad,
-        phi_wrist_rad,
+        ax, wrist_x, wrist_y, hand_length, hand_dir_x, hand_dir_y, theta_grip_rad, phi_wrist_rad
     )
-
-    # Wrist joint marker
     _draw_wrist_joint(ax, wrist_x, wrist_y)
-
-    # Angle arcs
     _draw_grip_angle_arc(ax, wrist_x, wrist_y, theta_grip_rad)
     forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
     forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
     _draw_wrist_angle_arc(ax, forearm_x, forearm_y, theta_grip_rad, phi_wrist_rad)
-
-    ax.set_xlim(-1.5, 0.8)
-    ax.set_ylim(-0.2, 1.2)
-    ax.set_aspect("equal")
-    ax.axis("off")
-    ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
-
+    _setup_diagram_axes(ax)
     plt.tight_layout()
     return fig

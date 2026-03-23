@@ -292,6 +292,55 @@ def append_function_scope_issues(
         )
 
 
+def _dispatch_line_checks(
+    lines: list[str],
+    line_number: int,
+    line: str,
+    is_comment: bool,
+    in_function: bool,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Run all per-line quality checks and append findings to issues."""
+    line_stripped = line.strip()
+    line_original = line
+    append_function_contract_issues(
+        lines=lines,
+        line_number=line_number,
+        line_stripped=line_stripped,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_banned_pattern_issues(
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    if is_comment:
+        return
+    append_anti_pattern_issues(
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_magic_number_issues(
+        line_original=line_original,
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_function_scope_issues(
+        in_function=in_function,
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+
+
 def analyze_matlab_file(file_path: Path) -> list[str]:
     """Analyze a single MATLAB file for quality issues.
 
@@ -305,63 +354,24 @@ def analyze_matlab_file(file_path: Path) -> list[str]:
 
     try:
         with file_path.open(encoding="utf-8", errors="ignore") as f:
-            content = f.read()
-            lines = content.split("\n")
+            lines = f.read().split("\n")
 
         in_function = False
         nesting_level = 0
 
         for line_number, line in enumerate(lines, 1):
             line_stripped = line.strip()
-            line_original = line
-
             if not line_stripped:
                 continue
-
             is_comment = line_stripped.startswith("%")
-
             in_function, nesting_level = update_function_scope(
                 line_stripped,
                 is_comment=is_comment,
                 in_function=in_function,
                 nesting_level=nesting_level,
             )
-
-            append_function_contract_issues(
-                lines=lines,
-                line_number=line_number,
-                line_stripped=line_stripped,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_banned_pattern_issues(
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            if is_comment:
-                continue
-
-            append_anti_pattern_issues(
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_magic_number_issues(
-                line_original=line_original,
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_function_scope_issues(
-                in_function=in_function,
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
+            _dispatch_line_checks(
+                lines, line_number, line, is_comment, in_function, file_path.name, issues
             )
 
     except (FileNotFoundError, PermissionError, OSError) as e:

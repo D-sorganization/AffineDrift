@@ -30,6 +30,47 @@ logger = logging.getLogger(__name__)
 logger = setup_logging(__name__, format_string="%(message)s")
 
 
+def _split_aside_content(
+    content: str,
+    aside_open_tag: str,
+    aside_close: str,
+) -> tuple[list[str], list[str]] | None:
+    """Split content on aside open/close tags.
+
+    Returns:
+        Tuple of (parts, subparts) if splitting succeeds, None if not splittable.
+    """
+    parts = content.split(aside_open_tag)
+    if len(parts) <= 1:
+        return None
+    subparts = parts[1].split(aside_close, 1)
+    if len(subparts) <= 1:
+        return None
+    return parts, subparts
+
+
+def _reassemble_wrapped(
+    parts: list[str],
+    subparts: list[str],
+    aside_open_tag: str,
+    aside_close: str,
+    sticky_div_start: str,
+    sticky_div_end: str,
+) -> str:
+    """Reassemble content with the aside inner content wrapped in a sticky div."""
+    return (
+        parts[0]
+        + aside_open_tag
+        + "\n        "
+        + sticky_div_start
+        + subparts[0]
+        + sticky_div_end
+        + "\n      "
+        + aside_close
+        + subparts[1]
+    )
+
+
 def _wrap_aside(
     content: str,
     aside_open_tag: str,
@@ -41,46 +82,27 @@ def _wrap_aside(
 ) -> str:
     """Wrap the first occurrence of an aside tag with a sticky div container.
 
-    Splits on the opening aside tag, then on the closing ``</aside>`` tag,
-    and reassembles with the sticky div inserted around the inner content.
-
     Args:
         content: Full HTML/QMD content string to process.
-        aside_open_tag: The opening aside tag to search for (e.g. ``<aside class="left-sidebar">``).
+        aside_open_tag: The opening aside tag to search for.
         sticky_div_start: Opening sticky div tag string.
         sticky_div_end: Closing sticky div tag string.
         aside_close: Closing aside tag string.
-        check_already_wrapped: When True, skip wrapping if the content immediately
-            following the aside tag already starts with the sticky div. Defaults to True.
+        check_already_wrapped: Skip wrapping if already wrapped. Defaults to True.
 
     Returns:
-        Updated content string with the aside wrapped, or the original string
-        if the aside tag is not found or already wrapped.
+        Updated content string, or original if tag not found or already wrapped.
     """
     if aside_open_tag not in content:
         return content
-
-    parts = content.split(aside_open_tag)
-    if len(parts) <= 1:
+    split_result = _split_aside_content(content, aside_open_tag, aside_close)
+    if split_result is None:
         return content
-
+    parts, subparts = split_result
     if check_already_wrapped and parts[1].strip().startswith(sticky_div_start):
         return content
-
-    subparts = parts[1].split(aside_close, 1)
-    if len(subparts) <= 1:
-        return content
-
-    return (
-        parts[0]
-        + aside_open_tag
-        + "\n        "
-        + sticky_div_start
-        + subparts[0]
-        + sticky_div_end
-        + "\n      "
-        + aside_close
-        + subparts[1]
+    return _reassemble_wrapped(
+        parts, subparts, aside_open_tag, aside_close, sticky_div_start, sticky_div_end
     )
 
 
