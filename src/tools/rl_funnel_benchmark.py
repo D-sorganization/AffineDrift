@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import argparse
 import logging
-import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -25,11 +24,14 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
-GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
+from src.core.constants import GRAVITY_M_S2
+
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
 CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
+
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -375,27 +377,26 @@ def run_comparison(
 
 
 def print_results(results: list[BenchmarkResult]) -> None:
-    """Print formatted benchmark comparison table."""
-    out = sys.stdout
-    out.write("\n" + "=" * 70 + "\n")
-    out.write(f"{'Controller':<30} {'Tracking Error':>15} {'Control Effort':>15}\n")
-    out.write("=" * 70 + "\n")
+    """Log formatted benchmark comparison table using the module logger."""
+    logger.info("\n" + "=" * 70)
+    logger.info(f"{'Controller':<30} {'Tracking Error':>15} {'Control Effort':>15}")
+    logger.info("=" * 70)
     for r in results:
-        out.write(
+        logger.info(
             f"{r.name:<30} {r.tracking_error:>15.4f} {r.control_effort:>15.4f}"
-            f"  ({r.runtime_sec:.2f}s)\n"
+            f"  ({r.runtime_sec:.2f}s)"
         )
-    out.write("=" * 70 + "\n")
+    logger.info("=" * 70)
 
     if len(results) >= 2:
         sp = next(r for r in results if "Setpoint" in r.name)
         tt = next(r for r in results if "Trajectory" in r.name)
         improvement = (sp.tracking_error - tt.tracking_error) / sp.tracking_error * 100
-        out.write(f"\nTTCF tracking improvement over setpoint: {improvement:.1f}%\n")
+        logger.info(f"\nTTCF tracking improvement over setpoint: {improvement:.1f}%")
         if improvement > 0:
-            out.write("✓ Trajectory tracking cost functional outperforms setpoint control.\n")
+            logger.info("Trajectory tracking cost functional outperforms setpoint control.")
         else:
-            out.write("✗ Setpoint control outperforms TTCF in this scenario.\n")
+            logger.info("Setpoint control outperforms TTCF in this scenario.")
 
 
 def main() -> None:

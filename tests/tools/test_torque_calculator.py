@@ -24,8 +24,33 @@ class TestCalculateMomentsOfInertia:
         assert i_alpha > 0
         assert i_gamma > 0
 
-    def test_i_gamma_is_half_i_alpha(self) -> None:
-        """I_gamma should be 0.5 * I_alpha."""
+    def test_i_gamma_default_ratio(self) -> None:
+        """I_gamma should default to 0.5 * I_alpha when no ratio is supplied."""
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            calculate_moments_of_inertia,
+        )
+
+        # Default call — backward compatibility
+        i_alpha, i_gamma = calculate_moments_of_inertia(
+            clubhead_weight_g=200.0,
+            shaft_weight_g=60.0,
+            club_length_m=1.15,
+            cg_distance_m=0.95,
+        )
+        assert i_gamma == pytest.approx(0.5 * i_alpha)
+
+        # Explicit default — same result
+        i_alpha2, i_gamma2 = calculate_moments_of_inertia(
+            clubhead_weight_g=200.0,
+            shaft_weight_g=60.0,
+            club_length_m=1.15,
+            cg_distance_m=0.95,
+            i_gamma_ratio=0.5,
+        )
+        assert i_gamma2 == pytest.approx(0.5 * i_alpha2)
+
+    def test_i_gamma_custom_ratio(self) -> None:
+        """I_gamma should equal i_gamma_ratio * I_alpha for a non-default ratio."""
         from src.tools.wrist_universal_joint.torque_calculator import (
             calculate_moments_of_inertia,
         )
@@ -35,8 +60,24 @@ class TestCalculateMomentsOfInertia:
             shaft_weight_g=60.0,
             club_length_m=1.15,
             cg_distance_m=0.95,
+            i_gamma_ratio=0.3,
         )
-        assert i_gamma == pytest.approx(0.5 * i_alpha)
+        assert i_gamma == pytest.approx(0.3 * i_alpha)
+
+    def test_raises_on_non_positive_i_gamma_ratio(self) -> None:
+        """Should raise on non-positive i_gamma_ratio (contract)."""
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            calculate_moments_of_inertia,
+        )
+
+        with pytest.raises(AssertionError):
+            calculate_moments_of_inertia(
+                clubhead_weight_g=200.0,
+                shaft_weight_g=60.0,
+                club_length_m=1.15,
+                cg_distance_m=0.95,
+                i_gamma_ratio=0.0,
+            )
 
     def test_raises_on_non_positive_weight(self) -> None:
         """Should raise on non-positive clubhead weight (contract)."""
@@ -211,6 +252,52 @@ class TestGenerateSampleTorque:
 
         with pytest.raises(AssertionError):
             generate_sample_torque("Step", np.array([]))
+
+    def test_step_indices_relative_to_length(self) -> None:
+        """Step should activate at midpoint regardless of array length."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Step", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+            midpoint = n // 2
+            # All samples before midpoint should be zero
+            assert np.all(torque[:midpoint] == 0.0), f"Pre-midpoint not zero for n={n}"
+            # All samples from midpoint onward should be 3.0
+            assert np.all(torque[midpoint:] == 3.0), f"Post-midpoint not 3.0 for n={n}"
+
+    def test_pulse_indices_relative_to_length(self) -> None:
+        """Pulse should be centered relative to array length, not at fixed 200-300."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Pulse", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+            pulse_start = int(0.4 * n)
+            pulse_end = int(0.6 * n)
+            # All samples outside the pulse window should be zero
+            assert np.all(torque[:pulse_start] == 0.0), f"Pre-pulse not zero for n={n}"
+            assert np.all(torque[pulse_end:] == 0.0), f"Post-pulse not zero for n={n}"
+
+    def test_burst_indices_relative_to_length(self) -> None:
+        """Burst should be centered at midpoint for any array length."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        for n in (100, 200, 1000):
+            t = np.linspace(0, 1, n)
+            torque, err = generate_sample_torque("Burst", t)
+            assert torque.shape == (n,), f"Shape mismatch for n={n}"
+
+    def test_all_noise_types_work_with_short_array(self) -> None:
+        """All noise types should produce valid output for a short time array (n=50)."""
+        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+
+        t = np.linspace(0, 1, 50)
+        for noise_type in ("Golf-like Random", "Step", "Pulse", "Burst", "Sinusoidal", "Random"):
+            torque, err = generate_sample_torque(noise_type, t)
+            assert torque.shape == (50,), f"Shape mismatch for noise_type={noise_type}"
 
 
 class TestEvaluatePolynomial:
