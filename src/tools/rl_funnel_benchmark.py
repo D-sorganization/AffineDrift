@@ -26,6 +26,11 @@ from scipy.linalg import solve_continuous_are
 
 from src.core.constants import GRAVITY_M_S2
 
+# Default control saturation limits for the double-pendulum benchmark (N*m).
+# The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
+# for different systems by passing `control_limits` to run_benchmark().
+CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
+
 # Double pendulum physical parameters (2-DoF golf swing proxy)
 PENDULUM_M1 = 1.0  # kg, mass of upper link
 PENDULUM_M2 = 1.0  # kg, mass of lower link
@@ -262,15 +267,31 @@ def run_benchmark(
     x_ref: np.ndarray,
     name: str,
     dt: float = 0.001,
+    control_limits: tuple[float, float] = CONTROL_SATURATION_DEFAULT,
 ) -> BenchmarkResult:
-    """Simulate closed-loop system and compute performance metrics."""
+    """Simulate closed-loop system and compute performance metrics.
+
+    Args:
+        controller: Callable ``(t, x) -> u`` returning control input.
+        x0_perturbed: Perturbed initial state of shape ``(n,)``.
+        t_span: Integration interval ``(t0, tf)``.
+        t_ref: Reference time array of shape ``(T,)``.
+        x_ref: Reference state trajectory of shape ``(n, T)``.
+        name: Human-readable label for this run.
+        dt: Maximum integration step size in seconds.
+        control_limits: ``(lower, upper)`` saturation bounds applied to the
+            control input at every time step.  Defaults to
+            ``CONTROL_SATURATION_DEFAULT`` (``-50.0``, ``50.0``) N*m, which is
+            appropriate for the built-in double-pendulum benchmark.  Override
+            this for systems with different actuator constraints.
+    """
     start = time.perf_counter()
 
     def closed_loop(t: float, x: np.ndarray) -> np.ndarray:
         """Closed-loop ODE: drift + controlled input with saturation."""
         u = controller(t, x)
-        # Clip control to prevent divergence
-        u = np.clip(u, -50, 50)
+        # Clip control to prevent divergence; bounds are system-specific
+        u = np.clip(u, control_limits[0], control_limits[1])
         return double_pendulum_drift(t, x) + double_pendulum_B(x) @ u
 
     sol = solve_ivp(
