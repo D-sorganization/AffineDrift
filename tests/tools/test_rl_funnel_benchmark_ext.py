@@ -86,8 +86,10 @@ class TestRunComparison:
 class TestPrintResultsEdgeCases:
     """Additional tests for print_results() edge cases."""
 
-    def test_setpoint_outperforms_ttcf_branch(self, capsys: pytest.CaptureFixture[str]) -> None:
-        """Should print setpoint wins message when TTCF is worse."""
+    def test_setpoint_outperforms_ttcf_branch(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Should log setpoint wins message when TTCF is worse."""
+        import logging
+
         from src.tools.rl_funnel_benchmark import print_results
 
         t = np.linspace(0, 1, 10)
@@ -97,10 +99,11 @@ class TestPrintResultsEdgeCases:
             BenchmarkResult("Setpoint LQR", 0.3, 1.0, 0.1, traj, t),
             BenchmarkResult("Trajectory Tracking (TTCF)", 0.8, 1.2, 0.15, traj, t),
         ]
-        print_results(results)
-        captured = capsys.readouterr()
+        with caplog.at_level(logging.INFO, logger="src.tools.rl_funnel_benchmark"):
+            print_results(results)
+        combined = " ".join(caplog.messages)
         # Either improvement or degradation message should appear
-        assert "%" in captured.out
+        assert "%" in combined
 
 
 class TestMain:
