@@ -25,6 +25,8 @@ from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
 from src.core.constants import GRAVITY_M_S2
+from src.core.contracts.definitions import require
+from src.core.contracts.validators import check_finite_array, check_positive
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
@@ -50,6 +52,14 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
     State: x = [theta1, theta2, dtheta1, dtheta2]
     Parameters: m1=m2=1kg, L1=L2=0.5m
     """
+    require(
+        isinstance(x, np.ndarray) and x.shape == (4,),
+        "x must be a numpy array of shape (4,)",
+        x,
+    )
+    check_finite_array(x, "x")
+    check_positive(g, "g")
+
     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, dth1, dth2 = x
     c12 = np.cos(th1 - th2)
@@ -68,6 +78,13 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
 
 def double_pendulum_B(x: np.ndarray) -> np.ndarray:
     """Control input matrix g(x): torques applied at both joints."""
+    require(
+        isinstance(x, np.ndarray) and x.shape == (4,),
+        "x must be a numpy array of shape (4,)",
+        x,
+    )
+    check_finite_array(x, "x")
+
     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, _, _ = x
     c12 = np.cos(th1 - th2)
@@ -89,6 +106,20 @@ def generate_reference_trajectory(
     x0: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Generate reference trajectory via passive simulation from backswing position."""
+    require(
+        len(t_span) == 2 and t_span[1] > t_span[0],
+        "t_span must be (t0, tf) with tf > t0",
+        t_span,
+    )
+    check_positive(dt, "dt")
+    if x0 is not None:
+        require(
+            isinstance(x0, np.ndarray) and x0.shape == (4,),
+            "x0 must be a numpy array of shape (4,)",
+            x0,
+        )
+        check_finite_array(x0, "x0")
+
     if x0 is None:
         x0 = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
 
@@ -140,6 +171,13 @@ def setpoint_lqr_controller(
     Minimizes integral (x - x_target)' Q (x - x_target) + u' R u.
     Linearizes around x_target.
     """
+    require(
+        isinstance(x_target, np.ndarray) and x_target.shape == (4,),
+        "x_target must be a numpy array of shape (4,)",
+        x_target,
+    )
+    check_finite_array(x_target, "x_target")
+
     n = 4
     m = 2
     if Q_sp is None:
@@ -229,6 +267,22 @@ def trajectory_tracking_lqr(
     """
     from scipy.interpolate import interp1d
 
+    require(
+        isinstance(t_ref, np.ndarray) and t_ref.ndim == 1 and len(t_ref) >= 2,
+        "t_ref must be a 1D numpy array with at least 2 elements",
+        t_ref,
+    )
+    require(
+        isinstance(x_ref, np.ndarray)
+        and x_ref.ndim == 2
+        and x_ref.shape[0] == 4
+        and x_ref.shape[1] == len(t_ref),
+        "x_ref must be a numpy array of shape (4, len(t_ref))",
+        x_ref,
+    )
+    check_finite_array(t_ref, "t_ref")
+    check_finite_array(x_ref, "x_ref")
+
     n = 4
     m = 2
     if Q_tt is None:
@@ -285,6 +339,20 @@ def run_benchmark(
             appropriate for the built-in double-pendulum benchmark.  Override
             this for systems with different actuator constraints.
     """
+    require(callable(controller), "controller must be callable", type(controller))
+    require(
+        isinstance(x0_perturbed, np.ndarray) and x0_perturbed.shape == (4,),
+        "x0_perturbed must be a numpy array of shape (4,)",
+        x0_perturbed,
+    )
+    check_finite_array(x0_perturbed, "x0_perturbed")
+    require(
+        len(t_span) == 2 and t_span[1] > t_span[0],
+        "t_span must be (t0, tf) with tf > t0",
+        t_span,
+    )
+    check_positive(dt, "dt")
+
     start = time.perf_counter()
 
     def closed_loop(t: float, x: np.ndarray) -> np.ndarray:
@@ -337,6 +405,14 @@ def run_comparison(
     seed: int = 42,
 ) -> list[BenchmarkResult]:
     """Run full benchmark comparison: setpoint vs TTCF vs passive."""
+    check_positive(perturbation_scale, "perturbation_scale")
+    require(
+        len(t_span) == 2 and t_span[1] > t_span[0],
+        "t_span must be (t0, tf) with tf > t0",
+        t_span,
+    )
+    check_positive(dt, "dt")
+
     rng = np.random.default_rng(seed)
 
     logger.info("Generating reference trajectory...")

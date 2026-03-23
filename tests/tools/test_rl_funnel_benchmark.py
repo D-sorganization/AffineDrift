@@ -5,8 +5,10 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from src.core.contracts.definitions import ContractViolationError
 from src.tools.rl_funnel_benchmark import (
     CONTROL_SATURATION_DEFAULT,
+    GRAVITY_M_S2,
     PENDULUM_L1,
     PENDULUM_L2,
     PENDULUM_M1,
@@ -331,3 +333,202 @@ class TestPrintResults:
             print_results([])
         combined = " ".join(caplog.messages)
         assert "=" in combined
+
+
+class TestInputValidation:
+    """Tests for DbC input validation on all public functions (GH1670)."""
+
+    # --- double_pendulum_drift ---
+
+    def test_drift_wrong_shape_raises(self) -> None:
+        """double_pendulum_drift should raise on wrong state dimension."""
+        x_bad = np.array([0.1, 0.2, 0.0])  # shape (3,) — wrong
+        with pytest.raises(ContractViolationError):
+            double_pendulum_drift(0.0, x_bad)
+
+    def test_drift_non_array_raises(self) -> None:
+        """double_pendulum_drift should raise if x is not an ndarray."""
+        with pytest.raises((ContractViolationError, AttributeError)):
+            double_pendulum_drift(0.0, [0.1, 0.2, 0.0, 0.0])  # type: ignore[arg-type]
+
+    def test_drift_nan_raises(self) -> None:
+        """double_pendulum_drift should raise on NaN in state."""
+        x_bad = np.array([np.nan, 0.2, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            double_pendulum_drift(0.0, x_bad)
+
+    def test_drift_negative_gravity_raises(self) -> None:
+        """double_pendulum_drift should raise on non-positive gravity."""
+        x = np.array([0.1, 0.2, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            double_pendulum_drift(0.0, x, g=-GRAVITY_M_S2)
+
+    def test_drift_zero_gravity_raises(self) -> None:
+        """double_pendulum_drift should raise on zero gravity."""
+        x = np.array([0.1, 0.2, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            double_pendulum_drift(0.0, x, g=0.0)
+
+    # --- double_pendulum_B ---
+
+    def test_B_wrong_shape_raises(self) -> None:
+        """double_pendulum_B should raise on wrong state dimension."""
+        x_bad = np.array([0.1, 0.2])  # shape (2,)
+        with pytest.raises(ContractViolationError):
+            double_pendulum_B(x_bad)
+
+    def test_B_nan_raises(self) -> None:
+        """double_pendulum_B should raise on NaN in state."""
+        x_bad = np.array([np.nan, 0.2, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            double_pendulum_B(x_bad)
+
+    # --- generate_reference_trajectory ---
+
+    def test_traj_reversed_t_span_raises(self) -> None:
+        """generate_reference_trajectory should raise when tf <= t0."""
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((1.0, 0.0))
+
+    def test_traj_equal_t_span_raises(self) -> None:
+        """generate_reference_trajectory should raise when t0 == tf."""
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((0.5, 0.5))
+
+    def test_traj_negative_dt_raises(self) -> None:
+        """generate_reference_trajectory should raise on negative dt."""
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((0.0, 0.1), dt=-0.01)
+
+    def test_traj_zero_dt_raises(self) -> None:
+        """generate_reference_trajectory should raise on zero dt."""
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((0.0, 0.1), dt=0.0)
+
+    def test_traj_bad_x0_shape_raises(self) -> None:
+        """generate_reference_trajectory should raise on wrong x0 shape."""
+        x0_bad = np.array([0.1, 0.2, 0.0])  # shape (3,)
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((0.0, 0.1), x0=x0_bad)
+
+    def test_traj_nan_x0_raises(self) -> None:
+        """generate_reference_trajectory should raise on NaN in x0."""
+        x0_bad = np.array([np.nan, 0.2, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            generate_reference_trajectory((0.0, 0.1), x0=x0_bad)
+
+    # --- setpoint_lqr_controller ---
+
+    def test_setpoint_wrong_shape_raises(self) -> None:
+        """setpoint_lqr_controller should raise on wrong x_target shape."""
+        x_bad = np.array([0.1, 0.2])  # shape (2,)
+        with pytest.raises(ContractViolationError):
+            setpoint_lqr_controller(x_bad)
+
+    def test_setpoint_nan_raises(self) -> None:
+        """setpoint_lqr_controller should raise on NaN in x_target."""
+        x_bad = np.array([np.nan, 0.0, 0.0, 0.0])
+        with pytest.raises(ContractViolationError):
+            setpoint_lqr_controller(x_bad)
+
+    # --- trajectory_tracking_lqr ---
+
+    def test_ttlqr_bad_t_ref_raises(self) -> None:
+        """trajectory_tracking_lqr should raise on 1-element t_ref."""
+        from src.tools.rl_funnel_benchmark import trajectory_tracking_lqr
+
+        t_ref = np.array([0.0])  # only 1 element
+        x_ref = np.zeros((4, 1))
+        with pytest.raises(ContractViolationError):
+            trajectory_tracking_lqr(t_ref, x_ref)
+
+    def test_ttlqr_mismatched_x_ref_raises(self) -> None:
+        """trajectory_tracking_lqr should raise when x_ref columns != len(t_ref)."""
+        from src.tools.rl_funnel_benchmark import trajectory_tracking_lqr
+
+        t_ref = np.array([0.0, 0.1, 0.2])
+        x_ref = np.zeros((4, 5))  # 5 cols but t_ref has 3 elements
+        with pytest.raises(ContractViolationError):
+            trajectory_tracking_lqr(t_ref, x_ref)
+
+    def test_ttlqr_wrong_state_rows_raises(self) -> None:
+        """trajectory_tracking_lqr should raise when x_ref has != 4 rows."""
+        from src.tools.rl_funnel_benchmark import trajectory_tracking_lqr
+
+        t_ref = np.array([0.0, 0.1, 0.2])
+        x_ref = np.zeros((3, 3))  # 3 rows instead of 4
+        with pytest.raises(ContractViolationError):
+            trajectory_tracking_lqr(t_ref, x_ref)
+
+    def test_ttlqr_nan_t_ref_raises(self) -> None:
+        """trajectory_tracking_lqr should raise on NaN in t_ref."""
+        from src.tools.rl_funnel_benchmark import trajectory_tracking_lqr
+
+        t_ref = np.array([0.0, np.nan, 0.2])
+        x_ref = np.zeros((4, 3))
+        with pytest.raises(ContractViolationError):
+            trajectory_tracking_lqr(t_ref, x_ref)
+
+    # --- run_benchmark ---
+
+    def test_run_benchmark_non_callable_raises(self) -> None:
+        """run_benchmark should raise when controller is not callable."""
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        t_ref, x_ref = generate_reference_trajectory((0.0, 0.05), dt=0.01)
+        x0 = x_ref[:, 0]
+        with pytest.raises(ContractViolationError):
+            run_benchmark("not_a_callable", x0, (0.0, 0.05), t_ref, x_ref, "test")  # type: ignore[arg-type]
+
+    def test_run_benchmark_bad_x0_shape_raises(self) -> None:
+        """run_benchmark should raise on wrong x0 shape."""
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        t_ref, x_ref = generate_reference_trajectory((0.0, 0.05), dt=0.01)
+        x0_bad = np.array([0.1, 0.2])  # wrong shape
+        ctrl = setpoint_lqr_controller(x_ref[:, -1])
+        with pytest.raises(ContractViolationError):
+            run_benchmark(ctrl, x0_bad, (0.0, 0.05), t_ref, x_ref, "test")
+
+    def test_run_benchmark_reversed_t_span_raises(self) -> None:
+        """run_benchmark should raise when t_span is reversed."""
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        t_ref, x_ref = generate_reference_trajectory((0.0, 0.05), dt=0.01)
+        x0 = x_ref[:, 0]
+        ctrl = setpoint_lqr_controller(x_ref[:, -1])
+        with pytest.raises(ContractViolationError):
+            run_benchmark(ctrl, x0, (0.05, 0.0), t_ref, x_ref, "test")
+
+    def test_run_benchmark_negative_dt_raises(self) -> None:
+        """run_benchmark should raise on negative dt."""
+        from src.tools.rl_funnel_benchmark import run_benchmark
+
+        t_ref, x_ref = generate_reference_trajectory((0.0, 0.05), dt=0.01)
+        x0 = x_ref[:, 0]
+        ctrl = setpoint_lqr_controller(x_ref[:, -1])
+        with pytest.raises(ContractViolationError):
+            run_benchmark(ctrl, x0, (0.0, 0.05), t_ref, x_ref, "test", dt=-0.001)
+
+    # --- run_comparison ---
+
+    def test_run_comparison_negative_perturbation_raises(self) -> None:
+        """run_comparison should raise on negative perturbation_scale."""
+        from src.tools.rl_funnel_benchmark import run_comparison
+
+        with pytest.raises(ContractViolationError):
+            run_comparison(perturbation_scale=-0.1, t_span=(0.0, 0.05), dt=0.005)
+
+    def test_run_comparison_reversed_t_span_raises(self) -> None:
+        """run_comparison should raise when t_span is reversed."""
+        from src.tools.rl_funnel_benchmark import run_comparison
+
+        with pytest.raises(ContractViolationError):
+            run_comparison(perturbation_scale=0.1, t_span=(0.5, 0.0), dt=0.005)
+
+    def test_run_comparison_negative_dt_raises(self) -> None:
+        """run_comparison should raise on negative dt."""
+        from src.tools.rl_funnel_benchmark import run_comparison
+
+        with pytest.raises(ContractViolationError):
+            run_comparison(perturbation_scale=0.1, t_span=(0.0, 0.05), dt=-0.005)
