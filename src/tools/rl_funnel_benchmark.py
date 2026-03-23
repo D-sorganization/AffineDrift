@@ -25,7 +25,8 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
-GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
+from src.core.constants import GRAVITY_M_S2
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
