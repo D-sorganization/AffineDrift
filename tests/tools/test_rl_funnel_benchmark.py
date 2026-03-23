@@ -6,12 +6,43 @@ import numpy as np
 import pytest
 
 from src.tools.rl_funnel_benchmark import (
+    PENDULUM_L1,
+    PENDULUM_L2,
+    PENDULUM_M1,
+    PENDULUM_M2,
     BenchmarkResult,
     double_pendulum_B,
     double_pendulum_drift,
     generate_reference_trajectory,
     setpoint_lqr_controller,
 )
+
+
+class TestPendulumConstants:
+    """Tests for module-level double pendulum physical constants (GH1657)."""
+
+    def test_pendulum_m1_value(self) -> None:
+        """PENDULUM_M1 should be 1.0 kg."""
+        assert PENDULUM_M1 == pytest.approx(1.0)
+
+    def test_pendulum_m2_value(self) -> None:
+        """PENDULUM_M2 should be 1.0 kg."""
+        assert PENDULUM_M2 == pytest.approx(1.0)
+
+    def test_pendulum_l1_value(self) -> None:
+        """PENDULUM_L1 should be 0.5 m."""
+        assert PENDULUM_L1 == pytest.approx(0.5)
+
+    def test_pendulum_l2_value(self) -> None:
+        """PENDULUM_L2 should be 0.5 m."""
+        assert PENDULUM_L2 == pytest.approx(0.5)
+
+    def test_constants_are_positive(self) -> None:
+        """All pendulum physical constants must be strictly positive."""
+        assert PENDULUM_M1 > 0
+        assert PENDULUM_M2 > 0
+        assert PENDULUM_L1 > 0
+        assert PENDULUM_L2 > 0
 
 
 class TestDoublePendulumDrift:
