@@ -7,6 +7,7 @@ import pytest
 
 from src.core.contracts.definitions import ContractViolationError
 from src.tools.rl_funnel_benchmark import (
+    GRAVITY_M_S2,
     BenchmarkResult,
     double_pendulum_B,
     double_pendulum_drift,
@@ -270,7 +271,7 @@ class TestInputValidation:
         """double_pendulum_drift should raise on non-positive gravity."""
         x = np.array([0.1, 0.2, 0.0, 0.0])
         with pytest.raises(ContractViolationError):
-            double_pendulum_drift(0.0, x, g=-9.81)
+            double_pendulum_drift(0.0, x, g=-GRAVITY_M_S2)
 
     def test_drift_zero_gravity_raises(self) -> None:
         """double_pendulum_drift should raise on zero gravity."""
