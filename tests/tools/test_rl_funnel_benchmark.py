@@ -203,10 +203,12 @@ class TestRunBenchmark:
 
 
 class TestPrintResults:
-    """Tests for print_results()."""
+    """Tests for print_results() — now uses logger.info() instead of sys.stdout.write()."""
 
-    def test_prints_to_stdout(self, capsys: pytest.CaptureFixture[str]) -> None:
-        """Should print formatted results to stdout."""
+    def test_logs_results(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Should log formatted results via logger.info()."""
+        import logging
+
         from src.tools.rl_funnel_benchmark import print_results
 
         t = np.linspace(0, 1, 10)
@@ -215,13 +217,16 @@ class TestPrintResults:
             BenchmarkResult("Setpoint LQR", 0.5, 1.0, 0.1, traj, t),
             BenchmarkResult("Trajectory Tracking (TTCF)", 0.3, 1.2, 0.15, traj, t),
         ]
-        print_results(results)
-        captured = capsys.readouterr()
-        assert "Setpoint" in captured.out
-        assert "Trajectory" in captured.out
+        with caplog.at_level(logging.INFO, logger="src.tools.rl_funnel_benchmark"):
+            print_results(results)
+        combined = " ".join(caplog.messages)
+        assert "Setpoint" in combined
+        assert "Trajectory" in combined
 
-    def test_prints_improvement_when_ttcf_better(self, capsys: pytest.CaptureFixture[str]) -> None:
-        """Should print improvement percentage when TTCF outperforms setpoint."""
+    def test_logs_improvement_when_ttcf_better(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Should log improvement percentage when TTCF outperforms setpoint."""
+        import logging
+
         from src.tools.rl_funnel_benchmark import print_results
 
         t = np.linspace(0, 1, 10)
@@ -230,14 +235,18 @@ class TestPrintResults:
             BenchmarkResult("Setpoint LQR", 1.0, 1.0, 0.1, traj, t),
             BenchmarkResult("Trajectory Tracking (TTCF)", 0.5, 1.2, 0.15, traj, t),
         ]
-        print_results(results)
-        captured = capsys.readouterr()
-        assert "%" in captured.out
+        with caplog.at_level(logging.INFO, logger="src.tools.rl_funnel_benchmark"):
+            print_results(results)
+        combined = " ".join(caplog.messages)
+        assert "%" in combined
 
-    def test_handles_empty_results(self, capsys: pytest.CaptureFixture[str]) -> None:
-        """Should not crash with empty results list."""
+    def test_handles_empty_results(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Should not crash with empty results list and still log separator."""
+        import logging
+
         from src.tools.rl_funnel_benchmark import print_results
 
-        print_results([])
-        captured = capsys.readouterr()
-        assert "=" in captured.out
+        with caplog.at_level(logging.INFO, logger="src.tools.rl_funnel_benchmark"):
+            print_results([])
+        combined = " ".join(caplog.messages)
+        assert "=" in combined
