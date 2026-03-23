@@ -3,15 +3,12 @@
 Converts all LaTeX article files to Quarto .qmd format.
 """
 
-import logging
 import os
 import sys
 
 from latex_to_qmd import LaTeXToQuartoConverter
 
-from src.tools.utils import setup_logging
-
-logger = logging.getLogger(__name__)
+from src.tools.utils import batch_convert, setup_logging
 
 logger = setup_logging(__name__)
 
@@ -135,35 +132,7 @@ def convert_all(dry_run: bool = False) -> bool:
     if not dry_run:
         setup_articles_directory()
 
-    success_count = 0
-    error_count = 0
-
-    for conversion in CONVERSIONS:
-        source = conversion["source"]
-        target = conversion["target"]
-        description = conversion["description"]
-
-        if not os.path.exists(source):
-            logger.warning("Source file not found: %s (%s)", source, description)
-            error_count += 1
-            continue
-
-        if dry_run:
-            logger.info("Would convert: %s -> %s", source, target)
-            success_count += 1
-        else:
-            try:
-                converter.convert_file(source, target)
-                logger.info("Converted: %s -> %s", source, target)
-                success_count += 1
-            except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
-                logger.error("Failed to convert %s: %s", source, e)
-                error_count += 1
-
-    if not dry_run and success_count > 0:
-        logger.info("Successfully converted %d files", success_count)
-
-    return error_count == 0
+    return batch_convert(converter, CONVERSIONS, dry_run, logger)
 
 
 def main() -> None:
