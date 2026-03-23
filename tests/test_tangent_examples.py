@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 # Add project root to path
+from src.core.constants import DEFAULT_SPACECRAFT_MASS_KG, EARTH_MU, ISS_ORBIT_RADIUS_M
 from src.tangent_models.examples import (
     PlanarQuadrotor,
     RobotArm,
@@ -114,3 +115,15 @@ def test_robot_arm_rejects_scalar_control_in_linearize() -> None:
     x = np.array([0.1, 0.1, 0.0, 0.0])
     with pytest.raises(ValueError):
         system.linearize(x, 1.0)
+
+
+def test_spacecraft_rendezvous_defaults_use_named_constants() -> None:
+    """SpacecraftRendezvous defaults must match named constants from src.core.constants."""
+    sys = SpacecraftRendezvous()
+    assert sys.mu == EARTH_MU, "mu default must equal EARTH_MU from core.constants"
+    assert (
+        sys.r_t == ISS_ORBIT_RADIUS_M
+    ), "r_t default must equal ISS_ORBIT_RADIUS_M from core.constants"
+    assert (
+        sys.m == DEFAULT_SPACECRAFT_MASS_KG
+    ), "m default must equal DEFAULT_SPACECRAFT_MASS_KG from core.constants"

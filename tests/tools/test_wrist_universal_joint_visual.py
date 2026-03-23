@@ -4,9 +4,9 @@ These modules use streamlit which is not installed in CI. We mock the streamlit
 package at the sys.modules level before importing so all tests can run headlessly.
 We also use matplotlib's Agg backend to prevent display calls.
 
-Note: streamlit_app.py executes full app logic at module-level import, making
-individual function testing impractical without extensive mocking. Coverage for
-streamlit_app.py is excluded from this test file.
+streamlit_app.py wraps all Streamlit UI calls inside main() and _init_page() so
+that importing the module has no side effects.  Individual helper functions and the
+top-level entry points are tested in TestStreamlitAppFunctions below.
 """
 
 from __future__ import annotations
@@ -525,3 +525,40 @@ class TestStreamlitAppFunctions:
             assert isinstance(result, dict)
             assert "grip_angle" in result
             assert "wrist_angle" in result
+
+    def test_init_page_calls_set_page_config(self) -> None:
+        """_init_page should call st.set_page_config and seed session state."""
+        with _streamlit_context() as st_mock:
+            import src.tools.wrist_universal_joint.streamlit_app as app
+
+            app._init_page()
+            st_mock.set_page_config.assert_called_once()
+            assert "polynomial_expression" in st_mock.session_state
+            assert "polynomial_error" in st_mock.session_state
+
+    def test_init_page_idempotent_session_state(self) -> None:
+        """_init_page should not overwrite existing session_state values."""
+        with _streamlit_context() as st_mock:
+            import src.tools.wrist_universal_joint.streamlit_app as app
+
+            st_mock.session_state["polynomial_expression"] = "custom_expr"
+            app._init_page()
+            # Value set before _init_page must be preserved
+            assert st_mock.session_state["polynomial_expression"] == "custom_expr"
+
+    def test_import_has_no_side_effects(self) -> None:
+        """Importing streamlit_app must not call set_page_config or UI functions."""
+        with _streamlit_context() as st_mock:
+            import src.tools.wrist_universal_joint.streamlit_app  # noqa: F401
+
+            st_mock.set_page_config.assert_not_called()
+            st_mock.title.assert_not_called()
+
+    def test_main_runs_full_app(self) -> None:
+        """main() should call init, header, sidebar, and content without raising."""
+        with _streamlit_context() as st_mock:
+            import src.tools.wrist_universal_joint.streamlit_app as app
+
+            app.main()
+            st_mock.set_page_config.assert_called_once()
+            st_mock.title.assert_called_once()
