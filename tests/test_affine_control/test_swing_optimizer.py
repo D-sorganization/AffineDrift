@@ -223,6 +223,30 @@ class TestSwingOptimizationResult(unittest.TestCase):
                 iterations=-1,
             )
 
+    def test_optimal_controls_not_list_rejected(self) -> None:
+        """Non-list optimal_controls should raise ContractViolationError."""
+        with self.assertRaises(ContractViolationError):
+            SwingOptimizationResult(
+                optimal_controls=np.zeros((10, 3)),  # type: ignore[arg-type]
+                optimal_trajectory=[],
+                final_velocity=0.0,
+                cost=0.0,
+                converged=False,
+                iterations=0,
+            )
+
+    def test_optimal_trajectory_not_list_rejected(self) -> None:
+        """Non-list optimal_trajectory should raise ContractViolationError."""
+        with self.assertRaises(ContractViolationError):
+            SwingOptimizationResult(
+                optimal_controls=[],
+                optimal_trajectory=np.zeros((11, 6)),  # type: ignore[arg-type]
+                final_velocity=0.0,
+                cost=0.0,
+                converged=False,
+                iterations=0,
+            )
+
 
 # ── Cost computation tests ──────────────────────────────────────────────────
 
