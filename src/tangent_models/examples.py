@@ -4,7 +4,12 @@ from typing import Any
 
 import numpy as np
 
-from src.core.constants import GRAVITY_M_S2
+from src.core.constants import (
+    DEFAULT_SPACECRAFT_MASS_KG,
+    EARTH_MU,
+    GRAVITY_M_S2,
+    ISS_ORBIT_RADIUS_M,
+)
 from src.core.contracts import check_finite_array, check_positive, require
 
 logger = logging.getLogger(__name__)
@@ -103,7 +108,12 @@ class SpacecraftRendezvous(DynamicalSystem):
     State x = [rx, ry, rz, vx, vy, vz] (Relative position and velocity in LVLH).
     """
 
-    def __init__(self, mu: float = 3.986e14, r_t: float = 6771000.0, m: float = 100.0) -> None:
+    def __init__(
+        self,
+        mu: float = EARTH_MU,
+        r_t: float = ISS_ORBIT_RADIUS_M,
+        m: float = DEFAULT_SPACECRAFT_MASS_KG,
+    ) -> None:
         """Initialize spacecraft rendezvous system."""
         check_positive(mu, "gravitational parameter")
         check_positive(r_t, "orbit radius")
