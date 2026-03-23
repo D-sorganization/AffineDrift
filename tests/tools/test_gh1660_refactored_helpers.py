@@ -245,8 +245,7 @@ class TestReassembleWrapped:
     def test_reassembly_contains_sticky_div(self) -> None:
         from src.tools.wrap_sidebars import _reassemble_wrapped
 
-        parts = ["before<aside>", "inner</aside>after"]
-        # split gives: parts[0]="before", parts[1]="inner</aside>after"
+        # split gives: parts_split[0]="before", parts_split[1]="inner</aside>after"
         parts_split = ["before", "inner</aside>after"]
         subparts = ["inner", "after"]
         result = _reassemble_wrapped(

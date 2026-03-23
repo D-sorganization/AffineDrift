@@ -192,7 +192,6 @@ def generate_sample_torque(
     error: str | None = None
     torque: np.ndarray[Any, Any]
 
-    n = len(t)
     if noise_type == "Golf-like Random":
         torque = _generate_golf_torque(t)
     elif noise_type == "Step":
