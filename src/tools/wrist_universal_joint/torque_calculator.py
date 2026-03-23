@@ -27,6 +27,7 @@ def calculate_moments_of_inertia(
     shaft_weight_g: float,
     club_length_m: float,
     cg_distance_m: float,
+    i_gamma_ratio: float = 0.5,
 ) -> tuple[float, float]:
     """Calculate moments of inertia for golf club about two axes.
 
@@ -36,18 +37,25 @@ def calculate_moments_of_inertia(
         shaft_weight_g: Shaft weight in grams.
         club_length_m: Total club length in meters.
         cg_distance_m: Distance from grip to clubhead center of mass in meters.
+        i_gamma_ratio: Ratio of I_gamma to I_alpha. Defaults to 0.5, a typical value
+            for golf clubs (ref: Jorgensen, T. (1994) *The Physics of Golf*, AIP Press,
+            p. 16–17). Different club types (drivers vs irons vs putters) exhibit
+            different cross-axis MOI ratios; override this parameter for club-specific
+            accuracy.
 
     Returns:
     -------
         A tuple containing:
             - I_alpha: Moment of inertia about shaft axis (kg·m²) - higher MOI.
-            - I_gamma: Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
+            - I_gamma: Moment of inertia about local gamma axis (kg·m²) — lowest MOI,
+              computed as ``i_gamma_ratio * I_alpha``.
 
     """
     check_positive(clubhead_weight_g, "clubhead weight")
     check_positive(shaft_weight_g, "shaft weight")
     check_positive(club_length_m, "club length")
     check_positive(cg_distance_m, "CG distance")
+    check_positive(i_gamma_ratio, "i_gamma_ratio")
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
 
@@ -60,8 +68,8 @@ def calculate_moments_of_inertia(
     # Total I_alpha (about shaft axis) - higher MOI axis
     i_alpha = i_shaft_alpha + i_head_alpha
 
-    # I_gamma (lowest MOI axis) - typically 0.5x for golf clubs
-    i_gamma = 0.5 * i_alpha
+    # I_gamma (lowest MOI axis): configurable ratio; default 0.5 for typical golf clubs
+    i_gamma = i_gamma_ratio * i_alpha
 
     ensure(i_alpha > 0, "I_alpha must be positive")
     ensure(i_gamma > 0, "I_gamma must be positive")
