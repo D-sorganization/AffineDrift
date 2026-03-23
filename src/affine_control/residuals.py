@@ -176,13 +176,15 @@ def predict_residual_bound(
     check_finite_array(delta_x_traj, "delta_x_traj")
     check_finite_array(dt_traj, "dt_traj")
     require(len(dt_traj) > 0, "dt_traj must not be empty")
+    require(
+        len(M_traj) == len(delta_x_traj) == len(dt_traj),
+        "all trajectory arrays must have equal length",
+        (len(M_traj), len(delta_x_traj), len(dt_traj)),
+    )
 
     r_accum = 0.0
 
     for i in range(len(dt_traj)):
-        if i >= len(M_traj) or i >= len(delta_x_traj):
-            break
-
         rate = float((M_traj[i] / 2.0) * (delta_x_traj[i] ** 2))
         r_accum += rate * float(dt_traj[i])
 
