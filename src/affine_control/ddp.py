@@ -3,9 +3,14 @@
 Implements a mock DDP trajectory optimiser that adapts the integration timestep
 based on estimated perturbation size and Hessian residual bounds.  Used by the
 AffineDrift benchmarks and control loop tests.
+
+WARNING: The DDP implementation in this module is a non-functional mock. The backward
+pass and Riccati equation solving are not implemented. Results are not mathematically
+meaningful. See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md
 """
 
 import logging
+import warnings
 from collections.abc import Callable
 from typing import Any
 
@@ -31,6 +36,14 @@ from src.core.contracts import (
 )
 
 logger = logging.getLogger(__name__)
+
+_DDP_MOCK_WARNING = (
+    "adaptive_timestep_ddp_mock is a non-functional mock implementation. "
+    "The backward pass and Riccati equation solving are not implemented. "
+    "Trajectories produced are mathematically incorrect. "
+    "Do not use in production optimisation pipelines. "
+    "See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md"
+)
 
 
 def estimate_perturbation_size(
@@ -134,8 +147,9 @@ def adaptive_timestep_ddp_mock(
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """DDP with curvature-adaptive timestep selection.
 
-    NOTE: This is a non-functional MOCK implementation.
-    The backward pass and Riccati equation solving are not implemented.
+    WARNING: This is a non-functional mock implementation. The backward pass and
+    Riccati equation solving are not implemented. This skeleton serves as a placeholder
+    for the algorithm structure. Trajectories produced are not mathematically meaningful.
     See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md
 
     Args:
@@ -150,6 +164,8 @@ def adaptive_timestep_ddp_mock(
     Returns:
         Tuple of (x_traj, u_traj, t_traj).
     """
+    warnings.warn(_DDP_MOCK_WARNING, UserWarning, stacklevel=2)
+
     check_finite_array(x0, "x0")
     check_finite_array(xf, "xf")
     require(x0.shape == xf.shape, "x0 and xf must have same shape")
@@ -210,7 +226,7 @@ def _simulate_trajectory(
     u_traj: np.ndarray[Any, Any],
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
-    """Exponential integrator or RK4 simulation."""
+    """Euler integration simulation (mock approximation — full RK4 not implemented)."""
     require(
         len(u_traj) == len(t_grid) - 1,
         "u_traj length must equal t_grid length - 1",
@@ -220,7 +236,6 @@ def _simulate_trajectory(
     curr_x = x0
     for i in range(len(u_traj)):
         dt = t_grid[i + 1] - t_grid[i]
-        # Simple Euler for prototype
         dx = f(curr_x, u_traj[i])
         curr_x = curr_x + dx * dt
         x.append(curr_x)
@@ -236,9 +251,7 @@ def _resample_controls(
     require(len(t_new) > 0, "t_new must not be empty")
     u_resampled = []
 
-    # Simple interpolation
-    # For robust implementation, use scipy.interpolate.interp1d
-    # Here we just map indices roughly for prototype without dependencies
+    # Zero-order hold: map each new time point to nearest preceding control
     for t in t_new:
         idx = np.searchsorted(t_old, t)
         idx = min(idx, len(u_old) - 1)
