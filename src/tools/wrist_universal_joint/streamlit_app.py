@@ -43,19 +43,25 @@ from .visualization import (
 
 logger = logging.getLogger(__name__)
 
-# Page config
-st.set_page_config(
-    page_title="Enhanced Wrist Universal Joint Model",
-    page_icon="🏌️",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
-# Initialize session state
-if "polynomial_expression" not in st.session_state:
-    st.session_state.polynomial_expression = "t**2 - t"
-if "polynomial_error" not in st.session_state:
-    st.session_state.polynomial_error = None
+def _init_page() -> None:
+    """Configure Streamlit page settings and initialize session state.
+
+    Must be called once at application startup inside the main() entry point.
+    Separating this from module level prevents side effects on import.
+    """
+    st.set_page_config(
+        page_title="Enhanced Wrist Universal Joint Model",
+        page_icon="🏌️",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+
+    # Initialize session state
+    if "polynomial_expression" not in st.session_state:
+        st.session_state.polynomial_expression = "t**2 - t"
+    if "polynomial_error" not in st.session_state:
+        st.session_state.polynomial_error = None
 
 
 def _inject_custom_css() -> None:
@@ -405,8 +411,21 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
         )
 
 
-# ===== Main App Entry Point =====
-_inject_custom_css()
-_render_header()
-_params = _render_sidebar()
-_render_main_content(_params)
+def main() -> None:
+    """Run the Streamlit application.
+
+    All Streamlit UI calls are contained here so that importing this module
+    does not execute any side effects.  Run via:
+        streamlit run streamlit_app.py
+    """
+    _init_page()
+    _inject_custom_css()
+    _render_header()
+    params = _render_sidebar()
+    _render_main_content(params)
+
+
+if __name__ == "__main__":
+    main()
+elif hasattr(st, "runtime") and st.runtime.exists():
+    main()
