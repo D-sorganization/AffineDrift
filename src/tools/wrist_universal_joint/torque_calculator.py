@@ -144,27 +144,33 @@ def _generate_golf_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
 
 
 def _generate_step_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-    """Generate a step torque signal (step at index 250)."""
+    """Generate a step torque signal (step at midpoint)."""
+    n = len(t)
     torque = np.zeros_like(t)
-    torque[250:] = 3.0  # Step at midpoint
+    midpoint = n // 2
+    torque[midpoint:] = 3.0  # Step at midpoint
     return torque
 
 
 def _generate_pulse_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-    """Generate a pulse torque signal (random burst from index 200 to 300)."""
+    """Generate a pulse torque signal (random burst in the middle 20% of the array)."""
+    n = len(t)
     torque = np.zeros_like(t)
-    pulse_start, pulse_end = 200, 300
+    pulse_start = int(0.4 * n)
+    pulse_end = int(0.6 * n)
     torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
     return torque
 
 
 def _generate_burst_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
-    """Generate a burst torque signal (Gaussian burst centered at index 250)."""
+    """Generate a burst torque signal (Gaussian burst centered at midpoint)."""
+    n = len(t)
     torque = np.zeros_like(t)
-    burst_center, burst_width = 250, 50
+    burst_center = n // 2
+    burst_width = max(1, n // 10)
     burst_indices = np.arange(
         max(0, burst_center - burst_width),
-        min(len(t), burst_center + burst_width),
+        min(n, burst_center + burst_width),
     )
     torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
     return torque
