@@ -25,9 +25,9 @@ import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
+from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_finite_array, check_positive, require
 
-GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
 STATE_DIM = 4
 CONTROL_DIM = 2
 DEFAULT_CONTROL_SATURATION = 50.0
