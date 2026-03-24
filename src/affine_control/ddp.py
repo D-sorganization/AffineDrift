@@ -93,6 +93,13 @@ class MockDDPSolver:
             float,
         ] = compute_hessian_bound,
     ) -> None:
+        """Initialise the mock solver and warn if used outside a pytest session.
+
+        Args:
+            compute_hessian_bound_func: Function ``M(f, x, u) -> float`` returning a
+                local upper bound on the dynamics Hessian.  Defaults to
+                :func:`src.affine_control.residuals.compute_hessian_bound`.
+        """
         if not _is_running_under_pytest():
             warnings.warn(
                 "MockDDPSolver is a non-functional prototype.  "
