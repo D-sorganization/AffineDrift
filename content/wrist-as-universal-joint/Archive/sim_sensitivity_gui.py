@@ -133,7 +133,7 @@ class MainWindow(QMainWindow):
         self.grip_slider.setTickInterval(1)
         self.grip_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
         self.grip_slider.valueChanged.connect(self.update_grip)
-        self.grip_value_label = QLabel(f"{self.grip_pos*100:.1f} cm")
+        self.grip_value_label = QLabel(f"{self.grip_pos * 100:.1f} cm")
         control_layout.addWidget(grip_label)
         control_layout.addWidget(self.grip_slider)
         control_layout.addWidget(self.grip_value_label)
@@ -184,7 +184,7 @@ class MainWindow(QMainWindow):
 
     def update_grip(self, value):
         self.grip_pos = value / 100.0
-        self.grip_value_label.setText(f"{self.grip_pos*100:.1f} cm")
+        self.grip_value_label.setText(f"{self.grip_pos * 100:.1f} cm")
         self.plot_canvas.update_grip(self.grip_pos)
         self.schematic_canvas.update_grip(self.grip_pos)
         self.update_info()
@@ -193,7 +193,7 @@ class MainWindow(QMainWindow):
         t = calculate_torque(self.grip_pos, FORCE_MAGNITUDE, FORCE_ANGLE_DEG)
         i = calculate_inertia_effect(self.grip_pos, MASS_HAND, MASS_FOREARM)
         explanation = (
-            f"<b>Grip Position:</b> {self.grip_pos*100:.1f} cm from wrist joint<br>"
+            f"<b>Grip Position:</b> {self.grip_pos * 100:.1f} cm from wrist joint<br>"
             f"<b>Torque at Wrist:</b> {t:.2f} Nm<br>"
             f"<b>Inertia Effect:</b> {i:.4f} kg·m²<br>"
             "<hr>"
