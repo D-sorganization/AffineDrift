@@ -257,7 +257,7 @@ class SwingOptimizer:
         1. Validates the initial state dimensions.
         2. Constructs a zero initial control guess.
         3. Builds the target state from ``config.target_velocity``.
-        4. Calls the DDP solver (``adaptive_timestep_ddp_mock``).
+        4. Calls the DDP solver (:class:`~src.affine_control.ddp.MockDDPSolver`).
         5. Evaluates convergence by comparing successive cost values.
         6. Packages and returns a ``SwingOptimizationResult``.
 
@@ -299,6 +299,11 @@ class SwingOptimizer:
             cfg.horizon_steps,
             cfg.dt,
         )
+
+        # NOTE: MockDDPSolver is a non-functional placeholder (issue #1659).
+        # It does not implement a real backward pass or Riccati solve.
+        # Replace with a proper DDP implementation before production use.
+        _ddp_solver = MockDDPSolver()
 
         # Iterative DDP with convergence check
         best_cost = float("inf")
