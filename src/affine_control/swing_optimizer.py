@@ -43,7 +43,7 @@ from typing import Any
 
 import numpy as np
 
-from src.affine_control.ddp import adaptive_timestep_ddp_mock
+from src.affine_control.ddp import MockDDPSolver
 from src.core.constants import EPSILON
 from src.core.contracts import (
     check_finite_array,
@@ -384,7 +384,7 @@ class SwingOptimizer:
         1. Validates the initial state dimensions.
         2. Constructs a zero initial control guess.
         3. Builds the target state from ``config.target_velocity``.
-        4. Calls the DDP solver (``adaptive_timestep_ddp_mock``).
+        4. Calls the DDP solver (:class:`~src.affine_control.ddp.MockDDPSolver`).
         5. Evaluates convergence by comparing successive cost values.
         6. Packages and returns a ``SwingOptimizationResult``.
 
@@ -423,6 +423,11 @@ class SwingOptimizer:
             cfg.dt,
         )
 
+        # NOTE: MockDDPSolver is a non-functional placeholder (issue #1659).
+        # It does not implement a real backward pass or Riccati solve.
+        # Replace with a proper DDP implementation before production use.
+        _ddp_solver = MockDDPSolver()
+
         # Iterative DDP with convergence check
         best_cost = float("inf")
         converged = False
@@ -432,7 +437,7 @@ class SwingOptimizer:
 
         for iteration in range(1, cfg.max_iterations + 1):
             # Call the DDP solver
-            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(
+            x_traj, u_traj, t_traj = _ddp_solver.solve(
                 f=dynamics_fn,
                 x0=initial_state,
                 xf=x_target,
