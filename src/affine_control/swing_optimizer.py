@@ -243,6 +243,158 @@ class SwingOptimizer:
         ensure(total >= -EPSILON, "trajectory cost must be non-negative", total)
         return max(total, 0.0)
 
+    def _validate_optimize_inputs(
+        self,
+        initial_state: np.ndarray[Any, Any],
+        dynamics_fn: object,
+    ) -> None:
+        """Validate inputs to :meth:`optimize`.
+
+        Args:
+            initial_state: Initial state vector to validate.
+            dynamics_fn: Must be callable.
+
+        Raises:
+            PreconditionError: On invalid inputs (wrong dimensions, non-finite, etc.).
+        """
+        check_finite_array(initial_state, "initial_state")
+        check_shape(initial_state, (self._config.state_dim,), "initial_state")
+        require(callable(dynamics_fn), "dynamics_fn must be callable")
+        require(
+            self._config.allow_mock_solver or not isinstance(self._ddp_solver, MockDDPSolver),
+            "mock DDP solver is disabled; set allow_mock_solver=True or pass a real solver",
+        )
+
+    def _call_ddp_solver(
+        self,
+        dynamics_fn: Callable[
+            [np.ndarray[Any, Any], np.ndarray[Any, Any]],
+            np.ndarray[Any, Any],
+        ],
+        initial_state: np.ndarray[Any, Any],
+        x_target: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Invoke the DDP solver for one outer iteration and return (x_traj, u_traj)."""
+        cfg = self._config
+        x_traj, u_traj, _t_traj = self._ddp_solver(
+            f=dynamics_fn,
+            x0=initial_state,
+            xf=x_target,
+            u_init=u_init,
+            eps_residual=cfg.convergence_tol,
+            max_iters=min(5, cfg.max_iterations),
+        )
+        return x_traj, u_traj
+
+    def _update_best_and_check_convergence(
+        self,
+        iteration: int,
+        x_traj: np.ndarray[Any, Any],
+        u_traj: np.ndarray[Any, Any],
+        current_cost: float,
+        best_cost: float,
+        best_x_traj: np.ndarray[Any, Any] | None,
+        best_u_traj: np.ndarray[Any, Any] | None,
+    ) -> tuple[float, np.ndarray[Any, Any], np.ndarray[Any, Any], bool]:
+        """Track best trajectory and test for convergence.
+
+        Returns:
+            Tuple of (new_best_cost, new_best_x_traj, new_best_u_traj, converged).
+        """
+        cost_improvement = best_cost - current_cost
+        logger.debug(
+            "Iteration %d: cost=%.6f, improvement=%.6e", iteration, current_cost, cost_improvement
+        )
+        if current_cost < best_cost:
+            best_cost, best_x_traj, best_u_traj = current_cost, x_traj, u_traj
+        converged = abs(cost_improvement) < self._config.convergence_tol and iteration > 1
+        if converged:
+            logger.info("Converged at iteration %d (cost=%.6f)", iteration, best_cost)
+        return best_cost, best_x_traj, best_u_traj, converged  # type: ignore[return-value]
+
+    def _run_optimization_loop(
+        self,
+        initial_state: np.ndarray[Any, Any],
+        dynamics_fn: Callable[
+            [np.ndarray[Any, Any], np.ndarray[Any, Any]],
+            np.ndarray[Any, Any],
+        ],
+        x_target: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], float, bool, int]:
+        """Iterative DDP loop with convergence tracking.
+
+        Returns:
+            Tuple of (best_x_traj, best_u_traj, best_cost, converged, iteration).
+        """
+        cfg = self._config
+        best_cost = float("inf")
+        converged = False
+        iteration = 0
+        best_x_traj: np.ndarray[Any, Any] | None = None
+        best_u_traj: np.ndarray[Any, Any] | None = None
+
+        for iteration in range(1, cfg.max_iterations + 1):
+            x_traj, u_traj = self._call_ddp_solver(dynamics_fn, initial_state, x_target, u_init)
+            current_cost = self.compute_trajectory_cost(
+                [x_traj[i] for i in range(len(x_traj))],
+                [u_traj[i] for i in range(len(u_traj))],
+            )
+            best_cost, best_x_traj, best_u_traj, converged = (
+                self._update_best_and_check_convergence(
+                    iteration, x_traj, u_traj, current_cost, best_cost, best_x_traj, best_u_traj
+                )
+            )
+            if converged:
+                break
+            u_init = u_traj
+
+        if best_x_traj is None or best_u_traj is None:
+            best_x_traj, best_u_traj = x_traj, u_traj
+
+        return best_x_traj, best_u_traj, best_cost, converged, iteration
+
+    def _build_result(
+        self,
+        best_x_traj: np.ndarray[Any, Any],
+        best_u_traj: np.ndarray[Any, Any],
+        best_cost: float,
+        converged: bool,
+        iteration: int,
+    ) -> SwingOptimizationResult:
+        """Package raw trajectory arrays into a :class:`SwingOptimizationResult`.
+
+        Args:
+            best_x_traj: Optimal state trajectory array.
+            best_u_traj: Optimal control trajectory array.
+            best_cost: Total trajectory cost achieved.
+            converged: Whether the loop converged.
+            iteration: Final iteration count.
+
+        Returns:
+            Populated :class:`SwingOptimizationResult`.
+        """
+        cfg = self._config
+        final_state = best_x_traj[-1]
+        final_velocity = float(np.linalg.norm(final_state[cfg.n_joints :]))
+        result = SwingOptimizationResult(
+            optimal_controls=[best_u_traj[i] for i in range(len(best_u_traj))],
+            optimal_trajectory=[best_x_traj[i] for i in range(len(best_x_traj))],
+            final_velocity=final_velocity,
+            cost=best_cost,
+            converged=converged,
+            iterations=iteration,
+        )
+        logger.info(
+            "Optimization complete: velocity=%.2f m/s, cost=%.4f, converged=%s, iterations=%d",
+            result.final_velocity,
+            result.cost,
+            result.converged,
+            result.iterations,
+        )
+        return result
+
     def optimize(
         self,
         initial_state: np.ndarray[Any, Any],
@@ -271,26 +423,11 @@ class SwingOptimizer:
         Raises:
             PreconditionError: On invalid inputs (wrong dimensions, non-finite, etc.).
         """
-        check_finite_array(initial_state, "initial_state")
-        check_shape(
-            initial_state,
-            (self._config.state_dim,),
-            "initial_state",
-        )
-        require(callable(dynamics_fn), "dynamics_fn must be callable")
+        self._validate_optimize_inputs(initial_state, dynamics_fn)
 
         cfg = self._config
-        require(
-            cfg.allow_mock_solver or not isinstance(self._ddp_solver, MockDDPSolver),
-            "mock DDP solver is disabled; set allow_mock_solver=True or pass a real solver",
-        )
-        n = cfg.state_dim
-
-        # Build target state
-        x_target = np.zeros(n)
+        x_target = np.zeros(cfg.state_dim)
         x_target[cfg.n_joints :] = cfg.target_velocity
-
-        # Initial control guess: zero torques
         u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
 
         logger.info(
@@ -303,85 +440,10 @@ class SwingOptimizer:
         # NOTE: MockDDPSolver is a non-functional placeholder (issue #1659).
         # It does not implement a real backward pass or Riccati solve.
         # Replace with a proper DDP implementation before production use.
-        _ddp_solver = MockDDPSolver()
-
-        # Iterative DDP with convergence check
-        best_cost = float("inf")
-        converged = False
-        iteration = 0
-        best_x_traj: np.ndarray[Any, Any] | None = None
-        best_u_traj: np.ndarray[Any, Any] | None = None
-
-        for iteration in range(1, cfg.max_iterations + 1):
-            # Call the DDP solver
-            x_traj, u_traj, t_traj = self._ddp_solver(
-                f=dynamics_fn,
-                x0=initial_state,
-                xf=x_target,
-                u_init=u_init,
-                eps_residual=cfg.convergence_tol,
-                max_iters=min(5, cfg.max_iterations),  # inner DDP iters
-            )
-
-            # Evaluate cost on the returned trajectory
-            traj_list = [x_traj[i] for i in range(len(x_traj))]
-            ctrl_list = [u_traj[i] for i in range(len(u_traj))]
-            current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
-
-            cost_improvement = best_cost - current_cost
-            logger.debug(
-                "Iteration %d: cost=%.6f, improvement=%.6e",
-                iteration,
-                current_cost,
-                cost_improvement,
-            )
-
-            if current_cost < best_cost:
-                best_cost = current_cost
-                best_x_traj = x_traj
-                best_u_traj = u_traj
-
-            # Convergence check
-            if abs(cost_improvement) < cfg.convergence_tol and iteration > 1:
-                converged = True
-                logger.info(
-                    "Converged at iteration %d (cost=%.6f)",
-                    iteration,
-                    best_cost,
-                )
-                break
-
-            # Warm-start next iteration with current best controls
-            u_init = u_traj
-
-        # If no improvement was ever made, use initial trajectory
-        if best_x_traj is None or best_u_traj is None:
-            best_x_traj = x_traj
-            best_u_traj = u_traj
-
-        # Extract final velocity (norm of velocity portion of terminal state)
-        final_state = best_x_traj[-1]
-        velocity_portion = final_state[cfg.n_joints :]
-        final_velocity = float(np.linalg.norm(velocity_portion))
-
-        result = SwingOptimizationResult(
-            optimal_controls=[best_u_traj[i] for i in range(len(best_u_traj))],
-            optimal_trajectory=[best_x_traj[i] for i in range(len(best_x_traj))],
-            final_velocity=final_velocity,
-            cost=best_cost,
-            converged=converged,
-            iterations=iteration,
+        best_x_traj, best_u_traj, best_cost, converged, iteration = self._run_optimization_loop(
+            initial_state, dynamics_fn, x_target, u_init
         )
-
-        logger.info(
-            "Optimization complete: velocity=%.2f m/s, cost=%.4f, converged=%s, iterations=%d",
-            result.final_velocity,
-            result.cost,
-            result.converged,
-            result.iterations,
-        )
-
-        return result
+        return self._build_result(best_x_traj, best_u_traj, best_cost, converged, iteration)
 
 
 __all__ = [

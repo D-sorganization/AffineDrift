@@ -29,6 +29,63 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def _style_axes(ax: Any, title: str, xlabel: str, ylabel: str) -> None:
+    """Apply common axis styling: title, labels, grid, and legend."""
+    ax.set_title(title, fontsize=12, fontweight="bold")
+    ax.set_xlabel(xlabel, fontsize=10)
+    ax.set_ylabel(ylabel, fontsize=10)
+    ax.grid(visible=True, alpha=0.3)
+    ax.legend(loc="best", fontsize=9)
+
+
+def _compute_torque_components(
+    input_torque: np.ndarray[Any, Any],
+    theta_grip_rad: float,
+    phi_wrist_rad: float,
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any], float]:
+    """Compute transmitted torque and per-axis components.
+
+    Returns:
+        Tuple of (torque_transmitted, torque_alpha, torque_gamma, tau_ratio).
+    """
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    torque_transmitted = input_torque * tau_ratio
+    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
+    return torque_transmitted, torque_alpha, torque_gamma, tau_ratio
+
+
+def _plot_torque_series(
+    ax: Any,
+    t: np.ndarray[Any, Any],
+    input_torque: np.ndarray[Any, Any],
+    torque_transmitted: np.ndarray[Any, Any],
+    torque_alpha: np.ndarray[Any, Any],
+    torque_gamma: np.ndarray[Any, Any],
+    tau_ratio: float,
+    show_input: bool,
+    show_transmitted: bool,
+    show_alpha: bool,
+    show_gamma: bool,
+) -> None:
+    """Draw the requested torque series onto *ax*."""
+    if show_input:
+        ax.plot(
+            t, input_torque, label="Input Torque (forearm)", color="gray", alpha=0.7, linewidth=1.5
+        )
+    if show_transmitted:
+        ax.plot(
+            t,
+            torque_transmitted,
+            label=f"Transmitted (ratio={tau_ratio:.3f})",
+            color="purple",
+            linewidth=2,
+        )
+    if show_alpha:
+        ax.plot(t, torque_alpha, label="\u03c4_\u03b1 (higher MOI axis)", color="red", linewidth=2)
+    if show_gamma:
+        ax.plot(t, torque_gamma, label="\u03c4_\u03b3 (lowest MOI axis)", color="blue", linewidth=2)
+
+
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
 @st.cache_resource(max_entries=20)
@@ -54,63 +111,73 @@ def plot_torque(
 
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad,
-        theta_grip_rad,
+    torque_transmitted, torque_alpha, torque_gamma, tau_ratio = _compute_torque_components(
+        input_torque, theta_grip_rad, phi_wrist_rad
     )
-    torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
+    _plot_torque_series(
+        ax,
+        t,
+        input_torque,
         torque_transmitted,
-        theta_grip_rad,
+        torque_alpha,
+        torque_gamma,
+        tau_ratio,
+        show_input,
+        show_transmitted,
+        show_alpha,
+        show_gamma,
     )
+    _style_axes(
+        ax,
+        title=f"Torque vs Time (Grip: {grip_angle_deg:.0f}\u00b0, Wrist: {wrist_angle_deg:.0f}\u00b0)",
+        xlabel="Time (s)",
+        ylabel="Torque (N\u00b7m)",
+    )
+    plt.tight_layout()
+    return fig
 
-    if show_input:
-        ax.plot(
-            t,
-            input_torque,
-            label="Input Torque (forearm)",
-            color="gray",
-            alpha=0.7,
-            linewidth=1.5,
-        )
-    if show_transmitted:
-        ax.plot(
-            t,
-            torque_transmitted,
-            label=f"Transmitted (ratio={tau_ratio:.3f})",
-            color="purple",
-            linewidth=2,
-        )
+
+def _compute_accel_components(
+    torque_alpha: np.ndarray[Any, Any],
+    torque_gamma: np.ndarray[Any, Any],
+    i_alpha: float,
+    i_gamma: float,
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Divide per-axis torques by moments of inertia to get angular accelerations."""
+    accel_alpha = torque_alpha / i_alpha if i_alpha > EPSILON else np.zeros_like(torque_alpha)
+    accel_gamma = torque_gamma / i_gamma if i_gamma > EPSILON else np.zeros_like(torque_gamma)
+    return accel_alpha, accel_gamma
+
+
+def _plot_accel_series(
+    ax: Any,
+    t: np.ndarray[Any, Any],
+    accel_alpha: np.ndarray[Any, Any],
+    accel_gamma: np.ndarray[Any, Any],
+    i_alpha: float,
+    i_gamma: float,
+    show_alpha: bool,
+    show_gamma: bool,
+) -> None:
+    """Draw the requested acceleration series onto *ax*."""
     if show_alpha:
         ax.plot(
             t,
-            torque_alpha,
-            label="\u03c4_\u03b1 (higher MOI axis)",
+            accel_alpha,
+            label=f"\u03b1_\u03b1 (I_\u03b1={i_alpha:.4f})",
             color="red",
             linewidth=2,
+            linestyle="--",
         )
     if show_gamma:
         ax.plot(
             t,
-            torque_gamma,
-            label="\u03c4_\u03b3 (lowest MOI axis)",
+            accel_gamma,
+            label=f"\u03b1_\u03b3 (I_\u03b3={i_gamma:.4f})",
             color="blue",
             linewidth=2,
+            linestyle="--",
         )
-
-    ax.set_title(
-        f"Torque vs Time (Grip: {grip_angle_deg:.0f}\u00b0, Wrist: {wrist_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
-    )
-    ax.set_xlabel("Time (s)", fontsize=10)
-    ax.set_ylabel("Torque (N\u00b7m)", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
-
-    plt.tight_layout()
-    return fig
 
 
 # Cache figure generation to prevent expensive redraws
@@ -136,49 +203,22 @@ def plot_acceleration(
 
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad,
-        theta_grip_rad,
+    _, torque_alpha, torque_gamma, _tau_ratio = _compute_torque_components(
+        input_torque, theta_grip_rad, phi_wrist_rad
     )
-    torque_transmitted = input_torque * tau_ratio
-    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-        torque_transmitted,
-        theta_grip_rad,
+    accel_alpha, accel_gamma = _compute_accel_components(
+        torque_alpha, torque_gamma, i_alpha, i_gamma
     )
-    accel_alpha = torque_alpha / i_alpha if i_alpha > EPSILON else np.zeros_like(torque_alpha)
-    accel_gamma = torque_gamma / i_gamma if i_gamma > EPSILON else np.zeros_like(torque_gamma)
-
-    if show_alpha:
-        ax.plot(
-            t,
-            accel_alpha,
-            label=f"\u03b1_\u03b1 (I_\u03b1={i_alpha:.4f})",
-            color="red",
-            linewidth=2,
-            linestyle="--",
-        )
-    if show_gamma:
-        ax.plot(
-            t,
-            accel_gamma,
-            label=f"\u03b1_\u03b3 (I_\u03b3={i_gamma:.4f})",
-            color="blue",
-            linewidth=2,
-            linestyle="--",
-        )
-
-    ax.set_title(
-        f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
-        f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
+    _plot_accel_series(ax, t, accel_alpha, accel_gamma, i_alpha, i_gamma, show_alpha, show_gamma)
+    _style_axes(
+        ax,
+        title=(
+            f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
+            f"Wrist: {wrist_angle_deg:.0f}\u00b0)"
+        ),
+        xlabel="Time (s)",
+        ylabel="Angular Acceleration (rad/s\u00b2)",
     )
-    ax.set_xlabel("Time (s)", fontsize=10)
-    ax.set_ylabel("Angular Acceleration (rad/s\u00b2)", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
-
     plt.tight_layout()
     return fig
 
@@ -227,34 +267,19 @@ def _compute_transmission_sweep(
     )
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
-def plot_transmission_sweep(
-    grip_angle_deg: float,
-    wrist_angle_deg: float,
-    i_alpha: float,
-    i_gamma: float,
+def _plot_sweep_series(
+    ax: Any,
+    phi_sweep: np.ndarray[Any, Any],
+    tau_ratios: np.ndarray[Any, Any],
+    omega_ratios: np.ndarray[Any, Any],
+    accel_alpha_ratios: np.ndarray[Any, Any],
+    accel_gamma_ratios: np.ndarray[Any, Any],
     show_transmission: bool,
     show_velocity: bool,
     show_accel_alpha: bool,
     show_accel_gamma: bool,
-) -> Figure:
-    """Plot transmission ratio vs wrist angle sweep."""
-    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
-    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
-    check_positive(i_alpha, "i_alpha")
-    check_positive(i_gamma, "i_gamma")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    theta_grip_rad = np.radians(grip_angle_deg)
-    phi_sweep = np.linspace(-60, 60, 200)
-
-    tau_ratios, omega_ratios, accel_alpha_ratios, accel_gamma_ratios = _compute_transmission_sweep(
-        phi_sweep, theta_grip_rad, i_alpha, i_gamma
-    )
-
+) -> None:
+    """Draw the requested sweep series onto *ax*."""
     if show_transmission:
         ax.plot(
             phi_sweep,
@@ -291,7 +316,15 @@ def plot_transmission_sweep(
             alpha=0.7,
         )
 
-    # Mark current wrist angle
+
+def _mark_current_wrist_angle(
+    ax: Any,
+    phi_sweep: np.ndarray[Any, Any],
+    tau_ratios: np.ndarray[Any, Any],
+    wrist_angle_deg: float,
+    show_transmission: bool,
+) -> None:
+    """Overlay a vertical marker for the current wrist angle and annotate tau if shown."""
     current_idx = np.argmin(np.abs(phi_sweep - wrist_angle_deg))
     ax.axvline(
         wrist_angle_deg,
@@ -302,24 +335,55 @@ def plot_transmission_sweep(
     )
     if show_transmission:
         ax.plot(
-            wrist_angle_deg,
-            tau_ratios[current_idx],
-            "go",
-            markersize=10,
-            markerfacecolor="lime",
+            wrist_angle_deg, tau_ratios[current_idx], "go", markersize=10, markerfacecolor="lime"
         )
-
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
-    ax.set_title(
-        f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
-    )
-    ax.set_xlabel("Wrist Deviation Angle (degrees)", fontsize=10)
-    ax.set_ylabel("Transmission Ratio", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
 
+# Cache figure generation to prevent expensive redraws
+# Limit entries to prevent OOM when sliding through many angles
+@st.cache_resource(max_entries=20)
+def plot_transmission_sweep(
+    grip_angle_deg: float,
+    wrist_angle_deg: float,
+    i_alpha: float,
+    i_gamma: float,
+    show_transmission: bool,
+    show_velocity: bool,
+    show_accel_alpha: bool,
+    show_accel_gamma: bool,
+) -> Figure:
+    """Plot transmission ratio vs wrist angle sweep."""
+    check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
+    check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
+    check_positive(i_alpha, "i_alpha")
+    check_positive(i_gamma, "i_gamma")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    theta_grip_rad = np.radians(grip_angle_deg)
+    phi_sweep = np.linspace(-60, 60, 200)
+    tau_ratios, omega_ratios, accel_alpha_ratios, accel_gamma_ratios = _compute_transmission_sweep(
+        phi_sweep, theta_grip_rad, i_alpha, i_gamma
+    )
+    _plot_sweep_series(
+        ax,
+        phi_sweep,
+        tau_ratios,
+        omega_ratios,
+        accel_alpha_ratios,
+        accel_gamma_ratios,
+        show_transmission,
+        show_velocity,
+        show_accel_alpha,
+        show_accel_gamma,
+    )
+    _mark_current_wrist_angle(ax, phi_sweep, tau_ratios, wrist_angle_deg, show_transmission)
+    _style_axes(
+        ax,
+        title=f"Universal Joint Transmission vs Wrist Deviation Angle (Grip={grip_angle_deg:.0f}\u00b0)",
+        xlabel="Wrist Deviation Angle (degrees)",
+        ylabel="Transmission Ratio",
+    )
     plt.tight_layout()
     return fig
