@@ -15,6 +15,41 @@ from src.core.contracts import check_finite_array, check_positive, require
 logger = logging.getLogger(__name__)
 
 
+def _central_difference_linearization(
+    dynamics: "DynamicalSystem",
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any] | list[float],
+    epsilon: float = 1e-6,
+) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Numerically linearize a system with central differences."""
+    x_arr = np.array(x, dtype=float)
+    u_arr = np.array(u, dtype=float)
+    n = len(x_arr)
+    m = len(u_arr)
+    A = np.zeros((n, n))
+    B = np.zeros((n, m))
+
+    for i in range(n):
+        x_plus = x_arr.copy()
+        x_minus = x_arr.copy()
+        x_plus[i] += epsilon
+        x_minus[i] -= epsilon
+        A[:, i] = (dynamics.dynamics(x_plus, u_arr) - dynamics.dynamics(x_minus, u_arr)) / (
+            2 * epsilon
+        )
+
+    for i in range(m):
+        u_plus = u_arr.copy()
+        u_minus = u_arr.copy()
+        u_plus[i] += epsilon
+        u_minus[i] -= epsilon
+        B[:, i] = (dynamics.dynamics(x_arr, u_plus) - dynamics.dynamics(x_arr, u_minus)) / (
+            2 * epsilon
+        )
+
+    return A, B
+
+
 class DynamicalSystem(ABC):
     """Abstract base class for continuous-time dynamical systems.
 
@@ -331,29 +366,4 @@ class RobotArm(DynamicalSystem):
         """Linearize robot arm dynamics."""
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
-        # Using numerical linearization for the 2-link arm due to complexity
-        epsilon = 1e-6
-        n = 4
-        m = 2
-
-        A = np.zeros((n, n))
-        B = np.zeros((n, m))
-
-        f0 = self.dynamics(x, u)
-
-        # Compute A
-        for i in range(n):
-            x_pert = x.copy()
-            x_pert[i] += epsilon
-            f_pert = self.dynamics(x_pert, u)
-            A[:, i] = (f_pert - f0) / epsilon
-
-        # Compute B
-        u_arr = np.array(u, dtype=float)
-        for i in range(m):
-            u_pert = u_arr.copy()
-            u_pert[i] += epsilon
-            f_pert = self.dynamics(x, u_pert)
-            B[:, i] = (f_pert - f0) / epsilon
-
-        return A, B
+        return _central_difference_linearization(self, x, u)

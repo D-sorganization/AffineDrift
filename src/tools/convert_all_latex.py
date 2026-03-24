@@ -4,11 +4,11 @@ Converts all LaTeX article files to HTML and updates root-level HTML files.
 """
 
 import logging
-import os
 import sys
 
 from latex_to_html import LaTeXToHTMLConverter
 
+from src.tools.conversion_batch import run_batch_conversion
 from src.tools.utils import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -43,33 +43,12 @@ def convert_all(dry_run: bool = False) -> bool:
     if dry_run:
         logger.info("Dry run mode - no files will be converted")
 
-    success_count = 0
-    error_count = 0
-
-    for conversion in CONVERSIONS:
-        source = conversion["source"]
-        target = conversion["target"]
-        if not isinstance(source, str) or not isinstance(target, str):
-            logger.error("Invalid conversion entry: source and target must be strings")
-            error_count += 1
-            continue
-
-        if not os.path.exists(source):
-            logger.warning("Source file not found: %s", source)
-            error_count += 1
-            continue
-
-        if dry_run:
-            logger.info("Would convert: %s -> %s", source, target)
-            success_count += 1
-        else:
-            try:
-                converter.convert_file(source, target)
-                logger.info("Converted: %s -> %s", source, target)
-                success_count += 1
-            except (FileNotFoundError, PermissionError, OSError, ValueError) as e:
-                logger.error("Failed to convert %s: %s", source, e)
-                error_count += 1
+    _, error_count = run_batch_conversion(
+        conversions=CONVERSIONS,
+        converter=converter,
+        logger=logger,
+        dry_run=dry_run,
+    )
 
     return error_count == 0
 

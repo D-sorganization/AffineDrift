@@ -2,7 +2,7 @@ import logging
 import os
 import warnings
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -179,6 +179,25 @@ class MockDDPSolver:
 
         return x_traj, u_traj, t
 
+    def __call__(
+        self,
+        f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        xf: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        eps_residual: float = DEFAULT_EPS_RESIDUAL,
+        max_iters: int = DEFAULT_MAX_ITERS,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Call through to :meth:`solve` for backend interchangeability."""
+        return self.solve(
+            f=f,
+            x0=x0,
+            xf=xf,
+            u_init=u_init,
+            eps_residual=eps_residual,
+            max_iters=max_iters,
+        )
+
 
 def adaptive_timestep_ddp_mock(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
@@ -243,7 +262,7 @@ def _compute_adaptive_timesteps(
 
     # Adaptive timestep: dt = sqrt( 2 * eps / (M * delta_x^2) )
     dt_adaptive = np.sqrt(2 * eps_residual / (m_traj * delta_x_max**2))
-    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
+    return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 
 def _simulate_trajectory(
