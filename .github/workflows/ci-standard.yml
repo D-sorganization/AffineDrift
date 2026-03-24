@@ -55,7 +55,7 @@ jobs:
       - name: Lint
         run: ruff check .
 
-      # FIX: Enforce Black formatting with the repo's configured line length
+      # Enforce Black formatting with explicit line-length matching pyproject.toml
       - name: Check Formatting
         run: black --check --line-length 100 .
 
