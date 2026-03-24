@@ -12,10 +12,11 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import streamlit as st
 from matplotlib.figure import Figure
 
@@ -234,8 +235,8 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
 
 def _create_plot_figure(
     params: dict[str, Any],
-    t: np.ndarray,
-    input_torque: np.ndarray,
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 
@@ -250,39 +251,48 @@ def _create_plot_figure(
     plot_type = params["plot_type"]
 
     if plot_type == "Torque":
-        return plot_torque(
-            t,
-            input_torque,
-            params["grip_angle"],
-            params["wrist_angle"],
-            params["I_alpha"],
-            params["I_gamma"],
-            params["show_input"],
-            params["show_transmitted"],
-            params["show_alpha"],
-            params["show_gamma"],
+        return cast(
+            Figure,
+            plot_torque(
+                t,
+                input_torque,
+                params["grip_angle"],
+                params["wrist_angle"],
+                params["I_alpha"],
+                params["I_gamma"],
+                params["show_input"],
+                params["show_transmitted"],
+                params["show_alpha"],
+                params["show_gamma"],
+            ),
         )
     if plot_type == "Angular Acceleration":
-        return plot_acceleration(
-            t,
-            input_torque,
+        return cast(
+            Figure,
+            plot_acceleration(
+                t,
+                input_torque,
+                params["grip_angle"],
+                params["wrist_angle"],
+                params["I_alpha"],
+                params["I_gamma"],
+                params["show_alpha"],
+                params["show_gamma"],
+            ),
+        )
+    # Transmission Ratio
+    return cast(
+        Figure,
+        plot_transmission_sweep(
             params["grip_angle"],
             params["wrist_angle"],
             params["I_alpha"],
             params["I_gamma"],
-            params["show_alpha"],
-            params["show_gamma"],
-        )
-    # Transmission Ratio
-    return plot_transmission_sweep(
-        params["grip_angle"],
-        params["wrist_angle"],
-        params["I_alpha"],
-        params["I_gamma"],
-        params["show_transmission"],
-        params["show_velocity"],
-        params["show_accel_alpha"],
-        params["show_accel_gamma"],
+            params["show_transmission"],
+            params["show_velocity"],
+            params["show_accel_alpha"],
+            params["show_accel_gamma"],
+        ),
     )
 
 

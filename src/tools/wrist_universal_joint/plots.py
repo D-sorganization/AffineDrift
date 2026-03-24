@@ -42,7 +42,7 @@ def _compute_torque_components(
     input_torque: np.ndarray[Any, Any],
     theta_grip_rad: float,
     phi_wrist_rad: float,
-) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any], float]:
+) -> tuple[np.ndarray[Any, Any], float | np.ndarray[Any, Any], float | np.ndarray[Any, Any], float]:
     """Compute transmitted torque and per-axis components.
 
     Returns:
@@ -59,8 +59,8 @@ def _plot_torque_series(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
     torque_transmitted: np.ndarray[Any, Any],
-    torque_alpha: np.ndarray[Any, Any],
-    torque_gamma: np.ndarray[Any, Any],
+    torque_alpha: float | np.ndarray[Any, Any],
+    torque_gamma: float | np.ndarray[Any, Any],
     tau_ratio: float,
     show_input: bool,
     show_transmitted: bool,
@@ -88,7 +88,7 @@ def _plot_torque_series(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -138,11 +138,11 @@ def plot_torque(
 
 
 def _compute_accel_components(
-    torque_alpha: np.ndarray[Any, Any],
-    torque_gamma: np.ndarray[Any, Any],
+    torque_alpha: float | np.ndarray[Any, Any],
+    torque_gamma: float | np.ndarray[Any, Any],
     i_alpha: float,
     i_gamma: float,
-) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+) -> tuple[float | np.ndarray[Any, Any], float | np.ndarray[Any, Any]]:
     """Divide per-axis torques by moments of inertia to get angular accelerations."""
     accel_alpha = torque_alpha / i_alpha if i_alpha > EPSILON else np.zeros_like(torque_alpha)
     accel_gamma = torque_gamma / i_gamma if i_gamma > EPSILON else np.zeros_like(torque_gamma)
@@ -152,8 +152,8 @@ def _compute_accel_components(
 def _plot_accel_series(
     ax: Any,
     t: np.ndarray[Any, Any],
-    accel_alpha: np.ndarray[Any, Any],
-    accel_gamma: np.ndarray[Any, Any],
+    accel_alpha: float | np.ndarray[Any, Any],
+    accel_gamma: float | np.ndarray[Any, Any],
     i_alpha: float,
     i_gamma: float,
     show_alpha: bool,
@@ -182,7 +182,7 @@ def _plot_accel_series(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -342,7 +342,7 @@ def _mark_current_wrist_angle(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
