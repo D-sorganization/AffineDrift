@@ -352,7 +352,7 @@ class NoiseTransmissionCanvas(FigureCanvas):
             inset_ax.set_ylim(-0.1, 0.4)
             inset_ax.axis("off")
             inset_ax.set_title(r"Schematic: $\theta$", fontsize=10)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             print(f"Warning: Could not create inset axes: {e}")
 
         # ACCELERATION PLOT (bottom subplot)
@@ -1012,11 +1012,11 @@ class MainWindow(QMainWindow):
             f"Local Gamma (high inertia axis): cos(θ)<br>"
             f"<hr>"
             f"<b>Grip Angle 1:</b> {theta1}°<br>"
-            f"Component Magnitudes: Alpha = {alpha1_mag*100:.1f}%, Gamma = {gamma1_mag*100:.1f}%<br>"
-            f"Power Distribution: Alpha = {alpha1_power*100:.1f}%, Gamma = {gamma1_power*100:.1f}% (sum = {(alpha1_power+gamma1_power)*100:.1f}%)<br>"
+            f"Component Magnitudes: Alpha = {alpha1_mag * 100:.1f}%, Gamma = {gamma1_mag * 100:.1f}%<br>"
+            f"Power Distribution: Alpha = {alpha1_power * 100:.1f}%, Gamma = {gamma1_power * 100:.1f}% (sum = {(alpha1_power + gamma1_power) * 100:.1f}%)<br>"
             f"<b>Grip Angle 2:</b> {theta2}°<br>"
-            f"Component Magnitudes: Alpha = {alpha2_mag*100:.1f}%, Gamma = {gamma2_mag*100:.1f}%<br>"
-            f"Power Distribution: Alpha = {alpha2_power*100:.1f}%, Gamma = {gamma2_power*100:.1f}% (sum = {(alpha2_power+gamma2_power)*100:.1f}%)<br>"
+            f"Component Magnitudes: Alpha = {alpha2_mag * 100:.1f}%, Gamma = {gamma2_mag * 100:.1f}%<br>"
+            f"Power Distribution: Alpha = {alpha2_power * 100:.1f}%, Gamma = {gamma2_power * 100:.1f}% (sum = {(alpha2_power + gamma2_power) * 100:.1f}%)<br>"
             "<hr>"
             "<i>Note: Component magnitudes don't add to 100% (orthogonal vectors).<br>"
             "Power distribution shows energy share (adds to 100%).</i>"
