@@ -218,14 +218,16 @@ class TestResidualMonitorContracts:
         ids=["1_update", "2_updates", "3_updates", "5_updates"],
     )
     def test_monitor_mode_transition_with_high_residuals(self, n_high_updates: int) -> None:
-        """After n_hysteresis high-residual updates, mode should switch to MPC_FULL."""
+        """High residuals should escalate from LQR to MPC_WARN to MPC_FULL."""
         n_hyst = 3
         m = ResidualMonitor(eps_warning=0.01, eps_critical=0.05, n_hysteresis=n_hyst)
         for _ in range(n_high_updates):
             mode, _ = m.update(np.array([1.0]), np.array([0.0]))  # r=1.0 >> eps_critical
 
-        if n_high_updates >= n_hyst:
+        if n_high_updates >= 2 * n_hyst:
             assert mode == "MPC_FULL"
+        elif n_high_updates >= n_hyst:
+            assert mode == "MPC_WARN"
         else:
             assert mode == "LQR"
 
@@ -292,6 +294,15 @@ class TestResidualBoundContracts:
         r1 = predict_residual_bound(np.array([1.0]), dx, dt)
         r2 = predict_residual_bound(np.array([10.0]), dx, dt)
         assert r2 > r1
+
+    def test_rejects_mismatched_lengths(self) -> None:
+        """All residual trajectories must have equal length."""
+        with pytest.raises(ContractViolationError, match="equal length"):
+            predict_residual_bound(
+                np.array([1.0, 2.0]),
+                np.array([0.1, 0.2]),
+                np.array([0.01]),
+            )
 
 
 # ===================================================================

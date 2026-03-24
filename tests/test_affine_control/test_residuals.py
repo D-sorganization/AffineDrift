@@ -60,17 +60,44 @@ class TestResiduals(unittest.TestCase):
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
-        # 3. Critical error (0.6) for 2nd step -> Switch
+        # 3. Critical error (0.6) for 2nd step -> Enter warning mode
+        monitor.update(np.array([0.6]), x_nom)
+        self.assertEqual(monitor.mode, "MPC_WARN")
+
+        # 4. Two more critical steps -> Switch to full MPC
+        monitor.update(np.array([0.6]), x_nom)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_FULL")
 
-        # 4. Low error (0.05) for 1 step -> No Switch
+        # 5. Low error (0.05) for 1 step -> No Switch
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_FULL")
 
-        # 5. Low error (0.05) for 2nd step -> Switch back
+        # 6. Low error (0.05) for 2nd step -> Back to warning mode
+        monitor.update(np.array([0.05]), x_nom)
+        self.assertEqual(monitor.mode, "MPC_WARN")
+
+        # 7. Two more low-error steps -> Return to LQR
+        monitor.update(np.array([0.05]), x_nom)
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
+
+    def test_monitor_warning_band_transitions(self) -> None:
+        """Residuals between warning and critical should activate MPC_WARN."""
+        monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
+        x_nom = np.array([0.0])
+        monitor.update(np.array([0.2]), x_nom)
+        mode, _ = monitor.update(np.array([0.2]), x_nom)
+        self.assertEqual(mode, "MPC_WARN")
+
+    def test_predict_residual_bound_rejects_mismatched_lengths(self) -> None:
+        """Mismatched trajectory lengths must fail fast instead of truncating."""
+        with self.assertRaisesRegex(Exception, "equal length"):
+            predict_residual_bound(
+                np.array([1.0, 2.0]),
+                np.array([0.1]),
+                np.array([0.01, 0.01]),
+            )
 
 
 if __name__ == "__main__":

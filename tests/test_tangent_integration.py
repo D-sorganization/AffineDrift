@@ -102,25 +102,28 @@ class TestResidualMonitorPipeline:
     """Test the full residual monitoring workflow."""
 
     def test_monitor_transitions_on_large_residuals(self) -> None:
-        """Monitor should transition to MPC_FULL when residuals exceed threshold."""
+        """Monitor should transition to MPC_FULL through MPC_WARN on large residuals."""
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=3)
+        seen_warning = False
 
         # Feed large residuals
-        for _ in range(5):
+        for _ in range(6):
             mode, r_est = monitor.update(
                 x_meas=np.array([1.0, 0.0]),
                 x_nom=np.array([0.0, 0.0]),
             )
+            seen_warning = seen_warning or mode == "MPC_WARN"
 
         assert mode == "MPC_FULL"
         assert r_est > 0.5
+        assert seen_warning
 
     def test_monitor_returns_to_lqr_on_small_residuals(self) -> None:
         """Monitor should return to LQR when residuals drop below warning threshold."""
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
 
         # First drive to MPC_FULL
-        for _ in range(3):
+        for _ in range(4):
             monitor.update(
                 x_meas=np.array([1.0, 0.0]),
                 x_nom=np.array([0.0, 0.0]),
@@ -128,7 +131,7 @@ class TestResidualMonitorPipeline:
         assert monitor.mode == "MPC_FULL"
 
         # Now feed small residuals
-        for _ in range(3):
+        for _ in range(4):
             mode, r_est = monitor.update(
                 x_meas=np.array([0.01, 0.0]),
                 x_nom=np.array([0.0, 0.0]),
@@ -138,7 +141,7 @@ class TestResidualMonitorPipeline:
         assert r_est < 0.1
 
     def test_hysteresis_prevents_oscillation(self) -> None:
-        """Monitor should not oscillate between modes with borderline residuals."""
+        """Borderline residuals should promote warning mode without jumping to full MPC."""
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=3)
 
         # Feed values in the hysteresis band (between warning and critical)
@@ -150,8 +153,8 @@ class TestResidualMonitorPipeline:
             )
             modes.append(mode)
 
-        # Should stay in LQR since values are in hysteresis band, not above critical
-        assert all(m == "LQR" for m in modes)
+        assert "MPC_FULL" not in modes
+        assert modes[-1] == "MPC_WARN"
 
 
 # ─── Integration Tests: Hessian and Residual Bound ───────────

@@ -17,7 +17,7 @@ from simpleeval import EvalWithCompoundTypes
 
 from src.core.contracts import check_positive, ensure, require
 
-from .constants import MAX_DELTA_DEGREES, rng
+from .constants import DEFAULT_GAMMA_TO_ALPHA_RATIO, MAX_DELTA_DEGREES, rng
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ def calculate_moments_of_inertia(
     shaft_weight_g: float,
     club_length_m: float,
     cg_distance_m: float,
+    gamma_to_alpha_ratio: float = DEFAULT_GAMMA_TO_ALPHA_RATIO,
 ) -> tuple[float, float]:
     """Calculate moments of inertia for golf club about two axes.
 
@@ -36,6 +37,9 @@ def calculate_moments_of_inertia(
         shaft_weight_g: Shaft weight in grams.
         club_length_m: Total club length in meters.
         cg_distance_m: Distance from grip to clubhead center of mass in meters.
+        gamma_to_alpha_ratio: Heuristic ratio I_gamma / I_alpha for the
+            simplified demo model. Defaults to 0.5 for backward compatibility;
+            callers should override this with measured club-specific data.
 
     Returns:
     -------
@@ -48,6 +52,7 @@ def calculate_moments_of_inertia(
     check_positive(shaft_weight_g, "shaft weight")
     check_positive(club_length_m, "club length")
     check_positive(cg_distance_m, "CG distance")
+    check_positive(gamma_to_alpha_ratio, "gamma_to_alpha_ratio")
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
 
@@ -60,8 +65,9 @@ def calculate_moments_of_inertia(
     # Total I_alpha (about shaft axis) - higher MOI axis
     i_alpha = i_shaft_alpha + i_head_alpha
 
-    # I_gamma (lowest MOI axis) - typically 0.5x for golf clubs
-    i_gamma = 0.5 * i_alpha
+    # I_gamma (lowest MOI axis) uses a configurable ratio so club-specific
+    # measurements can replace the demo-model heuristic.
+    i_gamma = gamma_to_alpha_ratio * i_alpha
 
     ensure(i_alpha > 0, "I_alpha must be positive")
     ensure(i_gamma > 0, "I_gamma must be positive")
@@ -158,16 +164,17 @@ def generate_sample_torque(
         torque = np.convolve(torque, np.ones(10) / 10, mode="same")
     elif noise_type == "Step":
         torque = np.zeros_like(t)
-        torque[250:] = 3.0  # Step at midpoint
+        midpoint = len(t) // 2
+        torque[midpoint:] = 3.0
     elif noise_type == "Pulse":
         torque = np.zeros_like(t)
-        pulse_start = 200
-        pulse_end = 300
+        pulse_start = int(0.4 * len(t))
+        pulse_end = int(0.6 * len(t))
         torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
     elif noise_type == "Burst":
         torque = np.zeros_like(t)
-        burst_center = 250
-        burst_width = 50
+        burst_center = len(t) // 2
+        burst_width = max(1, len(t) // 10)
         burst_indices = np.arange(
             max(0, burst_center - burst_width),
             min(len(t), burst_center + burst_width),
