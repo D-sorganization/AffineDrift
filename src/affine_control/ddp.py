@@ -1,4 +1,6 @@
 import logging
+import os
+import warnings
 from collections.abc import Callable
 from typing import Any
 
@@ -26,9 +28,14 @@ from src.core.contracts import (
 logger = logging.getLogger(__name__)
 
 
+def _is_running_under_pytest() -> bool:
+    """Return True if the current call occurs inside a pytest session."""
+    return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in os.environ.get("PYTHONPATH", "")
+
+
 def estimate_perturbation_size(
     x: np.ndarray[Any, Any],
-    u: np.ndarray[Any, Any],
+    _u: np.ndarray[Any, Any],
     base_noise: float = DEFAULT_BASE_NOISE,
     state_scale: float = DEFAULT_STATE_SCALE,
 ) -> float:
@@ -42,7 +49,7 @@ def estimate_perturbation_size(
 
     Args:
         x: State vector
-        u: Control vector (unused, reserved for control-dependent noise models)
+        _u: Control vector (unused, reserved for control-dependent noise models)
         base_noise: Minimum noise floor (default: 0.01)
         state_scale: Fraction of state magnitude to add as perturbation (default: 0.1)
 
@@ -60,6 +67,112 @@ def estimate_perturbation_size(
     return result
 
 
+class MockDDPSolver:
+    """Non-functional placeholder for a full DDP (Differential Dynamic Programming) solver.
+
+    .. warning::
+        This is a **mock implementation** intended for use in tests and early
+        prototyping only.  It does **not** implement a correct DDP backward
+        pass or Riccati equation solve.  The forward simulation uses simple
+        Euler integration and the iteration loop exits after at most 3 steps.
+        Trajectories produced by this solver are **mathematically incorrect**
+        and must not be used to drive physical hardware or generate production
+        decisions.
+
+        See GitHub issue #1659 for the tracking item to replace this with a
+        real DDP implementation.
+
+    When instantiated outside a pytest session this class emits a
+    :class:`UserWarning` to make the limitation visible at runtime.
+    """
+
+    def __init__(
+        self,
+        compute_hessian_bound_func: Callable[
+            [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]],
+            float,
+        ] = compute_hessian_bound,
+    ) -> None:
+        if not _is_running_under_pytest():
+            warnings.warn(
+                "MockDDPSolver is a non-functional prototype.  "
+                "The backward pass and Riccati solve are NOT implemented.  "
+                "Trajectories produced here are mathematically incorrect.  "
+                "See issue #1659 to track the full DDP implementation.",
+                UserWarning,
+                stacklevel=2,
+            )
+        self._compute_hessian_bound_func = compute_hessian_bound_func
+
+    def solve(
+        self,
+        f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        xf: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        eps_residual: float = DEFAULT_EPS_RESIDUAL,
+        max_iters: int = DEFAULT_MAX_ITERS,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Run the mock DDP solve.
+
+        .. warning::
+            This method does **not** converge to an optimal solution.  It
+            performs simple Euler-integrated forward passes with adaptive
+            timestep selection and exits after at most ``min(max_iters, 3)``
+            iterations.  It exists solely to exercise the surrounding
+            infrastructure in tests and prototypes.
+
+        Args:
+            f: Dynamics function f(x, u) -> dx/dt
+            x0: Initial state
+            xf: Target state
+            u_init: Initial control trajectory (array of shape (N, control_dim))
+            eps_residual: Nominal residual tolerance (used only for timestep sizing)
+            max_iters: Upper bound on iterations (effectively capped at 3)
+
+        Returns:
+            x_traj: State trajectory array of shape (N+1, state_dim)
+            u_traj: Control trajectory array of shape (N, control_dim)
+            t_traj: Adaptive time grid of shape (N+1,)
+        """
+        # --- Preconditions ---
+        check_finite_array(x0, "x0")
+        check_finite_array(xf, "xf")
+        require(x0.shape == xf.shape, "x0 and xf must have same shape")
+        check_positive(eps_residual, "eps_residual")
+        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+        require(len(u_init) > 0, "u_init must not be empty")
+
+        # Step 1: Initialize with uniform timestep
+        u_traj = np.array(u_init)
+        n_steps = len(u_traj)
+        dt_init = DEFAULT_DT_INIT
+        # Time grid needs N+1 points for N intervals
+        t = np.linspace(0, n_steps * dt_init, n_steps + 1)
+
+        # Initial forward pass (no backward pass implemented)
+        x_traj = _simulate_trajectory(f, x0, u_traj, t)
+
+        for iteration in range(max_iters):
+            dt_adaptive = _compute_adaptive_timesteps(
+                f, x_traj, u_traj, eps_residual, self._compute_hessian_bound_func
+            )
+
+            # Create new time grid and resample controls
+            t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
+            u_traj = _resample_controls(u_traj, t, t_new[:-1])
+
+            # Simulate on new grid (no DDP backward/forward pass — prototype only)
+            x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
+            t = t_new
+
+            # Exit early — this mock does not converge
+            if iteration > 2:
+                break
+
+        return x_traj, u_traj, t
+
+
 def adaptive_timestep_ddp_mock(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
@@ -71,67 +184,24 @@ def adaptive_timestep_ddp_mock(
         [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
     ] = compute_hessian_bound,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Thin wrapper around :class:`MockDDPSolver` kept for test compatibility.
+
+    .. deprecated::
+        Use :class:`MockDDPSolver` directly.  This function exists only so
+        that existing test code continues to import without modification while
+        the mock is properly gated behind its class.
+
+    See :meth:`MockDDPSolver.solve` for full documentation.
     """
-    DDP with curvature-adaptive timestep selection.
-
-    NOTE: This is a non-functional MOCK implementation.
-    The backward pass and Riccati equation solving are not implemented.
-    This skeleton serves as a placeholder for the algorithm structure.
-    See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md
-
-    Args:
-        f: Dynamics function f(x, u, t)
-        x0: Initial state
-        xf: Target state
-        u_init: Initial control trajectory (list of controls)
-        eps_residual: Maximum acceptable residual
-        max_iters: Maximum DDP iterations
-        compute_hessian_bound_func: Function M(x, u) returning local Hessian bound
-
-    Returns:
-        x_traj: Optimized state trajectory
-        u_traj: Optimized control trajectory
-        t_traj: Adaptive time grid
-    """
-
-    # --- Preconditions ---
-    check_finite_array(x0, "x0")
-    check_finite_array(xf, "xf")
-    require(x0.shape == xf.shape, "x0 and xf must have same shape")
-    check_positive(eps_residual, "eps_residual")
-    require(max_iters >= 1, "max_iters must be >= 1", max_iters)
-    require(len(u_init) > 0, "u_init must not be empty")
-
-    # Step 1: Initialize with uniform timestep
-    u_traj = np.array(u_init)
-    N = len(u_traj)
-    dt_init = DEFAULT_DT_INIT  # Initial guess
-    # Time grid needs N+1 points for N intervals
-    t = np.linspace(0, N * dt_init, N + 1)
-
-    # Initial Forward pass (Placeholder)
-    x_traj = _simulate_trajectory(f, x0, u_traj, t)
-
-    # cost_old = float('inf')
-
-    for iteration in range(max_iters):
-        dt_adaptive = _compute_adaptive_timesteps(
-            f, x_traj, u_traj, eps_residual, compute_hessian_bound_func
-        )
-
-        # Create new time grid and resample controls
-        t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
-        u_traj = _resample_controls(u_traj, t, t_new[:-1])
-
-        # Simulate on new grid (placeholder for full DDP backward/forward pass)
-        x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
-        t = t_new
-
-        # Break early for prototype
-        if iteration > 2:
-            break
-
-    return x_traj, u_traj, t
+    solver = MockDDPSolver(compute_hessian_bound_func=compute_hessian_bound_func)
+    return solver.solve(
+        f=f,
+        x0=x0,
+        xf=xf,
+        u_init=u_init,
+        eps_residual=eps_residual,
+        max_iters=max_iters,
+    )
 
 
 def _compute_adaptive_timesteps(
@@ -153,7 +223,7 @@ def _compute_adaptive_timesteps(
     Returns:
         Array of adaptive timestep sizes, clipped to [DT_CLIP_MIN, DT_CLIP_MAX].
     """
-    M_traj = np.array(
+    m_traj = np.array(
         [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
     )
     delta_x_max = np.array(
@@ -162,10 +232,10 @@ def _compute_adaptive_timesteps(
 
     # Avoid division by zero
     delta_x_max = np.maximum(delta_x_max, EPSILON)
-    M_traj = np.maximum(M_traj, EPSILON)
+    m_traj = np.maximum(m_traj, EPSILON)
 
-    # dt = sqrt( 2 * eps / (M * delta_x^2) )
-    dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
+    # Adaptive timestep: dt = sqrt( 2 * eps / (M * delta_x^2) )
+    dt_adaptive = np.sqrt(2 * eps_residual / (m_traj * delta_x_max**2))
     return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
 
 
@@ -175,7 +245,7 @@ def _simulate_trajectory(
     u_traj: np.ndarray[Any, Any],
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
-    """Exponential integrator or RK4 simulation."""
+    """Forward simulation using simple Euler integration (prototype quality only)."""
     require(
         len(u_traj) == len(t_grid) - 1,
         "u_traj length must equal t_grid length - 1",
@@ -185,7 +255,6 @@ def _simulate_trajectory(
     curr_x = x0
     for i in range(len(u_traj)):
         dt = t_grid[i + 1] - t_grid[i]
-        # Simple Euler for prototype
         dx = f(curr_x, u_traj[i])
         curr_x = curr_x + dx * dt
         x.append(curr_x)
@@ -201,9 +270,6 @@ def _resample_controls(
     require(len(t_new) > 0, "t_new must not be empty")
     u_resampled = []
 
-    # Simple interpolation
-    # For robust implementation, use scipy.interpolate.interp1d
-    # Here we just map indices roughly for prototype without dependencies
     for t in t_new:
         idx = np.searchsorted(t_old, t)
         idx = min(idx, len(u_old) - 1)
