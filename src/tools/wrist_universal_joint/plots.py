@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -115,7 +115,7 @@ def plot_torque(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -229,7 +229,7 @@ def _compute_transmission_sweep(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,

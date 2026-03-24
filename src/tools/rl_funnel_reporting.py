@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
-import numpy as np
+import numpy.typing as npt
 
 
 @dataclass
@@ -15,8 +16,8 @@ class BenchmarkResult:
     tracking_error: float
     control_effort: float
     runtime_sec: float
-    trajectory: np.ndarray = field(repr=False)
-    t_grid: np.ndarray = field(repr=False)
+    trajectory: npt.NDArray[Any] = field(repr=False)
+    t_grid: npt.NDArray[Any] = field(repr=False)
 
 
 def format_results(results: list[BenchmarkResult]) -> str:

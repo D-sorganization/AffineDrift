@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
+import numpy.typing as npt
 
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_finite_array, require
@@ -16,7 +19,7 @@ PENDULUM_LINK_1_M = 0.5
 PENDULUM_LINK_2_M = 0.5
 
 
-def double_pendulum_mass_matrix(theta1: float, theta2: float) -> np.ndarray:
+def double_pendulum_mass_matrix(theta1: float, theta2: float) -> npt.NDArray[Any]:
     """Return the benchmark mass matrix for the two-link pendulum."""
     c12 = np.cos(theta1 - theta2)
     return np.array(
@@ -33,7 +36,7 @@ def double_pendulum_mass_matrix(theta1: float, theta2: float) -> np.ndarray:
     )
 
 
-def validate_state_vector(x: np.ndarray, name: str) -> None:
+def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
     """Validate a 4D state vector for the benchmark system."""
     check_finite_array(x, name)
     require(x.shape == (STATE_DIM,), f"{name} must have shape ({STATE_DIM},)", x.shape)
@@ -45,13 +48,13 @@ def validate_time_span(t_span: tuple[float, float]) -> None:
     require(t_span[1] > t_span[0], "t_span end must exceed start", t_span)
 
 
-def validate_weight_matrix(matrix: np.ndarray, shape: tuple[int, int], name: str) -> None:
+def validate_weight_matrix(matrix: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
     """Validate a quadratic cost weight matrix."""
     check_finite_array(matrix, name)
     require(matrix.shape == shape, f"{name} must have shape {shape}", matrix.shape)
 
 
-def validate_reference_trajectory(t_ref: np.ndarray, x_ref: np.ndarray) -> None:
+def validate_reference_trajectory(t_ref: npt.NDArray[Any], x_ref: npt.NDArray[Any]) -> None:
     """Validate a reference time/state trajectory pair."""
     check_finite_array(t_ref, "t_ref")
     check_finite_array(x_ref, "x_ref")
