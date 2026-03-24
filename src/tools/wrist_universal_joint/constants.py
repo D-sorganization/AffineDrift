@@ -35,3 +35,8 @@ MAX_DELTA_DEGREES: float = 89.0
 
 # Default time array length for signal generation
 DEFAULT_SIGNAL_LENGTH: int = 500
+
+# Legacy demo-model ratio between gamma- and alpha-axis inertia.
+# This remains the default for backward compatibility, but callers should
+# override it with measured club-specific data whenever available.
+DEFAULT_GAMMA_TO_ALPHA_RATIO: float = 0.5

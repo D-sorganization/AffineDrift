@@ -43,19 +43,23 @@ from .visualization import (
 
 logger = logging.getLogger(__name__)
 
-# Page config
-st.set_page_config(
-    page_title="Enhanced Wrist Universal Joint Model",
-    page_icon="🏌️",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
 
-# Initialize session state
-if "polynomial_expression" not in st.session_state:
-    st.session_state.polynomial_expression = "t**2 - t"
-if "polynomial_error" not in st.session_state:
-    st.session_state.polynomial_error = None
+def _configure_page() -> None:
+    """Configure the Streamlit page metadata."""
+    st.set_page_config(
+        page_title="Enhanced Wrist Universal Joint Model",
+        page_icon="🏌️",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+
+
+def _initialize_session_state() -> None:
+    """Initialize the app session state lazily."""
+    if "polynomial_expression" not in st.session_state:
+        st.session_state.polynomial_expression = "t**2 - t"
+    if "polynomial_error" not in st.session_state:
+        st.session_state.polynomial_error = None
 
 
 def _inject_custom_css() -> None:
@@ -256,8 +260,8 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
 
 def _create_plot_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: np.ndarray,
+    input_torque: np.ndarray,
 ) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 
@@ -272,7 +276,7 @@ def _create_plot_figure(
     plot_type = params["plot_type"]
 
     if plot_type == "Torque":
-        return plot_torque(  # type: ignore[no-any-return]
+        return plot_torque(
             t,
             input_torque,
             params["grip_angle"],
@@ -285,7 +289,7 @@ def _create_plot_figure(
             params["show_gamma"],
         )
     if plot_type == "Angular Acceleration":
-        return plot_acceleration(  # type: ignore[no-any-return]
+        return plot_acceleration(
             t,
             input_torque,
             params["grip_angle"],
@@ -296,7 +300,7 @@ def _create_plot_figure(
             params["show_gamma"],
         )
     # Transmission Ratio
-    return plot_transmission_sweep(  # type: ignore[no-any-return]
+    return plot_transmission_sweep(
         params["grip_angle"],
         params["wrist_angle"],
         params["I_alpha"],
@@ -405,8 +409,15 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
         )
 
 
-# ===== Main App Entry Point =====
-_inject_custom_css()
-_render_header()
-_params = _render_sidebar()
-_render_main_content(_params)
+def main() -> None:
+    """Run the Streamlit wrist universal joint app."""
+    _configure_page()
+    _initialize_session_state()
+    _inject_custom_css()
+    _render_header()
+    params = _render_sidebar()
+    _render_main_content(params)
+
+
+if __name__ == "__main__":
+    main()

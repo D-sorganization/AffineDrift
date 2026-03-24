@@ -16,21 +16,58 @@ from __future__ import annotations
 
 import argparse
 import logging
-import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import cast
 
 import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
+from src.core.contracts import check_finite_array, check_positive, require
+
 GRAVITY_M_S2 = 9.81  # m/s^2, standard gravity
+STATE_DIM = 4
+CONTROL_DIM = 2
+DEFAULT_CONTROL_SATURATION = 50.0
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # System definition: double pendulum (2-DoF golf swing proxy)
 # ---------------------------------------------------------------------------
+
+
+def _validate_state_vector(x: np.ndarray, name: str) -> None:
+    """Validate a 4D state vector for the benchmark system."""
+    check_finite_array(x, name)
+    require(x.shape == (STATE_DIM,), f"{name} must have shape ({STATE_DIM},)", x.shape)
+
+
+def _validate_time_span(t_span: tuple[float, float]) -> None:
+    """Validate a simulation time span."""
+    require(len(t_span) == 2, "t_span must contain exactly two endpoints", t_span)
+    require(t_span[1] > t_span[0], "t_span end must exceed start", t_span)
+
+
+def _validate_weight_matrix(matrix: np.ndarray, shape: tuple[int, int], name: str) -> None:
+    """Validate a quadratic cost weight matrix."""
+    check_finite_array(matrix, name)
+    require(matrix.shape == shape, f"{name} must have shape {shape}", matrix.shape)
+
+
+def _validate_reference_trajectory(t_ref: np.ndarray, x_ref: np.ndarray) -> None:
+    """Validate a reference time/state trajectory pair."""
+    check_finite_array(t_ref, "t_ref")
+    check_finite_array(x_ref, "x_ref")
+    require(t_ref.ndim == 1, "t_ref must be one-dimensional", t_ref.ndim)
+    require(len(t_ref) >= 2, "t_ref must contain at least two samples", len(t_ref))
+    require(bool(np.all(np.diff(t_ref) > 0)), "t_ref must be strictly increasing")
+    require(
+        x_ref.shape == (STATE_DIM, len(t_ref)),
+        "x_ref must have shape (4, len(t_ref))",
+        x_ref.shape,
+    )
 
 
 def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> np.ndarray:
@@ -39,6 +76,8 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
     State: x = [theta1, theta2, dtheta1, dtheta2]
     Parameters: m1=m2=1kg, L1=L2=0.5m
     """
+    _validate_state_vector(x, "x")
+    check_positive(g, "g")
     m1, m2, L1, L2 = 1.0, 1.0, 0.5, 0.5
     th1, th2, dth1, dth2 = x
     c12 = np.cos(th1 - th2)
@@ -57,6 +96,7 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
 
 def double_pendulum_B(x: np.ndarray) -> np.ndarray:
     """Control input matrix g(x): torques applied at both joints."""
+    _validate_state_vector(x, "x")
     m1, m2, L1, L2 = 1.0, 1.0, 0.5, 0.5
     th1, th2, _, _ = x
     c12 = np.cos(th1 - th2)
@@ -78,8 +118,11 @@ def generate_reference_trajectory(
     x0: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Generate reference trajectory via passive simulation from backswing position."""
+    _validate_time_span(t_span)
+    check_positive(dt, "dt")
     if x0 is None:
         x0 = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
+    _validate_state_vector(x0, "x0")
 
     sol = solve_ivp(
         double_pendulum_drift,
@@ -120,10 +163,13 @@ def setpoint_lqr_controller(
     """
     n = 4
     m = 2
+    _validate_state_vector(x_target, "x_target")
     if Q_sp is None:
         Q_sp = np.diag([10.0, 10.0, 1.0, 1.0])
     if R_sp is None:
         R_sp = 0.1 * np.eye(m)
+    _validate_weight_matrix(Q_sp, (n, n), "Q_sp")
+    _validate_weight_matrix(R_sp, (m, m), "R_sp")
 
     # Linearize at target
     eps = 1e-6
@@ -141,7 +187,7 @@ def setpoint_lqr_controller(
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply setpoint LQR control law u = -K(x - x_target)."""
-        return -K @ (x - x_target)
+        return cast(np.ndarray, -K @ (x - x_target))
 
     return controller
 
@@ -161,10 +207,13 @@ def trajectory_tracking_lqr(
 
     n = 4
     m = 2
+    _validate_reference_trajectory(t_ref, x_ref)
     if Q_tt is None:
         Q_tt = np.diag([10.0, 10.0, 1.0, 1.0])
     if R_tt is None:
         R_tt = 0.1 * np.eye(m)
+    _validate_weight_matrix(Q_tt, (n, n), "Q_tt")
+    _validate_weight_matrix(R_tt, (m, m), "R_tt")
 
     # Precompute gains at each reference time step
     gains = []
@@ -191,15 +240,15 @@ def trajectory_tracking_lqr(
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
-        return gains_array[idx]
+        return cast(np.ndarray, gains_array[idx])
 
     x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
-        x_star = x_ref_interp(t)
+        x_star = cast(np.ndarray, x_ref_interp(t))
         K = get_K(t)
-        return -K @ (x - x_star)
+        return cast(np.ndarray, -K @ (x - x_star))
 
     return controller
 
@@ -217,16 +266,24 @@ def run_benchmark(
     x_ref: np.ndarray,
     name: str,
     dt: float = 0.001,
+    control_limit: float = DEFAULT_CONTROL_SATURATION,
 ) -> BenchmarkResult:
     """Simulate closed-loop system and compute performance metrics."""
+    require(callable(controller), "controller must be callable")
+    _validate_state_vector(x0_perturbed, "x0_perturbed")
+    _validate_time_span(t_span)
+    _validate_reference_trajectory(t_ref, x_ref)
+    check_positive(dt, "dt")
+    check_positive(control_limit, "control_limit")
+    require(bool(name.strip()), "name must be non-empty", name)
     start = time.perf_counter()
 
     def closed_loop(t: float, x: np.ndarray) -> np.ndarray:
         """Closed-loop ODE: drift + controlled input with saturation."""
         u = controller(t, x)
         # Clip control to prevent divergence
-        u = np.clip(u, -50, 50)
-        return double_pendulum_drift(t, x) + double_pendulum_B(x) @ u
+        u = cast(np.ndarray, np.clip(u, -control_limit, control_limit))
+        return cast(np.ndarray, double_pendulum_drift(t, x) + double_pendulum_B(x) @ u)
 
     sol = solve_ivp(
         closed_loop,
@@ -269,8 +326,13 @@ def run_comparison(
     t_span: tuple[float, float] = (0.0, 0.5),
     dt: float = 0.001,
     seed: int = 42,
+    control_limit: float = DEFAULT_CONTROL_SATURATION,
 ) -> list[BenchmarkResult]:
     """Run full benchmark comparison: setpoint vs TTCF vs passive."""
+    check_positive(control_limit, "control_limit")
+    check_positive(dt, "dt")
+    require(perturbation_scale >= 0, "perturbation_scale must be non-negative", perturbation_scale)
+    _validate_time_span(t_span)
     rng = np.random.default_rng(seed)
 
     logger.info("Generating reference trajectory...")
@@ -287,7 +349,16 @@ def run_comparison(
     logger.info("Running setpoint LQR benchmark...")
     sp_ctrl = setpoint_lqr_controller(x_target)
     results.append(
-        run_benchmark(sp_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Setpoint LQR", dt=dt)
+        run_benchmark(
+            sp_ctrl,
+            x0_perturbed,
+            t_span,
+            t_ref,
+            x_ref,
+            "Setpoint LQR",
+            dt=dt,
+            control_limit=control_limit,
+        )
     )
 
     # 2. Trajectory Tracking Cost Functional
@@ -295,7 +366,14 @@ def run_comparison(
     tt_ctrl = trajectory_tracking_lqr(t_ref, x_ref)
     results.append(
         run_benchmark(
-            tt_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Trajectory Tracking (TTCF)", dt=dt
+            tt_ctrl,
+            x0_perturbed,
+            t_span,
+            t_ref,
+            x_ref,
+            "Trajectory Tracking (TTCF)",
+            dt=dt,
+            control_limit=control_limit,
         )
     )
 
@@ -308,35 +386,43 @@ def run_comparison(
 
     results.append(
         run_benchmark(
-            passive_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Passive (no control)", dt=dt
+            passive_ctrl,
+            x0_perturbed,
+            t_span,
+            t_ref,
+            x_ref,
+            "Passive (no control)",
+            dt=dt,
+            control_limit=control_limit,
         )
     )
 
     return results
 
 
-def print_results(results: list[BenchmarkResult]) -> None:
-    """Print formatted benchmark comparison table."""
-    out = sys.stdout
-    out.write("\n" + "=" * 70 + "\n")
-    out.write(f"{'Controller':<30} {'Tracking Error':>15} {'Control Effort':>15}\n")
-    out.write("=" * 70 + "\n")
+def format_results(results: list[BenchmarkResult]) -> str:
+    """Return a formatted benchmark comparison table."""
+    lines = ["", "=" * 70]
+    lines.append(f"{'Controller':<30} {'Tracking Error':>15} {'Control Effort':>15}")
+    lines.append("=" * 70)
     for r in results:
-        out.write(
+        lines.append(
             f"{r.name:<30} {r.tracking_error:>15.4f} {r.control_effort:>15.4f}"
-            f"  ({r.runtime_sec:.2f}s)\n"
+            f"  ({r.runtime_sec:.2f}s)"
         )
-    out.write("=" * 70 + "\n")
+    lines.append("=" * 70)
 
     if len(results) >= 2:
         sp = next(r for r in results if "Setpoint" in r.name)
         tt = next(r for r in results if "Trajectory" in r.name)
         improvement = (sp.tracking_error - tt.tracking_error) / sp.tracking_error * 100
-        out.write(f"\nTTCF tracking improvement over setpoint: {improvement:.1f}%\n")
+        lines.append("")
+        lines.append(f"TTCF tracking improvement over setpoint: {improvement:.1f}%")
         if improvement > 0:
-            out.write("✓ Trajectory tracking cost functional outperforms setpoint control.\n")
+            lines.append("✓ Trajectory tracking cost functional outperforms setpoint control.")
         else:
-            out.write("✗ Setpoint control outperforms TTCF in this scenario.\n")
+            lines.append("✗ Setpoint control outperforms TTCF in this scenario.")
+    return "\n".join(lines)
 
 
 def main() -> None:
@@ -354,6 +440,12 @@ def main() -> None:
         "--horizon", type=float, default=0.5, help="Simulation horizon in seconds (default: 0.5)"
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for perturbation")
+    parser.add_argument(
+        "--control-limit",
+        type=float,
+        default=DEFAULT_CONTROL_SATURATION,
+        help="Symmetric control saturation limit in N·m (default: 50.0)",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     args = parser.parse_args()
 
@@ -363,8 +455,9 @@ def main() -> None:
         perturbation_scale=args.perturbation,
         t_span=(0.0, args.horizon),
         seed=args.seed,
+        control_limit=args.control_limit,
     )
-    print_results(results)
+    logger.warning("\n%s", format_results(results))
 
 
 if __name__ == "__main__":
