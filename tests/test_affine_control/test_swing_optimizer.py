@@ -384,6 +384,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             horizon_steps=10,
             max_iterations=3,
             target_velocity=5.0,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         x0 = np.zeros(2)
@@ -403,6 +404,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             horizon_steps=10,
             max_iterations=3,
             target_velocity=10.0,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         x0 = np.zeros(4)
@@ -418,6 +420,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             horizon_steps=10,
             max_iterations=2,
             target_velocity=15.0,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         x0 = np.zeros(6)
@@ -427,14 +430,18 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
     def test_optimize_wrong_initial_state_dim(self) -> None:
         """Wrong initial_state dimension should raise ContractViolationError."""
-        config = SwingOptimizationConfig(n_joints=2, horizon_steps=5, max_iterations=1)
+        config = SwingOptimizationConfig(
+            n_joints=2, horizon_steps=5, max_iterations=1, allow_mock_solver=True
+        )
         optimizer = SwingOptimizer(config)
         with self.assertRaises(ContractViolationError):
             optimizer.optimize(np.zeros(3), double_integrator_2dof)  # need dim 4
 
     def test_optimize_nan_initial_state_rejected(self) -> None:
         """NaN in initial_state should raise ContractViolationError."""
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
+        config = SwingOptimizationConfig(
+            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=True
+        )
         optimizer = SwingOptimizer(config)
         with self.assertRaises(ContractViolationError):
             optimizer.optimize(
@@ -448,6 +455,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             n_joints=1,
             horizon_steps=10,
             max_iterations=2,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         x0 = np.zeros(2)
@@ -463,12 +471,20 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             n_joints=1,
             horizon_steps=10,
             max_iterations=3,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         x0 = np.zeros(2)
         result = optimizer.optimize(x0, double_integrator_1dof)
         self.assertTrue(np.isfinite(result.cost))
         self.assertGreaterEqual(result.cost, 0.0)
+
+    def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
+        """Mock DDP should require explicit config opt-in."""
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
+        optimizer = SwingOptimizer(config)
+        with self.assertRaises(ContractViolationError):
+            optimizer.optimize(np.zeros(2), double_integrator_1dof)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────

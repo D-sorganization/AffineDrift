@@ -28,6 +28,7 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
     DEFAULT_SIGNAL_LENGTH,
 )
+from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
 from .torque_calculator import (
     calculate_moments_of_inertia,
     distribute_torque_by_grip_angle,
@@ -42,33 +43,6 @@ from .visualization import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-def _configure_page() -> None:
-    """Configure the Streamlit page metadata."""
-    st.set_page_config(
-        page_title="Enhanced Wrist Universal Joint Model",
-        page_icon="🏌️",
-        layout="wide",
-        initial_sidebar_state="expanded",
-    )
-
-
-def _initialize_session_state() -> None:
-    """Initialize the app session state lazily."""
-    if "polynomial_expression" not in st.session_state:
-        st.session_state.polynomial_expression = "t**2 - t"
-    if "polynomial_error" not in st.session_state:
-        st.session_state.polynomial_error = None
-
-
-def _inject_custom_css() -> None:
-    """Inject custom CSS styles into the Streamlit page."""
-    template_dir = Path(__file__).parent / "templates"
-    css_path = template_dir / "style.css"
-    if css_path.exists():
-        css = css_path.read_text()
-        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
 def _render_header() -> None:
@@ -411,9 +385,9 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
 
 def main() -> None:
     """Run the Streamlit wrist universal joint app."""
-    _configure_page()
-    _initialize_session_state()
-    _inject_custom_css()
+    configure_page()
+    initialize_session_state()
+    inject_custom_css(Path(__file__).parent / "templates")
     _render_header()
     params = _render_sidebar()
     _render_main_content(params)

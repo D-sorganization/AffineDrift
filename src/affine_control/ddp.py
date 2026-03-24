@@ -1,6 +1,6 @@
 import logging
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -24,6 +24,42 @@ from src.core.contracts import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class MockDDPSolver:
+    """Explicit wrapper around the placeholder DDP implementation."""
+
+    def __init__(self) -> None:
+        """Initialize the warning state for the placeholder solver."""
+        self._has_warned = False
+
+    def __call__(
+        self,
+        f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        xf: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        eps_residual: float = DEFAULT_EPS_RESIDUAL,
+        max_iters: int = DEFAULT_MAX_ITERS,
+        compute_hessian_bound_func: Callable[
+            [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
+        ] = compute_hessian_bound,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Run the mock solver and emit a clear warning on first use."""
+        if not self._has_warned:
+            logger.warning(
+                "Using MockDDPSolver placeholder; pass a production DDP backend for real optimization."
+            )
+            self._has_warned = True
+        return adaptive_timestep_ddp_mock(
+            f=f,
+            x0=x0,
+            xf=xf,
+            u_init=u_init,
+            eps_residual=eps_residual,
+            max_iters=max_iters,
+            compute_hessian_bound_func=compute_hessian_bound_func,
+        )
 
 
 def estimate_perturbation_size(
@@ -166,7 +202,7 @@ def _compute_adaptive_timesteps(
 
     # dt = sqrt( 2 * eps / (M * delta_x^2) )
     dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
-    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
+    return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 
 def _simulate_trajectory(
