@@ -460,6 +460,7 @@ def run_comparison(
         return np.zeros(2)
 
     def _rb(ctrl: Callable[[float, np.ndarray], np.ndarray], label: str) -> BenchmarkResult:
+        """Run a single named benchmark and return its result."""
         logger.info("Running %s benchmark...", label)
         return run_benchmark(ctrl, x0_perturbed, t_span, t_ref, x_ref, label, dt=dt)
 
