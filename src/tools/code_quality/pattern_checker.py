@@ -65,6 +65,9 @@ _PATTERN_SELF_CHECK_FILES = frozenset(
         # Decomposed modules that define/reference the patterns they check for
         "pattern_checker.py",
         "ast_analyzer.py",
+        # Assessment runner uses "REVIEW" and "PENDING REVIEW" as legitimate
+        # status labels in generated report strings, not as code placeholders
+        "run_assessment.py",
     }
 )
 
