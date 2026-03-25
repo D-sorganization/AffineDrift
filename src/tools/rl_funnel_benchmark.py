@@ -252,21 +252,8 @@ def _precompute_lqr_gains(
     return np.array(gains)
 
 
-def trajectory_tracking_lqr(
-    t_ref: np.ndarray,
-    x_ref: np.ndarray,
-    Q_tt: np.ndarray | None = None,
-    R_tt: np.ndarray | None = None,
-) -> Callable[[float, np.ndarray], np.ndarray]:
-    """Trajectory Tracking Cost Functional (TTCF) controller.
-
-    Time-varying LQR that tracks x*(t) with time-varying linearization.
-    Uses frozen-time LQR at each point (approximation; exact requires Riccati ODE).
-
-    Gain precomputation is delegated to ``_precompute_lqr_gains``.
-    """
-    from scipy.interpolate import interp1d
-
+def _validate_ttcf_inputs(t_ref: np.ndarray, x_ref: np.ndarray) -> None:
+    """Validate reference trajectory inputs for the TTCF controller."""
     require(
         isinstance(t_ref, np.ndarray) and t_ref.ndim == 1 and len(t_ref) >= 2,
         "t_ref must be a 1D numpy array with at least 2 elements",
@@ -283,27 +270,39 @@ def trajectory_tracking_lqr(
     check_finite_array(t_ref, "t_ref")
     check_finite_array(x_ref, "x_ref")
 
-    n = 4
-    m = 2
-    if Q_tt is None:
-        Q_tt = np.diag([10.0, 10.0, 1.0, 1.0])
-    if R_tt is None:
-        R_tt = 0.1 * np.eye(m)
 
+def trajectory_tracking_lqr(
+    t_ref: np.ndarray,
+    x_ref: np.ndarray,
+    Q_tt: np.ndarray | None = None,
+    R_tt: np.ndarray | None = None,
+) -> Callable[[float, np.ndarray], np.ndarray]:
+    """Trajectory Tracking Cost Functional (TTCF) controller.
+
+    Time-varying LQR that tracks x*(t) with time-varying linearization.
+    Uses frozen-time LQR at each point (approximation; exact requires Riccati ODE).
+
+    Gain precomputation is delegated to ``_precompute_lqr_gains``.
+    Validation is delegated to ``_validate_ttcf_inputs``.
+    """
+    from scipy.interpolate import interp1d
+
+    _validate_ttcf_inputs(t_ref, x_ref)
+
+    n, m = 4, 2
+    Q_tt = Q_tt if Q_tt is not None else np.diag([10.0, 10.0, 1.0, 1.0])
+    R_tt = R_tt if R_tt is not None else 0.1 * np.eye(m)
     gains_array = _precompute_lqr_gains(t_ref, x_ref, n, m, Q_tt, R_tt)
+    x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
 
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
         return gains_array[idx]
 
-    x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
-
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
-        x_star = x_ref_interp(t)
-        K = get_K(t)
-        return -K @ (x - x_star)
+        return -get_K(t) @ (x - x_ref_interp(t))
 
     return controller
 
@@ -311,6 +310,57 @@ def trajectory_tracking_lqr(
 # ---------------------------------------------------------------------------
 # Simulation runner
 # ---------------------------------------------------------------------------
+
+
+def _compute_tracking_metrics(
+    controller: Callable[[float, np.ndarray], np.ndarray],
+    x_sim: np.ndarray,
+    t_eval: np.ndarray,
+    t_ref: np.ndarray,
+    x_ref: np.ndarray,
+) -> tuple[float, float]:
+    """Compute mean tracking error and control effort from a simulated trajectory.
+
+    Args:
+        controller: Callable ``(t, x) -> u`` for control effort computation.
+        x_sim: Simulated state trajectory of shape ``(n, T)``.
+        t_eval: Time grid of shape ``(T,)``.
+        t_ref: Reference time array of shape ``(T_ref,)``.
+        x_ref: Reference trajectory of shape ``(n, T_ref)``.
+
+    Returns:
+        ``(tracking_error, control_effort)`` as scalar floats.
+    """
+    from scipy.interpolate import interp1d
+
+    x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
+    x_star = x_ref_interp(t_eval)
+    tracking_error = float(np.mean(np.linalg.norm(x_sim - x_star, axis=0) ** 2))
+    u_all = np.array([controller(t, x_sim[:, i]) for i, t in enumerate(t_eval)])
+    control_effort = float(np.mean(np.sum(u_all**2, axis=1)))
+    return tracking_error, control_effort
+
+
+def _validate_benchmark_inputs(
+    controller: object,
+    x0_perturbed: np.ndarray,
+    t_span: tuple[float, float],
+    dt: float,
+) -> None:
+    """Validate inputs for run_benchmark."""
+    require(callable(controller), "controller must be callable", type(controller))
+    require(
+        isinstance(x0_perturbed, np.ndarray) and x0_perturbed.shape == (4,),
+        "x0_perturbed must be a numpy array of shape (4,)",
+        x0_perturbed,
+    )
+    check_finite_array(x0_perturbed, "x0_perturbed")
+    require(
+        len(t_span) == 2 and t_span[1] > t_span[0],
+        "t_span must be (t0, tf) with tf > t0",
+        t_span,
+    )
+    check_positive(dt, "dt")
 
 
 def run_benchmark(
@@ -325,33 +375,12 @@ def run_benchmark(
 ) -> BenchmarkResult:
     """Simulate closed-loop system and compute performance metrics.
 
-    Args:
-        controller: Callable ``(t, x) -> u`` returning control input.
-        x0_perturbed: Perturbed initial state of shape ``(n,)``.
-        t_span: Integration interval ``(t0, tf)``.
-        t_ref: Reference time array of shape ``(T,)``.
-        x_ref: Reference state trajectory of shape ``(n, T)``.
-        name: Human-readable label for this run.
-        dt: Maximum integration step size in seconds.
-        control_limits: ``(lower, upper)`` saturation bounds applied to the
-            control input at every time step.  Defaults to
-            ``CONTROL_SATURATION_DEFAULT`` (``-50.0``, ``50.0``) N*m, which is
-            appropriate for the built-in double-pendulum benchmark.  Override
-            this for systems with different actuator constraints.
+    Validation delegated to ``_validate_benchmark_inputs``.
+    Metrics delegated to ``_compute_tracking_metrics``.
+    ``control_limits``: ``(lower, upper)`` saturation bounds; defaults to
+    ``CONTROL_SATURATION_DEFAULT`` (``-50.0``, ``50.0``) N*m.
     """
-    require(callable(controller), "controller must be callable", type(controller))
-    require(
-        isinstance(x0_perturbed, np.ndarray) and x0_perturbed.shape == (4,),
-        "x0_perturbed must be a numpy array of shape (4,)",
-        x0_perturbed,
-    )
-    check_finite_array(x0_perturbed, "x0_perturbed")
-    require(
-        len(t_span) == 2 and t_span[1] > t_span[0],
-        "t_span must be (t0, tf) with tf > t0",
-        t_span,
-    )
-    check_positive(dt, "dt")
+    _validate_benchmark_inputs(controller, x0_perturbed, t_span, dt)
 
     start = time.perf_counter()
 
@@ -373,16 +402,9 @@ def run_benchmark(
     elapsed = time.perf_counter() - start
     t_eval = np.arange(t_span[0], t_span[1], dt)
     x_sim = sol.sol(t_eval)
-
-    from scipy.interpolate import interp1d
-
-    x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
-    x_star = x_ref_interp(t_eval)
-
-    tracking_error = np.mean(np.linalg.norm(x_sim - x_star, axis=0) ** 2)
-    u_all = np.array([controller(t, x_sim[:, i]) for i, t in enumerate(t_eval)])
-    control_effort = np.mean(np.sum(u_all**2, axis=1))
-
+    tracking_error, control_effort = _compute_tracking_metrics(
+        controller, x_sim, t_eval, t_ref, x_ref
+    )
     return BenchmarkResult(
         name=name,
         tracking_error=tracking_error,
@@ -398,13 +420,17 @@ def run_benchmark(
 # ---------------------------------------------------------------------------
 
 
-def run_comparison(
-    perturbation_scale: float = 0.1,
-    t_span: tuple[float, float] = (0.0, 0.5),
-    dt: float = 0.001,
-    seed: int = 42,
-) -> list[BenchmarkResult]:
-    """Run full benchmark comparison: setpoint vs TTCF vs passive."""
+def _setup_comparison(
+    perturbation_scale: float,
+    t_span: tuple[float, float],
+    dt: float,
+    seed: int,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Validate inputs and build reference trajectory + perturbed initial condition.
+
+    Returns:
+        ``(x0_perturbed, t_ref, x_ref, x_target)``
+    """
     check_positive(perturbation_scale, "perturbation_scale")
     require(
         len(t_span) == 2 and t_span[1] > t_span[0],
@@ -412,49 +438,37 @@ def run_comparison(
         t_span,
     )
     check_positive(dt, "dt")
-
     rng = np.random.default_rng(seed)
-
     logger.info("Generating reference trajectory...")
     x0_nominal = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
     t_ref, x_ref = generate_reference_trajectory(t_span, dt=0.01, x0=x0_nominal)
-
-    # Perturbed initial condition
     x0_perturbed = x0_nominal + perturbation_scale * rng.standard_normal(4)
+    return x0_perturbed, t_ref, x_ref, x_ref[:, -1]
 
-    results = []
 
-    # 1. Classical setpoint LQR (targets final state = impact position)
-    x_target = x_ref[:, -1]
-    logger.info("Running setpoint LQR benchmark...")
-    sp_ctrl = setpoint_lqr_controller(x_target)
-    results.append(
-        run_benchmark(sp_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Setpoint LQR", dt=dt)
-    )
-
-    # 2. Trajectory Tracking Cost Functional
-    logger.info("Running TTCF benchmark...")
-    tt_ctrl = trajectory_tracking_lqr(t_ref, x_ref)
-    results.append(
-        run_benchmark(
-            tt_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Trajectory Tracking (TTCF)", dt=dt
-        )
-    )
-
-    # 3. Passive (no control) — baseline
-    logger.info("Running passive baseline...")
+def run_comparison(
+    perturbation_scale: float = 0.1,
+    t_span: tuple[float, float] = (0.0, 0.5),
+    dt: float = 0.001,
+    seed: int = 42,
+) -> list[BenchmarkResult]:
+    """Run full benchmark comparison: setpoint vs TTCF vs passive."""
+    x0_perturbed, t_ref, x_ref, x_target = _setup_comparison(perturbation_scale, t_span, dt, seed)
 
     def passive_ctrl(t: float, x: np.ndarray) -> np.ndarray:
         """Return zero torque (passive baseline, no active control)."""
         return np.zeros(2)
 
-    results.append(
-        run_benchmark(
-            passive_ctrl, x0_perturbed, t_span, t_ref, x_ref, "Passive (no control)", dt=dt
-        )
-    )
+    def _rb(ctrl: Callable[[float, np.ndarray], np.ndarray], label: str) -> BenchmarkResult:
+        """Run a single named benchmark and return its result."""
+        logger.info("Running %s benchmark...", label)
+        return run_benchmark(ctrl, x0_perturbed, t_span, t_ref, x_ref, label, dt=dt)
 
-    return results
+    return [
+        _rb(setpoint_lqr_controller(x_target), "Setpoint LQR"),
+        _rb(trajectory_tracking_lqr(t_ref, x_ref), "Trajectory Tracking (TTCF)"),
+        _rb(passive_ctrl, "Passive (no control)"),
+    ]
 
 
 def print_results(results: list[BenchmarkResult]) -> None:
