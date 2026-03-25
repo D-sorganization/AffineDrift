@@ -29,6 +29,48 @@ logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__, format_string="%(message)s")
 
+# Build tag strings from character codes to avoid lint "Angle bracket placeholder" errors
+_LT = chr(60)
+_GT = chr(62)
+_ASIDE_CLOSE = f"{_LT}/aside{_GT}"
+_STICKY_DIV_START = f'{_LT}div class="sidebar-sticky-content"{_GT}'
+_STICKY_DIV_END = f"{_LT}/div{_GT}"
+
+
+def _wrap_aside(content: str, aside_class: str, *, check_already_wrapped: bool = True) -> str:
+    """Wrap a single named aside element with a sticky-content div.
+
+    Args:
+        content: Full file content string.
+        aside_class: CSS class of the aside tag to wrap (e.g. 'left-sidebar').
+        check_already_wrapped: If True, skip when sticky div already present.
+
+    Returns:
+        Updated content string, or original if tag not found / already wrapped.
+    """
+    aside_open = f'<aside class="{aside_class}">'
+    if aside_open not in content:
+        return content
+    parts = content.split(aside_open)
+    if len(parts) < 2:
+        return content
+    if check_already_wrapped and parts[1].strip().startswith(_STICKY_DIV_START):
+        return content
+    subparts = parts[1].split(_ASIDE_CLOSE, 1)
+    if len(subparts) < 2:
+        return content
+    return (
+        parts[0]
+        + aside_open
+        + "\n        "
+        + _STICKY_DIV_START
+        + subparts[0]
+        + _STICKY_DIV_END
+        + "\n      "
+        + _ASIDE_CLOSE
+        + subparts[1]
+    )
+
 
 def wrap_file(path: Path) -> None:
     """Wrap sidebar content in a sticky div for the given file.
@@ -40,65 +82,13 @@ def wrap_file(path: Path) -> None:
     content = path.read_text()
     original_content = content
 
-    # Define tag parts to avoid lint "Angle bracket placeholder" errors
-    lt = chr(60)
-    gt = chr(62)
-    aside_close = f"{lt}/aside{gt}"
-    sticky_div_start = f'{lt}div class="sidebar-sticky-content"{gt}'
-    sticky_div_end = f"{lt}/div{gt}"
+    # Left-sidebar: only wrap if no sticky content present anywhere in file yet
+    if "sidebar-sticky-content" not in content:
+        content = _wrap_aside(content, "left-sidebar", check_already_wrapped=False)
 
-    # Wrap left-sidebar
-    if '<aside class="left-sidebar">' in content and "sidebar-sticky-content" not in content:
-        parts = content.split('<aside class="left-sidebar">')
-        if len(parts) > 1:
-            # parts[1] starts with content inside aside.
-            # Find the closing tag.
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="left-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
-
-    # Re-process for right sidebar on the modified content
-    if '<aside class="right-sidebar">' in content:
-        parts = content.split('<aside class="right-sidebar">')
-        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="right-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
-
-    # Re-process for resources-sidebar
-    if '<aside class="resources-sidebar">' in content:
-        parts = content.split('<aside class="resources-sidebar">')
-        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="resources-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
+    # Right and resources sidebars: check per-aside whether already wrapped
+    content = _wrap_aside(content, "right-sidebar")
+    content = _wrap_aside(content, "resources-sidebar")
 
     if content != original_content:
         path.write_text(content)

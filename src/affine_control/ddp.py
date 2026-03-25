@@ -121,6 +121,45 @@ class MockDDPSolver:
             )
         self._compute_hessian_bound_func = compute_hessian_bound_func
 
+    def _initialize_ddp_trajectory(
+        self,
+        f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Initialize trajectory with a uniform timestep grid and initial forward pass.
+
+        Returns:
+            (u_traj, x_traj, t) on the initial uniform grid.
+        """
+        u_traj = np.array(u_init)
+        n_steps = len(u_traj)
+        t = np.linspace(0, n_steps * DEFAULT_DT_INIT, n_steps + 1)
+        x_traj = _simulate_trajectory(f, x0, u_traj, t)
+        return u_traj, x_traj, t
+
+    def _run_ddp_iteration(
+        self,
+        f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        x_traj: np.ndarray[Any, Any],
+        u_traj: np.ndarray[Any, Any],
+        t: np.ndarray[Any, Any],
+        eps_residual: float,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Adapt timesteps, resample controls, and simulate one DDP iteration.
+
+        Returns:
+            Updated (u_traj, x_traj, t_new).
+        """
+        dt_adaptive = _compute_adaptive_timesteps(
+            f, x_traj, u_traj, eps_residual, self._compute_hessian_bound_func
+        )
+        t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
+        u_traj = _resample_controls(u_traj, t, t_new[:-1])
+        x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
+        return u_traj, x_traj, t_new
+
     def solve(
         self,
         f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
@@ -130,29 +169,13 @@ class MockDDPSolver:
         eps_residual: float = DEFAULT_EPS_RESIDUAL,
         max_iters: int = DEFAULT_MAX_ITERS,
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Run the mock DDP solve.
-
-        .. warning::
-            This method does **not** converge to an optimal solution.  It
-            performs simple Euler-integrated forward passes with adaptive
-            timestep selection and exits after at most ``min(max_iters, 3)``
-            iterations.  It exists solely to exercise the surrounding
-            infrastructure in tests and prototypes.
-
-        Args:
-            f: Dynamics function f(x, u) -> dx/dt
-            x0: Initial state
-            xf: Target state
-            u_init: Initial control trajectory (array of shape (N, control_dim))
-            eps_residual: Nominal residual tolerance (used only for timestep sizing)
-            max_iters: Upper bound on iterations (effectively capped at 3)
+        """Run the mock DDP solve (prototype only — does not converge optimally).
 
         Returns:
-            x_traj: State trajectory array of shape (N+1, state_dim)
-            u_traj: Control trajectory array of shape (N, control_dim)
+            x_traj: State trajectory of shape (N+1, state_dim)
+            u_traj: Control trajectory of shape (N, control_dim)
             t_traj: Adaptive time grid of shape (N+1,)
         """
-        # --- Preconditions ---
         check_finite_array(x0, "x0")
         check_finite_array(xf, "xf")
         require(x0.shape == xf.shape, "x0 and xf must have same shape")
@@ -160,33 +183,11 @@ class MockDDPSolver:
         require(max_iters >= 1, "max_iters must be >= 1", max_iters)
         require(len(u_init) > 0, "u_init must not be empty")
 
-        # Step 1: Initialize with uniform timestep
-        u_traj = np.array(u_init)
-        n_steps = len(u_traj)
-        dt_init = DEFAULT_DT_INIT
-        # Time grid needs N+1 points for N intervals
-        t = np.linspace(0, n_steps * dt_init, n_steps + 1)
-
-        # Initial forward pass (no backward pass implemented)
-        x_traj = _simulate_trajectory(f, x0, u_traj, t)
-
+        u_traj, x_traj, t = self._initialize_ddp_trajectory(f, x0, u_init)
         for iteration in range(max_iters):
-            dt_adaptive = _compute_adaptive_timesteps(
-                f, x_traj, u_traj, eps_residual, self._compute_hessian_bound_func
-            )
-
-            # Create new time grid and resample controls
-            t_new = np.concatenate([[0], np.cumsum(dt_adaptive)])
-            u_traj = _resample_controls(u_traj, t, t_new[:-1])
-
-            # Simulate on new grid (no DDP backward/forward pass — prototype only)
-            x_traj = _simulate_trajectory(f, x0, u_traj, t_new)
-            t = t_new
-
-            # Exit early — this mock does not converge
-            if iteration > 2:
+            u_traj, x_traj, t = self._run_ddp_iteration(f, x0, x_traj, u_traj, t, eps_residual)
+            if iteration > 2:  # exit early — mock does not converge
                 break
-
         return x_traj, u_traj, t
 
     def __call__(

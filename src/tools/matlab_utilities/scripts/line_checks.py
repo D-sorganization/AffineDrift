@@ -21,6 +21,54 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+# Numeric literals acceptable without a named constant
+_ACCEPTABLE_NUMBERS: frozenset[str] = frozenset(
+    {
+        "0",
+        "0.0",
+        "1",
+        "1.0",
+        "2",
+        "2.0",
+        "3",
+        "3.0",
+        "4",
+        "4.0",
+        "5",
+        "5.0",
+        "10",
+        "10.0",
+        "100",
+        "100.0",
+        "1000",
+        "1000.0",
+        "0.5",
+        "0.1",
+        "0.01",
+        "0.001",
+        "0.0001",
+    }
+)
+
+_GRAVITY_DESC = "gravitational acceleration [m/s^2] - approximate standard gravity"
+_PI_DESC = "pi constant [dimensionless] - mathematical constant"
+_PI_2_DESC = "pi/2 constant [dimensionless] - mathematical constant"
+_PI_4_DESC = "pi/4 constant [dimensionless] - mathematical constant"
+
+# Well-known constants that should still be named explicitly
+_KNOWN_CONSTANTS: dict[str, str] = {
+    "3.14159": _PI_DESC,
+    "3.1416": _PI_DESC,
+    "3.14": _PI_DESC,
+    "1.5708": _PI_2_DESC,
+    "1.57": _PI_2_DESC,
+    "0.7854": _PI_4_DESC,
+    "0.785": _PI_4_DESC,
+    "9.81": _GRAVITY_DESC,
+    "9.8": _GRAVITY_DESC,
+    "9.807": _GRAVITY_DESC,
+}
+
 
 def update_function_scope(
     line_stripped: str,
@@ -149,6 +197,13 @@ def append_anti_pattern_issues(
         )
 
 
+def _is_number_in_code(line_original: str, number: str) -> bool:
+    """Return True if *number* appears before any ``%`` comment on the line."""
+    comment_index = line_original.find("%")
+    number_index = line_original.find(number)
+    return comment_index == -1 or (number_index != -1 and number_index < comment_index)
+
+
 def append_magic_number_issues(
     *,
     line_original: str,
@@ -157,58 +212,18 @@ def append_magic_number_issues(
     file_name: str,
     issues: list[str],
 ) -> None:
-    """Flag unexplained literals."""
+    """Flag unexplained numeric literals using module-level constant sets."""
     magic_number_pattern = r"(?<![.\w])(?:\d+\.\d+|\d+)(?![.\w])"
-    acceptable_numbers = {
-        "0",
-        "0.0",
-        "1",
-        "1.0",
-        "2",
-        "2.0",
-        "3",
-        "3.0",
-        "4",
-        "4.0",
-        "5",
-        "5.0",
-        "10",
-        "10.0",
-        "100",
-        "100.0",
-        "1000",
-        "1000.0",
-        "0.5",
-        "0.1",
-        "0.01",
-        "0.001",
-        "0.0001",
-    }
-    gravity_desc = "gravitational acceleration [m/s^2] - approximate standard gravity"
-    known_constants = {
-        "3.14159": "pi constant [dimensionless] - mathematical constant",
-        "3.1416": "pi constant [dimensionless] - mathematical constant",
-        "3.14": "pi constant [dimensionless] - mathematical constant",
-        "1.5708": "pi/2 constant [dimensionless] - mathematical constant",
-        "1.57": "pi/2 constant [dimensionless] - mathematical constant",
-        "0.7854": "pi/4 constant [dimensionless] - mathematical constant",
-        "0.785": "pi/4 constant [dimensionless] - mathematical constant",
-        "9.81": gravity_desc,
-        "9.8": gravity_desc,
-        "9.807": gravity_desc,
-    }
     for number in re.findall(magic_number_pattern, line_stripped):
-        if number in known_constants:
+        if number in _KNOWN_CONSTANTS:
             issues.append(
                 f"{file_name} (line {line_number}): Magic number {number} "
-                f"({known_constants[number]}) - define as named constant",
+                f"({_KNOWN_CONSTANTS[number]}) - define as named constant",
             )
             continue
-        if number in acceptable_numbers:
+        if number in _ACCEPTABLE_NUMBERS:
             continue
-        comment_index = line_original.find("%")
-        number_index = line_original.find(number)
-        if comment_index == -1 or (number_index != -1 and number_index < comment_index):
+        if _is_number_in_code(line_original, number):
             issues.append(
                 f"{file_name} (line {line_number}): Magic number {number} "
                 "should be defined as constant with units and source",
@@ -255,6 +270,55 @@ def append_function_scope_issues(
         )
 
 
+def _dispatch_line_checks(
+    lines: list[str],
+    line_number: int,
+    line: str,
+    *,
+    is_comment: bool,
+    in_function: bool,
+    file_name: str,
+    issues: list[str],
+) -> None:
+    """Run all per-line quality checks, skipping code-only checks for comments."""
+    line_stripped = line.strip()
+    append_function_contract_issues(
+        lines=lines,
+        line_number=line_number,
+        line_stripped=line_stripped,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_banned_pattern_issues(
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    if is_comment:
+        return
+    append_anti_pattern_issues(
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_magic_number_issues(
+        line_original=line,
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+    append_function_scope_issues(
+        in_function=in_function,
+        line_stripped=line_stripped,
+        line_number=line_number,
+        file_name=file_name,
+        issues=issues,
+    )
+
+
 def analyze_matlab_file(file_path: Path) -> list[str]:
     """Analyze a single MATLAB file for quality issues.
 
@@ -269,60 +333,27 @@ def analyze_matlab_file(file_path: Path) -> list[str]:
     try:
         with file_path.open(encoding="utf-8", errors="ignore") as f:
             content = f.read()
-            lines = content.split("\n")
+        lines = content.split("\n")
 
         in_function = False
         nesting_level = 0
-
         for line_number, line in enumerate(lines, 1):
             line_stripped = line.strip()
-            line_original = line
-
             if not line_stripped:
                 continue
-
             is_comment = line_stripped.startswith("%")
-
             in_function, nesting_level = update_function_scope(
                 line_stripped,
                 is_comment=is_comment,
                 in_function=in_function,
                 nesting_level=nesting_level,
             )
-
-            append_function_contract_issues(
-                lines=lines,
-                line_number=line_number,
-                line_stripped=line_stripped,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_banned_pattern_issues(
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            if is_comment:
-                continue
-
-            append_anti_pattern_issues(
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_magic_number_issues(
-                line_original=line_original,
-                line_stripped=line_stripped,
-                line_number=line_number,
-                file_name=file_path.name,
-                issues=issues,
-            )
-            append_function_scope_issues(
+            _dispatch_line_checks(
+                lines,
+                line_number,
+                line,
+                is_comment=is_comment,
                 in_function=in_function,
-                line_stripped=line_stripped,
-                line_number=line_number,
                 file_name=file_path.name,
                 issues=issues,
             )
