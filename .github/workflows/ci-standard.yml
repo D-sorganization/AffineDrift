@@ -61,6 +61,8 @@ jobs:
 
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
+      - name: Audit Python Dependencies (pip-audit)
+        run: pip-audit -r requirements.txt
       - name: Verify frontend asset sync
         # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
         # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
