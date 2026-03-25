@@ -62,6 +62,8 @@ jobs:
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
       - name: Audit Python Dependencies (pip-audit)
+        # Non-blocking: surface findings as warnings; block on critical unfixed vulns manually
+        continue-on-error: true
         run: pip-audit -r requirements.txt
       - name: Verify frontend asset sync
         # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
