@@ -1,3 +1,13 @@
+"""Differential Dynamic Programming (DDP) solver for affine control.
+
+This module provides the mock DDP solver infrastructure used during early
+prototyping, along with helpers for adaptive timestep selection and trajectory
+simulation.  See GitHub issue #1659 for the full implementation roadmap.
+
+Public API: ``MockDDPSolver``, ``adaptive_timestep_ddp_mock``,
+``estimate_perturbation_size``.
+"""
+
 import logging
 import os
 import warnings

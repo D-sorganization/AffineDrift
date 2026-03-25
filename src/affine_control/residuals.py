@@ -1,3 +1,13 @@
+"""Residual computation and monitoring for affine control.
+
+This module provides numerical tools for estimating Hessian bounds,
+computing residual norms, predicting residual accumulation over trajectories,
+and the ``ResidualMonitor`` class that drives LQR/MPC mode switching.
+
+Public API: ``compute_hessian_bound``, ``compute_hessian_norm``,
+``predict_residual_bound``, ``ResidualMonitor``.
+"""
+
 import logging
 from collections.abc import Callable
 from typing import Any
