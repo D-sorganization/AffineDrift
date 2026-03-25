@@ -28,6 +28,12 @@
 
 ## 🐍 Python Coding Standards
 
+> **AffineDrift-specific tooling:**
+> - **Formatter:** `black --line-length 100` (NOT `ruff format`). CI runs `black --check --line-length 100`.
+> - **Linter:** `ruff check` (rules: E, F, W, I, B, UP). Target Python 3.12.
+> - **Line limit:** 100 characters.
+> - **Type checker:** `mypy` in strict mode (run against `src/tools/` and `scripts/`).
+
 ### 1. Code Quality & Style
 
 - **Logging vs. Print**:
@@ -60,24 +66,27 @@ project_name/
 
 ### 3. Testing
 
-- Use `unittest` or `pytest`.
+- Use `pytest` (not `unittest`).
 - Write unit tests for individual functions and integration tests for workflows.
+- **Coverage requirement: 50% minimum** (`--cov-fail-under=50`). Coverage must not decrease.
+- Place all tests in `tests/`. Mark cross-module or I/O tests with `@pytest.mark.integration`.
+- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60`
 
 ### 4. Test-Driven Development (TDD) - RED, GREEN, REFACTOR
 
 **MANDATORY**: All new code must follow the Test-Driven Development methodology:
 
-1. **🔴 RED - Write a Failing Test First**
+1. **RED - Write a Failing Test First**
    - Before writing any production code, write a unit test that defines the new functionality or behavior.
    - The test MUST fail initially because the production code has not yet been written.
    - This ensures you understand the requirements before implementation.
 
-2. **🟢 GREEN - Make the Test Pass**
+2. **GREEN - Make the Test Pass**
    - Write the **minimal** amount of production code necessary to make the failing test pass.
    - The goal is purely to pass the test, not to write perfect or optimized code.
    - Resist the temptation to add features not covered by tests.
 
-3. **🔵 REFACTOR - Clean Up the Code**
+3. **REFACTOR - Clean Up the Code**
    - Once the test passes, clean up the newly written code:
      - Remove duplication
      - Rename variables for clarity
@@ -85,6 +94,13 @@ project_name/
      - Improve structure
    - Ensure all existing tests continue to pass after refactoring.
    - This step prevents "technical debt" from accumulating.
+
+**Coverage Gate (AffineDrift-specific):**
+
+- CI enforces **50% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
+- Every new Python utility added to `src/` MUST have a corresponding `tests/` module.
+- Every new interactive JavaScript feature MUST have a corresponding Jest test.
+- Use `python3 -m pytest --cov --cov-fail-under=50` locally before pushing.
 
 **Benefits of TDD:**
 
@@ -107,6 +123,7 @@ def calculate_distance(x1, y1, x2, y2):
 
 # 3. REFACTOR: Improve code quality
 import math
+
 
 def calculate_distance(x1: float, y1: float, x2: float, y2: float) -> float:
     """Calculate Euclidean distance between two points."""
@@ -141,6 +158,7 @@ All code produced must adhere to the following design principles. These are eval
 
 - ❌ **DO NOT** create files exceeding **400 lines**. Files >800 lines are critical violations.
 - ✅ **Split** large files by responsibility into focused modules.
+- **AffineDrift CI** enforces per-file and per-module size budgets via `check_module_size_budget.py` and `check_changed_file_size_budget.py`. Violations block the PR.
 
 #### 5e. Reversibility
 
@@ -247,6 +265,41 @@ For repositories with numerical/scientific code, the following additional standa
 - ✅ **Consider** `numba.jit` for hot inner loops that cannot be vectorized.
 - ✅ **Batch** I/O operations — avoid record-by-record reads/writes.
 - ✅ **Profile** before optimizing — use `cProfile`, `line_profiler`, or `%timeit`.
+
+---
+
+### 7. Quarto Content Authoring Standards (AffineDrift-specific)
+
+AffineDrift is an educational textbook rendered with Quarto. The following rules apply to all `.qmd` files and the companion website.
+
+#### 7a. Quarto File Format
+
+- Write content in `.qmd` using Quarto markdown.
+- Executable code cells use `` {python} `` or `` {javascript} `` fenced blocks.
+- Cross-references: `@sec-`, `@fig-`, `@eq-` syntax.
+- Bibliography citations: `[@key]` syntax. Add entries to the `references/` directory.
+- New chapters MUST have an entry in `_quarto.yml`.
+- Images MUST have alt text. Math uses MathJax/KaTeX.
+
+#### 7b. Rendering Rules
+
+- Complex Python logic MUST be placed in importable modules under `src/`, not inline in `.qmd` cells.
+- ❌ **DO NOT** embed multi-function business logic directly in `.qmd` cells.
+- ✅ **Import** from `src/` and call a single function in the cell.
+- Rendering is validated by CI (`check_quarto_render_coverage.py`).
+
+#### 7c. CSS Architecture
+
+- **CSS lives in two places:** `css/` (canonical) and `docs/` (mirror built by Quarto).
+- ✅ **Edit CSS only in `css/`** — never edit `docs/` CSS directly.
+- CI enforces that `docs/` mirrors match `css/` exactly.
+- CSS file sizes are enforced by `check_styles_budget.py`.
+
+#### 7d. DRY for Content
+
+- ❌ **DO NOT** copy-paste prose or code examples between chapters.
+- ✅ **Extract** shared Quarto includes (`.qmd` fragments) and Python utilities.
+- CI tracks DRY adoption metrics via `check_dry_adoption.py`.
 
 ---
 
@@ -416,7 +469,7 @@ This section defines the active agents within the Jules "Control Tower" Architec
 
 - **Read:** Linting results, type check outputs
 - **Write:** Fixes for style, formatting, and minor code issues
-- **Constraint:** Limited to auto-fixable issues (ruff, black, isort).
+- **Constraint:** Limited to auto-fixable issues (ruff check --fix, black --line-length 100).
 
 ### 4. Completist (The Finisher)
 
@@ -552,16 +605,25 @@ powershell -Command "gh run view [RUN_ID]"
 
 **CRITICAL**: All code MUST pass linting checks locally before pushing. Failing to do so wastes CI resources and blocks PRs.
 
+**AffineDrift uses Black for formatting (NOT `ruff format`).** The CI enforces `black --check --line-length 100`. Running `ruff format` will produce different output and your PR will fail.
+
 ```bash
 # Python files - run ALL of these before committing:
-ruff check .                    # Linting errors
-ruff check --fix .              # Auto-fix what can be fixed
-ruff format .                   # Format code
-black .                         # Additional formatting
-mypy .                          # Type checking (if configured)
+python3 -m ruff check .                          # Linting errors (E, F, W, I, B, UP rules)
+python3 -m ruff check --fix .                    # Auto-fix what can be fixed
+python3 -m black --line-length 100 .             # Format with Black (100-char line limit)
 
-# Verify no issues remain:
-ruff check . && echo "✓ All checks passed"
+# Type checking (src and scripts only):
+mypy src/tools/ scripts/ --ignore-missing-imports
+
+# Run tests with coverage:
+python3 -m pytest tests/ --cov=src/tools --cov-fail-under=50 --timeout=60
+
+# JavaScript tests:
+npx jest
+
+# Verify no linting issues remain:
+python3 -m ruff check . && python3 -m black --check --line-length 100 . && echo "All checks passed"
 ```
 
 ### Common Python Linting Issues to Avoid
