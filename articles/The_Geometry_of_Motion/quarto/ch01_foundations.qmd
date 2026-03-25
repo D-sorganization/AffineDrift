@@ -17,6 +17,23 @@ very definition of what ``smooth'' means.
 
 :::
 
+::: {.callout-tip}
+## Before We Begin: A Note to the Reader
+
+If you are new to differential geometry, or if the words "manifold," "tangent space,"
+and "Fréchet derivative" sound intimidating, take a breath. Every single one of these
+ideas comes from something you already understand intuitively.
+
+You know what a tangent line is---you learned it in calculus. A tangent *space* is just
+the higher-dimensional version of that same idea: instead of a line touching a curve,
+it is a flat plane touching a curved surface. That is the entire concept.
+
+The rest of this chapter simply takes that intuition and makes it precise. We will show
+that this precision is not just mathematical formalism---it is the key to understanding
+why linear control theory works as well as it does, and exactly when it stops working.
+
+Read slowly. Reread the intuition boxes. The mathematics rewards patience.
+:::
 
 
 ## Motivation: Why Geometry Matters for Control
@@ -448,6 +465,84 @@ variations in the tangent space. This is not an approximation---it is the defini
 the tangent space as a vector space.
 
 
+### Tangent Spaces and the Physics of Motion: Position, Velocity, Acceleration
+
+To make the abstract definition of tangent spaces concrete, let us connect it directly
+to the quantities every physicist cares about: position, velocity, and acceleration.
+
+\subsubsection{Position Lives on the Manifold}
+
+A robot arm's joint angles define a **position** on the configuration manifold. If
+the arm has two joints with angles $\theta_1$ and $\theta_2$, each wrapping around
+from $0$ to $2\pi$, the configuration manifold is a **torus** $T^2$. The position
+$(\theta_1, \theta_2)$ is a *point* on this donut-shaped surface.
+
+Crucially, you cannot ``add'' two positions. What would it mean to add the
+configuration $(\pi/4, \pi/3)$ to the configuration $(\pi/2, \pi)$? If you naively
+add the angles, you get $(3\pi/4, 4\pi/3)$, which might wrap around past $2\pi$.
+Addition on a curved surface is not well-defined in general.
+
+\subsubsection{Velocity Lives in the Tangent Space}
+
+But now consider the *velocity* of the arm: how fast each joint is rotating. The
+angular velocities $(\dot\theta_1, \dot\theta_2)$ are a **tangent vector** at the
+current position. They live in the tangent space $T_{(\theta_1,\theta_2)}T^2 \cong \R^2$.
+
+And here is the key: velocities *can* be added. If Joint 1 is rotating at $2$ rad/s
+from one motor and getting an additional $0.5$ rad/s push from Coriolis coupling,
+the total angular velocity is simply $2.5$ rad/s. Vector addition works because
+the tangent space is a vector space.
+
+This is not a mathematical convenience---it is a physical fact. Velocities superpose.
+Forces superpose. Accelerations superpose. All of these are tangent-space objects,
+and superposition is the defining property of a vector space.
+
+\subsubsection{Acceleration Also Lives in the Tangent Space}
+
+For systems evolving in $\R^n$, acceleration $\ddot{q}$ lives in the same tangent
+space as velocity. Newton's second law $M(q)\ddot{q} = F$ is a statement about
+tangent vectors: given a force $F$ (also a tangent-space object---technically a
+\emph{co}tangent vector, but we defer that distinction), the mass matrix $M$ determines
+the resulting acceleration in the tangent space.
+
+On curved manifolds, the story is slightly more subtle. Acceleration requires a
+**connection** (a rule for comparing tangent vectors at different points). The
+``covariant acceleration'' $\nabla_{\dot{q}}\dot{q}$ is the proper generalization:
+it accounts for the fact that the tangent space itself rotates as you move along
+the manifold. The Christoffel symbols $\Gamma^k_{ij}$ that appear in the equations of
+motion of mechanical systems are precisely this connection---they encode how the
+``coordinate grid'' of the tangent space twists as you move through configuration space.
+
+\begin{intuitionbox}
+\textbf{The physical hierarchy:}
+\begin{itemize}
+\item \textbf{Position} ($q$): where you are on the surface. Cannot be added.
+\item \textbf{Velocity} ($\dot{q}$): which direction and how fast you are moving.
+      Lives in the tangent space. Can be added.
+\item \textbf{Acceleration} ($\ddot{q}$): how the velocity is changing. Also lives
+      in the tangent space (with a connection correction on curved manifolds). Can be added.
+\item \textbf{Force/Torque}: what causes acceleration. Lives in the cotangent space
+      (dual to the tangent space). Can be added.
+\end{itemize}
+Everything that obeys superposition lives in a vector space (tangent or cotangent).
+Everything that does not (position) lives on the manifold itself.
+\end{intuitionbox}
+
+\subsubsection{Why This Matters for Control}
+
+The entire edifice of linear control---PID, LQR, Kalman filtering, pole placement---works
+because it operates on quantities that live in vector spaces. When we ``linearize'' a
+nonlinear system, we are not making a crude approximation; we are recognizing that
+*perturbations* to position are velocities (tangent vectors), and velocities are
+the natural objects for linear analysis.
+
+The failure mode of linearization is not that ``the tangent space is wrong.'' It is
+that we are trying to use one tangent space to describe a region that spans multiple
+tangent spaces---a region where the manifold's curvature has rotated the local geometry.
+This is the transport problem of Axiom~4, and its resolution through iterative methods
+(DDP, iLQR) is the practical payoff of understanding the tangent-space structure.
+
+
 ### Coordinate Representation
 
 
@@ -582,6 +677,151 @@ finite perturbations, but for small perturbations it is good enough.'' In the ta
 view, the residual is information: it tells us about the curvature of the state-space manifold,
 and this information is essential for understanding transport and nonlinear phenomena.
 
+
+## What Curvature Actually Means: A Physical Guide
+
+The word "curvature" appears throughout this book, and it deserves a careful, patient
+explanation---not just as a mathematical abstraction, but as something you can *feel*.
+
+### The Everyday Experience of Curvature
+
+Think about driving a car on a winding mountain road. On a straight stretch, your steering
+wheel sits dead center and you coast along effortlessly. The road is *flat* in the
+geometric sense: your direction of travel does not change. Now the road bends. To follow
+the curve, you turn the steering wheel. The sharper the bend, the more you turn. That
+"amount of turning per unit of road traveled" is, quite literally, the curvature of the road.
+
+But here is the deeper point. While you are on the straight stretch, a small nudge to
+your steering wheel produces a predictable, proportional response: turn a little left,
+drift a little left. The relationship between input and output is *linear*. On the sharp
+bend, the same small nudge has a dramatically different effect because you are already
+turning hard. The relationship between what you do and what happens is no longer simple---it
+depends on *where you are on the curve*. This is exactly what curvature means for
+dynamical systems.
+
+\begin{intuitionbox}
+Curvature measures how quickly the ``rules of the game'' change as you move through
+state space. In a region of low curvature, the linearized model (tangent space) remains
+accurate over a wide neighborhood. In a region of high curvature, the linearized model
+is only trustworthy in a tiny neighborhood---not because the model is bad, but because
+the landscape is changing rapidly.
+\end{intuitionbox}
+
+
+### Curvature in State Space: The Geometric Picture
+
+Imagine a marble rolling on a surface. If the surface is a flat table, the marble rolls
+in a straight line (in the absence of friction). If the surface is a bowl, the marble
+curves inward. If the surface is a saddle, the marble curves in one direction and diverges
+in another.
+
+The surface itself has *intrinsic curvature*. You do not need to see the surface from
+the outside to measure this curvature---you can detect it by watching how nearby paths
+diverge or converge. Two ants walking side by side on a sphere will gradually drift
+apart, even if they both walk ``straight ahead'' (along geodesics). On a saddle, the
+same two ants would diverge even faster. On a flat plane, they stay parallel forever.
+
+This is precisely the situation in state-space dynamics:
+
+\begin{itemize}
+\item Two trajectories starting close together in a **low-curvature region** remain close
+      for a long time. The tangent-space (linear) prediction is accurate over large
+      perturbations and long time horizons.
+\item Two trajectories starting close together in a **high-curvature region** diverge
+      rapidly. The tangent-space prediction is accurate only for tiny perturbations and
+      short time windows.
+\item The **residual** $r(\delta\mathbf{x})$ from Eq.~\eqref{eq:ch1:residual-def}
+      is the direct measurement of this curvature: it tells you how much the true
+      trajectory deviates from the flat (tangent-space) prediction.
+\end{itemize}
+
+
+### Curvature and the Hessian: Making It Quantitative
+
+For a $C^2$ vector field $f$, the curvature at a point $\bar{\mathbf{x}}$ is encoded
+in the **Hessian tensor**---the matrix of second derivatives:
+\begin{equation}
+H_{ijk} = \frac{\partial^2 f_i}{\partial x_j \partial x_k}\bigg|_{\bar{\mathbf{x}}}.
+\end{equation}
+
+This tensor tells you exactly how the Jacobian (the tangent-space ``ruler'') changes
+as you move in each direction. If $H$ is large in some direction, the Jacobian is
+changing rapidly there---the manifold is sharply curved. If $H$ is small or zero, the
+Jacobian is nearly constant---the manifold is locally flat.
+
+The residual bound from Eq.~\eqref{eq:ch1:residual-bound} makes this precise:
+\begin{equation}
+\|r(\delta\mathbf{x})\| \leq \frac{1}{2} C_H \|\delta\mathbf{x}\|^2,
+\end{equation}
+where $C_H = \sup \|H\|$ is the **curvature constant**. A large $C_H$ means high
+curvature; a small $C_H$ means the system is nearly linear in that region.
+
+\begin{intuitionbox}
+\textbf{The curvature constant $C_H$ is the single most important number for understanding
+when linearization ``works'' in practice.} It is not that linearization is approximate---it
+is always exact at the infinitesimal level. But $C_H$ tells you how quickly that exact
+infinitesimal picture degrades as you zoom out to finite perturbations. Small $C_H$:
+you can zoom out far. Large $C_H$: stay close to the operating point.
+\end{intuitionbox}
+
+
+### Physical Examples of Curvature
+
+\subsubsection{The Pendulum: Curvature Varies with Position}
+
+Consider a pendulum with dynamics $\ddot\theta = -(g/L)\sin\theta$. The
+nonlinearity lives in $\sin\theta$. Near the bottom ($\theta \approx 0$),
+$\sin\theta \approx \theta$, and the dynamics are nearly linear. The curvature is low:
+the Hessian contribution from $\sin''(0) = -\sin(0) = 0$ vanishes. The tangent-space
+model works beautifully for large perturbations.
+
+Near the top ($\theta \approx \pi$), $\sin\theta \approx -(\theta - \pi)$, and the
+dynamics are also locally linear---but *unstable*. The curvature is again low at the
+exact top. However, *between* the bottom and the top ($\theta \approx \pi/2$),
+$|\sin''(\pi/2)| = |\!-\!\sin(\pi/2)| = 1$ is maximal. This is where the pendulum's
+state-space manifold is most curved, where the linear model degrades fastest, and where
+iterative methods like DDP gain the most by re-linearizing.
+
+\subsubsection{The Golf Swing: Curvature Explodes at High Speed}
+
+In a multibody system like the golf swing, curvature comes primarily from two sources:
+
+\begin{enumerate}
+\item \textbf{Centrifugal and Coriolis terms}, which scale as $\dot{q}^2$ (the square
+      of joint velocities). During the slow backswing, these are small and the curvature
+      is low. During the explosive downswing, velocities are enormous and curvature
+      dominates. This is why the late downswing is the hardest phase to model linearly.
+\item \textbf{Inertial coupling} between the rigid golfer and the flexible shaft. As the
+      club sweeps through large angles, the effective mass distribution changes rapidly,
+      causing the Jacobian to rotate and stretch. The rate of this change is curvature.
+\end{enumerate}
+
+\subsubsection{Walking and Running: Curvature at Transitions}
+
+In locomotion, the highest curvature occurs at phase transitions---heel strike, toe-off,
+double support to single support. These are moments where the effective dynamics shift
+abruptly (though still smoothly, in a well-modeled system). A controller that linearizes
+once at mid-stance and holds constant gains will fail at the transition. This is not a
+failure of theory; it is a signal that the controller needs to re-linearize at the
+high-curvature moment.
+
+
+### Why ``Curvature, Not Error'' Changes How You Think
+
+The standard engineering reflex when a linear model fails is to apologize: *``the model
+is only valid for small perturbations.''* The geometric perspective reframes this
+entirely:
+
+\begin{enumerate}
+\item The linear model is \textbf{always valid}---it is exact at the infinitesimal level.
+\item The question is not ``is the model good enough?'' but ``how curved is the landscape here?''
+\item High curvature is not a problem to be solved; it is \textbf{information to be exploited}.
+      A region of high curvature tells you that the system is sensitive there, that control
+      effort is amplified there, and that re-linearization is most valuable there.
+\end{enumerate}
+
+This shift from ``error tolerance'' to ``curvature awareness'' is, in our view, the
+most practically important conceptual contribution of the tangent-space framework.
 
 
 ## Manifold Examples: From Theory to Application
