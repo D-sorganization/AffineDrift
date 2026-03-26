@@ -108,7 +108,7 @@ def test_assess_error_handling_mock():
     mock_file.read_text.return_value = """
 try:
     pass
-except Exception:
+except Exception as e:  # noqa: BLE001
     pass
 """
     result = assess_repo.assess_error_handling([mock_file])

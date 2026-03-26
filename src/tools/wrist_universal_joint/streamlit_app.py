@@ -12,10 +12,11 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import streamlit as st
 from matplotlib.figure import Figure
 
@@ -28,6 +29,7 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
     DEFAULT_SIGNAL_LENGTH,
 )
+from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
 from .torque_calculator import (
     calculate_moments_of_inertia,
     distribute_torque_by_grip_angle,
@@ -314,8 +316,8 @@ def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
 
 def _create_plot_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 

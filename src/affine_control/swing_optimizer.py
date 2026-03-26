@@ -38,17 +38,25 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
-from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 
-from src.affine_control.ddp import adaptive_timestep_ddp_mock
+from src.affine_control.ddp import MockDDPSolver
+from src.affine_control.swing_types import (
+    DEFAULT_CONTROL_WEIGHT,
+    DEFAULT_CONVERGENCE_TOL,
+    DEFAULT_DT,
+    DEFAULT_HORIZON_STEPS,
+    DEFAULT_MAX_ITERATIONS,
+    DEFAULT_TARGET_VELOCITY,
+    DEFAULT_TERMINAL_WEIGHT,
+    SwingOptimizationConfig,
+    SwingOptimizationResult,
+)
 from src.core.constants import EPSILON
 from src.core.contracts import (
     check_finite_array,
-    check_non_negative,
-    check_positive,
     check_shape,
     ensure,
     require,
@@ -223,7 +231,14 @@ class SwingOptimizer:
         result = optimizer.optimize(x0, dynamics)
     """
 
-    def __init__(self, config: SwingOptimizationConfig) -> None:
+    def __init__(
+        self,
+        config: SwingOptimizationConfig,
+        ddp_solver: (
+            Callable[..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]]
+            | None
+        ) = None,
+    ) -> None:
         """Initialize the optimizer with given configuration.
 
         Args:
@@ -238,6 +253,7 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
+        self._ddp_solver = ddp_solver if ddp_solver is not None else MockDDPSolver()
         self._R = config.control_weight * np.eye(config.control_dim)
         self._Q = np.zeros((config.state_dim, config.state_dim))
         # Penalize velocity deviations (second half of state vector)

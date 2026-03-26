@@ -158,6 +158,23 @@ class TestGenerateSampleTorque:
         assert np.all(torque[:250] == 0.0)
         assert np.all(torque[250:] == 3.0)
 
+    def test_step_signal_scales_with_time_array_length(self) -> None:
+        """Step signal should use the midpoint of any time array length."""
+        t = np.linspace(0, 1, 100)
+        torque, error = generate_sample_torque("Step", t)
+        assert error is None
+        assert np.all(torque[:50] == 0.0)
+        assert np.all(torque[50:] == 3.0)
+
+    def test_pulse_signal_scales_with_time_array_length(self) -> None:
+        """Pulse signal should scale its active window relative to len(t)."""
+        t = np.linspace(0, 1, 100)
+        torque, error = generate_sample_torque("Pulse", t)
+        assert error is None
+        active = np.nonzero(torque)[0]
+        assert active.min() >= 40
+        assert active.max() <= 59
+
     def test_polynomial_valid(self) -> None:
         """Test valid polynomial expression returns array of correct shape."""
         t = np.linspace(0, 1, 500)
@@ -257,10 +274,10 @@ class TestMomentOfInertiaProperties:
         length_m=st.floats(min_value=0.1, max_value=2.0),
         cg_m=st.floats(min_value=0.1, max_value=1.5),
     )
-    def test_gamma_half_of_alpha(
+    def test_gamma_matches_default_ratio(
         self, head_g: float, shaft_g: float, length_m: float, cg_m: float
     ) -> None:
-        """I_gamma is always exactly half of I_alpha (model assumption)."""
+        """I_gamma should follow the configurable default ratio."""
         i_alpha, i_gamma = calculate_moments_of_inertia(head_g, shaft_g, length_m, cg_m)
         assert i_gamma == pytest.approx(0.5 * i_alpha, rel=1e-10)
 

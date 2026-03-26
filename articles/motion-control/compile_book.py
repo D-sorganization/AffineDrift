@@ -253,7 +253,7 @@ def compile_pdf(tex_file: str) -> str | None:
             logger.info("PDF file not found after compilation")
             return None
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.info(f"Error during compilation: {e}")
         return None
 

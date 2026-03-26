@@ -12,7 +12,7 @@ meaningful. See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-
 import logging
 import warnings
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -46,9 +46,14 @@ _DDP_MOCK_WARNING = (
 )
 
 
+def _is_running_under_pytest() -> bool:
+    """Return True if the current call occurs inside a pytest session."""
+    return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in os.environ.get("PYTHONPATH", "")
+
+
 def estimate_perturbation_size(
     x: np.ndarray[Any, Any],
-    u: np.ndarray[Any, Any],
+    _u: np.ndarray[Any, Any],
     base_noise: float = DEFAULT_BASE_NOISE,
     state_scale: float = DEFAULT_STATE_SCALE,
 ) -> float:
@@ -62,7 +67,7 @@ def estimate_perturbation_size(
 
     Args:
         x: State vector
-        u: Control vector (unused, reserved for control-dependent noise models)
+        _u: Control vector (unused, reserved for control-dependent noise models)
         base_noise: Minimum noise floor (default: 0.01)
         state_scale: Fraction of state magnitude to add as perturbation (default: 0.1)
 
@@ -204,7 +209,7 @@ def _compute_adaptive_timesteps(
     Returns:
         Array of adaptive timestep sizes, clipped to [DT_CLIP_MIN, DT_CLIP_MAX].
     """
-    M_traj = np.array(
+    m_traj = np.array(
         [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
     )
     delta_x_max = np.array(
@@ -213,11 +218,11 @@ def _compute_adaptive_timesteps(
 
     # Avoid division by zero
     delta_x_max = np.maximum(delta_x_max, EPSILON)
-    M_traj = np.maximum(M_traj, EPSILON)
+    m_traj = np.maximum(m_traj, EPSILON)
 
-    # dt = sqrt( 2 * eps / (M * delta_x^2) )
-    dt_adaptive = np.sqrt(2 * eps_residual / (M_traj * delta_x_max**2))
-    return np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX)  # type: ignore[no-any-return]
+    # Adaptive timestep: dt = sqrt( 2 * eps / (M * delta_x^2) )
+    dt_adaptive = np.sqrt(2 * eps_residual / (m_traj * delta_x_max**2))
+    return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 
 def _simulate_trajectory(

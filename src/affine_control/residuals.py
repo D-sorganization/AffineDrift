@@ -136,6 +136,12 @@ def compute_hessian_norm(
 
     Returns:
         Maximum spectral norm of the component Hessians.
+
+    Notes:
+        The nested central-difference construction here requires O(n^3)
+        dynamics evaluations in the state dimension n because each of the n
+        Hessian slices is assembled from two Jacobian evaluations, and each
+        Jacobian evaluation perturbs all n state coordinates.
     """
     n = len(x)
     dx = len(f(x, u))
@@ -217,6 +223,7 @@ class ResidualMonitor(ContractChecker):
         self.n = n_hysteresis
 
         self.high_count = 0
+        self.warn_count = 0
         self.low_count = 0
         self.mode = "LQR"  # LQR, MPC_WARN, MPC_FULL
 
@@ -234,6 +241,7 @@ class ResidualMonitor(ContractChecker):
                 lambda: self.mode in ("LQR", "MPC_WARN", "MPC_FULL"),
                 "mode must be a valid state",
             ),
+            (lambda: self.warn_count >= 0, "warn_count must be non-negative"),
         ]
 
     @invariant_checked
@@ -255,8 +263,13 @@ class ResidualMonitor(ContractChecker):
 
         if r_est > self.eps_critical:
             self.high_count += 1
+            self.warn_count += 1
             self.low_count = 0
-        elif r_est < self.eps_warning:
+        elif r_est >= self.eps_warning:
+            self.warn_count += 1
+            self.high_count = 0
+            self.low_count = 0
+        else:
             self.low_count += 1
             self.high_count = 0
         # else: hysteresis zone (between eps_warning and eps_critical) — no counter changes
@@ -265,6 +278,9 @@ class ResidualMonitor(ContractChecker):
         # Escalation path: LQR -> MPC_WARN -> MPC_FULL
         # Recovery path:   MPC_FULL -> MPC_WARN -> LQR
         if self.mode == "LQR":
+            if self.high_count >= self.n or self.warn_count >= self.n:
+                next_mode = "MPC_WARN"
+        elif self.mode == "MPC_WARN":
             if self.high_count >= self.n:
                 next_mode = "MPC_WARN"
                 self.high_count = 0
@@ -282,6 +298,19 @@ class ResidualMonitor(ContractChecker):
 
         if next_mode != self.mode:
             logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
+            if self.mode == "LQR" and next_mode == "MPC_WARN":
+                # Start a fresh hysteresis window for escalation beyond the warning mode.
+                self.high_count = 0
+                self.warn_count = 0
+                self.low_count = 0
+            elif self.mode == "MPC_WARN" and next_mode in {"LQR", "MPC_FULL"}:
+                self.high_count = 0
+                self.warn_count = 0
+                self.low_count = 0
+            elif self.mode == "MPC_FULL" and next_mode == "MPC_WARN":
+                self.high_count = 0
+                self.warn_count = 0
+                self.low_count = 0
             self.mode = next_mode
 
         return self.mode, float(r_est)

@@ -1,16 +1,4 @@
-"""RL and Funnel Benchmark: Compare classical setpoint control vs trajectory tracking cost.
-
-This module implements the benchmark described in issue #1269:
-  - Classical setpoint RL: reward = -||x - x_target||^2
-  - Trajectory Tracking Cost Functional (TTCF): reward = -||x - x*(t)||^2 - alpha*||u||^2
-  - Funnel-verified control: track trajectory AND certify convergence rate
-
-Run:
-  python3 -m src.tools.rl_funnel_benchmark --help
-
-Reference:
-  Vol I, Ch 5-8; Vol II, Ch 4 (Funnel Synthesis)
-"""
+"""Benchmark classical setpoint control against trajectory-tracking control."""
 
 from __future__ import annotations
 
@@ -18,9 +6,10 @@ import argparse
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from typing import Any, cast
 
 import numpy as np
+import numpy.typing as npt
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
@@ -41,12 +30,10 @@ PENDULUM_L2 = 0.5  # m, length of lower link
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# System definition: double pendulum (2-DoF golf swing proxy)
-# ---------------------------------------------------------------------------
 
-
-def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> np.ndarray:
+def double_pendulum_drift(
+    t: float, x: npt.NDArray[Any], g: float = GRAVITY_M_S2
+) -> npt.NDArray[Any]:
     """Passive dynamics of a double pendulum (drift term f(x,0)).
 
     State: x = [theta1, theta2, dtheta1, dtheta2]
@@ -62,21 +49,21 @@ def double_pendulum_drift(t: float, x: np.ndarray, g: float = GRAVITY_M_S2) -> n
 
     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, dth1, dth2 = x
-    c12 = np.cos(th1 - th2)
     s12 = np.sin(th1 - th2)
-
-    M = np.array([[(m1 + m2) * L1**2, m2 * L1 * L2 * c12], [m2 * L1 * L2 * c12, m2 * L2**2]])
+    M = double_pendulum_mass_matrix(th1, th2)
     rhs = np.array(
         [
-            -m2 * L1 * L2 * dth2**2 * s12 - (m1 + m2) * g * L1 * np.sin(th1),
-            m2 * L1 * L2 * dth1**2 * s12 - m2 * g * L2 * np.sin(th2),
+            -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+            - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+            PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+            - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
         ]
     )
     ddth = np.linalg.solve(M, rhs)
     return np.array([dth1, dth2, ddth[0], ddth[1]])
 
 
-def double_pendulum_B(x: np.ndarray) -> np.ndarray:
+def double_pendulum_B(x: npt.NDArray[Any]) -> npt.NDArray[Any]:
     """Control input matrix g(x): torques applied at both joints."""
     require(
         isinstance(x, np.ndarray) and x.shape == (4,),
@@ -87,24 +74,17 @@ def double_pendulum_B(x: np.ndarray) -> np.ndarray:
 
     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, _, _ = x
-    c12 = np.cos(th1 - th2)
-    M = np.array([[(m1 + m2) * L1**2, m2 * L1 * L2 * c12], [m2 * L1 * L2 * c12, m2 * L2**2]])
-    M_inv = np.linalg.inv(M)
+    M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
     B_full = np.zeros((4, 2))
     B_full[2:, :] = M_inv  # torques affect angular accelerations
     return B_full
 
 
-# ---------------------------------------------------------------------------
-# Reference trajectory generation
-# ---------------------------------------------------------------------------
-
-
 def generate_reference_trajectory(
     t_span: tuple[float, float],
     dt: float = 0.01,
-    x0: np.ndarray | None = None,
-) -> tuple[np.ndarray, np.ndarray]:
+    x0: npt.NDArray[Any] | None = None,
+) -> tuple[npt.NDArray[Any], npt.NDArray[Any]]:
     """Generate reference trajectory via passive simulation from backswing position."""
     require(
         len(t_span) == 2 and t_span[1] > t_span[0],
@@ -122,6 +102,7 @@ def generate_reference_trajectory(
 
     if x0 is None:
         x0 = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
+    validate_state_vector(x0, "x0")
 
     sol = solve_ivp(
         double_pendulum_drift,
@@ -162,10 +143,10 @@ class BenchmarkResult:
 
 
 def setpoint_lqr_controller(
-    x_target: np.ndarray,
-    Q_sp: np.ndarray | None = None,
-    R_sp: np.ndarray | None = None,
-) -> Callable[[float, np.ndarray], np.ndarray]:
+    x_target: npt.NDArray[Any],
+    Q_sp: npt.NDArray[Any] | None = None,
+    R_sp: npt.NDArray[Any] | None = None,
+) -> Callable[[float, npt.NDArray[Any]], npt.NDArray[Any]]:
     """Classical setpoint LQR controller.
 
     Minimizes integral (x - x_target)' Q (x - x_target) + u' R u.
@@ -180,10 +161,13 @@ def setpoint_lqr_controller(
 
     n = 4
     m = 2
+    validate_state_vector(x_target, "x_target")
     if Q_sp is None:
         Q_sp = np.diag([10.0, 10.0, 1.0, 1.0])
     if R_sp is None:
         R_sp = 0.1 * np.eye(m)
+    validate_weight_matrix(Q_sp, (n, n), "Q_sp")
+    validate_weight_matrix(R_sp, (m, m), "R_sp")
 
     # Linearize at target
     eps = 1e-6
@@ -199,9 +183,9 @@ def setpoint_lqr_controller(
     P = solve_continuous_are(A, B0, Q_sp, R_sp)
     K = np.linalg.solve(R_sp, B0.T @ P)
 
-    def controller(t: float, x: np.ndarray) -> np.ndarray:
+    def controller(t: float, x: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """Apply setpoint LQR control law u = -K(x - x_target)."""
-        return -K @ (x - x_target)
+        return cast(npt.NDArray[Any], -K @ (x - x_target))
 
     return controller
 
@@ -298,7 +282,7 @@ def trajectory_tracking_lqr(
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
-        return gains_array[idx]
+        return cast(npt.NDArray[Any], gains_array[idx])
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
@@ -364,11 +348,11 @@ def _validate_benchmark_inputs(
 
 
 def run_benchmark(
-    controller: Callable[[float, np.ndarray], np.ndarray],
-    x0_perturbed: np.ndarray,
+    controller: Callable[[float, npt.NDArray[Any]], npt.NDArray[Any]],
+    x0_perturbed: npt.NDArray[Any],
     t_span: tuple[float, float],
-    t_ref: np.ndarray,
-    x_ref: np.ndarray,
+    t_ref: npt.NDArray[Any],
+    x_ref: npt.NDArray[Any],
     name: str,
     dt: float = 0.001,
     control_limits: tuple[float, float] = CONTROL_SATURATION_DEFAULT,
@@ -384,7 +368,7 @@ def run_benchmark(
 
     start = time.perf_counter()
 
-    def closed_loop(t: float, x: np.ndarray) -> np.ndarray:
+    def closed_loop(t: float, x: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """Closed-loop ODE: drift + controlled input with saturation."""
         u = controller(t, x)
         # Clip control to prevent divergence; bounds are system-specific
@@ -451,11 +435,12 @@ def run_comparison(
     t_span: tuple[float, float] = (0.0, 0.5),
     dt: float = 0.001,
     seed: int = 42,
+    control_limit: float = DEFAULT_CONTROL_SATURATION,
 ) -> list[BenchmarkResult]:
     """Run full benchmark comparison: setpoint vs TTCF vs passive."""
     x0_perturbed, t_ref, x_ref, x_target = _setup_comparison(perturbation_scale, t_span, dt, seed)
 
-    def passive_ctrl(t: float, x: np.ndarray) -> np.ndarray:
+    def passive_ctrl(t: float, x: npt.NDArray[Any]) -> npt.NDArray[Any]:
         """Return zero torque (passive baseline, no active control)."""
         return np.zeros(2)
 
@@ -509,6 +494,12 @@ def main() -> None:
         "--horizon", type=float, default=0.5, help="Simulation horizon in seconds (default: 0.5)"
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed for perturbation")
+    parser.add_argument(
+        "--control-limit",
+        type=float,
+        default=DEFAULT_CONTROL_SATURATION,
+        help="Symmetric control saturation limit in N·m (default: 50.0)",
+    )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
     args = parser.parse_args()
 
@@ -518,8 +509,9 @@ def main() -> None:
         perturbation_scale=args.perturbation,
         t_span=(0.0, args.horizon),
         seed=args.seed,
+        control_limit=args.control_limit,
     )
-    print_results(results)
+    logger.warning("\n%s", format_results(results))
 
 
 if __name__ == "__main__":

@@ -299,6 +299,15 @@ class TestResidualBoundContracts:
         r2 = predict_residual_bound(np.array([10.0]), dx, dt)
         assert r2 > r1
 
+    def test_rejects_mismatched_lengths(self) -> None:
+        """All residual trajectories must have equal length."""
+        with pytest.raises(ContractViolationError, match="equal length"):
+            predict_residual_bound(
+                np.array([1.0, 2.0]),
+                np.array([0.1, 0.2]),
+                np.array([0.01]),
+            )
+
 
 # ===================================================================
 # 5. Hessian Bound Contracts

@@ -351,6 +351,7 @@ def draw_diagram(
     """
     check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
     check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
+    logger.debug("Drawing diagram: grip=%.1f deg, wrist=%.1f deg", grip_angle_deg, wrist_angle_deg)
     fig, ax = plt.subplots(figsize=(12, 4))
 
     theta_grip_rad = np.radians(grip_angle_deg)
