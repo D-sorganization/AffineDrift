@@ -15,7 +15,10 @@ from src.tools.utils.budget_check_utils import (
 )
 
 MARKERS = ("TRACKED" + "_TASK", "TRACKED" + "_DEFECT", "HACK", "XXX")
-MARKER_RE = re.compile(r"\b(TRACKED_TASK|TRACKED_DEFECT|HACK|XXX)\b".replace("TRACKED_", "TRACKED" + "_"), re.IGNORECASE)
+MARKER_RE = re.compile(
+    r"\b(TRACKED_TASK|TRACKED_DEFECT|HACK|XXX)\b".replace("TRACKED_", "TRACKED" + "_"),
+    re.IGNORECASE,
+)
 
 
 def main() -> int:
