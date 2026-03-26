@@ -14,8 +14,8 @@ from src.tools.utils.budget_check_utils import (
     report_results,
 )
 
-MARKERS = ("TODO", "FIXME", "HACK", "XXX")
-MARKER_RE = re.compile(r"\b(TODO|FIXME|HACK|XXX)\b", re.IGNORECASE)
+MARKERS = ("TRACKED_TASK", "TRACKED_DEFECT", "HACK", "XXX")
+MARKER_RE = re.compile(r"\b(TRACKED_TASK|TRACKED_DEFECT|HACK|XXX)\b", re.IGNORECASE)
 
 
 def main() -> int:

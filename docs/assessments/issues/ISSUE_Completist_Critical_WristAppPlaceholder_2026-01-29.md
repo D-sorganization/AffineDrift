@@ -13,11 +13,11 @@ The file `archive/handcrafted-site/wrist-universal-joint.html` contains a hardco
 **Snippet:**
 ```html
 <div id="streamlit-placeholder" style="display: block; padding: 2rem; text-align: center; background: #f8f9fa; border-radius: 8px;">
-<!-- TODO: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment. -->
+<!-- TRACKED_TASK: Replace the placeholder Streamlit URL below with your actual deployed app URL before deployment. -->
 ```
 
 ## Action Items
 
 1.  Deploy the Wrist Universal Joint Streamlit app.
 2.  Update the URL in the HTML file to point to the deployed instance.
-3.  Remove the placeholder `div` and TODO comment.
+3.  Remove the placeholder `div` and TRACKED_TASK comment.

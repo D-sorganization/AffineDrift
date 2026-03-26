@@ -145,7 +145,7 @@ What good looks like:
 
 Red flags:
 - Stale comments contradicting behavior.
-- Placeholder comments (`TODO/FIXME`) as long-term policy.
+- Placeholder comments (`TRACKED_TASK/TRACKED_DEFECT`) as long-term policy.
 
 Actionable checks:
 - Replace low-value comments with clearer naming and extracted functions.

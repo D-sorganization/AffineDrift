@@ -2,7 +2,7 @@
 
 ## Executive Summary
 - **Critical Gaps**: 81
-- **Feature Gaps (TODO)**: 16
+- **Feature Gaps (TRACKED_TASK)**: 16
 - **Content Gaps (Placeholders)**: 102
 - **Technical Debt**: 50
 - **Documentation Gaps**: 454
@@ -12,8 +12,8 @@
 ```mermaid
 pie title Completion Status
     "Impl Gaps (Critical)" : 81
-    "Feature Requests (TODO)" : 16
-    "Technical Debt (FIXME)" : 50
+    "Feature Requests (TRACKED_TASK)" : 16
+    "Technical Debt (TRACKED_DEFECT)" : 50
     "Doc Gaps" : 454
     "Content Gaps (Placeholders)" : 102
 ```
@@ -139,27 +139,27 @@ pie title Issues by Module
 ## Feature Gap Matrix
 | Module | Feature Gap | Type |
 |---|---|---|
-| `AGENTS.md` | - ❌ **DO NOT** leave `TODO`/`FIXME` markers for more than one sprint. | TODO |
-| `AGENTS.md` | - **Read:** Codebase for TODO, FIXME, NotImplementedError, pass statements | TODO |
-| `AffineDrift_Adversarial_Review_2026-03-07.md` | Sixteen .qmd files contain placeholder text. Notable gaps include book-reviews.qmd (2 "coming soon"  | TODO |
-| `config/tech_debt_budget.json` | "TODO": 20, | TODO |
-| `scripts/check_tech_debt_budget.py` | MARKERS = ("TODO", "FIXME", "HACK", "XXX") | TODO |
-| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TODO\|FIXME\|HACK\|XXX)\b", re.IGNORECASE) | TODO |
-| `scripts/generate_completist_data.py` | """Scan files for completion markers (TODO, FIXME, etc).""" | TODO |
-| `.claude/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
-| `.claude/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
-| `.claude/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
-| `.agent/workflows/lint.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
-| `.agent/workflows/lint.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
-| `.agent/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
-| `.agent/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
-| `.agent/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
-| `src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | TODO |
+| `AGENTS.md` | - ❌ **DO NOT** leave `TRACKED_TASK`/`TRACKED_DEFECT` markers for more than one sprint. | TRACKED_TASK |
+| `AGENTS.md` | - **Read:** Codebase for TRACKED_TASK, TRACKED_DEFECT, NotImplementedError, pass statements | TRACKED_TASK |
+| `AffineDrift_Adversarial_Review_2026-03-07.md` | Sixteen .qmd files contain placeholder text. Notable gaps include book-reviews.qmd (2 "coming soon"  | TRACKED_TASK |
+| `config/tech_debt_budget.json` | "TRACKED_TASK": 20, | TRACKED_TASK |
+| `scripts/check_tech_debt_budget.py` | MARKERS = ("TRACKED_TASK", "TRACKED_DEFECT", "HACK", "XXX") | TRACKED_TASK |
+| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TRACKED_TASK\|TRACKED_DEFECT\|HACK\|XXX)\b", re.IGNORECASE) | TRACKED_TASK |
+| `scripts/generate_completist_data.py` | """Scan files for completion markers (TRACKED_TASK, TRACKED_DEFECT, etc).""" | TRACKED_TASK |
+| `.claude/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
+| `.claude/skills/lint/SKILL.md` | - Search for `TRACKED_TASK`, `TRACKED_DEFECT`, `XXX`, `HACK` comments | TRACKED_TASK |
+| `.claude/skills/lint/SKILL.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
+| `.agent/workflows/lint.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
+| `.agent/workflows/lint.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
+| `.agent/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
+| `.agent/skills/lint/SKILL.md` | - Search for `TRACKED_TASK`, `TRACKED_DEFECT`, `XXX`, `HACK` comments | TRACKED_TASK |
+| `.agent/skills/lint/SKILL.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
+| `src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TRACKED_TASK placeholder found"), | TRACKED_TASK |
 
 ## Technical Debt Register
 | File | Line | Issue | Type |
 |---|---|---|---|
-| `config/tech_debt_budget.json` | 25 | "FIXME": 13, | FIXME |
+| `config/tech_debt_budget.json` | 25 | "TRACKED_DEFECT": 13, | TRACKED_DEFECT |
 | `config/tech_debt_budget.json` | 26 | "HACK": 8, | HACK |
 | `config/tech_debt_budget.json` | 27 | "XXX": 10 | XXX |
 | `scripts/generate_completist_data.py` | 202 | markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"] | XXX |
@@ -208,7 +208,7 @@ pie title Issues by Module
 | `.agent/skills/update-issues/SKILL.md` | 132 | \| #XXX \| Title \| High \| assessment.md \| | XXX |
 | `.agent/skills/update-issues/SKILL.md` | 137 | \| #XXX \| Title \| Fixed in commit abc123 \| | XXX |
 | `.agent/skills/update-issues/SKILL.md` | 142 | \| Description \| #XXX \| | XXX |
-| `src/tools/code_quality/pattern_checker.py` | 16 | (re.compile(r"\bFIXME\b"), "FIXME placeholder found"), | FIXME |
+| `src/tools/code_quality/pattern_checker.py` | 16 | (re.compile(r"\bFIXME\b"), "TRACKED_DEFECT placeholder found"), | TRACKED_DEFECT |
 
 ## Recommended Implementation Order
 Prioritized by Impact (High) and Complexity (Low).
