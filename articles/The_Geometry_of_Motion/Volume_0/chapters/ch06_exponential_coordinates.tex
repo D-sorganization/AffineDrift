@@ -5,96 +5,828 @@
 \label{ch:exponential_coordinates}
 
 \epigraph{%
-  To move smoothly through the universe, we do not jump from matrix to matrix. We integrate continuously along the exponent of a physical axis.
+  To move smoothly through the universe, we do not jump from matrix to matrix. We integrate continuously along the exponent of a physical axis. The exponential map wraps velocity vectors onto the curved surface of rotation space; the logarithm unfolds curved poses back into flat, linear velocity directions.
 }{}
 
-\begin{laymansbox}{Context \& Use Case: Smooth Interpolation}{context_box}
-\textbf{The Math You Will See:} We will introduce \textbf{Lie Algebras} ($so(3)$ and $se(3)$), the \textbf{Matrix Exponential} (\textit{exp}), and the \textbf{Matrix Logarithm} (\textit{log}).
-\textbf{Why We Need It:} Imagine a robotic arm needs to move from Pose A to Pose B. You cannot just average the $4 \times 4$ matrices of Pose A and Pose B ($ [T_A + T_B]/2 $); the resulting matrix is garbage and physically means nothing. Because 3D space is curved (due to rotation), moving smoothly requires calculating the exact "axis" of motion and sliding along it. The Logarithm extracts that axis, and the Exponential walks along it.
-\textbf{All Variables Defined:} $\mathfrak{se}(3)$ represents the flat tangent velocity space (Lie Algebra), $SE(3)$ represents the curved position manifold (Lie Group), and $\hat{\boldsymbol{\omega}}$ is the unit rotation axis.
+\begin{laymansbox}{Context \& Use Case: Smooth Interpolation and Geodesics}{context_box}
+\textbf{The Math You Will See:} We will introduce \textbf{Lie Algebras} ($\so(3)$ and $\se(3)$), the \textbf{Matrix Exponential} (\textit{exp}), the \textbf{Matrix Logarithm} (\textit{log}), and Rodrigues' formula. We will develop exponential coordinates, the Baker-Campbell-Hausdorff formula, and understand geodesics (shortest paths) on rotation space.
+
+\textbf{Why We Need It:} Imagine a robotic arm needs to move from Pose A to Pose B. You cannot just average the $4 \times 4$ matrices of Pose A and Pose B ($ [\mathbf{T}_A + \mathbf{T}_B]/2 $); the resulting matrix is garbage and physically means nothing. Because 3D space is curved (due to rotation), moving smoothly requires calculating the exact "velocity" of motion and sliding along it. The Logarithm extracts the direction and speed of motion, and the Exponential walks along the geodesic path.
+
+\textbf{All Variables Defined:} $\so(3)$ represents the tangent space of infinitesimal rotations (Lie algebra), $\SE(3)$ represents the curved position manifold (Lie group), $\hat{\boldsymbol{\omega}}$ is the unit rotation axis, and $\theta$ is the rotation angle.
 \end{laymansbox}
 
-\section{The Lie Algebra mapping to Lie Groups}
+\section{Historical Context: Sophus Lie and the Theory of Continuous Groups}
+\label{sec:historical_context_lie}
 
-In Chapters 4 and 5, we established that physical orientations live in the curved, multiplicative Special Orthogonal Group $SO(3)$, and complete $4 \times 4$ poses live in the Special Euclidean Group $SE(3)$. 
+The modern theory of Lie groups emerged in the 1870s-1890s from the groundbreaking work of Norwegian mathematician \textbf{Sophus Lie}. While studying differential equations, Lie discovered that continuous families of symmetries—transformations that preserve the structure of an equation—form special algebraic objects called \textbf{continuous groups}. These are now known as Lie groups in his honor.
 
-But how does a system actually \emph{move} between two poses? If a robotic arm starts at $\mathbf{T}_1$ and needs to rotate and shift to $\mathbf{T}_2$, it doesn't instantly teleport. It sweeps through a continuous, smooth path in physical space. 
+Lie's central insight was that every Lie group has a \textbf{Lie algebra}—an associated linear (flat) vector space at the identity element that completely encodes the local structure of the group. The exponential map serves as the bridge: it exponentiates elements of the Lie algebra to produce group elements. Conversely, the logarithm inverts this operation.
 
-To govern this continuous motion algorithmically, mathematicians map the curved, non-linear space of $SE(3)$ (where addition breaks) into a perfectly flat, linear tangent space where standard calculus operations (like addition, scaling, and derivatives) work flawlessly. 
+For the rotation group $\SO(3)$, Lie's theory predicts that the Lie algebra $\so(3)$ should consist of $3 \times 3$ skew-symmetric matrices. The exponential map then converts these skew-symmetric matrices into rotation matrices—a fact that was rediscovered and formalized by \textbf{Olinde Rodrigues} in the context of the rotation formula.
 
-This flat tangent space is called the \textbf{Lie Algebra}, mathematically denoted as $\mathfrak{so}(3)$ for pure rotations and $\mathfrak{se}(3)$ for complete spatial poses (Twists). While the \emph{Lie Group} represents "Where am I?" (position on the curved manifold), the \emph{Lie Algebra} represents "In what exact direction and how fast am I moving?" (velocity in the flat tangent space).
+In the early 20th century, the theory was extended and generalized. By the latter half of the century, computer scientists and roboticists (notably \textbf{Richard Murray}, \textbf{Zexiang Li}, and \textbf{S. Shankar Sastry}, as well as \textbf{John Hauser}) recognized that Lie group and Lie algebra techniques provide the natural language for parametrizing rigid body motions and solving differential equations in robotics.
 
-\begin{laymansbox}{Mathematical Reminder: The Differential Geometry Bridge}{exp_map_reminder}
-In differential geometry, we formulate control policies and perturbations entirely in the flat Tangent Space (the Lie Algebra). However, the system's true state evolves on the curved Manifold (the Lie Group). 
+The exponential-logarithm formalism is now foundational to modern control theory, computer graphics (SLERP interpolation), and numerical algorithms for rigid body dynamics. Understanding it is essential for anyone working with continuous motion in space.
 
-The \textbf{Exponential Map} is the formal mathematical bridge that integrates a straight flow in the flat tangent space and wraps it perfectly along a smooth, curved path (a \emph{geodesic}) on the manifold. Conversely, the \textbf{Logarithm Map} takes a curved path between two points on the manifold and correctly "flattens" it into a straight velocity vector in the tangent space.
-\end{laymansbox}
+\section{Lie Algebras and the Tangent Space}
+\label{sec:lie_algebras}
 
-\section{Exponential Coordinates and Axis-Angle}
+Recall from Chapter 5 that $\SE(3)$ and $\SO(3)$ are Lie groups—they have both algebraic and smooth geometric structure. But they are curved, non-linear manifolds: you cannot simply add two rotation matrices and get a valid rotation matrix.
 
-Let us revisit the concept of rotating around a single fixed unit axis $\hat{\boldsymbol{\omega}}$ by a certain angle $\theta$. 
+However, at each point on a Lie group, there exists a \textbf{tangent space}—the space of infinitesimal "velocity directions" at that point. For a Lie group, the tangent space at the identity element is particularly special: it inherits a vector space structure and can be identified with the Lie algebra.
 
-If we multiply the physical axis unit vector $\hat{\boldsymbol{\omega}} \in \Reals^3$ by the total angle $\theta \in \Reals$, we get a new 3-dimensional vector:
+\begin{definition}{The Lie Algebra so(3)}{lie_algebra_so3}
+  The \textbf{Lie algebra} $\so(3)$ is the set of all $3 \times 3$ skew-symmetric matrices:
+  \begin{equation}
+    \so(3) = \{ \mathbf{A} \in \Reals^{3 \times 3} : \mathbf{A}^T = -\mathbf{A} \}
+  \end{equation}
+
+  Equivalently, $\so(3)$ can be identified with $\Reals^3$ by the isomorphism between vectors and their skew-symmetric matrix representations. A vector $\boldsymbol{\omega} = [\omega_x, \omega_y, \omega_z]^T$ corresponds to the matrix:
+  \begin{equation}
+    [\boldsymbol{\omega}] = \begin{bmatrix} 0 & -\omega_z & \omega_y \\ \omega_z & 0 & -\omega_x \\ -\omega_y & \omega_x & 0 \end{bmatrix}
+  \end{equation}
+
+  The dimension of $\so(3)$ is 3 (the same as $\SO(3)$), and it is a \textbf{vector space}: sums and scalar multiples of skew-symmetric matrices are skew-symmetric.
+\end{definition}
+
+\begin{definition}{The Lie Algebra se(3)}{lie_algebra_se3}
+  The \textbf{Lie algebra} $\se(3)$ is the set of $4 \times 4$ matrices of the form:
+  \begin{equation}
+    \se(3) = \left\{ \begin{bmatrix} \mathbf{A} & \mathbf{v} \\ 0 & 0 \end{bmatrix} : \mathbf{A} \in \so(3), \mathbf{v} \in \Reals^3 \right\}
+  \end{equation}
+
+  Equivalently, $\se(3)$ can be identified with $\Reals^6$ by the isomorphism between 6D twist vectors $[\boldsymbol{\omega}^T, \mathbf{v}^T]^T$ and their matrix representation. The dimension is 6.
+\end{definition}
+
+\subsection{The Lie Bracket: Non-Commutativity of Motions}
+
+The Lie algebra structure includes a \textbf{Lie bracket} operation that measures the "failure to commute":
+
 \begin{equation}
-   \mathbf{r} = \hat{\boldsymbol{\omega}}\theta \in \Reals^3
+  [\mathbf{A}, \mathbf{B}] = \mathbf{A}\mathbf{B} - \mathbf{B}\mathbf{A}
 \end{equation}
 
-This incredibly compact vector $\mathbf{r}$ contains all the information needed to describe any 3D rotation. It is known as the \textbf{Exponential Coordinate} representation of a rotation. 
+For skew-symmetric matrices $\mathbf{A} = [\boldsymbol{\omega}_1]$ and $\mathbf{B} = [\boldsymbol{\omega}_2]$, the bracket is itself skew-symmetric:
+\begin{equation}
+  [[\boldsymbol{\omega}_1], [\boldsymbol{\omega}_2]] = [\boldsymbol{\omega}_1 \times \boldsymbol{\omega}_2]
+\end{equation}
+
+Geometrically, the Lie bracket of two rotations is another rotation—a reflection of the fact that two sequential rotations about different axes can be rearranged in a non-commutative way.
+
+\section{Exponential Coordinates and Axis-Angle Representation}
+\label{sec:exponential_coordinates}
+
+\subsection{The Exponential Coordinate Vector}
+
+Let us begin by revisiting the concept of rotating around a single fixed unit axis $\hat{\boldsymbol{\omega}} \in \Reals^3$ (with $\|\hat{\boldsymbol{\omega}}\| = 1$) by a certain angle $\theta \in \Reals$ (measured in radians).
+
+If we multiply the physical axis unit vector $\hat{\boldsymbol{\omega}}$ by the total angle $\theta$, we obtain a new 3-dimensional vector:
+\begin{equation}
+   \mathbf{r} = \hat{\boldsymbol{\omega}}\theta \in \Reals^3 \label{eq:exp_coord}
+\end{equation}
+
+This incredibly compact vector $\mathbf{r}$ contains all the information needed to describe any 3D rotation: the direction of $\mathbf{r}$ specifies the axis of rotation, and the magnitude $\|\mathbf{r}\| = \theta$ specifies the angle. This representation is known as the \textbf{Exponential Coordinate} representation of a rotation, or the \textbf{axis-angle} representation.
 
 \begin{laymansbox}{Why is it called "Exponential"?}{exponential_intuition}
-  In basic 1D calculus, the solution to the differential equation governing continuous growth ($\dot{x} = ax$) is the scalar exponential function: $x(t) = e^{at} x(0)$.
-  
-  Similarly, the differential equation governing a rigid body continuously spinning around a fixed angular velocity matrix $[\hat{\boldsymbol{\omega}}]$ at speed $\dot{\theta}$ is $\dot{\mathbf{R}} = [\hat{\boldsymbol{\omega}}]\dot{\theta} \mathbf{R}$. The solution uses exactly the same mathematical structure, just upgraded for matrices: the \textbf{Matrix Exponential} $\mathbf{R}(\theta) = e^{[\hat{\boldsymbol{\omega}}]\theta} \mathbf{R}(0)$.
+  In basic 1D calculus, the solution to the differential equation governing continuous exponential growth ($\dot{x} = ax$) is the scalar exponential function: $x(t) = e^{at} x(0)$.
+
+  Similarly, the differential equation governing a rigid body continuously rotating around a fixed angular velocity matrix $[\hat{\boldsymbol{\omega}}]$ at speed $\dot{\theta}$ is:
+  \begin{equation}
+    \dot{\mathbf{R}} = [\hat{\boldsymbol{\omega}}]\dot{\theta} \mathbf{R}
+  \end{equation}
+
+  The solution uses exactly the same mathematical structure, just upgraded for matrices: the \textbf{Matrix Exponential}:
+  \begin{equation}
+    \mathbf{R}(\theta) = e^{[\hat{\boldsymbol{\omega}}]\theta} \mathbf{R}(0)
+  \end{equation}
+
+  The matrix exponential $e^X$ is defined through its Taylor series (just like the scalar exponential):
+  \begin{equation}
+    e^X = \sum_{n=0}^{\infty} \frac{X^n}{n!} = I + X + \frac{X^2}{2!} + \frac{X^3}{3!} + \cdots
+  \end{equation}
 \end{laymansbox}
 
-\section{The Matrix Exponential (from $se(3)$ to $SE(3)$)}
+\section{Rodrigues' Formula and the Matrix Exponential for SO(3)}
+\label{sec:rodrigues_formula}
 
-To convert our flat, linear velocity commands (Lie Algebra) into the true, curved $4 \times 4$ pose matrix (Lie Group), we must use the \textbf{Matrix Exponential}.
+Computing the matrix exponential $e^{[\hat{\boldsymbol{\omega}}]\theta}$ by summing the infinite Taylor series would be prohibitively slow for computer calculations. Fortunately, there is a closed-form formula.
 
-First, consider just rotation. We expand the 3-element exponential coordinate $\mathbf{r} = \hat{\boldsymbol{\omega}}\theta$ into a $3 \times 3$ skew-symmetric matrix, denoted as $[\mathbf{r}]$:
-\begin{equation}
-  [\mathbf{r}] = [\hat{\boldsymbol{\omega}}]\theta = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix} \in \mathfrak{so}(3)
-\end{equation}
+\begin{theorem}{Rodrigues' Formula (Exponential Map on SO(3))}{rodrigues}
+  For any unit vector $\hat{\boldsymbol{\omega}} \in \Reals^3$ with $\|\hat{\boldsymbol{\omega}}\| = 1$ and angle $\theta \in [0, \pi]$, the matrix exponential is:
+  \begin{equation}
+     \mathbf{R} = \exp([\hat{\boldsymbol{\omega}}]\theta) = \mathbf{I} + \sin\theta \, [\hat{\boldsymbol{\omega}}] + (1 - \cos\theta) \, [\hat{\boldsymbol{\omega}}]^2
+     \label{eq:rodrigues}
+  \end{equation}
+\end{theorem}
 
-This skew-symmetric matrix literally \emph{is} the Lie Algebra $\mathfrak{so}(3)$. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $SO(3)$ to produce our final Rotation Matrix. Because calculating an infinite Taylor series ($e^A = I + A + A^2/2! + \dots$) is too slow for computers, we use \textbf{Rodrigues' Formula}:
+\begin{proof}[Derivation of Rodrigues' Formula]
+  We begin with the Taylor series expansion:
+  \begin{equation}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} = \sum_{n=0}^{\infty} \frac{([\hat{\boldsymbol{\omega}}]\theta)^n}{n!}
+  \end{equation}
 
-\begin{equation}
-   \mathbf{R} = \exp([\hat{\boldsymbol{\omega}}]\theta) = \mathbf{I} + \sin\theta [\hat{\boldsymbol{\omega}}] + (1 - \cos\theta)[\hat{\boldsymbol{\omega}}]^2
-\end{equation}
+  The key insight is to find a pattern in the powers of $[\hat{\boldsymbol{\omega}}]$. Since $\hat{\boldsymbol{\omega}}$ is a unit vector, its skew-symmetric matrix satisfies a special property. Using the vector triple product identity, we can show:
 
-This exact same exponential mapping scales up effortlessly to the full $4 \times 4$ spatial Twists ($\mathcal{V} \in \mathfrak{se}(3)$) we learned about in Chapter 5. By passing a Twist and a time step into the Matrix Exponential, we get the exact 3D rigid body transformation:
-\begin{equation}
-    \mathbf{T} = \exp([\mathcal{V}]\theta) = \begin{bmatrix} e^{[\hat{\boldsymbol{\omega}}]\theta} & \mathbf{V} \\ \mathbf{0} & 1 \end{bmatrix} \in SE(3)
-\end{equation}
-(where $\mathbf{V}$ is a specific translation integral mapping sliding along the screw axis).
+  \begin{equation}
+    [\hat{\boldsymbol{\omega}}]^2 = \hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}
+  \end{equation}
 
-\section{The Matrix Logarithm (from $SE(3)$ to $se(3)$)}
+  (This follows from the identity $\mathbf{a} \times (\mathbf{b} \times \mathbf{c}) = \mathbf{b}(\mathbf{a} \cdot \mathbf{c}) - \mathbf{c}(\mathbf{a} \cdot \mathbf{b})$ applied to skew matrices.)
 
-What if we have the opposite problem? What if a computer vision system gives us a Rotation Matrix $\mathbf{R}$, and we need to know what physical axis it spun around, and by how much? 
+  Crucially, we also have:
+  \begin{equation}
+    [\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}]
+  \end{equation}
 
-We must perform the exact inverse operation: the \textbf{Matrix Logarithm}. The Matrix Logarithm takes a curved element from the Lie Group ($\mathbf{R} \in SO(3)$) and perfectly flattens it back onto the tangent space $\mathfrak{so}(3)$ to extract the axis-angle representation.
+  This can be verified directly: $[\hat{\boldsymbol{\omega}}]^3 = [\hat{\boldsymbol{\omega}}] \cdot [\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}] (\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}) = [\hat{\boldsymbol{\omega}}] - [\hat{\boldsymbol{\omega}}] = -[\hat{\boldsymbol{\omega}}]$ (using $[\hat{\boldsymbol{\omega}}] \hat{\boldsymbol{\omega}} = 0$).
 
-\begin{equation}
-   [\hat{\boldsymbol{\omega}}]\theta = \log(\mathbf{R})
-\end{equation}
+  The pattern repeats:
+  \begin{equation}
+    [\hat{\boldsymbol{\omega}}]^4 = [\hat{\boldsymbol{\omega}}]^2, \quad [\hat{\boldsymbol{\omega}}]^5 = [\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}], \quad [\hat{\boldsymbol{\omega}}]^6 = [\hat{\boldsymbol{\omega}}]^2, \quad \ldots
+  \end{equation}
+
+  Therefore, the Taylor series can be reorganized by grouping terms with the same power modulo 3:
+
+  \begin{align}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} &= \sum_{n=0}^{\infty} \frac{([\hat{\boldsymbol{\omega}}]\theta)^n}{n!} \\
+    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^{2k} \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^{2k+1} \theta^{2k+1}}{(2k+1)!} \\
+    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!}
+  \end{align}
+
+  (using $[\hat{\boldsymbol{\omega}}]^0 = \mathbf{I}$, $[\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}]^2$, and $[\hat{\boldsymbol{\omega}}]^{2k+1} = [\hat{\boldsymbol{\omega}}]$).
+
+  Now separate the constant terms:
+  \begin{align}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} &= \mathbf{I} + \sum_{k=1}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!} \\
+    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \sum_{k=1}^{\infty} \frac{\theta^{2k}}{(2k)!} + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{\theta^{2k+1}}{(2k+1)!} \\
+    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \left( \sum_{k=0}^{\infty} \frac{\theta^{2k}}{(2k)!} - 1 \right) + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{\theta^{2k+1}}{(2k+1)!}
+  \end{align}
+
+  Recognizing the Taylor series for $\cos\theta$ and $\sin\theta$:
+  \begin{equation}
+    \cos\theta = \sum_{k=0}^{\infty} \frac{(-1)^k \theta^{2k}}{(2k)!}, \quad \sin\theta = \sum_{k=0}^{\infty} \frac{(-1)^k \theta^{2k+1}}{(2k+1)!}
+  \end{equation}
+
+  we get:
+  \begin{equation}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} = \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 (\cos\theta - 1) + [\hat{\boldsymbol{\omega}}] \sin\theta
+  \end{equation}
+
+  Rearranging:
+  \begin{equation}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} = \mathbf{I} + \sin\theta \, [\hat{\boldsymbol{\omega}}] + (1 - \cos\theta) \, [\hat{\boldsymbol{\omega}}]^2
+  \end{equation}
+
+  which is Rodrigues' formula.
+\end{proof}
+
+\subsection{Verification that the Exponential Map Produces Valid Rotations}
+
+We must verify that Rodrigues' formula actually produces a matrix in $\SO(3)$ (i.e., $\mathbf{R}^T\mathbf{R} = \mathbf{I}$ and $\det(\mathbf{R}) = 1$).
+
+\begin{theorem}{The Exponential Map so(3) \texorpdfstring{$\rightarrow$}{->} SO(3) is Surjective}{exp_surjective}
+  The map $\exp: \so(3) \to \SO(3)$ defined by Rodrigues' formula is surjective (onto). That is, every rotation matrix can be expressed as the exponential of some skew-symmetric matrix.
+\end{theorem}
+
+\begin{proof}
+  \textbf{Orthogonality:} For any skew-symmetric matrix $[\hat{\boldsymbol{\omega}}]$, we have $[\hat{\boldsymbol{\omega}}]^T = -[\hat{\boldsymbol{\omega}}]$. The matrix exponential of a skew-symmetric matrix is orthogonal:
+  \begin{equation}
+    (e^{[\hat{\boldsymbol{\omega}}]\theta})^T e^{[\hat{\boldsymbol{\omega}}]\theta} = e^{-[\hat{\boldsymbol{\omega}}]\theta} e^{[\hat{\boldsymbol{\omega}}]\theta} = e^{0} = \mathbf{I}
+  \end{equation}
+
+  (using the property that $e^{A^T} = (e^A)^T$ for any matrix.)
+
+  \textbf{Determinant:} The determinant of a matrix exponential is $\det(e^A) = e^{\text{tr}(A)}$. For skew-symmetric matrices, $\text{tr}([\hat{\boldsymbol{\omega}}]\theta) = 0$, so $\det(e^{[\hat{\boldsymbol{\omega}}]\theta}) = e^0 = 1$.
+
+  \textbf{Surjectivity:} Any rotation matrix $\mathbf{R} \in \SO(3)$ can be decomposed using the axis-angle representation: there exist a unit vector $\hat{\boldsymbol{\omega}}$ and angle $\theta \in [0, \pi]$ such that $\mathbf{R}$ represents rotation by angle $\theta$ about axis $\hat{\boldsymbol{\omega}}$. For this rotation, Rodrigues' formula shows that $\mathbf{R} = e^{[\hat{\boldsymbol{\omega}}]\theta}$.
+\end{proof}
+
+\section{The Matrix Logarithm on SO(3)}
+\label{sec:matrix_log_so3}
+
+The exponential map is not injective (one-to-one) on $\SO(3)$: multiple axis-angle pairs can produce the same rotation (e.g., rotating by $\theta$ about $\hat{\boldsymbol{\omega}}$ is the same as rotating by $-\theta$ about $-\hat{\boldsymbol{\omega}}$, and rotations by $\theta$ and $\theta + 2\pi$ are identical). However, if we restrict to $\theta \in [0, \pi]$, the exponential map becomes bijective, and the logarithm is its inverse.
+
+\begin{definition}{Matrix Logarithm on SO(3)}{log_so3}
+  The \textbf{Matrix Logarithm} on $\SO(3)$ is the inverse of the exponential map, mapping from $\SO(3)$ back to $\so(3)$:
+  \begin{equation}
+    \log: \SO(3) \to \so(3)
+  \end{equation}
+
+  Given a rotation matrix $\mathbf{R}$, the logarithm extracts the axis-angle representation.
+\end{definition}
+
+\subsection{Computing the Logarithm: All Cases}
+
+The logarithm of a rotation matrix depends on the rotation angle and must be handled in multiple cases:
+
+\begin{theorem}{Logarithm of SO(3) Rotations}{log_cases}
+  For a rotation matrix $\mathbf{R} \in \SO(3)$, the logarithm $[\hat{\boldsymbol{\omega}}]\theta = \log(\mathbf{R})$ can be computed as follows:
+
+  \textbf{Case 1: Identity ($\theta = 0$)}
+
+  If $\mathbf{R} = \mathbf{I}$, then:
+  \begin{equation}
+    \log(\mathbf{R}) = 0 \in \so(3)
+  \end{equation}
+
+  \textbf{Case 2: Small Angle ($\theta \ll 1$)}
+
+  For small rotations, $\sin\theta \approx \theta$ and $1 - \cos\theta \approx \theta^2/2$, so Rodrigues' formula becomes:
+  \begin{equation}
+    \mathbf{R} \approx \mathbf{I} + \theta [\hat{\boldsymbol{\omega}}] + O(\theta^2)
+  \end{equation}
+
+  Inverting this approximation (solving for $[\hat{\boldsymbol{\omega}}]\theta$):
+  \begin{equation}
+    [\hat{\boldsymbol{\omega}}]\theta \approx \mathbf{R} - \mathbf{R}^T \quad \text{(skew-symmetric part of } \mathbf{R} \text{)}
+  \end{equation}
+
+  More precisely:
+  \begin{equation}
+    \log(\mathbf{R}) = \frac{1}{2}(\mathbf{R} - \mathbf{R}^T) \quad \text{for small angles}
+  \end{equation}
+
+  \textbf{Case 3: General Case}
+
+  For arbitrary $\theta \in (0, \pi]$, the angle $\theta$ can be extracted from the trace of $\mathbf{R}$:
+  \begin{equation}
+    \text{tr}(\mathbf{R}) = 1 + 2\cos\theta
+  \end{equation}
+
+  Solving:
+  \begin{equation}
+    \theta = \arccos\left(\frac{\text{tr}(\mathbf{R}) - 1}{2}\right) \label{eq:angle_from_trace}
+  \end{equation}
+
+  Once $\theta$ is known, the axis $\hat{\boldsymbol{\omega}}$ is extracted from the skew-symmetric part:
+  \begin{equation}
+    \hat{\boldsymbol{\omega}} = \frac{1}{2\sin\theta} \begin{bmatrix} R_{32} - R_{23} \\ R_{13} - R_{31} \\ R_{21} - R_{12} \end{bmatrix} \label{eq:axis_from_skew}
+  \end{equation}
+
+  The skew-symmetric matrix logarithm is:
+  \begin{equation}
+    \log(\mathbf{R}) = [\hat{\boldsymbol{\omega}}]\theta
+  \end{equation}
+
+  \textbf{Case 4: $\pi$ Rotation}
+
+  When $\theta = \pi$ (180-degree rotation), $\sin\theta = 0$, so equation \eqref{eq:axis_from_skew} becomes singular. In this case, use:
+  \begin{equation}
+    \mathbf{R} = 2\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}
+  \end{equation}
+
+  The axis can be found from the eigenvector of $\mathbf{R}$ corresponding to eigenvalue 1:
+  \begin{equation}
+    \hat{\boldsymbol{\omega}} = \text{unit eigenvector of } (\mathbf{R} + \mathbf{I}) \text{ with eigenvalue } 2
+  \end{equation}
+\end{theorem}
+
+\begin{example}{Computing Logarithm: Example}{log_example}
+  Suppose we have a rotation matrix representing a $60^\circ$ rotation about the $z$-axis:
+  \begin{equation}
+    \mathbf{R} = \begin{bmatrix} \cos(60^\circ) & -\sin(60^\circ) & 0 \\ \sin(60^\circ) & \cos(60^\circ) & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 1/2 & -\sqrt{3}/2 & 0 \\ \sqrt{3}/2 & 1/2 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+  \end{equation}
+
+  \textbf{Step 1:} Compute $\text{tr}(\mathbf{R}) = 1/2 + 1/2 + 1 = 2$.
+
+  \textbf{Step 2:} Extract angle: $\theta = \arccos((2 - 1)/2) = \arccos(1/2) = 60^\circ = \pi/3$ rad.
+
+  \textbf{Step 3:} Extract axis from skew part:
+  \begin{equation}
+    \hat{\boldsymbol{\omega}} = \frac{1}{2\sin(60^\circ)} \begin{bmatrix} 0 - 0 \\ 0 - 0 \\ \sqrt{3}/2 - (-\sqrt{3}/2) \end{bmatrix} = \frac{1}{2 \cdot \sqrt{3}/2} \begin{bmatrix} 0 \\ 0 \\ \sqrt{3} \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+  \end{equation}
+
+  \textbf{Step 4:} Construct logarithm:
+  \begin{equation}
+    \log(\mathbf{R}) = \begin{bmatrix} 0 \\ 0 \\ \pi/3 \end{bmatrix}
+  \end{equation}
+
+  As a skew matrix: $[\hat{\boldsymbol{\omega}}]\theta = \begin{bmatrix} 0 & -\pi/3 & 0 \\ \pi/3 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix}$.
+\end{example}
 
 \begin{principle}{Geometric Distance via Logarithms}{log_dist}
-  The Matrix Logarithm is computationally critical in optimal control and error correction. If your robotic hand is at orientation $\mathbf{R}_{\text{current}}$ and your target is $\mathbf{R}_{\text{target}}$, you \emph{absolutely cannot} compute an "error" by subtracting them ($\mathbf{R}_{\text{target}} - \mathbf{R}_{\text{current}}$) because subtracting curved matrices yields garbage that does not belong to $SO(3)$.
-  
+  The Matrix Logarithm is computationally critical in optimal control and error correction. If your robotic hand is at orientation $\mathbf{R}_{\text{current}}$ and your target is $\mathbf{R}_{\text{target}}$, you \emph{absolutely cannot} compute an "error" by subtracting them ($\mathbf{R}_{\text{target}} - \mathbf{R}_{\text{current}}$) because subtracting curved matrices yields garbage that does not belong to $\SO(3)$.
+
   The true geometric error—the precise, shortest-path arc of rotation needed to correct the deviation—is found using the Logarithm of their relative transform:
-  $$ \mathbf{e}_{\text{error\_vector}} = \log(\mathbf{R}_{\text{target}} \mathbf{R}_{\text{current}}^T)^\vee $$
-  (Where the $\vee$ "vee" operator extracts the 3D vector from the skew-symmetric matrix). 
+  \begin{equation}
+    \mathbf{e}_{\text{error}} = \log(\mathbf{R}_{\text{target}} \mathbf{R}_{\text{current}}^T)
+  \end{equation}
+
+  The resulting axis-angle vector $\mathbf{e}_{\text{error}} \in \so(3)$ lives in the tangent space and directly tells you the minimal rotation needed to align the two frames. This is the mathematical foundation for proportional-derivative (PD) control in robotics.
 \end{principle}
 
-\section{The Quaternion Connection}
+\section{The Exponential Map on SE(3)}
+\label{sec:exp_se3}
 
-In Chapter 4, we showed that Unit Quaternions $\mathbf{q} \in \Reals^4$ are the ultimate fast mapping of $SO(3)$. Their speed and lack of singularities come directly from their deep connection to Exponential Coordinates.
+We now extend the exponential map from rotations alone ($\SO(3)$) to full spatial rigid body transformations ($\SE(3)$).
 
-Recall the Quaternion definition:
+\begin{definition}{The SE(3) Exponential Map}{exp_se3}
+  Given a twist $\twist = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v} \end{bmatrix} \in \se(3)$ and a scalar $\theta$ (the parameter along the motion), the exponential map is:
+  \begin{equation}
+    \mathbf{T} = \exp([\twist]\theta) \in \SE(3)
+  \end{equation}
+
+  where $[\twist] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ 0 & 0 \end{bmatrix}$ is the $4 \times 4$ matrix representation of the twist.
+\end{definition}
+
+\subsection{Derivation of the SE(3) Exponential Formula}
+
+To evaluate $\exp([\twist]\theta)$, we use the structure of the matrix. Let $[\boldsymbol{\omega}]$ denote the skew-symmetric matrix of $\boldsymbol{\omega}$, which satisfies $[\boldsymbol{\omega}]^3 = -[\boldsymbol{\omega}]$ as before.
+
+The Taylor series is:
 \begin{equation}
-  \mathbf{q} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\boldsymbol{\omega}} \sin(\theta/2) \end{bmatrix}
+  \exp([\twist]\theta) = \sum_{n=0}^{\infty} \frac{1}{n!} \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ 0 & 0 \end{bmatrix}^n \theta^n
 \end{equation}
 
-A quaternion is quite literally the Exponential Coordinate vector ($\hat{\boldsymbol{\omega}}\theta$) passed through a sine/cosine wave so that it algebraically bounds itself to a unit hypersphere. Quaternions explicitly preserve the pure geometric intention of the axis $\hat{\boldsymbol{\omega}}$ and the continuous rotation angle $\theta$.
+Computing powers:
+\begin{align}
+  \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ 0 & 0 \end{bmatrix}^2 &= \begin{bmatrix} [\boldsymbol{\omega}]^2 & [\boldsymbol{\omega}]\mathbf{v} \\ 0 & 0 \end{bmatrix} \\
+  \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ 0 & 0 \end{bmatrix}^3 &= \begin{bmatrix} [\boldsymbol{\omega}]^3 & [\boldsymbol{\omega}]^2\mathbf{v} \\ 0 & 0 \end{bmatrix}
+\end{align}
 
-Because Quaternions map rotation so cleanly via this exponential structure, interpolating halfway between two orientations (called \emph{Slerp} - Spherical Linear Interpolation) traces the exact, perfect, shortest-path geodesic arc across rotation space. Interpolating Euler Angles, on the other hand, creates chaotic, unpredictable wobbling.
+The pattern is similar to the $SO(3)$ case, but now we must also track the translation vectors. Using the fact that $[\boldsymbol{\omega}]^3 = -[\boldsymbol{\omega}]$:
+
+\begin{equation}
+  \exp([\twist]\theta) = \begin{bmatrix} e^{[\boldsymbol{\omega}]\theta} & \mathbf{V}(\theta) \mathbf{v} \\ 0 & 1 \end{bmatrix}
+\end{equation}
+
+where the \textbf{V matrix} (or screw Jacobian) is:
+
+\begin{theorem}{The V Matrix Formula}{v_matrix}
+  The $3 \times 3$ matrix that relates the translation component of the twist to the spatial translation is:
+  \begin{equation}
+    \mathbf{V}(\theta) = \mathbf{I} + (1-\cos\theta) \frac{[\boldsymbol{\omega}]}{\|\boldsymbol{\omega}\|^2} + (\theta - \sin\theta) \frac{[\boldsymbol{\omega}]^2}{\|\boldsymbol{\omega}\|^3}
+    \label{eq:v_matrix}
+  \end{equation}
+
+  For unit angular velocity $\hat{\boldsymbol{\omega}}$, this simplifies to:
+  \begin{equation}
+    \mathbf{V}(\theta) = \mathbf{I} + (1-\cos\theta)[\hat{\boldsymbol{\omega}}] + (\theta - \sin\theta)[\hat{\boldsymbol{\omega}}]^2
+    \label{eq:v_matrix_simple}
+  \end{equation}
+
+  For a prismatic (pure translation) twist with $\boldsymbol{\omega} = 0$, we have $\mathbf{V} = \mathbf{I}$.
+\end{theorem}
+
+\begin{proof}
+  Separating the Taylor series into even and odd powers (as we did for $SO(3)$), and using the cyclic property $[\boldsymbol{\omega}]^3 = -[\boldsymbol{\omega}]$:
+  \begin{align}
+    \exp([\twist]\theta) &= \sum_{n=0}^{\infty} \frac{1}{n!} \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ 0 & 0 \end{bmatrix}^n \theta^n \\
+    &= \begin{bmatrix} \sum_{k=0}^{\infty} \frac{[\boldsymbol{\omega}]^{2k} \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\boldsymbol{\omega}]^{2k+1}\theta^{2k+1}}{(2k+1)!} & \mathbf{V}(\theta)\mathbf{v} \\ 0 & 1 \end{bmatrix}
+  \end{align}
+
+  The rotation part gives Rodrigues' formula. For the translation part, we have:
+  \begin{align}
+    \mathbf{V}(\theta)\mathbf{v} &= \left( \mathbf{I} + \sum_{k=1}^{\infty} \frac{[\boldsymbol{\omega}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\boldsymbol{\omega}] \theta^{2k+1}}{(2k+1)!} \right) \mathbf{v} \\
+    &= \left( \mathbf{I} + [\boldsymbol{\omega}] \sum_{k=0}^{\infty} \frac{\theta^{2k+1}}{(2k+1)!} + [\boldsymbol{\omega}]^2 \sum_{k=1}^{\infty} \frac{\theta^{2k}}{(2k)!} \right) \mathbf{v} \\
+    &= \left( \mathbf{I} + [\boldsymbol{\omega}] \sin\theta + [\boldsymbol{\omega}]^2 (\cos\theta - 1) \right) \mathbf{v}
+  \end{align}
+
+  This is the $\mathbf{V}$ matrix.
+\end{proof}
+
+\section{The Matrix Logarithm on SE(3)}
+\label{sec:matrix_log_se3}
+
+The inverse of the exponential map is the logarithm:
+
+\begin{definition}{Matrix Logarithm on SE(3)}{log_se3}
+  Given a transformation $\mathbf{T} = \begin{bmatrix} \mathbf{R} & \mathbf{p} \\ 0 & 1 \end{bmatrix} \in \SE(3)$, the logarithm extracts the twist:
+  \begin{equation}
+    \log(\mathbf{T}) = [\twist]
+  \end{equation}
+
+  where $\twist = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v} \end{bmatrix}$ is reconstructed as:
+  \begin{enumerate}
+    \item Extract the angular part: $[\boldsymbol{\omega}] = \log(\mathbf{R})$ using the $SO(3)$ logarithm.
+    \item Extract the linear part: $\mathbf{v} = \mathbf{V}^{-1}(\theta) \mathbf{p}$, where $\mathbf{V}^{-1}$ is the inverse of the $\mathbf{V}$ matrix.
+  \end{enumerate}
+\end{definition}
+
+For numerical implementation, the inverse of the V matrix is:
+\begin{equation}
+  \mathbf{V}^{-1}(\theta) = \mathbf{I} - \frac{1}{2}[\boldsymbol{\omega}] + \frac{1}{\theta^2}\left(\frac{1}{2} - \frac{\sin(2\theta)}{4\sin\theta}\right)[\boldsymbol{\omega}]^2
+\end{equation}
+
+(and for $\theta \to 0$, use L'Hôpital's rule or series approximations to avoid numerical issues).
+
+\section{The Baker-Campbell-Hausdorff Formula}
+\label{sec:bch}
+
+One of the most subtle facts about Lie algebras and Lie groups is that they do not commute under composition. That is, if $\mathbf{A}$ and $\mathbf{B}$ are two elements of a Lie algebra, then:
+\begin{equation}
+  e^{\mathbf{A}} e^{\mathbf{B}} \neq e^{\mathbf{A} + \mathbf{B}}
+\end{equation}
+
+in general. The difference is captured by the \textbf{Baker-Campbell-Hausdorff (BCH) formula}, which expresses the "product" of two exponentials as a single exponential:
+
+\begin{theorem}{Baker-Campbell-Hausdorff Formula (First-Order)}{bch_formula}
+  For small perturbations $\mathbf{A}, \mathbf{B} \in \mathfrak{g}$ (the Lie algebra) with $\|\mathbf{A}\|, \|\mathbf{B}\| \ll 1$:
+  \begin{equation}
+    \log(e^{\mathbf{A}} e^{\mathbf{B}}) = \mathbf{A} + \mathbf{B} + \frac{1}{2}[\mathbf{A}, \mathbf{B}] + O(\|\mathbf{A}\|^3, \|\mathbf{B}\|^3)
+  \end{equation}
+
+  where $[\mathbf{A}, \mathbf{B}] = \mathbf{A}\mathbf{B} - \mathbf{B}\mathbf{A}$ is the Lie bracket (commutator).
+\end{theorem}
+
+\begin{principle}{Geometric Interpretation of BCH}{bch_interpretation}
+  The BCH formula reveals that when you compose two small rotations, the result is not simply the sum of the rotations, but the sum plus a correction term proportional to their bracket (commutator). This correction term vanishes only if the two motions commute (i.e., $[\mathbf{A}, \mathbf{B}] = 0$).
+
+  For rotations, the bracket of two twists is another twist:
+  \begin{equation}
+    [\twist_1, \twist_2] = \text{Ad}_{\exp(\twist_1)} \twist_2 - \twist_2 + \text{higher order}
+  \end{equation}
+
+  This is the mathematical reason why the order of rotations matters: it is not a "software bug" but a fundamental property of 3D rotations.
+\end{principle}
+
+The full BCH formula (for arbitrary elements) is an infinite series:
+\begin{equation}
+  \log(e^{\mathbf{A}} e^{\mathbf{B}}) = \mathbf{A} + \mathbf{B} + \frac{1}{2}[\mathbf{A}, \mathbf{B}] + \frac{1}{12}([\mathbf{A}, [\mathbf{A}, \mathbf{B}]] + [\mathbf{B}, [\mathbf{B}, \mathbf{A}]]) + \cdots
+\end{equation}
+
+In practice, the first-order approximation is sufficient for small perturbations.
+
+\section{Numerical Computation of Matrix Exponentials}
+\label{sec:numerical_exp}
+
+Computing the matrix exponential $e^A$ numerically is a classic problem in scientific computing. For large matrices or large exponents, directly summing the Taylor series is inefficient and can be numerically unstable.
+
+\subsection{Padé Approximation}
+
+One robust approach is the \textbf{Padé approximation}, which approximates $e^A$ as a ratio of two polynomials:
+\begin{equation}
+  e^A \approx \frac{N(A)}{D(A)} = \left( I + \frac{A}{2} + \frac{A^2}{12} + \cdots \right) \left( I - \frac{A}{2} + \frac{A^2}{12} - \cdots \right)^{-1}
+\end{equation}
+
+The advantage is that rational functions converge faster than power series and are more numerically stable.
+
+\subsection{Scaling and Squaring}
+
+For very large matrices, the \textbf{scaling and squaring} method is effective: compute $e^{A/2^k}$ (which has small norm and is easy to compute), then square the result $k$ times:
+\begin{equation}
+  e^A = (e^{A/2^k})^{2^k}
+\end{equation}
+
+\begin{laymansbox}{Practical Implementation Note}{numerical_note}
+  Modern libraries like Eigen (C++), NumPy (Python), and MATLAB provide optimized \texttt{matrix\_exp} functions that combine multiple techniques (scaling, Padé approximation, eigenvalue decomposition if applicable) to ensure numerical accuracy and efficiency. For robotics applications, it is almost always better to use these library functions than to implement your own.
+\end{laymansbox}
+
+\section{Geodesics on SO(3): Shortest Rotation Paths}
+\label{sec:geodesics}
+
+A \textbf{geodesic} is the shortest path between two points on a curved surface. On the surface of a sphere, geodesics are great circles. On the manifold $\SO(3)$, geodesics are paths parameterized by the exponential map.
+
+\begin{principle}{Geodesics via the Exponential Map}{geodesic_principle}
+  The shortest path (in a Riemannian sense) from the identity rotation to a rotation $\mathbf{R} \in \SO(3)$ is:
+  \begin{equation}
+    \mathbf{R}(t) = \exp(t \cdot \log(\mathbf{R})), \quad t \in [0, 1]
+  \end{equation}
+
+  where $t = 0$ gives the identity and $t = 1$ gives $\mathbf{R}$.
+
+  Geometrically, this path rotates at constant angular velocity along the axis extracted by the logarithm. The path length is the rotation angle $\theta = \|\log(\mathbf{R})\|$.
+\end{principle}
+
+\begin{proof}
+  The geodesic distance on $\SO(3)$ is defined by the Riemannian metric inherited from the tangent space. The exponential map is a local isometry, meaning it preserves distances: the Euclidean distance in the tangent space $\so(3)$ equals the geodesic distance on the manifold $\SO(3)$ (at least locally).
+
+  A straight line in the tangent space—parameterized by $t \cdot \mathbf{v}$ for a direction $\mathbf{v}$—has minimal length. Exponentiating this line gives the geodesic on the manifold.
+\end{proof}
+
+\section{SLERP: Spherical Linear Interpolation as Geodesic Interpolation}
+\label{sec:slerp}
+
+In Chapter 4, we introduced \textbf{SLERP (Spherical Linear Interpolation)}, which smoothly interpolates between two quaternions. We can now understand SLERP as a discretization of the geodesic on $\SO(3)$.
+
+\begin{theorem}{SLERP as Exponential Interpolation}{slerp_geodesic}
+  Given two rotation matrices $\mathbf{R}_0$ and $\mathbf{R}_1$, the SLERP interpolation:
+  \begin{equation}
+    \mathbf{R}(t) = \mathbf{R}_0 \exp(t \log(\mathbf{R}_0^T \mathbf{R}_1)), \quad t \in [0, 1]
+  \end{equation}
+
+  traces a geodesic from $\mathbf{R}_0$ to $\mathbf{R}_1$. This path:
+  \begin{enumerate}
+    \item Is the shortest distance (in terms of rotation angle) between the two orientations.
+    \item Rotates at constant angular velocity.
+    \item Is independent of the order (left-invariant parameterization) or dependent on the parameterization (right-invariant), depending on whether we multiply on the left or right.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  At $t = 0$: $\mathbf{R}(0) = \mathbf{R}_0 \exp(0) = \mathbf{R}_0$.
+
+  At $t = 1$: $\mathbf{R}(1) = \mathbf{R}_0 \exp(\log(\mathbf{R}_0^T \mathbf{R}_1)) = \mathbf{R}_0 (\mathbf{R}_0^T \mathbf{R}_1) = \mathbf{R}_1$.
+
+  The rotation angle between $\mathbf{R}(t)$ and $\mathbf{R}(0)$ is $t \theta_{\max}$ where $\theta_{\max} = \|\log(\mathbf{R}_0^T \mathbf{R}_1)\|$, so the angular velocity is constant.
+
+  For quaternions, the same path can be parameterized as:
+  \begin{equation}
+    \mathbf{q}(t) = \frac{\sin((1-t)\theta)}{\sin\theta}\mathbf{q}_0 + \frac{\sin(t\theta)}{\sin\theta}\mathbf{q}_1
+  \end{equation}
+
+  where $\theta = \arccos(\mathbf{q}_0 \cdot \mathbf{q}_1)$ is the angle between the quaternions. This is the classical SLERP formula.
+\end{proof}
+
+\begin{example}{SLERP vs. Linear Interpolation}{slerp_example}
+
+Consider interpolating between two rotations:
+- $\mathbf{R}_0 = I$ (identity, no rotation)
+- $\mathbf{R}_1 = e^{[0, 0, 1] \cdot \pi/2}$ (90-degree rotation about $z$-axis)
+
+\textbf{Linear Interpolation (Wrong):}
+\begin{equation}
+  \mathbf{R}_{\text{wrong}}(t) = (1-t)\mathbf{R}_0 + t \mathbf{R}_1 = (1-t)\mathbf{I} + t \mathbf{R}_1
+\end{equation}
+
+At $t = 0.5$, this yields a matrix that is neither orthogonal nor a valid rotation—it is geometrically meaningless.
+
+\textbf{SLERP (Correct):}
+\begin{equation}
+  \mathbf{R}_{\text{correct}}(t) = \mathbf{R}_0 \exp(t \log(\mathbf{R}_0^T \mathbf{R}_1)) = \exp(t [0, 0, 1] \cdot \pi/2)
+\end{equation}
+
+At $t = 0.5$, this yields a rotation by 45 degrees about the $z$-axis, which is geometrically correct and lies on the shortest path between the two orientations.
+\end{example}
+
+\section{Python Worked Example: Computing Exponentials and Logarithms}
+\label{sec:python_exp_log}
+
+\begin{lstlisting}[language=Python, caption=Exponential and Logarithm Computations, label=code:exp_log]
+import numpy as np
+from scipy.spatial.transform import Rotation as R
+from scipy.linalg import expm, logm
+import warnings
+
+def skew(v):
+    """Compute the skew-symmetric matrix of a 3D vector."""
+    return np.array([
+        [0, -v[2], v[1]],
+        [v[2], 0, -v[0]],
+        [-v[1], v[0], 0]
+    ])
+
+def unskew(S):
+    """Extract a 3D vector from a skew-symmetric matrix."""
+    return np.array([S[2, 1], S[0, 2], S[1, 0]])
+
+def rodrigues(omega, theta):
+    """
+    Compute rotation matrix using Rodrigues' formula.
+    omega: unit axis vector (3D)
+    theta: rotation angle in radians
+    """
+    if np.linalg.norm(omega) < 1e-10:
+        return np.eye(3)
+
+    omega_hat = omega / np.linalg.norm(omega)
+    omega_skew = skew(omega_hat)
+
+    R = (np.eye(3) +
+         np.sin(theta) * omega_skew +
+         (1 - np.cos(theta)) * omega_skew @ omega_skew)
+
+    return R
+
+def log_SO3(R):
+    """
+    Compute the logarithm of a rotation matrix.
+    Returns the axis-angle vector w = omega_hat * theta.
+    """
+    # Clamp to avoid numerical errors with arccos
+    trace = np.trace(R)
+    theta = np.arccos(np.clip((trace - 1) / 2, -1, 1))
+
+    if theta < 1e-10:  # Identity rotation
+        return np.zeros(3)
+    elif np.abs(theta - np.pi) < 1e-10:  # 180-degree rotation
+        # Find the axis from the eigenvector with eigenvalue 1
+        eigvals, eigvecs = np.linalg.eig((R + np.eye(3)))
+        idx = np.argmax(np.real(eigvals))
+        omega_hat = np.real(eigvecs[:, idx])
+        omega_hat = omega_hat / np.linalg.norm(omega_hat)
+        return omega_hat * theta
+    else:
+        omega_skew = (R - R.T) / (2 * np.sin(theta))
+        omega_hat = unskew(omega_skew)
+        return omega_hat * theta
+
+def exp_SE3(twist, theta):
+    """
+    Compute the exponential map from se(3) to SE(3).
+    twist: 6D twist vector [omega; v]
+    theta: parameter (typically 1.0 for unit time step)
+    """
+    omega = twist[:3]
+    v = twist[3:]
+
+    if np.linalg.norm(omega) < 1e-10:  # Pure translation
+        R = np.eye(3)
+        p = v * theta
+    else:
+        omega_hat = omega / np.linalg.norm(omega)
+        w_magnitude = np.linalg.norm(omega)
+        theta_total = w_magnitude * theta
+
+        # Rotation part
+        R = rodrigues(omega_hat, theta_total)
+
+        # Translation part via V matrix
+        V = (np.eye(3) +
+             (1 - np.cos(theta_total)) * skew(omega_hat) / w_magnitude +
+             (theta_total - np.sin(theta_total)) * skew(omega_hat)**2 / (w_magnitude**2))
+
+        p = V @ v * theta
+
+    T = np.eye(4)
+    T[:3, :3] = R
+    T[:3, 3] = p
+    return T
+
+def log_SE3(T):
+    """
+    Compute the logarithm of a transformation matrix.
+    Returns the twist vector [omega; v].
+    """
+    R = T[:3, :3]
+    p = T[:3, 3]
+
+    omega = log_SO3(R)
+    w_magnitude = np.linalg.norm(omega)
+
+    if w_magnitude < 1e-10:  # Pure translation
+        v = p
+    else:
+        omega_hat = omega / w_magnitude
+        theta = w_magnitude
+
+        # Compute V^{-1}
+        V_inv = (np.eye(3) -
+                 0.5 * skew(omega_hat) +
+                 (1.0/theta**2) * (0.5 - np.sin(2*theta)/(4*np.sin(theta))) * skew(omega_hat)**2)
+
+        v = V_inv @ p
+
+    twist = np.hstack([omega, v])
+    return twist
+
+def slerp(R0, R1, t):
+    """
+    Spherical linear interpolation between two rotations.
+    Uses exponential coordinates for geodesic interpolation.
+    """
+    # Relative rotation from R0 to R1
+    R_rel = R0.T @ R1
+    omega = log_SO3(R_rel)
+
+    # Interpolated relative rotation
+    R_interp_rel = rodrigues(omega / np.linalg.norm(omega), t * np.linalg.norm(omega)) if np.linalg.norm(omega) > 1e-10 else np.eye(3)
+
+    # Final rotation
+    R_interp = R0 @ R_interp_rel
+    return R_interp
+
+# Example usage
+if __name__ == "__main__":
+    # 1. Create a rotation: 60 degrees about the z-axis
+    theta = np.pi / 3  # 60 degrees
+    omega = np.array([0, 0, 1])  # z-axis
+    R = rodrigues(omega, theta)
+    print("Rotation matrix (60 deg about z):")
+    print(R)
+    print()
+
+    # 2. Compute logarithm
+    omega_recovered = log_SO3(R)
+    print(f"Recovered axis-angle: {omega_recovered}")
+    print(f"Expected: {omega * theta}")
+    print()
+
+    # 3. Verify round-trip
+    R_recovered = rodrigues(omega_recovered / np.linalg.norm(omega_recovered),
+                           np.linalg.norm(omega_recovered))
+    print("Round-trip error (should be ~0):")
+    print(np.linalg.norm(R - R_recovered))
+    print()
+
+    # 4. Exponential map on SE(3)
+    twist = np.array([0, 0, 1, 1, 0, 0])  # rotate about z, translate in x
+    T = exp_SE3(twist, 1.0)
+    print("SE(3) exponential:")
+    print(T)
+    print()
+
+    # 5. Log of SE(3)
+    twist_recovered = log_SE3(T)
+    print(f"Recovered twist: {twist_recovered}")
+    print(f"Expected twist: {twist}")
+    print()
+
+    # 6. SLERP interpolation
+    R0 = np.eye(3)
+    theta1 = np.pi / 2  # 90 degrees
+    R1 = rodrigues(np.array([0, 0, 1]), theta1)
+
+    print("SLERP interpolation (0, 0.5, 1.0):")
+    for t in [0, 0.5, 1.0]:
+        R_t = slerp(R0, R1, t)
+        omega_t = log_SO3(R_t)
+        angle_t = np.linalg.norm(omega_t)
+        print(f"  t={t}: rotation angle = {np.degrees(angle_t):.1f} deg")
+    print()
+
+    # 7. Geodesic distance
+    R_test = rodrigues(np.array([1, 1, 1]) / np.sqrt(3), np.pi / 4)
+    omega_log = log_SO3(R_test)
+    geodesic_distance = np.linalg.norm(omega_log)
+    print(f"Geodesic distance from identity to test rotation: {geodesic_distance:.4f} rad = {np.degrees(geodesic_distance):.2f} deg")
+\end{lstlisting}
+
+\section{Summary}
+\label{sec:exp_summary}
+
+In this chapter, we developed the exponential and logarithmic maps that govern motion on curved manifolds like $\SO(3)$ and $\SE(3)$.
+
+\begin{enumerate}
+  \item \textbf{Lie Algebras:} The tangent spaces $\so(3)$ and $\se(3)$ are flat vector spaces where standard calculus operations work perfectly. They are identified with skew-symmetric matrices (and 6D vectors in the SE(3) case).
+
+  \item \textbf{Rodrigues' Formula:} The exponential map from $\so(3)$ to $\SO(3)$ is given in closed form by Rodrigues' formula:
+  \begin{equation}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} = \mathbf{I} + \sin\theta [\hat{\boldsymbol{\omega}}] + (1 - \cos\theta) [\hat{\boldsymbol{\omega}}]^2
+  \end{equation}
+
+  \item \textbf{Matrix Logarithm:} The inverse operation extracts axis-angle coordinates from rotation matrices. It handles multiple cases (identity, small angles, general angles, 180-degree rotations) carefully to avoid numerical singularities.
+
+  \item \textbf{SE(3) Exponential:} Extension to full spatial transformations introduces the V matrix, which mediates between translation and rotation.
+
+  \item \textbf{Baker-Campbell-Hausdorff:} The composition of two exponentials is not simply the exponential of the sum; the Lie bracket (commutator) introduces correction terms. This reflects the non-commutativity of rotations.
+
+  \item \textbf{Geodesics:} The exponential map traces out geodesics (shortest paths) on the manifold. SLERP interpolation of quaternions is mathematically equivalent to geodesic interpolation on $\SO(3)$.
+
+  \item \textbf{Numerical Computation:} Modern libraries implement robust algorithms (scaling-and-squaring, Padé approximation) for computing exponentials and logarithms numerically.
+\end{enumerate}
+
+These tools enable us to:
+- Smoothly interpolate between poses without averaging invalid matrices.
+- Extract meaningful "error vectors" from the difference between two poses (via the logarithm).
+- Solve differential equations governing rigid body motion.
+- Parameterize smooth trajectories and control laws.
+
+With exponential coordinates and the matrix logarithm in hand, we possess the complete mathematical toolkit for describing, analyzing, and controlling rigid body motion in 3D space. We are now ready to move into Volume I, where we develop the geometric properties of $\SO(3)$ and $\SE(3)$ in depth.
+
+\section{Exercises}
+\label{sec:exercises_ch6}
+
+\begin{enumerate}
+
+\item \textbf{Rodrigues' Formula Verification:} Use Rodrigues' formula to compute the rotation matrix for a $45^\circ$ rotation about the axis $\hat{\boldsymbol{\omega}} = [1, 1, 1]^T / \sqrt{3}$. Verify that the result is orthogonal ($\mathbf{R}^T\mathbf{R} = \mathbf{I}$) and has determinant 1.
+
+\item \textbf{Logarithm of a 90-Degree Rotation:} Given the rotation matrix:
+  \begin{equation}
+    \mathbf{R} = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+  \end{equation}
+  compute $\log(\mathbf{R})$ and extract the axis and angle.
+
+\item \textbf{Trace-Based Angle Extraction:} Show that for any rotation matrix $\mathbf{R}$, the trace $\text{tr}(\mathbf{R}) = 1 + 2\cos\theta$ where $\theta$ is the rotation angle. Explain why this formula breaks down when $\theta = \pi$ and how to handle this case.
+
+\item \textbf{Skew Matrix Pattern:} Prove that for any unit vector $\hat{\boldsymbol{\omega}}$, the skew-symmetric matrix $[\hat{\boldsymbol{\omega}}]$ satisfies $[\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}]$.
+
+\item \textbf{Small Angle Approximation:} For small rotations with $\theta \ll 1$, show that $e^{[\hat{\boldsymbol{\omega}}]\theta} \approx \mathbf{I} + [\hat{\boldsymbol{\omega}}]\theta$ and derive the error term (to second order in $\theta$).
+
+\item \textbf{SE(3) Exponential:} Given a twist $\twist = \begin{bmatrix} 0 \\ 0 \\ 1 \\ 1 \\ 0 \\ 0 \end{bmatrix}$ (rotation about $z$, translation in $x$), compute the exponential map to produce the corresponding $4 \times 4$ transformation $\mathbf{T} = \exp([\twist])$.
+
+\item \textbf{V Matrix for Pure Translation:} For a prismatic (pure translation) joint with twist $\twist = \begin{bmatrix} 0 \\ 0 \\ 0 \\ 1 \\ 0 \\ 0 \end{bmatrix}$, show that $\mathbf{V} = \mathbf{I}$ and thus $\exp([\twist]) = \begin{bmatrix} \mathbf{I} & [1, 0, 0]^T \\ 0 & 1 \end{bmatrix}$.
+
+\item \textbf{Logarithm Inversion:} If $\mathbf{T} = \begin{bmatrix} \mathbf{R} & \mathbf{p} \\ 0 & 1 \end{bmatrix}$, show that $\log(\mathbf{T}^{-1}) = -\log(\mathbf{T})$ (as a property of the logarithm).
+
+\item \textbf{Baker-Campbell-Hausdorff (First Order):} For two small rotations with twists $\twist_1 = \epsilon \mathbf{a}$ and $\twist_2 = \epsilon \mathbf{b}$ (where $\epsilon \ll 1$), show that:
+  \begin{equation}
+    \log(e^{\twist_1} e^{\twist_2}) \approx \twist_1 + \twist_2 + \frac{1}{2}[\twist_1, \twist_2]
+  \end{equation}
+  where $[\cdot, \cdot]$ is the Lie bracket.
+
+\item \textbf{SLERP Geodesic Property:} Show algebraically that SLERP between two rotations $\mathbf{R}_0$ and $\mathbf{R}_1$ rotates at constant angular velocity. Specifically, verify that the angular velocity $\boldsymbol{\omega}(t) = \frac{d}{dt} \log(\mathbf{R}(t)\mathbf{R}_0^T)$ is constant (independent of $t$).
+
+\item \textbf{Geodesic Distance:} Compute the geodesic distance (rotation angle) between the identity and a rotation by $120^\circ$ about $[1, 1, 1]^T / \sqrt{3}$.
+
+\item \textbf{Numerical Stability:} For $\theta = 0.001$ rad and $\hat{\boldsymbol{\omega}} = [0, 0, 1]^T$, compare the Rodrigues formula result with the first-order Taylor approximation $\mathbf{R} \approx \mathbf{I} + [\hat{\boldsymbol{\omega}}]\theta$. How large is the error?
+
+\item \textbf{Matrix Exponential via scipy:} Using scipy's \texttt{linalg.expm}, compute $\exp([\twist] t)$ for $\twist = \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}$ and $t = \pi/4$. Verify the result matches Rodrigues.
+
+\item \textbf{Interpolation Verification:} Generate two random rotation matrices $\mathbf{R}_0$ and $\mathbf{R}_1$. Interpolate between them using SLERP at $t = 0.3$ and $t = 0.7$. Verify that the rotations are on a geodesic by checking that $\theta(0.3) \approx 0.3 \cdot \theta_{\max}$ and $\theta(0.7) \approx 0.7 \cdot \theta_{\max}$.
+
+\item \textbf{Exponential Trajectory:} A robot arm follows a screw axis with twist $\twist = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \\ 1 \\ 0 \end{bmatrix}$ (rotation about $x$, translation in $y$). Compute its pose at times $t = 0, \pi/4, \pi/2$ by evaluating $\mathbf{T}(t) = \exp([\twist] t)$.
+
+\end{enumerate}
+
+\index{Exponential Map}
+\index{Rodrigues Formula}
+\index{Matrix Logarithm}
+\index{so(3) Lie Algebra}
+\index{se(3) Lie Algebra}
+\index{Baker-Campbell-Hausdorff}
+\index{SLERP}
+\index{Geodesics}
+\index{Axis-Angle}
+\index{Matrix Exponential}

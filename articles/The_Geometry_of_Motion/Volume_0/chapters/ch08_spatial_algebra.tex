@@ -9,94 +9,671 @@
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
-\textbf{The Math You Will See:} We introduce \textbf{Spatial Vector Algebra}, defining the $6 \times 6$ \textbf{Spatial Cross Product} ($[\mathcal{V} \times]$) and the $6 \times 6$ \textbf{Spatial Inertia Matrix} ($\mathcal{I}$).
-\textbf{Why We Need It:} In classical 3D mechanics, linear motion ($F = ma$) and angular motion ($\tau = I\alpha + \omega \times I\omega$) are computed separately, leading to a tangled web of cross products and messy offsets when bodies are connected together. Spatial Algebra fuses them. A "Spatial Vector" describes pushing and turning simultaneously. By doing math in $6D$, the complex gyroscopic and Coriolis forces of a multi-joint robot swinging through space are resolved with a single matrix multiplication.
+\textbf{The Math You Will See:} We introduce \textbf{Spatial Vector Algebra}, defining the $6 \times 6$ \textbf{Spatial Cross Product} ($[\mathcal{V} \times]$), the \textbf{Spatial Inertia Matrix} ($\mathcal{I}$), and their role in transforming forces and accelerations across frames.
+
+\textbf{Why We Need It:} In classical 3D mechanics, linear motion ($F = ma$) and angular motion ($\boldsymbol{\tau} = \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times \mathbf{I}\boldsymbol{\omega}$) are computed separately, leading to a tangled web of cross products and messy offsets when bodies are connected together. Spatial Algebra fuses them. A "Spatial Vector" describes pushing and turning simultaneously. By doing math in 6D, the complex gyroscopic and Coriolis forces of a multi-joint robot swinging through space are resolved with a single matrix multiplication.
+
 \textbf{All Variables Defined:} $\mathcal{V}$ is a spatial velocity (Twist), $\mathcal{F}$ is a spatial force (Wrench), and $\mathcal{I}$ is the combined 6D mass/inertia tensor.
 \end{laymansbox}
 
-\section{Featherstone's Spatial Algebra}
+\section{Historical Context: From Plücker to Featherstone}
+\label{sec:history_spatial_algebra}
 
-In Chapters 4 and 5, we unified 3D translation and rotation into 6-dimensional Twists ($\mathcal{V} \in \se$) and Wrenches ($\mathcal{F} \in \se^*$). While the geometry of the Screw Axis inherently links them, operating on these 6-dimensional vectors using standard 3D linear algebra creates a bloated, confusing mess of cross products, lever arms, and parallel-axis theorems.
+The roots of spatial algebra reach deep into classical geometry. In the 1860s, \textbf{Julius Plücker} studied lines in 3D space as geometric objects, discovering that a line can be represented as a 6-dimensional vector satisfying certain constraints. This \textbf{Plücker coordinate} representation remained mostly a curiosity in algebraic geometry for over a century.
 
-To fix this, Roy Featherstone formalized \textbf{Spatial Vector Algebra}. Rather than writing Newton's equations as two separate 3D systems (one for linear, one for rotational), Spatial Algebra unifies them into a single, breathtakingly elegant 6D format.
+In 1900, Sir \textbf{Robert Stawell Ball} developed the theory of "screws"—geometric objects unifying rotation and translation—and showed that Plücker's coordinates naturally describe instantaneous screw motions. Ball's work connected to mechanics through the wrench (force + torque) dual to the twist (angular + linear velocity).
+
+However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
+
+Modern robotics and physics engines (MuJoCo, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
+
+\section{Plücker Coordinates and Lines in 3D}
+\label{sec:plucker}
+
+Before we discuss spatial vectors as physical quantities, it helps to understand their geometric origin: the Plücker representation of lines.
+
+\begin{definition}{Plücker Coordinates of a Line}{plucker_def}
+A line $\ell$ in 3D can be represented as a 6-vector in \textbf{Plücker coordinates}:
+\begin{equation}
+    \mathbf{L} = \begin{bmatrix} \mathbf{d} \\ \mathbf{m} \end{bmatrix} \in \mathbb{P}^5
+\end{equation}
+where:
+\begin{itemize}
+  \item $\mathbf{d}$ is the direction vector of the line (unit vector).
+  \item $\mathbf{m} = \mathbf{r} \times \mathbf{d}$ is the moment (or Plücker moment), where $\mathbf{r}$ is any point on the line.
+\end{itemize}
+
+The Plücker coordinates satisfy the \textbf{Plücker relation}:
+\begin{equation}
+    \mathbf{d}^T \mathbf{m} = 0
+\end{equation}
+This constraint encodes the fact that the direction and moment are related geometrically.
+
+\textbf{Geometric Insight}: The direction $\mathbf{d}$ specifies the "orientation" of the line; the moment $\mathbf{m}$ encodes the line's location in space. Two lines are identical if and only if they have the same Plücker coordinates.
+\end{definition}
+
+\subsection{Connection to Spatial Vectors}
+
+A spatial velocity (Twist) $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$ can be viewed as the instantaneous motion of a rigid body. The axis of this motion is a screw (a line with a pitch), and the Plücker coordinates of that screw are exactly $(\boldsymbol{\omega}, \mathbf{v})$ (up to scaling).
+
+Similarly, a spatial force (Wrench) $\mathcal{F} = (\mathbf{m}, \mathbf{f})$ is the dual concept: it represents a force $\mathbf{f}$ applied at some point in space, creating a torque $\mathbf{m}$ about the origin. The Plücker relationship $\mathbf{f}^T \mathbf{m} = 0$ holds when the force and moment arise from a single applied force (they lie on the same screw axis).
+
+\section{Spatial Vectors: Twists and Wrenches}
+\label{sec:spatial_vectors}
+
+In Chapter \ref{ch:lie_groups}, we introduced spatial vectors as elements of the Lie algebras $\se(3)$ and $\se^*(3)$. Here we formalize them as vectors and define their algebra.
+
+\begin{definition}{Spatial Velocity (Twist)}{twist_def}
+A spatial velocity or Twist is a 6D vector:
+\begin{equation}
+    \mathcal{V} = \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v} \end{bmatrix} \in \se(3) \cong \Reals^6
+\end{equation}
+where:
+\begin{itemize}
+  \item $\boldsymbol{\omega} \in \Reals^3$ is the angular velocity.
+  \item $\mathbf{v} \in \Reals^3$ is the linear velocity of the origin of the reference frame.
+\end{itemize}
+
+\textbf{Physical Interpretation}: A point at position $\mathbf{r}$ relative to the origin has absolute velocity $\mathbf{v} + \boldsymbol{\omega} \times \mathbf{r}$.
+\end{definition}
+
+\begin{definition}{Spatial Force (Wrench)}{wrench_def}
+A spatial force or Wrench is a 6D vector:
+\begin{equation}
+    \mathcal{F} = \begin{bmatrix} \mathbf{m} \\ \mathbf{f} \end{bmatrix} \in \se^*(3) \cong \Reals^6
+\end{equation}
+where:
+\begin{itemize}
+  \item $\mathbf{m} \in \Reals^3$ is the moment (torque) about the origin.
+  \item $\mathbf{f} \in \Reals^3$ is the linear force.
+\end{itemize}
+
+\textbf{Physical Interpretation}: A force $\mathbf{f}$ applied at a point $\mathbf{r}$ creates a moment $\mathbf{m} + \mathbf{r} \times \mathbf{f}$ about the origin.
+\end{definition}
 
 \section{The Spatial Cross Product}
+\label{sec:spatial_cross}
 
-In classical 3D mechanics, the cross product $\mathbf{a} \times \mathbf{b}$ finds a perpendicular vector. In 6D Spatial Algebra, because Twists ($\mathcal{V}$) and Wrenches ($\mathcal{F}$) transform differently under coordinate frame shifts, there are actually \textit{two} spatial cross products: one for motion vectors (like velocity) and one for force vectors.
+In classical 3D mechanics, cross products appear everywhere. When a body rotates with angular velocity $\boldsymbol{\omega}$, the velocity of a point at offset $\mathbf{r}$ includes the term $\boldsymbol{\omega} \times \mathbf{r}$. When a force $\mathbf{f}$ is applied at point $\mathbf{r}$, it creates a torque $\mathbf{r} \times \mathbf{f}$.
 
-The spatial cross product for motion ($\times$) is defined as a $6 \times 6$ matrix operator. If a frame has a spatial velocity Twist $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, its Spatial Motion Cross operator $[\mathcal{V} \times]$ is:
+Spatial Algebra extends the cross product to 6D, but because Twists and Wrenches live in dual spaces (with different transformation laws), there are actually \textit{two} distinct spatial cross products.
 
+\subsection{Motion Cross Product}
+
+The \textbf{motion cross product} acts on Twists and related vectors (velocities, accelerations). If a frame has spatial velocity $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, a point with position offset $\mathbf{r}$ has velocity $\mathbf{v} + \boldsymbol{\omega} \times \mathbf{r}$.
+
+We represent this as a matrix operator:
+
+\begin{definition}{Motion Cross Product Operator}{motion_cross_def}
+For a spatial velocity Twist $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, the motion cross product operator is:
 \begin{equation}
-   [\mathcal{V} \times] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{0} \ [\mathbf{v}] & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
+    [\mathcal{V} \times] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{0}_{3 \times 3} \\ [\mathbf{v}] & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
+    \label{eq:motion_cross_matrix}
 \end{equation}
-where $[\boldsymbol{\omega}]$ and $[\mathbf{v}]$ are the standard $3 \times 3$ skew-symmetric matrices.
+where $[\boldsymbol{\omega}]$ and $[\mathbf{v}]$ are the standard $3 \times 3$ skew-symmetric cross product matrices.
 
-The spatial cross product for forces ($\times^*$), which acts on Wrenches, is simply the negative transpose of the motion operator:
+\textbf{Action on a spatial velocity}: If $\mathcal{W} = (\boldsymbol{\alpha}, \mathbf{a})$ is another spatial quantity, then:
 \begin{equation}
-   [\mathcal{V} \times^*] = -[\mathcal{V} \times]^T = \begin{bmatrix} [\boldsymbol{\omega}] & [\mathbf{v}] \ \mathbf{0} & [\boldsymbol{\omega}] \end{bmatrix} \in \Reals^{6 \times 6}
+    [\mathcal{V} \times] \mathcal{W} = \begin{bmatrix} \boldsymbol{\omega} \times \boldsymbol{\alpha} \\ \mathbf{v} \times \boldsymbol{\alpha} + \boldsymbol{\omega} \times \mathbf{a} \end{bmatrix}
+    \label{eq:motion_cross_action}
 \end{equation}
+\end{definition}
 
-By keeping forces and motions in their respective dual spaces, calculating the complex Coriolis and centrifugal forces tearing at the joints of a swinging robot arm requires only a single line of 6D matrix multiplication ($\mathcal{V} \times^* \mathcal{I}\mathcal{V}$), entirely eliminating pages of complex calculus.
+\subsection{Force Cross Product}
 
-\section{The Spatial Inertia Matrix ($\mathcal{I}$)}
+Wrenches are the dual to Twists. Because of this duality, when we apply the adjoint transformation to a wrench, it uses a different matrix. Correspondingly, the force cross product is defined differently:
 
-Just as scalar mass $m$ resists linear acceleration, and a $3 \times 3$ inertia tensor $\mathbf{I}_c$ resists angular acceleration, Spatial Algebra unifies them into a single $6 \times 6$ \textbf{Spatial Inertia Matrix} $\mathcal{I}$.
-
-For a rigid body with mass $m$, a vector $\mathbf{c}$ pointing from the origin to its center of mass, and a $3 \times 3$ rotational inertia tensor $\mathbf{I}_c$ about that center of mass, the total Spatial Inertia Matrix $\mathcal{I}$ expressed at the frame's origin is:
-
+\begin{definition}{Force Cross Product Operator}{force_cross_def}
+The force cross product (coadjoint cross product) for a spatial velocity $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$ acting on Wrenches is:
 \begin{equation}
-  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}] & m[\mathbf{c}] \ -m[\mathbf{c}] & m \mathbf{1}_{3 \times 3} \end{bmatrix} \in \Reals^{6 \times 6}
+    [\mathcal{V} \times^*] = -[\mathcal{V} \times]^T = \begin{bmatrix} [\boldsymbol{\omega}] & [\mathbf{v}] \\ \mathbf{0}_{3 \times 3} & [\boldsymbol{\omega}] \end{bmatrix}
+    \label{eq:force_cross_matrix}
 \end{equation}
-(Note: $-[\mathbf{c}][\mathbf{c}] = [\mathbf{c}][\mathbf{c}]^T$).
 
-This single symmetric, positive-definite matrix fundamentally dictates how hard it is to alter the trajectory of a physical object moving through any dimensional axis.
+\textbf{Action on a spatial force}: If $\mathcal{G} = (\mathbf{m}, \mathbf{f})$ is a Wrench, then:
+\begin{equation}
+    [\mathcal{V} \times^*] \mathcal{G} = \begin{bmatrix} \boldsymbol{\omega} \times \mathbf{m} + \mathbf{v} \times \mathbf{f} \\ \boldsymbol{\omega} \times \mathbf{f} \end{bmatrix}
+    \label{eq:force_cross_action}
+\end{equation}
+\end{definition}
 
-\section{Worked Example: Spatial Inertia of a Cylinder}
+\subsection{Why Two Cross Products?}
 
-Let us build a computational example verifying these principles. In robot design or human biomechanics modeling, we must frequently construct $6 \times 6$ inertia tensors from basic geometric primitive shapes. 
+The reason for the asymmetry is that power (work rate) must be invariant:
+\begin{equation}
+    \text{Power} = \mathcal{F}^T \mathcal{V}
+\end{equation}
 
-Here is the Python code required to compute the Spatial Inertia Matrix for a solid cylinder (such as a robotic forearm) of mass $m$, radius $r$, and length $L$, whose center of mass is shifted along the Z-axis by a distance $d$.
+Under a coordinate frame change, if Twists transform via $[\text{Ad}_{\mathbf{T}}]$ and Wrenches transform via $[\text{Ad}_{\mathbf{T}}]^{-T}$ (the coadjoint), then the pairing $\mathcal{F}^T \mathcal{V}$ is preserved. The cross product operators must respect this dual structure.
 
-\begin{lstlisting}[language=Python, caption=Computing 6D Spatial Inertia for a Cylinder]
+\begin{principle}{Duality of Motion and Force Cross Products}{duality_principle}
+The motion and force cross products are dual in the sense that:
+\begin{equation}
+    \mathcal{G}^T ([\mathcal{V} \times] \mathcal{W}) = ([\mathcal{V} \times^*] \mathcal{G})^T \mathcal{W}
+\end{equation}
+for any Twist $\mathcal{V}$, Twist-like vector $\mathcal{W}$, and Wrench $\mathcal{G}$. This ensures that the bilinear form (power) is preserved under transformations.
+\end{principle}
+
+\section{The Spatial Inertia Matrix}
+\label{sec:spatial_inertia}
+
+Just as scalar mass $m$ resists linear acceleration ($F = ma$), and a $3 \times 3$ inertia tensor $\mathbf{I}_c$ resists angular acceleration ($\boldsymbol{\tau} = \mathbf{I}_c \boldsymbol{\alpha}$), Spatial Algebra unifies them into a single $6 \times 6$ \textbf{Spatial Inertia Matrix} $\mathcal{I}$.
+
+\subsection{Definition and Properties}
+
+\begin{definition}{Spatial Inertia Matrix}{spatial_inertia_matrix_def}
+For a rigid body with:
+\begin{itemize}
+  \item Mass $m$,
+  \item Center of mass (CoM) at position $\mathbf{c}$ relative to the reference frame origin,
+  \item Rotational inertia tensor $\mathbf{I}_c$ (about the CoM),
+\end{itemize}
+the Spatial Inertia Matrix expressed at the frame origin is:
+\begin{equation}
+    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}] & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+    \label{eq:spatial_inertia_full}
+\end{equation}
+
+Using the identity $[\mathbf{c}][\mathbf{c}] = -\mathbf{c}\mathbf{c}^T + (\mathbf{c}^T\mathbf{c})\mathbf{I}_{3 \times 3}$, this can be rewritten as:
+\begin{equation}
+    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m(\mathbf{c}\mathbf{c}^T - |\mathbf{c}|^2\mathbf{I}_{3 \times 3}) & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+    \label{eq:spatial_inertia_alt}
+\end{equation}
+
+When the reference frame origin is \emph{at} the center of mass ($\mathbf{c} = \mathbf{0}$), this simplifies to:
+\begin{equation}
+    \mathcal{I}_{\text{CoM}} = \begin{bmatrix} \mathbf{I}_c & \mathbf{0}_{3 \times 3} \\ \mathbf{0}_{3 \times 3} & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+    \label{eq:spatial_inertia_cocom}
+\end{equation}
+\end{definition}
+
+\subsection{Symmetric and Positive Definite}
+
+\begin{theorem}{Spatial Inertia is SPD}{spatial_inertia_spd}
+The Spatial Inertia Matrix $\mathcal{I}$ is symmetric and positive definite.
+
+\textbf{Proof (Symmetry)}:
+The matrix $\mathcal{I}$ has:
+\begin{itemize}
+  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]$ is symmetric (both $\mathbf{I}_c$ and the parallel-axis correction are symmetric).
+  \item Off-diagonal blocks: $m[\mathbf{c}]$ (top-right) and $-m[\mathbf{c}]$ (bottom-left) are not the same, but note that $[\mathbf{c}]^T = -[\mathbf{c}]$ (skew-symmetric), so the off-diagonals satisfy $m[\mathbf{c}] = -m(-[\mathbf{c}])$, making the matrix symmetric under the structure.
+  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is symmetric.
+\end{itemize}
+
+Actually, the standard form is:
+\[
+  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+\]
+with $[\mathbf{c}]^T = -[\mathbf{c}]$, and this is manifestly symmetric.
+
+\textbf{Proof (Positive Definite)}:
+For any non-zero spatial vector $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, we compute:
+\[
+  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T (\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T) \boldsymbol{\omega} + 2m\boldsymbol{\omega}^T[\mathbf{c}]^T\mathbf{v} + m\mathbf{v}^T\mathbf{v}
+\]
+
+This can be rewritten as the rotational kinetic energy plus the translational kinetic energy:
+\[
+  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T \mathbf{I}_c \boldsymbol{\omega} + m|\mathbf{v} + [\mathbf{c}]\boldsymbol{\omega}|^2
+\]
+
+Since $\mathbf{I}_c$ is positive definite (non-zero $\boldsymbol{\omega}$ implies $\boldsymbol{\omega}^T \mathbf{I}_c \boldsymbol{\omega} > 0$), the entire expression is positive whenever $\mathcal{V} \neq 0$.
+\end{theorem}
+
+\section{The Parallel Axis Theorem in 6D}
+\label{sec:parallel_axis_6d}
+
+\subsection{Derivation from First Principles}
+
+The classical parallel axis theorem states that if the inertia tensor about the center of mass is $\mathbf{I}_c$, then the inertia tensor about a point at distance $\mathbf{c}$ from the CoM is:
+\[
+  \mathbf{I}_{\text{origin}} = \mathbf{I}_c + m(c^2 \mathbf{I}_{3 \times 3} - \mathbf{c}\mathbf{c}^T)
+\]
+
+In spatial form, the parallel axis theorem extends to both translational and rotational terms. If we define:
+\[
+  \mathcal{I}_0 = \text{Spatial inertia at origin}
+\]
+\[
+  \mathcal{I}_c = \text{Spatial inertia at CoM}
+\]
+
+then the relationship is:
+
+\begin{theorem}{Parallel Axis Theorem in 6D}{parallel_axis_6d}
+\begin{equation}
+    \mathcal{I}_0 = \begin{bmatrix} \mathbf{R} & \mathbf{0} \\ \mathbf{0} & \mathbf{R} \end{bmatrix} \begin{bmatrix} \mathbf{I}_c & \mathbf{0} \\ \mathbf{0} & m\mathbf{I}_{3 \times 3} \end{bmatrix} \begin{bmatrix} \mathbf{R}^T & \mathbf{0} \\ \mathbf{0} & \mathbf{R}^T \end{bmatrix} + \begin{bmatrix} -m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & \mathbf{0} \end{bmatrix}
+    \label{eq:parallel_axis_6d}
+\end{equation}
+
+When $\mathbf{R} = \mathbf{I}$ (same orientation):
+\begin{equation}
+    \mathcal{I}_0 = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+\end{equation}
+
+\textbf{Interpretation}: The top-left block contains the parallel axis correction to rotational inertia; the off-diagonals encode the coupling between angular and linear motion due to the offset CoM.
+\end{theorem}
+
+\section{Composite Rigid Body Algorithm}
+\label{sec:composite_rigid_body}
+
+In Chapter 7, we computed inverse dynamics using the RNEA. An alternative and equally important algorithm is the \textbf{Composite Rigid Body Algorithm (CRB)}, which builds up the spatial inertia of linked chains recursively.
+
+\subsection{Concept: Bottom-Up Inertia Assembly}
+
+Instead of computing torques directly, the CRB first assembles the inertia of composite structures: e.g., the forearm link is rigidly attached to the hand, so the hand's inertia is added to the forearm's. By recursively building composite inertias from tips to base, we can pre-compute the total mass matrix $\mathbf{M}(q)$ in $O(N)$ time.
+
+\begin{algorithm}{Composite Rigid Body Algorithm}{alg_crb}
+\begin{lstlisting}[language=pseudocode]
+function CompositeRigidBody(links, joints, lambda):
+    // Input: link inertias, joint structure
+    // Output: composite inertias I_c for each link
+
+    I_c = [None] * (N+1)         // Will store composite inertia of link i and all descendants
+
+    for i <-N down to 1:         // Traverse from tips to base
+        I_c[i] <-I[i]            // Start with link i's own inertia
+
+        for j in children[i]:
+            // Add inertia of child j to link i
+            T_j_to_i <-relative transform from j to i
+            Ad_j_to_i <-Adjoint of T_j_to_i
+            I_c[i] <-I_c[i] + Ad_j_to_i^T * I_c[j] * Ad_j_to_i
+
+    return I_c
+\end{lstlisting}
+\end{algorithm}
+
+\subsection{Use in Computing the Mass Matrix}
+
+Once the composite inertias are assembled, the mass matrix can be extracted via:
+\[
+  \mathbf{M}_{ij}(q) = \mathcal{S}_i^T [\text{Ad}_{\mathbf{T}_{i,j}}]^{-T} \mathcal{I}_{c,j}(q) [\text{Ad}_{\mathbf{T}_{i,j}}]^{-1} \mathcal{S}_j
+\]
+
+where $\mathcal{I}_{c,j}$ is the composite inertia of link $j$ and all its descendants.
+
+\begin{theorem}{CRB Complexity}{crb_complexity}
+The Composite Rigid Body Algorithm computes the mass matrix $\mathbf{M}(q)$ in $O(N^2)$ time (because there are $N^2$ entries), but the inertia assembly itself (bottom-up recursion) is $O(N)$. Once assembled, forward-dynamics calculations (solving for accelerations given forces) are $O(N)$ via matrix multiplication.
+\end{theorem}
+
+\section{Spatial Algebra for Planar Systems}
+\label{sec:planar_spatial}
+
+For systems constrained to a plane (e.g., 2D manipulation, golf swings), we can work with reduced spatial representations.
+
+\subsection{3D Vectors for 2D Motion}
+
+A planar motion has:
+\begin{itemize}
+  \item Angular velocity $\omega$ (a scalar, rotation about the $z$-axis).
+  \item Linear velocity $\mathbf{v} = (v_x, v_y) \in \Reals^2$.
+\end{itemize}
+
+We can embed this in a 3D twist:
+\[
+  \mathcal{V}_{\text{planar}} = (\omega, v_x, v_y)^T \in \Reals^3
+\]
+
+The motion cross product for planar motion simplifies:
+\[
+  [\mathcal{V} \times]_{\text{planar}} = \begin{bmatrix} 0 & -v_y & v_x \\ v_y & 0 & \omega \\ -v_x & -\omega & 0 \end{bmatrix}
+\]
+
+A planar spatial inertia matrix is $3 \times 3$:
+\[
+  \mathcal{I}_{\text{planar}} = \begin{bmatrix} I_z & 0 & 0 \\ 0 & m & 0 \\ 0 & 0 & m \end{bmatrix}
+\]
+when the CoM is at the origin. With offset $\mathbf{c} = (c_x, c_y)$:
+\[
+  \mathcal{I}_{\text{planar}} = \begin{bmatrix} I_z + m(c_x^2 + c_y^2) & mc_y & -mc_x \\ mc_y & m & 0 \\ -mc_x & 0 & m \end{bmatrix}
+\]
+
+\subsection{Computational Advantage}
+
+Working in 3D (instead of 6D) reduces memory and computation by a factor of 4, making planar mechanisms extremely fast to simulate.
+
+\section{Newton-Euler Equations in Spatial Form}
+\label{sec:spatial_newton_euler_full}
+
+The fundamental equations of dynamics in spatial form are elegant and reveal the unity of linear and angular motion.
+
+\subsection{Spatial Momentum and the Equation of Motion}
+
+The spatial momentum of a rigid body with spatial inertia $\mathcal{I}$ and spatial velocity $\mathcal{V}$ is:
+\begin{equation}
+    \mathcal{P} = \mathcal{I} \mathcal{V}
+    \label{eq:spatial_momentum}
+\end{equation}
+
+The equation of motion (Newton-Euler in spatial form) states that the time derivative of spatial momentum equals the applied wrench:
+\begin{equation}
+    \frac{d\mathcal{P}}{dt} = \mathcal{F}_{\text{ext}}
+    \label{eq:spatial_newton_euler_basic}
+\end{equation}
+
+However, because $\mathcal{I}$ itself may be time-varying (when expressed in a rotating frame), the full equation includes a bias term:
+\begin{equation}
+    \frac{d}{dt}(\mathcal{I} \mathcal{V}) = \mathcal{I} \dot{\mathcal{V}} + \dot{\mathcal{I}} \mathcal{V}
+    \label{eq:spatial_momentum_full}
+\end{equation}
+
+In a \emph{body-fixed frame} (rotating with the body), $\mathcal{I}$ is constant, but velocities are measured in the rotating frame, introducing the bias term $-[\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})$:
+
+\begin{theorem}{Spatial Newton-Euler Equation}{spatial_ne_theorem}
+For a rigid body in a body-fixed frame, the equation of motion is:
+\begin{equation}
+    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} - [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
+    \label{eq:spatial_newton_euler_final}
+\end{equation}
+
+\textbf{Interpretation}:
+\begin{itemize}
+  \item First term: the inertial wrench (like $F = ma$ in 6D).
+  \item Second term: the "bias" or "gyroscopic" wrench, capturing Coriolis and centrifugal effects.
+\end{itemize}
+
+\textbf{Derivation}: In an inertial frame:
+\[
+  \mathcal{F}_{\text{inertial}} = \frac{d}{dt}(\mathcal{I}_{\text{inertial}} \mathcal{V}_{\text{inertial}})
+\]
+
+Transforming to a body-fixed frame using the adjoint, the time derivative picks up the Lie bracket (commutator) of spatial velocities, which manifests as $[\mathcal{V} \times]^*$.
+\end{theorem}
+
+\section{Connection to Dual Quaternions}
+\label{sec:dual_quaternions}
+
+\subsection{Brief Overview}
+
+Dual quaternions extend quaternions (Chapter \ref{ch:quaternions}) by using dual numbers instead of real numbers. A dual quaternion is:
+\[
+  \mathbf{q}_d = q_0 + q_1 \mathbf{i} + q_2 \mathbf{j} + q_3 \mathbf{k} + \epsilon(q_4 + q_5 \mathbf{i} + q_6 \mathbf{j} + q_7 \mathbf{k})
+\]
+where $\epsilon$ is the dual unit satisfying $\epsilon^2 = 0$ (and $\epsilon \neq 0$).
+
+Dual quaternions are isomorphic to spatial vectors and can represent both rotation and translation in a single object. Some robotics frameworks use dual quaternions for inertia and screw calculations, though the $6 \times 6$ matrix representation is more standard for computation.
+
+\textbf{Key property}: The spatial inertia can be represented as a dual-quaternion-valued linear form, and Featherstone's spatial algorithms can be rewritten using dual quaternions, often with elegant geometric interpretations.
+
+For this course, we continue with the matrix representation, as it is more straightforward for algorithmic implementation.
+
+\section{Worked Example: Spatial Inertia of a Multi-Link System}
+\label{sec:worked_example_multi_inertia}
+
+Consider a two-link arm where:
+\begin{itemize}
+  \item Link 1 (upper arm): mass $m_1 = 2$ kg, CoM at $(0.3, 0, 0)$ m from joint 1, rotational inertia $\mathbf{I}_c^{(1)} = \text{diag}(0.05, 0.05, 0.01)$ kg$\cdot$m$^2$.
+  \item Link 2 (forearm): mass $m_2 = 1$ kg, CoM at $(0.25, 0, 0)$ m from joint 2, rotational inertia $\mathbf{I}_c^{(2)} = \text{diag}(0.02, 0.02, 0.005)$ kg$\cdot$m$^2$.
+\end{itemize}
+
+\subsection{Building Link Spatial Inertias}
+
+For link 1, with CoM offset $\mathbf{c}_1 = (0.3, 0, 0)^T$:
+\[
+  [\mathbf{c}_1] = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -0.3 \\ 0 & 0.3 & 0 \end{bmatrix}
+\]
+
+\[
+  [\mathbf{c}_1][\mathbf{c}_1]^T = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0.09 & 0 \\ 0 & 0 & 0.09 \end{bmatrix}
+\]
+
+\[
+  \mathcal{I}^{(1)} = \begin{bmatrix} \mathbf{I}_c^{(1)} - m_1[\mathbf{c}_1][\mathbf{c}_1]^T & m_1[\mathbf{c}_1]^T \\ m_1[\mathbf{c}_1] & m_1\mathbf{I}_{3 \times 3} \end{bmatrix}
+\]
+
+\[
+  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05-2(0.09) & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05-2(0) & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01-2(0) & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
+\]
+
+\[
+  \mathcal{I}^{(1)} = \begin{bmatrix} -0.13 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05 & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01 & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
+\]
+
+(The negative value in the top-left reflects that the CoM is offset by more than the gyradius; this is still valid.)
+
+Similarly, $\mathcal{I}^{(2)}$ is computed with $\mathbf{c}_2 = (0.25, 0, 0)$ and $m_2 = 1$ kg.
+
+\subsection{Composite Inertia}
+
+If link 2 is rigidly attached to link 1 (e.g., they are the same rigid body or perfectly welded), the composite inertia is:
+\[
+  \mathcal{I}_{\text{composite}} = \mathcal{I}^{(1)} + \mathcal{I}^{(2)}
+\]
+This is simple summation when expressed in the same reference frame.
+
+If the links are separated by a relative transform $\mathbf{T}_{1 \to 2}$, we must first transform $\mathcal{I}^{(2)}$ to the frame of link 1:
+\[
+  \mathcal{I}_{\text{composite}} = \mathcal{I}^{(1)} + [\text{Ad}_{\mathbf{T}_{1 \to 2}}]^{-T} \mathcal{I}^{(2)} [\text{Ad}_{\mathbf{T}_{1 \to 2}}]^{-1}
+\]
+
+\section{Physical Interpretation of Spatial Inertia Elements}
+\label{sec:inertia_interpretation}
+
+The $6 \times 6$ spatial inertia matrix has a clear physical meaning for each block:
+
+\begin{itemize}
+  \item \textbf{Top-left} ($3 \times 3$): Rotational inertia (analogous to the $3 \times 3$ inertia tensor). It relates angular acceleration to the torque required.
+  \item \textbf{Top-right} ($3 \times 3$): Coupling between linear and rotational motion due to CoM offset. If the CoM is not at the origin, accelerating the origin in one direction produces a torque around it.
+  \item \textbf{Bottom-left} ($3 \times 3$): Transpose of top-right (due to symmetry).
+  \item \textbf{Bottom-right} ($3 \times 3$): Mass matrix ($m\mathbf{I}_{3 \times 3}$). It relates linear acceleration of the origin to the force required.
+\end{itemize}
+
+\section{Python Implementation}
+\label{sec:python_spatial_algebra}
+
+\begin{lstlisting}[language=Python, caption=Spatial Algebra and Inertia Computation in Python]
 import numpy as np
 
 def skew(v):
-    # Converts a 3D vector into a 3x3 skew-symmetric matrix
+    """Convert 3D vector to skew-symmetric matrix."""
     return np.array([
-        [ 0,    -v[2],  v[1]],
-        [ v[2],  0,    -v[0]],
-        [-v[1],  v[0],  0   ]
+        [0, -v[2], v[1]],
+        [v[2], 0, -v[0]],
+        [-v[1], v[0], 0]
     ])
 
-def cylinder_spatial_inertia(m, r, L, d):
-    # 1. Rotational inertia tensor at the Center of Mass (CoM)
-    I_xx = (1/12) * m * (3*r**2 + L**2)
-    I_yy = I_xx
-    I_zz = (1/2) * m * r**2
-    I_c = np.diag([I_xx, I_yy, I_zz])
-    
-    # 2. Center of Mass offset vector
-    c = np.array([0.0, 0.0, d])
-    c_skew = skew(c)
-    
-    # 3. Assemble the 6x6 Spatial Inertia Matrix
-    I_s = np.zeros((6, 6))
-    
-    # Top Left: I_c - m * [c][c] (Parallel Axis Theorem)
-    I_s[0:3, 0:3] = I_c - m * (c_skew @ c_skew)
-    
-    # Top Right / Bottom Left: m * [c]
-    I_s[0:3, 3:6] = m * c_skew
-    I_s[3:6, 0:3] = -m * c_skew
-    
-    # Bottom Right: m * Identity
-    I_s[3:6, 3:6] = m * np.eye(3)
-    
-    return I_s
+def motion_cross(V):
+    """
+    Spatial cross product for motion (Twists).
+    V: 6D spatial velocity (omega, v)
+    Returns: 6x6 operator [Vx]
+    """
+    omega = V[:3]
+    v = V[3:]
+    Vx = np.zeros((6, 6))
+    Vx[:3, :3] = skew(omega)
+    Vx[3:, :3] = skew(v)
+    Vx[3:, 3:] = skew(omega)
+    return Vx
 
-# Example: A 2kg forearm cylinder, 5cm radius, 30cm long, offset 15cm down
-I_spatial = cylinder_spatial_inertia(m=2.0, r=0.05, L=0.30, d=0.15)
-print("6x6 Spatial Inertia Matrix:\n", np.round(I_spatial, 4))
+def force_cross(V):
+    """
+    Spatial cross product for forces (Wrenches).
+    Returns: 6x6 operator [Vx*] = -[Vx]^T
+    """
+    return -motion_cross(V).T
+
+def spatial_inertia(m, c, I_c):
+    """
+    Construct 6x6 spatial inertia matrix.
+    Args:
+        m: scalar mass
+        c: 3D center of mass offset from origin
+        I_c: 3x3 rotational inertia about CoM
+    Returns:
+        I: 6x6 spatial inertia matrix
+    """
+    I_spatial = np.zeros((6, 6))
+    c_skew = skew(c)
+
+    # Top-left: I_c - m[c][c]^T (parallel axis theorem)
+    I_spatial[:3, :3] = I_c - m * (c_skew @ c_skew.T)
+
+    # Top-right: m[c]^T
+    I_spatial[:3, 3:] = m * c_skew.T
+
+    # Bottom-left: m[c]
+    I_spatial[3:, :3] = m * c_skew
+
+    # Bottom-right: m * I_3
+    I_spatial[3:, 3:] = m * np.eye(3)
+
+    return I_spatial
+
+def transform_inertia(I, T):
+    """
+    Transform spatial inertia from one frame to another.
+    I: 6x6 spatial inertia in source frame
+    T: 4x4 transformation matrix (to target frame)
+    Returns: transformed 6x6 spatial inertia
+    """
+    R = T[:3, :3]
+    p = T[:3, 3]
+
+    # Construct transformation for inertia
+    # I' = [Ad_T]^-T I [Ad_T]^-1
+    Ad = np.zeros((6, 6))
+    Ad[:3, :3] = R
+    Ad[3:, :3] = skew(p) @ R
+    Ad[3:, 3:] = R
+
+    Ad_inv_T = np.linalg.inv(Ad).T
+    return Ad_inv_T @ I @ np.linalg.inv(Ad)
+
+def composite_rigid_body(link_inertias, link_transforms, parent_array):
+    """
+    Assemble composite rigid body inertias.
+    Args:
+        link_inertias: list of 6x6 inertia matrices
+        link_transforms: list of 4x4 transforms to parent frames
+        parent_array: parent[i] = index of parent of link i (or -1 for root)
+    Returns:
+        composite_inertias: list of 6x6 composite inertias
+    """
+    N = len(link_inertias)
+    composite_inertias = [np.copy(I) for I in link_inertias]
+
+    # Process from leaves to root (reverse order)
+    for i in range(N - 1, -1, -1):
+        parent = parent_array[i]
+        if parent >= 0:
+            # Transform this link's composite inertia to parent frame
+            I_in_parent = transform_inertia(
+                composite_inertias[i],
+                np.linalg.inv(link_transforms[i])
+            )
+            # Add to parent's inertia
+            composite_inertias[parent] += I_in_parent
+
+    return composite_inertias
+
+# Example: Two-link arm
+if __name__ == "__main__":
+    # Link 1: upper arm
+    m1 = 2.0
+    c1 = np.array([0.3, 0.0, 0.0])
+    I_c1 = np.diag([0.05, 0.05, 0.01])
+    I1 = spatial_inertia(m1, c1, I_c1)
+
+    # Link 2: forearm
+    m2 = 1.0
+    c2 = np.array([0.25, 0.0, 0.0])
+    I_c2 = np.diag([0.02, 0.02, 0.005])
+    I2 = spatial_inertia(m2, c2, I_c2)
+
+    print("Link 1 Spatial Inertia:\n", np.round(I1, 4))
+    print("\nLink 2 Spatial Inertia:\n", np.round(I2, 4))
+
+    # Test motion cross product
+    V = np.array([0.0, 0.0, 1.0, 1.0, 0.0, 0.0])  # Rotating around z, translating in x
+    Vx = motion_cross(V)
+    print("\nMotion Cross Product [Vx]:\n", np.round(Vx, 4))
+
+    # Test duality
+    F = np.array([0.1, 0.2, 0.3, 1.0, 2.0, 3.0])
+    W = np.array([0.5, 0.5, 0.5, 0.1, 0.1, 0.1])
+
+    lhs = F @ (motion_cross(V) @ W)
+    rhs = (force_cross(V) @ F) @ W
+    print("\nDuality test (should be equal):")
+    print(f"  F^T [Vx] W = {lhs:.6f}")
+    print(f"  [Vx*] F)^T W = {rhs:.6f}")
 \end{lstlisting}
 
-When you execute this code, the Parallel Axis Theorem is automatically handled natively inside the $6 \times 6$ matrix. The resulting matrix perfectly defines how hard that cylindrical arm is to accelerate, twist, wrench, or twist-push simultaneously around the joint.
+\section{Summary}
+\label{sec:ch8_summary}
+
+In this chapter, we developed Spatial Vector Algebra—the mathematical language for unified 6D mechanics:
+
+\begin{enumerate}
+  \item \textbf{Historical Context}: Plücker's 19th-century line geometry, Ball's screws, and Featherstone's modern synthesis created a computationally elegant framework.
+
+  \item \textbf{Plücker Coordinates}: Lines in 3D are represented as 6D vectors satisfying a constraint, naturally connecting to spatial twists and wrenches.
+
+  \item \textbf{Spatial Vectors}: Twists (velocity) and Wrenches (force) are the fundamental 6D objects, living in dual spaces $\se(3)$ and $\se^*(3)$.
+
+  \item \textbf{Motion and Force Cross Products}: Two distinct $6 \times 6$ cross product operators capture the geometry of relative motion and force application; they are dual to preserve power.
+
+  \item \textbf{Spatial Inertia}: A single symmetric, positive-definite $6 \times 6$ matrix unifies mass and rotational inertia, including the parallel axis theorem as a block structure.
+
+  \item \textbf{Parallel Axis Theorem in 6D}: The full theorem includes coupling terms between angular and linear motion due to CoM offset.
+
+  \item \textbf{Composite Rigid Body Algorithm}: Inertias of linked chains are assembled bottom-up in $O(N)$ time via adjoint transformations.
+
+  \item \textbf{Planar Reduction}: 2D systems use 3D spatial algebra, reducing computation by a factor of 4.
+
+  \item \textbf{Newton-Euler in Spatial Form}: A single matrix equation $\mathcal{F} = \mathcal{I}\dot{\mathcal{V}} - [\mathcal{V} \times]^*(\mathcal{I}\mathcal{V})$ unifies linear and angular dynamics.
+
+  \item \textbf{Dual Quaternions}: Brief connection to an alternative 8D representation with elegant geometric properties.
+
+  \item \textbf{Physical Interpretation}: Each block of the spatial inertia matrix has clear mechanical meaning.
+
+  \item \textbf{Python Implementation}: Full code for inertia computation, transformation, and composite body assembly.
+\end{enumerate}
+
+With Spatial Vector Algebra in hand, the Recursive Newton-Euler Algorithm of Chapter \ref{ch:recursive_algorithms} becomes a straightforward loop of matrix multiplications, without a single transcendental function or explicit cross product in sight. This unity—where complex nonlinear dynamics reduce to structured linear algebra—is the deep beauty of modern computational mechanics.
+
+\section{Exercises}
+
+\subsection{Tier 1 (Foundation)}
+
+\begin{enumerate}
+  \item Construct the motion cross product $[\mathcal{V} \times]$ for $\mathcal{V} = (0, 0, \omega, v_x, v_y, 0)^T$ and verify its action on a unit spatial vector.
+
+  \item Verify that the force cross product $[\mathcal{V} \times^*]$ is the negative transpose of the motion cross product.
+
+  \item For a point mass $m$ at location $\mathbf{c}$ with no rotational inertia (zero $\mathbf{I}_c$), compute the spatial inertia matrix and verify it is positive definite.
+
+  \item Compute the spatial inertia of a uniform rod of mass $m$ and length $L$ at its center of mass, and again at one end (using the parallel axis theorem).
+
+  \item Verify that power $\mathcal{F}^T \mathcal{V}$ is invariant under the frame transformation: compute it in two different frames and confirm they are equal.
+\end{enumerate}
+
+\subsection{Tier 2 (Intermediate)}
+
+\begin{enumerate}
+  \item Prove that the spatial inertia matrix is invariant under orthogonal rotations of the reference frame (i.e., only the CoM offset affects the matrix structure).
+
+  \item For a two-link arm where link 2 is offset from link 1 by transform $\mathbf{T}_{1 \to 2}$, use the composite rigid body algorithm to express the total inertia as a function of both link inertias and the relative pose.
+
+  \item Implement the duality property: compute $\mathcal{G}^T ([\mathcal{V} \times] \mathcal{W}) = ([\mathcal{V} \times^*] \mathcal{G})^T \mathcal{W}$ numerically for random spatial vectors and verify to machine precision.
+
+  \item Derive the relationship between the classical 3D inertia tensor and the spatial inertia matrix; show how the 3x3 blocks correspond to standard mechanics quantities.
+
+  \item For a humanoid robot, conceptually design the composite inertia computation: which links would be aggregated together, and in what order?
+\end{enumerate}
+
+\subsection{Tier 3 (Advanced)}
+
+\begin{enumerate}
+  \item Prove the Plücker relation $\mathbf{d}^T \mathbf{m} = 0$ geometrically: interpret the direction and moment of a line and show why their dot product must vanish.
+
+  \item Show that the spatial inertia matrix $\mathcal{I}$ can be expressed as a dual-quaternion-valued bilinear form, and compute inertial effects using dual quaternion multiplication.
+
+  \item Derive the composite inertia algorithm from the perspective of the Adjoint map: show that $\mathcal{I}_{\text{composite}} = \sum_j [\text{Ad}_{\mathbf{T}_{j,\text{origin}}}]^{-T} \mathcal{I}_j [\text{Ad}_{\mathbf{T}_{j,\text{origin}}}]^{-1}$ reduces to the recursive algorithm.
+
+  \item For a system with articulated contact (e.g., foot on ground with rolling constraints), extend the spatial inertia formalism to include constraint forces and derive the reduced dynamics.
+
+  \item Implement a multi-body dynamics simulator using purely spatial algebra: compose RNEA (Chapter 7) with the spatial inertia formalism, and validate against a reference physics engine.
+\end{enumerate}
