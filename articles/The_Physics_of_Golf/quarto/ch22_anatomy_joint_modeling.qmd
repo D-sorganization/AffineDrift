@@ -36,17 +36,19 @@ Such a model would have thousands of degrees of freedom and would require months
 
 An engineer takes a different approach. We ask: *what is the primary motion of the knee?* The answer is almost entirely flexion and extension---bending and straightening in the sagittal plane. This suggests a *revolute joint*: a single hinge axis about which the tibia rotates relative to the femur.
 
-\begin{definition}{Revolute Joint (Hinge)}{def:revolute}
+::: {.callout-important}
+## Revolute Joint (Hinge)
 A revolute joint connects two bodies by a single rotation axis. It has one degree of freedom: $\theta$, the angle of rotation about the axis. Mathematically, if body A is in frame $\mathcal{F}_A$ and body B is in frame $\mathcal{F}_B$, the relative orientation is:
 $$\bm{R}_{AB}(\theta) = \exp(\theta \, [\bm{u}]_\times)$$
 where $\bm{u}$ is the unit vector along the rotation axis (in body A's frame) and $[\bm{u}]_\times$ is the skew-symmetric matrix representation of $\bm{u}$.
-\end{definition}
+:::
 
 With a revolute joint model, the knee has one input: the flexion angle $\theta_{\text{knee}}$. This is computationally tractable. We can identify the stiffness, damping, and range of motion from experimental data. We can simulate hundreds of golf swings in seconds.
 
 The tradeoff is obvious: we lose information. The revolute model assumes the rotation axis is fixed, but real knee axes shift slightly with angle. It assumes the tibia doesn't translate relative to the femur, but real knees have some anterior-posterior laxity, especially when the ACL is torn. It assumes the motion is perfectly in the sagittal plane, but the knee can varus/valgus (bow in and out) to some degree.
 
-\begin{principle}{The Modeling Art}{prin:modeling_art}
+::: {.callout-important}
+## The Modeling Art
 Good biomechanical modeling is a balance between fidelity and tractability. Ask: \emph{Does this simplification matter for the question I'm trying to answer?}
 
 If you're studying knee stability after ACL reconstruction, the anterior-posterior laxity matters. Model a 6-DOF knee.
@@ -54,22 +56,22 @@ If you're studying knee stability after ACL reconstruction, the anterior-posteri
 If you're studying the golf swing, the knee is essentially a hinge. Model a 1-DOF revolute.
 
 Never add complexity you don't need. Never remove complexity the physics requires.
-\end{principle}
+:::
 
 \section{Joint Types in Robotics --- A Taxonomy}
 \label{sec:joint_types}
 
-\index{revolute joint}
-\index{prismatic joint}
-\index{spherical joint}
-\index{universal joint}
+
+
+
+
 
 Roboticists have standardized a small set of joint primitives. Each is characterized by:
 \begin{itemize}
-\item Number of degrees of freedom ($f$)
-\item Number of constraints imposed ($c = 6 - f$)
-\item Constraint Jacobian structure
-\item Symbolic notation
+- Number of degrees of freedom ($f$)
+- Number of constraints imposed ($c = 6 - f$)
+- Constraint Jacobian structure
+- Symbolic notation
 \end{itemize}
 
 Let's enumerate them.
@@ -165,11 +167,12 @@ No constraint. The two bodies move independently relative to each other.
 
 \textbf{Example in golf:} A club in flight between shots has a 6-DOF joint to the ground (it's not touching).
 
-\begin{example}{Constraint Counting}{ex:constraint_count}
+::: {.callout-tip}
+## Constraint Counting
 A robot arm with:
 \begin{itemize}
-\item Base (1 link) fixed to ground
-\item Three revolute joints connecting four links
+- Base (1 link) fixed to ground
+- Three revolute joints connecting four links
 \end{itemize}
 
 Using Grübler: $N = 5$ links (including ground), $J = 3$ revolute joints, $\sum f_i = 3$.
@@ -189,13 +192,13 @@ Hmm, this still doesn't match intuition. A 3-link robot with 3 revolutes should 
 $$\text{DOF} = \sum_{i=1}^{J} f_i$$
 
 simply the sum of joint freedoms. So 3 revolutes give 3 DOF. The full Grübler formula applies when there are \textbf{loops}.
-\end{example}
+:::
 
 \section{The Knee --- A Revolute (Mostly)}
 \label{sec:knee_joint}
 
-\index{knee joint}
-\index{screw-home mechanism}
+
+
 
 The knee is the most obvious candidate for a revolute joint model. The primary motion is flexion and extension: the tibia bends forward and backward relative to the femur in the sagittal plane.
 
@@ -207,18 +210,18 @@ Between the femur and tibia are two cartilage discs called menisci---the medial 
 
 Stability is provided by ligaments:
 \begin{itemize}
-\item \textbf{ACL (Anterior Cruciate Ligament)}: prevents anterior tibial translation, prevents hyperextension
-\item \textbf{PCL (Posterior Cruciate Ligament)}: prevents posterior tibial translation
-\item \textbf{MCL (Medial Collateral Ligament)}: prevents valgus (outward bowing)
-\item \textbf{LCL (Lateral Collateral Ligament)}: prevents varus (inward bowing)
+- \textbf{ACL (Anterior Cruciate Ligament)}: prevents anterior tibial translation, prevents hyperextension
+- \textbf{PCL (Posterior Cruciate Ligament)}: prevents posterior tibial translation
+- \textbf{MCL (Medial Collateral Ligament)}: prevents valgus (outward bowing)
+- \textbf{LCL (Lateral Collateral Ligament)}: prevents varus (inward bowing)
 \end{itemize}
 
 \subsection{Range of Motion}
 
 In a healthy knee:
 \begin{itemize}
-\item Full extension: $\theta = 0{}^\circ$
-\item Flexion: up to $\theta \approx 140{}^\circ$ (can reach $\approx 160{}^\circ$ with heel-to-buttock bending)
+- Full extension: $\theta = 0{}^\circ$
+- Flexion: up to $\theta \approx 140{}^\circ$ (can reach $\approx 160{}^\circ$ with heel-to-buttock bending)
 \end{itemize}
 
 In a golf swing, the trailing knee (right knee for a right-handed golfer) flexes significantly during the backswing (to $\approx 20-30{}^\circ$) and extends during the downswing and follow-through. The leading knee (left knee) is often near full extension during the backswing and stays relatively extended during the downswing.
@@ -229,39 +232,41 @@ The motion is overwhelmingly flexion-extension. If you sit on a chair and move y
 
 \subsection{Where Revolute Breaks Down}
 
-\begin{driftcontrol}{Revolute Approximation vs. Reality}{drift:knee_revolute}
+::: {.callout-note}
+## Revolute Approximation vs. Reality
 \textbf{The Revolute Model:} The tibia has a fixed hinge axis. All rotation is about this axis. No translation occurs at the joint.
 
 \textbf{The Biological Reality:} The knee is more complex in several ways:
 
 \begin{enumerate}
-\item \textbf{Screw-home mechanism:} As the knee reaches full extension, the tibia externally rotates $\approx 8-12{}^\circ$ relative to the femur. This is an automatic locking mechanism that stabilizes the extended knee. When you extend your leg fully, your tibia rotates outward. This rotation is caused by the asymmetric shapes of the femoral condyles (the medial condyle is wider and deeper than the lateral one).
+- \textbf{Screw-home mechanism:} As the knee reaches full extension, the tibia externally rotates $\approx 8-12{}^\circ$ relative to the femur. This is an automatic locking mechanism that stabilizes the extended knee. When you extend your leg fully, your tibia rotates outward. This rotation is caused by the asymmetric shapes of the femoral condyles (the medial condyle is wider and deeper than the lateral one).
 
-\item \textbf{Varus/valgus laxity:} In flexion (bending), the knee can adduct/abduct (twist inward/outward) by $\approx 5-10{}^\circ$ if the ACL and collateral ligaments are intact. This is a small but real rotation perpendicular to the primary flexion axis.
+- \textbf{Varus/valgus laxity:} In flexion (bending), the knee can adduct/abduct (twist inward/outward) by $\approx 5-10{}^\circ$ if the ACL and collateral ligaments are intact. This is a small but real rotation perpendicular to the primary flexion axis.
 
-\item \textbf{Anterior-posterior translation:} The tibia can slide forward/backward relative to the femur by $\approx 5-6$ mm when the ACL is functional. In an ACL-deficient knee, this increases dramatically.
+- \textbf{Anterior-posterior translation:} The tibia can slide forward/backward relative to the femur by $\approx 5-6$ mm when the ACL is functional. In an ACL-deficient knee, this increases dramatically.
 
-\item \textbf{Medial-lateral translation:} Small shifts (a few mm) occur during rotation.
+- \textbf{Medial-lateral translation:} Small shifts (a few mm) occur during rotation.
 \end{enumerate}
 
 For golf analysis, these secondary motions are usually negligible. The screw-home adds $\approx 2%$ error to the model. For injury risk assessment (e.g., ACL tear prediction), these details matter.
-\end{driftcontrol}
+:::
 
 \subsection{Modeling Recommendation}
 
-\begin{constraintbox}{Choosing the Knee Model}{const:knee_model}
+::: {.callout-tip}
+## Choosing the Knee Model
 \textbf{For golf swing biomechanics:} Use a 1-DOF revolute joint. Measure or estimate the axis orientation (approximately horizontal, slightly offset anterior-posterior from the joint center).
 
 \textbf{For injury risk analysis:} Use a 6-DOF joint with nonlinear stiffness and damping constraints. Include ligament force-length relations based on experimental data. This level of detail is beyond the scope of swing analysis.
 
 \textbf{For real-time optimization:} Revolute is essential. You cannot optimize over hundreds of swing variations if each variation requires a detailed 6-DOF knee model.
-\end{constraintbox}
+:::
 
 \section{The Hip --- A Ball-and-Socket (Almost)}
 \label{sec:hip_joint}
 
-\index{hip joint}
-\index{femoroacetabular impingement}
+
+
 
 The hip is a classic ball-and-socket joint. The femoral head is a nearly perfect sphere that fits into the acetabular socket of the pelvis. It allows motion in multiple directions: flexion/extension (forward/backward), abduction/adduction (sideways), and internal/external rotation.
 
@@ -273,12 +278,12 @@ The femoral head is approximately spherical with a radius of $\approx 22$ mm. Th
 
 In a healthy hip:
 \begin{itemize}
-\item Flexion: $\approx 120{}^\circ$
-\item Extension: $\approx 10-20{}^\circ$
-\item Abduction: $\approx 45{}^\circ$
-\item Adduction: $\approx 25{}^\circ$
-\item Internal rotation: $\approx 40{}^\circ$
-\item External rotation: $\approx 45{}^\circ$
+- Flexion: $\approx 120{}^\circ$
+- Extension: $\approx 10-20{}^\circ$
+- Abduction: $\approx 45{}^\circ$
+- Adduction: $\approx 25{}^\circ$
+- Internal rotation: $\approx 40{}^\circ$
+- External rotation: $\approx 45{}^\circ$
 \end{itemize}
 
 \textbf{Important in golf:} The lead hip (left hip for a right-handed golfer) must internally rotate significantly during the downswing, sometimes $\approx 60{}^\circ$ or more in professional swings. This is close to the limit of normal hip motion.
@@ -289,62 +294,64 @@ The femoral head is nearly spherical. As long as the hip motion stays within the
 
 \subsection{Where Spherical Breaks Down}
 
-\begin{driftcontrol}{Spherical Approximation vs. Reality}{drift:hip_spherical}
+::: {.callout-note}
+## Spherical Approximation vs. Reality
 \textbf{The Spherical Model:} The femoral head is a perfect sphere. It rotates about a fixed center (the geometric center of the sphere). Any orientation is achievable.
 
 \textbf{The Biological Reality:}
 
 \begin{enumerate}
-\item \textbf{Shift of center of rotation:} The femoral head is not perfectly spherical (it's distorted by muscle attachment sites and loading). The center of rotation shifts slightly with joint angle---on the order of $\approx 5$ mm, which is small but measurable.
+- \textbf{Shift of center of rotation:} The femoral head is not perfectly spherical (it's distorted by muscle attachment sites and loading). The center of rotation shifts slightly with joint angle---on the order of $\approx 5$ mm, which is small but measurable.
 
-\item \textbf{Femoroacetabular impingement (FAI):} The femur and pelvis have bony anatomy that limits motion in certain directions. When the hip is flexed and internally rotated, the femoral neck can contact the acetabular rim. This contact limits further motion and can cause pain and cartilage damage over time. FAI is one of the most common hip pathologies in athletes. Professional golfers with FAI often modify their swing to avoid impingement.
+- \textbf{Femoroacetabular impingement (FAI):} The femur and pelvis have bony anatomy that limits motion in certain directions. When the hip is flexed and internally rotated, the femoral neck can contact the acetabular rim. This contact limits further motion and can cause pain and cartilage damage over time. FAI is one of the most common hip pathologies in athletes. Professional golfers with FAI often modify their swing to avoid impingement.
 
-\item \textbf{Ligamentous envelope:} The hip ligaments are not equally tight in all directions. Iliofemoral ligament is very tight, limiting hyperextension. This means that not all combinations of flexion/abduction/rotation are equally accessible. The ``range of motion envelope'' is not a perfect ball.
+- \textbf{Ligamentous envelope:} The hip ligaments are not equally tight in all directions. Iliofemoral ligament is very tight, limiting hyperextension. This means that not all combinations of flexion/abduction/rotation are equally accessible. The ``range of motion envelope'' is not a perfect ball.
 
-\item \textbf{Muscular constraints:} The hip muscles (especially the adductors and rotators) have a preferred range. Beyond this range, they stretch and limit motion.
+- \textbf{Muscular constraints:} The hip muscles (especially the adductors and rotators) have a preferred range. Beyond this range, they stretch and limit motion.
 \end{enumerate}
 
 For the golf swing, the most important breakdown is \textbf{FAI}. A golfer with FAI cannot internally rotate the lead hip as much as a healthy golfer without impingement.
-\end{driftcontrol}
+:::
 
 \subsection{Modeling Recommendation}
 
-\begin{constraintbox}{Choosing the Hip Model}{const:hip_model}
+::: {.callout-tip}
+## Choosing the Hip Model
 \textbf{For typical golfers:} Use a 3-DOF spherical joint (often represented as three sequential revolutes: ZYX Euler angles). Include mechanical range-of-motion limits. Typical limits: flexion $[-20{}^\circ, 120{}^\circ]$, abduction $[-25{}^\circ, 45{}^\circ]$, internal/external rotation $[-40{}^\circ, 45{}^\circ]$.
 
 \textbf{For golfers with FAI:} Reduce internal rotation ROM to $\approx 20-30{}^\circ$ instead of $40{}^\circ$. This forces the model to adopt a different swing strategy.
 
 \textbf{For competition analysis:} Use 3-DOF spherical. The three angles can be recorded from motion capture and used directly in the model.
-\end{constraintbox}
+:::
 
 \section{The Shoulder Complex --- A Gimbal (But Much More)}
 \label{sec:shoulder_complex}
 
-\index{shoulder joint}
-\index{glenohumeral joint}
-\index{scapulohumeral rhythm}
+
+
+
 
 The shoulder is unique: it is not a single joint. It is a \emph{complex} of four joints working together to provide the most mobile joint system in the human body.
 
 \subsection{The Four Joints of the Shoulder Complex}
 
 \begin{enumerate}
-\item \textbf{Glenohumeral (GH) joint:} The ball-and-socket joint formed by the humeral head and the glenoid fossa of the scapula. This is the primary articulation and contributes most of the motion.
+- \textbf{Glenohumeral (GH) joint:} The ball-and-socket joint formed by the humeral head and the glenoid fossa of the scapula. This is the primary articulation and contributes most of the motion.
 
-\item \textbf{Acromioclavicular (AC) joint:} A small gliding joint between the acromion (top of the scapula) and the distal clavicle. It allows small rotations (a few degrees).
+- \textbf{Acromioclavicular (AC) joint:} A small gliding joint between the acromion (top of the scapula) and the distal clavicle. It allows small rotations (a few degrees).
 
-\item \textbf{Sternoclavicular (SC) joint:} The joint between the clavicle and the sternum (breastbone). It is the only bony attachment of the arm to the axial skeleton. It allows clavicular rotation and protraction/retraction.
+- \textbf{Sternoclavicular (SC) joint:} The joint between the clavicle and the sternum (breastbone). It is the only bony attachment of the arm to the axial skeleton. It allows clavicular rotation and protraction/retraction.
 
-\item \textbf{Scapulothoracic (ST) articulation:} This is NOT a true joint (no cartilage, no synovial membrane). The scapula glides on the surface of the ribcage. This articulation contributes significantly to shoulder motion.
+- \textbf{Scapulothoracic (ST) articulation:} This is NOT a true joint (no cartilage, no synovial membrane). The scapula glides on the surface of the ribcage. This articulation contributes significantly to shoulder motion.
 \end{enumerate}
 
 \subsection{Degrees of Freedom}
 
 \begin{itemize}
-\item GH: 3 DOF (ball-and-socket)
-\item AC: $\approx 2$ DOF (primarily rotation, small translation)
-\item SC: $\approx 2$ DOF (clavicular elevation/depression, retraction/protraction)
-\item ST: 3 DOF (scapular upward/downward rotation, retraction/protraction, tilt)
+- GH: 3 DOF (ball-and-socket)
+- AC: $\approx 2$ DOF (primarily rotation, small translation)
+- SC: $\approx 2$ DOF (clavicular elevation/depression, retraction/protraction)
+- ST: 3 DOF (scapular upward/downward rotation, retraction/protraction, tilt)
 \end{itemize}
 
 Total: $\approx 10$ DOF, but many of these are coupled. The effective DOF at the shoulder complex is $\approx 7$.
@@ -365,12 +372,13 @@ This means that if the humerus abducts $60{}^\circ$ from the side of the body (r
 
 For simple swing analysis where we're computing forces and moments at the joint, the scapular motion affects:
 \begin{itemize}
-\item The location of the shoulder center relative to the trunk
-\item The moment arms of muscles crossing the shoulder
-\item The available range of motion for the humerus
+- The location of the shoulder center relative to the trunk
+- The moment arms of muscles crossing the shoulder
+- The available range of motion for the humerus
 \end{itemize}
 
-\begin{example}{Scapulohumeral Rhythm in the Golf Swing}{ex:scapular_rhythm}
+::: {.callout-tip}
+## Scapulohumeral Rhythm in the Golf Swing
 During the backswing, a right-handed golfer raises the trail arm (right arm).
 
 \textbf{Without scapular contribution:} The GH joint alone can abduct the humerus $\approx 90-100{}^\circ$. The hand would reach a certain height and angle.
@@ -378,23 +386,24 @@ During the backswing, a right-handed golfer raises the trail arm (right arm).
 \textbf{With scapulohumeral rhythm:} The scapula upwardly rotates (the bottom of the scapula swings outward) as the arm is raised. This adds another $45-50{}^\circ$ of combined scapular rotation, allowing the arm to reach higher and more posterior than GH alone allows.
 
 In practice, elite golfers exploit this coupling to position their hands precisely. Ignoring scapular motion would underestimate the achievable hand positions.
-\end{example}
+:::
 
 \subsection{Modeling Recommendation}
 
-\begin{constraintbox}{Choosing the Shoulder Model}{const:shoulder_model}
+::: {.callout-tip}
+## Choosing the Shoulder Model
 \textbf{For simple swing geometry:} Use a 3-DOF GH joint (spherical) at a fixed location on the trunk. The scapula rhythm is implicitly captured by the ROM limits of the GH joint (which are empirically measured and already include scapular compensation).
 
 \textbf{For detailed shoulder analysis:} Use a 7-DOF shoulder complex model: 3-DOF GH (ball-and-socket), 3-DOF ST (scapular motion), and 1-DOF AC coupling. This requires measuring or estimating the scapular motion from motion capture.
 
 \textbf{For injured shoulder:} If the scapular stabilizer muscles (serratus anterior, lower trapezius) are weak or damaged, the scapulohumeral rhythm is disrupted. The arm cannot achieve normal positions without compensation. Model the ST joint with reduced ROM.
-\end{constraintbox}
+:::
 
 \section{The Wrist --- A Universal Joint (Approximately)}
 \label{sec:wrist_joint}
 
-\index{wrist joint}
-\index{radiocarpal joint}
+
+
 
 The wrist is traditionally modeled as a 2-DOF universal joint: flexion/extension and radial/ulnar deviation. This is a reasonable first approximation but hides complexity.
 
@@ -407,10 +416,10 @@ Despite this complexity, the net result is approximately a universal joint at th
 \subsection{Primary Motions}
 
 \begin{itemize}
-\item Flexion (bending downward): $\approx 70-80{}^\circ$
-\item Extension (bending upward): $\approx 60-70{}^\circ$
-\item Radial deviation (toward thumb): $\approx 15-25{}^\circ$
-\item Ulnar deviation (toward pinky): $\approx 25-35{}^\circ$
+- Flexion (bending downward): $\approx 70-80{}^\circ$
+- Extension (bending upward): $\approx 60-70{}^\circ$
+- Radial deviation (toward thumb): $\approx 15-25{}^\circ$
+- Ulnar deviation (toward pinky): $\approx 25-35{}^\circ$
 \end{itemize}
 
 \subsection{The Dart-Thrower's Motion}
@@ -421,37 +430,39 @@ From a biomechanical perspective, the dart-thrower's motion aligns with the fibe
 
 \subsection{Where Universal Breaks Down}
 
-\begin{driftcontrol}{Universal Approximation vs. Reality}{drift:wrist_universal}
+::: {.callout-note}
+## Universal Approximation vs. Reality
 \textbf{The Universal Model:} Two perpendicular rotation axes at the wrist center. Motion is the product of rotations about these axes.
 
 \textbf{The Biological Reality:}
 
 \begin{enumerate}
-\item \textbf{Pronation/supination confusion:} Many golfers and coaches think of ``twisting the wrist'' as a wrist motion. In fact, the primary twist motion is radioulnar pronation/supination: rotation of the forearm around the long axis of the ulna and radius. This is NOT a wrist joint motion---it is an elbow-region joint. The wrist cannot pronate or supinate independently (though it can assist the motion).
+- \textbf{Pronation/supination confusion:} Many golfers and coaches think of ``twisting the wrist'' as a wrist motion. In fact, the primary twist motion is radioulnar pronation/supination: rotation of the forearm around the long axis of the ulna and radius. This is NOT a wrist joint motion---it is an elbow-region joint. The wrist cannot pronate or supinate independently (though it can assist the motion).
 
-\item \textbf{Carpal kinematics:} The carpal bones do not rotate about fixed axes. The instantaneous axis of rotation shifts during motion, following a complex path determined by ligament constraints and bone geometry. A 2-DOF model is a simplification.
+- \textbf{Carpal kinematics:} The carpal bones do not rotate about fixed axes. The instantaneous axis of rotation shifts during motion, following a complex path determined by ligament constraints and bone geometry. A 2-DOF model is a simplification.
 
-\item \textbf{Dart-thrower's motion:} The wrist does not equally prefer all (flexion, deviation) combinations. The nervous system and biomechanics prefer the dart-thrower's path. A 2-DOF planar model cannot capture this preference.
+- \textbf{Dart-thrower's motion:} The wrist does not equally prefer all (flexion, deviation) combinations. The nervous system and biomechanics prefer the dart-thrower's path. A 2-DOF planar model cannot capture this preference.
 \end{enumerate}
 
 For the golf swing, these subtleties matter because the wrist cock (cocking the wrist during backswing) involves both flexion/extension and ulnar deviation. Ignoring the dart-thrower's preference means we might underestimate the achievable wrist cock angle in certain configurations.
-\end{driftcontrol}
+:::
 
 \subsection{Modeling Recommendation}
 
-\begin{constraintbox}{Choosing the Wrist Model}{const:wrist_model}
+::: {.callout-tip}
+## Choosing the Wrist Model
 \textbf{For golf swing analysis:} Use 2-DOF universal joint (flexion/extension and radial/ulnar deviation). The axes are approximately orthogonal.
 
 \textbf{For club face angle analysis:} If you need to track club face rotation, note that the club shaft can rotate about its own long axis (the roll of the shaft). This is NOT a wrist motion---it is a motion of the club itself relative to the hand. Include it as a third DOF of the club, not the wrist.
 
 \textbf{For detailed wrist biomechanics:} Model the radiocarpal joint separately from the midcarpal joint (both 2 DOF). Include nonlinear stiffness constraints to capture the dart-thrower's preference.
-\end{constraintbox}
+:::
 
 \section{The Elbow --- A Revolute (Very Good Approximation)}
 \label{sec:elbow_joint}
 
-\index{elbow joint}
-\index{radioulnar joint}
+
+
 
 The elbow is one of the best candidates for a simple joint model. The primary motion---flexion and extension---is almost a pure revolute.
 
@@ -460,11 +471,11 @@ The elbow is one of the best candidates for a simple joint model. The primary mo
 The elbow is formed by three bones: the humerus (upper arm), the radius (forearm, thumb side), and the ulna (forearm, pinky side). There are three articulations:
 
 \begin{enumerate}
-\item \textbf{Humeroulnar joint:} The ulna has a U-shaped notch (trochlear notch) that wraps around the humeral trochlea (a pulley-like shape). This forms the primary hinge for flexion/extension.
+- \textbf{Humeroulnar joint:} The ulna has a U-shaped notch (trochlear notch) that wraps around the humeral trochlea (a pulley-like shape). This forms the primary hinge for flexion/extension.
 
-\item \textbf{Humeroradial joint:} The radius sits on the humeral capitellum (a rounded knob). This articulation allows some rotation of the radius.
+- \textbf{Humeroradial joint:} The radius sits on the humeral capitellum (a rounded knob). This articulation allows some rotation of the radius.
 
-\item \textbf{Proximal radioulnar joint:} The head of the radius rotates within a ring formed by the radial notch of the ulna. This joint is the axis of pronation/supination (rotation of the forearm).
+- \textbf{Proximal radioulnar joint:} The head of the radius rotates within a ring formed by the radial notch of the ulna. This joint is the axis of pronation/supination (rotation of the forearm).
 \end{enumerate}
 
 \subsection{Two Separate DOF}
@@ -472,8 +483,8 @@ The elbow is formed by three bones: the humerus (upper arm), the radius (forearm
 For the purposes of the golf swing, the elbow can be modeled as \textbf{two independent revolute joints}:
 
 \begin{itemize}
-\item Flexion/extension: 1 DOF, centered at the humeroulnar joint
-\item Pronation/supination: 1 DOF, a rotation of the radius+hand about the ulnar axis
+- Flexion/extension: 1 DOF, centered at the humeroulnar joint
+- Pronation/supination: 1 DOF, a rotation of the radius+hand about the ulnar axis
 \end{itemize}
 
 These two motions are not fully independent (they are mechanically coupled to some degree), but for golf analysis, they can be treated separately.
@@ -484,25 +495,26 @@ The elbow is not a perfectly aligned hinge. The forearm makes a small angle rela
 
 \subsection{Modeling Recommendation}
 
-\begin{constraintbox}{Choosing the Elbow Model}{const:elbow_model}
+::: {.callout-tip}
+## Choosing the Elbow Model
 \textbf{For golf swing analysis:} Use two sequential revolute joints: flexion/extension and pronation/supination. This gives 2 DOF at the elbow.
 
 \textbf{For detailed moment calculation:} Account for the carrying angle when computing muscle moment arms. The axis is not perfectly sagittal.
 
 \textbf{Typical ROM limits:}
 \begin{itemize}
-\item Flexion: $0{}^\circ$ to $150{}^\circ$
-\item Extension (hyperextension): $0{}^\circ$ to $\approx 5-10{}^\circ$ (limited by bony geometry and ligaments)
-\item Pronation: $\approx 80{}^\circ$
-\item Supination: $\approx 80{}^\circ$
+- Flexion: $0{}^\circ$ to $150{}^\circ$
+- Extension (hyperextension): $0{}^\circ$ to $\approx 5-10{}^\circ$ (limited by bony geometry and ligaments)
+- Pronation: $\approx 80{}^\circ$
+- Supination: $\approx 80{}^\circ$
 \end{itemize}
-\end{constraintbox}
+:::
 
 \section{The Ankle/Foot --- The Ground Connection}
 \label{sec:ankle_foot}
 
-\index{ankle joint}
-\index{foot mechanics}
+
+
 
 The ankle and foot are the interface between the body and the ground. For the golf swing, the feet are mostly stationary (though weight shifts during the swing), so the ankle model can be relatively simple.
 
@@ -510,10 +522,10 @@ The ankle and foot are the interface between the body and the ground. For the go
 
 The ankle complex includes:
 \begin{itemize}
-\item Talocrural joint (true ankle): tibiotalar joint allowing dorsiflexion (upward) and plantarflexion (downward) in the sagittal plane
-\item Subtalar joint: allowing inversion (inward turn) and eversion (outward turn)
-\item Midtarsal joint: additional motion of the mid-foot
-\item Tarsometatarsal and metatarsophalangeal joints: motions of the toes
+- Talocrural joint (true ankle): tibiotalar joint allowing dorsiflexion (upward) and plantarflexion (downward) in the sagittal plane
+- Subtalar joint: allowing inversion (inward turn) and eversion (outward turn)
+- Midtarsal joint: additional motion of the mid-foot
+- Tarsometatarsal and metatarsophalangeal joints: motions of the toes
 \end{itemize}
 
 The foot has 33 joints total and can deform significantly, especially in the arch.
@@ -522,8 +534,8 @@ The foot has 33 joints total and can deform significantly, especially in the arc
 
 For a golf swing where the feet are largely planted, a reasonable model is:
 \begin{itemize}
-\item Talocrural joint: 1 DOF (plantarflexion/dorsiflexion in the sagittal plane)
-\item Subtalar joint: 1 DOF (inversion/eversion in the frontal plane)
+- Talocrural joint: 1 DOF (plantarflexion/dorsiflexion in the sagittal plane)
+- Subtalar joint: 1 DOF (inversion/eversion in the frontal plane)
 \end{itemize}
 
 Total: 2 DOF per ankle.
@@ -532,18 +544,19 @@ Total: 2 DOF per ankle.
 
 The foot is not rigid. During the weight shift in the golf swing, the arch compresses and extends, storing and releasing elastic energy. For a highly detailed model that tracks power generation from the lower body, include the arch as a spring. For simpler models, assume the foot is rigid.
 
-\begin{constraintbox}{Choosing the Ankle/Foot Model}{const:ankle_foot_model}
+::: {.callout-tip}
+## Choosing the Ankle/Foot Model
 \textbf{For weight shift analysis:} Use 2-DOF ankle (plantarflexion and inversion/eversion) with the foot assumed rigid.
 
 \textbf{For ground reaction force analysis:} Model the foot-ground interface as a contact problem. The foot can slide, stick, or take off from the ground. This is a constraint handled by the dynamics solver, not a joint model.
 
 \textbf{For energetics analysis:} Include the arch as a spring (torsional spring about the mid-foot axis) to capture elastic energy storage.
-\end{constraintbox}
+:::
 
 \section{Summary Table and Modeling Guidelines}
 \label{sec:summary_table}
 
-\begin{center}
+
 \begin{tabular}{|l|c|c|l|}
 \hline
 \textbf{Joint} & \textbf{Model} & \textbf{DOF} & \textbf{Golf Significance} \\
@@ -556,29 +569,29 @@ Elbow & 1R + 1R & 2 & Flexion and pronation independent \\
 Wrist & Universal (2R) & 2 & Cock and bow motion \\
 \hline
 \end{tabular}
-\end{center}
+
 
 \subsection{Decision Flowchart}
 
 When choosing a joint model, ask:
 
 \begin{enumerate}
-\item \textbf{Is the motion primarily uniaxial?} (Motion about one axis dominates.)
+- \textbf{Is the motion primarily uniaxial?} (Motion about one axis dominates.)
    \begin{itemize}
-   \item \textbf{Yes:} Use revolute (1 DOF).
-   \item \textbf{No:} Proceed to question 2.
+   - \textbf{Yes:} Use revolute (1 DOF).
+   - \textbf{No:} Proceed to question 2.
    \end{itemize}
 
-\item \textbf{Are there two roughly orthogonal rotation axes?}
+- \textbf{Are there two roughly orthogonal rotation axes?}
    \begin{itemize}
-   \item \textbf{Yes:} Use universal (2 DOF).
-   \item \textbf{No:} Proceed to question 3.
+   - \textbf{Yes:} Use universal (2 DOF).
+   - \textbf{No:} Proceed to question 3.
    \end{itemize}
 
-\item 	\textbf{Is rotation about a fixed point with no translation?}
+- 	\textbf{Is rotation about a fixed point with no translation?}
    \begin{itemize}
-   \item \textbf{Yes:} Use spherical (3 DOF).
-   \item \textbf{No:} Use 6-DOF or a more complex model.
+   - \textbf{Yes:} Use spherical (3 DOF).
+   - \textbf{No:} Use 6-DOF or a more complex model.
    \end{itemize}
 \end{enumerate}
 
@@ -586,18 +599,19 @@ When choosing a joint model, ask:
 
 The golf swing model typically uses:
 \begin{itemize}
-\item Hip: 3R (spherical)
-\item Knee: 1R (revolute)
-\item Ankle: 1R + 1R (two perpendicular revolutes)
-\item Shoulder: 3R (spherical at GH)
-\item Elbow: 1R + 1R (flexion + pronation)
-\item Wrist: 1R + 1R (flexion + deviation)
-\item Club: Rigidly attached to hand (0 DOF)
+- Hip: 3R (spherical)
+- Knee: 1R (revolute)
+- Ankle: 1R + 1R (two perpendicular revolutes)
+- Shoulder: 3R (spherical at GH)
+- Elbow: 1R + 1R (flexion + pronation)
+- Wrist: 1R + 1R (flexion + deviation)
+- Club: Rigidly attached to hand (0 DOF)
 \end{itemize}
 
 Total: $3 + 1 + 2 + 3 + 2 + 2 + 0 = 13$ DOF per arm, times 2 arms plus pelvis/spine = $\approx 30$ DOF for a full-body golf swing model.
 
-\begin{principle}{Key Takeaways: Choosing Joint Models}{prin:ch22_summary}
+::: {.callout-important}
+## Key Takeaways: Choosing Joint Models
 The art of biomechanical modeling is choosing the simplest joint type that captures the essential physics for your specific question.
 
 \textbf{For kinematics:} Joint model choice affects the number of DOF and the constraint equations. Too simple, and you lose important motion. Too complex, and the model is unidentifiable.
@@ -609,14 +623,14 @@ The art of biomechanical modeling is choosing the simplest joint type that captu
 \textbf{Model hierarchy:} Build your model in layers. Start with revolute joints everywhere. Only add complexity (spherical, universal) where the simple model fails to capture observed motion. Only add constraint modeling (ligaments, ROM limits) if the physics requires it.
 
 Remember: \emph{All models are wrong, but some are useful.} --- George E. P. Box.
-\end{principle}
+:::
 
 \section{Injury Biomechanics of the Golf Swing}
 \label{sec:ch22_injury}
 
-\index{injury biomechanics}
-\index{low back pain!golf}
-\index{golfer's elbow}
+
+
+
 
 The golf swing subjects the musculoskeletal system to extreme loads in a highly asymmetric pattern. Understanding injury mechanisms requires the same joint models developed throughout this chapter, now applied to failure analysis.
 
@@ -628,48 +642,49 @@ Peak lumbar compression occurs during the downswing transition, when the hips re
 
 The injury risk increases when:
 \begin{itemize}
-\item Lumbar flexion exceeds 40--50$^{\circ}$ at address (increases disc stress by 300\%)
-\item Axial rotation exceeds 5$^{\circ}$ per lumbar motion segment (facet joint overload)
-\item The golfer ``reverse pivots,'' shifting weight toward the lead foot during the backswing (creates shear in the opposite direction to muscle preparation)
-\item Swing frequency is high (fatigue accumulation over a practice session)
+- Lumbar flexion exceeds 40--50$^{\circ}$ at address (increases disc stress by 300\%)
+- Axial rotation exceeds 5$^{\circ}$ per lumbar motion segment (facet joint overload)
+- The golfer ``reverse pivots,'' shifting weight toward the lead foot during the backswing (creates shear in the opposite direction to muscle preparation)
+- Swing frequency is high (fatigue accumulation over a practice session)
 \end{itemize}
 
-\begin{constraintbox}{Spine Loading as a Constraint Problem}{box:ch22_spine_constraint}
+::: {.callout-tip}
+## Spine Loading as a Constraint Problem
 From a modeling perspective, the spine is a parallel mechanism with loop closure constraints (Chapter~\ref{ch:parallel_mechanisms}). When the hips and shoulders rotate at different rates, the constraint forces in the spine are enormous. These constraint forces are not under direct muscular control---they arise from the geometry and the kinematics. The golfer can influence them only by changing the kinematics (slower hip rotation, less X-factor) or increasing spinal stiffness (core bracing, intra-abdominal pressure from Chapter~\ref{ch:soft_tissue_pliable}).
-\end{constraintbox}
+:::
 
 \subsection{Wrist and Hand Injuries}
 
 The lead wrist experiences the highest angular velocities of any joint in the swing ($\sim$50--70~rad/s at impact). Combined with the impact shock (3000--5000~N over 0.5~ms from Chapter~\ref{ch:impact_collision_collision}), the wrist is vulnerable to:
 \begin{itemize}
-\item \textbf{Hamate fracture}: The hook of the hamate bone sits directly under the butt end of the club. Repeated impact shock can cause stress fractures. This is the most common wrist fracture in golf.
-\item \textbf{Extensor tendinopathy}: The wrist extensors decelerate wrist flexion after impact. At the angular velocities involved, the eccentric loads on these tendons are substantial.
-\item \textbf{TFCC tears}: The triangular fibrocartilage complex stabilizes the distal radioulnar joint. Forced ulnar deviation (as occurs in the lead wrist at impact) can tear this structure.
+- \textbf{Hamate fracture}: The hook of the hamate bone sits directly under the butt end of the club. Repeated impact shock can cause stress fractures. This is the most common wrist fracture in golf.
+- \textbf{Extensor tendinopathy}: The wrist extensors decelerate wrist flexion after impact. At the angular velocities involved, the eccentric loads on these tendons are substantial.
+- \textbf{TFCC tears}: The triangular fibrocartilage complex stabilizes the distal radioulnar joint. Forced ulnar deviation (as occurs in the lead wrist at impact) can tear this structure.
 \end{itemize}
 
 \subsection{Medial Epicondylitis (Golfer's Elbow)}
 
 Despite its name, golfer's elbow is caused by the trail arm, not the lead arm. The trail wrist flexors and forearm pronators originate at the medial epicondyle of the humerus. During the downswing, these muscles contract eccentrically (lengthening under load) as the trail forearm supinates. The repeated eccentric loading causes micro-tears at the tendon-bone interface.
 
-\begin{principle}{Injury as a Constraint Violation}{princ:ch22_injury_constraint}
+::: {.callout-important}
+## Injury as a Constraint Violation
 From the ZTCF perspective, injuries occur when the drift field drives the system into configurations that exceed the structural capacity of biological tissues. The golfer's muscular control authority is insufficient to prevent these configurations at high speeds (because DCR $\gg 1$ at impact). This is why injuries are more common at high swing speeds and during the downswing-to-impact phase: the system is on autopilot, and the autopilot sometimes drives through dangerous territory.
-\end{principle}
+:::
 
-\begin{exercises}{Chapter Exercises}{ex:ch22_exercises}
+## Chapter Exercises
 \begin{enumerate}
 
-\item \textbf{Knee Analysis:} The screw-home mechanism causes the tibia to externally rotate $10{}^\circ$ as the knee moves from $90{}^\circ$ flexion to full extension. If your revolute model assumes a fixed axis, what error does this introduce in the position of the ankle (foot) as the knee extends? Assume the tibia is 40 cm long.
+- \textbf{Knee Analysis:} The screw-home mechanism causes the tibia to externally rotate $10{}^\circ$ as the knee moves from $90{}^\circ$ flexion to full extension. If your revolute model assumes a fixed axis, what error does this introduce in the position of the ankle (foot) as the knee extends? Assume the tibia is 40 cm long.
 
-\item \textbf{Hip FAI:} A golfer with femoroacetabular impingement can internally rotate the lead hip only $25{}^\circ$ instead of the normal $40{}^\circ$. How does this constrain the backswing? What compensatory motion might the golfer make in the spine or pelvis?
+- \textbf{Hip FAI:} A golfer with femoroacetabular impingement can internally rotate the lead hip only $25{}^\circ$ instead of the normal $40{}^\circ$. How does this constrain the backswing? What compensatory motion might the golfer make in the spine or pelvis?
 
-\item \textbf{Shoulder Scapular Rhythm:} During a backswing, the trail shoulder abducts $70{}^\circ$ (humerus relative to trunk). Using scapulohumeral rhythm (2:1 ratio), what is the GH joint abduction angle, and what is the scapular upward rotation angle?
+- \textbf{Shoulder Scapular Rhythm:} During a backswing, the trail shoulder abducts $70{}^\circ$ (humerus relative to trunk). Using scapulohumeral rhythm (2:1 ratio), what is the GH joint abduction angle, and what is the scapular upward rotation angle?
 
-\item \textbf{Wrist Dart-Thrower's Motion:} Explain why the dart-thrower's motion (extension + ulnar deviation) is stronger than extension alone or ulnar deviation alone. What role do ligaments play in defining this preferred path?
+- \textbf{Wrist Dart-Thrower's Motion:} Explain why the dart-thrower's motion (extension + ulnar deviation) is stronger than extension alone or ulnar deviation alone. What role do ligaments play in defining this preferred path?
 
-\item \textbf{Elbow Carrying Angle:} If the carrying angle is $10{}^\circ$ valgus, what does this imply for the flexion axis direction? How would you measure the carrying angle from motion capture data (marker positions)?
+- \textbf{Elbow Carrying Angle:} If the carrying angle is $10{}^\circ$ valgus, what does this imply for the flexion axis direction? How would you measure the carrying angle from motion capture data (marker positions)?
 
 - **Grübler for a Golf Body:** Construct a golf swing model with: pelvis (base), 3-DOF lumbar spine, 3-DOF thorax, 2 arms with 3-DOF shoulders, 1-DOF elbows, 2-DOF wrists, and a rigidly-attached club. Count: bodies (N), joints (J), DOF per joint, and compute the total DOF. Then subtract the loop constraint of the two-handed grip.
 
 - **Model Refinement:** You've built a golf swing model and found that it predicts the backswing configuration well, but the early downswing is off (wrist starts uncocking too early compared to video). What joint model refinement might explain this? (Hint: consider wrist stiffness or scapular motion.)
 
-\end{exercises}

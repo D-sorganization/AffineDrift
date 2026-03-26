@@ -140,7 +140,7 @@ The impulse delivered by the ground (the integral of GRF over time) equals the c
 ## Computing COM Acceleration from Force Plate Data
 
 Suppose a 90 kg golfer stands on a force plate during the downswing. The force plate records:
-\begin{center}
+
 \begin{tabular}{lll}
 \hline
 **Time** & **Vertical GRF** & **Anterior-Posterior GRF** 
@@ -149,7 +149,7 @@ $t = 0.0$ s & $900$ N (standing) & $0$ N
 $t = 0.2$ s & $1200$ N (peak) & $200$ N (forward) 
 \hline
 \end{tabular}
-\end{center}
+
 
 At $t = 0.2$ s, compute the center-of-mass acceleration.
 
@@ -223,9 +223,10 @@ $$
 W_{\mathrm{GRF}} = \int P_{\mathrm{GRF}} \, dt = \int 0 \, dt = 0.
 $$
 
-\begin{theorem}{GRF Does Zero Work}{thm:grf-zero-work}
+::: {.callout-important}
+## GRF Does Zero Work
 For a golfer with feet planted on the ground, the ground reaction force does zero work and delivers zero power. The GRF cannot increase the total mechanical energy of the golfer-club system.
-\end{theorem}
+:::
 
 This seems to contradict the impulse-momentum perspective. The GRF is the only external force, yet it adds no energy. How is this possible?
 
@@ -331,13 +332,14 @@ The zero-muscle-torque GRF is the GRF that exists even when all muscles are inac
 
 This distinction is powerful. By comparing actual measured GRF (from a force plate) to ZTCF GRF (computed from kinematics with zero muscle torques), we can infer the muscle torques that the golfer actually applied.
 
-\begin{driftcontrol}{Drift GRF vs. Control-Induced GRF}{box:grf-drift-control}
+::: {.callout-note}
+## Drift GRF vs. Control-Induced GRF
 **Drift GRF:** The GRF that arises purely from gravity and Coriolis effects, without any muscular effort. This includes static weight and inertial terms.
 
 **Control-Induced GRF:** The additional GRF resulting from muscular torques. This is what the golfer ``creates'' through effort.
 
 **Why it matters:** Force plate data measures total GRF. To extract muscle torques from force plates, we must separate these two components. The drift component is kinematic (determined by configuration and velocity). The control component is dynamic (determined by muscle activation).
-\end{driftcontrol}
+:::
 
 ## GRF Induced by Torques at Remote Joints
 
@@ -498,7 +500,7 @@ This data feeds into coaching: golfers can see whether their GRF pattern matches
 \subsection*{Looking Ahead}
 Ground reaction forces provide the impulse that changes the body's momentum, but the internal mechanism that generates motion is muscular torque at the joints. How do individual muscle forces combine to produce joint torques? Chapter~\ref{ch:muscle-to-torque} develops the *muscle Jacobian* that maps hundreds of muscle forces into the handful of joint torques that appear in our equations of motion.
 
-\begin{exercises}{Chapter Exercises}{ex:grf-exercises}
+## Chapter Exercises
 
 - A 95 kg golfer stands still on a force plate. Compute the vertical GRF. Assume $g = 9.81$ m/s$^2$.
 
@@ -516,4 +518,3 @@ Ground reaction forces provide the impulse that changes the body's momentum, but
 
 - Use the equation $\bm{F}_{\mathrm{GRF}} = m\ddot{\bm{r}}_{\mathrm{COM}} - m\bm{g}$ to explain why GRF must be less than body weight if the center of mass is accelerating downward (e.g., during a deep squat descent).
 
-\end{exercises}

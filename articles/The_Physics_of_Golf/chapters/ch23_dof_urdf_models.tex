@@ -1,4 +1,4 @@
-% Chapter 23: Degrees of Freedom and Robot Models
+% Chapter~\ref{ch:dof_urdf_models}: Degrees of Freedom and Robot Models
 % The Physics of Golf: Force, Drift, and Control in the Golf Swing
 
 \chapter{Degrees of Freedom and Robot Models of the Human Body}
@@ -9,7 +9,7 @@
 \begin{laymansbox}{From Anatomy to Equations}{box:ch23_dof_problem}
 You now know how to idealize individual joints. The next question is: \emph{how many independent numbers do I need to describe a golf swing?}
 
-Suppose you have a model of the human body made from the joints we discussed in Chapter 22. You specify:
+Suppose you have a model of the human body made from the joints we discussed in Chapter~\ref{ch:anatomy_joint_modeling}. You specify:
 \begin{itemize}
 \item Pelvis orientation (3 angles)
 \item Spine angles (3 DOF)
@@ -567,7 +567,7 @@ An instructor might optimize for one criterion (minimal shoulder strain), while 
 \label{sec:null_space_control}
 
 \begin{driftcontrol}{Null-Space Optimization in the ZTCF}{box:ch23_null_space_ztcf}
-Recall from Chapters 5 and 6 that the system evolves under drift and control:
+Recall from Chapters~\ref{ch:05_affine_structure} and 6 that the system evolves under drift and control:
 
 \begin{equation}
 \dot{\bm{x}}_{\text{state}} = \bm{f}(\bm{x}_{\text{state}}) + \bm{G}(\bm{x}_{\text{state}}) \bm{u}
@@ -1080,7 +1080,7 @@ Pinocchio is excellent for trajectory optimization. It can efficiently compute d
 
 \subsection{Computing the Equations of Motion Automatically}
 
-Here's the power of these tools. In Chapter 9, we derived the equations of motion:
+Here's the power of these tools. In Chapter~\ref{ch:parallel_mechanisms}, we derived the equations of motion:
 
 $$\bm{M}(\bm{q})\ddot{\bm{q}} = \bm{u} - \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})$$
 
@@ -1157,7 +1157,7 @@ A rough estimate: increasing the forearm mass by 10\% decreases the club speed b
 
 The golf swing is chaotic in a weak sense: small changes in initial conditions lead to larger changes in the outcome. This is because the swing is \emph{controlled by initial conditions} (the backswing position, velocity, and acceleration), and any error in measuring these propagates forward.
 
-\textbf{Key finding:} The ZTCF (zero-torque constraint force analysis from Chapter 20) is moderately sensitive to anthropometric parameters but \emph{extremely sensitive} to initial conditions and joint torques.
+\textbf{Key finding:} The ZTCF (zero-torque constraint force analysis from Chapter~\ref{ch:soft_tissue_pliable}) is moderately sensitive to anthropometric parameters but \emph{extremely sensitive} to initial conditions and joint torques.
 
 This is why motion capture accuracy matters more than perfectly measured segment masses. Getting the initial arm position and velocity correct is more important than having exact segment inertias.
 
