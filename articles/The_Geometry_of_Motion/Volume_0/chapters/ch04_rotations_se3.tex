@@ -81,7 +81,7 @@ The determinant condition $\det(\mathbf{R}) = 1$ distinguishes \emph{proper rota
 Any rotation in 3D can be decomposed into rotations about the principal axes. We derive the three elementary rotation matrices.
 
 \index{rotation matrix!Rx}
-\begin{theorem}{Rotation About the $x$-Axis}{rotation_x_axis}
+\begin{theorem}{Rotation About the \texorpdfstring{$x$}{x}-Axis}{rotation_x_axis}
 A rotation by angle $\theta$ about the $x$-axis, with the rotation viewed as right-hand rule (counterclockwise when looking from positive $x$ toward the origin), is given by:
 \begin{equation}
 \label{eq:Rx}
@@ -103,7 +103,7 @@ Embedding this in 3D yields equation \eqref{eq:Rx}.
 \end{derivation}
 
 \index{rotation matrix!Ry}
-\begin{theorem}{Rotation About the $y$-Axis}{rotation_y_axis}
+\begin{theorem}{Rotation About the \texorpdfstring{$y$}{y}-Axis}{rotation_y_axis}
 A rotation by angle $\theta$ about the $y$-axis is:
 \begin{equation}
 \label{eq:Ry}
@@ -112,7 +112,7 @@ A rotation by angle $\theta$ about the $y$-axis is:
 \end{theorem}
 
 \index{rotation matrix!Rz}
-\begin{theorem}{Rotation About the $z$-Axis}{rotation_z_axis}
+\begin{theorem}{Rotation About the \texorpdfstring{$z$}{z}-Axis}{rotation_z_axis}
 A rotation by angle $\theta$ about the $z$-axis is:
 \begin{equation}
 \label{eq:Rz}
@@ -128,14 +128,14 @@ Each elementary matrix satisfies $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ and $\de
 
 \subsection{SO(3) as a Group}
 
-\begin{definition}{The Group $\SO(3)$}{SO3_group}
+\begin{definition}{The Group \texorpdfstring{$\SO(3)$}{SO(3)}}{SO3_group}
 The \textbf{Special Orthogonal Group} $\SO(3)$ is the set of all $3 \times 3$ real matrices satisfying:
 \begin{equation}
 \SO(3) = \{\mathbf{R} \in \Reals^{3 \times 3} : \mathbf{R}^T \mathbf{R} = \mathbf{I}, \, \det(\mathbf{R}) = 1\}
 \end{equation}
 \end{definition}
 
-\begin{theorem}{$\SO(3)$ is a Group}{SO3_is_group}
+\begin{theorem}{\texorpdfstring{$\SO(3)$}{SO(3)} is a Group}{SO3_is_group}
 The set $\SO(3)$ forms a mathematical group under matrix multiplication.
 \end{theorem}
 
@@ -162,7 +162,7 @@ so $\mathbf{R}^{-1} \in \SO(3)$.
 
 \subsection{SO(3) as a Smooth Manifold}
 
-\begin{theorem}{$\SO(3)$ is a 3-Dimensional Smooth Manifold}{SO3_manifold}
+\begin{theorem}{\texorpdfstring{$\SO(3)$}{SO(3)} is a 3-Dimensional Smooth Manifold}{SO3_manifold}
 The set $\SO(3)$ is a smooth, compact manifold of dimension 3.
 \end{theorem}
 
@@ -241,7 +241,7 @@ The composite rotation is:
   Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this singularity, your matrices become non-invertible and your computer instantly crashes trying to compute a physical impossibility.
 \end{laymansbox}
 
-\begin{theorem}{Gimbal Lock at $\theta = \pm 90^\circ$}{gimbal_lock_proof}
+\begin{theorem}{Gimbal Lock at \texorpdfstring{$\theta = \pm 90^\circ$}{theta = +/- 90 degrees}}{gimbal_lock_proof}
 For ZYX Euler angles, the Jacobian matrix relating angular velocity components to Euler angle rate components becomes singular when $\theta = \pm 90^\circ$.
 \end{theorem}
 
@@ -290,7 +290,7 @@ If $\SO(3)$ is a curved manifold of positions (rotations), what is its velocity 
 
 If we examine the tangent space at the identity rotation (the "zero" rotation, matrix $\mathbf{I}$), we discover an incredibly special mathematical object called the \textbf{Lie Algebra}, denoted by lowercase $\so(3)$.
 
-\begin{definition}{Lie Algebra $\so(3)$}{lie_algebra}
+\begin{definition}{Lie Algebra \texorpdfstring{$\so(3)$}{so(3)}}{lie_algebra}
 The \emph{Lie Algebra} $\so(3)$ is the tangent space to the Lie Group $\SO(3)$ at the identity element. Physically, it represents the space of all possible angular velocities (spin rates) when the object is currently unrotated. Mathematically, it consists of all $3 \times 3$ \emph{skew-symmetric} matrices: matrices $[\boldsymbol{\omega}]_\times$ satisfying $[\boldsymbol{\omega}]_\times^T = -[\boldsymbol{\omega}]_\times$.
 \end{definition}
 
