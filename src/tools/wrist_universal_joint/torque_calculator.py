@@ -17,7 +17,7 @@ from simpleeval import EvalWithCompoundTypes
 
 from src.core.contracts import check_positive, ensure, require
 
-from .constants import MAX_DELTA_DEGREES, rng
+from .constants import DEFAULT_GAMMA_TO_ALPHA_RATIO, MAX_DELTA_DEGREES, rng
 
 logger = logging.getLogger(__name__)
 
