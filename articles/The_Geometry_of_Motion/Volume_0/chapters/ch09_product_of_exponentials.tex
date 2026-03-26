@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 9: The Product of Exponentials (PoE)
+%  Chapter 9: The Product of Exponentials Formula
 % ==========================================================================
 \chapter{The Product of Exponentials Formula}
 \label{ch:poe}
@@ -14,87 +14,670 @@
 \textbf{All Variables Defined:} $\mathbf{M}$ is the $4 \times 4$ "home" pose of the robot. $\mathcal{S}_i$ is the 6D Screw Axis of joint $i$. $\theta_i$ is how far the motor has moved.
 \end{laymansbox}
 
+\section{Historical Context and the Evolution of Kinematic Formalisms}
+\label{sec:poe_history}
+
+The theory of robotic kinematics has undergone a profound transformation over the past four decades. For nearly two centuries—from the mechanical linkage analysis of James Watt through the 1960s development of automated manufacturing—kinematic chains were described using local, Euclidean coordinate frames attached sequentially to each link. This frame-by-frame approach reached formal codification in 1955 with the \textit{Denavit-Hartenberg (D-H)} parametrization \cite{dh1955}, which became the dominant convention in robotics education and industrial practice.
+
+The D-H convention, while algebraically complete, carries three fundamental drawbacks:
+\begin{enumerate}
+  \item \textbf{Geometric Arbitrariness:} The perpendicularity rules for axis alignment create multiple valid D-H parameter sets for the same robot, requiring careful disambiguation.
+  \item \textbf{Notational Opacity:} Joint and link parameters are decoupled across four separate scalars ($a_i, d_i, \alpha_i, \theta_i$), obscuring the underlying geometric intent.
+  \item \textbf{Singularity Avoidance:} Parallel or collinear axes demand special-case treatments, complicating software and theoretical analysis.
+\end{enumerate}
+
+In the 1990s, Richard Murray, Zexiang Li, and Shankar Sastry—building on Lie group theory developed in differential geometry—published \textit{A Mathematical Introduction to Robotic Manipulation} \cite{murray1994}, which reformulated forward kinematics through the lens of exponential maps on the Lie group $SE(3)$ and its Lie algebra $\se(3)$. Their \textbf{Product of Exponentials (PoE)} formula unified kinematics under a single, coordinate-free framework: the composition of exponential twists in a global reference frame.
+
+This approach was further refined and popularized by Kevin Lynch and Frank Park \cite{lynch2017}, whose textbook \textit{Modern Robotics: Mechanics, Planning, and Control} established PoE as the modern standard. Today, PoE is the default kinematics formalism in advanced robotics research, computational mechanics, and biomechanics.
+
 \section{Abandoning Denavit-Hartenberg}
+\label{sec:dh_limitations}
 
-In classical robotics, the standard method for calculating Forward Kinematics (where the hand of the robot is given the angles of its motors) was the Denavit-Hartenberg (D-H) parameter convention. The D-H method requires attaching a strict, localized Cartesian coordinate frame $(x,y,z)$ to every single link of the robot arm using rigid, unintuitive rules about perpendicular normals and intersecting axes. 
+The D-H convention assigns to each link $i$ a local coordinate frame $\{\text{Frame}_i\}$ with four parameters:
+\begin{align}
+  d_i &: \text{offset along the previous joint axis} \\
+  a_i &: \text{length of the common perpendicular} \\
+  \alpha_i &: \text{twist angle about the perpendicular} \\
+  \theta_i &: \text{joint angle (for revolute joints)}
+\end{align}
 
-Modern robotics entirely abandons the D-H convention. Instead, modern kinematics relies entirely on the \textbf{Product of Exponentials (PoE)} formula, popularized by Richard Murray, Zexiang Li, Shankar Sastry, Kevin Lynch, and Frank Park.
+The combined transformation from frame $\{i-1\}$ to frame $\{i\}$ is:
+\begin{equation}
+  \mathbf{A}_{i-1,i}(\theta_i) = \mathbf{Rot}_z(\theta_i) \mathbf{Trans}(d_i) \mathbf{Trans}(a_i) \mathbf{Rot}_x(\alpha_i)
+\end{equation}
 
-\section{The Forward Kinematics Equation}
+The complete forward kinematics chain becomes:
+\begin{equation}
+  \mathbf{T}(\boldsymbol{\theta}) = \mathbf{A}_{0,1} \mathbf{A}_{1,2} \cdots \mathbf{A}_{n-1,n}
+\end{equation}
+
+where each transformation encodes one joint's motion relative to the previous link's local frame.
+
+\textit{Why PoE is superior:} The PoE formalism instead expresses all joint motions in a single, fixed \textbf{space frame} (the global reference frame). This eliminates the need to compute and track relative frame transformations and treats the kinematics as direct composition of rigid-body twists—a concept with deep physical meaning in mechanics.
+
+\section{Screws and Twists: A Geometric Foundation}
+\label{sec:screw_foundation}
+
+Recall from Chapter 6 that a screw axis $\mathcal{S} = (\boldsymbol{\omega}, \mathbf{v}) \in \se(3)$ encodes:
+\begin{itemize}
+  \item $\boldsymbol{\omega}$: the unit rotational axis (or zero for a purely prismatic joint)
+  \item $\mathbf{v}$: the linear velocity component, related to the axis location and pitch
+\end{itemize}
+
+For a revolute joint (rotation only), the axis passes through a point $\mathbf{q}$ in space, and we define:
+\begin{equation}
+  \mathcal{S}_{\text{rev}} = \begin{bmatrix} \boldsymbol{\omega} \\ -\boldsymbol{\omega} \times \mathbf{q} \end{bmatrix}
+\end{equation}
+
+For a prismatic joint (translation along direction $\mathbf{v}$), we have:
+\begin{equation}
+  \mathcal{S}_{\text{pris}} = \begin{bmatrix} \mathbf{0} \\ \mathbf{v} \end{bmatrix}
+\end{equation}
+
+The corresponding $4 \times 4$ skew-symmetric matrix representation is:
+\begin{equation}
+  [\mathcal{S}] = \begin{bmatrix} [\boldsymbol{\omega}] & \mathbf{v} \\ \mathbf{0}^T & 0 \end{bmatrix}
+\end{equation}
+
+\section{The Forward Kinematics Equation: Space Frame PoE}
+\label{sec:poe_formula}
 
 If a robotic arm has $n$ joints, the Product of Exponentials formula computes the final Homogeneous Transformation Matrix ($\mathbf{T}(\boldsymbol{\theta}) \in SE(3)$) of the end-effector relative to the base as:
 
 \begin{equation}
-   \mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1]\theta_1} e^{[\mathcal{S}_2]\theta_2} \dots e^{[\mathcal{S}_n]\theta_n} \mathbf{M}
+  \label{eq:poe_space_frame}
+  \mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1]\theta_1} e^{[\mathcal{S}_2]\theta_2} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M}
 \end{equation}
 
 Where:
 \begin{enumerate}
-    \item $\mathbf{M} \in SE(3)$ is the "Home Configuration" matrix perfectly describing where the end-effector sits when all motor angles $\theta_i = 0$.
-    \item $\mathcal{S}_i \in \se$ is the spatial Screw Axis (the twist parameter) for joint $i$, expressed in the global Space Frame when the robot is at Home Configuration.
-    \item $\theta_i$ is the actual angle (or distance) the motor has moved.
-    \item $e^{[\mathcal{S}_i]\theta_i} \in SE(3)$ is the Matrix Exponential (developed in Chapter 6) mapping that single joint's motion into a $4 \times 4$ rigid body transform.
+  \item $\mathbf{M} \in SE(3)$ is the \textbf{Home Configuration} matrix: the end-effector's pose when all joint angles $\theta_i = 0$. It is expressed in the space (global) frame and is typically computed by direct measurement or CAD.
+  \item $\mathcal{S}_i \in \se(3)$ is the \textbf{spatial Screw Axis} (the twist parameter) for joint $i$, expressed in the global Space Frame when the robot is at Home Configuration. It does \textit{not} change as the robot moves.
+  \item $\theta_i$ is the actual angle (in radians, for revolute joints) or distance (in meters, for prismatic joints) the motor has moved.
+  \item $e^{[\mathcal{S}_i]\theta_i} \in SE(3)$ is the Matrix Exponential (developed in Chapter 6) mapping that single joint's motion into a $4 \times 4$ rigid body transform.
 \end{enumerate}
 
-This equation guarantees that no matter how complex the geometric chain is, the entire forward kinematics operation is just sequentially multiplying $4 \times 4$ matrices starting from the base to the tool tip. Every single transformation is a direct, physically meaningful twist in the global space.
+\subsection{Derivation from First Principles}
+\label{subsec:poe_derivation}
 
-\section{Worked Example: PoE for a Planar 2R Arm}
-
-Let us calculate the forward kinematics of a simple 2-link robotic arm rotating on a flat table using Python. The first link has length $L_1$, and the second link has length $L_2$. 
-Both joints are purely rotational (Revolute) turning around the Z-axis coming vertically out of the table.
-
-When both joints are at $0^\circ$, the arm sticks straight out along the X-axis. Thus, the Home Configuration $\mathbf{M}$ has no rotation, and translates by $L_1 + L_2$ in X:
+Imagine the robot at home configuration. As joint 1 rotates by $\theta_1$, it rotates the entire downstream chain (all links $2, 3, \ldots, n$ plus the end-effector) by the exponential twist $e^{[\mathcal{S}_1]\theta_1}$. The end-effector moves to the configuration:
 \begin{equation}
-   \mathbf{M} = \begin{bmatrix} 1 & 0 & 0 & L_1 + L_2 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+  \mathbf{T}_1(\theta_1) = e^{[\mathcal{S}_1]\theta_1} \mathbf{M}
 \end{equation}
 
-Joint 1 spins at the origin $(0,0,0)$. Joint 2 spins at the elbow, located at $(L_1, 0, 0)$. Using Murray's formula for a pure rotational screw axis $\mathcal{S} = (\boldsymbol{\omega}, \mathbf{v}) = (\boldsymbol{\omega}, -\boldsymbol{\omega} \times \mathbf{q})$ (where $\mathbf{q}$ is any point on the axis), we find:
+Now, while joint 1 is held fixed, joint 2 begins to move. Its axis is \textit{fixed in the space frame}—it does not follow the rotated configuration of link 2. This is the crucial distinction between space-frame and body-frame PoE. Joint 2's twist applies to the pose resulting from joint 1:
+\begin{equation}
+  \mathbf{T}_{1,2}(\theta_1, \theta_2) = e^{[\mathcal{S}_2]\theta_2} \mathbf{T}_1(\theta_1) = e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}
+\end{equation}
+
+Continuing inductively, the full Product of Exponentials is:
+\begin{equation}
+  \mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_n]\theta_n} \cdots e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}
+\end{equation}
+
+Note the reversed ordering: joint $1$ is the leftmost exponential in the final product because it acts first (is applied closest to $\mathbf{M}$).
+
+The elegance of this formulation lies in its physical transparency: each exponential is a pure twist in the space frame, and the product is a concatenation of rigid-body motions. No ad-hoc frame transformations are needed.
+
+\section{Body Frame PoE: Motion Relative to the Tool}
+\label{sec:body_frame_poe}
+
+In some contexts (particularly when working backward from the end-effector), it is convenient to express joint axes in the \textbf{body frame}—a frame attached to the end-effector and moving with it. The body frame PoE formula is:
+
+\begin{equation}
+  \label{eq:poe_body_frame}
+  \mathbf{T}(\boldsymbol{\theta}) = \mathbf{M} \, e^{[\mathcal{S}'_n]\theta_n} e^{[\mathcal{S}'_{n-1}]\theta_{n-1}} \cdots e^{[\mathcal{S}'_1]\theta_1}
+\end{equation}
+
+Here, $\mathcal{S}'_i$ is the screw axis of joint $i$ expressed in the body frame (tool frame). The key difference is that joint $n$ acts first (is applied closest to the identity), and the exponentials are multiplied in increasing order of joint index.
+
+\subsection{Conversion Between Space and Body Frame}
+\label{subsec:poe_conversion}
+
+Given a body frame screw axis $\mathcal{S}'_i$ and a known transformation $\mathbf{M} \in SE(3)$, the corresponding space frame screw axis is obtained via the \textbf{Adjoint} action (see Chapter 8):
+
+\begin{equation}
+  \label{eq:adjoint_conversion}
+  \mathcal{S}_i = \text{Ad}_{\mathbf{T}} \mathcal{S}'_i
+\end{equation}
+
+where $\text{Ad}_{\mathbf{T}}$ is the adjoint representation of the transformation $\mathbf{T}$. In 6D spatial vector form:
+\begin{equation}
+  \text{Ad}_{\mathbf{T}} = \begin{bmatrix} \mathbf{R} & \mathbf{0} \\ [\mathbf{p}] \mathbf{R} & \mathbf{R} \end{bmatrix}
+\end{equation}
+
+where $\mathbf{T} = (\mathbf{R}, \mathbf{p})$.
+
+Equivalently, if we know all screw axes in space frame and wish to express them in body frame, we use:
+\begin{equation}
+  \mathcal{S}'_i = \text{Ad}_{\mathbf{M}^{-1}} \mathcal{S}_i
+\end{equation}
+
+The two PoE formulations are mathematically equivalent; the choice depends on which frame is more convenient for the application or computation.
+
+\section{Spatial Jacobian from the Product of Exponentials}
+\label{sec:spatial_jacobian}
+
+The \textbf{Spatial Jacobian} $\mathbf{J}_s(\boldsymbol{\theta})$ relates the time derivatives of joint angles to the spatial velocity (twist) of the end-effector:
+
+\begin{equation}
+  \mathcal{V}_{\text{ee}} = \mathbf{J}_s(\boldsymbol{\theta}) \dot{\boldsymbol{\theta}}
+\end{equation}
+
+where $\mathcal{V}_{\text{ee}} = [\boldsymbol{\omega}, \mathbf{v}]^T \in \mathbb{R}^6$ is the 6D twist of the end-effector.
+
+To derive the spatial Jacobian from the PoE formula, we differentiate Equation \ref{eq:poe_space_frame} with respect to time:
+
+\begin{equation}
+  \dot{\mathbf{T}} = \frac{d}{dt} \left( e^{[\mathcal{S}_1]\theta_1} e^{[\mathcal{S}_2]\theta_2} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M} \right)
+\end{equation}
+
+Using the product rule and chain rule on matrix exponentials (and noting that $[\mathcal{S}]$ is constant):
+
+\begin{equation}
+  \dot{\mathbf{T}} = [\mathcal{S}_1] \dot{\theta}_1 \, e^{[\mathcal{S}_1]\theta_1} e^{[\mathcal{S}_2]\theta_2} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M} \, + \, e^{[\mathcal{S}_1]\theta_1} [\mathcal{S}_2] \dot{\theta}_2 \, e^{[\mathcal{S}_2]\theta_2} \cdots + \cdots
+\end{equation}
+
+The spatial velocity (twist) at the end-effector is related to the time derivative of the transformation by:
+\begin{equation}
+  \mathcal{V}_{\text{ee}} = \dot{\mathbf{T}} \mathbf{T}^{-1}
+\end{equation}
+
+where the product $\dot{\mathbf{T}} \mathbf{T}^{-1}$ extracts the velocity in the space frame (as opposed to the body frame).
+
+After algebraic manipulation, we obtain the \textbf{spatial Jacobian columns}:
+
+\begin{equation}
+  \label{eq:spatial_jacobian}
+  \mathbf{J}_s(\boldsymbol{\theta}) = \begin{bmatrix} \mathcal{S}_1 & e^{[\mathcal{S}_1]\theta_1} \mathcal{S}_2 & \cdots & e^{[\mathcal{S}_1]\theta_1} \cdots e^{[\mathcal{S}_{n-1}]\theta_{n-1}} \mathcal{S}_n \end{bmatrix}
+\end{equation}
+
+Each column is the corresponding screw axis, transformed by all the exponential twists that precede it in the PoE product. This encodes the fact that earlier joints affect the effective direction of later joints.
+
+\subsection{Direct Numerical Computation}
+\label{subsec:jacobian_numerical}
+
+In practice, the spatial Jacobian is computed numerically by:
+\begin{enumerate}
+  \item Compute $\mathbf{T}(\boldsymbol{\theta})$ using the PoE formula.
+  \item For each joint $i$, compute the partial derivative using finite differences or automatic differentiation:
+  \begin{equation}
+    \frac{\partial \mathbf{T}}{\partial \theta_i} \approx \frac{\mathbf{T}(\boldsymbol{\theta} + \boldsymbol{\epsilon}_i) - \mathbf{T}(\boldsymbol{\theta} - \boldsymbol{\epsilon}_i)}{2\epsilon}
+  \end{equation}
+  where $\boldsymbol{\epsilon}_i$ is a small perturbation in joint $i$ only.
+  \item Extract the spatial velocity from each partial derivative.
+\end{enumerate}
+
+\section{Body Jacobian and the Adjoint Relationship}
+\label{sec:body_jacobian}
+
+The \textbf{Body Jacobian} $\mathbf{J}_b(\boldsymbol{\theta})$ expresses the end-effector velocity in the body (tool) frame:
+
+\begin{equation}
+  \mathcal{V}_{\text{ee}}^{\text{body}} = \mathbf{J}_b(\boldsymbol{\theta}) \dot{\boldsymbol{\theta}}
+\end{equation}
+
+The body Jacobian is related to the spatial Jacobian via the adjoint of the end-effector transformation:
+
+\begin{equation}
+  \label{eq:jacobian_adjoint}
+  \mathbf{J}_b(\boldsymbol{\theta}) = \text{Ad}_{\mathbf{T}(\boldsymbol{\theta})^{-1}} \mathbf{J}_s(\boldsymbol{\theta})
+\end{equation}
+
+where the adjoint action on a Jacobian matrix (with columns as 6D vectors) is:
+\begin{equation}
+  \text{Ad}_{\mathbf{T}} \mathbf{J} = \text{Ad}_{\mathbf{T}} [\text{col}_1(\mathbf{J}), \text{col}_2(\mathbf{J}), \ldots]
+\end{equation}
+
+applied column-wise.
+
+The body frame Jacobian is often more useful in control applications because the body frame is attached to the end-effector and its axes remain intuitively meaningful as the tool moves.
+
+\section{Singularity Analysis Using the PoE Jacobian}
+\label{sec:singularities}
+
+A robotic configuration is \textbf{singular} when the Jacobian loses rank, i.e., when $\text{rank}(\mathbf{J}_s) < n$. At a singularity:
+\begin{enumerate}
+  \item The robot cannot move in certain directions (loss of controllability).
+  \item Joint velocities required to achieve a desired end-effector motion become infinite.
+  \item The robot exhibits locked degrees of freedom.
+\end{enumerate}
+
+\subsection{Types of Singularities}
+\label{subsec:singularity_types}
+
+\begin{itemize}
+  \item \textbf{Boundary Singularities:} The end-effector is at or beyond the reachable workspace boundary. Typically occur at full extension of the arm.
+  \item \textbf{Interior Singularities:} Within the reachable workspace, occur when multiple joint axes become aligned. For example, in a planar 2R arm, singularity occurs when both links are collinear (fully extended or fully retracted).
+  \item \textbf{Redundant Degeneracies:} In redundant robots (more DOFs than required for a task), the null space of the Jacobian is non-trivial, allowing motion without changing the end-effector pose.
+\end{itemize}
+
+\subsection{Detection and Handling}
+\label{subsec:singularity_handling}
+
+Singularities are detected by:
+\begin{enumerate}
+  \item Computing $\det(\mathbf{J}_s^T \mathbf{J}_s)$ (the condition number of the Jacobian squared).
+  \item If $\det(\mathbf{J}_s^T \mathbf{J}_s) < \epsilon_{\text{tol}}$ for a small threshold $\epsilon_{\text{tol}}$, the configuration is near-singular.
+  \item The ratio $\det(\mathbf{J}_s^T \mathbf{J}_s)$ is called the \textbf{manipulability measure}; high values indicate dexterous configurations.
+\end{enumerate}
+
+Numerically, near-singular configurations are handled by:
+\begin{enumerate}
+  \item Adding damping to the inverse: $\mathbf{J}^{-1}_{\text{damp}} = \mathbf{J}^T (\mathbf{J} \mathbf{J}^T + \lambda I)^{-1}$ (Levenberg-Marquardt damping).
+  \item Using the pseudo-inverse with a singular value threshold: keep only singular values above $\tau \sigma_{\max}$, where $\tau$ is a threshold ratio (e.g., $\tau = 10^{-4}$).
+\end{enumerate}
+
+\section{Comparison with D-H: A Worked Example}
+\label{sec:poe_vs_dh}
+
+To illustrate the practical differences, consider a 3-DOF planar robot with:
+\begin{itemize}
+  \item Link 1: length $L_1 = 1$ m
+  \item Link 2: length $L_2 = 0.8$ m
+  \item Link 3: length $L_3 = 0.6$ m
+  \item All joints: revolute, rotating about the Z-axis (perpendicular to the table)
+\end{itemize}
+
+\subsection{D-H Parametrization}
+\label{subsec:dh_example}
+
+The D-H parameters are:
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+Link $i$ & $a_{i-1}$ & $d_i$ & $\alpha_{i-1}$ & $\theta_i$ \\
+\hline
+1 & 0 & 0 & 0 & $\theta_1$ \\
+2 & $L_1$ & 0 & 0 & $\theta_2$ \\
+3 & $L_2$ & 0 & 0 & $\theta_3$ \\
+\hline
+\end{tabular}
+\end{center}
+
+The transformation from base to end-effector is:
+\begin{equation}
+  \mathbf{T}_{\text{D-H}}(\boldsymbol{\theta}) = \mathbf{A}_{0,1} \mathbf{A}_{1,2} \mathbf{A}_{2,3}
+\end{equation}
+
+where each $\mathbf{A}_{i,i+1}$ is computed using the D-H convention. At $\boldsymbol{\theta} = [45°, -30°, 60°]^T$, one obtains a specific end-effector pose.
+
+\subsection{PoE Parametrization}
+\label{subsec:poe_example}
+
+The home configuration ($\boldsymbol{\theta} = \mathbf{0}$) has the arm fully extended along the X-axis:
+\begin{equation}
+  \mathbf{M} = \begin{bmatrix} 1 & 0 & 0 & L_1 + L_2 + L_3 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+\end{equation}
+
+The three screw axes (all revolute about Z):
 \begin{align}
-   \mathcal{S}_1 &= [0, 0, 1, 0, 0, 0]^T \\
-   \mathcal{S}_2 &= [0, 0, 1, 0, -L_1, 0]^T
+  \mathcal{S}_1 &= \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}, \quad \mathcal{S}_2 = \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \\ -L_1 \\ 0 \end{bmatrix}, \quad \mathcal{S}_3 = \begin{bmatrix} 0 \\ 0 \\ 1 \\ 0 \\ -(L_1 + L_2) \\ 0 \end{bmatrix}
 \end{align}
 
-Here is the Python code verifying the Forward Kinematics output:
+The PoE formula gives:
+\begin{equation}
+  \mathbf{T}_{\text{PoE}}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1] \theta_1} e^{[\mathcal{S}_2] \theta_2} e^{[\mathcal{S}_3] \theta_3} \mathbf{M}
+\end{equation}
 
-\begin{lstlisting}[language=Python, caption=Product of Exponentials Forward Kinematics]
+When computed at the same configuration $\boldsymbol{\theta} = [45°, -30°, 60°]^T$, the PoE and D-H formulations yield identical end-effector poses (as they must, since both are valid descriptions of the same kinematic chain).
+
+\subsection{Computational Advantages of PoE}
+\label{subsec:poe_advantages}
+
+\begin{enumerate}
+  \item \textbf{Consistency:} The PoE formula is coordinate-free; no ambiguity in frame attachment.
+  \item \textbf{Scalability:} Adding a new joint requires only specifying its screw axis; no recomputation of previous parameters.
+  \item \textbf{Jacobian Clarity:} The Jacobian columns have direct physical meaning: the $i$-th column is the screw axis of joint $i$ as "seen" from the space frame after the effects of earlier joints.
+  \item \textbf{Software Simplicity:} A single, unified algorithm computes forward kinematics for any serial chain, regardless of link lengths or orientations.
+\end{enumerate}
+
+\section{PoE for Prismatic Joints}
+\label{sec:prismatic_joints}
+
+A prismatic (sliding) joint moves along a direction vector $\mathbf{d}$ without rotating. Its screw axis is:
+\begin{equation}
+  \mathcal{S}_{\text{pris}} = \begin{bmatrix} \mathbf{0} \\ \mathbf{d} \end{bmatrix}
+\end{equation}
+
+where $\mathbf{d}$ is the unit direction of translation.
+
+The exponential of a purely prismatic screw is:
+\begin{equation}
+  e^{[\mathcal{S}_{\text{pris}}] d} = \begin{bmatrix} \mathbf{I}_{3 \times 3} & d \mathbf{d} \\ \mathbf{0}^T & 1 \end{bmatrix}
+\end{equation}
+
+a pure translation matrix.
+
+\subsection{Example: 3D Cartesian Robot}
+\label{subsec:cartesian_example}
+
+A 3D Cartesian robot with three prismatic joints (X, Y, Z directions) has screw axes:
+\begin{align}
+  \mathcal{S}_x &= [0, 0, 0, 1, 0, 0]^T \\
+  \mathcal{S}_y &= [0, 0, 0, 0, 1, 0]^T \\
+  \mathcal{S}_z &= [0, 0, 0, 0, 0, 1]^T
+\end{align}
+
+and home configuration $\mathbf{M} = \mathbf{I}$ (end-effector at the origin when all sliders are at zero position).
+
+The forward kinematics is:
+\begin{equation}
+  \mathbf{T}(d_x, d_y, d_z) = e^{[\mathcal{S}_x] d_x} e^{[\mathcal{S}_y] d_y} e^{[\mathcal{S}_z] d_z} = \begin{bmatrix} \mathbf{I} & [d_x, d_y, d_z]^T \\ \mathbf{0}^T & 1 \end{bmatrix}
+\end{equation}
+
+which correctly expresses a point displaced by $(d_x, d_y, d_z)$ in the global frame.
+
+\section{Velocity Kinematics from PoE Differentiation}
+\label{sec:velocity_kinematics}
+
+The instantaneous spatial velocity of the end-effector is obtained by differentiating the forward kinematics. Starting from:
+\begin{equation}
+  \mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1]\theta_1} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M}
+\end{equation}
+
+Differentiate with respect to time:
+\begin{equation}
+  \dot{\mathbf{T}} = \sum_{i=1}^{n} \frac{d}{dt} \left( e^{[\mathcal{S}_1]\theta_1} \cdots e^{[\mathcal{S}_i]\theta_i} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M} \right) \dot{\theta}_i
+\end{equation}
+
+Using the derivative rule for matrix exponentials $\frac{d}{dt} e^{A(t)} = A(t) e^{A(t)}$ when $A(t)$ is linear in a parameter:
+
+\begin{equation}
+  \dot{\mathbf{T}} = [\mathcal{S}_1] \dot{\theta}_1 e^{[\mathcal{S}_1]\theta_1} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M} + e^{[\mathcal{S}_1]\theta_1} [\mathcal{S}_2] \dot{\theta}_2 e^{[\mathcal{S}_2]\theta_2} \cdots + \cdots
+\end{equation}
+
+The spatial velocity is:
+\begin{equation}
+  \mathcal{V} = \dot{\mathbf{T}} \mathbf{T}^{-1}
+\end{equation}
+
+After collecting terms and using the adjoint action, the spatial velocity can be written as:
+\begin{equation}
+  [\mathcal{V}] = \sum_{i=1}^{n} [\mathcal{S}_i^{\text{transformed}}] \dot{\theta}_i
+\end{equation}
+
+where $\mathcal{S}_i^{\text{transformed}}$ is the screw axis of joint $i$ after being advected by all preceding joints. In matrix form, this is precisely the spatial Jacobian:
+\begin{equation}
+  \mathcal{V} = \mathbf{J}_s(\boldsymbol{\theta}) \dot{\boldsymbol{\theta}}
+\end{equation}
+
+\section{Worked Example: Complete PoE for a Spatial 3R Robot}
+\label{sec:worked_example_3r}
+
+Consider a 3-DOF spatial manipulator (Spatial 3R) with:
+\begin{itemize}
+  \item Base at origin; first joint axis along Z
+  \item Link 1 length: $L_1 = 0.5$ m
+  \item Second joint axis along Y (at the end of link 1)
+  \item Link 2 length: $L_2 = 0.3$ m
+  \item Third joint axis along X (at the end of link 2)
+  \item Link 3 length: $L_3 = 0.2$ m
+\end{itemize}
+
+\subsection{Home Configuration}
+\label{subsec:home_config}
+
+At $\boldsymbol{\theta} = \mathbf{0}$, the robot is fully extended in the positive X direction:
+\begin{equation}
+  \mathbf{M} = \begin{bmatrix} 1 & 0 & 0 & L_1 + L_2 + L_3 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 & 1.0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+\end{equation}
+
+\subsection{Screw Axes}
+\label{subsec:spatial_screw_axes}
+
+\begin{align}
+  \text{Joint 1 (Z-axis, at origin):} \quad \mathcal{S}_1 &= [0, 0, 1, 0, 0, 0]^T \\
+  \text{Joint 2 (Y-axis, at } [L_1, 0, 0]^T = [0.5, 0, 0]^T): \quad \mathcal{S}_2 &= [0, 1, 0, 0 \cdot 0 - 0 \cdot 0.5, 0 \cdot 0.5 - 0 \cdot 0, 1 \cdot 0.5 - 0 \cdot 0]^T \\
+  &= [0, 1, 0, 0, 0, 0.5]^T \\
+  \text{Joint 3 (X-axis, at } [L_1 + L_2, 0, 0]^T = [0.8, 0, 0]^T): \quad \mathcal{S}_3 &= [1, 0, 0, 0 \cdot 0 - 0 \cdot 0.8, 0 \cdot 0.8 - 0 \cdot 0, 0 \cdot 0.8 - 0 \cdot 0]^T \\
+  &= [1, 0, 0, 0, 0, 0]^T
+\end{align}
+
+\subsection{Numerical Evaluation at a Test Configuration}
+\label{subsec:spatial_3r_eval}
+
+At $\boldsymbol{\theta} = [\pi/4, \pi/6, -\pi/3]^T$ (45°, 30°, -60°):
+
+Compute the matrix exponentials:
+\begin{equation}
+  e^{[\mathcal{S}_1] \pi/4} = \begin{bmatrix} \cos(\pi/4) & -\sin(\pi/4) & 0 & 0 \\ \sin(\pi/4) & \cos(\pi/4) & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 0.707 & -0.707 & 0 & 0 \\ 0.707 & 0.707 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+\end{equation}
+
+(Rotation by $\pi/4$ about Z-axis; since the screw axis $\mathcal{S}_1$ passes through the origin, there is no translation component.)
+
+For $e^{[\mathcal{S}_2] \pi/6}$, the screw axis has a rotation part (Y-axis) and a translation part ($v = [0, 0, 0.5]^T$). The exponential yields a rotation about the Y-axis combined with a translation. Detailed computation yields:
+\begin{equation}
+  e^{[\mathcal{S}_2] \pi/6} \approx \begin{bmatrix} 0.966 & 0 & 0.259 & 0 \\ 0 & 1 & 0 & 0.067 \\ -0.259 & 0 & 0.966 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+\end{equation}
+
+Similarly, $e^{[\mathcal{S}_3] (-\pi/3)}$ produces a rotation about the X-axis plus a translation.
+
+The full forward kinematics is:
+\begin{equation}
+  \mathbf{T}(\pi/4, \pi/6, -\pi/3) = e^{[\mathcal{S}_1]\pi/4} e^{[\mathcal{S}_2]\pi/6} e^{[\mathcal{S}_3](-\pi/3)} \mathbf{M}
+\end{equation}
+
+which, when computed numerically, yields a specific 3D position and orientation of the end-effector. The exact numerical result depends on careful matrix multiplication and is best computed programmatically (see Section \ref{sec:python_example}).
+
+\section{Inverse Kinematics using the Jacobian: Newton-Raphson}
+\label{sec:inverse_kinematics}
+
+The inverse kinematics problem seeks to find joint angles $\boldsymbol{\theta}$ that place the end-effector at a desired pose $\mathbf{T}_{\text{desired}}$. Unlike forward kinematics, inverse kinematics has no closed-form solution for general serial chains and requires numerical optimization.
+
+The Newton-Raphson method formulates IK as an optimization problem:
+\begin{equation}
+  \min_{\boldsymbol{\theta}} \| \mathbf{T}(\boldsymbol{\theta}) - \mathbf{T}_{\text{desired}} \|_F^2
+\end{equation}
+
+where $\|\cdot\|_F$ is the Frobenius norm of the pose error.
+
+\subsection{Pose Error Representation}
+\label{subsec:pose_error}
+
+The error is typically decomposed into position and orientation components:
+\begin{enumerate}
+  \item \textbf{Position Error:} $\mathbf{e}_p = \mathbf{p}_{\text{desired}} - \mathbf{p}(\boldsymbol{\theta})$, where $\mathbf{p}$ is the translation part of $\mathbf{T}$.
+  \item \textbf{Orientation Error:} $\mathbf{e}_o = \text{vex}(\mathbf{R}_{\text{desired}} \mathbf{R}(\boldsymbol{\theta})^T)$, where $\text{vex}$ is the inverse of the skew-symmetric operator (extracting the axis-angle representation).
+\end{enumerate}
+
+The combined error vector is:
+\begin{equation}
+  \mathbf{e}(\boldsymbol{\theta}) = \begin{bmatrix} \mathbf{e}_p \\ \mathbf{e}_o \end{bmatrix} \in \mathbb{R}^6
+\end{equation}
+
+\subsection{Newton-Raphson Update Rule}
+\label{subsec:newton_raphson}
+
+The Jacobian of the error is:
+\begin{equation}
+  \frac{\partial \mathbf{e}}{\partial \boldsymbol{\theta}} = \begin{bmatrix} \frac{\partial \mathbf{p}}{\partial \boldsymbol{\theta}} \\ \frac{\partial \mathbf{e}_o}{\partial \boldsymbol{\theta}} \end{bmatrix}
+\end{equation}
+
+For small errors, the relationship is approximately linear, and the Newton-Raphson update is:
+\begin{equation}
+  \boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \Delta \boldsymbol{\theta}
+\end{equation}
+
+where $\Delta \boldsymbol{\theta}$ solves:
+\begin{equation}
+  \mathbf{J}_s(\boldsymbol{\theta}_k) \Delta \boldsymbol{\theta} = \mathbf{e}(\boldsymbol{\theta}_k)
+\end{equation}
+
+In practice, the pseudo-inverse is used to handle rank deficiency:
+\begin{equation}
+  \Delta \boldsymbol{\theta} = \mathbf{J}_s^{\dagger}(\boldsymbol{\theta}_k) \mathbf{e}(\boldsymbol{\theta}_k)
+\end{equation}
+
+where $\mathbf{J}_s^{\dagger}$ is the Moore-Penrose pseudo-inverse.
+
+\subsection{Algorithm and Convergence}
+\label{subsec:ik_algorithm}
+
+\begin{enumerate}
+  \item Initialize $\boldsymbol{\theta}_0$ with an initial guess (e.g., the previous solution or a random configuration).
+  \item For $k = 0, 1, 2, \ldots, K_{\max}$:
+  \begin{enumerate}
+    \item Compute the forward kinematics $\mathbf{T}_k = \mathbf{T}(\boldsymbol{\theta}_k)$.
+    \item Compute the spatial Jacobian $\mathbf{J}_s(\boldsymbol{\theta}_k)$.
+    \item Compute the pose error $\mathbf{e}_k = \mathbf{e}(\boldsymbol{\theta}_k)$.
+    \item If $\|\mathbf{e}_k\| < \epsilon_{\text{tol}}$, terminate and return $\boldsymbol{\theta}_k$ (solution found).
+    \item Compute the update $\Delta \boldsymbol{\theta} = \mathbf{J}_s^{\dagger}(\boldsymbol{\theta}_k) \mathbf{e}_k$.
+    \item Update $\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k + \alpha \Delta \boldsymbol{\theta}$, where $0 < \alpha \leq 1$ is a step size (often $\alpha = 1$).
+  \end{enumerate}
+  \item If convergence is not achieved within $K_{\max}$ iterations, the initial guess was infeasible or the target pose is outside the reachable workspace.
+\end{enumerate}
+
+\textbf{Convergence:} Near a non-singular configuration, Newton-Raphson converges quadratically. Far from a solution or near singularities, the convergence may be slow or absent. For robust IK, multiple random restarts or more sophisticated optimization methods (e.g., BFGS with line search) are often employed.
+
+\section{Python Worked Example}
+\label{sec:python_example}
+
+Here is a complete Python implementation computing PoE forward kinematics and the spatial Jacobian for the 3R robot.
+
+\begin{lstlisting}[language=Python, caption=PoE Forward Kinematics and Spatial Jacobian]
 import numpy as np
-import scipy.linalg
+from scipy.linalg import expm
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
-def create_screw_matrix(w, v):
-    # Assembles the 4x4 se(3) skew matrix for a screw axis (w, v)
-    return np.array([
-        [ 0,   -w[2], w[1], v[0] ],
-        [ w[2], 0,   -w[0], v[1] ],
-        [-w[1], w[0], 0,    v[2] ],
-        [ 0,    0,    0,    0    ]
-    ])
+class SpatialRobot3R:
+    """3-DOF spatial manipulator using Product of Exponentials"""
 
-def planar_2R_forward_kinematics(theta1, theta2, L1, L2):
-    # 1. Define the Home Configuration M
-    M = np.array([
-        [1, 0, 0, L1 + L2],
-        [0, 1, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
-    ])
-    
-    # 2. Define the Screw Axes (w, v) for the two joints
-    S1 = create_screw_matrix([0, 0, 1], [0, 0, 0])
-    S2 = create_screw_matrix([0, 0, 1], [0, -L1, 0])
-    
-    # 3. Compute Matrix Exponentials
-    T1 = scipy.linalg.expm(S1 * theta1)
-    T2 = scipy.linalg.expm(S2 * theta2)
-    
-    # 4. Product of Exponentials Formula T(theta)
-    T_final = T1 @ T2 @ M
-    
-    return T_final
+    def __init__(self, L1=0.5, L2=0.3, L3=0.2):
+        self.L1 = L1
+        self.L2 = L2
+        self.L3 = L3
 
-# Example: Arm with links L1=2m, L2=1.5m, rotated 90 deg and -45 deg
-T_end = planar_2R_forward_kinematics(np.pi/2, -np.pi/4, L1=2.0, L2=1.5)
-print("End-Effector Transform [T]:\n", np.round(T_end, 3))
-print("Final Tool X,Y Position:", np.round(T_end[0:2, 3], 3))
+        # Home configuration (fully extended along X-axis)
+        self.M = np.eye(4)
+        self.M[0, 3] = L1 + L2 + L3
+
+        # Screw axes in space frame (at home)
+        self.S1 = np.array([0, 0, 1, 0, 0, 0])  # Z-axis at origin
+        self.S2 = np.array([0, 1, 0, 0, 0, L1])  # Y-axis at (L1, 0, 0)
+        self.S3 = np.array([1, 0, 0, 0, 0, 0])  # X-axis at (L1+L2, 0, 0)
+
+    def screw_to_matrix(self, screw):
+        """Convert 6D screw to 4x4 skew-symmetric matrix"""
+        w = screw[:3]  # Angular velocity
+        v = screw[3:]  # Linear velocity
+        S = np.zeros((4, 4))
+        S[:3, :3] = np.array([[0, -w[2], w[1]],
+                               [w[2], 0, -w[0]],
+                               [-w[1], w[0], 0]])
+        S[:3, 3] = v
+        return S
+
+    def forward_kinematics(self, theta):
+        """Compute end-effector transformation T(theta)"""
+        T = np.eye(4)
+
+        # Apply each joint's exponential twist
+        for i, S in enumerate([self.S1, self.S2, self.S3]):
+            S_skew = self.screw_to_matrix(S)
+            exp_S_theta = expm(S_skew * theta[i])
+            T = exp_S_theta @ T
+
+        # Apply home configuration
+        T = T @ self.M
+        return T
+
+    def spatial_jacobian(self, theta, eps=1e-6):
+        """Compute spatial Jacobian using finite differences"""
+        J = np.zeros((6, 3))
+        T = self.forward_kinematics(theta)
+
+        for i in range(3):
+            theta_plus = theta.copy()
+            theta_minus = theta.copy()
+            theta_plus[i] += eps
+            theta_minus[i] -= eps
+
+            T_plus = self.forward_kinematics(theta_plus)
+            T_minus = self.forward_kinematics(theta_minus)
+
+            # Compute velocity from finite differences
+            dT = (T_plus - T_minus) / (2 * eps)
+            V = dT @ np.linalg.inv(T)  # Spatial velocity
+
+            # Extract twist from V
+            J[0:3, i] = V[0:3, 3]  # Linear velocity
+            J[3, i] = V[2, 1]      # Angular velocity components
+            J[4, i] = V[0, 2]
+            J[5, i] = V[1, 0]
+
+        return J
+
+    def end_effector_position(self, theta):
+        """Return (x, y, z) position of end-effector"""
+        T = self.forward_kinematics(theta)
+        return T[:3, 3]
+
+# Create robot and test
+robot = SpatialRobot3R()
+theta_test = np.array([np.pi/4, np.pi/6, -np.pi/3])
+
+T_ee = robot.forward_kinematics(theta_test)
+print("End-effector transformation:\n", np.round(T_ee, 4))
+
+pos = robot.end_effector_position(theta_test)
+print("End-effector position (x, y, z):", np.round(pos, 4))
+
+J = robot.spatial_jacobian(theta_test)
+print("Spatial Jacobian:\n", np.round(J, 4))
+
+# Test manipulability
+manip = np.sqrt(np.linalg.det(J @ J.T))
+print("Manipulability measure:", np.round(manip, 6))
 \end{lstlisting}
 
-By utilizing the Matrix Exponential and the global Screw Axis structure, the PoE formalism eliminates error-prone relative geometry tracking. It instantly scales up to complex, spatial 6-DOF and 15-DOF mechanisms seamlessly, forming the foundation of modern algorithmic kinematics.
+\section{Chapter Summary}
+\label{sec:ch9_summary}
+
+The Product of Exponentials formula provides a modern, geometrically transparent approach to forward kinematics:
+
+\begin{enumerate}
+  \item \textbf{PoE Formula:} $\mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1]\theta_1} \cdots e^{[\mathcal{S}_n]\theta_n} \mathbf{M}$ expresses forward kinematics as a product of matrix exponentials in the space frame.
+  \item \textbf{Screw Axes:} Each joint is characterized by a single 6D screw $\mathcal{S}_i$, eliminating frame attachment ambiguities of D-H.
+  \item \textbf{Spatial Jacobian:} Differentiation of the PoE formula yields the spatial Jacobian, relating joint velocities to end-effector twists.
+  \item \textbf{Body vs. Space Frame:} Two equivalent formulations exist; conversion via the Adjoint relates them.
+  \item \textbf{Singularities:} The rank of the Jacobian indicates dexterity; singular configurations arise when the Jacobian loses rank.
+  \item \textbf{Inverse Kinematics:} Newton-Raphson iterations using the pseudo-inverse Jacobian solve IK numerically.
+  \item \textbf{Computational Simplicity:} A single PoE algorithm handles revolute, prismatic, and spatial robots uniformly.
+\end{enumerate}
+
+\section{Exercises}
+\label{sec:ch9_exercises}
+
+\begin{enumerate}
+  \item \textbf{Planar 2R Arm:} A planar 2R arm has link lengths $L_1 = 1.5$ m and $L_2 = 1$ m. Write the PoE formula in space-frame form, and compute the end-effector position at $\boldsymbol{\theta} = [60°, -30°]$.
+
+  \item \textbf{D-H Comparison:} For the same 2R arm, compute the D-H parameters and verify that the forward kinematics matches the PoE result at the same configuration.
+
+  \item \textbf{Screw Axis Identification:} For a revolute joint rotating about the Y-axis and passing through the point $(2, 0, 1)$, write the screw axis $\mathcal{S}$.
+
+  \item \textbf{3D Cartesian Robot:} A 3D Cartesian robot has three prismatic joints (X, Y, Z directions). Write its PoE formula and forward kinematics. What is the spatial Jacobian?
+
+  \item \textbf{Spatial Jacobian:} For the planar 2R arm of Exercise 1, compute the spatial Jacobian at $\boldsymbol{\theta} = [45°, 0°]$ and identify any singular configurations.
+
+  \item \textbf{Manipulability:} For the 2R arm, plot the manipulability measure $\sqrt{\det(\mathbf{J} \mathbf{J}^T)}$ as a function of $\theta_1 \in [0, 180°]$ with $\theta_2$ fixed at $0°$.
+
+  \item \textbf{Singularity Analysis:} For the planar 2R arm, find all configurations where the Jacobian rank drops below 2.
+
+  \item \textbf{Body Frame PoE:} Rewrite the space-frame PoE of Exercise 1 in body-frame form using the Adjoint action.
+
+  \item \textbf{Inverse Kinematics:} Implement Newton-Raphson inverse kinematics for the planar 2R arm. Given a desired end-effector position $(x_d, y_d) = (2, 0.5)$, find $\boldsymbol{\theta}$ starting from an initial guess.
+
+  \item \textbf{Velocity Kinematics:} For the 2R arm at $\boldsymbol{\theta} = [30°, 60°]$ with $\dot{\boldsymbol{\theta}} = [1, -0.5]$ rad/s, compute the end-effector linear and angular velocities.
+
+  \item \textbf{Prismatic-Revolute Arm:} A robot has a prismatic joint (Z-direction) followed by a revolute joint (Y-axis). Write the screw axes and PoE formula.
+
+  \item \textbf{Numerical Jacobian:} Implement the spatial Jacobian computation using finite differences and compare it to analytical differentiation for the 2R arm.
+
+  \item \textbf{Constraint Jacobian:} For the 2R arm, compute the task-space Jacobian relating joint angles to end-effector orientation $\phi$ (yaw angle in the plane).
+
+  \item \textbf{Null-Space Motion:} For a redundant planar 3R arm, identify the null space of the Jacobian at a non-singular configuration and describe a motion in null space.
+
+  \item \textbf{Configuration Space Visualization:} For the planar 2R arm, plot the reachable workspace (set of all possible end-effector positions) and overlay the singular configurations.
+\end{enumerate}
+

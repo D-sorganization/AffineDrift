@@ -9,106 +9,1078 @@
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Learning Instead of Deriving}{context_box}
-\textbf{The Math You Will See:} We introduce \textbf{Neural Networks}, \textbf{Gradient Descent} ($\nabla_W \mathcal{L}$), and the concept of a \textbf{Policy} ($\pi(\mathbf{x})$).
+\textbf{The Math You Will See:} We introduce \textbf{Neural Networks}, \textbf{Backpropagation} (automatic differentiation), \textbf{Reinforcement Learning}, and \textbf{Policy Optimization}. We rigorously derive the backpropagation algorithm from first principles and formalize MDPs (Markov Decision Processes).
 \textbf{Why We Need It:} Analytical physics engines (Euler-Lagrange and Newton-Euler) are flawless for rigid robots made of perfectly measured titanium. But what about a human golfer? We do not know the exact mass distribution of their shirt, the friction of the grass, or the elasticity of their muscle fibers. When equations become too clouded with uncertainty or too wildly nonlinear to solve analytically, we use Machine Learning. We build a massive, flexible mathematical structure (a neural network) and repeatedly bend its shape using calculus until it naturally approximates the correct physics without us having to write them.
-\textbf{All Variables Defined:} $W$ and $b$ are the weights and biases of the network, $\sigma$ is the nonlinear activation function (like ReLU), and $\mathcal{L}$ is the Loss/Error we are trying to minimize.
+\textbf{All Variables Defined:} $W$ and $b$ are the weights and biases of the network, $\sigma$ is the nonlinear activation function (like ReLU), $\mathcal{L}$ is the Loss/Error, and $\pi(\mathbf{s})$ is the control policy (neural network).
 \end{laymansbox}
 
-\section{The Limits of Analytical Control}
+% ==========================================================================
+\section{Historical Context: From Perceptron to Deep Reinforcement Learning}
+% ==========================================================================
 
-By utilizing the Spatial Algebra, Exponential Coordinates, and Recursive Algorithms established in the preceding chapters, we can write a perfect mathematical model of a purely rigid robotic system.
+Machine learning for control has undergone several revolutions. In 1957, \textbf{Frank Rosenblatt} introduced the \textbf{Perceptron}, a single-layer neural network that could learn to classify linearly separable patterns. The perceptron learning rule was simple: adjust weights to minimize classification error.
+
+For decades, neural networks lay dormant due to the \textbf{XOR Problem}: a single-layer perceptron cannot represent the XOR function, and deeper networks were thought untrainable. This changed in 1986 when \textbf{David Rumelhart, Geoffrey Hinton, and Ronald Williams} published the \textbf{backpropagation algorithm}, showing how to efficiently compute gradients through many layers using the chain rule.
+
+Backpropagation rested dormant again until the 2010s, when three factors converged:
+\begin{enumerate}
+    \item \textbf{GPU Hardware}: Graphics processors enabled training on massive datasets.
+    \item \textbf{Big Data}: ImageNet and similar datasets provided hundreds of millions of labeled examples.
+    \item \textbf{Clever Architectures}: Convolutional neural networks (CNNs) and recurrent networks (RNNs) were engineered to handle specific problem structures.
+\end{enumerate}
+
+In 2013, \textbf{Deep Reinforcement Learning} emerged when \textbf{Volodymyr Mnih and colleagues at DeepMind} combined deep neural networks with Q-learning, training an agent to play Atari games from raw pixel inputs. By 2016, their AlphaGo algorithm defeated Lee Sedol at Go, a game with more possible positions than atoms in the universe. This demonstrated that gradient descent, applied at scale, could discover strategies that rival human intuition.
+
+Today, reinforcement learning powers robot locomotion, manipulation, autonomous driving, and optimal control across diverse domains. The mathematical foundation remains calculus: the chain rule applied iteratively through nested functions.
+
+% ==========================================================================
+\section{The Limits of Analytical Control}
+% ==========================================================================
+
+By utilizing the Spatial Algebra, Exponential Coordinates, and Recursive Algorithms established in preceding chapters, we can write a perfect mathematical model of a purely rigid robotic system.
 
 But what if the system isn't rigid? What if we are modeling the 15-DOF golf swing of an athlete with deformable muscles, unpredictable wind friction, and complex contact dynamics with the ground? The mathematical model $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})$ becomes inherently flawed. We do not know the exact friction. We do not know the exact mass of the golfer's shirt.
 
-When analytical equations fail due to extreme nonlinear complexity or uncertainty, we pivot from \textit{deriving} the control laws exactly to \textit{learning} them empirically.
+When analytical equations fail due to extreme nonlinear complexity or uncertainty, we pivot from \textit{deriving} the control laws exactly to \textit{learning} them empirically. This is where neural networks and reinforcement learning enter.
 
+% ==========================================================================
+\section{Universal Approximation Theorem}
+% ==========================================================================
+
+\textbf{Theorem (Cybenko, 1989):} Let $f: [0,1]^n \to \mathbb{R}$ be any continuous function on a compact domain. For any $\epsilon > 0$, there exists a neural network with a single hidden layer containing finitely many neurons with sigmoid activation $\sigma(z) = \frac{1}{1+e^{-z}}$ that approximates $f$ uniformly to within $\epsilon$.
+
+\textbf{Formal Statement:} There exist weights $\mathbf{W}, \mathbf{b}$ and biases $\mathbf{c}$ such that:
+$$\left|f(\mathbf{x}) - \sum_{i=1}^N c_i \sigma(\mathbf{w}_i^T \mathbf{x} + b_i)\right| < \epsilon$$
+for all $\mathbf{x} \in [0,1]^n$.
+
+\textbf{Significance:} This theorem proves that neural networks are \emph{universal function approximators}. Given enough neurons and proper training, a network can learn any smooth function. The theorem does NOT guarantee efficient learning (the required number of neurons may be exponentially large), nor does it provide a training algorithm. But it proves the concept is sound: if we can optimize the weights, we can approximate any control policy.
+
+\textbf{Extensions:}
+\begin{itemize}
+    \item Networks with ReLU activation $\sigma(z) = \max(0, z)$ are also universal approximators (with depth requirements).
+    \item Deeper networks can be exponentially more efficient than shallow networks for certain functions (convolutional structure, compositional functions).
+    \item Recurrent networks (RNNs) can approximate dynamical systems.
+\end{itemize}
+
+% ==========================================================================
 \section{Neural Networks as Function Approximators}
+% ==========================================================================
 
-At its core, a Neural Network is a series of matrix operations passed through nonlinear continuous functions.
+At its core, a Neural Network is a composition of parameterized linear transformations and element-wise nonlinearities. The simplest form is the feedforward network.
 
-Suppose we want a control policy $\pi$ that takes our current state vector $\mathbf{x}$ (joint positions, velocities, and targets) and outputs an optimal control torque $\mathbf{u}$:
+Suppose we want a control policy $\pi$ that maps state $\mathbf{s} \in \mathbb{R}^{n_s}$ (joint positions, velocities, sensor readings) to an action $\mathbf{a} \in \mathbb{R}^{n_a}$ (motor torques):
+
 \begin{equation}
-   \mathbf{u} = \pi(\mathbf{x})
+\mathbf{a} = \pi(\mathbf{s}) = \text{NeuralNetwork}(\mathbf{s}; \boldsymbol{\theta})
 \end{equation}
 
-A simple "feedforward" neural network approximates this exact function $\pi$ using layers of "neurons." A deep neural network translates the state vector $\mathbf{x} \in \Reals^n$ through successive weight matrices $\mathbf{W}$ and bias vectors $\mathbf{b}$:
+where $\boldsymbol{\theta}$ denotes all learnable parameters (weights and biases).
+
+\subsection{Feedforward Architecture}
+
+A simple multi-layer perceptron (MLP) with $L$ hidden layers processes the input through successive transformations:
+
 \begin{align}
-   \mathbf{h}_1 &= \sigma(\mathbf{W}_1 \mathbf{x} + \mathbf{b}_1) \\
-   \mathbf{h}_2 &= \sigma(\mathbf{W}_2 \mathbf{h}_1 + \mathbf{b}_2) \\
-   \mathbf{u} &= \mathbf{W}_3 \mathbf{h}_2 + \mathbf{b}_3
+\mathbf{z}^{(1)} &= \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)} \\
+\mathbf{h}^{(1)} &= \sigma(\mathbf{z}^{(1)}) \\
+\mathbf{z}^{(2)} &= \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)} \\
+\mathbf{h}^{(2)} &= \sigma(\mathbf{z}^{(2)}) \\
+&\vdots \\
+\mathbf{z}^{(L)} &= \mathbf{W}^{(L)}\mathbf{h}^{(L-1)} + \mathbf{b}^{(L)} \\
+\mathbf{a} &= \mathbf{W}^{(L+1)}\mathbf{h}^{(L)} + \mathbf{b}^{(L+1)}
 \end{align}
 
-Where $\sigma$ is a scalar activation function (like ReLU or Tanh) applied element-wise. The activation function introduces critical nonlinearity, preventing the entire massive network from algebraically collapsing into just a single linear matrix multiplication.
+where:
+\begin{itemize}
+    \item $\mathbf{W}^{(\ell)} \in \mathbb{R}^{d_{\ell} \times d_{\ell-1}}$ is the weight matrix at layer $\ell$
+    \item $\mathbf{b}^{(\ell)} \in \mathbb{R}^{d_{\ell}}$ is the bias vector
+    \item $\sigma$ is the element-wise activation function applied to hidden layers (not the output)
+    \item $d_{\ell}$ is the width (number of neurons) at layer $\ell$
+\end{itemize}
 
-\section{Backpropagation and Gradient Descent}
+\textbf{Nonlinearity is Essential:} Without activation functions, the entire network collapses to a single linear map: $\mathbf{a} = \mathbf{W}^{(L+1)}\cdots\mathbf{W}^{(1)}\mathbf{s} + \mathbf{b} = \mathbf{W}_{\text{eff}}\mathbf{s} + \mathbf{b}$. This is insufficient to approximate nonlinear dynamics. The activation $\sigma$ introduces necessary nonlinearity and prevents this collapse.
 
-How does the network "learn" the correct weights ($\mathbf{W}_1, \mathbf{W}_2, \dots$) to optimally control the robot?
-We define a \textbf{Loss Function} $\mathcal{L}$, which mathematically penalizes the network for making mistakes. If the network commands the robot to punch a wall, the loss $\mathcal{L}$ spikes massively.
+% ==========================================================================
+\section{Activation Functions}
+% ==========================================================================
 
-Using basic multi-variable calculus (the Chain Rule), we can evaluate the derivative of the Loss function with respect to every single weight matrix $\mathbf{W}$ in the network simultaneously. This is called the \textbf{Gradient} ($\nabla_W \mathcal{L}$). The Gradient simply points uphill towards the direction of higher error.
+Different activation functions possess different properties and computational characteristics.
 
-We update the weights by stepping gently downhill (the exact opposite direction of the gradient) scaled by a Learning Rate $\alpha$:
-\begin{equation}
-   \mathbf{W}_{\text{new}} = \mathbf{W}_{\text{old}} - \alpha \nabla_W \mathcal{L}
-\end{equation}
-This incredibly robust, iterative calculus calculation is called \textbf{Backpropagation (Backprop)}.
+\subsection{Rectified Linear Unit (ReLU)}
 
-\section{Reinforcement Learning (RL)}
+$$\sigma_{\text{ReLU}}(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \leq 0 \end{cases}$$
 
-In Supervised Learning, a human must constantly provide the "correct" answer (a labeled dataset) to calculate the gradient. But in robotic control, we often do not know the correct joint torques for a 15-DOF golf swing to use as a label.
+\textbf{Derivative:}
+$$\frac{d\sigma_{\text{ReLU}}}{dz} = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z < 0 \end{cases}$$
 
-\textbf{Reinforcement Learning (RL)} solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\mathbf{u}$ at state $\mathbf{x}$, observes the new resulting state $\mathbf{x}'$ from the simulator, and receives a scalar \textbf{Reward} $R$ (e.g., +100 for hitting the ball perfectly, -10 for falling over clumsily). 
+\textbf{Advantages:}
+\begin{itemize}
+    \item Computationally cheap (just a comparison and zero)
+    \item Addresses vanishing gradient problem (derivative is 1, not small)
+    \item Induces sparsity in hidden activations (many outputs are exactly zero)
+    \item Proven in deep learning at scale (AlexNet, ResNet, etc.)
+\end{itemize}
 
-RL algorithms seek to learn the \textbf{Value Function} $V(\mathbf{x})$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\mathbf{x}$. By maximizing the Value Function over millions of iterations, the neural network organically discovers complex behaviors—often outperforming classical analytical control theory because it fully exploits passive geometric dynamics instead of fighting them.
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Dead neurons: a weight configuration can make $z \leq 0$ always, causing gradient to be permanently zero
+    \item Not differentiable at $z = 0$ (handled via subgradient in practice)
+\end{itemize}
 
-\section{Worked Example: Forward Pass in Python}
+\subsection{Sigmoid}
 
-Implementing the usage of a Neural Network does not require massive libraries (like PyTorch or TensorFlow), just standard linear algebra. Here is the mathematical Forward Pass of a policy $\pi(\mathbf{x})$ mapping a 4-dimensional state (e.g., balancing an inverted pendulum) to a 1-dimensional control torque using \texttt{NumPy}.
+$$\sigma_{\text{sig}}(z) = \frac{1}{1 + e^{-z}}$$
 
-\begin{lstlisting}[language=Python, caption=Neural Network Forward Pass for Policy Control]
+\textbf{Derivative:}
+$$\frac{d\sigma_{\text{sig}}}{dz} = \sigma_{\text{sig}}(z)(1 - \sigma_{\text{sig}}(z))$$
+
+\textbf{Range:} $(0, 1)$—useful for probability outputs (classification).
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Vanishing gradients: derivative approaches 0 for large $|z|$ (gradient $< 0.25$ everywhere)
+    \item Slow to train deep networks
+    \item Not zero-centered, causing slower convergence in gradients
+\end{itemize}
+
+\subsection{Hyperbolic Tangent (Tanh)}
+
+$$\sigma_{\text{tanh}}(z) = \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$
+
+\textbf{Derivative:}
+$$\frac{d\sigma_{\text{tanh}}}{dz} = 1 - \tanh^2(z)$$
+
+\textbf{Range:} $(-1, 1)$—zero-centered, better than sigmoid for training.
+
+\textbf{Still suffers from vanishing gradients for deep networks.}
+
+\subsection{Gaussian Error Linear Unit (GELU)}
+
+$$\sigma_{\text{GELU}}(z) = z \cdot \Phi(z)$$
+
+where $\Phi(z) = \frac{1}{2}\left[1 + \text{erf}\left(\frac{z}{\sqrt{2}}\right)\right]$ is the cumulative distribution function of the standard normal.
+
+Approximation (often used for efficiency):
+$$\sigma_{\text{GELU}}(z) \approx 0.5z\left(1 + \tanh\left(\sqrt{\frac{2}{\pi}}(z + 0.044715z^3)\right)\right)$$
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Smooth, differentiable everywhere
+    \item Used in modern transformers (BERT, GPT)
+    \item Better gradient flow than sigmoid/tanh
+\end{itemize}
+
+% ==========================================================================
+\section{Loss Functions}
+% ==========================================================================
+
+Training a neural network requires defining what "correct" means: a loss function $\mathcal{L}(\boldsymbol{\theta})$ that penalizes incorrect outputs.
+
+\subsection{Supervised Learning: Mean Squared Error}
+
+For control tasks with reference trajectories, the \textbf{Mean Squared Error (MSE)} loss is:
+
+$$\mathcal{L}_{\text{MSE}} = \frac{1}{N}\sum_{i=1}^N \|\pi(\mathbf{s}_i; \boldsymbol{\theta}) - \mathbf{a}_i^*\|^2$$
+
+where $\mathbf{a}_i^*$ is the desired (expert or reference) action at state $\mathbf{s}_i$, and $N$ is the batch size.
+
+\textbf{Interpretation:} Minimize the squared deviation between predicted and desired actions. Simple, differentiable, but sensitive to outliers.
+
+\subsection{Robustness: Huber Loss}
+
+The \textbf{Huber loss} is a hybrid that is quadratic for small errors and linear for large errors:
+
+$$\mathcal{L}_{\text{Huber}}(\delta) = \begin{cases} \frac{1}{2}\delta^2 & \text{if } |\delta| \leq \kappa \\ \kappa(|\delta| - \frac{\kappa}{2}) & \text{if } |\delta| > \kappa \end{cases}$$
+
+where $\delta = \pi(\mathbf{s}) - \mathbf{a}^*$ is the prediction error and $\kappa$ is a threshold (typically 1.0).
+
+\textbf{Advantage:} Robust to outliers (large errors don't dominate the loss as they do in MSE).
+
+\subsection{Reinforcement Learning: Policy Gradient and Value Loss}
+
+In reinforcement learning, we don't have reference actions $\mathbf{a}^*$. Instead, the agent receives a scalar reward $r_t$ after taking action $a_t$ in state $s_t$.
+
+The \textbf{Policy Gradient Loss} (used in algorithms like REINFORCE and PPO) is:
+
+$$\mathcal{L}_{\text{PG}} = -\mathbb{E}[\log \pi(a_t | s_t) \cdot \hat{R}_t]$$
+
+where $\hat{R}_t$ is an estimate of future discounted rewards (the \textbf{return}).
+
+The \textbf{Value Loss} (used in actor-critic methods) is:
+
+$$\mathcal{L}_{\text{Value}} = \mathbb{E}[(\hat{R}_t - V(s_t; \boldsymbol{\phi}))^2]$$
+
+where $V(s_t; \boldsymbol{\phi})$ is a learned value function predicting expected future rewards.
+
+% ==========================================================================
+\section{Backpropagation: Chain Rule for Neural Networks}
+% ==========================================================================
+
+Backpropagation is the algorithm for computing gradients $\nabla_{\boldsymbol{\theta}} \mathcal{L}$ through a neural network. It is merely systematic application of the chain rule.
+
+\subsection{Computational Graph Example}
+
+Consider a simple 2-layer network:
+\begin{align}
+\mathbf{z}^{(1)} &= \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)} \\
+\mathbf{h}^{(1)} &= \sigma(\mathbf{z}^{(1)}) \\
+\mathbf{z}^{(2)} &= \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)} \\
+\mathcal{L} &= \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2
+\end{align}
+
+To compute $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}}$, we apply the chain rule:
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} \cdot \frac{\partial \mathbf{z}^{(2)}}{\partial \mathbf{h}^{(1)}} \cdot \frac{\partial \mathbf{h}^{(1)}}{\partial \mathbf{z}^{(1)}} \cdot \frac{\partial \mathbf{z}^{(1)}}{\partial \mathbf{W}^{(1)}}$$
+
+\subsection{Forward Pass}
+
+Compute all intermediate activations:
+$$\mathbf{z}^{(1)} = \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)}$$
+$$\mathbf{h}^{(1)} = \sigma(\mathbf{z}^{(1)})$$
+$$\mathbf{z}^{(2)} = \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)}$$
+$$\mathcal{L} = \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2$$
+
+\subsection{Backward Pass (Backpropagation)}
+
+Compute gradients in reverse order:
+
+\textbf{Step 1:} Loss gradient
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} = \mathbf{z}^{(2)} - \mathbf{a}^* \in \mathbb{R}^{n_a}$$
+
+\textbf{Step 2:} Gradient w.r.t. $\mathbf{W}^{(2)}$ and $\mathbf{b}^{(2)}$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} (\mathbf{h}^{(1)})^T$$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}$$
+
+\textbf{Step 3:} Backprop through activation to hidden layer
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} = (\mathbf{W}^{(2)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}$$
+
+\textbf{Step 4:} Backprop through nonlinearity
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} \odot \sigma'(\mathbf{z}^{(1)})$$
+
+where $\odot$ is element-wise multiplication and $\sigma'(z) = \frac{d\sigma}{dz}$.
+
+\textbf{Step 5:} Gradient w.r.t. $\mathbf{W}^{(1)}$ and $\mathbf{b}^{(1)}$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} \mathbf{s}^T$$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}}$$
+
+\subsection{General Pattern}
+
+For any layer $\ell$:
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} (\mathbf{h}^{(\ell-1)})^T$$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell-1)}} = (\mathbf{W}^{(\ell)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}}$$
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell)}} \odot \sigma'(\mathbf{z}^{(\ell)})$$
+
+The \textbf{computational cost} of backprop is roughly twice the forward pass, making gradient computation affordable even for massive networks.
+
+% ==========================================================================
+\section{Gradient Descent and Optimization}
+% ==========================================================================
+
+\subsection{Vanilla Stochastic Gradient Descent}
+
+Having computed gradients, the simplest update rule is to move opposite to the gradient:
+
+$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \nabla_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}_t)$$
+
+where $\alpha$ is the \textbf{learning rate}—how large a step to take. The gradient $\nabla_{\boldsymbol{\theta}} \mathcal{L}$ points in the direction of increasing loss, so moving opposite reduces it.
+
+In practice, we compute the gradient on a small batch of data (not the entire dataset) for efficiency:
+
+$$\mathcal{L}(\boldsymbol{\theta}) \approx \frac{1}{B}\sum_{i=1}^B \mathcal{L}(\boldsymbol{\theta}; \mathbf{s}_i, \mathbf{a}_i)$$
+
+This is \textbf{Stochastic Gradient Descent (SGD)}: noisy but fast.
+
+\subsection{Momentum}
+
+Adding momentum accelerates convergence and helps escape shallow local minima:
+
+$$\mathbf{m}_t = \beta \mathbf{m}_{t-1} + (1-\beta)\nabla_{\boldsymbol{\theta}} \mathcal{L}$$
+$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \mathbf{m}_t$$
+
+where $\beta \approx 0.9$ is the momentum decay. The momentum term $\mathbf{m}_t$ is an exponentially-weighted average of past gradients.
+
+\textbf{Intuition:} If gradients point consistently in one direction, momentum builds up, accelerating motion. If gradients oscillate, momentum dampens the oscillation.
+
+\subsection{Adam Optimizer}
+
+\textbf{Adaptive Moment Estimation (Adam)} combines momentum with adaptive learning rates per parameter:
+
+$$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\nabla_{\boldsymbol{\theta}} \mathcal{L}$$
+$$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)(\nabla_{\boldsymbol{\theta}} \mathcal{L})^2$$
+
+(second moment is element-wise squared)
+
+$$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}$$
+
+(bias correction to account for initialization at zero)
+
+$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}$$
+
+where division is element-wise and $\epsilon \approx 10^{-8}$ prevents division by zero.
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Adapts learning rate per parameter (small gradients get larger effective steps)
+    \item Robust to learning rate choice (works with $\alpha \approx 0.001$ across many problems)
+    \item Industry standard for deep learning
+\end{itemize}
+
+% ==========================================================================
+\section{Markov Decision Processes (MDPs)}
+% ==========================================================================
+
+Reinforcement learning operates on \textbf{Markov Decision Processes}, a mathematical framework for sequential decision-making under uncertainty.
+
+\subsection{Formal Definition}
+
+An MDP is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
+
+\begin{itemize}
+    \item $\mathcal{S}$: state space (joint angles, velocities, sensor readings)
+    \item $\mathcal{A}$: action space (torques, forces applied by actuators)
+    \item $P(s' | s, a)$: transition probability—likelihood of reaching state $s'$ after taking action $a$ in state $s$
+    \item $R(s, a, s')$: immediate reward for the transition
+    \item $\gamma \in [0, 1]$: discount factor weighting immediate vs. future rewards
+\end{itemize}
+
+\subsection{Markov Property}
+
+The \textbf{Markov property} states that the future depends only on the current state, not the history:
+
+$$P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)$$
+
+This is a simplifying assumption that makes the problem tractable. Partially Observable MDPs (POMDPs) relax this assumption.
+
+\subsection{Return and Value Function}
+
+The \textbf{return} from time $t$ is the sum of discounted future rewards:
+
+$$R_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \cdots = \sum_{k=0}^{\infty} \gamma^k r_{t+k}$$
+
+The \textbf{state value function} $V(s)$ estimates the expected return starting from state $s$ under a policy $\pi$:
+
+$$V^{\pi}(s) = \mathbb{E}[R_t | s_t = s, \pi]$$
+
+The \textbf{action-value function} (Q-function) estimates the expected return after taking action $a$ in state $s$, then following policy $\pi$:
+
+$$Q^{\pi}(s, a) = \mathbb{E}[R_t | s_t = s, a_t = a, \pi]$$
+
+The \textbf{advantage function} measures how much better action $a$ is compared to the policy's default:
+
+$$A^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s)$$
+
+\subsection{Bellman Equation}
+
+The fundamental recursion in MDPs is the \textbf{Bellman equation}:
+
+$$V^{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s,a)[R(s,a,s') + \gamma V^{\pi}(s')]$$
+
+This expresses the value of a state as the immediate reward plus the discounted value of the next state. Solving this recursion (either iteratively or via dynamic programming) yields the optimal policy.
+
+% ==========================================================================
+\section{Policy Gradient Methods}
+% ==========================================================================
+
+\subsection{REINFORCE Algorithm}
+
+\textbf{REINFORCE} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
+
+The key insight is the \textbf{policy gradient theorem}:
+
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]$$
+
+where $J(\boldsymbol{\theta})$ is the expected return and $R_t$ is the actual return from time $t$ onward.
+
+\textbf{Derivation:} The expected return is:
+$$J(\boldsymbol{\theta}) = \mathbb{E}_{s \sim \rho, a \sim \pi_{\boldsymbol{\theta}}}[R_t]$$
+
+Taking the gradient and using the log-derivative trick ($\nabla \log f = \frac{\nabla f}{f}$):
+
+$$\nabla_{\boldsymbol{\theta}} J = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]$$
+
+This gradient can be estimated from sample trajectories:
+
+$$\hat{\nabla}_{\boldsymbol{\theta}} J \approx \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_i|s_i) \cdot R_i$$
+
+The \textbf{REINFORCE algorithm}:
+
+\begin{algorithm}
+\caption{REINFORCE}
+\begin{algorithmic}
+\For{episode $= 1$ to $N_{\text{episodes}}$}
+    \State Initialize trajectory $\tau = \emptyset$
+    \State $s \gets s_0$ (initial state)
+    \For{step $= 1$ to $T$}
+        \State Sample $a \sim \pi_{\boldsymbol{\theta}}(a|s)$
+        \State Observe reward $r$ and next state $s'$
+        \State Append $(s, a, r)$ to $\tau$
+        \State $s \gets s'$
+    \EndFor
+    \State Compute returns: $R_t = \sum_{k=t}^T \gamma^{k-t} r_k$ for each $t$
+    \State Gradient: $\hat{g} = \frac{1}{T}\sum_t \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot R_t$
+    \State Update: $\boldsymbol{\theta} \gets \boldsymbol{\theta} + \alpha \hat{g}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\textbf{Interpretation:} The gradient term $\nabla_{\boldsymbol{\theta}} \log \pi$ increases the probability of actions that achieved high returns $R_t$, and decreases the probability of actions that achieved low returns.
+
+\subsection{High Variance Problem}
+
+The return $R_t$ is a noisy estimate of expected value. If a policy is bad, it takes bad actions, gets low rewards, and the gradients become very noisy. This is the \textbf{credit assignment problem}: which actions deserve credit (or blame) for the outcome?
+
+Solutions:
+
+\begin{enumerate}
+    \item \textbf{Baseline Subtraction:} Use a learned value function to reduce variance:
+    $$\hat{\nabla}_{\boldsymbol{\theta}} J \approx \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot (R_t - V(s))]$$
+
+    This estimates the \textbf{advantage} $A(s,a) = Q(s,a) - V(s)$, which has lower variance than raw returns.
+
+    \item \textbf{N-step returns:} Use multi-step bootstrapping:
+    $$R_t^{(n)} = r_t + \gamma r_{t+1} + \cdots + \gamma^{n-1}r_{t+n-1} + \gamma^n V(s_{t+n})$$
+
+    Longer $n$ has more bias but lower variance.
+\end{enumerate}
+
+% ==========================================================================
+\section{Actor-Critic Architecture}
+% ==========================================================================
+
+The \textbf{Actor-Critic} method combines policy gradient learning (actor) with value function learning (critic), reducing variance while maintaining policy gradient convergence.
+
+\subsection{Architecture}
+
+Two neural networks:
+
+\begin{enumerate}
+    \item \textbf{Actor} $\pi_{\boldsymbol{\theta}}(a|s)$: policy network mapping state to action distribution
+    \item \textbf{Critic} $V_{\boldsymbol{\phi}}(s)$: value network predicting expected returns
+\end{enumerate}
+
+\subsection{Advantage Estimate}
+
+The critic produces an estimate of the value, allowing us to compute the advantage:
+
+$$\hat{A}_t = r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t)$$
+
+This \textbf{temporal difference (TD) error} estimates the advantage on the fly without waiting for an entire episode.
+
+\subsection{Update Rules}
+
+\textbf{Critic update:} Minimize value loss
+$$\mathcal{L}_{\text{critic}} = (r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t))^2$$
+$$\boldsymbol{\phi} \gets \boldsymbol{\phi} - \alpha_{\phi} \nabla_{\boldsymbol{\phi}} \mathcal{L}_{\text{critic}}$$
+
+\textbf{Actor update:} Maximize expected advantage
+$$\mathcal{L}_{\text{actor}} = -\log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot \hat{A}_t$$
+$$\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha_{\boldsymbol{\theta}} \nabla_{\boldsymbol{\theta}} \mathcal{L}_{\text{actor}}$$
+
+\subsection{Advantage}
+
+Actor-Critic has significantly lower variance than REINFORCE because:
+\begin{itemize}
+    \item The critic baseline reduces the scale of gradient estimates
+    \item TD estimates use immediate rewards + bootstrap, not full episode returns
+    \item Both networks train jointly, with the critic improving its estimates each step
+\end{itemize}
+
+% ==========================================================================
+\section{Proximal Policy Optimization (PPO)}
+% ==========================================================================
+
+\textbf{Proximal Policy Optimization (PPO)} (Schulman et al., 2017) is a modern policy gradient algorithm that trades off sample efficiency, stability, and ease of implementation.
+
+\subsection{Problem with Large Policy Updates}
+
+A fundamental issue in policy gradient methods: if the policy changes too much in one gradient step, the value function estimates (computed with the old policy) become stale and unreliable. This causes learning instability.
+
+\subsection{Policy Clipping}
+
+PPO addresses this using a clipped policy gradient objective:
+
+$$\mathcal{L}^{\text{clip}}(\boldsymbol{\theta}) = \mathbb{E}\left[\min\left(r_t(\boldsymbol{\theta}) \cdot \hat{A}_t, \text{clip}(r_t(\boldsymbol{\theta}), 1-\epsilon, 1+\epsilon) \cdot \hat{A}_t\right)\right]$$
+
+where the \textbf{probability ratio} is:
+
+$$r_t(\boldsymbol{\theta}) = \frac{\pi_{\boldsymbol{\theta}}(a_t|s_t)}{\pi_{\boldsymbol{\theta}_{\text{old}}}(a_t|s_t)}$$
+
+and $\epsilon \approx 0.2$ is the clipping parameter.
+
+\subsection{Interpretation}
+
+The clipping mechanism prevents the probability ratio from deviating too far from 1:
+
+\begin{itemize}
+    \item If $\hat{A}_t > 0$ (action was good): increase $\pi(a|s)$, but clip the update so $r_t \leq 1 + \epsilon$
+    \item If $\hat{A}_t < 0$ (action was bad): decrease $\pi(a|s)$, but clip so $r_t \geq 1 - \epsilon$
+\end{itemize}
+
+This prevents the policy from collapsing to a bad deterministic action or diverging to zero probability.
+
+\subsection{Full PPO Objective}
+
+The complete PPO loss combines clipped policy gradient, value loss, and entropy regularization:
+
+$$\mathcal{L}^{\text{PPO}}(\boldsymbol{\theta}, \boldsymbol{\phi}) = \mathbb{E}\left[\mathcal{L}^{\text{clip}} - c_1 \mathcal{L}_{\text{value}} + c_2 \mathcal{H}(\pi_{\boldsymbol{\theta}})\right]$$
+
+where:
+\begin{itemize}
+    \item $c_1, c_2$ are weight coefficients
+    \item $\mathcal{H}(\pi) = -\mathbb{E}[\log \pi(a|s)]$ is entropy (encourages exploration)
+\end{itemize}
+
+% ==========================================================================
+\section{Model-Based vs. Model-Free RL}
+% ==========================================================================
+
+Reinforcement learning approaches differ in whether they learn an explicit model of the environment dynamics.
+
+\subsection{Model-Free RL}
+
+The agent learns a policy or value function directly, without learning environment dynamics $P(s'|s,a)$.
+
+\textbf{Examples:} Q-learning, SARSA, Policy Gradient, Actor-Critic, PPO.
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item No need to model potentially complex physics
+    \item Can leverage large amounts of real-world interaction data
+    \item Often more data-efficient than model-based methods in practice
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Requires many interactions (samples) to converge
+    \item Does not leverage knowledge of physics (Lagrangian mechanics, constraints)
+    \item Hard to transfer to different tasks or environments
+\end{itemize}
+
+\subsection{Model-Based RL}
+
+The agent learns an explicit model $\hat{P}(s'|s,a)$ and uses it for planning.
+
+\textbf{Examples:} Dyna-Q, Model Predictive Control with learned models, planning with learned world models.
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Can plan multiple steps ahead without interacting with environment
+    \item Often more sample-efficient (fewer interactions needed)
+    \item Can exploit physics knowledge (e.g., reward shaping)
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Model learning is itself a hard problem
+    \item Errors compound during multi-step planning (``compounding error'')
+    \item Computationally expensive for high-dimensional systems
+\end{itemize}
+
+\subsection{Hybrid Approaches}
+
+Modern approaches combine both:
+
+\begin{itemize}
+    \item Learn a model of dynamics and use it for data augmentation
+    \item Use learned models for short-horizon planning, long-horizon model-free learning
+    \item Incorporate physics priors (learned Lagrangian/Hamiltonian) into the dynamics model
+\end{itemize}
+
+% ==========================================================================
+\section{Physics-Informed Neural Networks (PINNs)}
+% ==========================================================================
+
+\textbf{Physics-Informed Neural Networks (PINNs)} encode known physics (differential equations, conservation laws) as regularization terms in the loss function.
+
+\subsection{Framework}
+
+Learn a network $u_{\boldsymbol{\theta}}(t, \mathbf{x})$ that satisfies a known PDE:
+
+$$\frac{\partial u}{\partial t} + \mathcal{N}[u] = 0$$
+
+where $\mathcal{N}$ is a nonlinear operator (e.g., $\mathcal{N}[u] = -u \frac{\partial u}{\partial x}$ for Burgers' equation).
+
+The loss combines:
+
+$$\mathcal{L} = \mathcal{L}_{\text{data}} + \lambda \mathcal{L}_{\text{physics}}$$
+
+\begin{itemize}
+    \item \textbf{Data loss:} $\mathcal{L}_{\text{data}} = \frac{1}{N}\sum_i (u_{\boldsymbol{\theta}}(t_i, \mathbf{x}_i) - u_i^{\text{obs}})^2$ (match observations)
+    \item \textbf{Physics loss:} $\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{\partial u_{\boldsymbol{\theta}}}{\partial t} + \mathcal{N}[u_{\boldsymbol{\theta}}]\right)^2$ (satisfy PDE)
+\end{itemize}
+
+Derivatives $\frac{\partial u_{\boldsymbol{\theta}}}{\partial t}$ are computed via \textbf{automatic differentiation}—backprop applied to the network output.
+
+\subsection{Application to Robotics}
+
+For learned dynamics $\dot{\mathbf{x}} = f_{\boldsymbol{\theta}}(\mathbf{x}, \mathbf{u})$:
+
+$$\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{d\mathbf{x}_j}{dt} - f_{\boldsymbol{\theta}}(\mathbf{x}_j, \mathbf{u}_j)\right)^2$$
+
+(enforces time derivatives match the learned model)
+
+For control with known Lagrangian dynamics:
+
+$$\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} + \mathbf{C}(\mathbf{x},\dot{\mathbf{x}})\dot{\mathbf{x}} + \mathbf{G}(\mathbf{x}) - \mathbf{u}\right\|^2$$
+
+\textbf{Benefit:} Encoder known physics greatly reduces data requirements and improves generalization to unseen configurations.
+
+% ==========================================================================
+\section{Neural ODEs and Adjoint Method}
+% ==========================================================================
+
+\subsection{Neural ODE Formulation}
+
+Instead of discrete layers, \textbf{Neural ODEs} define the hidden state as the solution to a continuous ODE:
+
+$$\frac{dh(t)}{dt} = f_{\boldsymbol{\theta}}(h(t), t)$$
+
+The network output is obtained by solving this ODE from $t=0$ to $t=T$:
+
+$$h(T) = h(0) + \int_0^T f_{\boldsymbol{\theta}}(h(t), t) \, dt$$
+
+Solved numerically using an ODE solver (e.g., RK45).
+
+\subsection{Adjoint Method}
+
+Training Neural ODEs requires computing gradients through an ODE solve, which is expensive. The \textbf{adjoint method} computes gradients backward in time:
+
+$$\frac{\partial \mathcal{L}}{\partial \boldsymbol{\theta}} = -\int_T^0 \left(\frac{\partial L}{\partial h(t)}\right)^T \frac{\partial f_{\boldsymbol{\theta}}}{\partial \boldsymbol{\theta}} dt$$
+
+This avoids storing intermediate activations (memory-efficient) and allows efficient backprop through ODE solvers.
+
+\textbf{Application to Control:} Dynamics are inherently continuous (governed by Lagrangian or Hamiltonian equations). Neural ODEs naturally parameterize control policies and learned dynamics, enabling efficient optimization.
+
+% ==========================================================================
+\section{Sim-to-Real Transfer and Domain Randomization}
+% ==========================================================================
+
+Policies trained in simulation often fail on real robots due to:
+\begin{itemize}
+    \item Unmodeled friction and damping
+    \item Sensor noise and delays
+    \item Actuator nonlinearities and backlash
+    \item Differences in mass, inertia, and geometry
+\end{itemize}
+
+\subsection{Domain Randomization}
+
+\textbf{Domain Randomization} trains the policy on diverse simulated environments with randomized parameters:
+
+\begin{algorithmic}
+\For{training episode}
+    \State Randomize: $m_i \sim \mathcal{U}(m_i^{\text{nominal}} \pm 30\%)$
+    \State Randomize: $\mu \sim \mathcal{U}(0.5 \mu_0, 1.5 \mu_0)$ (friction)
+    \State Randomize: $\mathbf{g} \sim \mathcal{U}(0.5 g_0, 1.5 g_0)$ (gravity)
+    \State Randomize: sensor noise $\sigma_{\text{noise}} \sim \mathcal{U}(0, \sigma_{\max})$
+    \State Train policy on randomized task
+\EndFor
+\end{algorithmic}
+
+If the policy learns to succeed across this distribution of tasks, it becomes robust to a wide range of real-world variation.
+
+\textbf{Intuition:} The policy learns invariant strategies rather than exploiting precise nominal parameters. This improves real-world performance.
+
+\subsection{System Identification}
+
+Alternatively, use real-world data to \textbf{identify} the actual system parameters:
+
+$$\hat{\boldsymbol{\theta}}_{\text{system}} = \arg\min_{\boldsymbol{\theta}} \sum_i \|f(\mathbf{s}_i, \mathbf{u}_i; \boldsymbol{\theta}) - \mathbf{s}_{i+1}^{\text{obs}}\|^2$$
+
+Then retrain the policy with identified parameters.
+
+% ==========================================================================
+\section{Worked Example: Pendulum Swing-Up Policy}
+% ==========================================================================
+
+\subsection{Problem Setup}
+
+Goal: Swing a simple pendulum from hanging (downward) to upright (upward) while minimizing energy expenditure.
+
+State: $\mathbf{s} = [\theta, \dot{\theta}]$ (angle and angular velocity)
+Action: $u \in [-1, 1]$ (normalized torque)
+
+Reward:
+$$r_t = -(\theta_t^2 + 0.1\dot{\theta}_t^2 + 0.01 u_t^2)$$
+
+This rewards reaching $\theta \approx \pi$ (upright), low velocity, and low control effort.
+
+\subsection{Policy Network}
+
+A simple 2-layer network with ReLU activations:
+
+$$\pi_{\boldsymbol{\theta}}(s) = \tanh(\mathbf{W}_2 \text{ReLU}(\mathbf{W}_1 s + b_1) + b_2)$$
+
+This maps 2D state to 1D action in $[-1, 1]$.
+
+\subsection{Training with PPO}
+
+\begin{algorithmic}
+\For{training step}
+    \State Collect trajectory: $(s_0, u_0, r_0, s_1, u_1, r_1, \ldots)$ from policy
+    \State Compute advantages: $\hat{A}_t = r_t + \gamma V(s_{t+1}) - V(s_t)$
+    \State Update critic: minimize $\sum_t (r_t + \gamma V(s_{t+1}) - V(s_t))^2$
+    \State Update actor: maximize $\sum_t \min(r_t(\boldsymbol{\theta}) \hat{A}_t, \text{clip}(...))$
+    \State Every $K$ steps: discard old policy, collect new trajectory
+\EndFor
+\end{algorithmic}
+
+After training, the policy learns to:
+\begin{enumerate}
+    \item Swing outward (build kinetic energy)
+    \item Swing upward, past the horizontal
+    \item Small corrections near the top to land upright
+\end{enumerate}
+
+This is a \textbf{learned strategy} that the algorithm discovered from reward signals, not explicit programming.
+
+% ==========================================================================
+\section{Python Worked Example: Backpropagation from Scratch}
+% ==========================================================================
+
+\begin{lstlisting}[language=Python, caption=Backpropagation Implementation from Scratch]
 import numpy as np
+import matplotlib.pyplot as plt
 
-def relu(x):
-    # Nonlinear Activation Function
-    return np.maximum(0, x)
+class NeuralNetwork:
+    """Simple 2-layer feedforward network with manual backprop."""
 
-def neural_network_policy(state, W1, b1, W2, b2):
-    """
-    Computes a forward pass mapping State -> Action
-    State: np.array of shape (4, 1)
-    """
-    
-    # Layer 1: Linear Transform + Activation
-    z1 = np.dot(W1, state) + b1
-    h1 = relu(z1)
-    
-    # Layer 2: Linear Transform -> Output Torque
-    z2 = np.dot(W2, h1) + b2
-    control_torque = z2
-    
-    return control_torque
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        """Initialize network parameters."""
+        # Layer 1: input -> hidden
+        self.W1 = np.random.randn(hidden_dim, input_dim) * 0.01
+        self.b1 = np.zeros((hidden_dim, 1))
 
-# Example: A tiny 4 -> 8 -> 1 Network Architecture
-state_space_dim = 4
-hidden_layer_dim = 8
-action_space_dim = 1
+        # Layer 2: hidden -> output
+        self.W2 = np.random.randn(output_dim, hidden_dim) * 0.01
+        self.b2 = np.zeros((output_dim, 1))
 
-# Randomly initialized matrices (in reality, optimized by Backprop)
-W1 = np.random.randn(hidden_layer_dim, state_space_dim) * 0.1
-b1 = np.zeros((hidden_layer_dim, 1))
+        # Cache for backprop
+        self.cache = {}
 
-W2 = np.random.randn(action_space_dim, hidden_layer_dim) * 0.1
-b2 = np.zeros((action_space_dim, 1))
+    def relu(self, z):
+        """ReLU activation."""
+        return np.maximum(0, z)
 
-# Current State [Position, Angle, Velocity, Angular Velocity]^T
-current_state = np.array([[0.0], [0.1], [0.0], [0.0]])
+    def relu_derivative(self, z):
+        """Derivative of ReLU."""
+        return (z > 0).astype(float)
 
-# Ask the network for a command
-commanded_u = neural_network_policy(current_state, W1, b1, W2, b2)
+    def forward(self, X):
+        """
+        Forward pass.
+        X: input of shape (input_dim, batch_size)
+        Returns: output of shape (output_dim, batch_size)
+        """
+        # Layer 1
+        Z1 = self.W1 @ X + self.b1
+        H1 = self.relu(Z1)
 
-print("Commanded Torque from Neural Network policy:", np.round(commanded_u[0, 0], 4))
+        # Layer 2 (no activation, for regression)
+        Z2 = self.W2 @ H1 + self.b2
+
+        # Cache for backprop
+        self.cache = {
+            'X': X, 'Z1': Z1, 'H1': H1, 'Z2': Z2,
+            'W1': self.W1, 'W2': self.W2
+        }
+
+        return Z2
+
+    def compute_loss(self, predictions, targets):
+        """Mean squared error loss."""
+        m = targets.shape[1]
+        error = predictions - targets
+        loss = (1 / (2*m)) * np.sum(error**2)
+        return loss, error
+
+    def backward(self, dZ2, learning_rate):
+        """
+        Backward pass (backpropagation).
+        dZ2: gradient w.r.t. output layer preactivations
+        """
+        m = self.cache['X'].shape[1]
+
+        # Gradient for layer 2
+        dW2 = (1/m) * dZ2 @ self.cache['H1'].T
+        db2 = (1/m) * np.sum(dZ2, axis=1, keepdims=True)
+
+        # Backprop through H1
+        dH1 = self.W2.T @ dZ2
+
+        # Backprop through ReLU
+        dZ1 = dH1 * self.relu_derivative(self.cache['Z1'])
+
+        # Gradient for layer 1
+        dW1 = (1/m) * dZ1 @ self.cache['X'].T
+        db1 = (1/m) * np.sum(dZ1, axis=1, keepdims=True)
+
+        # Update parameters
+        self.W2 -= learning_rate * dW2
+        self.b2 -= learning_rate * db2
+        self.W1 -= learning_rate * dW1
+        self.b1 -= learning_rate * db1
+
+    def train(self, X_train, y_train, epochs=100, learning_rate=0.01,
+              batch_size=32):
+        """Train the network."""
+        m = X_train.shape[1]
+        losses = []
+
+        for epoch in range(epochs):
+            epoch_loss = 0
+
+            # Shuffle data
+            indices = np.random.permutation(m)
+            X_shuffled = X_train[:, indices]
+            y_shuffled = y_train[:, indices]
+
+            # Mini-batch training
+            for i in range(0, m, batch_size):
+                X_batch = X_shuffled[:, i:i+batch_size]
+                y_batch = y_shuffled[:, i:i+batch_size]
+
+                # Forward pass
+                predictions = self.forward(X_batch)
+
+                # Compute loss
+                loss, error = self.compute_loss(predictions, y_batch)
+                epoch_loss += loss
+
+                # Backward pass
+                dZ2 = error  # gradient of MSE w.r.t. output
+                self.backward(dZ2, learning_rate)
+
+            losses.append(epoch_loss / (m // batch_size))
+
+            if (epoch + 1) % 20 == 0:
+                print(f"Epoch {epoch+1}: Loss = {losses[-1]:.6f}")
+
+        return losses
+
+    def predict(self, X):
+        """Make predictions."""
+        return self.forward(X)
+
+# Example: Regression on y = sin(x)
+np.random.seed(42)
+
+# Generate training data
+X_train = np.random.uniform(-np.pi, np.pi, (1, 100))
+y_train = np.sin(X_train)
+
+# Reshape for batch processing
+X_train = X_train.reshape(1, -1)
+y_train = y_train.reshape(1, -1)
+
+# Create and train network
+net = NeuralNetwork(input_dim=1, hidden_dim=16, output_dim=1)
+losses = net.train(X_train, y_train, epochs=200, learning_rate=0.1,
+                   batch_size=16)
+
+# Test on new data
+X_test = np.linspace(-np.pi, np.pi, 200).reshape(1, -1)
+y_test_true = np.sin(X_test)
+y_test_pred = net.predict(X_test)
+
+# Plot
+plt.figure(figsize=(10, 4))
+
+plt.subplot(1, 2, 1)
+plt.plot(losses)
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training Loss')
+plt.grid(True)
+
+plt.subplot(1, 2, 2)
+plt.plot(X_test[0], y_test_true[0], 'b-', label='True: sin(x)', linewidth=2)
+plt.plot(X_test[0], y_test_pred[0], 'r--', label='Predicted', linewidth=2)
+plt.scatter(X_train[0], y_train[0], c='green', s=20, label='Training data')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.grid(True)
+plt.title('Function Approximation')
+
+plt.tight_layout()
+plt.show()
+
+# Print summary
+print("\n=== Network Architecture ===")
+print(f"Layer 1: {net.W1.shape}")
+print(f"Layer 2: {net.W2.shape}")
+print(f"\nFinal training loss: {losses[-1]:.6f}")
 \end{lstlisting}
 
-This code block demonstrates exactly how Reinforcement Learning algorithms map physics internally at runtime. Millions of times per second, matrices multiply state vectors and pass through ReLU functions to output physical motor torques inside the UpstreamDrift physics simulation.
+This code demonstrates:
+\begin{itemize}
+    \item Forward pass through ReLU network
+    \item Manual computation of gradients via backprop
+    \item Layer-by-layer gradient computation using the chain rule
+    \item Mini-batch gradient descent with weight updates
+    \item Training a network to approximate a nonlinear function
+\end{itemize}
 
-With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds securely established, you are now completely prepared to tackle the advanced control theory contained in Volume I and Volume II of \textit{The Geometry of Motion}.
+% ==========================================================================
+\section{Deep Reinforcement Learning for Robot Control}
+% ==========================================================================
+
+Combining PPO (or other policy gradient methods) with deep neural networks enables learning of complex robot behaviors.
+
+\subsection{State Representation}
+
+Typical state vectors include:
+\begin{itemize}
+    \item Joint angles $\mathbf{q}$
+    \item Joint velocities $\dot{\mathbf{q}}$
+    \item End-effector position and orientation
+    \item Contact forces/torques
+    \item Goal state or target trajectory
+\end{itemize}
+
+\subsection{Action Parameterization}
+
+For continuous control, actions are typically:
+\begin{itemize}
+    \item Desired joint torques $\boldsymbol{\tau}$ (direct)
+    \item Desired joint accelerations $\ddot{\mathbf{q}}$
+    \item Motor commands in $[-1, 1]$ (normalized)
+    \item End-effector velocity targets
+\end{itemize}
+
+\subsection{Reward Shaping}
+
+Design a reward that guides learning toward the desired behavior:
+
+$$r_t = r_{\text{task}} + r_{\text{sparse}} + r_{\text{cost}}$$
+
+where:
+\begin{itemize}
+    \item $r_{\text{task}}$: shaped reward for progress toward goal (e.g., negative distance)
+    \item $r_{\text{sparse}}$: binary reward when task is completed
+    \item $r_{\text{cost}}$: penalties for high energy, constraint violations
+\end{itemize}
+
+Example for reaching a target $\mathbf{x}_{\text{goal}}$:
+
+$$r_t = -\|\mathbf{x}_{\text{EE},t} - \mathbf{x}_{\text{goal}}\|^2 - 0.01 \|\boldsymbol{\tau}_t\|^2 + 100 \cdot \mathbb{1}[\text{reached}]$$
+
+\subsection{Training Stability}
+
+Deep RL for robot control requires careful tuning:
+\begin{itemize}
+    \item \textbf{Learning rates}: Too high causes divergence, too low causes slow learning
+    \item \textbf{Network size}: Larger networks have more expressive power but overfit easily
+    \item \textbf{Exploration}: Must balance exploiting known good actions with exploring new ones
+    \item \textbf{Value function updates}: Bad value estimates propagate through policy gradient
+\end{itemize}
+
+Modern algorithms (PPO, SAC, DDPG) address these via:
+\begin{itemize}
+    \item Adaptive learning rates (Adam optimizer)
+    \item Clipping/normalization of advantages
+    \item Experience replay buffers
+    \item Entropy regularization
+\end{itemize}
+
+% ==========================================================================
+\section{Chapter Summary}
+% ==========================================================================
+
+Neural networks and reinforcement learning provide powerful tools for learning control policies when analytical models are unavailable or too complex.
+
+\begin{enumerate}
+    \item \textbf{Universal Approximation}: Neural networks with nonlinearities can approximate any continuous function, but scalability depends on architecture and training.
+
+    \item \textbf{Backpropagation}: Efficient computation of gradients via the chain rule enables training of deep networks on massive datasets.
+
+    \item \textbf{Gradient Descent}: Simple optimization algorithm that, despite its limitations, works remarkably well in practice when combined with proper learning rate scheduling (Adam optimizer).
+
+    \item \textbf{Markov Decision Processes}: Formal framework for sequential decision-making under uncertainty, essential for formulating RL problems rigorously.
+
+    \item \textbf{Policy Gradient Methods}: Learn policies directly by maximizing expected return, with advantages over value-based methods (stability, continuous actions).
+
+    \item \textbf{Actor-Critic}: Combines policy learning with value estimation, reducing variance and improving sample efficiency.
+
+    \item \textbf{Proximal Policy Optimization}: Modern workhorse algorithm that balances stability, sample efficiency, and ease of implementation via policy clipping.
+
+    \item \textbf{Physics-Informed Learning}: Incorporate known dynamics as loss terms to improve generalization and reduce data requirements.
+
+    \item \textbf{Sim-to-Real Transfer}: Domain randomization and system identification bridge the gap between simulated training and real robot deployment.
+\end{enumerate}
+
+Lagrangian mechanics (Chapter 11) and neural network learning (Chapter 12) are complementary:
+\begin{itemize}
+    \item Use \textbf{Lagrangian mechanics} when analytical models are available—design explicit control laws with guaranteed properties
+    \item Use \textbf{Neural networks} when models are uncertain or too complex—let data guide the policy
+    \item Use \textbf{both together}: incorporate Lagrangian constraints as PINN losses, use learned policies to optimize Lagrangian parameters
+\end{itemize}
+
+% ==========================================================================
+\section{Exercises}
+% ==========================================================================
+
+\begin{exercise}
+\textbf{Universal Approximation Intuition:} Show that a 2-layer network with ReLU activations can represent the function $f(x) = |x|$ on $[-1, 1]$. (Hint: use a positive and negative ReLU branch.)
+\end{exercise}
+
+\begin{exercise}
+\textbf{Backpropagation Trace:} For a 2-layer network computing $\hat{y} = W_2 \sigma(W_1 x + b_1) + b_2$ with loss $\mathcal{L} = \frac{1}{2}(\hat{y} - y)^2$, manually compute all gradients: $\frac{\partial \mathcal{L}}{\partial W_2}$, $\frac{\partial \mathcal{L}}{\partial b_2}$, $\frac{\partial \mathcal{L}}{\partial W_1}$, $\frac{\partial \mathcal{L}}{\partial b_1}$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Activation Function Comparison:} Plot sigmoid, tanh, ReLU, and GELU activations and their derivatives. Explain why ReLU and GELU are preferred for deep learning.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Vanishing Gradient Problem:} Consider a deep network with sigmoid activations. Show that the gradient $\frac{\partial L}{\partial W^{(1)}}$ contains a product of $(\sigma'(z))$ terms, each $< 0.25$. For a 10-layer network, estimate the scale of the gradient.
+\end{exercise}
+
+\begin{exercise}
+\textbf{MDP Formulation:} Write down a precise MDP formulation for a simple pendulum swing-up task, specifying state space, action space, transition dynamics, and reward function.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Bellman Equation:} For a simple discrete gridworld (5x5 grid, agent moves up/down/left/right, goal at corner), write the Bellman equation for state value and solve it iteratively (value iteration).
+\end{exercise}
+
+\begin{exercise}
+\textbf{Policy Gradient Derivation:} Derive the policy gradient theorem from first principles, starting from $J(\boldsymbol{\theta}) = \mathbb{E}[R_0]$ and using log-derivative trick.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Advantage Estimation:} For a trajectory $(s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$, compute n-step returns $R_t^{(1)}, R_t^{(2)}, R_t^{(3)}$ and compare their bias-variance tradeoff.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Actor-Critic Implementation:} Implement a simple actor-critic algorithm for the CartPole environment (gym). Train both networks jointly and plot learning curves.
+\end{exercise}
+
+\begin{exercise}
+\textbf{PPO Clipping:} Plot the PPO clipped policy gradient objective for a range of probability ratios $r \in [0.5, 2.0]$ and advantage values $\hat{A} \in [-2, 2]$. Explain why clipping prevents policy collapse.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Physics-Informed Loss:} For a pendulum with known Lagrangian dynamics, write the PINN loss combining observed trajectories with the constraint $\ddot{\theta} + \frac{g}{\ell}\sin\theta = 0$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Domain Randomization:} Implement training with parameter randomization (mass $\pm 30\%$, friction $\pm 50\%$) and compare final policy performance on nominal parameters vs. randomized policy.
+\end{exercise}
+
+\begin{exercise}
+\textbf{System Identification:} Given a recorded trajectory from an unknown pendulum, identify the unknown length $\ell$ and gravity $g$ by fitting a neural network dynamics model to observations.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Neural ODE:} Implement a Neural ODE for learning pendulum dynamics: $\frac{dh}{dt} = f_{\boldsymbol{\theta}}(h, t)$. Compare with discrete-layer networks on prediction accuracy.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Code Challenge:} Train a PPO agent to swing up and balance a simple pendulum. Log returns during training, final policy performance, and sample learned trajectories.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Transfer Learning:} Train a policy in simulation (known mass), then test on real robot (unknown mass). Compare zero-shot transfer vs. fine-tuning on real robot data.
+\end{exercise}

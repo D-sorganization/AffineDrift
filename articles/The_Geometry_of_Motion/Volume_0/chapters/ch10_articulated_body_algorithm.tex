@@ -11,95 +11,835 @@
 \begin{laymansbox}{Context \& Use Case: Forward Simulation}{context_box}
 \textbf{The Math You Will See:} We will cover the $O(N)$ \textbf{Articulated Body Algorithm (ABA)} and define the \textbf{Articulated Inertia} ($\mathcal{I}^A$).
 \textbf{Why We Need It:} In Chapter 7, we asked: "I want to move my arm here, how much motor torque do I need?" (Inverse Dynamics). ABA solves the exact opposite: "I am applying this much torque, what acceleration will result?" (Forward Dynamics). Physics simulators like MuJoCo or games use ABA every single frame to predict how a robot or character will move. If you use a massive matrix equation, it takes an impossibly long $O(N^3)$ calculation time to invert for 30 joints. ABA computes it perfectly recursively in just $O(N)$ time.
-\textbf{All Variables Defined:} $\mathbf{p}_i$ is the bias force dragging on a link, and $\mathcal{I}^A_i$ is the apparent inertia of a link when dragged along with all its children. 
+\textbf{All Variables Defined:} $\mathbf{p}_i$ is the bias force dragging on a link, and $\mathcal{I}^A_i$ is the apparent inertia of a link when dragged along with all its children.
 \end{laymansbox}
 
-\section{Forward Dynamics}
+\section{Historical Context: The Computational Mechanics Revolution}
+\label{sec:aba_history}
 
-In Chapter 7, we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the \textbf{Inverse Dynamics} problem: Given a desired trajectory ($\mathbf{q}, \dot{\mathbf{q}}, \ddot{\mathbf{q}}$), what forces $\boldsymbol{\tau}$ must the motors output to achieve it?
-
-However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments (as used in UpstreamDrift's simulation core), we face the exact opposite problem: \textbf{Forward Dynamics}. 
-
-Given the current position ($\mathbf{q}$), current speed ($\dot{\mathbf{q}}$), and the forces currently being produced by the motors ($\boldsymbol{\tau}$), what will the resulting physical acceleration ($\ddot{\mathbf{q}}$) mathematically be?
+For most of the twentieth century, the forward dynamics problem—computing accelerations from applied forces—was solved through monolithic matrix inversion. Given the equations of motion in the form:
 \begin{equation}
-   \ddot{\mathbf{q}} = \text{ForwardDynamics}(\mathbf{q}, \dot{\mathbf{q}}, \boldsymbol{\tau})
+  \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} - \mathbf{g}(\mathbf{q})
 \end{equation}
 
-If we construct the monolithic mass matrix $\mathbf{M}(\mathbf{q})$ and solve $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} = \boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{G}(\mathbf{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for multi-jointed robots, as the computational time scales worse than $O(N^3)$. Simulating a 50-joint human hand and arm with a monolithic matrix inversion is prohibitively slow for real-time physics.
+one inverts the mass matrix $\mathbf{M}(\mathbf{q})$ to solve for $\ddot{\mathbf{q}}$:
+\begin{equation}
+  \ddot{\mathbf{q}} = \mathbf{M}(\mathbf{q})^{-1} (\boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))
+\end{equation}
 
-\section{Featherstone's $O(N)$ Solution: Articulated Inertia}
+For an $N$-joint robot, computing the inverse of an $N \times N$ matrix via Gaussian elimination requires $O(N^3)$ floating-point operations—a severe computational bottleneck when $N$ is large (humanoid robots have 30+ joints; hands have 20+; cloth simulation may have thousands of degrees of freedom).
 
-In 1983, Roy Featherstone published a monumental paper outlining the \textbf{Articulated Body Algorithm (ABA)}. ABA solves the Forward Dynamics problem recursively without ever constructing or inverting the monolithic mass matrix $\mathbf{M}(\mathbf{q})$. Instead, it computes the exact joint accelerations ($\ddot{\mathbf{q}}$) sequentially in just $O(N)$ time.
+In 1983, Roy Featherstone published a seminal paper \cite{featherstone1983} proposing the \textbf{Articulated Body Algorithm (ABA)}, which solves forward dynamics in \textit{linear} time: $O(N)$ operations. Featherstone's insight—to propagate effective inertias recursively through the kinematic tree—transformed computational robotics from a theoretical exercise to a practical tool usable in real-time simulation.
 
-The secret to ABA lies in the concept of \textbf{Articulated Inertia} ($\mathcal{I}^A_i$). 
+The ABA has become the foundation of modern physics engines. Every frame of a video game featuring character animation, every timestep of a MuJoCo simulation, and every dynamics prediction in a robot control system leverages Featherstone's algorithm. Subsequent refinements by Featherstone himself \cite{featherstone1987} and countless others have extended ABA to handle floating bases (crucial for humanoid robots), contact constraints, and complex contact models.
+
+\section{The Forward Dynamics Problem}
+\label{sec:forward_dynamics_problem}
+
+\subsection{Problem Formulation}
+\label{subsec:fd_formulation}
+
+\textit{Forward Dynamics} (also called \textit{Direct Dynamics}) solves the inverse of the inverse dynamics problem:
+
+\begin{equation}
+  \text{Given: } \mathbf{q}, \dot{\mathbf{q}}, \boldsymbol{\tau} \quad \Rightarrow \quad \text{Find: } \ddot{\mathbf{q}}
+\end{equation}
+
+The equations of motion are:
+\begin{equation}
+  \mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau} + \mathbf{f}_{\text{ext}}
+\end{equation}
+
+where:
+\begin{itemize}
+  \item $\mathbf{M}(\mathbf{q}) \in \mathbb{R}^{N \times N}$ is the \textbf{inertia matrix} (symmetric positive definite).
+  \item $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}}$ is the \textbf{Coriolis and centrifugal force}.
+  \item $\mathbf{g}(\mathbf{q})$ is the \textbf{gravitational force}.
+  \item $\boldsymbol{\tau} \in \mathbb{R}^N$ is the applied joint torques (motor outputs).
+  \item $\mathbf{f}_{\text{ext}}$ is external forces (contact, disturbances, etc.).
+\end{itemize}
+
+\subsection{Why $O(N^3)$ is Intractable}
+\label{subsec:why_not_invert}
+
+Direct inversion of $\mathbf{M}(\mathbf{q})$ via Gaussian elimination (the standard $O(N^3)$ method) becomes prohibitively slow:
+
+\begin{center}
+\begin{tabular}{c|c|c|c}
+Number of Joints ($N$) & Operations ($N^3$) & Time @ 1 GHz & Time @ 100 GHz (GPU) \\
+\hline
+10 & $1,000$ & 1 ns & 0.01 ns \\
+30 & $27,000$ & 27 ns & 0.27 ns \\
+100 & $1,000,000$ & 1 $\mu$s & 0.01 $\mu$s \\
+1000 & $10^9$ & 1 ms & 0.01 ms \\
+\end{tabular}
+\end{center}
+
+For real-time control (e.g., a humanoid robot running at 1 kHz requiring $\sim 1$ ms per timestep), even $N=30$ becomes challenging with direct inversion. For interactive simulation or games (running at 30-60 Hz), the overhead is unacceptable.
+
+ABA reduces this to $O(N)$ operations—a linear dependence that scales gracefully to hundreds of joints.
+
+\section{Articulated Inertia: The Key Insight}
+\label{sec:articulated_inertia}
+
+\subsection{Intuitive Explanation}
+\label{subsec:inertia_intuition}
+
+Imagine pushing a heavy metal rod on a frictionless table. The resistance you feel—the inertia—is proportional to the rod's mass. Now, imagine that rod is rigidly connected via a hinge to another rod, which in turn is connected to a chain of massive bricks. If you push the first rod, you are indirectly pushing all the connected mass behind it. The \textit{effective} resistance at the base—the articulated inertia—accounts for all the downstream mass.
 
 \begin{laymansbox}{What is Articulated Inertia?}{aba_intuition}
-  Imagine pushing a heavy metal rod lying on a frictionless table. The resistance you feel is its standard rigid-body spatial inertia ($\mathcal{I}$). 
-  
-  Now, imagine that rod is bolted via a rusty, friction-filled hinge to another rod, which holds a giant heavy brick. If you push the first rod now, it feels immensely heavier. By pushing the base element, you are forcing the entire interconnected structure to move. The \textit{effective} resistance you feel at that base link, accounting for all the connected chains swinging behind it, is its \textbf{Articulated Inertia}.
+  \textbf{Rigid body inertia:} A single body's resistance to acceleration.
+
+  \textbf{Articulated inertia:} The effective inertia of a body \textit{as if} all downstream bodies (children) were rigidly attached to it, accounting for how motion at this joint propagates down the kinematic chain.
+
+  The key: downstream inertias are not simply added. Instead, they are \textit{projected} across the joint constraint. A joint restricts motion to one degree of freedom, and only the projection of child inertia onto that DOF contributes to the apparent inertia.
 \end{laymansbox}
 
-\section{The Three Passes of ABA}
+\subsection{Mathematical Definition}
+\label{subsec:articulated_inertia_math}
 
-The algorithm runs sequentially across the branches of the robot tree and operates entirely in the 6D Spatial Vector Algebra developed in Chapter 8. It consists of three sweeps:
+For a link $i$ with spatial inertia $\mathcal{I}_i$ and child link $i+1$ with articulated inertia $\mathcal{I}^A_{i+1}$, the \textbf{articulated inertia of link $i$} is:
 
-\subsection{1. Outward Pass: Velocity and Bias Forces}
-Starting at the root (the ground), propagate outward to the leaves (the end effectors). For every link $i$, compute its absolute spatial velocity $\mathcal{V}_i$. Then, compute the Coriolis accelerations, and extract the spatial \textbf{Bias Force} $\mathbf{p}_i$ (the force that would act upon the link even if the current joint accelerations were exactly zero).
-
-\subsection{2. Inward Pass: Articulated Inertias}
-Starting at the leaves and propagating inward towards the root base. 
-At the tip, the Articulated Inertia is completely identical to the standard rigid Spatial Inertia: $\mathcal{I}^A_{\text{tip}} = \mathcal{I}_{\text{tip}}$.
-But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $\mathcal{S}_{i+1}$ via a recursive equation:
 \begin{equation}
-   \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{ (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T }{ \mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1} }
+  \label{eq:articulated_inertia}
+  \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}
 \end{equation}
 
-The denominator $\mathcal{S}^T \mathcal{I}^A \mathcal{S}$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor safely across the geometric pin joint.
+Breaking down each term:
 
-\subsection{3. Outward Pass: Joint Accelerations}
-Once the Articulated Inertia has propagated completely back to the base, we reverse direction one final time.
-Because we now know the true apparent "weight" of the entire chain resting on the base link, we can immediately solve for the exact scalar acceleration $\ddot{q}_1$ of the first joint based purely on its applied torque $\tau_1$.
+\begin{enumerate}
+  \item $\mathcal{I}_i$: The rigid-body spatial inertia of link $i$ itself.
+  \item $\mathcal{I}^A_{i+1}$: The articulated inertia of the child link (everything downstream).
+  \item $\mathcal{S}_{i+1}$: The screw axis of the joint connecting link $i$ to link $i+1$ (6D vector).
+  \item $(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})$: The force required to accelerate the child chain along its screw axis.
+  \item $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}$: A scalar—the effective inertia \textit{along} the joint's single degree of freedom (similar to $I \alpha$ in 1D dynamics).
+  \item The fraction: Projects out the direction of motion along the joint; what remains is the inertia perpendicular to that motion (resistive to the parent).
+\end{enumerate}
+
+This is a rank-one update of the spatial inertia: we add the child's articulated inertia, then subtract the projection of that child onto the joint DOF.
+
+\section{Derivation from First Principles}
+\label{sec:aba_derivation}
+
+\subsection{Recursive Constraint Satisfaction}
+\label{subsec:constraint_derivation}
+
+Consider a two-body system: body $i$ (parent) connected to body $i+1$ (child) via a single-DOF joint with screw axis $\mathcal{S}_{i+1}$.
+
+The equations of motion for each body are:
+\begin{align}
+  \mathcal{I}_i \dot{\mathcal{V}}_i &= \mathbf{f}_i - \mathbf{f}_{i+1}^{\text{reaction}} \\
+  \mathcal{I}_{i+1} \dot{\mathcal{V}}_{i+1} &= \mathbf{f}_{i+1} - \mathbf{f}_{\text{ext}}^{(i+1)}
+\end{align}
+
+where $\mathbf{f}_i$ is the force on body $i$ and $\mathbf{f}_{i+1}^{\text{reaction}}$ is the reaction force from the child.
+
+The kinematic constraint is that the acceleration of the child relative to the parent must be along the joint screw:
 \begin{equation}
-   \ddot{q}_i = \frac{\tau_i - \mathcal{S}_i^T \mathbf{p}_i}{\mathcal{S}_i^T \mathcal{I}^A_i \mathcal{S}_i}
+  \dot{\mathcal{V}}_{i+1} = \dot{\mathcal{V}}_i + \text{Ad}_{\mathcal{S}_{i+1}} \ddot{q}_{i+1}
 \end{equation}
 
-Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\mathcal{V}}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
+where $\ddot{q}_{i+1}$ is the joint acceleration and $\text{Ad}_{\mathcal{S}_{i+1}} = \mathcal{S}_{i+1}$ (the screw represents infinitesimal motion).
 
-\section{Worked Example: ABA Pseudocode}
+Substituting into the child's equation:
+\begin{equation}
+  \mathcal{I}_{i+1} (\dot{\mathcal{V}}_i + \mathcal{S}_{i+1} \ddot{q}_{i+1}) = \mathbf{f}_{i+1} - \mathbf{f}_{\text{ext}}^{(i+1)}
+\end{equation}
 
-Here is Python pseudocode demonstrating how the recursive articulated inertia loop functions algorithmically.
+Rearranging:
+\begin{equation}
+  \mathcal{I}_{i+1} \mathcal{S}_{i+1} \ddot{q}_{i+1} = \mathbf{f}_{i+1} - \mathbf{f}_{\text{ext}}^{(i+1)} - \mathcal{I}_{i+1} \dot{\mathcal{V}}_i
+\end{equation}
 
-\begin{lstlisting}[language=Python, caption=The Inward Pass: Articulated Inertia Propagation]
+The reaction force on the parent is:
+\begin{equation}
+  \mathbf{f}_{i+1}^{\text{reaction}} = \mathcal{I}_{i+1} (\dot{\mathcal{V}}_i + \mathcal{S}_{i+1} \ddot{q}_{i+1}) = \mathcal{I}_{i+1} \dot{\mathcal{V}}_i + \mathcal{I}_{i+1} \mathcal{S}_{i+1} \ddot{q}_{i+1}
+\end{equation}
+
+For the parent, the equation of motion becomes:
+\begin{equation}
+  \mathcal{I}_i \dot{\mathcal{V}}_i = \mathbf{f}_i - \mathcal{I}_{i+1} \dot{\mathcal{V}}_i - \mathcal{I}_{i+1} \mathcal{S}_{i+1} \ddot{q}_{i+1}
+\end{equation}
+
+Rearranging:
+\begin{equation}
+  (\mathcal{I}_i + \mathcal{I}_{i+1}) \dot{\mathcal{V}}_i = \mathbf{f}_i - \mathcal{I}_{i+1} \mathcal{S}_{i+1} \ddot{q}_{i+1}
+\end{equation}
+
+This shows that the parent sees an effective inertia of $\mathcal{I}_i + \mathcal{I}_{i+1}$. However, this is only true if the child's acceleration is coupled to the parent's (i.e., if we solve for $\ddot{q}_{i+1}$ in terms of the parent's acceleration).
+
+The key step is to \textit{eliminate} the child's acceleration. From the constraint:
+\begin{equation}
+  \mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \mathcal{S}_{i+1} \ddot{q}_{i+1} = \mathcal{S}_{i+1}^T (\mathbf{f}_{i+1} - \mathbf{f}_{\text{ext}}^{(i+1)}) - \mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \dot{\mathcal{V}}_i
+\end{equation}
+
+Solving for $\ddot{q}_{i+1}$:
+\begin{equation}
+  \ddot{q}_{i+1} = \frac{\mathcal{S}_{i+1}^T (\mathbf{f}_{i+1} - \mathcal{I}_{i+1} \dot{\mathcal{V}}_i)}{\mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \mathcal{S}_{i+1}} - \frac{\mathcal{S}_{i+1}^T \mathbf{f}_{\text{ext}}^{(i+1)}}{\mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \mathcal{S}_{i+1}}
+\end{equation}
+
+Substituting back into the reaction force:
+\begin{equation}
+  \mathbf{f}_{i+1}^{\text{reaction}} = \mathcal{I}_{i+1} \dot{\mathcal{V}}_i + \mathcal{I}_{i+1} \mathcal{S}_{i+1} \frac{\mathcal{S}_{i+1}^T (\mathbf{f}_{i+1} - \mathcal{I}_{i+1} \dot{\mathcal{V}}_i)}{\mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \mathcal{S}_{i+1}}
+\end{equation}
+
+After algebraic simplification (collecting terms proportional to $\dot{\mathcal{V}}_i$ and to $\mathbf{f}_{i+1}$), one obtains:
+\begin{equation}
+  \mathbf{f}_{i+1}^{\text{reaction}} = \mathcal{I}^A_i \dot{\mathcal{V}}_i + \mathbf{p}_i + \text{(terms proportional to child force)}
+\end{equation}
+
+where:
+\begin{equation}
+  \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}_{i+1} - \frac{\mathcal{I}_{i+1} \mathcal{S}_{i+1} (\mathcal{I}_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}_{i+1} \mathcal{S}_{i+1}}
+\end{equation}
+
+This is precisely Equation \ref{eq:articulated_inertia}. The \textbf{bias force} $\mathbf{p}_i$ encodes accelerations and external forces that would act even if the joint acceleration were zero.
+
+\section{The Articulated Body Algorithm: Three Passes}
+\label{sec:aba_three_passes}
+
+The complete ABA consists of three sequential passes through the kinematic tree:
+
+\subsection{Pass 1: Outward Pass (Velocity and Bias Forces)}
+\label{subsec:pass1_outward}
+
+Starting at the base (root) link $0$ and sweeping outward to the end-effector leaves, compute the spatial velocity and bias force at each link.
+
+\subsubsection{Spatial Velocity Propagation}
+\label{subsubsec:velocity_propagation}
+
+The spatial velocity of link $i$ is related to link $i-1$ (its parent) by:
+\begin{equation}
+  \mathcal{V}_i = \mathcal{V}_{i-1} + \mathcal{S}_i \dot{q}_i
+\end{equation}
+
+where $\mathcal{S}_i \dot{q}_i$ is the velocity component due to joint $i$'s motion.
+
+Start at the base: $\mathcal{V}_0 = \mathbf{0}$ (or non-zero if the base is floating). Then recursively compute:
+\begin{equation}
+  \mathcal{V}_1 = \mathcal{V}_0 + \mathcal{S}_1 \dot{q}_1 = \mathcal{S}_1 \dot{q}_1
+\end{equation}
+
+and so on for each child.
+
+\subsubsection{Coriolis Acceleration and Bias Force}
+\label{subsubsec:bias_force}
+
+The spatial acceleration is related to the time derivative of velocity:
+\begin{equation}
+  \dot{\mathcal{V}}_i = \dot{\mathcal{V}}_{i-1} + \mathcal{S}_i \ddot{q}_i + \dot{\mathcal{S}}_i \dot{q}_i
+\end{equation}
+
+However, at this stage of the algorithm, we do not yet know $\ddot{q}_i$. Instead, we compute the \textbf{bias acceleration} (what the acceleration would be if the joint acceleration were zero):
+
+\begin{equation}
+  \mathcal{V}_{c,i} = \dot{\mathcal{V}}_{i-1} + [\mathcal{V}_i, \mathcal{S}_i \dot{q}_i]
+\end{equation}
+
+where $[\mathcal{V}, \mathcal{S}]$ is the Lie bracket (spatial cross product) encoding Coriolis effects. For spatial vectors:
+\begin{equation}
+  [\mathcal{V}, \mathcal{S}] = [\boldsymbol{\omega}, \mathbf{v}] \text{ such that } [\mathcal{V}] \mathcal{S} - \mathcal{S} [\mathcal{V}]^T = [\mathcal{V}, \mathcal{S}]
+\end{equation}
+
+The bias force is then:
+\begin{equation}
+  \mathbf{p}_i = \mathcal{I}_i \mathcal{V}_{c,i}
+\end{equation}
+
+This encodes the Coriolis and centrifugal effects that accelerate the link even without external torques.
+
+\subsection{Pass 2: Inward Pass (Articulated Inertia Propagation)}
+\label{subsec:pass2_inward}
+
+Starting at the leaves and propagating inward toward the base, compute the articulated inertia at each link.
+
+\subsubsection{Boundary Condition}
+\label{subsubsec:leaf_inertia}
+
+At a leaf (end-effector with no children), the articulated inertia equals the rigid inertia:
+\begin{equation}
+  \mathcal{I}^A_{\text{leaf}} = \mathcal{I}_{\text{leaf}}
+\end{equation}
+
+\subsubsection{Recursive Update}
+\label{subsubsec:inertia_recursion}
+
+For each link $i$ with articulated inertia $\mathcal{I}^A_{i+1}$ of its child, update:
+\begin{equation}
+  \label{eq:aba_inertia_recursion}
+  \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}
+\end{equation}
+
+The denominator $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}$ is a scalar (the effective inertia along the joint's DOF) and is typically cached for use in Pass 3.
+
+\subsubsection{Bias Force Propagation (Optional)}
+\label{subsubsec:bias_propagation}
+
+At each link, the bias force also accumulates contributions from constraints. For a simple open chain with no external forces on the links:
+\begin{equation}
+  \mathbf{p}_i^{\text{total}} = \mathbf{p}_i + \mathbf{f}_{i+1}^{\text{reaction}}
+\end{equation}
+
+For now, we defer the detailed calculation and focus on the inertia.
+
+\subsection{Pass 3: Outward Pass (Joint Accelerations)}
+\label{subsec:pass3_outward}
+
+Starting at the base and sweeping outward, compute the joint accelerations and link accelerations.
+
+\subsubsection{Base Link Acceleration}
+\label{subsubsec:base_acceleration}
+
+At the base link $0$, the equations of motion are:
+\begin{equation}
+  \mathcal{I}_0 \dot{\mathcal{V}}_0 = \mathbf{f}_0 - \mathbf{f}_1^{\text{reaction}}
+\end{equation}
+
+where $\mathbf{f}_0$ is the external force on the base (typically zero for a fixed base) and $\mathbf{f}_1^{\text{reaction}}$ is the reaction from the first link.
+
+If the base is floating (6 DOF), we solve directly for the base acceleration. If the base is fixed, $\dot{\mathcal{V}}_0 = \mathbf{0}$ is constrained.
+
+\subsubsection{Recursive Joint Acceleration Computation}
+\label{subsubsec:joint_acceleration}
+
+For each link $i$ (starting from the root and moving outward), the equation of motion is:
+\begin{equation}
+  \mathcal{I}^A_i \dot{\mathcal{V}}_i = \mathbf{f}_i - \text{reaction from child link}
+\end{equation}
+
+At the joint level, the constraint is:
+\begin{equation}
+  \dot{\mathcal{V}}_i = \dot{\mathcal{V}}_{i-1} + \mathcal{S}_i \ddot{q}_i
+\end{equation}
+
+Projecting onto the joint direction (taking the dot product with $\mathcal{S}_i^T$):
+\begin{equation}
+  \mathcal{S}_i^T \mathcal{I}^A_i \dot{\mathcal{V}}_i = \mathcal{S}_i^T (\mathbf{f}_i - \mathbf{p}_i)
+\end{equation}
+
+Substituting the kinematic constraint:
+\begin{equation}
+  \mathcal{S}_i^T \mathcal{I}^A_i (\dot{\mathcal{V}}_{i-1} + \mathcal{S}_i \ddot{q}_i) = \mathcal{S}_i^T (\boldsymbol{\tau}_i - \mathbf{p}_i)
+\end{equation}
+
+where $\boldsymbol{\tau}_i$ is the applied joint torque. Solving for $\ddot{q}_i$:
+\begin{equation}
+  \label{eq:aba_joint_acceleration}
+  \ddot{q}_i = \frac{\boldsymbol{\tau}_i - \mathcal{S}_i^T \mathbf{p}_i - \mathcal{S}_i^T \mathcal{I}^A_i \dot{\mathcal{V}}_{i-1}}{\mathcal{S}_i^T \mathcal{I}^A_i \mathcal{S}_i}
+\end{equation}
+
+Once $\ddot{q}_i$ is known, compute the spatial acceleration of link $i$:
+\begin{equation}
+  \dot{\mathcal{V}}_i = \dot{\mathcal{V}}_{i-1} + \mathcal{S}_i \ddot{q}_i
+\end{equation}
+
+This is propagated to the next link, and the process repeats.
+
+\section{Proof of O(N) Complexity}
+\label{sec:aba_complexity}
+
+The complexity analysis is straightforward:
+
+\begin{enumerate}
+  \item \textbf{Pass 1 (Outward velocity and bias):} For each of $N$ links, we compute one scalar velocity ($O(1)$) and one spatial vector bias force ($O(1)$). Total: $O(N)$.
+
+  \item \textbf{Pass 2 (Inward articulated inertia):} For each of $N$ links, we perform:
+  \begin{itemize}
+    \item One spatial inertia addition: $O(36)$ (a $6 \times 6$ matrix addition).
+    \item One matrix-vector product: $\mathcal{I}^A \mathcal{S}$, yielding a $6D$ vector, $O(36)$ operations.
+    \item One outer product: $(6D) \times (6D)^T = 6 \times 6$ matrix, $O(36)$ operations.
+    \item One scalar division: $O(1)$.
+  \end{itemize}
+  All operations are constant (independent of $N$). Total: $O(N)$.
+
+  \item \textbf{Pass 3 (Outward accelerations):} For each of $N$ links, we compute:
+  \begin{itemize}
+    \item One dot product: $\mathcal{S}_i^T (\cdot)$, $O(6)$ operations.
+    \item One scalar division: $O(1)$.
+    \item One scalar-vector multiplication: $\mathcal{S}_i \ddot{q}_i$, $O(6)$ operations.
+    \item One vector addition: $O(6)$ operations.
+  \end{itemize}
+  Total: $O(N)$.
+\end{enumerate}
+
+Thus, the overall complexity is $O(N) + O(N) + O(N) = O(N)$, a factor of $N^2$ improvement over direct matrix inversion.
+
+\section{Floating Base: 6-DOF Root}
+\label{sec:floating_base}
+
+Many robots have a floating base—a root link not constrained to a fixed location (humanoids, quadrupeds, characters in games). The floating base has 6 degrees of freedom (3 translation, 3 rotation).
+
+\subsection{Modification to ABA}
+\label{subsec:floating_base_aba}
+
+The algorithm is modified minimally:
+
+\begin{enumerate}
+  \item In Pass 3, instead of fixing $\dot{\mathcal{V}}_0 = \mathbf{0}$, we compute:
+  \begin{equation}
+    \dot{\mathcal{V}}_0 = \mathcal{I}_0^{-1} (\mathbf{f}_0 - \mathbf{f}_1^{\text{reaction}})
+  \end{equation}
+  where $\mathbf{f}_0$ is the net external force on the base (gravity, applied forces) and $\mathbf{f}_1^{\text{reaction}}$ is the reaction from the first joint.
+
+  \item The matrix inverse $\mathcal{I}_0^{-1}$ is computed once (it is constant) and cached.
+
+  \item All subsequent steps (joint accelerations, link accelerations) proceed as normal.
+\end{enumerate}
+
+The impact on complexity is minimal: a single $6 \times 6$ matrix inverse at the base, still $O(1)$ per timestep.
+
+\subsection{Contact and Constraints}
+\label{subsec:contact_constraints}
+
+When a floating-base robot makes contact with the environment (e.g., a humanoid's foot touching the ground), the contact introduces a constraint that reduces the effective DOF. Contact handling in ABA typically uses:
+
+\begin{enumerate}
+  \item \textbf{Constraint Impulse Methods:} Compute contact forces (impulses) that prevent interpenetration, incorporated into Pass 3 as additional terms in the force equations.
+
+  \item \textbf{Reduced Dynamics:} Temporarily treat the contacted link as having a fixed base, reducing the DOF until contact breaks.
+
+  \item \textbf{Hybrid Approach:} Use ABA to compute unconstrained accelerations, then solve for constraint forces and correct accelerations post-hoc.
+\end{enumerate}
+
+Modern simulators (MuJoCo, PyBullet) implement sophisticated contact handling on top of ABA, but the core algorithm remains unchanged.
+
+\section{Joint Friction and Motor Inertia}
+\label{sec:friction_motor_inertia}
+
+\subsection{Joint Friction}
+\label{subsec:joint_friction}
+
+Viscous friction at joint $i$ is modeled as:
+\begin{equation}
+  \boldsymbol{\tau}_{\text{friction}, i} = -b_i \dot{q}_i
+\end{equation}
+
+where $b_i$ is the damping coefficient. This is incorporated into the bias force:
+\begin{equation}
+  \mathbf{p}_i \gets \mathbf{p}_i + b_i \dot{q}_i \mathcal{S}_i
+\end{equation}
+
+Coulomb (dry) friction is more complex but can be approximated similarly. Joint limits are handled via constraint forces or penalty forces.
+
+\subsection{Motor Inertia}
+\label{subsec:motor_inertia}
+
+Actuators (motors, servos) have their own inertia $I_{\text{motor}, i}$. This is added to the effective inertia along the joint:
+\begin{equation}
+  \mathcal{S}_i^T \mathcal{I}^A_i \mathcal{S}_i \gets \mathcal{S}_i^T \mathcal{I}^A_i \mathcal{S}_i + I_{\text{motor}, i}
+\end{equation}
+
+This slightly increases the denominator in Equation \ref{eq:aba_joint_acceleration}, accounting for the additional inertia the motor must overcome.
+
+\section{ABA vs. CRBA: When to Use Which}
+\label{sec:aba_vs_crba}
+
+The \textbf{Composite Rigid Body Algorithm (CRBA)} is an alternative approach that constructs the inertia matrix $\mathbf{M}(\mathbf{q})$ in $O(N)$ time (instead of the naive $O(N^3)$) by compositing inertias of rigid bodies, then solves via matrix inversion. This is useful when:
+
+\begin{itemize}
+  \item \textbf{Multiple Forward Dynamics Calls with Same $\mathbf{q}$:} If you need to solve $\mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}} = \boldsymbol{\tau}_1$, $\ddot{\mathbf{q}} = \boldsymbol{\tau}_2$, etc., with different torques but same configuration, CRBA computes $\mathbf{M}$ once ($O(N)$) and solves multiple RHS ($O(N^3)$ total for all). ABA solves each independently ($O(N)$ each, $O(N^2)$ total).
+
+  \item \textbf{Linear System Solves:} If the forward dynamics must be inverted (e.g., in optimal control), having $\mathbf{M}$ explicitly is helpful.
+
+  \item \textbf{Stability Analysis:} Eigenvalues of $\mathbf{M}$ are useful for understanding system dynamics.
+\end{itemize}
+
+For single forward dynamics solves in real-time simulation, \textbf{ABA is superior}—it avoids both matrix construction and inversion.
+
+\section{Forward Dynamics vs. Inverse Dynamics Decision Criteria}
+\label{sec:fd_id_decision}
+
+\subsection{When to Use Inverse Dynamics (Recursive Newton-Euler)}
+\label{subsec:use_id}
+
+\begin{itemize}
+  \item \textbf{Trajectory Tracking:} You have a desired trajectory $(\mathbf{q}_d, \dot{\mathbf{q}}_d, \ddot{\mathbf{q}}_d)$ and want to compute the torques $\boldsymbol{\tau}$ required to achieve it.
+
+  \item \textbf{Control Design:} Inverse dynamics enables feedback control: compute the feedforward torques from the desired trajectory, add feedback corrections based on tracking error.
+
+  \item \textbf{Motion Planning Validation:} Given a planned trajectory, compute required torques to check if motors can deliver them.
+\end{itemize}
+
+Complexity: $O(N)$ using Recursive Newton-Euler (RNE).
+
+\subsection{When to Use Forward Dynamics (ABA)}
+\label{subsec:use_fd}
+
+\begin{itemize}
+  \item \textbf{Physical Simulation:} You apply known torques and predict what the system will do. Essential for interactive simulation, games, physics-based RL.
+
+  \item \textbf{Disturbance Response:} Analyze how the system responds to unexpected forces or unmodeled interactions.
+
+  \item \textbf{Dynamics Prediction:} Rollout predictions of future states for planning or control optimization (MPC).
+\end{itemize}
+
+Complexity: $O(N)$ using ABA.
+
+\section{Constraint Handling: Contact Forces and Joint Limits}
+\label{sec:constraints}
+
+\subsection{Unilateral Contact Constraints}
+\label{subsec:contact}
+
+When a link contacts the environment (e.g., a foot on the ground), the contact exerts a reaction force that constrains the link's motion. This is formulated as:
+
+\begin{enumerate}
+  \item \textbf{Inequality Constraint:} Penetration depth $\geq 0$.
+
+  \item \textbf{Complementarity:} If depth $> 0$ (not in contact), force $= 0$. If depth $= 0$ (in contact), force $\geq 0$.
+
+  \item \textbf{Friction Cone:} Friction force magnitude $\leq \mu \times$ normal force, where $\mu$ is the coefficient of friction.
+\end{enumerate}
+
+Modern simulators solve these complementarity constraints using iterative algorithms (projected Gauss-Seidel, interior-point methods).
+
+\subsection{Joint Limits}
+\label{subsec:joint_limits}
+
+Joint limits enforce $q_{\min,i} \leq q_i \leq q_{\max,i}$. When a joint hits a limit, it acts like a contact: the joint constraint becomes active (the joint no longer has a full degree of freedom), and a constraint force enforces the limit.
+
+\section{Connection to Gaussian Elimination}
+\label{sec:gaussian_elimination_connection}
+
+Featherstone's insight was that the articulated inertia recursion is mathematically equivalent to \textbf{Gaussian elimination on a band-diagonal system}—the sparsity structure of the mass matrix for a serial kinematic chain.
+
+The mass matrix for a serial robot is band-diagonal: $M_{ij}$ is non-zero only if links $i$ and $j$ are on the same kinematic path (ancestor/descendant). This sparsity can be exploited to invert the matrix in $O(N)$ time instead of $O(N^3)$.
+
+ABA effectively performs this sparse elimination implicitly, without ever constructing the full matrix. This is why ABA is both fast and numerically stable: it avoids the ill-conditioning issues that arise from explicit matrix inversion.
+
+\section{Worked Example: Full ABA Walkthrough for a 3-Link Arm}
+\label{sec:worked_example_aba}
+
+Consider a planar 3-link arm (all revolute joints, rotating about the Z-axis) with:
+\begin{itemize}
+  \item Link 1: length $L_1 = 1$ m, mass $m_1 = 1$ kg, rotates at the origin.
+  \item Link 2: length $L_2 = 0.8$ m, mass $m_2 = 0.8$ kg, hinges at the end of Link 1.
+  \item Link 3: length $L_3 = 0.6$ m, mass $m_3 = 0.6$ kg, hinges at the end of Link 2.
+\end{itemize}
+
+For simplicity, assume all mass is concentrated at the link's center of mass (half-length from the base). The spatial inertia matrix for a point mass $m$ at distance $r$ is:
+\begin{equation}
+  \mathcal{I} = m \begin{bmatrix} \mathbf{0}_{3 \times 3} & \mathbf{0}_{3 \times 3} \\ \mathbf{0}_{3 \times 3} & \mathbf{I}_{3 \times 3} \end{bmatrix}
+\end{equation}
+
+(Idealized point mass at the CoM; exact inertia would include the rotational inertia tensor.)
+
+\subsection{Configuration at the Test Point}
+\label{subsec:config_aba}
+
+At configuration $\mathbf{q} = [\pi/4, \pi/6, -\pi/3]^T$ (45°, 30°, -60°) with joint velocities $\dot{\mathbf{q}} = [0.5, -0.3, 0.2]^T$ rad/s and applied torques $\boldsymbol{\tau} = [10, 8, 5]^T$ N$\cdot$m.
+
+\subsection{Pass 1: Velocity and Bias}
+\label{subsec:pass1_example}
+
+The screw axes (all Z-axis rotations) are:
+\begin{align}
+  \mathcal{S}_1 &= [0, 0, 1, 0, 0, 0]^T \\
+  \mathcal{S}_2 &= [0, 0, 1, 0, 0, L_1]^T = [0, 0, 1, 0, 0, 1]^T \\
+  \mathcal{S}_3 &= [0, 0, 1, 0, 0, L_1 + L_2]^T = [0, 0, 1, 0, 0, 1.8]^T
+\end{align}
+
+Spatial velocities:
+\begin{align}
+  \mathcal{V}_1 &= \mathcal{S}_1 \dot{q}_1 = [0, 0, 1, 0, 0, 0]^T \times 0.5 = [0, 0, 0.5, 0, 0, 0]^T \\
+  \mathcal{V}_2 &= \mathcal{V}_1 + \mathcal{S}_2 \dot{q}_2 = [0, 0, 0.5, 0, 0, 0]^T + [0, 0, -0.3, 0, 0, 1]^T = [0, 0, 0.2, 0, 0, -0.3]^T \\
+  \mathcal{V}_3 &= \mathcal{V}_2 + \mathcal{S}_3 \dot{q}_3 = [0, 0, 0.2, 0, 0, -0.3]^T + [0, 0, 0.2, 0, 0, 1.8]^T = [0, 0, 0.4, 0, 0, 1.5]^T
+\end{align}
+
+(Note: For planar motion, we extract the Z-component of angular velocity and the X, Y components of linear velocity; a full 6D treatment would track all components.)
+
+Bias forces (assuming no external forces and using the Coriolis bracket):
+\begin{equation}
+  \mathbf{p}_i = \mathcal{I}_i (\dot{\mathcal{V}}_{i-1} + [\mathcal{V}_i, \mathcal{S}_i \dot{q}_i])
+\end{equation}
+
+For this simplified example, we set $\mathbf{p}_i = m_i \mathcal{V}_{c,i}$ where $\mathcal{V}_{c,i}$ is the Coriolis acceleration.
+
+\subsection{Pass 2: Articulated Inertia}
+\label{subsec:pass2_example}
+
+Starting from the leaf (Link 3) and working backward:
+
+Link 3 (leaf):
+\begin{equation}
+  \mathcal{I}^A_3 = \mathcal{I}_3 = \begin{bmatrix} 0 & \cdots & 0 & 0 \\ \vdots & & \vdots & \vdots \\ 0 & \cdots & 0 & m_3 \\ 0 & \cdots & m_3 & 0 \end{bmatrix}
+\end{equation}
+
+(Idealized representation; full $6 \times 6$ matrix in spatial form.)
+
+For Link 2, we apply Equation \ref{eq:aba_inertia_recursion}:
+
+First compute:
+\begin{equation}
+  \mathcal{I}^A_3 \mathcal{S}_3 = \begin{bmatrix} 0 \\ m_3 \times 1.8 \end{bmatrix} = \begin{bmatrix} 0 \\ 1.08 m_3 \end{bmatrix}
+\end{equation}
+
+The scalar $\mathcal{S}_3^T \mathcal{I}^A_3 \mathcal{S}_3 = 1.8 \times m_3 \times 1.8 = 3.24 \times 0.6 = 1.944$ (kg$\cdot$m$^2$).
+
+The rank-one correction:
+\begin{equation}
+  \Delta \mathcal{I}_2 = \frac{\mathcal{I}^A_3 \mathcal{S}_3 (\mathcal{I}^A_3 \mathcal{S}_3)^T}{\mathcal{S}_3^T \mathcal{I}^A_3 \mathcal{S}_3}
+\end{equation}
+
+Thus:
+\begin{equation}
+  \mathcal{I}^A_2 = \mathcal{I}_2 + \mathcal{I}^A_3 - \Delta \mathcal{I}_2
+\end{equation}
+
+Similarly for Link 1, applying the recursion with $\mathcal{I}^A_2$ as the child inertia. The result is a series of $6 \times 6$ matrices representing the effective inertia felt at each joint.
+
+\subsection{Pass 3: Joint Accelerations}
+\label{subsec:pass3_example}
+
+For Joint 1, using Equation \ref{eq:aba_joint_acceleration}:
+\begin{equation}
+  \ddot{q}_1 = \frac{\tau_1 - \mathcal{S}_1^T \mathbf{p}_1 - \mathcal{S}_1^T \mathcal{I}^A_1 \times 0}{\mathcal{S}_1^T \mathcal{I}^A_1 \mathcal{S}_1} = \frac{10 - \mathcal{S}_1^T \mathbf{p}_1}{\mathcal{S}_1^T \mathcal{I}^A_1 \mathcal{S}_1}
+\end{equation}
+
+(The base acceleration $\dot{\mathcal{V}}_0 = \mathbf{0}$ for a fixed base.)
+
+Assuming $\mathcal{S}_1^T \mathbf{p}_1 \approx 2$ N$\cdot$m (from Coriolis effects) and $\mathcal{S}_1^T \mathcal{I}^A_1 \mathcal{S}_1 \approx 3$ kg$\cdot$m$^2$ (effective inertia):
+\begin{equation}
+  \ddot{q}_1 \approx \frac{10 - 2}{3} = \frac{8}{3} \approx 2.67 \text{ rad/s}^2
+\end{equation}
+
+Once $\ddot{q}_1$ is known:
+\begin{equation}
+  \dot{\mathcal{V}}_1 = \dot{\mathcal{V}}_0 + \mathcal{S}_1 \ddot{q}_1 = \mathcal{S}_1 \times 2.67
+\end{equation}
+
+For Joint 2:
+\begin{equation}
+  \ddot{q}_2 = \frac{\tau_2 - \mathcal{S}_2^T \mathbf{p}_2 - \mathcal{S}_2^T \mathcal{I}^A_2 \dot{\mathcal{V}}_1}{\mathcal{S}_2^T \mathcal{I}^A_2 \mathcal{S}_2}
+\end{equation}
+
+And similarly for Joint 3. The numerical values depend on the exact inertia matrices, but the pattern is clear: each joint's acceleration is solved sequentially using previously computed values.
+
+\section{Python Worked Example}
+\label{sec:python_aba_example}
+
+Here is a Python implementation of the Articulated Body Algorithm:
+
+\begin{lstlisting}[language=Python, caption=Articulated Body Algorithm Implementation]
 import numpy as np
 
-def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
-    # Initialize Articulated Inertia matching Rigid Inertia 
-    # (assuming no child links yet)
-    I_A = list(spatial_inertias) 
-    
-    # Loop from leaf (tip) to root (base) backward
-    for i in range(n_links - 1, 0, -1):
-        
-        # Parent Index
-        p = i - 1 
-        
-        # S is the 6D spatial screw expressing the current joint geometry
-        S = screw_axes[i]
-        
-        # Propagate child's accumulated articulated inertia across its hinge S
-        U = I_A[i] @ S
-        D = np.transpose(S) @ U  # Scalar effective inertia of the joint
-        
-        # Accumulate the remaining structural inertia back onto the parent link
-        # Outer product U @ U^T divides by scalar D
-        inertia_shift = (U @ np.transpose(U)) / D
-        
-        # Add to parent's Articulated Inertia block
-        I_A[p] = I_A[p] + I_A[i] - inertia_shift
-        
-    return I_A
+class ArticulatedBodyRobot:
+    """Implements the Articulated Body Algorithm for forward dynamics"""
 
-# I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
+    def __init__(self, masses, lengths, damping=None):
+        """
+        Initialize robot with link parameters.
+        masses: list of link masses
+        lengths: list of link lengths
+        damping: joint damping coefficients (optional)
+        """
+        self.n_links = len(masses)
+        self.masses = np.array(masses)
+        self.lengths = np.array(lengths)
+        self.damping = damping if damping is not None else np.zeros(self.n_links)
+
+        # Spatial inertia for each link (point mass at center)
+        self.I_rigid = []
+        for i, m in enumerate(masses):
+            I = np.zeros((6, 6))
+            I[3:6, 3:6] = m * np.eye(3)  # Linear momentum: m * I
+            # Rotational inertia (simplified: point mass)
+            I[0:3, 0:3] = 1e-6 * np.eye(3)  # Small rotational inertia
+            self.I_rigid.append(I)
+
+    def get_screw_axes(self, q):
+        """Compute screw axes for the current configuration"""
+        S = []
+        cum_length = 0
+        for i in range(self.n_links):
+            # Z-axis rotation at current cumulative position
+            screw = np.array([0, 0, 1, 0, 0, cum_length])
+            S.append(screw)
+            cum_length += self.lengths[i]
+        return S
+
+    def pass1_velocities_and_biases(self, q, dq):
+        """Pass 1: Outward pass computing velocities and bias forces"""
+        V = [np.zeros(6)]  # Base velocity (fixed base)
+        S = self.get_screw_axes(q)
+
+        for i in range(self.n_links):
+            V_child = V[-1] + S[i] * dq[i]
+            V.append(V_child)
+
+        # Compute bias (Coriolis) forces (simplified)
+        p = [np.zeros(6)]  # Base bias
+        for i in range(self.n_links):
+            # Coriolis acceleration (simplified for planar case)
+            coriolis = self.masses[i] * np.linalg.norm(V[i+1][:3]) * 0.1
+            p_i = np.zeros(6)
+            p_i[3:6] = coriolis  # Add to force component
+            p.append(p_i)
+
+        return V, p, S
+
+    def pass2_articulated_inertias(self, S):
+        """Pass 2: Inward pass computing articulated inertias"""
+        I_A = [self.I_rigid[-1].copy()]  # Start with leaf inertia
+
+        for i in range(self.n_links - 2, -1, -1):
+            # Articulated inertia recursion
+            I_child = I_A[0]
+            S_i = S[i+1]
+
+            # Compute components
+            IS = I_child @ S_i
+            denom = S_i @ I_child @ S_i
+
+            if abs(denom) > 1e-10:
+                # Rank-one update
+                I_A_i = self.I_rigid[i] + I_child - np.outer(IS, IS) / denom
+            else:
+                I_A_i = self.I_rigid[i] + I_child
+
+            I_A.insert(0, I_A_i)
+
+        return I_A
+
+    def pass3_accelerations(self, q, dq, tau, I_A, p, S):
+        """Pass 3: Outward pass computing joint accelerations"""
+        ddq = np.zeros(self.n_links)
+        V_dot = np.zeros((self.n_links + 1, 6))  # Link accelerations
+
+        for i in range(self.n_links):
+            S_i = S[i]
+
+            # Denominator: effective inertia along joint
+            denom = S_i @ I_A[i] @ S_i
+
+            # Numerator: torque minus biases minus parent acceleration effects
+            numer = tau[i] - S_i @ p[i+1] - S_i @ I_A[i] @ V_dot[i]
+
+            if abs(denom) > 1e-10:
+                ddq[i] = numer / denom
+            else:
+                ddq[i] = 0
+
+            # Compute link acceleration
+            V_dot[i+1] = V_dot[i] + S_i * ddq[i]
+
+        return ddq
+
+    def forward_dynamics(self, q, dq, tau):
+        """
+        Solve forward dynamics: ddq = ForwardDynamics(q, dq, tau)
+
+        Returns joint accelerations ddq
+        """
+        # Pass 1: Velocities and bias forces
+        V, p, S = self.pass1_velocities_and_biases(q, dq)
+
+        # Pass 2: Articulated inertias
+        I_A = self.pass2_articulated_inertias(S)
+
+        # Pass 3: Joint accelerations
+        ddq = self.pass3_accelerations(q, dq, tau, I_A, p, S)
+
+        # Add damping
+        ddq -= self.damping * dq
+
+        return ddq
+
+# Example: 3-link planar arm
+masses = [1.0, 0.8, 0.6]  # kg
+lengths = [1.0, 0.8, 0.6]  # m
+robot = ArticulatedBodyRobot(masses, lengths, damping=np.array([0.1, 0.1, 0.1]))
+
+# Test configuration
+q = np.array([np.pi/4, np.pi/6, -np.pi/3])
+dq = np.array([0.5, -0.3, 0.2])
+tau = np.array([10, 8, 5])  # Applied torques
+
+ddq = robot.forward_dynamics(q, dq, tau)
+print("Joint accelerations (rad/s^2):", np.round(ddq, 4))
+
+# Integration step (simple Euler)
+dt = 0.01  # 10 ms timestep
+dq_new = dq + ddq * dt
+q_new = q + dq * dt
+
+print("Updated joint velocities:", np.round(dq_new, 4))
+print("Updated joint positions:", np.round(q_new, 4))
 \end{lstlisting}
 
-This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time forward simulation logic throughout computational dynamics.
+\section{Contact Forces and Impact Dynamics}
+\label{sec:contact_impact}
+
+When a link collides with an obstacle (e.g., a foot striking the ground), an impulsive contact force acts. ABA can be extended to handle contact by:
+
+\begin{enumerate}
+  \item \textbf{Detection:} Identify which link has penetrated the environment.
+
+  \item \textbf{Impulse Computation:} Solve for the impulse (integrated force) required to prevent further penetration.
+
+  \item \textbf{Velocity Update:} Update the link's velocity according to the impulse.
+
+  \item \textbf{Continuation:} Run ABA with the updated velocities for the next timestep.
+\end{enumerate}
+
+The mathematical framework involves solving a complementarity problem (contact force must be non-negative, and the contact constraint—zero relative acceleration—must hold). Modern solvers use interior-point methods or the Lemke algorithm to solve these efficiently.
+
+\section{Chapter Summary}
+\label{sec:ch10_summary}
+
+The Articulated Body Algorithm is a revolutionary approach to forward dynamics:
+
+\begin{enumerate}
+  \item \textbf{$O(N)$ Complexity:} ABA solves forward dynamics in linear time, versus $O(N^3)$ for matrix inversion—a dramatic speedup for large robots.
+
+  \item \textbf{Three-Pass Structure:}
+  \begin{enumerate}
+    \item \textit{Outward pass:} Propagate velocities and Coriolis effects.
+    \item \textit{Inward pass:} Accumulate articulated inertias from leaves to root.
+    \item \textit{Outward pass:} Solve joint accelerations from root to leaves.
+  \end{enumerate}
+
+  \item \textbf{Articulated Inertia:} The effective inertia of a body accounting for all downstream bodies, computed via a rank-one update that projects child inertia across the joint constraint.
+
+  \item \textbf{Floating Base:} Extends naturally to robots with 6-DOF roots (humanoids, quadrupeds).
+
+  \item \textbf{Practical Implementation:} All operations are local matrix-vector products and scalar divisions; the algorithm is numerically stable and easy to implement.
+
+  \item \textbf{Real-Time Capability:} ABA powers all modern physics engines, game engines, and robot simulators.
+\end{enumerate}
+
+\section{Exercises}
+\label{sec:ch10_exercises}
+
+\begin{enumerate}
+  \item \textbf{Complexity Analysis:} Prove that Pass 1 of ABA is $O(N)$ by counting operations for velocity propagation and bias force computation.
+
+  \item \textbf{Articulated Inertia of a Chain:} For a 3-link chain with equal masses ($m = 1$ kg) and lengths ($L = 1$ m), compute the articulated inertias $\mathcal{I}^A_1, \mathcal{I}^A_2, \mathcal{I}^A_3$ explicitly (use simplified point-mass inertias).
+
+  \item \textbf{Effect of Motor Inertia:} How does adding motor inertia $I_{\text{motor}}$ to joint 1 affect the joint accelerations of joints 2 and 3? (Explain via the recursive update in Pass 3.)
+
+  \item \textbf{Floating Base Dynamics:} A humanoid robot with floating base has $6 + 30 = 36$ DOF. How does the time to compute forward dynamics scale compared to a fixed-base robot with 30 DOF?
+
+  \item \textbf{ABA vs. CRBA:} Given a 10-DOF robot, how many operations does each method require if you need to solve forward dynamics for 100 different torque vectors with the same configuration $\mathbf{q}$?
+
+  \item \textbf{Bias Force Verification:} For a simple 2-DOF planar arm, verify that the bias force $\mathbf{p}$ correctly encodes Coriolis accelerations at a configuration with non-zero joint velocities.
+
+  \item \textbf{Singularity Handling in ABA:} What happens to the joint acceleration equation (Equation \ref{eq:aba_joint_acceleration}) if $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1} = 0$? Is this physically possible?
+
+  \item \textbf{Joint Friction Implementation:} Modify the ABA pseudocode to incorporate viscous damping $b_i \dot{q}_i$ at each joint.
+
+  \item \textbf{Kinematic Chain Simulation:} Implement ABA for a 4-link arm and simulate its free-fall (gravity only, no applied torques). Plot the joint angles and velocities over time.
+
+  \item \textbf{Contact Impulse:} A 2-DOF arm swinging downward contacts the ground. Using ABA, compute the joint accelerations before and after contact and verify that the contact impulse prevents interpenetration.
+
+  \item \textbf{Time Integration:} Given the joint accelerations from ABA, implement a second-order integration scheme (e.g., symplectic Euler or velocity Verlet) and simulate the arm's motion over 1 second.
+
+  \item \textbf{Comparison with Matrix Inversion:} For a 10-DOF robot, construct the full mass matrix $\mathbf{M}(\mathbf{q})$ using CRBA, invert it, and compare the forward dynamics result with ABA. Verify they match.
+
+  \item \textbf{Floating Base Reaction Forces:} For a humanoid with floating base and foot contact, use ABA to compute the reaction forces at the contact point. Explain how these relate to the base acceleration.
+
+  \item \textbf{Redundancy and Null-Space Motion:} For a redundant robot (more DOF than required for a task), use ABA to understand how joint accelerations couple across redundant DOF.
+
+  \item \textbf{Optimization:} Derive the minimum-norm solution for forward dynamics of a constrained system (e.g., end-effector position fixed) using ABA with constraint forces.
+\end{enumerate}
+
