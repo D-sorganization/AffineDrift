@@ -116,9 +116,28 @@
   breakable
 }{thm}
 
+\newtcbtheorem[number within=chapter]{exercises}{Exercises}{
+  colback=softgray, colframe=black!50,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{exercises}
+
+\newtcbtheorem[number within=chapter]{algorithm}{Algorithm}{
+  colback=purplehaze!5, colframe=purplehaze!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{alg}
+
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}[chapter]
 \newtheorem{lemma}{Lemma}[chapter]
+
+% Simple environments (no arguments)
+\newenvironment{exercise}{\par\medskip\noindent\textbf{Exercise.}\itshape}{\par\medskip}
+\newenvironment{derivation}{\begin{proof}[Derivation]}{\end{proof}}
+\newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
+\newenvironment{listing}{\begin{center}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{center}}
+\newenvironment{algorithmic}{\begin{ttfamily}\small}{\end{ttfamily}}
 
 % ──────────────────────────────────────────────
 % Chapter formatting
