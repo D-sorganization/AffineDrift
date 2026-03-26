@@ -46,6 +46,35 @@ from .visualization import (
 logger = logging.getLogger(__name__)
 
 
+def _init_page() -> None:
+    """Configure Streamlit page settings and initialize session state.
+
+    Must be called once at application startup inside the main() entry point.
+    Separating this from module level prevents side effects on import.
+    """
+    st.set_page_config(
+        page_title="Enhanced Wrist Universal Joint Model",
+        page_icon="🏌️",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+
+    # Initialize session state
+    if "polynomial_expression" not in st.session_state:
+        st.session_state.polynomial_expression = "t**2 - t"
+    if "polynomial_error" not in st.session_state:
+        st.session_state.polynomial_error = None
+
+
+def _inject_custom_css() -> None:
+    """Inject custom CSS styles into the Streamlit page."""
+    template_dir = Path(__file__).parent / "templates"
+    css_path = template_dir / "style.css"
+    if css_path.exists():
+        css = css_path.read_text()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+
 def _render_header() -> None:
     """Render the main app header and description."""
     st.title("🏌️ Enhanced Wrist Universal Joint Model")
@@ -233,6 +262,58 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
     }
 
 
+def _plot_torque_figure(
+    params: dict[str, Any],
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
+) -> Figure:
+    """Create a torque vs time figure."""
+    return plot_torque(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_input"],
+        params["show_transmitted"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_acceleration_figure(
+    params: dict[str, Any],
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
+) -> Figure:
+    """Create an angular acceleration vs time figure."""
+    return plot_acceleration(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
+    """Create a transmission ratio sweep figure."""
+    return plot_transmission_sweep(  # type: ignore[no-any-return]
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_transmission"],
+        params["show_velocity"],
+        params["show_accel_alpha"],
+        params["show_accel_gamma"],
+    )
+
+
 def _create_plot_figure(
     params: dict[str, Any],
     t: npt.NDArray[Any],
@@ -249,51 +330,11 @@ def _create_plot_figure(
         Matplotlib Figure for the selected plot type.
     """
     plot_type = params["plot_type"]
-
     if plot_type == "Torque":
-        return cast(
-            Figure,
-            plot_torque(
-                t,
-                input_torque,
-                params["grip_angle"],
-                params["wrist_angle"],
-                params["I_alpha"],
-                params["I_gamma"],
-                params["show_input"],
-                params["show_transmitted"],
-                params["show_alpha"],
-                params["show_gamma"],
-            ),
-        )
+        return _plot_torque_figure(params, t, input_torque)
     if plot_type == "Angular Acceleration":
-        return cast(
-            Figure,
-            plot_acceleration(
-                t,
-                input_torque,
-                params["grip_angle"],
-                params["wrist_angle"],
-                params["I_alpha"],
-                params["I_gamma"],
-                params["show_alpha"],
-                params["show_gamma"],
-            ),
-        )
-    # Transmission Ratio
-    return cast(
-        Figure,
-        plot_transmission_sweep(
-            params["grip_angle"],
-            params["wrist_angle"],
-            params["I_alpha"],
-            params["I_gamma"],
-            params["show_transmission"],
-            params["show_velocity"],
-            params["show_accel_alpha"],
-            params["show_accel_gamma"],
-        ),
-    )
+        return _plot_acceleration_figure(params, t, input_torque)
+    return _plot_transmission_figure(params)
 
 
 def _render_main_content(params: dict[str, Any]) -> None:
@@ -331,6 +372,67 @@ def _render_main_content(params: dict[str, Any]) -> None:
     _render_info_panel(params, input_torque)
 
 
+def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str, Any]:
+    """Compute transmission and torque metrics for the info panel.
+
+    Returns:
+        Dictionary with keys: omega_ratio, tau_ratio, torque_alpha, torque_gamma,
+        pct_alpha, pct_gamma, deviation.
+    """
+    grip_angle = params["grip_angle"]
+    wrist_angle = params["wrist_angle"]
+    theta_grip_rad = np.radians(grip_angle)
+    phi_wrist_rad = np.radians(wrist_angle)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    torque_transmitted = np.mean(input_torque) * tau_ratio
+    torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
+    return {
+        "omega_ratio": omega_ratio,
+        "tau_ratio": tau_ratio,
+        "torque_alpha": torque_alpha,
+        "torque_gamma": torque_gamma,
+        "pct_alpha": np.abs(np.sin(theta_grip_rad)) * 100,
+        "pct_gamma": np.abs(np.cos(theta_grip_rad)) * 100,
+        "deviation": "radial" if wrist_angle > 0 else "ulnar" if wrist_angle < 0 else "neutral",
+    }
+
+
+def _render_info_markdown(params: dict[str, Any], info: dict[str, Any]) -> None:
+    """Render the model information markdown block inside the expander."""
+    grip_angle = params["grip_angle"]
+    wrist_angle = params["wrist_angle"]
+    i_alpha = params["I_alpha"]
+    i_gamma = params["I_gamma"]
+    st.markdown(
+        f"""
+    ### Current Parameters
+    - **Grip Angle (θ_grip):** {grip_angle}°
+    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info['deviation']} deviation)
+
+    ### Transmission Ratios
+    - **Angular Velocity Ratio (ω_out/ω_in):** {info['omega_ratio']:.4f}
+    - **Torque Transmission Ratio (τ_out/τ_in):** {info['tau_ratio']:.4f}
+
+    ### Torque Distribution (at mean input torque)
+    - **Torque to α-axis (higher MOI):** {info['torque_alpha']:.4f} N·m
+    ({info['pct_alpha']:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {info['torque_gamma']:.4f} N·m
+    ({info['pct_gamma']:.1f}% of transmitted)
+
+    ### Angular Acceleration (at mean torque)
+    - **α-axis acceleration:** {info['torque_alpha'] / i_alpha:.4f} rad/s²
+    - **γ-axis acceleration:** {info['torque_gamma'] / i_gamma:.4f} rad/s²
+
+    ### Model Assumptions
+    - Universal joint (Hooke/Cardan) kinematics
+    - Rigid body model
+    - Power conservation (P = τω)
+    - Constant grip angle during motion
+    - Wrist angle represents radial/ulnar deviation
+    """,
+    )
+
+
 def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
     """Render the expandable model information panel.
 
@@ -340,68 +442,25 @@ def _render_info_panel(params: dict[str, Any], input_torque: Any) -> None:
     """
     st.markdown("---")
     with st.expander("📐 Model Information"):
-        grip_angle = params["grip_angle"]
-        wrist_angle = params["wrist_angle"]
-        i_alpha = params["I_alpha"]
-        i_gamma = params["I_gamma"]
-
-        theta_grip_rad = np.radians(grip_angle)
-        phi_wrist_rad = np.radians(wrist_angle)
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-            phi_wrist_rad,
-            theta_grip_rad,
-        )
-        torque_transmitted = np.mean(input_torque) * tau_ratio
-        torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
-            torque_transmitted,
-            theta_grip_rad,
-        )
-
-        pct_alpha = np.abs(np.sin(theta_grip_rad)) * 100
-        pct_gamma = np.abs(np.cos(theta_grip_rad)) * 100
-
-        deviation = "radial" if wrist_angle > 0 else "ulnar" if wrist_angle < 0 else "neutral"
-
-        st.markdown(
-            f"""
-        ### Current Parameters
-        - **Grip Angle (θ_grip):** {grip_angle}°
-        - **Wrist Deviation Angle (φ):** {wrist_angle}°
-        ({deviation} deviation)
-
-        ### Transmission Ratios
-        - **Angular Velocity Ratio (ω_out/ω_in):** {omega_ratio:.4f}
-        - **Torque Transmission Ratio (τ_out/τ_in):** {tau_ratio:.4f}
-
-        ### Torque Distribution (at mean input torque)
-        - **Torque to α-axis (higher MOI):** {torque_alpha:.4f} N·m
-        ({pct_alpha:.1f}% of transmitted)
-        - **Torque to γ-axis (lowest MOI):** {torque_gamma:.4f} N·m
-        ({pct_gamma:.1f}% of transmitted)
-
-        ### Angular Acceleration (at mean torque)
-        - **α-axis acceleration:** {torque_alpha / i_alpha:.4f} rad/s²
-        - **γ-axis acceleration:** {torque_gamma / i_gamma:.4f} rad/s²
-
-        ### Model Assumptions
-        - Universal joint (Hooke/Cardan) kinematics
-        - Rigid body model
-        - Power conservation (P = τω)
-        - Constant grip angle during motion
-        - Wrist angle represents radial/ulnar deviation
-        """,
-        )
+        info = _compute_info_metrics(params, input_torque)
+        _render_info_markdown(params, info)
 
 
 def main() -> None:
-    """Run the Streamlit wrist universal joint app."""
-    configure_page()
-    initialize_session_state()
-    inject_custom_css(Path(__file__).parent / "templates")
+    """Run the Streamlit application.
+
+    All Streamlit UI calls are contained here so that importing this module
+    does not execute any side effects.  Run via:
+        streamlit run streamlit_app.py
+    """
+    _init_page()
+    _inject_custom_css()
     _render_header()
     params = _render_sidebar()
     _render_main_content(params)
 
 
 if __name__ == "__main__":
+    main()
+elif hasattr(st, "runtime") and st.runtime.exists():
     main()

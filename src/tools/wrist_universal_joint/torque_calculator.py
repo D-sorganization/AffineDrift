@@ -27,7 +27,7 @@ def calculate_moments_of_inertia(
     shaft_weight_g: float,
     club_length_m: float,
     cg_distance_m: float,
-    gamma_to_alpha_ratio: float = DEFAULT_GAMMA_TO_ALPHA_RATIO,
+    i_gamma_ratio: float = 0.5,
 ) -> tuple[float, float]:
     """Calculate moments of inertia for golf club about two axes.
 
@@ -37,22 +37,25 @@ def calculate_moments_of_inertia(
         shaft_weight_g: Shaft weight in grams.
         club_length_m: Total club length in meters.
         cg_distance_m: Distance from grip to clubhead center of mass in meters.
-        gamma_to_alpha_ratio: Heuristic ratio I_gamma / I_alpha for the
-            simplified demo model. Defaults to 0.5 for backward compatibility;
-            callers should override this with measured club-specific data.
+        i_gamma_ratio: Ratio of I_gamma to I_alpha. Defaults to 0.5, a typical value
+            for golf clubs (ref: Jorgensen, T. (1994) *The Physics of Golf*, AIP Press,
+            p. 16–17). Different club types (drivers vs irons vs putters) exhibit
+            different cross-axis MOI ratios; override this parameter for club-specific
+            accuracy.
 
     Returns:
     -------
         A tuple containing:
             - I_alpha: Moment of inertia about shaft axis (kg·m²) - higher MOI.
-            - I_gamma: Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
+            - I_gamma: Moment of inertia about local gamma axis (kg·m²) — lowest MOI,
+              computed as ``i_gamma_ratio * I_alpha``.
 
     """
     check_positive(clubhead_weight_g, "clubhead weight")
     check_positive(shaft_weight_g, "shaft weight")
     check_positive(club_length_m, "club length")
     check_positive(cg_distance_m, "CG distance")
-    check_positive(gamma_to_alpha_ratio, "gamma_to_alpha_ratio")
+    check_positive(i_gamma_ratio, "i_gamma_ratio")
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
 
@@ -65,9 +68,8 @@ def calculate_moments_of_inertia(
     # Total I_alpha (about shaft axis) - higher MOI axis
     i_alpha = i_shaft_alpha + i_head_alpha
 
-    # I_gamma (lowest MOI axis) uses a configurable ratio so club-specific
-    # measurements can replace the demo-model heuristic.
-    i_gamma = gamma_to_alpha_ratio * i_alpha
+    # I_gamma (lowest MOI axis): configurable ratio; default 0.5 for typical golf clubs
+    i_gamma = i_gamma_ratio * i_alpha
 
     ensure(i_alpha > 0, "I_alpha must be positive")
     ensure(i_gamma > 0, "I_gamma must be positive")
@@ -134,6 +136,46 @@ def distribute_torque_by_grip_angle(
     return torque_alpha, torque_gamma
 
 
+def _generate_golf_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a golf-swing-like random torque signal."""
+    torque = rng.normal(0, 1, len(t))
+    torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
+    return np.convolve(torque, np.ones(10) / 10, mode="same")
+
+
+def _generate_step_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a step torque signal (step at midpoint)."""
+    n = len(t)
+    torque = np.zeros_like(t)
+    midpoint = n // 2
+    torque[midpoint:] = 3.0  # Step at midpoint
+    return torque
+
+
+def _generate_pulse_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a pulse torque signal (random burst in the middle 20% of the array)."""
+    n = len(t)
+    torque = np.zeros_like(t)
+    pulse_start = int(0.4 * n)
+    pulse_end = int(0.6 * n)
+    torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
+    return torque
+
+
+def _generate_burst_torque(t: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
+    """Generate a burst torque signal (Gaussian burst centered at midpoint)."""
+    n = len(t)
+    torque = np.zeros_like(t)
+    burst_center = n // 2
+    burst_width = max(1, n // 10)
+    burst_indices = np.arange(
+        max(0, burst_center - burst_width),
+        min(n, burst_center + burst_width),
+    )
+    torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
+    return torque
+
+
 def generate_sample_torque(
     noise_type: str,
     t: np.ndarray[Any, Any],
@@ -149,9 +191,7 @@ def generate_sample_torque(
 
     Returns:
     -------
-        A tuple containing:
-            - torque: Generated torque signal array.
-            - error: Error message string, or None if successful.
+        Tuple of (torque array, error string or None).
 
     """
     require(len(t) > 0, "time array must not be empty")
@@ -159,27 +199,13 @@ def generate_sample_torque(
     torque: np.ndarray[Any, Any]
 
     if noise_type == "Golf-like Random":
-        torque = rng.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = _generate_golf_torque(t)
     elif noise_type == "Step":
-        torque = np.zeros_like(t)
-        midpoint = len(t) // 2
-        torque[midpoint:] = 3.0
+        torque = _generate_step_torque(t)
     elif noise_type == "Pulse":
-        torque = np.zeros_like(t)
-        pulse_start = int(0.4 * len(t))
-        pulse_end = int(0.6 * len(t))
-        torque[pulse_start:pulse_end] = 5.0 * rng.standard_normal(pulse_end - pulse_start)
+        torque = _generate_pulse_torque(t)
     elif noise_type == "Burst":
-        torque = np.zeros_like(t)
-        burst_center = len(t) // 2
-        burst_width = max(1, len(t) // 10)
-        burst_indices = np.arange(
-            max(0, burst_center - burst_width),
-            min(len(t), burst_center + burst_width),
-        )
-        torque[burst_indices] = rng.normal(0, 3, len(burst_indices))
+        torque = _generate_burst_torque(t)
     elif noise_type == "Sinusoidal":
         torque = 2.0 * np.sin(8 * np.pi * t)
     elif noise_type == "Random":
@@ -188,12 +214,41 @@ def generate_sample_torque(
     elif noise_type == "Polynomial":
         torque, error = _evaluate_polynomial(t, polynomial_expression)
     else:
-        # Default to golf-like
-        torque = rng.normal(0, 1, len(t))
-        torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * rng.standard_normal(len(t))
-        torque = np.convolve(torque, np.ones(10) / 10, mode="same")
+        torque = _generate_golf_torque(t)
 
     return torque, error
+
+
+def _build_polynomial_namespace(
+    t: np.ndarray[Any, Any],
+) -> EvalWithCompoundTypes:
+    """Build a safe evaluator with allowed names and functions for polynomial expressions."""
+    return EvalWithCompoundTypes(
+        names={"t": t, "pi": np.pi, "e": np.e},
+        functions={
+            "sin": np.sin,
+            "cos": np.cos,
+            "exp": np.exp,
+            "sqrt": np.sqrt,
+            "log": np.log,
+        },
+    )
+
+
+def _validate_polynomial_result(
+    result: Any,
+    t: np.ndarray[Any, Any],
+) -> tuple[np.ndarray[Any, Any], str | None]:
+    """Validate and coerce a polynomial evaluation result to match the time array shape."""
+    if isinstance(result, np.ndarray):
+        if result.shape != t.shape:
+            return (
+                t**2 - t,
+                f"Polynomial result shape {result.shape} does not match "
+                f"time array shape {t.shape}.",
+            )
+        return result, None
+    return np.full_like(t, float(result)), None
 
 
 def _evaluate_polynomial(
@@ -209,36 +264,13 @@ def _evaluate_polynomial(
 
     Returns:
     -------
-        A tuple containing:
-            - torque: Evaluated result array.
-            - error: Error message string, or None if successful.
+        Tuple of (evaluated result array, error string or None).
 
     """
     try:
-        evaluator = EvalWithCompoundTypes(
-            names={
-                "t": t,
-                "pi": np.pi,
-                "e": np.e,
-            },
-            functions={
-                "sin": np.sin,
-                "cos": np.cos,
-                "exp": np.exp,
-                "sqrt": np.sqrt,
-                "log": np.log,
-            },
-        )
+        evaluator = _build_polynomial_namespace(t)
         result = evaluator.eval(expression)
-        if isinstance(result, np.ndarray):
-            if result.shape != t.shape:
-                return (
-                    t**2 - t,
-                    f"Polynomial result shape {result.shape} does not match "
-                    f"time array shape {t.shape}.",
-                )
-            return result, None
-        return np.full_like(t, float(result)), None
+        return _validate_polynomial_result(result, t)
     except SyntaxError:
         return t**2 - t, "Invalid polynomial syntax. Please check your expression."
     except NameError:

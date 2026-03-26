@@ -42,6 +42,7 @@ from .constants import (
     HTML_FIX_PATTERNS,
     PATH_REPLACEMENT_PATTERNS,
 )
+from .conversion_utils import batch_convert
 from .file_utils import (
     find_files_by_extension,
     find_html_files,
@@ -132,6 +133,8 @@ __all__ = [
     "get_repo_short_name",
     # Shell utilities
     "ToolResult",
+    # Conversion utilities
+    "batch_convert",
     # Async utilities
     "run_async_task",
     "run_sync_in_thread",
