@@ -1,3 +1,14 @@
+"""Concrete dynamical system examples for AffineDrift.
+
+This module provides the abstract base class ``DynamicalSystem`` and four
+example systems used in the textbook chapters:
+
+- ``SimplePendulum`` — torque-driven pendulum in 2D.
+- ``SpacecraftRendezvous`` — nonlinear relative orbital motion (LVLH).
+- ``PlanarQuadrotor`` — 2D quadrotor with two thrust inputs.
+- ``RobotArm`` — 2-link planar manipulator with full Lagrangian dynamics.
+"""
+
 import logging
 from abc import ABC, abstractmethod
 from typing import Any

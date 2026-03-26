@@ -11,7 +11,9 @@ from typing import Protocol
 class FileConverter(Protocol):
     """Minimal protocol for file-based converters."""
 
-    def convert_file(self, source: str, target: str) -> None: ...
+    def convert_file(self, source: str, target: str) -> None:
+        """Convert *source* file and write result to *target*."""
+        ...
 
 
 def run_batch_conversion(

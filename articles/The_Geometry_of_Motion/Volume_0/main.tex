@@ -3,6 +3,17 @@
 % ──────────────────────────────────────────────
 % Packages
 % ──────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\DeclareUnicodeCharacter{00B7}{\textperiodcentered}
+\DeclareUnicodeCharacter{00B0}{\textdegree}
+\DeclareUnicodeCharacter{00D7}{\texttimes}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{00B2}{\textsuperscript{2}}
+\DeclareUnicodeCharacter{00B3}{\textsuperscript{3}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
 \usepackage[margin=1.2in]{geometry}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{mathtools}
@@ -99,10 +110,34 @@
   breakable
 }{laymans}
 
+\newtcbtheorem[number within=chapter]{theorem}{Theorem}{
+  colback=accentred!5, colframe=accentred!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{thm}
+
+\newtcbtheorem[number within=chapter]{exercises}{Exercises}{
+  colback=softgray, colframe=black!50,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{exercises}
+
+\newtcbtheorem[number within=chapter]{algorithm}{Algorithm}{
+  colback=purplehaze!5, colframe=purplehaze!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{alg}
+
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{lemma}{Lemma}[chapter]
+
+% Simple environments (no arguments)
+\newenvironment{exercise}{\par\medskip\noindent\textbf{Exercise.}\itshape}{\par\medskip}
+\newenvironment{derivation}{\begin{proof}[Derivation]}{\end{proof}}
+\newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
+\newenvironment{listing}{\begin{center}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{center}}
+\newenvironment{algorithmic}{\begin{ttfamily}\small}{\end{ttfamily}}
 
 % ──────────────────────────────────────────────
 % Chapter formatting

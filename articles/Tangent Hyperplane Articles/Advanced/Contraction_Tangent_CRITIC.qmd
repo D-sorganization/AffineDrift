@@ -1366,15 +1366,15 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 
       <div class="laymans-item">
         <h3>Efficiency Doesn't Mean Stability</h3>
-        <p>The paper claims that finding the optimal setup guarantees stability, and that being stable means you have the optimal setup. In reality, you can have a perfectly stable system without it being the most efficient.</p>
+        <p>The paper assumes the most efficient system is always the most stable. In reality, a very safe system might not be efficient at all.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> driving a slow, heavy tractor. It is very stable and safe to drive, but it is definitely not the fastest or most efficient vehicle on the road.
         </div>
       </div>
 
       <div class="laymans-item">
-        <h3>Missing Real-World Evidence</h3>
-        <p>The author uses math to guess how human muscles coordinate during complex movements. However, the paper does not include any actual biological tests to prove that human brains work this way.</p>
+        <h3>Math Doesn't Always Equal Reality</h3>
+        <p>The author uses math to guess how human muscles work. But there are no real biological tests to prove the brain actually works this way.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> writing a detailed recipe based only on looking at a photo of a cake. The result might look similar, but you have no proof it tastes the same without actually testing it.
         </div>
@@ -1382,7 +1382,7 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 
       <div class="laymans-item">
         <h3>Guarantees Without Proof</h3>
-        <p>The paper advertises a method with a guaranteed safety net, claiming the system will not fail. Yet, the rigorous mathematical proof needed to back up that guarantee is missing.</p>
+        <p>The paper promises its method is guaranteed to be safe and won't fail. However, it leaves out the actual math proofs needed to back up this big claim.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> a lock company claiming their new lock is unbreakable, but refusing to let any security experts actually test it.
         </div>
@@ -1412,9 +1412,9 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 <span class="critic-label">Alternative View:</span>
 <h3>The Pragmatic Value of the "Duality" Framework</h3>
         </div>
-        <p class="critic-argument">While the mathematical mapping between LQR and contraction metrics is formally asymmetric (as LQR uniquely yields a contraction metric, but the inverse is non-unique), treating this relationship as a bidirectional "duality" is arguably a necessary abstraction for modern control engineering. By conceptually bridging stability and optimality, practitioners are empowered to inject geometric stability constraints directly into cost functions. In applied robotics, this heuristic accelerates the design of safe controllers significantly, and insisting on strict mathematical equivalence may unnecessarily gatekeep a highly productive engineering tool.</p>
+        <p class="critic-argument">The critique that the stability-optimality mapping is mathematically asymmetric (LQR yields contraction, but the inverse is non-unique) is formally correct, but it arguably misses the point for applied engineering. In modern control design, treating this relationship as a bidirectional "duality" is not a mathematical oversight, but a necessary, productive heuristic. Bridging these concepts allows practitioners to inject geometric stability constraints directly into optimization frameworks, significantly accelerating the design of safe, high-performance robotics. Insisting on strict mathematical isomorphisms over operational utility risks gatekeeping tools that, empirically, work exceptionally well.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is a strong and valid point; engineering often relies on productive heuristics that outpace formal theory. We agree that the "duality" framework is a powerful design accelerator. Our primary concern is simply one of taxonomy: if the text clarified that this is a <em>pragmatic</em> duality rather than a strict mathematical isomorphism, it would serve both practitioners and theorists without causing theoretical confusion.
+<strong>Our Response:</strong> We acknowledge the power of this operational heuristic; engineering routinely outpaces formal theory by relying on what works in practice. The framework is indeed a strong design accelerator. However, clarity of taxonomy remains important. If the text explicitly framed this as a <em>pragmatic</em> duality rather than a formal mathematical equivalence, it would empower engineers without misleading theorists.
         </div>
       </div>
 
@@ -1423,9 +1423,9 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 <span class="critic-label">Alternative View:</span>
 <h3>Mathematical Frameworks as Predictive Biological Models</h3>
         </div>
-        <p class="critic-argument">Criticizing the muscle synergy claims (Section 7) for lacking empirical data misunderstands the role of theoretical computational neuroscience. New organizing principles, such as the hypothesis that synergies maximize contraction rate, must be mathematically formalized <em>before</em> they can be experimentally tested. Foundational theories like the minimum-jerk or minimum-variance models were initially proposed purely mathematically. By introducing contraction maximization as a theoretical construct, the authors are providing a clear, falsifiable framework that experimentalists can now target with EMG or motion capture data.</p>
+        <p class="critic-argument">Dismissing the muscle synergy claims (Section 7) due to a lack of immediate empirical data fundamentally misunderstands how theoretical computational neuroscience operates. New organizing principles—like the hypothesis that biological synergies maximize contraction rates—must be mathematically formalized <em>before</em> experimentalists know what to look for. Historically, foundational models like minimum-jerk or minimum-variance were proposed entirely on mathematical elegance before data verified them. By framing contraction maximization mathematically, the authors are providing a precise, falsifiable model that gives meaning and direction to future EMG and motion capture studies.</p>
         <div class="author-response">
-<strong>Our Response:</strong> We fully concede that theoretical formulation is a vital precursor to empirical study, and the contraction-maximization hypothesis is a compelling, falsifiable model. The critique's goal is not to dismiss the theory, but to ensure it is framed explicitly as a predictive model rather than an established biological fact, ensuring readers differentiate between the rigorous control math and the speculative biomechanics.
+<strong>Our Response:</strong> This is a highly valid perspective. Theoretical formulation is a necessary precursor to discovery, and the contraction-maximization hypothesis is both compelling and testable. The intention of our critique is not to suppress theoretical exploration, but to urge the authors to clearly label these sections as "predictive models" rather than "established facts." This ensures that readers appropriately distinguish the rigorously proven control math from the pioneering biological hypotheses.
         </div>
       </div>
 
@@ -1434,9 +1434,9 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 <span class="critic-label">Alternative View:</span>
 <h3>Rethinking "Certified" in the Context of Optimization-Based Control</h3>
         </div>
-        <p class="critic-argument">The demand for an exhaustive formal proof to justify the term "certified stability" (Theorem 4.1) applies a standard from classical linear control that may be overly restrictive for modern, high-dimensional trajectory optimization. In contemporary robotics, "certified" often refers to algorithms that embed verifiable stability constraints directly into the solver at runtime (e.g., SDP conditions). Because the solver verifies these conditions step-by-step, the resulting control is practically certified by the algorithmic structure itself, even if deriving a closed-form global proof with explicit bounds on the penalty parameter is analytically intractable.</p>
+        <p class="critic-argument">Demanding an exhaustive, global analytical proof to justify the term "certified stability" (Theorem 4.1) applies an anachronistic standard to modern optimization-based control. In contemporary, high-dimensional robotics, analytical proofs are often intractable. Instead, "certified" has evolved to mean that the control algorithm mathematically embeds and verifies stability constraints (like SDP conditions) <em>at runtime</em>. Because the solver rigorously checks these conditions step-by-step before executing control, the system is practically and mathematically certified by the algorithmic structure itself, rendering the demand for offline global proofs largely obsolete.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This perspective correctly highlights a shift in how stability is practically verified in optimization-based control—runtime algorithmic guarantees are indeed a form of certification. Acknowledging this, the critique's focus narrows: the text would benefit from clarifying that the stability is "algorithmically certified" at runtime rather than "analytically proven" globally, bridging the gap between classical expectations and modern methods.
+<strong>Our Response:</strong> We concede that runtime algorithmic guarantees represent a paradigm shift in how stability is practically verified, and treating SDP enforcement as a form of certification is reasonable. Acknowledging this modern standard, our critique's focus refines: the article would be significantly strengthened by explicitly defining "certified" as "algorithmically guaranteed at runtime" rather than allowing readers to assume a classical, offline analytical proof exists.
         </div>
       </div>
 

@@ -1,0 +1,448 @@
+---
+title: "Parallel Mechanisms"
+---
+
+
+
+# Parallel Mechanisms and Loop Constraints
+
+::: {.callout-tip}
+## Why the Body is Not a Serial Chain
+
+In Chapters 6--8, we modeled the golf swing as a *serial* kinematic chain: hips → shoulders → arms → club. This is pedagogically useful, but it's *biomechanically wrong*.
+
+A serial chain assumes:
+- The hips rotate independently.
+- The shoulders rotate relative to the hips.
+- The arms rotate relative to the shoulders.
+- Each segment can move freely.
+
+But the human body doesn't work this way. The spine connects the pelvis to the shoulders. The two arms both attach to the shoulders. The ground constrains the feet. These connections form *closed loops*—the hallmarks of a parallel mechanism.
+
+A parallel mechanism is fundamentally different from a serial chain:
+- Fewer degrees of freedom than you'd naively expect.
+- Larger constraint forces.
+- Motion of one part directly constrains others.
+- Mobility is determined not just by the number of joints, but by the topology of the loops.
+
+This chapter develops the math and physics of parallel mechanisms, then applies it to understand the golf swing's body structure. The payoff: insights into X-factor rotation, why some golfers are efficient, and what breaks down in amateur swings.
+
+:::
+
+## Serial vs. Parallel Mechanisms
+
+::: {.callout-note}
+## Serial Mechanism
+
+A **serial mechanism** is a kinematic chain where each segment is attached to the next in a single sequence. Examples:
+- A robotic arm: base → joint 1 → link 1 → joint 2 → link 2 → ... → end effector.
+- A simplified golf swing: hips → shoulders → elbows → wrists → club.
+
+Key property: Each joint is traversed at most once. There are no closed loops.
+
+:::
+
+::: {.callout-note}
+## Parallel Mechanism
+
+A **parallel mechanism** is a kinematic structure with closed loops. Multiple paths connect the same two bodies. Examples:
+- A Stewart platform (used in flight simulators): a hexapod with 6 legs, each of which connects the base to the moving platform. The 6 legs form 6 parallel paths.
+- The human body during a golf swing: the spine connects the pelvis to the shoulders, the arms connect the shoulders to the hands, and the grip connects the hands to the club. These form loops.
+
+Key property: Motion of one part is constrained by multiple paths. The system is over-constrained, meaning flexibility (joints have limited ranges) is crucial.
+
+:::
+
+{Intuitive Difference}{inplain:serial_vs_parallel_intuition}
+A serial chain is like a single path through a graph: you can move each joint, and the endpoint of the chain follows.
+
+A parallel mechanism is like multiple paths. If you try to move one joint, you might be blocked by another path. The constraint must be satisfied by all paths simultaneously.
+
+For example, in the human body:
+- The spine is one path from pelvis to shoulders.
+- The left arm is another path: pelvis → shoulder → elbow → wrist → hand.
+- The right arm is a third path.
+
+These paths must be consistent. If the pelvis rotates, the shoulders must be positioned such that both spine and both arms can reach their destinations. This consistency constraint reduces the effective DOF.
+
+## The Body as a Closed Kinematic Chain
+
+::: {.callout-note}
+## Closed Kinematic Loop
+
+A **closed kinematic loop** is a sequence of segments and joints that form a cycle: segment 1 → joint 1 → segment 2 → joint 2 → ... → segment N → joint N → segment 1.
+
+The closure constraint is an algebraic equation relating the positions of all segments in the loop.
+
+:::
+
+**Example: The Shoulder-Spine-Hip Loop**
+
+Consider the loop formed by:
+1. Pelvis (base segment).
+2. Spine (a flexible multi-joint segment from pelvis to shoulders).
+3. Shoulders (a rigid platform connecting the two shoulder joints).
+4. Back from shoulders to pelvis (closure).
+
+The closure constraint states: if the pelvis rotates by angle $\theta_p$, the spine rotates by angle $\theta_s$, and the shoulders rotate by angle $\theta_{sh}$, then for the loop to close, the net rotation must be zero:
+
+\theta_p + \theta_s + \theta_{sh} = 0 \quad \text{(approximately, in a simplified 2D model)}
+
+Or more generally:
+
+\bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
+
+This is a holonomic constraint, just like the joint constraints from Chapter 7.
+
+{Why Loops Matter for the Swing}{inplain:loops_swing_importance}
+In a serial chain, you can rotate your hips, shoulders, and arms independently (within limits). In a body with loops, these rotations are coupled.
+
+For example, if you rotate your pelvis 50° (hips opening), and you want to prevent your shoulders from rotating (to create "X-factor"), the spine must absorb the difference. This is not free—it requires elastic energy and creates internal stresses.
+
+The loop constraint is what creates the X-factor: the separation between hip and shoulder rotation. Without understanding the loop constraint, you can't explain why X-factor is important or how it's limited.
+
+## Loop Closure Constraints and the Loop Jacobian
+
+::: {.callout-note}
+## Loop Closure Constraint
+
+For a closed loop, the endpoint must return to the starting point. If the loop consists of segments with relative positions $\bm{x}_1, \bm{x}_2, \ldots, \bm{x}_N$, then:
+
+\bm{\Phi}_{\text{loop}} = \sum_{i=1}^{N} \bm{x}_i = \mathbf{0}
+
+Each $\bm{x}_i$ is a function of the configuration $\bm{q}$, so $\bm{\Phi}_{\text{loop}}(\bm{q}) = \mathbf{0}$ is a constraint equation.
+
+:::
+
+::: {.callout-note}
+## Loop Jacobian
+
+The **loop Jacobian** is the Jacobian of the loop closure constraint:
+
+\bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
+
+It has the same interpretation as the constraint Jacobian from Chapter 7: its null space defines allowed motions, and its range defines constraint force directions.
+
+:::
+
+**Example: Loop Jacobian for a Planar Two-Arm System**
+
+Consider a simplified body: a fixed torso with two arms attached at the shoulders. Each arm is a 2-DOF serial chain (shoulder and elbow). Total DOF: 4 (2 per arm).
+
+The loop closure constraint states: the left hand and right hand positions must satisfy the grip constraint (hands are fixed relative to the club). In a simplified model:
+
+\bm{x}_L(\bm{q}_L) + \bm{x}_R(\bm{q}_R) = 2 \bm{x}_{\text{grip}} + \epsilon
+
+where $\bm{\epsilon}$ is a small allowable deviation (grips are not perfectly rigid).
+
+The loop Jacobian relating shoulder angles to hand positions is:
+
+\bm{J}_{\text{loop}} =
+\frac{\partial x_L}{\partial q_1^L} & \frac{\partial x_L}{\partial q_2^L} & \frac{\partial x_R}{\partial q_1^R} & \frac{\partial x_R}{\partial q_2^R}
+
+This matrix encodes how each shoulder angle affects the hand positions.
+
+## The Gruebler Mobility Formula
+
+{Gruebler's Criterion for Planar Mechanisms}{theorem:gruebler}
+For a mechanism with $N$ rigid bodies, $J$ joints, and $C$ constraints, the mobility (degrees of freedom) is:
+
+M = 3(N - 1) - 2J + C_{\text{passive}}
+
+where:
+- $3(N-1)$ is the total DOF if all bodies were free.
+- $2J$ is the constraint count (each joint in a planar mechanism removes up to 2 DOF).
+- $C_{\text{passive}}$ is the count of passive (non-actuated) constraints, like ground contact.
+
+For a 3D mechanism, the formula is:
+
+M = 6(N - 1) - \sum_i f_i
+
+where $f_i$ is the constraint count for joint $i$ (a revolute joint removes 5 DOF in 3D; a ball joint removes 3 DOF, etc.).
+
+{What Gruebler's Formula Tells You}{inplain:gruebler_interpretation}
+Gruebler's criterion predicts the effective DOF of a mechanism based purely on its topology—the number and types of joints, without needing to know forces or dynamics.
+
+For example, a Stewart platform (6-legged parallel manipulator):
+- 2 platforms (base + moving): $N = 2$.
+- 6 legs, each with a ball joint: $J = 6$, $f_i = 3$ per joint.
+- Ground contact on base: $C_{\text{passive}} = 3$.
+
+Mobility:
+
+M = 6(2-1) - 6 \times 3 + 3 = 6 - 18 + 3 = -9 + 6 = 0 \quad \text{(oops!)}
+
+Wait, this gives $M = -9$, which is nonsensical. The issue is that the 6 legs are *redundantly constrained*—the structure is over-constrained but still rigid. The correct formula for parallel mechanisms accounts for this via:
+
+M = 6(N-1) - \sum_i f_i + \text{(redundancy correction)}
+
+In the Stewart platform, the redundancy is intentional: the 6 legs over-constrain the moving platform, which allows high stiffness and precision.
+
+**Example: Gruebler Applied to the Golfer**
+
+Simplify the golfer as:
+- Bodies: pelvis, torso, shoulders (3).
+- Spine: 5 revolute joints (simplified).
+- Two arms: 3 DOF each (shoulder + elbow, wrist is small) = 6 DOF.
+- Total joints: $J = 5 + 6 = 11$.
+- Constraints from ground contact: $C_{\text{passive}} = 3$ (feet fixed to ground).
+
+Mobility (planar approximation, 2D):
+
+M = 3(3-1) - 2 \times 11 + 3 = 6 - 22 + 3 = -13
+
+This gives a negative mobility, which means the system is over-constrained. But the golfer is not locked—there's flexibility.
+
+The resolution: the body has elasticity (muscles and tendons). The "passive constraints" are not truly rigid; they allow small deviations. Gruebler's formula applies to rigid bodies. For the human body, you need to account for elasticity, which effectively increases the passive DOF.
+
+**Insight:** The fact that Gruebler's formula gives a negative mobility for a rigid body tells us that the human skeleton is over-constrained and rigid—it can't move. The only reason it *does* move is because soft tissues (ligaments, muscle tendons) have elasticity. This elasticity is crucial for defining effective DOF.
+
+## Over-Constrained Mechanisms and Flexibility
+
+::: {.callout-important}
+## Over-Constraint Requires Flexibility
+
+A mechanical system with negative mobility (according to Gruebler) cannot move if all parts are rigid. But the human body is not rigid—it's flexible.
+
+Flexibility provides the necessary "wiggle room" for the system to move:
+- The spine flexes, allowing bending and rotation beyond the rigid skeleton alone.
+- Muscle tendons stretch, allowing slight displacements at joints.
+- Cartilage compresses, allowing small adjustments.
+
+These small flexibilities effectively add DOF to the system, raising the mobility from negative to positive (or at least allowing motion).
+
+For the golf swing, this is crucial: the golfer's flexibility determines how much of a constraint-based strategy is possible. A stiff golfer (low flexibility) has fewer effective DOF and must rely more on active muscular control. A flexible golfer (high flexibility) can leverage constraint mechanisms and passive dynamics more effectively.
+
+:::
+
+{Why Flexibility Matters}{inplain:flexibility_importance}
+A golfer's flexibility is often treated as a cosmetic issue (in yoga-style golf tips). But from a dynamics perspective, flexibility is *functional*.
+
+A golfer who can rotate their hips 60° while keeping their shoulders at 20° rotation is creating a large X-factor. This is possible because the spine has elasticity—it can absorb the differential rotation.
+
+A stiff golfer can only achieve 60° hip rotation with 50° shoulder rotation, leaving little X-factor. The constraint (stiff spine) prevents the differential motion.
+
+More flexibility allows more efficient constraint-based energy transfer. This is why professional golfers invest in flexibility training.
+
+## How Loop Constraints Create Additional Constraint Forces
+
+::: {.callout-important}
+## Loop Constraints Produce Enormous Forces
+
+Every loop closure constraint produces constraint forces, just like the joint constraints from Chapter 7. But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
+
+These forces are often internal—they don't directly produce motion, but they create internal stresses and torques within the spine, at the grip, and throughout the kinetic chain.
+
+A professional golfer's X-factor rotation creates large internal compressive and shear forces in the spine, borne by the constraint forces maintaining loop closure.
+
+:::
+
+**Example: Constraint Forces in the Spine Loop**
+
+Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $\theta_p = 60°$ and the shoulders rotate $\theta_{sh} = 20°$ (X-factor), the spine must absorb the difference: $\theta_s = 40°$.
+
+The loop constraint is:
+
+\bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0
+
+Wait, I made an error. Let me redefine. If all rotations are measured from a common reference frame (not relative), and the constraint is that the total rotations must sum to zero in the loop:
+
+\bm{\Phi}_{\text{spine}} = \theta_p - \theta_{sh} - \Delta\theta_{\text{spine}} = 0
+
+where $\Delta\theta_{\text{spine}}$ is the rotation of the spine relative to the pelvis.
+
+For the golfer to achieve X-factor (hips open more than shoulders), the constraint force in the spine must act to resist the differential rotation. This force manifests as:
+- Compressive forces in the discs of the lumbar spine.
+- Shear forces between vertebrae.
+- Elastic restoring torques from the spine ligaments.
+
+During a golf swing at full speed, these forces can reach $1000$ N or higher, causing significant stress in the spine.
+
+{The X-Factor is a Constraint Mechanism}{constraint:xfactor_constraint}
+The **X-factor** is the difference between hip and shoulder rotation:
+
+\text{X-factor} = \theta_{\text{hips}} - \theta_{\text{shoulders}}
+
+From a constraint perspective, X-factor is the result of a loop constraint: the spine constrains the relationship between hip and shoulder motion. A large X-factor means the spine is being stretched or compressed significantly.
+
+The X-factor is not just a biomechanical marker of efficiency—it's a dynamic consequence of the loop constraint. Golfers with larger X-factor can store more elastic potential energy in the spine, which is released during the downswing.
+
+However, there's a limit: beyond a certain X-factor (typically 45°--60° for professionals), the spine constraint force becomes so large that injury risk increases significantly.
+
+## The Ground Closes the Kinetic Chain
+
+A crucial loop closure: the golfer's feet are in contact with the ground. This contact is a constraint.
+
+The ground reaction force is not something the muscles produce; it's a constraint force that the ground produces to maintain the contact constraint.
+
+Without the ground, the golfer would slide backward as they rotate forward (by Newton's third law). The ground prevents this by providing a normal force and friction. These forces close the kinematic loop: feet → legs → torso → ground.
+
+:::
+
+**Example: Ground Reaction Forces During Downswing**
+
+A 200-pound golfer (mass 90 kg) during the downswing experiences:
+
+1. **Vertical force:** The golfer's weight is $90 \times 9.81 = 883$ N. As the golfer rotates and transfers weight forward, the ground reaction force increases to $1200$--$1500$ N (1.4--1.7 times body weight). This is a constraint force—the ground must push up harder to prevent the golfer from accelerating downward.
+2. **Horizontal force:** As the upper body rotates and accelerates forward, the golfer's momentum would carry them forward. The friction between feet and ground provides a horizontal constraint force to prevent sliding. This force can reach $200$--$300$ N.
+3. **Torque:** The horizontal force is applied off-center (at the feet), creating a torque about the center of mass. This torque is a constraint effect: the ground is preventing the golfer from rotating forward uncontrollably.
+
+All of these forces are constraints, not muscle-produced forces. The muscles control the motion (how the golfer accelerates), but the ground enforces the constraints (the golfer doesn't sink into the ground or slide away).
+
+{Why Footing Matters}{inplain:footing_importance}
+A golfer's balance and footing are crucial because the ground constraint is critical for the swing's effectiveness.
+
+If the feet slip (poor footing), the constraint is violated, and the golfer's motion becomes uncontrolled. The energy that would normally be transferred through the kinetic chain (hips → shoulders → arms → club) is instead lost to lateral motion.
+
+This is why professionals choose their stance carefully, ensuring firm footing. It's not just about comfort—it's about making the ground constraint maximally effective.
+
+## The Shoulder-Hip-Spine Loop in Detail
+
+**Example: Detailed Analysis of the Shoulder-Hip-Spine Closed Loop**
+
+Consider the major closed loop in the golfer's body:
+
+1. Start at the pelvis (hip joint).
+2. Rotate the pelvis by angle $\theta_p$.
+3. Move up the spine to the shoulder, rotating by angle $\theta_s$ (spine rotation).
+4. At the shoulder, the arm attachment point has moved. The arm must accommodate this.
+5. The arm rotates at the shoulder joint by angle $\theta_a$.
+6. The hand grips the club (fixed attachment).
+7. The club must be consistent with the arm position.
+8. Back down to the hip: the constraint is that the shoulder position, given pelvis rotation and spine rotation, must be consistent.
+
+The loop closure constraint is:
+
+\text{Position of shoulder} = f(\theta_p, \theta_s, \theta_a, \text{arm parameters}) = \text{ground frame position}
+
+This is an algebraic equation relating the three rotations. The constraint force arises when this equation is enforced dynamically.
+
+**Numerical insight:**
+
+Assume:
+- Hip rotates at $\dot{\theta}_p = 20$ rad/s (fast).
+- Spine has been rotated $\theta_s = 30°$ (X-factor built up).
+- Arm wants to rotate at $\dot{\theta}_a = 5$ rad/s (shoulder muscles applying modest torque).
+
+The loop constraint equation is (in a simplified 2D form):
+
+\theta_p + \theta_s + \theta_a = \text{constant}
+
+Differentiating:
+
+\dot{\theta}_p + \dot{\theta}_s + \dot{\theta}_a = 0
+
+But we have $\dot{\theta}_p = 20$ and $\dot{\theta}_a = 5$. For the constraint to be satisfied:
+
+\dot{\theta}_s = -\dot{\theta}_p - \dot{\theta}_a = -20 - 5 = -25 \text{ rad/s}
+
+The spine must rotate backward at $25$ rad/s to maintain the loop constraint. But the spine can't rotate that fast—it has inertia and elasticity. The constraint force (acting on the spine) must provide the necessary torque.
+
+This constraint force is:
+
+\tau_{\text{constraint, spine}} = I_{\text{spine}} \ddot{\theta}_s + C_s + g_s
+
+If the arm is accelerating ($\ddot{\theta}_a > 0$) while the hips are accelerating ($\ddot{\theta}_p > 0$), the spine must decelerate ($\ddot{\theta}_s < 0$) to maintain the constraint. This creates a large constraint torque in the spine.
+
+**Physical interpretation:** The X-factor rotation (large $\theta_s - \theta_p$) creates large constraint forces because the rotation rates must remain compatible. When the hips suddenly accelerate forward (initiating the downswing), the shoulders lag behind (constraint), creating a differential rotation that stretches the spine elastically and produces constraint forces. These forces are what "slingshot" the upper body forward in the downswing.
+
+## Redundancy and Over-Constraint in Real Swings
+
+::: {.callout-important}
+## The Golf Swing is Over-Constrained by Design
+
+The golfer's body is deliberately over-constrained. Multiple paths couple the hips to the shoulders to the arms:
+
+1. **The spine:** Direct coupling via vertebral rotation.
+2. **The shoulder joint:** Connects arm to torso.
+3. **The rib cage:** Couples thoracic and lumbar spine.
+4. **The grip:** Couples both arms to the club.
+
+This over-constraint serves a purpose: **stiffness and energy transfer efficiency**.
+
+An over-constrained system, if well-designed, is stiff and predictable. The energy input (from leg drive and hip acceleration) is efficiently channeled through the constrained structure to the output (club speed).
+
+By contrast, a loosely jointed system (fewer constraints) is floppy and unpredictable. Energy dissipates in uncontrolled motion.
+{inplain:redundancy_feature}
+In engineering, over-constraint is usually a bad thing—it can cause jamming or failure if tolerances are tight. But in biomechanics, over-constraint can be beneficial.
+
+The human body is over-constrained but has elasticity. This elasticity allows the over-constraints to be satisfied while maintaining mobility. The benefits:
+
+1. **Load sharing:** Multiple paths can share the load, reducing stress on any single path. If the spine is damaged, the arms can still function (though less efficiently).
+2. **Stiffness:** Multiple constraints stiffen the structure, reducing energy loss to unwanted motion.
+3. **Precision:** Over-constraints allow precise control. A robot with one arm can reach a point, but it wiggles around that point. A robot with two arms over-constrained to reach the same point is rigid.
+
+For the golf swing, the over-constraint ensures that as the hips drive, the shoulders and arms follow predictably. There's no slack or slop. Energy flows efficiently from the ground (through the feet) up through the kinetic chain to the club.
+
+## Summary: Parallel Mechanisms and the Golf Body
+
+{Key Takeaways: Parallel Mechanisms and Loop Constraints}{principle:parallel_key_takeaways}
+
+1. **Serial vs. parallel:** The golf body is not a serial chain (hips → shoulders → arms). It's a parallel mechanism with closed loops. The spine and arms form multiple paths from the hips to the shoulders.
+2. **Closed loops and constraints:** Each loop (e.g., spine loop, ground contact loop) is a holonomic constraint. These constraints reduce effective DOF and create constraint forces.
+3. **Loop Jacobian:** The loop Jacobian defines which motions are allowed (null space) and which constraint forces can act (range of transpose).
+4. **Gruebler's criterion:** Predicts effective mobility based on the number of bodies and constraints. The golf body is over-constrained in a rigid approximation, but elasticity adds the needed flexibility.
+5. **X-factor is a constraint mechanism:** X-factor (hip-shoulder separation) is a direct consequence of the spine loop constraint. It stores elastic potential energy, which is released during the downswing.
+6. **Ground reaction forces close the chain:** The ground contact is a loop constraint that prevents sliding and creates reaction forces. Without firm footing, this constraint is violated and energy is lost.
+7. **Constraint forces are enormous:** Loop constraints produce forces of $500$--$1000$ N or more at the spine, grip, and other joints. These are not muscular forces—they're automatic consequences of the constraint geometry.
+8. **Over-constraint is intentional:** Multiple paths from hips to arms create redundancy. This redundancy, combined with elasticity, enables stiffness, load sharing, and efficient energy transfer.
+9. **Control and constraint:** A golfer controls the swing by modulating the initial acceleration (hip drive) and the sequence of joint releases. The constraint forces automatically redistribute this acceleration to the club, with minimal active muscular guidance needed.
+
+:::
+
+**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in Chapter 10.
+
+## Chapter Exercises: Parallel Mechanisms
+
+{Conceptual}
+Explain in plain language: Why is the golfer's body over-constrained (according to Gruebler's formula), yet it can still move? What makes this possible?
+
+{X-Factor Calculation}
+In a golf swing, measure (or estimate) the hip and shoulder rotations at two points:
+1. At the top of the backswing.
+2. At the start of the downswing.
+
+Calculate the X-factor at each point. Does X-factor increase or decrease as the downswing begins? What does this tell you about the spine constraint?
+
+{Gruebler's Mobility}
+For a simplified golfer model:
+- Pelvis (1 body).
+- Torso (1 body), connected via spine (3 joints).
+- Shoulders (1 body), connected via 2 shoulder joints (one per arm).
+- Total: 4 bodies, 5 joints.
+- Ground contact: 3 constraints.
+
+Compute the mobility using Gruebler's formula (planar approximation). Is it positive, negative, or zero? What does this imply?
+
+{Loop Jacobian for Grip Constraint}
+In a simplified 2D model, the left and right arms both reach the same grip point (on the club). Let:
+- Left arm: shoulder angle $q_1$, elbow angle $q_2$. Hand position: $x_L = L_1 \cos q_1 + L_2 \cos(q_1 + q_2)$.
+- Right arm: shoulder angle $q_3$, elbow angle $q_4$. Hand position: $x_R = L_1 \cos q_3 + L_2 \cos(q_3 + q_4)$.
+
+The grip constraint is $x_L = x_R$ (hands at the same position).
+
+1. Write the constraint equation $\bm{\Phi}_{\text{grip}}(\bm{q}) = 0$.
+2. Compute the constraint Jacobian $\bm{J}_c = \partial \bm{\Phi} / \partial \bm{q}$.
+3. What is the dimension of the null space? (How many DOF remain after enforcing this constraint?)
+
+{Constraint Forces in the Spine}
+Assume the spine loop constraint requires that hip rotation and shoulder rotation are related by:
+
+\theta_{\text{hips}} = \theta_{\text{shoulders}} + \theta_{\text{spine}}
+
+During the downswing:
+- $\theta_{\text{hips}}$ accelerates at $\ddot{\theta}_{\text{hips}} = 100$ rad/s$^2$.
+- $\theta_{\text{shoulders}}$ accelerates at $\ddot{\theta}_{\text{shoulders}} = 20$ rad/s$^2$ (delayed).
+
+What is the required spine acceleration $\ddot{\theta}_{\text{spine}}$? If the spine's moment of inertia is $I_s = 0.5$ kg$\cdot$m$^2$, what torque must the constraint force provide to the spine?
+
+{Application: Footing and Ground Reaction}
+Record or find a video of two golf swings (professional and amateur, if possible).
+
+Observe the footwork:
+1. How much does each golfer's feet move during the swing?
+2. At address, what is the width of stance?
+3. During the downswing, does the golfer's weight shift?
+
+Hypothesize: How does foot position affect the ground contact constraint? Does a wider stance provide a firmer constraint?
+
