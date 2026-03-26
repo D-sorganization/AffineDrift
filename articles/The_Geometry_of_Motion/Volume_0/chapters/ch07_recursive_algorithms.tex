@@ -200,16 +200,16 @@ function ForwardKinematics(q, dq, T_rel, S, lambda):
     //        screw axes S, parent array lambda
     // Output: link transforms T, spatial velocities V
 
-    T[0] ← Identity               // Base link is at the origin
-    V[0] ← Zero 6D vector         // Base link is stationary (or has gravity/base motion)
+    T[0] <-Identity               // Base link is at the origin
+    V[0] <-Zero 6D vector         // Base link is stationary (or has gravity/base motion)
 
-    for i ← 1 to N:
+    for i <-1 to N:
         // Compose transforms sequentially
-        T[i] ← T[lambda[i]] · T_rel[i]
+        T[i] <-T[lambda[i]] * T_rel[i]
 
         // Propagate velocity using Adjoint
-        V_parent_in_i ← Ad[T_rel[i]] · V[lambda[i]]
-        V[i] ← V_parent_in_i + S[i] * dq[i]
+        V_parent_in_i <-Ad[T_rel[i]] * V[lambda[i]]
+        V[i] <-V_parent_in_i + S[i] * dq[i]
 
     return (T, V)
 \end{lstlisting}
@@ -247,17 +247,17 @@ function ForwardAcceleration(V, ddq, S, lambda, Gravity):
     //        joint accelerations ddq, screw axes S, gravity vector
     // Output: spatial accelerations dV
 
-    dV[0] ← Gravity              // Base link has gravitational acceleration
+    dV[0] <-Gravity              // Base link has gravitational acceleration
 
-    for i ← 1 to N:
+    for i <-1 to N:
         // Velocity-dependent term (Coriolis)
-        Coriolis ← [V[i]×] · S[i] * dq[i]
+        Coriolis <-[V[i]x] * S[i] * dq[i]
 
         // Compose from parent
-        dV_parent_in_i ← Ad[T_rel[i]] · dV[lambda[i]]
+        dV_parent_in_i <-Ad[T_rel[i]] * dV[lambda[i]]
 
         // Total acceleration
-        dV[i] ← dV_parent_in_i + Coriolis + S[i] * ddq[i]
+        dV[i] <-dV_parent_in_i + Coriolis + S[i] * ddq[i]
 
     return dV
 \end{lstlisting}
@@ -360,41 +360,41 @@ Once we have the total wrench $\mathcal{F}_i$ acting on link $i$, the scalar tor
 \begin{lstlisting}[language=pseudocode]
 function RNEA(q, dq, ddq, T_rel, S, I, lambda, gravity, F_ext):
     // Outward pass: compute velocities and accelerations
-    V[0] ← gravity               // Base link has gravitational acceleration
-    dV[0] ← gravity
+    V[0] <-gravity               // Base link has gravitational acceleration
+    dV[0] <-gravity
 
-    for i ← 1 to N:
+    for i <-1 to N:
         // Compute relative transform
-        T[i] ← T[lambda[i]] · ForwardKin(q[i], S[i])
+        T[i] <-T[lambda[i]] * ForwardKin(q[i], S[i])
 
         // Velocity recursion
-        V_parent_in_i ← Ad[T_rel[i]] · V[lambda[i]]
-        V[i] ← V_parent_in_i + S[i] * dq[i]
+        V_parent_in_i <-Ad[T_rel[i]] * V[lambda[i]]
+        V[i] <-V_parent_in_i + S[i] * dq[i]
 
         // Acceleration recursion (Coriolis term)
-        dV_parent_in_i ← Ad[T_rel[i]] · dV[lambda[i]]
-        Coriolis ← [V[i]×] · S[i] * dq[i]
-        dV[i] ← dV_parent_in_i + Coriolis + S[i] * ddq[i]
+        dV_parent_in_i <-Ad[T_rel[i]] * dV[lambda[i]]
+        Coriolis <-[V[i]x] * S[i] * dq[i]
+        dV[i] <-dV_parent_in_i + Coriolis + S[i] * ddq[i]
 
     // Inward pass: compute forces and extract torques
-    F[N] ← F_ext[N]             // External forces at tip
+    F[N] <-F_ext[N]             // External forces at tip
 
-    for i ← N down to 1:
+    for i <-N down to 1:
         // Bias force (centrifugal + Coriolis)
-        bias ← [V[i]×]* · (I[i] · V[i])
+        bias <-[V[i]x]* * (I[i] * V[i])
 
         // Inertial force
-        inertial ← I[i] · dV[i]
+        inertial <-I[i] * dV[i]
 
         // Total wrench at link i
-        F[i] ← inertial - bias
+        F[i] <-inertial - bias
 
         // Add forces from children
-        for j ∈ children[i]:
-            F[i] ← F[i] + Ad[T_rel[j]]^{-T} · F[j]
+        for j in children[i]:
+            F[i] <-F[i] + Ad[T_rel[j]]^{-T} * F[j]
 
         // Extract joint torque
-        tau[i] ← F[i]^T · S[i]
+        tau[i] <-F[i]^T * S[i]
 
     return tau
 \end{lstlisting}
@@ -492,12 +492,12 @@ Let us trace through a complete RNEA computation for a 3-link planar arm in 2D (
 
 Links: Base (link 0), Upper arm (link 1), Forearm (link 2), Hand (link 3).
 \begin{itemize}
-  \item Link 1: mass $m_1 = 1$ kg, length $L_1 = 1$ m, CoM at $0.5$ m from joint, $I_z^{(1)} = 0.083$ kg·m$^2$.
-  \item Link 2: mass $m_2 = 0.5$ kg, length $L_2 = 0.8$ m, CoM at $0.4$ m from joint, $I_z^{(2)} = 0.027$ kg·m$^2$.
+  \item Link 1: mass $m_1 = 1$ kg, length $L_1 = 1$ m, CoM at $0.5$ m from joint, $I_z^{(1)} = 0.083$ kg$\cdot$m$^2$.
+  \item Link 2: mass $m_2 = 0.5$ kg, length $L_2 = 0.8$ m, CoM at $0.4$ m from joint, $I_z^{(2)} = 0.027$ kg$\cdot$m$^2$.
   \item Link 3: mass $m_3 = 0.2$ kg, point mass at tip ($0.6$ m from joint), $I_z^{(3)} = 0$.
 \end{itemize}
 
-Joint positions: $\mathbf{q} = [30°, 45°, 0°]^T = [0.524, 0.785, 0]$ rad.
+Joint positions: $\mathbf{q} = [30^\circ, 45^\circ, 0^\circ]^T = [0.524, 0.785, 0]$ rad.
 Joint velocities: $\dot{\mathbf{q}} = [0.5, 0.3, 0.2]$ rad/s.
 Joint accelerations: $\ddot{\mathbf{q}} = [1.0, 0.5, 0.1]$ rad/s$^2$.
 
@@ -540,7 +540,7 @@ The required joint torques are:
 
 For this system at the given configuration and accelerations, the output might be:
 \[
-  \boldsymbol{\tau} = [2.3, 1.1, 0.08]^T \text{ N·m}
+  \boldsymbol{\tau} = [2.3, 1.1, 0.08]^T \text{ N$\cdot$m}
 \]
 
 These are the torques the three joint motors must produce to execute the given trajectory.

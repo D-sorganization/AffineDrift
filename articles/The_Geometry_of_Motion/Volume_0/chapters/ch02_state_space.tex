@@ -682,8 +682,8 @@ plt.show()
 # Eigenvalues
 eigenvalues, eigenvectors = np.linalg.eig(A)
 print(f"Eigenvalues: {eigenvalues}")
-print(f"Damping ratio ζ = {c / (2*np.sqrt(k*m)):.3f}")
-print(f"Natural freq ω₀ = {np.sqrt(k/m):.3f} rad/s")
+print(f"Damping ratio zeta = {c / (2*np.sqrt(k*m)):.3f}")
+print(f"Natural freq omega_0 = {np.sqrt(k/m):.3f} rad/s")
 \end{verbatim}
 
 This code simulates the system and plots both the time evolution and the phase portrait. For the underdamped case ($\zeta = 0.177$), you should see a spiral converging to the origin with oscillation.
@@ -734,13 +734,13 @@ For any equilibrium point $\mathbf{x}^*$:
 \subsection*{Computational Exercises}
 
 \begin{enumerate}
-  \item For the DC motor from Example~\ref{ex:dc_motor}, suppose $L = 0.01$ H, $R = 1$ Ω, $K_e = 0.02$ V·s/rad, $K_t = 0.02$ N·m/A, $J = 0.001$ kg·m², $b = 0.001$ N·m·s/rad. Write the system in the form $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}V_{\text{in}}$. Compute the eigenvalues of $\mathbf{A}$ numerically and classify the open-loop stability.
+  \item For the DC motor from Example~\ref{ex:dc_motor}, suppose $L = 0.01$ H, $R = 1$ $\Omega$, $K_e = 0.02$ V$\cdot$s/rad, $K_t = 0.02$ N$\cdot$m/A, $J = 0.001$ kg$\cdot$m$^2$, $b = 0.001$ N$\cdot$m$\cdot$s/rad. Write the system in the form $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}V_{\text{in}}$. Compute the eigenvalues of $\mathbf{A}$ numerically and classify the open-loop stability.
 
-  \item For the two-tank system (Example~\ref{ex:two_tank}), assume $A = 0.1$ m², $C = 0.05$, $C_{\text{out}} = 0.03$. Starting from $h_1(0) = 0.5$ m, $h_2(0) = 0.2$ m, with constant inflow $Q_{\text{in}} = 0.01$ m³/s, simulate the system for 100 seconds and plot $h_1(t)$ and $h_2(t)$.
+  \item For the two-tank system (Example~\ref{ex:two_tank}), assume $A = 0.1$ m$^2$, $C = 0.05$, $C_{\text{out}} = 0.03$. Starting from $h_1(0) = 0.5$ m, $h_2(0) = 0.2$ m, with constant inflow $Q_{\text{in}} = 0.01$ m$^3$/s, simulate the system for 100 seconds and plot $h_1(t)$ and $h_2(t)$.
 
-  \item Consider the mass-spring-damper with $m = 2$ kg, $c = 4$ N·s/m, $k = 3$ N/m. Compute the damping ratio $\zeta$. Is the system underdamped, critically damped, or overdamped? Plot the phase portrait for initial conditions $(q, \dot{q}) = (1, 0)$ and $(0.5, 1)$.
+  \item Consider the mass-spring-damper with $m = 2$ kg, $c = 4$ N$\cdot$s/m, $k = 3$ N/m. Compute the damping ratio $\zeta$. Is the system underdamped, critically damped, or overdamped? Plot the phase portrait for initial conditions $(q, \dot{q}) = (1, 0)$ and $(0.5, 1)$.
 
-  \item For the pendulum system (Example~\ref{ex:pendulum}) with $L = 1$ m, $g = 9.81$ m/s², write the nonlinear state equations. Linearize around both the upright ($\theta = 0$) and inverted ($\theta = \pi$) equilibria. Classify each equilibrium.
+  \item For the pendulum system (Example~\ref{ex:pendulum}) with $L = 1$ m, $g = 9.81$ m/s$^2$, write the nonlinear state equations. Linearize around both the upright ($\theta = 0$) and inverted ($\theta = \pi$) equilibria. Classify each equilibrium.
 \end{enumerate}
 
 \subsection*{Conceptual Exercises}

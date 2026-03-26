@@ -299,7 +299,7 @@ The transformation from base to end-effector is:
   \mathbf{T}_{\text{D-H}}(\boldsymbol{\theta}) = \mathbf{A}_{0,1} \mathbf{A}_{1,2} \mathbf{A}_{2,3}
 \end{equation}
 
-where each $\mathbf{A}_{i,i+1}$ is computed using the D-H convention. At $\boldsymbol{\theta} = [45°, -30°, 60°]^T$, one obtains a specific end-effector pose.
+where each $\mathbf{A}_{i,i+1}$ is computed using the D-H convention. At $\boldsymbol{\theta} = [45^\circ, -30^\circ, 60^\circ]^T$, one obtains a specific end-effector pose.
 
 \subsection{PoE Parametrization}
 \label{subsec:poe_example}
@@ -319,7 +319,7 @@ The PoE formula gives:
   \mathbf{T}_{\text{PoE}}(\boldsymbol{\theta}) = e^{[\mathcal{S}_1] \theta_1} e^{[\mathcal{S}_2] \theta_2} e^{[\mathcal{S}_3] \theta_3} \mathbf{M}
 \end{equation}
 
-When computed at the same configuration $\boldsymbol{\theta} = [45°, -30°, 60°]^T$, the PoE and D-H formulations yield identical end-effector poses (as they must, since both are valid descriptions of the same kinematic chain).
+When computed at the same configuration $\boldsymbol{\theta} = [45^\circ, -30^\circ, 60^\circ]^T$, the PoE and D-H formulations yield identical end-effector poses (as they must, since both are valid descriptions of the same kinematic chain).
 
 \subsection{Computational Advantages of PoE}
 \label{subsec:poe_advantages}
@@ -436,7 +436,7 @@ At $\boldsymbol{\theta} = \mathbf{0}$, the robot is fully extended in the positi
 \subsection{Numerical Evaluation at a Test Configuration}
 \label{subsec:spatial_3r_eval}
 
-At $\boldsymbol{\theta} = [\pi/4, \pi/6, -\pi/3]^T$ (45°, 30°, -60°):
+At $\boldsymbol{\theta} = [\pi/4, \pi/6, -\pi/3]^T$ (45^\circ, 30^\circ, -60^\circ):
 
 Compute the matrix exponentials:
 \begin{equation}
@@ -650,7 +650,7 @@ The Product of Exponentials formula provides a modern, geometrically transparent
 \label{sec:ch9_exercises}
 
 \begin{enumerate}
-  \item \textbf{Planar 2R Arm:} A planar 2R arm has link lengths $L_1 = 1.5$ m and $L_2 = 1$ m. Write the PoE formula in space-frame form, and compute the end-effector position at $\boldsymbol{\theta} = [60°, -30°]$.
+  \item \textbf{Planar 2R Arm:} A planar 2R arm has link lengths $L_1 = 1.5$ m and $L_2 = 1$ m. Write the PoE formula in space-frame form, and compute the end-effector position at $\boldsymbol{\theta} = [60^\circ, -30^\circ]$.
 
   \item \textbf{D-H Comparison:} For the same 2R arm, compute the D-H parameters and verify that the forward kinematics matches the PoE result at the same configuration.
 
@@ -658,9 +658,9 @@ The Product of Exponentials formula provides a modern, geometrically transparent
 
   \item \textbf{3D Cartesian Robot:} A 3D Cartesian robot has three prismatic joints (X, Y, Z directions). Write its PoE formula and forward kinematics. What is the spatial Jacobian?
 
-  \item \textbf{Spatial Jacobian:} For the planar 2R arm of Exercise 1, compute the spatial Jacobian at $\boldsymbol{\theta} = [45°, 0°]$ and identify any singular configurations.
+  \item \textbf{Spatial Jacobian:} For the planar 2R arm of Exercise 1, compute the spatial Jacobian at $\boldsymbol{\theta} = [45^\circ, 0^\circ]$ and identify any singular configurations.
 
-  \item \textbf{Manipulability:} For the 2R arm, plot the manipulability measure $\sqrt{\det(\mathbf{J} \mathbf{J}^T)}$ as a function of $\theta_1 \in [0, 180°]$ with $\theta_2$ fixed at $0°$.
+  \item \textbf{Manipulability:} For the 2R arm, plot the manipulability measure $\sqrt{\det(\mathbf{J} \mathbf{J}^T)}$ as a function of $\theta_1 \in [0, 180^\circ]$ with $\theta_2$ fixed at $0^\circ$.
 
   \item \textbf{Singularity Analysis:} For the planar 2R arm, find all configurations where the Jacobian rank drops below 2.
 
@@ -668,7 +668,7 @@ The Product of Exponentials formula provides a modern, geometrically transparent
 
   \item \textbf{Inverse Kinematics:} Implement Newton-Raphson inverse kinematics for the planar 2R arm. Given a desired end-effector position $(x_d, y_d) = (2, 0.5)$, find $\boldsymbol{\theta}$ starting from an initial guess.
 
-  \item \textbf{Velocity Kinematics:} For the 2R arm at $\boldsymbol{\theta} = [30°, 60°]$ with $\dot{\boldsymbol{\theta}} = [1, -0.5]$ rad/s, compute the end-effector linear and angular velocities.
+  \item \textbf{Velocity Kinematics:} For the 2R arm at $\boldsymbol{\theta} = [30^\circ, 60^\circ]$ with $\dot{\boldsymbol{\theta}} = [1, -0.5]$ rad/s, compute the end-effector linear and angular velocities.
 
   \item \textbf{Prismatic-Revolute Arm:} A robot has a prismatic joint (Z-direction) followed by a revolute joint (Y-axis). Write the screw axes and PoE formula.
 

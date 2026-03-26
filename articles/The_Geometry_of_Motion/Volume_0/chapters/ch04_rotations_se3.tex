@@ -241,8 +241,8 @@ The composite rotation is:
   Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this singularity, your matrices become non-invertible and your computer instantly crashes trying to compute a physical impossibility.
 \end{laymansbox}
 
-\begin{theorem}{Gimbal Lock at $\theta = \pm 90°$}{gimbal_lock_proof}
-For ZYX Euler angles, the Jacobian matrix relating angular velocity components to Euler angle rate components becomes singular when $\theta = \pm 90°$.
+\begin{theorem}{Gimbal Lock at $\theta = \pm 90^\circ$}{gimbal_lock_proof}
+For ZYX Euler angles, the Jacobian matrix relating angular velocity components to Euler angle rate components becomes singular when $\theta = \pm 90^\circ$.
 \end{theorem}
 
 \begin{derivation}
@@ -259,9 +259,9 @@ where $\mathbf{J}(\boldsymbol{\theta})$ is the Jacobian. For ZYX angles, it can 
 \end{bmatrix}
 \end{equation}
 
-When $\theta = 90°$, we have $\cos\theta = 0$, so:
+When $\theta = 90^\circ$, we have $\cos\theta = 0$, so:
 \begin{equation}
-\mathbf{J}\left(\phi, 90°, \psi\right) = \begin{bmatrix}
+\mathbf{J}\left(\phi, 90^\circ, \psi\right) = \begin{bmatrix}
 0 & -\sin\psi & 0 \\
 0 & \cos\psi & 0 \\
 1 & 0 & -1
@@ -622,7 +622,7 @@ This chapter has developed the complete mathematical framework for 3D rotations:
 \begin{itemize}
     \item \textbf{Rotation Matrices ($\SO(3)$):} We defined the Special Orthogonal Group as the set of $3 \times 3$ orthogonal matrices with determinant $+1$, proved it is both a group and a 3-dimensional smooth manifold, and derived the three elementary rotations $\mathbf{R}_x(\theta), \mathbf{R}_y(\theta), \mathbf{R}_z(\theta)$.
 
-    \item \textbf{Euler Angles and Gimbal Lock:} We presented the ZYX and ZXZ conventions and rigorously proved that the Jacobian relating angular velocities to Euler angle rates becomes singular at $\theta = \pm 90°$, making Euler angles unsuitable for continuous control.
+    \item \textbf{Euler Angles and Gimbal Lock:} We presented the ZYX and ZXZ conventions and rigorously proved that the Jacobian relating angular velocities to Euler angle rates becomes singular at $\theta = \pm 90^\circ$, making Euler angles unsuitable for continuous control.
 
     \item \textbf{Lie Groups and Algebras:} We identified $\SO(3)$ as a Lie Group (smooth manifold + group structure) and its Lie algebra $\so(3)$ as the space of skew-symmetric matrices, which represent angular velocities.
 
@@ -655,12 +655,12 @@ Show that the composition of two rotations $\mathbf{R}_1$ and $\mathbf{R}_2$ (ap
 
 \begin{exercise}
 \label{ex:euler_angles_zyx}
-Compute the full ZYX Euler angle rotation matrix for $\phi = 45°$, $\theta = 30°$, $\psi = 60°$ by multiplying $\mathbf{R}_x(\phi) \mathbf{R}_y(\theta) \mathbf{R}_z(\psi)$. Verify orthogonality numerically.
+Compute the full ZYX Euler angle rotation matrix for $\phi = 45^\circ$, $\theta = 30^\circ$, $\psi = 60^\circ$ by multiplying $\mathbf{R}_x(\phi) \mathbf{R}_y(\theta) \mathbf{R}_z(\psi)$. Verify orthogonality numerically.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:gimbal_lock_jacobian}
-At $\theta = 90°$ in ZYX Euler angles, show that $\dot{\phi}$ and $\dot{\psi}$ are indistinguishable in their effect on the body frame by examining which rows of the Jacobian become parallel.
+At $\theta = 90^\circ$ in ZYX Euler angles, show that $\dot{\phi}$ and $\dot{\psi}$ are indistinguishable in their effect on the body frame by examining which rows of the Jacobian become parallel.
 \end{exercise}
 
 \begin{exercise}
@@ -682,12 +682,12 @@ Show that $\mathbf{q} = [0.7071, 0.7071, 0, 0]^T$ and $-\mathbf{q} = [-0.7071, -
 
 \begin{exercise}
 \label{ex:quat_to_matrix}
-Convert the quaternion $\mathbf{q} = [\cos(45°/2), \sin(45°/2), 0, 0]^T$ (rotation about the $x$-axis by $45°$) to a rotation matrix using equation \eqref{eq:quat_to_matrix} and verify it matches $\mathbf{R}_x(45°)$.
+Convert the quaternion $\mathbf{q} = [\cos(45^\circ/2), \sin(45^\circ/2), 0, 0]^T$ (rotation about the $x$-axis by $45^\circ$) to a rotation matrix using equation \eqref{eq:quat_to_matrix} and verify it matches $\mathbf{R}_x(45^\circ)$.
 \end{exercise}
 
 \begin{exercise}
 \label{ex:slerp_interpolation}
-Interpolate between $\mathbf{q}_0 = [1, 0, 0, 0]^T$ (identity) and $\mathbf{q}_1 = [\cos(45°/2), \sin(45°/2), 0, 0]^T$ at $t = 0.5$ using SLERP and verify the result represents a $22.5°$ rotation about the $x$-axis.
+Interpolate between $\mathbf{q}_0 = [1, 0, 0, 0]^T$ (identity) and $\mathbf{q}_1 = [\cos(45^\circ/2), \sin(45^\circ/2), 0, 0]^T$ at $t = 0.5$ using SLERP and verify the result represents a $22.5^\circ$ rotation about the $x$-axis.
 \end{exercise}
 
 \begin{exercise}
@@ -697,7 +697,7 @@ If $\mathbf{R}(t) = \mathbf{R}_z(t)$ (rotation about $z$-axis with unit angular 
 
 \begin{exercise}
 \label{ex:axis_angle_from_matrix}
-From the rotation matrix $\mathbf{R}_x(60°)$, extract the rotation axis (should be $[1, 0, 0]^T$) and angle (should be $60°$) using the eigenvector method and $\text{trace}(\mathbf{R})$ formula.
+From the rotation matrix $\mathbf{R}_x(60^\circ)$, extract the rotation axis (should be $[1, 0, 0]^T$) and angle (should be $60^\circ$) using the eigenvector method and $\text{trace}(\mathbf{R})$ formula.
 \end{exercise}
 
 \subsection{Advanced Tier}

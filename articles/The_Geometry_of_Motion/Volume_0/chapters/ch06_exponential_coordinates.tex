@@ -185,7 +185,7 @@ Computing the matrix exponential $e^{[\hat{\boldsymbol{\omega}}]\theta}$ by summ
 
 We must verify that Rodrigues' formula actually produces a matrix in $\SO(3)$ (i.e., $\mathbf{R}^T\mathbf{R} = \mathbf{I}$ and $\det(\mathbf{R}) = 1$).
 
-\begin{theorem}{The Exponential Map so(3) → SO(3) is Surjective}{exp_surjective}
+\begin{theorem}{The Exponential Map so(3) $\rightarrow$ SO(3) is Surjective}{exp_surjective}
   The map $\exp: \so(3) \to \SO(3)$ defined by Rodrigues' formula is surjective (onto). That is, every rotation matrix can be expressed as the exponential of some skew-symmetric matrix.
 \end{theorem}
 
@@ -283,18 +283,18 @@ The logarithm of a rotation matrix depends on the rotation angle and must be han
 \end{theorem}
 
 \begin{example}{Computing Logarithm: Example}{log_example}
-  Suppose we have a rotation matrix representing a $60°$ rotation about the $z$-axis:
+  Suppose we have a rotation matrix representing a $60^\circ$ rotation about the $z$-axis:
   \begin{equation}
-    \mathbf{R} = \begin{bmatrix} \cos(60°) & -\sin(60°) & 0 \\ \sin(60°) & \cos(60°) & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 1/2 & -\sqrt{3}/2 & 0 \\ \sqrt{3}/2 & 1/2 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+    \mathbf{R} = \begin{bmatrix} \cos(60^\circ) & -\sin(60^\circ) & 0 \\ \sin(60^\circ) & \cos(60^\circ) & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 1/2 & -\sqrt{3}/2 & 0 \\ \sqrt{3}/2 & 1/2 & 0 \\ 0 & 0 & 1 \end{bmatrix}
   \end{equation}
 
   \textbf{Step 1:} Compute $\text{tr}(\mathbf{R}) = 1/2 + 1/2 + 1 = 2$.
 
-  \textbf{Step 2:} Extract angle: $\theta = \arccos((2 - 1)/2) = \arccos(1/2) = 60° = \pi/3$ rad.
+  \textbf{Step 2:} Extract angle: $\theta = \arccos((2 - 1)/2) = \arccos(1/2) = 60^\circ = \pi/3$ rad.
 
   \textbf{Step 3:} Extract axis from skew part:
   \begin{equation}
-    \hat{\boldsymbol{\omega}} = \frac{1}{2\sin(60°)} \begin{bmatrix} 0 - 0 \\ 0 - 0 \\ \sqrt{3}/2 - (-\sqrt{3}/2) \end{bmatrix} = \frac{1}{2 \cdot \sqrt{3}/2} \begin{bmatrix} 0 \\ 0 \\ \sqrt{3} \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+    \hat{\boldsymbol{\omega}} = \frac{1}{2\sin(60^\circ)} \begin{bmatrix} 0 - 0 \\ 0 - 0 \\ \sqrt{3}/2 - (-\sqrt{3}/2) \end{bmatrix} = \frac{1}{2 \cdot \sqrt{3}/2} \begin{bmatrix} 0 \\ 0 \\ \sqrt{3} \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
   \end{equation}
 
   \textbf{Step 4:} Construct logarithm:
@@ -693,7 +693,7 @@ if __name__ == "__main__":
     theta = np.pi / 3  # 60 degrees
     omega = np.array([0, 0, 1])  # z-axis
     R = rodrigues(omega, theta)
-    print("Rotation matrix (60° about z):")
+    print("Rotation matrix (60 deg about z):")
     print(R)
     print()
 
@@ -733,14 +733,14 @@ if __name__ == "__main__":
         R_t = slerp(R0, R1, t)
         omega_t = log_SO3(R_t)
         angle_t = np.linalg.norm(omega_t)
-        print(f"  t={t}: rotation angle = {np.degrees(angle_t):.1f}°")
+        print(f"  t={t}: rotation angle = {np.degrees(angle_t):.1f} deg")
     print()
 
     # 7. Geodesic distance
     R_test = rodrigues(np.array([1, 1, 1]) / np.sqrt(3), np.pi / 4)
     omega_log = log_SO3(R_test)
     geodesic_distance = np.linalg.norm(omega_log)
-    print(f"Geodesic distance from identity to test rotation: {geodesic_distance:.4f} rad = {np.degrees(geodesic_distance):.2f}°")
+    print(f"Geodesic distance from identity to test rotation: {geodesic_distance:.4f} rad = {np.degrees(geodesic_distance):.2f} deg")
 \end{lstlisting}
 
 \section{Summary}
@@ -780,7 +780,7 @@ With exponential coordinates and the matrix logarithm in hand, we possess the co
 
 \begin{enumerate}
 
-\item \textbf{Rodrigues' Formula Verification:} Use Rodrigues' formula to compute the rotation matrix for a $45°$ rotation about the axis $\hat{\boldsymbol{\omega}} = [1, 1, 1]^T / \sqrt{3}$. Verify that the result is orthogonal ($\mathbf{R}^T\mathbf{R} = \mathbf{I}$) and has determinant 1.
+\item \textbf{Rodrigues' Formula Verification:} Use Rodrigues' formula to compute the rotation matrix for a $45^\circ$ rotation about the axis $\hat{\boldsymbol{\omega}} = [1, 1, 1]^T / \sqrt{3}$. Verify that the result is orthogonal ($\mathbf{R}^T\mathbf{R} = \mathbf{I}$) and has determinant 1.
 
 \item \textbf{Logarithm of a 90-Degree Rotation:} Given the rotation matrix:
   \begin{equation}
@@ -808,7 +808,7 @@ With exponential coordinates and the matrix logarithm in hand, we possess the co
 
 \item \textbf{SLERP Geodesic Property:} Show algebraically that SLERP between two rotations $\mathbf{R}_0$ and $\mathbf{R}_1$ rotates at constant angular velocity. Specifically, verify that the angular velocity $\boldsymbol{\omega}(t) = \frac{d}{dt} \log(\mathbf{R}(t)\mathbf{R}_0^T)$ is constant (independent of $t$).
 
-\item \textbf{Geodesic Distance:} Compute the geodesic distance (rotation angle) between the identity and a rotation by $120°$ about $[1, 1, 1]^T / \sqrt{3}$.
+\item \textbf{Geodesic Distance:} Compute the geodesic distance (rotation angle) between the identity and a rotation by $120^\circ$ about $[1, 1, 1]^T / \sqrt{3}$.
 
 \item \textbf{Numerical Stability:} For $\theta = 0.001$ rad and $\hat{\boldsymbol{\omega}} = [0, 0, 1]^T$, compare the Rodrigues formula result with the first-order Taylor approximation $\mathbf{R} \approx \mathbf{I} + [\hat{\boldsymbol{\omega}}]\theta$. How large is the error?
 

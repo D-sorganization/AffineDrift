@@ -271,14 +271,14 @@ function CompositeRigidBody(links, joints, lambda):
 
     I_c = [None] * (N+1)         // Will store composite inertia of link i and all descendants
 
-    for i ← N down to 1:         // Traverse from tips to base
-        I_c[i] ← I[i]            // Start with link i's own inertia
+    for i <-N down to 1:         // Traverse from tips to base
+        I_c[i] <-I[i]            // Start with link i's own inertia
 
-        for j ∈ children[i]:
+        for j in children[i]:
             // Add inertia of child j to link i
-            T_j_to_i ← relative transform from j to i
-            Ad_j_to_i ← Adjoint of T_j_to_i
-            I_c[i] ← I_c[i] + Ad_j_to_i^T · I_c[j] · Ad_j_to_i
+            T_j_to_i <-relative transform from j to i
+            Ad_j_to_i <-Adjoint of T_j_to_i
+            I_c[i] <-I_c[i] + Ad_j_to_i^T * I_c[j] * Ad_j_to_i
 
     return I_c
 \end{lstlisting}
@@ -403,8 +403,8 @@ For this course, we continue with the matrix representation, as it is more strai
 
 Consider a two-link arm where:
 \begin{itemize}
-  \item Link 1 (upper arm): mass $m_1 = 2$ kg, CoM at $(0.3, 0, 0)$ m from joint 1, rotational inertia $\mathbf{I}_c^{(1)} = \text{diag}(0.05, 0.05, 0.01)$ kg·m$^2$.
-  \item Link 2 (forearm): mass $m_2 = 1$ kg, CoM at $(0.25, 0, 0)$ m from joint 2, rotational inertia $\mathbf{I}_c^{(2)} = \text{diag}(0.02, 0.02, 0.005)$ kg·m$^2$.
+  \item Link 1 (upper arm): mass $m_1 = 2$ kg, CoM at $(0.3, 0, 0)$ m from joint 1, rotational inertia $\mathbf{I}_c^{(1)} = \text{diag}(0.05, 0.05, 0.01)$ kg$\cdot$m$^2$.
+  \item Link 2 (forearm): mass $m_2 = 1$ kg, CoM at $(0.25, 0, 0)$ m from joint 2, rotational inertia $\mathbf{I}_c^{(2)} = \text{diag}(0.02, 0.02, 0.005)$ kg$\cdot$m$^2$.
 \end{itemize}
 
 \subsection{Building Link Spatial Inertias}
@@ -477,7 +477,7 @@ def motion_cross(V):
     """
     Spatial cross product for motion (Twists).
     V: 6D spatial velocity (omega, v)
-    Returns: 6x6 operator [V×]
+    Returns: 6x6 operator [Vx]
     """
     omega = V[:3]
     v = V[3:]
@@ -490,7 +490,7 @@ def motion_cross(V):
 def force_cross(V):
     """
     Spatial cross product for forces (Wrenches).
-    Returns: 6x6 operator [V×*] = -[V×]^T
+    Returns: 6x6 operator [Vx*] = -[Vx]^T
     """
     return -motion_cross(V).T
 
@@ -588,7 +588,7 @@ if __name__ == "__main__":
     # Test motion cross product
     V = np.array([0.0, 0.0, 1.0, 1.0, 0.0, 0.0])  # Rotating around z, translating in x
     Vx = motion_cross(V)
-    print("\nMotion Cross Product [V×]:\n", np.round(Vx, 4))
+    print("\nMotion Cross Product [Vx]:\n", np.round(Vx, 4))
 
     # Test duality
     F = np.array([0.1, 0.2, 0.3, 1.0, 2.0, 3.0])
@@ -597,8 +597,8 @@ if __name__ == "__main__":
     lhs = F @ (motion_cross(V) @ W)
     rhs = (force_cross(V) @ F) @ W
     print("\nDuality test (should be equal):")
-    print(f"  F^T [V×] W = {lhs:.6f}")
-    print(f"  [V×*] F)^T W = {rhs:.6f}")
+    print(f"  F^T [Vx] W = {lhs:.6f}")
+    print(f"  [Vx*] F)^T W = {rhs:.6f}")
 \end{lstlisting}
 
 \section{Summary}
