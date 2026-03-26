@@ -380,6 +380,99 @@ Just as twists transform via the Adjoint map, wrenches transform via the \textbf
 
 This relationship ensures that mechanical power is invariant under coordinate transformations, a principle we will use next.
 
+% ==========================================================================
+\subsection{Physical Interpretation of Wrenches: Forces and Torques Unified}
+\label{sec:wrench_physical_interpretation}
+\index{Wrench!physical interpretation}
+% ==========================================================================
+
+The wrench $\wrench = [\boldsymbol{\tau}^T, \mathbf{f}^T]^T \in \Reals^6$ is far more than a
+convenient notational shorthand. It is a single geometric object\index{Wrench!geometric object}
+that captures the \emph{complete} force system acting on a rigid body---both the linear push
+and the rotational tendency---in one 6D vector. Just as the twist unified angular and linear
+velocity, the wrench unifies torque and force.
+
+\begin{definition}{\texorpdfstring{Wrench as a Dual Vector on $\se(3)$}{Wrench as a Dual Vector on se(3)}}{wrench_dual}
+  A wrench $\wrench \in \Reals^6$ is an element of the \textbf{dual space}\index{dual space}
+  $\se(3)^*$. It acts on twists (elements of $\se(3)$) through the natural pairing:
+  \begin{equation}
+    \langle \wrench, \twist \rangle = \wrench^T \twist
+    = \boldsymbol{\tau} \cdot \boldsymbol{\omega} + \mathbf{f} \cdot \mathbf{v}
+    \label{eq:wrench_twist_pairing}
+  \end{equation}
+  This pairing yields a scalar: mechanical power\index{mechanical power}. The wrench
+  ``measures'' the twist by returning the instantaneous rate of work.
+\end{definition}
+
+To build physical intuition, consider three canonical cases:
+
+\begin{example}{Three Canonical Wrenches}{canonical_wrenches}
+\textbf{Case 1: Pure force at the origin.}\index{Wrench!pure force}
+A force $\mathbf{f} = [0, 0, f_z]^T$ applied directly at the origin produces no moment:
+\begin{equation}
+  \wrench_{\text{pure force}} = \begin{bmatrix} \mathbf{0} \\ \mathbf{f} \end{bmatrix}
+  = \begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ f_z \end{bmatrix}
+\end{equation}
+This wrench has zero pitch ($h = 0$)\index{screw!pitch}: it is a pure ``pushing'' screw.
+
+\textbf{Case 2: Pure couple (torque without net force).}\index{Wrench!pure couple}
+A matched pair of equal-and-opposite forces separated by a moment arm produces a torque
+$\boldsymbol{\tau}$ but zero net force:
+\begin{equation}
+  \wrench_{\text{couple}} = \begin{bmatrix} \boldsymbol{\tau} \\ \mathbf{0} \end{bmatrix}
+  = \begin{bmatrix} 0 \\ 0 \\ \tau_z \\ 0 \\ 0 \\ 0 \end{bmatrix}
+\end{equation}
+This wrench has infinite pitch ($h = \infty$): it is a pure ``twisting'' screw.
+
+\textbf{Case 3: Force applied at an offset.}\index{Wrench!offset force}
+A force $\mathbf{f} = [f_x, 0, 0]^T$ applied at position $\mathbf{r} = [0, 0, d]^T$ (a
+distance $d$ along the $z$-axis from the origin) creates both a force and a moment:
+\begin{equation}
+  \wrench_{\text{offset}} = \begin{bmatrix} \mathbf{r} \times \mathbf{f} \\ \mathbf{f} \end{bmatrix}
+  = \begin{bmatrix} 0 \\ -d \, f_x \\ 0 \\ f_x \\ 0 \\ 0 \end{bmatrix}
+\end{equation}
+The offset generates a moment about the $y$-axis with magnitude $d \, f_x$---the familiar
+``lever arm'' effect, now packaged automatically in the wrench representation.
+\end{example}
+
+The deep power of the wrench formalism lies in its \emph{duality}\index{duality!wrench-twist}
+with twists. Twists describe how a body moves; wrenches describe how forces act on it.
+Their pairing through the inner product gives physical power:
+\begin{equation}
+  P = \wrench^T \twist
+  = \underbrace{\boldsymbol{\tau} \cdot \boldsymbol{\omega}}_{\text{rotational power}}
+  + \underbrace{\mathbf{f} \cdot \mathbf{v}}_{\text{translational power}}
+  \label{eq:wrench_twist_power}
+\end{equation}
+
+This relationship is not merely convenient---it is the reason the wrench convention places
+torque on top (matching angular velocity in the twist) and force on the bottom (matching
+linear velocity). The ordering is dictated by the requirement that the inner product yields
+the physically correct power.\index{power!inner product}
+
+Furthermore, this duality is \textbf{frame-invariant}\index{frame invariance!power}: if we
+transform both the wrench and twist to a new frame using the co-adjoint and adjoint maps
+respectively, the power remains unchanged. This is the mathematical expression of a physical
+fact---energy transfer does not depend on the observer's viewpoint.
+
+\begin{laymansbox}{Why One 6D Object Instead of Two 3D Ones?}{wrench_unified_motivation}
+In introductory physics, force $\mathbf{f}$ and torque $\boldsymbol{\tau}$ are taught as
+separate concepts with separate equations: $\mathbf{F} = m\mathbf{a}$ for translation and
+$\boldsymbol{\tau} = I\boldsymbol{\alpha}$ for rotation. This separation works fine for
+simple problems---a block on a ramp, a spinning wheel---but breaks down for robots.
+
+A robot joint motor produces a torque that simultaneously creates forces at the end-effector
+and torques at every downstream joint. Tracking forces and torques separately requires
+careful bookkeeping of lever arms, reference points, and sign conventions. The wrench
+eliminates this bookkeeping: a single 6D vector captures the entire mechanical effect,
+transforms cleanly between frames via the co-adjoint map, and yields power through a
+single dot product with the twist.
+
+For a 6-DOF robot arm, the alternative is juggling 12 separate 3D equations (force and
+torque for each link). The wrench formalism reduces this to 6 equations in 6D---a
+conceptual and computational simplification that becomes essential for real-time control.
+\end{laymansbox}
+
 \section{Mechanical Work and the Virtual Power Principle}
 \label{sec:virtual_power}
 
@@ -423,6 +516,65 @@ Reciprocal screws play a crucial role in mechanism analysis:
 \end{principle}
 
 For example, a revolute joint constrains motion to pure rotation about a fixed axis. The allowed twist is $\twist_{\text{rev}} = \dot{\theta} \begin{bmatrix} \hat{\mathbf{s}} \\ \mathbf{q} \times \hat{\mathbf{s}} \end{bmatrix}$. Any wrench that the joint can exert (its constraint forces and torques) must be reciprocal to this twist, meaning they cannot deliver power along the allowed motion direction.
+
+% ==================================================================
+%  Physical Interpretation of Wrenches: Forces and Torques Unified
+% ==================================================================
+\section{Physical Interpretation of Wrenches}
+\label{sec:wrench_physical}
+
+The wrench $\wrench = [\boldsymbol{\tau}^T, \mathbf{f}^T]^T \in \Reals^6$ is not merely a convenient notation---it is the natural language for describing how forces and torques act on rigid bodies in three-dimensional space. To build physical intuition, we examine three fundamental loading scenarios.
+
+\begin{laymansbox}{Why Combine Force and Torque into One Object?}{wrench_unified}
+In everyday life, we think of forces (pushes) and torques (twists) as separate things. But in robotics, they are inseparable. When you push a door handle, you are simultaneously applying a force (at the handle) and a torque (about the hinge). The wrench captures both in a single 6D vector, just as the twist captures both linear and angular velocity. This unification is not just elegant---it is \emph{computationally essential} for algorithms that must compute thousands of force-motion interactions per second.
+\end{laymansbox}
+
+\subsection{Three Fundamental Wrench Types}
+
+\paragraph{Pure force at the origin.}\index{pure force}
+A force $\mathbf{f}$ applied directly at the origin of the reference frame produces no torque about that origin. The wrench is:
+\begin{equation}
+  \wrench_{\text{pure force}} = \begin{bmatrix} \mathbf{0} \\ \mathbf{f} \end{bmatrix}
+\end{equation}
+
+\paragraph{Pure couple (torque with no net force).}\index{pure couple}
+A couple is a pair of equal and opposite forces separated by a distance, producing a net torque $\boldsymbol{\tau}$ but zero net force. The wrench is:
+\begin{equation}
+  \wrench_{\text{couple}} = \begin{bmatrix} \boldsymbol{\tau} \\ \mathbf{0} \end{bmatrix}
+\end{equation}
+Examples include the twisting torque applied by a screwdriver or the reaction torque from a motor.
+
+\paragraph{Force at an offset point.}\index{force at offset}
+The most common case in robotics: a force $\mathbf{f}$ applied at a point $\mathbf{r}$ away from the reference frame origin. By the moment-arm principle, this creates a torque $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{f}$:
+\begin{equation}
+  \wrench_{\text{offset}} = \begin{bmatrix} \mathbf{r} \times \mathbf{f} \\ \mathbf{f} \end{bmatrix}
+\end{equation}
+This is the wrench that gravity produces on every link of a robot---the gravitational force $m\mathbf{g}$ acts at the centre of mass, offset from the joint frame.
+
+\begin{example}{Gravity Wrench on a Robot Link}{gravity_wrench}
+Consider a robot link of mass $m = 2$ kg with its centre of mass at $\mathbf{r} = [0.3, 0, 0]^T$ m from the joint frame. Gravity acts as $\mathbf{f} = [0, 0, -mg]^T = [0, 0, -19.62]^T$ N. The wrench at the joint frame is:
+\begin{align}
+  \boldsymbol{\tau} &= \mathbf{r} \times \mathbf{f} = \begin{bmatrix} 0.3 \\ 0 \\ 0 \end{bmatrix} \times \begin{bmatrix} 0 \\ 0 \\ -19.62 \end{bmatrix} = \begin{bmatrix} 0 \\ 5.886 \\ 0 \end{bmatrix} \text{ N$\cdot$m} \\
+  \wrench_{\text{gravity}} &= \begin{bmatrix} 0 \\ 5.886 \\ 0 \\ 0 \\ 0 \\ -19.62 \end{bmatrix}
+\end{align}
+The torque component tells us gravity tries to rotate the link about the $y$-axis (bending the arm down). The force component tells us gravity pulls the link straight down. Both are captured in one wrench vector.
+\end{example}
+
+\subsection{The Wrench-Twist Duality and Mechanical Power}
+
+The deep relationship between wrenches and twists is \emph{duality}: they are elements of dual vector spaces. The mechanical power delivered by a wrench $\wrench$ acting on a body moving with twist $\twist$ is:
+\begin{equation}
+  P = \wrench^T \twist = \boldsymbol{\tau} \cdot \boldsymbol{\omega} + \mathbf{f} \cdot \mathbf{v}
+\end{equation}
+This is the sum of rotational power (torque times angular velocity) and translational power (force times linear velocity). The fact that this is a simple inner product---not requiring separate calculations for rotation and translation---is the central payoff of the spatial algebra formalism.
+
+\subsection{Transforming Wrenches Between Frames}
+
+When we move a wrench from frame $\{A\}$ to frame $\{B\}$, we use the \emph{adjoint transpose}:
+\begin{equation}
+  \wrench_B = [\text{Ad}_{\mathbf{T}_{BA}}]^T \wrench_A
+\end{equation}
+This is \emph{not} the same transformation as for twists (which use $[\text{Ad}]$ directly). The distinction arises because wrenches are \emph{covectors}---they transform contravariantly. Physically, forces and torques measured in one frame must be re-expressed to account for both the rotation and the lever-arm effect of the frame offset.
 
 \section{Wrench Analysis and Force Polytopes}
 \label{sec:wrench_analysis}

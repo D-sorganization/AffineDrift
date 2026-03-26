@@ -118,3 +118,49 @@ jobs:
         with:
           name: Geometry_of_Motion_Volume_5
           path: articles/The_Geometry_of_Motion/Volume_V/main.pdf
+
+      - name: Install Python PDF tools
+        run: pip install PyPDF2
+
+      - name: Merge all volumes into complete textbook
+        run: |
+          python3 << 'PYEOF'
+          from PyPDF2 import PdfReader, PdfWriter
+          import os
+
+          output = PdfWriter()
+          volumes = [
+              ("articles/The_Geometry_of_Motion/Volume_0/main.pdf", "Volume 0: Mathematical Primer"),
+              ("articles/The_Geometry_of_Motion/Volume_I/main.pdf", "Volume I: Rigid Body Kinematics"),
+              ("articles/The_Geometry_of_Motion/Volume_II/main.pdf", "Volume II: Rotations and Rotational Dynamics"),
+              ("articles/The_Geometry_of_Motion/Volume_III/main.pdf", "Volume III: Differential Geometry"),
+              ("articles/The_Geometry_of_Motion/Volume_IV/main.pdf", "Volume IV: Advanced Dynamics"),
+              ("articles/The_Geometry_of_Motion/Volume_V/main.pdf", "Volume V: Control Theory"),
+          ]
+
+          total = 0
+          for path, title in volumes:
+              if not os.path.exists(path):
+                  print(f"  SKIP {title}: {path} not found")
+                  continue
+              reader = PdfReader(path)
+              pages = len(reader.pages)
+              total += pages
+              first = len(output.pages)
+              for page in reader.pages:
+                  output.add_page(page)
+              output.add_outline_item(title, first)
+              print(f"  {title}: {pages} pages")
+
+          out_path = "articles/The_Geometry_of_Motion/The_Geometry_of_Motion_Complete.pdf"
+          with open(out_path, "wb") as f:
+              output.write(f)
+          size_mb = os.path.getsize(out_path) / 1024 / 1024
+          print(f"\nComplete textbook: {total} pages, {size_mb:.1f} MB")
+          PYEOF
+
+      - name: Upload Complete Textbook
+        uses: actions/upload-artifact@v7
+        with:
+          name: Geometry_of_Motion_Complete_Textbook
+          path: articles/The_Geometry_of_Motion/The_Geometry_of_Motion_Complete.pdf
