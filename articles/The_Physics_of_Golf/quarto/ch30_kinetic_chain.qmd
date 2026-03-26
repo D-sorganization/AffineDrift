@@ -39,15 +39,15 @@ In a coupled serial kinetic chain, *peak velocity* of each proximal segment prec
 
 To formalize this, consider a simplified kinetic chain with $n$ segments. Let $\theta_i$ be the rotation angle of segment $i$ (where $i=1$ is the hips, $i=n$ is the club), and let $I_i$ be the moment of inertia about the rotation axis. The torque balance at joint $i$ reads:
 
-\[
+$$
 I_i \ddot{\theta}_i = \tau_i^{(m)} + \tau_i^{(c)}
-\]
+$$
 
 where $\tau_i^{(m)}$ is the muscle torque applied at that joint and $\tau_i^{(c)}$ is the constraint torque (the reaction torque from the distal segment). Using the equations of motion from Chapter~\ref{ch:04_forces_and_torques}, the constraint torque at joint $i$ arises from the accelerations of the distal chain:
 
-\[
+$$
 \tau_i^{(c)} = -\frac{\partial}{\partial \theta_i} \mathcal{L}_{\text{constraint}}
-\]
+$$
 
 where the constraint Lagrangian encodes the coupling to distal segments.
 
@@ -77,9 +77,9 @@ This staggered timing is the essence of the kinetic chain. Each segment acts as 
 
 The timing relationship can be quantified. For a ideal coupled oscillator model (discussed below), the time interval between the peak velocity of segment $i$ and the peak velocity of segment $i+1$ is roughly:
 
-\[
+$$
 \Delta t_{i \to i+1} \approx \frac{\pi}{2 \omega_i}
-\]
+$$
 
 
 
@@ -87,9 +87,9 @@ where $\omega_i$ is the natural frequency of the oscillation at joint $i$. Since
 
 The *energy cascade* occurs because each segment, upon decelerating from its peak velocity, does work on the distal segment. The power delivered at joint $i$ is:
 
-\[
+$$
 P_i = \tau_i^{(c)} \dot{\theta}_i
-\]
+$$
 
 When $\dot{\theta}_i$ is large and $\tau_i^{(c)}$ is negative (the segment is being braked), the power is being transferred to accelerate the distal segments. The total mechanical energy is conserved (in an idealized frictionless model), but it is progressively concentrated into smaller masses, thereby increasing velocity.
 
@@ -122,13 +122,13 @@ Note that the peak velocity increases dramatically down the chain (due to the de
 
 To gain intuition, consider a simplified two-segment model: hip rotation ($\theta_1$) and arm/club rotation ($\theta_2$). Suppose the segments are connected by a damped elastic coupling (representing the passive elastic tissues and the active muscles):
 
-\[
+$$
 I_1 \ddot{\theta}_1 + c_1 \dot{\theta}_1 + k(\theta_1 - \theta_2) = \tau_1^{(m)}
-\]
+$$
 
-\[
+$$
 I_2 \ddot{\theta}_2 + c_2 \dot{\theta}_2 - k(\theta_1 - \theta_2) = 0
-\]
+$$
 
 where $k$ is the coupling stiffness and $c_i$ are damping coefficients. The muscle torque $\tau_1^{(m)}$ is applied only at the hip. The coupling force $k(\theta_1 - \theta_2)$ acts like a spring: if the hip rotates faster than the arm, the spring stretches and pulls the arm forward (accelerating it) while pulling the hip backward (decelerating it).
 
@@ -157,9 +157,9 @@ One of the most important kinematic variables in the golf swing is the *X-factor
 
 The X-factor is the angle between the shoulder rotation axis and the hip rotation axis, typically defined as:
 
-\[
+$$
 \alpha_X = \theta_{\text{shoulders}} - \theta_{\text{hips}}
-\]
+$$
 
 where $\theta$ is measured as the internal rotation from address. At the top of the backswing, the X-factor typically ranges from $40^{\circ}$ to $55^{\circ}$ in skilled golfers. A larger X-factor at the top indicates that the golfer has ``coiled'' the upper body against the lower body, storing elastic energy in the trunk muscles and passive tissues.
 
@@ -174,9 +174,9 @@ The X-factor stretch is the increase in X-factor angle that occurs during the ea
 
 Quantitatively, if $\alpha_X(t_{\text{top}})$ is the X-factor at the top of the backswing, then:
 
-\[
+$$
 \alpha_X^{\text{max}} = \max_{t_{\text{top}} < t < t_{\text{hip-30}}} \alpha_X(t) > \alpha_X(t_{\text{top}})
-\]
+$$
 
 The stretch magnitude is $\Delta \alpha_X^{\text{stretch}} = \alpha_X^{\text{max}} - \alpha_X(t_{\text{top}})$, typically $5^{\circ}$ to $10^{\circ}$ in skilled golfers.
 
@@ -190,13 +190,13 @@ The X-factor stretch reveals something profound: the trunk is not a rigid lever 
 
 Consider a two-DOF model of the hips (segment 1) and shoulders (segment 2), coupled elastically:
 
-\[
+$$
 I_{\text{hips}} \ddot{\theta}_1 + c_1 \dot{\theta}_1 + k(\theta_1 - \theta_2) = \tau_1^{(m)}(t)
-\]
+$$
 
-\[
+$$
 I_{\text{shoulders}} \ddot{\theta}_2 + c_2 \dot{\theta}_2 - k(\theta_1 - \theta_2) = 0
-\]
+$$
 
 At the top of the backswing, both segments are momentarily at rest: $\dot{\theta}_1(t_{\text{top}}) = \dot{\theta}_2(t_{\text{top}}) = 0$. However, the muscle torque $\tau_1^{(m)}$ begins to drive the hips backward. Initially, the coupling force $k(\theta_1 - \theta_2)$ is nearly zero (both are at maximum rotation), so the hip can accelerate without immediately restraining the shoulders. The hips accelerate and begin rotating backward, but the shoulders, having no direct muscle drive (or only weak eccentric muscle control), lag behind. As $\theta_1$ decreases and $\theta_2$ remains large, the angle difference $\theta_1 - \theta_2$ becomes negative: the coupling spring wants to pull the shoulder back toward the hip.
 
@@ -242,9 +242,9 @@ The lag angle is the angle between the lead forearm and the club shaft, measured
 
 The lag angle $\phi$ is related to the wrist rotation angle $\theta_{\text{wrist}}$ and arm rotation angle $\theta_{\text{arm}}$ by:
 
-\[
+$$
 \phi = \theta_{\text{arm}} - \theta_{\text{club}}
-\]
+$$
 
 where $\theta_{\text{club}}$ is the rotation of the club relative to the grip.
 
@@ -258,9 +258,9 @@ At first glance, it seems that the wrist should be a major power source: the wri
 
 Moreover, the wrist is a small, light segment at the distal end of the chain. For the wrist to actively drive the club, it would need to exert a torque $\tau_{\text{wrist}}$ on the club against the dynamic resistance (inertia and centrifugal effects) of the club. However, the work-energy theorem tells us:
 
-\[
+$$
 \Delta KE_{\text{club}} = \int P_{\text{wrist}} \, dt = \int \tau_{\text{wrist}} \cdot \dot{\theta}_{\text{club}} \, dt
-\]
+$$
 
 For the wrist muscles to do significant work on the club at high speeds, they would need to exert a large torque while the club is rotating at high angular velocity. But Hill's curve shows that muscles cannot exert large forces at high velocities. Therefore, the wrist *cannot* drive the club; instead, the wrist must *release* the club and let inertial and Coriolis forces accelerate it.
 
@@ -278,21 +278,21 @@ The wrist release is not an active drive of the club by the wrist muscles. Rathe
 
 Consider the wrist and club as a coupled system. Let $\theta_a$ be the arm rotation angle and $\theta_c$ be the club rotation angle. The club is subject to a constraint torque from the arm:
 
-\[
+$$
 I_{\text{club}} \ddot{\theta}_c = \tau_{\text{arm}} + \tau_{\text{gravity}} + \tau_{\text{air}}
-\]
+$$
 
 where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist from the arm. During the lag phase (when the wrist is cocked and constrained), the lag angle $\phi = \theta_a - \theta_c$ is maintained by a constraint:
 
-\[
+$$
 \phi = \text{const} \quad \Rightarrow \quad \dot{\theta}_c = \dot{\theta}_a, \quad \ddot{\theta}_c = \ddot{\theta}_a
-\]
+$$
 
 This means the wrist is acting like a rigid link, transmitting all acceleration from the arm to the club. The constraint force is whatever torque is necessary to maintain this rigid coupling:
 
-\[
+$$
 \tau_{\text{arm}} = I_{\text{club}} \ddot{\theta}_a - \tau_{\text{gravity}} - \tau_{\text{air}}
-\]
+$$
 
 As long as the wrist muscles can maintain this constraint (i.e., as long as the required torque does not exceed the maximum torque the wrist muscles can exert), the lag angle remains constant. However, as the arm accelerates faster and faster, the required constraint torque grows. Eventually, the constraint becomes infeasible (the wrist muscles cannot provide enough torque), and the lag angle begins to decrease. The wrist is now *releasing* not by active uncocking, but by the relaxation of the constraint.
 
@@ -312,15 +312,15 @@ For late release, the club is constrained to follow the arm: $\ddot{\theta}_c = 
 
 For early release at time $t_r < t_i$, the constraint is removed and the club is free to rotate:
 
-\[
+$$
 I_{\text{club}} \ddot{\theta}_c = -C_D \dot{\theta}_c
-\]
+$$
 
 where $C_D$ is the air resistance coefficient. From $t_r$ to $t_i$, the club rotates under this dynamics, which predicts a nearly constant velocity (if air resistance is small) or exponential decay (if significant). The club velocity at impact is thus:
 
-\[
+$$
 \dot{\theta}_c(t_i) = \dot{\theta}_a(t_r) \exp\left( -\frac{C_D}{I_{\text{club}}} (t_i - t_r) \right)
-\]
+$$
 
 Comparing the two, late release gives $\dot{\theta}_c(t_i) = \dot{\theta}_a(t_i)$, while early release gives $\dot{\theta}_c(t_i) = \dot{\theta}_a(t_r) \exp(\cdots)$. Since $\dot{\theta}_a$ is still increasing as the downswing progresses (the arm is accelerating), we have $\dot{\theta}_a(t_i) > \dot{\theta}_a(t_r)$, so late release yields a higher club velocity.
 
@@ -329,33 +329,33 @@ Comparing the two, late release gives $\dot{\theta}_c(t_i) = \dot{\theta}_a(t_i)
 
 Suppose the arm follows a simple acceleration profile:
 
-\[
+$$
 \ddot{\theta}_a(t) = a_0 \left(1 - \frac{t - t_r}{t_i - t_r}\right) \quad \text{for} \quad t_r < t < t_i
-\]
+$$
 
 where $a_0$ is the initial arm acceleration and $t_r$ is the release time. At time $t_i$ (impact), the arm angular velocity is:
 
-\[
+$$
 \dot{\theta}_a(t_i) = \dot{\theta}_a(t_r) + \int_{t_r}^{t_i} \ddot{\theta}_a(t) \, dt = \dot{\theta}_a(t_r) + \frac{a_0}{2}(t_i - t_r)
-\]
+$$
 
 For early release at $t_r = 0.7 t_i$ (70% into the downswing), the club velocity at impact is approximately:
 
-\[
+$$
 \dot{\theta}_c(t_i) \approx \dot{\theta}_a(0.7 t_i) = \dot{\theta}_a(t_r) + \frac{a_0}{2} (0.7 t_i)
-\]
+$$
 
 For late release at $t_r = 0.9 t_i$ (90% into the downswing), the club velocity is:
 
-\[
+$$
 \dot{\theta}_c(t_i) = \dot{\theta}_a(t_i) = \dot{\theta}_a(t_r) + \frac{a_0}{2} t_i
-\]
+$$
 
 The ratio is:
 
-\[
+$$
 \frac{\dot{\theta}_c^{\text{late}}}{\dot{\theta}_c^{\text{early}}} = \frac{\dot{\theta}_a(t_r) + \frac{a_0}{2} t_i}{\dot{\theta}_a(t_r) + \frac{a_0}{2} (0.7 t_i)} \approx 1.15 \text{ to } 1.30
-\]
+$$
 
 depending on the initial velocity. This implies that late release can yield club speeds 15--30% higher than early release, all else being equal. Of course, ``all else'' is *not* equal: a golfer with early release might have higher arm velocities at impact due to better sequencing, which could offset this disadvantage. However, the fundamental principle is clear: *holding the lag* (maintaining the constraint as long as possible) allows the arm to continue accelerating the club for a longer duration.
 
@@ -424,15 +424,15 @@ The fact that peak GRF precedes impact by a significant time interval is crucial
 
 The ground provides both vertical and horizontal forces. The vertical component (the ``push-off'') can be understood to create rotational momentum via the geometry of the stance. If the golfer applies a downward force $F_z$ at the lead foot, which is displaced a distance $r$ from the vertical axis of hip rotation, the torque about the hip rotation axis is:
 
-\[
+$$
 \tau = F_z \times r
-\]
+$$
 
 This torque drives the hip's angular momentum about the vertical axis. Similarly, a horizontal force $F_x$ (pushing toward the target) at the lead foot creates a torque:
 
-\[
+$$
 \tau = F_x \times h
-\]
+$$
 
 where $h$ is the height of the hip above the ground.
 
@@ -453,25 +453,25 @@ Consider a golfer with the following measurements:
 
 The torques are:
 
-\[
+$$
 \tau_z = F_z \times r = 1200 \times 0.4 = 480 \text{ N} \cdot \text{m}
-\]
+$$
 
-\[
+$$
 \tau_h = F_x \times h = 640 \times 1.0 = 640 \text{ N} \cdot \text{m}
-\]
+$$
 
 (assuming hip height $h \approx 1.0 \text{ m}$). These torques drive the angular acceleration:
 
-\[
+$$
 \ddot{\theta} = \frac{\tau}{I} = \frac{480 + 640}{1.5} \approx 750 \text{ rad/s}^2
-\]
+$$
 
 This is a substantial angular acceleration! Integrated over a time interval of 50 ms (early downswing), the change in angular velocity is:
 
-\[
+$$
 \Delta \dot{\theta} = \ddot{\theta} \times \Delta t = 750 \times 0.05 = 37.5 \text{ rad/s} \approx 2150^{\circ}/\text{s}
-\]
+$$
 
 This explains how the hips can rotate from a slow start at the top of the backswing to rotational velocities of 300--400 deg/s: the GRF provides enormous external torques.
 
@@ -488,21 +488,21 @@ To fully understand the kinetic chain, we must quantify how energy flows through
 
 For a single rotating segment with moment of inertia $I$ about a rotation axis, the equation of motion is:
 
-\[
+$$
 I \ddot{\theta} = \tau
-\]
+$$
 
 The rotational power delivered by the torque is:
 
-\[
+$$
 P = \tau \cdot \dot{\theta}
-\]
+$$
 
 The rate of change of rotational kinetic energy is:
 
-\[
+$$
 \frac{d}{dt} KE = \frac{d}{dt} \left( \frac{1}{2} I \dot{\theta}^2 \right) = I \dot{\theta} \ddot{\theta} = \tau \cdot \dot{\theta} = P
-\]
+$$
 
 Thus, the power delivered by a torque equals the rate of change of kinetic energy. If $P > 0$, the segment is being accelerated (increasing KE). If $P < 0$, the segment is being decelerated (decreasing KE). The decelerated segment is doing work on something else (in this case, the distal segments via constraint forces).
 
@@ -518,9 +518,9 @@ In a kinetic chain, there are two types of torques acting on each segment:
 
 For segment $i$, the total torque is $\tau_i = \tau_i^{(m)} + \tau_i^{(c)}$, and the power delivered to segment $i$ is:
 
-\[
+$$
 P_i = (\tau_i^{(m)} + \tau_i^{(c)}) \cdot \dot{\theta}_i = P_i^{(m)} + P_i^{(c)}
-\]
+$$
 
 The term $P_i^{(m)}$ is the power delivered by muscles. The term $P_i^{(c)}$ is the power delivered by constraint forces from neighboring segments.
 
@@ -529,15 +529,15 @@ The term $P_i^{(m)}$ is the power delivered by muscles. The term $P_i^{(c)}$ is 
 
 The total power delivered to the system is the sum of all muscle powers:
 
-\[
+$$
 P_{\text{total}} = \sum_i P_i^{(m)}
-\]
+$$
 
 In a frictionless system (neglecting air resistance and rolling resistance), this power is converted entirely into kinetic energy and potential energy. Since the swing is performed at relatively constant height (small changes in center of mass height), potential energy changes are negligible, and:
 
-\[
+$$
 P_{\text{total}} = \sum_i \frac{d}{dt} KE_i = \frac{d}{dt} \left( \sum_i KE_i \right)
-\]
+$$
 
 The constraint forces redistribute energy among the segments: $P_i^{(c)}$ can be negative for a proximal segment (losing energy) and positive for a distal segment (gaining energy), such that the total energy input from muscles flows out into the kinetic energy of the distal segments.
 
@@ -570,9 +570,9 @@ The muscular power input occurs primarily during the backswing and the early dow
 
 The ``efficiency'' of the kinetic chain is the ratio of the kinetic energy imparted to the club to the total muscular work done. In ideal terms:
 
-\[
+$$
 \eta = \frac{KE_{\text{club}}}{\int P^{(m)} dt}
-\]
+$$
 
 where $P^{(m)}$ is the total muscular power input.
 
@@ -602,9 +602,9 @@ One of the most profound insights from the ZTCF formalism (Chapter~\ref{ch:zero_
 
 Recall the coupled oscillator model introduced in Section~\ref{sec:x_factor}. Each joint has a natural frequency $\omega_i$ determined by the local stiffness and inertia. For a joint with moment of inertia $I_i$ and coupling stiffness $k_i$ (stiffness of the joint's passive and active structures):
 
-\[
+$$
 \omega_i \approx \sqrt{\frac{k_i}{I_i}}
-\]
+$$
 
 In the human body, distal segments have smaller inertias and higher stiffnesses (due to smaller structures and tighter joints), so they have higher natural frequencies. The hip joint has a lower natural frequency than the shoulder joint, which has a lower natural frequency than the wrist. This frequency hierarchy is built into the body's structure.
 
@@ -616,9 +616,9 @@ When a muscular input is applied at the hip, the coupled system's response natur
 
 In the ZTCF formalism, the dynamics of the coupled system are described by the drift field:
 
-\[
+$$
 \dot{\configvec} = \drift(\configvec, \configdot, \control)
-\]
+$$
 
 where $\configvec$ is the configuration vector (all joint angles), $\configdot$ is the configuration velocity, and $\control$ is the control input (muscle activations). The drift field incorporates the mass matrix $\massmat(\configvec)$, which encodes the coupling between segments.
 
@@ -626,9 +626,9 @@ The mass matrix is block-diagonal-like in the joint space, but the inversion $\m
 
 Specifically, the constraint force $\tau_i^{(c)}$ at joint $i$ is determined by the accelerations of all segments:
 
-\[
+$$
 \tau_i^{(c)} = \sum_j M_{ij}^{-1} (I_j \ddot{\theta}_j - \tau_j^{(m)})
-\]
+$$
 
 where $M_{ij}^{-1}$ are the elements of the inverted mass matrix. This equation encodes the physical fact that each segment's acceleration is coupled to every other segment through the mass matrix.
 

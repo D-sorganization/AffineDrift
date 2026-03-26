@@ -41,9 +41,9 @@ The rigid model predicts that the clubhead would be at the end of a straight lin
 To model shaft flexibility mathematically, we use **Euler-Bernoulli beam theory**, a classical result from mechanics. A beam (our shaft) can be described by how much it bends at each point along its length.
 
 The fundamental equation for the shape of a bent beam is:
-\[
+$$
 EI \frac{\partial^4 w}{\partial z^4} = q(z)
-\]
+$$
 
 where:
 - $w(z)$ is the vertical deflection of the beam at position $z$ along the shaft.
@@ -64,9 +64,9 @@ In practical terms: a stiffer shaft ($higher$ $EI$) requires a larger force to a
 In a golf swing, we don't need to solve this equation pointwise along the entire shaft. Instead, we use a technique called **modal decomposition**: we express the total deformation as a sum of a small number of deformation patterns (modes), each with its own amplitude.
 
 For a free cantilever beam (clamped at one end, free at the other---like a golf shaft), the first few modes have known shapes. Rather than solving the full PDE, we can write:
-\[
+$$
 w(z, t) = \sum_{j=1}^{N} \eta_j(t) \, \phi_j(z)
-\]
+$$
 
 where:
 - $\eta_j(t)$ are the **modal coordinates**, the time-varying amplitudes of each mode.
@@ -74,9 +74,9 @@ where:
 - $N$ is the number of modes we keep (typically 1--3 in practice).
 
 For a golf shaft, we almost always use just the first mode, the fundamental bending mode, because it dominates the energy transfer. So:
-\[
+$$
 w(z, t) \approx \eta(t) \, \phi_1(z)
-\]
+$$
 
 The modal coordinate $\eta(t)$ is treated as a generalized coordinate, just like a joint angle. It evolves according to its own differential equation, coupled to the rest of the swing dynamics.
 
@@ -92,9 +92,9 @@ A modal coordinate $\eta$ is a single number that describes how much the shaft i
 Previously, we wrote the state as $\state = [\configvec, \configdot]^T$, where $\configvec$ is the vector of joint angles and $\configdot$ is the vector of joint angular velocities.
 
 With shaft flexibility, we extend the state to include the modal coordinates and their velocities:
-\[
+$$
 \state =  \configvec \\ \configdot \\ \shaftflex \\ \shaftflexdot
-\]
+$$
 
 where $\shaftflex = \eta$ and $\shaftflexdot = \dot{\eta}$. If we keep multiple modes, $\shaftflex$ and $\shaftflexdot$ are vectors.
 
@@ -107,9 +107,9 @@ The same double pendulum with a flexible shaft has $\configvec \in \mathbb{R}^2$
 The system of differential equations is now larger, but it is still affine in the muscle torques (control inputs). We can still separate drift from control.
 
 The dynamics of the modal coordinates are themselves driven by the joint motion and by the modal stiffness and damping. In the absence of any active control of the shaft (and there is no muscle that controls $\eta$ directly), the modal equations are:
-\[
+$$
 \ddot{\eta} + 2 \zeta \omega_n \dot{\eta} + \omega_n^2 \eta = f_{\text{modal}}(\configvec, \configdot)
-\]
+$$
 
 where:
 - $\omega_n$ is the natural frequency of the first bending mode (a property of the shaft material and geometry).
@@ -121,9 +121,9 @@ For a typical golf shaft, $\omega_n$ is in the range of 15--25 Hz (10--12 radian
 ## How Shaft Flexibility Enters the Drift Field
 
 The extended dynamics are still affine:
-\[
+$$
 \dot{\state} = f(\state) + G(\state) \control
-\]
+$$
 
 The drift field $f$ now includes terms from the modal dynamics. Specifically:
 
@@ -163,16 +163,16 @@ In other words: shaft flexibility is almost entirely in the drift. This is why s
 In the equations above, the terms $-\omega_n^2\eta$ and $-2\zeta\omega_n\dot{\eta}$ are the elastic restoring force and the damping force on the shaft, respectively. Let's make them more explicit.
 
 The **elastic term** can be written as:
-\[
+$$
 F_{\text{elastic}} = -\shaftstiff \eta
-\]
+$$
 
 where $\shaftstiff = \omega_n^2 m_{\text{eff}}$ is an effective shaft stiffness. (Here $m_{\text{eff}}$ is the effective mass of the clubhead as "seen" by the bending mode.)
 
 The **damping term** can be written as:
-\[
+$$
 F_{\text{damping}} = -\shaftdamp \dot{\eta}
-\]
+$$
 
 where $\shaftdamp = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
 
@@ -195,9 +195,9 @@ Here is a subtle but important effect: as the shaft rotates faster and faster du
 Consider a small element of the shaft at distance $r$ from the pivot, rotating with angular velocity $\omega$. The centrifugal acceleration on that element is $\omega^2 r$. When the shaft bends, this centrifugal force has a component that tries to straighten the shaft, increasing its effective stiffness.
 
 Mathematically, the effective bending stiffness becomes:
-\[
+$$
 \shaftstiff_{\text{eff}} = \shaftstiff_0 + \Delta\shaftstiff_{\text{centrifugal}}(\omega)
-\]
+$$
 
 where $\shaftstiff_0$ is the passive bending stiffness and $\Delta\shaftstiff_{\text{centrifugal}}$ is the additional stiffness due to centrifugal effects.
 
@@ -326,16 +326,16 @@ Consider a simplified model: a point mass (the clubhead) at the end of a shaft, 
 
 The grip position follows $\bm{r}_{\text{grip}}(t)$ with velocity $\bm{v}_{\text{grip}}(t)$ and acceleration $\bm{a}_{\text{grip}}(t)$. The clubhead is constrained to be at distance $L$ from the grip (shaft length), so:
 
-\[
+$$
 \bm{r}_{\text{head}} = \bm{r}_{\text{grip}} + L \, \bm{\hat{n}}
-\]
+$$
 
 where $\bm{\hat{n}}$ is the unit vector along the shaft direction. In the rigid case, $\bm{\hat{n}}$ is determined by the hand orientation alone.
 
 The clubhead acceleration includes gravity and constraint forces:
-\[
+$$
 m_{\text{head}} \bm{a}_{\text{head}} = m_{\text{head}}\bm{g} + \bm{F}_{\text{constraint}}
-\]
+$$
 
 where $\bm{F}_{\text{constraint}}$ is the force keeping the clubhead at distance $L$ from the grip.
 
@@ -344,16 +344,16 @@ The \ztcf is the trajectory that results when the constraint forces alone (no mu
 ### Flexible Shaft Case
 
 Now the grip motion is the same, but the shaft can bend. The clubhead is no longer constrained to be exactly at distance $L$ from the grip. Instead:
-\[
+$$
 \bm{r}_{\text{head}} = \bm{r}_{\text{grip}} + L \, \bm{\hat{n}} + \eta(t) \bm{\phi}(z=L)
-\]
+$$
 
 where $\bm{\phi}(z=L)$ is the lateral displacement at the tip of the mode shape $\phi_1(z)$.
 
 The shaft deformation $\eta(t)$ evolves according to:
-\[
+$$
 \ddot{\eta} + 2\zeta\omega_n\dot{\eta} + \omega_n^2\eta = f_{\text{modal}}(\text{grip motion})
-\]
+$$
 
 This is a second-order ODE coupled to the grip motion.
 

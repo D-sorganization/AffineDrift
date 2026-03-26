@@ -31,9 +31,9 @@ A complete model of the golf swing includes:
 
 The full state vector is enormous: 20+ joint angles, 20+ joint angular velocities, plus the modal coordinates for shaft flexibility, plus the ground reaction forces (which are determined by the constraints). But despite the dimensionality, the affine structure holds:
 
-\[
+$$
 \dot{\state} = f(\state) + G(\state) \control
-\]
+$$
 
 The drift field $f$ includes gravity, Coriolis forces, elastic forces from the shaft, and passive damping. The control field $G$ is the mapping from muscle torques to accelerations. The constraints are managed through Lagrange multipliers (the constraint forces).
 
@@ -204,9 +204,9 @@ In the reference frame of the ball, the clubface is approaching at 100--140 mph.
 
 The collision is characterized by the coefficient of restitution (COR), which relates the separation speed to the approach speed:
 
-\[
+$$
 \mathrm{COR} = \frac{\text{separation speed}}{\text{approach speed}}
-\]
+$$
 
 Modern golf balls have COR $\approx 0.82$, meaning about 82\% of the kinetic energy of the clubface is transferred to the ball. The remaining 18\% is lost to heat, internal friction in the ball, and vibration of the clubface.
 

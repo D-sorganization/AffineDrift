@@ -43,9 +43,9 @@ A system exhibits *passive control* when it achieves stability and converges to 
 Consider a simple example: a pendulum hanging at rest. It is passively stable. If you displace it, gravity and the support structure automatically create a restoring force. The pendulum swings back to equilibrium without any external controller. The source of stability is potential energy stored in the gravitational field and kinetic energy dissipated by air resistance.
 
 Similarly, a spring-mass-damper system is passively stable:
-\[
+$$
 m\ddot{x} + c\dot{x} + kx = 0.
-\]
+$$
 If displaced, the spring force $kx$ restores the mass toward equilibrium, and the damper $c\dot{x}$ dissipates kinetic energy. With the right parameters, the system oscillates back to rest. No external controller is needed.
 
 
@@ -70,9 +70,9 @@ In the 1980s, the control theorist Neville Hogan proposed a radical insight: the
 
 \begin{definition}{Mechanical Impedance}{lab:def_impedance}
 Mechanical impedance is the relationship between a position perturbation and the restoring force. Formally, for a joint, impedance is characterized by:
-\[
+$$
 \bm{\tau}_{\mathrm{resist}} = -\bm{K}(\bm{q} - \bm{q}_0) - \bm{D}\dot{\bm{q}},
-\]
+$$
 where $\bm{K}$ is the stiffness matrix, $\bm{D}$ is the damping matrix, $\bm{q}$ is the joint position, $\bm{q}_0$ is the reference position, and $\dot{\bm{q}}$ is the joint angular velocity.
 
 This equation assumes the desired velocity is zero ($\dot{\bm{q}}_d = 0$), appropriate for posture maintenance. During the swing, the full impedance control law includes a feedforward term and desired trajectory:
