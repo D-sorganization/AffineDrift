@@ -47,7 +47,7 @@ This is a nonlinear function of velocity—quadratic in magnitude. This is criti
 
 The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD).
 
-\begin{center}
+
 \begin{tabular}{lll}
 \toprule
 Shape & $C_D$ & Notes 
@@ -61,7 +61,7 @@ Golf driver head (modern) & $0.30$--$0.50$ & Aerodynamic crown reduces drag
 Flat plate (normal) & $\sim 1.0$ & Maximum drag 
 \bottomrule
 \end{tabular}
-\end{center}
+
 
 The reference area $A$ is the projected area. For a cylinder of diameter $d$ and length $L$ with axis perpendicular to flow, $A = d \times L$. For a sphere of diameter $D$, $A = \pi D^2 / 4$. For a clubhead, $A$ is roughly the cross-sectional area of the clubface, approximately 50--80 cm$^2$ for modern drivers.
 
@@ -407,13 +407,13 @@ Drag depends on environmental conditions:
 ## Environmental Factors Affecting Drag
 
 \begin{description}
-\item[Air density $\rho$:] Varies with temperature and altitude. At 5000 ft elevation, $\rho \approx 1.05$ kg/m$^3$, about 14% lower than sea level. This reduces drag (and also reduces ball range due to less lift).
+- Air density $\rho$: Varies with temperature and altitude. At 5000 ft elevation, $\rho \approx 1.05$ kg/m$^3$, about 14% lower than sea level. This reduces drag (and also reduces ball range due to less lift).
 
-\item[Wind:] Non-zero ambient wind changes the relative velocity. If there is a 5 m/s headwind and the clubhead is moving at 50 m/s, the relative velocity is 55 m/s, and drag increases by $(55/50)^2 \approx 21\%$.
+- Wind: Non-zero ambient wind changes the relative velocity. If there is a 5 m/s headwind and the clubhead is moving at 50 m/s, the relative velocity is 55 m/s, and drag increases by $(55/50)^2 \approx 21\%$.
 
-\item[Temperature:] Affects air viscosity (slightly) and density. At 35°C vs. 15°C, $\rho$ decreases by about 3%.
+- Temperature: Affects air viscosity (slightly) and density. At 35°C vs. 15°C, $\rho$ decreases by about 3%.
 
-\item[Shaft compliance:] Some modern shafts have aerodynamic profiles or coatings that reduce $C_D$ slightly.
+- Shaft compliance: Some modern shafts have aerodynamic profiles or coatings that reduce $C_D$ slightly.
 
 \end{description}
 
@@ -517,15 +517,16 @@ The question of whether to include drag depends on the application:
 
 :::
 
-\begin{mythreality}{Myth: ``Air drag is negligible in golf''}{myth:drag-negligible}
+::: {.callout-warning}
+## Myth: ``Air drag is negligible in golf''
 \begin{description}
-\item[**The Myth:**] Golf is played in air at relatively modest speeds, so air resistance is a second-order effect. The swing is controlled by gravity, inertia, and muscles. Drag is a detail for researchers, not a real constraint.
+- **The Myth:** Golf is played in air at relatively modest speeds, so air resistance is a second-order effect. The swing is controlled by gravity, inertia, and muscles. Drag is a detail for researchers, not a real constraint.
 
-\item[**The Reality:**] At 50 m/s clubhead speed, drag forces are comparable to the muscular forces available late in the downswing. Drag reduces clubhead speed by 5--10% over the course of the downswing. For inverse dynamics, omitting drag introduces systematic errors of 2--5% in peak torques, and much larger errors in small joints. For accurate biomechanical analysis, drag must be included. Moreover, drag is part of the *passive dynamics* that define what the swing must overcome—understanding drag is understanding the true challenge the nervous system faces.
+- **The Reality:** At 50 m/s clubhead speed, drag forces are comparable to the muscular forces available late in the downswing. Drag reduces clubhead speed by 5--10% over the course of the downswing. For inverse dynamics, omitting drag introduces systematic errors of 2--5% in peak torques, and much larger errors in small joints. For accurate biomechanical analysis, drag must be included. Moreover, drag is part of the *passive dynamics* that define what the swing must overcome—understanding drag is understanding the true challenge the nervous system faces.
 
-\item[**Why the Myth Persists:**] Early biomechanics studies on golf were conducted before computational tools made it easy to include drag. The approximation was reasonable for the research questions at the time. The myth has lingered in textbooks and coaching education, even as the tools have improved. Modern research includes drag routinely.
+- **Why the Myth Persists:** Early biomechanics studies on golf were conducted before computational tools made it easy to include drag. The approximation was reasonable for the research questions at the time. The myth has lingered in textbooks and coaching education, even as the tools have improved. Modern research includes drag routinely.
 \end{description}
-\end{mythreality}
+:::
 
 ## Drag in the Context of Drift and Control
 
@@ -534,8 +535,9 @@ The question of whether to include drag depends on the application:
 
 Finally, let's place drag within the broader framework of drift vs. control forces.
 
-\begin{driftcontrol}{Drift Forces Include Drag}{drift:drag-inclusion}
-\noindent\begin{minipage}[t]{0.48\textwidth}
+::: {.callout-note}
+## Drift Forces Include Drag
+\begin{minipage}[t]{0.48\textwidth}
 **The drift field $f(\bm{x})$ includes:**
 
 - Gravity: $-\bm{M}^{-1} \bm{g}(\bm{q})$
@@ -557,7 +559,7 @@ Comparing magnitudes at impact:
 
 Including drag makes the situation slightly worse (higher ratio), but the conclusion is the same: impact is uncontrollable.
 \end{minipage}
-\end{driftcontrol}
+:::
 
 ::: {.callout-important}
 ## Key Takeaways: Aerodynamic Drag
@@ -581,7 +583,7 @@ Including drag makes the situation slightly worse (higher ratio), but the conclu
 \subsection*{Looking Ahead}
 With all external forces now catalogued---gravity, ground reaction, muscle torques, and aerodynamic drag---we face a fundamental question: given the observed motion, can we recover the muscle torques that produced it? Chapter~\ref{ch:inverse_dynamics_parallel} tackles this *inverse problem* and reveals a sobering limitation: when the body forms closed kinematic loops (as it does in a two-handed grip), the inverse problem becomes mathematically non-invertible.
 
-\begin{exercises}{Chapter Exercises}{ex:drag-chapter}
+## Chapter Exercises
 
 - **Drag Force Magnitude.** A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using Eq.~\eqref{eq:drag-scalar}. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
 
@@ -601,4 +603,3 @@ Now estimate the drag torque: arm + club dragging through air at high speed prod
 
 - **Spin Parameter and Lift.** A golf ball after impact has velocity $v = 50$ m/s and backspin $\omega = 200$ rad/s. The ball radius is $r = 0.02$ m. Compute the spin parameter $S$ using Eq.~\eqref{eq:spin-parameter}. Is this in the typical range for golf (0.1--0.3)? If $C_L = 0.3$ at this spin, compute the lift force on the ball (mass 0.045 kg). How does lift compare to weight?
 
-\end{exercises}

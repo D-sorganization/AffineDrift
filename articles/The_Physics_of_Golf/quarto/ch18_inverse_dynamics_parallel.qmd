@@ -240,7 +240,8 @@ where $\bm{h}(\bm{q},\dot{\bm{q}}) = \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} +
 
 This is called the KKT (Karush-Kuhn-Tucker) or augmented system. It is square ($2n \times 2n$ if $k$ constraints reduce the system to $n$ independent DOF).
 
-\begin{theorem}{The Augmented System is Invertible in Forward Dynamics}{thm:augmented_invertible}
+::: {.callout-important}
+## The Augmented System is Invertible in Forward Dynamics
 For a well-posed mechanical system with constraints, the augmented matrix
 \begin{equation}
 \bm{K} = \begin{bmatrix} \bm{M} & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix}
@@ -250,7 +251,7 @@ For a well-posed mechanical system with constraints, the augmented matrix
 is nonsingular whenever $\bm{M}$ is positive definite and $\bm{J}_c$ has full row rank. Therefore, given $\bm{u}$, we can always solve uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$.
 
 This means **forward dynamics always works**.
-\end{theorem}
+:::
 
 This theorem guarantees that if you specify all muscle torques, the skeleton's acceleration is uniquely determined. Physically, this makes sense: physics is deterministic going forward.
 
@@ -401,7 +402,8 @@ The direction matters because causality flows forward (from forces to motion) bu
 
 ### Forward Dynamics: Always Uniquely Solvable
 
-\begin{theorem}{Forward Dynamics is Well-Posed}{thm:forward_wellposed}
+::: {.callout-important}
+## Forward Dynamics is Well-Posed
 Given applied torques $\bm{u}(t)$ and an initial state $\bm{q}(0), \dot{\bm{q}}(0)$, the constrained differential equations
 \begin{equation}
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}\bm{u} - \bm{h} \\ -\dot{\bm{J}}_c\dot{\bm{q}} \end{bmatrix}
@@ -411,13 +413,14 @@ Given applied torques $\bm{u}(t)$ and an initial state $\bm{q}(0), \dot{\bm{q}}(
 always have a unique solution at each time instant. The motion $\bm{q}(t)$ evolves deterministically forward in time.
 
 **Why?** The coefficient matrix on the left is the KKT matrix (Equation \ref{eq:KKT_matrix}), which is nonsingular for any valid mechanical system. Therefore, the system can be solved uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ at each instant.
-\end{theorem}
+:::
 
 Physically: if you know exactly what every muscle is doing, physics determines exactly what the skeleton does. There is no ambiguity.
 
 ### Inverse Dynamics: Not Uniquely Solvable
 
-\begin{theorem}{Inverse Dynamics is Under-Determined in Parallel Systems}{thm:inverse_underdetermined}
+::: {.callout-important}
+## Inverse Dynamics is Under-Determined in Parallel Systems
 Given a measured trajectory $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$ in a system with loop constraints, the equation
 \begin{equation}
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
@@ -429,7 +432,7 @@ does not have a unique solution when $\mathrm{rank}(\bm{B}) < p$ or when interna
 The applied torques $\bm{u}$ lie in an affine subspace of dimension at least 1. The constraint forces $\boldsymbol{\lambda}$ are usually uniquely determined.
 
 **Why?** The measurement gives us $n$ equations (one per coordinate). The unknowns are $\bm{u}$ (applied) and $\boldsymbol{\lambda}$ (constraint). If there are more unknowns than equations, the system is underdetermined.
-\end{theorem}
+:::
 
 Physically: knowing how the skeleton moved does not fully specify what the muscles were doing. The muscles' effort can be distributed infinitely many ways among the different muscle groups, as long as their combined effect matches the observed motion.
 
@@ -653,7 +656,8 @@ The ZTCF trajectory is the unique solution to the zero-control problem. There is
 
 ### Comparing Estimation Approaches
 
-\begin{driftcontrol}{Forward Simulation vs. Inverse Inference in Parallel Systems}{drift:simulation_vs_inference}
+::: {.callout-note}
+## Forward Simulation vs. Inverse Inference in Parallel Systems
 
 **Inverse Dynamics Approach:**
 
@@ -671,7 +675,7 @@ The ZTCF trajectory is the unique solution to the zero-control problem. There is
 
 **The Trade-Off:** Inverse dynamics tells you what actually happened (the muscles' actual commands). Forward simulation tells you what would happen under a simplified assumption (zero muscle torque on the club). Inverse is more direct but fragile; forward is more robust but less direct. The ZTCF framework sacrifices the directness of inverse inference in exchange for the robustness of forward integration.
 
-\end{driftcontrol}
+:::
 
 ## The Condition Number and Near-Singular Configurations
 
@@ -830,7 +834,7 @@ When reading biomechanics papers that claim to have computed individual joint to
 
 :::
 
-\begin{exercises}{Chapter Exercises}{ex:ch18_exercises}
+## Chapter Exercises
 
 - **Open vs. Closed Chain (Conceptual)**
 
@@ -914,4 +918,3 @@ You read a biomechanics paper that claims: "We computed that the left erector sp
 
 Given that the spine is a parallel mechanism with multiple muscles on each side and closed kinematic loops, list at least three pieces of missing information that would make you skeptical of these numbers.
 
-\end{exercises}

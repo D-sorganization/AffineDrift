@@ -32,7 +32,7 @@ python3 -m pytest -x --timeout=60 -q
 7. No new `print()` calls in `src/` (use logging).
 8. Minimum test coverage: 50%. Coverage must not decrease.
 9. Quarto documentation builds must succeed (`quarto render` must not fail).
-10. No TODO/FIXME comments unless a tracked GitHub issue exists.
+10. No TRACKED_TASK/TRACKED_DEFECT comments unless a tracked GitHub issue exists.
 
 ## CI Watch (Post-PR)
 11. After creating a PR, invoke the `ci-watch-and-fix` skill to monitor CI and remediate failures.

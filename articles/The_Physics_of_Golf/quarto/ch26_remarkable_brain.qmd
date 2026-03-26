@@ -122,7 +122,8 @@ Given these constraints, how does the brain manage to swing a golf club?
 
 This is the central insight of the entire textbook, viewed from the motor control perspective.
 
-\begin{theorem}{Drift Exploitation in Neural Control}{thm:ch26_drift_exploitation}
+::: {.callout-important}
+## Drift Exploitation in Neural Control
 The golf swing is drift-dominated. The drift forces (gravity, centrifugal effects, elastic restoring forces) are much larger than the control forces (muscle torques).
 
 This is an enormous advantage for the brain. The brain doesn't need to generate the whole trajectory. It only needs to:
@@ -132,7 +133,7 @@ This is an enormous advantage for the brain. The brain doesn't need to generate 
 - Let the drift field carry the system through the mid- and late-swing phases.
 
 The ball's final position is determined primarily by the drift field physics, not by precise real-time muscle control. The brain exploits this by using a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry it there.
-\end{theorem}
+:::
 
 This is why the ZTCF framework (Chapter \ref{ch:zero_torque_counterfactual}) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
 
@@ -263,7 +264,8 @@ This is why the pre-swing motion and address posture are so critical. Elite golf
 
 Chapters \ref{ch:motor_control_brain} and \ref{ch:motor_learning} established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
 
-\begin{theorem}{Three Things the Brain Learns}{thm:ch26_what_learned}
+::: {.callout-important}
+## Three Things the Brain Learns
 Through practice, the brain learns three things about the golf swing:
 
 - **The drift field $\hat{f}(\bm{x})$:** What physics does for free. Which parts of the trajectory are gravity-driven, which are active. Where the trajectory curves naturally.
@@ -278,7 +280,7 @@ Through practice, the brain learns three things about the golf swing:
 
   Evidence: after thousands of swings, your golf swing becomes automatic. You've learned the policy---given any state during the swing, fire these muscles.
 
-\end{theorem}
+:::
 
 Learning the drift field IS learning physics. The brain becomes a physicist, even if it doesn't use equations. The neural encoding in the cerebellum and motor cortex approximates the nonlinear dynamics of the golf swing.
 
@@ -747,7 +749,7 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 :::
 
-\begin{exercises}{Chapter Exercises}{ex:ch26_exercises}
+## Chapter Exercises
 
 - Calculate the control problem dimensionality. If you naively controlled 200 muscles at 7 activation levels each, across 30 time points, how many possible swings would there be? Express in powers of 10.
 
@@ -777,6 +779,6 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - Explain the paradox: your brain solves an extraordinarily complex control problem while also being vulnerable to failure under pressure. Why are these two things related?
 
-\end{exercises}
+
 
 \newpage

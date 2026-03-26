@@ -84,7 +84,7 @@ From Chapter~\ref{ch:soft_tissue_pliable}, we discussed the wobble of forearm so
 
 The table below provides typical damping coefficients for major joints involved in the golf swing:
 
-\begin{center}
+
 \begin{tabular}{lccc}
 \hline
 **Joint** & **Typical Range (Nm$\cdot$s/rad)** & **Primary Source** & **Notes** 
@@ -97,7 +97,7 @@ Trunk rotation & 2.0--5.0 & Intervertebral disc + muscle & Large muscles, distri
 Grip (fingers on club) & 0.02--0.1 & Skin friction + muscle & Highly variable with grip force 
 \hline
 \end{tabular}
-\end{center}
+
 
 These values are approximate and vary widely based on age, fitness, flexibility, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint.
 
@@ -278,11 +278,12 @@ Concretely, if left arm damping causes the left hand to lag behind, the constrai
 
 Here is the apparent paradox: damping dissipates energy, which is bad for distance. But damping also stabilizes motion, which is good for control. How can we reconcile this?
 
-\begin{theorem}{Damping and Stability}{thm:damping_stability}
+::: {.callout-important}
+## Damping and Stability
 Consider the linearized dynamics around an equilibrium: $\dot{\bm{x}} = A\bm{x}$. The eigenvalues of $A$ determine stability. If $A$ has a term $-\bm{D}$ (damping), then damping moves the eigenvalues into the left half-plane (negative real parts), making the equilibrium stable. Without damping, eigenvalues can lie on the imaginary axis (marginal stability) or right half-plane (instability).
 
 Damping trades energy loss for stability.
-\end{theorem}
+:::
 
 ### Underdamped vs. Overdamped Joints
 
@@ -416,7 +417,7 @@ Where does this energy go?
 
 ### Sources of Dissipation
 
-\begin{center}
+
 \begin{tabular}{lrr}
 \hline
 **Dissipation Source** & **Energy (J)** & **% of Total** 
@@ -433,7 +434,7 @@ Swing-to-impact transition inefficiency & 20--40 & 7--10%
 **Total dissipation** & **145--245** & **48--65%** 
 \hline
 \end{tabular}
-\end{center}
+
 
 Note: These are rough estimates based on biomechanical studies. The exact breakdown varies widely with individual swing mechanics, body composition, and equipment.
 
@@ -560,9 +561,10 @@ A lighter, lower-damping shaft (like a lightweight graphite) provides:
 
 Modern drivers use relatively low-damping graphite shafts precisely because the efficiency gain (higher ball speed for a given muscular effort) outweighs the aesthetic loss of transient vibrations.
 
-\begin{mythreality}{Myth: "Steel shafts are better for control because they don't vibrate."}{mythreality:steel_shaft}
+::: {.callout-warning}
+## Myth: "Steel shafts are better for control because they don't vibrate."
 **Reality:** Steel shafts are more heavily damped, so they vibrate less *after impact*. But during the downswing, the difference in oscillation is minimal if the shaft is loaded predominantly in bending (not torsion). The "control" benefit of steel is more about tradition, feel, and perhaps placebo than about physics. Graphite shafts can be equally controllable if the golfer has proper timing and technique.
-\end{mythreality}
+:::
 
 ## The Control-Affine Perspective on Damping
 
@@ -584,11 +586,12 @@ The effective damping $\bm{D}_{\text{eff}}$ is not simply the sum of viscous and
 2. Implicit damping from the Coriolis terms (reducing velocity reduces Coriolis forces).
 3. Configuration-dependent effects (soft tissue compression, muscle routing changes).
 
-\begin{driftcontrol}{Damping as Drift Modification}{drift:damping_modification}
+::: {.callout-note}
+## Damping as Drift Modification
 The drift field represents the "natural" motion of the system under gravity and inertia, without any muscular control. When damping is added, the drift field is damped: the velocity naturally decays, and extreme accelerations are limited. This is why damping stabilizes the system.
 
 Equivalently, the control field $G(\state)$ must work against the damping to accelerate the joints. The control inputs must provide enough torque to overcome damping. This is one reason why the transition from backswing to downswing requires a sudden increase in muscular effort: the brain must overcome damping forces to reverse the direction of motion.
-\end{driftcontrol}
+:::
 
 ## Summary: The Damping Principle
 
@@ -600,7 +603,7 @@ Damping is not a bug in the golf swing; it's a feature. The right amount of damp
 
 The challenge is tuning damping for the task. Too much, and you lose efficiency. Too little, and you lose stability. A good golf swing implicitly balances these two objectives through unconscious learning and adaptation.
 
-\begin{exercises}{Chapter Exercises}{ex:ch29}
+## Chapter Exercises
 
 - **Damping Coefficient Estimation.** Suppose a golfer's wrist has a damping coefficient of $c_w = 0.1$ Nm$\cdot$s/rad. During the downswing, the wrist angular velocity is $\dot{q}_w = 50$ rad/s. What is the damping torque? If the maximum wrist torque the muscles can provide is 20 Nm, what percentage of the muscular torque is consumed by damping?
 
@@ -612,4 +615,3 @@ The challenge is tuning damping for the task. Too much, and you lose efficiency.
 
 - **Configuration-Dependent Damping.** Suppose the wrist damping increases with wrist flexion angle according to $c_w(q_w) = 0.1 + 0.02 q_w$ Nm$\cdot$s/rad, where $q_w$ is in radians. If the wrist flexes from $q_w = 0$ rad to $q_w = 1$ rad during the downswing, and the wrist velocity is constant at $\dot{q}_w = 50$ rad/s, compute the instantaneous damping torque at $q_w = 0$, $q_w = 0.5$, and $q_w = 1$ rad. How much does the damping torque change over this range?
 
-\end{exercises}

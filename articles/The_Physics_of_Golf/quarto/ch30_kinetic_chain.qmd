@@ -98,7 +98,7 @@ When $\dot{\theta}_i$ is large and $\tau_i^{(c)}$ is negative (the segment is be
 
 Biomechanical data from high-speed video and marker tracking show the following approximate peak velocities (from \citep{Cheetham2001, Hume2005}):
 
-\begin{center}
+
 \begin{tabular}{lcc}
 \toprule
 Segment & Peak Velocity (deg/s) & Percent of Downswing 
@@ -110,7 +110,7 @@ Lead Arm (elevation) & 650 & 85%
 Club (rotation about grip) & 1200 & 95% 
 \bottomrule
 \end{tabular}
-\end{center}
+
 
 Note that the peak velocity increases dramatically down the chain (due to the decreasing moment of inertia and the geometry of the motion), yet each successive peak occurs later. This timing is the hallmark of a well-sequenced swing. A golfer with poor sequencing might accelerate the arms too early relative to the torso, in which case the constraint torque from the torso cannot effectively accelerate the arms, and the final club velocity suffers.
 
@@ -549,7 +549,7 @@ The constraint forces redistribute energy among the segments: $P_i^{(c)}$ can be
 
 Measurements of elite golfers reveal the following approximate energy distribution (from \citep{Hume2005, Sprigings2005}):
 
-\begin{center}
+
 \begin{tabular}{lcc}
 \toprule
 Segment & Peak KE (J) & % of Total KE at Impact 
@@ -560,7 +560,7 @@ Wrists and forearms & 20--40 & 8--15%
 Club & 200--300 & 50--60% 
 \bottomrule
 \end{tabular}
-\end{center}
+
 
 The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club.
 
@@ -719,46 +719,46 @@ Several training methods are effective:
 
 The key is that the training exploits the natural dynamics: rather than fighting the body's coupled structure, the golfer learns to align muscular control with the natural frequencies and time scales.
 
-\begin{exercises}{Problems: Kinetic Chain and Energy Flow}{ex:kinetic_chain_problems}
+## Problems: Kinetic Chain and Energy Flow
 
 - **Proximal-to-Distal Timing** 
 In a simplified two-segment model, the hip has moment of inertia $I_1 = 2 \text{ kg} \cdot \text{m}^2$ and the arm has $I_2 = 0.5 \text{ kg} \cdot \text{m}^2$. The segments are coupled by a spring with stiffness $k = 100 \text{ N} \cdot \text{m} / \text{rad}$. The hip is driven by a muscle torque $\tau_1^{(m)} = 50 \text{ N} \cdot \text{m}$ (constant), and the arm has no direct muscle torque.
 
-  \item[(a)] Derive the equations of motion for $\theta_1$ and $\theta_2$.
+  - (a) Derive the equations of motion for $\theta_1$ and $\theta_2$.
 
-  \item[(b)] Assuming negligible damping and zero initial conditions, solve for $\theta_1(t)$ and $\theta_2(t)$ for the first 1 second.
+  - (b) Assuming negligible damping and zero initial conditions, solve for $\theta_1(t)$ and $\theta_2(t)$ for the first 1 second.
 
-  \item[(c)] Find the time at which $\dot{\theta}_1$ reaches its maximum (peak hip velocity).
+  - (c) Find the time at which $\dot{\theta}_1$ reaches its maximum (peak hip velocity).
 
-  \item[(d)] Find the time at which $\ddot{\theta}_2$ reaches its maximum (peak arm acceleration).
+  - (d) Find the time at which $\ddot{\theta}_2$ reaches its maximum (peak arm acceleration).
 
-  \item[(e)] Compute the time delay between the two events and discuss the implications for the kinetic chain.
+  - (e) Compute the time delay between the two events and discuss the implications for the kinetic chain.
 
 - **X-Factor Stretch Dynamics** 
 A golfer's hips and shoulders are modeled as two coupled oscillators with $I_{\text{hip}} = 1.8 \text{ kg} \cdot \text{m}^2$ and $I_{\text{shoulder}} = 1.2 \text{ kg} \cdot \text{m}^2$. At the top of the backswing, both are at maximum rotation: $\theta_{\text{hip}} = \theta_{\text{shoulder}} = 90^{\circ}$, but both are at zero velocity. The hip is then driven by a muscle torque $\tau_{\text{hip}} = 80 \text{ N} \cdot \text{m} (1 - 0.5 t)$ for $0 < t < 1$ s, where $t$ is time into the downswing. The shoulder has no direct muscle torque but is coupled to the hip by stiffness $k = 150 \text{ N} \cdot \text{m} / \text{rad}$ and damping $c = 20 \text{ N} \cdot \text{m} \cdot \text{s} / \text{rad}$.
 
-  \item[(a)] Set up the coupled differential equations.
+  - (a) Set up the coupled differential equations.
 
-  \item[(b)] Numerically solve for $\theta_{\text{hip}}(t)$ and $\theta_{\text{shoulder}}(t)$ from $t=0$ to $t=0.5$ s.
+  - (b) Numerically solve for $\theta_{\text{hip}}(t)$ and $\theta_{\text{shoulder}}(t)$ from $t=0$ to $t=0.5$ s.
 
-  \item[(c)] Plot the X-factor angle $\alpha_X(t) = \theta_{\text{shoulder}}(t) - \theta_{\text{hip}}(t)$ vs. time.
+  - (c) Plot the X-factor angle $\alpha_X(t) = \theta_{\text{shoulder}}(t) - \theta_{\text{hip}}(t)$ vs. time.
 
-  \item[(d)] Identify the peak X-factor stretch magnitude and the time at which it occurs.
+  - (d) Identify the peak X-factor stretch magnitude and the time at which it occurs.
 
-  \item[(e)] Explain how the damping coefficient affects the magnitude and timing of the X-factor stretch.
+  - (e) Explain how the damping coefficient affects the magnitude and timing of the X-factor stretch.
 
 - **Wrist Release and Lag Angle** 
 An arm rotating at angular velocity $\dot{\theta}_a(t) = 300 + 1000 t$ deg/s (for $0 < t < 0.1$ s) drives a club with moment of inertia $I_c = 0.05 \text{ kg} \cdot \text{m}^2$. The arm has $I_a = 0.3 \text{ kg} \cdot \text{m}^2$. During the acceleration phase, the wrist constrains the club to follow the arm (lag angle is constant). At $t = 0.08$ s, the wrist releases.
 
-  \item[(a)] Before release ($t < 0.08$ s), what is the constraint torque that the wrist must exert on the club?
+  - (a) Before release ($t < 0.08$ s), what is the constraint torque that the wrist must exert on the club?
 
-  \item[(b)] At the release time, what is the club's angular velocity?
+  - (b) At the release time, what is the club's angular velocity?
 
-  \item[(c)] After release, assume the club evolves under the dynamics $I_c \ddot{\theta}_c = -C_D \dot{\theta}_c$, where $C_D = 0.02 \text{ N} \cdot \text{m} \cdot \text{s} / \text{rad}$ (air resistance). Compute the club's angular velocity at $t = 0.10$ s (impact).
+  - (c) After release, assume the club evolves under the dynamics $I_c \ddot{\theta}_c = -C_D \dot{\theta}_c$, where $C_D = 0.02 \text{ N} \cdot \text{m} \cdot \text{s} / \text{rad}$ (air resistance). Compute the club's angular velocity at $t = 0.10$ s (impact).
 
-  \item[(d)] Compare to a scenario in which the wrist does not release until $t = 0.095$ s. What is the club velocity at impact in this case?
+  - (d) Compare to a scenario in which the wrist does not release until $t = 0.095$ s. What is the club velocity at impact in this case?
 
-  \item[(e)] Calculate the percentage increase in club velocity from earlier to later release.
+  - (e) Calculate the percentage increase in club velocity from earlier to later release.
 
 - **Ground Reaction Force and Torque** 
 A golfer with an 80 kg body mass applies the following ground reaction forces at the lead foot during the late downswing:
@@ -769,40 +769,39 @@ A golfer with an 80 kg body mass applies the following ground reaction forces at
 
 The lead foot is 0.35 m lateral from the hip rotation axis and 0.95 m below the hip. Assume the hip's moment of inertia about the vertical axis is $I = 1.5 \text{ kg} \cdot \text{m}^2$.
 
-  \item[(a)] Compute the vertical torque $\tau_z(t) = F_z(t) \times 0.35$ and the horizontal torque $\tau_h(t) = F_x(t) \times 0.95$.
+  - (a) Compute the vertical torque $\tau_z(t) = F_z(t) \times 0.35$ and the horizontal torque $\tau_h(t) = F_x(t) \times 0.95$.
 
-  \item[(b)] Plot the total torque $\tau_{\text{total}}(t) = \tau_z(t) + \tau_h(t)$ vs. time.
+  - (b) Plot the total torque $\tau_{\text{total}}(t) = \tau_z(t) + \tau_h(t)$ vs. time.
 
-  \item[(c)] Integrate to find the change in angular momentum: $\Delta L = \int_0^{0.05} \tau_{\text{total}}(t) \, dt$.
+  - (c) Integrate to find the change in angular momentum: $\Delta L = \int_0^{0.05} \tau_{\text{total}}(t) \, dt$.
 
-  \item[(d)] Compute the final angular velocity: $\omega = \Delta L / I$.
+  - (d) Compute the final angular velocity: $\omega = \Delta L / I$.
 
-  \item[(e)] Discuss whether this computed angular velocity is consistent with empirical measurements of hip rotational velocity (250--350 deg/s at impact).
+  - (e) Discuss whether this computed angular velocity is consistent with empirical measurements of hip rotational velocity (250--350 deg/s at impact).
 
 - **Energy Efficiency** 
 A golfer performs a swing in which the muscular work input is $W_{\text{muscle}} = 400$ J. At impact, the club has kinetic energy $KE_{\text{club}} = 180$ J, and the body (hips, torso, arms) has $KE_{\text{body}} = 120$ J. After impact, the club decelerates due to air resistance and the collision with the ball, losing 50% of its kinetic energy to the ball.
 
-  \item[(a)] Compute the total kinetic energy in the system at impact: $KE_{\text{total}} = KE_{\text{club}} + KE_{\text{body}}$.
+  - (a) Compute the total kinetic energy in the system at impact: $KE_{\text{total}} = KE_{\text{club}} + KE_{\text{body}}$.
 
-  \item[(b)] Compute the overall efficiency of the swing: $\eta = KE_{\text{total}} / W_{\text{muscle}}$.
+  - (b) Compute the overall efficiency of the swing: $\eta = KE_{\text{total}} / W_{\text{muscle}}$.
 
-  \item[(c)] Compute the energy delivered to the ball: $E_{\text{ball}} = 0.5 \times KE_{\text{club}}$.
+  - (c) Compute the energy delivered to the ball: $E_{\text{ball}} = 0.5 \times KE_{\text{club}}$.
 
-  \item[(d)] What is the overall ``ball efficiency'' $\eta_{\text{ball}} = E_{\text{ball}} / W_{\text{muscle}}$?
+  - (d) What is the overall ``ball efficiency'' $\eta_{\text{ball}} = E_{\text{ball}} / W_{\text{muscle}}$?
 
-  \item[(e)] If the golfer improves sequencing and increases the club kinetic energy to 220 J (with body KE decreasing to 100 J), what is the new overall efficiency? What is the new ball efficiency?
+  - (e) If the golfer improves sequencing and increases the club kinetic energy to 220 J (with body KE decreasing to 100 J), what is the new overall efficiency? What is the new ball efficiency?
 
 - **Natural Frequencies and Segment Coupling** 
 Consider a three-segment kinetic chain: hips ($I_1 = 2.0$), shoulders ($I_2 = 1.2$), and arms ($I_3 = 0.4$) in $\text{kg} \cdot \text{m}^2$. The segments are coupled by springs: between hips and shoulders, $k_{12} = 120$ N·m/rad; between shoulders and arms, $k_{23} = 100$ N·m/rad.
 
-  \item[(a)] Estimate the natural frequencies $\omega_i = \sqrt{k_i / I_i}$ for each segment (using the stiffness to the next segment as a rough estimate).
+  - (a) Estimate the natural frequencies $\omega_i = \sqrt{k_i / I_i}$ for each segment (using the stiffness to the next segment as a rough estimate).
 
-  \item[(b)] Rank the segments by natural frequency.
+  - (b) Rank the segments by natural frequency.
 
-  \item[(c)] For a system excited by a transient hip impulse, which segment reaches its peak velocity first, second, and third? Explain using the natural frequency ordering.
+  - (c) For a system excited by a transient hip impulse, which segment reaches its peak velocity first, second, and third? Explain using the natural frequency ordering.
 
-  \item[(d)] Estimate the time delay between successive peak velocities using $\Delta t \approx \pi / (2 \omega_i)$.
+  - (d) Estimate the time delay between successive peak velocities using $\Delta t \approx \pi / (2 \omega_i)$.
 
-  \item[(e)] Discuss how the natural frequency hierarchy contributes to the proximal-to-distal sequencing.
+  - (e) Discuss how the natural frequency hierarchy contributes to the proximal-to-distal sequencing.
 
-\end{exercises}
