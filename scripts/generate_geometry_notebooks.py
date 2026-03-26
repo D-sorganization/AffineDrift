@@ -1,4 +1,4 @@
-"""Generate chapter-aligned notebooks for The Geometry of Motion."""
+"""Generate chapter-aligned notebooks for Tangent-Space Methods for Nonlinear Control and Biomechanics."""
 
 from __future__ import annotations
 

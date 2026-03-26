@@ -1,8 +1,8 @@
-# The Geometry of Motion Manuscripts
+# Tangent-Space Methods for Nonlinear Control and Biomechanics — Manuscripts
 
 ## Purpose
 
-Canonical LaTeX manuscript source for the multi-volume textbook series "The Geometry of Motion" (GoM).
+Canonical LaTeX manuscript source for the multi-volume textbook series "Tangent-Space Methods for Nonlinear Control and Biomechanics" (formerly "The Geometry of Motion").
 
 ## Directory Structure
 

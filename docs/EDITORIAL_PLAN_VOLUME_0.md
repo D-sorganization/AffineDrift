@@ -1,4 +1,4 @@
-# Editorial Plan: The Geometry of Motion - Volume 0: The Mathematical Primer
+# Editorial Plan: Tangent-Space Methods for Nonlinear Control and Biomechanics - Volume 0: The Mathematical Primer
 
 **Document Version:** 1.0
 **Date:** March 2026
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-*The Geometry of Motion - Volume 0* is currently a 12-chapter mathematical foundations textbook (≈1,200 lines of LaTeX) designed for university-level study of nonlinear control theory applied to biomechanics and robotics. The manuscript requires systematic expansion from lecture-outline format (80-125 lines per chapter) to publication-quality textbook chapters (800-2,000 lines per chapter).
+*Tangent-Space Methods for Nonlinear Control and Biomechanics - Volume 0* is currently a 12-chapter mathematical foundations textbook (≈1,200 lines of LaTeX) designed for university-level study of nonlinear control theory applied to biomechanics and robotics. The manuscript requires systematic expansion from lecture-outline format (80-125 lines per chapter) to publication-quality textbook chapters (800-2,000 lines per chapter).
 
 **Current State:** Excellent pedagogical infrastructure and physical intuition, but insufficient depth for peer-reviewed university press publication.
 
@@ -1073,7 +1073,7 @@ This editorial plan transforms a lecture-outline textbook into a comprehensive u
 
 ---
 
-*Document prepared for: The Geometry of Motion - Volume 0: The Mathematical Primer*
+*Document prepared for: Tangent-Space Methods for Nonlinear Control and Biomechanics - Volume 0: The Mathematical Primer*
 *Prepared by: Editorial Planning Team*
 *Version: 1.0 — March 2026*
 *Status: Ready for Phase 1 Implementation*

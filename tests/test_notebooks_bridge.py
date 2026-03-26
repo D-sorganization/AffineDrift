@@ -1,4 +1,4 @@
-"""Tests for the Geometry of Motion notebook bridge feature."""
+"""Tests for the Tangent-Space Methods notebook bridge feature."""
 
 from __future__ import annotations
 

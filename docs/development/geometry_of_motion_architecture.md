@@ -1,4 +1,4 @@
-# Geometry of Motion Series Architecture and Progress Tracking
+# Tangent-Space Methods for Nonlinear Control and Biomechanics — Series Architecture and Progress Tracking
 
 ## Scope
 
