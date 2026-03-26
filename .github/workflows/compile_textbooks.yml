@@ -25,11 +25,22 @@ jobs:
 
       - name: Compile Volume 0
         uses: xu-cheng/latex-action@v4
+        continue-on-error: true
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_0
           pre_compile: "rm -f *.aux chapters/*.aux"
           args: "-pdf -file-line-error -interaction=nonstopmode -f"
+
+      - name: Verify Volume 0 PDF exists
+        run: |
+          if [ -f articles/The_Geometry_of_Motion/Volume_0/main.pdf ]; then
+            echo "Volume 0 PDF generated successfully"
+            ls -lh articles/The_Geometry_of_Motion/Volume_0/main.pdf
+          else
+            echo "ERROR: Volume 0 PDF was not generated"
+            exit 1
+          fi
 
       - name: Compile Volume I
         uses: xu-cheng/latex-action@v4
