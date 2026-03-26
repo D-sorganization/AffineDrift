@@ -1,5 +1,6 @@
 % ==========================================================================
 %  Chapter 1: A Primer on Linear Algebra
+%  Publication-Quality Expanded Version
 % ==========================================================================
 \chapter{A Primer on Linear Algebra}
 \label{ch:linear_algebra}
@@ -9,116 +10,752 @@
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Why Linear Algebra is the Language of Motion}{context_box}
-\textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), and Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$). 
-\textbf{Why We Need It:} A robot's joints or a car's velocity don't exist as single numbers; they exist as large arrays of interacting numbers. Linear algebra is the mathematics of these arrays. If you want to know if a drone will crash into the ground, you don't track every single rotor separately; you assemble the entire system into a single matrix and look at its eigenvalues. 
+\textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Vector Spaces and their axioms, Linear Independence and Basis, Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$), and Positive Definiteness.
+
+\textbf{Why We Need It:} A robot's joints or a car's velocity don't exist as single numbers; they exist as large arrays of interacting numbers. Linear algebra is the mathematics of these arrays. If you want to know if a drone will crash into the ground, you don't track every single rotor separately; you assemble the entire system into a single matrix and look at its eigenvalues.
+
 \textbf{All Variables Defined:} Check the \textbf{Nomenclature} at the start of the book for standard vector and matrix conventions.
 \end{laymansbox}
 
+% ------------------------------------------------------------------
+\section{Historical Context}
+\label{sec:la_history}
+% ------------------------------------------------------------------
+
+Linear algebra---the mathematics of vectors, matrices, and linear transformations---is arguably the single most consequential mathematical framework underpinning all of modern engineering. Its roots stretch back to ancient China (the \emph{Nine Chapters on the Mathematical Art}, ca.~200 BCE, contained early row-reduction methods for solving systems of linear equations) and were formalized in the West through the work of Leibniz, Cramer, and Cayley in the 17th--19th centuries.
+
+However, it was not until the mid-20th century that linear algebra assumed its central role in control theory. In 1960, Rudolf Kalman published his landmark paper introducing the \emph{state space representation} of dynamical systems, which recast classical control problems---previously analyzed using frequency-domain transfer functions---into the language of matrices and vectors~\cite{kalman1960}. Kalman's formulation required engineers to reason about \emph{controllability} and \emph{observability} using rank conditions on matrices, placing linear algebra at the absolute foundation of modern control engineering.
+
+Today, every simulation framework discussed in this text series---from MuJoCo's articulated-body integrator to Drake's trajectory optimization engine---performs thousands of matrix operations per millisecond. Understanding the structures, decompositions, and geometric interpretations of linear algebra is not optional; it is the prerequisite upon which every subsequent chapter of \textit{The Geometry of Motion} is built.
+
+% ------------------------------------------------------------------
 \section{Vectors, Matrices, and Vector Spaces}
+\label{sec:vectors_matrices}
+% ------------------------------------------------------------------
 
-Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
+Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the geometry of that space dictates everything about how physical systems behave.
 
-A \textbf{vector} $\mathbf{v}$ is an ordered array of numbers. It can represent a position in space, a velocity profile, or a list of sensor readings. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
+\subsection{Vectors}
+
+A \textbf{vector}\index{Vector} $\mathbf{v}$ is an ordered array of numbers. It can represent a position in space, a velocity profile, a list of sensor readings, or the activation levels of every muscle in a golfer's forearm. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
 \begin{equation}
    \mathbf{v} = \begin{bmatrix} v_1 \\ v_2 \\ \vdots \\ v_n \end{bmatrix} \in \Reals^n
 \end{equation}
 
-A \textbf{matrix} $\mathbf{M}$ is a 2D grid of numbers. If a vector represents a point, a matrix acts as a set of instructions on how to \emph{transform} that point---stretching it, rotating it, or moving it into an entirely different dimensional space. It maps vectors from one space to another ($\mathbf{M} : \Reals^m \to \Reals^n$).
+It is crucial to distinguish two perspectives on what a vector ``is.'' The \emph{algebraic} perspective treats a vector as a column of numbers. The \emph{geometric} perspective treats a vector as a directed arrow in space, possessing both magnitude and direction. Both perspectives are valid and useful; throughout this text, we will switch between them freely. When we write $\mathbf{v} \in \Reals^3$, we mean both the triple of numbers $(v_1, v_2, v_3)$ and the arrow pointing from the origin to the point $(v_1, v_2, v_3)$ in three-dimensional Euclidean space.
+
+\subsection{Matrices}
+
+A \textbf{matrix}\index{Matrix} $\mathbf{M}$ is a rectangular grid of numbers arranged in rows and columns. If a vector represents a point or a direction, a matrix acts as a set of instructions on how to \emph{transform} that point---stretching it, rotating it, projecting it, or mapping it into an entirely different dimensional space. An $n \times m$ matrix maps vectors from $\Reals^m$ to $\Reals^n$:
 \begin{equation}
    \mathbf{M} = \begin{bmatrix} m_{11} & m_{12} & \cdots & m_{1m} \\ m_{21} & m_{22} & \cdots & m_{2m} \\ \vdots & \vdots & \ddots & \vdots \\ m_{n1} & m_{n2} & \cdots & m_{nm} \end{bmatrix} \in \Reals^{n \times m}
 \end{equation}
 
-When we multiply a matrix by a vector ($\mathbf{M}\mathbf{v}$), the matrix takes a linear combination of its columns using the elements of $\mathbf{v}$ as weights. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its links.
+When we multiply a matrix by a vector ($\mathbf{M}\mathbf{v}$), the result is a \emph{linear combination of the columns of} $\mathbf{M}$, using the elements of $\mathbf{v}$ as weights. Specifically, if $\mathbf{m}_1, \mathbf{m}_2, \ldots, \mathbf{m}_m$ denote the columns of $\mathbf{M}$, then:
+\begin{equation}
+\label{eq:matvec_colview}
+   \mathbf{M}\mathbf{v} = v_1 \mathbf{m}_1 + v_2 \mathbf{m}_2 + \cdots + v_m \mathbf{m}_m
+\end{equation}
+This ``column view'' of matrix-vector multiplication is one of the most important conceptual tools in linear algebra. It means that the \emph{range} (or image) of a matrix---the set of all possible outputs $\mathbf{M}\mathbf{v}$ as $\mathbf{v}$ varies over all of $\Reals^m$---is precisely the \emph{span} of the columns of $\mathbf{M}$. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its links.
 
-\subsection{Rank and Null Space}
-Not all transformations lose information, but some do. 
+\subsection{The Axioms of a Vector Space}
+\label{subsec:vector_space_axioms}
+
+We have described vectors informally as ``arrays of numbers.'' But the true power of linear algebra lies in the abstract concept of a \textbf{vector space}\index{Vector Space}, which captures the essential algebraic properties that make vectors useful---regardless of whether the ``vectors'' are columns of numbers, functions, or even infinite-dimensional signals.
+
+\begin{definition}{Vector Space}{vector_space}
+A \emph{vector space} $V$ over the real numbers $\Reals$ is a set of objects (called vectors) together with two operations---\textbf{addition} ($\mathbf{u} + \mathbf{v}$) and \textbf{scalar multiplication} ($\alpha \mathbf{v}$, where $\alpha \in \Reals$)---satisfying the following eight axioms for all $\mathbf{u}, \mathbf{v}, \mathbf{w} \in V$ and all $\alpha, \beta \in \Reals$:
+
+\begin{enumerate}[label=(\roman*)]
+    \item \textbf{Closure under addition:} $\mathbf{u} + \mathbf{v} \in V$.
+    \item \textbf{Commutativity:} $\mathbf{u} + \mathbf{v} = \mathbf{v} + \mathbf{u}$.
+    \item \textbf{Associativity of addition:} $(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w})$.
+    \item \textbf{Existence of a zero vector:} There exists $\mathbf{0} \in V$ such that $\mathbf{v} + \mathbf{0} = \mathbf{v}$.
+    \item \textbf{Existence of additive inverses:} For each $\mathbf{v} \in V$, there exists $-\mathbf{v} \in V$ such that $\mathbf{v} + (-\mathbf{v}) = \mathbf{0}$.
+    \item \textbf{Closure under scalar multiplication:} $\alpha \mathbf{v} \in V$.
+    \item \textbf{Distributivity:} $\alpha(\mathbf{u} + \mathbf{v}) = \alpha \mathbf{u} + \alpha \mathbf{v}$ \; and \; $(\alpha + \beta)\mathbf{v} = \alpha \mathbf{v} + \beta \mathbf{v}$.
+    \item \textbf{Compatibility:} $\alpha(\beta \mathbf{v}) = (\alpha\beta)\mathbf{v}$, \; and \; $1 \cdot \mathbf{v} = \mathbf{v}$.
+\end{enumerate}
+\end{definition}
+
+\begin{laymansbox}{Why Do We Care About Abstract Axioms?}{axiom_motivation}
+You might wonder: why bother with these formal rules? Because the same mathematical structures appear over and over in radically different contexts. The set $\Reals^n$ of column vectors satisfies these axioms---but so does the set of all continuous functions $f: [0, T] \to \Reals$ (where ``addition'' means adding functions pointwise). In optimal control, the ``vectors'' we optimize over are often entire \emph{trajectories}, which are functions of time. By proving a theorem about abstract vector spaces, we prove it simultaneously for column vectors, for functions, and for trajectories. The axioms are the price of generality.
+\end{laymansbox}
+
+\begin{example}{Verifying $\Reals^n$ is a Vector Space}{rn_vector_space}
+Let us verify that $\Reals^n$ with standard component-wise addition and scalar multiplication satisfies the axioms.
+
+Given $\mathbf{u} = (u_1, \ldots, u_n)$ and $\mathbf{v} = (v_1, \ldots, v_n)$ in $\Reals^n$, and $\alpha \in \Reals$:
 \begin{itemize}
-    \item \textbf{Rank:} The \emph{rank} of a matrix is the number of linearly independent columns it contains. If a $3 \times 3$ matrix has a rank of 2, it collapses full 3D space into a completely flat 2D plane. In robotics, the rank of the Jacobian matrix tells you how many directions your end-effector can actually move. If the rank drops, the robot is in a \emph{singularity} (stuck).
-    \item \textbf{Null Space (Kernel):} The null space $\mathcal{N}(\mathbf{M})$ is the set of all vectors $\mathbf{x}$ that get crushed to zero: $\mathbf{M}\mathbf{x} = \mathbf{0}$. For a humanoid robot, the null space of the arm's Jacobian describes all the "internal motions" it can make (like wildly swinging its elbow) while keeping its hand completely still holding a cup of coffee.
-    \item \textbf{The Determinant (Volumetric Interpretation):} For a square matrix, the determinant calculates the factor by which the matrix scales lengths, areas, or volumes. Imagine a theoretical $1 \times 1 \times 1$ cube. If you multiply every point in that cube by a $3 \times 3$ matrix $\mathbf{M}$, the cube warps into a parallelepiped. The newly formed volume is precisely $\det(\mathbf{M})$. 
-    \begin{itemize}
-        \item If $\det(\mathbf{M}) = 1$, the volume is perfectly preserved (like a pure rotation in space).
-        \item If $\det(\mathbf{M}) = 0$, the volume is crushed completely flat (the matrix loses rank and goes singular).
-        \item If $\det(\mathbf{M}) < 0$, the space has been turned completely inside out (a mirror reflection). 
-    \end{itemize}
+    \item \emph{Closure under addition:} $\mathbf{u} + \mathbf{v} = (u_1 + v_1, \ldots, u_n + v_n)$. Since each $u_i + v_i \in \Reals$, the sum is in $\Reals^n$. \checkmark
+    \item \emph{Zero vector:} $\mathbf{0} = (0, 0, \ldots, 0)$. Clearly $\mathbf{v} + \mathbf{0} = \mathbf{v}$. \checkmark
+    \item \emph{Additive inverse:} $-\mathbf{v} = (-v_1, \ldots, -v_n)$. Then $\mathbf{v} + (-\mathbf{v}) = \mathbf{0}$. \checkmark
+    \item \emph{Closure under scalar multiplication:} $\alpha \mathbf{v} = (\alpha v_1, \ldots, \alpha v_n) \in \Reals^n$. \checkmark
+\end{itemize}
+The remaining axioms (commutativity, associativity, distributivity, compatibility) follow immediately from the corresponding properties of real number arithmetic. Therefore $\Reals^n$ is a vector space. $\square$
+\end{example}
+
+\subsection{Linear Independence and Span}
+\label{subsec:linear_independence}
+
+\begin{definition}{Linear Independence\index{Linear Independence}}{linear_independence}
+A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_k\}$ in a vector space $V$ is called \emph{linearly independent} if the only solution to the equation
+\begin{equation}
+    \alpha_1 \mathbf{v}_1 + \alpha_2 \mathbf{v}_2 + \cdots + \alpha_k \mathbf{v}_k = \mathbf{0}
+\end{equation}
+is the trivial solution $\alpha_1 = \alpha_2 = \cdots = \alpha_k = 0$. If a nontrivial solution exists (i.e., at least one $\alpha_i \neq 0$), the vectors are \emph{linearly dependent}.
+\end{definition}
+
+Intuitively, a set of vectors is linearly independent if none of them can be ``built'' from the others. In $\Reals^2$, two vectors are linearly independent if and only if they do not point in the same (or exactly opposite) direction. In $\Reals^3$, three vectors are linearly independent if and only if they do not all lie in the same plane.
+
+\begin{example}{Linear Independence in $\Reals^3$}{lin_indep_R3}
+Consider the vectors:
+\begin{equation}
+    \mathbf{v}_1 = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \quad
+    \mathbf{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}, \quad
+    \mathbf{v}_3 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
+\end{equation}
+
+Are these linearly independent? We solve $\alpha_1 \mathbf{v}_1 + \alpha_2 \mathbf{v}_2 + \alpha_3 \mathbf{v}_3 = \mathbf{0}$:
+\begin{align}
+    \alpha_1 + \alpha_3 &= 0 \\
+    \alpha_2 + \alpha_3 &= 0 \\
+    0 &= 0
+\end{align}
+
+The third equation provides no constraint. Setting $\alpha_3 = 1$ yields $\alpha_1 = -1$, $\alpha_2 = -1$. A nontrivial solution exists: $-\mathbf{v}_1 - \mathbf{v}_2 + \mathbf{v}_3 = \mathbf{0}$, confirming that $\mathbf{v}_3 = \mathbf{v}_1 + \mathbf{v}_2$. The vectors are linearly \emph{dependent}. Geometrically, all three vectors lie in the $xy$-plane, and the third is the diagonal of the rectangle formed by the first two.
+\end{example}
+
+\subsection{Basis and Dimension}
+\label{subsec:basis_dimension}
+
+\begin{definition}{Basis\index{Basis}}{basis}
+A \emph{basis} for a vector space $V$ is a set of vectors $\mathcal{B} = \{\mathbf{b}_1, \ldots, \mathbf{b}_n\}$ that is both linearly independent and spans $V$ (i.e., every vector in $V$ can be written as a linear combination of the basis vectors). The number $n$ of vectors in any basis is called the \emph{dimension}\index{Dimension} of $V$, written $\dim(V) = n$.
+\end{definition}
+
+A fundamental theorem of linear algebra states that \emph{every basis for a given vector space has exactly the same number of elements}. This is why ``dimension'' is well-defined---it is an intrinsic property of the space, not of any particular choice of basis.
+
+The standard basis for $\Reals^n$ consists of the unit coordinate vectors $\mathbf{e}_1 = (1, 0, \ldots, 0)^T$, $\mathbf{e}_2 = (0, 1, 0, \ldots, 0)^T$, through $\mathbf{e}_n = (0, \ldots, 0, 1)^T$. Any vector $\mathbf{v} = (v_1, \ldots, v_n)^T$ can be written uniquely as $\mathbf{v} = v_1 \mathbf{e}_1 + \cdots + v_n \mathbf{e}_n$. The numbers $v_1, \ldots, v_n$ are the \emph{coordinates} of $\mathbf{v}$ with respect to this basis.
+
+\begin{laymansbox}{Why Basis Matters for Robotics}{basis_robotics}
+When we model a robot arm, the ``natural'' basis might be the joint angles $(\theta_1, \theta_2, \ldots, \theta_n)$. But the task might require us to think in Cartesian coordinates $(x, y, z)$. Changing basis---expressing the same physical motion in different coordinate systems---is one of the most common operations in robotics. The Jacobian matrix (Chapter~\ref{ch:configuration}) is precisely the mathematical tool that translates between these bases.
+\end{laymansbox}
+
+\subsection{Linear Transformations}
+\label{subsec:linear_transformations}
+
+\begin{definition}{Linear Transformation\index{Linear Transformation}}{linear_transformation}
+A function $T: V \to W$ between two vector spaces is called a \emph{linear transformation} (or \emph{linear map}) if it preserves vector addition and scalar multiplication:
+\begin{enumerate}[label=(\roman*)]
+    \item $T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v})$ for all $\mathbf{u}, \mathbf{v} \in V$.
+    \item $T(\alpha \mathbf{v}) = \alpha \, T(\mathbf{v})$ for all $\alpha \in \Reals$ and $\mathbf{v} \in V$.
+\end{enumerate}
+\end{definition}
+
+The fundamental connection between linear transformations and matrices is this: \emph{every linear transformation between finite-dimensional vector spaces can be represented by a matrix, and every matrix represents a linear transformation.} Specifically, if $T: \Reals^m \to \Reals^n$ is linear, then there exists a unique $n \times m$ matrix $\mathbf{M}$ such that $T(\mathbf{v}) = \mathbf{M}\mathbf{v}$ for all $\mathbf{v} \in \Reals^m$. The columns of $\mathbf{M}$ are simply $T(\mathbf{e}_1), T(\mathbf{e}_2), \ldots, T(\mathbf{e}_m)$---the images of the standard basis vectors.
+
+\begin{theorem}
+\label{thm:matrix_is_linear}
+Let $\mathbf{M} \in \Reals^{n \times m}$. Then the function $T(\mathbf{v}) = \mathbf{M}\mathbf{v}$ is a linear transformation from $\Reals^m$ to $\Reals^n$.
+\end{theorem}
+
+\begin{proof}
+Let $\mathbf{u}, \mathbf{v} \in \Reals^m$ and $\alpha \in \Reals$. By the distributive property of matrix multiplication:
+\begin{equation}
+    T(\mathbf{u} + \mathbf{v}) = \mathbf{M}(\mathbf{u} + \mathbf{v}) = \mathbf{M}\mathbf{u} + \mathbf{M}\mathbf{v} = T(\mathbf{u}) + T(\mathbf{v})
+\end{equation}
+and by the compatibility of matrix multiplication with scalar multiplication:
+\begin{equation}
+    T(\alpha \mathbf{v}) = \mathbf{M}(\alpha \mathbf{v}) = \alpha (\mathbf{M}\mathbf{v}) = \alpha \, T(\mathbf{v})
+\end{equation}
+Both conditions of linearity are satisfied. $\qed$
+\end{proof}
+
+\subsection{Rank, Null Space, and the Rank-Nullity Theorem}
+\label{subsec:rank_nullity}
+
+Not all linear transformations preserve full information about the input. Some transformations ``collapse'' certain directions to zero.
+
+\begin{definition}{Rank\index{Rank}}{rank}
+The \emph{rank} of a matrix $\mathbf{M}$, denoted $\text{rank}(\mathbf{M})$, is the number of linearly independent columns (equivalently, the number of linearly independent rows) of $\mathbf{M}$. It equals the dimension of the column space (the range of the corresponding linear transformation).
+\end{definition}
+
+If a $3 \times 3$ matrix has rank 2, it collapses full 3D space into a 2D plane. In robotics, the rank of the Jacobian matrix $\mathbf{J}(\mathbf{q})$ tells you how many independent directions the end-effector can instantaneously move in. If the rank drops below its maximum value, the robot is at a \emph{singularity}\index{Singularity}---it has lost the ability to move in at least one Cartesian direction, regardless of how its motors are commanded.
+
+\begin{definition}{Null Space (Kernel)\index{Null Space}}{null_space}
+The \emph{null space} (or \emph{kernel}) of a matrix $\mathbf{M}$, denoted $\mathcal{N}(\mathbf{M})$, is the set of all vectors that the matrix maps to zero:
+\begin{equation}
+    \mathcal{N}(\mathbf{M}) = \{ \mathbf{x} \in \Reals^m \mid \mathbf{M}\mathbf{x} = \mathbf{0} \}
+\end{equation}
+\end{definition}
+
+For a humanoid robot, the null space of the arm's Jacobian describes all ``internal motions'' the arm can execute (like repositioning the elbow) while keeping the hand perfectly stationary holding a cup of coffee. These null-space motions are invisible in task space but consume real joint velocities. Exploiting them is a key strategy in redundant robot control.
+
+\begin{definition}{The Determinant\index{Determinant} (Volumetric Interpretation)}{determinant}
+For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant} $\det(\mathbf{M})$ is a scalar that measures the factor by which $\mathbf{M}$ scales $n$-dimensional volume. Imagine a unit hypercube $[0,1]^n$. Applying $\mathbf{M}$ to every point in that cube warps it into a parallelepiped whose signed volume equals $\det(\mathbf{M})$.
+\end{definition}
+
+\begin{itemize}
+    \item If $\det(\mathbf{M}) = 1$, volume is perfectly preserved (like a pure rotation in space).
+    \item If $\det(\mathbf{M}) = 0$, volume is crushed completely flat---the matrix is \emph{singular} and loses rank. The transformation is not invertible.
+    \item If $\det(\mathbf{M}) < 0$, volume is preserved in magnitude but orientation is flipped (a mirror reflection).
 \end{itemize}
 
-\section{The Dot Product and Cross Product}
+Now we arrive at one of the most important structural results in linear algebra:
 
-Two fundamental operations exist for combining vectors in 3-dimensional space:
-
-\subsection{The Dot Product}
-The dot product (or inner product) is a scalar (a single number). It measures how much two vectors "align" with each other. It is calculated by multiplying matching components and summing them.
+\begin{theorem}[Rank-Nullity Theorem\index{Rank-Nullity Theorem}]
+\label{thm:rank_nullity}
+For any $n \times m$ matrix $\mathbf{M}$:
 \begin{equation}
-   \mathbf{a} \cdot \mathbf{b} = \mathbf{a}^T \mathbf{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos(\theta)
+    \underbrace{\text{rank}(\mathbf{M})}_{\text{dimension of range}} + \underbrace{\dim\bigl(\mathcal{N}(\mathbf{M})\bigr)}_{\text{dimension of null space}} = m \quad (\text{number of columns})
 \end{equation}
-If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\mathbf{v}^T \mathbf{M} \mathbf{v}$) and to project forces mathematically onto specific mechanical joints. The inner product fundamentally generalizes the concept of an angle to high dimensions.
+\end{theorem}
+
+\begin{proof}
+Let $r = \text{rank}(\mathbf{M})$ and let $\{\mathbf{n}_1, \ldots, \mathbf{n}_k\}$ be a basis for $\mathcal{N}(\mathbf{M})$, where $k = \dim(\mathcal{N}(\mathbf{M}))$. Extend this to a basis $\{\mathbf{n}_1, \ldots, \mathbf{n}_k, \mathbf{w}_1, \ldots, \mathbf{w}_{m-k}\}$ for all of $\Reals^m$ (this extension is always possible by a standard result in linear algebra).
+
+We claim that $\{\mathbf{M}\mathbf{w}_1, \ldots, \mathbf{M}\mathbf{w}_{m-k}\}$ is a basis for the column space of $\mathbf{M}$, which would establish $r = m - k$, i.e., $r + k = m$.
+
+\emph{Spanning:} Any $\mathbf{y}$ in the range of $\mathbf{M}$ can be written as $\mathbf{y} = \mathbf{M}\mathbf{v}$ for some $\mathbf{v} \in \Reals^m$. Expanding $\mathbf{v}$ in our basis: $\mathbf{v} = \sum_{i=1}^k \alpha_i \mathbf{n}_i + \sum_{j=1}^{m-k} \beta_j \mathbf{w}_j$. Since $\mathbf{M}\mathbf{n}_i = \mathbf{0}$, we get $\mathbf{y} = \sum_{j=1}^{m-k} \beta_j \mathbf{M}\mathbf{w}_j$. So the $\mathbf{M}\mathbf{w}_j$ span the range.
+
+\emph{Independence:} Suppose $\sum_{j=1}^{m-k} \beta_j \mathbf{M}\mathbf{w}_j = \mathbf{0}$. Then $\mathbf{M}\left(\sum_j \beta_j \mathbf{w}_j\right) = \mathbf{0}$, meaning $\sum_j \beta_j \mathbf{w}_j \in \mathcal{N}(\mathbf{M})$. So $\sum_j \beta_j \mathbf{w}_j = \sum_{i=1}^k \gamma_i \mathbf{n}_i$ for some scalars $\gamma_i$. But $\{\mathbf{n}_1, \ldots, \mathbf{n}_k, \mathbf{w}_1, \ldots, \mathbf{w}_{m-k}\}$ is a basis for $\Reals^m$, so these vectors are linearly independent. Therefore all $\beta_j = 0$ and all $\gamma_i = 0$.
+
+Thus $r = m - k$, establishing $\text{rank}(\mathbf{M}) + \dim(\mathcal{N}(\mathbf{M})) = m$. $\qed$
+\end{proof}
+
+\begin{laymansbox}{The Physical Meaning of Rank-Nullity}{rank_nullity_physical}
+For a robot with $m$ motors and an end-effector moving in $n$-dimensional task space:
+\begin{itemize}
+    \item The \textbf{rank} of the Jacobian tells you how many independent task-space directions the robot can control.
+    \item The \textbf{nullity} (dimension of the null space) tells you how many ``extra'' internal motions remain after the task is specified.
+\end{itemize}
+If a 7-DOF arm ($m = 7$) controls a hand in 3D position space ($n = 3$), and the Jacobian has rank 3, then the nullity is $7 - 3 = 4$. The robot has 4 degrees of internal freedom to reposition its elbow, shoulder, and wrist without moving the hand at all.
+\end{laymansbox}
+
+% ------------------------------------------------------------------
+\section{The Dot Product, Cross Product, and Inner Product Spaces}
+\label{sec:dot_cross}
+% ------------------------------------------------------------------
+
+Two fundamental operations exist for combining vectors. Understanding them geometrically is essential for everything from computing kinetic energy to defining stability metrics.
+
+\subsection{The Dot Product (Inner Product)}
+\label{subsec:dot_product}
+
+The dot product (or inner product) takes two vectors and returns a scalar. It measures how much two vectors ``align'' with each other.
+
+\begin{definition}{Dot Product\index{Dot Product}}{dot_product}
+For vectors $\mathbf{a}, \mathbf{b} \in \Reals^n$, the \emph{dot product} is defined as:
+\begin{equation}
+   \mathbf{a} \cdot \mathbf{b} = \mathbf{a}^T \mathbf{b} = \sum_{i=1}^n a_i b_i
+\end{equation}
+In $\Reals^3$, this expands to $a_x b_x + a_y b_y + a_z b_z$.
+\end{definition}
+
+The geometric interpretation connects the algebraic formula to angles:
+\begin{equation}
+\label{eq:dot_product_angle}
+   \mathbf{a} \cdot \mathbf{b} = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos(\theta)
+\end{equation}
+where $\theta$ is the angle between $\mathbf{a}$ and $\mathbf{b}$, and $\norm{\mathbf{a}} = \sqrt{\mathbf{a} \cdot \mathbf{a}}$ is the Euclidean norm (length) of $\mathbf{a}$.
+
+\begin{proof}[Derivation of Equation~\eqref{eq:dot_product_angle}]
+Consider two vectors $\mathbf{a}$ and $\mathbf{b}$ with an angle $\theta$ between them. The vector $\mathbf{a} - \mathbf{b}$ forms the third side of a triangle. By the law of cosines:
+\begin{equation}
+    \norm{\mathbf{a} - \mathbf{b}}^2 = \norm{\mathbf{a}}^2 + \norm{\mathbf{b}}^2 - 2\norm{\mathbf{a}}\norm{\mathbf{b}}\cos\theta
+\end{equation}
+Expanding the left side using the definition of the norm:
+\begin{align}
+    \norm{\mathbf{a} - \mathbf{b}}^2 &= (\mathbf{a} - \mathbf{b})^T(\mathbf{a} - \mathbf{b}) \\
+    &= \mathbf{a}^T\mathbf{a} - 2\mathbf{a}^T\mathbf{b} + \mathbf{b}^T\mathbf{b} \\
+    &= \norm{\mathbf{a}}^2 - 2\,\mathbf{a}^T\mathbf{b} + \norm{\mathbf{b}}^2
+\end{align}
+Equating the two expressions:
+\begin{equation}
+    \norm{\mathbf{a}}^2 - 2\,\mathbf{a}^T\mathbf{b} + \norm{\mathbf{b}}^2 = \norm{\mathbf{a}}^2 + \norm{\mathbf{b}}^2 - 2\norm{\mathbf{a}}\norm{\mathbf{b}}\cos\theta
+\end{equation}
+Canceling $\norm{\mathbf{a}}^2 + \norm{\mathbf{b}}^2$ from both sides and dividing by $-2$:
+\begin{equation}
+    \mathbf{a}^T\mathbf{b} = \norm{\mathbf{a}}\norm{\mathbf{b}}\cos\theta \qed
+\end{equation}
+\end{proof}
+
+Key consequences of the dot product formula:
+\begin{itemize}
+    \item If $\theta = 0$ (parallel vectors): $\mathbf{a} \cdot \mathbf{b} = \norm{\mathbf{a}}\norm{\mathbf{b}}$ (maximum positive value).
+    \item If $\theta = 90^\circ$ (perpendicular vectors): $\mathbf{a} \cdot \mathbf{b} = 0$. This is the fundamental test for \textbf{orthogonality}\index{Orthogonality}.
+    \item If $\theta = 180^\circ$ (antiparallel vectors): $\mathbf{a} \cdot \mathbf{b} = -\norm{\mathbf{a}}\norm{\mathbf{b}}$ (maximum negative value).
+\end{itemize}
+
+In control theory, the dot product appears constantly: kinetic energy is $E = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q}) \dot{\mathbf{q}}$, optimal control costs are $J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$, and projecting forces onto joint axes uses $\tau_i = \mathcal{F}^T \mathcal{S}_i$. In each case, a dot product computes a scalar ``alignment'' between a vector and a reference direction.
+
+\subsubsection{Orthogonal Projection}
+
+A common operation is projecting one vector onto another. The \textbf{scalar projection} of $\mathbf{b}$ onto $\mathbf{a}$ is:
+\begin{equation}
+    \text{proj}_{\mathbf{a}} \mathbf{b} = \frac{\mathbf{a} \cdot \mathbf{b}}{\mathbf{a} \cdot \mathbf{a}} \, \mathbf{a} = \frac{\mathbf{a}^T \mathbf{b}}{\norm{\mathbf{a}}^2} \, \mathbf{a}
+\end{equation}
+The residual $\mathbf{b} - \text{proj}_{\mathbf{a}} \mathbf{b}$ is orthogonal to $\mathbf{a}$. This decomposition---splitting a vector into a component along a direction and a component perpendicular to it---is the geometric core of the Gram-Schmidt process and underlies the QR decomposition used in numerical linear algebra.
 
 \subsection{The Cross Product and the Skew-Symmetric Matrix}
-The cross product is a vector. It takes two vectors and generates a brand new vector that is perfectly perpendicular to both of them.
+\label{subsec:cross_product}
+
+The cross product is a vector operation unique to three dimensions. It takes two vectors and generates a third vector that is perfectly perpendicular to both of them.
+
+\begin{definition}{Cross Product\index{Cross Product}}{cross_product}
+For vectors $\mathbf{a}, \mathbf{b} \in \Reals^3$, the \emph{cross product} is:
 \begin{equation}
    \mathbf{a} \times \mathbf{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
 \end{equation}
-
-In physics, the cross product is the mathematical engine of rotation. If you apply a force $\mathbf{F}$ at a distance $\mathbf{r}$ from a hinge, the resulting torque $\boldsymbol{\tau}$ twisting the hinge is exactly the cross product: $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}$. 
-Crucially, the cross product can be rewritten as a matrix multiplication. We define the \emph{skew-symmetric matrix} $[\mathbf{a}_\times]$:
+The direction of $\mathbf{a} \times \mathbf{b}$ is determined by the \emph{right-hand rule}: curl the fingers of your right hand from $\mathbf{a}$ toward $\mathbf{b}$; your thumb points in the direction of the cross product. The magnitude satisfies:
 \begin{equation}
+    \norm{\mathbf{a} \times \mathbf{b}} = \norm{\mathbf{a}}\norm{\mathbf{b}}\sin(\theta)
+\end{equation}
+which equals the area of the parallelogram spanned by $\mathbf{a}$ and $\mathbf{b}$.
+\end{definition}
+
+The cross product is \emph{anti-commutative}: $\mathbf{a} \times \mathbf{b} = -(\mathbf{b} \times \mathbf{a})$. This has profound physical consequences. If you apply a force $\mathbf{F}$ at a displacement $\mathbf{r}$ from a pivot, the resulting torque is $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}$. Reversing the order reverses the torque direction.
+
+Crucially, the cross product can be rewritten as a matrix multiplication using the \emph{skew-symmetric matrix}\index{Skew-Symmetric Matrix}:
+\begin{equation}
+\label{eq:skew_symmetric}
     [\mathbf{a}_\times] = \begin{bmatrix} 0 & -a_z & a_y \\ a_z & 0 & -a_x \\ -a_y & a_x & 0 \end{bmatrix} \quad \implies \quad \mathbf{a} \times \mathbf{b} = [\mathbf{a}_\times] \mathbf{b}
 \end{equation}
-Notice that for a skew-symmetric matrix, $[\mathbf{a}_\times]^T = -[\mathbf{a}_\times]$. This matrix representation is absolutely pivotal for representing 3D rotations in Lie Algebra, which we cover heavily in Chapter 4.
 
-\section{Eigenvalues, Eigenvectors, and Quadratic Forms}
+\begin{proposition}
+\label{prop:skew_symmetric_properties}
+The skew-symmetric matrix $[\mathbf{a}_\times]$ satisfies:
+\begin{enumerate}[label=(\roman*)]
+    \item $[\mathbf{a}_\times]^T = -[\mathbf{a}_\times]$ (skew-symmetry; equivalently, all diagonal entries are zero and the off-diagonal entries are negated across the diagonal).
+    \item $\mathbf{a}^T [\mathbf{a}_\times] \mathbf{b} = 0$ for all $\mathbf{b}$ (the cross product is always perpendicular to both input vectors).
+    \item The eigenvalues of $[\mathbf{a}_\times]$ are $\{0, +i\norm{\mathbf{a}}, -i\norm{\mathbf{a}}\}$ (purely imaginary, reflecting the rotational nature of the cross product).
+\end{enumerate}
+\end{proposition}
 
-When you multiply a vector by a matrix, the vector usually changes direction. However, for almost every square matrix, there are a few special directions that do \emph{not} change their axis when the matrix hits them. They only stretch, shrink, or flip. 
+\begin{proof}
+(i) is immediate from inspection of Equation~\eqref{eq:skew_symmetric}: transposing negates every off-diagonal element while the diagonal remains zero.
 
-\subsection{The Eigen-Decomposition}
-These magical vectors are called \textbf{Eigenvectors} ($\mathbf{v}_i$), and the amount they stretch is called the \textbf{Eigenvalue} ($\lambda_i$). 
+(ii) We compute $\mathbf{a}^T ([\mathbf{a}_\times] \mathbf{b}) = \mathbf{a}^T (\mathbf{a} \times \mathbf{b})$. Since $\mathbf{a} \times \mathbf{b}$ is perpendicular to $\mathbf{a}$ (by the geometric definition of the cross product), the dot product is zero.
+
+(iii) The characteristic polynomial $\det([\mathbf{a}_\times] - \lambda \mathbf{I}) = -\lambda^3 - \norm{\mathbf{a}}^2 \lambda = -\lambda(\lambda^2 + \norm{\mathbf{a}}^2)$. The roots are $\lambda = 0$ and $\lambda = \pm i\norm{\mathbf{a}}$. $\qed$
+\end{proof}
+
+This skew-symmetric matrix representation is absolutely pivotal for Chapters~\ref{ch:rotations} and~\ref{ch:exponential_coordinates}, where we show that the Lie Algebra $\mathfrak{so}(3)$---the tangent space to the rotation group---consists entirely of $3 \times 3$ skew-symmetric matrices. Angular velocities live in this space.
+
+\subsubsection{The Scalar Triple Product}
+
+The scalar triple product $\mathbf{a} \cdot (\mathbf{b} \times \mathbf{c})$ computes the signed volume of the parallelepiped formed by three vectors $\mathbf{a}, \mathbf{b}, \mathbf{c} \in \Reals^3$. It can be computed as a determinant:
 \begin{equation}
-   \mathbf{M}\mathbf{v}_i = \lambda_i \mathbf{v}_i
+    \mathbf{a} \cdot (\mathbf{b} \times \mathbf{c}) = \det\begin{bmatrix} a_x & b_x & c_x \\ a_y & b_y & c_y \\ a_z & b_z & c_z \end{bmatrix}
+\end{equation}
+If this determinant is zero, the three vectors are coplanar and linearly dependent---a direct connection between the cross product and the rank of the matrix formed by stacking the vectors as columns.
+
+% ------------------------------------------------------------------
+\section{Eigenvalues, Eigenvectors, and Quadratic Forms}
+\label{sec:eigenvalues}
+% ------------------------------------------------------------------
+
+When you multiply a general vector by a matrix, the resulting vector typically changes both its magnitude and its direction. However, for almost every square matrix, there exist a few special directions that do \emph{not} change their orientation when the matrix acts upon them. They are only stretched, shrunk, or flipped. These invariant directions reveal the deepest structural properties of the linear transformation.
+
+\subsection{The Eigenvalue Equation}
+\label{subsec:eigen_equation}
+
+\begin{definition}{Eigenvalues and Eigenvectors\index{Eigenvalue}\index{Eigenvector}}{eigenvalue}
+Given a square matrix $\mathbf{M} \in \Reals^{n \times n}$, a nonzero vector $\mathbf{v} \in \Reals^n$ is called an \emph{eigenvector} of $\mathbf{M}$ if there exists a scalar $\lambda$ (possibly complex) such that:
+\begin{equation}
+\label{eq:eigenvalue_equation}
+   \mathbf{M}\mathbf{v} = \lambda \mathbf{v}
+\end{equation}
+The scalar $\lambda$ is the corresponding \emph{eigenvalue}. The requirement that $\mathbf{v} \neq \mathbf{0}$ is essential; otherwise the equation would be trivially satisfied for any $\lambda$.
+\end{definition}
+
+\subsubsection{Deriving the Characteristic Polynomial}
+
+How do we actually find the eigenvalues? We rearrange Equation~\eqref{eq:eigenvalue_equation}:
+\begin{equation}
+    \mathbf{M}\mathbf{v} - \lambda \mathbf{v} = \mathbf{0} \quad \implies \quad (\mathbf{M} - \lambda \mathbf{I})\mathbf{v} = \mathbf{0}
+\end{equation}
+where $\mathbf{I}$ is the $n \times n$ identity matrix. For a nonzero solution $\mathbf{v}$ to exist, the matrix $(\mathbf{M} - \lambda \mathbf{I})$ must be singular. By our earlier discussion, this means its determinant must vanish:
+\begin{equation}
+\label{eq:characteristic_polynomial}
+    \det(\mathbf{M} - \lambda \mathbf{I}) = 0
+\end{equation}
+This is the \textbf{characteristic equation}\index{Characteristic Equation}. Expanding the determinant produces a polynomial of degree $n$ in $\lambda$, called the \textbf{characteristic polynomial}. By the Fundamental Theorem of Algebra, this polynomial has exactly $n$ roots (counted with multiplicity, possibly complex), giving us $n$ eigenvalues.
+
+\begin{example}{Computing Eigenvalues of a $2 \times 2$ Matrix}{eigen_2x2}
+Consider the dynamics matrix of a simple spring system:
+\begin{equation}
+    \mathbf{A} = \begin{bmatrix} 0 & 1 \\ -4 & -5 \end{bmatrix}
 \end{equation}
 
-Why do we care? 
+\textbf{Step 1:} Form $\mathbf{A} - \lambda \mathbf{I}$:
+\begin{equation}
+    \mathbf{A} - \lambda \mathbf{I} = \begin{bmatrix} -\lambda & 1 \\ -4 & -5 - \lambda \end{bmatrix}
+\end{equation}
+
+\textbf{Step 2:} Compute the determinant and set it to zero:
+\begin{align}
+    \det(\mathbf{A} - \lambda \mathbf{I}) &= (-\lambda)(-5 - \lambda) - (1)(-4) \\
+    &= \lambda^2 + 5\lambda + 4 \\
+    &= (\lambda + 1)(\lambda + 4) = 0
+\end{align}
+
+\textbf{Step 3:} The eigenvalues are $\lambda_1 = -1$ and $\lambda_2 = -4$. Both are negative, meaning this system is \textbf{asymptotically stable}---any perturbation decays exponentially back to equilibrium. The mode associated with $\lambda_1 = -1$ decays slowly (time constant $\tau_1 = 1$ second), while the mode associated with $\lambda_2 = -4$ decays four times faster ($\tau_2 = 0.25$ seconds).
+
+\textbf{Step 4:} Find the eigenvectors. For $\lambda_1 = -1$, solve $(\mathbf{A} + \mathbf{I})\mathbf{v}_1 = \mathbf{0}$:
+\begin{equation}
+    \begin{bmatrix} 1 & 1 \\ -4 & -4 \end{bmatrix} \mathbf{v}_1 = \mathbf{0} \quad \implies \quad \mathbf{v}_1 = \begin{bmatrix} 1 \\ -1 \end{bmatrix}
+\end{equation}
+For $\lambda_2 = -4$, solve $(\mathbf{A} + 4\mathbf{I})\mathbf{v}_2 = \mathbf{0}$:
+\begin{equation}
+    \begin{bmatrix} 4 & 1 \\ -4 & -1 \end{bmatrix} \mathbf{v}_2 = \mathbf{0} \quad \implies \quad \mathbf{v}_2 = \begin{bmatrix} 1 \\ -4 \end{bmatrix}
+\end{equation}
+\end{example}
+
+\subsection{Physical Interpretation of Eigenvalues}
+\label{subsec:eigen_physical}
+
 \begin{enumerate}
-    \item If $\mathbf{M}$ represents the mass and inertia tensor of a tumbling satellite in space, its eigenvectors tell us the "Principal Axes"---the natural axes where the satellite is easiest and hardest to spin stably. Think of spinning a book in the air: it spins cleanly along its shortest or longest axis (eigenvectors), but tumbles chaotically if you try to spin it along the intermediate axis.
-    \item If $\mathbf{M}$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate stability. If any eigenvalue has a positive real part ($Re(\lambda) > 0$), the system will explode exponentially. If all eigenvalues are negative ($Re(\lambda) < 0$), the system safely stabilizes back to rest. Eigenvalues are the fundamental heartbeat of linear dynamics.
+    \item \textbf{Inertia tensors and principal axes.} If $\mathbf{M}$ represents the mass-and-inertia tensor of a tumbling satellite, its eigenvectors identify the \textbf{Principal Axes}\index{Principal Axes}---the natural directions where the satellite spins stably. The eigenvalues give the moments of inertia about those axes. The famous ``tennis racket theorem'' (or Dzhanibekov effect) states that rotation about the axis with the \emph{intermediate} eigenvalue is unstable, while rotation about the axes with the largest and smallest eigenvalues is stable.
+
+    \item \textbf{Stability of dynamical systems.} If $\mathbf{A}$ is the linearized dynamics matrix of a control system ($\dot{\mathbf{x}} = \mathbf{A}\mathbf{x}$), the eigenvalues dictate stability:
+    \begin{itemize}
+        \item $\text{Re}(\lambda_i) < 0$ for all $i$: the system is \textbf{asymptotically stable} (all perturbations decay).
+        \item $\text{Re}(\lambda_i) > 0$ for any $i$: the system is \textbf{unstable} (perturbations grow exponentially).
+        \item $\text{Re}(\lambda_i) = 0$: the system is \textbf{marginally stable} (oscillations persist forever without growing or decaying).
+    \end{itemize}
+    Eigenvalues are the fundamental heartbeat of linear dynamics. Every analysis in Chapter~\ref{ch:state_space} builds on this fact.
 \end{enumerate}
 
 \begin{example}{Visualizing Eigenvectors: The Stretching Rubber Sheet}{visualize_eigenvectors}
-Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it wildly in various directions. The circle stretches into an ellipse. 
+Imagine printing a perfect circle onto a rubber square. You grab the edges of the rubber and stretch it wildly in various directions. The circle distorts into an ellipse.
 
-Most straight lines drawn on the circle have now been rotated and tilted. However, exactly two lines pointing across the circle did not rotate at all; they only got \emph{longer}. These non-rotating axes are your \textbf{Eigenvectors}. The factor by which those specific lines stretched (perhaps one stretched by $3\times$ and the other shrunk by $0.5\times$) are your \textbf{Eigenvalues}. The matrix $\mathbf{M}$ is simply the algebraic instruction set for that stretching operation.
+Most straight lines drawn on the original circle have been both rotated and elongated. However, exactly two perpendicular lines---the major and minor axes of the resulting ellipse---did not rotate at all; they were only stretched. These non-rotating axes are your \textbf{eigenvectors}. The factors by which those specific lines were stretched (perhaps one stretched by $3\times$ and the other shrunk to $0.5\times$) are your \textbf{eigenvalues}. The matrix $\mathbf{M}$ is the algebraic instruction set for that stretching operation.
+
+In $n$ dimensions, a symmetric matrix transforms a hypersphere into a hyperellipsoid. The eigenvectors point along the principal axes of the ellipsoid, and the eigenvalues are the semi-axis lengths.
 \end{example}
 
-\subsection{Symmetric Matrices and Quadratic Forms}
-In optimization and energy mechanics, we frequently encounter \emph{quadratic forms}, written as $\mathbf{x}^T \mathbf{M} \mathbf{x}$. 
+\subsection{The Spectral Theorem for Symmetric Matrices}
+\label{subsec:spectral_theorem}
+
+Among all matrices, \emph{symmetric} matrices ($\mathbf{M} = \mathbf{M}^T$) occupy a privileged position. They arise naturally throughout mechanics (mass matrices, stiffness matrices, inertia tensors) and control theory (cost matrices, Lyapunov functions).
+
+\begin{theorem}[The Spectral Theorem\index{Spectral Theorem}]
+\label{thm:spectral}
+If $\mathbf{M} \in \Reals^{n \times n}$ is symmetric ($\mathbf{M} = \mathbf{M}^T$), then:
+\begin{enumerate}[label=(\roman*)]
+    \item All eigenvalues of $\mathbf{M}$ are real.
+    \item Eigenvectors corresponding to distinct eigenvalues are orthogonal.
+    \item $\mathbf{M}$ can be factored as $\mathbf{M} = \mathbf{Q} \boldsymbol{\Lambda} \mathbf{Q}^T$, where $\mathbf{Q}$ is an orthogonal matrix ($\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$) whose columns are the eigenvectors, and $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n)$ is a diagonal matrix of eigenvalues.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof that eigenvalues of a real symmetric matrix are real]
+Let $\mathbf{M} = \mathbf{M}^T$ and suppose $\mathbf{M}\mathbf{v} = \lambda \mathbf{v}$ for some possibly complex eigenvalue $\lambda$ and eigenvector $\mathbf{v}$. We will show that $\lambda$ must be real.
+
+Take the complex conjugate transpose (denoted by $^*$) of both sides of $\mathbf{M}\mathbf{v} = \lambda \mathbf{v}$:
 \begin{equation}
-    q(\mathbf{x}) = \mathbf{x}^T \mathbf{M} \mathbf{x} = \sum_{i,j} M_{ij} x_i x_j
+    \mathbf{v}^* \mathbf{M}^T = \bar{\lambda} \, \mathbf{v}^*
 \end{equation}
-Kinetic energy ($E = \frac{1}{2} \mathbf{v}^T \mathbf{M} \mathbf{v}$), optimal control costs ($J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$), and Lyapunov functions all rely on symmetric metrics. A symmetric matrix ($\mathbf{M} = \mathbf{M}^T$) has a beautiful property: \emph{all of its eigenvalues are strictly real, and all of its eigenvectors are perfectly orthogonal to each other}.
+Since $\mathbf{M} = \mathbf{M}^T$ (and $\mathbf{M}$ is real, so $\mathbf{M}^* = \mathbf{M}^T = \mathbf{M}$):
+\begin{equation}
+    \mathbf{v}^* \mathbf{M} = \bar{\lambda} \, \mathbf{v}^*
+\end{equation}
 
-If all eigenvalues of a symmetric matrix $\mathbf{M}$ are strictly positive ($\lambda_i > 0$), the matrix is called \textbf{Positive Definite} ($\mathbf{M} \succ 0$). This guarantees that $\mathbf{x}^T \mathbf{M} \mathbf{x} > 0$ for any non-zero $\mathbf{x}$. In control, if you can prove your energy matrix is positive definite, you have mathematically proven that your system's energy has a strict "bottom" (a minimum), which is the cornerstone of stability proofs.
+Now multiply the original equation on the left by $\mathbf{v}^*$:
+\begin{equation}
+    \mathbf{v}^* \mathbf{M} \mathbf{v} = \lambda \, \mathbf{v}^* \mathbf{v}
+\end{equation}
+And multiply the conjugated equation on the right by $\mathbf{v}$:
+\begin{equation}
+    \mathbf{v}^* \mathbf{M} \mathbf{v} = \bar{\lambda} \, \mathbf{v}^* \mathbf{v}
+\end{equation}
 
+Equating the right-hand sides:
+\begin{equation}
+    \lambda \, \mathbf{v}^* \mathbf{v} = \bar{\lambda} \, \mathbf{v}^* \mathbf{v}
+\end{equation}
+
+Since $\mathbf{v} \neq \mathbf{0}$, we have $\mathbf{v}^* \mathbf{v} = \sum_i |v_i|^2 > 0$. Dividing both sides by $\mathbf{v}^*\mathbf{v}$ yields $\lambda = \bar{\lambda}$, which is true if and only if $\lambda$ is real. $\qed$
+\end{proof}
+
+\begin{proof}[Proof that eigenvectors for distinct eigenvalues are orthogonal]
+Let $\mathbf{M}\mathbf{v}_1 = \lambda_1 \mathbf{v}_1$ and $\mathbf{M}\mathbf{v}_2 = \lambda_2 \mathbf{v}_2$ with $\lambda_1 \neq \lambda_2$. Compute:
+\begin{equation}
+    \lambda_1 (\mathbf{v}_1^T \mathbf{v}_2) = (\mathbf{M}\mathbf{v}_1)^T \mathbf{v}_2 = \mathbf{v}_1^T \mathbf{M}^T \mathbf{v}_2 = \mathbf{v}_1^T \mathbf{M} \mathbf{v}_2 = \mathbf{v}_1^T (\lambda_2 \mathbf{v}_2) = \lambda_2 (\mathbf{v}_1^T \mathbf{v}_2)
+\end{equation}
+Therefore $(\lambda_1 - \lambda_2)(\mathbf{v}_1^T \mathbf{v}_2) = 0$. Since $\lambda_1 \neq \lambda_2$, we must have $\mathbf{v}_1^T \mathbf{v}_2 = 0$. The eigenvectors are orthogonal. $\qed$
+\end{proof}
+
+The spectral decomposition $\mathbf{M} = \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^T$ has a beautiful geometric interpretation: the transformation defined by $\mathbf{M}$ can be decomposed into three steps: (1) rotate coordinates to align with the eigenvector axes ($\mathbf{Q}^T$), (2) independently scale each axis by its eigenvalue ($\boldsymbol{\Lambda}$), (3) rotate back ($\mathbf{Q}$). This is a ``rotation-stretch-rotation'' decomposition entirely analogous to the SVD, which we discuss next.
+
+\subsection{Quadratic Forms and Positive Definiteness}
+\label{subsec:quadratic_forms}
+
+In optimization and energy mechanics, we frequently encounter \emph{quadratic forms}\index{Quadratic Form}---scalar-valued functions that are quadratic in a vector argument:
+
+\begin{definition}{Quadratic Form}{quadratic_form}
+Given a symmetric matrix $\mathbf{M} \in \Reals^{n \times n}$, the associated \emph{quadratic form} is the scalar function $q: \Reals^n \to \Reals$ defined by:
+\begin{equation}
+    q(\mathbf{x}) = \mathbf{x}^T \mathbf{M} \mathbf{x} = \sum_{i=1}^n \sum_{j=1}^n M_{ij} \, x_i \, x_j
+\end{equation}
+\end{definition}
+
+Quadratic forms appear throughout this text series:
+\begin{itemize}
+    \item \textbf{Kinetic energy:} $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q}) \dot{\mathbf{q}}$, where $\mathbf{M}(\mathbf{q})$ is the mass matrix (Chapter~\ref{ch:lagrangian}).
+    \item \textbf{Optimal control cost:} $J = \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{u}^T \mathbf{R} \mathbf{u}$, where $\mathbf{Q}$ penalizes state deviations and $\mathbf{R}$ penalizes control effort.
+    \item \textbf{Lyapunov functions:} $V(\mathbf{x}) = \mathbf{x}^T \mathbf{P} \mathbf{x}$, used to prove stability (Volume I).
+    \item \textbf{Contraction metrics:} $\delta\mathbf{x}^T \mathbf{M}(x) \, \delta\mathbf{x}$, measuring infinitesimal distances on manifolds (Volume I).
+\end{itemize}
+
+\begin{definition}{Positive Definiteness\index{Positive Definite}}{positive_definite}
+A symmetric matrix $\mathbf{M}$ is called:
+\begin{itemize}
+    \item \textbf{Positive definite} ($\mathbf{M} \succ 0$) if $\mathbf{x}^T \mathbf{M} \mathbf{x} > 0$ for all $\mathbf{x} \neq \mathbf{0}$.
+    \item \textbf{Positive semi-definite} ($\mathbf{M} \succeq 0$) if $\mathbf{x}^T \mathbf{M} \mathbf{x} \geq 0$ for all $\mathbf{x}$.
+    \item \textbf{Negative definite} ($\mathbf{M} \prec 0$) if $\mathbf{x}^T \mathbf{M} \mathbf{x} < 0$ for all $\mathbf{x} \neq \mathbf{0}$.
+    \item \textbf{Indefinite} if $\mathbf{x}^T \mathbf{M} \mathbf{x}$ takes both positive and negative values.
+\end{itemize}
+\end{definition}
+
+\begin{proposition}
+\label{prop:pd_eigenvalues}
+A symmetric matrix $\mathbf{M}$ is positive definite if and only if all of its eigenvalues are strictly positive.
+\end{proposition}
+
+\begin{proof}
+By the Spectral Theorem (Theorem~\ref{thm:spectral}), $\mathbf{M} = \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^T$ where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n)$ and $\mathbf{Q}$ is orthogonal. For any nonzero $\mathbf{x}$, define $\mathbf{y} = \mathbf{Q}^T \mathbf{x}$. Since $\mathbf{Q}$ is invertible and $\mathbf{x} \neq \mathbf{0}$, we have $\mathbf{y} \neq \mathbf{0}$. Then:
+\begin{equation}
+    \mathbf{x}^T \mathbf{M} \mathbf{x} = \mathbf{x}^T \mathbf{Q}\boldsymbol{\Lambda}\mathbf{Q}^T \mathbf{x} = \mathbf{y}^T \boldsymbol{\Lambda} \mathbf{y} = \sum_{i=1}^n \lambda_i y_i^2
+\end{equation}
+
+$(\Rightarrow)$ If $\mathbf{M} \succ 0$, then for each eigenvector $\mathbf{v}_i$ (which is nonzero): $\mathbf{v}_i^T \mathbf{M} \mathbf{v}_i = \lambda_i \norm{\mathbf{v}_i}^2 > 0$, so $\lambda_i > 0$.
+
+$(\Leftarrow)$ If all $\lambda_i > 0$ and $\mathbf{y} \neq \mathbf{0}$, then at least one $y_i \neq 0$, so $\sum_i \lambda_i y_i^2 > 0$. $\qed$
+\end{proof}
+
+\begin{laymansbox}{Why Positive Definiteness Matters for Control}{pd_control}
+In control theory, if you can construct a function $V(\mathbf{x}) = \mathbf{x}^T \mathbf{P} \mathbf{x}$ with $\mathbf{P} \succ 0$ such that $V$ decreases along every trajectory of your system, you have mathematically \emph{proven} that the system is stable. The positive definiteness of $\mathbf{P}$ guarantees that $V$ has a strict minimum at the origin---it forms a ``bowl'' in state space. If the system's energy ($V$) always decreases and the bowl has a definite bottom, the system must converge to rest. This is the essence of \textbf{Lyapunov stability theory}, the single most important stability analysis tool in nonlinear control (developed in Volume I).
+\end{laymansbox}
+
+\subsubsection{The Cholesky Decomposition}
+
+A practical consequence of positive definiteness: any positive definite matrix $\mathbf{M}$ can be uniquely factored as:
+\begin{equation}
+    \mathbf{M} = \mathbf{L}\mathbf{L}^T
+\end{equation}
+where $\mathbf{L}$ is a lower triangular matrix with strictly positive diagonal entries. This is the \textbf{Cholesky decomposition}\index{Cholesky Decomposition}. It is numerically efficient (roughly half the cost of a general $LU$ factorization) and is the standard method for solving linear systems involving positive definite matrices in physics engines. When MuJoCo inverts the mass matrix $\mathbf{M}(\mathbf{q})$ to compute forward dynamics, it uses Cholesky decomposition.
+
+The Cholesky factor $\mathbf{L}$ also provides a constructive test for positive definiteness: if the factorization completes without encountering a zero or negative diagonal element, the matrix is positive definite. If the algorithm fails, the matrix is not positive definite.
+
+% ------------------------------------------------------------------
 \section{The Singular Value Decomposition (SVD)}
-What if a matrix isn't square? Or what if it doesn't have a full set of eigenvectors? The \textbf{Singular Value Decomposition (SVD)} is the ultimate, bulletproof factorization of \emph{any} matrix, regardless of size or rank.
+\label{sec:svd}
+% ------------------------------------------------------------------
+
+What if a matrix is not square? What if it does not have a full set of eigenvectors? The \textbf{Singular Value Decomposition}\index{Singular Value Decomposition} (SVD) is the ultimate, universal factorization of \emph{any} matrix $\mathbf{M} \in \Reals^{n \times m}$, regardless of its shape or rank.
+
+\begin{theorem}[The Singular Value Decomposition]
+\label{thm:svd}
+Every matrix $\mathbf{M} \in \Reals^{n \times m}$ can be factored as:
 \begin{equation}
-    \mathbf{M} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T
+    \mathbf{M} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^T
 \end{equation}
+where:
 \begin{itemize}
-    \item $\mathbf{V}$ (Right singular vectors): A rotation in the input space.
-    \item $\mathbf{\Sigma}$ (Singular values, $\sigma_i$): Diagonal scaling factors (always positive).
-    \item $\mathbf{U}$ (Left singular vectors): A rotation in the output space.
+    \item $\mathbf{U} \in \Reals^{n \times n}$ is an orthogonal matrix ($\mathbf{U}^T\mathbf{U} = \mathbf{I}$). Its columns are called the \emph{left singular vectors}.
+    \item $\boldsymbol{\Sigma} \in \Reals^{n \times m}$ is a diagonal matrix with non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_{\min(n,m)} \geq 0$ on the diagonal. These are the \emph{singular values}\index{Singular Value}.
+    \item $\mathbf{V} \in \Reals^{m \times m}$ is an orthogonal matrix. Its columns are the \emph{right singular vectors}.
+\end{itemize}
+\end{theorem}
+
+\subsection{Derivation of the SVD from the Eigendecomposition}
+\label{subsec:svd_derivation}
+
+The SVD can be derived from the spectral theorem applied to related symmetric matrices. Here is the construction:
+
+\textbf{Step 1.} Form the symmetric matrix $\mathbf{M}^T\mathbf{M} \in \Reals^{m \times m}$. This matrix is always positive semi-definite because for any $\mathbf{x}$:
+\begin{equation}
+    \mathbf{x}^T (\mathbf{M}^T\mathbf{M}) \mathbf{x} = (\mathbf{M}\mathbf{x})^T (\mathbf{M}\mathbf{x}) = \norm{\mathbf{M}\mathbf{x}}^2 \geq 0
+\end{equation}
+
+\textbf{Step 2.} By the Spectral Theorem, $\mathbf{M}^T\mathbf{M}$ has an eigendecomposition:
+\begin{equation}
+    \mathbf{M}^T\mathbf{M} = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^T
+\end{equation}
+where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_m)$ with $\lambda_i \geq 0$ (since $\mathbf{M}^T\mathbf{M}$ is positive semi-definite). Define the singular values as $\sigma_i = \sqrt{\lambda_i}$.
+
+\textbf{Step 3.} For each nonzero singular value $\sigma_i$, define the corresponding left singular vector:
+\begin{equation}
+    \mathbf{u}_i = \frac{1}{\sigma_i} \mathbf{M} \mathbf{v}_i
+\end{equation}
+These vectors are orthonormal (a straightforward verification using $\mathbf{M}^T\mathbf{M}\mathbf{v}_i = \sigma_i^2 \mathbf{v}_i$).
+
+\textbf{Step 4.} Extend $\{\mathbf{u}_1, \ldots, \mathbf{u}_r\}$ to a complete orthonormal basis for $\Reals^n$ (where $r = \text{rank}(\mathbf{M})$). Assemble these into the columns of $\mathbf{U}$. Then $\mathbf{M} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$ follows by construction.
+
+\subsection{Geometric Interpretation of the SVD}
+
+The SVD reveals that \emph{any} linear transformation, no matter how complex, can be decomposed into exactly three simple geometric operations:
+\begin{enumerate}
+    \item \textbf{Rotate the input space} (apply $\mathbf{V}^T$): align the input with the principal directions.
+    \item \textbf{Scale each axis independently} (apply $\boldsymbol{\Sigma}$): stretch or shrink along each principal direction.
+    \item \textbf{Rotate the output space} (apply $\mathbf{U}$): reorient the result in the output space.
+\end{enumerate}
+
+This geometric decomposition transforms a unit hypersphere in the input space into a hyperellipsoid in the output space. The singular values are the semi-axis lengths of this ellipsoid, and the left singular vectors point along the ellipsoid's principal axes.
+
+\subsection{The Condition Number}
+\label{subsec:condition_number}
+
+The \textbf{condition number}\index{Condition Number} of a matrix $\mathbf{M}$ is the ratio of its largest to its smallest singular value:
+\begin{equation}
+    \kappa(\mathbf{M}) = \frac{\sigma_{\max}}{\sigma_{\min}}
+\end{equation}
+
+If $\kappa(\mathbf{M})$ is large (say, $10^6$ or more), the matrix is \emph{ill-conditioned}: small perturbations in the input can cause enormous changes in the output. In robotics, the condition number of the Jacobian quantifies how close the robot is to a singularity. As $\sigma_{\min} \to 0$, the condition number $\to \infty$, and the numerical solution of $\mathbf{J}\dot{\mathbf{q}} = \mathbf{v}$ becomes catastrophically unreliable.
+
+\subsection{Truncated SVD and Low-Rank Approximation}
+
+One of the most powerful applications of the SVD is data compression. Given a matrix $\mathbf{M}$ with singular values $\sigma_1 \geq \sigma_2 \geq \cdots$, the best rank-$k$ approximation (in the Frobenius norm) is:
+\begin{equation}
+    \mathbf{M}_k = \sum_{i=1}^k \sigma_i \, \mathbf{u}_i \mathbf{v}_i^T
+\end{equation}
+This result (the Eckart-Young-Mirsky theorem) underpins dimensionality reduction techniques like Principal Component Analysis (PCA), which identifies the dominant modes of variation in high-dimensional data such as motion capture recordings of golf swings.
+
+\begin{example}{The SVD of the Jacobian (Manipulability Ellipsoid)}{svd_jacobian}
+In robotics, the Jacobian matrix $\mathbf{J}(\mathbf{q})$ maps joint velocities to end-effector Cartesian velocity: $\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$. For a redundant manipulator with 7 joints moving in 3D space, $\mathbf{J} \in \Reals^{3 \times 7}$. Taking the SVD $\mathbf{J} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$:
+
+\begin{itemize}
+    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns define the physical 3D directions the hand can move.
+    \item $\boldsymbol{\Sigma} \in \Reals^{3\times7}$: The singular values $(\sigma_1, \sigma_2, \sigma_3)$ are the semi-axis lengths of the \textbf{Velocity Manipulability Ellipsoid}\index{Manipulability Ellipsoid}. They quantify how fast the robot can move in each $\mathbf{U}$-direction. If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$: the ellipsoid collapses to a pancake, and the robot loses a degree of freedom.
+    \item $\mathbf{V}^T \in \Reals^{7\times7}$: The columns define the joint velocity combinations required to produce motion along each principal direction.
 \end{itemize}
 
-Geometrically, the SVD says that \emph{any} linear transformation can be broken down into three simple steps: Rotate the input ($\mathbf{V}^T$), stretch it along the axes ($\mathbf{\Sigma}$), and rotate the output ($\mathbf{U}$). 
-
-\begin{example}{The SVD of the Jacobian (Mobility) Matrix}{svd_jacobian}
-In robotics, the Jacobian matrix ($\mathbf{J}$) maps joint speeds to the physical cartesian velocity of the hand ($\mathbf{v}_{\text{hand}} = \mathbf{J} \dot{\mathbf{q}}$). Because the robot likely has more joints than spatial dimensions (e.g., 7 joints moving in 3D space), $\mathbf{J}$ is a non-square $3 \times 7$ matrix. You cannot calculate its eigenvectors. 
-
-Instead, we take the SVD of the Jacobian ($\mathbf{J} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T$):
-\begin{itemize}
-    \item $\mathbf{U} \in \Reals^{3\times3}$: The columns of $\mathbf{U}$ define the actual geometric 3D directions the hand can push in the physical room.
-    \item $\mathbf{\Sigma} \in \Reals^{3\times7}$: The singular values ($\sigma_1, \sigma_2, \sigma_3$) form the axes of the \textbf{Velocity Manipulability Ellipsoid}. They tell us exactly how fast the robot can move in the corresponding $\mathbf{U}$ directions. If the arm is stretched perfectly straight, one singular value drops to $\sigma_k = 0$, the ellipsoid flattens into a pancake, and the robot loses a degree of freedom (it cannot pull straight back).
-    \item $\mathbf{V}^T \in \Reals^{7\times7}$: These vectors define the specific combinations of joint motors required to move the hand along those lines.
-\end{itemize}
- Conversely, the \textbf{Force Manipulability Ellipsoid} uses the exact same axes $\mathbf{U}$, but its scaling is defined by $1/\sigma_i$. Where a robot is fastest, it is mechanically weakest. Where it is slowest (near singularities), it can exert infinite mechanical leverage.
+Conversely, the \textbf{Force Manipulability Ellipsoid} has axes proportional to $1/\sigma_i$. Where the robot is fastest ($\sigma_i$ large), it is mechanically weakest. Where it is slowest (near singularities, $\sigma_i$ small), it can exert enormous force---a consequence of the conservation of mechanical power.
 \end{example}
+
+% ------------------------------------------------------------------
+\section{Worked Example: Eigenvalue and SVD Analysis in Python}
+\label{sec:python_example}
+% ------------------------------------------------------------------
+
+Let us bring together the theory developed in this chapter with a concrete computational example. The following Python code constructs a $3 \times 3$ symmetric matrix (representing a simplified 3D inertia tensor), computes its eigendecomposition and SVD, and verifies the key properties we have proven.
+
+\begin{lstlisting}[language=Python, caption=Eigendecomposition and SVD of a Symmetric Matrix]
+import numpy as np
+
+# ---- Define a symmetric positive definite matrix ----
+# This could represent a simplified 3D inertia tensor
+M = np.array([
+    [5.0, 1.0, 0.5],
+    [1.0, 4.0, 0.3],
+    [0.5, 0.3, 3.0]
+])
+
+# Verify symmetry
+assert np.allclose(M, M.T), "Matrix is not symmetric!"
+
+# ---- Eigendecomposition ----
+eigenvalues, eigenvectors = np.linalg.eigh(M)  # eigh for symmetric matrices
+print("Eigenvalues:", np.round(eigenvalues, 4))
+print("Eigenvectors (columns):\n", np.round(eigenvectors, 4))
+
+# Verify: all eigenvalues positive => positive definite
+assert all(eigenvalues > 0), "Matrix is not positive definite!"
+print("Matrix is POSITIVE DEFINITE (all eigenvalues > 0)")
+
+# Verify: eigenvectors are orthogonal
+QTQ = eigenvectors.T @ eigenvectors
+print("Q^T Q (should be identity):\n", np.round(QTQ, 10))
+
+# Verify spectral decomposition: M = Q * Lambda * Q^T
+M_reconstructed = eigenvectors @ np.diag(eigenvalues) @ eigenvectors.T
+print("Reconstruction error:", np.linalg.norm(M - M_reconstructed))
+
+# ---- Singular Value Decomposition ----
+U, sigma, VT = np.linalg.svd(M)
+print("\nSingular values:", np.round(sigma, 4))
+print("Eigenvalues (sorted descending):", np.round(sorted(eigenvalues, reverse=True), 4))
+print("For symmetric PD matrices, singular values = eigenvalues (sorted)")
+
+# ---- Condition Number ----
+kappa = sigma[0] / sigma[-1]
+print(f"\nCondition number: {kappa:.4f}")
+print("(Close to 1 means well-conditioned; >>1 means ill-conditioned)")
+
+# ---- Cholesky Decomposition ----
+L = np.linalg.cholesky(M)
+print("\nCholesky factor L:\n", np.round(L, 4))
+print("Verify L @ L^T = M, error:", np.linalg.norm(M - L @ L.T))
+\end{lstlisting}
+
+% ------------------------------------------------------------------
+\section{Chapter Summary}
+\label{sec:ch1_summary}
+% ------------------------------------------------------------------
+
+\begin{principle}{Key Takeaways from Chapter 1}{ch1_summary}
+\begin{enumerate}
+    \item A \textbf{vector space} is defined by eight axioms guaranteeing closure, commutativity, and compatibility of addition and scalar multiplication. $\Reals^n$ is the prototypical example.
+
+    \item The \textbf{rank} of a matrix counts independent columns; the \textbf{null space} captures the ``lost'' dimensions. The \textbf{Rank-Nullity Theorem} connects them: $\text{rank} + \text{nullity} = \text{number of columns}$.
+
+    \item The \textbf{dot product} measures alignment between vectors and defines orthogonality. The \textbf{cross product} in $\Reals^3$ produces a perpendicular vector and can be written as a \emph{skew-symmetric matrix} multiplication---a representation central to Lie Algebra ($\mathfrak{so}(3)$).
+
+    \item \textbf{Eigenvalues} of a dynamics matrix dictate stability; eigenvalues of an inertia tensor identify principal axes. The \textbf{Spectral Theorem} guarantees that symmetric matrices have real eigenvalues and orthogonal eigenvectors.
+
+    \item \textbf{Positive definiteness} ($\mathbf{M} \succ 0$) guarantees a quadratic form has a strict minimum---the cornerstone of Lyapunov stability proofs and energy-based control design.
+
+    \item The \textbf{SVD} decomposes any matrix into rotation-stretch-rotation. It reveals the manipulability ellipsoid of a robot and quantifies proximity to singularities via the condition number.
+\end{enumerate}
+\end{principle}
+
+% ------------------------------------------------------------------
+\section{Exercises}
+\label{sec:ch1_exercises}
+% ------------------------------------------------------------------
+
+\subsection*{Computational Exercises}
+
+\begin{enumerate}
+    \item \textbf{(Rank and Null Space)} Given the matrix
+    \begin{equation*}
+        \mathbf{A} = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+    \end{equation*}
+    compute the rank, determinant, and a basis for the null space. Verify the Rank-Nullity Theorem. \emph{Hint: row reduce to echelon form.}
+
+    \item \textbf{(Eigenvalue Computation)} For the matrix $\mathbf{A} = \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix}$, compute the eigenvalues and eigenvectors by hand. Verify that $\mathbf{A}\mathbf{v}_i = \lambda_i \mathbf{v}_i$ for each pair.
+
+    \item \textbf{(SVD by Hand)} Compute the SVD of $\mathbf{M} = \begin{bmatrix} 3 & 0 \\ 0 & -2 \end{bmatrix}$. What are the singular values, and how do they relate to the eigenvalues?
+
+    \item \textbf{(Cholesky)} Verify that $\mathbf{M} = \begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix}$ is positive definite by: (a) checking all eigenvalues are positive, (b) computing the Cholesky factorization $\mathbf{L}\mathbf{L}^T$.
+
+    \item \textbf{(Python)} Write a Python script that generates a random $5 \times 5$ symmetric matrix $\mathbf{M} = \mathbf{A}^T\mathbf{A} + \epsilon \mathbf{I}$ (guaranteeing positive definiteness), computes its eigendecomposition, SVD, and Cholesky factorization, and verifies all three decompositions reproduce the original matrix within numerical tolerance.
+\end{enumerate}
+
+\subsection*{Conceptual Exercises}
+
+\begin{enumerate}[resume]
+    \item \textbf{(Vector Spaces)} Is the set of all $2 \times 2$ symmetric matrices a vector space under standard matrix addition and scalar multiplication? Prove or disprove by checking the axioms. What is its dimension?
+
+    \item \textbf{(Physical Interpretation)} A robot Jacobian $\mathbf{J} \in \Reals^{3 \times 5}$ has singular values $\sigma_1 = 2.0$, $\sigma_2 = 0.8$, $\sigma_3 = 0.01$. Describe the shape of the velocity manipulability ellipsoid. Is the robot near a singularity? What does the condition number tell you about the reliability of inverse kinematics computations?
+
+    \item \textbf{(Positive Definiteness in Control)} Explain in your own words why the mass matrix $\mathbf{M}(\mathbf{q})$ of any physical mechanical system must be positive definite. What would a zero eigenvalue of $\mathbf{M}(\mathbf{q})$ physically mean?
+
+    \item \textbf{(Skew-Symmetric Matrices)} Prove that for any skew-symmetric matrix $\mathbf{S}$ ($\mathbf{S}^T = -\mathbf{S}$), the matrix $e^{\mathbf{S}} = \mathbf{I} + \mathbf{S} + \frac{1}{2!}\mathbf{S}^2 + \cdots$ is an orthogonal matrix (i.e., $(e^{\mathbf{S}})^T e^{\mathbf{S}} = \mathbf{I}$). \emph{Hint: use the fact that $(e^{\mathbf{S}})^T = e^{\mathbf{S}^T} = e^{-\mathbf{S}}$.} This result is the mathematical foundation of Chapter~\ref{ch:exponential_coordinates}.
+\end{enumerate}
+
+\subsection*{Proof-Based Exercises}
+
+\begin{enumerate}[resume]
+    \item \textbf{(Rank-Nullity Application)} Prove that if $\mathbf{A} \in \Reals^{m \times n}$ with $m < n$, then $\mathbf{A}$ must have a nontrivial null space (i.e., $\mathcal{N}(\mathbf{A}) \neq \{\mathbf{0}\}$). Interpret this result for an underactuated robot with more joints than task-space dimensions.
+
+    \item \textbf{(Trace and Eigenvalues)} Prove that the trace of a matrix (sum of diagonal elements) equals the sum of its eigenvalues: $\text{tr}(\mathbf{M}) = \sum_{i=1}^n \lambda_i$. \emph{Hint: use the fact that similar matrices have the same trace.}
+
+    \item \textbf{(Determinant and Eigenvalues)} Prove that the determinant of a matrix equals the product of its eigenvalues: $\det(\mathbf{M}) = \prod_{i=1}^n \lambda_i$. \emph{Hint: evaluate the characteristic polynomial at $\lambda = 0$.}
+
+    \item \textbf{(Uniqueness of SVD)} The singular values of a matrix are unique, but the singular vectors are not (when singular values are repeated). Give an example of a $2 \times 2$ matrix with a repeated singular value, and show that the corresponding singular vectors can be chosen as any orthonormal pair spanning a two-dimensional subspace.
+
+    \item \textbf{(Schur Complement and Positive Definiteness)} Let $\mathbf{M} = \begin{bmatrix} \mathbf{A} & \mathbf{B} \\ \mathbf{B}^T & \mathbf{C} \end{bmatrix}$ be a symmetric block matrix with $\mathbf{A} \succ 0$. Prove that $\mathbf{M} \succ 0$ if and only if $\mathbf{C} - \mathbf{B}^T \mathbf{A}^{-1} \mathbf{B} \succ 0$ (the \emph{Schur complement} condition). This result is used extensively in the Articulated Body Algorithm (Chapter~\ref{ch:articulated_body_algorithm}).
+\end{enumerate}

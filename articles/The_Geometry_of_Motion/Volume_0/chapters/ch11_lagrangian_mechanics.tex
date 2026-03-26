@@ -1,5 +1,5 @@
 % ==========================================================================
-%  Chapter 11: Lagrangian\index{Lagrangian Mechanics} Mechanics
+%  Chapter 11: Lagrangian Mechanics
 % ==========================================================================
 \chapter{Lagrangian\index{Lagrangian Mechanics} Mechanics}
 \label{ch:lagrangian}
@@ -14,7 +14,25 @@
 \textbf{All Variables Defined:} $T$ is Kinetic Energy, $V$ is Potential Energy, and $\mathcal{L} = T - V$.
 \end{laymansbox}
 
+% ==========================================================================
+\section{Historical Context: From Newton to Lagrange to Hamilton}
+% ==========================================================================
+
+The development of Lagrangian mechanics represents one of the most profound intellectual shifts in the history of mechanics. Isaac Newton formulated motion through explicit forces acting on point masses: $\sum \mathbf{F} = m\mathbf{a}$. This framework dominated for over a century and remains the foundation of computational physics engines.
+
+However, in 1788, \textbf{Joseph-Louis Lagrange} published his \textit{M\'{e}canique Analytique}, introducing a radically different approach. Rather than tracking forces, Lagrange proposed that mechanical systems evolve along paths that extremize a single scalar function: the \textbf{action integral}
+$$\mathcal{S}[\mathbf{q}(t)] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt$$
+where $\mathcal{L} = T - V$ is the Lagrangian. This became known as the \textbf{Principle of Least Action}, or equivalently, Hamilton's Principle.
+
+Nearly simultaneously, \textbf{Leonhard Euler} was developing the \textbf{calculus of variations}—the mathematics required to find functions that minimize or maximize functionals (functions of functions). The union of Euler's calculus of variations with Lagrange's mechanical insight created the Euler-Lagrange equations, which automatically derive equations of motion from any Lagrangian density.
+
+Later, in the early 1800s, \textbf{William Rowan Hamilton} reformulated Lagrange's framework using a Legendre transform, introducing \textbf{conjugate momenta} and the \textbf{Hamiltonian} function $H = \mathbf{p} \cdot \dot{\mathbf{q}} - \mathcal{L}$. This opened pathways to modern quantum mechanics and symplectic geometry.
+
+\textbf{Why This History Matters:} Lagrangian mechanics is not merely an alternative notation for Newton's laws. It encodes deep philosophical truth: nature does not "know" about forces. It only "knows" about energy. Systems evolve along extremal paths of action. This principle applies equally to light rays (Fermat's principle), quantum fields (path integrals), and relativistic gravity (Einstein's equations). By learning Lagrangian mechanics, you are learning the geometric language that unifies all modern physics.
+
+% ==========================================================================
 \section{The Limitations of Newton}
+% ==========================================================================
 
 In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in Chapter 7), motion is determined by analyzing explicit spatial forces: $\sum \mathbf{F} = m\mathbf{a}$.
 
@@ -22,64 +40,748 @@ While Newton's equations are spectacular for computational algorithms evaluating
 
 If a bead slides along a curved wire, or a heavy pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing and analytically useless for control theory.
 
-\section{The Principle of Least Action}
+Moreover, constraint forces do \emph{no work} in the motion. The tension in a rigid pendulum rod redirects motion but adds no energy. Yet in Newton's framework, we must solve for it anyway. This is deeply inelegant.
 
-Joseph-Louis Lagrange bypassed forces entirely. His formulation relies on a profound truth about the universe known as the \textbf{Principle of Least Action}.
+Lagrangian mechanics solves this by working exclusively with \textbf{generalized coordinates}—minimal, unconstrained variables. The constraints are built into the coordinate system itself. Internal forces vanish from the mathematical framework entirely.
 
-Nature minimizes effort. If a ball rolls down a hill, it fundamentally seeks the path that minimizes the action integral, elegantly balancing its active, moving energy (Kinetic) and its stored, resting energy (Potential) over time.
+% ==========================================================================
+\section{Hamilton's Principle and the Calculus of Variations}
+% ==========================================================================
+
+\textbf{Hamilton's Principle} states that among all conceivable paths $\mathbf{q}(t)$ connecting two configurations $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ at fixed times, the \emph{actual} physical path satisfies:
+
+\begin{equation}
+\delta \mathcal{S} = \delta \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt = 0
+\label{eq:hamilton_principle}
+\end{equation}
+
+where $\delta$ denotes a variation—an infinitesimal perturbation to the path that respects the boundary conditions $\delta \mathbf{q}(t_1) = 0$ and $\delta \mathbf{q}(t_2) = 0$.
+
+This is not a minimum (as popularized, though not always accurate). It is a \textbf{stationary point}—an extremum (often a minimum, sometimes a saddle point). The physical system behaves as if ``nature chooses'' the path where small perturbations produce zero first-order change in the action.
+
+To extract equations of motion from Hamilton's principle, we apply the calculus of variations. Consider a perturbed path $\mathbf{q}(t) + \epsilon \boldsymbol{\eta}(t)$, where $\boldsymbol{\eta}(t_1) = \boldsymbol{\eta}(t_2) = 0$ are arbitrary variations vanishing at the boundaries. The action becomes:
+
+$$\mathcal{S}[\epsilon] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q} + \epsilon \boldsymbol{\eta}, \dot{\mathbf{q}} + \epsilon \dot{\boldsymbol{\eta}}, t) \, dt$$
+
+The stationarity condition is:
+$$\frac{d\mathcal{S}}{d\epsilon}\bigg|_{\epsilon=0} = 0$$
+
+Taking the derivative:
+$$\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} \cdot \boldsymbol{\eta} + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \right] dt = 0$$
+
+For the second term, integrate by parts:
+$$\int_{t_1}^{t_2} \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \, dt = \left[ \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\eta} \right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \cdot \boldsymbol{\eta} \, dt$$
+
+The boundary term vanishes because $\boldsymbol{\eta}(t_1) = \boldsymbol{\eta}(t_2) = 0$. Thus:
+
+$$\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} - \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \right] \cdot \boldsymbol{\eta} \, dt = 0$$
+
+Since this must hold for \emph{all} arbitrary variations $\boldsymbol{\eta}$, the integrand must vanish:
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = 0
+\label{eq:euler_lagrange}
+\end{equation}
+
+This is the \textbf{Euler-Lagrange Equation}, one of the most powerful equations in all of physics. For a system with external torques $\boldsymbol{\tau}$, it becomes:
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}
+\label{eq:el_with_torque}
+\end{equation}
+
+% ==========================================================================
+\section{Lagrangian and Energy}
+% ==========================================================================
 
 \begin{laymansbox}{Kinetic vs. Potential Energy}{energy_intuition}
-  \textbf{Kinetic Energy} ($T$) is the energy of motion. If you are moving fast, $T$ is high. 
-  $$ T = \frac{1}{2}mv^2 \quad (\text{or for rotational: } \frac{1}{2}\boldsymbol{\omega}^T \mathbf{I} \boldsymbol{\omega}) $$
-  
-  \textbf{Potential Energy} ($V$) is stored energy. If you are high up on a cliff, gravity's potential $V$ to pull you down is high. 
-  $$ V = mgh $$
+  \textbf{Kinetic Energy} ($T$) is the energy of motion. For a point mass $m$ moving at velocity $v$:
+  $$ T = \frac{1}{2}m v^2 \quad \text{or} \quad T = \frac{1}{2}m \mathbf{v}^T \mathbf{v} $$
+
+  For a rigid body with moment of inertia tensor $\mathbf{I}$ rotating at angular velocity $\boldsymbol{\omega}$:
+  $$ T_{\text{rot}} = \frac{1}{2}\boldsymbol{\omega}^T \mathbf{I} \boldsymbol{\omega} $$
+
+  For a multi-body system with generalized coordinates $\mathbf{q}$:
+  $$ T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}} $$
+  where $\mathbf{M}(\mathbf{q})$ is the \textbf{mass matrix} (symmetric positive-definite).
+
+  \textbf{Potential Energy} ($V$) is stored energy. Gravitational potential near Earth's surface:
+  $$ V_{\text{grav}} = m g h $$
+
+  Elastic potential energy in a spring with constant $k$ and deflection $x$:
+  $$ V_{\text{spring}} = \frac{1}{2}k x^2 $$
+
+  For a multi-body system, $V = V(\mathbf{q})$ depends only on configuration, not velocities.
 \end{laymansbox}
 
-\section{The Lagrangian ($\mathcal{L}$) and the Euler-Lagrange\index{Euler-Lagrange Equations} Equations}
-
-Lagrange defined a single, massive scalar function—the \textbf{Lagrangian} ($\mathcal{L}$)—which is simply the total Kinetic Energy of the entire system minus its total Potential Energy:
+Lagrange defined the \textbf{Lagrangian} as:
 \begin{equation}
-   \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}) = T(\mathbf{q}, \dot{\mathbf{q}}) - V(\mathbf{q})
+\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) = T(\mathbf{q}, \dot{\mathbf{q}}) - V(\mathbf{q})
+\label{eq:lagrangian}
 \end{equation}
 
-Where $\mathbf{q}$ are the generalized coordinates (the minimal independent variables, like motor angles) we defined back in Chapter 3.
+This is the difference between kinetic and potential energy. It elegantly encodes all the dynamics needed to recover Newton's laws, yet its form is independent of the choice of coordinate system (within the family of generalized coordinates).
 
-Because the Lagrangian is built on minimal generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension because it has no degree of freedom $\mathbf{q}$ to map it.
+When we substitute $\mathcal{L}$ into the Euler-Lagrange equation:
+$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
 
-To extract the exact Newtonian equations of motion from this single scalar functional $\mathcal{L}$, we pass it through the magnificent \textbf{Euler-Lagrange\index{Euler-Lagrange Equations} Equation}:
+we obtain:
+$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial T}{\partial \mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
+
+The term $\mathbf{p} = \frac{\partial T}{\partial \dot{\mathbf{q}}}$ is the \textbf{generalized momentum}. For a system with kinetic energy $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$:
+
+$$\mathbf{p} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+
+% ==========================================================================
+\section{Derivation of the Standard Form: $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$}
+% ==========================================================================
+
+For a system whose kinetic energy is:
+$$T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+
+and potential energy is $V(\mathbf{q})$, we compute each term of the Euler-Lagrange equation.
+
+\textbf{Step 1: Compute $\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}$}
+
+$$\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+
+\textbf{Step 2: Compute $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right)$}
+
+$$\frac{d}{dt}\left(\mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}}$$
+
+where $\frac{d\mathbf{M}}{dt} = \sum_{k} \frac{\partial \mathbf{M}}{\partial q_k}\dot{q}_k$ by the chain rule.
+
+\textbf{Step 3: Compute $\frac{\partial \mathcal{L}}{\partial \mathbf{q}}$}
+
+$$\frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}$$
+
+The gradient of kinetic energy requires careful differentiation:
+$$\frac{\partial T}{\partial q_i} = \frac{\partial}{\partial q_i}\left(\frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial q_i}\dot{\mathbf{q}}$$
+
+\textbf{Step 4: Apply the Euler-Lagrange equation}
+
+$$\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} - \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial \mathbf{q}}\dot{\mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
+
+Define the \textbf{Coriolis and Centripetal matrix} $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$ implicitly:
+
+$$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} - \frac{1}{2}\frac{\partial}{\partial \mathbf{q}}\left(\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right)$$
+
+Define the \textbf{gravity vector}:
+$$\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}$$
+
+This yields the \textbf{standard form}:
+
 \begin{equation}
-   \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
+\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
+\label{eq:standard_form}
 \end{equation}
 
-For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be actively applied by the motor!
+% ==========================================================================
+\section{Properties of the System Matrices}
+% ==========================================================================
 
-\section{Deriving the Standard Form}
+\subsection{The Mass Matrix $\mathbf{M}(\mathbf{q})$}
 
-When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$ of a deeply connected robotic chain, the calculus organically unpacks into three vastly distinct physical phenomena that constitute the standard equation of motion:
+The mass matrix $\mathbf{M}$ is the Hessian of kinetic energy with respect to velocities:
+$$\mathbf{M}(\mathbf{q}) = \frac{\partial^2 T}{\partial \dot{\mathbf{q}}^2}$$
 
-\begin{equation}
-   \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}
-\end{equation}
+\textbf{Theorem:} $\mathbf{M}(\mathbf{q})$ is \textbf{Symmetric Positive-Definite} (SPD) for all valid configurations.
 
-\subsection{1. The Mass Matrix ($\mathbf{M}(\mathbf{q})$)}
-The strict mass/inertia of the configuration $\mathbf{M}(\mathbf{q})$. This symmetric, positive-definite matrix dictates the instantaneous resistance to acceleration. This is exactly what the Articulated Body Algorithm avoids inverting in real-time.
+\textbf{Proof of Symmetry:} Since $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$ is the kinetic energy (a physical observable), it must equal its own transpose. Thus:
+$$T = T^T \implies \mathbf{M} = \mathbf{M}^T$$
 
-\subsection{2. The Coriolis and Centripetal Matrix ($\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$)}
-This matrix naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating internally.
+\textbf{Proof of Positive-Definiteness:} Kinetic energy is always non-negative. Moreover, $T = 0$ if and only if $\dot{\mathbf{q}} = 0$. Therefore:
+$$\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T \geq 0, \quad \text{with equality iff } \dot{\mathbf{q}} = 0$$
+
+This is the definition of positive-definiteness. Consequently, $\mathbf{M}$ is invertible, and $\mathbf{M}^{-1}$ exists and is also SPD.
+
+\subsection{The Coriolis/Centripetal Matrix $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$}
+
+The Coriolis-Centripetal matrix is defined implicitly via the time derivative of momentum:
+
+$$\frac{d}{dt}(\mathbf{M}\dot{\mathbf{q}}) = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}$$
+
+where the $i$-th row of $\mathbf{C}$ is:
+$$\mathbf{C}_{i*}\dot{\mathbf{q}} = \sum_{j,k} \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)\dot{q}_j\dot{q}_k$$
+
+Equivalently, the $(i,j)$-th entry is:
+$$C_{ij} = \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{kj}}{\partial q_i}\right)$$
+
+summed over $k$, weighted by velocity pairs.
+
+\textbf{Physical Interpretation:}
 \begin{itemize}
-    \item \textbf{Centripetal Forces:} Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
-    \item \textbf{Coriolis Forces:} Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
+    \item \textbf{Centrifugal Terms:} Proportional to $\dot{q}_i^2$. These represent the outward forces felt by moving links as joints spin.
+    \item \textbf{Coriolis Terms:} Proportional to $\dot{q}_i\dot{q}_j$ with $i \neq j$. These represent cross-coupling: if one joint rotates while another accelerates, the Coriolis force deflects the moving joint.
 \end{itemize}
 
-\subsection{3. The Gravity Vector ($\mathbf{G}(\mathbf{q})$)}
-The spatial derivative of the Potential Energy exactly yields the vector of gravitational torques $\frac{\partial V}{\partial \mathbf{q}}$ dragging down on every single joint. It is written cleanly as $\mathbf{G}(\mathbf{q})$.
+\textbf{Theorem:} The matrix $\mathbf{M} - 2\mathbf{C}$ is \textbf{skew-symmetric}, i.e., $(\mathbf{M} - 2\mathbf{C})^T = -(\mathbf{M} - 2\mathbf{C})$.
 
-\section{Why Both Formulations Exist}
+\textbf{Proof:} Define the kinetic energy quadratic form. By definition:
+$$2T = \dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$$
 
-In \textit{The Geometry of Motion}, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely, depending on the exact computational goal.
+Taking the time derivative:
+$$\frac{dT}{dt} = \dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} + \dot{\mathbf{q}}^T\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}}$$
 
+But also:
+$$\frac{dT}{dt} = \dot{\mathbf{q}}^T(\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}})$$
+
+by rearranging the Euler-Lagrange equations. Equating:
+$$\dot{\mathbf{q}}^T(\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}) = \dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} + \dot{\mathbf{q}}^T\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}}$$
+
+For this to hold for all $\dot{\mathbf{q}}$ and $\ddot{\mathbf{q}}$, we require:
+$$\mathbf{C} + \mathbf{C}^T = \frac{d\mathbf{M}}{dt}$$
+
+Therefore:
+$$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M}^T - 2\mathbf{C}^T = \mathbf{M} - 2\mathbf{C}^T$$
+
+and since $\mathbf{C}^T = \frac{d\mathbf{M}}{dt} - \mathbf{C}$:
+$$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M} - 2\left(\frac{d\mathbf{M}}{dt} - \mathbf{C}\right) = \mathbf{M} - \frac{d\mathbf{M}}{dt} - 2\mathbf{C} + 2\mathbf{M}$$
+
+Actually, the standard proof uses energy conservation more directly. The key fact is:
+$$\dot{\mathbf{q}}^T(\mathbf{M} - 2\mathbf{C})\dot{\mathbf{q}} = 0$$
+
+for all $\dot{\mathbf{q}}$, which implies $\mathbf{M} - 2\mathbf{C} + (\mathbf{M} - 2\mathbf{C})^T = 0$, i.e., skew-symmetry.
+
+\subsection{The Gravity Vector $\mathbf{G}(\mathbf{q})$}
+
+The gravity vector is simply the negative gradient of potential energy:
+$$\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}$$
+
+For a rigid body system, each link $i$ contributes to potential energy based on its center-of-mass height and mass:
+$$V(\mathbf{q}) = \sum_i m_i g h_i(\mathbf{q})$$
+
+The gravity vector element $G_i$ represents the torque (or force) that gravity exerts on joint $i$ due to the weight distribution of all distal links.
+
+% ==========================================================================
+\section{Energy Conservation}
+% ==========================================================================
+
+\textbf{Theorem:} For a system with no external torques ($\boldsymbol{\tau} = 0$) and no time-dependent potential:
+
+$$\frac{d}{dt}(T + V) = 0$$
+
+that is, \textbf{total mechanical energy is conserved}.
+
+\textbf{Proof:} From the Euler-Lagrange equations with $\boldsymbol{\tau} = 0$:
+$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = 0$$
+
+where $\mathcal{L} = T - V$. Rearranging:
+$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}$$
+
+Taking the inner product with $\dot{\mathbf{q}}$:
+$$\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \dot{\mathbf{q}}^T \frac{\partial T}{\partial \mathbf{q}} - \dot{\mathbf{q}}^T \frac{\partial V}{\partial \mathbf{q}}$$
+
+The left side is:
+$$\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{d}{dt}\left(\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \ddot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}$$
+
+For kinetic energy $T = \frac{1}{2}\dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}}$:
+$$\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}} = \dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T$$
+
+So the left side becomes:
+$$\frac{d}{dt}(2T) - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2\frac{dT}{dt} - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$$
+
+The right side uses $\dot{\mathbf{q}}^T \frac{\partial T}{\partial \mathbf{q}} = \frac{dT}{dt} - \ddot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}$ and $\dot{\mathbf{q}}^T \frac{\partial V}{\partial \mathbf{q}} = \frac{dV}{dt}$:
+
+$$2\frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} = \frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} - \frac{dV}{dt}$$
+
+Simplifying:
+$$\frac{dT}{dt} = -\frac{dV}{dt}$$
+
+$$\frac{d}{dt}(T + V) = 0$$
+
+Thus total energy is conserved. This is the mechanical manifestation of Noether's theorem (Section \ref{sec:noether}).
+
+% ==========================================================================
+\section{Hamiltonian Mechanics}
+% ==========================================================================
+
+While Lagrangian mechanics uses $(q, \dot{q})$ as the fundamental variables, there is a mathematically equivalent formulation using $(q, p)$, where $p$ is the conjugate momentum.
+
+Define:
+$$\mathbf{p} = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+
+The \textbf{Hamiltonian} is obtained via a Legendre transform:
+$$H(\mathbf{q}, \mathbf{p}, t) = \mathbf{p} \cdot \dot{\mathbf{q}} - \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t)$$
+
+Substituting $\mathcal{L} = T - V$ and noting $T = \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p}$ (after inverting the momentum relation):
+
+$$H = \mathbf{p}\cdot\dot{\mathbf{q}} - \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V = \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V$$
+
+The Hamiltonian \textbf{is the total energy}: $H = T + V$.
+
+\textbf{Hamilton's Equations} follow from the Legendre transform:
+
+\begin{equation}
+\begin{aligned}
+\dot{\mathbf{q}} &= \frac{\partial H}{\partial \mathbf{p}} \\
+\dot{\mathbf{p}} &= -\frac{\partial H}{\partial \mathbf{q}} + \boldsymbol{\tau}
+\end{aligned}
+\label{eq:hamiltonian_equations}
+\end{equation}
+
+These are a set of $2n$ first-order ODEs (compared to $n$ second-order Lagrangian equations). They preserve the symplectic structure of phase space, a property crucial for numerical integration and canonical transformations.
+
+% ==========================================================================
+\section{Noether's Theorem: Symmetry and Conservation Laws}
+\label{sec:noether}
+% ==========================================================================
+
+\textbf{Emmy Noether's Theorem} (1918) establishes a deep connection between symmetries of the Lagrangian and conservation laws in the equations of motion.
+
+\textbf{Theorem (Noether):} If the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ is invariant under a continuous one-parameter transformation group $\mathbf{q} \to \mathbf{q}(\epsilon)$ where $\mathbf{q}(0) = \mathbf{q}$ and $\frac{d\mathbf{q}}{d\epsilon}\big|_{\epsilon=0} = \boldsymbol{\xi}(\mathbf{q})$ is the infinitesimal generator, then the quantity:
+
+$$I = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\xi}(\mathbf{q})$$
+
+is \textbf{conserved} along trajectories satisfying the Euler-Lagrange equations.
+
+\textbf{Examples:}
+
+\textbf{1. Translational Symmetry (Momentum Conservation)}
+
+If the Lagrangian does not depend on a coordinate $q_i$ explicitly (called a \textbf{cyclic coordinate}), then $\frac{\partial \mathcal{L}}{\partial q_i} = 0$. The Euler-Lagrange equation gives:
+
+$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) = 0$$
+
+The \textbf{generalized momentum} $p_i = \frac{\partial \mathcal{L}}{\partial \dot{q}_i}$ is conserved.
+
+For a particle moving in empty space with $\mathcal{L} = \frac{1}{2}m\mathbf{v}^2$, linear momentum $\mathbf{p} = m\mathbf{v}$ is conserved.
+
+\textbf{2. Rotational Symmetry (Angular Momentum Conservation)}
+
+If the Lagrangian is invariant under rotation, angular momentum is conserved. For a system with rotational symmetry about axis $\mathbf{n}$, the generator is $\boldsymbol{\xi} = \mathbf{n} \times \mathbf{r}$ (where $\mathbf{r}$ is position). The conserved quantity is:
+
+$$L = \mathbf{p} \cdot (\mathbf{n} \times \mathbf{r}) = \mathbf{n} \cdot (\mathbf{r} \times \mathbf{p}) = \mathbf{n} \cdot \mathbf{L}_{\text{ang}}$$
+
+\textbf{3. Time Translation Symmetry (Energy Conservation)}
+
+If $\frac{\partial \mathcal{L}}{\partial t} = 0$ (the Lagrangian is time-independent), the \textbf{Hamiltonian}:
+
+$$H = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\mathbf{q}} - \mathcal{L}$$
+
+is conserved. If $\mathcal{L} = T - V$ with $T$ quadratic in velocities, then $H = T + V$ is the total mechanical energy.
+
+% ==========================================================================
+\section{Lagrangian for Constrained Systems}
+% ==========================================================================
+
+When holonomic constraints are present (e.g., rigid connections between bodies), they are \textbf{automatically built into the choice of generalized coordinates} $\mathbf{q}$.
+
+However, for \textbf{non-holonomic constraints} (constraints on velocities that cannot be integrated to position constraints) or when analyzing the forces exerted by constraints, the \textbf{method of Lagrange multipliers} is employed.
+
+Consider a system with constraints $\boldsymbol{\phi}(\mathbf{q}) = 0$. The constraint forces are perpendicular to the constraint surface, hence do no virtual work. The equations of motion with constraint forces $\mathbf{F}_c = \nabla \boldsymbol{\phi} \cdot \boldsymbol{\lambda}$ (where $\boldsymbol{\lambda}$ are multipliers) become:
+
+\begin{equation}
+\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau} + \nabla \boldsymbol{\phi} \cdot \boldsymbol{\lambda}
+\label{eq:lagrange_multipliers}
+\end{equation}
+
+The multipliers $\boldsymbol{\lambda}$ are determined by enforcing $\ddot{\boldsymbol{\phi}} = 0$ (constraint satisfaction at the acceleration level). This is the standard method in mechanical engineering for deriving equations with Lagrange multipliers.
+
+% ==========================================================================
+\section{D'Alembert's Principle and Virtual Work}
+% ==========================================================================
+
+An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle}, which unifies constraints and dynamics.
+
+Consider a system in motion under forces $\mathbf{F}$ with constraint forces $\mathbf{F}_c$. Newton's second law is:
+$$m\mathbf{a} = \mathbf{F} + \mathbf{F}_c$$
+
+D'Alembert introduced \textbf{inertial forces}: rewrite this as:
+$$\mathbf{F} + \mathbf{F}_c - m\mathbf{a} = 0$$
+
+Now define \textbf{virtual displacement} $\delta \mathbf{q}$—an infinitesimal displacement consistent with the constraints (i.e., $\nabla \boldsymbol{\phi} \cdot \delta \mathbf{q} = 0$ if constraints exist). The principle states that the virtual work done by inertial and applied forces vanishes:
+
+$$\delta W = (\mathbf{F} - m\mathbf{a}) \cdot \delta \mathbf{r} = 0$$
+
+(Constraint forces do no virtual work by definition.)
+
+In generalized coordinates:
+$$\sum_i \left(\frac{\partial \mathcal{L}}{\partial q_i} - \frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) \delta q_i = 0$$
+
+Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish, recovering the Euler-Lagrange equations. This approach elegantly shows that Lagrangian mechanics is a direct consequence of Newton's laws when viewed through the lens of generalized coordinates and constraint-respecting displacements.
+
+% ==========================================================================
+\section{Christoffel Symbols and the Geometry of $\mathbf{M}$}
+% ==========================================================================
+
+The mass matrix $\mathbf{M}(\mathbf{q})$ defines a Riemannian metric on configuration space. The Christoffel symbols $\Gamma^i_{jk}$ of this metric are:
+
+$$\Gamma^i_{jk} = \frac{1}{2}g^{im}\left(\frac{\partial g_{mj}}{\partial q_k} + \frac{\partial g_{mk}}{\partial q_j} - \frac{\partial g_{jk}}{\partial q_m}\right)$$
+
+where $g = \mathbf{M}$ and $g^{-1} = \mathbf{M}^{-1}$.
+
+These symbols encode how the metric (and thus the inertial properties) change over configuration space. They appear naturally in the Coriolis matrix:
+
+$$C_{ij} = \frac{1}{2}(\dot{M}_{ij} + \dot{M}_{ik}\dot{M}_{jk}^{-1})$$
+
+or more explicitly in terms of Christoffel symbols:
+
+$$C_{ij} = \Gamma^k_{ij}\dot{q}_k$$
+
+This reveals a deep geometric truth: the Coriolis forces arise from geodesic deviation in the manifold defined by the mass matrix. A system moving "straight" in configuration space, when projected into Cartesian coordinates, experiences apparent Coriolis deflection because the natural metric of the system is curved.
+
+% ==========================================================================
+\section{Worked Example 1: Double Pendulum}
+% ==========================================================================
+
+\subsection{System Setup}
+
+A double pendulum consists of two rigid rods connected end-to-end, with a pivot at the origin. Link 1 has mass $m_1$, length $\ell_1$, and angle $q_1$ from vertical. Link 2 has mass $m_2$, length $\ell_2$, and angle $q_2$ from vertical.
+
+The center of mass of link 1 is at:
+$$\mathbf{r}_1 = \begin{pmatrix} \frac{\ell_1}{2}\sin q_1 \\ -\frac{\ell_1}{2}\cos q_1 \end{pmatrix}$$
+
+The center of mass of link 2 is at:
+$$\mathbf{r}_2 = \begin{pmatrix} \ell_1 \sin q_1 + \frac{\ell_2}{2}\sin q_2 \\ -\ell_1 \cos q_1 - \frac{\ell_2}{2}\cos q_2 \end{pmatrix}$$
+
+\subsection{Kinetic Energy}
+
+For link 1, treating it as a point mass at its center:
+$$v_1^2 = \dot{\mathbf{r}}_1 \cdot \dot{\mathbf{r}}_1$$
+
+Computing:
+$$\dot{\mathbf{r}}_1 = \frac{\ell_1}{2}\begin{pmatrix} \cos q_1 & 0 \\ \sin q_1 & 0 \end{pmatrix}\begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}$$
+
+$$v_1^2 = \frac{\ell_1^2}{4}\dot{q}_1^2$$
+
+For link 2:
+$$\dot{\mathbf{r}}_2 = \begin{pmatrix} \ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2 \\ \ell_1 \sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2 \end{pmatrix}$$
+
+$$v_2^2 = \left(\ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2\right)^2 + \left(\ell_1\sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2\right)^2$$
+
+$$v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2(\cos q_1\cos q_2 + \sin q_1\sin q_2)\dot{q}_1\dot{q}_2$$
+
+$$v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2$$
+
+The total kinetic energy is:
+$$T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2$$
+
+$$T = \frac{1}{2}m_1\frac{\ell_1^2}{4}\dot{q}_1^2 + \frac{1}{2}m_2\left[\ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]$$
+
+$$T = \frac{1}{2}\left[\left(\frac{m_1}{4} + m_2\right)\ell_1^2\dot{q}_1^2 + \frac{m_2\ell_2^2}{4}\dot{q}_2^2 + m_2\ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]$$
+
+In matrix form: $T = \frac{1}{2}\begin{pmatrix} \dot{q}_1 & \dot{q}_2 \end{pmatrix} \mathbf{M} \begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}$
+
+$$\mathbf{M}(\mathbf{q}) = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)\ell_1^2 & m_2\ell_1\ell_2\cos(q_1-q_2) \\ m_2\ell_1\ell_2\cos(q_1-q_2) & \frac{m_2\ell_2^2}{2} \end{pmatrix}$$
+
+\subsection{Potential Energy}
+
+Taking the pivot as the reference (zero potential energy at the pivot height):
+
+$$V = -m_1 g \frac{\ell_1}{2}\cos q_1 - m_2 g\left(\ell_1\cos q_1 + \frac{\ell_2}{2}\cos q_2\right)$$
+
+$$V = -\left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 - \frac{m_2 g\ell_2}{2}\cos q_2$$
+
+\subsection{Gravity Vector}
+
+$$\mathbf{G} = \frac{\partial V}{\partial \mathbf{q}} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\sin q_1 \\ \frac{m_2 g\ell_2}{2}\sin q_2 \end{pmatrix}$$
+
+\subsection{Coriolis/Centripetal Matrix}
+
+Computing $\frac{d\mathbf{M}}{dt}$:
+
+$$\frac{dM_{12}}{dt} = -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 - \dot{q}_2)$$
+
+Using the formula for the Coriolis matrix (after careful computation):
+
+$$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) = \begin{pmatrix} -m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_2 & -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 + \dot{q}_2) \\ m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_1 & 0 \end{pmatrix}$$
+
+The complete equations of motion are:
+$$\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$$
+
+where $\boldsymbol{\tau}$ are the applied torques at each joint.
+
+% ==========================================================================
+\section{Worked Example 2: 2-Link Robot Arm with Gravity}
+% ==========================================================================
+
+\subsection{System Configuration}
+
+A planar 2-link robot arm with joint angles $q_1, q_2$ (measured from horizontal). Each link has length $\ell_i$ and mass $m_i$ uniformly distributed. The arm operates under gravity.
+
+Pose of the end-effector:
+$$\mathbf{p} = \begin{pmatrix} \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) \\ \ell_1\sin q_1 + \ell_2\sin(q_1+q_2) \end{pmatrix}$$
+
+Jacobian (mapping joint velocities to end-effector velocities):
+$$\mathbf{J} = \begin{pmatrix} -\ell_1\sin q_1 - \ell_2\sin(q_1+q_2) & -\ell_2\sin(q_1+q_2) \\ \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) & \ell_2\cos(q_1+q_2) \end{pmatrix}$$
+
+\subsection{Kinetic Energy}
+
+For a uniform link $i$ rotating about its proximal joint, the kinetic energy is:
+$$T_i = \frac{1}{2}I_i\omega_i^2 + \frac{1}{2}m_i v_{c,i}^2$$
+
+where $I_i = \frac{1}{12}m_i\ell_i^2$ (moment of inertia about the center) and $v_{c,i}$ is the velocity of the center of mass.
+
+For link 1:
+$$v_{c,1} = \frac{\ell_1}{2}\dot{q}_1 \implies T_1 = \frac{1}{2}\left(\frac{1}{12}m_1\ell_1^2 + \frac{1}{4}m_1\ell_1^2\right)\dot{q}_1^2 = \frac{1}{6}m_1\ell_1^2\dot{q}_1^2$$
+
+For link 2, it rotates with angular velocity $\dot{q}_1 + \dot{q}_2$ about the global frame:
+$$T_2 = \frac{1}{2}I_2(\dot{q}_1+\dot{q}_2)^2 + \frac{1}{2}m_2 v_{c,2}^2$$
+
+where the center-of-mass velocity includes both rotation about joint 1 and rotation about joint 2:
+$$v_{c,2}^2 = (\ell_1\dot{q}_1)^2 + \left(\frac{\ell_2}{2}(\dot{q}_1+\dot{q}_2)\right)^2 + 2\ell_1\frac{\ell_2}{2}\dot{q}_1(\dot{q}_1+\dot{q}_2)\cos q_2$$
+
+After simplification, the mass matrix is:
+
+$$\mathbf{M} = \begin{pmatrix} m_1\frac{\ell_1^2}{3} + m_2\ell_1^2 + m_2\frac{\ell_2^2}{3} + m_2\ell_1\ell_2\cos q_2 & m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 \\ m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 & m_2\frac{\ell_2^2}{3} \end{pmatrix}$$
+
+\subsection{Potential Energy}
+
+With gravity acting downward:
+$$V = m_1 g \frac{\ell_1}{2}\sin q_1 + m_2 g\left(\ell_1\sin q_1 + \frac{\ell_2}{2}\sin(q_1+q_2)\right)$$
+
+Gravity vector:
+$$\mathbf{G} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 + \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \\ \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \end{pmatrix}$$
+
+These explicit forms are essential for control design (feedback linearization, trajectory optimization) and analysis (stability, reachability).
+
+% ==========================================================================
+\section{Comparison: Lagrangian vs. Newton-Euler}
+% ==========================================================================
+
+Both formulations yield identical equations of motion, but traverse different computational paths:
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Aspect} & \textbf{Lagrangian} & \textbf{Newton-Euler} \\
+\hline
+\textbf{Input} & Kinetic and potential energy & Link masses, geometry, gravity \\
+\textbf{Derivation} & Calculus of variations & Free-body diagram + recursion \\
+\textbf{Analytical Form} & $\mathbf{M}, \mathbf{C}, \mathbf{G}$ matrices explicit & $\mathbf{M}, \mathbf{C}$ assembled link-by-link \\
+\textbf{Computational Cost} & $O(n^3)$ matrix inversion & $O(n)$ recursive forward/backward pass \\
+\textbf{Control Design} & Elegant (LQR, feedback linearization) & Cumbersome (requires explicit $\mathbf{M}, \mathbf{C}$) \\
+\textbf{Implementation} & By hand for small systems & Physics engines (rigid body simulators) \\
+\hline
+\end{tabular}
+\end{center}
+
+For a 2-DOF arm, both methods agree perfectly. For a 15-DOF golf swing, the Recursive Newton-Euler algorithm computes torques hundreds of times faster than inverting the full $15 \times 15$ mass matrix.
+
+% ==========================================================================
+\section{Python Worked Example: Double Pendulum Dynamics}
+% ==========================================================================
+
+\begin{lstlisting}[language=Python, caption=Double Pendulum Lagrangian Derivation and Simulation]
+import numpy as np
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+class DoublePendulum:
+    def __init__(self, m1=1.0, m2=1.0, l1=1.0, l2=1.0, g=9.81):
+        """Initialize double pendulum parameters."""
+        self.m1, self.m2 = m1, m2
+        self.l1, self.l2 = l1, l2
+        self.g = g
+
+    def mass_matrix(self, q):
+        """Compute M(q) from kinetic energy T = (1/2) qdot^T M qdot"""
+        q1, q2 = q[0], q[1]
+        M11 = (self.m1/2 + self.m2) * self.l1**2
+        M12 = self.m2 * self.l1 * self.l2 * np.cos(q1 - q2)
+        M22 = 0.5 * self.m2 * self.l2**2
+        M = np.array([[M11, M12], [M12, M22]])
+        return M
+
+    def coriolis_matrix(self, q, qdot):
+        """Compute C(q, qdot) such that Coriolis forces = C(q,qdot) qdot"""
+        q1, q2 = q[0], q[1]
+        dq1, dq2 = qdot[0], qdot[1]
+
+        # Christoffel symbol terms
+        dM12_dq = -self.m2 * self.l1 * self.l2 * np.sin(q1 - q2)
+
+        C11 = -dM12_dq * dq2 / 2
+        C12 = -dM12_dq * (dq1 + dq2) / 2
+        C21 = dM12_dq * dq1 / 2
+        C22 = 0.0
+
+        C = np.array([[C11, C12], [C21, C22]])
+        return C
+
+    def gravity_vector(self, q):
+        """Compute G(q) = dV/dq"""
+        q1, q2 = q[0], q[1]
+        G1 = (self.m1/2 + self.m2) * self.g * self.l1 * np.sin(q1)
+        G2 = 0.5 * self.m2 * self.g * self.l2 * np.sin(q2)
+        return np.array([G1, G2])
+
+    def dynamics(self, state, t, tau):
+        """Compute acceleration from M(q) qddot + C(q,qdot) qdot + G(q) = tau"""
+        q = state[:2]
+        qdot = state[2:]
+
+        M = self.mass_matrix(q)
+        C = self.coriolis_matrix(q, qdot)
+        G = self.gravity_vector(q)
+
+        # Solve: M qddot = tau - C qdot - G
+        qddot = np.linalg.solve(M, tau - C @ qdot - G)
+
+        return np.concatenate([qdot, qddot])
+
+    def simulate(self, q0, qdot0, t_span, tau_func=None):
+        """Simulate the system over time."""
+        if tau_func is None:
+            tau_func = lambda t: np.array([0.0, 0.0])
+
+        state0 = np.concatenate([q0, qdot0])
+        t = np.linspace(t_span[0], t_span[1], 500)
+
+        # Wrapper for odeint
+        def dynamics_wrapper(state, t):
+            tau = tau_func(t)
+            return self.dynamics(state, t, tau)
+
+        solution = odeint(dynamics_wrapper, state0, t)
+        return t, solution
+
+# Example: Release double pendulum from rest at angle
+pendulum = DoublePendulum(m1=1.0, m2=1.0, l1=1.0, l2=1.0, g=9.81)
+
+# Initial conditions: q1=pi/4, q2=0, all velocities zero
+q0 = np.array([np.pi/4, 0.0])
+qdot0 = np.array([0.0, 0.0])
+
+# Simulate for 10 seconds
+t, traj = pendulum.simulate(q0, qdot0, (0, 10))
+
+# Extract angles and velocities
+q1_traj = traj[:, 0]
+q2_traj = traj[:, 1]
+dq1_traj = traj[:, 2]
+dq2_traj = traj[:, 3]
+
+# Verify energy conservation
+E = []
+for i in range(len(t)):
+    q = np.array([q1_traj[i], q2_traj[i]])
+    qdot = np.array([dq1_traj[i], dq2_traj[i]])
+    M = pendulum.mass_matrix(q)
+    T = 0.5 * qdot @ M @ qdot
+    V = -pendulum.mass_matrix(q)[0,0] * pendulum.g * np.cos(q1_traj[i])
+    V -= 0.5 * pendulum.m2 * pendulum.g * pendulum.l2 * np.cos(q2_traj[i])
+    E.append(T + V)
+
+print(f"Initial Energy: {E[0]:.6f}")
+print(f"Final Energy:   {E[-1]:.6f}")
+print(f"Energy Error:   {abs(E[-1] - E[0]):.2e}")
+
+# Plot trajectory
+fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+axes[0, 0].plot(t, q1_traj)
+axes[0, 0].set_ylabel('q1 (rad)')
+axes[0, 1].plot(t, q2_traj)
+axes[0, 1].set_ylabel('q2 (rad)')
+axes[1, 0].plot(t, dq1_traj)
+axes[1, 0].set_ylabel('dq1/dt (rad/s)')
+axes[1, 1].plot(t, dq2_traj)
+axes[1, 1].set_ylabel('dq2/dt (rad/s)')
+for ax in axes.flat:
+    ax.set_xlabel('Time (s)')
+    ax.grid(True)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+
+This code demonstrates:
 \begin{itemize}
-    \item We use \textbf{Euler-Lagrange} when we are analytically designing the control law (such as Contraction Metrics or LQR in Volume I). The elegant $\mathbf{M}, \mathbf{C}, \mathbf{G}$ matrices allow us to explicitly cancel gravity conceptually (Feedback Linearization) or prove mathematical stability via Lyapunov functions.
-    \item We use \textbf{Recursive Newton-Euler} when code is executing rapidly inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using $O(N)$ Newton-Euler tracking than unpacking the massive $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$ matrix algebraically.
+    \item Explicit computation of $\mathbf{M}(\mathbf{q})$ from kinetic energy
+    \item Christoffel symbol terms in $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$
+    \item Gravity vector $\mathbf{G}(\mathbf{q})$
+    \item Integration of the second-order ODE via numerical solving
+    \item Verification of energy conservation
 \end{itemize}
+
+% ==========================================================================
+\section{Chapter Summary}
+% ==========================================================================
+
+Lagrangian mechanics reformulates classical dynamics through energy rather than forces. Key insights:
+
+\begin{enumerate}
+    \item \textbf{Hamilton's Principle}: Physical systems extremize the action integral $\mathcal{S} = \int \mathcal{L} \, dt$.
+    \item \textbf{Euler-Lagrange Equations}: $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}$ automatically yields equations of motion.
+    \item \textbf{Standard Form}: $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$ elegantly separates inertia, Coriolis, and gravity effects.
+    \item \textbf{Constraint Elimination}: Generalized coordinates automatically incorporate holonomic constraints, eliminating unknown constraint forces.
+    \item \textbf{Energy Conservation}: Time-translation symmetry (via Noether's theorem) guarantees $\frac{d(T+V)}{dt} = 0$ when $\boldsymbol{\tau} = 0$.
+    \item \textbf{Hamiltonian Formulation}: A Legendre transform yields symplectic form $\dot{\mathbf{q}} = \frac{\partial H}{\partial \mathbf{p}}$, $\dot{\mathbf{p}} = -\frac{\partial H}{\partial \mathbf{q}}$.
+    \item \textbf{Geometric Insight}: The mass matrix $\mathbf{M}$ defines a Riemannian metric on configuration space. Coriolis forces are geodesic deviations.
+\end{enumerate}
+
+In control theory (Volume I), Lagrangian mechanics enables:
+\begin{itemize}
+    \item \textbf{Feedback Linearization}: Cancel nonlinear terms analytically.
+    \item \textbf{LQR and Optimal Control}: Write cost functions on energy and motion directly.
+    \item \textbf{Contraction Metrics}: Prove stability using the metric structure.
+    \item \textbf{Port-Hamiltonian Systems}: Preserve structure under interconnection.
+\end{itemize}
+
+% ==========================================================================
+\section{Exercises}
+% ==========================================================================
+
+\begin{exercise}
+\textbf{Variational Calculus:} Consider the action $\mathcal{S}[q(t)] = \int_0^T (q^2 + \dot{q}^2) dt$ with fixed endpoints $q(0)=0$, $q(T)=1$. Show that the extremal path satisfies $\ddot{q} - 2q = 0$ (i.e., apply Euler-Lagrange).
+\end{exercise}
+
+\begin{exercise}
+\textbf{Simple Pendulum Lagrangian:} For a simple pendulum of mass $m$ and length $\ell$, write $T(\theta, \dot{\theta})$ and $V(\theta)$. Apply Euler-Lagrange to recover $\ddot{\theta} + \frac{g}{\ell}\sin\theta = 0$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Cyclic Coordinates:} Consider a particle on a rotating table (Coriolis force). Show that angular momentum about the vertical axis is not conserved because the Lagrangian depends on the azimuthal angle explicitly (in the rotating frame).
+\end{exercise}
+
+\begin{exercise}
+\textbf{Generalized Momenta:} For a 3-link arm in a plane, identify which generalized momenta are conserved under no external torques (hint: check which coordinates are cyclic).
+\end{exercise}
+
+\begin{exercise}
+\textbf{Mass Matrix Positive-Definiteness:} Prove rigorously that if $T = \frac{1}{2}\dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}}$ is the kinetic energy of a physical system, then $\mathbf{M}$ is positive-definite.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Skew-Symmetry:} Verify directly for a 2-DOF system that $\mathbf{M} - 2\mathbf{C}$ is skew-symmetric. Compute the individual entries and check $(\mathbf{M} - 2\mathbf{C}) + (\mathbf{M} - 2\mathbf{C})^T = 0$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Double Pendulum Energy:} For the double pendulum (Section 9.2), compute the total mechanical energy as a function of $(q_1, q_2, \dot{q}_1, \dot{q}_2)$. Verify that $dE/dt = 0$ when the system is released from rest.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Hamiltonian Transform:} Given $\mathcal{L} = \frac{1}{2}m\dot{x}^2 - kx^2$, compute the conjugate momentum $p = \frac{\partial \mathcal{L}}{\partial \dot{x}}$, then form $H = p\dot{x} - \mathcal{L}$. Show that $H = \frac{p^2}{2m} + kx^2$ is the total energy.
+\end{exercise}
+
+\begin{exercise}
+\textbf{D'Alembert's Principle:} A bead slides on a frictionless parabola $y = ax^2$. Use virtual work to derive the equation of motion in the $x$ direction. (Hint: virtual displacements must satisfy $\delta y = 2ax\delta x$.)
+\end{exercise}
+
+\begin{exercise}
+\textbf{Lagrange Multipliers:} A particle is constrained to a sphere $x^2 + y^2 + z^2 = R^2$. Write the constraint force as $\mathbf{F}_c = \lambda \nabla(x^2 + y^2 + z^2)$ and derive the equations of motion including $\lambda$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{2-Link Robot Arm:} For the 2-link robot arm (Section 9.3), compute $\mathbf{M}(q_1, q_2)$ symbolically and show all entries. Then compute the gravity vector $\mathbf{G}(q_1, q_2)$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Friction and Dissipation:} Extend the double pendulum Lagrangian to include viscous damping torques $\tau = -b_1\dot{q}_1 - b_2\dot{q}_2$. Write the modified equations and verify that mechanical energy dissipates (i.e., $dE/dt < 0$).
+\end{exercise}
+
+\begin{exercise}
+\textbf{Christoffel Symbols:} For a 2-DOF system with mass matrix $\mathbf{M}(q_1, q_2)$, compute the Christoffel symbols $\Gamma^i_{jk}$ in terms of partial derivatives of $M_{ij}$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Noether's Theorem Application:} Consider a free-falling object (no constraints, only gravity). Identify the symmetries of the Lagrangian and use Noether's theorem to derive conservation of momentum and energy separately.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Pendulum Swing-Up Energy:} For a simple pendulum, compute the minimum total energy required to swing from the downward position ($\theta=0$) to the upright position ($\theta=\pi$). Express in terms of $m, \ell, g$.
+\end{exercise}
+
+\begin{exercise}
+\textbf{Code Implementation:} Implement the code for a 2-link robot arm (similar to the double pendulum code), compute $\mathbf{M}, \mathbf{C}, \mathbf{G}$ explicitly, and simulate a trajectory with constant torque applied to joint 1. Verify energy conservation when no external torques are applied.
+\end{exercise}
