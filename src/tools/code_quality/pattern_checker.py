@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 # ─── Configuration ────────────────────────────────────────────
 
 BANNED_PATTERNS = [
-    (re.compile(r"\bDEFERRED\b"), "DEFERRED placeholder found"),
-    (re.compile(r"\bREVIEW\b"), "REVIEW placeholder found"),
+    (re.compile(r"\bTODO\b"), "TODO placeholder found"),
+    (re.compile(r"\bFIXME\b"), "FIXME placeholder found"),
     # (re.compile(r"^\s*\.\.\.\s*$"), "Ellipsis placeholder"), # Allow for abstract methods
     (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"),
     # (re.compile(r"<.*>"), "Angle bracket placeholder"), # Too aggressive for HTML
@@ -65,9 +65,10 @@ _PATTERN_SELF_CHECK_FILES = frozenset(
         # Decomposed modules that define/reference the patterns they check for
         "pattern_checker.py",
         "ast_analyzer.py",
-        # Assessment runner uses "REVIEW" and "PENDING REVIEW" as legitimate
-        # status labels in generated report strings, not as code placeholders
-        "run_assessment.py",
+        # Test files that intentionally contain banned patterns as test fixtures
+        "test_code_quality_extras.py",
+        "test_code_quality_module.py",
+        "test_wrist_universal_joint_visual.py",
     }
 )
 

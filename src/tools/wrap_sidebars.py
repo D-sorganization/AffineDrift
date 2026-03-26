@@ -30,12 +30,90 @@ logger = logging.getLogger(__name__)
 logger = setup_logging(__name__, format_string="%(message)s")
 
 
+def _split_aside_content(
+    content: str,
+    aside_open_tag: str,
+    aside_close: str,
+) -> tuple[list[str], list[str]] | None:
+    """Split content on aside open/close tags.
+
+    Returns:
+        Tuple of (parts, subparts) if splitting succeeds, None if not splittable.
+    """
+    parts = content.split(aside_open_tag)
+    if len(parts) <= 1:
+        return None
+    subparts = parts[1].split(aside_close, 1)
+    if len(subparts) <= 1:
+        return None
+    return parts, subparts
+
+
+def _reassemble_wrapped(
+    parts: list[str],
+    subparts: list[str],
+    aside_open_tag: str,
+    aside_close: str,
+    sticky_div_start: str,
+    sticky_div_end: str,
+) -> str:
+    """Reassemble content with the aside inner content wrapped in a sticky div."""
+    return (
+        parts[0]
+        + aside_open_tag
+        + "\n        "
+        + sticky_div_start
+        + subparts[0]
+        + sticky_div_end
+        + "\n      "
+        + aside_close
+        + subparts[1]
+    )
+
+
+def _wrap_aside(
+    content: str,
+    aside_open_tag: str,
+    sticky_div_start: str,
+    sticky_div_end: str,
+    aside_close: str,
+    *,
+    check_already_wrapped: bool = True,
+) -> str:
+    """Wrap the first occurrence of an aside tag with a sticky div container.
+
+    Args:
+        content: Full HTML/QMD content string to process.
+        aside_open_tag: The opening aside tag to search for.
+        sticky_div_start: Opening sticky div tag string.
+        sticky_div_end: Closing sticky div tag string.
+        aside_close: Closing aside tag string.
+        check_already_wrapped: Skip wrapping if already wrapped. Defaults to True.
+
+    Returns:
+        Updated content string, or original if tag not found or already wrapped.
+    """
+    if aside_open_tag not in content:
+        return content
+    split_result = _split_aside_content(content, aside_open_tag, aside_close)
+    if split_result is None:
+        return content
+    parts, subparts = split_result
+    if check_already_wrapped and parts[1].strip().startswith(sticky_div_start):
+        return content
+    return _reassemble_wrapped(
+        parts, subparts, aside_open_tag, aside_close, sticky_div_start, sticky_div_end
+    )
+
+
 def wrap_file(path: Path) -> None:
     """Wrap sidebar content in a sticky div for the given file.
 
+    Processes left-sidebar, right-sidebar, and resources-sidebar aside tags,
+    wrapping each in a ``sidebar-sticky-content`` div container.
+
     Args:
         path: Path to the .qmd file to process.
-
     """
     content = path.read_text()
     original_content = content
@@ -47,58 +125,32 @@ def wrap_file(path: Path) -> None:
     sticky_div_start = f'{lt}div class="sidebar-sticky-content"{gt}'
     sticky_div_end = f"{lt}/div{gt}"
 
-    # Wrap left-sidebar
-    if '<aside class="left-sidebar">' in content and "sidebar-sticky-content" not in content:
-        parts = content.split('<aside class="left-sidebar">')
-        if len(parts) > 1:
-            # parts[1] starts with content inside aside.
-            # Find the closing tag.
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="left-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
+    # Wrap left-sidebar (only when not already wrapped anywhere in the file)
+    if "sidebar-sticky-content" not in content:
+        content = _wrap_aside(
+            content,
+            '<aside class="left-sidebar">',
+            sticky_div_start,
+            sticky_div_end,
+            aside_close,
+            check_already_wrapped=False,
+        )
 
-    # Re-process for right sidebar on the modified content
-    if '<aside class="right-sidebar">' in content:
-        parts = content.split('<aside class="right-sidebar">')
-        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="right-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
-
-    # Re-process for resources-sidebar
-    if '<aside class="resources-sidebar">' in content:
-        parts = content.split('<aside class="resources-sidebar">')
-        if len(parts) > 1 and not parts[1].strip().startswith(sticky_div_start):
-            subparts = parts[1].split(aside_close, 1)
-            if len(subparts) > 1:
-                content = (
-                    parts[0]
-                    + '<aside class="resources-sidebar">\n        '
-                    + sticky_div_start
-                    + subparts[0]
-                    + sticky_div_end
-                    + "\n      "
-                    + aside_close
-                    + subparts[1]
-                )
+    # Wrap right-sidebar and resources-sidebar on the (possibly modified) content
+    content = _wrap_aside(
+        content,
+        '<aside class="right-sidebar">',
+        sticky_div_start,
+        sticky_div_end,
+        aside_close,
+    )
+    content = _wrap_aside(
+        content,
+        '<aside class="resources-sidebar">',
+        sticky_div_start,
+        sticky_div_end,
+        aside_close,
+    )
 
     if content != original_content:
         path.write_text(content)

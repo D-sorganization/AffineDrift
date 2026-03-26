@@ -31,11 +31,72 @@ logger = logging.getLogger(__name__)
 logger = setup_logging(__name__)
 
 
+def _apply_inline_formatting(text: str) -> str:
+    """Apply bold and italic Markdown inline formatting to a text string.
+
+    Args:
+        text: Source text that may contain ``**bold**`` and ``*italic*`` markup.
+
+    Returns:
+        Text with Markdown formatting replaced by HTML ``<strong>`` and ``<em>`` tags.
+    """
+    text = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", text)
+    return re.sub(r"\*(.*?)\*", r"<em>\1</em>", text)
+
+
+def _process_header_line(line: str, html_lines: list[str], in_list: bool) -> bool:
+    """Process a Markdown level-2 header line and append the HTML fragment.
+
+    Closes an open ``<ul>`` list before appending the ``<h2>`` tag.
+
+    Args:
+        line: Stripped Markdown line starting with ``## ``.
+        html_lines: Mutable list of accumulated HTML output lines.
+        in_list: Whether a ``<ul>`` list is currently open.
+
+    Returns:
+        Updated ``in_list`` state (always False after a header).
+    """
+    if in_list:
+        html_lines.append("</ul>")
+        in_list = False
+    title = line[3:]
+    anchor = title.lower().replace(" ", "-").replace(".", "")
+    html_lines.append(
+        f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>',
+    )
+    return in_list
+
+
+def _process_list_item(line: str, html_lines: list[str], in_list: bool) -> bool:
+    """Process a Markdown list item line and append the HTML fragment.
+
+    Opens a ``<ul>`` list if not already open, then appends the ``<li>`` tag.
+
+    Args:
+        line: Stripped Markdown line starting with ``- ``.
+        html_lines: Mutable list of accumulated HTML output lines.
+        in_list: Whether a ``<ul>`` list is currently open.
+
+    Returns:
+        Updated ``in_list`` state (always True after a list item).
+    """
+    if not in_list:
+        html_lines.append("<ul>")
+        in_list = True
+    content = _apply_inline_formatting(line[2:])
+    html_lines.append(f"<li>{content}</li>")
+    return in_list
+
+
 def simple_markdown_to_html(md_text: str) -> str:
     """Convert simple Markdown to HTML.
 
     This is a basic converter that handles headers, lists, bold, and italics.
     For more complex Markdown, use a full parser like markdown or mistune.
+
+    Delegates line-level processing to ``_process_header_line``,
+    ``_process_list_item``, and ``_apply_inline_formatting``.
 
     Args:
         md_text: The Markdown text to convert.
@@ -44,40 +105,24 @@ def simple_markdown_to_html(md_text: str) -> str:
         HTML string.
     """
     lines = md_text.split("\n")
-    html_lines = []
+    html_lines: list[str] = []
     in_list = False
 
     for line in lines:
         line = line.strip()
 
-        # Skip YAML frontmatter markers
         if line == "---":
             continue
 
-        # Headers
         if line.startswith("## "):
-            if in_list:
-                html_lines.append("</ul>")
-                in_list = False
-            title = line[3:]
-            anchor = title.lower().replace(" ", "-").replace(".", "")
-            html_lines.append(
-                f'<h2 id="{anchor}" class="anchored" data-anchor-id="{anchor}">{title}</h2>',
-            )
+            in_list = _process_header_line(line, html_lines, in_list)
             continue
 
-        # Lists
         if line.startswith("- "):
-            if not in_list:
-                html_lines.append("<ul>")
-                in_list = True
-            content = line[2:]
-            content = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", content)
-            content = re.sub(r"\*(.*?)\*", r"<em>\1</em>", content)
-            html_lines.append(f"<li>{content}</li>")
+            in_list = _process_list_item(line, html_lines, in_list)
             continue
 
-        if in_list and not line.startswith("- ") and line:
+        if in_list and line:
             html_lines.append("</ul>")
             in_list = False
 
@@ -87,10 +132,7 @@ def simple_markdown_to_html(md_text: str) -> str:
                 in_list = False
             continue
 
-        # Paragraphs with inline formatting
-        line = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", line)
-        line = re.sub(r"\*(.*?)\*", r"<em>\1</em>", line)
-        html_lines.append(f"<p>{line}</p>")
+        html_lines.append(f"<p>{_apply_inline_formatting(line)}</p>")
 
     if in_list:
         html_lines.append("</ul>")

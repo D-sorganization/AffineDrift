@@ -40,7 +40,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
 
-      - run: pip install ruff==0.15.7 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
+      - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
       # Validate that environment is sane
       - name: Environment Health Check
@@ -55,25 +55,16 @@ jobs:
       - name: Lint
         run: ruff check .
 
-      # Enforce Black formatting with explicit line-length matching pyproject.toml
+      # FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
       - name: Check Formatting
         run: black --check --line-length 100 .
 
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
-      - name: Audit Python Dependencies (pip-audit)
-        # Non-blocking: surface findings as warnings; block on critical unfixed vulns manually
-        continue-on-error: true
-        run: pip-audit -r requirements.txt
+      - name: Python Dependency Audit
+        run: pip-audit -r requirements.txt --progress-spinner=off
       - name: Verify frontend asset sync
-        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
-        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
-        run: |
-          if [ -d "docs" ] && [ -f "docs/index.html" ]; then
-            python3 scripts/sync_frontend_assets.py --check
-          else
-            echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
-          fi
+        run: python3 scripts/sync_frontend_assets.py --check
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
       - name: Validate Article Frontmatter
@@ -209,22 +200,25 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+      - name: Install Python build dependencies
+        run: pip install -r requirements.txt
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-      - name: Run E2E Smoke Tests (Critical Flows)
-        # docs/ HTML is no longer committed (issue #1419); e2e tests require a
-        # built site. This step will always skip in ci-standard.yml because
-        # docs/index.html is never present here — that is intentional. E2E tests
-        # run in the deploy-website workflow after Quarto renders the site.
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.6.39"
+      - name: Build site for E2E
         run: |
-          if [ -f "docs/index.html" ]; then
-            npx playwright test \
-              --project=chromium \
-              --retries=0 \
-              tests/e2e/smoke.spec.js
-          else
-            echo "docs/ not present (expected: built by deploy workflow). Skipping e2e smoke tests."
-          fi
+          python3 scripts/sync_frontend_assets.py
+          rm -f .env.example
+          quarto render
+      - name: Run E2E Smoke Tests (Critical Flows)
+        run: |
+          npx playwright test \
+            --project=chromium \
+            --retries=0 \
+            tests/e2e/smoke.spec.js
       - uses: actions/upload-artifact@v7
         if: failure()
         with:

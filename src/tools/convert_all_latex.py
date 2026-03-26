@@ -3,15 +3,11 @@
 Converts all LaTeX article files to HTML and updates root-level HTML files.
 """
 
-import logging
 import sys
 
 from latex_to_html import LaTeXToHTMLConverter
 
-from src.tools.conversion_batch import run_batch_conversion
-from src.tools.utils import setup_logging
-
-logger = logging.getLogger(__name__)
+from src.tools.utils import batch_convert, setup_logging
 
 logger = setup_logging(__name__)
 
@@ -43,14 +39,7 @@ def convert_all(dry_run: bool = False) -> bool:
     if dry_run:
         logger.info("Dry run mode - no files will be converted")
 
-    _, error_count = run_batch_conversion(
-        conversions=CONVERSIONS,
-        converter=converter,
-        logger=logger,
-        dry_run=dry_run,
-    )
-
-    return error_count == 0
+    return batch_convert(converter, CONVERSIONS, dry_run, logger)
 
 
 def main() -> None:

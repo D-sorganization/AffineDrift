@@ -1,6 +1,5 @@
-"""Tangent (linearized) dynamical system models.
+"""Tangent models package for AffineDrift.
 
-This package defines the abstract base class ``DynamicalSystem`` and
-concrete example systems (SimplePendulum, SpacecraftRendezvous,
-PlanarQuadrotor, RobotArm) used throughout the AffineDrift curriculum.
+Provides tangent space models and example implementations for
+affine drift control systems.
 """

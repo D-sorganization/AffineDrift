@@ -1,6 +1,5 @@
-"""Affine control algorithms for the AffineDrift platform.
+"""Affine control algorithms package for AffineDrift.
 
-This package provides DDP-based trajectory optimization, residual monitoring,
-and swing optimization for golf biomechanics applications.
-Modules: ddp, residuals, swing_optimizer, swing_types.
+Contains DDP-based trajectory optimisation, residual bound computation,
+and swing-up controllers for affine drift systems.
 """

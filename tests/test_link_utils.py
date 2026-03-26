@@ -142,6 +142,15 @@ class TestPathExistsInSearchRoots:
         (tmp_path / "docs" / "page.html").write_text("content")
         assert path_exists_in_search_roots(root=tmp_path, target=tmp_path / "page.html") is True
 
+    def test_returns_false_when_target_not_relative_to_root(self, tmp_path: Path) -> None:
+        """path_exists_in_search_roots should return False when target is outside root."""
+        # Use an absolute path outside root that doesn't exist
+        # The function first checks target.exists() (returns False), then is_relative_to
+        target = Path("/tmp/__gaai_nonexistent_target_xyz_12345/page.html")
+        # Ensure it doesn't exist and is not relative to tmp_path
+        assert not target.exists()
+        assert path_exists_in_search_roots(root=tmp_path, target=target) is False
+
 
 class TestLinkPatterns:
     """Tests for compiled link patterns."""

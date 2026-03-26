@@ -218,7 +218,11 @@ class TestResidualMonitorContracts:
         ids=["1_update", "2_updates", "3_updates", "5_updates"],
     )
     def test_monitor_mode_transition_with_high_residuals(self, n_high_updates: int) -> None:
-        """High residuals should escalate from LQR to MPC_WARN to MPC_FULL."""
+        """Mode transitions through MPC_WARN before reaching MPC_FULL.
+
+        With the three-state machine (LQR -> MPC_WARN -> MPC_FULL), n_hyst critical
+        updates trigger LQR->MPC_WARN and another n_hyst trigger MPC_WARN->MPC_FULL.
+        """
         n_hyst = 3
         m = ResidualMonitor(eps_warning=0.01, eps_critical=0.05, n_hysteresis=n_hyst)
         for _ in range(n_high_updates):
