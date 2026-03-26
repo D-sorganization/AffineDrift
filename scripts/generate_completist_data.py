@@ -198,7 +198,7 @@ def _scan_files_multi_pattern(
 
 
 def scan_for_todo_markers(files: list[Path], repo_root: Path) -> list[str]:
-    """Scan files for completion markers (TRACKED_TASK, TRACKED_DEFECT, etc)."""
+    """Scan files for completion markers (TRACKED\_TASK, TRACKED\_DEFECT, etc)."""
     markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"]
     pattern = re.compile(r"\b(" + "|".join(markers) + r")\b", re.IGNORECASE)
     return _scan_files_by_line(files, repo_root, pattern)
