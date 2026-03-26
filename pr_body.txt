@@ -1,0 +1,40 @@
+## Summary
+
+Adds **The Physics of Golf: Force, Drift, and Control in the Golf Swing** — a 559-page, 31-chapter graduate-level textbook applying the ZTCF framework to golf biomechanics.
+
+### What's included
+
+- **LaTeX source**: 31 chapters organized into 10 parts, with custom style package, 100+ bibliography entries, nomenclature, and glossary
+- **Compiled PDF**: 559 pages, compiles cleanly with zero errors/warnings
+- **Quarto web mirror**: All 31 chapters converted to .qmd for website rendering
+- **Website integration**: Navbar updated with Textbooks subsection; articles page updated with Physics of Golf section
+- **CI/CD**: Existing workflow (`compile_golf_textbook.yml`) handles automated compilation on merge
+
+### Chapter structure (10 Parts, 31 Chapters)
+
+1. **Foundations** — Why physics, language of motion, double pendulum
+2. **The Affine Framework** — Forces/torques, affine structure, ZTCF
+3. **Constraints and Mechanisms** — Constraint forces, triple pendulum, parallel mechanisms
+4. **Forces in Detail** — Energy transfer, GRF, muscle mechanics, drag, damping, impact, swing plane
+5. **The Inverse Problem** — Inverse dynamics in parallel mechanisms
+6. **The Physical System** — Flexible shaft, fascia, soft tissue
+7. **The Musculoskeletal Model** — Spine, joint anatomy, DOF/URDF models
+8. **The Kinetic Chain** — Proximal-distal sequencing, X-factor, wrist release
+9. **Motor Control and Learning** — Brain, motor learning, passive distributed control
+10. **Synthesis** — Interdisciplinary integration, complete swing model
+
+### Website changes
+
+- `_quarto.yml`: Added "Textbooks" subsection under Learn menu with links to both Physics of Golf and Geometry of Motion
+- `resources/articles.qmd`: Added new Physics of Golf section with accordion navigation for all 10 parts
+
+### Test plan
+
+- [ ] Verify `pdflatex → bibtex → makeindex → pdflatex → pdflatex` compiles with zero errors
+- [ ] Verify CI workflow triggers and passes on this PR
+- [ ] Verify Quarto renders the book pages without errors
+- [ ] Verify navbar shows Textbooks subsection with both books
+- [ ] Verify articles page shows Physics of Golf with working accordion links
+- [ ] Spot-check 3-5 chapter .qmd files render math correctly
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
