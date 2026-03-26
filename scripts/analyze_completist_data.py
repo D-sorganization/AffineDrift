@@ -379,7 +379,7 @@ def _build_priority_section(criticals: list[Finding], todos: list[Finding]) -> l
 
     Args:
         criticals: Critical findings.
-        todos: TRACKED\_TASK marker findings.
+        todos: TRACKED-TASK marker findings.
 
     Returns:
         Markdown lines for the priority section.
