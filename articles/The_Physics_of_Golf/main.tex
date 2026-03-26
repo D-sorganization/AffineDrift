@@ -1,0 +1,320 @@
+\documentclass[11pt,letterpaper,openany]{book}
+
+% ══════════════════════════════════════════════
+% THE PHYSICS OF GOLF
+% Force, Drift, and Control in the Golf Swing
+% An AffineDrift Textbook
+% ══════════════════════════════════════════════
+
+% ──────────────────────────────────────────────
+% Packages
+% ──────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\DeclareUnicodeCharacter{00B7}{\textperiodcentered}
+\DeclareUnicodeCharacter{00B0}{\textdegree}
+\DeclareUnicodeCharacter{00D7}{\texttimes}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{00B2}{\textsuperscript{2}}
+\DeclareUnicodeCharacter{00B3}{\textsuperscript{3}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning, 3d, angles, quotes}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\usepackage{hyperref}
+\usepackage{imakeidx}
+\makeindex[intoc, title=Index]
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{epigraph}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+
+% Load our style package
+\usepackage{golf_physics}
+\gpapplylistingstyle
+
+% ──────────────────────────────────────────────
+% Colors (local overrides for this volume)
+% ──────────────────────────────────────────────
+\definecolor{chapblue}{RGB}{0, 70, 130}
+\definecolor{accentred}{RGB}{180, 40, 40}
+\definecolor{softgray}{RGB}{245, 245, 245}
+\definecolor{trajgreen}{RGB}{30, 130, 60}
+\definecolor{darkgold}{RGB}{160, 120, 20}
+\definecolor{purplehaze}{RGB}{100, 40, 140}
+\definecolor{driftblue}{RGB}{50, 100, 180}
+\definecolor{controlred}{RGB}{200, 60, 60}
+\definecolor{constraintgold}{RGB}{180, 140, 30}
+\definecolor{fasciarust}{RGB}{160, 90, 50}
+\definecolor{shaftsilver}{RGB}{140, 140, 160}
+
+% ──────────────────────────────────────────────
+% Theorem Environments
+% ──────────────────────────────────────────────
+\newtcbtheorem[number within=chapter]{principle}{Key Principle}{
+  colback=chapblue!5, colframe=chapblue!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{princ}
+
+\newtcbtheorem[number within=chapter]{laymansbox}{In Plain Language}{
+  colback=trajgreen!8!white, colframe=trajgreen!60!black,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{laymans}
+
+\newtcbtheorem[number within=chapter]{example}{Example}{
+  colback=softgray, colframe=black!40,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{ex}
+
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  colback=darkgold!5, colframe=darkgold!80,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{def}
+
+\newtcbtheorem[number within=chapter]{theorem}{Theorem}{
+  colback=accentred!5, colframe=accentred!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{thm}
+
+\newtcbtheorem[number within=chapter]{exercises}{Exercises}{
+  colback=softgray, colframe=black!50,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{exercises}
+
+\newtcbtheorem[number within=chapter]{algorithm}{Algorithm}{
+  colback=purplehaze!5, colframe=purplehaze!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{alg}
+
+% Golf-specific: Drift vs Control comparison box
+\newtcbtheorem[number within=chapter]{driftcontrol}{Drift vs.\ Control}{
+  colback=driftblue!5, colframe=driftblue!60,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{dc}
+
+% Golf-specific: Myth vs Reality box (for fascia, etc.)
+\newtcbtheorem[number within=chapter]{mythreality}{Myth vs.\ Reality}{
+  colback=fasciarust!5, colframe=fasciarust!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{myth}
+
+% Golf-specific: Constraint Insight box
+\newtcbtheorem[number within=chapter]{constraintbox}{Constraint Insight}{
+  colback=constraintgold!5, colframe=constraintgold!70,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{constr}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+
+% Simple environments
+\newenvironment{exercise}{\par\medskip\noindent\textbf{Exercise.}\itshape}{\par\medskip}
+\newenvironment{derivation}{\begin{proof}[Derivation]}{\end{proof}}
+\newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
+
+% ──────────────────────────────────────────────
+% Chapter Formatting
+% ──────────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{chapblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% ──────────────────────────────────────────────
+% Header/Footer
+% ──────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{The Physics of Golf}}
+\fancyhead[LO]{\textit{\nouppercase{\leftmark}}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14.5pt}
+
+% ──────────────────────────────────────────────
+% Hyperref Setup
+% ──────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=chapblue,
+  filecolor=magenta,
+  urlcolor=chapblue,
+  citecolor=accentred,
+  pdftitle={The Physics of Golf: Force, Drift, and Control in the Golf Swing},
+  pdfauthor={AffineDrift},
+  pdfsubject={Golf Biomechanics and Control Theory},
+  pdfkeywords={golf, physics, biomechanics, control theory, ZTCF, affine control}
+}
+
+% ──────────────────────────────────────────────
+% Title Page
+% ──────────────────────────────────────────────
+\title{%
+  {\Huge\bfseries\color{chapblue} The Physics of Golf}\\[0.4cm]
+  {\Large Force, Drift, and Control in the Golf Swing}\\[0.3cm]
+  {\large An AffineDrift Textbook}\\[0.6cm]
+  {\color{chapblue}\rule{\textwidth}{2pt}}
+}
+\author{{\large AffineDrift}\\[0.2cm]{\normalsize\url{https://affinedrift.com}}}
+\date{{\normalsize First Edition --- March 2026}}
+
+% ══════════════════════════════════════════════
+% DOCUMENT
+% ══════════════════════════════════════════════
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\cleardoublepage
+
+% ──────────────────────────────────────────────
+% Front Matter
+% ──────────────────────────────────────────────
+\frontmatter
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+Every golfer, from the weekend duffer to the touring professional, has felt it: that one swing where everything clicks, the ball launches off the clubface with a crack that resonates up through your hands, and for a brief moment the physics of the universe conspired in your favor. What happened in that swing? What forces were at play? And---perhaps more importantly---which of those forces did \emph{you} actually create, and which did physics hand you for free?
+
+This book exists to answer those questions with mathematical precision, but in a language that any curious golfer can follow.
+
+The central idea is deceptively simple. When you swing a golf club, two fundamentally different kinds of forces are at work. The first kind---we call it \textbf{drift}---is everything that would happen if your muscles went limp mid-swing: momentum carrying the club forward, gravity pulling it down, the shaft springing back from its bend. These are the forces of physics acting on autopilot. The second kind---we call it \textbf{control}---is the direct effect of your muscles applying torque at the joints. The mathematical framework that separates these two is called \emph{control-affine decomposition}, and it is the backbone of this entire book.
+
+Why does this separation matter? Because it reveals something profound about the golf swing that decades of traditional biomechanics could not cleanly articulate: \emph{by the time you reach the fastest part of the downswing, the drift forces overwhelm the control forces by a factor of 100 to 1.} The swing is effectively on autopilot. The outcome was determined earlier, by how you set up the conditions that drift would exploit. Elite golfers are not necessarily stronger; they are better at arranging physics to work in their favor.
+
+This book will take you on a journey from the simplest possible model of a golf swing---a double pendulum, which is just two sticks hinged together---through the constraint forces that silently redirect enormous amounts of energy, through the parallel mechanisms that make the human body a closed kinematic chain, all the way to the flexible shaft and the biological tissues that connect it all together. Along the way, we will not shy away from equations. Every equation in this book is motivated by a physical question that a golfer would care about, and every equation is followed by a plain-language explanation of what it means and why it matters.
+
+We have also included a chapter on fascia---the connective tissue that has been the subject of much mystical thinking in the golf and fitness communities. We approach it the way we approach everything in this book: with respect for the biology, skepticism toward unsupported claims, and a mathematical framework that puts the tissue in its proper place within the mechanics of the swing.
+
+This book is part of the AffineDrift project, a broader effort to bring modern control theory and robotics mathematics to the study of human movement. Our companion series, \emph{The Geometry of Motion}, provides the full mathematical foundations; this volume is designed to be self-contained and accessible without it. If a concept from \emph{The Geometry of Motion} is needed, we develop it from scratch here, always with golf as the motivating example.
+
+Welcome to the physics of golf. Let's find out what your swing is really doing.
+
+\vspace{1cm}
+\noindent\textit{AffineDrift}\\
+\textit{March 2026}
+
+\cleardoublepage
+
+% Nomenclature
+\include{nomenclature}
+
+% Table of Contents (auto-updating)
+\tableofcontents
+\cleardoublepage
+
+% List of Figures (auto-updating)
+\listoffigures
+\cleardoublepage
+
+% ──────────────────────────────────────────────
+% Main Matter
+% ──────────────────────────────────────────────
+\mainmatter
+
+% Part I: Foundations
+\part{Foundations}
+\include{chapters/ch01_why_physics}
+\include{chapters/ch02_language_of_motion}
+\include{chapters/ch03_double_pendulum}
+
+% Part II: The Affine Framework
+\part{The Affine Framework}
+\include{chapters/ch04_forces_and_torques}
+\include{chapters/ch05_affine_structure}
+\include{chapters/ch06_zero_torque_counterfactual}
+
+% Part III: Constraints and Mechanisms
+\part{Constraints and Mechanisms}
+\include{chapters/ch07_constraint_forces}
+\include{chapters/ch08_triple_pendulum}
+\include{chapters/ch09_parallel_mechanisms}
+
+% Part IV: Forces in Detail
+\part{Forces in Detail}
+\include{chapters/ch10_energy_transfer}
+\include{chapters/ch15_ground_reaction_forces}
+\include{chapters/ch16_muscle_to_joint_torques}
+\include{chapters/ch17_muscle_force_generation}
+\include{chapters/ch19_aerodynamic_drag}
+\include{chapters/ch29_joint_damping_friction}
+\include{chapters/ch28_impact_collision}
+\include{chapters/ch31_swing_plane_launch}
+
+% Part V: The Inverse Problem and Its Limits
+\part{The Inverse Problem and Its Limits}
+\include{chapters/ch18_inverse_dynamics_parallel}
+
+% Part VI: The Physical System
+\part{The Physical System}
+\include{chapters/ch11_flexible_shaft}
+\include{chapters/ch12_fascia}
+\include{chapters/ch20_soft_tissue_pliable}
+
+% Part VII: The Musculoskeletal Model
+\part{The Musculoskeletal Model}
+\include{chapters/ch21_spine_modeling}
+\include{chapters/ch22_anatomy_joint_modeling}
+\include{chapters/ch23_dof_urdf_models}
+
+% Part VIII: The Kinetic Chain and Performance
+\part{The Kinetic Chain and Performance}
+\include{chapters/ch30_kinetic_chain}
+
+% Part IX: Motor Control and Learning
+\part{Motor Control and Learning}
+\include{chapters/ch24_motor_control_brain}
+\include{chapters/ch25_motor_learning}
+\include{chapters/ch26_remarkable_brain}
+\include{chapters/ch27_passive_distributed_control}
+
+% Part X: Synthesis
+\part{Synthesis}
+\include{chapters/ch13_interdisciplinary}
+\include{chapters/ch14_complete_swing}
+
+% ──────────────────────────────────────────────
+% Back Matter
+% ──────────────────────────────────────────────
+\backmatter
+
+% Glossary
+\include{chapters/glossary}
+
+% Bibliography
+\bibliographystyle{plainnat}
+\bibliography{golf_physics}
+
+% Index (auto-updating)
+\printindex
+
+\end{document}

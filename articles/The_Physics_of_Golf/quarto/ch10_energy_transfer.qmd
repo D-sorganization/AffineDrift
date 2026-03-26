@@ -1,0 +1,487 @@
+---
+title: "Energy Transfer"
+---
+
+
+
+# Energy Transfer: How Power Flows Through the Kinetic Chain
+
+::: {.callout-tip}
+## Energy is the Bottom Line
+
+We've examined forces (Chapter 6), constraint forces (Chapter 7), multiple segments (Chapter 8), and parallel mechanisms (Chapter 9). Now we ask: **where does the energy go?**
+
+The total mechanical energy of the swing is roughly conserved (ignoring air resistance and internal losses). But the *distribution* of that energy among the segments changes dramatically:
+
+- At the top of the backswing: most energy is stored in the elevated arms and the stretched muscles/tendons.
+- During the downswing: energy flows from the torso (hips and shoulders) to the arm.
+- Late downswing: energy concentrates in the club.
+- At impact: nearly all kinetic energy is in the club head.
+
+This flow is the essence of the kinetic chain. Understanding it requires thinking in terms of power, energy partition, and where energy is stored and released.
+
+This chapter quantifies energy flow, shows why constraint forces are energy transfer agents, and derives a complete energy budget for a typical swing.
+
+:::
+
+## Energy Fundamentals: Kinetic and Potential
+
+::: {.callout-note}
+## Kinetic and Potential Energy in a Multi-Segment System
+
+The total mechanical energy of the swing is:
+
+E = T + V = \sum_{i=1}^{n} T_i + \sum_{i=1}^{n} V_i
+
+where:
+
+- **Kinetic energy of segment $i$:**
+
+  T_i = \frac{1}{2} m_i v_{c,i}^2 + \frac{1}{2} I_i \dot{q}_i^2
+
+  The first term is translational KE of the center of mass; the second is rotational KE about the center of mass.
+- **Potential energy of segment $i$:**
+
+  V_i = m_i g h_i
+
+  where $h_i$ is the height of the center of mass above a reference.
+- **Total kinetic energy (for a system of linked segments):**
+
+  T = \frac{1}{2} \dot{\bm{q}}^T \bm{M}(\bm{q}) \dot{\bm{q}}
+
+  The mass matrix $\bm{M}(\bm{q})$ encodes all the kinetic energy, including coupling between segments.
+
+:::
+
+{Energy Storage in the Swing}{inplain:energy_storage}
+Energy enters the swing in several ways:
+
+1. **Gravitational potential energy:** When you raise your arms during the backswing, you increase potential energy. This energy is highest at the top of the backswing.
+2. **Rotational kinetic energy:** As you rotate your hips and shoulders during the downswing, you build angular momentum. This is kinetic energy stored as rotation.
+3. **Elastic potential energy:** Stretched muscles and tendons store elastic energy. The wound-up torso and stretched muscles at the top of the backswing are like a wound spring.
+4. **Muscular work:** Your muscles do work, converting chemical energy to mechanical energy. This input is most important in the early downswing (building hip acceleration) and backswing (setting up the initial position).
+
+During the downswing, potential energy and elastic energy are converted to kinetic energy in the club. The role of constraint forces is to *redirect* this energy to the distal segments, ensuring that the club gets the maximum kinetic energy.
+
+## Power and the Equation of Power Flow
+
+::: {.callout-note}
+## Power
+
+**Power** is the rate of energy change:
+
+P = \frac{dE}{dt}
+
+For kinetic energy:
+
+\frac{dT}{dt} = \frac{d}{dt}\left(\frac{1}{2}\dot{\bm{q}}^T \bm{M} \dot{\bm{q}}\right) = \dot{\bm{q}}^T \bm{M} \ddot{\bm{q}} + \frac{1}{2}\dot{\bm{q}}^T \dot{\bm{M}} \dot{\bm{q}}
+
+For potential energy:
+
+\frac{dV}{dt} = \sum_i m_i g \frac{dh_i}{dt}
+
+The total mechanical power balance is:
+
+\frac{dE}{dt} = \frac{dT}{dt} + \frac{dV}{dt} = \tau^T \dot{\bm{q}} + P_{\text{non-conservative}}
+
+where $\tau^T \dot{\bm{q}}$ is the power delivered by all torques (muscles, gravity, constraints).
+
+:::
+
+{Power Decomposition}{theorem:power_decomposition}
+The power delivered to the system can be decomposed:
+
+P_{\text{total}} = P_{\text{gravity}} + P_{\text{Coriolis}} + P_{\text{input}} + P_{\text{constraint}}
+
+where:
+
+- $P_{\text{gravity}} = -\bm{g}^T \dot{\bm{q}}$: power from gravity (negative during backswing, positive during downswing as the arm falls).
+- $P_{\text{Coriolis}} = -\bm{C}^T \dot{\bm{q}}$: power from Coriolis/centrifugal effects.
+- $P_{\text{input}} = \bm{u}^T \dot{\bm{q}}$: power from muscular torques (always non-negative; muscles do positive work).
+- $P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c \dot{\bm{q}} = 0$: power from constraint forces (always zero, by the constraint condition).
+
+{Why Constraint Power is Zero (But Energy Still Transfers)}{inplain:constraint_power_paradox}
+This is the key insight: constraint forces do zero net power to the system, yet they transfer energy between segments.
+
+How? The trick is to decompose power by segment:
+
+P_{\text{constraint}} = P_{\text{constraint, segment 1}} + P_{\text{constraint, segment 2}} + \cdots = 0
+
+Each term individually can be nonzero (e.g., the constraint force acts on segment 1, doing work). But they sum to zero: the work done on one segment by the constraint is exactly balanced by negative work on another segment.
+
+For example, at the wrist:
+
+P_{\text{constraint, arm}} &= \lambda_{\text{wrist}} \cdot v_{\text{arm}} \quad \text{(work done on arm)}\\
+P_{\text{constraint, club}} &= (-\lambda_{\text{wrist}}) \cdot v_{\text{club}} \quad \text{(reaction on club)}
+
+If the arm is moving at velocity $v_a$ and the club at velocity $v_c$, and they're constrained to move together (or with a specific relationship), then:
+
+\lambda_{\text{wrist}} \cdot v_a - \lambda_{\text{wrist}} \cdot v_c = \lambda_{\text{wrist}} (v_a - v_c) = 0
+
+Only if the velocities are related by the constraint. But before the constraint is enforced, $v_a \neq v_c$, and the constraint force acts to accelerate the club and decelerate the arm, transferring energy between them.
+
+**Bottom line:** Constraint forces are energy transfer agents. They redistribute energy from proximal segments to distal segments, maintaining zero net power to the system but changing the energy partition dramatically.
+
+## Constraint Power is Zero: Proof and Interpretation
+
+{Constraint Forces Do Zero Net Work}{theorem:constraint_zero_work}
+For any holonomic constraint $\bm{\Phi}(\bm{q}) = \mathbf{0}$, the power delivered by constraint forces is:
+
+P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}} = \bm{\lambda}^T \frac{d\bm{\Phi}}{dt}
+
+Since $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$:
+
+\frac{d\bm{\Phi}}{dt} = \bm{J}_c \dot{\bm{q}} = \mathbf{0}
+
+Therefore:
+
+P_{\text{constraint}} = \mathbf{0}
+
+{The Physical Meaning}{inplain:constraint_power_meaning}
+The velocity $\dot{\bm{q}}$ is always in the null space of $\bm{J}_c$ (it's the only direction that maintains the constraint). Constraint forces act in the range of $\bm{J}_c^T$, which is perpendicular to the null space.
+
+So constraint forces are always perpendicular to velocity, and perpendicular forces do zero work. This is fundamental: a force perpendicular to motion cannot change the kinetic energy directly.
+
+Yet this doesn't mean constraints can't change energy partition between segments. It means they do so while keeping total energy constant—they're pure redistribution mechanisms.
+
+This is why constraint forces are so useful in the golf swing: they can transfer energy from the arm to the club without "using up" the total energy. It's lossless energy transfer.
+
+## Energy Partition During the Downswing
+
+**Example: Energy Partition at Five Downswing Phases**
+
+Track the kinetic energy of each segment during the downswing. Assume a triple pendulum (torso, arm, club) with the following initial energies:
+
+1. **Phase 1: Top of backswing (t = 0)**
+   Configuration: fully coiled, little rotation.
+
+   T_{\text{torso}} &= \frac{1}{2} I_1 \dot{q}_1^2 \approx \frac{1}{2} \times 2.0 \times 0^2 = 0 \text{ J}\\
+   T_{\text{arm}} &= \frac{1}{2} I_2 \dot{q}_2^2 \approx \frac{1}{2} \times 0.5 \times 0^2 = 0 \text{ J}\\
+   T_{\text{club}} &= \frac{1}{2} I_3 \dot{q}_3^2 \approx \frac{1}{2} \times 0.1 \times 0^2 = 0 \text{ J}\\
+   T_{\text{total}} &= 0 \text{ J}
+
+   Potential energy is maximum (arms elevated), approximately $V \approx 20$ J.
+   **Energy partition: 0\% kinetic, 100\% potential (gravitational + elastic).**
+2. **Phase 2: Early downswing (t = 0.1 s, 100 ms)**
+   Hip acceleration has begun. Torso is rotating fast, arms are beginning to lag.
+
+   \dot{q}_1 &= 8 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}\\
+   \dot{q}_2 &= 3 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 9 = 2.25 \text{ J}\\
+   \dot{q}_3 &= 2 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 4 = 0.2 \text{ J}\\
+   T_{\text{total}} &= 66.45 \text{ J}
+
+   $V \approx 15$ J (arms have fallen).
+   **Energy partition: 66.45 J kinetic (81\%), 15 J potential (19\%). Most energy is in torso rotation.**
+3. **Phase 3: Mid-downswing (t = 0.25 s, 250 ms)**
+   Torso approaching maximum speed, arm beginning to accelerate.
+
+   \dot{q}_1 &= 12 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 144 = 144 \text{ J}\\
+   \dot{q}_2 &= 12 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 144 = 36 \text{ J}\\
+   \dot{q}_3 &= 10 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 100 = 5 \text{ J}\\
+   T_{\text{total}} &= 185 \text{ J}
+
+   $V \approx 5$ J (arms fully lowered).
+   **Energy partition: 185 J kinetic (97\%), 5 J potential (3\%). Most energy is still in torso, but arm is accelerating.**
+4. **Phase 4: Late downswing (t = 0.35 s, 350 ms)**
+   Torso beginning to decelerate (it's rotating maximally), arm and club accelerating rapidly.
+
+   \dot{q}_1 &= 13 \text{ rad/s} (peaking) \quad T_1 = \frac{1}{2} \times 2.0 \times 169 = 169 \text{ J}\\
+   \dot{q}_2 &= 18 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 324 = 81 \text{ J}\\
+   \dot{q}_3 &= 25 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 625 = 31.25 \text{ J}\\
+   T_{\text{total}} &= 281.25 \text{ J}
+
+   $V \approx 0$ J (minimal potential energy remaining).
+   **Energy partition: Club now carries 31.25 J out of 281.25 J total, or 11\%. Energy is being transferred to the club.**
+5. **Phase 5: Impact (t = 0.42 s, 420 ms)**
+   Torso decelerating (energy exhausted), arm decelerating, club at maximum speed.
+
+   \dot{q}_1 &= 8 \text{ rad/s} (slowing) \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}\\
+   \dot{q}_2 &= 15 \text{ rad/s} (slowing) \quad T_2 = \frac{1}{2} \times 0.5 \times 225 = 56.25 \text{ J}\\
+   \dot{q}_3 &= 50 \text{ rad/s} (maximum) \quad T_3 = \frac{1}{2} \times 0.1 \times 2500 = 125 \text{ J}\\
+   T_{\text{total}} &= 245.25 \text{ J}
+
+   Total energy has decreased to 245.25 J (from peak of 281.25 J) due to air resistance and internal losses.
+   **Energy partition: Club carries 125 J out of 245.25 J, or 51\%. At impact, more than half the total energy is in the club.**
+
+**Summary Table:**
+
+[h]
+\centering
+{|c|c|c|c|c|c|c|c|}
+\hline
+**Phase** & **Time** & $T_1$ & $T_2$ & $T_3$ & $T_{\text{total}}$ & **Club\%** & **Notes** \\
+\hline
+1. Top & 0 ms & 0 & 0 & 0 & 0 J & 0\% & All potential (coiled) \\
+2. Early & 100 ms & 64 & 2.25 & 0.2 & 66.45 J & 0.3\% & Torso-driven \\
+3. Mid & 250 ms & 144 & 36 & 5 & 185 J & 2.7\% & Arm accelerating \\
+4. Late & 350 ms & 169 & 81 & 31.25 & 281.25 J & 11.1\% & Club accelerating \\
+5. Impact & 420 ms & 64 & 56.25 & 125 & 245.25 J & 51\% & Club carries most energy \\
+\hline
+
+\caption{Energy partition through the downswing. Club percentage grows exponentially.}
+
+**Interpretation:**
+
+The fraction of energy in the club grows from 0\% at the top to 51\% at impact. This growth is entirely due to constraint forces redirecting energy from proximal to distal segments. Muscles contribute initial momentum (early downswing), but by late downswing, the system is passive, and constraint forces drive the redistribution.
+
+This explains why the club reaches such high speeds: it's not that muscles are pushing it hard. It's that the proximal segments have built up energy, and constraint forces have concentrated that energy into the distal segment (which has minimal inertia, so small energy means high velocity).
+
+{Energy Flow Visualization}{inplain:energy_flow_visualization}
+Imagine energy as a fluid flowing through the kinetic chain:
+
+1. **Source:** Muscles inject energy at the hips (early downswing). Gravity and elastic energy are also sources.
+2. **Flow:** Energy flows through the constraint-connected segments: hips → torso → arms → club.
+3. **Regulation:** Constraint forces act as valves, controlling how much energy reaches each segment and when.
+4. **Sink:** At impact, most energy is in the club, which then transfers energy to the ball (and is dissipated as sound, heat, deformation).
+
+A professional golfer's swing is optimized for:
+- Building initial energy efficiently (strong hip acceleration early).
+- Timing the joint releases (wrist unlock timing) to maximize energy transfer.
+- Minimizing energy loss to unnecessary motion (tight, efficient form).
+
+An amateur's swing often has energy leaks: excessive arm motion (energy dissipated in arm oscillation), poor timing of releases, inefficient hip drive.
+
+## The Summation of Speed Principle vs. Sequential Acceleration
+
+::: {.callout-important}
+## Summation of Speed: A Constraint-Force Mechanism
+
+The **summation of speed principle** is often stated as: ``Each segment reaches peak speed sequentially—the hips fastest, then the shoulders, then the arms, then the wrist. Each segment's peak speed is higher than the previous one.''
+
+This observation is correct, but the reason is *constraint-force-based redistribution of energy*, not a simple cascading of muscular activations.
+
+The mechanics:
+
+1. The hips accelerate (muscle-driven) to peak speed $\omega_{\text{hips}}$.
+2. At this peak, the hips begin to decelerate (energy exhausted). But the hip's kinetic energy doesn't disappear—it's transferred to the next segment (shoulders) via the hip-shoulder constraint.
+3. The shoulders, which were lagging, suddenly accelerate as they receive hip energy via the constraint force. They reach peak speed $\omega_{\text{shoulders}} > \omega_{\text{hips}}$ because they have lower inertia.
+4. The shoulders then decelerate, transferring energy to the arms.
+5. The arms decelerate, transferring energy to the club.
+6. By the time the club reaches impact, it has received energy (and thus momentum) from all prior segments, concentrated into its small inertia, resulting in very high speed.
+
+:::
+
+{Why Sequential Peak Speeds Increase}{inplain:why_speeds_increase}
+Peak speeds increase as you go from proximal to distal because inertia decreases. Energy conservation gives:
+
+E = \frac{1}{2} I \omega^2 \implies \omega = \sqrt{\frac{2E}{I}}
+
+If a segment receives energy $E$ and has inertia $I$, its peak speed is $\omega = \sqrt{2E/I}$. Smaller inertia means higher speed for the same energy.
+
+The club reaches 2--3 times higher speeds than the hips not because muscles push it 2--3 times harder, but because its inertia is 20--50 times smaller. The energy is conservatively transferred; the speed is amplified by the inertia ratio.
+
+This is why the summation of speed principle is sometimes misunderstood. It's not about muscles accelerating sequentially. It's about constraint forces transferring energy sequentially, with each segment's lower inertia amplifying the speed.
+
+**Example: Numerical Summation of Speed**
+
+Assume all segments receive the same amount of energy ($100$ J each) at their moment of peak speed:
+
+\text{Hips:} \quad &I_h = 5 \text{ kg} \cdot \text{m}^2 \implies \omega_h = \sqrt{2 \times 100 / 5} = \sqrt{40} = 6.3 \text{ rad/s}\\
+\text{Torso:} \quad &I_s = 2 \text{ kg} \cdot \text{m}^2 \implies \omega_s = \sqrt{2 \times 100 / 2} = \sqrt{100} = 10 \text{ rad/s}\\
+\text{Arm:} \quad &I_a = 0.5 \text{ kg} \cdot \text{m}^2 \implies \omega_a = \sqrt{2 \times 100 / 0.5} = \sqrt{400} = 20 \text{ rad/s}\\
+\text{Club:} \quad &I_c = 0.1 \text{ kg} \cdot \text{m}^2 \implies \omega_c = \sqrt{2 \times 100 / 0.1} = \sqrt{2000} = 44.7 \text{ rad/s}
+
+The peak speed ratio is $\omega_c / \omega_h = 44.7 / 6.3 \approx 7$. The club is 7 times faster than the hips, even though they received equal energy!
+
+This is the magic of the kinetic chain: energy is conservatively transferred (no energy creation), but speed is amplified due to inertia differences. And this amplification happens automatically via constraint forces—no muscle effort is required at the distal end to achieve high speed. High speed emerges from the system's geometry and the energy of prior segments.
+
+## Where is Energy Stored and Released?
+
+{Energy Storage Mechanisms}{def:energy_storage}
+Energy is stored in the golf swing at multiple points:
+
+1. **Gravitational potential energy:** Raising the arms stores energy $mgh$. At the top of the backswing, this can be $10$--$20$ J for a typical golfer's arms.
+2. **Elastic potential energy in muscles and tendons:** The coiled position of the backswing stretches muscles and stores elastic energy. Estimates range from $5$--$20$ J, depending on flexibility and muscular tension.
+3. **Rotational kinetic energy:** As the hips, shoulders, and arms accelerate during the downswing, they store kinetic energy. This is the primary energy source during the downswing, reaching $100$--$200$ J.
+4. **Stored in the constraint relationships:** The X-factor (hip-shoulder separation) stores energy in the stretched spine. This is both elastic (spine tissue) and kinetic (relative rotational motion).
+
+\hline
+**Phase** & **Gravitational** & **Elastic** & **Kinetic** & **Total** & **Source/Sink** \\
+\hline
+Address & 0 J & 0 J & 0 J & 0 J & Starting point \\
+Top of backswing & +15 J & +10 J & 0 J & 25 J & Arm elevation + muscle tension \\
+Midway down & +5 J & +2 J & +100 J & 107 J & Energy conversion; gravity contributes \\
+Late downswing & 0 J & 0 J & +200 J & 200 J & Kinetic energy peaked \\
+Impact & 0 J & 0 J & +200 J & 200 J & Energy in club motion \\
+Post-impact & 0 J & 0 J & +50 J & 50 J & Energy transferred to ball \& air; \\
+& & & & & rest dissipated \\
+\hline
+
+\caption{Energy budget through the swing. Total energy goes through the system and is finally transferred to the ball.}
+
+**Interpretation:**
+
+1. **Energy input:** Muscles do work during the backswing (lifting arms, creating tension) and early downswing (accelerating hips). Total muscular input is roughly $25$--$30$ J (from potential and elastic energy) plus $70$--$80$ J from muscular acceleration (early downswing). Total input: $\approx 100$ J.
+2. **Energy peak:** At late downswing, kinetic energy reaches $200$ J. This is the sum of muscular work plus energy from gravity (falling arms during downswing adds $\sim 100$ J).
+3. **Constraint force redistribution:** The $200$ J is redistributed from hips/torso ($\sim 150$ J) to arms and club ($\sim 50$ J) via constraint forces. No external energy added; pure redistribution.
+4. **Energy to the ball:** At impact, the club has $\sim 200$ J. A 150-gram ball initially at rest gains roughly $50$ J of kinetic energy (the rest is lost to shock, deformation, heat). The ball leaves at $\sim 150$ mph, which checks out.
+5. **Efficiency:** Muscular input is $\approx 100$ J, energy to the ball is $\approx 50$ J. Efficiency is roughly 50\%, with losses to:
+
+
+## Why Lag is an Energy Storage Mechanism
+
+::: {.callout-important}
+## Lag as a Constraint State
+
+**Lag** is the angular difference between arm and club: $\text{lag} = q_{\text{arm}} - q_{\text{club}}$. At the top of the backswing, lag is maximum (wrist cocked). During the downswing, lag decreases as the club releases.
+
+Lag is often described as a technique—"maintain lag to build power." But from an energy perspective, lag is a *constraint state* that stores potential energy.
+
+When the wrist is cocked (large lag), the arm and club are not moving together. The wrist constraint is tight (muscular tension). When the wrist is cocked and rotating (during downswing), the constraint force stores energy in the relative motion: the club is being pulled along by the arm's rotation, but the constraint force opposes their motion being identical (the wrist is not fully released).
+
+This stored energy—the kinetic energy in the relative motion between arm and club—is released when the wrist finally unlocks. The result: the club suddenly accelerates, reaching peak speed.
+
+:::
+
+{Lag Timing and Energy Release}{inplain:lag_timing}
+Golfers are often taught to "maintain lag late in the downswing." The physical intuition is: if you hold the wrist back (keep lag high), you can release it suddenly late, adding a burst of speed.
+
+The energy perspective confirms this: by holding the wrist cocked, you're maintaining the constraint that prevents the club from accelerating at its full rate. When you finally release, the constraint force is removed, and the club's acceleration can increase sharply. The energy that was stored in the constraint state (the potential energy in the stretched wrist tendons and the kinetic energy of the coupled arm-club system) is released to the club.
+
+However, there's a limit: if you hold the wrist too long, the release comes too late and the club doesn't have time to reach maximum speed before impact. This is why wrist release timing is so critical—it's not about muscular effort, but about when the constraint is released relative to the overall swing motion.
+
+**Example: Lag Release Timing and Energy Transfer**
+
+Scenario A: Early release (wrist released at t = 0.3 s)
+- At release: $T_{\text{arm}} = 80$ J, $T_{\text{club}} = 10$ J (still coupled).
+- Arm angular velocity at release: $\dot{q}_a = 15$ rad/s.
+- After release, Coriolis accelerates the club, but the arm is already slowing. Final club KE: $\sim 60$ J.
+
+Scenario B: Late release (wrist released at t = 0.38 s)
+- At release: $T_{\text{arm}} = 120$ J, $T_{\text{club}} = 20$ J (still coupled).
+- Arm angular velocity at release: $\dot{q}_a = 25$ rad/s (much higher).
+- After release, Coriolis accelerates the club further. Final club KE: $\sim 150$ J.
+
+**Comparison:** Late release results in $2.5 \times$ more club kinetic energy (150 J vs 60 J), even though no additional muscular effort was applied. The difference is purely due to *timing* of the constraint release.
+
+This is why timing is everything in golf: the total energy input is roughly constant (same muscular effort), but the final club speed depends critically on when the wrist releases. A 80 ms later release can double the club speed due to the energy state of the arm at the moment of release.
+
+## Double Pendulum Energy Transfer: Complete Derivation
+
+**Example: Energy Partition in the Double Pendulum**
+
+For a double pendulum (arm and club), the total kinetic energy is:
+
+T = \frac{1}{2} I_1 \dot{q}_1^2 + \frac{1}{2} I_2 \dot{q}_2^2 + m_2 L_1 L_2 \cos(q_2) \dot{q}_1 \dot{q}_2
+
+The third term is the coupling term—it's nonzero only if both segments are rotating.
+
+The power delivered by gravity and Coriolis (no muscle input, $\bm{u} = \mathbf{0}$) is:
+
+P = -\bm{C}^T \dot{\bm{q}} - \bm{g}^T \dot{\bm{q}}
+
+where:
+
+\bm{C} &=  -m_2 L_1 L_2 \sin(q_2) \dot{q}_1 \dot{q}_2 \\ 0 \\
+\bm{g} &=  m_1 g (L_1/2) \sin(q_1) + m_2 g L_1 \sin(q_1) \\ m_2 g (L_2/2) \sin(q_1 + q_2)
+
+The Coriolis term contributes:
+
+P_{\text{Cor}} = m_2 L_1 L_2 \sin(q_2) \dot{q}_1 \dot{q}_2 \cdot \dot{q}_1 = m_2 L_1 L_2 \sin(q_2) \dot{q}_1^2 \dot{q}_2
+
+When $q_2 > 0$ (elbow extended) and both $\dot{q}_1$ and $\dot{q}_2$ are positive (both rotating forward), the Coriolis power is positive for $\dot{q}_2 > 0$: energy is being added to the club's rotation.
+
+Conversely, if $\dot{q}_2 < 0$ (club is being held back), Coriolis power is negative: energy is being extracted from the club and returned to the system.
+
+This is the mechanism of energy transfer: Coriolis coupling acts as an energy pump, transferring energy between the segments.
+
+**Numerical example:**
+
+At a moment when $q_2 = 90°$ (elbow extended), $\dot{q}_1 = 10$ rad/s, $\dot{q}_2 = 5$ rad/s (arm extending), $m_2 = 0.2$ kg, $L_1 = 0.4$ m, $L_2 = 0.3$ m:
+
+P_{\text{Cor}} = 0.2 \times 0.4 \times 0.3 \times \sin(90°) \times 10^2 \times 5 = 0.024 \times 1 \times 100 \times 5 = 12 \text{ W}
+
+At $12$ W, the club's kinetic energy is increasing at a rate of $12$ J/s. If this continues for $0.05$ s (50 ms), the club gains $0.6$ J of energy. This seems small, but it's the cumulative effect over the entire downswing that matters.
+
+Later in the downswing, when velocities are higher and the coupling term is large, the Coriolis power becomes enormous:
+
+With $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 40$ rad/s:
+
+P_{\text{Cor}} = 0.024 \times 1 \times 400 \times 40 = 384 \text{ W}
+
+At $384$ W, the club's kinetic energy is increasing at an enormous rate. Over just $0.01$ s (10 ms), the club gains $3.8$ J.
+
+**Insight:** Coriolis power (energy transfer via coupling) scales as $\dot{q}_1^2 \dot{q}_2$. Late in the downswing, when velocities are high, this term dominates and drives the final acceleration of the club.
+
+## Summary: The Energy Picture of the Golf Swing
+
+::: {.callout-important}
+## Key Takeaways: Energy Transfer
+
+1. **Energy conservation:** Total mechanical energy is (roughly) conserved, but it flows and redistributes.
+2. **Power decomposition:** Power comes from gravity (during downswing), Coriolis effects, muscular input (early downswing), and constraint forces (which contribute zero net power but enable local transfers).
+3. **Constraint forces enable lossless energy transfer:** Constraint forces do zero net work to the system, but they redistribute energy between segments. This is the mechanism of the kinetic chain.
+4. **Energy partition:** Energy starts concentrated in the torso (hips and shoulders) and gradually flows to the arm and club. By impact, more than 50\% of kinetic energy is in the club.
+5. **Summation of speed:** Segments reach peak speed sequentially, with later segments moving faster because they have less inertia. This is not due to harder muscular pushing, but due to energy being transferred into smaller-inertia segments.
+6. **Sequential peak speeds:** Peak speeds increase proximal to distal because $\omega = \sqrt{2E/I}$. Smaller inertia at the distal end means higher speed for the same energy.
+7. **Lag stores energy:** A cocked wrist (large lag) constrains the club's motion relative to the arm. When released, this stored energy (both kinetic in the coupled system and elastic in stretched tissues) is converted to club speed.
+8. **Lag timing is critical:** Releasing the wrist earlier or later changes the final club speed by a factor of 2--3, even with identical muscular effort. Timing determines when the club inherits the arm's energy.
+9. **Efficiency:** A typical swing is about 50\% efficient—100 J of muscular input results in 50 J of kinetic energy in the ball. Losses come from air resistance, inefficient constraint transfers, and incomplete energy capture at impact.
+10. **The role of muscles:** Muscles provide the initial energy input (early downswing) and set up the constraint configuration (lag, X-factor). But the final club speed emerges primarily from passive constraint-based energy redistribution and Coriolis effects.
+
+:::
+
+::: {.callout-important}
+## Drift (Passive Energy Transfer) vs. Control (Muscular Input)
+
+**Drift (Passive):** Once the swing is initiated, gravity, Coriolis, and constraint forces handle energy redistribution. The system is essentially ballistic. Energy flows from proximal to distal segments automatically.
+
+**Control (Active):** Muscles control the initial momentum (early downswing hip acceleration) and the constraint configuration (wrist cock timing, X-factor magnitude). Control is about *setting up conditions* for passive physics to work optimally.
+
+**Implication:** To increase distance, don't focus on muscular effort at impact (you're too weak compared to Coriolis forces). Instead, focus on:
+- Early downswing: aggressive hip acceleration to build momentum.
+- Mid-downswing: maintaining lag and X-factor to keep energy distributed across segments.
+- Late downswing: precise wrist release timing to transfer arm energy to the club.
+
+These are all constraint and timing optimizations, not muscular power increases.
+
+:::
+
+**What comes next:** This concludes our journey through the physics of the golf swing. We've examined forces (Chapter 6), their transmission through constraints (Chapter 7), multi-segment systems (Chapter 8), parallel body structure (Chapter 9), and energy flow (Chapter 10).
+
+The overarching lesson: the golf swing is a beautiful interplay of *passive physics* (gravity, Coriolis, constraint forces) and *active control* (muscular input, constraint modulation, timing). Understanding this interplay reveals why technique matters, where effort should be focused, and why the best golfers look so effortless—they're not fighting physics; they're channeling it.
+
+## Chapter Exercises: Energy Transfer
+
+{Conceptual: Energy Flow}
+Describe the path of energy from the golfer's legs (pushing against the ground) to the ball (flying off the club face). Where is energy stored? Where is it transferred? Where is it lost?
+
+{Energy Partition Tracking}
+Simulate or model a double pendulum swing (or use the parameters from Chapter 8).
+
+1. Compute total kinetic energy $T = \frac{1}{2}\dot{\bm{q}}^T \bm{M} \dot{\bm{q}}$ at 5 time points during downswing.
+2. Decompose $T$ into arm kinetic energy and club kinetic energy.
+3. Plot the energy partition over time: what fraction is in the club at each moment?
+4. When does the club's kinetic energy exceed the arm's? Why?
+
+{Coriolis Power}
+For the double pendulum parameters given in this chapter:
+
+1. At early downswing ($\dot{q}_1 = 8$ rad/s, $\dot{q}_2 = 5$ rad/s), compute Coriolis power.
+2. At late downswing ($\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 40$ rad/s), compute Coriolis power.
+3. What is the ratio of late to early Coriolis power? (How much more powerful is Coriolis at the end?)
+
+{Lag Release Timing}
+Implement a swing model with controlled wrist release timing.
+
+1. Set up a constraint that couples arm and club for $t < t_{\text{release}}$, then releases the constraint at $t = t_{\text{release}}$.
+2. Run the model with $t_{\text{release}} = 0.30$ s, $0.35$ s, $0.40$ s.
+3. Measure club kinetic energy at impact for each release time.
+4. Plot club kinetic energy vs. release time. Is there an optimal release time that maximizes club energy?
+
+{Efficiency Calculation}
+For a recorded or simulated swing:
+
+1. Estimate total muscular work input (energy added by muscles early in downswing). This might be $80$--$120$ J.
+2. Measure kinetic energy of club at impact. This might be $150$--$200$ J.
+3. Estimate energy losses (air resistance, inefficient transfers, etc.).
+4. What fraction of muscular input reached the club as kinetic energy?
+
+{Application: Lag and Distance}
+Watch videos of two golfers (one pro, one amateur) at the moment of maximum lag (mid-downswing):
+
+1. Estimate the lag angle in each swing.
+2. Estimate when the lag is released (wrist straightens).
+3. Hypothesize: which golfer's lag release is better timed for energy transfer to the club?
+4. Predict club head speed based on your lag observations. Then look up actual club head speeds if possible—do your predictions match?
+

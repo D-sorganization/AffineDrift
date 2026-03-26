@@ -1,0 +1,1234 @@
+---
+title: "Degrees of Freedom and Robot Models of the Human Body"
+---
+
+::: {.callout-note}
+## From Anatomy to Equations
+
+You now know how to idealize individual joints. The next question is: *how many independent numbers do I need to describe a golf swing?*
+
+Suppose you have a model of the human body made from the joints we discussed in Chapter 22. You specify:
+
+- Pelvis orientation (3 angles)
+- Spine angles (3 DOF)
+- Lead hip angle (3 DOF)
+- Lead knee angle (1 DOF)
+- Lead ankle angles (2 DOF)
+- Trail hip angle (3 DOF)
+- Trail knee angle (1 DOF)
+- Trail ankle angles (2 DOF)
+- Lead shoulder angle (3 DOF)
+- Lead elbow angles (2 DOF)
+- Lead wrist angles (2 DOF)
+- Trail shoulder angle (3 DOF)
+- Trail elbow angles (2 DOF)
+- Trail wrist angles (2 DOF)
+
+That's approximately 35 numbers. Are all 35 independent? Is there a systematic way to count?
+
+The answer is the **Grübler-Kutzbach formula**, a tool from mechanism design that counts the degrees of freedom of any kinematic chain. In this chapter, we'll learn to use it, build a complete golf swing model in URDF (Unified Robot Description Format), and show how to simulate that model using robotics software.
+
+This is where biomechanics meets robotics. The human body is a robot. The laws are the same.
+
+:::
+
+## Counting Degrees of Freedom --- The Robotics Way
+
+
+
+
+
+### The Formula
+
+The **Grübler-Kutzbach formula** (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system.
+
+\begin{theorem}{Grübler-Kutzbach Formula}{thm:grubler}
+For a kinematic chain of $N$ rigid bodies (links) connected by $J$ joints, where joint $i$ has $f_i$ degrees of freedom, the total degrees of freedom of the system is:
+
+$$\mathrm{DOF} = 6(N-1) - \sum_{i=1}^{J} (6 - f_i)$$
+
+Equivalently, defining $c_i = 6 - f_i$ as the number of constraints imposed by joint $i$:
+
+$$\mathrm{DOF} = 6(N-1) - \sum_{i=1}^{J} c_i$$
+
+The constant 6 reflects the dimension of rigid-body motion in three-dimensional space: three translations + three rotations.
+\end{theorem}
+
+\subsection{Interpretation}
+
+Let's build intuition. Suppose we have $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total (the first body is the reference frame).
+
+Each joint imposes constraints. A revolute joint (1 DOF) imposes $c = 6 - 1 = 5$ constraints: it prevents translation in 3 directions and rotation about 2 axes (perpendicular to the joint axis). A spherical joint (3 DOF) imposes $c = 6 - 3 = 3$ constraints: only translation is prevented.
+
+The formula subtracts the total constraints from the free DOF.
+
+\subsection{Worked Example 1: A Simple Robot Arm}
+
+\begin{example}{3-Link Robot Arm}{ex:robot_arm_dof}
+Consider a robot arm with a fixed base and three revolute joints in series:
+
+\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.
+
+\textbf{Joints:} 3 revolute joints (one between ground and link 1, one between link 1 and link 2, one between link 2 and link 3). So $J = 3$.
+
+\textbf{Constraint count:} Each revolute has $f_i = 1$, so $c_i = 6 - 1 = 5$. Total constraints: $\sum c_i = 15$.
+
+\textbf{Grübler calculation:}
+$$\mathrm{DOF} = 6(4-1) - 15 = 18 - 15 = 3$$
+
+\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Yes! The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
+
+\textbf{Alternative calculation (tree formula):} For a tree structure (no loops), the DOF is simply the sum of joint DOFs:
+$$\mathrm{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
+
+Both methods agree for a tree structure.
+\end{example}
+
+\subsection{Worked Example 2: A Closed Kinematic Loop}
+
+\begin{example}{4-Bar Mechanism (Linkage)}{ex:four_bar_loop}
+Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints. The links form a closed loop: link 1 connects to link 2, link 2 to link 3, link 3 to link 4, and link 4 back to link 1.
+
+\textbf{Bodies:} Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.
+
+Wait, a 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed). So $N = 4$ (ground + 3 moving links).
+
+\textbf{Joints:} 4 revolute joints. $J = 4$. Each has $f_i = 1$, so $\sum c_i = 20$.
+
+\textbf{Grübler calculation (open chain):}
+$$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
+
+Negative DOF? This is wrong! The issue is that the formula gives a negative answer when there's a loop. We need to account for loop closure constraints.
+
+\textbf{Loop constraints:} The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation) ... but wait, in a planar 4-bar mechanism, only some of these constraints are active.
+
+Actually, the correct formula for a mechanism with loops is:
+$$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
+
+For a planar 4-bar mechanism, the loop closure imposes 3 constraints (2 position + 1 orientation in the plane). So:
+$$\mathrm{DOF} = 18 - 20 - (-2) = 18 - 20 + 2 = 0$$
+
+Hmm, still off. Let me reconsider. Actually, the Grübler formula for a planar mechanism (where all DOFs are in a plane) is:
+
+$$\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum c_i^{\text{planar}}$$
+
+For a planar 4-bar: $N = 4$, each revolute imposes $c^{\text{planar}} = 1$ constraint.
+$$\mathrm{DOF} = 3(3) - 4(1) = 9 - 4 = 5$$
+
+Still wrong! Let me look this up mentally... A 4-bar linkage should have 1 DOF (you can input one angle and the rest of the mechanism follows).
+
+Ah, I see the issue. We need to count more carefully. In a planar mechanism:
+- Each body has 3 DOF: 2 translations + 1 rotation in the plane.
+- Ground is fixed: 0 DOF.
+- Each moving body contributes 3 DOF: $N-1$ moving bodies × 3 = 3(N-1)$.
+
+For a 4-bar with 4 bodies (1 ground + 3 moving):$3(4-1) = 9$unconstrained DOF.
+
+Each revolute in a plane allows 1 rotation, imposes 2 constraints (prevents 2 translations + 1 perpendicular rotation ... wait, let me think again.
+
+Actually, in 2D:
+- Revolute joint:$f = 1$(rotation),$c = 2$(prevents 2 translations)
+- Prismatic joint:$f = 1$(translation),$c = 2$(prevents perpendicular translation + rotation)
+
+For a 4-bar:$N = 4$,$J = 4$revolutes,$\sum c = 4 \times 2 = 8$.
+
+$$\mathrm{DOF} = 3(4-1) - 8 = 9 - 8 = 1$$
+
+Yes! A 4-bar linkage has 1 DOF. $\checkmark$
+\end{example}
+
+\textbf{Lesson:} The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
+
+\section{Worked Example --- The Golf Swing Model}
+\label{sec:golf_swing_dof}
+
+\index{golf swing model}
+\index{kinematic structure}
+
+Let's build a golf swing model from scratch and count its degrees of freedom.
+
+\subsection{Model Definition}
+
+The model consists of the following kinematic chain:
+
+\begin{enumerate}
+\item \textbf{Base:} Pelvis (fixed to ground). We'll define the pelvis in the global frame. The pelvis orientation is fixed (for now), or we can allow small pelvis rotations in the $z$-axis (azimuth, yaw).
+
+\item \textbf{Spine:}
+   \begin{itemize}
+   \item Lumbar spine: 3-DOF joint (spherical) connecting pelvis to lumbar vertebra
+   \item Thorax: 3-DOF joint (spherical) connecting lumbar to thorax/ribcage
+   \end{itemize}
+
+\item \textbf{Lead side (left arm for right-handed golfer):}
+   \begin{itemize}
+   \item Lead shoulder: 3-DOF (spherical) connecting thorax to upper arm
+   \item Lead elbow: 2-DOF (revolute flexion + revolute pronation) connecting upper arm to forearm
+   \item Lead wrist: 2-DOF (universal joint) connecting forearm to hand
+   \item Lead hand: (0-DOF, rigidly attached to club, OR 3-DOF if we allow grip motion)
+   \item Club: (0-DOF, rigidly attached to lead hand)
+   \end{itemize}
+
+\item \textbf{Trail side (right arm for right-handed golfer):}
+   \begin{itemize}
+   \item Trail hip: 3-DOF (spherical) connecting pelvis to trail upper leg
+   \item Trail knee: 1-DOF (revolute) connecting upper leg to lower leg
+   \item Trail ankle: 2-DOF connecting lower leg to foot
+   \item Lead hip: 3-DOF connecting pelvis to lead upper leg
+   \item Lead knee: 1-DOF connecting upper leg to lower leg
+   \item Lead ankle: 2-DOF connecting lower leg to foot
+   \end{itemize}
+
+Actually, let me simplify for now. Let's focus on the upper body and arms (ignore legs for this calculation).
+
+\subsection{Simplified Upper Body Model}
+
+\begin{enumerate}
+\item Pelvis (base, fixed orientation): 0 DOF relative to ground
+\item Lumbar spine: 3-DOF (3R spherical joint)
+\item Thorax: 3-DOF (3R spherical joint)
+\item Lead shoulder: 3-DOF (3R spherical)
+\item Lead elbow: 2-DOF (1R flexion + 1R pronation)
+\item Lead wrist: 2-DOF (2R universal)
+\item Trail shoulder: 3-DOF (3R spherical)
+\item Trail elbow: 2-DOF (1R flexion + 1R pronation)
+\item Trail wrist: 2-DOF (2R universal)
+\end{enumerate}
+
+\textbf{Open chain (if the two hands were not gripping the same club):}
+
+__DISPLAY_MATH_8__
+
+\textbf{Bodies:} Pelvis + Lumbar + Thorax + Lead Upper Arm + Lead Forearm + Lead Hand + Trail Upper Arm + Trail Forearm + Trail Hand = 9 bodies (plus the ground/pelvis base, so $N = 10$).
+
+\textbf{Joints:} 8 joints as listed.
+
+\textbf{Grübler check (open chain):}
+$$\mathrm{DOF} = 6(10-1) - \sum c_i = 54 - (6-3 \times 3) - (6-3) - (6-2) - ... $$
+
+Actually, let's use the simpler formula for a tree:
+$$\mathrm{DOF}_{\text{tree}} = \sum f_i = 20$$
+
+So without any closure constraints, 20 DOF.
+
+\subsection{The Grip Constraint (Loop Closure)}
+
+Here's the critical part: the two hands grip the \emph{same club}. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
+
+This creates a \textbf{loop closure constraint}: the position and orientation of the club relative to the lead hand must be consistent with the position and orientation relative to the trail hand.
+
+If we model the club as rigidly attached to the lead hand (0 additional DOF), then the trail hand must follow the lead hand exactly. But this is too restrictive---the hands can slip slightly relative to each other on the grip.
+
+A more realistic model: the club is a separate body connected to:
+\begin{itemize}
+\item Lead hand via a 0-DOF (rigid) joint OR a 6-DOF (free) joint with stiffness constraints
+\item Trail hand via a 0-DOF (rigid) joint OR a 6-DOF (free) joint with stiffness constraints
+\end{itemize}
+
+If we use 6-DOF joints, we've added 12 DOF (6 for each hand). The total becomes $20 + 12 = 32$ DOF in the open chain.
+
+But the constraint is: the club is a single rigid body. Its position and orientation are uniquely determined. This is 6 constraints (3 position + 3 orientation).
+
+\textbf{Closed-chain DOF:}
+$$\mathrm{DOF}_{\text{closed}} = 32 - 6 = 26 \text{ DOF}$$
+
+Alternatively, if we use the simpler model (club rigidly attached to lead hand), we have:
+$$\mathrm{DOF}_{\text{closed}} = 20 - 6 = 14 \text{ DOF}$$
+
+(The 6 subtracted are the position/orientation of the trail hand relative to the club, which is now constrained.)
+
+\textbf{In practice:} A full-body golf swing model (including both legs) has approximately 25--30 DOF depending on how many joints we include. This is large but manageable for dynamics simulation and optimization.
+
+\begin{principle}{DOF Counting in Practice}{prin:dof_practice}
+When building a biomechanical model:
+
+\begin{enumerate}
+\item Start with the kinematic structure (which bodies, which joints)
+\item Use the tree formula if there are no loops: $\sum f_i$
+\item If there's a loop (two hands on a club, foot-ground contact in a stance), use the full Grübler formula with loop closure constraints
+\item Verify your answer by checking intuition: does it match the task-space dimensionality?
+\end{enumerate}
+
+For the golf swing, we have roughly 25--30 DOF. The task (hit a golf ball to a target) requires control of the club orientation (3 DOF) and club position (3 DOF) at impact. That's 6 DOF task-space. This means we have 20--25 DOF of redundancy: many different arm configurations can hit the same shot.
+\end{principle}
+
+\section{The Human Arm --- A 7-DOF Redundant Manipulator}
+\label{sec:arm_redundancy}
+
+\index{redundancy}
+\index{null space}
+\index{self-motion}
+
+The human arm is a fascinating example of a redundant manipulator. Let's analyze it in detail.
+
+\subsection{DOF Count}
+
+A single human arm has:
+\begin{itemize}
+\item Shoulder: 3 DOF (spherical joint)
+\item Elbow: 1 DOF (flexion)
+\item Pronation/supination: 1 DOF (forearm rotation)
+\item Wrist: 2 DOF (flexion + deviation)
+\end{itemize}
+
+Total: $3 + 1 + 1 + 2 = 7$ DOF.
+
+\subsection{Task Space}
+
+The task for the arm is to position and orient the hand. In 3D space:
+\begin{itemize}
+\item Position: 3 DOF (x, y, z coordinates of the hand)
+\item Orientation: 3 DOF (roll, pitch, yaw of the hand frame)
+\end{itemize}
+
+Total task space: 6 DOF.
+
+\subsection{Redundancy}
+
+The arm has 7 actuated DOF but only needs 6 to achieve the task. This means:
+
+$$\text{Redundancy} = 7 - 6 = 1 \text{ DOF of redundancy}$$
+
+Physically, this means: \emph{you can keep your hand fixed in position and orientation while still moving your arm}. The only motion available is the \emph{null space} of the Jacobian.
+
+\subsection{The Null-Space Motion: Elbow Swivel}
+
+The null-space motion of the arm is the \textbf{elbow swivel}. Keep your hand fixed in space (position and orientation). Now swivel your elbow in and out. The hand doesn't move, but the elbow traces a circle.
+
+Mathematically, if $\bm{J}(\bm{q})$ is the Jacobian (relating joint velocities to hand velocities), then the null space is:
+
+$$\mathcal{N}(\bm{J}) = \{\bm{v} : \bm{J} \bm{v} = \mathbf{0}\}$$
+
+Any velocity in this null space leaves the hand unchanged.
+
+\subsection{Why Redundancy Matters for Golf}
+
+In the golf swing, both hands are on the club. The task is to move the club along a specific path. Because the arm is redundant, there are multiple arm configurations that can achieve the same club position at any moment.
+
+Elite golfers exploit this redundancy to:
+\begin{itemize}
+\item Maximize club speed at impact (choose the configuration with the highest end-effector velocity)
+\item Minimize muscle activation and energy cost
+\item Avoid awkward or painful arm positions
+\item Adjust grip tension (allowing more pronation or wrist bow through the swing)
+\end{itemize}
+
+This is why motion capture data shows that no two golfers swing identically. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
+
+\begin{example}{Elbow Swivel in the Golf Swing}{ex:elbow_swivel}
+Consider a golfer at the top of the backswing. The club is at a specific position and orientation. Now, without moving the club, the golfer could:
+
+\begin{enumerate}
+\item Flex the elbow slightly (bringing the elbow closer to the body): this uses the null-space motion.
+\item Extend the elbow slightly (straightening the arm): another null-space motion.
+\end{enumerate}
+
+Both configurations move the elbow but leave the club unchanged. In the downswing, different null-space trajectories would result in different arm angles at the same club positions. Some trajectories are more efficient (less muscular effort), others place less strain on the joints.
+
+Biomechanical optimization of the golf swing must account for this redundancy: there is not a unique optimal arm configuration for each club position, but rather a manifold of near-optimal configurations.
+\end{example}
+
+\subsection{The Pseudoinverse and Null-Space Projection}
+
+If we want to solve for joint velocities $\dot{\bm{q}}$ given desired hand velocity $\dot{\bm{x}}$ (task space), we use the inverse Jacobian:
+
+$$\dot{\bm{q}} = \bm{J}^{\dagger} \dot{\bm{x}} + (\bm{I} - \bm{J}^{\dagger}\bm{J}) \bm{v}_{\text{null}}$$
+
+where:
+\begin{itemize}
+\item $\bm{J}^{\dagger}$ is the Moore-Penrose pseudoinverse
+\item $(\bm{I} - \bm{J}^{\dagger}\bm{J})$ is the projection onto the null space
+\item $\bm{v}_{\text{null}}$ is any vector in the null space
+\end{itemize}
+
+The first term, $\bm{J}^{\dagger} \dot{\bm{x}}$, solves the task. The second term, $(\bm{I} - \bm{J}^{\dagger}\bm{J}) \bm{v}_{\text{null}}$, is the null-space motion.
+
+By choosing different $\bm{v}_{\text{null}}$, we can optimize for secondary objectives (minimize energy, avoid joint limits, maximize manipulability) while maintaining the task.
+
+\section{Kinematic Redundancy and the Manifold of Solutions}
+\label{sec:manifold_solutions}
+
+\index{kinematic redundancy}
+\index{manifold of solutions}
+\index{null space}
+\index{motor equivalence}
+\index{Bernstein's degrees of freedom problem}
+
+\begin{laymansbox}{Many Ways to Reach the Cup}{box:ch23_redundancy_intro}
+Here's a simple everyday fact: there are infinitely many ways to reach for a coffee cup on your desk.
+
+Your shoulder can rotate, your elbow can flex or extend, your wrist can bend and twist. If you keep your hand fixed at the cup, you can still move your arm. Your elbow can point forward, sideways, or backward --- each configuration is a different arrangement of your shoulder, elbow, and wrist, yet your hand stays at the cup.
+
+This is redundancy. Your body has more degrees of freedom than the task requires.
+
+The golf swing is the same. A golfer has approximately 25--30 degrees of freedom. But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
+
+That leaves 20--25 DOF unspecified. There are \emph{infinitely many} joint configurations that produce the same club position. This is not a problem. It's a feature. It's how the brain exploits redundancy to adapt, optimize, and recover from perturbations.
+
+In this section, we characterize the structure of these infinite solutions: the \textbf{manifold of solutions}.
+\end{laymansbox}
+
+\subsection{The Redundancy Problem}
+
+Let's formalize the redundancy. Suppose the task is to control the position and orientation of the club head. We call this the \textbf{task space}:
+
+__DISPLAY_MATH_0__
+
+where $\bm{q} \in \mathbb{R}^n$ is the vector of joint angles ($n \approx 25$--$30$ for a full-body golf swing model) and $h$ is the forward kinematics function that maps joint angles to club head pose.
+
+The task is 6-dimensional. The system is $n$-dimensional. Since $n > 6$, the system is \textbf{redundant}: there are $n - 6$ ``extra'' degrees of freedom that don't directly affect the task.
+
+For a full-body golf swing model with $n = 25$, we have:
+
+__DISPLAY_MATH_1__
+
+This means: \emph{you can move your joints while keeping the club head fixed}. The only motions available are those that don't move the club head. These are called \textbf{null-space motions}.
+
+\subsection{The Task Jacobian and the Null Space}
+
+To understand null-space motion mathematically, we differentiate the task:
+
+__DISPLAY_MATH_2__
+
+where $\bm{J}(\bm{q}) \in \mathbb{R}^{6 \times n}$ is the \textbf{task Jacobian}. It relates club head velocity (task space) to joint velocities (joint space).
+
+Since $\bm{J}$ has more columns than rows ($n > 6$), it has a non-trivial \textbf{null space}:
+
+\begin{definition}{Null Space of the Jacobian}{def:ch23_null_space}
+The null space of the Jacobian is the set of all joint velocities that produce zero club head velocity:
+
+__DISPLAY_MATH_3__
+
+Geometrically, this is the set of directions in joint space that are orthogonal to all rows of $\bm{J}$.
+
+Dimensionally, if $\bm{J}$ has rank $r = 6$ (full rank in task space), then $\dim(\mathcal{N}(\bm{J})) = n - r = n - 6$.
+\end{definition}
+
+\textbf{Physical meaning:} Any velocity in the null space produces zero task-space velocity. These are \textbf{internal motions}---motions that move the joints but leave the club head stationary.
+
+\subsection{The Solution Manifold}
+
+Now consider the inverse problem: given a desired club head position $\bm{x}^*$, find all joint configurations $\bm{q}$ that achieve it.
+
+The set of all solutions is:
+
+__DISPLAY_MATH_4__
+
+This set is called the \textbf{solution manifold}. It is a submanifold of the joint configuration space $\mathbb{R}^n$.
+
+\begin{theorem}{Dimension of the Solution Manifold}{thm:ch23_manifold_dimension}
+If the task Jacobian $\bm{J}(\bm{q})$ has full rank (rank 6) at a configuration $\bm{q}^*$, then the solution manifold $\mathcal{M}(\bm{x}^*)$ passing through $\bm{q}^*$ is a smooth submanifold of dimension $n - 6 = 19$.
+\end{theorem}
+
+\textbf{Proof sketch:} The level set $h(\bm{q}) = \bm{x}^*$ is defined by 6 equations. If $\bm{J}$ has rank 6, these equations are independent, and the implicit function theorem applies. The solution set is a $(n - 6)$-dimensional submanifold.
+
+\subsection{Intuition: The Elbow Circle}
+
+The simplest example is the 7-DOF human arm reaching a fixed hand position in space. The arm has 7 DOF but the task (hand position and orientation) requires 6. So there is $7 - 6 = 1$ DOF of redundancy.
+
+The solution manifold is 1-dimensional: a curve in joint space. This curve is the \textbf{elbow circle}. As you move along the elbow circle, your joint angles change, but your hand stays fixed. Your elbow traces a circle in 3D space.
+
+For the golf swing with 25 DOF and 6-DOF task, the solution manifold is 19-dimensional. You can't visualize it, but the principle is the same: a smooth 19-dimensional surface in 25-dimensional joint space. Every point on this surface corresponds to a different joint configuration that places the club head at the desired position.
+
+\subsection{Different Golfers, Different Paths}
+
+Two golfers with different body proportions, flexibility, and strength navigate \emph{different} solution manifolds. Their manifolds are actually different subsets of joint space because their anthropometry is different.
+
+Yet if both golfers hit the same shot (same club position at impact, same club head velocity), their task-space trajectories are identical. Their joint-space trajectories, however, are completely different. One golfer might use more shoulder rotation; the other uses more spinal twist. One might have a more extended arm at the top; the other more bent. Both are moving along different paths through their respective solution manifolds, yet both hit the same target.
+
+\textbf{This is motor equivalence}: same task, different joint trajectories.
+
+\begin{principle}{Motor Equivalence and Biological Variability}{prin:ch23_motor_equivalence}
+In biomechanics, different individuals can perform the same task with completely different movement patterns because:
+
+\begin{enumerate}
+\item Each individual has a unique body (different limb lengths, joint ranges, muscle properties).
+\item The task is lower-dimensional than the organism (task is 6 DOF, body is 25--30 DOF).
+\item Therefore, there are multiple solution manifolds (one per individual), and multiple paths on each manifold.
+\item The nervous system exploits this freedom to adapt to constraints, injuries, and learned preferences.
+\end{enumerate}
+
+This explains why two elite golfers can look completely different in slow motion yet produce identical ball flights.
+\end{principle}
+
+\subsection{Bernstein's Degrees of Freedom Problem}
+
+In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}
+
+\begin{definition}{Bernstein's Degrees of Freedom Problem}{def:ch23_bernstein_problem}
+Given a motor task (e.g., hit a golf ball), the organism has many more DOF than required by the task. This creates a problem:
+
+\begin{itemize}
+\item The task constrains only 6 DOF (club position and orientation).
+\item The body has 25--30 DOF.
+\item Therefore, there are infinitely many ways to accomplish the task.
+\item How does the brain \emph{choose} which one?
+\end{itemize}
+
+This is Bernstein's degrees of freedom problem. It is the fundamental challenge of motor control.
+\end{definition}
+
+The traditional answer was that the brain ``freezes'' extra degrees of freedom: it selects a subset of joints to control and keeps the others rigid. A beginner might lock the wrist and elbow, using only shoulder and hip rotation. This reduces the effective DOF, making the problem easier but less fluid.
+
+Experts do the opposite: they \emph{free} degrees of freedom. An expert golfer uses all 25--30 DOF, exploiting the full redundancy. This requires more sophisticated neural control but allows optimization for energy efficiency, injury avoidance, and adaptability.
+
+\begin{laymansbox}{Freezing vs. Freeing DOF}{box:ch23_freezing_freeing}
+A beginner's golf swing is characterized by rigidity: the wrist is locked, the elbow stays close to the body, the spine is stiff. The swing uses perhaps 10--12 effective DOF.
+
+An expert's swing is fluid and coordinated: the wrist is active, the elbow follows a natural arc, the spine rotates smoothly. The swing uses 25--30 DOF.
+
+Why the difference?
+
+In a beginner, motor control is not yet learned. The brain hasn't developed the neural patterns to coordinate all DOF simultaneously. So it shuts down redundancy: it freezes joints. This makes the task easier to control (lower-dimensional problem) but produces less speed and less consistency.
+
+As the golfer learns, the brain develops these patterns. It learns to exploit redundancy: to coordinate the full chain of joints. This unlocks energy transfer (the whip effect of the club), allows compensation for perturbations (wind, slight mis-hits), and enables the golfer to recover from injuries by redistributing load to other joints.
+\end{laymansbox}
+
+\subsection{Self-Organization Through Constraints}
+
+So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology:
+
+\begin{itemize}
+\item \textbf{Joint limits:} Each joint has a maximum range of motion. This reduces the feasible set to a smaller manifold (the intersection of the solution manifold with the joint-limit constraints).
+\item \textbf{Muscle strength:} Not all accelerations are achievable with available torque. This further constrains the feasible solution space.
+\item \textbf{Energy minimization:} The brain tends to choose solutions that minimize metabolic cost or joint stress. This singles out a small region of the solution manifold.
+\item \textbf{Stability and safety:} The brain avoids configurations that are unstable or place the body in mechanical disadvantage.
+\item \textbf{The two-handed constraint:} Both hands grip the club. This is a loop-closure constraint that dramatically shrinks the solution space.
+\end{itemize}
+
+These physical constraints do the work. The brain doesn't need to pick from infinity; it only needs to navigate a greatly reduced feasible set.
+
+\subsection{Compensation Patterns}
+
+A beautiful consequence of the solution manifold is \textbf{compensation}. When one DOF is limited (due to injury, immobility, or asymmetry), the redundancy allows other DOF to compensate.
+
+\textbf{Example:} A golfer with reduced hip mobility cannot rotate the hips as much. But because the solution manifold is high-dimensional, other joints can take up the slack. The thoracic spine can rotate more, or the shoulders can shift, or the timing can change. The golfer can still hit the same shot, but the null-space motion is different.
+
+This is why skilled golfers can adapt to injuries. And it's why rehabilitation after injury works: the brain learns new paths through the solution manifold that respect the new constraints.
+
+\section{The 7-DOF Arm --- Redundancy in Miniature}
+\label{sec:arm_redundancy_detailed}
+
+Let's focus on a single limb to make the solution manifold concrete.
+
+\subsection{DOF Count and Redundancy}
+
+The human arm has:
+\begin{itemize}
+\item Shoulder: 3 DOF
+\item Elbow: 1 DOF
+\item Forearm rotation: 1 DOF
+\item Wrist: 2 DOF
+\end{itemize}
+
+Total: 7 DOF. The task (hand position and orientation) is 6 DOF. Redundancy: $7 - 6 = 1$.
+
+\subsection{The Elbow Circle --- A Concrete Null-Space Motion}
+
+The null-space motion is the elbow circle. Keep your hand fixed in space (position and orientation). Now swing your elbow outward and inward. Your hand stays at the same location, but your elbow traces a circle.
+
+Mathematically, this is a motion $\dot{\bm{q}}_0 \in \mathcal{N}(\bm{J})$. The joint angles change, but $\bm{J} \dot{\bm{q}}_0 = 0$, so the hand velocity is zero.
+
+\subsection{Application to the Golf Swing}
+
+In the golf swing, both hands grip the club, but each arm has its own 1 DOF of redundancy (the elbow circle). This means:
+
+\begin{enumerate}
+\item At any instant, the lead elbow can point forward (tucked), sideways (neutral), or backward (flying).
+\item Each choice is a different point on the solution manifold.
+\item Different instructors teach different elbow positions: ``Keep your elbow tucked'' vs. ``Let your elbow fly.'' These are not contradictions; they are different points on the same manifold that produce the same task outcome.
+\item The optimal elbow position depends on secondary objectives: energy efficiency, injury avoidance, or club head speed.
+\end{enumerate}
+
+An instructor might optimize for one criterion (minimal shoulder strain), while an elite golfer naturally chooses another (maximum energy transfer). Both are navigating the solution manifold, but along different paths.
+
+\section{Redundancy and Null-Space Control}
+\label{sec:null_space_control}
+
+\begin{driftcontrol}{Null-Space Optimization in the ZTCF}{box:ch23_null_space_ztcf}
+Recall from Chapters 5 and 6 that the system evolves under drift and control:
+
+__DISPLAY_MATH_5__
+
+In the golf swing, the state includes joint angles and velocities. The control is muscular torque.
+
+Now, here is the key insight: \textbf{redundancy means the control matrix $\bm{G}$ has a null space}. Some control directions don't affect the task (club head motion) but DO affect joint loads, energy storage, and timing.
+
+Specifically, suppose we decompose the control:
+
+__DISPLAY_MATH_6__
+
+where:
+\begin{itemize}
+\item $\bm{u}_{\text{task}}$ is a component that directly drives the task (club head motion).
+\item $\bm{u}_{\text{null}}$ is a component that lies in the null space of the task Jacobian (doesn't move the club head).
+\end{itemize}
+
+The brain can use $\bm{u}_{\text{null}}$ to optimize secondary objectives without affecting the primary task:
+
+\begin{enumerate}
+\item \textbf{Minimize joint stress:} By distributing load across multiple joints rather than concentrating it in one.
+\item \textbf{Maximize energy transfer:} By timing the null-space motion to add energy to the system without changing the club head trajectory.
+\item \textbf{Reduce metabolic cost:} By exploiting passive dynamics in the null space (e.g., letting gravity assist in the downswing).
+\item \textbf{Increase robustness:} By maintaining stability in the null-space directions even when the task is on track.
+\end{enumerate}
+
+This is precisely what skilled golfers do intuitively. They simultaneously:
+\begin{itemize}
+\item Control the primary task (club head to the ball, square face, maximum speed).
+\item Optimize secondary objectives in the null space (energy transfer, joint health, adaptability).
+\end{itemize}
+
+This layered control is the hallmark of expertise.
+\end{driftcontrol}
+
+\subsection{The Pseudoinverse Solution and Null-Space Projection}
+
+If we want to command a desired club head velocity $\dot{\bm{x}}_{\text{desired}}$ while optimizing in the null space, we solve:
+
+__DISPLAY_MATH_7__
+
+where:
+\begin{itemize}
+\item $\bm{J}^{\dagger}$ is the Moore-Penrose pseudoinverse: $(J^T J)^{-1} J^T$.
+\item $(\bm{I} - \bm{J}^{\dagger} \bm{J})$ is the orthogonal projection onto $\mathcal{N}(\bm{J})$.
+\item $\bm{z}$ is an arbitrary vector (the null-space optimization input).
+\end{itemize}
+
+The first term solves the task: it finds the joint velocities needed to produce the desired club head velocity. The second term adds null-space motion: it optimizes the solution without affecting the task.
+
+\begin{example}{Null-Space Optimization: Elbow Swivel}{ex:ch23_elbow_swivel_null_space}
+Consider a golfer at the top of the backswing. The task is to swing the club down along a specific trajectory. The club head position and velocity are prescribed.
+
+However, the elbow position is not prescribed. It's part of the null space.
+
+The pseudoinverse gives one solution: a particular elbow position that achieves the task. But there are infinitely many solutions (a 1-DOF family for a 7-DOF arm).
+
+By choosing the null-space vector $\bm{z}$, the brain can:
+\begin{enumerate}
+\item Minimize shoulder torque: choose an elbow position that reduces the torque required at the shoulder.
+\item Maximize club head speed: choose an elbow position that adds energy to the system (e.g., allowing the elbow to extend into the swing, converting arm energy into club head speed).
+\item Adapt to perturbations: if the club is slightly off the planned trajectory, adjust the null-space motion to compensate without changing the primary task.
+\end{enumerate}
+
+Elite golfers do this automatically. Their null-space choices are learned over thousands of repetitions.
+\end{example}
+
+\subsection{Summary: The Manifold of Solutions}
+
+The structure of the golf swing emerges from redundancy:
+
+\begin{itemize}
+\item The solution manifold is the set of all joint configurations that achieve a given club head pose.
+\item It is high-dimensional ($n - m = 19$--$24$ for a golfer with 25--30 DOF aiming at a 6-DOF task).
+\item Different golfers, different anthropometries, different paths along manifolds.
+\item Physical constraints (joint limits, muscle strength, injury, the two-handed grip) prune the manifold to a manageable subset.
+\item The brain exploits this structure to optimize multiple objectives simultaneously: the primary task (hit the ball) and secondary objectives (minimize energy, avoid injury, adapt to perturbations).
+\item Redundancy is not a liability; it is the key to adaptation and resilience.
+\end{itemize}
+
+\section{URDF --- The Unified Robot Description Format}
+\label{sec:urdf}
+
+\index{URDF}
+\index{Unified Robot Description Format}
+\index{robot description}
+
+URDF is an XML-based format that describes the kinematic and dynamic structure of a robot. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models.
+
+\subsection{Basic Structure}
+
+A URDF file defines:
+\begin{itemize}
+\item \textbf{Links:} Rigid bodies with mass properties and geometry (collision and visual shapes)
+\item \textbf{Joints:} Constraints connecting links
+\item \textbf{Inertia:} Mass and moment of inertia for each link
+\end{itemize}
+
+\subsection{A Simple Example: 2-Link Arm}
+
+\begin{example}{URDF for a 2-Link Planar Arm}{ex:urdf_simple}
+\begin{verbatim}
+<?xml version="1.0"?>
+<robot name="simple_arm">
+
+  <!-- Base link (fixed to ground) -->
+  <link name="base_link">
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.01"/>
+    </inertial>
+  </link>
+
+  <!-- Upper arm (link 1) -->
+  <link name="upper_arm">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0.15 0 0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.05"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.15 0 0"/>
+      <geometry>
+        <cylinder length="0.3" radius="0.05"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.15 0 0"/>
+      <geometry>
+        <cylinder length="0.3" radius="0.05"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Lower arm (link 2) -->
+  <link name="lower_arm">
+    <inertial>
+      <mass value="1.5"/>
+      <origin xyz="0.15 0 0"/>
+      <inertia ixx="0.03" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.03"/>
+    </inertial>
+    <collision>
+      <origin xyz="0.15 0 0"/>
+      <geometry>
+        <cylinder length="0.3" radius="0.04"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.15 0 0"/>
+      <geometry>
+        <cylinder length="0.3" radius="0.04"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- Shoulder joint (revolute, 1 DOF) -->
+  <joint name="shoulder" type="revolute">
+    <parent link="base_link"/>
+    <child link="upper_arm"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.14" upper="3.14" effort="10" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+  </joint>
+
+  <!-- Elbow joint (revolute, 1 DOF) -->
+  <joint name="elbow" type="revolute">
+    <parent link="upper_arm"/>
+    <child link="lower_arm"/>
+    <origin xyz="0.3 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="3.14" effort="10" velocity="1.0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+  </joint>
+
+</robot>
+\end{verbatim}
+
+This URDF describes a 2-link planar arm. The shoulder joint connects the base to the upper arm. The elbow joint connects the upper arm to the lower arm. Both joints are revolute (rotation about the z-axis, which is perpendicular to the plane).
+\end{example}
+
+\subsection{Key URDF Tags}
+
+\begin{definition}{URDF Link}{def:urdf_link}
+A \texttt{<link>} element represents a rigid body. It contains:
+\begin{itemize}
+\item \texttt{<inertial>}: Mass and moment of inertia
+\item \texttt{<collision>}: Collision geometry (for contact simulation)
+\item \texttt{<visual>}: Visual mesh for rendering
+\end{itemize}
+
+Inertia values are stored in a 3×3 symmetric matrix $\bm{I}$, represented as six values: $I_{xx}, I_{xy}, I_{xz}, I_{yy}, I_{yz}, I_{zz}$.
+\end{definition}
+
+\begin{definition}{URDF Joint}{def:urdf_joint}
+A \texttt{<joint>} element represents a kinematic constraint. It contains:
+\begin{itemize}
+\item \texttt{<parent link>}: The parent rigid body
+\item \texttt{<child link>}: The child rigid body
+\item \texttt{<origin>}: Relative position/orientation (x, y, z, roll, pitch, yaw)
+\item \texttt{<axis>}: Direction of motion (for revolute: unit vector; for prismatic: direction of translation)
+\item \texttt{<limit>}: Range of motion (lower, upper bounds) and effort/velocity limits
+\item \texttt{<dynamics>}: Damping and friction coefficients
+\item \texttt{type}: revolute, continuous, prismatic, floating, planar, fixed
+\end{itemize}
+\end{definition}
+
+\subsection{URDF Joint Types}
+
+\begin{itemize}
+\item \textbf{revolute:} Rotation about a fixed axis, with position limits
+\item \textbf{continuous:} Rotation about a fixed axis, unlimited (can spin freely, like a wheel)
+\item \textbf{prismatic:} Translation along a fixed axis
+\item \textbf{floating:} 6-DOF free motion (used for objects not attached to anything)
+\item \textbf{planar:} 3-DOF motion in a plane (2 translations + 1 rotation)
+\item \textbf{fixed:} 0-DOF (rigid connection)
+\end{itemize}
+
+\subsection{Critical Limitation: URDF Cannot Represent Closed Loops}
+
+URDF describes a kinematic \textbf{tree structure}. Each link has exactly one parent. This means URDF cannot directly represent a closed kinematic loop.
+
+For example, the golf swing has a loop: both hands grip the club. If we model the club as a separate body connected to both hands, this is a loop. URDF cannot handle this.
+
+\textbf{Workarounds:}
+\begin{enumerate}
+\item \textbf{Ignore one side of the loop:} Attach the club to one hand (lead hand) via a fixed joint, and ignore the trail hand's contact with the club. This is simple but inaccurate.
+
+\item \textbf{Use a dynamics engine that supports loops:} Some simulators (Drake, MuJoCo, PyBullet) can load URDF and add constraint equations to handle loops. The loop is treated as a constraint in the dynamics solver, not as part of the kinematic tree.
+
+\item \textbf{Use SDF instead of URDF:} The Simulation Description Format (SDF) supports multiple kinematic trees and joint constraints, so it can represent loops. SDF is more complex but more general.
+\end{enumerate}
+
+For our golf swing model, we'll use approach 2: load the URDF into a dynamics engine and add a constraint that the trail hand must stay attached to the club grip.
+
+\section{Building a Full-Body Golf URDF}
+\label{sec:golf_urdf}
+
+\subsection{Kinematic Structure}
+
+Since URDF requires a tree, we'll model the golf swing as a branching tree with the pelvis as the root:
+
+\begin{verbatim}
+pelvis (root)
+|-- lumbar
+|   +-- thorax
+|       |-- lead_shoulder
+|       |   +-- lead_upper_arm
+|       |       +-- lead_forearm
+|       |           +-- lead_hand
+|       |               +-- club
+|       +-- trail_shoulder
+|           +-- trail_upper_arm
+|               +-- trail_forearm
+|                   +-- trail_hand
+|-- lead_hip
+|   +-- lead_upper_leg
+|       +-- lead_lower_leg
+|           +-- lead_foot
++-- trail_hip
+    +-- trail_upper_leg
+        +-- trail_lower_leg
+            +-- trail_foot
+\end{verbatim}
+
+This tree has 11 links (pelvis + 10 others) and 10 joints. The DOF is the sum of joint DOFs:
+$$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 + 3 + 1 + 2 + 3 + 1 + 2 = 32 \text{ DOF (if we include hip flexion/extension, leg DOFs)}$$
+
+For a simplified upper-body model (ignoring legs):
+$$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20 \text{ DOF}$$
+
+\subsection{Segment Parameters: Anthropometry}
+
+To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects.
+
+\begin{example}{Anthropometric Data (de Leva 1996)}{ex:anthropometry}
+For a 70 kg male, typical segment masses are:
+
+\begin{center}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Segment} & \textbf{Mass (\% total)} & \textbf{Mass (kg)} \\
+\hline
+Upper arm & 2.7 & 1.9 \\
+Forearm & 1.6 & 1.1 \\
+Hand & 0.6 & 0.4 \\
+Thorax & 16 & 11.2 \\
+Lumbar & (part of thorax) & \\
+Upper leg & 10 & 7.0 \\
+Lower leg & 4.7 & 3.3 \\
+Foot & 1.5 & 1.0 \\
+\hline
+\end{tabular}
+\end{center}
+
+For moments of inertia, de Leva provides regression equations. For example, the moment of inertia of the forearm about its long axis is:
+$$I_{zz}^{\text{forearm}} \approx 0.016 \times m \times L^2$$
+where $m$ is forearm mass and $L$ is forearm length.
+
+A complete URDF would include all segment masses and inertias computed from de Leva's data scaled to the athlete's body weight.
+\end{example}
+
+\subsection{A Simplified Golf Swing URDF (Upper Body)
+
+```xml
+<?xml version="1.0"?>
+<robot name="golfer">
+
+  <!-- Pelvis (base, fixed to ground) -->
+  <link name="pelvis">
+    <inertial>
+      <mass value="10.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.5" ixy="0" ixz="0"
+               iyy="0.5" iyz="0"
+               izz="0.5"/>
+    </inertial>
+  </link>
+
+  <!-- Lumbar vertebrae -->
+  <link name="lumbar">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0.1"/>
+      <inertia ixx="0.02" ixy="0" ixz="0"
+               iyy="0.02" iyz="0"
+               izz="0.01"/>
+    </inertial>
+  </link>
+
+  <!-- Thorax (ribcage) -->
+  <link name="thorax">
+    <inertial>
+      <mass value="11.0"/>
+      <origin xyz="0 0 0.2"/>
+      <inertia ixx="0.3" ixy="0" ixz="0"
+               iyy="0.3" iyz="0"
+               izz="0.15"/>
+    </inertial>
+  </link>
+
+  <!-- Trail shoulder / upper arm -->
+  <link name="trail_upper_arm">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 -0.15 0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Trail forearm -->
+  <link name="trail_forearm">
+    <inertial>
+      <mass value="1.1"/>
+      <origin xyz="0 -0.15 0"/>
+      <inertia ixx="0.03" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.03"/>
+    </inertial>
+  </link>
+
+  <!-- Trail hand -->
+  <link name="trail_hand">
+    <inertial>
+      <mass value="0.4"/>
+      <origin xyz="0 -0.05 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- Lead shoulder / upper arm (same for left side) -->
+  <link name="lead_upper_arm">
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0.15 0"/>
+      <inertia ixx="0.05" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Lead forearm -->
+  <link name="lead_forearm">
+    <inertial>
+      <mass value="1.1"/>
+      <origin xyz="0 0.15 0"/>
+      <inertia ixx="0.03" ixy="0" ixz="0"
+               iyy="0.01" iyz="0"
+               izz="0.03"/>
+    </inertial>
+  </link>
+
+  <!-- Lead hand -->
+  <link name="lead_hand">
+    <inertial>
+      <mass value="0.4"/>
+      <origin xyz="0 0.05 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- Golf club -->
+  <link name="club">
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0.5 0 0"/>
+      <inertia ixx="0.005" ixy="0" ixz="0"
+               iyy="0.005" iyz="0"
+               izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- Lumbar-thorax joint (3-DOF spherical) -->
+  <joint name="lumbar_joint" type="revolute">
+    <parent link="pelvis"/>
+    <child link="lumbar"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.5" upper="0.5" effort="100" velocity="1.0"/>
+  </joint>
+
+  <!-- Note: A complete 3-DOF joint would require three revolutes -->
+  <!-- We'll simplify and use 1-DOF revolutes for each axis -->
+  <!-- ... (additional joints for thorax, shoulders, elbows, wrists) ...-->
+
+</robot>
+```
+
+\textbf{Note:} This is a \emph{simplified} excerpt. A complete URDF would include all 20 joints (3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, 3 for thorax) and would require careful definition of each axis.
+
+\section{From URDF to Simulation --- Drake, MuJoCo, and Pinocchio}
+\label{sec:simulation_engines}
+
+\index{Drake}
+\index{MuJoCo}
+\index{Pinocchio}
+\index{dynamics engine}
+
+Once you have a URDF, you can load it into a dynamics engine. These engines compute the equations of motion automatically.
+
+\subsection{Drake (MIT)}
+
+Drake is a C++/Python library for dynamics, control, and optimization. It includes:
+\begin{itemize}
+\item Symbolic and numerical differentiation
+\item Inverse and forward dynamics
+\item Trajectory optimization
+\item Contact mechanics (collision and friction)
+\end{itemize}
+
+For a golf swing, Drake can:
+1. Load the golf URDF
+2. Compute the mass matrix $\bm{M}(\bm{q})$ symbolically
+3. Compute Coriolis $\bm{C}(\bm{q},\dot{\bm{q}})$ and gravity $\bm{g}(\bm{q})$ symbolically
+4. Integrate the equations $\bm{M}\ddot{\bm{q}} = \bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}$ forward in time
+5. Optimize muscle activations to produce a desired swing
+
+\subsection{MuJoCo (DeepMind)}
+
+MuJoCo (Multi-Joint dynamics with Contact) is a physics engine designed for robotics and biomechanics. It's fast, accurate, and widely used for reinforcement learning.
+
+Key features:
+\begin{itemize}
+\item Can simulate 1000+ timesteps per second for a humanoid model
+\item Supports contact forces (Coulomb friction, rolling resistance)
+\item Supports tendons (muscles with nonlinear force-length relations)
+\item Can optimize policies using reinforcement learning
+\end{itemize}
+
+For the golf swing, MuJoCo is ideal for learning-based approaches. You can train a neural network policy to swing a golf club by reinforcement learning in MuJoCo simulation.
+
+\subsection{Pinocchio (INRIA)}
+
+Pinocchio is a lightweight library focused on efficient computation of dynamics algorithms. It computes:
+\begin{itemize}
+\item Forward kinematics: given $\bm{q}$ and $\dot{\bm{q}}$, compute link positions and velocities
+\item Jacobians: $\bm{J}(\bm{q})$ and time derivatives $\dot{\bm{J}}(\bm{q},\dot{\bm{q}})$
+\item Inverse dynamics: given $\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}$, compute required torques
+\item Forward dynamics: given torques, compute accelerations
+\end{itemize}
+
+Pinocchio is excellent for trajectory optimization. It can efficiently compute derivatives of costs and constraints, which are needed for gradient-based optimization.
+
+\subsection{Computing the Equations of Motion Automatically}
+
+Here's the power of these tools. In Chapter 9, we derived the equations of motion:
+
+$$\bm{M}(\bm{q})\ddot{\bm{q}} = \bm{u} - \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})$$
+
+Deriving these by hand for a 20-DOF golf swing model is tedious and error-prone. But Drake or Pinocchio computes them \emph{automatically} from the URDF.
+
+\begin{example}{Automatic Dynamics Computation}{ex:auto_dynamics}
+In Drake (Python):
+
+```python
+import pydrake
+from pydrake.multibody.parsing import Parser
+from pydrake.systems.framework import DiagramBuilder
+
+# Load the golf URDF
+parser = Parser()
+plant = parser.AddModelFromFile("golfer.urdf")
+
+# Plant automatically computes M, C, g
+# To get M(q) at a specific configuration:
+context = plant.CreateDefaultContext()
+M = plant.CalcMassMatrixViaInverseDynamics(context)
+
+# To integrate the dynamics forward:
+simulator = Simulator(plant)
+context = simulator.get_mutable_context()
+simulator.Initialize()
+simulator.AdvanceTo(final_time=1.0)
+```
+
+The library handles all the complexity. You specify the structure (URDF), and the engine does the computation.
+\end{example}
+
+\section{Sensitivity Analysis --- What Happens When Parameters Are Wrong?}
+\label{sec:sensitivity}
+
+\index{sensitivity analysis}
+\index{anthropometry}
+\index{parameter uncertainty}
+
+Real biomechanics has uncertainties. Segment masses, lengths, and inertia are measured with ~5-10% error. How sensitive is our golf swing model to these errors?
+
+\subsection{Sources of Uncertainty}
+
+\begin{itemize}
+\item \textbf{Mass and anthropometry:} De Leva data is averaged over a population. Individual athletes differ.
+\item \textbf{Segment length:} Estimated from marker positions in motion capture. Error: ~1-2 cm.
+\item \textbf{Inertia tensor:} Computed from regression equations. Error: ~10-20%.
+\item \textbf{Joint axis location:} Joint centers are inferred, not directly measured. Error: ~5 mm.
+\item \textbf{Initial conditions:} Motion capture data has noise. Error: ~5-10 mm in position, ~5{}^\circ in angle.
+\end{itemize}
+
+\subsection{Sensitivity to Anthropometry}
+
+A natural question: if the forearm mass is $m = 1.1 \pm 0.1$ kg, how much does this affect the club speed at impact?
+
+This is a \emph{sensitivity analysis}. We compute:
+
+$$\text{Sensitivity} = \frac{\partial v_{\text{club}}}{\partial m_{\text{forearm}}}$$
+
+\begin{example}{Sensitivity of Club Speed to Forearm Mass}{ex:sensitivity}
+Using a simplified arm model (2-segment arm, no wrist motion), the club speed depends on:
+\begin{itemize}
+\item Shoulder torque $\tau_s$ (larger shoulder can swing faster)
+\item Arm configuration (forearm length, mass distribution)
+\item Forearm inertia
+\end{itemize}
+
+A rough estimate: increasing the forearm mass by 10\% decreases the club speed by ~0.5-1\%. The effect is small because the club speed is more sensitive to the initial shoulder angular velocity than to forearm inertia.
+
+\textbf{More sensitive:} The early downswing (first 0.1 s) is \emph{very sensitive} to initial angular velocity. If the pelvis rotation rate is 1{}^\circ off, the club path is significantly altered.
+\end{example}
+
+\subsection{Sensitivity to Initial Conditions}
+
+The golf swing is chaotic in a weak sense: small changes in initial conditions lead to larger changes in the outcome. This is because the swing is \emph{controlled by initial conditions} (the backswing position, velocity, and acceleration), and any error in measuring these propagates forward.
+
+\textbf{Key finding:} The ZTCF (zero-torque constraint force analysis from Chapter 20) is moderately sensitive to anthropometric parameters but \emph{extremely sensitive} to initial conditions and joint torques.
+
+This is why motion capture accuracy matters more than perfectly measured segment masses. Getting the initial arm position and velocity correct is more important than having exact segment inertias.
+
+\begin{principle}{Practical Implications}{prin:sensitivity_practical}
+When building a golf biomechanics model:
+
+\begin{enumerate}
+\item \textbf{Prioritize motion capture accuracy:} Invest in high-quality mocap (120+ Hz, multiple cameras, careful marker placement). This is more important than precise anthropometry.
+
+\item \textbf{Use population-average anthropometry:} De Leva's data is good enough. Refining it further doesn't help if your mocap is noisy.
+
+\item \textbf{Include sensitivity bounds:} When reporting results (club speed, joint torques), include error bars showing the effect of $\pm 10%$ anthropometric errors.
+
+\item \textbf{Test robustness:} Run simulations with perturbed parameters. If your conclusions hold across a 20\% parameter range, you have robust findings.
+\end{enumerate}
+\end{principle}
+
+\section{Building Intuition: From URDF to Golf Physics}
+\label{sec:intuition}
+
+Let's return to the big picture. Why does all this matter for golf?
+
+\subsection{The Redundancy Principle}
+
+The golf swing has 20-30 DOF in the upper body. The task (hit the ball straight to a target) uses only 6 DOF (club position and orientation at impact). This leaves 15-25 DOF of redundancy.
+
+Elite golfers exploit this redundancy:
+\begin{itemize}
+\item They can produce the same impact position via different arm/shoulder configurations
+\item Different configurations have different energy costs, different injury risks, different feel
+\item Over a career, they learn the null-space motions that work best for their body
+\end{itemize}
+
+A robot with redundancy is more adaptable, more robust to perturbations, and more efficient. The human body is a redundant robot.
+
+\subsection{The Identification Problem}
+
+If we want to understand how a golfer produces a particular swing, we face an inverse problem: given the club trajectory, find the joint torques and muscle activations that produce it.
+
+With 20 DOF, this is underdetermined: there are infinitely many solutions. The nervous system must choose one. Which one?
+
+Optimization theory suggests the nervous system minimizes some cost (muscle activation, energy, jerks, joint torques). Different costs lead to different solutions. Biomechanics must find the right cost.
+
+A URDF + dynamics engine allows us to:
+1. Propose a cost function
+2. Optimize the muscle activations
+3. Check if the predicted swing matches recorded mocap
+4. Iteratively refine the cost function
+
+This is the future of golf biomechanics: mathematical models that explain not just \emph{what} the golfer does, but \emph{why} they choose that particular swing pattern.
+
+\begin{principle}{Key Takeaways: From URDF to Physics}{prin:ch23_summary}
+\begin{enumerate}
+
+\item \textbf{Grübler-Kutzbach formula:} Counts the DOF of any kinematic system. For a tree: $\sum f_i$. For a mechanism with loops: account for loop closure constraints.
+
+\item \textbf{Human arm redundancy:} 7 DOF to achieve a 6-DOF task. The 1 extra DOF is the null space (elbow swivel). Redundancy allows optimization of secondary objectives.
+
+\item \textbf{URDF and dynamics:} Define the structure, let the engine compute $\bm{M}, \bm{C}, \bm{g}$. This enables forward simulation, inverse dynamics, and trajectory optimization.
+
+\item \textbf{Sensitivity:} Initial conditions matter more than anthropometry. High-quality motion capture is more valuable than perfectly tuned segment parameters.
+
+\item \textbf{Optimization and redundancy:} The nervous system solves an ill-posed inverse problem. Propose a cost, optimize, compare to data. Iterate.
+
+\end{enumerate}
+\end{principle}
+
+\subsection*{Looking Ahead}
+We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part~VIII turns to the remarkable organ that orchestrates all of this: the human brain. Chapter~\ref{ch:motor_control_brain} examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
+
+\begin{exercises}{Chapter Exercises}{ex:ch23_exercises}
+\begin{enumerate}
+
+\item \textbf{DOF Counting:} For the golf swing model described in Section \ref{sec:golf_swing_dof}, compute the DOF using the Grübler formula:
+   \begin{enumerate}
+   \item Count the bodies $N$ (include ground)
+   \item Count the joints $J$ and their DOFs $f_i$
+   \item Compute $\mathrm{DOF} = 6(N-1) - \sum(6-f_i)$
+   \item If the model includes a two-handed grip on the club, subtract the loop closure constraints
+   \end{enumerate}
+
+\item \textbf{Null-Space Motion:} For a 7-DOF arm (shoulder 3, elbow 1, pronation 1, wrist 2):
+   \begin{enumerate}
+   \item Describe the null-space motion (what can the arm do without moving the hand?)
+   \item If the task is to keep the hand at a fixed position, how many possible elbow positions exist?
+   \item If you add the constraint that the elbow must stay at a specific height (z-coordinate), how many DOF remain in the null space?
+   \end{enumerate}
+
+\item \textbf{URDF Construction:} Write a minimal URDF for a golfer's spine and trail arm (3-link: thorax, upper arm, forearm). Include:
+   \begin{enumerate}
+   \item Three links with realistic inertias (use de Leva data for 70 kg athlete)
+   \item Two 3-DOF spherical joints (thorax rotation, shoulder) implemented as three sequential revolutes (ZYX order)
+   \item Masses and inertia tensors
+   \end{enumerate}
+
+\item \textbf{Anthropometric Scaling:} If a golfer is 80 kg instead of 70 kg, how would you scale the segment masses from de Leva's data? How would the moments of inertia scale?
+
+\item \textbf{Sensitivity Calculation:} Suppose club speed at impact is $v_{\text{club}} = 45$ m/s. A sensitivity analysis shows $\frac{\partial v}{\partial m_{\text{forearm}}} = -0.05$ m/s per kg. If forearm mass is uncertain by $\pm 0.2$ kg, what is the uncertainty in club speed?
+
+- **Loop Constraint:** Explain why a two-handed golf grip creates a loop constraint in the kinematic model. How many constraints does this loop impose? (Position: 3, orientation: 3, or less?)
+
+- **Redundancy in Golf:** Explain why elbow swivel (null-space motion) matters for golf swing consistency. Can two golfers produce the same club trajectory with different arm configurations? Give a specific example.
+
+\end{exercises}

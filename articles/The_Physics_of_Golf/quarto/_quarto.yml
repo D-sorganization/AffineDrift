@@ -1,0 +1,131 @@
+project:
+  type: book
+
+book:
+  title: "The Physics of Golf"
+  subtitle: "Force, Drift, and Control in the Golf Swing"
+  author: "AffineDrift"
+  date: "2026-03-26"
+  site-url: "https://affinedrift.com/articles/The_Physics_of_Golf/quarto/"
+  chapters:
+    - index.qmd
+    - part: "Foundations"
+      chapters:
+        - ch01_why_physics.qmd
+        - ch02_language_of_motion.qmd
+        - ch03_double_pendulum.qmd
+    - part: "The Affine Framework"
+      chapters:
+        - ch04_forces_and_torques.qmd
+        - ch05_affine_structure.qmd
+        - ch06_zero_torque_counterfactual.qmd
+    - part: "Constraints and Mechanisms"
+      chapters:
+        - ch07_constraint_forces.qmd
+        - ch08_triple_pendulum.qmd
+        - ch09_parallel_mechanisms.qmd
+    - part: "Forces in Detail"
+      chapters:
+        - ch10_energy_transfer.qmd
+        - ch15_ground_reaction_forces.qmd
+        - ch16_muscle_to_joint_torques.qmd
+        - ch17_muscle_force_generation.qmd
+        - ch19_aerodynamic_drag.qmd
+        - ch29_joint_damping_friction.qmd
+        - ch28_impact_collision.qmd
+        - ch31_swing_plane_launch.qmd
+    - part: "The Inverse Problem and Its Limits"
+      chapters:
+        - ch18_inverse_dynamics_parallel.qmd
+    - part: "The Physical System"
+      chapters:
+        - ch11_flexible_shaft.qmd
+        - ch12_fascia.qmd
+        - ch20_soft_tissue_pliable.qmd
+    - part: "The Musculoskeletal Model"
+      chapters:
+        - ch21_spine_modeling.qmd
+        - ch22_anatomy_joint_modeling.qmd
+        - ch23_dof_urdf_models.qmd
+    - part: "The Kinetic Chain and Performance"
+      chapters:
+        - ch30_kinetic_chain.qmd
+    - part: "Motor Control and Learning"
+      chapters:
+        - ch24_motor_control_brain.qmd
+        - ch25_motor_learning.qmd
+        - ch26_remarkable_brain.qmd
+        - ch27_passive_distributed_control.qmd
+    - part: "Synthesis"
+      chapters:
+        - ch13_interdisciplinary.qmd
+        - ch14_complete_swing.qmd
+    - glossary.qmd
+
+bibliography: ../golf_physics.bib
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+    include-in-header:
+      text: |
+        <script>
+        window.MathJax = {
+          tex: {
+            macros: {
+              // Vector/matrix notation
+              bm: ["\\boldsymbol{#1}", 1],
+              norm: ["\\left\\lVert #1 \\right\\rVert", 1],
+              inner: ["\\left\\langle #1, #2 \\right\\rangle", 2],
+              // Number sets
+              Reals: "\\mathbb{R}",
+              // State-space shorthand
+              state: "\\mathbf{x}",
+              control: "\\mathbf{u}",
+              configvec: "\\mathbf{q}",
+              configdot: "\\dot{\\mathbf{q}}",
+              configddot: "\\ddot{\\mathbf{q}}",
+              // Dynamics
+              massmat: "\\mathbf{M}(\\mathbf{q})",
+              cormat: "\\mathbf{C}(\\mathbf{q}, \\dot{\\mathbf{q}})",
+              gravvec: "\\mathbf{g}(\\mathbf{q})",
+              // Affine decomposition
+              drift: "f(\\mathbf{x})",
+              inputmap: "G(\\mathbf{x})",
+              // Counterfactuals
+              ztcf: "\\mathrm{ZTCF}",
+              zvcf: "\\mathrm{ZVCF}",
+              dcr: "\\mathrm{DCR}",
+              // Constraint
+              constraintforce: "\\boldsymbol{\\lambda}",
+              loopjac: "\\mathbf{J}_{\\mathrm{loop}}",
+              // Shaft
+              shaftflex: "\\boldsymbol{\\eta}",
+              shaftstiff: "K_s",
+              shaftdamp: "D_s",
+              // Golf-specific
+              clubhead: "\\mathbf{p}_{\\mathrm{head}}",
+              clubvel: "\\mathbf{v}_{\\mathrm{head}}",
+              // Lie groups
+              SO: ["\\mathrm{SO}(#1)", 1],
+              SE: ["\\mathrm{SE}(#1)", 1],
+              so: ["\\mathfrak{so}(#1)", 1],
+              se: ["\\mathfrak{se}(#1)", 1],
+              wrench: "\\mathcal{F}",
+              twist: "\\mathcal{V}",
+              screw: "\\mathcal{S}"
+            }
+          }
+        };
+        </script>
+  pdf:
+    documentclass: book
+    keep-tex: true
+    number-sections: true
+    include-in-header:
+      text: |
+        \usepackage{bm}
+        \usepackage{tcolorbox}
+        \tcbuselibrary{theorems, breakable, skins}

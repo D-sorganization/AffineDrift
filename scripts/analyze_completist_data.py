@@ -375,11 +375,11 @@ def _build_findings_table(
 
 
 def _build_priority_section(criticals: list[Finding], todos: list[Finding]) -> list[str]:
-    """Build the recommended implementation order section.
+    r"""Build the recommended implementation order section.
 
     Args:
         criticals: Critical findings.
-        todos: TRACKED_TASK marker findings.
+        todos: TRACKED-TASK marker findings.
 
     Returns:
         Markdown lines for the priority section.
